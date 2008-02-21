@@ -38,7 +38,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
@@ -138,7 +137,7 @@ public abstract class AbstractCreateFloodPolygonWidget extends AbstractWidget
     final QName geomProp = m_geomProperties[m_currentGeometry];
     final IValuePropertyType vpt = (IValuePropertyType) m_featureType.getProperty( geomProp );
     final QName valueQName = vpt.getValueQName();
-    final CS_CoordinateSystem targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
+    final String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
 
     if( GeometryUtilities.QN_POLYGON_PROPERTY.equals( valueQName ) )
       m_builder = new PolygonGeometryBuilder( 0, targetCrs );

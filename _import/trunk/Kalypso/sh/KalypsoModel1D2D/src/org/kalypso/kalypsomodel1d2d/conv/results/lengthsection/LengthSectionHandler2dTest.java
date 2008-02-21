@@ -65,9 +65,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -123,7 +121,7 @@ public class LengthSectionHandler2dTest extends TestCase
       URL resource = getClass().getResource( "resources/tin_Terrain.gml" );
       GMLWorkspace w = GmlSerializer.createGMLWorkspace( resource, null );
 
-      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
@@ -184,8 +182,7 @@ public class LengthSectionHandler2dTest extends TestCase
       throw new IllegalStateException();
 
     // XXX fixed coordinate system?
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    final CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:31467" ) );
+    final String cSystem = "EPSG:31467";
 
     String shape = "";
     for( int i = 0; i < sShapes.length - 1; i++ )

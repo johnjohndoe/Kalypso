@@ -62,11 +62,9 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 {
@@ -86,7 +84,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     m_tinResultFile = tinResultFile;
   }
 
-  public TriangulatedSurfaceTriangleEater( CS_CoordinateSystem crs ) throws GM_Exception
+  public TriangulatedSurfaceTriangleEater( String crs ) throws GM_Exception
   {
     m_surface = new GM_TriangulatedSurface_Impl( crs );
   }
@@ -104,7 +102,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
     GM_Triangle_Impl gmTriangle = null;
     GM_Position pos[] = null;
 
-    final CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    final String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
     if( m_parameter != null )
     {
       if( isWet == true )
@@ -280,7 +278,7 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
 
   public void add( final List<GM_Point> nodeList )
   {
-    final CS_CoordinateSystem crs = nodeList.get( 0 ).getCoordinateSystem();
+    final String crs = nodeList.get( 0 ).getCoordinateSystem();
 
     GM_Triangle_Impl gmTriangle = null;
 

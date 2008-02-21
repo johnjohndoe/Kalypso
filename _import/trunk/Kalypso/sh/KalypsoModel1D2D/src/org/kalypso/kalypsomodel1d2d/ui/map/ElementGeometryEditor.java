@@ -89,7 +89,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
@@ -332,7 +331,7 @@ public class ElementGeometryEditor
       // C.1) one of the new edges crosses other edges
       // C.2) one of the new edges links two non-adjacent points
       /* D) element geometry checks */
-      final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final GM_Ring[] rings = getNewGeometries();
       for( GM_Ring ring : rings )
       {
@@ -398,7 +397,7 @@ public class ElementGeometryEditor
   {
     final GM_Position[] poses = getEditedNodesPositions( element );
 
-    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     return GeometryFactory.createGM_Curve( poses, crs );
   }
 
@@ -410,7 +409,7 @@ public class ElementGeometryEditor
   {
     final GM_Position[] poses = getEditedNodesPositions( element );
 
-    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     return GeometryFactory.createGM_Ring( poses, crs );
   }
 

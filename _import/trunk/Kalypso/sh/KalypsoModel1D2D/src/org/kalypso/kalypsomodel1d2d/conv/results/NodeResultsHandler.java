@@ -108,7 +108,6 @@ import org.kalypsodeegree_impl.model.feature.index.FeatureIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -131,7 +130,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   private final FeatureList m_resultList;
 
-  private final CS_CoordinateSystem m_crs;
+  private final String m_crs;
 
   private final ITriangleEater m_triangleEater;
 
@@ -627,7 +626,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
   @SuppressWarnings("unchecked")
   private void create1dTriangles( final INodeResult[] nodes, final GM_Curve[] curves, final double curveDistance ) throws GM_Exception
   {
-    final CS_CoordinateSystem crs = curves[0].getCoordinateSystem();
+    final String crs = curves[0].getCoordinateSystem();
 
     // make a polygon from the curves (polygon must be oriented ccw)
 
@@ -646,7 +645,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     BufferedReader eleReader = null;
     PrintWriter pwSimuLog;
 
-    final CS_CoordinateSystem crs = nodeCurve1d.getCoordinateSystem();
+    final String crs = nodeCurve1d.getCoordinateSystem();
 
     final List<GM_Curve> breaklines = new ArrayList<GM_Curve>( 2 );
     breaklines.add( nodeCurve1d );
@@ -725,7 +724,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final GM_Curve[] curves = curveList.toArray( new GM_Curve[curveList.size()] );
     final INodeResult[] nodeResults = nodeList.toArray( new INodeResult[nodeList.size()] );
 
-    final CS_CoordinateSystem crs = curveList.get( 0 ).getCoordinateSystem();
+    final String crs = curveList.get( 0 ).getCoordinateSystem();
 
     pwSimuLog = new PrintWriter( System.out );
 
@@ -798,7 +797,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
   }
 
-  private void feedTriangleEaterWithJunctionResults( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
+  private void feedTriangleEaterWithJunctionResults( final INodeResult nodeResult1d, final FeatureList resultList, final GM_Curve nodeCurve1d, final GM_Curve boundaryCurve, final double curveDistance, final String crs, final GM_Position[] ring )
   {
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
 
@@ -870,7 +869,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
   }
 
-  private void feedTriangleEaterWith1dResults( final INodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final CS_CoordinateSystem crs, final GM_Position[] ring )
+  private void feedTriangleEaterWith1dResults( final INodeResult[] nodeResults, final GM_Curve[] curves, final double curveDistance, final String crs, final GM_Position[] ring )
   {
     final List<INodeResult> nodes = new LinkedList<INodeResult>();
 
@@ -1603,7 +1602,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final double x3 = node1.getPoint().getX() + (dist13 / dist12) * dx12;
     final double y3 = node1.getPoint().getY() + (dist13 / dist12) * dy12;
 
-    final CS_CoordinateSystem crs = node1.getPoint().getCoordinateSystem();
+    final String crs = node1.getPoint().getCoordinateSystem();
 
     node3.setLocation( x3, y3, z3, crs );
     // node3.setResultValues( 0, 0, 0, z3 );

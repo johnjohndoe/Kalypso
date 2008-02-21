@@ -73,6 +73,7 @@ import org.kalypso.model.flood.binding.ITinReference.SOURCETYPE;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -84,14 +85,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
-import org.kalypsodeegree_impl.model.cs.Adapters;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.kalypsodeegree_impl.model.ct.GeoTransformer;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.bce.gis.io.hmo.HMOReader;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -157,7 +154,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
     final MinMaxSurfacePatchVisitor<GM_Triangle> minmaxVisitor = new MinMaxSurfacePatchVisitor<GM_Triangle>();
     String desc;
-    CS_CoordinateSystem crs;
+    String crs;
     GM_TriangulatedSurface gmSurface = null;
     TriangulatedSurfaceTriangleEater eater;
     GMLWorkspace sourceWorkspace;
@@ -342,10 +339,8 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     return Status.OK_STATUS;
   }
 
-  protected static CS_CoordinateSystem getCoordinateSytem( final String crsName )
+  protected static String getCoordinateSytem( final String crsName )
   {
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    return Adapters.getDefault().export( csFac.getCSByName( crsName ) );
+    return crsName;
   }
-
 }

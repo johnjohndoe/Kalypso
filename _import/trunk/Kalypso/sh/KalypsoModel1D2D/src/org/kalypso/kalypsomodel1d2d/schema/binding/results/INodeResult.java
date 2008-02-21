@@ -48,7 +48,6 @@ import org.kalypso.kalypsomodel1d2d.conv.results.ArcResult;
 import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author jung
@@ -60,7 +59,7 @@ public interface INodeResult extends IFeatureWrapper2
 
   public abstract void setCalcId( final int id );
 
-  public abstract void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs );
+  public abstract void setLocation( final double x, final double y, final double z, final String crs );
 
   public abstract void setResultValues( final double vx, final double vy, final double virtualDepth, final double waterlevel );
 

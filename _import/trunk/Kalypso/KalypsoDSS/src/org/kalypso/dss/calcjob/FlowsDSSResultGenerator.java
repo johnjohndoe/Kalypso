@@ -99,7 +99,7 @@ public class FlowsDSSResultGenerator
 
   /**
    * @param noMeasures
-   *          true, if calculation is based only on planing without measures
+   *            true, if calculation is based only on planing without measures
    */
   public static List<HTMLFragmentBean> generateDssResultFor( final File dssResultDir, final File rrmResultDir, final ISimulationDataProvider inputProvider, final String hqEventId, final Feature resultNode, final boolean doMeasures, List<HTMLFragmentBean> htmlFragmentCollector ) throws MalformedURLException
   {
@@ -348,7 +348,7 @@ public class FlowsDSSResultGenerator
       final GM_Point centroid = position.getCentroid();
       double x = centroid.getPosition().getX();
       double y = centroid.getPosition().getY();
-      final String crsName = centroid.getCoordinateSystem().getName();
+      final String crsName = centroid.getCoordinateSystem();
       final String showInMap = "kalypso://showInMap?title=" + nodeName//
           + "&duration=4000" //
           + "&x=" + x//

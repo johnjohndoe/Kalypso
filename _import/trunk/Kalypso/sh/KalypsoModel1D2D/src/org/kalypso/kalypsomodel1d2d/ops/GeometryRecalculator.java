@@ -70,7 +70,6 @@ import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
@@ -166,7 +165,7 @@ public class GeometryRecalculator
     if( m_flowRelationshipsModelChanges.contains( feature ) )
       return;
     feature.invalidEnvelope();
-    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     if( element instanceof IFELine )
     {
       int countBCs = 0;

@@ -40,75 +40,61 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.conv;
 
-
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
- * Interface for classes that provide a 
- * conversion from native coordinates to gml goordinates.
- * Such a provider class can for example translate
- * all native point by a fix vector.
+ * Interface for classes that provide a conversion from native coordinates to gml goordinates. Such a provider class can
+ * for example translate all native point by a fix vector.
  * 
  * @author Patrice Congo
  */
 public interface IPositionProvider
 {
   /**
-   * Return the gml point corresponding to the native
-   * position given ba nativeX, naticeY and nativeZ
+   * Return the gml point corresponding to the native position given ba nativeX, naticeY and nativeZ
+   * 
    * @return a {@link GM_Point} corresponding to the given point
-   * @return {@link IllegalArgumentException} if the transform coodinate
-   *  of the native coordinate are illegal for the given  crs
+   * @throws IllegalArgumentException
+   *             if the transform coodinate of the native coordinate are illegal for the given crs
    * 
    */
-  public GM_Point getGMPoint(
-                      double nativeX, 
-                      double nativeY,
-                      double nativeZ)
-                      throws IllegalArgumentException;
-  
+  public GM_Point getGMPoint( double nativeX, double nativeY, double nativeZ ) throws IllegalArgumentException;
+
   /**
    * Gets the native X position for the given point
-   * @return the native x position corresonding to the given
-   *    position 
-   * @throws if point is null or the provider cannot handle
-   *    the {@link CS_CoordinateSystem} of the given point 
-   *        or the its coordinate
+   * 
+   * @return the native x position corresonding to the given position
+   * @throws IllegalArgumentException
+   *             if point is null or the provider cannot handle the {@link CS_CoordinateSystem} of the given point or
+   *             the its coordinate
    */
-  public double getNativeX(
-                      GM_Point point)
-                      throws IllegalArgumentException;
-  
+  public double getNativeX( GM_Point point ) throws IllegalArgumentException;
+
   /**
    * Gets the native Y position for the given point
-   * @return the native Y position corresonding to the given
-   *    position 
-   * @throws if point is null or the provider cannot handle
-   *    the {@link CS_CoordinateSystem} of the given point 
-   *        or the its coordinate
+   * 
+   * @return the native Y position corresonding to the given position
+   * @throws IllegalArgumentException
+   *             if point is null or the provider cannot handle the {@link CS_CoordinateSystem} of the given point or
+   *             the its coordinate
    */
-  public double getNativeY(
-                      GM_Point point)
-                      throws IllegalArgumentException;
-  
+  public double getNativeY( GM_Point point ) throws IllegalArgumentException;
+
   /**
    * Gets the native Z position for the given point
-   * @return the native Z position corresonding to the given
-   *    position 
-   * @throws if point is null or the provider cannot handle
-   *    the {@link CS_CoordinateSystem} of the given point 
-   *        or the z coordinate is not available
+   * 
+   * @return the native Z position corresonding to the given position
+   * @throws IllegalArgumentException
+   *             if point is null or the provider cannot handle the {@link CS_CoordinateSystem} of the given point or
+   *             the z coordinate is not available
    */
-  public double getNativeZ(
-                      GM_Point point)
-                      throws IllegalArgumentException;
-  
+  public double getNativeZ( GM_Point point ) throws IllegalArgumentException;
+
   /**
-   * Get the target coordinate system of this provider.
-   * Points return by this provider will be in this 
-   * {@link CS_CoordinateSystem}
-   * @return the {@link CS_CoordinateSystem} of this provider 
+   * Get the target coordinate system of this provider. Points return by this provider will be in this coordinate
+   * system.
+   * 
+   * @return the coordinate system of this provider
    */
-  public CS_CoordinateSystem getCoordinateSystem();  
+  public String getCoordinateSystem( );
 }

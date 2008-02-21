@@ -84,7 +84,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Wizard to show length sections to the chart view.
@@ -330,7 +329,7 @@ public class ConfigureLengthSectionWizard extends Wizard
       final URL surfaceURL = ResourceUtilities.createURL( folder );
       GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
 
-      final CS_CoordinateSystem targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 

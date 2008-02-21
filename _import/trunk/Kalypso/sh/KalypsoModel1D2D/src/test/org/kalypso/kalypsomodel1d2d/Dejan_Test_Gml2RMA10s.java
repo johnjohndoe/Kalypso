@@ -50,33 +50,31 @@ import org.kalypso.kalypsomodel1d2d.conv.XYZOffsetPositionProvider;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import test.org.kalypso.kalypsosimulationmodel.TestUtils;
 
 /**
  * @author antanas
- *
+ * 
  */
 public class Dejan_Test_Gml2RMA10s extends TestCase
 {
   private URL test_RMA10sModelURL;
 
   private URL test_discretisationModelURL;
-  
-  private final CS_CoordinateSystem test_CoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( TestWorkspaces.CS_KEY_GAUSS_KRUEGER );
 
+  private final String test_CoordinateSystem = TestWorkspaces.CS_KEY_GAUSS_KRUEGER;
 
   private void init( ) throws MalformedURLException
   {
     test_RMA10sModelURL = new URL( "file:/F:/_ECLIPSE/modell1D_OUTPUT.2d" );
-//    test_discretisationModelURL = new URL( "file:/D:/working/discretisation.gml" );
+    // test_discretisationModelURL = new URL( "file:/D:/working/discretisation.gml" );
     test_discretisationModelURL = new URL( "file:/F:/_ECLIPSE/discretisation.gml" );
   }
 
   /**
-   * Test method for {@link org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv#Gml2RMA10SConv(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d, java.io.OutputStream, org.kalypso.kalypsomodel1d2d.conv.IPositionProvider, org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)}.
+   * Test method for
+   * {@link org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv#Gml2RMA10SConv(org.kalypso.kalypsomodel1d2d.schema.binding.IFEDiscretisationModel1d2d, java.io.OutputStream, org.kalypso.kalypsomodel1d2d.conv.IPositionProvider, org.kalypso.kalypsomodel1d2d.conv.IModelElementIDProvider)}.
    */
   public final void testGml2RMA10SConv( ) throws MalformedURLException
   {
@@ -86,7 +84,7 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
     try
     {
       workspace = GmlSerializer.createGMLWorkspace( test_discretisationModelURL, null );
-//      workspace = TestWorkspaces.loadGMLWorkspace( test_discretisationModelURL, test_schemaLocation );
+      // workspace = TestWorkspaces.loadGMLWorkspace( test_discretisationModelURL, test_schemaLocation );
     }
     catch( Exception e )
     {
@@ -98,10 +96,10 @@ public class Dejan_Test_Gml2RMA10s extends TestCase
     try
     {
       IPositionProvider positionProvider = new XYZOffsetPositionProvider( test_CoordinateSystem, 35 * 100000, 35 * 100000, 0 );
-//      Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
-//      converter.toRMA10sModel();
-//      converter.sysout();
-//      converter.write();
+      // Gml2RMA10SConv converter = new Gml2RMA10SConv(sourceModel, test_RMA10sModelURL, positionProvider);
+      // converter.toRMA10sModel();
+      // converter.sysout();
+      // converter.write();
     }
     catch( Throwable th )
     {

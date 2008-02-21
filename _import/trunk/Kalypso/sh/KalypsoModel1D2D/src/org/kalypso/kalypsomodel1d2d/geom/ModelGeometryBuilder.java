@@ -55,7 +55,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree_impl.model.geometry.GM_SurfaceInterpolation_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provide methods to build the geometry of the 1D 2D finite element model constituants like 2D element, continuity line
@@ -87,11 +86,11 @@ public class ModelGeometryBuilder
 
     if( SIZE <= 3 )
     {
-//      System.out.println( Messages.ModelGeometryBuilder_1 );
+      // System.out.println( Messages.ModelGeometryBuilder_1 );
       return null;
     }
 
-    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
     if( crs == null )
       crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
@@ -123,7 +122,7 @@ public class ModelGeometryBuilder
 
     final IFE1D2DNode node0 = nodes.get( 0 );
     final GM_Point point0 = node0.getPoint();
-    final CS_CoordinateSystem crs = point0.getCoordinateSystem();
+    final String crs = point0.getCoordinateSystem();
 
     final GM_Position positions[] = new GM_Position[SIZE];
     for( int i = 0; i < SIZE; i++ )

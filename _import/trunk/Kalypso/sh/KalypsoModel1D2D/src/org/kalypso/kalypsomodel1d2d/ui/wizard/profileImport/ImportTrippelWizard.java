@@ -74,7 +74,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * A wizard to import profile data (right now jus as trippel) into a 1D2D Terrain Model.
@@ -193,11 +192,11 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     final String desc = String.format( Messages.getString( "ImportTrippelWizard.19" ), m_ProfilePage.getFileName(), ImportTrippelWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
     network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
     network.setDescription( desc );
-    final CS_CoordinateSystem crs = m_ProfilePage.getCoordinateSystem();
+    final String crs = m_ProfilePage.getCoordinateSystem();
 
     final GMLWorkspace workspace = networkFeature.getWorkspace();
 
-    final CS_CoordinateSystem coordinatesSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String coordinatesSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     workspace.accept( new TransformVisitor( coordinatesSystem ), networkFeature, FeatureVisitor.DEPTH_INFINITE );
 
     for( final IProfil profile : profiles )
@@ -205,7 +204,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
       final Feature profileFeature = FeatureHelper.addFeature( network.getFeature(), IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE, new QName( IWspmConstants.NS_WSPMPROF, Messages.getString( "ImportTrippelWizard.20" ) ) ); //$NON-NLS-1$
       profileFeature.invalidEnvelope();
       ProfileFeatureFactory.toFeature( profile, profileFeature );
-      new WspmProfile( profileFeature ).setSrsName( crs.getName() );
+      new WspmProfile( profileFeature ).setSrsName( crs );
       addedFeatures.add( profileFeature );
     }
 

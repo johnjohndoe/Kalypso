@@ -13,7 +13,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Returns the bounding box of the static model as {@link org.kalypsodeegree.model.geometry.GM_Surface}
@@ -56,7 +55,7 @@ public class StaticModelBBoxFunc extends FeaturePropertyFunction
           else
           {
             final GM_Envelope bbox = nodes.getWrappedList().getBoundingBox();
-            CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+            String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
             if( crs == null )
               crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
             geometry = GeometryUtilities.toGM_Curve( bbox, crs );

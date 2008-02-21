@@ -94,7 +94,6 @@ import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
@@ -322,7 +321,7 @@ public abstract class AbstractCreateFlowrelationWidget extends AbstractWidget
           return;
         }
 
-        final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         flowRel.setPosition( GeometryFactory.createGM_Point( flowPositionFromElement, crs ) );
 
         /* Post it as an command */

@@ -64,7 +64,6 @@ import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * This class is a geometry builder for a line.
@@ -80,7 +79,7 @@ public class LinePointCollector
 
   private final List<MutableGMPoint> m_points = new ArrayList<MutableGMPoint>();
 
-  private CS_CoordinateSystem m_crs;
+  private String m_crs;
 
   private boolean m_isSelected = false;
 
@@ -97,7 +96,7 @@ public class LinePointCollector
    * @param targetCrs
    *            The target coordinate system.
    */
-  public LinePointCollector( final int cnt_points, final CS_CoordinateSystem targetCrs )
+  public LinePointCollector( final int cnt_points, final String targetCrs )
   {
     m_cnt_points = 0;
 
@@ -280,7 +279,7 @@ public class LinePointCollector
     m_cnt_points = 0;
   }
 
-  void reset( final CS_CoordinateSystem crs )
+  void reset( final String crs )
   {
     m_points.clear();
     m_isSelected = false;

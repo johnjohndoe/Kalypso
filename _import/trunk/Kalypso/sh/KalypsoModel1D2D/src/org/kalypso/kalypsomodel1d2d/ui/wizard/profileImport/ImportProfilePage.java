@@ -46,7 +46,6 @@
 package org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport;
 
 import java.io.File;
-import java.rmi.RemoteException;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -70,9 +69,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
+import org.kalypso.transformation.CRSHelper;
 
 /**
  * @author Thomas Jung
@@ -107,8 +104,6 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   private String m_filePath;
 
   private String m_crs;
-
-  private String m_;
 
   private Combo m_separatorCombo;
 
@@ -161,15 +156,9 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_checkCRS = new Combo( m_group, SWT.NONE );
 
     availableCoordinateSystems( m_checkCRS );
-    try
-    {
-      String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem().getName();
-      m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
-    }
-    catch( RemoteException e1 )
-    {
-      e1.printStackTrace();
-    }
+
+    String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
 
     m_checkCRS.setToolTipText( Messages.getString( "ImportProfilePage.3" ) ); //$NON-NLS-1$
     GridData data = new GridData( SWT.FILL, SWT.FILL, false, false );
@@ -177,7 +166,8 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_checkCRS.addSelectionListener( this );
     m_checkCRS.addKeyListener( this );
 
-    final Label dummy1 = new Label( m_group, SWT.NONE );
+    /* Dummy label. */
+    new Label( m_group, SWT.NONE );
 
     final Label seperatorLabel = new Label( m_group, SWT.NONE );
     seperatorLabel.setText( "Trennzeichen:" );
@@ -198,19 +188,12 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
   private void availableCoordinateSystems( Combo checkCRS )
   {
-    ConvenienceCSFactoryFull factory = new ConvenienceCSFactoryFull();
-    checkCRS.setItems( factory.getKnownCS() );
+    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
 
   private boolean checkCRS( String customCRS )
   {
-    boolean result = false;
-    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( customCRS );
-    if( cs != null )
-    {
-      result = true;
-    }
-    return result;
+    return CRSHelper.isKnownCRS( customCRS );
   }
 
   private void createFileGroup( Composite parent )
@@ -406,8 +389,8 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_browseButton.removeSelectionListener( this );
   }
 
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
-    return ConvenienceCSFactory.getInstance().getOGCCSByName( m_crs );
+    return m_crs;
   }
 }

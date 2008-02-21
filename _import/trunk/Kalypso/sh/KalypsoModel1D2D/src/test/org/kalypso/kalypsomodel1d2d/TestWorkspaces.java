@@ -53,9 +53,7 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogModelSimulationBase;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * 
@@ -64,8 +62,8 @@ import org.opengis.cs.CS_CoordinateSystem;
  */
 public class TestWorkspaces
 {
-// private static final Logger logger=
-// Logger.getLogger(TestWorkspaces.class.getName());
+  // private static final Logger logger=
+  // Logger.getLogger(TestWorkspaces.class.getName());
 
   public static final String CS_KEY_GAUSS_KRUEGER = "EPSG:31467";
 
@@ -138,11 +136,9 @@ public class TestWorkspaces
     }
   }
 
-  public static final CS_CoordinateSystem getGaussKrueger( )
+  public static final String getGaussKrueger( )
   {
-    CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( TestWorkspaces.CS_KEY_GAUSS_KRUEGER );
-    return cs;
-
+    return TestWorkspaces.CS_KEY_GAUSS_KRUEGER;
   }
 
   public static GMLWorkspace loadGMLWorkspace( URL gmlURL, String schemaLocation ) throws Exception

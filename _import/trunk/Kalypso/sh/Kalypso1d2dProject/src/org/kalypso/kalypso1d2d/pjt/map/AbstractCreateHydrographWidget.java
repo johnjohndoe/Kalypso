@@ -73,7 +73,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -237,7 +236,7 @@ public abstract class AbstractCreateHydrographWidget extends AbstractWidget
           return;
         }
 
-        final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         hydro.setLocation( GeometryFactory.createGM_Point( hydroPositionFromElement, crs ) );
 
         /* Post it as an command */

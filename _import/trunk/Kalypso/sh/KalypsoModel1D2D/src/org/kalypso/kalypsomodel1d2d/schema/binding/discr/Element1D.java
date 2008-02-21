@@ -54,7 +54,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Gernot Belger
@@ -158,7 +157,7 @@ public class Element1D<CT extends IFE1D2DComplexElement, ET extends IFE1D2DEdge>
       return null;
     }
 
-    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
     if( crs == null )
       crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 

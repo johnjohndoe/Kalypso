@@ -70,13 +70,10 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author huebsch here are moethodes used for preparing the kollau modell
  */
-
 public class UpdateModellKollau extends TestCase
 {
   // private final URL m_modellURL;
@@ -236,8 +233,7 @@ public class UpdateModellKollau extends TestCase
   private static void updateGeometries( final Feature modelFeature, final String shapeDir ) throws GmlSerializeException
   {
     // load ShapeFile
-    final ConvenienceCSFactoryFull csFac = new ConvenienceCSFactoryFull();
-    final CS_CoordinateSystem cSystem = org.kalypsodeegree_impl.model.cs.Adapters.getDefault().export( csFac.getCSByName( "EPSG:31467" ) );
+    final String cSystem = "EPSG:31467";
 
     final GMLWorkspace catchmentWorkspace = ShapeSerializer.deserialize( shapeDir + "\\Subcatchments", cSystem );
     final List catchmentFeatures = (List) catchmentWorkspace.getRootFeature().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );

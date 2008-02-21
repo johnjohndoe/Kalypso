@@ -54,7 +54,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -126,7 +125,7 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_WATERLEVEL, new Double( waterlevel ) );
   }
 
-  public void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs )
+  public void setLocation( final double x, final double y, final double z, final String crs )
   {
     final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
     final GM_Point point = GeometryFactory.createGM_Point( position, crs );

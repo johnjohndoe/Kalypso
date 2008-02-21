@@ -78,7 +78,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -125,7 +124,7 @@ public class MeasuresHelper
     {
       final Feature feature = (Feature) storageChannelList.first();
       final GM_Object geom = feature.getGeometryProperties()[0];
-      final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
+      final String targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
       measureRhbWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
     }
@@ -360,7 +359,7 @@ public class MeasuresHelper
     {
       final Feature feature = (Feature) hydroList.first();
       final GM_Object geom = feature.getGeometryProperties()[0];
-      final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
+      final String targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
       planningWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
     }
@@ -457,7 +456,7 @@ public class MeasuresHelper
       if( hydroFE == null )// the list can contain elementData = null
         continue;
       final GM_Object hydroGEOM = (GM_Object) hydroFE.getProperty( NaModelConstants.HYDRO_PROP_GEOM );
-      final CS_CoordinateSystem storedCrs = hydroGEOM.getCoordinateSystem();
+      final String storedCrs = hydroGEOM.getCoordinateSystem();
       final Geometry jtsHydroGEOM = JTSAdapter.export( hydroGEOM );
       Geometry intersection = null;
       Geometry difference = null;
@@ -611,7 +610,7 @@ public class MeasuresHelper
     {
       final Feature feature = (Feature) hydroList.first();
       final GM_Object geom = feature.getGeometryProperties()[0];
-      final CS_CoordinateSystem targetCS = geom.getCoordinateSystem();
+      final String targetCS = geom.getCoordinateSystem();
       final TransformVisitor visitor = new TransformVisitor( targetCS );
       sealingWS.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
     }
@@ -739,7 +738,7 @@ public class MeasuresHelper
         // assure that the measures and designArea geometries have the same coordinate system like the model data
         final Feature catchment = (Feature) catchementList.iterator().next();
         final GM_Object targetGeom = (GM_Object) catchment.getProperty( NaModelConstants.CATCHMENT_GEOM_PROP );
-        final CS_CoordinateSystem targetCS = targetGeom.getCoordinateSystem();
+        final String targetCS = targetGeom.getCoordinateSystem();
         final TransformVisitor visitor = new TransformVisitor( targetCS );
         mrsMeasureWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
         designAreaWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );

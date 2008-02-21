@@ -57,7 +57,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 @SuppressWarnings("unchecked")//$NON-NLS-1$
 public class GridPointCollector /* implements IGeometryBuilder */
@@ -104,7 +103,7 @@ public class GridPointCollector /* implements IGeometryBuilder */
     }
   }
 
-  public void reset( CS_CoordinateSystem targetCrs )
+  public void reset( String targetCrs )
   {
     for( LinePointCollector b : sides )
     {

@@ -93,7 +93,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * TODO: remove processing of the map
@@ -208,7 +207,7 @@ public class ProcessResultsJob extends Job
       /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
 
-      final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
 
       for( final ResultType.TYPE parameter : m_parameters )

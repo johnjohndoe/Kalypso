@@ -51,8 +51,6 @@ import org.kalypso.kalypsosimulationmodel.core.discr.IFENetItem;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENode;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Interface for classes representing an finite element node of the 1D, 2D model.
@@ -70,7 +68,7 @@ public interface IFE1D2DNode<CT extends IFENetItem> extends IFENode/* <CT> */
 
   public static final QName PROP_HAS_ELEVATION = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "hasElevation" ); //$NON-NLS-1$
 
-  public static final CS_CoordinateSystem DEFAULT_COORDINATE_SYSTEM = ConvenienceCSFactory.getInstance().getOGCCSByName( IKalypsoCorePreferences.DEFAULT_CRS );
+  public static final String DEFAULT_COORDINATE_SYSTEM = IKalypsoCorePreferences.DEFAULT_CRS;
 
   /**
    * To get the position of this fe-node

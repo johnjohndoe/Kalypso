@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -40,7 +40,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
   Combo cmb_CoordinateSystem;
 
   private IPath initialSourcePath;
-  
+
   private IPath m_sourcePath = null;
 
   List<String> fileExtensions = new LinkedList<String>();
@@ -57,7 +57,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
    * 
    * @param parent
-   *          the parent composite
+   *            the parent composite
    */
   public void createControl( Composite parent )
   {
@@ -70,8 +70,8 @@ public class ImportBaseMapImportImgPage extends WizardPage
     // final Label label = new Label( container, SWT.NONE );
     // final GridData gridData = new GridData();
     // gridData.horizontalSpan = 3;
-    //    label.setLayoutData( gridData );
-    //label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.3" ) );
+    // label.setLayoutData( gridData );
+    // label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
@@ -97,12 +97,12 @@ public class ImportBaseMapImportImgPage extends WizardPage
         browseForSourceFile();
       }
     } );
-    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.BrowseButton" )); //$NON-NLS-1$
+    button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.BrowseButton" ) ); //$NON-NLS-1$
 
     // Coordinate system combo box
     new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.1" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
     final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
     cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     GridData gd = new GridData();
@@ -119,7 +119,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
    * Called by the wizard to initialize the receiver's cached selection.
    * 
    * @param selection
-   *          the selection or <code>null</code> if none
+   *            the selection or <code>null</code> if none
    */
   public void init( ISelection selection )
   {
@@ -168,7 +168,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
     setMessage( null );
     setErrorMessage( null );
   }
-  
+
   /**
    * Update the current page complete state based on the field content.
    */
@@ -178,22 +178,24 @@ public class ImportBaseMapImportImgPage extends WizardPage
 
     IPath sourceLoc = getSourceLocation();
     // if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
-    if( sourceLoc == null || !sourceLoc.toFile().isFile())
+    if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
       setMessage( null );
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.6" ) );
       return;
     }
-    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile())
+    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "tif" ) && !sourceLoc.removeFileExtension().addFileExtension( "tfw" ).toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment()}) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(),
+          sourceLoc.removeFileExtension().addFileExtension( "tfw" ).lastSegment() } ) );
       return;
     }
-    else if(sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile())
+    else if( sourceLoc.getFileExtension().equalsIgnoreCase( "jpg" ) && !sourceLoc.removeFileExtension().addFileExtension( "jgw" ).toFile().isFile() )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] {sourceLoc.lastSegment(), sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment()} ) );
+      setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.5", new Object[] { sourceLoc.lastSegment(),
+          sourceLoc.removeFileExtension().addFileExtension( "jgw" ).lastSegment() } ) );
       return;
     }
     setMessage( null );
@@ -219,9 +221,9 @@ public class ImportBaseMapImportImgPage extends WizardPage
    * Open a file dialog for selecting a file
    * 
    * @param path
-   *          the initially selected file
+   *            the initially selected file
    * @param mustExist
-   *          <code>true</code> if the selected file must already exist, else <code>false</code>
+   *            <code>true</code> if the selected file must already exist, else <code>false</code>
    * @return the newly selected file or <code>null</code>
    */
   private IPath browse( IPath path )
@@ -247,8 +249,8 @@ public class ImportBaseMapImportImgPage extends WizardPage
    */
   public IPath getSourceLocation( )
   {
-//    if(m_sourcePath != null)
-//      return m_sourcePath;
+    // if(m_sourcePath != null)
+    // return m_sourcePath;
     String text = sourceFileField.getText().trim();
     if( text.length() == 0 )
       return null;
@@ -262,7 +264,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
   {
     return cmb_CoordinateSystem.getText();
   }
-  
+
   /**
    * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
    */

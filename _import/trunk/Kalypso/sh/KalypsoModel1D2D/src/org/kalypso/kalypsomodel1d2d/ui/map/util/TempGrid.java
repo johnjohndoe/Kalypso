@@ -92,7 +92,6 @@ import org.kalypsodeegree_impl.graphics.sld.LineSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -110,7 +109,7 @@ public class TempGrid
   /**
    * The target coordinate reference system for the created grid point
    */
-  private CS_CoordinateSystem m_crs;
+  private String m_crs;
 
   /**
    * Cache for grid computed grid points
@@ -130,7 +129,7 @@ public class TempGrid
    * @throws IllegalArgumentException
    *             is targetCrs is null
    */
-  public void setCoodinateSystem( final CS_CoordinateSystem targetCrs ) throws IllegalArgumentException
+  public void setCoodinateSystem( final String targetCrs ) throws IllegalArgumentException
   {
     Assert.throwIAEOnNullParam( targetCrs, "targetCrs" ); //$NON-NLS-1$
     m_crs = targetCrs;
@@ -222,7 +221,7 @@ public class TempGrid
    * @throws IllegalArgumentException
    *             if crs is null
    */
-  public void resetTempGrid( final CS_CoordinateSystem crs ) throws IllegalArgumentException
+  public void resetTempGrid( final String crs ) throws IllegalArgumentException
   {
     m_gridPoints = new GM_Point[0][0];
     m_crs = crs;

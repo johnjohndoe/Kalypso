@@ -9,21 +9,20 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
 public class DataContainer
 {
-  private String m_inputFile = ""; // absolute path  //$NON-NLS-1$
+  private String m_inputFile = ""; // absolute path //$NON-NLS-1$
 
-  private CS_CoordinateSystem m_coordinateSystem;
+  private String m_coordinateSystem;
 
-  private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( IKalypsoCorePreferences.DEFAULT_CRS );
+  private static final String m_defaultCoordinateSystem = IKalypsoCorePreferences.DEFAULT_CRS;
 
-//  private static final CS_CoordinateSystem m_defaultCoordinateSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  // private static final CS_CoordinateSystem m_defaultCoordinateSystem =
+  // KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
   private SzenarioDataProvider m_szenarioDataProvider;
 
@@ -34,7 +33,7 @@ public class DataContainer
 
   public final void setCoordinateSystem( String coordinateSystem )
   {
-    this.m_coordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( coordinateSystem );
+    this.m_coordinateSystem = coordinateSystem;
   }
 
   public String getInputFile( )
@@ -46,7 +45,7 @@ public class DataContainer
   {
     try
     {
-      return new URL( "file:" + m_inputFile );  //$NON-NLS-1$
+      return new URL( "file:" + m_inputFile ); //$NON-NLS-1$
     }
     catch( MalformedURLException e )
     {
@@ -55,7 +54,7 @@ public class DataContainer
     return null;
   }
 
-  public CS_CoordinateSystem getCoordinateSystem( boolean getDefaultIfNull )
+  public String getCoordinateSystem( boolean getDefaultIfNull )
   {
     if( m_coordinateSystem == null && getDefaultIfNull )
       return m_defaultCoordinateSystem;

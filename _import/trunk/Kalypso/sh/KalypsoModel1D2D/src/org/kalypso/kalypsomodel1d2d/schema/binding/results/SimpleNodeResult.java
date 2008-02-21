@@ -49,11 +49,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class SimpleNodeResult implements INodeResult
 {
@@ -112,9 +110,9 @@ public class SimpleNodeResult implements INodeResult
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setLocation(double, double, double,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   *      java.lang.String)
    */
-  public void setLocation( final double x, final double y, final double z, final CS_CoordinateSystem crs )
+  public void setLocation( final double x, final double y, final double z, final String crs )
   {
     final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
     m_point = GeometryFactory.createGM_Point( position, crs );

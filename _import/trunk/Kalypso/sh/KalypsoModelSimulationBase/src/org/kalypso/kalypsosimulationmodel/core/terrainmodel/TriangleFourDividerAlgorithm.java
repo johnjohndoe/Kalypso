@@ -54,7 +54,6 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -130,7 +129,7 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
    */
   public Map<GM_Triangle, Double> visitThisDivisionSurface( final GM_SurfacePatch surfacePatch )
   {
-    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     final List<GM_Position[]> toSplit = new ArrayList<GM_Position[]>();
     final HashMap<GM_Triangle, Double> notToSplit = new HashMap<GM_Triangle, Double>();
@@ -173,14 +172,14 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
            * Creates a GM_Surface using the coordinates and adds it to the HashMap along with the center coordinate of
            * GM_Surface.
            */
-//          final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( splitCandidate, HMOTerrainElevationModel.NO_INTERIOR_POS, null, crs );
+          // final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( splitCandidate,
+          // HMOTerrainElevationModel.NO_INTERIOR_POS, null, crs );
           GM_Position pos1 = splitCandidate[0];
           GM_Position pos2 = splitCandidate[1];
           GM_Position pos3 = splitCandidate[2];
 
           final GM_Triangle createGM_Surface = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, crs );
 
-          
           notToSplit.put( createGM_Surface, PlaneUtils.calculateCenterCoOrdinate( splitCandidate ).getZ() );
         }
         catch( final Throwable e )
@@ -204,8 +203,9 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
     final double[] exterior = { coordinates[0].x, coordinates[0].y, coordinates[0].z, coordinates[1].x, coordinates[1].y, coordinates[1].z, coordinates[2].x, coordinates[2].y, coordinates[2].z,
         coordinates[0].x, coordinates[0].y, coordinates[0].z };
 
-    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-//    final GM_SurfacePatch surfacePatch = GeometryFactory.createGM_SurfacePatch( exterior, HMOTerrainElevationModel.NO_INTERIOR, 3, crs );
+    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    // final GM_SurfacePatch surfacePatch = GeometryFactory.createGM_SurfacePatch( exterior,
+    // HMOTerrainElevationModel.NO_INTERIOR, 3, crs );
 
     GM_Position pos1 = GeometryFactory.createGM_Position( coordinates[0].x, coordinates[0].y, coordinates[0].z );
     GM_Position pos2 = GeometryFactory.createGM_Position( coordinates[1].x, coordinates[1].y, coordinates[1].z );
@@ -213,7 +213,6 @@ public class TriangleFourDividerAlgorithm implements ITriangleAlgorithm, ISurfac
 
     final GM_Triangle surfacePatch = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, crs );
 
-    
     /**
      * toBeVisited HashMap is cached..this prevents from recalculating the Triangles from a Given Surface
      */

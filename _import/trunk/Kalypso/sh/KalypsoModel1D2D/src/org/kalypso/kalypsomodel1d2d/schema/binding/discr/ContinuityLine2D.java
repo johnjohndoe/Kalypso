@@ -57,7 +57,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 public class ContinuityLine2D extends FELine implements IContinuityLine2D
 {
@@ -121,7 +120,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     final GM_Position[] nodePositions = new GM_Position[recalculatedNodes.size()];
     for( int i = 0; i < nodePositions.length; i++ )
       nodePositions[i] = recalculatedNodes.get( i ).getPoint().getPosition();
-    CS_CoordinateSystem crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
+    String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
     if( crs == null )
       crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     setGeometry( GeometryFactory.createGM_Curve( nodePositions, crs ) );

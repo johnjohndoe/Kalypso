@@ -66,7 +66,6 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -76,7 +75,7 @@ public class DifferenceResultTinHandler
 {
   public static IStatus generateDifferences( final GM_TriangulatedSurface[] surfaces, final MATH_OPERATOR operator, final IFile diffFile, final MinMaxCatcher minMaxCatcher, final IProgressMonitor monitor )
   {
-    final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     final File tinResultFile = diffFile.getLocation().toFile();
 

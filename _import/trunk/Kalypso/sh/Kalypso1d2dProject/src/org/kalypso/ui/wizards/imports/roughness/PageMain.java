@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -38,9 +38,9 @@ public class PageMain extends WizardPage implements Listener
   Text txt_InputFile;
 
   Button btn_inputFileBrowse;
-  
-//  Text m_layerName;
-  
+
+  // Text m_layerName;
+
   Button m_layerTypeCorrection;
 
   Button m_layerTypeBasic;
@@ -107,7 +107,7 @@ public class PageMain extends WizardPage implements Listener
     // Coordinate system combo box
     new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.8" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( composite, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
     final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
     cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     gd = new GridData();
@@ -118,18 +118,19 @@ public class PageMain extends WizardPage implements Listener
 
     createLine( composite, ncol );
 
-//    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.11" ) ); //$NON-NLS-1$
-//    m_layerName = new Text( composite, SWT.BORDER );
-//    gd = new GridData();
-//    gd.horizontalAlignment = GridData.FILL;
-//    gd.grabExcessHorizontalSpace = true;
-//    // gd.horizontalSpan = ncol - 1;
-//    m_layerName.setLayoutData( gd );
-//    new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
-    
+    // new Label( composite, SWT.NONE ).setText( Messages.getString(
+    // "org.kalypso.ui.wizards.imports.roughness.PageMain.11" ) ); //$NON-NLS-1$
+    // m_layerName = new Text( composite, SWT.BORDER );
+    // gd = new GridData();
+    // gd.horizontalAlignment = GridData.FILL;
+    // gd.grabExcessHorizontalSpace = true;
+    // // gd.horizontalSpan = ncol - 1;
+    // m_layerName.setLayoutData( gd );
+    // new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
+
     new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.12" ) ); //$NON-NLS-1$
-    m_layerTypeCorrection = new Button(composite, SWT.RADIO);
-    m_layerTypeCorrection.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.14" ) ); //$NON-NLS-1$
+    m_layerTypeCorrection = new Button( composite, SWT.RADIO );
+    m_layerTypeCorrection.setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.14" ) ); //$NON-NLS-1$
     m_layerTypeCorrection.setSelection( false );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
@@ -137,17 +138,17 @@ public class PageMain extends WizardPage implements Listener
     // gd.horizontalSpan = ncol - 1;
     m_layerTypeCorrection.setLayoutData( gd );
     new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
-    
+
     new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
-    m_layerTypeBasic = new Button(composite, SWT.RADIO);
-    m_layerTypeBasic.setText(  Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.13" ) ); //$NON-NLS-1$
+    m_layerTypeBasic = new Button( composite, SWT.RADIO );
+    m_layerTypeBasic.setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.13" ) ); //$NON-NLS-1$
     m_layerTypeBasic.setSelection( true );
     gd = new GridData();
     gd.horizontalAlignment = GridData.FILL;
     gd.grabExcessHorizontalSpace = true;
     // gd.horizontalSpan = ncol - 1;
     m_layerTypeBasic.setLayoutData( gd );
-    
+
     // set the composite as the control for this page
 
     btn_inputFileBrowse.setFocus();
@@ -161,7 +162,7 @@ public class PageMain extends WizardPage implements Listener
     btn_inputFileBrowse.addListener( SWT.KeyDown, this );
     txt_InputFile.addListener( SWT.Modify, this );
     cmb_ShapeProperty.addListener( SWT.Selection, this );
-//    m_layerName.addListener( SWT.Modify, this );
+    // m_layerName.addListener( SWT.Modify, this );
   }
 
   /**
@@ -304,23 +305,23 @@ public class PageMain extends WizardPage implements Listener
       m_data.setInputFile( txt_InputFile.getText() );
       m_data.setShapeProperty( cmb_ShapeProperty.getText() );
       m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
-//      m_data.setLayerName( m_layerName.getText() );
-//      m_data.setLayerEditable( m_layerType.getSelection() );
+      // m_data.setLayerName( m_layerName.getText() );
+      // m_data.setLayerEditable( m_layerType.getSelection() );
       m_data.setLayerAsBasic( m_layerTypeBasic.getSelection() );
-      
-//      m_data.getRoughnessPolygonCollection().clear();
-//      m_data.getRoughnessShapeStaticRelationMap().clear();
-//      m_data.getRoughnessStaticCollectionMap().clear();
+
+      // m_data.getRoughnessPolygonCollection().clear();
+      // m_data.getRoughnessShapeStaticRelationMap().clear();
+      // m_data.getRoughnessStaticCollectionMap().clear();
       try
       {
-        ((Transformer)((ImportWizard)getWizard()).m_operation).unprepare();
-        ((Transformer)((ImportWizard)getWizard()).m_operation).prepare(true);
-        ((ImportWizard)getWizard()).m_pageSecond.delayedCreateControl();
+        ((Transformer) ((ImportWizard) getWizard()).m_operation).unprepare();
+        ((Transformer) ((ImportWizard) getWizard()).m_operation).prepare( true );
+        ((ImportWizard) getWizard()).m_pageSecond.delayedCreateControl();
       }
       catch( Exception e )
       {
         e.printStackTrace();
-        ((ImportWizard)getWizard()).performCancel();
+        ((ImportWizard) getWizard()).performCancel();
       }
     }
   }

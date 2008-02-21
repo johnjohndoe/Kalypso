@@ -62,14 +62,13 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Dejan Antanaskovic
  */
 public class RestartNodes
 {
-  private static final CS_CoordinateSystem COORDINATE_SYSTEM = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  private static final String COORDINATE_SYSTEM = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
   public static RestartNodes createRestartNodes( final IContainer folder, final IControlModel1D2D controlModel ) throws CoreException
   {

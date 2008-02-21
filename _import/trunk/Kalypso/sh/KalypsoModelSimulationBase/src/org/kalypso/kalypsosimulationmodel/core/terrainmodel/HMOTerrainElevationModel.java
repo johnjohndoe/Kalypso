@@ -56,7 +56,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.cs.CS_CoordinateSystem;
 
 import com.bce.gis.io.hmo.HMOReader;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -88,7 +87,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
 
   private Quadtree triangles;
 
-  private final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  private final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
   public HMOTerrainElevationModel( final URL hmoFileURL ) throws IOException, ParseException
   {
@@ -159,7 +158,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     // TODO Patrice this hard coded and not okay put it into the gml
     return crs;
@@ -198,7 +197,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
     catch( final Throwable th )
     {
-      throw new RuntimeException( Messages.getString("HMOTerrainElevationModel.0"), th ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "HMOTerrainElevationModel.0" ), th ); //$NON-NLS-1$
     }
   }
 

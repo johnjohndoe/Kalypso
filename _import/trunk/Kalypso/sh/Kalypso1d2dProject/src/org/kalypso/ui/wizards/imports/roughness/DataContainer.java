@@ -16,8 +16,6 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -32,7 +30,7 @@ public class DataContainer
 
   private boolean m_isBasicLayer = true;
 
-  private CS_CoordinateSystem m_coordinateSystem;
+  private String m_coordinateSystem;
 
   private LinkedHashMap<String, String> m_roughnessStaticCollectionMap;
 
@@ -44,7 +42,7 @@ public class DataContainer
 
   private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
-  private static final CS_CoordinateSystem m_defaultCoordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( IKalypsoCorePreferences.DEFAULT_CRS );
+  private static final String m_defaultCoordinateSystem = IKalypsoCorePreferences.DEFAULT_CRS;
 
   private LinkedHashMap<String, String> m_userSelectionMap;
 
@@ -110,7 +108,7 @@ public class DataContainer
 
   public final void setCoordinateSystem( String coordinateSystem )
   {
-    this.m_coordinateSystem = ConvenienceCSFactory.getInstance().getOGCCSByName( coordinateSystem );
+    this.m_coordinateSystem = coordinateSystem;
   }
 
   public String getInputFile( )
@@ -136,7 +134,7 @@ public class DataContainer
     return m_shapeProperty;
   }
 
-  public CS_CoordinateSystem getCoordinateSystem( boolean getDefaultIfNull )
+  public String getCoordinateSystem( boolean getDefaultIfNull )
   {
     if( m_coordinateSystem == null && getDefaultIfNull )
       return m_defaultCoordinateSystem;

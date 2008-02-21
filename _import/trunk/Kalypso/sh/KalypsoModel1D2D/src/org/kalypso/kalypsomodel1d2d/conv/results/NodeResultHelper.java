@@ -70,7 +70,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -220,8 +219,7 @@ public class NodeResultHelper
     // get the intersection points
     // get the crs from the profile-gml
     final String srsName = profile.getSrsName();
-    final CS_CoordinateSystem crs = srsName == null ? KalypsoCorePlugin.getDefault().getCoordinatesSystem()
-        : org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory.getInstance().getOGCCSByName( srsName );
+    final String crs = srsName == null ? KalypsoCorePlugin.getDefault().getCoordinatesSystem() : srsName;
 
     // final double waterlevel = nodeResult.getWaterlevel();
 
@@ -262,7 +260,7 @@ public class NodeResultHelper
     return new BigDecimal( computeResult ).setScale( 4, BigDecimal.ROUND_HALF_UP );
   }
 
-  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final CS_CoordinateSystem crs ) throws Exception, GM_Exception
+  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final String crs ) throws Exception, GM_Exception
   {
     final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel, null );
     IProfil cutProfile = null;
@@ -313,7 +311,7 @@ public class NodeResultHelper
       return false;
   }
 
-  public static GM_Curve getCurveForBoundaryLine( final GM_Point[] linePoints, final double waterlevel, final CS_CoordinateSystem crs ) throws GM_Exception, Exception
+  public static GM_Curve getCurveForBoundaryLine( final GM_Point[] linePoints, final double waterlevel, final String crs ) throws GM_Exception, Exception
   {
     // we create a profile in order to use already implemented methods
     final IProfil boundaryProfil = ProfilFactory.createProfil( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );

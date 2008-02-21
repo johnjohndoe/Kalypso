@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -102,7 +102,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
     // Coordinate system combo box
     new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.1" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
     final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
     cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     GridData gd = new GridData();

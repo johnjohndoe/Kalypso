@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -47,10 +48,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.ct.MathTransform;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.Debug;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Wrapped a {@link GM_Point} and mimes the possibility to changes it
@@ -182,7 +179,7 @@ class MutableGMPoint implements GM_Point
   /**
    * @see org.kalypsodeegree.model.geometry.GM_Object#getCoordinateSystem()
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return point.getCoordinateSystem();
   }
@@ -245,9 +242,9 @@ class MutableGMPoint implements GM_Point
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#setCoordinateSystem(org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#setCoordinateSystem(java.lang.String)
    */
-  public void setCoordinateSystem( final CS_CoordinateSystem crs )
+  public void setCoordinateSystem( final String crs )
   {
     point.setCoordinateSystem( crs );
   }
@@ -291,57 +288,11 @@ class MutableGMPoint implements GM_Point
   }
 
   /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.kalypsodeegree_impl.model.ct.MathTransform,
-   *      org.opengis.cs.CS_CoordinateSystem)
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
    */
-  public GM_Object transform( MathTransform trans, CS_CoordinateSystem targetOGCCS ) throws Exception
+  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
   {
-    Debug.debugMethodBegin( this, "transformPoint" );
-
-    final double[] din = getAsArray();
-    // TODO macht der folgende if Sinn ?
-    if( getCoordinateSystem().getName().equalsIgnoreCase( "EPSG:4326" ) )
-    {
-      if( din[0] <= -180 )
-        din[0] = -179.999;
-      else if( din[0] >= 180 )
-        din[0] = 179.999;
-      if( din[1] <= -90 )
-        din[1] = -89.999;
-      else if( din[1] >= 90 )
-        din[1] = 89.999;
-    }
-    final double[] dout = new double[din.length];
-    try
-    {
-      if( din.length < 3 )
-        trans.transform( din, 0, dout, 0, din.length - 1 );
-      else
-      {
-        final double[] din2d = new double[2];
-        final double[] dout2d = new double[2];
-        din2d[0] = din[0];
-        din2d[1] = din[1];
-        trans.transform( din2d, 0, dout2d, 0, din2d.length - 1 );
-        dout[0] = dout2d[0];
-        dout[1] = dout2d[1];
-        dout[2] = din[2];
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    if( din.length > 2 )
-    {
-      Debug.debugMethodEnd();
-      return GeometryFactory.createGM_Point( dout[0], dout[1], dout[2], targetOGCCS );
-    }
-    else
-    {
-      Debug.debugMethodEnd();
-      return GeometryFactory.createGM_Point( dout[0], dout[1], targetOGCCS );
-    }
-
+    return new MutableGMPoint( (GM_Point) this.point.transform( trans, targetOGCCS ) );
   }
 }

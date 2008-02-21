@@ -43,7 +43,6 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * An offset based position provider with the following translation scheme:
@@ -74,11 +73,11 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * coordinate reference system of the target points
    */
-  private CS_CoordinateSystem crs;
+  private String crs;
 
-  public XYZOffsetPositionProvider( double xoffset, double yoffset, CS_CoordinateSystem coordinateSystem )
+  public XYZOffsetPositionProvider( double xoffset, double yoffset, String coordinateSystem )
   {
-    Assert.throwIAEOnNullParam( coordinateSystem, "coordinateSystem" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( coordinateSystem, "coordinateSystem" ); //$NON-NLS-1$
     xOffset = xoffset;
     yOffset = yoffset;
     zOffset = 0.0;
@@ -89,17 +88,17 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    * Creates a native coordinate system with the specified target coordinate system and the given coordinate offsets
    * 
    * @param xOffset
-   *          the x offset
+   *            the x offset
    * @param yOffset
-   *          the y offset
+   *            the y offset
    * @param zOffset
-   *          the z offset
+   *            the z offset
    * @param crs
-   *          the target coordinate system
+   *            the target coordinate system
    */
-  public XYZOffsetPositionProvider( CS_CoordinateSystem crs, double xOffset, double yOffset, double zOffset ) throws IllegalArgumentException
+  public XYZOffsetPositionProvider( String crs, double xOffset, double yOffset, double zOffset ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( crs, "crs" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( crs, "crs" ); //$NON-NLS-1$
 
     this.xOffset = xOffset;
     this.yOffset = yOffset;
@@ -111,7 +110,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IPositionProvider#getCoordinateSystem()
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     return crs;
   }
@@ -130,7 +129,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    */
   public double getNativeX( GM_Point point ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( point, "point" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
     return point.getX() - xOffset;
   }
 
@@ -139,7 +138,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    */
   public double getNativeY( GM_Point point ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( point, "point" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
     return point.getY() - yOffset;
   }
 
@@ -148,8 +147,7 @@ public class XYZOffsetPositionProvider implements IPositionProvider
    */
   public double getNativeZ( GM_Point point ) throws IllegalArgumentException
   {
-    Assert.throwIAEOnNullParam( point, "point" );  //$NON-NLS-1$
+    Assert.throwIAEOnNullParam( point, "point" ); //$NON-NLS-1$
     return point.getZ() - zOffset;
   }
-
 }

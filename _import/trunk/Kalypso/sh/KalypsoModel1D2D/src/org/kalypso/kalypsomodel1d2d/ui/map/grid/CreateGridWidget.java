@@ -30,7 +30,6 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Provides the mechanism to create automaticaly fem element within a grid
@@ -95,7 +94,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
   private final void reinit( )
   {
-    CS_CoordinateSystem targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
+    String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
     if( targetCrs == null )
       targetCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 

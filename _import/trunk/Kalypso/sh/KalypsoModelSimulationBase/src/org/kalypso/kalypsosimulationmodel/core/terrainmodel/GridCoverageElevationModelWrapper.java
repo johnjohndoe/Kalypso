@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Patrice Congo
@@ -113,7 +112,7 @@ public class GridCoverageElevationModelWrapper extends AbstractFeatureBinder imp
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     // TODO Patrice get crs from grid coverate
     throw new UnsupportedOperationException();

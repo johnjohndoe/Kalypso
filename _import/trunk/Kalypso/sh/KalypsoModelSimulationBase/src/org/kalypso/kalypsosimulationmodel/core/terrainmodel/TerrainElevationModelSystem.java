@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Default {@link AbstractFeatureBinder} based implementation of {@link ITerrainElevationModelSystem}
@@ -164,7 +163,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     // TODO Patrice check whether the elevation do have the same system and return it
     return null;

@@ -47,7 +47,6 @@ import java.util.List;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.SimpleNodeResult;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author Thomas Jung
@@ -209,7 +208,7 @@ public class ElementResult
       sumVyCorner = sumVyCorner + node.getVelocity().get( 1 );
     }
 
-    final CS_CoordinateSystem crs = m_cornerNodes.get( 0 ).getPoint().getCoordinateSystem();
+    final String crs = m_cornerNodes.get( 0 ).getPoint().getCoordinateSystem();
     final double x = sumXCoord / m_cornerNodes.size();
     final double y = sumYCoord / m_cornerNodes.size();
     final double z = sumZCoord / m_cornerNodes.size();

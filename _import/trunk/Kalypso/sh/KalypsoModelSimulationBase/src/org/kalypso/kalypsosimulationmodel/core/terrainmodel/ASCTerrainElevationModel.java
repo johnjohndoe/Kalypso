@@ -59,7 +59,6 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * An elevation provider base on ASC file
@@ -102,7 +101,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    */
   private GM_Envelope maxEnvelope;
 
-  private final CS_CoordinateSystem crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  private final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
   /**
    * Create an elevation provider based on the given asc file, in the specified region of interest. if the
@@ -355,7 +354,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.IElevationProvider#getCoordinateSystem()
    */
-  public CS_CoordinateSystem getCoordinateSystem( )
+  public String getCoordinateSystem( )
   {
     // TODO Patrice introduce the it in the schema
     return this.crs;

@@ -28,7 +28,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Widget for creating 1d2d element
@@ -156,7 +155,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
   public void finishLine( final GM_Curve curve ) throws GM_Exception
   {
     /* create 1d elements */
-    final CS_CoordinateSystem crs = curve.getCoordinateSystem();
+    final String crs = curve.getCoordinateSystem();
 
     final CommandableWorkspace workspace = m_theme.getWorkspace();
     final ChangeDiscretiationModelCommand modelChangeCmd = new ChangeDiscretiationModelCommand( workspace, m_model1d2d );

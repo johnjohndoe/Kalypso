@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Helper class for {@link org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship}s.
@@ -150,7 +149,7 @@ public class FlowRelationUtilitites
       try
       {
         final GM_Curve geometry = ((IFELine) modelElement).getGeometry();
-        final CS_CoordinateSystem coordinateSystem = geometry.getCoordinateSystem();
+        final String coordinateSystem = geometry.getCoordinateSystem();
         final GM_Position[] positions = geometry.getAsLineString().getPositions();
         for( final GM_Position element : positions )
           pointList.add( GeometryFactory.createGM_Point( element, coordinateSystem ) );

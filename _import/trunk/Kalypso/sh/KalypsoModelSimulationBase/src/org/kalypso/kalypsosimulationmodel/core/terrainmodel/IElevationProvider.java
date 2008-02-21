@@ -42,7 +42,6 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * Interface for classes that provide elevation information. The elevation can be get using
@@ -74,7 +73,7 @@ public interface IElevationProvider
    * 
    * @return return the coordinate system as {@link CS_CoordinateSystem}
    */
-  public CS_CoordinateSystem getCoordinateSystem( );
+  public String getCoordinateSystem( );
 
   /**
    * To get the minimal elavation in this elevation provider

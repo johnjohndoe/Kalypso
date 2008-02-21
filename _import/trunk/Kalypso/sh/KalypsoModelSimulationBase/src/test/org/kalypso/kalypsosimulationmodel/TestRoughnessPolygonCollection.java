@@ -54,9 +54,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.opengis.cs.CS_CoordinateSystem;
 
 /**
  * @author antanas
@@ -67,7 +65,7 @@ public class TestRoughnessPolygonCollection extends TestCase
 
   public final static QName QNAME_PROP_ROUGHNESSLAYERMEMBER = new QName( UrlCatalogModelSimulationBase.SIM_MODEL_NS, "roughnessLayerMember" ); //$NON-NLS-1$
 
-  public final static CS_CoordinateSystem cs = ConvenienceCSFactory.getInstance().getOGCCSByName( "EPSG:31467" ); //$NON-NLS-1$
+  public final static String cs = "EPSG:31467"; //$NON-NLS-1$
 
   public final void testRoughnessPolygonCollection( ) throws Exception
   {
@@ -88,23 +86,23 @@ public class TestRoughnessPolygonCollection extends TestCase
     List<IRoughnessPolygon> polygons = m_polygonCollection.selectRoughnessPolygons( point.getPosition() );
     System.out.println( "" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
-    System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION); //$NON-NLS-1$
+    System.out.println( "* TESTING FILE: " + TestWorkspaces.URL_ROUGHNESS_POLYGON_COLLECTION ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "* TEST: select                                                   *" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
-    System.out.println( Messages.getString("TestRoughnessPolygonCollection.12") + point.getX() + ", " + point.getY() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    System.out.println( Messages.getString("TestRoughnessPolygonCollection.14") ); //$NON-NLS-1$
+    System.out.println( Messages.getString( "TestRoughnessPolygonCollection.12" ) + point.getX() + ", " + point.getY() + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    System.out.println( Messages.getString( "TestRoughnessPolygonCollection.14" ) ); //$NON-NLS-1$
     for( int i = 0; i < polygons.size(); i++ )
     {
       System.out.println( (i + 1) + ". - " + polygons.get( i ).getGmlID() ); //$NON-NLS-1$
     }
-    
-    if(polygons.size() == 0)
+
+    if( polygons.size() == 0 )
     {
-      System.out.println( Messages.getString("TestRoughnessPolygonCollection.16") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "TestRoughnessPolygonCollection.16" ) ); //$NON-NLS-1$
     }
-    
+
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "" ); //$NON-NLS-1$
 
@@ -112,15 +110,15 @@ public class TestRoughnessPolygonCollection extends TestCase
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "* TEST: checksOverlapping                                        *" ); //$NON-NLS-1$
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
-    System.out.println( Messages.getString("TestRoughnessPolygonCollection.13") ); //$NON-NLS-1$
+    System.out.println( Messages.getString( "TestRoughnessPolygonCollection.13" ) ); //$NON-NLS-1$
     for( int i = 0; i < polygonsList.size(); i++ )
     {
       System.out.println( (i + 1) + ". - " + polygonsList.get( i ).getGmlID() ); //$NON-NLS-1$
     }
-    
-    if(polygonsList.size() == 0)
+
+    if( polygonsList.size() == 0 )
     {
-      System.out.println( Messages.getString("TestRoughnessPolygonCollection.24") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "TestRoughnessPolygonCollection.24" ) ); //$NON-NLS-1$
     }
     System.out.println( "******************************************************************" ); //$NON-NLS-1$
     System.out.println( "" ); //$NON-NLS-1$

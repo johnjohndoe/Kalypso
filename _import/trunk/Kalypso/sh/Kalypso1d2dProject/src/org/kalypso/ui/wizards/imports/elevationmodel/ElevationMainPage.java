@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.wizards.imports.Messages;
-import org.kalypsodeegree_impl.model.cs.ConvenienceCSFactoryFull;
 
 /**
  * @author Madanagopal
@@ -96,7 +96,7 @@ public class ElevationMainPage extends WizardPage
     label_2.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.12" ) ); //$NON-NLS-1$
     label_2.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     m_coordinateSystems = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    m_coordinateSystems.setItems( (new ConvenienceCSFactoryFull()).getKnownCS() );
+    m_coordinateSystems.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
     final int indexOfDefaultCRS = m_coordinateSystems.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
     m_coordinateSystems.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     final GridData gridData_2 = new GridData( GridData.FILL_HORIZONTAL );
@@ -189,7 +189,7 @@ public class ElevationMainPage extends WizardPage
   private void updatePageComplete( )
   {
     setPageComplete( false );
-    
+
     // source file not empty
     // tile title not empty
 
@@ -200,7 +200,7 @@ public class ElevationMainPage extends WizardPage
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) );
       return;
     }
-    if(m_tileTitle.getText().trim().length()==0)
+    if( m_tileTitle.getText().trim().length() == 0 )
     {
       setMessage( null );
       setErrorMessage( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.3" ) );
