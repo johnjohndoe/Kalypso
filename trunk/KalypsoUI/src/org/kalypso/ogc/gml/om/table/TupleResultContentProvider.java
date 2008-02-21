@@ -136,7 +136,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
     final List<CellEditor> cellEditors = new ArrayList<CellEditor>( m_componentHandlers.size() + 1 );
 
-    // HACK: add a 'dummy' column (size 0) ,in order to avoid the windows feature, that the first column is always
+    // HACK: add a 'dummy' column (size 0) ,in order to avoid the MS-Windows feature, that the first column is always
     // left-aligned
     final ComponentUiFirstColumnHandler dummyHandler = new ComponentUiFirstColumnHandler();
     addColumn( DUMMY, dummyHandler );
