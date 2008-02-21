@@ -155,6 +155,9 @@ public class RiskModelHelper
                   if( Double.isNaN( damageValue ) )
                     return Double.NaN;
 
+                  if( damageValue < 0.0 )
+                    return Double.NaN;
+
                   return damageValue;
                 }
               }
