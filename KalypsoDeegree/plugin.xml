@@ -144,5 +144,11 @@
             factory="org.kalypso.ogc.sensor.deegree.ObservationTypeHandlerFactory">
       </typeHandler>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.kalypso.preferences.KalypsoDeegreePreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>

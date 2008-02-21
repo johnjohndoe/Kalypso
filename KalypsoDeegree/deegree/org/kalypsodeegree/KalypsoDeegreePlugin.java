@@ -10,17 +10,30 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoDeegreePlugin extends Plugin
 {
+  /**
+   * The logger.
+   */
   private static final Logger LOGGER = Logger.getLogger( KalypsoDeegreePlugin.class.getName() );
 
-  // The shared instance.
+  /**
+   * The shared instance.
+   */
   private static KalypsoDeegreePlugin m_plugin;
 
+  /**
+   * The default style factory.
+   */
   private DefaultStyleFactory m_defaultStyleFactory;
 
+  /**
+   * The constructor.
+   */
   public KalypsoDeegreePlugin( )
   {
     super();
+
     m_plugin = this;
+    m_defaultStyleFactory = null;
   }
 
   /**
@@ -39,6 +52,7 @@ public class KalypsoDeegreePlugin extends Plugin
   public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
+
     m_plugin = null;
     m_defaultStyleFactory = null;
   }

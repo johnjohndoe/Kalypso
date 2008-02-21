@@ -196,5 +196,4 @@ public class KalypsoCorePlugin extends Plugin
     }
     return m_preferenceStore;
   }
-
 }
