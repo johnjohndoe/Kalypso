@@ -52,7 +52,6 @@ import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.table.ComponentUiProblemHandler;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -133,13 +132,13 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
       return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" );
 
     if( ComponentUiHandlerFactory.Q_DECIMAL.equals( valueTypeName ) )
-      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "%.03f" );
+      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "", "%.03f" );
 
     if( ComponentUiHandlerFactory.Q_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "null", "%.03f" );
+      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.03f", "", "%.03f" );
 
     if( ComponentUiHandlerFactory.Q_BOOLEAN.equals( valueTypeName ) )
-      return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "null", "" );
+      return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" );
 
     throw new UnsupportedOperationException();
   }

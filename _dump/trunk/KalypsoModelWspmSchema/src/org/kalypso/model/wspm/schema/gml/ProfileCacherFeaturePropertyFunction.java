@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
@@ -117,6 +118,10 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         {
           rw = (Double) point.getValue( compRechtswert );
           hw = (Double) point.getValue( compHochwert );
+
+          /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
+          if( srsName == null )
+            srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
         }
         else
         {
@@ -125,16 +130,16 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
 
           rw = (Double) point.getValue( compBreite );
           hw = profil.getStation() * 1000;
+
+          /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
+          if( srsName == null )
+            srsName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         }
 
         if( rw == null || hw == null )
           continue;
 
         final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
-
-        /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
-        if( srsName == null )
-          srsName = TimeserieUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
 
         final GM_Position position;
         if( h == null )
