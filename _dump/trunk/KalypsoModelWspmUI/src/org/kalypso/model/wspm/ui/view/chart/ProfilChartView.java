@@ -298,6 +298,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final ChartCanvas chart = m_chart;
+    if (chart == null)
+      return;
+    
     chart.getDisplay().syncExec( new Runnable()
     {
       public void run( )
