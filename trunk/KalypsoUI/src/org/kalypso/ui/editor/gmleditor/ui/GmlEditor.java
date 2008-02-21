@@ -172,7 +172,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
     layoutData.horizontalAlignment = GridData.FILL;
     layoutData.verticalAlignment = GridData.FILL;
     m_viewer.getTreeViewer().getControl().setLayoutData( layoutData );
-    
+
     // register as site selection provider
     getSite().setSelectionProvider( m_viewer );
 
@@ -199,7 +199,7 @@ public class GmlEditor extends AbstractEditorPart implements IEditorPart, IComma
   }
 
   /**
-   * Add some special actions to the menuManager, dependend on the current selection.
+   * Add some special actions to the menuManager, dependent on the current selection.
    */
   public void handleMenuAboutToShow( final IMenuManager manager )
   {
