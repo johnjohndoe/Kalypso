@@ -1,5 +1,7 @@
 package org.kalypso.risk.model.schema.binding;
 
+import java.util.List;
+
 import org.eclipse.swt.graphics.RGB;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
@@ -92,4 +94,31 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     getFeature().setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
   }
 
+  public IAssetValueClass getAssetValue( )
+  {
+    Feature parent = getFeature().getParent();
+    if( parent == null )
+      return null;
+
+    final IRasterizationControlModel model = (IRasterizationControlModel) parent.getAdapter( IRasterizationControlModel.class );
+    if( model == null )
+      return null;
+
+    final List<IAssetValueClass> assetValueClassesList = model.getAssetValueClassesList();
+
+    // TODO: probably the data model is not correctly modelled; this reverse search is not nice at all
+    // Possible solutions: 1) link from landuseClass to assesValue instead
+    // or 2) link from landusePolygon to assetValue
+
+    // // TODO For the moment, administration units are ignored; consider using administration units
+    //
+    final String landuseClassGmlID = getGmlID();
+    for( final IAssetValueClass assetValueClass : assetValueClassesList )
+    {
+      if( assetValueClass.getLanduseClassGmlID().equals( landuseClassGmlID ) )
+        return assetValueClass;
+    }
+
+    return null;
+  }
 }

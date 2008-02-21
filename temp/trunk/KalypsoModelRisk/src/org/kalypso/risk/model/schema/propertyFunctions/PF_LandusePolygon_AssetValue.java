@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,26 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.schema.propertyFunctions;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
-import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Dejan Antanaskovic
@@ -67,8 +58,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
 {
   private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
-
-  private List<IAssetValueClass> m_assetValueClassesList = null;
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -79,26 +68,6 @@ public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
     // initialization of m_assetValueClassesList here produces a deadlock
   }
 
-  private void loadAssetValueClassesList( )
-  {
-    if( m_assetValueClassesList != null && m_assetValueClassesList.size() > 0 )
-      return;
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-    try
-    {
-      final IRasterizationControlModel model = scenarioDataProvider.getModel( IRasterizationControlModel.class );
-      m_assetValueClassesList = model.getAssetValueClassesList();
-    }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-  }
-
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
@@ -106,22 +75,21 @@ public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
   @SuppressWarnings("unchecked")
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    loadAssetValueClassesList();
-    final XLinkedFeature_Impl landuseClass = (XLinkedFeature_Impl) feature.getProperty( XLINKED_LANDUSE_CLS );
-    if( landuseClass == null )
+    final XLinkedFeature_Impl landuseClassLink = (XLinkedFeature_Impl) feature.getProperty( XLINKED_LANDUSE_CLS );
+    if( landuseClassLink == null )
       return Double.NaN;
-    else
-    {
-      // TODO For the moment, administration units are ignored; consider using administration units
 
-      final String landuseClassGmlID = landuseClass.getFeatureId();
-      for( final IAssetValueClass assetValueClass : m_assetValueClassesList )
-      {
-        if( assetValueClass.getLanduseClassGmlID().equals( landuseClassGmlID ) )
-          return assetValueClass.getAssetValue();
-      }
+    Feature landuseClassFeature = landuseClassLink.getFeature();
+    if( landuseClassFeature == null )
       return Double.NaN;
-    }
+
+    ILanduseClass landuseClass = (ILanduseClass) landuseClassFeature.getAdapter( ILanduseClass.class );
+
+    final IAssetValueClass assetValueClass = landuseClass.getAssetValue();
+    if( assetValueClass == null )
+      return Double.NaN;
+
+    return assetValueClass.getAssetValue();
   }
 
   /**

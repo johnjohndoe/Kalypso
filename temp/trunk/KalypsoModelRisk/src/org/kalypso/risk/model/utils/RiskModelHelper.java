@@ -11,9 +11,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -188,7 +190,6 @@ public class RiskModelHelper
   /**
    * creates a map layer for the grid collection
    * 
-   * @param monitor
    * @param parentKalypsoTheme
    *            theme in which we add the new theme layer
    * @param coverageCollection
@@ -196,9 +197,8 @@ public class RiskModelHelper
    * @param scenarioFolder
    * @throws Exception
    */
-  public static void createDamagePotentialMapLayer( final IProgressMonitor monitor, final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection, final IResource scenarioFolder ) throws Exception
+  public static void createDamagePotentialMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection, final IResource scenarioFolder ) throws Exception
   {
-    monitor.subTask( "" ); //$NON-NLS-1$
     final String layerName = Messages.getString( "DamagePotentialCalculationHandler.13" ) + coverageCollection.getReturnPeriod() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
     // TODO: this is dangerous!
@@ -272,5 +272,96 @@ public class RiskModelHelper
       result += (damages[j - 1] + damages[j]) * dP / 2;
     }
     return result;
+  }
+
+  /**
+   * creates the landuse raster files
+   * 
+   * @param scenarioFolder
+   *            relative path needed for the output file path to append on
+   * @param inputCoverages
+   *            {@link ICoverageCollection} that gives the extend of the raster
+   * @param outputCoverages
+   *            {@link ICoverageCollection} for the landuse
+   * @param polygonCollection
+   *            landuse polygons that give the landuse class ordinal number
+   * @throws Exception
+   */
+  public static IStatus doRasterLanduse( final IFolder scenarioFolder, final ICoverageCollection inputCoverages, final ICoverageCollection outputCoverages, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection )
+  {
+    try
+    {
+      for( int i = 0; i < inputCoverages.size(); i++ )
+      {
+        final ICoverage inputCoverage = inputCoverages.get( i );
+
+        final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
+
+        final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
+        {
+          /**
+           * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
+           */
+          @Override
+          public double getValue( int x, int y ) throws GeoGridException
+          {
+            final Double value = super.getValue( x, y );
+            if( value.equals( Double.NaN ) )
+              return Double.NaN;
+            else
+            {
+              final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
+              final GM_Position positionAt = JTSAdapter.wrap( coordinate );
+              final List<ILandusePolygon> list = polygonCollection.query( positionAt );
+              if( list == null || list.size() == 0 )
+                return Double.NaN;
+              else
+                for( final ILandusePolygon polygon : list )
+                {
+                  if( polygon.contains( positionAt ) )
+                    return polygon.getLanduseClassOrdinalNumber();
+                }
+              return Double.NaN;
+            }
+          }
+        };
+
+        // TODO: change name: better: use input name
+        final String outputFilePath = "raster/output/LanduseCoverage" + i + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
+
+        final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
+        final File file = new File( ifile.getRawLocation().toPortableString() );
+        GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
+        inputGrid.dispose();
+      }
+
+      return Status.OK_STATUS;
+    }
+    catch( Exception e )
+    {
+      return StatusUtilities.statusFromThrowable( e, "Fehler bei Erzeugung des Ländnutzungsrasters." );
+    }
+  }
+
+  /**
+   * get the water depth raster with the greatest annuality
+   * 
+   * @param waterDepthCoverageCollection
+   *            raster collection
+   * @return
+   */
+  public static IAnnualCoverageCollection getMaxReturnPeriodCollection( IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection )
+  {
+    int maxReturnPeriod = Integer.MIN_VALUE;
+    IAnnualCoverageCollection maxCoveragesCollection = null;
+    for( final IAnnualCoverageCollection annualCoverageCollection : waterDepthCoverageCollection )
+    {
+      if( annualCoverageCollection.getReturnPeriod() > maxReturnPeriod && annualCoverageCollection.size() > 0 )
+      {
+        maxReturnPeriod = annualCoverageCollection.getReturnPeriod();
+        maxCoveragesCollection = annualCoverageCollection;
+      }
+    }
+    return maxCoveragesCollection;
   }
 }

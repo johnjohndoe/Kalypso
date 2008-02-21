@@ -49,4 +49,6 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
   public String getDamageFunctionGmlID( );
 
   public void setDamageFunction( final IDamageFunction damageFunction );
+
+  public IAssetValueClass getAssetValue( );
 }

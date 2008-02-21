@@ -30,7 +30,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public LandusePolygon( final Feature featureToBind )
   {
     super( featureToBind, QNAME );
-
+    // TODO: NO! This is not robust against changes of this feature during runtime. Get all those values only on demand
     final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
     m_styleType = (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_";
 

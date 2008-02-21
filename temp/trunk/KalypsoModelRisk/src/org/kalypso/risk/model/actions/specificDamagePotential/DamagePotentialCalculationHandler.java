@@ -1,17 +1,20 @@
 package org.kalypso.risk.model.actions.specificDamagePotential;
 
+import java.io.IOException;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -19,22 +22,22 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
-import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.xml.sax.SAXException;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -63,29 +66,16 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
         final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
         final IRasterDataModel model = scenarioDataProvider.getModel( IRasterDataModel.class );
-        if( model.getWaterlevelCoverageCollection().size() == 0 )
-        {
-          MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.5" ), Messages.getString( "DamagePotentialCalculationHandler.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-          return null;
-        }
-        for( final IAnnualCoverageCollection collection : model.getWaterlevelCoverageCollection() )
-        {
-          final Integer returnPeriod = collection.getReturnPeriod();
-          if( returnPeriod == null || returnPeriod <= 0 )
-          {
-            MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.5" ), Messages.getString( "DamagePotentialCalculationHandler.18" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-            return null;
-          }
-        }
+
         final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
         final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
+        // TODO: check needed? this model is not used in the following code....
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {
           MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.7" ), Messages.getString( "DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
-        final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = vectorDataModel.getLandusePolygonCollection();
-        final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
+
         final MapPanel mapPanel = mapView.getMapPanel();
 
         /* wait for map to load */
@@ -94,75 +84,64 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
 
-        /* get cascading them that holds the damage layers */
-        final CascadingKalypsoTheme parentKalypsoTheme = RiskModelHelper.getCascadingTheme( mapModell, "Schadenspotentiale" );
+        final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcDamagePotentialRunnable( model, vectorDataModel, scenarioFolder );
 
-        /* delete existing damage layers */
-        RiskModelHelper.deleteExistingDamagePotentialMapLayers( parentKalypsoTheme );
+        IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
+        ErrorDialog.openError( shell, "", "Fehler bei der Schadensberechnung", execute );
 
-        parentKalypsoTheme.setVisible( true );
-
-        model.getSpecificDamageCoverageCollection().clear();
-
-        new ProgressMonitorDialog( shell ).run( true, false, new IRunnableWithProgress()
+        if( !execute.isOK() )
         {
-          public void run( final IProgressMonitor monitor ) throws InterruptedException
-          {
-            monitor.beginTask( Messages.getString( "DamagePotentialCalculationHandler.9" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
-            try
-            {
-              for( final IAnnualCoverageCollection srcAnnualCoverages : model.getWaterlevelCoverageCollection() )
-              {
-                monitor.subTask( Messages.getString( "DamagePotentialCalculationHandler.10" ) + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
+          KalypsoRiskPlugin.getDefault().getLog().log( execute );
+        }
 
-                final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
-                // TODO: check if still ok: probably delete all underlying grids
+        scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        /* Undoing this operation is not possible because old raster files are deleted */
+        scenarioDataProvider.saveModel( new NullProgressMonitor() );
 
-                // remove existing (invalid) coverages from the model
-                // specificDamageCoverageCollection.clear();
-                // final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
-                // for( final IAnnualCoverageCollection existingAnnualCoverage : specificDamageCoverageCollection )
-                // if( existingAnnualCoverage.getReturnPeriod() == srcAnnualCoverages.getReturnPeriod() )
-                // coveragesToRemove.add( existingAnnualCoverage );
-                // for( final IAnnualCoverageCollection coverageToRemove : coveragesToRemove )
-                // specificDamageCoverageCollection.remove( coverageToRemove );
-
-                /* create annual damage coverage collection */
-                final IAnnualCoverageCollection dstAnnualCoverages = RiskModelHelper.createAnnualDamageCoverages( scenarioFolder, polygonCollection, srcAnnualCoverages, specificDamageCoverageCollection );
-
-                /* add the coverage collection to the map */
-                RiskModelHelper.createDamagePotentialMapLayer( monitor, parentKalypsoTheme, dstAnnualCoverages, scenarioFolder );
-
-                /* fireModellEvent to redraw a map */
-                workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, model.getSpecificDamageCoverageCollection().getFeature(), new Feature[] { dstAnnualCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-              }
-
-              scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-
-              /* Undoing this operation is not possible because old raster files are deleted */
-              scenarioDataProvider.saveModel( new NullProgressMonitor() );
-            }
-            catch( final Exception e )
-            {
-              e.printStackTrace();
-              throw new InterruptedException( e.getLocalizedMessage() );
-            }
-          }
-        } );
-        ;
-
-        final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
-        RiskModelHelper.updateDamageStyle( sldFile, model );
+        updateLayers( scenarioFolder, model, mapModell );
 
         if( mapView != null )
           mapPanel.invalidateMap();
       }
       catch( final Exception e )
       {
-        e.printStackTrace();
+        IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoRiskPlugin.getDefault().getLog().log( status );
+
+        ErrorDialog.openError( shell, "", "Fehler bei der Schadensberechnung", status );
       }
     }
     return null;
+  }
+
+  /**
+   * deletes the old layer, add the new one and modifies the style according to the max values
+   * 
+   * @param scenarioFolder
+   * @param model
+   * @param mapModell
+   * @throws Exception
+   * @throws IOException
+   * @throws SAXException
+   * @throws CoreException
+   */
+  private static void updateLayers( final IFolder scenarioFolder, final IRasterDataModel model, final GisTemplateMapModell mapModell ) throws Exception, IOException, SAXException, CoreException
+  {
+    /* get cascading them that holds the damage layers */
+    final CascadingKalypsoTheme parentKalypsoTheme = RiskModelHelper.getCascadingTheme( mapModell, "Schadenspotentiale" );
+
+    /* delete existing damage layers */
+    RiskModelHelper.deleteExistingDamagePotentialMapLayers( parentKalypsoTheme );
+
+    parentKalypsoTheme.setVisible( true );
+
+    /* add the coverage collections to the map */
+    IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
+    for( IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
+      RiskModelHelper.createDamagePotentialMapLayer( parentKalypsoTheme, annualCoverageCollection, scenarioFolder );
+
+    final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
+    RiskModelHelper.updateDamageStyle( sldFile, model );
   }
 
 }
