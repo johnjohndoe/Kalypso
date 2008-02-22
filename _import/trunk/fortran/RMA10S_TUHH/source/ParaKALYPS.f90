@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2008    2:36 pm
+!     Last change:  WP   14 Feb 2008    6:14 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -94,6 +94,9 @@ REAL (KIND = 8), ALLOCATABLE :: kmWeight(:)
 !nis,feb08: Contribution to calculation base units
 INTEGER, ALLOCATABLE :: CalcUnitID (:)
 CHARACTER (Len = 128), ALLOCATABLE :: CalcUnitName (:)
+
+!new parameters for weirs defined by linear functions
+REAL (KIND = 8), ALLOCATABLE :: cstrcRange (:,:,:), cstrcCoefs (:,:,:,:), cstrcdisch (:, :)
 
 
 END MODULE 

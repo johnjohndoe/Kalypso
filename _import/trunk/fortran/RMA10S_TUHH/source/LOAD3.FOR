@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  NIS   2 Feb 2008    8:59 pm
+C     Last change:  WP   22 Feb 2008    2:31 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -638,7 +638,7 @@ C
 CIPK JUN05     test for totally submerged control structure
 C              set equations to by-pass
 C
-        !NiS,may06: IMAT.gt.903 and IMAT.lt.990 means control structure transition
+        !NiS,may06,com: IMAT.gt.903 and IMAT.lt.990 means control structure
         ELSEIF(IMAT(NN) .GT. 903   .AND.  IMAT(NN) .LT. 990) THEN
 
 cipk JUN05 first analyse 2-d structures
@@ -789,12 +789,18 @@ c       now do middle elements
 
 c       now do 1-d structures
 
-      !NiS,may06,com: initialize equations for 1D-elements;
+      !NiS,may06,com: initialize equations for 1D-control structure elements
       !NiS,may06,com: get corner nodes
             N1=NOP(NN,1)
             N2=NOP(NN,3)
             NAD1=ELTON(N1,1)
             NAD2=ELTON(N2,1)
+
+            !nis,feb08: Why do we need the water stage equations?
+            !nbc(n1, 3) = 0
+            !nbc(n2, 3) = 0
+            !-
+
             IF(N1 .GT. 0) THEN
 
               IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
@@ -832,12 +838,15 @@ CIPK DEC05 ADD QFACT
 
             !for polynom approach
             if (imat(nn) /= 89) then
-            IF(ISUBMEL(nn) .EQ. 1) THEN
+              IF(ISUBMEL(nn) .EQ. 1) THEN
                 NBC(N1,1)=1
                 NBC(N1,2)=0
-            ELSE
-              NBC(N1,1)=1
-            ENDIF          
+              ELSE
+                !nis,feb08: Activate midside node equation
+                !NBC(N1,1)=1
+                NBC(N1,1)=0
+                !-
+              ENDIF
             end if
 
             IF(INOVEL .GT. 0.) THEN

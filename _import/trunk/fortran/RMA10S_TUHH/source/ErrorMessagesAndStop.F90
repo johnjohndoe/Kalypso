@@ -1,4 +1,4 @@
-!     Last change:  WP   14 Jan 2008   11:31 am
+!     Last change:  WP   14 Feb 2008    4:46 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -116,6 +116,14 @@ elseif (ErrorID == 1205) then
 elseif (ErrorID == 1206) then
   WRITE (ErrorUnit, 1206)
   WRITE (        *, 1206)
+
+elseif (ErrorID == 1207) then
+  WRITE (ErrorUnit, 1207) ObjectID
+  WRITE (        *, 1207) ObjectID
+
+elseif (ErrorID == 1208) then
+  WRITE (ErrorUnit, 1208) ObjectID
+  WRITE (        *, 1208) ObjectID
 
 elseif (ErrorID == 1301) then
   WRITE (ErrorUnit, 1301) ObjectID
@@ -239,6 +247,13 @@ end if
             & 1x, 'check the geometry!')
  1205 format (1x, 'ERROR - Element ', i5, ' is twisted. Rearrange the element!')
  1206 format (1x, 'ERROR - Too many transition elements', / 'Execution terminated!')
+ !incstrc
+ 1207 format (1x, 'ERROR - Table of control structure with the no', i5,/ &
+            & 1x, ' is not sorted in the correct way. Check your',/ &
+            & 1x, 'control structure data', / 'Execution terminated')
+ 1208 format (1x, 'ERROR - ', i5, ' is not a valid control structure type number', / &
+            & 1x, 'execution terminated!' )
+
 
 !1300  Errors with arcs
 !****

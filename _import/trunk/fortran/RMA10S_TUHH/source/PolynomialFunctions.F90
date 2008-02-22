@@ -1,4 +1,4 @@
-!     Last change:  WP    8 Nov 2007   10:46 am
+!     Last change:  WP   15 Feb 2008   11:02 am
 !polynom calculation
 
 function calcPolynomial(a, x)
@@ -14,6 +14,28 @@ endk   = 12
 do k = startk, endk
   calcPolynomial = calcPolynomial + a(k) * x ** (k)
 end do
+return
+end
+
+function calcPolynomial2(a, x)
+implicit none
+REAL (KIND = 8) :: calcPolynomial2
+REAL (KIND = 8) :: a(0:*)
+REAL (KIND = 8) :: x
+INTEGER         :: k, startk, endk
+
+calcPolynomial2 = 0.0
+startk = LBOUND (a, 1)
+endk   = 1
+!WRITE(*,*) 'in calcpolynomial2'
+!WRITE(*,*) startk, endk
+!WRITE(*,*) a(startk), a (endk)
+!WRITE(*,*) x
+do k = startk, endk
+  calcPolynomial2 = calcPolynomial2 + a(k) * x ** (k)
+  !WRITE(*,*) calcpolynomial2
+end do
+!pause
 return
 end
 

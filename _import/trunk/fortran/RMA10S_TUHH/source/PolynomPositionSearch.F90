@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Jan 2008    7:06 pm
+!     Last change:  WP   14 Feb 2008    5:47 pm
 !function to get the valid polynom to apply
 !TODO: Replace it by binary search
 FUNCTION FindPolynom (rangearray, depth, entries)
@@ -16,6 +16,11 @@ findit: DO i = 1, entries
   IF (depth <= rangearray(i)) THEN
     FindPolynom = i
     RETURN
+
+  if (depth > rangearray (i) .and. i == entries) then
+    FindPolynom = i + 1
+    return
+  end if
   ENDIF
 ENDDO findit
 

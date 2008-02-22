@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Feb 2008    5:19 pm
+C     Last change:  WP   15 Feb 2008    1:02 pm
 CIPK  LAST UPDATE SEP 6 2004  add error file
 CIPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 CIPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION 
@@ -503,6 +503,13 @@ C-
           problematicNode = nmx(1)
         ENDIF
         !-
+
+        !nis,feb08: big changes cause parsing errors in GUI
+        do i = 1, 3
+          if (emax (i) > 999.9) then
+            emax (i) = 999.9
+          end if
+        end do
 
         !EFa jun07, necessary for autoconverge
         if (beiauto.gt.0.) then
