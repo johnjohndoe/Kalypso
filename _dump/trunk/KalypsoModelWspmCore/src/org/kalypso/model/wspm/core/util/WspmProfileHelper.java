@@ -69,6 +69,9 @@ import com.vividsolutions.jts.geom.LineSegment;
  */
 public class WspmProfileHelper
 {
+
+  public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
+
   /**
    * The constructor is private, should not be instanciated.
    */
@@ -490,4 +493,45 @@ public class WspmProfileHelper
 
     throw new IllegalStateException( "property not defined" );
   }
+
+  /**
+   * Adds a recory by its width. If this record(point) already exists in the profile, the existing record will be
+   * updated
+   */
+  public static void addRecordByWidth( final IProfil profile, final IRecord record )
+  {
+    final IComponent cBreite = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BREITE );
+    final Double width = (Double) record.getValue( cBreite );
+
+    final IRecord[] records = profile.getPoints();
+
+    for( int i = 0; i < records.length; i++ )
+    {
+      final IRecord r = records[i];
+      final Double rw = (Double) r.getValue( cBreite );
+
+      if( Math.abs( width - rw ) < FUZZINESS )
+      {
+        // copy values to existing record
+        final IComponent[] components = record.getOwner().getComponents();
+        for( final IComponent component : components )
+        {
+          r.setValue( component, record.getValue( component ) );
+        }
+        return;
+      }
+      else if( width < rw )
+      {
+        // add new record
+        profile.getResult().add( i, record );
+        return;
+
+      }
+      else if( width == rw )
+        throw new IllegalStateException();
+    }
+
+    profile.addPoint( record );
+  }
+
 }
