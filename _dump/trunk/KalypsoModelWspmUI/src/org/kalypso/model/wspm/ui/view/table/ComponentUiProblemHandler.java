@@ -168,6 +168,8 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   public Image getImage( final IRecord record )
   {
     final MarkerIndex markerIndex = m_profile.getProblemMarker();
+    if( markerIndex == null )
+      return null;
 
     final IMarker[] markers = markerIndex.get( record );
     final IMarker worst = MarkerUtils.worstOf( markers );
