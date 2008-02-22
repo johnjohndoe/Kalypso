@@ -44,7 +44,6 @@ import java.awt.Point;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -327,7 +326,7 @@ public class DeegreeWMSUtilities
    *            The layers that have to be matched to the local srs.
    * @return An array of possible coordiante systems.
    */
-  public static String[] negotiateCRS( String localCRS, WMSCapabilities capabilities, String[] layerNames ) throws RemoteException
+  public static String[] negotiateCRS( String localCRS, WMSCapabilities capabilities, String[] layerNames )
   {
     Layer topLayer = capabilities.getLayer();
     String crs = matchCrs( topLayer, layerNames, localCRS );
@@ -352,7 +351,7 @@ public class DeegreeWMSUtilities
    * @return Null, if one element of the layers to be matched is not available in the local coordinate system, otherwise
    *         it returns the local crs.
    */
-  private static String matchCrs( Layer topLayer, String[] layerSelection, String localCRS ) throws RemoteException
+  private static String matchCrs( Layer topLayer, String[] layerSelection, String localCRS )
   {
     HashSet<Layer> collector = new HashSet<Layer>();
 

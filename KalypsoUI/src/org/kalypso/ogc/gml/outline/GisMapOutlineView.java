@@ -146,7 +146,6 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       setMapPart( (AbstractMapPart) activeEditor );
     else if( mapView instanceof AbstractMapPart )
       setMapPart( (AbstractMapPart) mapView );
-
   }
 
   /**

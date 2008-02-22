@@ -60,6 +60,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.RuleTreeObject;
+import org.kalypso.ogc.gml.ThemeStyleTreeObject;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -165,7 +167,7 @@ public class MapUtilities
   }
 
   /**
-   * This method transforms the GM_Point to a AWT-Point.
+   * This method transforms the GM_Point to an AWT-Point.
    * 
    * @param mapPanel
    *            The MapPanel of the map.
@@ -385,5 +387,72 @@ public class MapUtilities
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  /**
+   * This function checks, if a theme is out of scale.
+   * 
+   * @param mapPanel
+   *            The map panel.
+   * @param theme
+   *            The theme.
+   * @return True, if the theme is out of scale.
+   */
+  public static boolean isOutOfScale( MapPanel mapPanel, IKalypsoTheme theme )
+  {
+    /* Get all children. */
+    Object[] styles = theme.getChildren( theme );
+    for( int i = 0; i < styles.length; i++ )
+    {
+      /* Get the object. */
+      Object object = styles[i];
+
+      if( object instanceof IKalypsoTheme )
+      {
+        /* This is a theme. */
+        IKalypsoTheme kalypsoTheme = (IKalypsoTheme) object;
+
+        /* If one is visible, return false. */
+        if( isOutOfScale( mapPanel, kalypsoTheme ) == false )
+          return false;
+      }
+
+      /* Only styles can be checked. */
+      if( !(object instanceof ThemeStyleTreeObject) )
+        return false;
+
+      /* This is a style. */
+      ThemeStyleTreeObject style = (ThemeStyleTreeObject) object;
+
+      /* Get the rules. */
+      Object[] rules = style.getChildren( style );
+      for( Object object2 : rules )
+      {
+        /* Only rules can be checked. */
+        if( !(object2 instanceof RuleTreeObject) )
+          return false;
+
+        /* This is a rule. */
+        RuleTreeObject rule = (RuleTreeObject) object2;
+
+        /* Get the scale constraints. */
+        double minScaleDenominator = rule.getRule().getMinScaleDenominator();
+        double maxScaleDenominator = rule.getRule().getMaxScaleDenominator();
+
+        /* Get the current scale. */
+        double mapScale = MapUtilities.getMapScale( mapPanel );
+
+        System.out.println( "Min:" + minScaleDenominator );
+        System.out.println( "Scale:" + mapScale );
+        System.out.println( "Max:" + maxScaleDenominator );
+
+        /* Is one rule is lying between the constraint, the theme is still visible. */
+        if( minScaleDenominator <= mapScale && mapScale <= maxScaleDenominator )
+          return false;
+      }
+    }
+
+    /* No theme rule is visible, due to the scale constraints. */
+    return true;
   }
 }

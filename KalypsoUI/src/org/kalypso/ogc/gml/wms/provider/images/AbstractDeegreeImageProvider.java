@@ -43,12 +43,10 @@ package org.kalypso.ogc.gml.wms.provider.images;
 import java.awt.Image;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
 
 import org.deegree.ogcwebservices.wms.RemoteWMService;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -236,25 +234,12 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    *            The layers that have to be matched to the local srs.
    * @return An array of possible coordiante systems.
    */
-  private String negotiateCRS( String localSRS, WMSCapabilities wmsCapabilities, String[] layers ) throws CoreException
+  private String negotiateCRS( String localSRS, WMSCapabilities wmsCapabilities, String[] layers )
   {
     /* Match the local with the remote coordinate system. */
-    try
-    {
-      String[] crs = DeegreeWMSUtilities.negotiateCRS( localSRS, wmsCapabilities, layers );
-      if( crs.length > 0 )
-        return crs[0];
-    }
-    catch( RemoteException e )
-    {
-      /* Create the error status. */
-      IStatus errorStatus = StatusUtilities.createErrorStatus( "Failed to negotiate CRS." );
-
-      /* Log the error. */
-      KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
-
-      throw new CoreException( errorStatus );
-    }
+    String[] crs = DeegreeWMSUtilities.negotiateCRS( localSRS, wmsCapabilities, layers );
+    if( crs.length > 0 )
+      return crs[0];
 
     return localSRS;
   }
