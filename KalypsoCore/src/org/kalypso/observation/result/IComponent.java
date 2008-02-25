@@ -79,6 +79,11 @@ public interface IComponent extends Comparator<Object>
   public IRestriction[] getRestrictions( );
 
   public IPhenomenon getPhenomenon( );
+  
+  /** 
+   * @return a precision to compare numeric values
+   */
+  public Double getPrecision();
 
   /** override equals. Component are equals if their name, description, valueTyleName and defaultValue are equals */
   public boolean equals( final Object object );
