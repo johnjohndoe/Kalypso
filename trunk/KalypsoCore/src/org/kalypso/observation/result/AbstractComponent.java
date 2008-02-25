@@ -53,6 +53,14 @@ public abstract class AbstractComponent implements IComponent
 {
 
   /**
+   * @see org.kalypso.observation.result.IComponent#getPrecision()
+   */
+  public Double getPrecision( )
+  {
+    return 0.0;
+  }
+
+  /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   public int compare( final Object objFirst, final Object objSecond )
