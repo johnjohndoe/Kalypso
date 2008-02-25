@@ -94,7 +94,7 @@ public class BuildingPanel extends AbstractProfilView
 
   private String getLabel( final IComponent property )
   {
-    return property.getName();
+    return property.getName()+ " ["+property.getUnit()+"]";
   }
 
   /**
@@ -117,7 +117,7 @@ public class BuildingPanel extends AbstractProfilView
 
     for( final IComponent buildingProperty : m_building.getObjectProperties() )
     {
-      final String tooltip = ""; // TODO: Kim labelProvider.getTooltipFor(buildingProperty);
+      final String tooltip = buildingProperty.getDescription(); 
 
       final Label label = new Label( panel, SWT.NONE );
       label.setLayoutData( new GridData( GridData.BEGINNING, GridData.BEGINNING, true, false ) );
@@ -148,8 +148,7 @@ public class BuildingPanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( bldText.getText() );
           final IProfil profil = getProfil();
 
-          // TODO IProfileObjects now returned as list from IProfile
-          final IProfileObject[] buildings = profil.getProfileObjects();
+           final IProfileObject[] buildings = profil.getProfileObjects();
           IProfileObject building = null;
 
           if( buildings.length > 0 )
@@ -166,7 +165,7 @@ public class BuildingPanel extends AbstractProfilView
             if( value == currentValue )
               return;
             final ProfileObjectEdit edit = new ProfileObjectEdit( building, buildingProperty, value );
-            final ProfilOperation operation = new ProfilOperation( /* TODO: labelProvider */"" + " ändern", getProfil(), edit, true );
+            final ProfilOperation operation = new ProfilOperation( buildingProperty.getName() + " ändern", getProfil(), edit, true );
             new ProfilOperationJob( operation ).schedule();
           }
           catch( final Exception e1 )

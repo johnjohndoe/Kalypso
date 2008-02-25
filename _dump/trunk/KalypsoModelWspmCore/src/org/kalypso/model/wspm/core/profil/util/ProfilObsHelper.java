@@ -169,11 +169,12 @@ public class ProfilObsHelper
 
     return list.toArray( new IComponent[] {} );
   }
-
+  /**
+   * @deprecated Use {@link IComponent#getPrecision()} instead.
+   */
   public static double getPrecision( final IComponent property )
   {
-    // FIXME take value from phenomnen (dictionary)
-    return 0.0001;
+     return property.getPrecision();
   }
 
   public static double doInterpolation( final IComponent property, final IRecord startPoint, final IRecord endPoint, final double breite )

@@ -96,15 +96,7 @@ public class TrennerRule extends AbstractValidatorRule
     // Regel für fehlende Trennflächen bei Durchlässen erlauben
     // TUHH-Hack
     if( tf.length == 0 && !isDurchlass( building ) )
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "keine Trennflächen vorhanden", "", 0, null, pluginId, null );// new
-                                                                                                                        // IMarkerResolution2[]
-                                                                                                                        // {
-                                                                                                                        // new
-                                                                                                                        // AddDeviderResolution(
-                                                                                                                        // IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE
-                                                                                                                        // ) }
-                                                                                                                        // );
-
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "keine Trennflächen vorhanden", "", 0, null, pluginId, null );
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
   }

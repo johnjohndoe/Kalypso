@@ -139,19 +139,19 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
     final double bezY = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
     final double lang = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
     final double hoch = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-    final double dx = hoch * ((Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ) / 100);
+    final double dx = hoch * ((Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ));
 
     final double[] trapezArray = new double[8];
-    trapezArray[0] = bezX - (lang / 2 - dx);
+    trapezArray[0] = bezX - (lang / 2);
     trapezArray[1] = bezY;
 
-    trapezArray[2] = bezX + (lang / 2 - dx);
+    trapezArray[2] = bezX + (lang / 2);
     trapezArray[3] = bezY;
 
-    trapezArray[4] = bezX + lang / 2;
+    trapezArray[4] = bezX + (lang / 2 + dx);
     trapezArray[5] = bezY + hoch;
 
-    trapezArray[6] = bezX - lang / 2;
+    trapezArray[6] = bezX - (lang / 2 + dx);
     trapezArray[7] = bezY + hoch;
 
     return trapezArray;

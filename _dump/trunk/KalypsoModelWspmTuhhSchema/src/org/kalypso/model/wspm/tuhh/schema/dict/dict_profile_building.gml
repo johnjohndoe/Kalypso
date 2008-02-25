@@ -32,11 +32,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="HOEHE">
-   <gml:name>Gesamthöhe [m]</gml:name>
+   <gml:name>Gesamthöhe</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Hoehe">
      <gml:description/>
-     <gml:name>Gesamthöhe [m]</gml:name>
+     <gml:name>Gesamthöhe</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -49,11 +49,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="SOHLGEFAELLE">
-   <gml:name>Sohlgefälle [1/1000]</gml:name>
+   <gml:name>Sohlgefälle</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Sohlgefaelle">
      <gml:description/>
-     <gml:name>Sohlgefälle [1/1000]</gml:name>
+     <gml:name>Sohlgefälle</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -66,11 +66,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BEZUGSPUNKT_X">
-   <gml:name>Bezugspunkt Breite [m]</gml:name>
+   <gml:name>Bezugspunkt Breite</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_BEZUGSPUNKT_X">
      <gml:description/>
-     <gml:name>Bezugspunkt Breite [m]</gml:name>
+     <gml:name>Bezugspunkt Breite</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -83,11 +83,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BEZUGSPUNKT_Y">
-   <gml:name>Bezugspunkt Höhe [NN+m]</gml:name>
+   <gml:name>Bezugspunkt Höhe</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_BEZUGSPUNKT_Y">
      <gml:description/>
-     <gml:name>Bezugspunkt Höhe [NN+m]</gml:name>
+     <gml:name>Bezugspunkt Höhe</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -100,16 +100,16 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="STEIGUNG">
-   <gml:name>Verhältnis der Dreieckseiten [1/100]</gml:name>
+   <gml:name>Steigung der Dreieckseite</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_STEIGUNG">
      <gml:description/>
-     <gml:name>Verhältnis der Dreieckseiten [1/100]</gml:name>
+     <gml:name>Steigung der Dreieckseite</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="1/100"/>
+     <gml:unitOfMeasure uom="1/m"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -126,7 +126,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="?"/>
+     <gml:unitOfMeasure uom=""/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -143,7 +143,7 @@
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="?"/>
+     <gml:unitOfMeasure uom=""/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
@@ -151,16 +151,16 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="UNTERWASSER">
-   <gml:name>Unterwasser [NN+m]</gml:name>
+   <gml:name>Unterwasser</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_UNTERWASSER">
      <gml:description>Höhe der Gewässersohle im Unterwasser</gml:description>
-     <gml:name>Unterwasser [NN+m]</gml:name>
+     <gml:name>Unterwasser</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="?"/>
+     <gml:unitOfMeasure uom="mNN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
