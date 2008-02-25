@@ -57,7 +57,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -65,8 +64,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
  * ImportImageWizardPage
@@ -77,9 +77,6 @@ import org.kalypso.transformation.CRSHelper;
  */
 public class ImportImageWizardPage extends WizardPage implements SelectionListener, KeyListener
 {
-  // constants
-  private static final int SIZING_TEXT_FIELD_WIDTH = 250;
-
   private Group m_group;
 
   private Button m_browseButton;
@@ -112,7 +109,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   private boolean m_wfExists;
 
-  private Combo m_CS;
+  private CRSSelectionPanel m_crsPanel;
 
   public ImportImageWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
@@ -124,107 +121,105 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
    */
   public void createControl( Composite parent )
   {
-    m_topComposite = new Composite( parent, SWT.NULL );
+    m_topComposite = new Composite( parent, SWT.NONE );
     m_topComposite.setFont( parent.getFont() );
-    m_topComposite.setLayout( new GridLayout() );
-    m_topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    m_topComposite.setLayout( new GridLayout( 1, false ) );
+    m_topComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     initializeDialogUnits( parent );
 
-    m_group = new Group( m_topComposite, SWT.NULL );
-    GridLayout topGroupLayout = new GridLayout();
-    GridData topGroupData = new GridData();
-    topGroupLayout.numColumns = 3;
-    topGroupData.horizontalAlignment = GridData.FILL;
-    m_group.setLayout( topGroupLayout );
-    m_group.setLayoutData( topGroupData );
+    /* File group. */
+    m_group = new Group( m_topComposite, SWT.NONE );
+    m_group.setLayout( new GridLayout( 3, false ) );
+    m_group.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_group.setText( "Bild-Datei" );
+
     Label sourceFileLabel = new Label( m_group, SWT.NONE );
     sourceFileLabel.setText( "Quelle : " );
 
-    // Set width of source path field
-    GridData data0 = new GridData( GridData.FILL_HORIZONTAL );
-    data0.widthHint = SIZING_TEXT_FIELD_WIDTH;
-
     m_sourceFileText = new Text( m_group, SWT.BORDER );
-    m_sourceFileText.setLayoutData( data0 );
+    m_sourceFileText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_sourceFileText.setEditable( false );
 
     m_browseButton = new Button( m_group, SWT.PUSH );
     m_browseButton.setText( "Durchsuchen..." );
     m_browseButton.setLayoutData( new GridData( GridData.END ) );
     m_browseButton.addSelectionListener( this );
-    Label crsLabel = new Label( m_group, SWT.NONE );
-    crsLabel.setText( "Koordinaten System: " );
 
-    m_CS = new Combo( m_group, SWT.NONE );
+    /* CRS panel. */
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( m_topComposite );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      /**
+       * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
+       */
+      @Override
+      protected void selectionChanged( String selectedCRS )
+      {
+        setPageComplete( validate() );
+      }
+    } );
 
-    availableCoordinateSystems( m_CS );
-
-    String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-    m_CS.select( m_CS.indexOf( defaultCS ) );
-
-    m_CS.setToolTipText( "Koordinatensystem der World Datei" );
+    /* World file panel. */
     createWorldFilePanel( m_topComposite );
+
     // m_group.pack();
+
     setControl( m_topComposite );
-
-  }
-
-  private void availableCoordinateSystems( Combo checkCRS )
-  {
-    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
 
   private void createWorldFilePanel( Composite composite )
   {
-
-    m_worldFileGroup = new Group( composite, SWT.NULL );
+    m_worldFileGroup = new Group( composite, SWT.NONE );
     m_worldFileGroup.setText( "World file:" );
-    GridLayout wfGroupLayout = new GridLayout();
-    GridData wfGroupData = new GridData();
-    wfGroupData.grabExcessHorizontalSpace = true;
-    wfGroupLayout.numColumns = 2;
-    wfGroupData.horizontalAlignment = GridData.FILL;
-    m_worldFileGroup.setLayout( wfGroupLayout );
-    m_worldFileGroup.setLayoutData( wfGroupData );
+    m_worldFileGroup.setLayout( new GridLayout( 2, false ) );
+    m_worldFileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     Label dx = new Label( m_worldFileGroup, SWT.NONE );
     dx.setText( "Pixel (dx):" );
     m_textDx = new Text( m_worldFileGroup, SWT.BORDER );
+    m_textDx.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textDx.setEditable( false );
     m_textDx.addKeyListener( this );
 
     Label phix = new Label( m_worldFileGroup, SWT.NONE );
     phix.setText( "phi X:" );
     m_textPhix = new Text( m_worldFileGroup, SWT.BORDER );
+    m_textPhix.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textPhix.setEditable( false );
     m_textPhix.addKeyListener( this );
 
     Label phiy = new Label( m_worldFileGroup, SWT.NONE );
     phiy.setText( "phi Y:" );
     m_textPhiy = new Text( m_worldFileGroup, SWT.BORDER );
+    m_textPhiy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textPhiy.setEditable( false );
     m_textPhiy.addKeyListener( this );
 
     Label dy = new Label( m_worldFileGroup, SWT.NONE );
     dy.setText( "Pixel (dy):" );
     m_textDy = new Text( m_worldFileGroup, SWT.BORDER );
+    m_textDy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textDy.setEditable( false );
     m_textDy.addKeyListener( this );
 
     Label ulcx = new Label( m_worldFileGroup, SWT.NONE );
     ulcx.setText( "Obere linke Ecke (X):" );
     m_textULCx = new Text( m_worldFileGroup, SWT.BORDER );
+    m_textULCx.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textULCx.setEditable( false );
     m_textULCx.addKeyListener( this );
 
     Label ulcy = new Label( m_worldFileGroup, SWT.NONE );
     ulcy.setText( "Obere linke Ecke (Y):" );
     m_textULCy = new Text( m_worldFileGroup, SWT.BORDER );
+    m_textULCy.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_textULCy.setEditable( false );
     m_textULCy.addKeyListener( this );
-    m_worldFileGroup.setVisible( false );
 
+    /* Initial invisible. */
+    m_worldFileGroup.setVisible( false );
   }
 
   /**
@@ -335,9 +330,8 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   }
 
-  private boolean validate( )
+  protected boolean validate( )
   {
-
     try
     {
       Double.parseDouble( m_textDx.getText().trim() );
@@ -352,7 +346,9 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
       setErrorMessage( "Bitte geben sie alle Zahlen unten ein." );
       return false;
     }
+
     if( !m_wfExists )
+    {
       try
       {
         IFile worldfile = m_project.getFile( m_relativeSourcePath.removeFirstSegments( 1 ).removeFileExtension().addFileExtension( m_wfType ) );
@@ -375,15 +371,18 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
         setErrorMessage( "Error while writing world file" );
         return false;
       }
-    if( m_CS.getText() != null || m_CS.getText() != "" )
+    }
+
+    if( m_crsPanel != null && m_crsPanel.getSelectedCRS() != null && CRSHelper.isKnownCRS( m_crsPanel.getSelectedCRS() ) )
     {
       // ok
     }
     else
     {
-      setErrorMessage( "Bitte wählen sie ein gültigers Coordinaten System aus." );
+      setErrorMessage( "Bitte wählen sie ein gültiges Koordinaten-System aus." );
       setPageComplete( false );
     }
+
     setErrorMessage( null );
     return true;
   }
@@ -405,7 +404,6 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   public void setProjectSelection( IProject project )
   {
     m_project = project;
-
   }
 
   /**
@@ -414,7 +412,6 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
   public void keyPressed( KeyEvent e )
   {
     // do nothing
-
   }
 
   /**
@@ -422,7 +419,6 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
    */
   public void keyReleased( KeyEvent e )
   {
-
     if( (e.widget == m_textDx || e.widget == m_textDy || e.widget == m_textPhix || e.widget == m_textPhiy || e.widget == m_textULCx || e.widget == m_textULCy) && e.character == SWT.CR )
     {
       setPageComplete( validate() );
@@ -432,7 +428,6 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   public URL getURL( ) throws MalformedURLException
   {
-
     return m_project.getLocation().append( m_relativeSourcePath.removeFirstSegments( 1 ) ).toFile().toURL();
   }
 
@@ -467,7 +462,6 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
 
   public String getCSName( )
   {
-
-    return m_CS.getText();
+    return m_crsPanel.getSelectedCRS();
   }
 }

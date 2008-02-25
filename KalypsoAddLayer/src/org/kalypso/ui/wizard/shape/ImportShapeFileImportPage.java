@@ -70,6 +70,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -79,8 +80,9 @@ import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -111,7 +113,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   private IPath m_relativeSourcePath;
 
-  private Combo m_checkCRS;
+  private CRSSelectionPanel m_crsPanel;
 
   private IProject m_project;
 
@@ -173,6 +175,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
     m_topComposite.setLayout( new GridLayout() );
     m_topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
     // build wizard page
     createFileGroup( m_topComposite );
     setControl( m_topComposite );
@@ -205,22 +208,20 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     m_browseButton.setLayoutData( new GridData( GridData.END ) );
     m_browseButton.addSelectionListener( this );
 
-    Label crsLabel = new Label( m_group, SWT.NONE );
-    crsLabel.setText( "Koordinaten System: " );
-
-    m_checkCRS = new Combo( m_group, SWT.NONE );
-
-    availableCoordinateSystems( m_checkCRS );
-
-    String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-    m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
-
-    m_checkCRS.setToolTipText( "Koordinatensystem der ESRI(tm) Shape Datei" );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
-    data.widthHint = SIZING_TEXT_FIELD_WIDTH;
-    m_checkCRS.setLayoutData( data );
-    m_checkCRS.addSelectionListener( this );
-    m_checkCRS.addKeyListener( this );
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( parent );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      /**
+       * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
+       */
+      @Override
+      protected void selectionChanged( String selectedCRS )
+      {
+        validate();
+      }
+    } );
 
     m_group.pack();
 
@@ -282,11 +283,6 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   }
 
-  private void availableCoordinateSystems( Combo checkCRS )
-  {
-    checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
-  }
-
   void validate( )
   {
     setErrorMessage( null );
@@ -317,7 +313,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     }
 
     // CoordinateSystem
-    if( checkCRS( m_checkCRS.getText() ) )
+    if( checkCRS( m_crsPanel.getSelectedCRS() ) )
     {
       // ok
     }
@@ -347,7 +343,6 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
    */
   public void widgetSelected( SelectionEvent e )
   {
-    Combo c;
     Button b;
     if( e.widget instanceof Button )
     {
@@ -448,14 +443,6 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
     }
     if( e.widget instanceof Combo )
     {
-      if( e.widget == m_checkCRS )
-      {
-        c = (Combo) e.widget;
-        if( c == m_checkCRS )
-        {
-          setPageComplete( true );
-        }
-      }
       if( e.widget == styleNameCombo )
       {
         styleName = styleNameCombo.getText();
@@ -525,7 +512,7 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
 
   public String getCRS( )
   {
-    return m_checkCRS.getText();
+    return m_crsPanel.getSelectedCRS();
   }
 
   protected void setProjectSelection( IProject project )
@@ -556,6 +543,6 @@ public class ImportShapeFileImportPage extends WizardPage implements SelectionLi
   public void removeListeners( )
   {
     m_browseButton.removeSelectionListener( this );
-    m_checkCRS.removeSelectionListener( this );
+    // m_checkCRS.removeSelectionListener( this );
   }
 }

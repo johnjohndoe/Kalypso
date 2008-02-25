@@ -73,6 +73,9 @@ public class CRSHelper
    */
   public static boolean isKnownCRS( String name )
   {
+    if( name == null )
+      return false;
+
     try
     {
       /* In case it is asked often, it is better to used the cached crs factory. */
