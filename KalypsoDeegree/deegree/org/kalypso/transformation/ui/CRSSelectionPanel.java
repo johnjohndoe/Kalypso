@@ -104,7 +104,7 @@ public class CRSSelectionPanel
     try
     {
       /* Create the combo. */
-      m_viewer = new ComboViewer( m_main, SWT.NONE );
+      m_viewer = new ComboViewer( m_main, SWT.READ_ONLY | SWT.DROP_DOWN );
       m_viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       m_viewer.setContentProvider( new ArrayContentProvider() );
       m_viewer.setLabelProvider( new CRSLabelProvider() );
