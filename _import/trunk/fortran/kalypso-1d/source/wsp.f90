@@ -1,4 +1,4 @@
-!     Last change:  MD   16 Jan 2008   10:40 am
+!     Last change:  MD   26 Feb 2008    1:43 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1676,12 +1676,13 @@ end if
 ! ABFRAGEN BEZUEGLICH REIBUNGSVERLUST UND GENAUIGKEIT
 ! -------------------------------------------------------------------------------------
 
+if (RUN_MODUS /= 'KALYPSO') then
+
 ! Vorbelegung
+! ------------------------------
 rg_vst = 1
 REIBUNGSVERLUST = 'TRAPEZ'
 ITERATIONSART = 'SIMPLE'
-
-if (RUN_MODUS /= 'KALYPSO') then
 
   if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
