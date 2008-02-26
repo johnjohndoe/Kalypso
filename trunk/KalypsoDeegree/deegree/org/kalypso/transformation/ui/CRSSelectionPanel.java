@@ -192,7 +192,11 @@ public class CRSSelectionPanel
   public void setSelectedCRS( String selectedCRS )
   {
     if( m_viewer != null )
-      m_viewer.setSelection( new StructuredSelection( m_coordHash.get( selectedCRS ) ) );
+    {
+      CoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
+      if( coordinateSystem != null )
+        m_viewer.setSelection( new StructuredSelection( coordinateSystem ) );
+    }
   }
 
   /**
