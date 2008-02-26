@@ -55,7 +55,6 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
-import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.scenarios.Scenario;
 
 /**
@@ -89,7 +88,7 @@ public class ActivateWorkflowProjectIntroAction implements IIntroAction
 
       // TODO: is this a job for the workflow-view-context stuff? There should be one task in the workflow which gets
       // activated on scenario-activation
-      workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
+      // workbench.showPerspective( Perspective.ID, workbench.getActiveWorkbenchWindow() );
     }
     catch( final CoreException e )
     {
@@ -99,5 +98,4 @@ public class ActivateWorkflowProjectIntroAction implements IIntroAction
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
     }
   }
-
 }

@@ -26,8 +26,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
-import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
@@ -212,6 +210,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       currentCase = null;
     else
       currentCase = m_caseManager.getCurrentCase();
+    
     if( currentCase == null && caze == null )
       return;
     else if( caze != null && currentCase != null && currentCase.getURI().equals( caze.getURI() ) )
@@ -223,6 +222,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       ensureProject( caze );
       if( m_caseManager != null )
         m_caseManager.setCurrentCase( caze );
+      
       fireActiveContextChanged( m_currentProjectNature, caze );
     }
   }

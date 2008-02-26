@@ -46,6 +46,7 @@ import java.net.URL;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -139,11 +140,12 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
           }
 
           ProgressUtilities.worked( progress, 5 );
+          
           /* Also activate new project */
           final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
           final Scenario caze = nature.getCaseManager().getCases().get( 0 );
           KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
-          project.refreshLocal( 0, monitor );
+          project.refreshLocal( IResource.DEPTH_ZERO, monitor );
           description.setName( newName );
           project.move( description, false, monitor );
         }

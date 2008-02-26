@@ -16,7 +16,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
@@ -44,8 +43,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private static KalypsoAFGUIFrameworkPlugin plugin;
 
   private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
-
-  private PerspectiveWatcher<Scenario> m_perspectiveWatcher;
 
   private ActiveWorkContext<Scenario> m_activeWorkContext;
 
@@ -97,7 +94,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
        */
       @SuppressWarnings("synthetic-access")
       public boolean preShutdown( final IWorkbench workbench2, final boolean forced )
-      {        
+      {
         if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
         {
           m_taskExecutor.stopActiveTask();
@@ -128,8 +125,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         }
       }
       m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, ScenarioHandlingProjectNature.ID );
-      m_perspectiveWatcher = new PerspectiveWatcher<Scenario>( m_activeWorkContext.getCurrentCase() );
-      m_activeWorkContext.addActiveContextChangeListener( m_perspectiveWatcher );
     }
 
     if( m_szenarioSourceProvider == null )
@@ -245,8 +240,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       {
         e.printStackTrace();
       }
-      m_activeWorkContext.removeActiveContextChangeListener( m_perspectiveWatcher );
     }
+
     m_activeWorkContext = null;
   }
 

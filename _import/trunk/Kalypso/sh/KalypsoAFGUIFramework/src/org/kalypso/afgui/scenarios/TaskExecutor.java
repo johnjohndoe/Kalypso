@@ -204,48 +204,62 @@ public class TaskExecutor implements ITaskExecutor
     return result;
   }
 
+  /**
+   * This function activates the context, which is given and all its parents.
+   * 
+   * @param context
+   *            The context.
+   * @return A status object indicating the success of the function.
+   */
   private IStatus activateContext( final ContextType context )
   {
-    final List<IStatus> statusList = new ArrayList<IStatus>();
-
     final ContextType parentContext = context.getParent();
     if( parentContext != null )
     {
       // first activate all parent contexts (loop)
+      final List<IStatus> statusList = new ArrayList<IStatus>();
       final IStatus activateContext = activateContext( parentContext );
       statusList.add( activateContext );
+
       if( !activateContext.isOK() )
         return StatusUtilities.createStatus( statusList, "Bei der Aktivierung des Arbeitskontexts sind Fehler aufgetreten." );
-    }
-    else
-    {
-      // loop termination
-      return StatusUtilities.createStatus( statusList, "Bei der Aktivierung des Arbeitskontexts sind Fehler aufgetreten." );
+
+      return internalActivateContext( context );
     }
 
+    // loop termination
+    return internalActivateContext( context );
+  }
+
+  /**
+   * This function activates the context, which is given.
+   * 
+   * @param context
+   *            The context, which should be activated.
+   * @return A status object indicating the success of the function.
+   */
+  private IStatus internalActivateContext( final ContextType context )
+  {
     // then execute the associated handler
     final IHandler handler = m_contextHandlerFactory.getHandler( context );
     final Command contextCommand = getCommand( m_commandService, context.getId(), TaskExecutionListener.CATEGORY_CONTEXT );
     contextCommand.setHandler( handler );
+
     try
     {
       final Object result = m_handlerService.executeCommand( context.getId(), null );
+
+      // if result is a status, return it
       if( result instanceof IStatus )
-      {
-        // if result is a status, return it
         return (IStatus) result;
-      }
-      else
-      {
-        // otherwise everything must be ok
-        return Status.OK_STATUS;
-      }
+
+      // otherwise everything must be ok
+      return Status.OK_STATUS;
     }
     catch( final Throwable e )
     {
       return StatusUtilities.statusFromThrowable( e );
     }
-
   }
 
   private static Command getCommand( final ICommandService commandService, final String commandId, final String categoryId )
