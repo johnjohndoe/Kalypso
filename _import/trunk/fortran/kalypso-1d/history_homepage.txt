@@ -534,4 +534,20 @@ Kalypso 2.1.0.0     19. Februar 2008
      Eiprofile angenommen, dass die Wasserspiegelbreite gleich dem benetzen Umfang ist.
      (Betroffene Routine: Uf)      
 							
-					             Edgar Nehlsen & Monika Donner, 19.02.2008 
+					             Edgar Nehlsen & Monika Donner, 19.02.2008
+
+
+Kalypso 2.1.1.0      26. Februar 2008
+-------------------------------------                                                           
+
+1.)  Bug-Fix:
+     Beim Einlesen der INI-Datei fuer einen Start im Modus "Kalypso" (also nicht WspWin) wurden zwar alle Einstellungen
+     richtig eingelesen, aber beim Rückkehr in die HauptRoutine mit Default Belegungen ueberschrieben mit:
+             REIBUNGSVERLUST = 'TRAPEZ'   und    ITERATIONSART = 'SIMPLE'
+     Daher wurden für alle Berechnungsarten die Einstellung REIBUNGSVERLUST='GEOMET' und ITERATIONSART='EXACT ' 
+     bis dato falsch übernommen!  
+							
+							                Monika Donner, 26.02.2008 
+
+
+ 
