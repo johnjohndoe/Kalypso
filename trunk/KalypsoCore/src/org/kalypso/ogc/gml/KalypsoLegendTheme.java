@@ -52,6 +52,8 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -121,9 +123,16 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
   private Image m_image = null;
 
+  /**
+   * Holds the descriptor for the default icon of this theme. Is used in legends, such as the outline.
+   */
+  private org.eclipse.swt.graphics.Image m_legendThemeIcon;
+
   public KalypsoLegendTheme( final String name, final IMapModell mapModell, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, "legend", mapModell, legendIcon, context, shouldShowChildren );
+
+    m_legendThemeIcon = null;
 
     mapModell.addMapModelListener( m_modellListener );
   }
@@ -135,6 +144,10 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   public void dispose( )
   {
     getMapModell().removeMapModelListener( m_modellListener );
+
+    if( m_legendThemeIcon != null )
+      m_legendThemeIcon.dispose();
+
     super.dispose();
   }
 
@@ -290,5 +303,17 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   public GM_Envelope getFullExtent( )
   {
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
+  @Override
+  protected ImageDescriptor getDefaultIcon( )
+  {
+    if( m_legendThemeIcon == null )
+      m_legendThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/legendTheme.gif" ) );
+
+    return ImageDescriptor.createFromImage( m_legendThemeIcon );
   }
 }

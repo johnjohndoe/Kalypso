@@ -75,6 +75,7 @@
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.LegendThemeWizard"
+            icon="icon/legendTheme.gif"
             id="org.kalypso.ui.wizard.others.LegendThemeWizard"
             name="Legende">
          <description>
@@ -83,6 +84,7 @@
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.ScrabThemeWizard"
+            icon="icon/scrapTheme.gif"
             id="org.kalypso.ui.wizard.others.ScrabThemeWizard"
             name="Skizzier-Thema">
          <description>
