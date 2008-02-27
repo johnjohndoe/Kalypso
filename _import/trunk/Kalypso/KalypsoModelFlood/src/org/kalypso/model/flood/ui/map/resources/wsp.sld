@@ -112,7 +112,7 @@
 					<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>
 						<ogc:PropertyIsEqualTo>
 							<ogc:Function name="org.kalypso.model.flood.ui.map.EventFilterExpression">
-								<ogc:Literal>RunoffEvent11951496414172</ogc:Literal>
+								<ogc:Literal>%eventFeatureId%</ogc:Literal>
 							</ogc:Function>
 							<ogc:Literal>true</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
