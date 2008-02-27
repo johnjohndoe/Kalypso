@@ -53,6 +53,7 @@ public class Feature_Impl extends AbstractFeature
       throw new UnsupportedOperationException( "must provide a featuretype" );
 
     m_parent = parent;
+
     m_parentRelation = parentRelation;
     m_featureType = ft;
     m_id = id;

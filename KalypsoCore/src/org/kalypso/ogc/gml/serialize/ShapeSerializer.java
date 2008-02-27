@@ -352,7 +352,6 @@ public class ShapeSerializer
       final GMLWorkspace workspace = rootFeature.getWorkspace();
 
       final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
-      final List list = (List) rootFeature.getProperty( listRelation );
 
       // die shape-api liefert stets WGS84 als Koordinatensystem, daher
       // Anpassung hier:
@@ -362,7 +361,7 @@ public class ShapeSerializer
         final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, true );
         GMLUtilities.setCrs( fe, sourceCrs );
         if( fe != null )
-          list.add( fe );
+          workspace.addFeatureAsComposition( rootFeature, listRelation, -1, fe );
       }
 
       return workspace;
