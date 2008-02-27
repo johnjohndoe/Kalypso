@@ -161,8 +161,8 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
     if( m_extender != null )
       m_extender.setCursor( DEFAULT_CURSOR );
 
-    if( m_result != null )
-      return m_result;
+// if( m_result != null )
+// return m_result;
 
     if( m_startPoint != null && m_endPoint != null )
     {

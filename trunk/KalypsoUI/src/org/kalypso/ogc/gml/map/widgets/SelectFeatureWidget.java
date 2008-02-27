@@ -133,7 +133,9 @@ public class SelectFeatureWidget extends AbstractWidget
   private void reinit( )
   {
     // default: selection by Rectangle
-    m_selectionTypeDelegate = new RectangleGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
+    // TODO: get from outside
+    if( m_selectionTypeDelegate == null )
+      m_selectionTypeDelegate = new RectangleGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
 
     m_theme = null;
     m_featureList = null;
@@ -141,10 +143,11 @@ public class SelectFeatureWidget extends AbstractWidget
 
     final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-
+    mapPanel.repaint();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     m_theme = activeTheme instanceof IKalypsoFeatureTheme ? (IKalypsoFeatureTheme) activeTheme : null;
     m_featureList = m_theme == null ? null : m_theme.getFeatureList();
+
   }
 
   /**
@@ -332,6 +335,8 @@ public class SelectFeatureWidget extends AbstractWidget
       // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_selectionTypeDelegate.reset();
+        final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+        selectionManager.clear();
         break;
 
     }
