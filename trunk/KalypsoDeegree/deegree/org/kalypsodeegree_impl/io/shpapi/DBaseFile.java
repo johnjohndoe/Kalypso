@@ -801,7 +801,8 @@ public class DBaseFile
       }
     }
 
-    return FeatureFactory.createFeature( parent, parentRelation, rowNo + "_" + m_suffix, m_featureType, fp );
+//    return FeatureFactory.createFeature( parent, parentRelation, rowNo + "_" + m_suffix, m_featureType, fp );
+    return FeatureFactory.createFeature( parent, parentRelation, ""+rowNo , m_featureType, fp );
   }
 
   /**

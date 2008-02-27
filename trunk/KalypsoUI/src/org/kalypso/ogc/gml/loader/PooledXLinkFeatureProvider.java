@@ -41,7 +41,9 @@
 package org.kalypso.ogc.gml.loader;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.AbstractXLinkFeatureProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
@@ -96,19 +98,29 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
 
         /* Immediately handle local features */
         final String uri = getUri();
-
-        if( "urn:ogc:gml:dict:kalypso:model:wspm:components".equals( uri ) )
-        {
-          System.out.println();
-        }
-
         if( uri == null )
         {
           m_workspace = contextWorkspace;
           return m_workspace;
         }
 
-        m_key = new PoolableObjectType( "gml", uri, contextWorkspace.getContext() );
+        final String type;
+        final String source;
+
+        // HACK: in order to allow links into shape files, we just test if it may be a shape file
+        if( uri.toLowerCase().endsWith( ".shp" ) )
+        {
+          type = "shape";
+          // TODO: get the crs from somewhere...
+          source = FileUtilities.nameWithoutExtension( uri ) + "#" + KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        }
+        else
+        {
+          type = "gml";
+          source = uri;
+        }
+
+        m_key = new PoolableObjectType( type, source, contextWorkspace.getContext() );
 
         final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 

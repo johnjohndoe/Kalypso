@@ -114,6 +114,8 @@ public class FeatureFactory
    */
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final Object[] properties )
   {
+    /// TODO: but the feature into the workspace!
+    
     return new Feature_Impl( parent, parentRelation, featureType, id, properties );
   }
 
