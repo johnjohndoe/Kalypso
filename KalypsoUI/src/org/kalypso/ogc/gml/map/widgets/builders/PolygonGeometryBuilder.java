@@ -255,7 +255,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   {
     m_cnt_points = 0;
     m_points.clear();
-
+    m_result = null;
     if( m_extender != null )
       m_extender.setCursor( CROSSHAIR_CURSOR );
   }
