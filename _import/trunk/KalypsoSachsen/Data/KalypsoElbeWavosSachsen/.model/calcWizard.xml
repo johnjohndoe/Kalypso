@@ -53,10 +53,14 @@
 		<!--  -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
 		<!--  -->
+		<!--  -->
+		<arg name="ignoreType2" value="Q"/>
 		<arg name="ignoreType1" value="W"/>
+		<arg name="ignoreLabel2" value="Wasserstand"/>
+		<arg name="ignoreLabel1" value="Abfluss"/>
 	</page>
 	<!-- Konfiguration Projektion (=diffuse Zufluesse) -->
-	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndTableWizardPage" pageTitle="Konfiguration Projektion" imageLocation="icons/calcwizard/kalypso32.gif">
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Konfiguration Projektion" imageLocation="icons/calcwizard/kalypso32.gif">
 		<!--  
 			HTML-Navigation und pageID-->
 		<arg name="pageID" value="Projektion"/>
@@ -74,7 +78,11 @@
 		<arg name="maximizeMap" value="true"/>
 		<!--
 			TableView -->
-		<arg name="tableTemplate" value=".templates/calcCase/wiz03_projektion.gtt"/>
+<!--		<arg name="tableTemplate" value=".templates/calcCase/wiz03_projektion.gtt"/>-->
+		<!--
+			FeatureView -->
+		<arg name="featureTemplate" value=".templates/calcCase/wiz03_projektion.gft"/>
+		<arg name="featureControlStyle" value="SWT.NONE"/>
 		<!-- 
 			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% [%axisunit%]#linkColumn=ganglinie_gesamt"/>
@@ -121,7 +129,7 @@
 		<!-- 
 			Page-Layout -->
 		<arg name="mainSash" value="40"/>
-		<arg name="rightSash" value="30"/>
+		<arg name="rightSash" value="0"/>
 		<arg name="hideCalcButton" value="true"/>
 		<!-- 
 			Karte -->

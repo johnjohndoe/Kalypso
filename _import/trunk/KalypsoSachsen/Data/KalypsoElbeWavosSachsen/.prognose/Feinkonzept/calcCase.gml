@@ -12,14 +12,14 @@
       </lage>
       <name>Wittenberg</name>
       <description/>
-      <id/>
-      <lageAmGewaesser/>
-      <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
-      <datenUebergabe>Q</datenUebergabe>
-      <projektionErlaubt>true</projektionErlaubt>
+      <id>501420</id>
+      <lageAmGewaesser>214.14</lageAmGewaesser>
+      <pegelNullPunkt>62.44</pegelNullPunkt>
+      <kenn>WITT</kenn>
+      <lfdNum>150</lfdNum>
+      <river>Elbe</river>
+      <datenUebergabe>W</datenUebergabe>
+      <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
       <ganglinie_gesamt>
@@ -45,12 +45,12 @@
       </lage>
       <name>Usti</name>
       <description/>
-      <id/>
-      <lageAmGewaesser/>
-      <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
+      <id>2210</id>
+      <lageAmGewaesser>70.3</lageAmGewaesser>
+      <pegelNullPunkt>131.0</pegelNullPunkt>
+      <kenn>USTI</kenn>
+      <lfdNum>20</lfdNum>
+      <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
@@ -78,16 +78,16 @@
       </lage>
       <name>Torgau</name>
       <description/>
-      <id/>
-      <lageAmGewaesser/>
-      <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
-      <datenUebergabe>Q</datenUebergabe>
+      <id>501261</id>
+      <lageAmGewaesser>154.15</lageAmGewaesser>
+      <pegelNullPunkt>75.15</pegelNullPunkt>
+      <kenn>TORG</kenn>
+      <lfdNum>120</lfdNum>
+      <river>Elbe</river>
+      <datenUebergabe>W</datenUebergabe>
       <projektionErlaubt>true</projektionErlaubt>
-      <projektionEmpfohlen>0</projektionEmpfohlen>
-      <projektionEingschaltet>0</projektionEingschaltet>
+      <projektionEmpfohlen>W</projektionEmpfohlen>
+      <projektionEingschaltet>W</projektionEingschaltet>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Torgau.zml"/>
       </ganglinie_gesamt>
@@ -111,14 +111,14 @@
       </lage>
       <name>Schöna</name>
       <description/>
-      <id/>
-      <lageAmGewaesser/>
-      <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
-      <datenUebergabe>Q</datenUebergabe>
-      <projektionErlaubt>true</projektionErlaubt>
+      <id>501010</id>
+      <lageAmGewaesser>2.05</lageAmGewaesser>
+      <pegelNullPunkt>116.18</pegelNullPunkt>
+      <kenn>SCHO</kenn>
+      <lfdNum>40</lfdNum>
+      <river>Elbe</river>
+      <datenUebergabe>W</datenUebergabe>
+      <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
       <ganglinie_gesamt>
@@ -144,13 +144,13 @@
       </lage>
       <name>Riesa</name>
       <description/>
-      <id/>
-      <lageAmGewaesser/>
-      <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
-      <datenUebergabe>Q</datenUebergabe>
+      <id>501110</id>
+      <lageAmGewaesser>108.4</lageAmGewaesser>
+      <pegelNullPunkt>88.01</pegelNullPunkt>
+      <kenn>RIES</kenn>
+      <lfdNum>100</lfdNum>
+      <river>Elbe</river>
+      <datenUebergabe>W</datenUebergabe>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -177,13 +177,13 @@
       </lage>
       <name>Löben</name>
       <description/>
-      <id/>
-      <lageAmGewaesser/>
-      <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
-      <datenUebergabe>Q</datenUebergabe>
+      <id>553060</id>
+      <lageAmGewaesser>21.6</lageAmGewaesser>
+      <pegelNullPunkt>73.04</pegelNullPunkt>
+      <kenn>LOEB</kenn>
+      <lfdNum>140</lfdNum>
+      <river>Schwarze Elster</river>
+      <datenUebergabe>W</datenUebergabe>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -202,11 +202,11 @@
       <name>Dresden / Torgau</name>
       <description/>
       <id/>
-      <lageAmGewaesser/>
+      <lageAmGewaesser>95.0</lageAmGewaesser>
       <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
+      <kenn>ZG_II</kenn>
+      <lfdNum>80</lfdNum>
+      <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
@@ -226,10 +226,10 @@
       <name>Usti / Dresden</name>
       <description/>
       <id/>
-      <lageAmGewaesser/>
+      <lageAmGewaesser>40.0</lageAmGewaesser>
       <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
+      <kenn>ZG_I</kenn>
+      <lfdNum>60</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
       <projektionErlaubt>false</projektionErlaubt>
@@ -249,13 +249,13 @@
       </lage>
       <name>Dresden</name>
       <description/>
-      <id/>
-      <lageAmGewaesser/>
-      <pegelNullPunkt/>
-      <kenn/>
-      <lfdNum/>
-      <river/>
-      <datenUebergabe>Q</datenUebergabe>
+      <id>501060</id>
+      <lageAmGewaesser>55.63</lageAmGewaesser>
+      <pegelNullPunkt>102.68</pegelNullPunkt>
+      <kenn>DRES</kenn>
+      <lfdNum>70</lfdNum>
+      <river>Elbe</river>
+      <datenUebergabe>W</datenUebergabe>
       <projektionErlaubt>true</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -282,9 +282,9 @@
       </lage>
       <name>Axien</name>
       <description/>
-      <kenn/>
+      <kenn>Axien</kenn>
       <lfdNum/>
-      <river/>
+      <river>Elbe</river>
       <ganglinie_zustand>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Polder/Axien.zml"/>
       </ganglinie_zustand>
@@ -294,14 +294,14 @@
     <Polder fid="PolderDautzschen">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5432614.54558422,5612340.671412242</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5411711.0004026,5658455.009435971</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Dautzschen</name>
       <description/>
-      <kenn/>
+      <kenn>Dautz</kenn>
       <lfdNum/>
-      <river/>
+      <river>Elbe</river>
       <ganglinie_zustand>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Polder/Dautzschen.zml"/>
       </ganglinie_zustand>
@@ -316,28 +316,28 @@
       </lage>
       <name>Nünchritz</name>
       <description/>
-      <kenn/>
+      <kenn>Nuenritz</kenn>
       <lfdNum/>
-      <river/>
+      <river>Elbe</river>
       <ganglinie_zustand>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Polder/Nünchritz.zml"/>
       </ganglinie_zustand>
     </Polder>
   </bauwerkMember>
   <bauwerkMember>
-    <Polder fid="PolderUsti">
+    <Polder fid="PolderAussig">
       <lage>
         <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5337950.070308044,5749549.000069435</gml:coordinates>
+          <gml:coordinates cs="," decimal="." ts=" ">5432614.54558422,5612340.671412242</gml:coordinates>
         </gml:Point>
       </lage>
-      <name>Usti</name>
+      <name>Aussig</name>
       <description/>
-      <kenn/>
+      <kenn>Aussig</kenn>
       <lfdNum/>
       <river>Elbe</river>
       <ganglinie_zustand>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Polder/Usti.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Polder/Aussig.zml"/>
       </ganglinie_zustand>
     </Polder>
   </bauwerkMember>

@@ -4,6 +4,8 @@
 	<scenarioName>:scenarioName:</scenarioName>
 	<scenarioDescription>:scenarioDescription:</scenarioDescription>
 	<startforecast>:startforecast:</startforecast>
+	<simulationDuration>6</simulationDuration>
+	<forecastDuration>72</forecastDuration>
 	<editor>:user:</editor>
 	<description>- bitte ausfüllen -</description>
 	<comment>- bitte ausfüllen -</comment>

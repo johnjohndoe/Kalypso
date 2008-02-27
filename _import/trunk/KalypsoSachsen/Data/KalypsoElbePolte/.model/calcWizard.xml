@@ -9,8 +9,6 @@
 	<arg name="askForSaveOnFinish" value="false"/>
 
 	<!-- 
-ToDo: Help-Ids setzen!!! -->
-	<!-- 
 		Phase 1: KONTROLLE DER ZEITREIHEN
 	-->
 	<!-- Kontrolle Startpegel -->
