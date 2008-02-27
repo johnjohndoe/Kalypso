@@ -118,11 +118,11 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected void doFinish( final IProject project, final IFile[] file, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Import aus WspWin", 10 );
 
-    super.doFinish( project, file, new SubProgressMonitor( monitor, 5 ) );
+    final IFile file = super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
 
     final File wspwinDirectory = m_wspWinImportPage.getSourceDirectory();
 
@@ -131,6 +131,8 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
       final IStatus status = WspWinImporter.importProject( wspwinDirectory, project, new SubProgressMonitor( monitor, 5 ) );
       if( !status.isOK() )
         throw new CoreException( status );
+
+      return file;
     }
     catch( final Exception e )
     {

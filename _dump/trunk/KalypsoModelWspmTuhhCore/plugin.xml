@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="demoProject" name="demoProject" schema="schema/demoProject.exsd"/>
    <extension
          point="org.kalypso.model.wspm.core.profilserializer">
       <source
@@ -56,6 +57,16 @@
             id="org.kalypso.model.wspm.tuhh.profiletype"
             name="Pasche">
       </profiletype>
+   </extension>
+   <extension
+         point="org.kalypso.model.wspm.tuhh.core.demoProject">
+      <project
+            data="etc/demos/testDemo.zip"
+            description="Dies ist ein leeres Testproject, welches Gernot hilft, diese neue Funktion zu implementieren."
+            icon="icons/obj16/legend_col1.gif"
+            label="Test (leer)"
+            projectName="TestDemoTuhh">
+      </project>
    </extension>
 
 </plugin>

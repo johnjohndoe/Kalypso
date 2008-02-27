@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -54,8 +55,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.dialogs.IPageChangingListener;
+import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
@@ -68,7 +74,9 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCoreExtensions;
 import org.kalypso.model.wspm.tuhh.core.gml.TuhhHelper;
+import org.kalypso.model.wspm.tuhh.core.util.TuhhDemoProject;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ui.editorLauncher.GmlEditorTemplateLauncher;
@@ -105,15 +113,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     @Override
     protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
     {
-      final IFile[] file = new IFile[1];
-      try
-      {
-        doFinish( m_project, file, monitor );
-      }
-      finally
-      {
-        m_file = file[0];
-      }
+      m_file = doFinish( m_project, monitor );
     }
   }
 
@@ -127,13 +127,33 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
 
   private IStructuredSelection m_selection;
 
+  private final IPageChangingListener m_pageChangeingListener = new IPageChangingListener()
+  {
+    public void handlePageChanging( PageChangingEvent event )
+    {
+      doHandlePageChangeing( event );
+    }
+  };
+
+  private final DemoProjectsWizardPage m_demoProjectPage;
+
   public NewProjectWizard( )
+  {
+    this( false );
+  }
+
+  public NewProjectWizard( final boolean showDemoPage )
   {
     setWindowTitle( STR_WINDOW_TITLE );
     setNeedsProgressMonitor( true );
 
     final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
     setDialogSettings( dialogSettings );
+
+    if( showDemoPage )
+      m_demoProjectPage = new DemoProjectsWizardPage( "demoProjectPage", KalypsoModelWspmTuhhCoreExtensions.getDemoProjects() );
+    else
+      m_demoProjectPage = null;
   }
 
   /**
@@ -147,13 +167,53 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     m_createProjectPage.setDescription( "Dieser Dialog erstellt ein neues Spiegellinienberechnung-Projekt im Arbeitsbereich." );
     m_createProjectPage.setImageDescriptor( KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.NEWPROJECT_PROJECT_PAGE_WIZBAN ) );
 
+    if( m_demoProjectPage != null )
+      addPage( m_demoProjectPage );
+
     addPage( m_createProjectPage );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPageControls( final Composite pageContainer )
+  {
+    // Overwritten in order to NOT create the pages during initalisation, so we can set
+    // the project name later before the next page is created, this work however only once :-(
   }
 
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     m_workbench = workbench;
     m_selection = selection;
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
+   */
+  @Override
+  public void setContainer( final IWizardContainer wizardContainer )
+  {
+    final IWizardContainer oldContainer = getContainer();
+    if( oldContainer instanceof WizardDialog )
+      ((WizardDialog) oldContainer).addPageChangingListener( m_pageChangeingListener );
+
+    if( wizardContainer instanceof WizardDialog )
+      ((WizardDialog) wizardContainer).addPageChangingListener( m_pageChangeingListener );
+
+    super.setContainer( wizardContainer );
+  }
+
+  protected void doHandlePageChangeing( final PageChangingEvent event )
+  {
+    if( event.getCurrentPage() == m_demoProjectPage )
+    {
+      final TuhhDemoProject demoProject = m_demoProjectPage.getSelectedProject();
+
+      // TODO: Does work only the first time :-( ,see above createPageControls
+      m_createProjectPage.setInitialProjectName( demoProject.getProjectName() );
+    }
   }
 
   protected IStructuredSelection getSelection( )
@@ -261,9 +321,12 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
    * Overwrite, if more has to be done while finishing.
    * </p>
    */
-  protected void doFinish( final IProject project, final IFile[] file, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Neues Spiegellinienprojekt", 4 );
+
+    final TuhhDemoProject demoProject = m_demoProjectPage == null ? KalypsoModelWspmTuhhCoreExtensions.getEmptyProject() : m_demoProjectPage.getSelectedProject();
+    final URL zipLocation = demoProject.getData();
 
     project.create( new SubProgressMonitor( monitor, 1 ) );
     project.open( new SubProgressMonitor( monitor, 1 ) );
@@ -273,6 +336,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     description.setNatureIds( natures );
     project.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
 
-    file[0] = TuhhHelper.ensureValidWspmTuhhStructure( project, new SubProgressMonitor( monitor, 1 ) );
+    return TuhhHelper.ensureValidWspmTuhhStructure( project, zipLocation, new SubProgressMonitor( monitor, 1 ) );
   }
+
 }

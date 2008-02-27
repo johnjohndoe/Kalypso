@@ -42,12 +42,11 @@ package org.kalypso.model.wspm.tuhh.core.gml;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -79,11 +78,10 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
    * 
    * @return the freshly created modell file
    */
-  public static IFile ensureValidWspmTuhhStructure( final IContainer wspmContainer, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public static IFile ensureValidWspmTuhhStructure( final IContainer wspmContainer, final URL zipLocation, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( "Validierung der Modellstruktur", 2000 );
 
-    InputStream zipInputStream = null;
     try
     {
       if( !wspmContainer.exists() )
@@ -115,17 +113,15 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
       monitor.subTask( " - kopiere Modellstruktur" );
       final File containerDir = wspmContainer.getLocation().toFile();
 
-      zipInputStream = TuhhHelper.class.getResourceAsStream( "resources/wspmTuhh_template.zip" );
-
       // REMARK: unzipping files with non UTF-8 filename encoding is really awesome in java.
       // We do use the apache tools, which let us at least set the encoding.
       // Try and error led to use the encoding: "IBM850" for WinZippes .zip's.
 
-      // TODO: It still doesn´t work on each machine!!! @gernot: This is a test - I will remove it, if it doesn´t work
+      // TODO: It still doesn´t work on every machine!!! @gernot: This is a test - I will remove it, if it doesn´t work
       // Jessica: The test also doesn´t work?!?
 
       // REMARK: make sure that the .zip was created with WinZIP/PKZIP instead of Eclipse-ZIP?
-      ZipUtilities.unzip( zipInputStream, containerDir );
+      ZipUtilities.unzip( zipLocation, containerDir );
 // ZipUtilities.unzipApache( zipInputStream, containerDir, false, "IBM850" );
       monitor.worked( 500 );
       wspmContainer.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 500 ) );
@@ -138,7 +134,6 @@ public class TuhhHelper implements IWspmConstants, IWspmTuhhConstants
     }
     finally
     {
-      IOUtils.closeQuietly( zipInputStream );
       monitor.done();
     }
 
