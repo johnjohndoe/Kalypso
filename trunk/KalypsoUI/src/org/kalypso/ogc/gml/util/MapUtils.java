@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -56,7 +61,14 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
@@ -107,8 +119,18 @@ public class MapUtils
     workspace.postCommand( compositeCommand );
   }
 
+  @SuppressWarnings("unchecked")
   public static void paintGrabbedFeature( final Graphics g, final MapPanel panel, final Feature feature, QName geomQName )
   {
+    final Graphics2D g2 = (Graphics2D) g;
+    final BasicStroke oldStroke = (BasicStroke) g2.getStroke();
+    final Color oldColor = g2.getColor();
+
+    final BasicStroke newStroke = new BasicStroke( 3 );
+
+    g2.setStroke( newStroke );
+    g2.setColor( new Color( 255, 0, 0 ) );
+
     if( feature == null )
       return;
     final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
@@ -116,8 +138,72 @@ public class MapUtils
       return;
 
     final int smallRect = 10;
-    final Point nodePoint = MapUtilities.retransform( panel, geom.getCentroid() );
-    g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
-  }
 
+    if( geom instanceof GM_Point )
+    {
+      final Point nodePoint = MapUtilities.retransform( panel, (GM_Point) geom );
+      g2.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+    }
+    else if( geom instanceof GM_Curve )
+    {
+      List<Point> pointList = new ArrayList<Point>();
+      final GM_Curve curve = (GM_Curve) geom;
+      try
+      {
+        final String crs = curve.getCoordinateSystem();
+        GM_Position[] positions = curve.getAsLineString().getPositions();
+
+        int[] xPoints = new int[positions.length];
+        int[] yPoints = new int[positions.length];
+
+        for( int i = 0; i < positions.length; i++ )
+        {
+          final GM_Point createGM_Point = GeometryFactory.createGM_Point( positions[i], crs );
+          final Point nodePoint = MapUtilities.retransform( panel, createGM_Point );
+          pointList.add( nodePoint );
+          xPoints[i] = nodePoint.x;
+          yPoints[i] = nodePoint.y;
+        }
+
+        g2.drawPolyline( xPoints, yPoints, pointList.size() );
+      }
+      catch( GM_Exception e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+    }
+    else if( geom instanceof GM_Surface )
+    {
+      List<Point> pointList = new ArrayList<Point>();
+      final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) geom;
+      final GM_SurfacePatch patch = surface.get( 0 );
+
+      final String crs = surface.getCoordinateSystem();
+      final GM_Position[] positions = patch.getExteriorRing();
+
+      int[] xPoints = new int[positions.length];
+      int[] yPoints = new int[positions.length];
+
+      for( int i = 0; i < positions.length; i++ )
+      {
+        final GM_Point createGM_Point = GeometryFactory.createGM_Point( positions[i], crs );
+        final Point nodePoint = MapUtilities.retransform( panel, createGM_Point );
+        pointList.add( nodePoint );
+        xPoints[i] = nodePoint.x;
+        yPoints[i] = nodePoint.y;
+      }
+
+      g2.drawPolygon( xPoints, yPoints, pointList.size() );
+    }
+    else
+    {
+      final Point nodePoint = MapUtilities.retransform( panel, geom.getCentroid() );
+      g2.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+    }
+
+    g2.setStroke( oldStroke );
+    g2.setColor( oldColor );
+  }
 }
