@@ -4,12 +4,10 @@
 package org.kalypso.risk.model.actions.riskZonesCalculation;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -48,7 +46,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     m_vectorModel = vectorModel;
   }
 
-  public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "RiskZonesCalculationHandler.7" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
@@ -102,7 +100,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new InterruptedException( e.getLocalizedMessage() );
+      return StatusUtilities.statusFromThrowable( e, "Fehler bei Berechnung der Risikozonen" );
     }
   }
 }

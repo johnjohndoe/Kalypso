@@ -1,14 +1,9 @@
-package org.kalypso.risk.model.actions.specificDamagePotential;
-
-import java.io.IOException;
+package org.kalypso.risk.model.actions.specificDamage;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
@@ -24,27 +19,23 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
-import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.views.map.MapView;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
-import org.xml.sax.SAXException;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
-public class DamagePotentialCalculationHandler extends AbstractHandler
+public class SpecificDamageCalculationHandler extends AbstractHandler
 {
   @Override
-  public Object execute( final ExecutionEvent arg0 ) throws ExecutionException
+  public Object execute( final ExecutionEvent arg0 )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getDisplay().getActiveShell();
@@ -84,10 +75,10 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
 
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
 
-        final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcDamagePotentialRunnable( model, vectorDataModel, scenarioFolder );
+        final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( model, vectorDataModel, scenarioFolder );
 
         IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
-        ErrorDialog.openError( shell, "", "Fehler bei der Schadensberechnung", execute );
+        ErrorDialog.openError( shell, "Fehler", "Fehler bei der Schadensberechnung", execute );
 
         if( !execute.isOK() )
         {
@@ -98,7 +89,7 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
         /* Undoing this operation is not possible because old raster files are deleted */
         scenarioDataProvider.saveModel( new NullProgressMonitor() );
 
-        updateLayers( scenarioFolder, model, mapModell );
+        RiskModelHelper.updateDamageLayers( scenarioFolder, model, mapModell );
 
         if( mapView != null )
           mapPanel.invalidateMap();
@@ -112,36 +103,6 @@ public class DamagePotentialCalculationHandler extends AbstractHandler
       }
     }
     return null;
-  }
-
-  /**
-   * deletes the old layer, add the new one and modifies the style according to the max values
-   * 
-   * @param scenarioFolder
-   * @param model
-   * @param mapModell
-   * @throws Exception
-   * @throws IOException
-   * @throws SAXException
-   * @throws CoreException
-   */
-  private static void updateLayers( final IFolder scenarioFolder, final IRasterDataModel model, final GisTemplateMapModell mapModell ) throws Exception, IOException, SAXException, CoreException
-  {
-    /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = RiskModelHelper.getCascadingTheme( mapModell, "Schadenspotentiale" );
-
-    /* delete existing damage layers */
-    RiskModelHelper.deleteExistingDamagePotentialMapLayers( parentKalypsoTheme );
-
-    parentKalypsoTheme.setVisible( true );
-
-    /* add the coverage collections to the map */
-    IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
-    for( IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
-      RiskModelHelper.createDamagePotentialMapLayer( parentKalypsoTheme, annualCoverageCollection, scenarioFolder );
-
-    final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
-    RiskModelHelper.updateDamageStyle( sldFile, model );
   }
 
 }

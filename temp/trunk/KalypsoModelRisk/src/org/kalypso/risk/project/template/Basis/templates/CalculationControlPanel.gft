@@ -45,7 +45,7 @@
 			</gft:table>
 		</gft:group>
 
-		<gft:group text="Schadenfunktionen" style="0">
+		<gft:group text="Schadensfunktionen" style="0">
 			<gft:gridData horizontalSpan="1" minimumHeight="150"
 				horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"
@@ -70,7 +70,7 @@
 			</gft:table>
 		</gft:group>
 
-		<gft:group text="Schadenspotentiale" style="0">
+		<gft:group text="spez. Vermögenswerte" style="0">
 			<gft:gridData horizontalSpan="1" verticalSpan="2"
 				minimumHeight="200" horizontalAlignment="GridData.FILL"
 				verticalAlignment="GridData.FILL" grabExcessHorizontalSpace="true"

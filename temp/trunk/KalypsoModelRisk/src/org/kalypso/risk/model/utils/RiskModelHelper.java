@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,12 +12,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
+import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
@@ -25,6 +28,7 @@ import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -34,7 +38,6 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -244,7 +247,7 @@ public class RiskModelHelper
     parentKalypsoTheme.addLayer( layer );
   }
 
-  public static void deleteExistingDamagePotentialMapLayers( CascadingKalypsoTheme parentKalypsoTheme )
+  public static void deleteExistingMapLayers( CascadingKalypsoTheme parentKalypsoTheme )
   {
     final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
     for( int i = 0; i < childThemes.length; i++ )
@@ -364,4 +367,124 @@ public class RiskModelHelper
     }
     return maxCoveragesCollection;
   }
+
+  public static IStatus importAsBinaryRaster( final File srcFile, final File dstFile, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
+  {
+    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2 );
+    ascii2Binary.doConvert( monitor );
+    return Status.OK_STATUS;
+  }
+
+  /**
+   * deletes the old layer, add the new one and modifies the style according to the max values
+   * 
+   * @param scenarioFolder
+   * @param model
+   * @param mapModell
+   * @throws Exception
+   * @throws IOException
+   * @throws SAXException
+   * @throws CoreException
+   */
+  public static void updateDamageLayers( final IFolder scenarioFolder, final IRasterDataModel model, final GisTemplateMapModell mapModell ) throws Exception
+  {
+    /* get cascading them that holds the damage layers */
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, "Schadenspotentiale" );
+
+    /* delete existing damage layers */
+    deleteExistingMapLayers( parentKalypsoTheme );
+
+    parentKalypsoTheme.setVisible( true );
+
+    /* add the coverage collections to the map */
+    IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
+    for( IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
+      createDamagePotentialMapLayer( parentKalypsoTheme, annualCoverageCollection, scenarioFolder );
+
+    final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
+    updateDamageStyle( sldFile, model );
+  }
+
+  /**
+   * deletes the old layers and adds the new ones
+   * 
+   * @param scenarioFolder
+   * @param model
+   * @param mapModell
+   * @throws Exception
+   * @throws IOException
+   * @throws SAXException
+   * @throws CoreException
+   */
+  public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
+  {
+    /* get cascading them that holds the damage layers */
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, "HQi" );
+
+    /* delete existing damage layers */
+    // TODO: manage that only the newly imported gets deleted.
+    deleteExistingMapLayers( parentKalypsoTheme, rasterInfos );
+
+    parentKalypsoTheme.setVisible( true );
+
+    IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = model.getWaterlevelCoverageCollection();
+
+    for( int i = 0; i < rasterInfos.size(); i++ )
+    {
+      final AsciiRasterInfo asciiRasterInfo = rasterInfos.get( i );
+      final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
+
+      createWaterdepthLayer( scenarioFolder, parentKalypsoTheme, waterdepthCoverageCollection.get( i ), layerName );
+    }
+  }
+
+  private static void deleteExistingMapLayers( CascadingKalypsoTheme parentKalypsoTheme, List<AsciiRasterInfo> rasterInfos )
+  {
+    final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
+
+    for( int i = 0; i < rasterInfos.size(); i++ )
+    {
+      final AsciiRasterInfo asciiRasterInfo = rasterInfos.get( i );
+      final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
+      final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
+      for( int j = 0; j < childThemes.length; j++ )
+        if( childThemes[j].getName().equals( layerName ) )
+          themesToRemove.add( childThemes[j] );
+    }
+    for( final IKalypsoTheme themeToRemove : themesToRemove )
+      parentKalypsoTheme.removeTheme( themeToRemove );
+  }
+
+  private static void createWaterdepthLayer( final IFolder scenarioFolder, final CascadingKalypsoTheme parentKalypsoTheme, final IAnnualCoverageCollection annualCoverageCollection, final String layerName ) throws Exception
+  {
+    final StyledLayerType layer = new StyledLayerType();
+    layer.setName( layerName );
+    layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
+    layer.setLinktype( "gml" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+    layer.setVisible( true );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+    layer.setVisible( true );
+    final Property layerPropertyDeletable = new Property();
+    layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
+    layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
+    final Property layerPropertyThemeInfoId = new Property();
+    layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
+    layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" ); //$NON-NLS-1$
+    final List<Property> layerPropertyList = layer.getProperty();
+    layerPropertyList.add( layerPropertyDeletable );
+    layerPropertyList.add( layerPropertyThemeInfoId );
+    final List<Style> styleList = layer.getStyle();
+    final Style style = new Style();
+    style.setLinktype( "sld" ); //$NON-NLS-1$
+    style.setStyle( "Kalypso style" ); //$NON-NLS-1$
+    style.setActuate( "onRequest" ); //$NON-NLS-1$
+    style.setHref( "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
+    style.setType( "simple" ); //$NON-NLS-1$
+    styleList.add( style );
+
+    parentKalypsoTheme.addLayer( layer );
+  }
+
 }

@@ -219,6 +219,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * @param assetValueClassesList
    * @param damageFunctionNamesList
    */
+  @SuppressWarnings("unchecked")
   public void init( final ISelection selection, final List<String> damageFunctionNamesList, final List<String> assetValueClassesList )
   {
     m_damageFunctionNamesList = damageFunctionNamesList;

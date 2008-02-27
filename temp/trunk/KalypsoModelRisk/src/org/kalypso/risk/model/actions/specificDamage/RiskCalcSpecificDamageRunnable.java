@@ -1,12 +1,9 @@
 /**
  * 
  */
-package org.kalypso.risk.model.actions.specificDamagePotential;
-
-import java.lang.reflect.InvocationTargetException;
+package org.kalypso.risk.model.actions.specificDamage;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,7 +20,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-public final class RiskCalcDamagePotentialRunnable implements ICoreRunnableWithProgress
+public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithProgress
 {
   private final IRasterDataModel m_rasterDataModel;
 
@@ -31,14 +28,14 @@ public final class RiskCalcDamagePotentialRunnable implements ICoreRunnableWithP
 
   private final IVectorDataModel m_vectorDataModel;
 
-  public RiskCalcDamagePotentialRunnable( final IRasterDataModel rasterDataModel, final IVectorDataModel vectorDataModel, final IFolder scenarioFolder )
+  public RiskCalcSpecificDamageRunnable( final IRasterDataModel rasterDataModel, final IVectorDataModel vectorDataModel, final IFolder scenarioFolder )
   {
     m_rasterDataModel = rasterDataModel;
     m_vectorDataModel = vectorDataModel;
     m_scenarioFolder = scenarioFolder;
   }
 
-  public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( IProgressMonitor monitor )
   {
     final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = m_rasterDataModel.getSpecificDamageCoverageCollection();
     final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = m_vectorDataModel.getLandusePolygonCollection();
@@ -74,7 +71,7 @@ public final class RiskCalcDamagePotentialRunnable implements ICoreRunnableWithP
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new InvocationTargetException( e );
+      return StatusUtilities.statusFromThrowable( e, "Fehler beim Berechnen der Schadenswerte." );
     }
   }
 }

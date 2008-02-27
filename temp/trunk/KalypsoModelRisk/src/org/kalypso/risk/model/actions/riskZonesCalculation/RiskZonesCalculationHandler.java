@@ -2,7 +2,6 @@ package org.kalypso.risk.model.actions.riskZonesCalculation;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
@@ -31,7 +30,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 public class RiskZonesCalculationHandler extends AbstractHandler
 {
   @Override
-  public Object execute( final ExecutionEvent arg0 ) throws ExecutionException
+  public Object execute( final ExecutionEvent arg0 )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getDisplay().getActiveShell();

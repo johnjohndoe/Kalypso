@@ -40,22 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.actions.dataImport.waterdepth;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import ogc31.www.opengis.net.gml.FileType;
-import ogc31.www.opengis.net.gml.RangeSetType;
-
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
@@ -65,26 +56,18 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.grid.ConvertAscii2Binary;
-import org.kalypso.grid.GeoGridException;
-import org.kalypso.ogc.gml.CascadingKalypsoTheme;
-import org.kalypso.ogc.gml.CascadingThemeHelper;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.template.types.StyledLayerType.Property;
-import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.ui.views.map.MapView;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -140,126 +123,42 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
     final IEvaluationContext context = handlerService.getCurrentState();
     final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wassertiefen" ); //$NON-NLS-1$
-    parentKalypsoTheme.setVisible( true );
+    final List<AsciiRasterInfo> rasterInfos = m_page.getRasterInfos();
+
     try
     {
       final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
-      getContainer().run( true, true, new IRunnableWithProgress()
+      final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class );
+
+      final ICoreRunnableWithProgress importWaterdepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, workspace, scenarioFolder );
+
+      final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importWaterdepthRunnable );
+      ErrorDialog.openError( getShell(), "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );
+
+      if( !execute.isOK() )
       {
-        public void run( final IProgressMonitor monitor ) throws InterruptedException
-        {
-          monitor.beginTask( Messages.getString( "ImportWaterdepthWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
-          try
-          {
-            monitor.subTask( Messages.getString( "ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
-            final List<AsciiRasterInfo> rasterInfos = m_page.getRasterInfos();
-            final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class );
-            final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
-            for( final AsciiRasterInfo asciiRasterInfo : rasterInfos )
-            {
-              monitor.subTask( " HQ " + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
-              final String binFileName = asciiRasterInfo.getSourceFile().getName() + ".bin"; //$NON-NLS-1$
-              final String dstFileName = "models/raster/input/" + binFileName; //$NON-NLS-1$
-              final IFile dstRasterIFile = scenarioFolder.getFile( dstFileName );
-              final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
-              importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
-              // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
-              final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-              rangeSetFile.setFileName( "raster/input/" + binFileName ); //$NON-NLS-1$
-              rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
-              final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
-              rangeSet.setFile( rangeSetFile );
+        KalypsoRiskPlugin.getDefault().getLog().log( execute );
+      }
 
-              // remove existing (invalid) coverages from the model
-              final List<IAnnualCoverageCollection> coveragesToRemove = new ArrayList<IAnnualCoverageCollection>();
-              for( final IAnnualCoverageCollection existingAnnualCoverage : waterdepthCoverageCollection )
-                if( existingAnnualCoverage.getReturnPeriod() == asciiRasterInfo.getReturnPeriod() )
-                  coveragesToRemove.add( existingAnnualCoverage );
-              for( final IAnnualCoverageCollection coverageToRemove : coveragesToRemove )
-                waterdepthCoverageCollection.remove( coverageToRemove );
+      scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
 
-              final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-              annualCoverageCollection.setName( "HQ " + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
-              annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
-              final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
-              final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
-              final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getFeature(), parentRelation, rgcFeatureType );
-              final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
-              annualCoverageCollection.add( coverage );
-              coverage.setRangeSet( rangeSet );
-              coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
-              coverage.setName( binFileName );
-              coverage.setDescription( "Imported from " + asciiRasterInfo.getSourceFile().getName() ); //$NON-NLS-1$
+      // Undoing this operation is not possible because old raster files are deleted...
+      scenarioDataProvider.saveModel( new NullProgressMonitor() );
 
-              // remove themes that are showing invalid coverages
-              final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
-              final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
-              final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
-              for( int i = 0; i < childThemes.length; i++ )
-                if( childThemes[i].getName().equals( layerName ) )
-                  themesToRemove.add( childThemes[i] );
-              for( final IKalypsoTheme themeToRemove : themesToRemove )
-                parentKalypsoTheme.removeTheme( themeToRemove );
+      // remove themes that are showing invalid coverages
+      RiskModelHelper.updateWaterdepthLayers( scenarioFolder, rasterDataModel, rasterInfos, mapModell );
 
-              final StyledLayerType layer = new StyledLayerType();
-              layer.setName( layerName );
-              layer.setFeaturePath( "#fid#" + annualCoverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
-              layer.setLinktype( "gml" ); //$NON-NLS-1$
-              layer.setType( "simple" ); //$NON-NLS-1$
-              layer.setVisible( true );
-              layer.setActuate( "onRequest" ); //$NON-NLS-1$
-              layer.setHref( "project:/" + scenarioFolder.getProjectRelativePath() + "/models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
-              layer.setVisible( true );
-              final Property layerPropertyDeletable = new Property();
-              layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
-              layerPropertyDeletable.setValue( "false" ); //$NON-NLS-1$
-              final Property layerPropertyThemeInfoId = new Property();
-              layerPropertyThemeInfoId.setName( IKalypsoTheme.PROPERTY_THEME_INFO_ID );
-              layerPropertyThemeInfoId.setValue( "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Wassertiefe %.2f m" ); //$NON-NLS-1$
-              final List<Property> layerPropertyList = layer.getProperty();
-              layerPropertyList.add( layerPropertyDeletable );
-              layerPropertyList.add( layerPropertyThemeInfoId );
-              final List<Style> styleList = layer.getStyle();
-              final Style style = new Style();
-              style.setLinktype( "sld" ); //$NON-NLS-1$
-              style.setStyle( "Kalypso style" ); //$NON-NLS-1$
-              style.setActuate( "onRequest" ); //$NON-NLS-1$
-              style.setHref( "../styles/WaterlevelCoverage.sld" ); //$NON-NLS-1$
-              style.setType( "simple" ); //$NON-NLS-1$
-              styleList.add( style );
+      // fireModellEvent to redraw a map...
+      final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = rasterDataModel.getWaterlevelCoverageCollection();
+      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getFeature(), new Feature[] { waterdepthCoverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-              parentKalypsoTheme.addLayer( layer );
-
-              // fireModellEvent to redraw a map...
-              workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, waterdepthCoverageCollection.getFeature(), new Feature[] { annualCoverageCollection.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-            }
-            scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
-
-            // Undoing this operation is not possible because old raster files are deleted...
-            scenarioDataProvider.saveModel( new NullProgressMonitor() );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-            throw new InterruptedException( e.getLocalizedMessage() );
-          }
-        }
-      } );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
-      ErrorDialog.openError( getShell(), Messages.getString( "ImportWaterdepthWizard.6" ), "", StatusUtilities.statusFromThrowable( e ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      // TODO Auto-generated catch block
       e.printStackTrace();
-      return false;
     }
+
     return true;
   }
-
-  private void importAsBinaryRaster( final File srcFile, final File dstFile, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
-  {
-    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2 );
-    ascii2Binary.doConvert( monitor );
-  }
-
 }

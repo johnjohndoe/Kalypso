@@ -159,7 +159,7 @@
  <extension
        point="org.eclipse.ui.handlers">
     <handler
-          class="org.kalypso.risk.model.actions.specificDamagePotential.DamagePotentialCalculationHandler"
+          class="org.kalypso.risk.model.actions.specificDamage.SpecificDamageCalculationHandler"
           commandId="http___www.tu-harburg.de_wb_kalypso_risk__DamagePotentialCalculationHandler">
     </handler>
     <handler

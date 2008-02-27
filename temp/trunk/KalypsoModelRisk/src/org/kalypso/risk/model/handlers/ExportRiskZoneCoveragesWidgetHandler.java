@@ -50,7 +50,7 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     {
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( final IKalypsoTheme element : themes )
-        if( element.getName().equals( "Risikozonen (raster)" ) ) //$NON-NLS-1$
+        if( element.getName().equals( "Risikozonen (gerastert)" ) ) //$NON-NLS-1$
         {
           mapModell.activateTheme( element );
           break;

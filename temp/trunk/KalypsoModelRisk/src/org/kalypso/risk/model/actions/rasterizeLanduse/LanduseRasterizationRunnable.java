@@ -3,10 +3,7 @@
  */
 package org.kalypso.risk.model.actions.rasterizeLanduse;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,7 +35,7 @@ final class LanduseRasterizationRunnable implements ICoreRunnableWithProgress
     m_scenarioFolder = scenarioFolder;
   }
 
-  public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+  public IStatus execute( IProgressMonitor monitor )
   {
     monitor.beginTask( "Erstelle Rasterung aus Landnutzungs Vektordaten...", IProgressMonitor.UNKNOWN );
 

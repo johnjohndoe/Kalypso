@@ -2,7 +2,6 @@ package org.kalypso.risk.model.actions.rasterizeLanduse;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
@@ -34,7 +33,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 public class LanduseRasterizationHandler extends AbstractHandler
 {
   @Override
-  public Object execute( final ExecutionEvent arg0 ) throws ExecutionException
+  public Object execute( final ExecutionEvent arg0 )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final IWorkbench workbench = PlatformUI.getWorkbench();
