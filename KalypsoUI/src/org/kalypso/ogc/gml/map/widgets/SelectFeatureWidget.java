@@ -239,19 +239,13 @@ public class SelectFeatureWidget extends AbstractWidget
       GM_Point point = null;
       if( m_selectionTypeDelegate instanceof PointGeometryBuilder )
       {
-        /* snap to grabbed feature */
+        /* just snap to grabbed feature */
         if( m_foundFeature != null )
         {
-          final GM_Object geom = (GM_Object) m_foundFeature.getProperty( m_geomQName );
-          if( geom instanceof GM_Point )
-            point = (GM_Point) geom;
+          final List<Feature> selectedFeatures = new ArrayList<Feature>();
+          selectedFeatures.add( m_foundFeature );
+          manageSelection( selectedFeatures );
         }
-
-        if( point == null )
-          point = MapUtilities.transform( mapPanel, p );
-
-        final GM_Object selectGeometry = m_selectionTypeDelegate.addPoint( point );
-        doSelect( selectGeometry, m_featureList );
         m_selectionTypeDelegate.reset();
       }
       else if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
@@ -430,6 +424,11 @@ public class SelectFeatureWidget extends AbstractWidget
     // select feature from featureList by using the selectGeometry
     final List<Feature> selectedFeatures = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, m_geomQName, m_intersectMode );
 
+    manageSelection( selectedFeatures );
+  }
+
+  private void manageSelection( final List<Feature> selectedFeatures )
+  {
     /* consider the selection modes */
     final CommandableWorkspace workspace = m_theme.getWorkspace();
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
@@ -472,7 +471,7 @@ public class SelectFeatureWidget extends AbstractWidget
   }
 
   @SuppressWarnings("unchecked")
-  private static List<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
+  private List<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
   {
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
 
@@ -502,27 +501,6 @@ public class SelectFeatureWidget extends AbstractWidget
             if( geom != null && surface.contains( geom ) )
               selectedFeatures.add( feature );
           }
-        }
-      }
-    }
-    else if( selectGeometry instanceof GM_Point )
-    {
-      final GM_Point point = (GM_Point) selectGeometry;
-
-      final GM_Envelope envelope = GeometryUtilities.getEnvelope( selectGeometry );
-
-      final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
-      final List result = featureList.query( envelope, null );
-
-      for( final Object object : result )
-      {
-        final Feature feature = FeatureHelper.getFeature( workspace, object );
-
-        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), qnamesToSelect ) )
-        {
-          final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
-          if( geom != null && point.intersects( geom ) )
-            selectedFeatures.add( feature );
         }
       }
     }
