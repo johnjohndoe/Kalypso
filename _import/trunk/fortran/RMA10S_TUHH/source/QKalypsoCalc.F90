@@ -1,4 +1,4 @@
-!     Last change:  WP   25 Sep 2007    2:44 pm
+!     Last change:  WP   26 Feb 2008    3:53 pm
 !purpose of the subroutine is to calculate the average water level along a CCL.
 
 subroutine getLineAverageWaterLevel(CCL, waspi)
@@ -48,22 +48,25 @@ DO k = 1, lmt (CCL)
   !Test whether node exists, if so get the flow depth
   IF (na > 0) fliesstiefe = vel (3, na)
 
-  if (idnopt == 0) then
-  !nis,sep06,com: Very small flow depth
-    IF (fliesstiefe <= 0.001) then
-      !nis,sep06,com: Decrease the number of wetted nodes (lump) and overgive estimated 0.0 depth to the temporary depth d3
-      lump = lump - 1
-      d3 = 0.0
+  IF (fliesstiefe <= 0.001) then
+    !nis,sep06,com: Decrease the number of wetted nodes (lump) and overgive estimated 0.0 depth to the temporary depth d3
+    lump = lump - 1
+    d3 = 0.0
     !nis,sep06,com: If flow depth is not small
-    ELSE
-      d3 = ao(na) + vel(3,na)
-    ENDIF
-    !nis,sep06,com: Summed waterlevel elevation over all not drown nodes
-    waspi = waspi + d3
   ELSE
-    CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na), amec (k), d2, 0)
-    waspi = waspi + d3 + ado(na)
-  ENDIF
+    if (idnopt == 0) then
+      !nis,sep06,com: Very small flow depth
+      d3 = ao(na) + vel(3,na)
+      !nis,sep06,com: Summed waterlevel elevation over all not drown nodes
+      waspi = waspi + d3
+    ELSE
+      CALL amf (d3, fliesstiefe, akp (na), adt (na), adb (na), amec (k), d2, 0)
+      !testing
+      !WRITE(*,*) 'node: ', na, 'waspi: ', waspi, 'ft: ', fliesstiefe, 'd3: ', d3
+      !testing-
+      waspi = waspi + d3 + ado(na)
+    ENDIF
+  endif
 
 END DO
 

@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   22 Feb 2008    2:31 pm
+C     Last change:  WP   27 Feb 2008   10:29 am
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -92,47 +92,28 @@ CZZZ
       NE=NESAV
 
       !NiS,may06: do for every node
-
-!NiS,may06: test
-!      OPEN(9999,'testfile.txt')
-!-
       do n=1,np
-
-!NiS,may06: test
-!      testing variable iactvbc
-!      IF(iactvbc(n).gt.0 .and. maxn.eq.1)
-!    +   WRITE(9999,*) 'iactvbc(',N,') =', iactvbc(N)
-!      testing node assignment at surface
-!      IF(N.ne.nsurf(n)) WRITE(9999,*) 'NSURF(',N,') = ', NSURF(N)
-!      testing the nodes below
-!      if (nref(n).ne.0) WRITE(9999,*) 'NREF(',N,') = ', NREF(N)
-!-
-
-          IF(MOD(NFIX(N),100)/10 .EQ. 2) THEN
-            ibc=iactvbc(n)
-	      if(ibc .eq. 0) then
-              NFD=NFIX(N)/100
-              NFIX(N)=NFD*100+MOD(NFIX(N),10)
-            endif
-	    endif
-          IF(MOD(NFIX(N),10) .EQ. 2) THEN
-            ibc=iactvbc(n)
-	      if(ibc .eq. 0) then
-              NFD=NFIX(N)/10
-              NFIX(N)=NFD*10
-            endif
-	    endif
-          IF(NFIX1(N) .EQ. 2) THEN
-            ibc=iactvbc(n)
-	      if(ibc .eq. 0) then
-              NFIX1(N)=0
-            endif
-	    endif
+        IF(MOD(NFIX(N),100)/10 .EQ. 2) THEN
+          ibc=iactvbc(n)
+          if(ibc .eq. 0) then
+            NFD=NFIX(N)/100
+            NFIX(N)=NFD*100+MOD(NFIX(N),10)
+          endif
+        endif
+        IF(MOD(NFIX(N),10) .EQ. 2) THEN
+          ibc=iactvbc(n)
+          if(ibc .eq. 0) then
+            NFD=NFIX(N)/10
+            NFIX(N)=NFD*10
+          endif
+        endif
+        IF(NFIX1(N) .EQ. 2) THEN
+          ibc=iactvbc(n)
+          if(ibc .eq. 0) then
+            NFIX1(N)=0
+          endif
+        endif
       enddo
-
-!NiS,may06: test
-!      CLOSE(9999)
-!-
 
 c      write(75,*) 'load-76 nfix(93),nfix(634)',nfix(93),nfix(634),
 c     +    maxn,iteqv(maxn)
@@ -163,10 +144,6 @@ C-
         DO 197 M=1,NDF
   197     NBC(N,M)=-1
       !NiS,may06: end of do-loop 197
-
-!NiS,may06: testing
-!      OPEN(9998, 'testfile.txt')
-!-
 
       !NiS,may06: for every element
       DO 199 J=1,NE
@@ -315,10 +292,6 @@ CIPK JUN02
          ENDDO NBCrelation
 !-
   199 CONTINUE
-
-      !NiS,may06:testing
-      !CLOSE(9998)
-      !-
 
  1991 CONTINUE
 C
@@ -956,7 +929,7 @@ cipk oct98 update to f90
           ENDDO
 
           !check for 1d-node
-          if (NLN > CoNode) NLN = CoNode
+          !if (NLN > CoNode) NLN = CoNode
 
           !assign references to all nodes of the connection line
           equationassigning: DO K=1, LiLe
@@ -1008,9 +981,15 @@ cipk oct98 update to f90
           !Process 1D-node, because this can't be member of the line
           nbc(CoNode,1) = 1
           nbc(CoNode,2) = 0
-          DO eqdof = 3,6
-            NBC(CoNode,eqdof) = -NLN
+          nbc(CoNode,3) = 1
+          DO eqdof = 4,6
+          !DO eqdof = 3,6
+            !NBC (CoNode, eqdof) = -NLN
+            write (*,*) 'CoNode: ', CoNode, 'NLN ', NLN
+            WRITE (*,*) nbc (NLN, eqdof)
+            NBC(CoNode,eqdof) = 0
           ENDDO
+          !pause
 
           !if element was found, jump out of Loop; Reason: This loop was only done for the 1D-transitioning element nn.
           deallocate (NodeIsDry)
@@ -1485,17 +1464,14 @@ C-
 CIPK MAY02 SWITCH NDF TO 7
         DO 305 M=1,7
           IF(NBC(N,M) .LT. 0) THEN
+          !IF(NBC(N,M) .LT. -1) THEN
+
+
             NRF=-NBC(N,M)
             itmp = nbc(nrf,m)
             if (nrf .gt. n  .and. itmp .lt. 0)  goto 305
 
             NBC(N,M)=NBC(NRF,M)
-            !testing
-            !if (TransitionMember (n) .and. m == 3) then
-            !  WRITE(*,*) n, m, nrf, nbc(n, m), nbc(nrf, m)
-            !  WRITE(*,*) n, nbc(n, m)
-            !end if
-            !testing-
           ENDIF
   305   CONTINUE
   310 CONTINUE

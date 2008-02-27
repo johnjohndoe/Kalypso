@@ -29,7 +29,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   26 Sep 2007   11:47 am
+C     Last change:  WP   27 Feb 2008   10:46 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
@@ -1507,7 +1507,12 @@ C       COMPUTE BOUNDARY FORCES
         N2=NCON(L+1)
 CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         IF(IBN(N2) .NE. 1  .AND.  IBN(N2) .NE. 10
-     +    .AND.  IBN(N2) .NE. 11  .AND.  IBN(N2) .NE. 21) GO TO 650
+     +    .AND.  IBN(N2) .NE. 11  .AND.  IBN(N2) .NE. 21
+      !nis, feb08: for transition
+     +    .AND. (ibn(n2) /= 2 .AND. (.NOT. TransitionMember (n2))))
+      !-
+     +    GO TO 650
+
         N1=NCON(L)
         NA=MOD(L+2,NCN)
         N3=NCON(NA)
@@ -1531,6 +1536,10 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         ENDIF
         IF(MOD(NFIX(N2)/100,10) .EQ. 2) THEN
           IHD=1
+        !nis,feb08: for transition
+        ELSEIF (TransitionMember (n2)) then
+          IHD = 1
+        !-
         ELSE
           IHD=0
         ENDIF
@@ -1721,21 +1730,25 @@ C-
       ENDIF
 
       !nis,jul07: Write 1D-2D-line-Transition values to equation system
-      if (TransitionMember(M)) then
-        !get momentum equation of 2D-node at transition
-        IRW = NDF * (N - 1) + 1
-        IRH = NDF * (N - 1) + 3
-        !calculate absolute velocity
-        VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
-        !reset Jacobian
-        do j = 1, nef
-          estifm(irw, j) = 0.0
-        enddo
-        !form specific discharge values like inner boundary condition
-        F (IRW)           = spec(M, 1) - vx * vel(3, M)
-        ESTIFM (IRW, IRW) = vel(3, M)  - dspecdv(M)
-        ESTIFM (IRW, IRH) = vx         - dspecdh(M)
-      end if
+      !if (TransitionMember(M)) then
+      !
+      !  !get momentum equation of 2D-node at transition
+      !  IRW = NDF * (N - 1) + 1
+      !  IRH = NDF * (N - 1) + 3
+      !
+      !  !calculate absolute velocity
+      !  VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
+      !
+      !  !reset Jacobian
+      !  do j = 1, nef
+      !    estifm(irw, j) = 0.0
+      !  enddo
+      !
+      !  !form specific discharge values like inner boundary condition
+      !  F (IRW)           = spec(M, 1) - vx * vel(3, M)
+      !  ESTIFM (IRW, IRW) = vel(3, M)  - dspecdv(M)
+      !  ESTIFM (IRW, IRH) = vx         - dspecdh(M)
+      !end if
       !-
 
       NFX=NFIX(M)/1000

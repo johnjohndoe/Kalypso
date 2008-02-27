@@ -1,4 +1,4 @@
-C     Last change:  NIS   3 Feb 2008   11:17 am
+C     Last change:  WP   26 Feb 2008    3:32 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -441,21 +441,23 @@ CIPK APR01  NOW RESET FOR MID-SIDES
           LiNo  = TransLines(j, 2)
           LiLe  = lmt (LiNo)
           waspi = 0.0
-          TDep  = vel(3, TNode)
-          TDepv = 0.0
 
-          !marsh-option not active
-          if (idnopt == 0) then
-            !calculate water level
-            waspi = ao(TNode) + TDep
+!          TDep  = vel(3, TNode)
+          call getLineAverageWaterLevel (LiNo, waspi)
+!          TDepv = 0.0
 
-          !marsh-option active
-          else
-            !calculate water level with marsh-option, first transform virtual depth to "real" flow depth and then add bottom elevation of marsh-range
-            CALL amf (TDepv, TDep, akp (TNode),
-     +                  adt (TNode), adb (TNode), dum1, dum2, 0)
-            waspi = ado(TNode) + TDepV
-          end if
+!          !marsh-option not active
+!          if (idnopt == 0) then
+!            !calculate water level
+!            waspi = ao(TNode) + TDep
+!
+!          !marsh-option active
+!          else
+!            !calculate water level with marsh-option, first transform virtual depth to "real" flow depth and then add bottom elevation of marsh-range
+!            CALL amf (TDepv, TDep, akp (TNode),
+!     +                  adt (TNode), adb (TNode), dum1, dum2, 0)
+!            waspi = ado(TNode) + TDepV
+!          end if
 
           !Assign water depth to nodes of transition
           if (idnopt == 0) then
@@ -468,11 +470,16 @@ CIPK APR01  NOW RESET FOR MID-SIDES
             end do
           else
             do k = 1, LiLe
+              !get node
               na = line(LiNo, k)
+              !if node is not deactivated
               if (vel(3,na) > 0.0) then
+                !get virtual depth
                 tmpdepth = waspi - ado(na)
+                !calculate Calculation depth
                 CALL amf (tmpdepth, vel(3,na), akp(na),
      +                    adt (na), adb (na), dum1, dum2, 1)
+                !take water surface elevation
                 WSLL(na) = waspi
               endif
             end do

@@ -1,4 +1,4 @@
-!     Last change:  NIS   2 Feb 2008   10:30 pm
+!     Last change:  WP   27 Feb 2008    9:06 am
 subroutine TransVelDistribution
 
 !description
@@ -22,7 +22,7 @@ INTEGER            :: TransLi, TransNo
 INTEGER            :: PolyPos, findpolynom
 real               :: TransVel, CSArea, Discharge, localVel
 REAL (KIND = 8)    :: calcPolynomial
-REAL (KIND = 8)    :: TransDep
+REAL (KIND = 8)    :: TransDep, waspi
 CHARACTER (LEN=26) :: filename_out
 
 !TransLi   :: number of Transition Line
@@ -62,7 +62,7 @@ delta = 0.0
 
 
 !increments for numerical derivative
-Dh = 0.0001
+Dh = 0.01
 dv = 0.001
 
 !for every line transition
@@ -113,42 +113,45 @@ transitionloop: do i = 1, MaxLT
     !j = 2: Calculate numeric derivative (difference quotient) due to LOWER water depth
 
 !deactivated
-!    !j = 3: Calculate numeric derivative (difference quotient) due to HIGHER water depth and average numeric derivative
-!    !j = 4: Calculate numeric derivative (difference quotient) due to lower flow velocity at a particular node
-!    !j = 5: Calculate numeric derivative (difference quotient) due to higher flow velocity at a particular node
+!    !j = 3: Calculate numerical derivative (difference quotient) due to HIGHER water depth and average numeric derivative
+!    !j = 4: Calculate numerical derivative (difference quotient) due to lower flow velocity at a particular node
+!    !j = 5: Calculate numerical derivative (difference quotient) due to higher flow velocity at a particular node
 !-
 
     !1D-values
     TransVel = vel (1, TransNo) * COS (alfa( TransNo)) + vel (2, TransNo) * SIN (alfa( TransNo))
     TransDep = vel (3, TransNo)
+    if (j == 1) then
+      !get the discharge area
+      CSArea = 0.0
+      !geometry-approach (RMA10S original)
+      if (ABS(width(TransNo)) > 1.e-7) then
+        CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))*TransDep) * TransDep
+      !polynom-approach
+      else
+        PolyPos = findPolynom (PolyRangeA (TransNo, :), TransDep, PolySplitsA (TransNo))
+        CSArea  = calcPolynomial (apoly (PolyPos, TransNo, 0:12), TransDep)
+      end if
+      !Calculate discharge-value
+      Discharge = ABS(CSArea * TransVel)
+    endif
+
+    !average water level at transition in 2D part
+    call GetLineAverageWaterLevel (TransLi, waspi)
 
     !reset values for numerical derivative
     IF (j == 2) THEN
-      TransDep = TransDep - Dh
+      waspi = waspi + Dh
     ELSEIF (j == 3) then
-      TransDep = TransDep + 2 * Dh
+      waspi = waspi + 2 * Dh
     END IF
-
-    !get the discharge area
-    CSArea = 0.0
-    !geometry-approach (RMA10S original)
-    if (ABS(width(TransNo)) > 1.e-7) then
-      CSArea = (width(TransNo) + 0.5 * (ss1(TransNo) + ss2(TransNo))*TransDep) * TransDep
-    !polynom-approach
-    else
-      PolyPos = findPolynom (PolyRangeA (TransNo, :), TransDep, PolySplitsA (TransNo))
-      CSArea  = calcPolynomial (apoly (PolyPos, TransNo, 0:12), TransDep)
-    end if
-
-    !Calculate discharge-value
-    Discharge = ABS(CSArea * TransVel)
 
     !getting the 2D-specific discharges with the QGENTRANSITION-subroutine
     if (j < 4) then
 
       !Getting the specific discharges at the transition
       WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
-      call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
+      call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
       !input:
       !TransLi   = is line, where to set the velocities
@@ -189,8 +192,15 @@ transitionloop: do i = 1, MaxLT
           end if
 
           !calculate derivative
+          !testing
           !WRITE(*,*) dspecdh(na), spec(na,1), dh
-          dspecdh (na) = (spec(na, 1) - dspecdh(na)) / (-Dh)
+          !testing-
+
+          dspecdh (na) = (dspecdh(na) - spec(na, 1)) / Dh
+
+          !testing
+          !WRITE(*,*) 'dspecdh(na)', dspecdh(na)
+          !testing-
         end do
 !switched off for the moment
 !      ELSEIF (j == 3) then
@@ -216,7 +226,7 @@ transitionloop: do i = 1, MaxLT
 !        !velocities
 !        vel(1, na) = vel(1, na) + Dv * COS (alfa(na))
 !        vel(2, na) = vel(2, na) + Dv * SIN (alfa(na))
-!        call QGENtrans (TransLi, TransNo, Discharge, 0.0, TransDep)
+!        call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 !        !store value in derivative
 !        dspecdv(na) = TransSpec (k)
 !        !correct direction
@@ -247,37 +257,122 @@ transitionloop: do i = 1, MaxLT
     ENDIF
   ENDDO
 
+  !get original WSLL again
+  call GetLineAverageWaterLevel (TransLi, waspi)
+
+  !Calculate velocity-derivative vor every 2D-node
+  do j = 1, lmt(TransLines (i, 2))
+
+    !get the nodes
+    node = line (TransLines (i, 2), j)
+
+    !change velocities
+    vel (1, node) = vel (1, node) + Dv * COS (alfa(node))
+    vel (2, node) = vel (2, node) + Dv * SIN (alfa(node))
+
+    WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
+    call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
+
+    !Restore velocities
+    vel (1, node) = vel (1, node) - Dv * COS (alfa(TransNo))
+    vel (2, node) = vel (2, node) - Dv * SIN (alfa(TransNo))
+
+    !store it in derivative
+    dspecdv(na) = TransSpec (j)
+
+    !correct direction
+    SpecCrossA = dspecdv (na) * COS( alfa(na)) * DYtot - dspecdv (na) * SIN( alfa(na)) * DXtot
+
+    !of nominal (1D)-discharge and spec-discharge through line have different signs then correct
+    if (SpecCrossA * VelCrossA < 0.0) then
+      dspecdv (na) = - dspecdv (na)
+    end if
+
+    !testing
+    !WRITE(*,*) 'Berechne Ableitung ueber v'
+    !WRITE(*,*) na, dspecdv (na), spec (na, 1), dv
+    !testing-
+    dspecdv (na) = (dspecdv (na) - spec(na, 1)) / Dv
+    !testing
+    !WRITE(*,*) dspecdv (na)
+    !testing-
+
+  end do
+  !testing
+  !pause
+  !testing-
+
   DEALLOCATE (TransSpec)
 
+
+  !set water stage condition for every 2D-boundary node
+  if (idnopt == 0) then
+    waspi = vel (3, TransNo) + ao (TransNo)
+  else
+    CALL amf (TDepv, vel (3, TransNo), akp (TransNo), adt (TransNo), adb (TransNo), dum1, dum2, 0)
+    waspi = ado (TransNo) + TDepV
+  end if
+
+  do j = 1, lmt (TransLines (i, 2))
+    node = line (TransLines (i, 2), j)
+    spec (node, 3) = waspi - ao (node)
+  enddo
+  !-
+
+  q2D(i) = 0.0
+  dh = 0.01
+  dq2ddh(i) = 0.0
+  !testing
+  !WRITE(*,*) 'Vor der 2D-Abflussberechnung'
+  !WRITE(*,*) lmt(TransLi), TransLi
+  !pause
+  !testing-
+
+  do derivative = 1, 2
 
   !Get actual 2D-discharge (algorithm out of check-subroutine)
   sumx = 0.0
   sumy = 0.0
-  q2D(i) = 0.0
 
-  GetDischarge: do k = 1, lmt(TransLi) - 2, 2
-    !get nodes
-    NA = LINE (TransLi, K)
-    NB = LINE (TransLi, K + 1)
-    NC = LINE (TransLi, K + 2)
+    GetDischarge: do k = 1, lmt(TransLi) - 2, 2
+      !get nodes
+      NA = LINE (TransLi, K)
+      NB = LINE (TransLi, K + 1)
+      NC = LINE (TransLi, K + 2)
 
-    !get segment length
-    DX = (CORD (NC, 1) - CORD (NA, 1))
-    DY = (CORD (NC, 2) - CORD (NA, 2))
+      !get segment length
+      DX = (CORD (NC, 1) - CORD (NA, 1))
+      DY = (CORD (NC, 2) - CORD (NA, 2))
 
-    !get nodal water depths
-    D1 = VEL (3, NA)
-    D3 = VEL (3, NC)
-    IF (D1 <= DSET  .OR.  D3 <= DSET) CYCLE GetDischarge
-    D2 = (D1 + D3) / 2.
+      !get nodal water depths
+      if (derivative == 1) then
+        D1 = VEL (3, NA)
+        D3 = VEL (3, NC)
+      ELSEIF (derivative == 2) then
+        D1 = VEL (3, na) + dh
+        D3 = VEL (3, nc) + dh
+      endif
 
-    !calculate discharge components
-    SUMX = SUMX + DY * (VEL (1, NA) * D1 + 4.0 * VEL (1, NB) * D2 + VEL (1, NC) * D3) / 6.
-    SUMY = SUMY + DX * (VEL (2, NA) * D1 + 4.0 * VEL (2, NB) * D2 + VEL (2, NC) * D3) / 6.
-  end do GetDischarge
+      IF (D1 <= DSET  .OR.  D3 <= DSET) CYCLE GetDischarge
+      D2 = (D1 + D3) / 2.
 
+      !calculate discharge components
+      SUMX = SUMX + DY * (VEL (1, NA) * D1 + 4.0 * VEL (1, NB) * D2 + VEL (1, NC) * D3) / 6.
+      SUMY = SUMY + DX * (VEL (2, NA) * D1 + 4.0 * VEL (2, NB) * D2 + VEL (2, NC) * D3) / 6.
+    end do GetDischarge
   !calculate discharge be cross product ([V] x [L])
-  q2D(i) = SUMX - SUMY
+  if (derivative == 1) then
+    q2D(i) = SUMX - SUMY
+    !testing
+    WRITE(*,*) 'Abfluss 2D: ', i, q2d(i)
+    !testing-
+  ELSEIF (derivative == 2) then
+    dq2ddh(i) = SUMX - sumy
+
+    dq2ddh(i) = (dq2ddh(i) - q2d(i))/ dh
+  end if
+  end do
+
 
 end do transitionloop
 

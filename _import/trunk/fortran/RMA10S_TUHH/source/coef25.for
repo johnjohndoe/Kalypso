@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   22 Nov 2007    7:51 pm
+C     Last change:  WP   27 Feb 2008   11:48 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -64,7 +64,7 @@ C
       INTEGER :: nbct (1:32,1:2)
       CHARACTER (LEN =  1) :: sort(1:32)
       CHARACTER (LEN = 16) :: FMT1
-      CHARACTER (LEN = 34) :: FMT2
+      CHARACTER (LEN = 38) :: FMT2
 !-
 cycw aug94 add double precision salt
       REAL*8 SALT
@@ -1660,7 +1660,12 @@ C       COMPUTE BOUNDARY FORCES
         N2=NCON(L+1)
 CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         IF(IBN(N2) .NE. 1  .AND.  IBN(N2) .NE. 10
-     +    .AND.  IBN(N2) .NE. 11  .AND.  IBN(N2) .NE. 21) GO TO 650
+     +    .AND.  IBN(N2) .NE. 11  .AND.  IBN(N2) .NE. 21
+      !nis,feb08: for transition
+     +    .AND. (IBN (n2) /= 2 .AND. (.NOT. TransitionMember (n2))))
+      !-
+     +    GO TO 650
+
         N1=NCON(L)
         NA=MOD(L+2,NCN)
         N3=NCON(NA)
@@ -1684,6 +1689,10 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         ENDIF
         IF(MOD(NFIX(N2)/100,10) .EQ. 2) THEN
           IHD=1
+        !nis,feb08: for transition
+        ELSEIF (TransitionMember (n2)) then
+          IHD = 1
+        !-
         ELSE
           IHD=0
         ENDIF
@@ -1698,7 +1707,7 @@ CIPK APR01 FIX BUG            AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
      +		AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
-	      ENDIF
+            ENDIF
             XHT=ELEV-AZER
 CMAY93            U=
 CMAY93     +      XNAL(1,N)*VEL(1,N1)+XNAL(2,N)*VEL(1,N2)+XNAL(3,N)*VEL(1,N3)
@@ -1887,21 +1896,25 @@ C-
       ENDIF
 
       !nis,jul07: Write 1D-2D-line-Transition values to equation system
-      if (TransitionMember(M)) then
-        !get momentum equation of 2D-node at transition
-        IRW = NDF * (N - 1) + 1
-        IRH = NDF * (N - 1) + 3
-        !calculate resulting velocity
-        VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
-        !reset Jacobian line
-        do j = 1, nef
-          estifm(irw, j) = 0.0
-        enddo
-        !form specific discharge values like inner boundary condition
-        F (IRW)           = spec(M, 1) - vx * vel(3, M)
-        ESTIFM (IRW, IRW) = vel(3, M)  !- dspecdv(M)
-        ESTIFM (IRW, IRH) = vx         - dspecdh(M)
-      end if
+      !if (TransitionMember(M)) then
+      !
+      !  !get momentum equation of 2D-node at transition
+      !  IRW = NDF * (N - 1) + 1
+      !  IRH = NDF * (N - 1) + 3
+      !
+      !  !calculate resulting velocity
+      !  VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
+      !
+      !  !reset Jacobian line
+      !  do j = 1, nef
+      !    estifm(irw, j) = 0.0
+      !  enddo
+      !
+      !  !form specific discharge values like inner boundary condition
+      !  F (IRW)           = spec(M, 1) - vx * vel(3, M)
+      !  ESTIFM (IRW, IRW) = vel(3, M)  !- dspecdv(M)
+      !  ESTIFM (IRW, IRH) = vx         !- dspecdh(M)
+      !end if
       !-
 
       NFX=NFIX(M)/1000
@@ -2031,8 +2044,9 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 
 !write matrix into file
 !if (nn == 92 .or. nn == 93 .or. nn == 95) then
-!      WRITE(9919,*) 'Matrix for element: ', nn, ' calculated.'
-!      if (nn < 0) then
+!      !WRITE(9919,*) 'Matrix for element: ', nn, ' calculated.'
+!      !if (nn < 0) then
+!      if (TransitionElement (nn)) then
 !        !active degreecount
 !        dca = 0
 !        !active positions
@@ -2059,9 +2073,9 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 !          end do
 !        end do
 !
-!        WRITE(FMT1, '(a5,i2.2,a9)') '(21x,', dca, '(1x,i10))'
-!        write(FMT2, '(a14,i2.2,a18)')
-!     +    '(a1,i1,a2,i10,', dca+1, '(1x,f10.2),1x,i10)'
+!        WRITE(FMT1, '(a5,i2.2,a9)') '(33x,', dca, '(1x,i10))'
+!        write(FMT2, '(a18,i2.2,a18)')
+!     +    '(a1,i1,a2,2(1x,i8),', dca+1, '(1x,f10.2),1x,i10)'
 !
 !        WRITE(9919,*) 'Element ', nn, 'coef2 t', xht
 !        WRITE(9919, FMT1)
@@ -2071,7 +2085,7 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 !          WRITE(9919, FMT2)
 !     +     sort(i), nbct(i,1), ': ',
 !     +     nbc( nop(nn, nbct(i,1)), nbct(i,2)),
-!     +     f(k),
+!     +     nop(nn, nbct(i,1)), f(k),
 !     +     (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
 !     +     nbc( nop(nn, nbct(i,1)), nbct(i,2))
 !        ENDDO

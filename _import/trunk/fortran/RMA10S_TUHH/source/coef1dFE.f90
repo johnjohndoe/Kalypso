@@ -1,4 +1,4 @@
-!Last change:  WP   21 Jan 2008    8:18 pm
+!Last change:  WP   27 Feb 2008   11:49 am
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -46,7 +46,7 @@ REAL (KIND = 8) :: sbot
 REAL (KIND = 8) :: CalcPolynomial, CalcPolynomialIntegral, CalcPolynomial1stDerivative, CalcPolynomial2ndDerivative
 REAL (KIND = 8) :: speclocal
 
-INTEGER :: i, j, k, Pos
+INTEGER :: i, j, k, Pos, TrID
 INTEGER :: PPA(1:2), PPQ(1:2), PPB(1:2), findpolynom, PP(1:2)
 
 !new variables
@@ -1744,23 +1744,56 @@ ENDIF
 
 !estifm-testoutput
 !if (testoutput > -1) then
-!  WRITE(9919,*) 'Element ', nn, 'coef1Pol'
-!        WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1,  3, 2), nbc (nop(nn,2), 1), ( nbc (nop(nn,3), j), j=1,  3, 2)
-!  writematrix: do i = 1, 11, 2
-!    if (i == 7) CYCLE writematrix
 !
-!    if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
-!      WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
-!    elseif (MOD(i,4) == 3 ) then
-!      WRITE(9919, 1234) nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4)), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
-!    ELSE
-!      WRITE(9919, 1234) nbc( nop(nn, i/4 ), 4), (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
-!    endif
-!  end do writematrix
-!  WRITE(9919,*)
-!  WRITE(9919,*)
+!  !testing
+!  do i = 1, 3, 2
+!    if (TransitionMember (nop (nn, i)) ) then
+!      WRITE(*,*) '1D-Knoten: ', nop(nn, i)
+!      WRITE(*,*) '***********'
+!      IA = NDF * (i - 1) + 3
+!      WRITE(*,*) 'Gleichung: ', NBC (nop (nn, i), 3)
+!      WRITE(*,*) 'Residuum : ', f (ia), 'Gesamt: ', r1(NBC (nop(nn,i), 3))
+!    end if
+!  end do
+!  !testing-
+!
+!  if (Transitionelement (nn)) then
+!    WRITE(9919,*) 'Element ', nn, 'coef1Pol'
+!    WRITE(9919, 1233) ( nbc (nop(nn,1), j), j=1,  3, 2), nbc (nop(nn,2), 1), ( nbc (nop(nn,3), j), j=1,  3, 2)
+!
+!    writematrix: do i = 1, 11, 2
+!      if (i == 7) CYCLE writematrix
+!
+!      if (MOD(i,4) == 1 .or. MOD(i,4) == 2) then
+!        IA = nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4))
+!        if (f (i) /= r1(ia)) then
+!          WRITE(9919, 1235) ia, (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i), r1(ia)
+!        else
+!          WRITE(9919, 1234) ia, (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
+!        endif
+!      elseif (MOD(i,4) == 3 ) then
+!        ia = nbc( nop(nn, 1+(i-MOD(i,4))/ 4), mod(i,4))
+!        if (f (i) /= r1 (ia)) then
+!          WRITE(9919, 1235) ia, (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i), r1(ia)
+!        else
+!          WRITE(9919, 1234) ia, (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
+!        end if
+!      ELSE
+!        ia = nbc( nop(nn, i/4 ), 4)
+!        if (f (i) /= r1 (ia)) then
+!          WRITE(9919, 1235) ia, (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i), r1(ia)
+!        else
+!          WRITE(9919, 1234) ia, (estifm(i,j), j=1,  5, 2), (estifm(i,j), j=9, 11, 2), f(i)
+!        end if
+!      endif
+!    end do writematrix
+!    WRITE(9919,*)
+!    WRITE(9919,*)
+!  end if
+!
 ! 1233 format (6x, 5(1x, i10))
 ! 1234 format (i6, 6(1x, f10.2))
+! 1235 format (i6, 7(1x, f10.2))
 !endif
 !-
 

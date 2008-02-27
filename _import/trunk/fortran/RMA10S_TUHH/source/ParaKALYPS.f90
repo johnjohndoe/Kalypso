@@ -1,4 +1,4 @@
-!     Last change:  WP   14 Feb 2008    6:14 pm
+!     Last change:  WP   26 Feb 2008    4:32 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -45,7 +45,7 @@ real (KIND=4),allocatable :: gl_bedform(:,:)
 !           Add pointer for all nodes to be part of a transition or not
 logical, allocatable :: TransitionMember(:), TransitionElement(:)
 REAL   , allocatable :: dspecdh (:), dspecdv (:)
-REAL                 :: q2d(1:50)
+REAL                 :: q2d(1:50), dq2ddh (1: 50)
 !-
 
 !if restart with kalypso 2D-file, then RESTARTSwitch = 1, else RESTARTSwitch = 0
@@ -97,6 +97,5 @@ CHARACTER (Len = 128), ALLOCATABLE :: CalcUnitName (:)
 
 !new parameters for weirs defined by linear functions
 REAL (KIND = 8), ALLOCATABLE :: cstrcRange (:,:,:), cstrcCoefs (:,:,:,:), cstrcdisch (:, :)
-
 
 END MODULE 

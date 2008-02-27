@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Feb 2008    2:38 pm
+C     Last change:  WP   26 Feb 2008    4:32 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -902,6 +902,7 @@ CIPK MAR01
       do i = 1, 50
         lmt(i) = 0
         q2D(i) = 0.0
+        dq2ddh(i) = 0.0
       end do
       !nis,jun07: maxfil is not zero, if there was a scratch file, otherwise it should be zero, ALWAYS
       MAXFIL = 0

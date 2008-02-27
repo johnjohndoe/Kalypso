@@ -1,5 +1,5 @@
-!     Last change:  WP   26 Sep 2007   11:52 am
-      SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, TDep)
+!     Last change:  WP   26 Feb 2008    3:53 pm
+      SUBROUTINE QGENtrans (TLine,TNode,QREQ,THET, waspi)
 
       !nis,jan07: Overgiven variables
       ! J    = number of CCL
@@ -95,21 +95,19 @@ dxline = cord (nc, 1) - cord (na, 1)
 dyline = cord (nc, 2) - cord (na, 2)
 
 !Initializing average waterlevel at the line
-waspi = 0.0
-
+!waspi = 0.0
 !marsh-option not active
-if (idnopt == 0) then
-  waspi = ao(TNode) + TDep
+!if (idnopt == 0) then
+!  waspi = ao(TNode) + TDep
 !marsh-option active
-else
-  CALL amf (TDepv, TDep, akp (TNode), adt (TNode), adb (TNode), dum1, dum2, 0)
-  waspi = ado(TNode) + TDepV
-end if
-
+!else
+!  CALL amf (TDepv, TDep, akp (TNode), adt (TNode), adb (TNode), dum1, dum2, 0)
+!  waspi = ado(TNode) + TDepV
+!end if
 !testfile ouput ('TransitionoutputXXXX.txt
-!WRITE(999,*) 'Average waterlevel at transition:', waspi
-!WRITE(999,*) 'required discharge:              ', qreq
-!WRITE(999,*) 'inflow angle:                    ', thet
+!WRITE(*,*) 'Average waterlevel at transition:', waspi
+!WRITE(*,*) 'required discharge:              ', qreq
+!WRITE(*,*) 'inflow angle:                    ', thet
 !-
 
 !Initialize factor suma

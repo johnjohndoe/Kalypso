@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Nov 2007    9:18 am
+C     Last change:  WP   26 Feb 2008    1:45 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 CIPK  LAST UPDATE AUG 1 2000 ADD SLOPING ELEVATION SET
 CIPK  LAST UPDATE DEC 16 1997 
@@ -57,28 +57,28 @@ CIPK AUG00
         ENDIF
 CIPK AUG00  END CHANGES
         IFIX=NFIX(NA)/100
-	  NFIX(NA)=IFIX*100
-	  NFIX1(NA)=0
+        NFIX(NA)=IFIX*100
+        NFIX1(NA)=0
         IF(QQAL(1) .GE. 0.) THEN
           SPEC(NA,4)=QQAL(1)
           IF(MOD(NFIX(NA),100)/10 .EQ. 0) NFIX(NA)=NFIX(NA)+10
-	  ELSEIF(QQAL(1) .GT. -9000.) THEN
+        ELSEIF(QQAL(1) .GT. -9000.) THEN
           SPEC(NA,4)=QQAL(1)
-	    NFIX(NA)=NFIX(NA)+20
+          NFIX(NA)=NFIX(NA)+20
         ENDIF
         IF(QQAL(2) .GE. 0.) THEN
           SPEC(NA,5)=QQAL(2)
           IF(MOD(NFIX(NA),10) .EQ. 0) NFIX(NA)=NFIX(NA)+1
-	  ELSEIF(QQAL(2) .GT. -9000.) THEN
+        ELSEIF(QQAL(2) .GT. -9000.) THEN
           SPEC(NA,5)=QQAL(2)
-	    NFIX(NA)=NFIX(NA)+2
+          NFIX(NA)=NFIX(NA)+2
         ENDIF
         IF(QQAL(3) .GE. 0.) THEN
           SPEC(NA,6)=QQAL(3)
           IF(NFIX1(NA) .EQ. 0) NFIX1(NA)=1
-	  ELSEIF(QQAL(3) .GT. -9000.) THEN
+        ELSEIF(QQAL(3) .GT. -9000.) THEN
           SPEC(NA,6)=QQAL(3)
-	    NFIX1(NA)=NFIX1(NA)+2
+          NFIX1(NA)=NFIX1(NA)+2
         ENDIF
         IF(ICYC .GT. 0) CALL BFORM(NA)
   300 CONTINUE
