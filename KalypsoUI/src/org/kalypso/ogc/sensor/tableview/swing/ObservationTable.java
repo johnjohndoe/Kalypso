@@ -91,7 +91,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   protected final DateTableCellRenderer m_dateRenderer;
 
-  private MaskedNumberTableCellRenderer m_nbRenderer;
+  private final MaskedNumberTableCellRenderer m_nbRenderer;
 
   private final boolean m_waitForSwing;
 
@@ -118,10 +118,10 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   /**
    * @param waitForSwing
-   *          when true, the events are handled synchonuously in onObsviewChanged(), this is usefull when you are
-   *          creating the table for non-gui purposes such as in the export-document-wizard: there you need to wait for
-   *          swing to be finished with updating/painting the table before doing the export, else you get unexpected
-   *          results
+   *            when true, the events are handled synchronously in onObsviewChanged(), this is useful when you are
+   *            creating the table for non-gui purposes such as in the export-document-wizard: there you need to wait
+   *            for swing to be finished with updating/painting the table before doing the export, else you get
+   *            unexpected results
    */
   public ObservationTable( final TableView template, final boolean waitForSwing, final boolean useContextMenu )
   {
@@ -131,7 +131,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_waitForSwing = waitForSwing;
 
     // for convenience
-    m_model = (ObservationTableModel)getModel();
+    m_model = (ObservationTableModel) getModel();
     m_model.setRules( template.getRules() );
 
     // date renderer with timezone
@@ -176,7 +176,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    * @see javax.swing.JTable#columnAdded(javax.swing.event.TableColumnModelEvent)
    */
   @Override
-  public void columnAdded( TableColumnModelEvent e )
+  public void columnAdded( final TableColumnModelEvent e )
   {
     super.columnAdded( e );
 
@@ -188,7 +188,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    * @see javax.swing.JTable#columnRemoved(javax.swing.event.TableColumnModelEvent)
    */
   @Override
-  public void columnRemoved( TableColumnModelEvent e )
+  public void columnRemoved( final TableColumnModelEvent e )
   {
     super.columnRemoved( e );
 
@@ -196,7 +196,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     if( m_excelCp != null )
       m_excelCp.dispose();
@@ -221,14 +221,14 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     final CatchRunnable runnable = new CatchRunnable()
     {
       @Override
-      protected void runIntern() throws Throwable
+      protected void runIntern( ) throws Throwable
       {
         final int evenType = evt.getType();
 
         // REFRESH ONE COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_DATA_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
           model.refreshColumn( column, evt.getSource() );
 
           analyseObservation( column.getObservation(), true );
@@ -237,7 +237,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         // REFRESH COLUMN ACCORDING TO ITS STATE
         if( evenType == ObsViewEvent.TYPE_ITEM_STATE_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
 
           if( column.isShown() )
             model.addColumn( column );
@@ -250,7 +250,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         // ADD COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_ADD && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
           if( column.isShown() )
             model.addColumn( column );
 
@@ -260,7 +260,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         // REMOVE COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_REMOVE && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
           model.removeColumn( column );
 
           analyseObservation( column.getObservation(), false );
@@ -288,10 +288,10 @@ public class ObservationTable extends JTable implements IObsViewEventListener
         // VIEW CHANGED
         if( evenType == ObsViewEvent.TYPE_VIEW_CHANGED )
         {
-          final TableView view = (TableView)evt.getObject();
+          final TableView view = (TableView) evt.getObject();
           model.setAlphaSort( view.isAlphaSort() );
           m_dateRenderer.setTimeZone( view.getTimezone() );
-          
+
           repaint();
         }
       }
@@ -304,7 +304,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    * @see javax.swing.JTable#getCellRenderer(int, int)
    */
   @Override
-  public TableCellRenderer getCellRenderer( int row, int column )
+  public TableCellRenderer getCellRenderer( final int row, final int column )
   {
     final TableCellRenderer renderer = super.getCellRenderer( row, column );
     return renderer;
@@ -319,7 +319,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    * </ul>
    * 
    * @param adding
-   *          is true when the observation (actually its associated table-view-column) is added to the model
+   *            is true when the observation (actually its associated table-view-column) is added to the model
    */
   protected void analyseObservation( final IObservation obs, final boolean adding )
   {
@@ -337,14 +337,14 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
       final MetadataList mdl = obs.getMetadataList();
 
+      // TODO: move scenario stuff into template as anonymous table view enhancments
+
       // add a scenario-label if obs has scenario specific metadata property
       if( mdl.getProperty( ObservationConstants.MD_SCENARIO ) != null )
       {
-        final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario(
-            mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
+        final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
 
-        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && m_panel != null
-            && !m_panel.isLabelSet() )
+        if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && m_panel != null && !m_panel.isLabelSet() )
         {
           Icon icon = null;
           final String imageURL = scenario.getProperty( IScenario.PROP_TABLE_HEADER_IMAGE_URL, null );
@@ -386,7 +386,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    * @see java.awt.Component#processMouseEvent(java.awt.event.MouseEvent)
    */
   @Override
-  protected void processMouseEvent( MouseEvent e )
+  protected void processMouseEvent( final MouseEvent e )
   {
     if( e.isPopupTrigger() && m_popup != null )
       m_popup.show( this, e.getX(), e.getY() );
@@ -394,12 +394,12 @@ public class ObservationTable extends JTable implements IObsViewEventListener
       super.processMouseEvent( e );
   }
 
-  public ObservationTableModel getObservationTableModel()
+  public ObservationTableModel getObservationTableModel( )
   {
     return m_model;
   }
 
-  public TableView getTemplate()
+  public TableView getTemplate( )
   {
     return m_view;
   }
@@ -409,7 +409,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
     m_panel = panel;
   }
 
-  public String getCurrentScenarioName()
+  public String getCurrentScenarioName( )
   {
     return m_currentScenarioName;
   }
@@ -429,6 +429,5 @@ public class ObservationTable extends JTable implements IObsViewEventListener
    */
   public void onPrintObsView( final ObsViewEvent evt )
   {
-    // TODO Auto-generated method stub
   }
 }

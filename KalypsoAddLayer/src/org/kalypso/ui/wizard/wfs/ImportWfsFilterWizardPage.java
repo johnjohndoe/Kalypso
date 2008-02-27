@@ -75,7 +75,6 @@ import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -132,7 +131,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   ComboViewer m_geomComboViewer;
 
-  public ImportWfsFilterWizardPage( String pageName, String title, ImageDescriptor titleImage, IMapModell viewer )
+  public ImportWfsFilterWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IMapModell viewer )
   {
     super( pageName, title, titleImage );
     m_gisMapOutlineViewer = viewer;
@@ -141,7 +140,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
   /**
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     final Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 2, true ) );
@@ -157,7 +156,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( m_bufferButton.getSelection() )
         {
@@ -178,7 +177,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         setPageComplete( validate() );
       }
@@ -193,7 +192,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( m_activeSelectionButton.getSelection() )
           m_geomComboViewer.getCombo().setEnabled( true );
@@ -202,9 +201,9 @@ public class ImportWfsFilterWizardPage extends WizardPage
         setPageComplete( validate() );
       }
     } );
-    Combo geomCombo = new Combo( topGroup, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
+    final Combo geomCombo = new Combo( topGroup, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     geomCombo.setEnabled( false );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     // data.widthHint = STANDARD_WIDTH_FIELD;
     geomCombo.setLayoutData( data );
     m_geomComboViewer = new ComboViewer( geomCombo );
@@ -215,12 +214,12 @@ public class ImportWfsFilterWizardPage extends WizardPage
     m_geomComboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        ISelection selection = event.getSelection();
+        final ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          IStructuredSelection ss = (IStructuredSelection) selection;
+          final IStructuredSelection ss = (IStructuredSelection) selection;
           m_selectedGeom = (GM_Object) ss.getFirstElement();
         }
         setPageComplete( validate() );
@@ -235,7 +234,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         getBBoxFromActiveMap();
         setPageComplete( validate() );
@@ -258,7 +257,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     {
 
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         m_maxFeaturesAsString = maxFeatureField.getText();
         setPageComplete( validate() );
@@ -270,18 +269,18 @@ public class ImportWfsFilterWizardPage extends WizardPage
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_doFilterMaxFeature = !m_doFilterMaxFeature;
         maxFeatureField.setEnabled( m_doFilterMaxFeature );
       }
     } );
 
-    Group spatialOpsGroup = new Group( main, SWT.HORIZONTAL );
+    final Group spatialOpsGroup = new Group( main, SWT.HORIZONTAL );
     spatialOpsGroup.setLayout( new GridLayout( 2, false ) );
     spatialOpsGroup.setLayoutData( new GridData() );
     spatialOpsGroup.setText( "Unterstütze Räumliche Operatoren" );
-    Label opsLabel = new Label( spatialOpsGroup, SWT.NONE );
+    final Label opsLabel = new Label( spatialOpsGroup, SWT.NONE );
     opsLabel.setText( "Operatoren" );
     m_spatialOpsCombo = new Combo( spatialOpsGroup, SWT.READ_ONLY );
     m_spatialOpsCombo.addSelectionListener( new SelectionAdapter()
@@ -290,7 +289,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         setPageComplete( validate() );
       }
@@ -329,7 +328,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
           return false;
         }
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         setErrorMessage( "maximale Anzahl Feature muss ein Zahlenwert sein" );
         return false;
@@ -340,11 +339,11 @@ public class ImportWfsFilterWizardPage extends WizardPage
     {
       try
       {
-        String text = m_bufferDistance.getText();
+        final String text = m_bufferDistance.getText();
         Double.parseDouble( text );
         // Integer.parseInt( text );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
         setErrorMessage( "Es können nur Zahlen in das Textfeld eingegeben werden" );
         m_bufferDistance.setText( "" );
@@ -391,8 +390,8 @@ public class ImportWfsFilterWizardPage extends WizardPage
   Filter getFilter( final IWFSLayer layer ) throws GM_Exception
   {
     // TODO check checkboxes, maybe no filter at all is wanted
-    int selectionIndex = m_spatialOpsCombo.getSelectionIndex();
-    String item = m_spatialOpsCombo.getItem( selectionIndex );
+    final int selectionIndex = m_spatialOpsCombo.getSelectionIndex();
+    final String item = m_spatialOpsCombo.getItem( selectionIndex );
     int ops = -1;
     if( item.equals( OPS_CONTAINS ) )
       ops = OperationDefines.CONTAINS;
@@ -401,7 +400,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     if( item.equals( OPS_TOUCHES ) )
       ops = OperationDefines.TOUCHES;
     // TODO wählen des Poperties wenn mehrere gibt, zur Zeit wird nur das defautltGeometryProperty genommen
-    // dies muss mit einer TreeView gelöst werden -> Label und ContentProvider anpassen 
+    // dies muss mit einer TreeView gelöst werden -> Label und ContentProvider anpassen
     final IFeatureType ft = layer.getFeatureType();
     if( ft == null )
       return null;
@@ -462,7 +461,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
         final Feature feature = (Feature) firstElement;
         final Object[] properties = feature.getProperties();
         final ArrayList<Object> list = new ArrayList<Object>();
-        for( Object prop : properties )
+        for( final Object prop : properties )
         {
           if( prop != null )
             list.add( prop );
@@ -475,20 +474,20 @@ public class ImportWfsFilterWizardPage extends WizardPage
 
   GM_Surface getBBoxFromActiveMap( )
   {
-    IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     // if this Wizard is activated we assume there is always a map (GisMapEditor) open.
-    IEditorPart activeEditor = activePage.getActiveEditor();
+    final IEditorPart activeEditor = activePage.getActiveEditor();
     if( activeEditor instanceof GisMapEditor )
     {
       final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
       final MapPanel mapPanel = gisMapEditor.getMapPanel();
-      GM_Envelope boundingBox = mapPanel.getBoundingBox();
+      final GM_Envelope boundingBox = mapPanel.getBoundingBox();
       if( boundingBox != null )
         try
         {
           return GeometryFactory.createGM_Surface( boundingBox, mapPanel.getMapModell().getCoordinatesSystem() );
         }
-        catch( GM_Exception ex )
+        catch( final GM_Exception ex )
         {
           ex.printStackTrace();
           setPageComplete( validate() );
@@ -505,7 +504,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
      *      java.lang.Object)
      */
     @Override
-    public boolean select( Viewer viewer, Object parentElement, Object element )
+    public boolean select( final Viewer viewer, final Object parentElement, final Object element )
     {
       return GeometryUtilities.isGeometry( element );
     }

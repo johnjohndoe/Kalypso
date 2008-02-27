@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -138,7 +137,7 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * Adds a column to this tablemodel at the given position
    */
-  private void addColumn( final TableViewColumn col, int pos ) throws SensorException
+  private void addColumn( final TableViewColumn col, final int pos ) throws SensorException
   {
     synchronized( m_columns )
     {
@@ -153,8 +152,7 @@ public class ObservationTableModel extends AbstractTableModel
       {
         // verify compatibility of the axes. We do not use IAxis.equals()
         // since the position is not relevant here
-        if( m_sharedAxis.getDataClass() != keyAxis.getDataClass() || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() )
-            || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
+        if( m_sharedAxis.getDataClass() != keyAxis.getDataClass() || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() ) || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
         {
           throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis + " kompatibel." );
         }
@@ -173,11 +171,11 @@ public class ObservationTableModel extends AbstractTableModel
         // adapt width of column
         // TODO: listen for column width changes (initiated by the user) and
         // store it in the template when saving it
-        //        final int colIx = m_valuesModel.findColumn( col.getName() );
-        //        final int colIx = findColumn( col.getName() );
-        //        final TableColumn tableColumn = m_table.getColumnModel().getColumn(
-        //            colIx );
-        //        tableColumn.setPreferredWidth( col.getWidth() );
+        // final int colIx = m_valuesModel.findColumn( col.getName() );
+        // final int colIx = findColumn( col.getName() );
+        // final TableColumn tableColumn = m_table.getColumnModel().getColumn(
+        // colIx );
+        // tableColumn.setPreferredWidth( col.getWidth() );
       }
 
       final ITuppleModel tupModel = obs.getValues( col.getArguments() );
@@ -225,7 +223,7 @@ public class ObservationTableModel extends AbstractTableModel
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */
   @Override
-  public Class<?> getColumnClass( int columnIndex )
+  public Class< ? > getColumnClass( final int columnIndex )
   {
     synchronized( m_columns )
     {
@@ -243,7 +241,7 @@ public class ObservationTableModel extends AbstractTableModel
    * @see javax.swing.table.AbstractTableModel#getColumnName(int)
    */
   @Override
-  public String getColumnName( int columnIndex )
+  public String getColumnName( final int columnIndex )
   {
     synchronized( m_columns )
     {
@@ -260,7 +258,7 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * @see javax.swing.table.TableModel#getColumnCount()
    */
-  public int getColumnCount()
+  public int getColumnCount( )
   {
     synchronized( m_columns )
     {
@@ -274,7 +272,7 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * @see javax.swing.table.TableModel#getRowCount()
    */
-  public int getRowCount()
+  public int getRowCount( )
   {
     return m_sharedModel.size();
   }
@@ -282,7 +280,7 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * @see javax.swing.table.TableModel#getValueAt(int, int)
    */
-  public Object getValueAt( int rowIndex, int columnIndex )
+  public Object getValueAt( final int rowIndex, final int columnIndex )
   {
     synchronized( m_columns )
     {
@@ -327,7 +325,7 @@ public class ObservationTableModel extends AbstractTableModel
    * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
    */
   @Override
-  public boolean isCellEditable( int rowIndex, int columnIndex )
+  public boolean isCellEditable( int rowIndex, final int columnIndex )
   {
     synchronized( m_columns )
     {
@@ -344,7 +342,7 @@ public class ObservationTableModel extends AbstractTableModel
    * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
    */
   @Override
-  public void setValueAt( Object aValue, int rowIndex, int columnIndex )
+  public void setValueAt( final Object aValue, final int rowIndex, final int columnIndex )
   {
     synchronized( m_columns )
     {
@@ -402,7 +400,7 @@ public class ObservationTableModel extends AbstractTableModel
    * Set the flag for alphabetical sorting order. If true, columns are sorted according to their name in alphabetical
    * order.
    */
-  public void setAlphaSort( boolean alphaSort )
+  public void setAlphaSort( final boolean alphaSort )
   {
     m_alphaSort = alphaSort;
   }
@@ -412,7 +410,7 @@ public class ObservationTableModel extends AbstractTableModel
    * 
    * @return rendering rules or empty array if no rules found.
    */
-  public RenderingRule[] findRules( int row, int column )
+  public RenderingRule[] findRules( final int row, final int column )
   {
     synchronized( m_columns )
     {
@@ -430,7 +428,7 @@ public class ObservationTableModel extends AbstractTableModel
           final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getAxis() );
           if( statusAxis != null )
           {
-            final Number status = (Number)values.getElement( ix, statusAxis );
+            final Number status = (Number) values.getElement( ix, statusAxis );
 
             if( status != null )
               return m_rules.findRules( status );
@@ -450,7 +448,7 @@ public class ObservationTableModel extends AbstractTableModel
   /**
    * Clears the columns of the model.
    */
-  public void clearColumns()
+  public void clearColumns( )
   {
     synchronized( m_columns )
     {
@@ -471,20 +469,20 @@ public class ObservationTableModel extends AbstractTableModel
   {
     synchronized( m_columns )
     {
-      int pos = m_columns.indexOf( col );
+      final int pos = m_columns.indexOf( col );
 
       m_columns.remove( col );
 
       final ArrayList<TableViewColumn> cols = new ArrayList<TableViewColumn>( m_columns );
       clearColumns();
 
-      for( Iterator it = cols.iterator(); it.hasNext(); )
-        addColumn( (TableViewColumn)it.next() );
+      for( final Object element : cols )
+        addColumn( (TableViewColumn) element );
 
       return pos;
     }
   }
-  
+
   public boolean containsColumn( final TableViewColumn col )
   {
     synchronized( m_columns )
@@ -500,7 +498,7 @@ public class ObservationTableModel extends AbstractTableModel
    * @return adequate instance of NumberFormat
    * @see org.kalypso.ogc.sensor.timeseries.TimeserieUtils#getNumberFormatFor(String)
    */
-  public NumberFormat getNumberFormat( int column )
+  public NumberFormat getNumberFormat( final int column )
   {
     if( column == 0 )
       return TimeserieUtils.getNumberFormatFor( m_sharedAxis.getType() );
@@ -567,9 +565,9 @@ public class ObservationTableModel extends AbstractTableModel
     writer.write( m_sharedAxis.getName() );
 
     int col = 1;
-    for( final Iterator it = m_columns.iterator(); it.hasNext(); )
+    for( final Object element : m_columns )
     {
-      final TableViewColumn tvc = (TableViewColumn)it.next();
+      final TableViewColumn tvc = (TableViewColumn) element;
 
       nf[col] = TimeserieUtils.getNumberFormat( tvc.getFormat() );
 
@@ -583,10 +581,8 @@ public class ObservationTableModel extends AbstractTableModel
 
     // dump values
     int row = 0;
-    for( final Iterator iter = m_sharedModel.iterator(); iter.hasNext(); )
+    for( final Object key : m_sharedModel )
     {
-      final Object key = iter.next();
-
       writer.write( nf[0] == null ? key.toString() : nf[0].format( key ) );
 
       col = 1;
@@ -608,13 +604,14 @@ public class ObservationTableModel extends AbstractTableModel
   }
 
   /**
-   * Called to update the displayed columns by removing the one that should be ignored. This method should only be called by ObservationTable.
+   * Called to update the displayed columns by removing the one that should be ignored. This method should only be
+   * called by ObservationTable.
    */
-  protected void hideIgnoredTypes()
+  protected void hideIgnoredTypes( )
   {
     synchronized( m_columns )
     {
-      
+
     }
   }
 }

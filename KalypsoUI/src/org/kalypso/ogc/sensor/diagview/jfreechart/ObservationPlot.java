@@ -114,7 +114,7 @@ public class ObservationPlot extends XYPlot
     {
       props.load( ChartFactory.class.getResourceAsStream( "resource/type2valueAxis.properties" ) );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -158,15 +158,14 @@ public class ObservationPlot extends XYPlot
     setRenderer( new StandardXYItemRenderer( StandardXYItemRenderer.LINES ) );
 
     final DiagramAxis[] diagAxes = view.getDiagramAxes();
-    for( int i = 0; i < diagAxes.length; i++ )
+    for( final DiagramAxis diagAxis : diagAxes )
     {
-      final DiagramAxis diagAxis = diagAxes[i];
       addDiagramAxis( diagAxis );
     }
 
     final ObsViewItem[] curves = view.getItems();
-    for( int i = 0; i < curves.length; i++ )
-      addCurve( (DiagViewCurve) curves[i] );
+    for( final ObsViewItem element : curves )
+      addCurve( (DiagViewCurve) element );
 
     setNoDataMessage( "Keine Daten vorhanden" );
 
@@ -209,7 +208,7 @@ public class ObservationPlot extends XYPlot
 
     if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
     {
-      int pos = getAdequateDomainPos();
+      final int pos = getAdequateDomainPos();
       setDomainAxis( pos, vAxis );
       setDomainAxisLocation( pos, loc );
 
@@ -217,7 +216,7 @@ public class ObservationPlot extends XYPlot
     }
     else
     {
-      int pos = getAdequateRangePos();
+      final int pos = getAdequateRangePos();
       setRangeAxis( pos, vAxis );
       setRangeAxisLocation( pos, loc );
 
@@ -320,9 +319,9 @@ public class ObservationPlot extends XYPlot
 
     if( mings != null )
     {
-      for( int i = 0; i < mings.length; i++ )
+      for( final AxisMapping element : mings )
       {
-        final DiagramAxis diagAxis = mings[i].getDiagramAxis();
+        final DiagramAxis diagAxis = element.getDiagramAxis();
 
         // check if this axis is already present in this plot
         if( !m_diag2chartAxis.containsKey( diagAxis ) )
@@ -330,12 +329,12 @@ public class ObservationPlot extends XYPlot
 
         if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
         {
-          xAxis = mings[i].getObservationAxis();
+          xAxis = element.getObservationAxis();
           xDiagAxis = diagAxis;
         }
         else
         {
-          yAxis = mings[i].getObservationAxis();
+          yAxis = element.getObservationAxis();
           yDiagAxis = diagAxis;
         }
       }
@@ -406,6 +405,8 @@ public class ObservationPlot extends XYPlot
     {
       final MetadataList mdl = obs.getMetadataList();
 
+      // TODO: move background image stuff into template
+
       // change diagram background if obs has scenario specific metadata property
       if( mdl.getProperty( ObservationConstants.MD_SCENARIO ) != null )
       {
@@ -435,9 +436,9 @@ public class ObservationPlot extends XYPlot
       if( curve.isDisplayAlarmLevel() )
       {
         final AlarmLevel[] alarms = curve.getAlarmLevels();
-        for( int i = 0; i < alarms.length; i++ )
+        for( final AlarmLevel element : alarms )
         {
-          final Double value = new Double( alarms[i].value );
+          final Double value = new Double( element.value );
           if( !m_yConsts.containsKey( value ) )
           {
             final XYCurveSerie xyc = m_curve2serie.get( curve );
@@ -447,7 +448,7 @@ public class ObservationPlot extends XYPlot
             else
               x = getDomainAxis().getLowerBound();
 
-            final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( alarms[i], x, xyc.getYDiagAxis() );
+            final AlarmLevelPlotElement vac = new AlarmLevelPlotElement( element, x, xyc.getYDiagAxis() );
             m_yConsts.put( value, vac );
           }
         }
@@ -468,9 +469,9 @@ public class ObservationPlot extends XYPlot
 
     // step through curves and analyse them
 
-    for( Iterator it = m_curve2serie.keySet().iterator(); it.hasNext(); )
+    for( final Object element : m_curve2serie.keySet() )
     {
-      final DiagViewCurve curve = (DiagViewCurve) it.next();
+      final DiagViewCurve curve = (DiagViewCurve) element;
 
       try
       {
@@ -597,7 +598,7 @@ public class ObservationPlot extends XYPlot
    *      org.jfree.chart.plot.PlotRenderingInfo)
    */
   @Override
-  public synchronized void drawAnnotations( Graphics2D g2d, Rectangle2D rec, PlotRenderingInfo arg2 )
+  public synchronized void drawAnnotations( final Graphics2D g2d, final Rectangle2D rec, final PlotRenderingInfo arg2 )
   {
     super.drawAnnotations( g2d, rec, arg2 );
 
@@ -607,11 +608,11 @@ public class ObservationPlot extends XYPlot
   /**
    * Draw alarmlevels (horizontal line and text annotation)
    */
-  private void drawAlarmLevels( Graphics2D g2, Rectangle2D dataArea )
+  private void drawAlarmLevels( final Graphics2D g2, final Rectangle2D dataArea )
   {
-    for( final Iterator it = m_yConsts.keySet().iterator(); it.hasNext(); )
+    for( final Object element : m_yConsts.keySet() )
     {
-      final AlarmLevelPlotElement vac = m_yConsts.get( it.next() );
+      final AlarmLevelPlotElement vac = m_yConsts.get( element );
 
       final ValueAxis axis = m_diag2chartAxis.get( vac.axis );
       if( axis == null )
@@ -633,7 +634,7 @@ public class ObservationPlot extends XYPlot
   /**
    * Helper that creates a marker
    */
-  private final static Marker createMarker( double start, double end, String label, Color color )
+  private final static Marker createMarker( final double start, final double end, final String label, final Color color )
   {
     final IntervalMarker marker = new IntervalMarker( start, end );
     marker.setPaint( color );
