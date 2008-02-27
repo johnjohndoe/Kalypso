@@ -127,7 +127,8 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					<Name>Bandgenerator</Name>
 				</Task>
 
-				<Task type="ASYNCHRONOUS" context="FenetMap"
+				<Task type="ASYNCHRONOUS" 
+					context="ContextFeNodeTheme"
 					URI="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
 					<Help><![CDATA[Weist den FE-2D-Elementknoten mittels zuvor importierter Geländemodelle Höhen zu.]]></Help>
 					<Name>Höhen zuweisen</Name>
@@ -388,6 +389,14 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 								value="themeContext" />
 							<con:Parameter name="input"
 								value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship" />
+						</con:ExtensionContext>
+						<con:ExtensionContext id="ContextFeNodeTheme"
+							parent="FenetMap"
+							handlerFactoryId="kalypsoContextHandlerFactory">
+							<con:Parameter name="type"
+								value="themeContext" />
+							<con:Parameter name="input"
+								value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}Node" />
 						</con:ExtensionContext>
 						<con:ExtensionContext id="Context2dElementTheme"
 							parent="FenetMap"

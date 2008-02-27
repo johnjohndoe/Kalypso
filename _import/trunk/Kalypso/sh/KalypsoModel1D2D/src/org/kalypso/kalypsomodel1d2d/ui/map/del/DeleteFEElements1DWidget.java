@@ -90,7 +90,6 @@ public class DeleteFEElements1DWidget extends AbstractDelegateWidget
       final String delegateTooltip = getDelegate().getToolTip();
 
       m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-Elemente in der Karte.\n    'Del': selektierte Elemente löschen.\n" + delegateTooltip );
-
       m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
     }
   }

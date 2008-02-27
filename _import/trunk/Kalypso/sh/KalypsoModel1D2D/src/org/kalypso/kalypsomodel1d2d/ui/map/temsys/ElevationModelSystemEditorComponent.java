@@ -103,18 +103,12 @@ public class ElevationModelSystemEditorComponent
       {
         final String name = ((ITerrainElevationModel) element).getName();
         if( name != null )
-        {
           return name;
-        }
         else
-        {
           return ((ITerrainElevationModel) element).getGmlID();
-        }
       }
       else
-      {
-        throw new RuntimeException( Messages.getString("ElevationModelSystemEditorComponent.0") + Messages.getString("ElevationModelSystemEditorComponent.1") + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      }
+        throw new RuntimeException( Messages.getString( "ElevationModelSystemEditorComponent.0" ) + Messages.getString( "ElevationModelSystemEditorComponent.1" ) + (element == null ? null : element.getClass()) + "\n\t value=" + element ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 
@@ -150,9 +144,8 @@ public class ElevationModelSystemEditorComponent
     elevFormData.left = new FormAttachment( 0, 5 );
     elevFormData.top = new FormAttachment( 0, 5 );
     final Label terrainModelLabel = new Label( elevationComposite, SWT.NONE );
-    // GridData labelGridData = new GridData( GridData.FILL_BOTH );
-    // labelGridData.horizontalSpan = 2;
-    terrainModelLabel.setText( Messages.getString("ElevationModelSystemEditorComponent.6") ); //$NON-NLS-1$
+
+    terrainModelLabel.setText( Messages.getString( "ElevationModelSystemEditorComponent.6" ) ); //$NON-NLS-1$
     terrainModelLabel.setLayoutData( elevFormData );
 
     elevFormData = new FormData();
@@ -250,7 +243,7 @@ public class ElevationModelSystemEditorComponent
 
     final Button showTerrain = new Button( elevationComposite, SWT.PUSH );
     // showTerrain.setText( "Goto Terrain" );
-    showTerrain.setToolTipText( Messages.getString("ElevationModelSystemEditorComponent.10") ); //$NON-NLS-1$
+    showTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.10" ) ); //$NON-NLS-1$
     m_image_goToTerrain = new Image( elevationComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/23_show_elevationmodel.gif" ).getImageData() );
     showTerrain.setImage( m_image_goToTerrain );
     showTerrain.setLayoutData( elevFormData );
@@ -275,7 +268,7 @@ public class ElevationModelSystemEditorComponent
     elevFormData.bottom = new FormAttachment( 100, 0 );
     final Button deleteTerrain = new Button( elevationComposite, SWT.PUSH );
     // showTerrain.setText( "Goto Terrain" );
-    deleteTerrain.setToolTipText( Messages.getString("ElevationModelSystemEditorComponent.12") ); //$NON-NLS-1$
+    deleteTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.12" ) ); //$NON-NLS-1$
 
     m_image_goToTerrain = new Image( elevationComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/25_cut_elevationmodel.gif" ).getImageData() );
     deleteTerrain.setImage( m_image_goToTerrain );
@@ -290,7 +283,7 @@ public class ElevationModelSystemEditorComponent
     } );
 
     m_descriptionGroupText = new Group( elevationComposite, SWT.NONE );
-    m_descriptionGroupText.setText( Messages.getString("ElevationModelSystemEditorComponent.14") ); //$NON-NLS-1$
+    m_descriptionGroupText.setText( Messages.getString( "ElevationModelSystemEditorComponent.14" ) ); //$NON-NLS-1$
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( moveUpBtn, 5 );
     elevFormData.top = new FormAttachment( terrainModelLabel, 10 );
@@ -301,7 +294,7 @@ public class ElevationModelSystemEditorComponent
     final FormLayout formDescription = new FormLayout();
     m_descriptionGroupText.setLayout( formDescription );
     m_descriptionText = new Text( m_descriptionGroupText, SWT.MULTI | SWT.WRAP );
-    m_descriptionText.setText( Messages.getString("ElevationModelSystemEditorComponent.15")); //$NON-NLS-1$
+    m_descriptionText.setText( Messages.getString( "ElevationModelSystemEditorComponent.15" ) ); //$NON-NLS-1$
     final FormData formDescripData = new FormData();
     formDescripData.left = new FormAttachment( 0, 0 );
     formDescripData.right = new FormAttachment( 100, 0 );
@@ -349,7 +342,7 @@ public class ElevationModelSystemEditorComponent
     final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getDiscretisationModel();
     if( model1d2d == null )
     {
-      System.out.println(Messages.getString("ElevationModelSystemEditorComponent.16")); //$NON-NLS-1$
+      System.out.println( Messages.getString( "ElevationModelSystemEditorComponent.16" ) ); //$NON-NLS-1$
     }
 
     final IKalypsoFeatureTheme elevationTheme = m_dataModel.getElevationTheme();

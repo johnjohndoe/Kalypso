@@ -102,18 +102,14 @@ class ApplyElevationWidgetFace
 
   private final IFeatureSelectionListener featureSelectionListener = new IFeatureSelectionListener()
   {
-
-    @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+    @SuppressWarnings( { "synthetic-access", "unchecked" })//$NON-NLS-1$
     public void selectionChanged( IFeatureSelection selection )
     {
-      if( nodeElevationViewer == null )
-      {
+      if( m_nodeElevationViewer == null )
         return;
-      }
-      if( nodeElevationViewer.getControl().isDisposed() )
-      {
+
+      if( m_nodeElevationViewer.getControl().isDisposed() )
         return;
-      }
 
       final List<IFE1D2DNode> nodeList = new ArrayList<IFE1D2DNode>();
       Feature selecFeature = null;
@@ -121,21 +117,16 @@ class ApplyElevationWidgetFace
       for( Object selected : selection.toList() )
       {
         if( selected instanceof Feature )
-        {
           selecFeature = (Feature) selected;
-        }
+
         else if( selected instanceof EasyFeatureWrapper )
-        {
           selecFeature = ((EasyFeatureWrapper) selected).getFeature();
-        }
 
         if( selecFeature != null )
         {
           selecNode = (IFE1D2DNode) selecFeature.getAdapter( IFE1D2DNode.class );
           if( selecNode != null )
-          {
             nodeList.add( selecNode );
-          }
         }
 
       }
@@ -144,29 +135,24 @@ class ApplyElevationWidgetFace
       {
         IWorkbench workbench = PlatformUI.getWorkbench();
 
-        nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
+        m_nodeElevationViewer.getControl().getDisplay().syncExec( new Runnable()
         {
           public void run( )
           {
-            IContentProvider cp = nodeElevationViewer.getContentProvider();
+            IContentProvider cp = m_nodeElevationViewer.getContentProvider();
             if( cp instanceof ArrayContentProvider )
-            {
-              // because it is complaining about content provider not set
-              nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-            }
+              m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
             else
-            {
-              nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
-            }
-            nodeElevationViewer.setInput( nodeList.toArray( new IFE1D2DNode[] {} ) );
-          }
+              m_nodeElevationViewer.setContentProvider( new ArrayContentProvider() );
 
+            m_nodeElevationViewer.setInput( nodeList.toArray( new IFE1D2DNode[] {} ) );
+          }
         } );
 
         IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
         if( activeWorkbenchWindow == null )
         {
-            System.out.println( Messages.getString("ApplyElevationWidgetFace.1") ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "ApplyElevationWidgetFace.1" ) ); //$NON-NLS-1$
           return;
         }
 
@@ -190,7 +176,7 @@ class ApplyElevationWidgetFace
 
   public Control createControl( final Composite parent )
   {
-    this.m_dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
+    m_dataModel.getMapPanel().getSelectionManager().addSelectionListener( featureSelectionListener );
     preferenceStore.addPropertyChangeListener( storePropertyChangeListener );
     initStoreDefaults();
 
@@ -206,7 +192,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select Elevation Model"
     elevationSelectStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationSelectStatus.setText( Messages.getString("ApplyElevationWidgetFace.2") ); //$NON-NLS-1$
+    elevationSelectStatus.setText( Messages.getString( "ApplyElevationWidgetFace.2" ) ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.grabVertical = true;
@@ -215,7 +201,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section for "Select A Region - among the List of Nodes drawn on the Viewer Pane"
     areaSelectSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    areaSelectSection.setText(Messages.getString("ApplyElevationWidgetFace.3")  ); //$NON-NLS-1$
+    areaSelectSection.setText( Messages.getString( "ApplyElevationWidgetFace.3" ) ); //$NON-NLS-1$
     tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
     tableWrapData.grabHorizontal = true;
     tableWrapData.align = TableWrapData.FILL_GRAB;
@@ -225,7 +211,7 @@ class ApplyElevationWidgetFace
 
     // Creates Section to Configure the Color for Different Elevations
     elevationColorSection = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
-    elevationColorSection.setText( Messages.getString("ApplyElevationWidgetFace.4") //$NON-NLS-1$
+    elevationColorSection.setText( Messages.getString( "ApplyElevationWidgetFace.4" ) //$NON-NLS-1$
     // "Select Colors for MAX Elevation and MIN Elevation "
     );
     // elevationColorSection.addPaintListener( drawListener );
@@ -280,7 +266,7 @@ class ApplyElevationWidgetFace
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
     if( rootPanel == null )
     {
-      System.out.println( Messages.getString("ApplyElevationWidgetFace.5") ); //$NON-NLS-1$
+      System.out.println( Messages.getString( "ApplyElevationWidgetFace.5" ) ); //$NON-NLS-1$
       return;
     }
     if( !rootPanel.isDisposed() )
@@ -288,23 +274,20 @@ class ApplyElevationWidgetFace
       rootPanel.dispose();
       toolkit.dispose();
     }
+
     final MapPanel mapPanel = m_dataModel.getMapPanel();
     if( mapPanel != null )
-    {
       mapPanel.getSelectionManager().addSelectionListener( featureSelectionListener );
-    }
 
     if( colorModelChangeComponent != null )
-    {
       colorModelChangeComponent.dispose();
-    }
   }
 
   public static final String HANDLE_WIDTH_NAME = "x.handleWidth";//$NON-NLS-1$
 
-  private AssignNodeElevationFaceComponent assignNodeElevationFaceComponent;
+  private AssignNodeElevationFaceComponent m_assignNodeElevationFaceComponent;
 
-  private TableViewer nodeElevationViewer;
+  private TableViewer m_nodeElevationViewer;
 
   private void initStoreDefaults( )
   {
@@ -331,8 +314,10 @@ class ApplyElevationWidgetFace
     formData.bottom = new FormAttachment( 100, 0 );
     clientComposite.setLayoutData( formData );
     // guiCreateSelectRegion(clientComposite);
-    assignNodeElevationFaceComponent = new AssignNodeElevationFaceComponent();
-    assignNodeElevationFaceComponent.createControl( m_dataModel, toolkit, clientComposite );
+    m_assignNodeElevationFaceComponent = new AssignNodeElevationFaceComponent();
+    m_assignNodeElevationFaceComponent.createControl( m_dataModel, toolkit, clientComposite );
+
+    m_nodeElevationViewer = m_assignNodeElevationFaceComponent.getTableViewer();
   }
 
   private IPropertyChangeListener createPropertyChangeLis( )

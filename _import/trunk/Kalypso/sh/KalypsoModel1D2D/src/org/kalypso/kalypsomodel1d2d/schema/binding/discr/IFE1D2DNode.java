@@ -70,6 +70,8 @@ public interface IFE1D2DNode<CT extends IFENetItem> extends IFENode/* <CT> */
 
   public static final String DEFAULT_COORDINATE_SYSTEM = IKalypsoCorePreferences.DEFAULT_CRS;
 
+  public static final QName PROP_GEOMETRY = new QName( NS.GML3, "pointProperty" ); //$NON-NLS-1$
+
   /**
    * To get the position of this fe-node
    * 

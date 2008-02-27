@@ -87,10 +87,14 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   private static final String[] KEYS = { ITerrainModel.class.toString(), ITerrainElevationModelSystem.class.toString(), ITerrainElevationModel.class.toString(), IMapModell.class.toString(),
       SELECTED_NODE_KEY, GM_Polygon.class.toString(), IFEDiscretisationModel1d2d.class.toString(), MapPanel.class.toString(), ELEVATION_THEME, NODE_THEME };
 
-  private boolean m_ignoreMapSelection = false;
+  private final boolean m_ignoreMapSelection = false;
 
   private final ICaseDataProvider<IFeatureWrapper2> m_dataProvider;
 
+  @SuppressWarnings("unchecked")
+  private List<IFE1D2DNode> m_selectedNodeList;
+
+  @SuppressWarnings("unchecked")
   public ApplyElevationWidgetDataModel( )
   {
     super( KEYS, null );
@@ -144,12 +148,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     return null;
   }
 
-  // public void setDiscretisationModel( IFEDiscretisationModel1d2d discretisationModel )
-  // {
-  // // this.discretisationModel = discretisationModel;
-  // setData( IFEDiscretisationModel1d2d.class.toString(), discretisationModel );
-  // }
-
   public ITerrainElevationModel getElevationModel( )
   {
     // return elevationModel;
@@ -174,25 +172,17 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setData( ITerrainElevationModelSystem.class.toString(), elevationModelSystem );
   }
 
+  @SuppressWarnings("unchecked")
   public List<IFE1D2DNode> getSelectedNode( )
   {
-    // if (this.discretisationModel == null)
-    // return new ArrayList<IFE1D2DNode>();
-    // else
-    // {
-    // ArrayList<IFE1D2DNode> fakeSelection =
-    // new ArrayList<IFE1D2DNode>( this.discretisationModel.getNodes());
-    // selectedNode=fakeSelection;
-    // return selectedNode;
-    // }
     return (List<IFE1D2DNode>) getData( SELECTED_NODE_KEY );
 
   }
 
+  @SuppressWarnings("unchecked")
   public void setSelectedNode( final List<IFE1D2DNode> selectedNode )
   {
     setData( SELECTED_NODE_KEY, selectedNode, false );
-    // this.selectedNode = selectedNode;
   }
 
   public GM_Polygon getSelectionArea( )
@@ -234,6 +224,7 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(org.kalypso.ogc.gml.selection.IFeatureSelection)
    */
+  @SuppressWarnings("unchecked")
   public void selectionChanged( final IFeatureSelection selection )
   {
     // TODO pat maybe get th list from dataModel
@@ -254,16 +245,6 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
     setSelectedNode( nodes );
   }
 
-  public void setIgnoreMapSelection( final boolean ignoreMapSelection )
-  {
-    m_ignoreMapSelection = ignoreMapSelection;
-  }
-
-  public boolean getIgnoreMapSelection( )
-  {
-    return m_ignoreMapSelection;
-  }
-
   public final IFeatureWrapperCollection<ITerrainElevationModel> getTerrainElevationModels( )
   {
     final ITerrainElevationModelSystem elevationModelSystem = getElevationModelSystem();
@@ -271,6 +252,18 @@ public class ApplyElevationWidgetDataModel extends KeyBasedDataModel implements 
       return null;
     else
       return elevationModelSystem.getTerrainElevationModels();
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setSelectedNodeList( List<IFE1D2DNode> selectionNodeList )
+  {
+    m_selectedNodeList = selectionNodeList;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<IFE1D2DNode> getSelectedNodeList( )
+  {
+    return m_selectedNodeList;
   }
 
 }
