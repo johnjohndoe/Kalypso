@@ -96,7 +96,7 @@ open MAKEFILE, ">$mkfile" or die "\aERROR opening file $mkfile for writing: $!\n
 printf MAKEFILE "# Makefile created by %s $version\n\n", basename($0);
 printf MAKEFILE "FC = g95\n";
 printf MAKEFILE "LD = g95\n";
-printf MAKEFILE "FFLAGS = FFLAGS = -ftrace=full -fzero\n";
+printf MAKEFILE "FFLAGS = -ftrace=full -fzero\n";
 
 
 print  MAKEFILE "include $opt_t\n\n" if $opt_t; #include template if supplied
@@ -432,11 +432,11 @@ my $noff = scalar keys %off_sources;
 &print_formatted_list( "OFF =", keys %off_sources ) if $noff > 0;
 
 #write targets
-print MAKEFILE "clean: neat\n\t-rm -f .cppdefs \$(OBJ) $opt_p\n";
-print MAKEFILE "neat:\n\t-rm -f \$(TMPFILES)\n";
+print MAKEFILE "clean: \n\t-del /F .cppdefs \$(OBJ) $opt_p\n";
+#print MAKEFILE "neat:\n\t-rm -f \$(TMPFILES)\n";
 print MAKEFILE "localize: \$(OFF)\n\tcp \$(OFF) .\n" if $noff > 0;
-print MAKEFILE "TAGS: \$(SRC)\n\tetags \$(SRC)\n";
-print MAKEFILE "tags: \$(SRC)\n\tctags \$(SRC)\n";
+#print MAKEFILE "TAGS: \$(SRC)\n\tetags \$(SRC)\n";
+#print MAKEFILE "tags: \$(SRC)\n\tctags \$(SRC)\n";
 print MAKEFILE "$opt_p: \$(OBJ)\n\t\$(LD) \$(OBJ) -o $opt_p \$(LDFLAGS)\n";
 close MAKEFILE;
 print " $mkfile is ready.\n";
