@@ -51,12 +51,12 @@ import java.util.Properties;
 public class Scenario implements IScenario
 {
   public final static IScenario DEFAULT_SCENARIO = new Scenario( ID_DEFAULT_SCENARIO, new Properties() );
-  
+
   private final String m_id;
 
   private final Properties m_props;
 
-  public Scenario(final String id, final Properties props )
+  public Scenario( final String id, final Properties props )
   {
     m_id = id;
     m_props = props;
@@ -65,7 +65,7 @@ public class Scenario implements IScenario
   /**
    * @see org.kalypso.auth.scenario.IScenario#getName()
    */
-  public String getName()
+  public String getName( )
   {
     return getProperty( IScenario.PROP_NAME, "-unbekannt-" );
   }
@@ -73,16 +73,16 @@ public class Scenario implements IScenario
   /**
    * @see org.kalypso.auth.scenario.IScenario#getDescription()
    */
-  public String getDescription()
+  public String getDescription( )
   {
     return getProperty( IScenario.PROP_DESCRIPTION, "" );
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return getName();
   }
@@ -90,7 +90,7 @@ public class Scenario implements IScenario
   /**
    * @see org.kalypso.auth.scenario.IScenario#getId()
    */
-  public String getId()
+  public String getId( )
   {
     return m_id;
   }

@@ -147,7 +147,7 @@ public class GrafikLauncher
     {
       odt = DiagViewUtils.loadDiagramTemplateXML( odtFile.getContents() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new SensorException( e );
@@ -187,9 +187,9 @@ public class GrafikLauncher
    * WorkspaceModifyOperation.
    * 
    * @param fileName
-   *          the filename to use for the grafik template file
+   *            the filename to use for the grafik template file
    * @param odt
-   *          the xml binding object
+   *            the xml binding object
    * @throws SensorException
    */
   public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest, final IProgressMonitor monitor ) throws SensorException
@@ -232,7 +232,7 @@ public class GrafikLauncher
 
       return Status.OK_STATUS;
     }
-    catch( Throwable e ) // generic exception caught
+    catch( final Throwable e ) // generic exception caught
     {
       throw new SensorException( e );
     }
@@ -249,7 +249,7 @@ public class GrafikLauncher
    * Starts the grafik.exe with an eclipse IFile tpl-File.
    * 
    * @param tplFile
-   *          the Grafik-Vorlage
+   *            the Grafik-Vorlage
    * @throws SensorException
    */
   public static IStatus startGrafikTPL( final IFile tplFile, final List sync ) throws SensorException
@@ -311,7 +311,7 @@ public class GrafikLauncher
 
       return ms;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new SensorException( e );
     }
@@ -379,13 +379,13 @@ public class GrafikLauncher
 
     int cc = 1;
     final TypeObservation[] tobs = odt.getObservation().toArray( new TypeObservation[0] );
-    for( int i = 0; i < tobs.length; i++ )
+    for( final TypeObservation element : tobs )
     {
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
       // now try to locate observation file
-      final URL url = urlRes.resolveURL( context, tobs[i].getHref() );
+      final URL url = urlRes.resolveURL( context, element.getHref() );
       final IFile zmlFile = ResourceUtilities.findFileFromURL( url );
 
       // if file cannot be found, that probably means it is not local...
@@ -428,7 +428,7 @@ public class GrafikLauncher
 
       final List<IAxis> displayedAxes = new ArrayList<IAxis>( numberAxes.length );
 
-      final List curves = tobs[i].getCurve();
+      final List curves = element.getCurve();
       for( final Iterator itc = curves.iterator(); itc.hasNext(); )
       {
         final TypeCurve tc = (TypeCurve) itc.next();
@@ -496,6 +496,9 @@ public class GrafikLauncher
       }
 
       // check observation for specific scenario
+
+      // TODO: get the scenario stuff from the templates
+
       if( scenarioName == null ) // not already set in this session?
       {
         final MetadataList mdl = obs.getMetadataList();
@@ -525,13 +528,13 @@ public class GrafikLauncher
 
         final MetadataList mdl = obs.getMetadataList();
         final String[] mds = TimeserieUtils.findOutMDAlarmLevel( obs );
-        for( int j = 0; j < mds.length; j++ )
+        for( final String element2 : mds )
         {
-          final Double value = new Double( mdl.getProperty( mds[j] ) );
-          yLines.put( value, new ValueAndColor( mds[j] + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) );
+          final Double value = new Double( mdl.getProperty( element2 ) );
+          yLines.put( value, new ValueAndColor( element2 + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) );
         }
       }
-      catch( NoSuchElementException e )
+      catch( final NoSuchElementException e )
       {
         // ignored
       }
@@ -557,17 +560,17 @@ public class GrafikLauncher
     }
 
     // constant vertical lines...
-    for( Iterator it = xLines.iterator(); it.hasNext(); )
+    for( final Object element : xLines )
     {
-      final String strDate = it.next().toString();
+      final String strDate = element.toString();
       writer.write( "Senkrechte: " + strDate + '\n' );
     }
     xLines.clear();
 
     // constant horizontal lines...
-    for( final Iterator it = yLines.keySet().iterator(); it.hasNext(); )
+    for( final Object element : yLines.keySet() )
     {
-      final ValueAndColor vac = yLines.get( it.next() );
+      final ValueAndColor vac = yLines.get( element );
       writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' );
     }
     yLines.clear();
@@ -646,7 +649,7 @@ public class GrafikLauncher
       return strDate;
     }
 
-    public int compareTo( Object o )
+    public int compareTo( final Object o )
     {
       return strDate.compareTo( ((XLine) o).strDate );
     }

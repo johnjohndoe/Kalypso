@@ -201,11 +201,11 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,
- org.kalypso.auth,
- org.kalypso.metadoc;visibility:=reexport,
  org.junit,
  org.kalypso.services.core.client,
  org.eclipse.ui.forms,
  org.eclipse.core.expressions,
- org.eclipse.ui.views.properties.tabbed
+ org.eclipse.ui.views.properties.tabbed,
+ org.kalypso.auth,
+ org.kalypso.metadoc;visibility:=reexport
 Eclipse-LazyStart: true
