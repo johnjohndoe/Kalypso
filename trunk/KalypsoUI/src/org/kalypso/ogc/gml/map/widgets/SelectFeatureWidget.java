@@ -329,11 +329,11 @@ public class SelectFeatureWidget extends AbstractWidget
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder( mapPanel );
         break;
-
+      // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
-        // TODO: clear selection
-        changeGeometryBuilder( mapPanel );
+        m_selectionTypeDelegate.reset();
         break;
+
     }
     mapPanel.repaint();
 
