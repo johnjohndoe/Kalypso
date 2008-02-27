@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -77,11 +79,17 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
 
   private final IFeatureSelectionManager m_selectionManager;
 
+  /**
+   * Holds the descriptor for the default icon of this theme. Is used in legends, such as the outline.
+   */
+  private org.eclipse.swt.graphics.Image m_scrapThemeIcon;
+
   public ScrabLayerFeatureTheme( final String layerName, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( layerName, "scrab", mapModel, legendIcon, context, shouldShowChildren );
 
     m_selectionManager = selectionManager;
+    m_scrapThemeIcon = null;
 
     final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" );
     CommandableWorkspace workspace = null;
@@ -200,6 +208,10 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.dispose();
+
+    if( m_scrapThemeIcon != null )
+      m_scrapThemeIcon.dispose();
+
     super.dispose();
   }
 
@@ -286,5 +298,17 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   public void paintInternal( final IPaintInternalDelegate delegate )
   {
     // nothing to do
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
+  @Override
+  protected ImageDescriptor getDefaultIcon( )
+  {
+    if( m_scrapThemeIcon == null )
+      m_scrapThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/scrapTheme.gif" ) );
+
+    return ImageDescriptor.createFromImage( m_scrapThemeIcon );
   }
 }

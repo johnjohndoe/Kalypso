@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -460,19 +461,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   protected ImageDescriptor getDefaultIcon( )
   {
     if( m_standardThemeIcon == null )
-    {
-      // TODO: this must be done inside the swt thread!
-
-      final Display current = Display.getCurrent();
-      if( current == null )
-        System.out.println( "Autsch" );
-
-      final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( AbstractKalypsoTheme.class.getResource( "resources/standardTheme.gif" ) );
-      m_standardThemeIcon = imgDesc.createImage();
-    }
-
-    if( m_standardThemeIcon.isDisposed() )
-      return null;
+      m_standardThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/standardTheme.gif" ) );
 
     return ImageDescriptor.createFromImage( m_standardThemeIcon );
   }
