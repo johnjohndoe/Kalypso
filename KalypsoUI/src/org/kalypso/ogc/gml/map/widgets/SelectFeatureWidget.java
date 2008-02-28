@@ -422,6 +422,9 @@ public class SelectFeatureWidget extends AbstractWidget
     if( selectGeometry == null )
       return;
     // select feature from featureList by using the selectGeometry
+    if( featureList == null )
+      return;
+
     final List<Feature> selectedFeatures = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, m_geomQName, m_intersectMode );
 
     manageSelection( selectedFeatures );
