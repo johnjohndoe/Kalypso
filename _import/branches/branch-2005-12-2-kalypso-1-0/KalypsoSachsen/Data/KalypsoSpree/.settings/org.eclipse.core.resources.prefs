@@ -1,4 +1,4 @@
-#Tue Jan 22 16:37:52 CET 2008
+#Tue Oct 23 18:01:08 CEST 2007
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/W_SAERI.zml=UTF-8
@@ -54,6 +54,7 @@ encoding//Rechenf\u00E4lle/test/zeitreihen/W_LIESKE.zml=UTF-8
 encoding//Rechenvarianten/20040104_test2/Zeitreihen/QP_BURGNEU.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h58/Zeitreihen/W_BAUTZWB.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/QV_TSQUITZ.zml=UTF-8
+encoding//.prognose/Vorhersage-2007-10-23_17h54/.calculation=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/QV_RLKETTE.zml=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h26/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/steuerparameter.gft=UTF-8
@@ -335,6 +336,7 @@ encoding//.prognose/Vorhersage-04-11-2004_17h26/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-04-11-2004_17h25/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/Bodenfeuchten.gtt=UTF-8
+encoding//.prognose/Vorhersage-2007-10-23_18h01/.calculation=UTF-8
 encoding//Rechenvarianten/20040104_test1/Zeitreihen/QV_TSBAUTZ.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h49/Zeitreihen/QV_RLKETTE.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h17/Zeitreihen/QV_TSQUITZ.zml=UTF-8
@@ -412,9 +414,9 @@ encoding//.model/observationConf/PegelMessungMapping.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h49/calcCase.log=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h58/Zeitreihen/W_LIESKE.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_10h33/calcCase.log=UTF-8
+encoding//.prognose/Vorhersage-2005-01-04_10h33/Zeitreihen/PA_SAERI.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/PA_SAERI.zml=UTF-8
-encoding//.prognose/Vorhersage-2005-01-04_10h33/Zeitreihen/PA_SAERI.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h49/Zeitreihen/W_SPREMB.zml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h54/Bodenfeuchten.gtt=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QV_TSQUITZ.zml=UTF-8
