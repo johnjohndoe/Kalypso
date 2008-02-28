@@ -60,6 +60,7 @@ import org.apache.commons.io.output.NullOutputStream;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.zip.ZipFile;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -117,7 +118,7 @@ public class ZipUtilities
     {
       file = new ZipFile( zip, encoding );
 
-      final Enumeration entries = file.getEntries();
+      final Enumeration< ? > entries = file.getEntries();
       while( entries.hasMoreElements() )
       {
         final org.apache.tools.zip.ZipEntry entry = (org.apache.tools.zip.ZipEntry) entries.nextElement();
@@ -388,29 +389,44 @@ public class ZipUtilities
   }
 
   /**
-   * Unzips a zip into a {@link IContainer}.
+   * UnZIPs a ZIP archive into a {@link IContainer}.
    * 
    * @see org.eclipse.core.resources.IProjectNature#configure()
    */
-  public static void unzipToContainer( final URL zipLocation, final IContainer targetContainer, final IProgressMonitor monitor ) throws CoreException
+  public static void unzip( final URL zipLocation, final IContainer targetContainer, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "ZIP wird entpackt nach: " + targetContainer.getName(), 2 ); //$NON-NLS-1$
+    monitor.beginTask( "ZIP wird entpackt nach: " + targetContainer.getName(), 1100 ); //$NON-NLS-1$
 
-    InputStream zipStream = null;
+    final InputStream zipStream = null;
     try
     {
-      // unpack other file structure from zip
-      zipStream = new BufferedInputStream( zipLocation.openStream() );
+      /* Ensur that the container exists */
+      if( !targetContainer.exists() )
+      {
+        if( targetContainer instanceof IFolder )
+        {
+          monitor.subTask( "erzeuge Hauptverzeichnis" + targetContainer.getName() );
+          ((IFolder) targetContainer).create( false, true, new SubProgressMonitor( monitor, 100 ) );
+        }
+        else
+          monitor.worked( 100 );
+      }
+
+      monitor.subTask( "" );
+
+      final File containerDir = targetContainer.getLocation().toFile();
 
       // REMARK: unzipping files with non UTF-8 filename encoding is really awesome in java.
       // We do use the apache tools, which let us at least set the encoding.
       // Try and error led to use the encoding: "IBM850" for WinZippes .zip's.
-      // REMARK: This doesn´t work in the deploy (I don´t know why???) -use simple unzip instead works!!!
-      // ZipUtilities.unzipApache( zipStream, targetContainer.getLocation().toFile(), true, "IBM850" );
-      unzip( zipStream, targetContainer.getLocation().toFile() );
-      zipStream.close();
 
-      monitor.worked( 1 );
+      // TODO: It still doesn´t work on every machine!!! @gernot: This is a test - I will remove it, if it doesn´t work
+      // Jessica: The test also doesn´t work?!?
+
+      // REMARK: make sure that the .zip was created with WinZIP/PKZIP instead of Eclipse-ZIP?
+      ZipUtilities.unzip( zipLocation, containerDir );
+// ZipUtilities.unzipApache( zipInputStream, containerDir, false, "IBM850" );
+      monitor.worked( 500 );
     }
     catch( final IOException e )
     {
@@ -423,7 +439,7 @@ public class ZipUtilities
       try
       {
         // Never leave the container unsynchronized
-        targetContainer.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1 ) );
+        targetContainer.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1000 ) );
       }
       finally
       {
@@ -433,5 +449,4 @@ public class ZipUtilities
       }
     }
   }
-
 }

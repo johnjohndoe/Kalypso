@@ -48,8 +48,8 @@ import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 /**
- * Utilities for the (xml-binding-)class {@link LayerType}. 
- *
+ * Utilities for the (xml-binding-)class {@link LayerType}.
+ * 
  * @author bce
  */
 @SuppressWarnings("restriction")
@@ -63,8 +63,7 @@ public class LayerTypeUtilities
     final String contentType;
 
     final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + file.getProject().getName() + "/";
-//   final String projectURL = "project:/";
-    
+
     final String href;
     if( "gml".equalsIgnoreCase( fileext ) )
     {

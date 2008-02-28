@@ -189,7 +189,7 @@ Export-Package: com.thoughtworks.xstream,
 Require-Bundle: org.junit,
  org.apache.ant;visibility:=reexport,
  org.kalypso.contribs.java;visibility:=reexport,
- org.eclipse.core.resources,
+ org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.core.runtime,
  org.kalypso.contribs.eclipseplatform;visibility:=reexport,
  org.apache.commons.vfs;visibility:=reexport
