@@ -276,8 +276,8 @@
   <bauwerkMember>
     <Polder fid="PolderAxien">
       <lage>
-        <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5337950.070308044,5749549.000069435</gml:coordinates>
+        <gml:Point srsName="EPSG:31468">
+          <gml:coordinates cs="," decimal="." ts=" ">4558457.155947,5730722.217383</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Axien</name>
@@ -293,8 +293,8 @@
   <bauwerkMember>
     <Polder fid="PolderDautzschen">
       <lage>
-        <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5411711.0004026,5658455.009435971</gml:coordinates>
+        <gml:Point srsName="EPSG:31468">
+          <gml:coordinates cs="," decimal="." ts=" ">4570780.527732,5718544.608240</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Dautzschen</name>
@@ -310,8 +310,8 @@
   <bauwerkMember>
     <Polder fid="PolderNünchritz">
       <lage>
-        <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5381136.854438425,5687674.25760649</gml:coordinates>
+        <gml:Point srsName="EPSG:31468">
+          <gml:coordinates cs="," decimal="." ts=" ">4594316.656134,5686807.009240</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Nünchritz</name>
@@ -327,8 +327,8 @@
   <bauwerkMember>
     <Polder fid="PolderAussig">
       <lage>
-        <gml:Point srsName="EPSG:31469">
-          <gml:coordinates cs="," decimal="." ts=" ">5432614.54558422,5612340.671412242</gml:coordinates>
+        <gml:Point srsName="EPSG:31468">
+          <gml:coordinates cs="," decimal="." ts=" ">4584568.668240,5696525.202652 </gml:coordinates>
         </gml:Point>
       </lage>
       <name>Aussig</name>
