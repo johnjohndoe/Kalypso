@@ -24,8 +24,11 @@ Require-Bundle: org.eclipse.ui,
  org.kalypso.chart.ui,
  org.kalypso.featureview
 Eclipse-LazyStart: true 
-Export-Package: org.kalypso.afgui,
+Export-Package: de.renew.workflow.cases,
+ org.kalypso.afgui,
  org.kalypso.afgui.application,
+ org.kalypso.afgui.handlers,
+ org.kalypso.afgui.i18n,
  org.kalypso.afgui.perspective,
  org.kalypso.afgui.scenarios,
  org.kalypso.afgui.views,
