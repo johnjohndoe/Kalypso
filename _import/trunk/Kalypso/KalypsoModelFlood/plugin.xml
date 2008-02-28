@@ -22,7 +22,7 @@
    <extension
          point="de.renew.workflow.model.workflowSystem">
       <workflowSystem
-            definition="src/org/kalypso/model/flood/ui/resources/workflow.xml"
+            definition="etc/workflow.xml"
             id="org.kalypso.model.flood.workflow"
             name="Flood-Modeller-Workflow">
       </workflowSystem>
@@ -305,6 +305,16 @@
             Erzeugt ein neues Flood-Modeller Projekt zur Generierung von Fliesstiefenkarten anhand zuvor berechneter Wasserspiegel.
          </description>
       </wizard>
+      <wizard
+            canFinishEarly="false"
+            category="org.kalypso.ui.newwizards.kalypso/org.kalypso.model.flood.newwizard"
+            class="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
+            descriptionImage="content/images/button_flood.gif"
+            hasPages="true"
+            id="org.kalypso.model.flood.ui.wizards.NewDemoProjectWizard"
+            name="Kalypso Flood Model - Demo Projekt"
+            project="true">
+      </wizard>
    </extension>
    <extension
          point="org.kalypso.deegree.functionExpression">
@@ -324,5 +334,15 @@
                id="org.kalypso.core.tin.waterlevel">
          </category>
       </provider>
+   </extension>
+   <extension
+         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
+      <project
+            category="org.kalypso.model.flood.projectTemplate"
+            data="etc/projectTemplate.zip"
+            description="Die leere Vorlage für Flood-Projekte"
+            label="Leere Vorlage"
+            projectName="">
+      </project>
    </extension>
 </plugin>

@@ -358,7 +358,7 @@
    <extension
          point="de.renew.workflow.model.workflowSystem">
       <workflowSystem
-            definition="src/org/kalypso/kalypso1d2d/pjt/resources/workflow.xml"
+            definition="etc/workflow.xml"
             id="workflow1d2d"
             name="Workflow 1d2d-Model">
       </workflowSystem>
@@ -395,5 +395,15 @@
             </and>
          </enablement>
       </decorator>
+   </extension>
+   <extension
+         point="org.kalypso.contribs.eclipseplatform.projectTemplate">
+      <project
+            category="org.kalypso.kalypso1d2d.pjt.projectTemplate"
+            data="etc/emptyProject.zip"
+            description="Leere Projektvorlage für 1D2D Projekte"
+            label="Leere Vorlage"
+            projectName=" ">
+      </project>
    </extension>
 </plugin>

@@ -11,10 +11,8 @@ public class Kalypso1D2DNewProjectWizard extends NewProjectWizard
 {
   public final static String ID = "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DNewProjectWizard"; //$NON-NLS-1$
 
-  private static final String EMPTY_PROJECT_ZIP_PATH = "resources/emptyProject.zip"; //$NON-NLS-1$
-
   public Kalypso1D2DNewProjectWizard( )
   {
-    super( Kalypso1D2DNewProjectWizard.class.getResource( EMPTY_PROJECT_ZIP_PATH ) );
+    super( "org.kalypso.kalypso1d2d.pjt.projectTemplate", false );//$NON-NLS-1$
   }
 }

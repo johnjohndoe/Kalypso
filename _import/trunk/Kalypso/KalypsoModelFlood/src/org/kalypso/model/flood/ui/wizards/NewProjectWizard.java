@@ -4,6 +4,6 @@ public class NewProjectWizard extends org.kalypso.afgui.wizards.NewProjectWizard
 {
   public NewProjectWizard( )
   {
-    super( NewProjectWizard.class.getResource( "/org/kalypso/model/flood/ui/resources/projectTemplate.zip" ) );
+    super( "org.kalypso.model.flood.projectTemplate", false );
   }
 }

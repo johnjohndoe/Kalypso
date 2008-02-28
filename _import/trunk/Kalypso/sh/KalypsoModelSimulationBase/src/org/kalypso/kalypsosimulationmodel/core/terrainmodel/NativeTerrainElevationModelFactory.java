@@ -72,12 +72,14 @@ public class NativeTerrainElevationModelFactory
     if( nativeTerrainModelFile.isDirectory() )
     {
       return null;
-//      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.5") + nativeTerrainModelFile ); //$NON-NLS-1$
+      // throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.5") +
+      // nativeTerrainModelFile ); //$NON-NLS-1$
     }
     if( !nativeTerrainModelFile.exists() )
     {
       return null;
-//      throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.6") + nativeTerrainModelFile ); //$NON-NLS-1$
+      // throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.6") +
+      // nativeTerrainModelFile ); //$NON-NLS-1$
     }
     return resolveTerrainElevationModel( nativeTerrainModelFile );
   }
@@ -114,12 +116,12 @@ public class NativeTerrainElevationModelFactory
       catch( final ParseException e )
       {
         e.printStackTrace();
-        throw new IllegalArgumentException( Messages.getString("NativeTerrainElevationModelFactory.4"), e ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "NativeTerrainElevationModelFactory.4" ), e ); //$NON-NLS-1$
       }
     }
     else
     {
-      throw new RuntimeException( Messages.getString("NativeTerrainElevationModelFactory.10") + filePath ); //$NON-NLS-1$
+      throw new RuntimeException( Messages.getString( "NativeTerrainElevationModelFactory.10" ) + filePath ); //$NON-NLS-1$
     }
   }
 
@@ -128,6 +130,7 @@ public class NativeTerrainElevationModelFactory
     try
     {
       final String filePath = ascFile.getAbsolutePath();
+      // TODO: is the next line necessary?
       /* final Object cachedEleModel = */cache.getObject( filePath );
       cache.remove( filePath );
     }

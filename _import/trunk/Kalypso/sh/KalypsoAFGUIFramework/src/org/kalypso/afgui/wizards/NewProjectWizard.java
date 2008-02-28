@@ -52,14 +52,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
 /**
@@ -70,27 +75,55 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard
 {
-  private final URL m_projectTemplateZipLocation;
+  private final ProjectTemplatePage m_templateProjectPage;
 
   /**
-   * @param projectTemplateZipLocation
-   *            The location of the project template. The zip file must contain a <code>.project</code> file. All
-   *            natures of the project will be configured after unzipping the template.
+   * @param categoryId
+   *            If non-<code>null</code>, only project templates with this categoryId are shown.
    */
-  public NewProjectWizard( final URL projectTemplateZipLocation )
+  public NewProjectWizard( final String categoryId, final boolean showTemplatePage )
   {
-    m_projectTemplateZipLocation = projectTemplateZipLocation;
+    m_templateProjectPage = new ProjectTemplatePage( "demoProjectPage", categoryId );
+    if( showTemplatePage )
+      addPage( m_templateProjectPage );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPageControls( final Composite pageContainer )
+  {
+    // Overwritten in order to NOT create the pages during initialization, so we can set
+    // the project name later before the next page is created, this work however only once :-(
+
+    // HACK: special case: the resource page: will lead to NPE if not created
+    final IWizardPage page = getPage( "basicReferenceProjectPage" );
+    if( page != null )
+      page.createControl( pageContainer );
+  }
+
+  protected void doHandlePageChangeing( final PageChangingEvent event )
+  {
+    if( event.getCurrentPage() == m_templateProjectPage )
+    {
+      final ProjectTemplate demoProject = m_templateProjectPage.getSelectedProject();
+      // TODO: Does work only the first time :-( ,see above createPageControls
+
+      final WizardNewProjectCreationPage createProjectPage = (WizardNewProjectCreationPage) getPage( "basicNewProjectPage" );
+      createProjectPage.setInitialProjectName( demoProject.getProjectName() );
+    }
   }
 
   @Override
   /**
-   * This method was overriden in order to get rid of the 'select dependend projects' page from the
+   * This method was overridden in order to get rid of the 'select dependent projects' page from the
    * BasicNewProjectResourceWizard.
    */
   public IWizardPage getNextPage( final IWizardPage page )
   {
     // HACK: to do so, we just skip this particular page
-    // Unfortunateley we cannot just overide 'addPages' and do not add the secod page,
+    // Unfortunately we cannot just override 'addPages' and do not add the second page,
     // because the BasicNewProjectResourceWizard relies on the second page to exist.
     final IWizardPage[] pages = getPages();
 
@@ -108,7 +141,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
     if( !result )
       return false;
 
-    final URL zipURl = m_projectTemplateZipLocation;
+    final URL zipURl = m_templateProjectPage.getSelectedProject().getData();
     final IProject project = getNewProject();
     final String newName = project.getName();
 
@@ -121,7 +154,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
         try
         {
           /* Unpack project from template */
-          ZipUtilities.unzipToContainer( zipURl, project, progress.newChild( 40 ) );
+          ZipUtilities.unzip( zipURl, project, progress.newChild( 40 ) );
           ProgressUtilities.worked( progress, 0 );
 
           final IProjectDescription description = project.getDescription();
@@ -140,7 +173,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
           }
 
           ProgressUtilities.worked( progress, 5 );
-          
+
           /* Also activate new project */
           final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
           final Scenario caze = nature.getCaseManager().getCases().get( 0 );
