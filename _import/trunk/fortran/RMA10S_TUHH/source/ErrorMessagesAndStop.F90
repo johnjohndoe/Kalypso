@@ -1,4 +1,4 @@
-!     Last change:  WP   14 Feb 2008    4:46 pm
+!     Last change:  WP   28 Feb 2008    5:17 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -129,6 +129,10 @@ elseif (ErrorID == 1301) then
   WRITE (ErrorUnit, 1301) ObjectID
   WRITE (        *, 1301) ObjectID
 
+elseif (ErrorID == 1302) then
+  WRITE (ErrorUnit, 1302) ObjectID
+  WRITE (        *, 1302) ObjectID
+
 elseif (ErrorID == 1401) then
   WRITE (ErrorUnit, 1401) ObjectID
   WRITE (        *, 1401) ObjectID
@@ -168,6 +172,10 @@ elseif (ErrorID == 4001) then
 elseif (ErrorID == 4101) then
   WRITE (ErrorUnit, 4101)
   WRITE (        *, 4101)
+
+else
+  WRITE (ErrorUnit, *) 'Error No.', ErrorID, ' not documented. Please contact programmer!'
+  WRITE (        *, *) 'Error No.', ErrorID, ' not documented. Please contact programmer!'
 end if
 
 
