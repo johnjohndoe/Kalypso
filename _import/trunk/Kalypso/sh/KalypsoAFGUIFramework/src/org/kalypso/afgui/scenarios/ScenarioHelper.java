@@ -124,7 +124,7 @@ public class ScenarioHelper
 
   /**
    * Find the oldest parent (=root) of the given scenario.<br>
-   * If the scenario has no parent, itself is returned-.
+   * If the scenario has no parent, itself is returned.
    */
   public static Scenario findRootScenario( final Scenario scenario )
   {
@@ -132,6 +132,6 @@ public class ScenarioHelper
     if( parentScenario == null )
       return scenario;
 
-    return findRootScenario( scenario );
+    return findRootScenario( parentScenario );
   }
 }
