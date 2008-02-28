@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -60,11 +65,15 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.operations.UndoRedoActionGroup;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -72,7 +81,9 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
@@ -94,12 +105,13 @@ import org.kalypsodeegree.model.feature.Feature;
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
  * 
  * @author Gernot Belger
+ * @author kimwerner
  */
 public class TableView extends ViewPart implements IAdapterEater<IProfilProvider2>, IProfilProviderListener, ITupleResultViewerProvider
 {
   private final AdapterPartListener<IProfilProvider2> m_profilProviderListener = new AdapterPartListener<IProfilProvider2>( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private Composite m_control;
+  protected Form m_form;
 
   private UndoRedoActionGroup m_group;
 
@@ -112,6 +124,64 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   private TupleResultContentProvider m_tupleResultContentProvider;
 
   private TupleResultLabelProvider m_tupleResultLabelProvider;
+
+  private final class MarkerAction extends Action
+  {
+    final IMarker m_marker;
+
+    public MarkerAction( final IMarker marker )
+    {
+      super();
+      m_marker = marker;
+    }
+
+    /**
+     * @see org.eclipse.jface.action.Action#getImageDescriptor()
+     */
+    @SuppressWarnings("restriction")
+    @Override
+    public ImageDescriptor getImageDescriptor( )
+    {
+
+      switch( m_marker.getAttribute( IMarker.SEVERITY, 0 ) )
+      {
+        case IMarker.SEVERITY_ERROR:
+          return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
+        case IMarker.SEVERITY_WARNING:
+          return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
+        case IMarker.SEVERITY_INFO:
+          return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
+        default:
+          return null;
+      }
+    }
+
+    /**
+     * @see org.eclipse.jface.action.Action#getText()
+     */
+    @Override
+    public String getText( )
+    {
+      return m_marker.getAttribute( IMarker.MESSAGE, "" );
+    }
+
+    /**
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run( )
+    {
+      final int pos = m_marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, -1 );
+      if( pos > 0 )
+      {
+        final IProfil profil = getProfil();
+        if( profil == null || pos < 0 )
+          return;
+        profil.setActivePoint( profil.getPoint( pos ) );
+      }
+    }
+
+  }
 
   // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
@@ -140,9 +210,44 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
      */
     public void onProblemMarkerChanged( IProfil source )
     {
-      // TODO: only refresh what we need
-// m_view.update( source.getResult().toArray(), null );
-      ViewerUtilities.refresh( m_view, true );
+      final IProfil profil = source;
+      if( m_form != null && !m_form.isDisposed() )
+        m_form.getDisplay().asyncExec( new Runnable()
+        {
+          public void run( )
+          {
+            final IMarker[] markers = profil.getProblemMarker().getMarkers();
+            final IMarker worst = MarkerUtils.worstOf( markers );
+            if( worst == null )
+            {
+              m_form.setText( null );
+              m_form.setMessage( null );
+            }
+            else
+            {
+
+              if( markers.length > 1 )
+              {
+
+                m_form.setText( " ..." );
+                m_form.setMessage( worst.getAttribute( IMarker.MESSAGE, "" ), worst.getAttribute( IMarker.SEVERITY, IMessageProvider.NONE ) + 1 );
+                m_form.getMenuManager().removeAll();
+                for( IMarker marker : markers )
+                {
+                  m_form.getMenuManager().add( new MarkerAction( marker ) );
+                }
+              }
+              else
+              {
+                m_form.setText( null );
+                m_form.setMessage( worst.getAttribute( IMarker.MESSAGE, "" ), worst.getAttribute( IMarker.SEVERITY, IMessageProvider.NONE ) + 1 );
+              }
+
+            }
+            // ViewerUtilities.refresh( m_view, true );
+          }
+        } );
+
     }
   };
 
@@ -186,8 +291,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_group != null )
       m_group.dispose();
 
-    if( m_control != null )
-      m_control.dispose();
+    if( m_form != null )
+      m_form.dispose();
   }
 
   private void unhookProvider( )
@@ -209,13 +314,42 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( contextService != null )
       contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" );
 
-    m_control = new Composite( parent, SWT.NONE );
+    final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
+    m_form = toolkit.createForm( parent );
+
+    m_form.addMessageHyperlinkListener( new HyperlinkAdapter()
+    {
+
+      /**
+       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+       */
+      @Override
+      public void linkActivated( HyperlinkEvent e )
+      {
+        final IProfil profil = getProfil();
+        if( profil == null )
+          return;
+        final MarkerIndex mi = getProfil().getProblemMarker();
+        final IMarker[] markers = mi.getMarkers();
+        if( markers.length == 0 )
+          return;
+        final int pointPos = markers[0].getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, -1 );
+        if( pointPos < 0 )
+          return;
+        final IRecord record = getProfil().getPoint( pointPos );
+        getProfil().setActivePoint( record );
+      }
+    } );
+
+    toolkit.decorateFormHeading( m_form );
+
     final GridLayout gridLayout = new GridLayout();
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
-    m_control.setLayout( gridLayout );
+    m_form.getBody().setLayout( gridLayout );
+    m_form.getBody().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_view = new DefaultTableViewer( m_control, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
+    m_view = new DefaultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_view.getTable().setHeaderVisible( true );
     m_view.getTable().setLinesVisible( true );
 
@@ -240,7 +374,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       }
     } );
 
-    m_control.layout();
+    m_form.getBody().layout();
 
     updateControl();
   }
@@ -261,16 +395,14 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected void updateControl( )
   {
-    if( m_control == null || m_control.isDisposed() )
+    if( m_form == null || m_form.isDisposed() )
       return;
 
-    // final IProfil pem = m_provider == null ? null : m_provider.getEventManager();
     final ProfilViewData pvd = m_provider == null ? null : m_provider.getViewData();
 
     if( m_profile == null || pvd == null )
     {
-      setContentDescription( "Kein Profil geladen" );
-
+      m_form.setMessage( "Kein Profil geladen", IMessageProvider.INFORMATION );
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
       m_view.getTable().setVisible( false );
@@ -309,7 +441,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   protected void updatePartNameAndControl( final ProfilchartEditor editor )
   {
     setPartName( editor.getPartName() );
-    if( !m_control.isDisposed() ) // control may have been disposed in the meantime
+    if( !m_form.isDisposed() ) // control may have been disposed in the meantime
       updateControl();
   }
 
@@ -328,7 +460,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_provider != null )
       m_provider.addProfilProviderListener( this );
 
-    // final IProfilEventManager pem = m_provider == null ? null : m_provider.getEventManager();
     final ProfilViewData viewData = m_provider == null ? null : m_provider.getViewData();
     onProfilProviderChanged( m_provider, null, m_profile, null, viewData );
   }
@@ -341,28 +472,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
    */
   public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
-    // if( m_group != null )
-    // {
-    // m_group.dispose();
-    // m_group = null;
-    // }
-    //
-    // m_group = new UndoRedoActionGroup( getSite(), new ProfilUndoContext( getProfil() ), true );
-    // final IActionBars actionBars = getViewSite().getActionBars();
-    // m_group.fillActionBars( actionBars );
-    //
-    // if( m_control != null && !m_control.isDisposed() )
-    // {
-    // m_control.getDisplay().asyncExec( new Runnable()
-    // {
-    // public void run( )
-    // {
-    // actionBars.updateActionBars();
-    // updatePartNameAndControl( editor );
-    // }
-    // } );
-    // }
-
+    
     if( m_profile != null )
       m_profile.removeProfilListener( m_profileListener );
 
@@ -371,8 +481,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     if( m_profile != null )
       m_profile.addProfilListener( m_profileListener );
 
-    if( m_control != null && !m_control.isDisposed() )
-      m_control.getDisplay().asyncExec( new Runnable()
+    if( m_form != null && !m_form.isDisposed() )
+      m_form.getDisplay().asyncExec( new Runnable()
       {
         public void run( )
         {
