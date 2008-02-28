@@ -81,9 +81,9 @@
             <enumeration value="0">
                 <annotation>
                     <documentation xml:lang="de">
-                        <label>nein</label>
-                        <tooltip>nein</tooltip>
-                        <description>nein</description>
+                        <label>keine</label>
+                        <tooltip>keine</tooltip>
+                        <description>keine</description>
                     </documentation>
                 </annotation>
             </enumeration>

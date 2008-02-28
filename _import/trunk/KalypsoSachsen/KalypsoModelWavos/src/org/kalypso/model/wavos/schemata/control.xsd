@@ -15,7 +15,7 @@
                             <documentation xml:lang="de">
                                 <label>Szenario Id</label>
                                 <tooltip>Id des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -24,7 +24,7 @@
                             <documentation xml:lang="de">
                                 <label>Szenario</label>
                                 <tooltip>Name des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -33,7 +33,7 @@
                             <documentation xml:lang="de">
                                 <label>Szenario Beschreibung</label>
                                 <tooltip>Beschreibung des Szenario in welchem die Rechnung durchgeführt wird</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -42,7 +42,7 @@
                             <documentation xml:lang="de">
                                 <label>Start der Simulation</label>
                                 <tooltip>Startzeitpunkt der Modellrechung</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -51,7 +51,25 @@
                             <documentation xml:lang="de">
                                 <label>Start der Vorhersage</label>
                                 <tooltip>Startzeitpunkt der Vorhersagerechnung</tooltip>
-                                <description></description>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="simulationDuration" type="int">
+                        <annotation>
+                            <documentation xml:lang="de"> startsimulation = Tagesanfang(startforecast - simulationDuration)
+                                <label>Simulationszeitraum [d]</label>
+                                <tooltip>Dauer der Simulationsrechnung [d]</tooltip>
+                                <description/>
+                            </documentation>
+                        </annotation>
+                    </element>
+                    <element name="forecastDuration" type="int">
+                        <annotation>
+                            <documentation xml:lang="de"> 
+                                <label>Vorhersagezeitraum [h]</label>
+                                <tooltip>Vorhersagezeitraum [h]</tooltip>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -60,7 +78,7 @@
                             <documentation xml:lang="de">
                                 <label>Ersteller</label>
                                 <tooltip>Name des Erstellers</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -69,7 +87,7 @@
                             <documentation xml:lang="de">
                                 <label>Beschreibung</label>
                                 <tooltip>Kurzbeschreibung dieses Rechenfalls</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -78,7 +96,7 @@
                             <documentation xml:lang="de">
                                 <label>Kommentar</label>
                                 <tooltip>Langbeschreibung dieses Rechenfalls</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>
@@ -87,7 +105,7 @@
                             <documentation xml:lang="de">
                                 <label>Erstellungszeitpunkt</label>
                                 <tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
-                                <description></description>
+                                <description/>
                             </documentation>
                         </annotation>
                     </element>

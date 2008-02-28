@@ -342,10 +342,10 @@
                     <element name="projektionEmpfohlen" type="commons:projektionType" default="0" nillable="false">
                         <annotation>
                             <documentation xml:lang="de"> 
-                                <name>Projektion empfohlen</name>
-                                <label>Projektion empfohlen</label>
-                                <tooltip>Projektion empfohlen</tooltip>
-                                <description>Projektion empfohlen</description>
+                                <name>Empfehlung Projektion</name>
+                                <label>Empfehlung Projektion</label>
+                                <tooltip>Empfehlung Projektion</tooltip>
+                                <description>Empfehlung Projektion</description>
                             </documentation>
                         </annotation>
                     </element>
