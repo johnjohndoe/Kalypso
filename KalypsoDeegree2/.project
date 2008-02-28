@@ -29,7 +29,7 @@
 		<link>
 			<name>deegree</name>
 			<type>2</type>
-			<location>workspace/deegree2/src</location>
+			<locationURI>workspace/deegree2/src</locationURI>
 		</link>
 		<link>
 			<name>lib</name>
