@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IFeatureChangeCommand;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypso.kalypsosimulationmodel.core.terrainmodel.NativeTerrainElevationModelFactory;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -115,7 +117,6 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
   /**
    * @see org.kalypso.commons.command.ICommand#process()
    */
-  @SuppressWarnings("deprecation")
   public void process( ) throws Exception
   {
     final List<Feature> changedFeatures = new ArrayList<Feature>();
@@ -222,6 +223,10 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
       try
       {
         file.delete( false, new NullProgressMonitor() );
+
+        /* remove from cache */
+        final File chachedFile = file.getLocation().toFile();
+        NativeTerrainElevationModelFactory.removeFromCache( chachedFile );
       }
       catch( final CoreException e )
       {
@@ -231,4 +236,12 @@ public class ChangeTerrainElevationSystemCommand implements ICommand
 
     return status;
   }
+
+  public IStatus removeFromCahce( )
+  {
+
+    return null;
+
+  }
+
 }

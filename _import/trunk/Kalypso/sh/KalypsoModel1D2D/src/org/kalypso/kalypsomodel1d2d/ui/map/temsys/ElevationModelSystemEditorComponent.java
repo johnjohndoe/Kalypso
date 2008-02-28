@@ -279,6 +279,7 @@ public class ElevationModelSystemEditorComponent
       public void widgetSelected( final SelectionEvent event )
       {
         deleteElevationModel( event.display.getActiveShell() );
+        m_dataModel.getMapPanel().repaint();
       }
     } );
 
@@ -347,15 +348,11 @@ public class ElevationModelSystemEditorComponent
 
     final IKalypsoFeatureTheme elevationTheme = m_dataModel.getElevationTheme();
     if( elevationTheme == null )
-    {
       return;
-    }
 
     final CommandableWorkspace workspace = elevationTheme.getWorkspace();
     if( workspace == null )
-    {
       return;
-    }
 
     final ITerrainElevationModelSystem modelSystem = m_dataModel.getElevationModelSystem();
     final ChangeTerrainElevationSystemCommand compositeCommand = new ChangeTerrainElevationSystemCommand( workspace, model1d2d );
@@ -385,6 +382,7 @@ public class ElevationModelSystemEditorComponent
 
     final IStatus deleteFiles = compositeCommand.deleteFiles();
     ErrorDialog.openError( shell, "Höhenmodell(e) löschen", "Fehler beim Löschen der Datendatei(en)", deleteFiles );
+
   }
 
   protected void moveSelection( final int delta )

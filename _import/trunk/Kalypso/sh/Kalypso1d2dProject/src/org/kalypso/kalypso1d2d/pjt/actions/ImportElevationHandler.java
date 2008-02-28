@@ -54,10 +54,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
@@ -70,7 +71,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  */
 public class ImportElevationHandler extends AbstractHandler
 {
-  private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard";  //$NON-NLS-1$
+  private static final String WIZARD_ID = "org.kalypso.ui.wizards.imports.elevationmodel.ImportElevationWizard"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
@@ -95,16 +96,16 @@ public class ImportElevationHandler extends AbstractHandler
       final ITerrainModel terrainModel = szenarioDataProvider.getModel( ITerrainModel.class );
       final IFolder modelFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-      final IFolder temFolder = modelFolder.getFolder( "models/native_tem" );  //$NON-NLS-1$
+      final IFolder temFolder = modelFolder.getFolder( "models/native_tem" ); //$NON-NLS-1$
 
       final IStructuredSelection selection = new StructuredSelection( new Object[] { terrainModel, modelFolder, temFolder } );
 
-      final IWorkbenchWindow workbenchWindow = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-      final IWorkbench workbench = (workbenchWindow).getWorkbench();
+      final IWorkbench workbench = PlatformUI.getWorkbench();
 
       final IWizardDescriptor wizardDescriptor = workbench.getNewWizardRegistry().findWizard( WIZARD_ID );
       final INewWizard wizard = (INewWizard) wizardDescriptor.createWizard();
-      final WizardDialog wizardDialog = new WizardDialog( workbenchWindow.getShell(), wizard );
+      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
 
       wizard.init( workbench, selection );
 
@@ -117,7 +118,7 @@ public class ImportElevationHandler extends AbstractHandler
     }
     catch( final CoreException e )
     {
-      throw new ExecutionException( Messages.getString("ImportElevationHandler.4") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "ImportElevationHandler.4" ) ); //$NON-NLS-1$
     }
 
     return Status.CANCEL_STATUS;
