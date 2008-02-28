@@ -31,7 +31,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
 
 /**
- * This abstract class is a facade for the eclipse
+ * This abstract class is a facade for the eclipse browser view.
  * 
  * @see org.eclipse.ui.internal.browser.BrowserViewer Supports the IMemento for persistance and context for relative
  *      references MementoWithUrlResolver.
@@ -66,6 +66,9 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   private String m_html = null;
 
+  /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+   */
   @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
@@ -85,6 +88,9 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     m_viewer.getBrowser().removeLocationListener( listener );
   }
 
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -106,6 +112,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   protected void restoreState( IMemento memento )
   {
     final String urlAsString = memento.getString( TAG_URL );
+
     if( memento instanceof MementoWithUrlResolver )
     {
       try
@@ -134,6 +141,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     IMemento scrollbars = memento.getChild( TAG_SCROLLBARS );
     if( scrollbars == null )
       return;
+
     IMemento horizontal = scrollbars.getChild( TAG_HORIZONTAL_BAR );
     if( horizontal != null )
     {
@@ -142,6 +150,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       if( horizontalBar != null )
         horizontalBar.setSelection( hSelection );
     }
+
     IMemento vertical = scrollbars.getChild( TAG_VERTICAL_BAR );
     if( vertical != null )
     {
@@ -157,6 +166,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   {
     if( m_viewer != null )
       m_viewer.dispose();
+
     super.dispose();
   }
 
@@ -199,6 +209,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         {
           e.printStackTrace();
         }
+
         // set the url for the Browser
         try
         {
@@ -212,6 +223,9 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     } );
   }
 
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+   */
   @Override
   public void setFocus( )
   {
@@ -258,11 +272,13 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
    * Return true if the filename has a "web" extension.
    * 
    * @param name
-   * @return
+   *            The filename.
+   * @return True if the filename has a "web" extension.
    */
   public static boolean isWebFile( final String name )
   {
     final String lowerCase = name.toLowerCase();
+
     return lowerCase.endsWith( "html" ) || lowerCase.endsWith( "htm" ) || lowerCase.endsWith( "gif" ) || lowerCase.endsWith( "png" ) || //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         lowerCase.endsWith( "jpg" ) || lowerCase.endsWith( "pdf" ) || lowerCase.endsWith( "txt" ); //$NON-NLS-1$
   }
@@ -274,6 +290,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     {
       if( m_memento != null ) // Keep the old state;
         memento.putMemento( m_memento );
+
       return;
     }
 
@@ -298,11 +315,12 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     }
   }
 
-  void handleSetUrl( final String url ) throws MalformedURLException
+  protected void handleSetUrl( final String url ) throws MalformedURLException
   {
     Runnable runnable = null;
     if( url == null )
       return;
+
     if( url.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {
       final URL realUrl = new URL( url );
@@ -312,7 +330,9 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       changeContext( file.toURL() );
       runnable = new Runnable()
       {
-
+        /**
+         * @see java.lang.Runnable#run()
+         */
         public void run( )
         {
           m_viewer.setURL( fileAsString );
@@ -322,6 +342,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         }
       };
     }
+
     if( runnable == null )
     {
       try
@@ -332,6 +353,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       {
         // nothing
       }
+
       runnable = new Runnable()
       {
 
@@ -344,14 +366,18 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
         }
       };
     }
+
     if( runnable == null )
       return;
+
     final IWorkbenchPartSite site = getSite();
     if( site == null )
       return;
+
     final Shell shell = site.getShell();
     if( shell == null )
       return;
+
     final Display display = shell.getDisplay();
     if( display == null )
       return;
@@ -380,10 +406,10 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
     if( adapter == Browser.class )
       return m_viewer.getBrowser();
-    
+
     if( adapter == BrowserViewer.class )
       return m_viewer;
-    
+
     return super.getAdapter( adapter );
   }
 }
