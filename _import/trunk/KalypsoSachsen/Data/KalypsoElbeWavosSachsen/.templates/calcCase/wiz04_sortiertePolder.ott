@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <obstableview xmlns="obstableview.template.kalypso.org">
     <features>Alarmstufen;Vorhersage</features>
-    
+    <observation linktype="zml" ns1:href="Zeitreihen/Polder/Nünchritz.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
+        <column axis="W" editable="true" id="c1" name="Nünchritz [%axisunit%]" width="50"/>
+    </observation>
     <observation linktype="zml" ns1:href="Zeitreihen/Polder/Aussig.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="W" editable="true" id="c1" name="Aussig [%axisunit%]" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="Zeitreihen/Polder/Dautzschen.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="W" editable="true" id="c1" name="Dautzschen [%axisunit%]" width="50"/>
-    </observation>
-    <observation linktype="zml" ns1:href="Zeitreihen/Polder/Nünchritz.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column axis="W" editable="true" id="c1" name="Nünchritz [%axisunit%]" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="Zeitreihen/Polder/Axien.zml" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="W" editable="true" id="c1" name="Axien [%axisunit%]" width="50"/>
