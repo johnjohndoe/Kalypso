@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
@@ -62,33 +61,27 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCoreExtensions;
-import org.kalypso.model.wspm.tuhh.core.gml.TuhhHelper;
-import org.kalypso.model.wspm.tuhh.core.util.TuhhDemoProject;
+import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIImages;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.ui.editorLauncher.GmlEditorTemplateLauncher;
 
 /**
- * Wizard to create a new wspm tuhh project.
- * <p>
- * Overwrite for special purposes, like create new project and import data from an existing datasource.
- * </p>
- * <p>
- * If overwritten, also {@link #doFinish(IProject, IProgressMonitor)} should be overwritten
- * </p>
+ * Wizard to create a new wspm tuhh project.<br>
+ * Overwrite for special purposes, like create new project and import data from an existing datasource.<br>
+ * If overwritten, also {@link #doFinish(IProject, IProgressMonitor)} should be overwritten<br>
  * 
  * @author Gernot Belger
  */
@@ -98,28 +91,21 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
   {
     private final IProject m_project;
 
-    private IFile m_file;
-
     protected DoFinishOperation( final IProject project )
     {
       m_project = project;
     }
 
-    public IFile getFile( )
-    {
-      return m_file;
-    }
-
     @Override
-    protected void execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+    protected void execute( final IProgressMonitor monitor ) throws CoreException
     {
-      m_file = doFinish( m_project, monitor );
+      doFinish( m_project, monitor );
     }
   }
 
   private static final String STR_WINDOW_TITLE = "Neues Projekt - Spiegellinienberechnung";
 
-  private WizardNewProjectCreationPage m_createProjectPage;
+  private final WizardNewProjectCreationPage m_createProjectPage;
 
   private IWorkbench m_workbench;
 
@@ -135,7 +121,7 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     }
   };
 
-  private final DemoProjectsWizardPage m_demoProjectPage;
+  private final ProjectTemplatePage m_demoProjectPage;
 
   public NewProjectWizard( )
   {
@@ -150,25 +136,17 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoModelWspmTuhhUIPlugin.getDefault(), getClass().getName() );
     setDialogSettings( dialogSettings );
 
+    final String templateCategory = showDemoPage ? "org.kalypso.model.wspm.tuhh.demoProjects" : "org.kalypso.model.wspm.tuhh.projectTemplate";
+    m_demoProjectPage = new ProjectTemplatePage( "demoProjectPage", templateCategory );
     if( showDemoPage )
-      m_demoProjectPage = new DemoProjectsWizardPage( "demoProjectPage", KalypsoModelWspmTuhhCoreExtensions.getDemoProjects() );
-    else
-      m_demoProjectPage = null;
-  }
+      // We only add this page here, if we only want the default template, we just use the page to transport the
+      // template data
+      addPage( m_demoProjectPage );
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
-  @Override
-  public void addPages( )
-  {
     m_createProjectPage = new WizardNewProjectCreationPage( "newProjectPage" );
     m_createProjectPage.setTitle( "Neues Spiegellinienberechnung-Projekt erzeugen" );
     m_createProjectPage.setDescription( "Dieser Dialog erstellt ein neues Spiegellinienberechnung-Projekt im Arbeitsbereich." );
     m_createProjectPage.setImageDescriptor( KalypsoModelWspmTuhhUIPlugin.getImageProvider().getImageDescriptor( KalypsoModelWspmTuhhUIImages.NEWPROJECT_PROJECT_PAGE_WIZBAN ) );
-
-    if( m_demoProjectPage != null )
-      addPage( m_demoProjectPage );
 
     addPage( m_createProjectPage );
   }
@@ -209,8 +187,8 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
   {
     if( event.getCurrentPage() == m_demoProjectPage )
     {
-      final TuhhDemoProject demoProject = m_demoProjectPage.getSelectedProject();
-
+      final ProjectTemplate demoProject = m_demoProjectPage.getSelectedProject();
+      // TODO: if project name is already existent, no error message is shown, the user may be confused
       // TODO: Does work only the first time :-( ,see above createPageControls
       m_createProjectPage.setInitialProjectName( demoProject.getProjectName() );
     }
@@ -252,7 +230,8 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
       BasicNewProjectResourceWizard.updatePerspective( m_config );
       BasicNewResourceWizard.selectAndReveal( project, m_workbench.getActiveWorkbenchWindow() );
 
-      openTreeView( op.getFile() );
+      final IFile fileToOpen = project.getFile( "WSPM.gmv" );
+      openTreeView( fileToOpen );
       return true;
     }
 
@@ -268,10 +247,8 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
       {
         try
         {
-          final GmlEditorTemplateLauncher launcher = new GmlEditorTemplateLauncher();
-          final IEditorInput input = launcher.createInput( file );
-          final IEditorDescriptor editor = launcher.getEditor();
-          getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor( input, editor.getId() );
+          final FileEditorInput input = new FileEditorInput( file );
+          getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor( input, "org.kalypso.ui.editor.GmlEditor" );
 
           return Status.OK_STATUS;
         }
@@ -321,12 +298,11 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
    * Overwrite, if more has to be done while finishing.
    * </p>
    */
-  protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Neues Spiegellinienprojekt", 4 );
 
-    final TuhhDemoProject demoProject = m_demoProjectPage == null ? KalypsoModelWspmTuhhCoreExtensions.getEmptyProject() : m_demoProjectPage.getSelectedProject();
-    final URL zipLocation = demoProject.getData();
+    final ProjectTemplate demoProject = m_demoProjectPage.getSelectedProject();
 
     project.create( new SubProgressMonitor( monitor, 1 ) );
     project.open( new SubProgressMonitor( monitor, 1 ) );
@@ -336,7 +312,8 @@ public class NewProjectWizard extends Wizard implements INewWizard, IExecutableE
     description.setNatureIds( natures );
     project.setDescription( description, new SubProgressMonitor( monitor, 1 ) );
 
-    return TuhhHelper.ensureValidWspmTuhhStructure( project, zipLocation, new SubProgressMonitor( monitor, 1 ) );
+    final URL zipLocation = demoProject.getData();
+    ZipUtilities.unzip( zipLocation, project, new SubProgressMonitor( monitor, 1 ) );
   }
 
 }

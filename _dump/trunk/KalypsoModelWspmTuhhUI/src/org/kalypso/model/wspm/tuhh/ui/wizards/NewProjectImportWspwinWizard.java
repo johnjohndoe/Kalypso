@@ -41,9 +41,7 @@
 package org.kalypso.model.wspm.tuhh.ui.wizards;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -118,11 +116,11 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IFile doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  protected void doFinish( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Import aus WspWin", 10 );
 
-    final IFile file = super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
+    super.doFinish( project, new SubProgressMonitor( monitor, 5 ) );
 
     final File wspwinDirectory = m_wspWinImportPage.getSourceDirectory();
 
@@ -131,8 +129,6 @@ public class NewProjectImportWspwinWizard extends NewProjectWizard
       final IStatus status = WspWinImporter.importProject( wspwinDirectory, project, new SubProgressMonitor( monitor, 5 ) );
       if( !status.isOK() )
         throw new CoreException( status );
-
-      return file;
     }
     catch( final Exception e )
     {

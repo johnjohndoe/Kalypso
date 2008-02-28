@@ -18,5 +18,4 @@ Export-Package: org.kalypso.model.wspm.tuhh.core,
  org.kalypso.model.wspm.tuhh.core.profile.buildings,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.building,
  org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass,
- org.kalypso.model.wspm.tuhh.core.util,
  org.kalypso.model.wspm.tuhh.core.wspwin
