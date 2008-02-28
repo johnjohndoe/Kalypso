@@ -27,7 +27,7 @@
    <extension
          point="de.renew.workflow.model.workflowSystem">
       <workflowSystem
-            definition="src/org/kalypso/risk/project/workflow.xml"
+            definition="etc/workflow.xml"
             id="workflowKalypsoRisk"
             name="Workflow Kalypso Risk">
       </workflowSystem>
@@ -197,5 +197,15 @@
           class="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo"
           id="org.kalypso.risk.plugin.RasterizedLanduseThemeInfo">
     </themeInfo>
+ </extension>
+ <extension
+       point="org.kalypso.contribs.eclipseplatform.projectTemplate">
+    <project
+          category="org.kalypso.risk.projectTemplate"
+          data="etc/RiskProjectTemplate.zip"
+          description="Leere Projektvorlage für Risiko Projekte"
+          label="Leere Vorlage"
+          projectName=" ">
+    </project>
  </extension>
 </plugin>
