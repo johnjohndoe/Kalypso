@@ -46,11 +46,16 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
   {
     super.start( context );
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-    m_taskExecutionListener = new TaskExecutionListener();
-    commandService.addExecutionListener( m_taskExecutionListener );
-    m_taskExecutionAuthority = new TaskExecutionAuthority();
+    if( PlatformUI.isWorkbenchRunning() )
+    {
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      // TODO: check if this stuff is really necessary! This is copy paste from AFGUI stuff, probably not needed twice
+
+      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      m_taskExecutionListener = new TaskExecutionListener();
+      commandService.addExecutionListener( m_taskExecutionListener );
+      m_taskExecutionAuthority = new TaskExecutionAuthority();
+    }
 
     // delete tmp images both on startup and shutdown
     m_imageProvider = new PluginImageProvider( this );
@@ -81,6 +86,7 @@ public class KalypsoRiskPlugin extends AbstractUIPlugin
       final SzenarioDataProvider caseDataProvider = (SzenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       caseDataProvider.removeScenarioDataListener( m_szenarioController );
     }
+
     m_plugin = null;
     super.stop( context );
   }

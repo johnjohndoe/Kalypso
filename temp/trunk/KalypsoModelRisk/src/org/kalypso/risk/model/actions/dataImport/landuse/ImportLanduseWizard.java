@@ -69,6 +69,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.risk.model.operation.RiskImportLanduseRunnable;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -111,11 +112,11 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
   private final IFolder m_scenarioFolder;
 
-  private List<Feature> m_predefinedLanduseColorsCollection1;
+  private List<Feature> m_predefinedLanduseColorsCollection;
 
-  private List<Feature> m_predefinedDamageFunctionsCollection1;
+  private List<Feature> m_predefinedDamageFunctionsCollection;
 
-  private List<Feature> m_predefinedAssetValueClassesCollection1;
+  private List<Feature> m_predefinedAssetValueClassesCollection;
 
   private final boolean m_wrongLanduseSelectedStatus = false;
 
@@ -139,9 +140,9 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     {
       final URL url = m_scenarioFolder.getFile( PREDEFINED_DATASET_PATH ).getLocationURI().toURL();
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, new UrlResolver(), null );
-      m_predefinedLanduseColorsCollection1 = (FeatureList) workspace.getRootFeature().getProperty( PROP_LANDUSE_COLORS_COLLECTION );
-      m_predefinedDamageFunctionsCollection1 = (FeatureList) workspace.getRootFeature().getProperty( PROP_DAMAGE_FUNCTION_COLLECTION );
-      m_predefinedAssetValueClassesCollection1 = (FeatureList) workspace.getRootFeature().getProperty( PROP_ASSET_VALUES_CLASSES_COLLECTION );
+      m_predefinedLanduseColorsCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_LANDUSE_COLORS_COLLECTION );
+      m_predefinedDamageFunctionsCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_DAMAGE_FUNCTION_COLLECTION );
+      m_predefinedAssetValueClassesCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_ASSET_VALUES_CLASSES_COLLECTION );
     }
     catch( Exception e )
     {
@@ -158,13 +159,13 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
     final List<String> damageFunctionNamesList = new ArrayList<String>();
     final List<String> assetValueClassesList = new ArrayList<String>();
-    for( final Feature feature : m_predefinedDamageFunctionsCollection1 )
+    for( final Feature feature : m_predefinedDamageFunctionsCollection )
     {
       final List<String> names = (List<String>) feature.getProperty( PROP_NAME );
       if( names != null && names.size() > 0 && names.get( 0 ) != null )
         damageFunctionNamesList.add( names.get( 0 ) );
     }
-    for( final Feature feature : m_predefinedAssetValueClassesCollection1 )
+    for( final Feature feature : m_predefinedAssetValueClassesCollection )
     {
       final List<String> names = (List<String>) feature.getProperty( PROP_NAME );
       if( names != null && names.size() > 0 && names.get( 0 ) != null )
@@ -209,7 +210,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class );
       final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class );
 
-      ICoreRunnableWithProgress importLanduseRunnable = new RiskImportLanduseRunnable( controlModel, vectorDataModel, coordinateSystem, m_scenarioFolder, selectedDatabaseOption, assetValuesCollectionName, landuseProperty, damageFunctionsCollectionName, sourceShapeFilePath, externalProjectName, m_predefinedAssetValueClassesCollection1, m_predefinedDamageFunctionsCollection1, m_predefinedLanduseColorsCollection1, m_wrongLanduseSelectedStatus );
+      ICoreRunnableWithProgress importLanduseRunnable = new RiskImportLanduseRunnable( controlModel, vectorDataModel, coordinateSystem, m_scenarioFolder, selectedDatabaseOption, assetValuesCollectionName, landuseProperty, damageFunctionsCollectionName, sourceShapeFilePath, externalProjectName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importLanduseRunnable );
       ErrorDialog.openError( getShell(), "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );

@@ -20,6 +20,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.risk.model.operation.RiskLanduseRasterizationRunnable;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
@@ -69,7 +70,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
       if( dialog.open() != 0 )
         return null;
 
-      final ICoreRunnableWithProgress runnableWithProgress = new LanduseRasterizationRunnable( vectorDataModel, rasterModel, scenarioFolder );
+      final ICoreRunnableWithProgress runnableWithProgress = new RiskLanduseRasterizationRunnable( vectorDataModel, rasterModel, scenarioFolder );
 
       IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
       ErrorDialog.openError( shell, "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );

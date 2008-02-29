@@ -1,4 +1,4 @@
-package org.kalypso.risk.model.actions.dataImport.waterdepth;
+package org.kalypso.risk.model.operation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,6 +17,8 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
+import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
@@ -29,7 +31,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
  * @author Thomas Jung
  * 
  */
-final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProgress
+public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProgress
 {
   private final GMLWorkspace m_workspace;
 

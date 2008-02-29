@@ -1,4 +1,4 @@
-package org.kalypso.risk.model.actions.dataImport.landuse;
+package org.kalypso.risk.model.operation;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.risk.model.actions.dataImport.landuse.Messages;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.IAdministrationUnit;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
@@ -48,7 +49,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * @author Thomas Jung
  * 
  */
-final class RiskImportLanduseRunnable implements ICoreRunnableWithProgress
+public final class RiskImportLanduseRunnable implements ICoreRunnableWithProgress
 {
 
   private static final int DB_CREATE_NEW = 0;
@@ -95,7 +96,7 @@ final class RiskImportLanduseRunnable implements ICoreRunnableWithProgress
 
   private final IFolder m_scenarioFolder;
 
-  RiskImportLanduseRunnable( IRasterizationControlModel controlModel, IVectorDataModel vectorDataModel, String coordinateSystem, IFolder scenarioFolder, int selectedDatabaseOption, String assetValuesCollectionName, String landuseProperty, String damageFunctionsCollectionName, String sourceShapeFilePath, String externalProjectName, List<Feature> predefinedAssetValueClassesCollection, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedLanduseColorsCollection, boolean wrongLanduseSelectedStatus )
+  public RiskImportLanduseRunnable( IRasterizationControlModel controlModel, IVectorDataModel vectorDataModel, String coordinateSystem, IFolder scenarioFolder, int selectedDatabaseOption, String assetValuesCollectionName, String landuseProperty, String damageFunctionsCollectionName, String sourceShapeFilePath, String externalProjectName, List<Feature> predefinedAssetValueClassesCollection, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedLanduseColorsCollection, boolean wrongLanduseSelectedStatus )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;

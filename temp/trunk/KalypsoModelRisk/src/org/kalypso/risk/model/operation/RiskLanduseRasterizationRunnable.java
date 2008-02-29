@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.risk.model.actions.rasterizeLanduse;
+package org.kalypso.risk.model.operation;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,7 +20,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
-final class LanduseRasterizationRunnable implements ICoreRunnableWithProgress
+public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWithProgress
 {
   private final IRasterDataModel m_rasterModel;
 
@@ -28,7 +28,7 @@ final class LanduseRasterizationRunnable implements ICoreRunnableWithProgress
 
   private final IFolder m_scenarioFolder;
 
-  LanduseRasterizationRunnable( final IVectorDataModel vectorDataModel, final IRasterDataModel rasterModel, final IFolder scenarioFolder )
+  public RiskLanduseRasterizationRunnable( final IVectorDataModel vectorDataModel, final IRasterDataModel rasterModel, final IFolder scenarioFolder )
   {
     m_vectorDataModel = vectorDataModel;
     m_rasterModel = rasterModel;

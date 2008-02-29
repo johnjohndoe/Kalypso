@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.risk.model.actions.riskZonesCalculation;
+package org.kalypso.risk.model.operation;
 
 import java.io.File;
 import java.util.Date;
@@ -17,6 +17,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.risk.model.actions.riskZonesCalculation.Messages;
+import org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -38,7 +40,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   private final IFolder m_scenarioFolder;
 
-  RiskCalcRiskZonesRunnable( IRasterDataModel rasterModel, IVectorDataModel vectorModel, IRasterizationControlModel controlModel, IFolder scenarioFolder )
+  public RiskCalcRiskZonesRunnable( IRasterDataModel rasterModel, IVectorDataModel vectorModel, IRasterizationControlModel controlModel, IFolder scenarioFolder )
   {
     m_rasterModel = rasterModel;
     m_controlModel = controlModel;

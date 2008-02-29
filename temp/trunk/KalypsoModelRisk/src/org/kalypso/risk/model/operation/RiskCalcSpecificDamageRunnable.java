@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.kalypso.risk.model.actions.specificDamage;
+package org.kalypso.risk.model.operation;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
