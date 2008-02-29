@@ -194,7 +194,7 @@ public class Control1D2DConverter
 
     // // C0
     final Object[] c0Props = new Object[] { 0, m_controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
-        getTimeInPercentage( calendarForFirstTimeStep ), m_controlModel.getIEDSW(), m_controlModel.getTBFACT(), m_controlModel.getTBMIN(), 1 };
+        getTimeInPercentage( calendarForFirstTimeStep ), m_controlModel.getIEDSW(), m_controlModel.getTBFACT(), m_controlModel.getTBMIN(), 0 };
     formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props ); //$NON-NLS-1$
 
     // C1
