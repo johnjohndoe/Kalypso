@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.ui.wizard.ImportProfilePage;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -76,11 +77,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
- * A wizard to import profile data (right now jus as trippel) into a 1D2D Terrain Model.
+ * A wizard to import profile data (right now just as trippel) into a 1D2D Terrain Model.
  * 
  * @author Thomas Jung
  */
-public class ImportTrippelWizard extends Wizard implements IWizard
+public class ImportTrippleWizard extends Wizard implements IWizard
 {
   private static final DateFormat DF = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
 
@@ -92,13 +93,11 @@ public class ImportTrippelWizard extends Wizard implements IWizard
 
   private IRiverProfileNetwork m_network;
 
-  public ImportTrippelWizard( final IRiverProfileNetworkCollection networkModel )
+  public ImportTrippleWizard( final IRiverProfileNetworkCollection networkModel )
   {
 
     m_networkModel = networkModel;
-
     setWindowTitle( Messages.getString( "ImportTrippelWizard.0" ) ); //$NON-NLS-1$
-
     setNeedsProgressMonitor( true );
   }
 
@@ -189,7 +188,7 @@ public class ImportTrippelWizard extends Wizard implements IWizard
     addedFeatures.add( networkFeature );
 
     /* Set user friendly name and description */
-    final String desc = String.format( Messages.getString( "ImportTrippelWizard.19" ), m_ProfilePage.getFileName(), ImportTrippelWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
+    final String desc = String.format( Messages.getString( "ImportTrippelWizard.19" ), m_ProfilePage.getFileName(), ImportTrippleWizard.DF.format( new Date() ), m_ProfilePage.getFilePath() ); //$NON-NLS-1$
     network.setName( FileUtilities.nameWithoutExtension( m_ProfilePage.getFileName() ) );
     network.setDescription( desc );
     final String crs = m_ProfilePage.getCoordinateSystem();

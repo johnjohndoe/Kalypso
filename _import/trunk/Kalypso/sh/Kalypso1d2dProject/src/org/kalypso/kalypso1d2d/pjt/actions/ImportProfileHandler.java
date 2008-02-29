@@ -55,7 +55,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippelWizard;
+import org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport.ImportTrippleWizard;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -101,7 +101,7 @@ public class ImportProfileHandler extends AbstractHandler
     /* Import Reach into Terrain-Model */
     final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
 
-    final ImportTrippelWizard importWizard = new ImportTrippelWizard( networkModel );
+    final ImportTrippleWizard importWizard = new ImportTrippleWizard( networkModel );
 
     importWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModel1D2DPlugin.getDefault(), getClass().getName() ) );
 
