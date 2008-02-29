@@ -70,40 +70,44 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     super.start( context );
 
     final WorkflowContextHandlerFactory workflowContextHandlerFactory = new WorkflowContextHandlerFactory();
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-    m_taskExecutionListener = new TaskExecutionListener();
-    commandService.addExecutionListener( m_taskExecutionListener );
-    m_taskExecutionAuthority = new TaskExecutionAuthority();
-    m_taskExecutor = new TaskExecutor( workflowContextHandlerFactory, m_taskExecutionAuthority, commandService, handlerService );
 
-    PlatformUI.getWorkbench().addWorkbenchListener( new IWorkbenchListener()
+    if( PlatformUI.isWorkbenchRunning() )
     {
-      /**
-       * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
-       */
-      @SuppressWarnings("synthetic-access")
-      public void postShutdown( final IWorkbench workbench2 )
-      {
-        stopSzenarioSourceProvider();
-      }
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+      m_taskExecutionListener = new TaskExecutionListener();
+      commandService.addExecutionListener( m_taskExecutionListener );
+      m_taskExecutionAuthority = new TaskExecutionAuthority();
+      m_taskExecutor = new TaskExecutor( workflowContextHandlerFactory, m_taskExecutionAuthority, commandService, handlerService );
 
-      /**
-       * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
-       */
-      @SuppressWarnings("synthetic-access")
-      public boolean preShutdown( final IWorkbench workbench2, final boolean forced )
+      workbench.addWorkbenchListener( new IWorkbenchListener()
       {
-        if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
+        /**
+         * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
+         */
+        @SuppressWarnings("synthetic-access")
+        public void postShutdown( final IWorkbench workbench2 )
         {
-          m_taskExecutor.stopActiveTask();
-          return true;
+          stopSzenarioSourceProvider();
         }
-        else
-          return false;
-      }
-    } );
+
+        /**
+         * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
+         */
+        @SuppressWarnings("synthetic-access")
+        public boolean preShutdown( final IWorkbench workbench2, final boolean forced )
+        {
+          if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
+          {
+            m_taskExecutor.stopActiveTask();
+            return true;
+          }
+          else
+            return false;
+        }
+      } );
+    }
   }
 
   private void startActiveWorkContext( )
@@ -130,11 +134,15 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     if( m_szenarioSourceProvider == null )
     {
       // This can only be called if the platform has already been started
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       m_szenarioDataProvider = new SzenarioDataProvider();
       m_szenarioSourceProvider = new CaseHandlingSourceProvider<Scenario, IModel>( m_activeWorkContext, m_szenarioDataProvider );
-      handlerService.addSourceProvider( m_szenarioSourceProvider );
+
+      if( PlatformUI.isWorkbenchRunning() )
+      {
+        final IWorkbench workbench = PlatformUI.getWorkbench();
+        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+        handlerService.addSourceProvider( m_szenarioSourceProvider );
+      }
     }
   }
 
@@ -144,20 +152,23 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( !workbench.isClosing() )
+    if( PlatformUI.isWorkbenchRunning() )
     {
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      if( handlerService != null )
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      if( !workbench.isClosing() )
       {
-        handlerService.removeSourceProvider( m_szenarioSourceProvider );
+        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+        if( handlerService != null )
+        {
+          handlerService.removeSourceProvider( m_szenarioSourceProvider );
+        }
+        final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+        if( commandService != null )
+        {
+          commandService.removeExecutionListener( m_taskExecutionListener );
+        }
+        stopSzenarioSourceProvider();
       }
-      final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
-      if( commandService != null )
-      {
-        commandService.removeExecutionListener( m_taskExecutionListener );
-      }
-      stopSzenarioSourceProvider();
     }
 
     plugin = null;
