@@ -63,6 +63,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.framework.model.IChartModel;
 import org.kalypso.chart.framework.model.impl.ChartModel;
 import org.kalypso.chart.framework.view.ChartComposite;
@@ -70,6 +71,7 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
+import org.kalypso.chart.ui.outline.ChartOutlinePage;
 
 /**
  * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
@@ -86,6 +88,8 @@ public class ChartTabItem extends Composite implements IChartPart
   private final IExecutionListener m_executionListener;
 
   private final AxisDragHandlerDelegate m_axisDragHandlerDelegate;
+
+  private ChartOutlinePage m_outlinePage;
 
   public ChartTabItem( final Composite parent, final int style, final Map<String, Integer> commands )
   {
@@ -219,4 +223,22 @@ public class ChartTabItem extends Composite implements IChartPart
   {
     return m_axisDragHandlerDelegate;
   }
+
+  @SuppressWarnings("unchecked")
+  public Object getAdapter( final Class adapter )
+  {
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      if( m_outlinePage == null )
+      {
+        if( m_chartComposite != null )
+          m_outlinePage = new ChartOutlinePage( this );
+        else
+          return null;
+      }
+      return m_outlinePage;
+    }
+    return null;
+  }
+
 }

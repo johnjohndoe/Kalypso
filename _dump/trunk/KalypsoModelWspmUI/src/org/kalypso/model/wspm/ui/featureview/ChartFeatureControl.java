@@ -56,6 +56,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.chart.factory.configuration.ChartFactory;
+import org.kalypso.chart.framework.model.layer.IChartLayer;
+import org.kalypso.chart.framework.model.layer.ILayerManager;
 import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -200,8 +202,14 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     {
       final ChartComposite chart = m_chartTabs[i].getChartComposite();
 
+      // if the chart was previously loaded, it will contain layers - these have to be removed
+      ILayerManager lm = chart.getModel().getLayerManager();
+      IChartLayer< ? , ? >[] layers = lm.getLayers();
+      for( IChartLayer< ? , ? > chartLayer : layers )
+      {
+        lm.removeLayer( chartLayer );
+      }
       ChartFactory.doConfiguration( chart.getModel(), m_ccl, m_chartTypes[i], m_context );
-
       ChartUtilities.maximize( chart.getModel() );
     }
   }
