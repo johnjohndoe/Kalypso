@@ -43,9 +43,13 @@ package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -61,15 +65,15 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 {
   private final LinearRing ring;
 
-  private final ITriangleAlgorithm _divider;
-
   private final Polygon polygon;
 
   private final double[] planeEquation;
 
   private final double centerElevation;
 
-  public TriangleData( final LinearRing ring )
+  private GM_Triangle_Impl m_trianglePath;
+
+  public TriangleData( final LinearRing ring, String crs )
   {
     // TODO: there is no need to divide the triangles anymore, because now they get split at
     // the real borders. Therefore convert the ring into an Triangle an paint it.
@@ -77,13 +81,25 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
     // TODO: give the paint method the right border.
 
     this.ring = ring;
-    // Choice of the Triangle Division Algoritm
-    /* 1. */_divider = new TriangleFourDividerAlgorithm( ring );
-    /* 2. */// _divider = new TriangleDivider(ring);
     polygon = new Polygon( ring, null, ring.getFactory() );
     final Coordinate[] coords = ring.getCoordinates();
     planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
+
+    GM_Position pos1 = JTSAdapter.wrap( ring.getCoordinateN( 0 ) );
+    GM_Position pos2 = JTSAdapter.wrap( ring.getCoordinateN( 1 ) );
+    GM_Position pos3 = JTSAdapter.wrap( ring.getCoordinateN( 2 ) );
+
+    try
+    {
+      m_trianglePath = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, crs );
+    }
+    catch( GM_Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
   }
 
   /**
@@ -127,9 +143,17 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor )
   {
-    _divider.acceptSurfacePatches( envToVisit, surfacePatchVisitor );
+    try
+    {
+      surfacePatchVisitor.visit( m_trianglePath, centerElevation );
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   public double getMinElevation( )

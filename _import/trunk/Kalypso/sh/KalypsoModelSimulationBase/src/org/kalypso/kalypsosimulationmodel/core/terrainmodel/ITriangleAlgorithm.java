@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
-import java.util.Map;
-
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
 /**
@@ -55,9 +51,9 @@ import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
  */
 public interface ITriangleAlgorithm
 {
-  public boolean furtherDivisionNeeded( GM_Position[] coOrds );
+  // public boolean furtherDivisionNeeded( GM_Position[] coOrds );
 
-  public Map<GM_Triangle, Double> visitThisDivisionSurface( final GM_SurfacePatch patch );
+  // public Map<GM_Triangle, Double> visitThisDivisionSurface( final GM_SurfacePatch patch );
 
   /**
    * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,

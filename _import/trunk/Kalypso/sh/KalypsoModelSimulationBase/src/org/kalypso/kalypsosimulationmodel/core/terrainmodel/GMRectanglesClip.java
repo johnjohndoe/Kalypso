@@ -51,11 +51,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class GMRectanglesClip
 {
-  public GMRectanglesClip( final GM_Envelope envOne, final GM_Envelope envTwo )
-  {
-    // this.envOne = envOne;
-    // this.envTwo = envTwo;
-  }
 
   /**
    * returns upper left corner and lower right corner of the intersection envelop or null if the 2 envelop do not

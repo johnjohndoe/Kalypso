@@ -107,15 +107,12 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     maxElevation = Double.MIN_VALUE;
     double extremum;
 
-    // System.out.println("Parsing:"+rings.length);
     union = rings[0].getEnvelopeInternal();
     for( final LinearRing ring : rings )
     {
-      // System.out.println("ring:"+ring);
-      triangleData = new TriangleData( ring );
+      triangleData = new TriangleData( ring, crs );
       final Envelope envelopeInternal = ring.getEnvelopeInternal();
       triangles.insert( envelopeInternal, triangleData );
-      //
       // set min
       extremum = triangleData.getMinElevation();
       if( minElevation > extremum )
@@ -176,24 +173,16 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
       final Point jtsPoint = (Point) JTSAdapter.export( location );
       final Envelope searchEnv = new Envelope( x, x, y, y );
       final List<TriangleData> list = triangles.query( searchEnv );
+
       if( list.isEmpty() )
-      {
-        // System.out.println( "List is empty" );
         return Double.NaN;
-      }
-      else
+
+      for( final TriangleData data : list )
       {
-        // System.out.println("Selected triange liste size="+list.size());
-        for( final TriangleData data : list )
-        {
-          if( data.contains( jtsPoint ) )
-          {
-            return data.computeZOfTrianglePlanePoint( x, y );// getCenterElevation();
-          }
-        }
-        // System.out.println("trinagle location not in list");
-        return Double.NaN;// ((TriangleData)list.get( 0 )).getCenterElevation();
+        if( data.contains( jtsPoint ) )
+          return data.computeZOfTrianglePlanePoint( x, y );
       }
+      return Double.NaN;
     }
     catch( final Throwable th )
     {
