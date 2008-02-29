@@ -42,6 +42,10 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Color;
 
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
+import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
+
 /**
  * Interface for color model used in the elevation visualization
  * 
@@ -72,4 +76,16 @@ public interface IElevationColorModel
   public double[] getElevationMinMax( );
 
   public double getDiscretisationInterval( );
+
+  public int getNumOfClasses( );
+
+  public double getFrom( int currentClass );
+
+  public double getTo( int currentClass );
+
+  public StrokePainter getLinePainter( int currentClass );
+
+  public FillPainter getFillPolygonPainter( int currentClass );
+
+  public void setProjection( GeoTransform projection );
 }
