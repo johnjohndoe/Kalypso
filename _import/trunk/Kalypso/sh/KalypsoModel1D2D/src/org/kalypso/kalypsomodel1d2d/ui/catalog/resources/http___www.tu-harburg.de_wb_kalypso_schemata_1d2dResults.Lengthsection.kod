@@ -62,8 +62,8 @@
 				<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
 			</Parameters>
 		</Provider>
-		<title>Abfluss</title>
-		<description>Abflussganglinie</description>
+		<Title>Abfluss</Title>
+		<Description>Abflussganglinie</Description>
 		<Mapper>
 			<DomainAxisRef ref="Station_Axis" />
 			<TargetAxisRef ref="m3sAxis" />
@@ -82,8 +82,8 @@
 				<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSection_v_m" />
 			</Parameters>
 		</Provider>
-		<title>Geschwindigkeit</title>
-		<description>Geschwindigkeitsganglinie</description>
+		<Title>Geschwindigkeit</Title>
+		<Description>Geschwindigkeitsganglinie</Description>
 		<Mapper>
 			<DomainAxisRef ref="Station_Axis" />
 			<TargetAxisRef ref="msAxis" />
