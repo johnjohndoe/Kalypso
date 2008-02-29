@@ -82,7 +82,7 @@ public class TestRiskModel extends TestCase
     project.create( new NullProgressMonitor() );
 
     final URL zipLocation = getClass().getResource( "resources/testProject.zip" );
-    ZipUtilities.unzipToContainer( zipLocation, project, new NullProgressMonitor() );
+    ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run risk model
     final IFolder folder = project.getFolder( "testScenario" );
