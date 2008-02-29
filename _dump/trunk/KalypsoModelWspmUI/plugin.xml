@@ -288,6 +288,13 @@
                style="push"
                tooltip="Importiert eine oder mehrere WspWin .prf Dateien in diese Profil-Liste"/>
          <action
+               class="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
+               id="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
+               label=".&amp;txt Dateien"
+               menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
+               style="push"
+               tooltip="Importiert eine oder mehrere Trippel-Dateien in diese Profil-Liste"/>
+         <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"

@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * Intermediates between the {@link IProfil} interface and Featurees of QName {org.kalypso.model.wspm.profile}profile
+ * Intermediates between the {@link IProfil} interface and Features of QName {org.kalypso.model.wspm.profile}profile
  * 
  * @author Gernot Belger
  */

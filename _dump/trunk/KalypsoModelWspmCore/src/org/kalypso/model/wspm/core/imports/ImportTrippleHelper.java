@@ -69,7 +69,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ImportTrippleHelper
 {
-
   /**
    * imports the profile trippel data and converts it into IProfils
    * 
@@ -207,7 +206,8 @@ public class ImportTrippleHelper
       profile.addPoint( point );
 
     profile.setStation( station );
-    profile.setName( "Trippel-Import" );
+    profile.setName( "Import" );
+    profile.setDescription( "Trippel-Import" );
 
     profiles.add( profile );
   }
