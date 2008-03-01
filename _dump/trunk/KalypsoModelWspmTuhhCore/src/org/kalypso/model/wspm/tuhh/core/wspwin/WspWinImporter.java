@@ -327,7 +327,7 @@ public class WspWinImporter
 
     final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
     final IProfil profile = ProfilSerializerUtilitites.readProfile( prfSource, prfFile, profiletype );
-    
+
     ProfileFeatureFactory.toFeature( profile, prof.getFeature() );
     /* Set state as default name for profile. */
     prof.setName( bean.getStateName() );
@@ -357,7 +357,7 @@ public class WspWinImporter
     {
       reach = tuhhProject.createNewReach( waterName, isDirectionUpstreams );
     }
-    catch( GMLSchemaException e )
+    catch( final GMLSchemaException e )
     {
       return StatusUtilities.statusFromThrowable( e );
     }
@@ -573,7 +573,9 @@ public class WspWinImporter
         else
           reibType = TuhhCalculation.REIBUNGSVERLUST_TYPE.GEOMETRIC_FORMULA;
 
-        calc.setWaterlevelParameters( iterationType, verzType, reibType, contentBean.isBerechneBruecken(), contentBean.isBerechneWehre() );
+        final boolean useExtremeRougness = false; // as WSPWIN did not know this option, set to false
+
+        calc.setWaterlevelParameters( iterationType, verzType, reibType, contentBean.isBerechneBruecken(), contentBean.isBerechneWehre(), useExtremeRougness );
 
         switch( contentBean.getCalcKind() )
         {

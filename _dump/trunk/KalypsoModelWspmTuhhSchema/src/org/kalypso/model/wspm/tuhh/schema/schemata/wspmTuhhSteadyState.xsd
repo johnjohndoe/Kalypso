@@ -1045,7 +1045,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="exeVersion" default="_2_1_0_0">
+					<element name="exeVersion" default="_2_1_1_0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label><![CDATA[Version Rechenkern]]></label>
@@ -1058,13 +1058,13 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="_2_0_6_6">
+								<enumeration value="_2_1_1_0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
+											<label><![CDATA[_2_1_1_0 (26.02.2008)]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
+											<label><![CDATA[_2_1_1_0 (26.02.2008)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -1075,6 +1075,16 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 										</documentation>
 										<documentation xml:lang="en">
 											<label><![CDATA[_2_1_0_0 (19.02.2008)]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
+								<enumeration value="_2_0_6_6">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -1185,18 +1195,14 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 								<enumeration value="DFG">
 									<annotation>
 										<documentation xml:lang="de">
-											<label>nach BWK (beta = 2 / (1+Ai + 1/Ai) )</label>
-											<tooltip>nach BWK (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
-											<description>
-												Verzögerungsverlust nach BWK (beta = 2 / (1+Ai + 1/Ai) )
-											</description>
+											<label>nach BWK</label>
+											<tooltip>nach BWK</tooltip>
+											<description>Verzögerungsverlust nach BWK</description>
 										</documentation>
 										<documentation xml:lang="en">
-											<label>according to BWK (beta = 2 / (1+Ai + 1/Ai) )</label>
-											<tooltip>according to BWK (beta = 2 / (1+Ai + 1/Ai) )</tooltip>
-											<description>
-												Delay attrition according to BWK (beta = 2 / (1+Ai + 1/Ai) )
-											</description>
+											<label>according to BWK</label>
+											<tooltip>according to BWK</tooltip>
+											<description>Delay attrition according to BWK</description>
 										</documentation>
 									</annotation>
 								</enumeration>
@@ -1550,16 +1556,12 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Brücken mit berechnen</label>
-								<tooltip>
-									falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.
-								</tooltip>
-								<description>
-									falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.
-								</description>
+								<tooltip><![CDATA[falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.]]></tooltip>
+								<description><![CDATA[falls aktiv, werden Brücken und Durchlässe bei der Berechnung berücksichtigt.]]></description>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Include bridges</label>
-								<tooltip>Bridges and outlets are included in calculation.</tooltip>
+								<tooltip>if activated, bridges and outlets are included in calculation.</tooltip>
 								<description>Bridges and outlets are included in calculation.</description>
 							</documentation>
 						</annotation>
@@ -1573,8 +1575,19 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 							</documentation>
 							<documentation xml:lang="en">
 								<label>Include weirs</label>
-								<tooltip>Weirs are included in calculation.</tooltip>
+								<tooltip>if activated, weirs are included in calculation.</tooltip>
 								<description>Weirs are included in calculation.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="useExtremeRoughness" type="boolean" default="true">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Extreme Rauhigkeit berücksichtigen</label>
+								<tooltip>falls aktiv, wird bei geringen Wassertiefen der Ansatz für extreme Rauheiten verwendet.</tooltip>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>if activated, the method of 'extreme roughness' will be used for small waterdepths</label>
 							</documentation>
 						</annotation>
 					</element>

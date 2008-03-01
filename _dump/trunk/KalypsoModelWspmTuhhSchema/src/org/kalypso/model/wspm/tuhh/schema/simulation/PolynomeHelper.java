@@ -219,6 +219,9 @@ public class PolynomeHelper
 
       // start calculation; the out-stream gets copied into the simulation.log and the system.out
       final File exeFile = new File( tmpDir, "Polynome1d" + version.name() + ".exe" );
+      if( !exeFile.exists() )
+        throw new SimulationException( "Polynom-Exe nicht vorhanden. Prüfen Sie die Versionsnummer: " + exeFile.getAbsolutePath() );
+
       final String cmdLine = "cmd.exe /C \"" + exeFile.getAbsolutePath() + "\"";
       ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, timeout, logStream, errStream, null );
 

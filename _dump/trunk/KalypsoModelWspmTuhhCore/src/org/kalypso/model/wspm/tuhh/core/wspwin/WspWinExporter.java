@@ -51,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -65,6 +66,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -282,107 +284,110 @@ public class WspWinExporter
   {
     final MODE calcMode = calculation.getCalcMode();
 
-    PrintWriter pw = null;
+    Formatter pw = null;
     try
     {
       batFile.getParentFile().mkdirs();
-      pw = new PrintWriter( new BufferedWriter( new FileWriter( batFile ) ) );
 
-      pw.println( "# " + calculation.getName() );
-      pw.println( "# " + SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) );
+      pw = new Formatter( batFile );
 
-      pw.println();
-      pw.println( "PROJEKTPFAD=" + zustFile.getParentFile().getParent() );
-      pw.println( "STRANGDATEI=" + zustFile.getName() );
+      pw.format( "# %s%n", calculation.getName() );
+      pw.format( "# %s%n", SimpleDateFormat.getDateTimeInstance( SimpleDateFormat.SHORT, SimpleDateFormat.SHORT ).format( new Date() ) );
+
+      pw.format( "%n" );
+      pw.format( "PROJEKTPFAD=%s%n", zustFile.getParentFile().getParent() );
+      pw.format( "STRANGDATEI=%s%n", zustFile.getName() );
+
+      pw.format( "%n" );
+      pw.format( "# mögliche Werte:%n" );
+      pw.format( "# WATERLEVEL%n" );
+      pw.format( "# BF_UNIFORM%n" );
+      pw.format( "# BF_NON_UNIFORM%n" );
+      pw.format( "# REIB_KONST%n" );
+
+      pw.format( "BERECHNUNGSMODUS=%s%n", calcMode.name() );
 
       // TODO: passt das zum RK?
-      pw.println();
-      pw.println( "# mögliche Werte:" );
-      pw.println( "# WATERLEVEL" );
-      pw.println( "# BF_UNIFORM" );
-      pw.println( "# BF_NON_UNIFORM" );
-      pw.println( "# REIB_KONST" );
-      pw.println( "BERECHNUNGSMODUS=" + calcMode.name() );
+      pw.format( "%n" );
+      pw.format( "# mögliche Werte:%n" );
+      pw.format( "# DARCY_WEISBACH_OHNE_FORMEINFLUSS%n" );
+      pw.format( "# DARCY_WEISBACH_MIT_FORMEINFLUSS%n" );
+      pw.format( "# MANNING_STRICKLER%n" );
+      pw.format( "FLIESSGESETZ=%s%n", calculation.getFliessgesetz().name() );
 
-      // TODO: passt das zum RK?
-      pw.println();
-      pw.println( "# mögliche Werte:" );
-      pw.println( "# DARCY_WEISBACH_OHNE_FORMEINFLUSS" );
-      pw.println( "# DARCY_WEISBACH_MIT_FORMEINFLUSS" );
-      pw.println( "# MANNING_STRICKLER" );
-      pw.println( "FLIESSGESETZ=" + calculation.getFliessgesetz().name() );
+      pw.format( "%n" );
+      pw.format( "ANFANGSSTATION=%s%n", Double.toString( calculation.getStartStation().doubleValue() ) );
+      pw.format( "ENDSTATION=%s%n", Double.toString( calculation.getEndStation().doubleValue() ) );
 
-      pw.println();
-      pw.println( "ANFANGSSTATION=" + Double.toString( calculation.getStartStation().doubleValue() ) );
-      pw.println( "ENDSTATION=" + Double.toString( calculation.getEndStation().doubleValue() ) );
-
-      pw.println();
-      pw.println( "# mögliche Werte" );
-      pw.println( "# CRITICAL_WATER_DEPTH" );
-      pw.println( "# UNIFORM_BOTTOM_SLOPE" );
-      pw.println( "# WATERLEVEL" );
-      pw.println( "ART_RANDBEDINGUNG=" + calculation.getStartKind().name() );
+      pw.format( "%n" );
+      pw.format( "# mögliche Werte%n" );
+      pw.format( "# CRITICAL_WATER_DEPTH%n" );
+      pw.format( "# UNIFORM_BOTTOM_SLOPE%n" );
+      pw.format( "# WATERLEVEL%n" );
+      pw.format( "ART_RANDBEDINGUNG=%s%n", calculation.getStartKind().name() );
       final Double startWaterlevel = calculation.getStartWaterlevel();
       if( startWaterlevel != null )
-        pw.println( "ANFANGSWASSERSPIEGEL=" + Double.toString( startWaterlevel ) );
+        pw.format( "ANFANGSWASSERSPIEGEL=%s%n", Double.toString( startWaterlevel ) );
       final BigDecimal startSlope = calculation.getStartSlope();
       if( startSlope != null )
-        pw.println( "GEFAELLE=" + startSlope );
+        pw.format( "GEFAELLE=%s%n", startSlope );
 
-      pw.println();
-      pw.println( "# mögliche Werte" );
-      pw.println( "# NON" );
-      pw.println( "# DVWK" );
-      pw.println( "# BJOERNSEN" );
-      pw.println( "# DFG" );
-      pw.println( "VERZOEGERUNGSVERLUST=" + calculation.getVerzoegerungsverlust().name() );
+      pw.format( "%n" );
+      pw.format( "# mögliche Werte%n" );
+      pw.format( "# NON%n" );
+      pw.format( "# DVWK%n" );
+      pw.format( "# BJOERNSEN%n" );
+      pw.format( "# DFG%n" );
+      pw.format( "VERZOEGERUNGSVERLUST=%s%n", calculation.getVerzoegerungsverlust().name() );
 
-      pw.println();
-      pw.println( "# mögliche Werte" );
-      pw.println( "# SIMPLE" );
-      pw.println( "# EXACT" );
-      pw.println( "ITERATIONSART=" + calculation.getIterationType().name() );
+      pw.format( "%n" );
+      pw.format( "# mögliche Werte%n" );
+      pw.format( "# SIMPLE%n" );
+      pw.format( "# EXACT%n" );
+      pw.format( "ITERATIONSART=%s%n", calculation.getIterationType().name() );
 
-      pw.println();
-      pw.println( "# mögliche Werte" );
-      pw.println( "# TRAPEZ_FORMULA" );
-      pw.println( "# GEOMETRIC_FORMULA" );
-      pw.println( "REIBUNGSVERLUST=" + calculation.getReibungsverlust().name() );
+      pw.format( "%n" );
+      pw.format( "# mögliche Werte%n" );
+      pw.format( "# TRAPEZ_FORMULA%n" );
+      pw.format( "# GEOMETRIC_FORMULA%n" );
+      pw.format( "REIBUNGSVERLUST=%s%n", calculation.getReibungsverlust().name() );
 
-      pw.println();
-      pw.println( "# mögliche Werte: true / false" );
-      pw.println( "MIT_BRUECKEN=" + calculation.isCalcBridges().toString() );
-      pw.println( "MIT_WEHREN=" + calculation.isCalcBarrages().toString() );
+      pw.format( "%n" );
+      pw.format( "# mögliche Werte: true / false%n" );
+      pw.format( "MIT_BRUECKEN=%b%n", calculation.isCalcBridges() );
+      pw.format( "MIT_WEHREN=%b%n", calculation.isCalcBarrages() );
+      pw.format( "USE_EXTREM_ROUGH=%b%n", calculation.isUseExtremeRoughness() );
 
-      pw.println();
-      pw.println( "ABFLUSSEREIGNIS=" + qwtFile.getName() );
+      pw.format( "%n" );
+      pw.format( "ABFLUSSEREIGNIS=%s%n", qwtFile.getName() );
 
-      pw.println();
-      pw.println( "EINZELVERLUSTE=" + "TODO" );
+      pw.format( "%n" );
+      pw.format( "EINZELVERLUSTE=%s%n", "TODO" );
 
-      pw.println();
+      pw.format( "%n" );
       final Double minQ = calculation.getMinQ();
       if( minQ != null )
-        pw.println( "MIN_Q=" + Double.toString( minQ ) );
+        pw.format( "MIN_Q=%s%n", Double.toString( minQ ) );
       final Double maxQ = calculation.getMaxQ();
       if( maxQ != null )
-        pw.println( "MAX_Q=" + Double.toString( maxQ ) );
+        pw.format( "MAX_Q=%s%n", Double.toString( maxQ ) );
       final Double qstep = calculation.getQStep();
       if( qstep != null )
-        pw.println( "DELTA_Q=" + Double.toString( qstep ) );
+        pw.format( "DELTA_Q=%s%n", Double.toString( qstep ) );
 
-      pw.println();
+      pw.format( "%n" );
       // Einheit des Durchflusses wird standardmäßig festgelegt
-      pw.println( "# mögliche Werte" );
-      pw.println( "# QM_S" );
-      pw.println( "# L_S" );
-      pw.println( "DURCHFLUSS_EINHEIT=QM_S" );
+      pw.format( "# mögliche Werte%n" );
+      pw.format( "# QM_S%n" );
+      pw.format( "# L_S%n" );
+      pw.format( "DURCHFLUSS_EINHEIT=QM_S%n" );
 
-      pw.close();
+      FormatterUtils.checkIoException( pw );
     }
     finally
     {
-      IOUtils.closeQuietly( pw );
+      if( pw != null )
+        pw.close();
     }
 
   }

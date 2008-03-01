@@ -70,10 +70,12 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConstants, IWspmTuhhConstants
 {
+
   public static enum ExeVersion
   {
     _2_0_6_6,
-    _2_1_0_0
+    _2_1_0_0,
+    _2_1_1_0
   }
 
   public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" );
@@ -85,6 +87,10 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
   private static final QName QNAME_PROP_WATERLEVEL_PARAMS = new QName( NS_WSPM_TUHH, "waterlevelParameterMember" );
 
   private static final QName QNAME_PROP_EXE_VERSION = new QName( NS_WSPM_TUHH, "exeVersion" );
+
+  private static final QName QNAME_PROP_SPECIAL_OPTIONS_MEMBER = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
+
+  private static final QName QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS = new QName( NS_WSPM_TUHH, "useExtremeRoughness" );
 
   public static enum MODE
   {
@@ -279,7 +285,7 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
     }
   }
 
-  public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, final boolean doCalcBarrages )
+  public void setWaterlevelParameters( final WSP_ITERATION_TYPE iterationType, final VERZOEGERUNSVERLUST_TYPE verzType, final REIBUNGSVERLUST_TYPE reibType, final boolean doCalcBridges, final boolean doCalcBarrages, final boolean useExtremeRoughness )
   {
     final Feature parameterFeature = FeatureHelper.getSubFeature( getFeature(), QNAME_PROP_WATERLEVEL_PARAMS );
 
@@ -287,10 +293,10 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "verzoegerungsverlust" ), verzType.name() );
     parameterFeature.setProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ), reibType.name() );
 
-    final QName specialQname = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
-    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, specialQname );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
     specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ), new Boolean( doCalcBridges ) );
     specialFeature.setProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ), new Boolean( doCalcBarrages ) );
+    specialFeature.setProperty( QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS, new Boolean( useExtremeRoughness ) );
   }
 
   public WSP_ITERATION_TYPE getIterationType( )
@@ -321,22 +327,37 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
     return REIBUNGSVERLUST_TYPE.valueOf( (String) parameterFeature.getProperty( new QName( NS_WSPM_TUHH, "reibungsverlust" ) ) );
   }
 
-  public Boolean isCalcBridges( )
+  public boolean isCalcBridges( )
   {
     final Feature parameterFeature = FeatureHelper.getSubFeature( getFeature(), QNAME_PROP_WATERLEVEL_PARAMS );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
+    final Boolean value = (Boolean) specialFeature.getProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ) );
+    if( value == null )
+      return false;
 
-    final QName specialQname = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
-    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, specialQname );
-    return (Boolean) specialFeature.getProperty( new QName( NS_WSPM_TUHH, "doCalcBridges" ) );
+    return value.booleanValue();
   }
 
-  public Boolean isCalcBarrages( )
+  public boolean isCalcBarrages( )
   {
     final Feature parameterFeature = FeatureHelper.getSubFeature( getFeature(), QNAME_PROP_WATERLEVEL_PARAMS );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
+    final Boolean value = (Boolean) specialFeature.getProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ) );
+    if( value == null )
+      return false;
 
-    final QName specialQname = new QName( NS_WSPM_TUHH, "specialOptionsMember" );
-    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, specialQname );
-    return (Boolean) specialFeature.getProperty( new QName( NS_WSPM_TUHH, "doCalcBarrages" ) );
+    return value.booleanValue();
+  }
+
+  public boolean isUseExtremeRoughness( )
+  {
+    final Feature parameterFeature = FeatureHelper.getSubFeature( getFeature(), QNAME_PROP_WATERLEVEL_PARAMS );
+    final Feature specialFeature = FeatureHelper.getSubFeature( parameterFeature, QNAME_PROP_SPECIAL_OPTIONS_MEMBER );
+    final Boolean useExtremeRoughness = (Boolean) specialFeature.getProperty( QNAME_PROP_SPECIAL_PROP_USE_EXTREME_ROUGHNESS );
+    if( useExtremeRoughness == null )
+      return false;
+
+    return useExtremeRoughness.booleanValue();
   }
 
   public void setCalcMode( final MODE mode )
