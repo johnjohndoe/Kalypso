@@ -403,7 +403,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     else
       calcBuildings = true;
 
-    calculation.setWaterlevelParameters( template.getIterationType(), template.getVerzoegerungsverlust(), template.getReibungsverlust(), calcBuildings, calcBuildings );
+    calculation.setWaterlevelParameters( template.getIterationType(), template.getVerzoegerungsverlust(), template.getReibungsverlust(), calcBuildings, calcBuildings, template.isUseExtremeRoughness() );
     calculation.setStartSlope( template.getStartSlope() );
 
     final PolynomeProperties polynomeProperties = calculation.getPolynomeProperties();
