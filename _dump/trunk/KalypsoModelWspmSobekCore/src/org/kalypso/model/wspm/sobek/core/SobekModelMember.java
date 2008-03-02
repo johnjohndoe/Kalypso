@@ -105,7 +105,9 @@ import org.xml.sax.SAXException;
 /**
  * @author kuch
  */
-public final class SobekModelMember implements ISobekModelMember
+
+// TODO ask Dirk why Class was marked as final; constructor changed to protected....
+public class SobekModelMember implements ISobekModelMember
 {
 
   private static CommandableWorkspace m_lastUsedWorkspace = null;
@@ -135,7 +137,7 @@ public final class SobekModelMember implements ISobekModelMember
     if( model != null )
       return model;
 
-    if( modelMember == null || reposContainer == null )
+    if( modelMember == null )
       throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), "can't create a new ISobekModel Member with null valued parameters" ) );
 
     return new SobekModelMember( workspace, modelMember, reposContainer );
@@ -147,7 +149,7 @@ public final class SobekModelMember implements ISobekModelMember
 
   private final CommandableWorkspace m_workspace;
 
-  private SobekModelMember( final CommandableWorkspace workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
+  protected SobekModelMember( final CommandableWorkspace workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
   {
     m_workspace = workspace;
     m_reposContainer = reposContainer;
@@ -502,7 +504,7 @@ public final class SobekModelMember implements ISobekModelMember
           m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
 
           final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-          final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/fileformats.xsd" );
+          final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/Delft_PI.xsd" );
           final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
           m.setSchema( schema );
 
@@ -530,6 +532,34 @@ public final class SobekModelMember implements ISobekModelMember
     }
   }
 
+  /**
+   *
+   */
+  public void deleteSobekStructs( ) throws Exception
+  {
+
+    final ISbkStructure[] nodes = getSobekStructureTypeNodeMembers();
+    for( final ISbkStructure node : nodes )
+      node.delete();
+
+    return;
+  }
+
+  /**
+   * returns all nodes that are somehow SbkStructures
+   */
+  private ISbkStructure[] getSobekStructureTypeNodeMembers( )
+  {
+
+    final INode[] allNodes = getNodeMembers();
+    final List<INode> sbkStructNodes = new ArrayList<INode>();
+    for( final INode node : allNodes )
+      if( node instanceof ISbkStructure )
+        sbkStructNodes.add( node );
+
+    return sbkStructNodes.toArray( new ISbkStructure[] {} );
+  }
+
   public static void removeModel( final CommandableWorkspace workspace )
   {
     m_models.remove( workspace );
@@ -542,4 +572,5 @@ public final class SobekModelMember implements ISobekModelMember
   {
     removeModel( getWorkspace() );
   }
+
 }

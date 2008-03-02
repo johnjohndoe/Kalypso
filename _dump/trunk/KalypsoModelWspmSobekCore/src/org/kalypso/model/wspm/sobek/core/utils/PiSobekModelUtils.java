@@ -127,6 +127,14 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class PiSobekModelUtils
 {
 
+  private static String cTypeDouble = "double"; //$NON-NLS-1$
+
+  private static String cTypeString = "string"; //$NON-NLS-1$
+
+  private static String cTypeLong = "long"; //$NON-NLS-1$
+
+  private static String cTypeTable = "table"; //$NON-NLS-1$
+
   private static PiSobekModelUtils instance = null;
 
   public static PiSobekModelUtils getInstance( )
@@ -170,10 +178,10 @@ public class PiSobekModelUtils
 
   private PiSobekModelUtils( )
   {
-    lookUpModelToPi.put( BOUNDARY_TYPE.eQ.toString(), "Sobek.Nodes.Bound_Q" );
-    lookUpModelToPi.put( BOUNDARY_TYPE.eW.toString(), "Sobek.Nodes.Bound_H" );
-    lookUpModelToPi.put( INode.TYPE.eLinkageNode.toString(), "Sobek.Nodes.linkage" );
-    lookUpModelToPi.put( INode.TYPE.eConnectionNode.toString(), "Sobek.Nodes.Connection" );
+    lookUpModelToPi.put( BOUNDARY_TYPE.eQ.toString(), "Sobek.Nodes.Bound_Q" ); //$NON-NLS-1$
+    lookUpModelToPi.put( BOUNDARY_TYPE.eW.toString(), "Sobek.Nodes.Bound_H" ); //$NON-NLS-1$
+    lookUpModelToPi.put( INode.TYPE.eLinkageNode.toString(), "Sobek.Nodes.linkage" ); //$NON-NLS-1$
+    lookUpModelToPi.put( INode.TYPE.eConnectionNode.toString(), "Sobek.Nodes.Connection" ); //$NON-NLS-1$
 
   }
 
@@ -190,7 +198,8 @@ public class PiSobekModelUtils
     if( !(description == null) )
       piCrossSection.setComment( description );
 
-    piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); // nofdp default kSt
+    // nofdp default kSt
+    piCrossSection.setRoughnessType( "Sobek.RoughnessType.StricklerKs" ); //$NON-NLS-1$ 
 
     final IProfil profil = csNode.getProfile();
     final IRecord[] points = profil.getPoints();
@@ -203,7 +212,7 @@ public class PiSobekModelUtils
 // TODO get real Roughness from nofdpIDSSProfile
 // csData.setRoughness( point.getValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) );
       csData.setRoughness( 2.1 );
-      csData.setMark( new BigInteger( "0" ) );
+      csData.setMark( new BigInteger( "0" ) ); //$NON-NLS-1$
 
       piCrossSection.getCrossSectionData().add( csData );
     }
@@ -237,7 +246,7 @@ public class PiSobekModelUtils
         if( linkedBranch == null )
           throw new IllegalArgumentException( "Missing linked branch for linkage node " + ln.getName() );
         else
-          location.setLocationType( lookUpModelToPi.get( ln.getType().toString() ) + "@" + linkedBranch.getId() );
+          location.setLocationType( lookUpModelToPi.get( ln.getType().toString() ) + "@" + linkedBranch.getId() ); //$NON-NLS-1$
 
       }
       else if( node instanceof IBoundaryNode )
@@ -275,7 +284,9 @@ public class PiSobekModelUtils
         final NodePointComplexType pt = factory.createNodePointComplexType();
         pt.setX( position.getX() );
         pt.setY( position.getY() );
-        pt.setLabel( "" ); // label has to be set but will be ignored during import to Sobek
+
+        // label has to be set but will be ignored during import to Sobek
+        pt.setLabel( "" ); //$NON-NLS-1$ 
 
         chainage = chainage + JTSUtilities.getLengthBetweenPoints( jtsFirstPos, JTSAdapter.export( position ) );
         pt.setChainage( chainage ); // chainage has to be set but will be ignored during import to Sobek
@@ -367,11 +378,11 @@ public class PiSobekModelUtils
     final TupleResult tupleResult = timeSeriesTupple.getResult();
 
     IComponent valueComp = null;
-    final IComponent dateComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE" );
+    final IComponent dateComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE" ); //$NON-NLS-1$
     if( boundaryType.equals( BOUNDARY_TYPE.eQ ) )
-      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#Q" );
+      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#Q" ); //$NON-NLS-1$
     else if( boundaryType.equals( BOUNDARY_TYPE.eW ) )
-      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W" );
+      valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W" ); //$NON-NLS-1$
     else
       throw new NotImplementedException( "Boundary condition of type " + boundaryType + " can't be transferred by PI format yet." );
 
@@ -400,45 +411,45 @@ public class PiSobekModelUtils
     final ISbkStructDatabaseStructure sbkDBStruct = (ISbkStructDatabaseStructure) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkDBStruct.getName();
     if( name == null )
       name = "";
-    structureDefinition.setStructureDefinitionId( sbkDBStruct.getId() + "_dbStruct" );
-    structureDefinition.setStructureDefinitionName( name + "_dbStruct" );
-    structureDefinition.setStructureDefinitionType( "Sobek.Structures.DatabaseStructure" );
+    structureDefinition.setStructureDefinitionId( sbkDBStruct.getId() + "_dbStruct" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionName( name + "_dbStruct" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.DatabaseStructure" ); //$NON-NLS-1$
 
     final Parameters parameters = factory.createParameters();
 
     Parameter parameter = factory.createParameter();
-    parameter.setId( "crestLevel" );
-    parameter.setType( "double" );
+    parameter.setId( "crestLevel" ); //$NON-NLS-1$
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkDBStruct.getCrestHeight() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "numberOfGateValues" );
-    parameter.setType( "long" );
+    parameter.setId( "numberOfGateValues" ); //$NON-NLS-1$
+    parameter.setType( cTypeLong ); 
     parameter.getContent().add( Long.toString( sbkDBStruct.getNumOfGateValues() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "secondAxisValue" );
-    parameter.setType( "string" );
+    parameter.setId( "secondAxisValue" ); //$NON-NLS-1$
+    parameter.setType( cTypeString ); 
     parameter.getContent().add( sbkDBStruct.getSecondAxisValueType() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "interpolationType" );
-    parameter.setType( "string" );
+    parameter.setId( "interpolationType" ); //$NON-NLS-1$
+    parameter.setType( cTypeString ); 
     parameter.getContent().add( sbkDBStruct.getInterpolationType() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "database" );
-    parameter.setType( "table" );
+    parameter.setId( "database" ); //$NON-NLS-1$
+    parameter.setType( cTypeTable ); 
     final Table innerTableDB = factory.createTable();
-    innerTableDB.setName( "database" );
+    innerTableDB.setName( "database" ); //$NON-NLS-1$
 
     final Info tableInfoDB = factory.createInfo();
 
@@ -455,7 +466,7 @@ public class PiSobekModelUtils
     columnsDB.setCount( ((Number) colCountDB).byteValue() );
 
     final Column columnDB = factory.createColumn();
-    columnDB.setType( "double" );
+    columnDB.setType( cTypeDouble ); 
     for( int i = 0; i < colCountDB; i++ )
       columnsDB.getColumn().add( columnDB );
     tableInfoDB.setColumns( columnsDB );
@@ -480,7 +491,7 @@ public class PiSobekModelUtils
 
     parameter = factory.createParameter();
     parameter.setId( "databaseUsage" );
-    parameter.setType( "table" );
+    parameter.setType( cTypeTable );
     final Table innerTableDBUsage = factory.createTable();
     innerTableDBUsage.setName( "databaseUsage" );
 
@@ -499,7 +510,7 @@ public class PiSobekModelUtils
     columnsDBUsage.setCount( ((Number) colCountDBUsage).byteValue() );
 
     final Column columnDBUsage = factory.createColumn();
-    columnDBUsage.setType( "double" );
+    columnDBUsage.setType( cTypeDouble );
     for( int i = 0; i < colCountDBUsage; i++ )
       columnsDBUsage.getColumn().add( columnDBUsage );
     tableInfoDBUsage.setColumns( columnsDBUsage );
@@ -543,133 +554,133 @@ public class PiSobekModelUtils
 
     Parameter parameter = factory.createParameter();
     parameter.setId( "widthUpstream" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthUpstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "widthStructureLeft" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthStructureLeft() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "widthStructure" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthStructure() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "widthStructureRight" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthStructureRight() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "widthDownstream" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthDownstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "bedLevelUpstream" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelUpstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "bedLevelStructureLeft" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelStructureLeft() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "bedLevelStructure" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelStructure() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "bedLevelStructureRight" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelStructureRight() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "bedLevelDownstream" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelDownstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "gateHeight" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getGateHeight() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveFreeGateFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosFreeGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveDrownedGateFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosDrownedGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveFreeWeirFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosFreeWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveDrownedWeirFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosDrownedWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveContractionCoefficient" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosContractionCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "negativeFreeGateFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegFreeGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "negativeDrownedGateFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegDrownedGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "negativeFreeWeirFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegFreeWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "negativeDrownedWeirFlow" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegDrownedWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "negativeContractionCoefficient" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegContractionCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "extraResistence" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getExtraResistence() ) );
     parameters.getParameter().add( parameter );
 
@@ -694,31 +705,31 @@ public class PiSobekModelUtils
 
     Parameter parameter = factory.createParameter();
     parameter.setId( "flowDirection" );
-    parameter.setType( "string" );
+    parameter.setType( cTypeString );
     parameter.getContent().add( sbkPump.getFlowDirection() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "controlPosition" );
-    parameter.setType( "string" );
+    parameter.setType( cTypeString );
     parameter.getContent().add( sbkPump.getControlPosition() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "reductionType" );
-    parameter.setType( "string" );
+    parameter.setType( cTypeString );
     parameter.getContent().add( sbkPump.getReductionType() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "reductionConstant" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkPump.getReductionConstant() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "capacitySettings" );
-    parameter.setType( "table" );
+    parameter.setType( cTypeTable );
     final Table innerTable = factory.createTable();
     innerTable.setName( "capacitySettings" );
 
@@ -728,7 +739,7 @@ public class PiSobekModelUtils
     columns.setCount( ((Number) colCount).byteValue() );
 
     final Column column = factory.createColumn();
-    column.setType( "double" );
+    column.setType( cTypeDouble );
     for( int i = 0; i < colCount; i++ )
       columns.getColumn().add( column );
     tableInfo.setColumns( columns );
@@ -770,37 +781,37 @@ public class PiSobekModelUtils
 
     Parameter parameter = factory.createParameter();
     parameter.setId( "crestLevel" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getCrestLevel() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "crestWidth" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getCrestWidth() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "crestShape" );
-    parameter.setType( "string" );
+    parameter.setType( cTypeString );
     parameter.getContent().add( sbkRiverWeir.getCrestShape() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveCorrectionCoefficient" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getPosCorrectionCeoff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveSubmergeLimit" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getPosSubmergeLimit() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "positiveReductionFactors" );
-    parameter.setType( "table" );
+    parameter.setType( cTypeTable );
     final Table innerTablePos = factory.createTable();
     innerTablePos.setName( "positiveReductionFactors" );
 
@@ -819,7 +830,7 @@ public class PiSobekModelUtils
     columnsPos.setCount( ((Number) colCountPos).byteValue() );
 
     final Column columnPos = factory.createColumn();
-    columnPos.setType( "double" );
+    columnPos.setType( cTypeDouble );
     for( int i = 0; i < colCountPos; i++ )
       columnsPos.getColumn().add( columnPos );
     tableInfoPos.setColumns( columnsPos );
@@ -827,6 +838,7 @@ public class PiSobekModelUtils
     innerTablePos.setInfo( tableInfoPos );
 
     final TupleResult result = sbkRiverWeir.getPosReductionFactors().getTupleResult();
+// result.
 // Submergeance and Reduction
     // als Konstante festlegen
 // <catalog:system systemId="urn:ogc:gml:dict:kalypso:wspm:sobek:sbkRiverWeirObservationDefs"
@@ -852,19 +864,19 @@ public class PiSobekModelUtils
 
     parameter = factory.createParameter();
     parameter.setId( "negativeCorrectionCoefficient" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getNegCorrectionCeoff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "negativeSubmergeLimit" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getNegSubmergeLimit() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "negativeReductionFactors" );
-    parameter.setType( "table" );
+    parameter.setType( cTypeTable );
     final Table innerTableNeg = factory.createTable();
     innerTableNeg.setName( "negativeReductionFactors" );
 
@@ -883,7 +895,7 @@ public class PiSobekModelUtils
     columnsNeg.setCount( ((Number) colCountNeg).byteValue() );
 
     final Column columnNeg = factory.createColumn();
-    columnNeg.setType( "double" );
+    columnNeg.setType( cTypeDouble );
     for( int i = 0; i < colCountNeg; i++ )
       columnsNeg.getColumn().add( columnNeg );
     tableInfoNeg.setColumns( columnsNeg );
@@ -947,31 +959,31 @@ public class PiSobekModelUtils
 
     Parameter parameter = factory.createParameter();
     parameter.setId( "flowDirection" );
-    parameter.setType( "string" );
+    parameter.setType( cTypeString );
     parameter.getContent().add( sbkWeir.getFlowDirection() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "crestLevel" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getCrestLevel() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "crestWidth" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getCrestWidth() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "dischargeCoef" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getDischargeCoeffCE() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
     parameter.setId( "lateralContractioncCoef" );
-    parameter.setType( "double" );
+    parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getLateralContractionCoeffCW() ) );
     parameters.getParameter().add( parameter );
 
