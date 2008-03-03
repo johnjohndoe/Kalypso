@@ -210,7 +210,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       currentCase = null;
     else
       currentCase = m_caseManager.getCurrentCase();
-    
+
     if( currentCase == null && caze == null )
       return;
     else if( caze != null && currentCase != null && currentCase.getURI().equals( caze.getURI() ) )
@@ -222,7 +222,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       ensureProject( caze );
       if( m_caseManager != null )
         m_caseManager.setCurrentCase( caze );
-      
+
       fireActiveContextChanged( m_currentProjectNature, caze );
     }
   }
@@ -274,7 +274,9 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       {
         display.asyncExec( new Runnable()
         {
-
+          /**
+           * @see java.lang.Runnable#run()
+           */
           public void run( )
           {
             try

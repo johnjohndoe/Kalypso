@@ -83,6 +83,7 @@ public class WorkflowView extends ViewPart
             scenarioPathName = "<Fehler>";
             e.printStackTrace();
           }
+          
           final String projectName = newProject.getProject().getName();
           setContentDescription( "Aktives Szenario: " + projectName + scenarioPathName );
           try
