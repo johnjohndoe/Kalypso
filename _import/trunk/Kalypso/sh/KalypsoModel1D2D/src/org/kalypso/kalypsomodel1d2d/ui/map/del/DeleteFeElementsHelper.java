@@ -70,6 +70,8 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.kalypsosimulationmodel.core.discr.IFENode;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -239,6 +241,7 @@ public class DeleteFeElementsHelper
           }
         }
       }
+      final CompositeCommand compositeCommand = new CompositeCommand( "Objekte löschen" );
 
       final FeatureList wrappedList = flowRelationshipModel.getWrappedList();
       for( final Object object : wrappedList )
@@ -254,8 +257,18 @@ public class DeleteFeElementsHelper
               selectionManager.clear();
               return Status.OK_STATUS;
             }
+            else
+            {
+              final Feature feature = element.getFeature();
+              selectionManager.changeSelection( new Feature[] { feature }, new EasyFeatureWrapper[] {} );
+
+              final DeleteFeatureCommand command = new DeleteFeatureCommand( feature );
+              compositeCommand.addCommand( command );
+            }
         }
       }
+      final CommandableWorkspace workspace = selected[0].getWorkspace();
+      workspace.postCommand( compositeCommand );
     }
     catch( final Exception e )
     {
