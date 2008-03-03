@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +54,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
@@ -62,16 +66,23 @@ import org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.RemoveBoundaryLineFromC
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.ICommonKeys;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModel;
 import org.kalypso.kalypsomodel1d2d.ui.map.facedata.KeyBasedDataModelUtil;
-import org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget;
+import org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Patrice Congo
+ * @author Thomas Jung (changes in order to use the common SelectFeatureWidget)
  * 
  */
 
-public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelectionWidget
+public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWidget
 {
   private static final String SEPARATOR_PSEUDO_TEXT = "_separator_pseudo_text_"; //$NON-NLS-1$
 
@@ -85,26 +96,27 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
 
   private static final String[][] MENU_ITEM_SPECS = { { TXT_ADD_BOUNDARY_LINE_TO_UNIT, ICONS_ELCL16_ADD_GIF }, { TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT, ICONS_ELCL16_REMOVE_GIF } };
 
-  private final KeyBasedDataModel m_dataModel;
+  protected final KeyBasedDataModel m_dataModel;
 
   private JPopupMenu m_popupMenu;
 
   private final List<JMenuItem> m_popupMenuItems = new ArrayList<JMenuItem>();
 
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
+  private final SelectFeatureWidget m_selDelegateWidget;
+
+  private final QName[] m_themeElementQNames = new QName[] { IFELine.QNAME };
+
+  private IKalypsoFeatureTheme[] m_featureThemes;
+
   public AddRemoveContinuityLineToCalcUnitWidget( final KeyBasedDataModel dataModel )
   {
-    this( new QName[] { IFELine.QNAME }, Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.5" ), Messages.getString( "AddRemoveContinuityLineToCalcUnitWidget.6" ), dataModel ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
+    super( "Randlinien zu Teilmodell hinzufügen / löschen", "Randlinien zu Teilmodell hinzufügen / löschen", new SelectFeatureWidget( "", "", new QName[] { IFELine.QNAME }, IFELine.PROP_GEOMETRY ) );
 
-  protected AddRemoveContinuityLineToCalcUnitWidget( final QName themeElementsQName, final String name, final String toolTip, final KeyBasedDataModel dataModel )
-  {
-    this( new QName[] { themeElementsQName }, name, toolTip, dataModel );
-  }
-
-  protected AddRemoveContinuityLineToCalcUnitWidget( final QName[] themeElementsQNames, final String name, final String toolTip, final KeyBasedDataModel dataModel )
-  {
-    super( themeElementsQNames, name, toolTip );
+    m_toolTipRenderer.setTooltip( "Selektieren Sie Randlinien in der Karte.\n    '<Einfügen>': zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" );
     m_dataModel = dataModel;
+    m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
   }
 
   /**
@@ -113,11 +125,42 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
   @Override
   public void clickPopup( final Point p )
   {
+    // TODO: we should discuss, if we want this right-click popup behavior. Right now it is only used in the calcunit
+    // widgets and no common kalypso style...
+
     final MapPanel mapPanel = (MapPanel) m_dataModel.getData( ICommonKeys.KEY_MAP_PANEL );
     if( m_popupMenu == null )
       m_popupMenu = createMenu();
     updateMenuItem();
     m_popupMenu.show( mapPanel, p.x, p.y );
+    super.clickPopup( p );
+  }
+
+  @Override
+  public void keyPressed( final KeyEvent e )
+  {
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    if( e.getKeyChar() == KeyEvent.VK_ESCAPE )
+      reinit();
+
+    // Remove
+    else if( e.getKeyChar() == KeyEvent.VK_DELETE )
+    {
+      final IFELine[] selectedBoundaryLines = CalcUnitHelper.getSelectedBoundaryLine( mapPanel );
+
+      actionRemoveBoundaryLineFromUnit( selectedBoundaryLines );
+    }
+    // Add
+    else if( e.getKeyCode() == KeyEvent.VK_INSERT )
+    {
+      final IFELine[] selectedBoundaryLines = CalcUnitHelper.getSelectedBoundaryLine( mapPanel );
+
+      actionAddBoundaryLineToUnit( selectedBoundaryLines );
+    }
+    super.keyPressed( e );
   }
 
   private ImageIcon getImageIcon( final String pluginRelativPath )
@@ -143,118 +186,191 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
     return al;
   }
 
+  @Override
+  public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
+  {
+    super.activate( commandPoster, mapPanel );
+    reinit();
+  }
+
+  private void reinit( )
+  {
+    final MapPanel mapPanel = getMapPanel();
+    final IMapModell mapModell = mapPanel.getMapModell();
+
+    m_featureThemes = new IKalypsoFeatureTheme[m_themeElementQNames.length];
+    for( int i = 0; i < m_themeElementQNames.length; i++ )
+      m_featureThemes[i] = UtilMap.findEditableTheme( mapModell, m_themeElementQNames[i] );
+
+    m_selDelegateWidget.setThemes( m_featureThemes );
+
+    final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
+    selectionManager.clear();
+    mapPanel.repaint();
+  }
+
   private void updateMenuItem( )
   {
     for( final JMenuItem item : m_popupMenuItems )
     {
-      final String text = item.getText();
-      if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ) )
-        updateAddUpStreamMenu( item );
-      else if( TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT.equals( text ) )
-        updateRemoveUpStreamMenu( item );
+      item.setEnabled( true );
+
+      // final String text = item.getText();
+      // if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ) )
+      // updateAddUpStreamMenu( item );
+      // else if( TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT.equals( text ) )
+      // updateRemoveUpStreamMenu( item );
     }
   }
 
   private void updateAddUpStreamMenu( final JMenuItem item )
   {
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
     updateGeneralBadSelection( item );
     final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IFELine selectedBoundaryLine = getSelectedBoundaryLine();
-    if( selectedBoundaryLine != null && calUnit != null )
+
+    final IFELine[] selectedBoundaryLines = CalcUnitHelper.getSelectedBoundaryLine( mapPanel );
+
+    if( selectedBoundaryLines == null )
+      return;
+
+    for( int i = 0; i < selectedBoundaryLines.length; i++ )
     {
-      if( CalcUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )
-        item.setEnabled( false );
-      else
-        item.setEnabled( true );
+      final IFELine bLine = selectedBoundaryLines[i];
+
+      if( bLine != null && calUnit != null )
+      {
+        if( CalcUnitOps.isBoundaryLineOf( bLine, calUnit ) )
+          item.setEnabled( false );
+        else
+          item.setEnabled( true );
+      }
     }
   }
 
   private void updateRemoveUpStreamMenu( final JMenuItem item )
   {
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
     updateGeneralBadSelection( item );
     if( item.isEnabled() )
     {
       final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-      final IFELine selectedBoundaryLine = getSelectedBoundaryLine();
-      if( selectedBoundaryLine == null || calUnit == null )
-        item.setEnabled( false );
-      else if( !CalcUnitOps.isBoundaryLineOf( selectedBoundaryLine, calUnit ) )
-        item.setEnabled( false );
+
+      final IFELine[] selectedBoundaryLines = CalcUnitHelper.getSelectedBoundaryLine( mapPanel );
+
+      if( selectedBoundaryLines == null )
+        return;
+
+      for( int i = 0; i < selectedBoundaryLines.length; i++ )
+      {
+        final IFELine bLine = selectedBoundaryLines[i];
+
+        if( bLine == null || calUnit == null )
+          item.setEnabled( false );
+        else if( !CalcUnitOps.isBoundaryLineOf( bLine, calUnit ) )
+          item.setEnabled( false );
+      }
     }
   }
 
   private void updateGeneralBadSelection( final JMenuItem item )
   {
-    final Feature[] selectedFeature = getSelectedFeature();
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    final Feature[] selectedFeature = CalcUnitHelper.getSelectedFeature( mapPanel );
     item.setEnabled( true );
     if( selectedFeature == null )
       item.setEnabled( false );
-    else if( selectedFeature.length != 1 )
-      item.setEnabled( false );
+    // else if( selectedFeature.length != 1 )
+    // item.setEnabled( false );
     else if( m_dataModel.getData( ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER ) == null )
       item.setEnabled( false );
   }
 
   synchronized void doMenuAction( final String text )
   {
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
     if( text == null )
       return;
+
     else if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ) )
-      actionAddBoundaryLineToUnit( text );
+      actionAddBoundaryLineToUnit( CalcUnitHelper.getSelectedBoundaryLine( mapPanel ) );
     else if( TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT.equals( text ) )
-      actionRemoveBoundaryLineFromUnit( text );
+      actionRemoveBoundaryLineFromUnit( CalcUnitHelper.getSelectedBoundaryLine( mapPanel ) );
   }
 
-  private void actionAddBoundaryLineToUnit( final String itemText )
+  private void actionAddBoundaryLineToUnit( final IFELine[] selectedBoundaryLines )
   {
     final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IFELine bLine = getSelectedBoundaryLine();
-    if( !itemText.equals( TXT_ADD_BOUNDARY_LINE_TO_UNIT ) )
+    final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
+
+    if( selectedBoundaryLines == null )
+      return;
+
+    for( int i = 0; i < selectedBoundaryLines.length; i++ )
     {
-      throw new RuntimeException( "Unknown itemText:" + itemText ); //$NON-NLS-1$
+      final IFELine bLine = selectedBoundaryLines[i];
+
+      final AddBoundaryLineToCalculationUnitCmd cmd = new AddBoundaryLineToCalculationUnitCmd( calUnit, bLine, model1d2d )
+      {
+        /**
+         * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit#process()
+         */
+        @SuppressWarnings("synthetic-access")
+        @Override
+        public void process( ) throws Exception
+        {
+          super.process();
+          getMapPanel().getSelectionManager().clear();
+          KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+          KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
+        }
+      };
+      KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
     }
-
-    final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final AddBoundaryLineToCalculationUnitCmd cmd = new AddBoundaryLineToCalculationUnitCmd( calUnit, bLine, model1d2d )
-    {
-      /**
-       * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit#process()
-       */
-      @Override
-      public void process( ) throws Exception
-      {
-        super.process();
-        getMapPanel().getSelectionManager().clear();
-        KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-        KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
-      }
-    };
-    KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
   }
 
-  private void actionRemoveBoundaryLineFromUnit( final String itemText )
+  private void actionRemoveBoundaryLineFromUnit( final IFELine[] selectedBoundaryLines )
   {
     final ICalculationUnit calUnit = m_dataModel.getData( ICalculationUnit.class, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-    final IFELine bLine = getSelectedBoundaryLine();
-
     final IFEDiscretisationModel1d2d model1d2d = m_dataModel.getData( IFEDiscretisationModel1d2d.class, ICommonKeys.KEY_DISCRETISATION_MODEL );
-    final RemoveBoundaryLineFromCalculationUnitCmd cmd = new RemoveBoundaryLineFromCalculationUnitCmd( calUnit, bLine, model1d2d )
+
+    if( selectedBoundaryLines == null )
+      return;
+
+    for( int i = 0; i < selectedBoundaryLines.length; i++ )
     {
-      /**
-       * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit#process()
-       */
-      @Override
-      public void process( ) throws Exception
+      final IFELine bLine = selectedBoundaryLines[i];
+
+      final RemoveBoundaryLineFromCalculationUnitCmd cmd = new RemoveBoundaryLineFromCalculationUnitCmd( calUnit, bLine, model1d2d )
       {
-        super.process();
-        getMapPanel().getSelectionManager().clear();
-        KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
-        KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
-      }
-    };
+        /**
+         * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit.AddBoundaryLineToCalculationUnit#process()
+         */
+        @SuppressWarnings("synthetic-access")
+        @Override
+        public void process( ) throws Exception
+        {
+          super.process();
+          getMapPanel().getSelectionManager().clear();
+          KeyBasedDataModelUtil.resetCurrentEntry( m_dataModel, ICommonKeys.KEY_SELECTED_FEATURE_WRAPPER );
+          KeyBasedDataModelUtil.repaintMapPanel( m_dataModel, ICommonKeys.KEY_MAP_PANEL );
+        }
+      };
 
-    KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
-
+      KeyBasedDataModelUtil.postCommand( m_dataModel, cmd, ICommonKeys.KEY_COMMAND_MANAGER_DISC_MODEL );
+    }
   }
 
   synchronized private JPopupMenu createMenu( )
@@ -282,15 +398,34 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends FENetConceptSelecti
     return menu;
   }
 
-  private final IFELine getSelectedBoundaryLine( )
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.ui.map.select.FENetConceptSelectionWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
   {
-    final IFELine[] bLines = getWrappedSelectedFeature( IFELine.class );
-    if( bLines == null )
-      return null;
-    else if( bLines.length == 0 )
-      return null;
-    else
-      return bLines[0];
+    super.paint( g );
+
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel != null )
+    {
+      final Rectangle bounds = mapPanel.getBounds();
+      final String delegateTooltip = getDelegate().getToolTip();
+
+      m_toolTipRenderer.setTooltip( "Selektieren Sie Randlinien in der Karte.\n    '<Einfügen>': zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" + delegateTooltip );
+
+      m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#finish()
+   */
+  @Override
+  public void finish( )
+  {
+    getMapPanel().getSelectionManager().clear();
+    super.finish();
   }
 
 }

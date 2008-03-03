@@ -24,6 +24,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateContinuityLineCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
@@ -123,22 +124,16 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
         if( m_lineType.equals( IContinuityLine1D.QNAME ) )
         {
           if( DiscretisationModelUtils.is1DNode( candidateNode ) )
-          {
             m_currentNode = candidateNode;
-          }
           else
             m_currentNode = null;
         }
         else
         {
           if( DiscretisationModelUtils.is1DNode( candidateNode ) )
-          {
             m_currentNode = null;
-          }
           else
-          {
             m_currentNode = candidateNode;
-          }
         }
       }
     }
@@ -190,8 +185,16 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( DiscretisationModelUtils.is1DNode( m_currentNode ) )
     {
       m_lineType = IContinuityLine1D.QNAME;
-      createBoundaryLine();
-      m_nodeList.clear();
+
+      // TODO: check if there is already a 1d boundary line
+      if( !checkFor1DContiLine() )
+      {
+        createBoundaryLine();
+        m_nodeList.clear();
+
+      }
+      else
+        reinit();
     }
     else
       m_lineType = IContinuityLine2D.QNAME;
@@ -202,6 +205,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void doubleClickedLeft( final Point p )
   {
@@ -215,11 +219,34 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
       if( m_nodeList.size() == 1 )
       {
         m_lineType = IContinuityLine1D.QNAME;
-        createBoundaryLine();
-        m_nodeList.clear();
+
+        // TODO: check if there is already a 1d boundary line
+
+        if( !checkFor1DContiLine() )
+        {
+          createBoundaryLine();
+          m_nodeList.clear();
+        }
+        else
+          reinit();
       }
     }
     createBoundaryLine();
+  }
+
+  @SuppressWarnings("unchecked")
+  private boolean checkFor1DContiLine( )
+  {
+    final IFE1D2DNode node = m_nodeList.get( 0 );
+
+    if( node == null )
+      return false;
+
+    final IFELine contiLine = m_discModel.findContinuityLine( node.getPoint(), 0.1 );
+    if( contiLine == null || contiLine instanceof IContinuityLine2D )
+      return false;
+    else
+      return true;
   }
 
   private void createBoundaryLine( )
@@ -228,6 +255,9 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     {
       if( m_nodeList.isEmpty() )
         return;
+
+      // TODO: check if there is already a boundary line
+
       final IKalypsoTheme theme = UtilMap.findEditableTheme( getMapPanel().getMapModell(), Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
       final CommandableWorkspace workspace = ((IKalypsoFeatureTheme) theme).getWorkspace();
 
