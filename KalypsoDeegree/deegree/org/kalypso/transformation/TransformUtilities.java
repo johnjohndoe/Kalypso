@@ -42,9 +42,10 @@ package org.kalypso.transformation;
 
 import java.util.ArrayList;
 
+import javax.vecmath.Point3d;
+
 import org.deegree.crs.components.Unit;
 import org.deegree.crs.coordinatesystems.CoordinateSystem;
-import org.deegree.crs.exceptions.TransformationException;
 import org.deegree.crs.projections.ProjectionUtils;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
@@ -106,7 +107,7 @@ public class TransformUtilities
    *            The transformation.
    * @return The transformed point.
    */
-  public static GM_Point transform( GM_Point geo, CRSTransformation trans ) throws TransformationException
+  public static GM_Point transform( GM_Point geo, CRSTransformation trans )
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
@@ -120,26 +121,29 @@ public class TransformUtilities
     if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
       return geo;
 
-    /* Create the arrays for source and destination. */
-    double[] din = geo.getAsArray();
-    double[] dout = new double[din.length];
+    Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
+
+    double[] din = new double[] { geo.getX(), geo.getY() };
 
     /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
-    if( sourceCRS.getUnits().equals( Unit.RADIAN ) )
+    if( sourceCRS.getUnits()[0].equals( Unit.DEGREE ) )
     {
       din[0] = ProjectionUtils.normalizeLongitude( Math.toRadians( din[0] ) );
       din[1] = ProjectionUtils.normalizeLatitude( Math.toRadians( din[1] ) );
     }
 
-    trans.doTransform( din, 0, dout, 0, din.length - 1 );
+    /* Transform. */
+    Point3d coords = new Point3d( din[0], din[1], geo.getZ() );
+    Point3d newCoords = trans.doTransform( coords );
 
-    if( targetCRS.getUnits().equals( Unit.RADIAN ) )
+    /* Back to degree. */
+    if( targetCRS.getUnits()[0].equals( Unit.DEGREE ) )
     {
-      dout[0] = Math.toDegrees( dout[0] );
-      dout[1] = Math.toDegrees( dout[1] );
+      newCoords.x = Math.toDegrees( newCoords.x );
+      newCoords.y = Math.toDegrees( newCoords.y );
     }
 
-    return GeometryFactory.createGM_Point( dout[0], dout[1], (targetCRS.getDimension() == 3) ? dout[2] : Double.NaN, targetCRS.getIdentifier() );
+    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : Double.NaN, targetCRS.getIdentifier() );
   }
 
   /**
@@ -151,7 +155,7 @@ public class TransformUtilities
    *            The transformation.
    * @return The transformed position.
    */
-  public static GM_Position transform( GM_Position pos, CRSTransformation trans ) throws TransformationException
+  public static GM_Position transform( GM_Position pos, CRSTransformation trans )
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
@@ -165,32 +169,22 @@ public class TransformUtilities
     if( sourceCRS.getIdAndName().equals( targetCRS.getIdAndName() ) )
       return pos;
 
-    boolean srcRad = sourceCRS.getUnits().equals( Unit.RADIAN );
-    boolean targetRad = targetCRS.getUnits().equals( Unit.RADIAN );
+    Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 
-    /* Create the arrays for source and destination. */
-    double[] oldCoords = new double[3];
-    double[] newCoords = new double[3];
+    Point3d coords = new Point3d( pos.getX(), pos.getY(), pos.getZ() );
+    if( sourceCRS.getUnits()[0].equals( Unit.DEGREE ) )
+      coords = new Point3d( Math.toRadians( pos.getX() ), Math.toRadians( pos.getY() ), pos.getZ() );
 
-    if( srcRad )
+    Point3d newCoords = trans.doTransform( coords );
+
+    /* Back to degree. */
+    if( targetCRS.getUnits()[0].equals( Unit.DEGREE ) )
     {
-      oldCoords[0] = Math.toRadians( pos.getX() );
-      oldCoords[1] = Math.toRadians( pos.getY() );
-      oldCoords[2] = pos.getZ();
-    }
-    else
-    {
-      oldCoords[0] = pos.getX();
-      oldCoords[1] = pos.getY();
-      oldCoords[2] = pos.getZ();
+      newCoords.x = Math.toDegrees( newCoords.x );
+      newCoords.y = Math.toDegrees( newCoords.y );
     }
 
-    trans.doTransform( oldCoords, 0, newCoords, 0, oldCoords.length - 1 );
-
-    if( targetRad )
-      return GeometryFactory.createGM_Position( Math.toDegrees( newCoords[0] ), Math.toDegrees( newCoords[1] ), Double.NaN );
-    else
-      return GeometryFactory.createGM_Position( newCoords[0], newCoords[1], (targetCRS.getDimension() == 3) ? newCoords[2] : Double.NaN );
+    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, newCoords.z );
   }
 
   /**
@@ -203,7 +197,7 @@ public class TransformUtilities
    *            The transformation.
    * @return The array of transformed positions.
    */
-  public static GM_Position[] transform( GM_Position[] pos, CRSTransformation trans ) throws TransformationException
+  public static GM_Position[] transform( GM_Position[] pos, CRSTransformation trans )
   {
     ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
 

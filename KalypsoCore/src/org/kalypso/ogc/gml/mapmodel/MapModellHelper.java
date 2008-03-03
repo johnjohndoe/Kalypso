@@ -180,6 +180,9 @@ public class MapModellHelper
 
   private static GM_Envelope getWgs84BBox( final IMapModell model, final GM_Envelope bbox ) throws RemoteException, Exception
   {
+    if( model == null )
+      return null;
+
     final String crs = model.getCoordinatesSystem();
     if( crs.equalsIgnoreCase( "EPSG:4326" ) )
       return bbox;

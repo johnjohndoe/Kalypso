@@ -777,4 +777,16 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     Debug.debugMethodEnd();
     return GeometryFactory.createGM_Surface( patches[0] );
   }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#setCoordinateSystem(java.lang.String)
+   */
+  @Override
+  public void setCoordinateSystem( String crs )
+  {
+    super.setCoordinateSystem( crs );
+
+    if( m_patch instanceof GM_SurfacePatch_Impl )
+      ((GM_SurfacePatch_Impl) m_patch).setCoordinateSystem( crs );
+  }
 }

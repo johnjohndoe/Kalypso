@@ -15,7 +15,7 @@ public class GMLUtilities
     final IPropertyType ftp[] = fe.getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
-      Object prop = fe.getProperty( ftp[i].getName() );
+      Object prop = fe.getProperty( ftp[i].getQName() );
       if( prop != null && prop instanceof Feature )
         setCrs( (Feature) prop, srcCS );
       else if( prop != null && prop instanceof GM_Object )
@@ -34,7 +34,7 @@ public class GMLUtilities
     final IPropertyType ftp[] = fe.getFeatureType().getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
-      Object prop = fe.getProperty( ftp[i].getName() );
+      Object prop = fe.getProperty( ftp[i].getQName() );
       if( prop != null && prop instanceof Feature )
         checkCrs( (Feature) prop, defaultCS );
       else if( prop != null && prop instanceof GM_Object )
