@@ -12,14 +12,16 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.wizards.imports.Messages;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 
@@ -28,7 +30,7 @@ import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
  */
 public class PageMain extends WizardPage implements Listener
 {
-  private DataContainer m_data;
+  private final DataContainer m_data;
 
   // widgets on this page
   Combo cmb_ShapeProperty;
@@ -47,6 +49,10 @@ public class PageMain extends WizardPage implements Listener
 
   // status variable for the possible errors on this page
   IStatus msg_StatusLine;
+
+  private CRSSelectionPanel m_crsPanel;
+
+  protected String m_crs;
 
   /**
    * Constructor for main page
@@ -104,29 +110,36 @@ public class PageMain extends WizardPage implements Listener
 
     createLine( composite, ncol );
 
-    // Coordinate system combo box
-    new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.8" ) ); //$NON-NLS-1$
-    cmb_CoordinateSystem = new Combo( composite, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
-    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
-    cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
-    gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.widthHint = 75;
-    cmb_CoordinateSystem.setEnabled( true );
-    cmb_CoordinateSystem.setLayoutData( gd );
+    /* Coordinate system combo */
+    final Composite crsContainer = new Composite( composite, SWT.NULL );
+    final GridLayout crsGridLayout = new GridLayout();
+    crsGridLayout.numColumns = 1;
+    crsContainer.setLayout( crsGridLayout );
+
+    final GridData crsGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    crsGridData.horizontalSpan = 3;
+    crsContainer.setLayoutData( crsGridData );
+
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( crsContainer );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    crsControl.setToolTipText( "Koordinatensystem der Shape-Datei" );
+
+    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crsPanel.setSelectedCRS( m_crs );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      @Override
+      protected void selectionChanged( String selectedCRS )
+      {
+        m_crs = selectedCRS;
+        // updatePageComplete();
+      }
+
+    } );
 
     createLine( composite, ncol );
-
-    // new Label( composite, SWT.NONE ).setText( Messages.getString(
-    // "org.kalypso.ui.wizards.imports.roughness.PageMain.11" ) ); //$NON-NLS-1$
-    // m_layerName = new Text( composite, SWT.BORDER );
-    // gd = new GridData();
-    // gd.horizontalAlignment = GridData.FILL;
-    // gd.grabExcessHorizontalSpace = true;
-    // // gd.horizontalSpan = ncol - 1;
-    // m_layerName.setLayoutData( gd );
-    // new Label( composite, SWT.NONE ).setText( "" ); //$NON-NLS-1$
 
     new Label( composite, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.roughness.PageMain.12" ) ); //$NON-NLS-1$
     m_layerTypeCorrection = new Button( composite, SWT.RADIO );

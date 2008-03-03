@@ -22,11 +22,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 
@@ -44,6 +46,10 @@ public class ImportBaseMapImportImgPage extends WizardPage
   private IPath m_sourcePath = null;
 
   List<String> fileExtensions = new LinkedList<String>();
+
+  protected String m_crs;
+
+  private CRSSelectionPanel m_crsPanel;
 
   public ImportBaseMapImportImgPage( )
   {
@@ -66,12 +72,6 @@ public class ImportBaseMapImportImgPage extends WizardPage
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
     setControl( container );
-
-    // final Label label = new Label( container, SWT.NONE );
-    // final GridData gridData = new GridData();
-    // gridData.horizontalSpan = 3;
-    // label.setLayoutData( gridData );
-    // label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
@@ -99,17 +99,34 @@ public class ImportBaseMapImportImgPage extends WizardPage
     } );
     button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.BrowseButton" ) ); //$NON-NLS-1$
 
-    // Coordinate system combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportImgPage.1" ) ); //$NON-NLS-1$
-    cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
-    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
-    cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
-    GridData gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.widthHint = 75;
-    cmb_CoordinateSystem.setEnabled( true );
-    cmb_CoordinateSystem.setLayoutData( gd );
+    /* Coordinate system combo */
+    final Composite crsContainer = new Composite( container, SWT.NULL );
+    final GridLayout crsGridLayout = new GridLayout();
+    crsGridLayout.numColumns = 1;
+    crsContainer.setLayout( crsGridLayout );
+
+    final GridData crsGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    crsGridData.horizontalSpan = 3;
+    crsContainer.setLayoutData( crsGridData );
+
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( crsContainer );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    crsControl.setToolTipText( "Koordinatensystem der Shape-Datei" );
+
+    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crsPanel.setSelectedCRS( m_crs );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      @Override
+      protected void selectionChanged( String selectedCRS )
+      {
+        m_crs = selectedCRS;
+        updatePageComplete();
+      }
+
+    } );
 
     button.setFocus();
     initContents();
@@ -121,6 +138,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
    * @param selection
    *            the selection or <code>null</code> if none
    */
+  @SuppressWarnings("unchecked")
   public void init( ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )

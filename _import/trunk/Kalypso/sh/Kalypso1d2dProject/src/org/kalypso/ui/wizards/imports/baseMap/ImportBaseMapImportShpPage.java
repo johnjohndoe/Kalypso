@@ -20,13 +20,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
 
@@ -37,13 +38,15 @@ public class ImportBaseMapImportShpPage extends WizardPage
 {
   private Text sourceFileField;
 
-  Combo cmb_CoordinateSystem;
+  private CRSSelectionPanel m_crsPanel;
 
   private IPath initialSourcePath;
 
   private IPath m_sourcePath = null;
 
-  List<String> fileExtensions = new LinkedList<String>();
+  private final List<String> fileExtensions = new LinkedList<String>();
+
+  protected String m_crs;
 
   public ImportBaseMapImportShpPage( )
   {
@@ -66,12 +69,6 @@ public class ImportBaseMapImportShpPage extends WizardPage
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
     setControl( container );
-
-    // final Label label = new Label( container, SWT.NONE );
-    // final GridData gridData = new GridData();
-    // gridData.horizontalSpan = 3;
-    // label.setLayoutData( gridData );
-    // label.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.3" ) );
 
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
@@ -99,17 +96,34 @@ public class ImportBaseMapImportShpPage extends WizardPage
     } );
     button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.BrowseButton" ) ); //$NON-NLS-1$
 
-    // Coordinate system combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapImportShpPage.1" ) ); //$NON-NLS-1$
-    cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
-    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
-    cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
-    GridData gd = new GridData();
-    gd.horizontalAlignment = GridData.FILL;
-    gd.widthHint = 75;
-    cmb_CoordinateSystem.setEnabled( true );
-    cmb_CoordinateSystem.setLayoutData( gd );
+    /* Coordinate system combo */
+    final Composite crsContainer = new Composite( container, SWT.NULL );
+    final GridLayout crsGridLayout = new GridLayout();
+    crsGridLayout.numColumns = 1;
+    crsContainer.setLayout( crsGridLayout );
+
+    final GridData crsGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    crsGridData.horizontalSpan = 3;
+    crsContainer.setLayoutData( crsGridData );
+
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( crsContainer );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    crsControl.setToolTipText( "Koordinatensystem der Shape-Datei" );
+
+    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crsPanel.setSelectedCRS( m_crs );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      @Override
+      protected void selectionChanged( String selectedCRS )
+      {
+        m_crs = selectedCRS;
+        updatePageComplete();
+      }
+
+    } );
 
     button.setFocus();
     initContents();
@@ -121,13 +135,13 @@ public class ImportBaseMapImportShpPage extends WizardPage
    * @param selection
    *            the selection or <code>null</code> if none
    */
+  @SuppressWarnings("unchecked")
   public void init( ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
       return;
 
     fileExtensions.add( new String( "shp" ) );
-    // fileExtensions.add( new String( "gml" ) );
 
     // Find the first plugin.xml file.
     Iterator iter = ((IStructuredSelection) selection).iterator();
@@ -255,7 +269,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
 
   public String getCoordinateSystem( )
   {
-    return cmb_CoordinateSystem.getText();
+    return m_crs;
   }
 
   /**
