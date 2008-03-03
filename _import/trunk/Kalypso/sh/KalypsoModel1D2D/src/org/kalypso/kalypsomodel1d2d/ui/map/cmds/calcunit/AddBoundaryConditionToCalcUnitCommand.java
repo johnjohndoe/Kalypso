@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * @author madanago
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" }) //$NON-NLS-1$ //$NON-NLS-2$
+@SuppressWarnings( { "unchecked", "hiding" })//$NON-NLS-1$ //$NON-NLS-2$
 public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dChangeCommand
 {
   private final IBoundaryCondition m_boundaryConditionToAdd;
@@ -82,13 +82,9 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
   public IFeatureWrapper2[] getChangedFeature( )
   {
     if( done )
-    {
       return new IFeatureWrapper2[] { m_calculationUnit, m_boundaryConditionToAdd };
-    }
     else
-    {
       return new IFeatureWrapper2[] {};
-    }
   }
 
   /**
@@ -151,16 +147,6 @@ public class AddBoundaryConditionToCalcUnitCommand implements IDiscrModel1d2dCha
     final GMLWorkspace bcWorkspace = bcFeature.getWorkspace();
     final FeatureStructureChangeModellEvent bcEvent = new FeatureStructureChangeModellEvent( bcWorkspace, bcFeature.getParent(), new Feature[] { bcFeature }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE );
     bcWorkspace.fireModellEvent( bcEvent );
-
-//    
-//    
-//    final Feature bcFeature = m_boundaryConditionToAdd.getWrappedFeature();
-//    final List<Feature> features = new ArrayList<Feature>();
-//    features.add( bcFeature );
-//
-//    final GMLWorkspace workspace = bcFeature.getWorkspace();
-//    final FeaturesChangedModellEvent event = new FeaturesChangedModellEvent( workspace, features.toArray( new Feature[features.size()] ) );
-//    workspace.fireModellEvent( event );
   }
 
   /**

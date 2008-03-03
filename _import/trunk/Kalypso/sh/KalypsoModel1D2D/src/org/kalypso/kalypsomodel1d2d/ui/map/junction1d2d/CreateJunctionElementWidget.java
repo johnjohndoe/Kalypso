@@ -71,8 +71,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 public class CreateJunctionElementWidget extends AbstractDelegateWidget
 {
-  private final int m_grabRadius = 10;
-
   private IKalypsoFeatureTheme m_mapActiveTheme;
 
   private IFEDiscretisationModel1d2d m_discretisationModel;
@@ -141,7 +139,11 @@ public class CreateJunctionElementWidget extends AbstractDelegateWidget
         IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final QName qName = ft.getFeatureType().getQName();
         if( qName.equals( IFELine.QNAME ) )
-          m_selDelegateWidget.setTheme( ft );
+        {
+          IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
+          fts[0] = ft;
+          m_selDelegateWidget.setThemes( fts );
+        }
       }
     }
 

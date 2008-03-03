@@ -134,6 +134,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
    *      org.kalypso.ogc.gml.map.MapPanel)
    */
+  @SuppressWarnings("unchecked")
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     m_dataModel.setData( ICommonKeys.KEY_MAP_PANEL, mapPanel );

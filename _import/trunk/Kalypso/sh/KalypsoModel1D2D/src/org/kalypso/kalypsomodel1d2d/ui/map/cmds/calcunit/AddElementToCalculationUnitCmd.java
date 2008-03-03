@@ -40,21 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.cmds.calcunit;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -65,77 +59,36 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  * Command to add element to calculation unit
  * 
  * @author Patrice Congo
- *
+ * 
  */
-@SuppressWarnings("unchecked") //$NON-NLS-1$
+@SuppressWarnings("unchecked")//$NON-NLS-1$
 public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeCommand
 {
 
-  private final IFE1D2DElement[] elementsToAdd ;
-  
-  private boolean added = false;
-  
-  private final ICalculationUnit calculationUnit;
+  private final IFE1D2DElement[] m_elementsToAdd;
 
-  private final IFEDiscretisationModel1d2d model1d2d;
-  
-//  @SuppressWarnings("hiding")
-//  public AddElementToCalculationUnitCmd(
-//                      ICalculationUnit1D calculationUnit,
-//                      IElement1D[] elementsToAdd,
-//                      IFEDiscretisationModel1d2d model1d2d )
-//  {
-//    this.calculationUnit = calculationUnit;
-//    this.elementsToAdd = elementsToAdd;
-//    this.model1d2d = model1d2d;
-//  }
-  
-  public AddElementToCalculationUnitCmd(
-      ICalculationUnit calculationUnit,
-      IFE1D2DElement[] elementsToAdd,
-      IFEDiscretisationModel1d2d model1d2d )
+  private boolean added = false;
+
+  private final ICalculationUnit m_calculationUnit;
+
+  private final IFEDiscretisationModel1d2d m_model1d2d;
+
+  public AddElementToCalculationUnitCmd( ICalculationUnit calculationUnit, IFE1D2DElement[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
   {
-    this.calculationUnit = calculationUnit;
-    
-    this.elementsToAdd = CalcUnitOps.toAddableElements( calculationUnit, elementsToAdd );
-    this.model1d2d = model1d2d;
+    m_calculationUnit = calculationUnit;
+
+    m_elementsToAdd = CalcUnitOps.toAddableElements( calculationUnit, elementsToAdd );
+    m_model1d2d = model1d2d;
   }
-  
-  public AddElementToCalculationUnitCmd(
-      ICalculationUnit calculationUnit,
-      Feature[] elementsToAdd,
-      IFEDiscretisationModel1d2d model1d2d )
+
+  public AddElementToCalculationUnitCmd( ICalculationUnit calculationUnit, Feature[] elementsToAdd, IFEDiscretisationModel1d2d model1d2d )
   {
-    this.calculationUnit = calculationUnit;
-    
-    this.elementsToAdd = CalcUnitOps.toAddableElements( calculationUnit, elementsToAdd );
-    this.model1d2d = model1d2d;
+    m_calculationUnit = calculationUnit;
+
+    m_elementsToAdd = CalcUnitOps.toAddableElements( calculationUnit, elementsToAdd );
+    m_model1d2d = model1d2d;
   }
-  
-  
-  
- 
-  
-//  public AddElementToCalculationUnitCmd(
-//      ICalculationUnit2D<IElement2D> calculationUnit,
-//      IElement2D[] elementsToAdd,
-//      IFEDiscretisationModel1d2d model1d2d )
-//  {
-//    this.calculationUnit = calculationUnit;
-//    this.elementsToAdd = elementsToAdd;
-//    this.model1d2d = model1d2d;
-//  }
-  
-//  public AddElementToCalculationUnitCmd(
-//      ICalculationUnit1D2D calculationUnit,
-//      IFE1D2DElement[] elementsToAdd,
-//      IFEDiscretisationModel1d2d model1d2d )
-//  {
-//    this.calculationUnit = calculationUnit;
-//    this.elementsToAdd = elementsToAdd;
-//    this.model1d2d = model1d2d;
-//  }
-  
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
    */
@@ -144,12 +97,12 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
     if( added )
     {
       List<IFeatureWrapper2> changed = new ArrayList<IFeatureWrapper2>();
-      changed.addAll( Arrays.asList( elementsToAdd ) );
+      changed.addAll( Arrays.asList( m_elementsToAdd ) );
       return changed.toArray( new IFeatureWrapper2[changed.size()] );
     }
     else
     {
-      return new IFeatureWrapper2[]{};
+      return new IFeatureWrapper2[] {};
     }
   }
 
@@ -158,7 +111,7 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
    */
   public IFEDiscretisationModel1d2d getDiscretisationModel1d2d( )
   {
-    return model1d2d;
+    return m_model1d2d;
   }
 
   /**
@@ -182,76 +135,73 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
    */
   public void process( ) throws Exception
   {
-    if(!added )
+    if( !added )
     {
       try
       {
-        for( IFE1D2DElement ele : elementsToAdd )
+        for( IFE1D2DElement ele : m_elementsToAdd )
         {
-          ele.getContainers().addRef( calculationUnit );
-          calculationUnit.addElementAsRef( ele );
+          ele.getContainers().addRef( m_calculationUnit );
+          m_calculationUnit.addElementAsRef( ele );
         }
-        
+
         added = true;
-        //fire change
+        // fire change
         fireProcessChanges();
       }
       catch( Exception th )
       {
-        for( IFE1D2DElement ele : elementsToAdd )
+        for( IFE1D2DElement ele : m_elementsToAdd )
         {
           try
           {
-            ele.getContainers().add( calculationUnit );
+            ele.getContainers().add( m_calculationUnit );
           }
-          catch( Throwable e)
+          catch( Throwable e )
           {
-            
+
           }
           try
           {
-            calculationUnit.addElementAsRef( ele );
+            m_calculationUnit.addElementAsRef( ele );
           }
-          catch ( Throwable e ) 
+          catch( Throwable e )
           {
-            
+
           }
         }
         th.printStackTrace();
         throw th;
       }
-      
+
     }
   }
-  private final void fireProcessChanges()
+
+  private final void fireProcessChanges( )
   {
-    List<Feature> features = new ArrayList<Feature>( elementsToAdd.length * 2 );
-    features.add( calculationUnit.getFeature() );
-    for( IFE1D2DElement ele: elementsToAdd )
-    {
+    List<Feature> features = new ArrayList<Feature>( m_elementsToAdd.length * 2 );
+    features.add( m_calculationUnit.getFeature() );
+    for( IFE1D2DElement ele : m_elementsToAdd )
       features.add( ele.getFeature() );
-    }
-    
-    GMLWorkspace workspace = calculationUnit.getFeature().getWorkspace();
-    FeatureStructureChangeModellEvent event = 
-        new FeatureStructureChangeModellEvent(
-            workspace,//final GMLWorkspace workspace, 
-            model1d2d.getFeature(),// Feature parentFeature, 
-            features.toArray( new Feature[features.size()] ),//final Feature[] changedFeature, 
-            FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD//final int changeType
-            );
+
+    GMLWorkspace workspace = m_calculationUnit.getFeature().getWorkspace();
+    FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
+
+    // workspace,
+    m_model1d2d.getFeature(),// Feature parentFeature,
+    features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
+    FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD// final int changeType
+    );
     workspace.fireModellEvent( event );
   }
-  
+
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   public void redo( ) throws Exception
   {
     if( !added )
-    {
       process();
-    }
   }
 
   /**
@@ -261,15 +211,14 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
   {
     if( added )
     {
-     
       MultiException multiException = null;
-      for( IFE1D2DElement ele : elementsToAdd )
+      for( IFE1D2DElement ele : m_elementsToAdd )
       {
         try
         {
-          ele.getContainers().add( calculationUnit );
+          ele.getContainers().add( m_calculationUnit );
         }
-        catch( Exception e)
+        catch( Exception e )
         {
           e.printStackTrace();
           if( multiException == null )
@@ -280,9 +229,9 @@ public class AddElementToCalculationUnitCmd implements IDiscrModel1d2dChangeComm
         }
         try
         {
-          calculationUnit.addElementAsRef( ele );
+          m_calculationUnit.addElementAsRef( ele );
         }
-        catch ( Exception e ) 
+        catch( Exception e )
         {
           if( multiException == null )
           {

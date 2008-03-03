@@ -144,7 +144,11 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
         IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final QName qName = ft.getFeatureType().getQName();
         if( qName.equals( IFELine.QNAME ) )
-          m_selDelegateWidget.setTheme( ft );
+        {
+          IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
+          fts[0] = ft;
+          m_selDelegateWidget.setThemes( fts );
+        }
       }
     }
     final FeatureList featureList = m_mapActiveTheme.getFeatureList();
@@ -159,7 +163,7 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyReleased( final KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
     if( e.getKeyChar() == KeyEvent.VK_ESCAPE )
       reinit();

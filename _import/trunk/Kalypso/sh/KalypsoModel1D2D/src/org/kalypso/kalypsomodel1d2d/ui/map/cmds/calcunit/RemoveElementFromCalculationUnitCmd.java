@@ -61,22 +61,9 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
 {
   private final IFE1D2DElement[] elementsToRemove;
 
-  private boolean added = false;
-
   private final ICalculationUnit calculationUnit;
 
   private final IFEDiscretisationModel1d2d model1d2d;
-
-  // @SuppressWarnings("hiding")
-  // public RemoveElementFromCalculationUnitCmd(
-  // ICalculationUnit1D calculationUnit,
-  // IElement1D[] elementsToRemove,
-  // IFEDiscretisationModel1d2d model1d2d )
-  // {
-  // this.calculationUnit = calculationUnit;
-  // this.elementsToRemove = elementsToRemove;
-  // this.model1d2d = model1d2d;
-  // }
 
   public RemoveElementFromCalculationUnitCmd( ICalculationUnit calculationUnit, Feature[] elementsToRemove, IFEDiscretisationModel1d2d model1d2d )
   {
@@ -91,26 +78,6 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
     this.elementsToRemove = CalcUnitOps.toAddableElements( calculationUnit, elementsToRemove );
     this.model1d2d = model1d2d;
   }
-
-  // public RemoveElementFromCalculationUnitCmd(
-  // ICalculationUnit2D calculationUnit,
-  // IElement2D[] elementsToRemove,
-  // IFEDiscretisationModel1d2d model1d2d )
-  // {
-  // this.calculationUnit = calculationUnit;
-  // this.elementsToRemove = elementsToRemove;
-  // this.model1d2d = model1d2d;
-  // }
-
-  // public RemoveElementFromCalculationUnitCmd(
-  // ICalculationUnit1D2D calculationUnit,
-  // IFE1D2DElement[] elementsToRemove,
-  // IFEDiscretisationModel1d2d model1d2d )
-  // {
-  // this.calculationUnit = calculationUnit;
-  // this.elementsToRemove = elementsToRemove;
-  // this.model1d2d = model1d2d;
-  // }
 
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand#getChangedFeature()
@@ -168,7 +135,7 @@ public class RemoveElementFromCalculationUnitCmd implements IDiscrModel1d2dChang
 
     GMLWorkspace workspace = calculationUnit.getFeature().getWorkspace();
     FeatureStructureChangeModellEvent event = new FeatureStructureChangeModellEvent( workspace,// final GMLWorkspace
-                                                                                                // workspace,
+    // workspace,
     model1d2d.getFeature(),// Feature parentFeature,
     features.toArray( new Feature[features.size()] ),// final Feature[] changedFeature,
     FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE// final int changeType
