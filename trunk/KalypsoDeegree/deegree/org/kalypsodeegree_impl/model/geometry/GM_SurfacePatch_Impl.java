@@ -63,22 +63,19 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_GenericSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
- * TODO: this implementation does not implement GM_SurfacePath with is a BUG.<br>TODO: implement it, but check, taht everything works still fine...
- * 
- * default implementation of the GM_SurfacePatch interface from package jago.model. the class is abstract because it
- * should be specialized by derived classes <code>GM_Polygon</code> for example
- * ------------------------------------------------------------
+ * TODO: this implementation does not implement GM_SurfacePath with is a BUG.<br>
+ * TODO: implement it, but check, taht everything works still fine... default implementation of the GM_SurfacePatch
+ * interface from package jago.model. the class is abstract because it should be specialized by derived classes
+ * <code>GM_Polygon</code> for example ------------------------------------------------------------
  * 
  * @version 11.6.2001
  * @author Andreas Poth
@@ -251,6 +248,20 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     return m_crs;
   }
 
+  /**
+   * This function sets the coordinate system.
+   * 
+   * @param crs
+   *            The coordinate system.
+   */
+  public void setCoordinateSystem( String crs )
+  {
+    m_crs = crs;
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals( final Object other )
   {
@@ -496,5 +507,4 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
     throw new CloneNotSupportedException();
   }
 
- 
 }

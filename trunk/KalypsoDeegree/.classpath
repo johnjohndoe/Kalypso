@@ -11,7 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/jai/mlibwrapper_jai.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/java3d/vecmath.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.8.jar" sourcepath="lib/jts/jts-1.8_src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jts/jtsio-1.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/shiftone/shiftone-cache.jar"/>
