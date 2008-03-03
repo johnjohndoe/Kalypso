@@ -20,7 +20,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
@@ -38,8 +37,6 @@ import org.kalypso.ui.wizards.imports.Messages;
 public class ImportBaseMapImportImgPage extends WizardPage
 {
   private Text sourceFileField;
-
-  Combo cmb_CoordinateSystem;
 
   private IPath initialSourcePath;
 
@@ -280,7 +277,7 @@ public class ImportBaseMapImportImgPage extends WizardPage
 
   public String getCoordinateSystem( )
   {
-    return cmb_CoordinateSystem.getText();
+    return m_crs;
   }
 
   /**

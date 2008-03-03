@@ -19,13 +19,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.wizards.imports.Messages;
 
 /**
@@ -39,11 +40,13 @@ public class ElevationMainPage extends WizardPage
 
   private final List<String> m_fileExtensions = new ArrayList<String>();
 
-  private Combo m_coordinateSystems;
-
   public Text m_tileTitle;
 
   public Text m_tileDescription;
+
+  private CRSSelectionPanel m_crsPanel;
+
+  protected String m_crs;
 
   public ElevationMainPage( )
   {
@@ -92,17 +95,34 @@ public class ElevationMainPage extends WizardPage
     } );
     button.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.Browse" ) );
 
-    final Label label_2 = new Label( container, SWT.NONE );
-    label_2.setText( Messages.getString( "org.kalypso.ui.wizards.imports.elevationModel.Elevation.12" ) ); //$NON-NLS-1$
-    label_2.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    m_coordinateSystems = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    m_coordinateSystems.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
-    final int indexOfDefaultCRS = m_coordinateSystems.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
-    m_coordinateSystems.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
-    final GridData gridData_2 = new GridData( GridData.FILL_HORIZONTAL );
-    gridData_2.horizontalSpan = 2;
-    m_coordinateSystems.setEnabled( true );
-    m_coordinateSystems.setLayoutData( gridData_2 );
+    /* Coordinate system combo */
+    final Composite crsContainer = new Composite( container, SWT.NULL );
+    final GridLayout crsGridLayout = new GridLayout();
+    crsGridLayout.numColumns = 1;
+    crsContainer.setLayout( crsGridLayout );
+
+    final GridData crsGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    crsGridData.horizontalSpan = 3;
+    crsContainer.setLayoutData( crsGridData );
+
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( crsContainer );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    crsControl.setToolTipText( "Koordinatensystem der Shape-Datei" );
+
+    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crsPanel.setSelectedCRS( m_crs );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      @Override
+      protected void selectionChanged( String selectedCRS )
+      {
+        m_crs = selectedCRS;
+        updatePageComplete();
+      }
+
+    } );
 
     final Label label_3 = new Label( container, SWT.NONE );
     label_3.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
@@ -110,6 +130,7 @@ public class ElevationMainPage extends WizardPage
     m_tileTitle = new Text( container, SWT.BORDER );
     m_tileTitle.addModifyListener( new ModifyListener()
     {
+      @SuppressWarnings("synthetic-access")
       public void modifyText( ModifyEvent e )
       {
         updatePageComplete();
@@ -138,6 +159,7 @@ public class ElevationMainPage extends WizardPage
    * @param selection
    *            the selection or <code>null</code> if none
    */
+  @SuppressWarnings("unchecked")
   public void init( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )
@@ -186,7 +208,7 @@ public class ElevationMainPage extends WizardPage
   /**
    * Update the current page complete state based on the field content.
    */
-  private void updatePageComplete( )
+  protected void updatePageComplete( )
   {
     setPageComplete( false );
 
@@ -317,6 +339,6 @@ public class ElevationMainPage extends WizardPage
 
   public String getCoordinateSystem( )
   {
-    return m_coordinateSystems.getSelection().toString();
+    return m_crs;
   }
 }
