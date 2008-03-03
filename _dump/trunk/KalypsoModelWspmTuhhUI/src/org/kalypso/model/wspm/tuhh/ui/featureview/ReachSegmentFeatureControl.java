@@ -57,6 +57,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
@@ -75,6 +76,52 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public class ReachSegmentFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
+  /**
+   * @author jung
+   */
+  private final class ChangeListSelectionCommand implements ICommand
+  {
+    private final TuhhReach m_reach;
+
+    private final Feature m_feature;
+
+    private final WspmProfile m_changedProfile;
+
+    private final GMLWorkspace m_workspace;
+
+    private ChangeListSelectionCommand( TuhhReach reach, Feature feature, WspmProfile changedProfile, GMLWorkspace workspace )
+    {
+      m_reach = reach;
+      m_feature = feature;
+      m_changedProfile = changedProfile;
+      m_workspace = workspace;
+    }
+
+    public String getDescription( )
+    {
+      return null;
+    }
+
+    public boolean isUndoable( )
+    {
+      return false;
+    }
+
+    public void process( ) throws Exception
+    {
+      final TuhhReachProfileSegment segment = m_reach.createProfileSegment( m_changedProfile, m_changedProfile.getStation() );
+      m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_feature, segment.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    }
+
+    public void redo( ) throws Exception
+    {
+    }
+
+    public void undo( ) throws Exception
+    {
+    }
+  }
+
   protected final class ChangeCheckstateAction extends Action
   {
     private final boolean m_checkState;
@@ -210,15 +257,17 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
     // add or remove profile segment according to new check-state
     final TuhhReach reach = new TuhhReach( getFeature() );
 
+    final Feature feature = reach.getFeature();
     if( checked )
     {
-      // TODO: post via command...
-      final TuhhReachProfileSegment segment = reach.createProfileSegment( changedProfile, changedProfile.getStation() );
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach.getFeature(), segment.getFeature(), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+      // post via command...
+
+      final ICommand changeCommand = new ChangeListSelectionCommand( reach, feature, changedProfile, workspace );
+      fireFeatureChange( changeCommand );
     }
     else
     {
-      final FeatureList segments = (FeatureList) reach.getFeature().getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
+      final FeatureList segments = (FeatureList) feature.getProperty( TuhhReach.QNAME_PROP_REACHSEGMENTMEMBER );
 
       // CAUTION: this is a linear search through a list, and so a potential performance problem
       for( final Object segmentFeature : segments )
@@ -229,12 +278,12 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
         {
           // TODO: post via command
           segments.remove( segmentFeature );
-          workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reach.getFeature(), (Feature) segmentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+          workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, feature, (Feature) segmentFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+
           break;
         }
       }
     }
 
   }
-
 }
