@@ -91,13 +91,13 @@ public class SelectFeatureWidget extends AbstractWidget
 {
   private IGeometryBuilder m_selectionTypeDelegate;
 
-  private IKalypsoFeatureTheme m_theme;
+  private IKalypsoFeatureTheme[] m_themes;
 
   private final QName[] m_qnamesToSelect;
 
   private final QName m_geomQName;
 
-  private FeatureList m_featureList;
+  private FeatureList[] m_featureLists;
 
   private Feature m_foundFeature;
 
@@ -137,16 +137,22 @@ public class SelectFeatureWidget extends AbstractWidget
     if( m_selectionTypeDelegate == null )
       m_selectionTypeDelegate = new RectangleGeometryBuilder( getMapPanel().getMapModell().getCoordinatesSystem() );
 
-    m_theme = null;
-    m_featureList = null;
+    m_themes = null;
+    m_featureLists = null;
     m_foundFeature = null;
 
     final MapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
     mapPanel.repaint();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    m_theme = activeTheme instanceof IKalypsoFeatureTheme ? (IKalypsoFeatureTheme) activeTheme : null;
-    m_featureList = m_theme == null ? null : m_theme.getFeatureList();
+    if( activeTheme instanceof IKalypsoFeatureTheme )
+    {
+      m_themes = new IKalypsoFeatureTheme[1];
+      m_featureLists = new FeatureList[1];
+
+      m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
+      m_featureLists[0] = m_themes == null ? null : m_themes[0].getFeatureList();
+    }
 
   }
 
@@ -161,14 +167,26 @@ public class SelectFeatureWidget extends AbstractWidget
 
     m_foundFeature = null;
 
-    if( m_featureList == null )
+    if( m_featureLists == null )
       return;
 
-    if( m_selectionTypeDelegate instanceof PointGeometryBuilder )
+    for( int i = 0; i < m_featureLists.length; i++ )
     {
-      /* Grab next feature */
-      final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
-      m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, m_featureList, m_geomQName, m_qnamesToSelect );
+      FeatureList featureList = m_featureLists[i];
+
+      if( featureList == null )
+        continue;
+
+      if( m_selectionTypeDelegate instanceof PointGeometryBuilder )
+      {
+        /* Grab next feature */
+        final double grabDistance = MapUtilities.calculateWorldDistance( getMapPanel(), currentPos, m_grabRadius * 2 );
+        m_foundFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, featureList, m_geomQName, m_qnamesToSelect );
+
+        /* grap to the first feature that you can get */
+        if( m_foundFeature != null )
+          continue;
+      }
     }
 
     final MapPanel panel = getMapPanel();
@@ -210,7 +228,7 @@ public class SelectFeatureWidget extends AbstractWidget
         GM_Object object = m_selectionTypeDelegate.addPoint( point );
         if( object != null )
         {
-          doSelect( object, m_featureList );
+          doSelect( object, m_featureLists );
           m_selectionTypeDelegate.reset();
         }
       }
@@ -277,7 +295,7 @@ public class SelectFeatureWidget extends AbstractWidget
     {
       m_selectionTypeDelegate.addPoint( point );
       final GM_Object selectGeometry = m_selectionTypeDelegate.finish();
-      doSelect( selectGeometry, m_featureList );
+      doSelect( selectGeometry, m_featureLists );
       m_selectionTypeDelegate.reset();
 
     }
@@ -405,7 +423,7 @@ public class SelectFeatureWidget extends AbstractWidget
         final GM_Object selectGeometry = m_selectionTypeDelegate.addPoint( point );
         if( selectGeometry != null )
         {
-          doSelect( selectGeometry, m_featureList );
+          doSelect( selectGeometry, m_featureLists );
           m_selectionTypeDelegate.reset();
         }
       }
@@ -417,23 +435,28 @@ public class SelectFeatureWidget extends AbstractWidget
     }
   }
 
-  private void doSelect( GM_Object selectGeometry, FeatureList featureList )
+  private void doSelect( GM_Object selectGeometry, FeatureList[] featureLists )
   {
     if( selectGeometry == null )
       return;
     // select feature from featureList by using the selectGeometry
-    if( featureList == null )
+    if( featureLists == null )
       return;
 
-    final List<Feature> selectedFeatures = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, m_geomQName, m_intersectMode );
+    final List<Feature> selectedFeatures = new ArrayList<Feature>();
+
+    for( int i = 0; i < featureLists.length; i++ )
+    {
+      final List<Feature> selectedSubList = selectFeatures( featureLists[i], selectGeometry, m_qnamesToSelect, m_geomQName, m_intersectMode );
+      if( selectedSubList != null )
+        selectedFeatures.addAll( selectedSubList );
+    }
 
     manageSelection( selectedFeatures );
   }
 
   private void manageSelection( final List<Feature> selectedFeatures )
   {
-    /* consider the selection modes */
-    final CommandableWorkspace workspace = m_theme.getWorkspace();
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
     if( selectedFeatures.size() == 0 )
       selectionManager.clear();
@@ -441,32 +464,38 @@ public class SelectFeatureWidget extends AbstractWidget
     final List<Feature> toRemove = new ArrayList<Feature>();
     final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
 
-    if( m_addMode == true )
+    for( int i = 0; i < m_themes.length; i++ )
     {
-      // Add selection
-      for( final Feature feature : selectedFeatures )
+      /* consider the selection modes */
+      final CommandableWorkspace workspace = m_themes[i].getWorkspace();
+
+      if( m_addMode == true )
       {
-        if( !selectionManager.isSelected( feature ) )
-          toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+        // Add selection
+        for( final Feature feature : selectedFeatures )
+        {
+          if( !selectionManager.isSelected( feature ) )
+            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+        }
       }
-    }
-    else if( m_toggleMode == true )
-    {
-      // Toggle selection
-      for( final Feature feature : selectedFeatures )
+      else if( m_toggleMode == true )
       {
-        if( selectionManager.isSelected( feature ) )
-          toRemove.add( feature );
-        else
-          toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+        // Toggle selection
+        for( final Feature feature : selectedFeatures )
+        {
+          if( selectionManager.isSelected( feature ) )
+            toRemove.add( feature );
+          else
+            toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+        }
       }
-    }
-    else
-    {
-      selectionManager.clear();
-      for( final Feature feature : selectedFeatures )
+      else
       {
-        toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+        selectionManager.clear();
+        for( final Feature feature : selectedFeatures )
+        {
+          toAdd.add( new EasyFeatureWrapper( workspace, feature, feature.getParent(), feature.getParentRelation() ) );
+        }
       }
     }
 
@@ -536,10 +565,28 @@ public class SelectFeatureWidget extends AbstractWidget
     return sb.toString();
   }
 
-  public void setTheme( IKalypsoFeatureTheme theme )
+  @SuppressWarnings("unchecked")
+  public void setThemes( IKalypsoFeatureTheme[] themes )
   {
-    m_theme = theme;
-    m_featureList = m_theme == null ? null : m_theme.getFeatureList();
-  }
+    m_themes = new IKalypsoFeatureTheme[themes.length];
+    m_themes = themes;
 
+    m_featureLists = new FeatureList[themes.length];
+
+    if( m_themes == null )
+    {
+      m_featureLists = null;
+      return;
+    }
+
+    for( int i = 0; i < m_themes.length; i++ )
+    {
+      if( m_themes[i] != null )
+      {
+        final FeatureList featureList = m_themes[i].getFeatureList();
+        if( featureList != null )
+          m_featureLists[i] = featureList;
+      }
+    }
+  }
 }
