@@ -63,8 +63,16 @@ public class LinkFeatureWrapper
       return m_wrapper.getLinkedFeature( (String) property );
     else if( property instanceof XLinkedFeature_Impl )
     {
-      final XLinkedFeature_Impl xLnk = (XLinkedFeature_Impl) property;
-      return xLnk.getFeature();
+      try
+      {
+        final XLinkedFeature_Impl xLnk = (XLinkedFeature_Impl) property;
+        return xLnk.getFeature();
+      }
+      catch( final IllegalStateException e )
+      {
+        return null;
+      }
+
     }
     else if( property instanceof Feature )
       return (Feature) property;
