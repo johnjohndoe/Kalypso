@@ -186,7 +186,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       if( partRef.getPart( false ) == AbstractMapPart.this )
       {
         final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
-        if( (contextService != null) && (m_activateContext != null) )
+        if( contextService != null && m_activateContext != null )
           contextService.deactivateContext( m_activateContext );
       }
     }
@@ -457,7 +457,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   public void saveMap( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    if( (m_mapModell == null) || m_saving )
+    if( m_mapModell == null || m_saving )
       return;
 
     m_saving = true;
