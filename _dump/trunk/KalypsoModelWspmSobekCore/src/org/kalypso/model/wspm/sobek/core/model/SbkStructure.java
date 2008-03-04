@@ -101,5 +101,4 @@ public class SbkStructure extends AbstractNode implements ISbkStructure
   {
     return true;
   }
-
 }

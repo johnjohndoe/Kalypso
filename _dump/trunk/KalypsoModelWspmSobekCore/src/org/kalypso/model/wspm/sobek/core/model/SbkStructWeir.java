@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.sobek.core.model;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -112,5 +113,12 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
 
     return Double.NaN;
   }
-
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  @Override
+  public TYPE getType( )
+  {
+    return TYPE.eSbkStructWeir;
+  }
 }

@@ -47,6 +47,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructCompundStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -78,5 +79,13 @@ public class SbkStructCompoundStructure extends SbkStructure implements ISbkStru
     }
 
     return myStructs.toArray( new ISbkStructure[] {} );
+  }
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  @Override
+  public TYPE getType( )
+  {
+    return TYPE.eSbkStructCompundStructure;
   }
 }

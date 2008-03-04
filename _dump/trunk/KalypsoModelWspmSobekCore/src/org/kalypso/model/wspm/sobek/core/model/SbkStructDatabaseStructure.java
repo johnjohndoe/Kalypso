@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructDatabaseStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -116,5 +117,14 @@ public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStru
   {
     // TODO ggf. noch "Übersetzung" des Strings... von nofdp -> SBK
     return (String) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_SECOND_AXIS_VALUE_TYPE );
+  }
+  
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  @Override
+  public TYPE getType( )
+  {
+    return TYPE.eSbkStructDatabaseStructure;
   }
 }

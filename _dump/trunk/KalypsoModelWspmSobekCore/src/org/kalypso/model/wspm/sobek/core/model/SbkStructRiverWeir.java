@@ -44,6 +44,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -159,5 +160,14 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
       return (((Double) property).doubleValue());
 
     return Double.NaN;
+  }
+  
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
+   */
+  @Override
+  public TYPE getType( )
+  {
+    return TYPE.eSbkStructRiverWeir;
   }
 }

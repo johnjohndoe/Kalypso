@@ -62,7 +62,13 @@ public interface INode
     eConnectionNode,
     eCrossSectionNode,
     eLinkageNode,
-    eSbkStructure;
+    eSbkStructure,
+    eSbkStructCompundStructure,
+    eSbkStructDatabaseStructure,
+    eSbkStructGeneralStructure,
+    eSbkStructPump,
+    eSbkStructRiverWeir,
+    eSbkStructWeir;
 
     public String getTypeOfConnectionNode( )
     {

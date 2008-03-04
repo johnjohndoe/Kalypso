@@ -70,6 +70,21 @@ public abstract class AbstractNode implements INode
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
     else if( TYPE.eLinkageNode.equals( nodeType ) )
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
+
+// TODO implement FNNodeUtils.createNode step by step
+//    else if( TYPE.eSbkStructCompundStructure.equals( nodeType ) )
+//      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE );
+//    else if( TYPE.eSbkStructDatabaseStructure.equals( nodeType ) )
+//      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE );
+//    else if( TYPE.eSbkStructGeneralStructure.equals( nodeType ) )
+// targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE );
+//    else if( TYPE.eSbkStructPump.equals( nodeType ) )
+//      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP );
+//    else if( TYPE.eSbkStructRiverWeir.equals( nodeType ) )
+//      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR );
+    else if( TYPE.eSbkStructWeir.equals( nodeType ) )
+      targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR );
+
     else
       throw new IllegalStateException( "Can't handle node type" + nodeType.name() );
 
