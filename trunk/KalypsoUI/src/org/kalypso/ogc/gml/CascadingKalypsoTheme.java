@@ -174,6 +174,10 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       styledLayerType.getDepends();
 
       final ObjectFactory extentFac = new ObjectFactory();
+
+      styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( getLegendIcon() ) );
+      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
+
       GisTemplateFeatureTheme.fillProperties( this, extentFac, styledLayerType );
     }
   }

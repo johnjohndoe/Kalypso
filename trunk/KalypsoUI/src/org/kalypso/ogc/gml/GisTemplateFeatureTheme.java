@@ -264,6 +264,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       styledLayerType.setName( getName() );
       styledLayerType.setVisible( isVisible );
       styledLayerType.getDepends();
+
+      styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( getLegendIcon() ) );
+      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
+
       final List<Style> stylesList = styledLayerType.getStyle();
       for( final GisTemplateUserStyle style : m_gisTemplateUserStyles )
       {

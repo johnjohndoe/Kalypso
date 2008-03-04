@@ -109,11 +109,15 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     layer.setVisible( isVisible );
     layer.getDepends();
 
+    final ObjectFactory extentFac = new ObjectFactory();
+
+    layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( getLegendIcon() ) );
+    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
+
     final List<JAXBElement< ? extends StyledLayerType>> layers = layer.getLayer();
 
     fillLayerList( layers, getInnerMapModel(), srsName, monitor );
 
-    final ObjectFactory extentFac = new ObjectFactory();
     GisTemplateFeatureTheme.fillProperties( this, extentFac, layer );
   }
 

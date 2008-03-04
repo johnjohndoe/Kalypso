@@ -39,6 +39,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -105,6 +106,8 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   public void fillLayerType( final StyledLayerType layer, final String id, final boolean visible )
   {
+    final ObjectFactory extentFac = new ObjectFactory();
+
     layer.setName( m_layerType.getName() );
     layer.setFeaturePath( "" );
 
@@ -114,6 +117,8 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     layer.setLinktype( m_layerType.getLinktype() );
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
+    layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( getLegendIcon() ) );
+    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
   }
 
   /**

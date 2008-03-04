@@ -478,6 +478,12 @@ public class GisTemplateHelper
       layer.setActuate( "onRequest" ); //$NON-NLS-1$
       layer.setType( "simple" ); //$NON-NLS-1$
 
+      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+
+      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
+
       final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
 
       layerList.add( layerElement );
@@ -531,6 +537,12 @@ public class GisTemplateHelper
 
       layer.setLinktype( "legend" );
 
+      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+
+      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
+
       layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
 
       monitor.worked( 1000 );
@@ -549,6 +561,12 @@ public class GisTemplateHelper
 
       layer.setLinktype( "scrab" );
 
+      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+
+      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
+
       layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
 
       monitor.worked( 1000 );
@@ -564,6 +582,12 @@ public class GisTemplateHelper
       layer.setId( "ID_" + count );
       layer.setLinktype( "scale" );
 
+      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+
+      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
+
       final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
 
       layerList.add( layerElement );
@@ -574,5 +598,4 @@ public class GisTemplateHelper
 
     return null;
   }
-
 }
