@@ -111,7 +111,10 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 
     final ObjectFactory extentFac = new ObjectFactory();
 
-    layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( getLegendIcon() ) );
+    String legendIcon = getLegendIcon();
+    if( legendIcon != null )
+      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
     layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
 
     final List<JAXBElement< ? extends StyledLayerType>> layers = layer.getLayer();

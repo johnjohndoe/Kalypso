@@ -117,7 +117,11 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     layer.setLinktype( m_layerType.getLinktype() );
     layer.setActuate( "onRequest" );
     layer.setType( "simple" );
-    layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( getLegendIcon() ) );
+
+    String legendIcon = getLegendIcon();
+    if( legendIcon != null )
+      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
     layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowChildren() ) );
   }
 

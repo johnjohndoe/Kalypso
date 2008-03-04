@@ -481,7 +481,10 @@ public class GisTemplateHelper
       org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
       AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
       final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
@@ -540,7 +543,10 @@ public class GisTemplateHelper
       org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
       AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
       layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
@@ -564,7 +570,10 @@ public class GisTemplateHelper
       org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
       AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
       layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
@@ -585,7 +594,10 @@ public class GisTemplateHelper
       org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
       AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( abstractKalypsoTheme.getLegendIcon() ) );
+      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
       final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
