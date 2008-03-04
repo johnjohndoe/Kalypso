@@ -66,7 +66,7 @@ public abstract class AbstractRauheitLayer extends AbstractProfilChartLayer impl
     super( layerId, pcv, pcv.getDomainRange(), pcv.getValueRangeRight(), label, true );
     m_profile = pcv.getProfil();
     final ColorRegistry cr = pcv.getColorRegistry();
-    if( !cr.getKeySet().contains(layerId) )
+    if( !cr.getKeySet().contains( layerId ) )
     {
       cr.put( layerId, color );
     }
@@ -80,10 +80,9 @@ public abstract class AbstractRauheitLayer extends AbstractProfilChartLayer impl
    */
 
   @Override
-  protected void editProfil( Point point, Object data )
+  protected void editProfil( final Point point, final Object data )
   {
     // no editing
-
   }
 
   /**
@@ -97,11 +96,9 @@ public abstract class AbstractRauheitLayer extends AbstractProfilChartLayer impl
 
   protected void fillRectangle( final GCWrapper gc, final Rectangle box )
   {
-
     gc.setForeground( m_color );
     gc.setBackground( m_color );
     gc.fillRectangle( box );
-
   }
 
   /**

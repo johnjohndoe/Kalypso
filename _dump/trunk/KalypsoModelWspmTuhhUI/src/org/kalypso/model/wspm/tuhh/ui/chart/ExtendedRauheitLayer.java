@@ -120,7 +120,6 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
 
   public void paint( final GCWrapper gc )
   {
-
     final Color background = gc.getBackground();
     final IProfil profil = getProfil();
     if( profil == null )
@@ -188,7 +187,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
 
   private final void updateRauheit( )
   {
-// TODO:Kim ï¿½berschreiben der Rauheitsspalte
+    // TODO:Kim überschreiben der Rauheitsspalte
   }
 
   /**

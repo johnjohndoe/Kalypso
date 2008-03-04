@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -485,7 +485,7 @@ public class WspmProfileHelper
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
       return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Hï¿½he", "Hï¿½he", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Hï¿½he", "Hï¿½he" ) );
+      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Hï¿½he", "Hï¿½he" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
       return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert" ) );
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )

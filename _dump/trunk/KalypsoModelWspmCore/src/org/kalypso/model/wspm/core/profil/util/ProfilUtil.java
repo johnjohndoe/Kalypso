@@ -273,10 +273,10 @@ public class ProfilUtil
     IRecord pkt = points[0];
     if( index < 0 )
       return pkt;
-    for(int i = 1; i < points.length; i++ )
+    for( int i = 1; i < points.length; i++ )
     {
       final Double b = (Double) points[i].getValue( index );
-      if( Math.abs( b - breite ) < Math.abs( (Double) pkt.getValue( index) - breite ) )
+      if( Math.abs( b - breite ) < Math.abs( (Double) pkt.getValue( index ) - breite ) )
         pkt = points[i];
     }
     return pkt;
@@ -365,6 +365,9 @@ public class ProfilUtil
 
   public static Double getMaxValueFor( final IProfil profil, final IComponent property )
   {
+    if( property == null )
+      return null;
+
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;
@@ -518,8 +521,8 @@ public class ProfilUtil
 
     for( int i = 0; i < profil.getPoints().length - 1; i++ )
     {
-      IRecord p = profil.getPoints()[i];
-      IRecord pPlus = profil.getPoints()[i + 1];
+      final IRecord p = profil.getPoints()[i];
+      final IRecord pPlus = profil.getPoints()[i + 1];
 
       final double currentWidth = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
@@ -551,8 +554,8 @@ public class ProfilUtil
 
     for( int i = 0; i < profil.getPoints().length - 1; i++ )
     {
-      IRecord p = profil.getPoints()[i];
-      IRecord pPlus = profil.getPoints()[i + 1];
+      final IRecord p = profil.getPoints()[i];
+      final IRecord pPlus = profil.getPoints()[i + 1];
 
       final double z1 = maxZ - (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
       final double z2 = maxZ - (Double) pPlus.getValue( ProfilObsHelper.getPropertyFromId( pPlus, IWspmConstants.POINT_PROPERTY_HOEHE ) );
@@ -588,7 +591,7 @@ public class ProfilUtil
   public static void croppProfile( final IProfil profile, final double start, final double end )
   {
 
-    TupleResult points = profile.getResult();
+    final TupleResult points = profile.getResult();
     final IRecord[] segment1 = getSegment( profile, start );
     final IRecord[] segment2 = getSegment( profile, end );
     IRecord startPoint = null;
