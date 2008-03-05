@@ -51,17 +51,6 @@ import org.kalypso.commons.xml.NS;
  */
 public interface IWspmConstants
 {
-  public static final QName Q_DATE_TIME = new QName( NS.XSD_SCHEMA, "dateTime" );
-
-  public static final QName Q_STRING = new QName( NS.XSD_SCHEMA, "string" );
-
-  public static final QName Q_INTEGER = new QName( NS.XSD_SCHEMA, "integer" );
-
-  public static final QName Q_DECIMAL = new QName( NS.XSD_SCHEMA, "decimal" );
-
-  public static final QName Q_DOUBLE = new QName( NS.XSD_SCHEMA, "double" );
-
-  public static final QName Q_BOOLEAN = new QName( NS.XSD_SCHEMA, "boolean" );
 
   public static String NS_WSPM = "org.kalypso.model.wspm";
 
@@ -80,6 +69,20 @@ public interface IWspmConstants
   public static String NS_WSPM_BREAKLINE = "org.kalypso.model.wspmbreakline";
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary";
+
+  public static final QName Q_DATE_TIME = new QName( NS.XSD_SCHEMA, "dateTime" );
+
+  public static final QName Q_STRING = new QName( NS.XSD_SCHEMA, "string" );
+
+  public static final QName Q_INTEGER = new QName( NS.XSD_SCHEMA, "integer" );
+
+  public static final QName Q_DECIMAL = new QName( NS.XSD_SCHEMA, "decimal" );
+
+  public static final QName Q_DOUBLE = new QName( NS.XSD_SCHEMA, "double" );
+
+  public static final QName Q_BOOLEAN = new QName( NS.XSD_SCHEMA, "boolean" );
+
+  public static final QName Q_TYPE = new QName( NS_WSPMPROF, "type" );
 
   public static final String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
 
