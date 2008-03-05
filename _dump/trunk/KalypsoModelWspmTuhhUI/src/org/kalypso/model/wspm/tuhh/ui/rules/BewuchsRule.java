@@ -121,9 +121,9 @@ public class BewuchsRule extends AbstractValidatorRule
         if( profil.getProfileObjects().length == 0 )
         {
           if( VorlandLhasValues && (Double) points[lastIndex].getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "", lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( 0 ) } );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "", lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution(  ) } );
           if( VorlandRhasValues && (Double) rightP.getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "", rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( devider.length - 1 ) } );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "", rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( ) } );
         }
       }
     }

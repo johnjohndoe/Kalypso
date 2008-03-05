@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -57,11 +62,11 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
   final private String m_deviderType;
 
   /**
-   * erzeugt fehlende Trennflï¿½che
+   * erzeugt fehlende Trennfläche
    */
   public AddDeviderResolution( final String deviderType )
   {
-    super( "fehlende Trennflï¿½chen erzeugen", null, null );
+    super( "fehlende Trennflächen erzeugen", null, null );
     m_deviderType = deviderType;
   }
 
@@ -70,19 +75,30 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( final IProfil profil )
+  protected void resolve( final IProfil profil )
   {
-    if( m_deviderType == null )
-      return null;
-    final IProfilChange[] changes = new IProfilChange[2];
-    final IRecord firstP = profil.getPoints()[0];
-    final IRecord lastP = profil.getPoints()[profil.getPoints().length - 1];
+    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
 
-    final IComponent component = ProfilObsHelper.getPropertyFromId( profil, m_deviderType );
-
-    changes[0] = new PointMarkerEdit( new ProfilDevider( component, firstP ), true );
-    changes[1] = new PointMarkerEdit( new ProfilDevider( component, lastP ), true );
-    return changes;
+    final IComponent cTarget = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    if( cTarget == null )
+    {
+      if( profil.getPoints().length > 0 )
+      {
+        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
+        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        profil.setActivePoint( profil.getPoint( 0 ) );
+      }
+    }
+    else
+    {
+      final IProfilPointMarker[] markers = profil.getPointMarkerFor( cTarget );
+      if( markers.length > 0 )
+      {
+        markerProvider.createProfilPointMarker( m_deviderType, markers[0].getPoint() );
+        markerProvider.createProfilPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
+        profil.setActivePoint( markers[0].getPoint() );
+      }
+    }
   }
 
 }

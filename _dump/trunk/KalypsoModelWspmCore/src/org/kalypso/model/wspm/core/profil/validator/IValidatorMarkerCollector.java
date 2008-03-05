@@ -78,5 +78,10 @@ public interface IValidatorMarkerCollector
    */
   public void reset( ) throws CoreException;
 
+  /**
+   * only reset markers of profile with this profilFeatureID
+   */
+  public void reset( final String profilFeatureID ) throws CoreException;
+
   public IMarker[] getMarkers( );
 }

@@ -58,19 +58,19 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 {
   final private int m_deviderIndex;
 
-  final private IComponent m_deviderTyp;
+  final private String m_deviderTyp;
 
   final private int m_pointIndex;
 
   /**
-   * verschieben der Trennflï¿½che auf den Profilpunkt IProfil.getPoints().get(index)
+   * verschieben der Trennfläche auf den Profilpunkt IProfil.getPoints().get(index)
    * 
    * @param deviderTyp,deviderIndex
    *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
-  public MoveDeviderResolution( final int deviderIndex, final IComponent deviderTyp, final int pointIndex )
+  public MoveDeviderResolution( final int deviderIndex, final String deviderTyp, final int pointIndex )
   {
-    super( "verschieben der Trennflï¿½che in den Gï¿½ltigkeitsbereich", null, null );
+    super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
     m_pointIndex = pointIndex;
@@ -81,15 +81,18 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( final IProfil profil )
+  protected void resolve( final IProfil profil )
   {
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( m_deviderTyp );
+    final IComponent comp = profil.hasPointProperty( m_deviderTyp );
+    final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( comp );
     final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
     final IRecord[] points = profil.getPoints();
-    if( marker == null || m_pointIndex < 0 || m_pointIndex >= points.length )
-      return null;
+    if( marker == null || cBreite==null||m_pointIndex < 0 || m_pointIndex >= points.length )
+      return;
     final IRecord point = points[m_pointIndex];
-    return new IProfilChange[] { new PointMarkerSetPoint( marker, point ), new ActiveObjectEdit( profil, point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) };
+    marker.setPoint(point);
+    profil.setActivePoint( point );
   }
 
 }

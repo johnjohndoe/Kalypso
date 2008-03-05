@@ -55,21 +55,19 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
 {
   final private int m_index;
 
-  final private IComponent m_property;
+  final private String m_propertyId;
 
   final private double m_value;
 
   /**
-   * verschieben der Trennflï¿½che auf die Trenner "Durchstrï¿½mter Bereich"
-   * 
    * @param deviderTyp,deviderIndex
    *            devider=IProfil.getDevider(deviderTyp)[deviderIndex]
    */
   public EditPointResolution( final int index, final IComponent property, final double value )
   {
-    super( "ï¿½ndern der Eigenschaft " + property.toString() + " auf einen gï¿½ltigen Wert", null, null );
+    super( "Ändern der Eigenschaft " + property.getName() + " auf einen gültigen Wert", null, null );
     m_index = index;
-    m_property = property;
+    m_propertyId = property.getId();
     m_value = value;
   }
 
@@ -78,14 +76,16 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( final IProfil profil )
+  protected void resolve( final IProfil profil )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
-      return null;
+      return;
     final IRecord point = points[m_index];
     if( point == null )
-      return null;
-    return new IProfilChange[] { new PointPropertyEdit( point, m_property, m_value ), new ActiveObjectEdit( profil, point, m_property ) };
+      return;
+    final int comp = profil.indexOfProperty( m_propertyId );
+    if( comp > -1 )
+      point.setValue( comp, m_value );
   }
 }

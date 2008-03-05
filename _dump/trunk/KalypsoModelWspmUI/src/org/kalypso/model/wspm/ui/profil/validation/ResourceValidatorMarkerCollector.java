@@ -52,6 +52,9 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
 final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
 {
   private final IResource m_resource;
@@ -66,15 +69,17 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
 
   private final IProfil m_profile;
 
-// private final XStream m_xstream;
+  private final XStream m_xstream;
 
-  public ResourceValidatorMarkerCollector( final IResource resource, final String editorID, final IProfil profile )
+  private final String m_profileFeatureID;
+
+  public ResourceValidatorMarkerCollector( final IResource resource, final String editorID, final IProfil profile, String profileID )
   {
     m_resource = resource;
     m_editorID = editorID;
     m_profile = profile;
-
-// m_xstream = new XStream( new DomDriver() );
+    m_profileFeatureID = profileID;
+    m_xstream = new XStream( new DomDriver() );
 
   }
 
@@ -92,17 +97,13 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
       System.out.println( debugMsg );
     }
 
-    // FIXME: does not work any more, as the resolution marker contains a FeatureComposite, so the whole gml will be
-    // serialized here...
-// final String resSerialised = m_xstream.toXML( resolutionMarkers );
-    final String resSerialised = null;// m_xstream.toXML( resolutionMarkers );
+    final String resSerialised = m_xstream.toXML( resolutionMarkers );
 
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
 
-    final String profileID = "unknown";
     final String station = String.format( "%.4f", m_profile.getStation() );
 
-    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, resSerialised, profileID, station };
+    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, resSerialised, m_profileFeatureID, station };
 
     marker.setAttributes( USED_ATTRIBUTES, values );
 
@@ -112,6 +113,24 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
   public void reset( ) throws CoreException
   {
     m_resource.deleteMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
+  }
+
+  
+  public void reset( final String profilFeatureID ) throws CoreException
+  {
+    final IMarker[] markers = m_resource.findMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
+    final ArrayList<IMarker> toDelete = new ArrayList<IMarker>();
+    for( int i = 0; i < markers.length; i++ )
+    {
+      if( markers[i].getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( profilFeatureID ) )
+        toDelete.add( markers[i] );
+    }
+    
+    if( !toDelete.isEmpty() )
+    {
+      for( final IMarker marker : toDelete )
+        marker.delete();
+    }
   }
 
   /**

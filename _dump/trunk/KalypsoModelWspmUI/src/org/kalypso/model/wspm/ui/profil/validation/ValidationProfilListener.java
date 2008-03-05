@@ -69,11 +69,15 @@ public class ValidationProfilListener implements IProfilListener
 
   private final WorkspaceJob m_validateJob;
 
-  public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID )
+   private String m_featureID;
+
+  public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID, final String featureID )
   {
     final String profiletype = profile.getType();
 
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
+
+    m_featureID = featureID;
 
     m_validateJob = new WorkspaceJob( "Profil wird validiert" )
     {
@@ -84,12 +88,12 @@ public class ValidationProfilListener implements IProfilListener
         final boolean validate = preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
         final String excludes = preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
 
-        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID, profile );
+        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID, profile, m_featureID );
 
         try
         {
           // TODO: only reset markers of this profile
-          collector.reset();
+          collector.reset( featureID );
 
           // TODO: use monitor and check for cancel
           final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) );
@@ -119,6 +123,8 @@ public class ValidationProfilListener implements IProfilListener
 
     revalidate();
   }
+
+ 
 
   public void dispose( )
   {

@@ -349,7 +349,8 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
       if( m_profile != null && m_file != null )
       {
-        m_profilValidator = new ValidationProfilListener( m_profile, m_file, m_editorID );
+                 m_profilValidator = new ValidationProfilListener( m_profile, m_file, m_editorID, m_feature.getId() );
+       
         m_profile.addProfilListener( m_profilValidator );
       }
     }

@@ -40,17 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import java.util.List;
-import java.util.ListIterator;
+import java.util.ArrayList;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -59,99 +57,83 @@ import org.kalypso.observation.result.IRecord;
 
 public class AddBewuchsResolution extends AbstractProfilMarkerResolution
 {
-  final private Integer m_deviderIndex;
+
+  public AddBewuchsResolution( )
+  {
+    super( "Bewuchsparameter an der Trennfläche erzeugen", null, null );
+  }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected IProfilChange[] resolve( final IProfil profil )
+  protected void resolve( final IProfil profil )
   {
-    final IRecord[] points = profil.getPoints();
-    if( points.length == 0 )
-      return null;
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    final IComponent CTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( CTrennF );
     if( deviders.length < 2 )
-      return null;
-    IProfilPointMarker devider = null;
-    IRecord point = null;
-    final double[] params = new double[] { 0.0, 0.0, 0.0 };
-    try
-    {
-      devider = deviders[m_deviderIndex];
-    }
-    catch( final ArrayIndexOutOfBoundsException e )
-    {
-      return null;
-    }
-    if( m_deviderIndex == 0 )
-    {
-      final int i = ArrayUtils.indexOf( points, devider.getPoint() );
+      return;
+    final int leftIndex = profil.indexOfPoint( deviders[0].getPoint() );
+    final IComponent cAX = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final IComponent cAY = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final IComponent cDP = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
 
-      final List<IRecord> leftPts = profil.getResult().subList( 0, i );
-      for( final IRecord pt : leftPts )
+    final int iAX = profil.indexOfProperty( cAX );
+    final int iAY = profil.indexOfProperty( cAY );
+    final int iDP = profil.indexOfProperty( cDP );
+
+    if( leftIndex > 0 )
+    {
+      final IRecord point_l = profil.getPoint( leftIndex - 1 );
+      Double AX_l = (Double) point_l.getValue( iAX );
+      Double AY_l = (Double) point_l.getValue( iAY );
+      Double DP_l = (Double) point_l.getValue( iDP );
+      for( int i = leftIndex - 1; i >= 0; i-- )
       {
-        point = pt;
-        try
+        if( AX_l * AY_l * DP_l != 0.0 )
         {
-          final Double ax = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-          final Double ay = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-          final Double dp = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
-          if( ax != 0.0 )
-            params[0] = ax;
-          if( ay != 0.0 )
-            params[1] = ay;
-          if( dp != 0.0 )
-            params[2] = dp;
+          profil.setActivePoint( point_l);
+          break;
         }
-        catch( final Exception e )
-        {
-          point = null;
-        }
+        final IRecord point = profil.getPoint( i );
+        final Double AX = (Double) point.getValue( iAX );
+        final Double AY = (Double) point.getValue( iAY );
+        final Double DP = (Double) point.getValue( iDP );
+        if( AX_l == 0.0 & AX != 0.0 )
+          point_l.setValue( iAX, AX );
+        if( AY_l == 0.0 & AY != 0.0 )
+          point_l.setValue( iAY, AY );
+        if( DP_l == 0.0 & DP != 0.0 )
+          point_l.setValue( iDP, DP );
       }
     }
-    if( m_deviderIndex > 0 )
+    final int rightIndex = profil.indexOfPoint( deviders[0].getPoint() );
+    if( rightIndex < profil.getPoints().length )
     {
-      point = devider.getPoint();
-      final int i = ArrayUtils.indexOf( points, point );
-      final ListIterator<IRecord> rightPts = profil.getResult().listIterator( i );
-      for( IRecord pt; rightPts.hasNext(); )
+      final IRecord point_r = profil.getPoint( rightIndex );
+      Double AX_r = (Double) point_r.getValue( iAX );
+      Double AY_r = (Double) point_r.getValue( iAY );
+      Double DP_r = (Double) point_r.getValue( iDP );
+      for( int i = rightIndex; i < profil.getPoints().length; i++ )
       {
-        pt = rightPts.next();
-        try
+        if( AX_r * AY_r * DP_r != 0.0 )
         {
-          final double ax = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-          final double ay = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-          final double dp = (Double) pt.getValue( ProfilObsHelper.getPropertyFromId( pt, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
-          if( params[0] == 0.0 )
-            params[0] = ax;
-          if( params[1] == 0.0 )
-            params[1] = ay;
-          if( params[2] == 0.0 )
-            params[2] = dp;
+          profil.setActivePoint( point_r);
+          break;
         }
-        catch( final Exception e )
-        {
-          point = null;
-        }
+        final IRecord point = profil.getPoint( i );
+        final Double AX = (Double) point.getValue( iAX );
+        final Double AY = (Double) point.getValue( iAY );
+        final Double DP = (Double) point.getValue( iDP );
+        if( AX_r == 0.0 & AX != 0.0 )
+          point_r.setValue( iAX, AX );
+        if( AY_r == 0.0 & AY != 0.0 )
+          point_r.setValue( iAY, AY );
+        if( DP_r == 0.0 & DP != 0.0 )
+          point_r.setValue( iDP, DP );
       }
     }
-    if( point == null )
-      return null;
-    if( params[0] * params[1] * params[2] == 0.0 )
-      return null;
-    final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ), params[0] );
-    changes[1] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ), params[1] );
-    changes[2] = new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ), params[2] );
-    return changes;
-  }
 
-  public AddBewuchsResolution( final Integer deviderIndex )
-  {
-    super( "Bewuchsparameter an der Trennflï¿½che erzeugen", null, null );
-    m_deviderIndex = deviderIndex;
   }
-
 }
