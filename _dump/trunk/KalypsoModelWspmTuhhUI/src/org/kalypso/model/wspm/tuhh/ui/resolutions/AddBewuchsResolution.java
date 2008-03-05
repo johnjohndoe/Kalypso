@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import java.util.ArrayList;
-
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -68,12 +64,12 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected void resolve( final IProfil profil )
+  protected boolean resolve( final IProfil profil )
   {
     final IComponent CTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( CTrennF );
     if( deviders.length < 2 )
-      return;
+      return false;
     final int leftIndex = profil.indexOfPoint( deviders[0].getPoint() );
     final IComponent cAX = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
     final IComponent cAY = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
@@ -93,7 +89,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
       {
         if( AX_l * AY_l * DP_l != 0.0 )
         {
-          profil.setActivePoint( point_l);
+          profil.setActivePoint( point_l );
           break;
         }
         final IRecord point = profil.getPoint( i );
@@ -108,7 +104,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
           point_l.setValue( iDP, DP );
       }
     }
-    final int rightIndex = profil.indexOfPoint( deviders[0].getPoint() );
+    final int rightIndex = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
     if( rightIndex < profil.getPoints().length )
     {
       final IRecord point_r = profil.getPoint( rightIndex );
@@ -119,7 +115,7 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
       {
         if( AX_r * AY_r * DP_r != 0.0 )
         {
-          profil.setActivePoint( point_r);
+          profil.setActivePoint( point_r );
           break;
         }
         final IRecord point = profil.getPoint( i );
@@ -134,6 +130,6 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
           point_r.setValue( iDP, DP );
       }
     }
-
+    return true;
   }
 }

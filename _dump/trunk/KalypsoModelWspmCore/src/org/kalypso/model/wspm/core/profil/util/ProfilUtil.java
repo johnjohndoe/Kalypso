@@ -70,11 +70,14 @@ public class ProfilUtil
   {
     final IRecord[] points = profil.getPoints();
     final Double[] values = new Double[points.length];
+    final int iProp = profil.indexOfProperty( pointProperty );
+    if( iProp < 0 )
+      return values;
     int i = 0;
 
     for( final IRecord point : points )
     {
-      values[i] = (Double) point.getValue( pointProperty );
+      values[i] = (Double) point.getValue( iProp );
       i++;
     }
     return values;

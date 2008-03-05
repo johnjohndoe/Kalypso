@@ -87,7 +87,10 @@ public class RauheitRule extends AbstractValidatorRule
     {
       try
       {
-        final double rh = (Double) point.getValue( index );
+        final Object oValue = point.getValue( index );
+        if( oValue == null )
+          return;
+        final double rh = (Double) oValue;
         if( rh <= 0.0 )
         {
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Rauheitswert [" + rh + "]", "", profil.indexOfPoint( point ), pointProp.getId(), pluginId, null );

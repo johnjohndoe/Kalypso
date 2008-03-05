@@ -40,15 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -70,18 +63,18 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected void resolve( final IProfil profil )
+  protected boolean resolve( final IProfil profil )
   {
     final IComponent cTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( cTrennF == null )
-      return;
+      return false;
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( cTrennF );
     if( deviders.length < 2 )
-      return;
+      return false;
     final int l = profil.indexOfPoint( deviders[0].getPoint() );
     final int r = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
     if( l >= r )
-      return;
+      return false;
     final int iAX = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
     final int iAY = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
     final int iDP = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
@@ -92,6 +85,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
       point.setValue( iAY, 0.0 );
       point.setValue( iDP, 0.0 );
     }
+    return true;
   }
 
 }

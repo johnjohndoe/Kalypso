@@ -42,11 +42,7 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -81,7 +77,7 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected void resolve( final IProfil profil )
+  protected boolean resolve( final IProfil profil )
   {
     final IComponent comp = profil.hasPointProperty( m_deviderTyp );
     final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -89,10 +85,11 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
     final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
     final IRecord[] points = profil.getPoints();
     if( marker == null || cBreite==null||m_pointIndex < 0 || m_pointIndex >= points.length )
-      return;
+      return false;
     final IRecord point = points[m_pointIndex];
     marker.setPoint(point);
     profil.setActivePoint( point );
+    return true;
   }
 
 }

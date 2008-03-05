@@ -73,8 +73,18 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
       final IProfil profil = ProfileFeatureFactory.toProfile( feature );
       if( profil != null )
       {
-        resolve( profil );
+        final boolean resolved = resolve( profil );
         ProfileFeatureFactory.toFeature( profil, feature );
+        if( resolved )
+          try
+          {
+            marker.delete();
+          }
+          catch( CoreException e )
+          {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
       }
     }
   }
@@ -144,5 +154,5 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
     return m_image;
   }
 
-  protected abstract void resolve( final IProfil profil );
+  protected abstract boolean resolve( final IProfil profil );
 }

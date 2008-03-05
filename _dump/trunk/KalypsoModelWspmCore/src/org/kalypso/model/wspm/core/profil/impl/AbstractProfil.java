@@ -505,9 +505,17 @@ public abstract class AbstractProfil implements IProfil
    */
   public boolean removePointProperty( final IComponent pointProperty )
   {
-    final int index = getResult().indexOfComponent( pointProperty );
+    try
+    {
+      final int index = getResult().indexOfComponent( pointProperty );
 
-    return getResult().removeComponent( index );
+      return getResult().removeComponent( index );
+    }
+    catch( ArrayIndexOutOfBoundsException e )
+    {
+       e.printStackTrace();
+       return false;
+    }
   }
 
   /**

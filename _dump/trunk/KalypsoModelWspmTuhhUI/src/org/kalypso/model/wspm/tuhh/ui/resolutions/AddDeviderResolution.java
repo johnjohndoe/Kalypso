@@ -42,16 +42,10 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -75,7 +69,7 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected void resolve( final IProfil profil )
+  protected boolean resolve( final IProfil profil )
   {
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
 
@@ -98,7 +92,14 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
         markerProvider.createProfilPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
         profil.setActivePoint( markers[0].getPoint() );
       }
+      else
+      {
+        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
+        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        profil.setActivePoint( profil.getPoint( 0 ) );
+      }
     }
+    return true;
   }
 
 }

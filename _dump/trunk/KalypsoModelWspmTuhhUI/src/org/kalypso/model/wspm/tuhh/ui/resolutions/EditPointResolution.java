@@ -41,9 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -76,16 +73,20 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
    *      org.eclipse.core.resources.IMarker)
    */
   @Override
-  protected void resolve( final IProfil profil )
+  protected boolean resolve( final IProfil profil )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
-      return;
+      return false;
     final IRecord point = points[m_index];
     if( point == null )
-      return;
+      return false;
     final int comp = profil.indexOfProperty( m_propertyId );
     if( comp > -1 )
+    {
       point.setValue( comp, m_value );
+      return true;
+    }
+    return false;
   }
 }
