@@ -1,4 +1,4 @@
-!Last change:  WP   19 Feb 2008   10:01 am
+!Last change:  WP   29 Feb 2008    9:10 am
 !Last change:  WP    7 Feb 2008    3:42 pm
 SUBROUTINE WTFORM(Q, NCTR, HOW, HUW)
 USE CSVAR
@@ -108,9 +108,21 @@ if (UseEnergyCstrc == 0) then
 !energy slope with partly linear equations
 ELSEIF (UseEnergyCstrc == 1) then
 
-  !TODO
+  !very special case
+  if (huw == how) then
+    Q = 0.0
+    return
+  end if
 
-  if (how <= huw) then
+  !TODO
+  !testing
+  !if (huw > how) then
+  !  WRITE(*,*) 'Unterwasser höher Oberwasser'
+  !  pause
+  !end if
+  !testing-
+
+  if (how < huw) then
     QFact = -1.0
     huw_tmp = huw
     huw = how
@@ -132,9 +144,11 @@ ELSEIF (UseEnergyCstrc == 1) then
   do i = 1, noOfOutQs
     Pos = findPolynom (cstrcRange (nctr, i, :), huw, noOfOutQs)
     !testing
-    !WRITE(*,*) huw, (cstrcRange(nctr, i, j), j=1, noOfOutQs)
-    !WRITE(*,*) Pos
-    !pause
+    !if (huw > how) then
+    !  WRITE(*,*) huw, (cstrcRange(nctr, i, j), j=1, noOfOutQs)
+    !  WRITE(*,*) Pos
+    !  pause
+    !endif
     !testing-
     if (Pos > noOfOutQs) then
       findLast: do j = 1, noOfOutQs
@@ -178,16 +192,32 @@ ELSEIF (UseEnergyCstrc == 1) then
   !WRITE(*,*) huw, how, pos
   !pause
   !testing-
+
   if (pos == 1) then
     HUPP = valuesOnLine (pos)
     HLOW = HOW
-    Q = cstrcdisch (nctr, pos) *  HOW / valuesOnLine (pos)
+    Q = cstrcdisch (nctr, pos) *  (HOW - huw) / (valuesOnLine (pos) - huw)
+
+    !testing
+    !WRITE(*,*) 'pos: ', pos, 'nctr: ', nctr
+    !WRITE(*,*) 'HUP: ', HUPP, 'HLOW: ', hlow
+    !WRITE(*,*) 'how: ', how
+    !WRITE(*,*) 'huw: ', huw
+    !WRITE(*,*) 'dis: ', cstrcdisch (nctr, pos)
+    !WRITE(*,*) 'res: ', Q
+    !pause
+    !testing-
+
+
+  !extrapolation at very high upstream water levels
   ELSEIF (pos > noOfOutQs) then
     HUPP = valuesOnLine (pos - 1)
     HLOW = valuesOnLine (pos - 2)
     A(1) = (cstrcdisch (nctr, pos - 1) - cstrcdisch (nctr, pos - 2)) / (valuesOnLine (pos - 1) - valuesOnLine (pos - 2))
     A(0) = cstrcdisch (nctr, pos - 1) - A(1) * valuesOnLine (pos - 1)
     Q = CalcPolynomial2 (A, how)
+
+  !normal interpolation between functions
   else
     HUPP = valuesOnLine (pos)
     HLOW = valuesOnLine (pos - 1)
@@ -205,14 +235,20 @@ ELSEIF (UseEnergyCstrc == 1) then
 
   end if
 
-  !WRITE(*,*) huw, how
-  !WRITE(*,*) hlow, hupp
-  !WRITE(*,*) Q
-  !pause
+  !set direction of Q
+  Q = Q * Qfact
 
+  !testing
+  !if (qfact < 0.0) then
+  !  WRITE(*,*) huw, how
+  !  WRITE(*,*) hlow, hupp
+  !  WRITE(*,*) Q
+  !  pause
+  !end if
+  !testing-
 
   !turn the values back!
-  if (qfact < 0) then
+  if (qfact < 0.0) then
     huw_tmp = huw
     huw = how
     how = huw_tmp
