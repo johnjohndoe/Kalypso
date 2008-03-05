@@ -75,7 +75,7 @@ public class MarkerIndex
         {
 
         }
-        else
+        else if (pointPos < profil.getResult().size())
         {
           final IRecord record = profil.getResult().get( pointPos );
           if( !m_recordIndex.containsKey( record ) )

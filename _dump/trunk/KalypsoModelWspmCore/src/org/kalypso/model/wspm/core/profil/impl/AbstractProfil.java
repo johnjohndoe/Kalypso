@@ -302,6 +302,7 @@ public abstract class AbstractProfil implements IProfil
    */
   public IRecord getPoint( final int index )
   {
+    
     return getResult().get( index );
   }
 
