@@ -292,7 +292,7 @@ public class TaskExecutor implements ITaskExecutor
   /**
    * @see de.renew.workflow.connector.worklist.ITaskExecutor#addTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
    */
-  public void addTaskChangeListener( ITaskExecutionListener listener )
+  public void addTaskExecutionListener( ITaskExecutionListener listener )
   {
     m_taskChangeListeners.add( listener );
   }
@@ -300,7 +300,7 @@ public class TaskExecutor implements ITaskExecutor
   /**
    * @see de.renew.workflow.connector.worklist.ITaskExecutor#removeTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
    */
-  public void removeTaskChangeListener( ITaskExecutionListener listener )
+  public void removeTaskExecutionListener( ITaskExecutionListener listener )
   {
     m_taskChangeListeners.remove( listener );
   }

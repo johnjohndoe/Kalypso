@@ -106,8 +106,17 @@ public class ScenarioHelper
   public static IFolder getScenarioFolder( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
+    if( workbench == null )
+      return null;
+
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
+    if( handlerService == null )
+      return null;
+
     final IEvaluationContext context = handlerService.getCurrentState();
+    if( context == null )
+      return null;
+
     return (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
   }
 

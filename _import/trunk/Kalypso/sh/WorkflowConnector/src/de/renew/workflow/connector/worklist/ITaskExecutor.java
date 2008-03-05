@@ -70,7 +70,7 @@ public interface ITaskExecutor
    * @param listener
    *            The listener, which should be added.
    */
-  public void addTaskChangeListener( ITaskExecutionListener listener );
+  public void addTaskExecutionListener( ITaskExecutionListener listener );
 
   /**
    * This function removes a task change listener. If it is not registerd, nothing will happen.
@@ -78,5 +78,5 @@ public interface ITaskExecutor
    * @param listener
    *            The listener, which should be removed.
    */
-  public void removeTaskChangeListener( ITaskExecutionListener listener );
+  public void removeTaskExecutionListener( ITaskExecutionListener listener );
 }
