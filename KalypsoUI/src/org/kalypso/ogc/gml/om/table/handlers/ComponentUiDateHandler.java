@@ -109,9 +109,10 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
 
       final Calendar instance = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
       instance.setTime( date );
+
       final String displayFormat = getDisplayFormat();
 
-      return String.format( displayFormat, instance );
+      return String.format( displayFormat, instance, instance, instance );
     }
 
     return "<No Date>";
