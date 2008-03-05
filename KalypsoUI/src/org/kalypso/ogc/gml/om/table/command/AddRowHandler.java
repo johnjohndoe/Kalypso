@@ -65,13 +65,14 @@ public class AddRowHandler extends AbstractHandler
   {
     final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
-    if( tupleResult == null || viewer == null )
+    if(  viewer == null )
       throw new ExecutionException( "No tuple result viewer available" );
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
     final Object target = selection.getFirstElement();
-    final int index = tupleResult.indexOf( target );
-    final IRecord next = index < tupleResult.size() - 2 ? tupleResult.get( index + 1 ) : null;
+    final int index = tupleResult == null ? -1 : tupleResult.indexOf( target );
+    final int size = tupleResult == null ? 0 : tupleResult.size();
+    final IRecord next = index < size - 2 ? tupleResult.get( index + 1 ) : null;
     final IRecord row = tupleResult.createRecord();
     for( final IComponent component : tupleResult.getComponents() )
     {
