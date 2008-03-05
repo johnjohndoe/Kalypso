@@ -59,7 +59,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
 
   private CaseHandlingProjectNature m_currentProjectNature;
 
-  private final List<IActiveContextChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveContextChangeListener<T>>();
+  private final List<IActiveScenarioChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener<T>>();
 
   private final String m_natureID;
 
@@ -185,12 +185,12 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
     return m_caseManager.getCurrentCase();
   }
 
-  public void addActiveContextChangeListener( final IActiveContextChangeListener<T> l )
+  public void addActiveContextChangeListener( final IActiveScenarioChangeListener<T> l )
   {
     m_activeContextChangeListeners.add( l );
   }
 
-  public void removeActiveContextChangeListener( final IActiveContextChangeListener<T> l )
+  public void removeActiveContextChangeListener( final IActiveScenarioChangeListener<T> l )
   {
     m_activeContextChangeListeners.remove( l );
   }
@@ -198,9 +198,9 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
   protected void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final T caze )
   {
     // Convert to array to avoid concurrent modification exceptions
-    final IActiveContextChangeListener<T>[] listeners = m_activeContextChangeListeners.toArray( new IActiveContextChangeListener[m_activeContextChangeListeners.size()] );
-    for( final IActiveContextChangeListener<T> l : listeners )
-      l.activeContextChanged( newProject, caze );
+    final IActiveScenarioChangeListener<T>[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
+    for( final IActiveScenarioChangeListener<T> l : listeners )
+      l.activeScenarioChanged( newProject, caze );
   }
 
   public void setCurrentCase( final T caze ) throws CoreException

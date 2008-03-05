@@ -32,9 +32,9 @@ import de.renew.workflow.WorkflowManager;
 import de.renew.workflow.WorkflowManagerImpl;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.context.IActiveContextChangeListener;
+import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
-public class WorkflowConnector implements IWorkflowConnector, IActiveContextChangeListener<Case>
+public class WorkflowConnector implements IWorkflowConnector, IActiveScenarioChangeListener<Case>
 {
   private static final String SERVICE_NAME = "de.renew.workflow.WorkflowManager"; //$NON-NLS-1$
 
@@ -469,7 +469,7 @@ public class WorkflowConnector implements IWorkflowConnector, IActiveContextChan
    * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.context.CaseHandlingProjectNature,
    *      de.renew.workflow.cases.Case)
    */
-  public void activeContextChanged( final CaseHandlingProjectNature newProject, final Case caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final Case caze )
   {
     m_activeCase = caze;
   }

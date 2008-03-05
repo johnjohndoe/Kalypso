@@ -21,7 +21,7 @@ import de.renew.workflow.base.Workflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.IActiveContextChangeListener;
+import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
 /**
  * @author Patrice Congo, Stefan Kurzbach
@@ -43,14 +43,14 @@ public class WorkflowView extends ViewPart
 
   protected ActiveWorkContext<Scenario> m_activeWorkContext;
 
-  private final IActiveContextChangeListener<Scenario> m_contextListener = new IActiveContextChangeListener<Scenario>()
+  private final IActiveScenarioChangeListener<Scenario> m_contextListener = new IActiveScenarioChangeListener<Scenario>()
   {
     /**
      * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
      */
-    public void activeContextChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
+    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
     {
-      handleContextChanged( newProject, scenario );
+      handleScenarioChanged( newProject, scenario );
     }
   };
 
@@ -61,10 +61,10 @@ public class WorkflowView extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_workflowControl.createControl( parent );
-    handleContextChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
+    handleScenarioChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  protected void handleContextChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
   {
     PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
     {

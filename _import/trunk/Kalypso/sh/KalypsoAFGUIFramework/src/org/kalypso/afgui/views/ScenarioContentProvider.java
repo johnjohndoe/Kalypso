@@ -22,12 +22,12 @@ import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.ICaseManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.IActiveContextChangeListener;
+import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<Scenario>, IActiveContextChangeListener<Scenario>
+public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<Scenario>, IActiveScenarioChangeListener<Scenario>
 {
   private Viewer m_viewer;
 
@@ -184,7 +184,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
    * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.cases.CaseHandlingProjectNature,
    *      de.renew.workflow.cases.Case)
    */
-  public void activeContextChanged( final CaseHandlingProjectNature newProject, final Scenario caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario caze )
   {
     refreshViewer( null );
   }

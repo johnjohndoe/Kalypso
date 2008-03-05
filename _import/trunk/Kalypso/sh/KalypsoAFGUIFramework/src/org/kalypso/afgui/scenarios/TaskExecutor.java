@@ -63,6 +63,7 @@ import de.renew.workflow.base.EActivityType;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
+import de.renew.workflow.connector.worklist.ITaskExecutionListener;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.ContextType;
@@ -85,12 +86,15 @@ public class TaskExecutor implements ITaskExecutor
 
   private final IContextHandlerFactory m_contextHandlerFactory;
 
+  private ArrayList<ITaskExecutionListener> m_taskChangeListeners;
+
   public TaskExecutor( final IContextHandlerFactory contextHandlerFactory, final ITaskExecutionAuthority authority, final ICommandService commandService, final IHandlerService handlerService )
   {
     m_contextHandlerFactory = contextHandlerFactory;
     m_authority = authority;
     m_commandService = commandService;
     m_handlerService = handlerService;
+    m_taskChangeListeners = new ArrayList<ITaskExecutionListener>();
   }
 
   public Task getActiveTask( )
@@ -110,6 +114,10 @@ public class TaskExecutor implements ITaskExecutor
       partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
       final IWorkbench workbench = PlatformUI.getWorkbench();
       PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
+
+      /* Tell the listeners, that the task was stopped. */
+      fireTaskStopped( m_activeTask );
+
       m_activeTask = null;
     }
     // if the active task is null it must have been stopped
@@ -169,6 +177,10 @@ public class TaskExecutor implements ITaskExecutor
     }
 
     m_activeTask = task;
+
+    /* Tell the listeners, that the task was executed. */
+    fireTaskExecuted( statusList, task );
+
     return StatusUtilities.createStatus( statusList, "Beim Ausführen der Aktivität sind Fehler aufgetreten." );
   }
 
@@ -275,5 +287,53 @@ public class TaskExecutor implements ITaskExecutor
       command.define( commandId, null, category );
     }
     return command;
+  }
+
+  /**
+   * @see de.renew.workflow.connector.worklist.ITaskExecutor#addTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
+   */
+  public void addTaskChangeListener( ITaskExecutionListener listener )
+  {
+    m_taskChangeListeners.add( listener );
+  }
+
+  /**
+   * @see de.renew.workflow.connector.worklist.ITaskExecutor#removeTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
+   */
+  public void removeTaskChangeListener( ITaskExecutionListener listener )
+  {
+    m_taskChangeListeners.remove( listener );
+  }
+
+  /**
+   * This function notifies all registered listeners.
+   * 
+   * @param results
+   *            The results of the task, which was activated, as well of all of its associated tasks.
+   * @param task
+   *            The final task, that was activated.
+   */
+  private void fireTaskExecuted( List<IStatus> results, Task task )
+  {
+    for( int i = 0; i < m_taskChangeListeners.size(); i++ )
+    {
+      ITaskExecutionListener listener = m_taskChangeListeners.get( i );
+      listener.handleTaskExecuted( results, task );
+    }
+  }
+
+  /**
+   * This function notifies all registered listeners.
+   * 
+   * @param task
+   *            The final task, that was activated.
+   */
+  private void fireTaskStopped( Task task )
+  {
+    for( int i = 0; i < m_taskChangeListeners.size(); i++ )
+    {
+      ITaskExecutionListener listener = m_taskChangeListeners.get( i );
+      listener.handleTaskStopped( task );
+    }
   }
 }

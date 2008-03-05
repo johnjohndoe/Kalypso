@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,47 +36,39 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.worklist;
+
+import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 
 import de.renew.workflow.base.Task;
 
 /**
- * @author Stefan Kurzbach
+ * This listener will be notified, if a new task (a context from the workflow.xml) has been activated. <br>
+ * It should only be notified, after the last task (last parent) was activated.
+ * 
+ * @author Holger Albert
  */
-public interface ITaskExecutor
+public interface ITaskExecutionListener
 {
   /**
-   * Called when a task needs to be executed
-   */
-  public IStatus execute( final Task task );
-
-  /**
-   * Returns the active task or <code>null</code> if there is no active task.
-   */
-  public Task getActiveTask( );
-
-  /**
-   * Stops the active task if any. Returns true if the task could be stopped or there was no active task.
-   */
-  public boolean stopActiveTask( );
-
-  /**
-   * This function adds a task change listener.
+   * This function is called, after a task was activated.
    * 
-   * @param listener
-   *            The listener, which should be added.
+   * @param results
+   *            The results of the task, which was activated, as well of all of its associated tasks.
+   * @param task
+   *            The task, which was activated.
    */
-  public void addTaskChangeListener( ITaskExecutionListener listener );
+  public void handleTaskExecuted( List<IStatus> results, Task task );
 
   /**
-   * This function removes a task change listener. If it is not registerd, nothing will happen.
+   * This function is called, after a task was stopped.
    * 
-   * @param listener
-   *            The listener, which should be removed.
+   * @param task
+   *            The task, which was stopped.
    */
-  public void removeTaskChangeListener( ITaskExecutionListener listener );
+  public void handleTaskStopped( Task task );
 }

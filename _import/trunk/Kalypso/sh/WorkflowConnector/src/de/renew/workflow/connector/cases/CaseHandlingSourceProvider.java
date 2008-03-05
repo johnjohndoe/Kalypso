@@ -11,7 +11,7 @@ import org.eclipse.ui.AbstractSourceProvider;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.IActiveContextChangeListener;
+import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class CaseHandlingSourceProvider<T extends Case, D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
@@ -34,10 +34,10 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
   /** data provider for the current szenario */
   private final ICaseDataProvider<D> m_dataProvider;
 
-  private final IActiveContextChangeListener<T> workContextChangeListener = new IActiveContextChangeListener<T>()
+  private final IActiveScenarioChangeListener<T> workContextChangeListener = new IActiveScenarioChangeListener<T>()
   {
     @SuppressWarnings("synthetic-access")
-    public void activeContextChanged( final CaseHandlingProjectNature newProject, T scenario )
+    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, T scenario )
     {
       m_dataProvider.setCurrent( getSzenarioFolder() );
 
