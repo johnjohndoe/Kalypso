@@ -141,14 +141,14 @@ public class PageEditTimeSeriesObservation extends WizardPage
 
       IComponentUiHandler handler;
       if( DATE_AXIS.equals( qname ) )
-        handler = new ComponentUiDateHandler( i, true, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
+        handler = new ComponentUiDateHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%tF %tH:%tM", "%s", "" );
       else
-        handler = new ComponentUiStringHandler( i, true, true, true, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
+        handler = new ComponentUiStringHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
 
       provider.add( i, handler );
     }
     // obsTable
-    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, provider, true, false );
+    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, provider, false, false );
 
     final Control tblControl = control.createControl( container, SWT.BORDER );
     tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
