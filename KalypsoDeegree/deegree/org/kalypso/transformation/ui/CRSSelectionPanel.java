@@ -53,6 +53,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -108,6 +109,7 @@ public class CRSSelectionPanel
       m_viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       m_viewer.setContentProvider( new ArrayContentProvider() );
       m_viewer.setLabelProvider( new CRSLabelProvider() );
+      m_viewer.setSorter( new ViewerSorter() );
 
       /* Get all coordinate system names. */
       List<String> names = CRSHelper.getAllNames();
