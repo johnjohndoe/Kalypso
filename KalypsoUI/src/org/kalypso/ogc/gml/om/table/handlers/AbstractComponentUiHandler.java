@@ -107,12 +107,19 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
    */
   public String getStringRepresentation( final IRecord record )
   {
-    final Object value = record.getValue( m_component );
 
-    if( value == null )
+    try
+    {
+      final Object value = record.getValue( m_component );
+      if( value == null )
+        return String.format( m_nullFormat );
+      return String.format( m_displayFormat, value );
+    }
+    catch( IndexOutOfBoundsException e )
+    {
+     
       return String.format( m_nullFormat );
-
-    return String.format( m_displayFormat, value );
+    }
   }
 
   /**
