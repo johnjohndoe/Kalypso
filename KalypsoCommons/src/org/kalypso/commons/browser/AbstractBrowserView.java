@@ -348,23 +348,23 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
       try
       {
         changeContext( new URL( url ) );
+
+        runnable = new Runnable()
+        {
+
+          public void run( )
+          {
+            m_viewer.setURL( url );
+            if( m_viewer.combo != null )
+              m_viewer.combo.setText( url );
+            m_viewer.forward();
+          }
+        };
       }
       catch( MalformedURLException e )
       {
         // nothing
       }
-
-      runnable = new Runnable()
-      {
-
-        public void run( )
-        {
-          m_viewer.setURL( url );
-          if( m_viewer.combo != null )
-            m_viewer.combo.setText( url );
-          m_viewer.forward();
-        }
-      };
     }
 
     if( runnable == null )
