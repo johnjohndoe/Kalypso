@@ -316,7 +316,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
         final int iBreite = getProfil().indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
         final int iHoehe = getProfil().indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
         final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( editing ).getX() );
-        if( destinationPoint.getValue( iDevider ) == cDevider.getDefaultValue() )
+
+        final Object destinationValue = destinationPoint.getValue( iDevider );
+        System.out.println( destinationValue );
+        System.out.println( "Default: " + cDevider.getDefaultValue() );
+
+        if( destinationValue == null || destinationValue.equals( cDevider.getDefaultValue() ) )
         {
           final Point destP = logical2screen( new Point2D.Double( (Double) destinationPoint.getValue( iBreite ), (Double) destinationPoint.getValue( iHoehe ) ) );
           gc.drawRectangle( destP.x - 5, top - 5, 10, bottom - top + 10 );

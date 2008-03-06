@@ -25,8 +25,8 @@
    <swe:representation>
     <swe:Boolean>
      <swe:restriction>
-      <xst:enumeration value="true"/>
       <xst:enumeration value="false"/>
+      <xst:enumeration value="true"/>
      </swe:restriction>
     </swe:Boolean>
    </swe:representation>
@@ -45,8 +45,8 @@
    <swe:representation>
     <swe:Boolean>
      <swe:restriction>
-      <xst:enumeration value="true"/>
       <xst:enumeration value="false"/>
+      <xst:enumeration value="true"/>
      </swe:restriction>
     </swe:Boolean>
    </swe:representation>

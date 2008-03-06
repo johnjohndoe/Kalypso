@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.model.wspm.tuhh.ui,
  org.kalypso.model.wspm.tuhh.ui.chart,
+ org.kalypso.model.wspm.tuhh.ui.resolutions,
  org.kalypso.model.wspm.tuhh.ui.rules
 Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.tuhh.core,

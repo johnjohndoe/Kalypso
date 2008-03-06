@@ -121,6 +121,8 @@ public class ImportProfileWizard extends Wizard implements IWizard
 
           List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile, separator, PROFIL_TYPE_PASCHE );
 
+// new AddDeviderResolution
+
           monitor.worked( 1 );
 
           /* Convert Trippel Data */
