@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -106,11 +105,8 @@ public abstract class AbstractComponent implements IComponent
         return false;
 
       final IComponent comp = (IComponent) obj;
-      final EqualsBuilder builder = new EqualsBuilder();
 
-      fillEqualsBuilder( comp, builder );
-
-      return builder.isEquals();
+      return this.getId().equals( comp.getId() );
     }
     else
     {
@@ -119,15 +115,6 @@ public abstract class AbstractComponent implements IComponent
 
       return getId().equals( other.getId() );
     }
-  }
-
-  protected void fillEqualsBuilder( final IComponent comp, final EqualsBuilder builder )
-  {
-    builder.append( comp.getId(), getId() );
-    builder.append( comp.getDefaultValue(), getDefaultValue() );
-    builder.append( comp.getDescription(), getDescription() );
-    builder.append( comp.getName(), getName() );
-    builder.append( comp.getValueTypeName(), getValueTypeName() );
   }
 
   protected void fillHashCodeBuilder( final HashCodeBuilder builder )
