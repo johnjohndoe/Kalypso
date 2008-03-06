@@ -40,14 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om;
 
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.gmlschema.swe.RepresentationType;
 import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
 import org.kalypso.observation.phenomenon.FeaturePhenomenon;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.AbstractComponent;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -71,6 +76,15 @@ public class FeatureComponent extends AbstractComponent
    */
   public Object getDefaultValue( )
   {
+    // HACK: in case of enums, we use the first value. Maybe we could add a annotation for that
+    final IRestriction[] restrictions = getRestrictions();
+    if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
+    {
+      final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
+      if( items.size() > 0 )
+        return items.keySet().iterator().next();
+    }
+
     // REMARK: The ItemDefinition has no notion of default value, so for now we always return null.
     // TODO: Maybe we can define a meaningful policy what to return as a default value (for example: first value of an
     // enumeration)

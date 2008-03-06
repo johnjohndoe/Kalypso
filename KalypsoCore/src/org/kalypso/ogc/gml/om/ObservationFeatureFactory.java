@@ -275,6 +275,16 @@ public class ObservationFeatureFactory implements IAdapterFactory
       return compHandler.getTypeHandler();
 
     final QName valueTypeName = component.getValueTypeName();
+
+    // REMARK: special case for boolean values, as their string represantation is not always
+    // 'true' or 'false'
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "boolean" ) ) )
+    {
+      // TODO: we need to return a special type handler, that serializes according to the enumeration restriction
+      // of the component
+      // At the moment we still have the old behaviour: we read/write only 'false' and 'true'
+    }
+
     final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
     if( handler instanceof XsdBaseTypeHandler )
       return (XsdBaseTypeHandler< ? >) handler;
