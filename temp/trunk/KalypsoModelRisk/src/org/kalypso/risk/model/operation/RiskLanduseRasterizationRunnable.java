@@ -28,7 +28,7 @@ public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWith
 
   private final IFolder m_scenarioFolder;
 
-  public RiskLanduseRasterizationRunnable( final IVectorDataModel vectorDataModel, final IRasterDataModel rasterModel, final IFolder scenarioFolder )
+  public RiskLanduseRasterizationRunnable( final IRasterDataModel rasterModel, final IVectorDataModel vectorDataModel, final IFolder scenarioFolder )
   {
     m_vectorDataModel = vectorDataModel;
     m_rasterModel = rasterModel;

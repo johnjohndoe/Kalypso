@@ -131,7 +131,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
       final GMLWorkspace workspace = scenarioDataProvider.getCommandableWorkSpace( IRasterDataModel.class );
       final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class );
 
-      final ICoreRunnableWithProgress importWaterdepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, workspace, scenarioFolder );
+      final ICoreRunnableWithProgress importWaterdepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, scenarioFolder );
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importWaterdepthRunnable );
       ErrorDialog.openError( getShell(), "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );

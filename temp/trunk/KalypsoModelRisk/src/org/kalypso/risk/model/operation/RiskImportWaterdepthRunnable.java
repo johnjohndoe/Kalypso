@@ -33,7 +33,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
  */
 public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProgress
 {
-  private final GMLWorkspace m_workspace;
 
   private final IFolder m_scenarioFolder;
 
@@ -41,11 +40,10 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
 
   private final IRasterDataModel m_rasterDataModel;
 
-  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, GMLWorkspace workspace, IFolder scenarioFolder )
+  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, IFolder scenarioFolder )
   {
     m_rasterDataModel = rasterDataModel;
     m_rasterInfos = rasterInfos;
-    m_workspace = workspace;
     m_scenarioFolder = scenarioFolder;
   }
 
@@ -55,6 +53,8 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
     try
     {
       monitor.subTask( Messages.getString( "ImportWaterdepthWizard.7" ) ); //$NON-NLS-1$
+
+      final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
 
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = m_rasterDataModel.getWaterlevelCoverageCollection();
       for( final AsciiRasterInfo asciiRasterInfo : m_rasterInfos )
@@ -86,9 +86,9 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
         annualCoverageCollection.setName( "HQ " + asciiRasterInfo.getReturnPeriod() );
         annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
-        final IFeatureType rgcFeatureType = m_workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
+        final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
         final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
-        final Feature coverageFeature = m_workspace.createFeature( annualCoverageCollection.getFeature(), parentRelation, rgcFeatureType );
+        final Feature coverageFeature = workspace.createFeature( annualCoverageCollection.getFeature(), parentRelation, rgcFeatureType );
         final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
         annualCoverageCollection.add( coverage );
         coverage.setRangeSet( rangeSet );

@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.actions.dataImport.landuse;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +49,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -69,7 +66,9 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.risk.model.operation.RiskImportLanduseRunnable;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.risk.model.operation.RiskImportDBLanduseRunnable;
+import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -79,7 +78,6 @@ import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.xml.sax.SAXException;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -188,6 +186,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
+  @SuppressWarnings("unchecked")
   @Override
   public boolean performFinish( )
   {
@@ -210,7 +209,34 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       final IVectorDataModel vectorDataModel = szenarioDataProvider.getModel( IVectorDataModel.class );
       final IRasterizationControlModel controlModel = szenarioDataProvider.getModel( IRasterizationControlModel.class );
 
-      ICoreRunnableWithProgress importLanduseRunnable = new RiskImportLanduseRunnable( controlModel, vectorDataModel, coordinateSystem, m_scenarioFolder, selectedDatabaseOption, assetValuesCollectionName, landuseProperty, damageFunctionsCollectionName, sourceShapeFilePath, externalProjectName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
+      final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
+
+      final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+      final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+
+      ICoreRunnableWithProgress importLanduseRunnable = null;
+
+      /* implement the importing of the existing database or predefined values */
+      switch( selectedDatabaseOption )
+      {
+        case DB_CREATE_NEW:
+          break;
+
+        case DB_IMPORT:
+          importLanduseRunnable = new RiskImportDBLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, scenarioFolder, landuseProperty, externalProjectName, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
+          break;
+
+        case DB_USE_PREDEFINED:
+          importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, scenarioFolder, landuseProperty, assetValuesCollectionName, damageFunctionsCollectionName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
+
+          break;
+
+        default:
+          break;
+      }
+
+      if( importLanduseRunnable == null )
+        return false;
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importLanduseRunnable );
       ErrorDialog.openError( getShell(), "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );
@@ -238,22 +264,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       SLDHelper.exportRasterSymbolyzerSLD( rasterSldFile, landuseClassesList, "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     }
-    catch( CoreException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( IOException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( SAXException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    catch( InvocationTargetException e )
+    catch( Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

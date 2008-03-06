@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -107,7 +109,8 @@ public class RiskModelHelper
   }
 
   /**
-   * Creates the annual damage coverage collection
+   * Creates the specific damage coverage collection. <br>
+   * The damage value for each grid cell is taken from the underlying polygon.
    * 
    * @param scenarioFolder
    *            scenario folder
@@ -120,7 +123,7 @@ public class RiskModelHelper
    * @return {@link CoverageCollection} with the annual damage values
    * @throws Exception
    */
-  public static IAnnualCoverageCollection createAnnualDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection ) throws Exception
+  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection ) throws Exception
   {
     final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
 
@@ -134,6 +137,8 @@ public class RiskModelHelper
       {
         /**
          * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
+         * 
+         * gets the damage value for each grid cell from the underlying polygon.
          */
         @Override
         public double getValue( int x, int y ) throws GeoGridException
@@ -173,19 +178,20 @@ public class RiskModelHelper
       };
 
       /* add the new coverage to the collection */
-      final String outputFilePath = "raster/output/specificDamage_HQ" + sourceCoverageCollection.getReturnPeriod() + "_part" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final String outputFilePath = "raster/output/specificDamage_HQ" + sourceCoverageCollection.getReturnPeriod() + "_part" + i + ".bin";
 
-      final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
+      final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
       final File file = new File( ifile.getRawLocation().toPortableString() );
 
-      final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
+      final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
 
-      newCoverage.setName( Messages.getString( "DamagePotentialCalculationHandler.14" ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      newCoverage.setName( Messages.getString( "DamagePotentialCalculationHandler.14" ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" );
       // TODO: check for right time zone?
-      newCoverage.setDescription( Messages.getString( "DamagePotentialCalculationHandler.17" ) + new Date().toString() ); //$NON-NLS-1$
+      newCoverage.setDescription( Messages.getString( "DamagePotentialCalculationHandler.17" ) + new Date().toString() );
 
       inputGrid.dispose();
     }
+    /* set the return period of the specific damage grid */
     destCoverageCollection.setReturnPeriod( sourceCoverageCollection.getReturnPeriod() );
     return destCoverageCollection;
   }
@@ -194,9 +200,9 @@ public class RiskModelHelper
    * creates a map layer for the grid collection
    * 
    * @param parentKalypsoTheme
-   *            theme in which we add the new theme layer
+   *            {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
-   *            coverage collection that will be added
+   *            {@link IAnnualCoverageCollection} that will be added
    * @param scenarioFolder
    * @throws Exception
    */
@@ -255,7 +261,7 @@ public class RiskModelHelper
   }
 
   /**
-   * calculates the damage potential value for one raster cell <br>
+   * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
    * 
    * @param damages
@@ -278,7 +284,7 @@ public class RiskModelHelper
   }
 
   /**
-   * creates the landuse raster files
+   * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
    * 
    * @param scenarioFolder
    *            relative path needed for the output file path to append on
@@ -304,6 +310,8 @@ public class RiskModelHelper
         {
           /**
            * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
+           * 
+           * gets the ordinal number of the landuse class
            */
           @Override
           public double getValue( int x, int y ) throws GeoGridException
@@ -351,7 +359,7 @@ public class RiskModelHelper
    * 
    * @param waterDepthCoverageCollection
    *            raster collection
-   * @return
+   * @return {@link IAnnualCoverageCollection} with greatest return period value
    */
   public static IAnnualCoverageCollection getMaxReturnPeriodCollection( IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection )
   {
@@ -487,4 +495,12 @@ public class RiskModelHelper
     parentKalypsoTheme.addLayer( layer );
   }
 
+  public static int guessReturnPeriodFromName( final String name )
+  {
+    final Pattern pattern = Pattern.compile( "([^0-9]*)([0-9]+)([^0-9]*)" ); //$NON-NLS-1$
+    final Matcher matcher = pattern.matcher( name );
+    if( matcher.matches() )
+      return Integer.parseInt( matcher.group( 2 ) );
+    return 0;
+  }
 }

@@ -70,7 +70,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
       if( dialog.open() != 0 )
         return null;
 
-      final ICoreRunnableWithProgress runnableWithProgress = new RiskLanduseRasterizationRunnable( vectorDataModel, rasterModel, scenarioFolder );
+      final ICoreRunnableWithProgress runnableWithProgress = new RiskLanduseRasterizationRunnable( rasterModel, vectorDataModel, scenarioFolder );
 
       IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
       ErrorDialog.openError( shell, "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );

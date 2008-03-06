@@ -36,7 +36,11 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public int getLanduseClassOrdinalNumber( );
 
-  public double getDamageValue( final double waterLevel );
+  /**
+   * calculates the damage value:<br>
+   * <code>asset value * damage function( depth )[%] </code>
+   */
+  public double getDamageValue( final double waterDepth );
 
   public boolean contains( final GM_Position position );
 

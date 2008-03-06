@@ -1,6 +1,7 @@
 package org.kalypso.risk.model.schema.binding;
 
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
+import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -12,16 +13,6 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   private double m_statisticsAverageAnnualDamage = 0.0;
 
-  private String m_styleType = null;
-
-  private Integer m_landuseClassOrdinalNumber = null;
-
-  private ParseFunction m_damageFunction = null;
-
-  private Double m_assetValue = null;
-
-  private final Boolean m_isUrbanLanduseType;
-
   //
   // private double m_riskBorderLowMiddle = Double.NaN;
   //
@@ -30,47 +21,25 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public LandusePolygon( final Feature featureToBind )
   {
     super( featureToBind, QNAME );
-    // TODO: NO! This is not robust against changes of this feature during runtime. Get all those values only on demand
-    final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
-    m_styleType = (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_";
 
-    final Object isUrbanTypeProperty = getFeature().getProperty( ILandusePolygon.PROPERTY_ISURBANTYPE );
-    if( isUrbanTypeProperty instanceof Boolean )
-      m_isUrbanLanduseType = (Boolean) isUrbanTypeProperty;
-    else
-      m_isUrbanLanduseType = null;
-    m_landuseClassOrdinalNumber = (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
-
-    final Object damageFunctionProp = getFeature().getProperty( ILandusePolygon.PROPERTY_DAMAGE_FUNCTION );
-    if( damageFunctionProp != null && damageFunctionProp != "" )
-    {
-      final Object assetValueProp = getFeature().getProperty( ILandusePolygon.PROPERTY_ASSET_VALUE );
-      if( assetValueProp != null )
-      {
-        m_damageFunction = new ParseFunction( damageFunctionProp.toString() );
-        if( !m_damageFunction.parse() )
-          throw new IllegalArgumentException( "Damage function not parsable: " + damageFunctionProp.toString() );
-        m_assetValue = ((Double) assetValueProp).doubleValue();
-        // try
-        // {
-        // if( m_isUrbanLanduseType != null )
-        // if( m_isUrbanLanduseType )
-        // {
-        // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
-        // m_riskBorderMiddleHigh = 0.08 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
-        // }
-        // else
-        // {
-        // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
-        // m_riskBorderMiddleHigh = 0.03 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
-        // }
-        // }
-        // catch( Exception e )
-        // {
-        // e.printStackTrace();
-        // }
-      }
-    }
+    // try
+    // {
+    // if( m_isUrbanLanduseType != null )
+    // if( m_isUrbanLanduseType )
+    // {
+    // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
+    // m_riskBorderMiddleHigh = 0.08 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
+    // }
+    // else
+    // {
+    // m_riskBorderLowMiddle = 0.01 * m_assetValue * m_damageFunction.getResult( 2.0 ) / 100.0;
+    // m_riskBorderMiddleHigh = 0.03 * m_assetValue * m_damageFunction.getResult( 1.0 ) / 100.0;
+    // }
+    // }
+    // catch( Exception e )
+    // {
+    // e.printStackTrace();
+    // }
   }
 
   public void setGeometry( GM_Surface< ? > surface )
@@ -85,7 +54,8 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public String getStyleType( )
   {
-    return m_styleType;
+    final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
+    return (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_";
   }
 
   public void setLanduseClass( final Feature landuseClassFeature )
@@ -95,12 +65,16 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public int getLanduseClassOrdinalNumber( )
   {
-    return m_landuseClassOrdinalNumber;
+    return (Integer) getFeature().getProperty( ILandusePolygon.PROPERTY_ORDNUMBER );
   }
 
   public Boolean isUrbanLanduseType( )
   {
-    return m_isUrbanLanduseType;
+    final Object isUrbanTypeProperty = getFeature().getProperty( ILandusePolygon.PROPERTY_ISURBANTYPE );
+    if( isUrbanTypeProperty instanceof Boolean )
+      return (Boolean) isUrbanTypeProperty;
+    else
+      return null;
   }
 
   public boolean contains( final GM_Position position )
@@ -110,11 +84,23 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
   public double getDamageValue( double depth )
   {
-    if( m_damageFunction == null || m_assetValue == null )
+    final ParseFunction damageFunction = getDamageFunction();
+    final Double assetValue = getAssetValue();
+
+    if( damageFunction == null || assetValue == null )
       return Double.NaN;
+
     try
     {
-      return m_assetValue * m_damageFunction.getResult( depth ) / 100.0;
+      // the returned calculated damage value must not be greater than the input asset value!
+      // So, the value of the damage function must be less than 1, because there can be no greater damage than the
+      // specified asset value!
+      final double damagefunctionValue = damageFunction.getResult( depth ) / 100;
+
+      if( damagefunctionValue > 1 )
+        KalypsoRiskDebug.OPERATION.printf( "%s", "WARNING: damage value > asset value!\n" );
+
+      return assetValue * damagefunctionValue;
     }
     catch( Exception e )
     {
@@ -144,6 +130,44 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public double getStatisticsAverageAnnualDamage( )
   {
     return m_statisticsAverageAnnualDamage;
+  }
+
+  private Object getDamageFunctionProp( )
+  {
+    return getFeature().getProperty( ILandusePolygon.PROPERTY_DAMAGE_FUNCTION );
+  }
+
+  private Object getAssetValueProp( )
+  {
+    return getFeature().getProperty( ILandusePolygon.PROPERTY_ASSET_VALUE );
+  }
+
+  private ParseFunction getDamageFunction( )
+  {
+    final Object damageFunctionProp = getDamageFunctionProp();
+
+    if( damageFunctionProp != null && getDamageFunctionProp() != "" )
+    {
+      final ParseFunction damageFunction = new ParseFunction( damageFunctionProp.toString() );
+
+      // check if function is parsable
+      if( !damageFunction.parse() )
+        throw new IllegalArgumentException( "Damage function not parsable: " + getDamageFunctionProp().toString() );
+      else
+        return damageFunction;
+    }
+    else
+      return null;
+  }
+
+  private Double getAssetValue( )
+  {
+    final Object assetValueProp = getAssetValueProp();
+
+    if( assetValueProp != null )
+      return ((Double) assetValueProp).doubleValue();
+    else
+      return null;
   }
 
 }

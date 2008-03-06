@@ -53,17 +53,20 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
     monitor.beginTask( Messages.getString( "DamagePotentialCalculationHandler.9" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
     {
+      /* clear existing data */
       specificDamageCoverageCollection.clear();
+
+      /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : m_rasterDataModel.getWaterlevelCoverageCollection() )
       {
         monitor.subTask( Messages.getString( "DamagePotentialCalculationHandler.10" ) + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
 
         /* create annual damage coverage collection */
-        final IAnnualCoverageCollection dstAnnualCoverages = RiskModelHelper.createAnnualDamageCoverages( m_scenarioFolder, polygonCollection, srcAnnualCoverages, specificDamageCoverageCollection );
+        final IAnnualCoverageCollection dstSpecificDamageCoverages = RiskModelHelper.createSpecificDamageCoverages( m_scenarioFolder, polygonCollection, srcAnnualCoverages, specificDamageCoverageCollection );
 
         /* fireModellEvent to redraw a map */
         final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();
-        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, specificDamageCoverageCollection.getFeature(), new Feature[] { dstAnnualCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+        workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, specificDamageCoverageCollection.getFeature(), new Feature[] { dstSpecificDamageCoverages.getFeature() }, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
       }
 
       return Status.OK_STATUS;

@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.test;
 
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
@@ -51,22 +55,48 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.risk.model.operation.RiskImportLanduseRunnable;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
+import org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable;
+import org.kalypso.risk.model.operation.RiskCalcSpecificDamageRunnable;
+import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
+import org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable;
 import org.kalypso.risk.model.operation.RiskLanduseRasterizationRunnable;
+import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
+ * JUnit Test Case for the Kalypso Risk Model.<br>
+ * This test extracts demo input data (landuse shape and waterdepth grids) from resources and converts them into risk
+ * data format. <br>
+ * This test only checks, if the input raster will be converted, but will not save the altered gml files.<br>
+ * 
+ * As a next step, the test uses a pre-defined set of risk-gmls in order to create the output raster data for:
+ * <li>specific damage
+ * <li>risk zones <br>
+ * by using the converted input data (see above).
+ * 
+ * <br>
+ * <br>
  * Run this test as plug-in test.
  * 
  * @author Thomas Jung
@@ -74,6 +104,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class TestRiskModel extends TestCase
 {
+  private static final QName PROP_LANDUSE_COLORS_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "landuseClassesDefaultColorsCollection" ); //$NON-NLS-1$
+
+  private static final QName PROP_DAMAGE_FUNCTION_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "damageFunctionsCollection" ); //$NON-NLS-1$
+
+  private static final QName PROP_ASSET_VALUES_CLASSES_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "assetValueClassesCollection" ); //$NON-NLS-1$
+
+  @SuppressWarnings( { "unchecked", "restriction" })
   public void testRiskModel( ) throws MalformedURLException, Exception
   {
     // unzip test project into workspace
@@ -81,52 +118,141 @@ public class TestRiskModel extends TestCase
     IProject project = workspace.getRoot().getProject( "RiskTest" );
     project.create( new NullProgressMonitor() );
 
+    final Display display = Display.getDefault();
+    final Shell shell = new Shell( display );
+
     final URL zipLocation = getClass().getResource( "resources/testProject.zip" );
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run risk model
     final IFolder folder = project.getFolder( "testScenario" );
+    final IFolder importDataFolder = project.getFolder( "Kelling_Stadt" );
 
-    final IFile riskFile = folder.getFile( new Path( "models/risk.gml" ) );
-    GMLWorkspace riskWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskFile ), null );
-    riskWorkspace.getRootFeature().getAdapter( IModel.class );
+    // load models
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade VectorDataModel.gml...\n" );
+    final IFile riskVectorFile = folder.getFile( new Path( "models/VectorDataModel.gml" ) );
+    final GMLWorkspace riskVectorWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskVectorFile ), null );
 
-    KalypsoRiskDebug.OPERATION.printf( "%.4f", 0, 12345 );
-    // TODO: start operation on scenario folder
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade RasterizationControlModel.gml...\n" );
+    final IFile riskControlFile = folder.getFile( new Path( "models/RasterizationControlModel.gml" ) );
+    final GMLWorkspace riskControlWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskControlFile ), null );
 
-    final IVectorDataModel vectorDataModel = (IVectorDataModel) riskWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
-    final IRasterDataModel rasterDataModel = (IRasterDataModel) riskWorkspace.getRootFeature().getAdapter( IRasterDataModel.class );
-    final IRasterizationControlModel rasterControlDataModel = (IRasterizationControlModel) riskWorkspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade RasterDataModel.gml...\n" );
+    final IFile riskRasterFile = folder.getFile( new Path( "models/RasterDataModel.gml" ) );
+    final GMLWorkspace riskRasterWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskRasterFile ), null );
 
-    final int selectDatabaseOption = 2; // 0: new database, 1: from other project, 2: import from template
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Modelle geladen...\n\n" );
 
-    String landUseProperty = "LANDUSE"; // name of the shape file field that represents the landuse classes
-    String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template
-    String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template
+    final IVectorDataModel vectorDataModel = (IVectorDataModel) riskVectorWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
+    final IRasterDataModel rasterDataModel = (IRasterDataModel) riskRasterWorkspace.getRootFeature().getAdapter( IRasterDataModel.class );
+    final IRasterizationControlModel rasterControlDataModel = (IRasterizationControlModel) riskControlWorkspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
 
+    /* LANDUSE SHAPE */
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade Landnutzungs Shape...\n" );
+    final IFile shapeFile = importDataFolder.getFile( new Path( "Landuse/landuse" ) );
+
+    final String sourceShapeFilePath = shapeFile.getLocation().toFile().toString();
     final String crs = "EPSG:31467"; // the coordinate system of the shape file
-    String sourceShapeFilePath = null; // path to the landuse shapefile
 
-    String externalProjectName = ""; // name of the external project from which the database will be taken
-    // (selectDatabaseOption = 1)
+    final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, crs );
+    final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+    final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+
+    // name of the shape file field that represents the landuse classes
+    final String landUseProperty = "LANDUSE";
 
     /* pre-definitions from template */
-    List<Feature> predefinedAssetValueClassesCollection = null;
-    List<Feature> predefinedDamageValueClassesCollection = null;
-    List<Feature> predefinedLanduseColorsCollection = null;
+    final IFile predefDataFile = folder.getFile( new Path( "models/PredefinedDataset.gml" ) );
+    final GMLWorkspace predefinedDataWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( predefDataFile ), null );
+
+    final List<Feature> predefinedLanduseColorsCollection = (FeatureList) predefinedDataWorkspace.getRootFeature().getProperty( PROP_LANDUSE_COLORS_COLLECTION );
+    final List<Feature> predefinedDamageFunctionsCollection = (FeatureList) predefinedDataWorkspace.getRootFeature().getProperty( PROP_DAMAGE_FUNCTION_COLLECTION );
+    final List<Feature> predefinedAssetValueClassesCollection = (FeatureList) predefinedDataWorkspace.getRootFeature().getProperty( PROP_ASSET_VALUES_CLASSES_COLLECTION );
+
+    final String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template
+    final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template
 
     final boolean wrongLandUseselectedStatus = false; // status of landuse selection
 
-    /* IMPORT DATA */
-    RiskImportLanduseRunnable importLanduseRunnable = new RiskImportLanduseRunnable( rasterControlDataModel, vectorDataModel, crs, folder, selectDatabaseOption, assetValuesCollectionName, landUseProperty, damageFunctionsCollectionName, sourceShapeFilePath, externalProjectName, predefinedAssetValueClassesCollection, predefinedDamageValueClassesCollection, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
+    /* IMPORT PREDEFINED DATA */
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Konvertiere Landnutzung in GML...\n" );
 
-    /* raster landuse classes */
+    final ICoreRunnableWithProgress importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, folder, landUseProperty, assetValuesCollectionName, damageFunctionsCollectionName, predefinedAssetValueClassesCollection, predefinedDamageFunctionsCollection, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importLanduseRunnable );
+
+    /* IMPORT WATERDEPTH */
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Importiere Fliesstiefenraster...\n" );
+
+    // get the file locations as string
+    final IFile rasterFile2 = importDataFolder.getFile( new Path( "Waterdepth/wsp_hq2.asc" ) );
+    final IFile rasterFile5 = importDataFolder.getFile( new Path( "Waterdepth/wsp_hq5.asc" ) );
+    final IFile rasterFile10 = importDataFolder.getFile( new Path( "Waterdepth/wsp_hq10.asc" ) );
+    final IFile rasterFile20 = importDataFolder.getFile( new Path( "Waterdepth/wsp_hq20.asc" ) );
+    final IFile rasterFile50 = importDataFolder.getFile( new Path( "Waterdepth/wsp_hq50.asc" ) );
+    final IFile rasterFile100 = importDataFolder.getFile( new Path( "Waterdepth/wsp_hq100.asc" ) );
+
+    final String raster2 = rasterFile2.getLocation().toFile().toString();
+    final String raster5 = rasterFile5.getLocation().toFile().toString();
+    final String raster10 = rasterFile10.getLocation().toFile().toString();
+    final String raster20 = rasterFile20.getLocation().toFile().toString();
+    final String raster50 = rasterFile50.getLocation().toFile().toString();
+    final String raster100 = rasterFile100.getLocation().toFile().toString();
+
+    final String[] fileNames = new String[] { raster2, raster5, raster10, raster20, raster50, raster100 };
+
+    // create raster infos, in which the return period is set
+    final List<AsciiRasterInfo> rasterInfos = new ArrayList<AsciiRasterInfo>();
+    for( final String rasterFile : fileNames )
+    {
+      final AsciiRasterInfo rasterInfo = new AsciiRasterInfo( rasterFile );
+      // guess the return period from file name or set it by hand...
+      rasterInfo.setReturnPeriod( RiskModelHelper.guessReturnPeriodFromName( rasterFile ) );
+      rasterInfos.add( rasterInfo );
+    }
+
+    // import the data into the IRasterDataModel
+    final ICoreRunnableWithProgress importDepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, folder );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importDepthRunnable );
+
+    saveGml( riskVectorFile, riskVectorWorkspace );
+    saveGml( riskVectorFile, riskVectorWorkspace );
+    saveGml( riskVectorFile, riskVectorWorkspace );
+
+    /* RASTER LANDUSE CLASSES */
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Landnutzungsraster...\n" );
+
     final IFolder outputFolder = folder;
+    final ICoreRunnableWithProgress landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel, vectorDataModel, outputFolder );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, landuseRasterRunnable );
 
-    RiskLanduseRasterizationRunnable landuseRasterRunnable = new RiskLanduseRasterizationRunnable( vectorDataModel, rasterDataModel, outputFolder );
+    /* CREATE SPECIFIC DAMAGE */
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge spezifischen Schaden je Fliesstiefe...\n" );
+    final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterDataModel, vectorDataModel, folder );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
+
+    /* CREATE RSIK ZONES */
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Risikozonen...\n" );
+    final ICoreRunnableWithProgress calcRiskZonesRunnable = new RiskCalcRiskZonesRunnable( rasterDataModel, vectorDataModel, rasterControlDataModel, folder );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, calcRiskZonesRunnable );
+
+    // TODO: generate ascii grid
 
     // check results?
     // TODO?
-
   }
+
+  private void saveGml( final IFile file, final GMLWorkspace workspace ) throws CoreException
+  {
+    final SetContentHelper helper = new SetContentHelper( "Projekt Eigenschaften werden geschrieben" )
+    {
+      @Override
+      protected void write( final OutputStreamWriter writer ) throws Throwable
+      {
+        GmlSerializer.serializeWorkspace( writer, workspace, writer.getEncoding() );
+      }
+    };
+
+    helper.setFileContents( file, false, false, new NullProgressMonitor() );
+  }
+
 }

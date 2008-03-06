@@ -178,7 +178,7 @@ public final class RiskImportLanduseRunnable implements ICoreRunnableWithProgres
           break;
 
         case DB_USE_PREDEFINED:
-          handleUserDefinedData( m_damageFunctionsCollectionName, m_assetValuesCollectionName, m_controlModel, administrationUnits, m_predefinedDamageFunctionsCollection, m_predefinedAssetValueClassesCollection );
+          handleUsePreDefinedData( m_damageFunctionsCollectionName, m_assetValuesCollectionName, m_controlModel, administrationUnits, m_predefinedDamageFunctionsCollection, m_predefinedAssetValueClassesCollection );
 
           break;
 
@@ -217,7 +217,7 @@ public final class RiskImportLanduseRunnable implements ICoreRunnableWithProgres
   }
 
   @SuppressWarnings("unchecked")
-  private void handleUserDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<IAdministrationUnit> administrationUnits, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedAssetValueClassesCollection )
+  private void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<IAdministrationUnit> administrationUnits, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedAssetValueClassesCollection )
   {
     for( final Feature feature : predefinedDamageFunctionsCollection )
     {

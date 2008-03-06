@@ -3,8 +3,6 @@ package org.kalypso.risk.model.actions.dataImport.waterdepth;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -28,6 +26,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
@@ -39,7 +38,7 @@ public class ImportWaterdepthPage extends WizardPage
 {
   private Table m_tableViewer;
 
-  private List<AsciiRasterInfo> m_rasterInfos;
+  private final List<AsciiRasterInfo> m_rasterInfos;
 
   private Button m_btnAddNew;
 
@@ -189,7 +188,7 @@ public class ImportWaterdepthPage extends WizardPage
           try
           {
             final AsciiRasterInfo rasterInfo = new AsciiRasterInfo( rasterFile );
-            rasterInfo.setReturnPeriod( guessReturnPeriodFromName( rasterFile ) );
+            rasterInfo.setReturnPeriod( RiskModelHelper.guessReturnPeriodFromName( rasterFile ) );
             m_rasterInfos.add( rasterInfo );
             final TableItem tableItem = new TableItem( m_tableViewer, 0 );
             tableItem.setText( rasterInfo.getDisplayDetails() );
@@ -354,15 +353,6 @@ public class ImportWaterdepthPage extends WizardPage
         return false;
     }
     return true;
-  }
-
-  private int guessReturnPeriodFromName( final String name )
-  {
-    final Pattern pattern = Pattern.compile( "([^0-9]*)([0-9]+)([^0-9]*)" ); //$NON-NLS-1$
-    final Matcher matcher = pattern.matcher( name );
-    if( matcher.matches() )
-      return Integer.parseInt( matcher.group( 2 ) );
-    return 0;
   }
 
   public List<AsciiRasterInfo> getRasterInfos( )
