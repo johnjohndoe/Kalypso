@@ -46,18 +46,8 @@
          </class>
       </handler>
       <handler
+            class="org.kalypso.model.flood.handlers.VisualizeGridDataHandler"
             commandId="org.kalypso.model.flood.ManageDTMData">
-         <class
-               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                  value="org.kalypso.gml.ui.map.CoverageManagementWidget">
-            </parameter>
-            <parameter
-                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-                  value="org.kalypso.gml.ui">
-            </parameter>
-         </class>
       </handler>
       <handler
             class="org.kalypso.model.flood.handlers.PolygonEditingHandler"
