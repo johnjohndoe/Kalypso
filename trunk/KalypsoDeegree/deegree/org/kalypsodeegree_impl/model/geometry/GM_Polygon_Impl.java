@@ -319,7 +319,11 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
     super.invalidate();
   }
-  
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#transform(org.deegree.crs.transformations.CRSTransformation,
+   *      java.lang.String)
+   */
   public GM_SurfacePatch transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
@@ -335,7 +339,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     final GM_Position[][] interiors = getInteriorRings();
     if( interiors == null )
       return new GM_Polygon_Impl( m_interpolation, transExRing.getPositions(), null, targetOGCCS );
-    
+
     final GM_Position[][] transInRings = new GM_Position[interiors.length][];
 
     for( int j = 0; j < interiors.length; j++ )
