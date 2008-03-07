@@ -511,7 +511,12 @@ public class ImportWspmWizard extends Wizard implements IWizard
     if( buildingPos != null )
     {
       if( existingRelation == null )
-        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Should not happen: could not create element for non-existing bulding", null ) );
+      {
+        // no existing realtion -> add the new one!
+
+        // throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Should not happen: could not create
+        // element for non-existing bulding", null ) );
+      }
       buildingRelation.setPosition( buildingPos );
     }
 
