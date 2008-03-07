@@ -50,6 +50,7 @@ Export-Package: org.kalypso.model.wspm.sobek.core;
    org.eclipse.jface.viewers,
    org.kalypso.model.wspm.sobek.core.interfaces,
    org.eclipse.swt.widgets",
+ org.kalypso.model.wspm.sobek.core.utils,
  org.kalypso.model.wspm.sobek.core.wizard;
   uses:="org.eclipse.jface.viewers,
    org.kalypsodeegree.model.feature,

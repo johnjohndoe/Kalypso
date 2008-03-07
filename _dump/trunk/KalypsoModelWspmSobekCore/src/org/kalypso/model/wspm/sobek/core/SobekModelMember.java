@@ -535,10 +535,10 @@ public class SobekModelMember implements ISobekModelMember
   /**
    *
    */
-  public void deleteSobekStructs( ) throws Exception
+  public void deleteSbkStructs( ) throws Exception
   {
 
-    final ISbkStructure[] nodes = getSobekStructureTypeNodeMembers();
+    final ISbkStructure[] nodes = getSbkStructureTypeNodeMembers();
     for( final ISbkStructure node : nodes )
       node.delete();
 
@@ -548,7 +548,7 @@ public class SobekModelMember implements ISobekModelMember
   /**
    * returns all nodes that are somehow SbkStructures
    */
-  private ISbkStructure[] getSobekStructureTypeNodeMembers( )
+  private ISbkStructure[] getSbkStructureTypeNodeMembers( )
   {
 
     final INode[] allNodes = getNodeMembers();

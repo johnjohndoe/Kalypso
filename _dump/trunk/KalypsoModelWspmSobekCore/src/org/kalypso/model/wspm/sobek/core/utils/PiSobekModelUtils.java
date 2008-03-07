@@ -301,6 +301,7 @@ public class PiSobekModelUtils
   public Structure createStructureFromSbkStruct( final ObjectFactory factory, final ISbkStructure sbkStruct )
   {
     final Structure piStruct = new Structure();
+//    sbkStruct.getModelMember().getBranchMembers()
     piStruct.setBranchId( sbkStruct.getLinkToBranch().getId() );
     piStruct.setStructureId( sbkStruct.getId() );
     final String name = sbkStruct.getName();

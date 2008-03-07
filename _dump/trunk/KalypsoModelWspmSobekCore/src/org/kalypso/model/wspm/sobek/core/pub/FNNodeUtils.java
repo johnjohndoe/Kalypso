@@ -87,7 +87,7 @@ public class FNNodeUtils
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID ), nodeId );
     values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NAME ), nodeId );
 
-    if( (nodeType != null) && (TYPE.eBoundaryNode.equals( nodeType ) || TYPE.eConnectionNode.equals( nodeType ) || TYPE.eLinkageNode.equals( nodeType )) )
+    if( (nodeType != null) && ((TYPE.eBoundaryNode.equals( nodeType ) || TYPE.eConnectionNode.equals( nodeType ) || TYPE.eLinkageNode.equals( nodeType ))) )
       values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_CONNECTION_TYPE ), nodeType.getTypeOfConnectionNode() );
 
     CommandableWorkspace cw;
@@ -145,6 +145,18 @@ public class FNNodeUtils
       return "rbn_";
     else if( ISobekConstants.QN_NOFDP_WEIR_NODE.equals( qn ) )
       return "wn_";
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR.equals( qn ) )
+      return "sbkW_";
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR.equals( qn ) )
+      return "sbkRW_";
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE.equals( qn ) )
+      return "sbkComp_";
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE.equals( qn ) )
+      return "sbkDB_";
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE.equals( qn ) )
+      return "sbkGen_";
+    else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP.equals( qn ) )
+      return "sbkP_";
     else
       throw new NotImplementedException();
   }

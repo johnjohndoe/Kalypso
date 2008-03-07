@@ -46,6 +46,8 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author thuel2
@@ -72,18 +74,14 @@ public class SbkStructure extends AbstractNode implements ISbkStructure
   public IBranch getLinkToBranch( )
   {
     final Object objBranch = getFeature().getProperty( ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH );
-    final Feature f;
-    if( objBranch instanceof Feature )
-      // this branch should never be reached according to the schema file
-      f = (Feature) objBranch;
-    else
-      f = getFeature().getWorkspace().getFeature( (String) objBranch );
+    final Feature f = FeatureHelper.getFeature( getFeature().getWorkspace(), objBranch );
+    if( f instanceof XLinkedFeature_Impl )
+    {
+      XLinkedFeature_Impl new_name = (XLinkedFeature_Impl) f;
+      return new Branch( getModel(), new_name.getFeature() );
 
-    final IBranch result = new Branch( getModel(), f );
-
-    if( result == null )
-      return null;
-    return result;
+    }
+    return new Branch( getModel(), f );
   }
 
   /**
