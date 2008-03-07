@@ -80,7 +80,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * @version 11.6.2001
  * @author Andreas Poth
  */
-abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
+abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurface, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
@@ -506,5 +506,4 @@ abstract class GM_SurfacePatch_Impl implements GM_GenericSurface, Serializable
   {
     throw new CloneNotSupportedException();
   }
-
 }

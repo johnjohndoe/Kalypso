@@ -71,7 +71,6 @@ import org.deegree.crs.transformations.CRSTransformation;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-
 public interface GM_SurfacePatch extends GM_GenericSurface
 {
   /**

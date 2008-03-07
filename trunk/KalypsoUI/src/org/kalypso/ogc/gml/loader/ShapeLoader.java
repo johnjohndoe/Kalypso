@@ -101,8 +101,7 @@ public class ShapeLoader extends AbstractLoader
       }
       else
       {
-        // TODO: better change to Kalypso default crs
-        sourceSrs = "EPSG:4326";
+        sourceSrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
         shpSource = location;
       }
 
@@ -166,7 +165,6 @@ public class ShapeLoader extends AbstractLoader
       try
       {
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-// workspace.accept( new ResortVisitor(), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       }
       catch( final Throwable e1 )
       {

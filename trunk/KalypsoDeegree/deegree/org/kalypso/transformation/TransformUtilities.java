@@ -44,9 +44,7 @@ import java.util.ArrayList;
 
 import javax.vecmath.Point3d;
 
-import org.deegree.crs.components.Unit;
 import org.deegree.crs.coordinatesystems.CoordinateSystem;
-import org.deegree.crs.projections.ProjectionUtils;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -123,25 +121,9 @@ public class TransformUtilities
 
     Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 
-    double[] din = new double[] { geo.getX(), geo.getY() };
-
-    /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
-    if( sourceCRS.getUnits()[0].equals( Unit.DEGREE ) )
-    {
-      din[0] = ProjectionUtils.normalizeLongitude( Math.toRadians( din[0] ) );
-      din[1] = ProjectionUtils.normalizeLatitude( Math.toRadians( din[1] ) );
-    }
-
     /* Transform. */
-    Point3d coords = new Point3d( din[0], din[1], geo.getZ() );
+    Point3d coords = new Point3d( geo.getX(), geo.getY(), geo.getZ() );
     Point3d newCoords = trans.doTransform( coords );
-
-    /* Back to degree. */
-    if( targetCRS.getUnits()[0].equals( Unit.DEGREE ) )
-    {
-      newCoords.x = Math.toDegrees( newCoords.x );
-      newCoords.y = Math.toDegrees( newCoords.y );
-    }
 
     return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCRS.getDimension() == 3) ? newCoords.z : Double.NaN, targetCRS.getIdentifier() );
   }
@@ -172,17 +154,7 @@ public class TransformUtilities
     Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS.getIdentifier(), targetCRS.getIdentifier() );
 
     Point3d coords = new Point3d( pos.getX(), pos.getY(), pos.getZ() );
-    if( sourceCRS.getUnits()[0].equals( Unit.DEGREE ) )
-      coords = new Point3d( Math.toRadians( pos.getX() ), Math.toRadians( pos.getY() ), pos.getZ() );
-
     Point3d newCoords = trans.doTransform( coords );
-
-    /* Back to degree. */
-    if( targetCRS.getUnits()[0].equals( Unit.DEGREE ) )
-    {
-      newCoords.x = Math.toDegrees( newCoords.x );
-      newCoords.y = Math.toDegrees( newCoords.y );
-    }
 
     return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, newCoords.z );
   }
