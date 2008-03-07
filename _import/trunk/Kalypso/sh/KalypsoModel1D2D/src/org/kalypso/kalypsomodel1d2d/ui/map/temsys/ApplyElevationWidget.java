@@ -63,6 +63,7 @@ import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationMod
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
 import org.kalypso.kalypsosimulationmodel.schema.KalypsoModelSimulationBaseConsts;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -94,10 +95,14 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
 
   private Point m_point;
 
+  private final SelectFeatureWidget m_selDelegateWidget;
+
   public ApplyElevationWidget( )
   {
     super( "Knoten selektieren", "Knoten selektieren", new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) );
     m_toolTipRendererDesc.setTooltip( "Selektieren Sie die Randbedingungen in der Karte.\n    'Del': selektierte Randbed. löschen." );
+
+    m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
   }
 
   /**
@@ -121,6 +126,22 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
       return;
 
     m_dataModel.setMapModell( mapModell );
+
+    IKalypsoTheme[] themes = mapModell.getAllThemes();
+    for( IKalypsoTheme theme : themes )
+    {
+      if( theme instanceof IKalypsoFeatureTheme )
+      {
+        IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final QName qName = ft.getFeatureType().getQName();
+        if( qName.equals( IFE1D2DNode.QNAME ) )
+        {
+          IKalypsoFeatureTheme[] fts = new IKalypsoFeatureTheme[1];
+          fts[0] = ft;
+          m_selDelegateWidget.setThemes( fts );
+        }
+      }
+    }
 
     // find and set Elevation model system
     final IKalypsoFeatureTheme terrainElevationTheme = UtilMap.findEditableTheme( mapModell, KalypsoModelSimulationBaseConsts.SIM_BASE_F_BASE_TERRAIN_ELE_MODEL );
