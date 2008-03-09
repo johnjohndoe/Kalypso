@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 
 /**
  * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.<br> *
@@ -121,6 +120,9 @@ public class StatusComposite extends Composite
 
   protected void detailsButtonPressed( )
   {
+    if( m_status == null )
+      return;
+
     final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, "Details" );
     statusTableDialog.open();
   }
@@ -177,19 +179,19 @@ public class StatusComposite extends Composite
   {
     switch( status.getSeverity() )
     {
-      case IGeoStatus.OK:
+      case IStatus.OK:
         return KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_IMAGE_OK );
 
         // case IGeoStatus.CANCEL:
         // return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INCOMPLETE_TSK );
 
-      case IGeoStatus.ERROR:
+      case IStatus.ERROR:
         return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
 
-      case IGeoStatus.WARNING:
+      case IStatus.WARNING:
         return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
 
-      case IGeoStatus.INFO:
+      case IStatus.INFO:
         return getIDEImage( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
 
       default:
