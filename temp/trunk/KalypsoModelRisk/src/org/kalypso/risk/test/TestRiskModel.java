@@ -114,8 +114,8 @@ public class TestRiskModel extends TestCase
   public void testRiskModel( ) throws MalformedURLException, Exception
   {
     // unzip test project into workspace
-    IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    IProject project = workspace.getRoot().getProject( "RiskTest" );
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IProject project = workspace.getRoot().getProject( "RiskTest" );
     project.create( new NullProgressMonitor() );
 
     final Display display = Display.getDefault();
@@ -215,8 +215,8 @@ public class TestRiskModel extends TestCase
     RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importDepthRunnable );
 
     saveGml( riskVectorFile, riskVectorWorkspace );
-    saveGml( riskVectorFile, riskVectorWorkspace );
-    saveGml( riskVectorFile, riskVectorWorkspace );
+    saveGml( riskControlFile, riskControlWorkspace );
+    saveGml( riskRasterFile, riskRasterWorkspace );
 
     /* RASTER LANDUSE CLASSES */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Landnutzungsraster...\n" );

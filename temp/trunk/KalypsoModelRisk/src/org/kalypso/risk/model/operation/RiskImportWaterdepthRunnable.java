@@ -40,14 +40,14 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
 
   private final IRasterDataModel m_rasterDataModel;
 
-  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, IFolder scenarioFolder )
+  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, final IFolder scenarioFolder )
   {
     m_rasterDataModel = rasterDataModel;
     m_rasterInfos = rasterInfos;
     m_scenarioFolder = scenarioFolder;
   }
 
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportWaterdepthWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
@@ -66,6 +66,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IFile dstRasterIFile = m_scenarioFolder.getFile( dstFileName );
         final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
 
+        // TODO Thomas: nofdpIDSS already have converted all .asc-files to .bin(ary) files
         RiskModelHelper.importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
 
         // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
