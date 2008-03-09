@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:krvdm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel"
+	xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+	<xs:import
+		namespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel" />
+
+	<xs:element name="_Model" type="gml:AbstractFeatureType"
+		substitutionGroup="gml:_Feature" />
+
+	<xs:element name="VectorDataModel" type="krvdm:VectorDataModelType"
+		substitutionGroup="krvdm:_Model" />
+
+	<xs:complexType name="VectorDataModelType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krvdm:landusePolygonCollection"
+						minOccurs="1" maxOccurs="1" />
+					<xs:element ref="krvdm:administrationUnitsPolygonCollection"
+						minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="landusePolygonCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="krvdm:PolygonCollection" minOccurs="0"
+					maxOccurs="1" />
+			</xs:sequence>
+			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="administrationUnitsPolygonCollection">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="krvdm:PolygonCollection" minOccurs="0"
+					maxOccurs="1" />
+			</xs:sequence>
+			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		</xs:complexType>
+	</xs:element>
+	<!-- =================================================================
+		PolygonCollection
+		================================================================== -->
+	<xs:element name="PolygonCollection"
+		type="krvdm:PolygonCollectionType" substitutionGroup="gml:_Feature">
+	</xs:element>
+
+	<xs:complexType name="PolygonCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element ref="krvdm:polygonMember" minOccurs="0"
+						maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="polygonMember"
+		type="krvdm:PolygonMemberPropertyType" />
+
+	<xs:complexType name="PolygonMemberPropertyType">
+		<xs:sequence>
+			<xs:element ref="krvdm:Polygon" minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="Polygon" type="krvdm:PolygonType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+
+	<xs:complexType name="PolygonType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_DamageFunction"
+					kapp:property="krvdm:damageFunction" kapp:isVirtual="true"
+					kapp:valueType="xs:string" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_IsUrbanType"
+					kapp:property="krvdm:isUrbanLanduseType" kapp:isVirtual="true"
+					kapp:valueType="xs:boolean" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.PF_LandusePolygon_AssetValue"
+					kapp:property="krvdm:assetValue" kapp:isVirtual="true"
+					kapp:valueType="xs:double" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.LanduseClsOrdinalNumberPropertyFunction"
+					kapp:property="krvdm:clsOrdinalNumber" />
+				<kapp:functionProperty
+					kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.LanduseStylePropertyFunction"
+					kapp:property="krvdm:sldStyle" />
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="polygonGeometry"
+						type="gml:PolygonPropertyType" />
+					<xs:element ref="krrcm:landuseClassMember" />
+					<xs:element name="sldStyle" type="xs:string" />
+					<xs:element name="clsOrdinalNumber" type="xs:int" />
+					<xs:element name="assetValue" type="xs:double" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>
