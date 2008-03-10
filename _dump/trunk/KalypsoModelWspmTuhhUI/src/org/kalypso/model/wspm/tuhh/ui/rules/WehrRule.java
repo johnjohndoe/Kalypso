@@ -145,7 +145,7 @@ public class WehrRule extends AbstractValidatorRule
       for( final IProfilPointMarker devider : deviders )
       {
         final Object objValue = devider.getValue();
-        if( (objValue == null) || (((Double) objValue).isNaN()) || ((Double) objValue == 0.0) )
+        if( (objValue == null) || !(objValue instanceof Double)||(((Double) objValue).isNaN()) || ((Double) objValue == 0.0) )
         {
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiger Kronenparameter: 0.0", "", profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
           break;

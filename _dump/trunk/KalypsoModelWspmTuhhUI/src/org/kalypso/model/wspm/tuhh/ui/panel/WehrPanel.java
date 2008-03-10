@@ -218,7 +218,10 @@ public class WehrPanel extends AbstractProfilView
       if( dev == null )
         value = 0.0;
       else
-        value = (Double) dev.getValue() == null ? 0.0 : (Double) dev.getValue();
+      {
+        final Object objValue = dev.getValue();
+        value = (objValue == null || !(objValue instanceof Double)) ? 0.0 : (Double) dev.getValue();
+      }
       m_beiwert.setText( Double.toString( value ) );
       m_point.setText( Double.toString( (Double) dev.getPoint().getValue( ProfilObsHelper.getPropertyFromId( dev.getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) ) ) );
     }

@@ -110,23 +110,30 @@ public class TrennerLayer extends AbstractProfilChartLayer
     final IProfilPointMarker activeDevider = (IProfilPointMarker) data;
 
     final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
-    final int index = getProfil().indexOfProperty( activeDevider.getId() );
-
-    final IRecord oldPos = activeDevider.getPoint();
-    if( (oldPos != destinationPoint) && (destinationPoint.getValue( index ) == activeDevider.getId().getDefaultValue()) )
+//    final int index = getProfil().indexOfProperty( activeDevider.getId() );
+//
+//    final IRecord oldPos = activeDevider.getPoint();
+    final IProfilPointMarker[] markers = getProfil().getPointMarkerFor( destinationPoint );
+    for( final IProfilPointMarker marker : markers )
     {
-      final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfil(), true );
-      operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
-
-      final String id = activeDevider.getId().getId() == IWspmTuhhConstants.MARKER_TYP_WEHR ? IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR : null;
-
-      if( id == IWspmTuhhConstants.MARKER_TYP_WEHR )
-        operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, ProfilObsHelper.getPropertyFromId( activeDevider.getPoint(), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
-      else
-        operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, null ) );
-
-      new ProfilOperationJob( operation ).schedule();
+      if( marker.getId().getId().equals( activeDevider.getId().getId() ) )
+      {
+        return;
+      }
     }
+
+    final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfil(), true );
+    operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
+
+    final String id = activeDevider.getId().getId() == IWspmTuhhConstants.MARKER_TYP_WEHR ? IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR : null;
+
+    if( id == IWspmTuhhConstants.MARKER_TYP_WEHR )
+      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, ProfilObsHelper.getPropertyFromId( activeDevider.getPoint(), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
+    else
+      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, null ) );
+
+    new ProfilOperationJob( operation ).schedule();
+
   }
 
   /**

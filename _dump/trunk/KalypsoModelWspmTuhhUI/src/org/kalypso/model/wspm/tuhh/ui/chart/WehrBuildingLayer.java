@@ -140,7 +140,8 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
       final double breite = (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmConstants.POINT_PROPERTY_BREITE ) );
       final Point point = logical2screen( new Point2D.Double( breite, (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
       final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
-      final Double rightValue = (Double) devider.getValue();
+      final Object objValue = devider.getValue();
+      final Double rightValue = (objValue==null||!(objValue instanceof Double) )? Double.NaN :  (Double)objValue;
       if( devRect.contains( mousePoint.x, mousePoint.y ) )
       {
         final String text = String.format( "%s%n%s: %10.4f%n%s: %10.4f", new Object[] { "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ), leftValue,

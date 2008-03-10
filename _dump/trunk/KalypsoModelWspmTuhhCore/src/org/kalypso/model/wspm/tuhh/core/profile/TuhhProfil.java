@@ -167,7 +167,7 @@ public class TuhhProfil extends AbstractProfil
     if( id.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) && value.equals( Boolean.FALSE ) )
       return null;
 
-    if( id.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) && ((Double) value).isNaN() )
+    if( id.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) && (value instanceof Double) && ((Double) value).isNaN() )
       return null;
 
     return new ProfilDevider( component, record );

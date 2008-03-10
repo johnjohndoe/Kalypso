@@ -83,7 +83,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * @author gernot
+ * @author kimwerner
  */
 public class TrennerPanel extends AbstractProfilView
 {
@@ -355,11 +355,11 @@ public class TrennerPanel extends AbstractProfilView
       if( (!m_fzl_text.isDisposed()) && (fz_devs.length > 0) )
         m_fzl_text.setText( String.format( "%.4f", fz_devs[0].getPoint().getValue( ProfilObsHelper.getPropertyFromId( fz_devs[0].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
       else
-        m_fzl_text.setText( "unbekant" );
+        m_fzl_text.setText( "unbekannt" );
       if( !m_fzr_text.isDisposed() && (fz_devs.length > 1) )
         m_fzr_text.setText( String.format( "%.4f", fz_devs[1].getPoint().getValue( ProfilObsHelper.getPropertyFromId( fz_devs[1].getPoint(), IWspmTuhhConstants.POINT_PROPERTY_BREITE ) ) ) );
       else
-        m_fzr_text.setText( "unbekant" );
+        m_fzr_text.setText( "unbekannt" );
       if( !m_fzl_combo.isDisposed() && (fz_devs.length > 0) )
       {
         final Boolean valueFor = (Boolean) fz_devs[0].getIntepretedValue();
