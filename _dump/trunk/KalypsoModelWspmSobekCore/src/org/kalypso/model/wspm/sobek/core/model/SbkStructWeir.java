@@ -130,7 +130,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
    */
   public void setLinkToBranch( IBranch branch ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature(  getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, "#" + branch.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, "hydraulModel.gml#" + branch.getFeature().getId() );
   }
 
 }

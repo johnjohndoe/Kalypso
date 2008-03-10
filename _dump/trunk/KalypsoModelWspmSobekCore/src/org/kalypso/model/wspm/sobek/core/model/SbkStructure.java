@@ -77,9 +77,8 @@ public class SbkStructure extends AbstractNode implements ISbkStructure
     final Feature f = FeatureHelper.getFeature( getFeature().getWorkspace(), objBranch );
     if( f instanceof XLinkedFeature_Impl )
     {
-      XLinkedFeature_Impl new_name = (XLinkedFeature_Impl) f;
+      final XLinkedFeature_Impl new_name = (XLinkedFeature_Impl) f;
       return new Branch( getModel(), new_name.getFeature() );
-
     }
     return new Branch( getModel(), f );
   }
