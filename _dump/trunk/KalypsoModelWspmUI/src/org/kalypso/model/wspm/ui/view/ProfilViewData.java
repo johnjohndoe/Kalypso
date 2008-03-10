@@ -79,7 +79,7 @@ public class ProfilViewData
 
   protected boolean m_editvert = true;
 
-  private final List<IComponent> m_invisibleMarker = new ArrayList<IComponent>();
+  private final List<String> m_invisibleMarker = new ArrayList<String>();
 
   private final List<String> m_invisiblePointProperties = new ArrayList<String>();
 
@@ -150,7 +150,7 @@ public class ProfilViewData
     m_edithorz = edithorz;
   }
 
-  public void setMarkerVisibility( final IComponent markerTyp, final boolean visible )
+  public void setMarkerVisibility( final String markerTyp, final boolean visible )
   {
     if( visible )
       m_invisibleMarker.remove( markerTyp );

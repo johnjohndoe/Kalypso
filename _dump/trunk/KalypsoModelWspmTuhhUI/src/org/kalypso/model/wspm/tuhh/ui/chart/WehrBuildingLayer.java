@@ -141,7 +141,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
       final Point point = logical2screen( new Point2D.Double( breite, (Double) deviderPos.getValue( ProfilObsHelper.getPropertyFromId( deviderPos, IWspmConstants.POINT_PROPERTY_HOEHE ) ) ) );
       final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
       final Object objValue = devider.getValue();
-      final Double rightValue = (objValue==null||!(objValue instanceof Double) )? Double.NaN :  (Double)objValue;
+      final Double rightValue = (objValue == null || !(objValue instanceof Double)) ? Double.NaN : (Double) objValue;
       if( devRect.contains( mousePoint.x, mousePoint.y ) )
       {
         final String text = String.format( "%s%n%s: %10.4f%n%s: %10.4f", new Object[] { "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ), leftValue,
@@ -178,7 +178,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
       return new IRecord[] {};
     final int left = profil.indexOfPoint( markers[0].getPoint() );
     final int right = profil.indexOfPoint( markers[size - 1].getPoint() );
-    return profil.getPoints( left, right);
+    return profil.getPoints( left, right );
   }
 
   /**
@@ -299,13 +299,14 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   {
 
     final IProfil profile = getProfil();
-    final IProfilPointMarker[] deviders = profile.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_WEHR ) );
-    final IProfilChange[] changes = new IProfilChange[deviders.length + 2];
-    changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
-    changes[1] = new PointPropertyRemove( profile, ProfilObsHelper.getPropertyFromId( profile, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) );
-    for( int i = 0; i < deviders.length; i++ )
-      changes[i + 2] = new PointMarkerEdit( deviders[i], null );
-    final ProfilOperation operation = new ProfilOperation( "Wehr entfernen", profile, changes, true );
+    final IComponent cWehr = profile.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    final IComponent cOKWehr = profile.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    final ProfilOperation operation = new ProfilOperation( "Wehr entfernen", profile, true );
+    operation.addChange( new ProfileObjectSet( profile, new IProfileObject[] {} ) );
+    if( cOKWehr != null )
+      operation.addChange( new PointPropertyRemove( profile, cOKWehr ) );
+    if( cWehr != null )
+      operation.addChange( new PointPropertyRemove( profile, cWehr ) );
     new ProfilOperationJob( operation ).schedule();
   }
 

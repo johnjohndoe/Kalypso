@@ -47,13 +47,13 @@ import org.kalypso.observation.result.IComponent;
 
 public class VisibleMarkerEdit implements IProfilChange
 {
-  private final IComponent m_typ;
+  private final String m_typ;
 
   private final boolean m_visible;
 
   private final ProfilViewData m_viewData;
 
-  public VisibleMarkerEdit( final ProfilViewData viewData, final IComponent typ, final boolean isVisible )
+  public VisibleMarkerEdit( final ProfilViewData viewData, final String typ, final boolean isVisible )
   {
     m_typ = typ;
     m_visible = isVisible;

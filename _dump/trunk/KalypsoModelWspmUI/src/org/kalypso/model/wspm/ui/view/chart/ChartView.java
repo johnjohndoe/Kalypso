@@ -133,7 +133,7 @@ public class ChartView extends AbstractProfilViewPart2
       final IComponent[] markerTypes = m_profilPart.getProfil().getPointMarkerTypes();
       for( final IComponent markerTyp : markerTypes )
       {
-        m_profilPart.getViewData().setMarkerVisibility( markerTyp, true );
+        m_profilPart.getViewData().setMarkerVisibility( markerTyp.getId(), true );
       }
     }
   }

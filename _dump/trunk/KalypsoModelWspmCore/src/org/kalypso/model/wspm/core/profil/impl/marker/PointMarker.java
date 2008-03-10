@@ -67,7 +67,7 @@ public class PointMarker implements IProfilPointMarker
     final TupleResult result = point.getOwner();
     if( !result.hasComponent( typ ) )
       result.addComponent( typ );
-    setInterpretedValue( true );
+
   }
 
   /**

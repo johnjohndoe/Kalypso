@@ -207,7 +207,7 @@ public class TrennerPanel extends AbstractProfilView
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final ProfilOperation operation = new ProfilOperation( "", getProfil(), true );
-        operation.addChange( new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), m_fz_show.getSelection() ) );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, m_fz_show.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
@@ -240,7 +240,7 @@ public class TrennerPanel extends AbstractProfilView
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final ProfilOperation operation = new ProfilOperation( "", getProfil(), true );
-        operation.addChange( new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), m_db_show.getSelection() ) );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, m_db_show.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
@@ -274,7 +274,7 @@ public class TrennerPanel extends AbstractProfilView
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:", getProfil(), true );
-        operation.addChange( new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), m_bv_show.getSelection() ) );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, m_bv_show.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )
@@ -309,7 +309,7 @@ public class TrennerPanel extends AbstractProfilView
 
           operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[0].getPoint() ), true ) );
           operation.addChange( new PointMarkerEdit( new ProfilDevider( bordvoll, db_devs[1].getPoint() ), true ) );
-          operation.addChange( new VisibleMarkerEdit( getViewData(), bordvoll, true ) );
+          operation.addChange( new VisibleMarkerEdit( getViewData(), bordvoll.getId(), true ) );
 
           operation.addChange( new ActiveObjectEdit( getProfil(), db_devs[1].getPoint(), null ) );
           new ProfilOperationJob( operation ).schedule();
@@ -322,7 +322,7 @@ public class TrennerPanel extends AbstractProfilView
           {
             changes[i] = new PointMarkerEdit( bv_devs[i], null );
           }
-          changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), false );
+          changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, false );
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", getProfil(), changes, true );
           new ProfilOperationJob( operation ).schedule();
         }

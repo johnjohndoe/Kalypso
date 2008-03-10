@@ -449,7 +449,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     {
       if( profile != null )
         for( final IComponent markerId : profile.getPointMarkerTypes() )
-          oldViewData.setMarkerVisibility( markerId, true );
+          oldViewData.setMarkerVisibility( markerId.getId(), true );
     }
 
     m_profilPart.setProfil( profile );

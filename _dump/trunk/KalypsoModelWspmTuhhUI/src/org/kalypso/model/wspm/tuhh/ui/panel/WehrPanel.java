@@ -152,12 +152,9 @@ public class WehrPanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( m_beiwert.getText() );
           if( !Double.isNaN( value ) )
           {
-            final IProfilChange[] changes = new IProfilChange[2];
-            changes[0] = new PointMarkerEdit( m_devider, value );
-            changes[1] = new ActiveObjectEdit( getProfil(), m_devider.getPoint(), null );
-            final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfil(), changes, true );
+            final ProfilOperation operation = new ProfilOperation( "Wehrfeld verschieben", getProfil(), true );
+            operation.addChange( new PointMarkerEdit( m_devider, value ) );
             new ProfilOperationJob( operation ).schedule();
-
           }
         }
       } );
@@ -222,7 +219,7 @@ public class WehrPanel extends AbstractProfilView
         final Object objValue = dev.getValue();
         value = (objValue == null || !(objValue instanceof Double)) ? 0.0 : (Double) dev.getValue();
       }
-      m_beiwert.setText( Double.toString( value ) );
+      m_beiwert.setText( dev.getValue().toString() );// Double.toString( value ) );
       m_point.setText( Double.toString( (Double) dev.getPoint().getValue( ProfilObsHelper.getPropertyFromId( dev.getPoint(), IWspmConstants.POINT_PROPERTY_BREITE ) ) ) );
     }
 
@@ -251,15 +248,12 @@ public class WehrPanel extends AbstractProfilView
 
   private final Image m_addImg;
 
-  private final IProfilPointPropertyProvider m_pointPropertyProvider;
-
   public WehrPanel( final IProfil profile, final ProfilViewData viewdata )
   {
     super( profile, viewdata );
     m_deviderLines = new LinkedList<DeviderLine>();
     m_deleteImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_DELETE.createImage();
     m_addImg = KalypsoModelWspmUIImages.ID_BUTTON_WEHR_ADD.createImage();
-    m_pointPropertyProvider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getProfil().getType() );
   }
 
   @Override
@@ -453,7 +447,7 @@ public class WehrPanel extends AbstractProfilView
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
         final ProfilOperation operation = new ProfilOperation( "Sichtbarkeit ändern:", getProfil(), true );
-        operation.addChange( new VisibleMarkerEdit( getViewData(), m_pointPropertyProvider.getPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR ), m_WehrfeldVisible.getSelection() ) );
+        operation.addChange( new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_WEHR, m_WehrfeldVisible.getSelection() ) );
         final IStatus status = operation.execute( new NullProgressMonitor(), null );
         operation.dispose();
         if( !status.isOK() )

@@ -78,8 +78,10 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
     {
       if( profil.getPoints().length > 0 )
       {
-        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
-        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
+        final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        m1.setInterpretedValue(true);
+        m2.setInterpretedValue( true );
         profil.setActivePoint( profil.getPoint( 0 ) );
       }
     }
@@ -88,14 +90,18 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
       final IProfilPointMarker[] markers = profil.getPointMarkerFor( cTarget );
       if( markers.length > 0 )
       {
-        markerProvider.createProfilPointMarker( m_deviderType, markers[0].getPoint() );
-        markerProvider.createProfilPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
+        final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, markers[0].getPoint() );
+        final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
+        m1.setInterpretedValue(true);
+        m2.setInterpretedValue( true );
         profil.setActivePoint( markers[0].getPoint() );
       }
       else
       {
-        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
-        markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
+        final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        m1.setInterpretedValue(true);
+        m2.setInterpretedValue( true );
         profil.setActivePoint( profil.getPoint( 0 ) );
       }
     }
