@@ -106,6 +106,15 @@ public class LineGeometryBuilder implements IGeometryBuilder
       m_extender.setCursor( CROSSHAIR_CURSOR );
   }
 
+  /**
+   * The constructor.
+   * 
+   * @param cnt_points
+   *            If > 1 the the geometry will be finished, if the count of points is reached. If <= 1 no rule regarding
+   *            the count of the points will apply, except that a line must consist of at least 2 points.
+   * @param targetCrs
+   *            The target coordinate system.
+   */
   public LineGeometryBuilder( final int cnt_points, final String targetCrs )
   {
     this( cnt_points, targetCrs, null );
