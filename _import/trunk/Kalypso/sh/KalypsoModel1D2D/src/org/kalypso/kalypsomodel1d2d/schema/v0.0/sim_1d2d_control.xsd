@@ -311,11 +311,11 @@
 									<xs:annotation>
 										<xs:documentation
 											xml:lang="de">
-											<xs:label><![CDATA[14 konst. Wirbelviskosität m. sohlind. Turb.]]></xs:label>
+											<xs:label><![CDATA[14 Smagorinsky Ansatz m. sohlind. Turb.]]></xs:label>
 										</xs:documentation>
 										<xs:documentation
 											xml:lang="en">
-											<xs:label><![CDATA[14 const. eddy viscosity w. bottom induced turb.]]></xs:label>
+											<xs:label><![CDATA[14 Smagorinsky approach w. bottom induced turb.]]></xs:label>
 										</xs:documentation>
 									</xs:annotation>
 								</xs:enumeration>
@@ -335,11 +335,11 @@
 									<xs:annotation>
 										<xs:documentation
 											xml:lang="de">
-											<xs:label><![CDATA[16 Smagorinsky mit sohlinduzierter Turbulenz]]></xs:label>
+											<xs:label><![CDATA[16 Mittelwert Prandtl u. Smago. m. sohlind. Turbulenz]]></xs:label>
 										</xs:documentation>
 										<xs:documentation
 											xml:lang="en">
-											<xs:label><![CDATA[16 Smagorinsky with bottom induced turbulence]]></xs:label>
+											<xs:label><![CDATA[16 ave. of Prandtl and Smago w. bottom induced turbulence]]></xs:label>
 										</xs:documentation>
 									</xs:annotation>
 								</xs:enumeration>
