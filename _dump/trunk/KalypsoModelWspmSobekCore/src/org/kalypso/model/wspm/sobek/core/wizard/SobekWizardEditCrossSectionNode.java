@@ -50,6 +50,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
+import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditCrossSectionNode;
 import org.kalypso.ogc.gml.FeatureUtils;
@@ -104,7 +105,7 @@ public class SobekWizardEditCrossSectionNode extends Wizard implements INewWizar
       values.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, description );
 
       FeatureUtils.updateFeature( m_workspace, m_node, values );
-      FeatureUtils.updateLinkedFeature( m_workspace, m_node, ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() );
+      FeatureUtils.updateLinkedFeature( m_workspace, m_node, ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + profile.getId() );
     }
     catch( final Exception e )
     {

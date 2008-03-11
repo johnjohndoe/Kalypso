@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.core.model;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -104,7 +105,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
     final IBranch[] inflowing = getInflowingBranches();
     final IBranch[] outflowing = getOutflowingBranches();
 
-    if( (inflowing.length == 0) && (outflowing.length == 0) )
+    if( inflowing.length == 0 && outflowing.length == 0 )
       return true;
 
     return false;
@@ -136,7 +137,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
         continue;
       else if( curve.intersects( point ) )
       {
-        final String id = "#" + branch.getFeature().getId();
+        final String id = IGmlWorkspaces.HYDRAUL_MODEL + "#" + branch.getFeature().getId();
         FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, id );
       }
 

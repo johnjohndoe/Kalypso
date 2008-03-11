@@ -60,6 +60,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
@@ -93,7 +94,7 @@ public class NodeUtils implements INodeUtils
 
     /* set linked lastfall! */
     final Feature condition = command.getNewFeature();
-    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, "#" + lastfall.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, IGmlWorkspaces.HYDRAUL_MODEL + "#" + lastfall.getFeature().getId() );
 
     return command.getNewFeature();
   }

@@ -59,7 +59,6 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
 import org.kalypso.ogc.gml.map.widgets.builders.ToolTipRenderer;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -84,7 +83,7 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
   public FNSnapPainterCreateProfileNode( final ISobekModelMember model, final IGeometryBuilderExtensionProvider extender )
   {
     discoverBranchGeometries( model );
-    discoverCrossSections( model.getWorkspace() );
+    discoverCrossSections( model.getWorkspace().getRootFeature() );
 
     m_renderer = new ToolTipRenderer( extender );
   }
@@ -96,9 +95,8 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
       m_curves.put( branch, branch.getGeometryProperty() );
   }
 
-  private void discoverCrossSections( final CommandableWorkspace workspace )
+  private void discoverCrossSections( final Feature root )
   {
-    final Feature root = workspace.getRootFeature();
     final List< ? > waterbodies = (List< ? >) root.getProperty( new QName( "org.kalypso.nofdpidss.1dmodel", "waterBodyMember" ) );
 
     final QName qProfileMember = new QName( "org.kalypso.nofdpidss.1dmodel", "profileMember" );
