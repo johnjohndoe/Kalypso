@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.swt;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.swt.SWT;
@@ -64,6 +67,8 @@ public class WizardFeatureCheckbox
   private final Feature m_feature;
 
   private final QName m_qname;
+
+  Set<Runnable> m_listener = new LinkedHashSet<Runnable>();
 
   public WizardFeatureCheckbox( final Feature feature, final QName qname, final String fallbackLabel )
   {
@@ -95,6 +100,11 @@ public class WizardFeatureCheckbox
       public void widgetSelected( final SelectionEvent e )
       {
         m_selection = button.getSelection();
+
+        for( final Runnable r : m_listener )
+        {
+          r.run();
+        }
       }
     } );
 
@@ -111,4 +121,10 @@ public class WizardFeatureCheckbox
   {
     return m_selection;
   }
+
+  public void addSelectionChangeListener( final Runnable r )
+  {
+    m_listener.add( r );
+  }
+
 }
