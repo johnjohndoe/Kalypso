@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructPump;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -165,5 +167,13 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
   public TYPE getType( )
   {
     return TYPE.eSbkStructPump;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructPump#setLinkToBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public void setLinkToBranch( IBranch branch ) throws Exception
+  {
+    FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, IGmlWorkspaces.HYDRAUL_MODEL + "#" + branch.getFeature().getId() );
   }
 }

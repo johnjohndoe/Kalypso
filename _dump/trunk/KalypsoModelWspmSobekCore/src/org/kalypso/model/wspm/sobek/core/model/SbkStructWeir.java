@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.model;
 
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -130,7 +131,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
    */
   public void setLinkToBranch( IBranch branch ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, "hydraulModel.gml#" + branch.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, IGmlWorkspaces.HYDRAUL_MODEL + "#" + branch.getFeature().getId() );
   }
 
 }

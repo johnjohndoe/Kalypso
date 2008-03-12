@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+
 /**
  * @author thuel2
  */
@@ -63,5 +64,7 @@ public interface ISbkStructPump extends ISbkStructure
   public double getSwitchOnLevelPressureSide( );
 
   public double getSwitchOnLevelSuctionSide( );
+
+  public void setLinkToBranch( IBranch branch ) throws Exception;
 
 }

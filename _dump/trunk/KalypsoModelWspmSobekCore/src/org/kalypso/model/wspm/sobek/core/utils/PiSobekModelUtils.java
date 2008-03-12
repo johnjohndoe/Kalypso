@@ -491,10 +491,10 @@ public class PiSobekModelUtils
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "databaseUsage" );
+    parameter.setId( "databaseUsage" ); //$NON-NLS-1$
     parameter.setType( cTypeTable );
     final Table innerTableDBUsage = factory.createTable();
-    innerTableDBUsage.setName( "databaseUsage" );
+    innerTableDBUsage.setName( "databaseUsage" ); //$NON-NLS-1$
 
     final Info tableInfoDBUsage = factory.createInfo();
 
@@ -543,144 +543,144 @@ public class PiSobekModelUtils
     final ISbkStructGeneralStructure sbkGenStruct = (ISbkStructGeneralStructure) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkGenStruct.getName();
     if( name == null )
       name = "";
-    structureDefinition.setStructureDefinitionId( sbkGenStruct.getId() + "_genStruct" );
+    structureDefinition.setStructureDefinitionId( sbkGenStruct.getId() + "_genStruct" ); //$NON-NLS-1$
     structureDefinition.setStructureDefinitionName( name + "_genStruct" );
-    structureDefinition.setStructureDefinitionType( "Sobek.Structures.GeneralStructure" );
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.GeneralStructure" ); //$NON-NLS-1$
 
     final Parameters parameters = factory.createParameters();
 
     Parameter parameter = factory.createParameter();
-    parameter.setId( "widthUpstream" );
+    parameter.setId( "widthUpstream" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthUpstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "widthStructureLeft" );
+    parameter.setId( "widthStructureLeft" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthStructureLeft() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "widthStructure" );
+    parameter.setId( "widthStructure" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthStructure() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "widthStructureRight" );
+    parameter.setId( "widthStructureRight" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthStructureRight() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "widthDownstream" );
+    parameter.setId( "widthDownstream" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getWidthDownstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "bedLevelUpstream" );
+    parameter.setId( "bedLevelUpstream" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelUpstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "bedLevelStructureLeft" );
+    parameter.setId( "bedLevelStructureLeft" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelStructureLeft() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "bedLevelStructure" );
+    parameter.setId( "bedLevelStructure" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelStructure() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "bedLevelStructureRight" );
+    parameter.setId( "bedLevelStructureRight" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelStructureRight() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "bedLevelDownstream" );
+    parameter.setId( "bedLevelDownstream" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getBedLevelDownstream() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "gateHeight" );
+    parameter.setId( "gateHeight" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getGateHeight() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveFreeGateFlow" );
+    parameter.setId( "positiveFreeGateFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosFreeGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveDrownedGateFlow" );
+    parameter.setId( "positiveDrownedGateFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosDrownedGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveFreeWeirFlow" );
+    parameter.setId( "positiveFreeWeirFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosFreeWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveDrownedWeirFlow" );
+    parameter.setId( "positiveDrownedWeirFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosDrownedWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveContractionCoefficient" );
+    parameter.setId( "positiveContractionCoefficient" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getPosContractionCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeFreeGateFlow" );
+    parameter.setId( "negativeFreeGateFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegFreeGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeDrownedGateFlow" );
+    parameter.setId( "negativeDrownedGateFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegDrownedGateFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeFreeWeirFlow" );
+    parameter.setId( "negativeFreeWeirFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegFreeWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeDrownedWeirFlow" );
+    parameter.setId( "negativeDrownedWeirFlow" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegDrownedWeirFlowCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeContractionCoefficient" );
+    parameter.setId( "negativeContractionCoefficient" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getNegContractionCoeff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "extraResistence" );
+    parameter.setId( "extraResistence" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkGenStruct.getExtraResistence() ) );
     parameters.getParameter().add( parameter );
@@ -694,45 +694,45 @@ public class PiSobekModelUtils
     final ISbkStructPump sbkPump = (ISbkStructPump) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkPump.getName();
     if( name == null )
       name = "";
-    structureDefinition.setStructureDefinitionId( sbkPump.getId() + "_pump" );
-    structureDefinition.setStructureDefinitionName( name + "_pump" );
-    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Pump" );
+    structureDefinition.setStructureDefinitionId( sbkPump.getId() + "_pump" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionName( name + "_pump" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Pump" ); //$NON-NLS-1$
 
     final Parameters parameters = factory.createParameters();
 
     Parameter parameter = factory.createParameter();
-    parameter.setId( "flowDirection" );
+    parameter.setId( "flowDirection" ); //$NON-NLS-1$
     parameter.setType( cTypeString );
     parameter.getContent().add( sbkPump.getFlowDirection() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "controlPosition" );
+    parameter.setId( "controlPosition" ); //$NON-NLS-1$
     parameter.setType( cTypeString );
     parameter.getContent().add( sbkPump.getControlPosition() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "reductionType" );
+    parameter.setId( "reductionType" ); //$NON-NLS-1$
     parameter.setType( cTypeString );
     parameter.getContent().add( sbkPump.getReductionType() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "reductionConstant" );
+    parameter.setId( "reductionConstant" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkPump.getReductionConstant() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "capacitySettings" );
+    parameter.setId( "capacitySettings" ); //$NON-NLS-1$
     parameter.setType( cTypeTable );
     final Table innerTable = factory.createTable();
-    innerTable.setName( "capacitySettings" );
+    innerTable.setName( "capacitySettings" ); //$NON-NLS-1$
 
     final Info tableInfo = factory.createInfo();
     final Columns columns = factory.createColumns();
