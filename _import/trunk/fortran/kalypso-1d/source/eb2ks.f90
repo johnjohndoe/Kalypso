@@ -1,4 +1,4 @@
-!     Last change:  MD    7 Aug 2007    9:47 am
+!     Last change:  MD   12 Mar 2008    4:03 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1462,15 +1462,15 @@ alpha_IW(pn_alpha) = alpha_I
 !UT   => hv = (phion/(phiun**3)) *q*q / (9.81*2.)     ???
 !HB   Der Verlusthoehe wird die Energiebilanz zugrundegelegt,
 !HB   so dass der Nenner in dritter Potenz vorliegt
-!MD   hv = phion / phiun**3 * q * q / g / 2.
+   hv = phion / phiun**3 * q * q / g / 2.
 
 !MD  NEU: NEU  04.07.2007
 !MD  Durch diese Veraenderung wird weniger haeufig die Grenztiefe angesetzt
 !MD  BERECHNUNG VERLUSTHOEHE ANLEHNUNG FORMEL 9, S.17 BWK
 !MD   => hv = (1/(phiun**2)) *q*q / (9.81*8.)
-!MD   hv = (q*q)/(phiun**2.D0) / g / 8.0D0
+!MD    hv = (q*q)/(phiun**2.D0) / g / 8.0D0
 
-hv = (vges**2.) / g / 2.0D0
+!MD  hv = (vges**2.) / g / 2.0D0
 !WRITE (UNIT_OUT_TAB, '('' hv(eb2ks)  ='',f8.4)') hv
 
 iergeb = 0
