@@ -923,7 +923,7 @@ Kalypso 1.3.1      04. April 2007
 Kalypso 1.3.1.1      25. April 2007
 -----------------------------------
 
-1.)  Ueberarbeitung der Wehrberechnung in w_ber, beiwert und wspow für scharf- und runndkronige Wehre:
+1.)  Ueberarbeitung der Wehrberechnung in w_ber, beiwert und wspow für scharf- und rundkronige Wehre:
 	
   A) Änderung in der Berechnung des Abminderungsfaktors des Ueberfall-Beiwertes
      rundkronige fuer Wehre (beiwert):
@@ -1474,10 +1474,26 @@ Kalypso 2.1.1.0      26. Februar 2008
      Daher wurden für alle Berechnungsarten die Einstellung REIBUNGSVERLUST = 'GEOMET' und ITERATIONSART = 'EXACT ' 
      bis dato falsch übernommen!
      (Betroffene Routine: wsp)
-    
-							
+    							
 							                Monika Donner, 26.02.2008 
 
 
+Kalypso 2.1.1.1r      10. März 2008
+-------------------------------------                                                           
 
+1.)  Zurückholen der ursprünglichen Energiehöhenberechnung (hen) bzw. Verlusthöhen-Berechnung (hv):
+     Die Energiehöhe wurde seit Version 2.0.4.3 (07. August 2007) mit einem vereinfachten Ansatz ueber
+     hv = v²/2g aus Stabilitätsgründen berechnet. Durch weitere Stabilisierung des Energiehöhenberechnung
+     wird nun der ursprüngliche Ansatz: hv = phion / phiun**3 * q * q / g / 2. nach BWK 1, S.15 zurückgeholt.
+
+     Diese Korrektur wirkt sich minimal (im cm Bereich) auf alle Rechenvarianten und alle Ergebnisse aus!
+     Betroffene SUBR: eb2ks
+    							
+2.)  Zurücksetzen der Korrektur vom 07. Februar2008 der uebergebenen Parameter aus br-konv: Energiehöhen waren richtig!
+     (siehe Theorie zum Verlustbeiwert)
+     Diese Aenderung fuehrte zu KEINEN Aenderungen in den Ergebnissen, verhindert jedoch den Programm-
+     abbruch fuer den Abflusszustand: Druckabzufluss in der Bruecke ohne Wehrabfluss!
+	   
+
+							                Monika Donner, 10.03.2008 
 

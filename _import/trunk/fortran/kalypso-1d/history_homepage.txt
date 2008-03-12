@@ -550,4 +550,17 @@ Kalypso 2.1.1.0      26. Februar 2008
 							                Monika Donner, 26.02.2008 
 
 
+
+Kalypso 2.1.1.1r      10. März 2008
+-------------------------------------                                                           
+
+1.)  Zurückholen der ursprünglichen Energiehöhenberechnung (hen) bzw. Verlusthöhen-Berechnung (hv):
+     Die Energiehöhe wurde seit Version 2.0.4.3 (07. August 2007) mit einem vereinfachten Ansatz ueber
+     hv = v²/2g aus Stabilitätsgründen berechnet. Durch weitere Stabilisierung des Energiehöhenberechnung
+     wird nun der ursprüngliche Ansatz: hv = phion / phiun**3 * q * q / g / 2. nach BWK 1, S.15 zurückgeholt.
+
+     Diese Korrektur wirkt sich minimal (im cm Bereich) auf alle Rechenvarianten und alle Ergebnisse aus!
+     Betroffene SUBR: eb2ks   							
+							                Monika Donner, 10.03.2008 
+
  
