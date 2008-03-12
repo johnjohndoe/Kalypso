@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.services;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Command used for assigning roughnesses to elements.
@@ -68,15 +66,17 @@ public class RoughnessAssignCommand extends ChangeFeaturesCommand
   @Override
   protected void applyChanges( final FeatureChange[] changes )
   {
-    final Set<Feature> changedFeaturesList = new HashSet<Feature>();
+//    final Set<Feature> changedFeaturesList = new HashSet<Feature>();
+    final Feature[] changedFeatures = new Feature_Impl[changes.length];
     for( int i = 0; i < changes.length; i++ )
     {
       final FeatureChange change = changes[i];
-      change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
-      changedFeaturesList.add( change.getFeature() );
+      changedFeatures[i] =change.getFeature();
+      changedFeatures[i].setProperty( change.getProperty(), change.getNewValue() );
+//      changedFeaturesList.add( change.getFeature() );
     }
 
     if( m_workspace != null )
-      m_workspace.fireModellEvent( new RoughnessAssignServiceModellEvent( m_workspace, changes ) );
+      m_workspace.fireModellEvent( new RoughnessAssignServiceModellEvent( m_workspace, changedFeatures ) );
   }
 }

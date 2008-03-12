@@ -119,6 +119,7 @@ public class RoughnessAssignService extends Job
     }
     finally
     {
+      monitor.subTask( "Waiting for the workspace to process changes" );
       fireEvents();
       monitor.done();
     }

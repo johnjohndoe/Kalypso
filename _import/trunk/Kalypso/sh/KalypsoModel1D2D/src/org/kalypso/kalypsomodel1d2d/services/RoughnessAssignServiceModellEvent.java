@@ -40,17 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.services;
 
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
 /**
  * @author Dejan Antanaskovic
  * 
  */
-public class RoughnessAssignServiceModellEvent extends FeatureChangeModellEvent
+public class RoughnessAssignServiceModellEvent extends FeaturesChangedModellEvent
 {
-  public RoughnessAssignServiceModellEvent( GMLWorkspace eventSource, FeatureChange[] changes )
+  public RoughnessAssignServiceModellEvent( final GMLWorkspace eventSource, final Feature[] changes )
   {
     super( eventSource, changes );
   }
