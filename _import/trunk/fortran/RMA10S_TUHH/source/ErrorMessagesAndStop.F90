@@ -1,4 +1,4 @@
-!     Last change:  WP   28 Feb 2008    5:17 pm
+!     Last change:  WP   11 Mar 2008   12:08 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -55,7 +55,7 @@ elseif (ErrorID == 1102) then
   WRITE (ErrorUnit, 1102) ObjectID
   WRITE (        *, 1102) ObjectID
 
-elseif (ErrorID == 1102) then
+elseif (ErrorID == 1103) then
   WRITE (ErrorUnit, 1103) ObjectID
   WRITE (        *, 1103) ObjectID
 

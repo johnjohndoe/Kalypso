@@ -1,4 +1,4 @@
-!Last change:  WP   27 Feb 2008   11:49 am
+!Last change:  WP   12 Mar 2008    3:18 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1612,16 +1612,25 @@ QBCAssign: DO N=1, NCN, 2
     ENDIF
       ESTIFM(IRW,IRH)=ESTIFM(IRW,IRH)-AREA(NN)*(AC2*CP*(WSEL-E0)**(CP-1.0))
       F(IRW)=F(IRW)+AREA(NN)*(AC2*(WSEL-E0)**CP)
-    ELSEIF (istab(m).gt.0.) then
-      if (spec(m,1).lt.0.) then
-        adir = -1.
-      else
-        adir = 1.
-      end if
-      srfel = hel(m) + ao(m)
-      call stfltab(m,srfel,dfdh,ff,1)
-      estifm(irw,irh) = estifm(irw,irh) - area(nn)*dfdh*adir
-      f(irw) = f(irw) + area(nn) * (ff * adir - spec(m,1))
+  ELSEIF (istab(m).gt.0.) then
+    !nis,mar08: bug fix, elevation srfel was not calculated correctly
+    IF (IDNOPT.LT .0) THEN
+      HD=VEL(3,M)
+      CALL AMF(HS, HD, AKP(M), ADT(M), ADB(M), AML, DUM2, 0)
+      srfel = ADO(M)+HS
+    ELSE
+      srfel = VEL(3,M)+AO(M)
+    ENDIF
+    !-
+    if (spec(m,1).lt.0.) then
+      adir = -1.
+    else
+      adir = 1.
+    end if
+
+    call stfltab(m,srfel,dfdh,ff,1)
+    estifm(irw,irh) = estifm(irw,irh) - area(nn)*dfdh*adir
+    f(irw) = f(irw) + area(nn) * (ff * adir - spec(m,1))
   ENDIF
   !-
 ENDDO QBCAssign

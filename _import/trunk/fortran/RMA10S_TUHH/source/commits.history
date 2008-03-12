@@ -32,11 +32,23 @@ autoconverge
 ------------
 - Einbau des gesonderten Programms autoconverge aber ohne Tests.
 
+Rauheitskorrektur
+-----------------
+- Benutzer kann Rauheitswerte korrigieren. Dabei können die festen Rauheitsparameter der Rauheitsklassen bestehen bleiben und nur die Elemente mit einem Faktor auf die entsprechenden Parameter verändert werden.
 
 History geführt ab dem 27.02.2008
 ---------------------------------
 - Kopplung hat starke Probleme bei der Kontinuität verursacht. Grundsätzlich haben Modelle konvergiert, aber der Abfluss ist immer kleiner geworden mit fortschreitender Berechnung. Die numerische Ursache war, dass die Abflussidentität auf der 2D- und 1D-Seite sich jeweils hoch oder runter geschaukelt haben. Alternativ wurden nun die Impulsgleichungen auf der 2d-Seite beibehalten und der WasserSTAND der 1D-Seite als Rand verwendet.
   - Impulsgleichungen 2D werden durch den WasserSTAND auf der 1D-Seite berandet (innere Randbedingung).
   - dies ist bisher nur 2D-1D ERFOLGREICH getestet.
+  
+Änderungen 12.03.2008
+---------------------
+bugfix - H-Q-Beziehung als Randbedingung in coef1DFE hat nicht die korrekten Wasserstände berücksichtigt.
+(coef1DFE)
+bugfix - ErrorMessagesAndStop had wrong entry
+(ErrorMessagesAndStop)
+
+Nico Schrage
 
 
