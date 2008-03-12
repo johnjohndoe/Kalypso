@@ -1,4 +1,4 @@
-!     Last change:  MD   11 Feb 2008    4:52 pm
+!     Last change:  MD   12 Mar 2008    4:02 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -724,11 +724,11 @@ isch = isch + 1
 !MD  Hier ist die Uebergabe des Wasserspiegels hr3 an die Abflussberechnung
 !MD    nicht Uebergabe der Energiehoehe he3 erforderlich!!!!!!!!!!!
 !MD  -------------------------------------------------------------------
-!MD  CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, qd,  &
-!MD            & qw, qgesb, aue3, wl3, iartb)
-
-CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, hr3, qd,  &
+  CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, qd,  &
             & qw, qgesb, aue3, wl3, iartb)
+
+!MD CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, hr3, qd,  &
+!MD            & qw, qgesb, aue3, wl3, iartb)
 
 !JK      SCHREIBEN IN KONTROLLFILE
 IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
