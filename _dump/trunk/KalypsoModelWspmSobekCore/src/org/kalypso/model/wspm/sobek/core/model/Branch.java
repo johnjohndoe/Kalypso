@@ -49,7 +49,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
-import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -254,7 +253,7 @@ public class Branch implements IBranch
    */
   public void setLowerNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + node.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
 
   /**
@@ -262,6 +261,6 @@ public class Branch implements IBranch
    */
   public void setUpperNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + node.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, "#" + node.getFeature().getId() );
   }
 }
