@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.sobek.core.model;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructGeneralStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

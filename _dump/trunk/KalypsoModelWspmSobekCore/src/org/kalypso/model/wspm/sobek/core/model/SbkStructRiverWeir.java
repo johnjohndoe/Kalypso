@@ -44,7 +44,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructRiverWeir;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkTable;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
