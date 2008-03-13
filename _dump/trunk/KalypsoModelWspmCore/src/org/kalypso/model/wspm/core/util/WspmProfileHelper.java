@@ -498,7 +498,7 @@ public class WspmProfileHelper
    * Adds a recory by its width. If this record(point) already exists in the profile, the existing record will be
    * updated
    */
-  public static void addRecordByWidth( final IProfil profile, final IRecord record )
+  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record )
   {
     final IComponent cBreite = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BREITE );
     final Double width = (Double) record.getValue( cBreite );
@@ -518,13 +518,13 @@ public class WspmProfileHelper
         {
           r.setValue( component, record.getValue( component ) );
         }
-        return;
+        return r;
       }
       else if( width < rw )
       {
         // add new record
         profile.getResult().add( i, record );
-        return;
+        return record;
 
       }
       else if( width == rw )
@@ -532,6 +532,8 @@ public class WspmProfileHelper
     }
 
     profile.addPoint( record );
+
+    return record;
   }
 
 }
