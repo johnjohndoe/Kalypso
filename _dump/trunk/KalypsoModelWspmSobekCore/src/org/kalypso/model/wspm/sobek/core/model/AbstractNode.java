@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -51,6 +52,8 @@ import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author kuch
@@ -186,5 +189,13 @@ public abstract class AbstractNode implements INode
   public int hashCode( )
   {
     return HashCodeBuilder.reflectionHashCode( this );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#relaysOnGeometry(com.vividsolutions.jts.geom.Geometry)
+   */
+  public boolean relaysOnGeometry( final Geometry geometry )
+  {
+    throw new NotImplementedException();
   }
 }

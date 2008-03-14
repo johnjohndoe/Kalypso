@@ -43,6 +43,8 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * Generic Node interface, Node implementations and special interface should be derived from this interface!
  * 
@@ -109,4 +111,6 @@ public interface INode
   public TYPE getType( );
 
   public boolean isEmpty( );
+
+  public boolean relaysOnGeometry( Geometry geometry );
 }
