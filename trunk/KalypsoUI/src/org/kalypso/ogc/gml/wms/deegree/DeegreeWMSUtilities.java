@@ -63,6 +63,7 @@ import org.deegree.owscommon_new.Operation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.net.Proxy;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
@@ -100,6 +101,9 @@ public class DeegreeWMSUtilities
 
     try
     {
+      /* FIXME: HACK: Initialize once, to init the java-proxy settings, in case they are not set. */
+      Proxy.getProxyService( KalypsoGisPlugin.getDefault() );
+
       /* Get the input stream of the capabilities. */
       inputStream = loader.getCapabilitiesStream( monitor );
 
