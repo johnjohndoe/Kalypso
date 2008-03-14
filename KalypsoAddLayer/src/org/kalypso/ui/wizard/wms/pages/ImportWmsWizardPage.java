@@ -55,6 +55,7 @@ import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -796,7 +797,9 @@ public class ImportWmsWizardPage extends WizardPage
     CapabilitiesGetter runnable = new CapabilitiesGetter( service, getProviderID() );
 
     /* Execute it. */
-    RunnableContextHelper.execute( getContainer(), false, false, runnable );
+    IStatus execute = RunnableContextHelper.execute( getContainer(), false, false, runnable );
+    if( !execute.isOK() )
+      setErrorMessage( execute.getMessage() );
 
     /* Get the capabilities. */
     WMSCapabilities capabilities = runnable.getCapabilities();
