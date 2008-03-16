@@ -41,11 +41,14 @@
 package org.kalypso.jts;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
@@ -82,17 +85,17 @@ public class JTSUtilities
    *            The points of the line will be checked with this geometry.
    * @return The first point of the line, which lies in the second geometry.
    */
-  public static Point linePointInGeometry( LineString line, Geometry geometry_2nd )
+  public static Point linePointInGeometry( final LineString line, final Geometry geometry_2nd )
   {
-    int numPoints = line.getNumPoints();
+    final int numPoints = line.getNumPoints();
 
     for( int i = 0; i < numPoints; i++ )
     {
-      Point pointN = line.getPointN( i );
+      final Point pointN = line.getPointN( i );
 
       if( geometry_2nd.contains( pointN ) )
       {
-        GeometryFactory factory = new GeometryFactory( pointN.getPrecisionModel(), pointN.getSRID() );
+        final GeometryFactory factory = new GeometryFactory( pointN.getPrecisionModel(), pointN.getSRID() );
         return factory.createPoint( new Coordinate( pointN.getCoordinate() ) );
       }
     }
@@ -109,31 +112,31 @@ public class JTSUtilities
    *            One point lying on the line.
    * @return The distance of the point on the line.
    */
-  public static double pointDistanceOnLine( LineString line, Point point )
+  public static double pointDistanceOnLine( final LineString line, final Point point )
   {
     /* Check for intersection. */
-    if( (point.distance( line ) >= 10E-08) )
+    if( point.distance( line ) >= 10E-08 )
       throw new IllegalStateException( "The point does not lie on the line ..." );
 
     /* The needed factory. */
-    GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+    final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
     /* Get all coordinates. */
-    Coordinate[] coordinates = line.getCoordinates();
+    final Coordinate[] coordinates = line.getCoordinates();
 
     /* Only loop until the one before the last one. */
     for( int i = 0; i < coordinates.length - 1; i++ )
     {
       /* Get the coordinates to the current one + 1. */
-      Coordinate[] coords = (Coordinate[]) ArrayUtils.subarray( coordinates, 0, i + 2 );
+      final Coordinate[] coords = (Coordinate[]) ArrayUtils.subarray( coordinates, 0, i + 2 );
 
       /* Create a new line with the coordinates. */
-      LineString ls = factory.createLineString( coords );
-      if( (point.distance( ls ) >= 10E-08) )
+      final LineString ls = factory.createLineString( coords );
+      if( point.distance( ls ) >= 10E-08 )
         continue;
 
       /* Point was intersecting the last segment, now take all coordinates but the last one ... */
-      LinkedList<Coordinate> lineCoords = new LinkedList<Coordinate>();
+      final LinkedList<Coordinate> lineCoords = new LinkedList<Coordinate>();
       for( int j = 0; j < coords.length - 1; j++ )
         lineCoords.add( coords[j] );
 
@@ -141,7 +144,7 @@ public class JTSUtilities
       lineCoords.add( point.getCoordinate() );
 
       /* Create the new geometry. */
-      LineString tempLine = factory.createLineString( lineCoords.toArray( new Coordinate[] {} ) );
+      final LineString tempLine = factory.createLineString( lineCoords.toArray( new Coordinate[] {} ) );
 
       return tempLine.getLength();
     }
@@ -158,14 +161,14 @@ public class JTSUtilities
    *            The distance at which the point should be placed on the line.
    * @return The newly created point on the line or null, if something was wrong.
    */
-  public static Point pointOnLine( LineString lineJTS, double distance )
+  public static Point pointOnLine( final LineString lineJTS, double distance )
   {
-    double length = lineJTS.getLength();
+    final double length = lineJTS.getLength();
 
     if( distance < 0 || distance > length )
       return null;
 
-    int numPoints = lineJTS.getNumPoints();
+    final int numPoints = lineJTS.getNumPoints();
 
     if( numPoints == 0 )
       return null;
@@ -174,12 +177,12 @@ public class JTSUtilities
     LineString line = null;
     for( int i = 0; i < numPoints - 1; i++ )
     {
-      Point startPoint = lineJTS.getPointN( i );
-      Point endPoint = lineJTS.getPointN( i + 1 );
+      final Point startPoint = lineJTS.getPointN( i );
+      final Point endPoint = lineJTS.getPointN( i + 1 );
 
-      GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
+      final GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
       line = factory.createLineString( new Coordinate[] { new Coordinate( startPoint.getCoordinate() ), new Coordinate( endPoint.getCoordinate() ) } );
-      double lineLength = line.getLength();
+      final double lineLength = line.getLength();
 
       if( distance - lineLength < 0 )
         break;
@@ -188,10 +191,10 @@ public class JTSUtilities
     }
 
     /* Now calculate the rest of the line. */
-    double max = line.getLength();
+    final double max = line.getLength();
 
-    Point startPoint = line.getStartPoint();
-    Point endPoint = line.getEndPoint();
+    final Point startPoint = line.getStartPoint();
+    final Point endPoint = line.getEndPoint();
 
     try
     {
@@ -199,7 +202,7 @@ public class JTSUtilities
       double x = startPoint.getX();
       if( Double.compare( startPoint.getX(), endPoint.getX() ) != 0 )
       {
-        LinearEquation computeX = new LinearEquation( startPoint.getX(), 0, endPoint.getX(), max );
+        final LinearEquation computeX = new LinearEquation( startPoint.getX(), 0, endPoint.getX(), max );
         x = computeX.computeX( distance );
       }
 
@@ -207,31 +210,31 @@ public class JTSUtilities
       double y = startPoint.getY();
       if( Double.compare( startPoint.getY(), endPoint.getY() ) != 0 )
       {
-        LinearEquation computeY = new LinearEquation( startPoint.getY(), 0, endPoint.getY(), max );
+        final LinearEquation computeY = new LinearEquation( startPoint.getY(), 0, endPoint.getY(), max );
         y = computeY.computeX( distance );
       }
 
       /* If the two Z koords are equal, take one of them for the new point. */
       double zStart = startPoint.getCoordinate().z;
-      double zEnd = endPoint.getCoordinate().z;
+      final double zEnd = endPoint.getCoordinate().z;
 
       if( zStart != Double.NaN && zEnd != Double.NaN )
       {
         if( Double.compare( zStart, zEnd ) != 0 )
         {
-          LinearEquation computeZ = new LinearEquation( zStart, 0, zEnd, max );
+          final LinearEquation computeZ = new LinearEquation( zStart, 0, zEnd, max );
           zStart = computeZ.computeX( distance );
         }
       }
       else
         zStart = Double.NaN;
 
-      GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
-      Point pointJTS = factory.createPoint( new Coordinate( x, y, zStart ) );
+      final GeometryFactory factory = new GeometryFactory( lineJTS.getPrecisionModel(), lineJTS.getSRID() );
+      final Point pointJTS = factory.createPoint( new Coordinate( x, y, zStart ) );
 
       return pointJTS;
     }
-    catch( SameXValuesException e )
+    catch( final SameXValuesException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -250,13 +253,13 @@ public class JTSUtilities
    * @return The newly created point on the line or null, if something was wrong. Update: returns the start point or the
    *         end point if percentage is 0 or 100.
    */
-  public static Point pointOnLinePercent( LineString lineJTS, int percent )
+  public static Point pointOnLinePercent( final LineString lineJTS, final int percent )
   {
     if( percent < 0 || percent > 100 )
       return null;
 
-    double length = lineJTS.getLength();
-    double distance = length / 100.0 * percent;
+    final double length = lineJTS.getLength();
+    final double distance = length / 100.0 * percent;
 
     if( percent == 0 )
       return lineJTS.getPointN( 0 );
@@ -279,10 +282,10 @@ public class JTSUtilities
    *            distance is calculated only by the x- and y-coordinates!! for an 3-dimensaional distance calculation,
    *            the start and end point should have z-coordinates.
    */
-  public static LineString createLineSegment( Geometry line, Point start, Point end )
+  public static LineString createLineSegment( final Geometry line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line (2d!). */
-    if( (line.distance( start ) >= 10E-08) || (line.distance( start ) >= 10E-08) )
+    if( line.distance( start ) >= 10E-08 || line.distance( start ) >= 10E-08 )
       return null;
 
     if( line instanceof LineString )
@@ -310,21 +313,21 @@ public class JTSUtilities
    *            The end point of the new line (it has to be one point that lies on the original LineString).
    * @return True, if the first found point of the line is nearer to the start point, than to the end point.
    */
-  public static boolean getLineOrientation( LineString line, Point start, Point end )
+  public static boolean getLineOrientation( final LineString line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line. */
-    if( (line.distance( start ) >= 10E-08) || (line.distance( start ) >= 10E-08) )
+    if( line.distance( start ) >= 10E-08 || line.distance( start ) >= 10E-08 )
       throw new IllegalArgumentException( "One of the two points does not lie on the given line ..." );
 
     boolean first = false;
 
     for( int i = 0; i < line.getNumPoints() - 1; i++ )
     {
-      Point pointN = line.getPointN( i );
-      Point pointN1 = line.getPointN( i + 1 );
+      final Point pointN = line.getPointN( i );
+      final Point pointN1 = line.getPointN( i + 1 );
 
       /* Build a line with the two points to check the flag. */
-      LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+      final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
       if( testLine.distance( start.getCoordinate() ) < 10E-08 )
         first = true;
@@ -357,9 +360,9 @@ public class JTSUtilities
    *            The end point of the new line (it has to be one point that lies on the original LineString).
    * @return A LineString on the original LineString starting at with the start point and ending with the end point.
    */
-  private static LineString createLineSegmentFromLine( LineString line, Point start, Point end )
+  private static LineString createLineSegmentFromLine( final LineString line, final Point start, final Point end )
   {
-    List<Point> points = new LinkedList<Point>();
+    final List<Point> points = new LinkedList<Point>();
 
     boolean add = false;
 
@@ -367,14 +370,14 @@ public class JTSUtilities
 
     for( int i = 0; i < line.getNumPoints() - 1; i++ )
     {
-      Point pointN = line.getPointN( i );
-      Point pointN1 = line.getPointN( i + 1 );
+      final Point pointN = line.getPointN( i );
+      final Point pointN1 = line.getPointN( i + 1 );
 
       if( add )
         points.add( pointN );
 
       /* Build a line with the two points to check the flag. */
-      LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+      final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
       if( testLine.distance( start.getCoordinate() ) < 10E-08 )
         add = true;
@@ -389,12 +392,12 @@ public class JTSUtilities
     points.add( end );
 
     /* Create the coordinates for the new line string. */
-    Coordinate[] coordinates = new Coordinate[points.size()];
+    final Coordinate[] coordinates = new Coordinate[points.size()];
 
     for( int i = 0; i < points.size(); i++ )
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
 
-    GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+    final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
     return factory.createLineString( coordinates );
   }
@@ -424,9 +427,9 @@ public class JTSUtilities
    * @return A LineString on the original MultiLineString starting at with the start point and ending with the end
    *         point.
    */
-  private static LineString createLineSegmentFromMultiLine( MultiLineString line, Point start, Point end )
+  private static LineString createLineSegmentFromMultiLine( final MultiLineString line, final Point start, final Point end )
   {
-    List<Point> points = new LinkedList<Point>();
+    final List<Point> points = new LinkedList<Point>();
 
     boolean add = false;
     boolean endPointFound = false;
@@ -434,18 +437,18 @@ public class JTSUtilities
     points.add( start );
     for( int i = 0; i < line.getNumGeometries(); i++ )
     {
-      LineString lineN = (LineString) line.getGeometryN( i );
+      final LineString lineN = (LineString) line.getGeometryN( i );
 
       for( int j = 0; j < lineN.getNumPoints() - 1; j++ )
       {
-        Point pointN = lineN.getPointN( j );
-        Point pointN1 = lineN.getPointN( j + 1 );
+        final Point pointN = lineN.getPointN( j );
+        final Point pointN1 = lineN.getPointN( j + 1 );
 
         if( add )
           points.add( pointN );
 
         /* Build a line with the two points to check the flag. */
-        LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+        final LineSegment testLine = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
         if( testLine.distance( start.getCoordinate() ) < 10E-08 )
           add = true;
@@ -465,11 +468,11 @@ public class JTSUtilities
     points.add( end );
 
     /* Create the coordinates for the new line string. */
-    Coordinate[] coordinates = new Coordinate[points.size()];
+    final Coordinate[] coordinates = new Coordinate[points.size()];
 
     for( int i = 0; i < points.size(); i++ )
       coordinates[i] = new Coordinate( points.get( i ).getCoordinate() );
-    GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+    final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
     return factory.createLineString( coordinates );
   }
@@ -483,10 +486,10 @@ public class JTSUtilities
    *            The end point of the line.
    * @return A vector of the line between this two points as point.
    */
-  public static Point getVector( Point start, Point end )
+  public static Point getVector( final Point start, final Point end )
   {
-    Coordinate coords = new Coordinate( start.getX() - end.getX(), start.getY() - end.getY() );
-    GeometryFactory factory = new GeometryFactory( start.getPrecisionModel(), start.getSRID() );
+    final Coordinate coords = new Coordinate( start.getX() - end.getX(), start.getY() - end.getY() );
+    final GeometryFactory factory = new GeometryFactory( start.getPrecisionModel(), start.getSRID() );
 
     return factory.createPoint( coords );
   }
@@ -498,16 +501,16 @@ public class JTSUtilities
    *            The vector to be normalized.
    * @return The normalized vector.
    */
-  public static Point getNormalizedVector( Point vector )
+  public static Point getNormalizedVector( final Point vector )
   {
-    double x = vector.getX();
-    double y = vector.getY();
+    final double x = vector.getX();
+    final double y = vector.getY();
 
     /* The length of a vector is the sum of all elements with the power of two and than the square root of it. */
-    double laenge = Math.sqrt( x * x + y * y );
+    final double laenge = Math.sqrt( x * x + y * y );
 
-    Coordinate coord = new Coordinate( x / laenge, y / laenge );
-    GeometryFactory factory = new GeometryFactory( vector.getPrecisionModel(), vector.getSRID() );
+    final Coordinate coord = new Coordinate( x / laenge, y / laenge );
+    final GeometryFactory factory = new GeometryFactory( vector.getPrecisionModel(), vector.getSRID() );
     return factory.createPoint( coord );
   }
 
@@ -521,7 +524,7 @@ public class JTSUtilities
    *            This point will be used as end point of the line segment.
    * @return The length of the line between the two points given.
    */
-  public static double getLengthBetweenPoints( Point pointOne, Point pointTwo )
+  public static double getLengthBetweenPoints( final Point pointOne, final Point pointTwo )
   {
     return getLengthBetweenPoints( pointOne.getCoordinate(), pointTwo.getCoordinate() );
   }
@@ -536,22 +539,22 @@ public class JTSUtilities
    *            This coordinate will be used as end point of the line segment.
    * @return The length of the line between the two coordinates given.
    */
-  public static double getLengthBetweenPoints( Coordinate coordinateOne, Coordinate coordinateTwo )
+  public static double getLengthBetweenPoints( final Coordinate coordinateOne, final Coordinate coordinateTwo )
   {
-    LineSegment segment = new LineSegment( coordinateOne, coordinateTwo );
+    final LineSegment segment = new LineSegment( coordinateOne, coordinateTwo );
     return segment.getLength();
   }
 
   /** Creates a jts-polygon from a deegree-envelope */
-  public static Polygon convertGMEnvelopeToPolygon( GM_Envelope envelope, GeometryFactory gf )
+  public static Polygon convertGMEnvelopeToPolygon( final GM_Envelope envelope, final GeometryFactory gf )
   {
-    Coordinate minCoord = JTSAdapter.export( envelope.getMin() );
-    Coordinate maxCoord = JTSAdapter.export( envelope.getMax() );
-    Coordinate tmp1Coord = new Coordinate( minCoord.x, maxCoord.y );
-    Coordinate tmp2Coord = new Coordinate( maxCoord.x, minCoord.y );
+    final Coordinate minCoord = JTSAdapter.export( envelope.getMin() );
+    final Coordinate maxCoord = JTSAdapter.export( envelope.getMax() );
+    final Coordinate tmp1Coord = new Coordinate( minCoord.x, maxCoord.y );
+    final Coordinate tmp2Coord = new Coordinate( maxCoord.x, minCoord.y );
 
-    Coordinate[] coordinates = new Coordinate[] { minCoord, tmp1Coord, maxCoord, tmp2Coord, minCoord };
-    LinearRing linearRing = gf.createLinearRing( coordinates );
+    final Coordinate[] coordinates = new Coordinate[] { minCoord, tmp1Coord, maxCoord, tmp2Coord, minCoord };
+    final LinearRing linearRing = gf.createLinearRing( coordinates );
     return gf.createPolygon( linearRing, null );
   }
 
@@ -563,22 +566,22 @@ public class JTSUtilities
    *            coordinate of 3 plane points
    * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
    */
-  public static double[] calculateTrianglePlaneEquation( Coordinate[] coords )
+  public static double[] calculateTrianglePlaneEquation( final Coordinate[] coords )
   {
     Assert.isNotNull( coords, "coords" );
     Assert.isTrue( coords.length >= 3, "Param coord which represent the point of a triangle must have a minimum length of 3" );
 
-    double x1 = coords[0].x;
-    double y1 = coords[0].y;
-    double z1 = coords[0].z;
+    final double x1 = coords[0].x;
+    final double y1 = coords[0].y;
+    final double z1 = coords[0].z;
 
-    double x2 = coords[1].x;
-    double y2 = coords[1].y;
-    double z2 = coords[1].z;
+    final double x2 = coords[1].x;
+    final double y2 = coords[1].y;
+    final double z2 = coords[1].z;
 
-    double x3 = coords[2].x;
-    double y3 = coords[2].y;
-    double z3 = coords[2].z;
+    final double x3 = coords[2].x;
+    final double y3 = coords[2].y;
+    final double z3 = coords[2].z;
     if( z1 == z2 && z2 == z3 )
       // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
       return new double[] { 0, 0, z1 };
@@ -587,8 +590,8 @@ public class JTSUtilities
       // build the equation Ax + By + Cz - D = 0
       double A = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
       double B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
-      double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
-      double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
+      final double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
+      final double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
 
       // C=-C;
       // z=-A/Cx-B/Cy-D/C = Q*x+P*y+O
@@ -601,7 +604,7 @@ public class JTSUtilities
    *            Previously obtained by {@link #calculateTrianglePlaneEquation(Coordinate[])}. If <code>null</code>,
    *            <code>Double.NaN</code> will be returned.
    */
-  public static double calculateTriangleZ( double[] planeEquation, double x, double y )
+  public static double calculateTriangleZ( final double[] planeEquation, final double x, final double y )
   {
     if( planeEquation == null )
       return Double.NaN;
@@ -615,17 +618,17 @@ public class JTSUtilities
    * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive) TODO: move it to
    *         JTSUtilities
    */
-  public static double calcSignedAreaOfRing( Coordinate[] ring )
+  public static double calcSignedAreaOfRing( final Coordinate[] ring )
   {
     if( ring.length < 4 ) // 3 points and 4. is repetition of first point
       throw new UnsupportedOperationException( "can not calculate area of < 3 points" );
 
-    Coordinate a = ring[0]; // base
+    final Coordinate a = ring[0]; // base
     double area = 0;
     for( int i = 1; i < ring.length - 2; i++ )
     {
-      Coordinate b = ring[i];
-      Coordinate c = ring[i + 1];
+      final Coordinate b = ring[i];
+      final Coordinate c = ring[i + 1];
 
       area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
 
@@ -648,15 +651,15 @@ public class JTSUtilities
    *            The point, which marks the segment (e.g. an intersection point of another geometry).
    * @return The line segment or null.
    */
-  public static LineSegment findLineSegment( LineString curve, Point point )
+  public static LineSegment findLineSegment( final LineString curve, final Point point )
   {
     for( int i = 0; i < curve.getNumPoints() - 1; i++ )
     {
-      Point pointN = curve.getPointN( i );
-      Point pointN1 = curve.getPointN( i + 1 );
+      final Point pointN = curve.getPointN( i );
+      final Point pointN1 = curve.getPointN( i + 1 );
 
       /* Build a line with the two points to check the intersection. */
-      LineSegment segment = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
+      final LineSegment segment = new LineSegment( new Coordinate( pointN.getCoordinate() ), new Coordinate( pointN1.getCoordinate() ) );
 
       /* If found, return it. */
       if( segment.distance( point.getCoordinate() ) < 10E-08 )
@@ -680,23 +683,23 @@ public class JTSUtilities
    *            The points, which should be added. The points has to lie on the line.
    * @return The new line as copy of the old line, including the given points. The result may be null.
    */
-  public static LineString addPointsToLine( LineString line, List<Point> points )
+  public static LineString addPointsToLine( final LineString line, final List<Point> points )
   {
     /* Check for intersection. */
     for( int i = 0; i < points.size(); i++ )
     {
-      if( (points.get( i ).distance( line ) >= 10E-08) )
+      if( points.get( i ).distance( line ) >= 10E-08 )
         throw new IllegalStateException( "One of the points does not lie on the line ..." );
     }
 
     /* The geometry factory. */
-    GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+    final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
     /* Memory for the new coordinates. */
-    ArrayList<Coordinate> newCoordinates = new ArrayList<Coordinate>();
+    final ArrayList<Coordinate> newCoordinates = new ArrayList<Coordinate>();
 
     /* Get all coordinates. */
-    Coordinate[] lineCoordinates = line.getCoordinates();
+    final Coordinate[] lineCoordinates = line.getCoordinates();
 
     /* Always add the first coordinate. */
     newCoordinates.add( lineCoordinates[0] );
@@ -705,18 +708,18 @@ public class JTSUtilities
     for( int i = 0; i < lineCoordinates.length - 1; i++ )
     {
       /* Get the coordinates. */
-      Coordinate startCoord = lineCoordinates[i];
-      Coordinate endCoord = lineCoordinates[i + 1];
+      final Coordinate startCoord = lineCoordinates[i];
+      final Coordinate endCoord = lineCoordinates[i + 1];
 
       /* Create a new line with the coordinates. */
-      LineString ls = factory.createLineString( new Coordinate[] { startCoord, endCoord } );
+      final LineString ls = factory.createLineString( new Coordinate[] { startCoord, endCoord } );
 
       /* If no one is intersecting, the current end coordinate has to be added. */
-      ArrayList<Point> toRemove = new ArrayList<Point>();
+      final ArrayList<Point> toRemove = new ArrayList<Point>();
       for( int j = 0; j < points.size(); j++ )
       {
-        Point point = points.get( j );
-        if( (point.distance( ls ) < 10E-08) )
+        final Point point = points.get( j );
+        if( point.distance( ls ) < 10E-08 )
         {
           /* The point intersects, and has to be added. */
           newCoordinates.add( point.getCoordinate() );
@@ -742,7 +745,7 @@ public class JTSUtilities
     }
 
     /* Create the new geometry. */
-    LineString newLine = factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
+    final LineString newLine = factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
 
     return newLine;
   }
@@ -754,20 +757,20 @@ public class JTSUtilities
    *            The curve with original points.
    * @return A map containing the distance as key and the points as value (original and new points).
    */
-  public static TreeMap<Double, Point> calculatePointsOnLine( LineString curve )
+  public static TreeMap<Double, Point> calculatePointsOnLine( final LineString curve )
   {
     /* The length of the line. */
-    double length = curve.getLength();
+    final double length = curve.getLength();
 
     /* Memory for the new points. */
-    TreeMap<Double, Point> points = new TreeMap<Double, Point>();
+    final TreeMap<Double, Point> points = new TreeMap<Double, Point>();
 
     /* If there is only 1 meter, the start- and endpoint have to suffice. */
     double usedLength = 1.0;
     while( usedLength < length )
     {
       /* Create a new point. */
-      Point pointOnLine = pointOnLine( curve, usedLength );
+      final Point pointOnLine = pointOnLine( curve, usedLength );
 
       /* Add the found point to the map. */
       points.put( usedLength, pointOnLine );
@@ -779,11 +782,35 @@ public class JTSUtilities
     /* Add the points of the line. */
     for( int i = 0; i < curve.getNumPoints(); i++ )
     {
-      Point point = curve.getPointN( i );
-      Double distance = pointDistanceOnLine( curve, point );
+      final Point point = curve.getPointN( i );
+      final Double distance = pointDistanceOnLine( curve, point );
       points.put( distance, point );
     }
 
     return points;
+  }
+
+  /**
+   * inverts a given geometry
+   */
+  public static Geometry invert( final Geometry geometry )
+  {
+    final GeometryFactory factory = new GeometryFactory( geometry.getPrecisionModel(), geometry.getSRID() );
+
+    if( geometry instanceof LineString )
+    {
+      final LineString lineString = (LineString) geometry;
+      final Coordinate[] coordinates = lineString.getCoordinates();
+
+      final Set<Coordinate> myCoordinates = new LinkedHashSet<Coordinate>();
+      for( int i = coordinates.length - 1; i >= 0; i-- )
+      {
+        myCoordinates.add( coordinates[i] );
+      }
+
+      return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
+    }
+
+    throw new NotImplementedException();
   }
 }
