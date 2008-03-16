@@ -51,15 +51,20 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author kuch
  */
 public abstract class AbstractNode implements INode
 {
+  public static double GEOM_BUFFER = 0.1;
+
   public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point ) throws Exception
   {
     final IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
@@ -194,8 +199,20 @@ public abstract class AbstractNode implements INode
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#relaysOnGeometry(com.vividsolutions.jts.geom.Geometry)
    */
-  public boolean relaysOnGeometry( final Geometry geometry )
+  public boolean relaysOnGeometry( final Geometry geometry ) throws GM_Exception
   {
+    if( geometry instanceof LineString )
+    {
+      final LineString lineString = (LineString) geometry;
+      final GM_Point location = getLocation();
+      final Geometry point = JTSAdapter.export( location );
+
+      if( lineString.intersects( point.buffer( GEOM_BUFFER ) ) )
+        return true;
+
+      return false;
+    }
+
     throw new NotImplementedException();
   }
 }

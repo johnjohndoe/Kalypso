@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author kuch
@@ -133,8 +134,12 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
 
     final Feature feature = getFeature();
     final Object objCsData = feature.getProperty( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE );
-
-    if( objCsData instanceof Feature )
+    if( objCsData instanceof XLinkedFeature_Impl )
+    {
+      final XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) objCsData;
+      f = lnk.getFeature();
+    }
+    else if( objCsData instanceof Feature )
       // this branch should never be reached according to the schema file
       f = (Feature) objCsData;
     else

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -112,5 +113,5 @@ public interface INode
 
   public boolean isEmpty( );
 
-  public boolean relaysOnGeometry( Geometry geometry );
+  public boolean relaysOnGeometry( Geometry geometry ) throws GM_Exception;
 }
