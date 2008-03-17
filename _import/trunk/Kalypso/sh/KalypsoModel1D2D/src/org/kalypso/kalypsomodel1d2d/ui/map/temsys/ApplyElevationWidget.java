@@ -101,6 +101,7 @@ public class ApplyElevationWidget extends AbstractDelegateWidget implements IWid
   {
     super( "Knoten selektieren", "Knoten selektieren", new SelectFeatureWidget( "", "", new QName[] { IFE1D2DNode.QNAME }, IFE1D2DNode.PROP_GEOMETRY ) );
     m_toolTipRendererDesc.setTooltip( "Selektieren Sie die Randbedingungen in der Karte.\n    'Del': selektierte Randbed. löschen." );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
   }

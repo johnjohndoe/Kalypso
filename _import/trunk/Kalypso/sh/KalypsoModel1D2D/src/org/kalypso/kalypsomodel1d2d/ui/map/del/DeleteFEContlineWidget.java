@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -74,6 +75,7 @@ public class DeleteFEContlineWidget extends AbstractDelegateWidget
     super( "Kontinuitätslinien löschen", "Kontinuitätslinien löschen", new SelectFeatureWidget( "", "", new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME }, IFELine.PROP_GEOMETRY ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie die Kontinuitätslinien in der Karte.\n    'Del': selektierte Linien löschen." );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
   }
 

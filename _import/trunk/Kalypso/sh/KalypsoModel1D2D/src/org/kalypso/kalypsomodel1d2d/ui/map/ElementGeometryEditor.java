@@ -201,7 +201,7 @@ public class ElementGeometryEditor
       // }
 
       // create the new elements
-      ElementGeometryHelper.createAddElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, points );
+      ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, points );
 
       m_nodeTheme.getWorkspace().postCommand( command );
     }

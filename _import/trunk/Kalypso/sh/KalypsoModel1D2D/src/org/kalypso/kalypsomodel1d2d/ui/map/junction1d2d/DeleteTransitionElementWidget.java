@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -68,6 +69,7 @@ public class DeleteTransitionElementWidget extends AbstractDelegateWidget
     super( "Kopplung löschen", "Kopplung löschen", new SelectFeatureWidget( "", "", new QName[] { ITransitionElement.QNAME }, ITransitionElement.PROP_GEOMETRY ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie die Kopplung in der Karte.\n    'Del': selektierte Kopplung löschen." );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
   }
 

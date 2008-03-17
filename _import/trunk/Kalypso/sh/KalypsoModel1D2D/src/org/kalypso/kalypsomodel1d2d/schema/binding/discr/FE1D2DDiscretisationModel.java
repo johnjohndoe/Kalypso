@@ -87,13 +87,20 @@ public class FE1D2DDiscretisationModel extends VersionedModel implements IFEDisc
    */
   public IFE1D2DEdge findEdge( final IFE1D2DNode node0, final IFE1D2DNode node1 )
   {
-    for( final IFE1D2DEdge edge : (IFeatureWrapperCollection<IFE1D2DEdge>) node0.getContainers() )
+    final IFeatureWrapperCollection containers = node0.getContainers();
+    for( IFeatureWrapper2 featureWrapper : (IFeatureWrapperCollection< ? >) containers )
     {
-      if( edge.getNodes().contains( node1 ) )
+      if( featureWrapper instanceof IFE1D2DEdge )
       {
-        return edge;
+        final IFE1D2DEdge edge = (IFE1D2DEdge) featureWrapper;
+        if( edge.getNodes().contains( node1 ) )
+        {
+          return edge;
+        }
+
       }
     }
+
     return null;
   }
 

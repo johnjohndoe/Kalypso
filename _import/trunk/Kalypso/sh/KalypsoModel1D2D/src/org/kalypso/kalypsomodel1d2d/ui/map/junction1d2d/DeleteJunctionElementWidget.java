@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -69,6 +70,7 @@ public class DeleteJunctionElementWidget extends AbstractDelegateWidget
     super( "1D-Einmündung löschen", "1D-Einmündung löschen", new SelectFeatureWidget( "", "", new QName[] { IJunctionElement.QNAME }, IAbstractJunction.PROP_GEOMETRY ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie die 1D-Einmündung in der Karte.\n    'Del': selektierte Einmündung löschen." );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
 
   }
 

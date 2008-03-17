@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.del;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -71,8 +72,8 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
   {
     super( "2D-Elemente löschen", "2D-Elemente löschen", new SelectFeatureWidget( "", "", new QName[] { IElement2D.QNAME }, IFE1D2DElement.PROP_GEOMETRY ) );
 
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
     m_toolTipRenderer.setTooltip( "Selektieren Sie die 2D-Elemente in der Karte.\n    'Del': selektierte Elemente löschen." );
-
   }
 
   /**
@@ -113,7 +114,8 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
       if( status != Status.OK_STATUS )
       {
         final Shell shell = Display.getCurrent().getActiveShell();
-        MessageDialog.openError( shell, "1D-Elemente löschen", status.getMessage() );
+        if( shell != null )
+          MessageDialog.openError( shell, "1D-Elemente löschen", status.getMessage() );
       }
     }
     super.keyPressed( e );

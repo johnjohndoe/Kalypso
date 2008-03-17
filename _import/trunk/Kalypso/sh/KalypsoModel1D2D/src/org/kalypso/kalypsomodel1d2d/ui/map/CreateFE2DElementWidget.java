@@ -1,8 +1,10 @@
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import org.eclipse.core.runtime.IStatus;
@@ -19,6 +21,7 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -37,19 +40,28 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
   private Point m_currentMapPoint;
 
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
+  private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
+
+  private boolean m_warning;
+
   public CreateFE2DElementWidget( )
   {
     super( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.0" ), Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.CreateFE2DElementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.m_toolTipRenderer.setBackgroundColor( new Color(
+   *      1f, 1f, 0.6f, 0.70f ) );kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
+
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
+    m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
 
     final IMapModell mapModell = mapPanel.getMapModell();
     final IFEDiscretisationModel1d2d discModel = UtilMap.findFEModelTheme( mapModell );
@@ -86,6 +98,10 @@ public class CreateFE2DElementWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
     if( m_currentMapPoint != null )
     {
       if( m_builder != null )
@@ -98,6 +114,13 @@ public class CreateFE2DElementWidget extends AbstractWidget
     }
 
     super.paint( g );
+
+    final Rectangle bounds = mapPanel.getBounds();
+    m_toolTipRenderer.setTooltip( "Generieren Sie neue 2D-Elemente durch Klicken in die Karte.\n    'Doppelklick': Generierung abschließen.\n    'Esc':               abbrechen.\n    'Del':                letzten Punkt löschen." );
+    m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+
+    if( m_warning == true )
+      m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 80 ), g, bounds );
   }
 
   /**
@@ -246,9 +269,12 @@ public class CreateFE2DElementWidget extends AbstractWidget
       status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint() );
 
     if( status.isOK() )
-      mapPanel.setMessage( "" );
+      m_warning = false;
     else
-      mapPanel.setMessage( status.getMessage() );
+    {
+      m_warning = true;
+      m_warningRenderer.setTooltip( status.getMessage() );
+    }
 
     if( status.isOK() )
       return newNode;

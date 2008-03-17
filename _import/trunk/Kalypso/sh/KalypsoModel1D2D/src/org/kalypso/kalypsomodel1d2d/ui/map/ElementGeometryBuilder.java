@@ -44,8 +44,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -84,12 +82,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-
-import com.vividsolutions.jts.algorithm.CGAlgorithms;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * TODO: separate (again) geometry building from 1d2d element building!
@@ -175,7 +168,7 @@ public class ElementGeometryBuilder
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
-    ElementGeometryHelper.createAddElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, m_nodes );
+    ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, m_nodes );
 
     return command;
   }
@@ -253,6 +246,18 @@ public class ElementGeometryBuilder
     return m_nodes.contains( snapNode );
   }
 
+  private static void removeDuplicates( final List<GM_Point> list )
+  {
+    Object last = null;
+    for( final Iterator<GM_Point> iterator = list.iterator(); iterator.hasNext(); )
+    {
+      final GM_Point next = iterator.next();
+      if( ObjectUtils.equals( last, next ) )
+        iterator.remove();
+      last = next;
+    }
+  }
+
   /**
    * Checks, if the resulting element would be valid, if the given new node would be inserted at the given position.
    */
@@ -269,18 +274,6 @@ public class ElementGeometryBuilder
       m_valid = false;
 
     return status;
-  }
-
-  private static void removeDuplicates( final List<GM_Point> list )
-  {
-    Object last = null;
-    for( final Iterator<GM_Point> iterator = list.iterator(); iterator.hasNext(); )
-    {
-      final GM_Point next = iterator.next();
-      if( ObjectUtils.equals( last, next ) )
-        iterator.remove();
-      last = next;
-    }
   }
 
   // REMARK: some optimization is done here, in order to enhance performance.
@@ -330,6 +323,13 @@ public class ElementGeometryBuilder
           if( element instanceof IElement2D )
           {
             final GM_Surface<GM_SurfacePatch> eleGeom = ((IElement2D) element).getGeometry();
+            if( eleGeom == null )
+            {
+              // check for null geometries... What to do?
+              // delete the elements???
+
+              return StatusUtilities.createErrorStatus( "Warnung! Element ohne Geometrie in Modell vorhanden." );
+            }
             if( eleGeom.intersects( curve ) )
             {
               final GM_Object intersection = eleGeom.intersection( curve );
@@ -340,10 +340,10 @@ public class ElementGeometryBuilder
                 final GM_Point endPoint = intersCurve.getAsLineString().getEndPoint();
 
                 if( checkIntersectionCurve( allNodes, startPoint, endPoint ) )
-                return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+                  return StatusUtilities.createErrorStatus( "Neues Element überdeckt vorhandene" );
+              }
             }
           }
-        }
         }
 
       }

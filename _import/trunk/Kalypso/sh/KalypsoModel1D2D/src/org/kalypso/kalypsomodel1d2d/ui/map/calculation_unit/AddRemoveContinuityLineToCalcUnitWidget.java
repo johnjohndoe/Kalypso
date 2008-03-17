@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.calculation_unit;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -115,6 +116,8 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     super( "Randlinien zu Teilmodell hinzufügen / löschen", "Randlinien zu Teilmodell hinzufügen / löschen", new SelectFeatureWidget( "", "", new QName[] { IFELine.QNAME }, IFELine.PROP_GEOMETRY ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie Randlinien in der Karte.\n    '<Einfügen>': zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
+
     m_dataModel = dataModel;
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
   }
@@ -214,12 +217,6 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     for( final JMenuItem item : m_popupMenuItems )
     {
       item.setEnabled( true );
-
-      // final String text = item.getText();
-      // if( TXT_ADD_BOUNDARY_LINE_TO_UNIT.equals( text ) )
-      // updateAddUpStreamMenu( item );
-      // else if( TXT_REMOVE_BOUNDARY_LINE_FROM_UNIT.equals( text ) )
-      // updateRemoveUpStreamMenu( item );
     }
   }
 

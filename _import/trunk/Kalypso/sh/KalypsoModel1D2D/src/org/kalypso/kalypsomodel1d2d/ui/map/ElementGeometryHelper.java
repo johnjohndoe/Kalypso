@@ -50,8 +50,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
+import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -104,7 +106,7 @@ public class ElementGeometryHelper
    *            the {@link GM_Point} list
    */
   @SuppressWarnings("unchecked")
-  public static void createAddElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IRelationType parentEdgeProperty, final IRelationType parentElementProperty, final IPropertyType nodeContainerPT, final IPropertyType edgeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+  public static void createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IRelationType parentEdgeProperty, final IRelationType parentElementProperty, final IPropertyType nodeContainerPT, final IPropertyType edgeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
   {
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -112,7 +114,7 @@ public class ElementGeometryHelper
     final IFE1D2DNode[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
 
     /* Build new edges */
-    final IFE1D2DEdge[] edges = buildNewEdges( points, command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
+    final IFE1D2DEdge[] edges = buildNewEdges( points.size(), command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
 
     /* Build new element */
     final IPolyElement newElement = PolyElement.createPolyElement( discModel );
@@ -123,6 +125,44 @@ public class ElementGeometryHelper
     command.addCommand( addElementCommand );
 
     addEdgeContainerCommand( edges, edgeContainerPT, newElement, changes );
+
+    command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
+  }
+
+  /**
+   * Fills an {@link org.kalypso.kalypsomodel1d2d.ui.map.cmds.AddElementCommand} in a given {@link CompositeCommand}<br>
+   * The new {@link IFE1D2DElement} is specified by its geometry.
+   * 
+   * @param command
+   *            the {@link CompositeCommand} to be filled
+   * @param workspace
+   * @param parentFeature
+   * @param parentNodeProperty
+   * @param parentEdgeProperty
+   * @param parentElementProperty
+   * @param nodeContainerPT
+   * @param edgeContainerPT
+   * @param discModel
+   *            the discretisation model
+   * @param points
+   *            the {@link GM_Point} list
+   */
+  @SuppressWarnings("unchecked")
+  public static void createAdd1dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IRelationType parentEdgeProperty, final IRelationType parentElementProperty, final IPropertyType nodeContainerPT, final IPropertyType edgeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+  {
+    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+
+    /* Build new nodes */
+    final IFE1D2DNode[] nodes = buildNewNodes( points, command, workspace, parentFeature, parentNodeProperty, discModel, SEARCH_DISTANCE );
+
+    /* Build one new edge for the 1d element */
+    final IFE1D2DEdge[] edges = buildNewEdges( 1, command, workspace, parentFeature, parentEdgeProperty, nodeContainerPT, discModel, changes, nodes );
+
+    /* Build new element */
+    final IElement1D newElement = ModelOps.createElement1d( discModel, edges[0] );
+
+    final AddFeatureCommand addElementCommand = new AddFeatureCommand( workspace, parentFeature, parentElementProperty, -1, newElement.getFeature(), null, true );
+    command.addCommand( addElementCommand );
 
     command.addCommand( new ListPropertyChangeCommand( workspace, changes.toArray( new FeatureChange[changes.size()] ) ) );
   }
@@ -214,10 +254,10 @@ public class ElementGeometryHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static IFE1D2DEdge[] buildNewEdges( List<GM_Point> points, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentEdgeProperty, final IPropertyType nodeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<FeatureChange> changes, final IFE1D2DNode[] nodes )
+  public static IFE1D2DEdge[] buildNewEdges( final int numOfEdges, final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentEdgeProperty, final IPropertyType nodeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<FeatureChange> changes, final IFE1D2DNode[] nodes )
   {
     /* Build new edges */
-    final IFE1D2DEdge[] edges = new IFE1D2DEdge[points.size()];
+    final IFE1D2DEdge[] edges = new IFE1D2DEdge[numOfEdges];
     for( int i = 0; i < edges.length; i++ )
     {
       final IFE1D2DNode node0 = nodes[i];
@@ -237,9 +277,7 @@ public class ElementGeometryHelper
         ElementGeometryHelper.addNodeContainerCommand( node0, node1, nodeContainerPT, newEdge, changes );
       }
       else
-      {
         edges[i] = edge;
-      }
     }
 
     return edges;

@@ -116,7 +116,7 @@ public class TempGrid
    */
   private GM_Point[][] m_gridPoints;
 
-  private double m_searchRectWidth;
+  private double m_searchRectWidth = 0.1;
 
   private IKalypsoFeatureTheme m_nodeTheme;
 
@@ -147,9 +147,6 @@ public class TempGrid
    */
   public void paint( final Graphics g, final GeoTransform projection )
   {
-    // IMPORTANT: we remember GM_Points (not Point's) and retransform them for painting
-    // because the projection depends on the current map-extent, so this builder
-    // is stable in regard to zoom in/out
     if( m_gridPoints.length != 0 )
     {
       /* Paint a linestring. */
@@ -363,7 +360,7 @@ public class TempGrid
       // create the new elements
       if( nodes.size() == 3 || nodes.size() == 4 )
       {
-        ElementGeometryHelper.createAddElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, nodes );
+        ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, nodes );
         nodeTheme.getWorkspace().postCommand( command );
       }
     }
@@ -434,7 +431,7 @@ public class TempGrid
         poses[4] = m_gridPoints[i][j].getPosition();
 
         final GM_Position[] checkedPoses = checkPoses( poses );
-        if( checkedPoses.length >= 4 )
+        if( checkedPoses.length >= 4 && checkedPoses[0].equals( checkedPoses[checkedPoses.length - 1] ) )
           rings.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( checkedPoses, m_crs ) );
       }
     }
@@ -472,16 +469,6 @@ public class TempGrid
     final GM_Position[] positions = posList.toArray( new GM_Position[posList.size() + 1] );
     positions[posList.size()] = positions[0];
     return positions;
-  }
-
-  private static boolean nodeExistsInList( List<GM_Position> posList, GM_Position position )
-  {
-    for( int i = 0; i < posList.size(); i++ )
-    {
-      if( posList.get( i ).equals( position ) )
-        return true;
-    }
-    return false;
   }
 
   /**
