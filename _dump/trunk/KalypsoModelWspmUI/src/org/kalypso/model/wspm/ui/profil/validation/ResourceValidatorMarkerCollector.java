@@ -104,7 +104,7 @@ final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollecto
     final String station = String.format( "%.4f", m_profile.getStation() );
 
     final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, resSerialised, m_profileFeatureID, station };
-
+   
     marker.setAttributes( USED_ATTRIBUTES, values );
 
     m_markers.add( marker );

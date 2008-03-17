@@ -93,7 +93,7 @@ public class RauheitRule extends AbstractValidatorRule
         final double rh = (Double) oValue;
         if( rh <= 0.0 )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Rauheitswert [" + rh + "]", "", profil.indexOfPoint( point ), pointProp.getId(), pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Rauheitswert [" + rh + "]", "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), pointProp.getId(), pluginId, null );
           break;
         }
       }

@@ -55,10 +55,13 @@ import org.kalypso.observation.result.IRecord;
  * A helper class that helps indexing the problem markers of a profile by certain categories (by IRecord, ...).
  * 
  * @author Gernot Belger
+ * @author kimwerner
  */
 public class MarkerIndex
 {
   private final Map<IRecord, Collection<IMarker>> m_recordIndex = new HashMap<IRecord, Collection<IMarker>>();
+
+  private final Map<Integer, Collection<IMarker>> m_severityIndex = new HashMap<Integer, Collection<IMarker>>();
 
   private final IMarker[] m_markers;
 
@@ -75,7 +78,7 @@ public class MarkerIndex
         {
 
         }
-        else if (pointPos < profil.getResult().size())
+        else if( pointPos < profil.getResult().size() )
         {
           final IRecord record = profil.getResult().get( pointPos );
           if( !m_recordIndex.containsKey( record ) )
@@ -84,6 +87,12 @@ public class MarkerIndex
           final Collection<IMarker> recordMarkers = m_recordIndex.get( record );
           recordMarkers.add( marker );
         }
+
+        final int severity = marker.getAttribute( IMarker.SEVERITY, IMarker.SEVERITY_INFO );
+        if( !m_severityIndex.containsKey( severity ) )
+          m_severityIndex.put( severity, new ArrayList<IMarker>() );
+        final Collection<IMarker> severityMarkers = m_severityIndex.get( severity );
+        severityMarkers.add( marker );
 
         // TODO: Can't: must be moved to ui or tracing option moved here...
         // if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers/table" )
@@ -117,6 +126,18 @@ public class MarkerIndex
   public IMarker[] get( final IRecord record )
   {
     final Collection<IMarker> markers = m_recordIndex.get( record );
+    if( markers == null )
+      return new IMarker[] {};
+
+    return markers.toArray( new IMarker[markers.size()] );
+  }
+
+  /**
+   * Return all markers associated to the given severity.
+   */
+  public IMarker[] get( final int severity )
+  {
+    final Collection<IMarker> markers = m_severityIndex.get( severity );
     if( markers == null )
       return new IMarker[] {};
 

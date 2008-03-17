@@ -89,9 +89,9 @@ public class RuecksprungRule extends AbstractValidatorRule
           final double deltaX = cB.getPrecision();
           final double deltaY = cH.getPrecision();
           if( (Double) x1 - (Double) x2 > deltaX )
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+            collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
           else if( Math.abs( (Double) x2 - (Double) x1 ) < deltaX && Math.abs( (Double) y2 - (Double) y1 ) > deltaY )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "", profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
         }
 
         prevPoint = point;
