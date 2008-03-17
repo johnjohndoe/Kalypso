@@ -35,8 +35,6 @@ public class PageMain extends WizardPage implements Listener
   // widgets on this page
   Combo cmb_ShapeProperty;
 
-  Combo cmb_CoordinateSystem;
-
   Text txt_InputFile;
 
   Button btn_inputFileBrowse;
@@ -317,7 +315,7 @@ public class PageMain extends WizardPage implements Listener
     {
       m_data.setInputFile( txt_InputFile.getText() );
       m_data.setShapeProperty( cmb_ShapeProperty.getText() );
-      m_data.setCoordinateSystem( cmb_CoordinateSystem.getText() );
+      m_data.setCoordinateSystem( m_crs );
       // m_data.setLayerName( m_layerName.getText() );
       // m_data.setLayerEditable( m_layerType.getSelection() );
       m_data.setLayerAsBasic( m_layerTypeBasic.getSelection() );
