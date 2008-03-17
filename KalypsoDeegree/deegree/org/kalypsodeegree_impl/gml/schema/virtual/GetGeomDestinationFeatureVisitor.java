@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.gml.schema.virtual;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -101,7 +102,7 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
     // get childs
     final Feature[] destFEs;
 
-    if( linkProp.isList())
+    if( linkProp.isList() )
       destFEs = m_workspace.resolveLinks( feature, linkProp );
     else
     {
@@ -114,7 +115,14 @@ public class GetGeomDestinationFeatureVisitor implements FeatureVisitor
     // process childs
     for( int i = 0; i < destFEs.length; i++ )
     {
-      if( destFEs[i].getFeatureType().getDefaultGeometryProperty() != null )
+      if( destFEs[i] == null )
+      {
+        System.out.println( "Warning: Feature is null. That must not be!" );
+        continue;
+      }
+
+      final IFeatureType featureType = destFEs[i].getFeatureType();
+      if( featureType.getDefaultGeometryProperty() != null )
       {
         final GM_Object geom = destFEs[i].getDefaultGeometryProperty();
         if( geom != null )
