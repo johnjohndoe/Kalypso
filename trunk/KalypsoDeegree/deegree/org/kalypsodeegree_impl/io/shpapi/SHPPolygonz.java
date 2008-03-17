@@ -171,6 +171,9 @@ public class SHPPolygonz implements ISHPGeometry
    */
   public byte[] writeShape( )
   {
+    if( m_rings == null )
+      return null;
+
     int offset = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
     final byte[] bytearray = new byte[offset + size()];
 
