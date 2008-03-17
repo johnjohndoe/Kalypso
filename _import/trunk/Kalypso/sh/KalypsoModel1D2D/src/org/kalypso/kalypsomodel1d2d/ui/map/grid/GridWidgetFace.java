@@ -92,7 +92,7 @@ class GridWidgetFace
   /**
    * @author Patrice Congo
    */
-  private final class GridWorkStatusCnCProvider implements ITableLabelProvider, IColorProvider
+  protected final class GridWorkStatusCnCProvider implements ITableLabelProvider, IColorProvider
   {
     public Image getColumnImage( Object element, int columnIndex )
     {
@@ -102,18 +102,13 @@ class GridWidgetFace
     public String getColumnText( Object element, int columnIndex )
     {
       if( element instanceof LinePointCollectorConfig )
-      {
         return getColumnText( (LinePointCollectorConfig) element, columnIndex );
-      }
       else
-      {
         return "" + element; //$NON-NLS-1$
-      }
     }
 
     private String getColumnText( LinePointCollectorConfig elementConfig, int columnIndex )
     {
-      // System.out.println( "Getting label:" + elementConfig );
       switch( columnIndex )
       {
         case 0:
@@ -129,9 +124,7 @@ class GridWidgetFace
             return String.valueOf( curPointCnt );
           }
           else
-          {
             return "0"; //$NON-NLS-1$
-          }
         }
         case 2:
         {
@@ -142,9 +135,7 @@ class GridWidgetFace
             return String.valueOf( pointCnt );
           }
           else
-          {
             return "0"; //$NON-NLS-1$
-          }
         }
         default:
         {
@@ -200,6 +191,7 @@ class GridWidgetFace
     /**
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
+    @SuppressWarnings("synthetic-access")
     public Color getForeground( Object element )
     {
       if( element instanceof LinePointCollectorConfig )
@@ -207,7 +199,7 @@ class GridWidgetFace
         java.awt.Color awtColor = ((LinePointCollectorConfig) element).getColor();
         awtColor = awtColor.darker();
 
-        Color swtColor = toolkit.getColors().createColor( ((LinePointCollectorConfig) element).getName(), awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+        Color swtColor = m_toolkit.getColors().createColor( ((LinePointCollectorConfig) element).getName(), awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
         return swtColor;
       }
       else
@@ -223,17 +215,18 @@ class GridWidgetFace
 
     public void stateChanged( GridPointColectorChangeEvent changeEvent )
     {
-      Display display = rootPanel.getDisplay();
+      Display display = m_rootPanel.getDisplay();
       display.syncExec( new Runnable()
       {
+        @SuppressWarnings("synthetic-access")
         public void run( )
         {
-          tableViewer.setInput( gridPointCollector );
-          tableViewer.setItemCount( 4 );
-          LinePointCollectorConfig currentLPCConfig = gridPointCollector.getCurrentLPCConfig();
+          m_tableViewer.setInput( m_gridPointCollector );
+          m_tableViewer.setItemCount( 4 );
+          LinePointCollectorConfig currentLPCConfig = m_gridPointCollector.getCurrentLPCConfig();
           if( currentLPCConfig != null )
           {
-            tableViewer.setSelection( new StructuredSelection( currentLPCConfig ) );
+            m_tableViewer.setSelection( new StructuredSelection( currentLPCConfig ) );
           }
         }
       } );
@@ -241,13 +234,13 @@ class GridWidgetFace
 
   };
 
-  private Composite rootPanel;
+  protected Composite m_rootPanel;
 
-  private FormToolkit toolkit;
+  private FormToolkit m_toolkit;
 
-  private TableViewer tableViewer;
+  private TableViewer m_tableViewer;
 
-  private GridPointCollector gridPointCollector;
+  private GridPointCollector m_gridPointCollector;
 
   static private IPreferenceStore preferenceStore = KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
 
@@ -264,15 +257,15 @@ class GridWidgetFace
 
   public Control createControl( Composite parent, final FormToolkit toolkit, final CreateGridWidget widget )
   {
-    this.toolkit = toolkit;
+    m_toolkit = toolkit;
     m_widget = widget;
     preferenceStore.addPropertyChangeListener( storePropertyChangeListener );
     initStoreDefaults();
 
     parent.setLayout( new FillLayout() );
-    rootPanel = new Composite( parent, SWT.FILL );
-    rootPanel.setLayout( new FillLayout() );
-    final ScrolledForm scrolledForm = toolkit.createScrolledForm( rootPanel );
+    m_rootPanel = new Composite( parent, SWT.FILL );
+    m_rootPanel.setLayout( new FillLayout() );
+    final ScrolledForm scrolledForm = toolkit.createScrolledForm( m_rootPanel );
 
     scrolledForm.getBody().setLayout( new TableWrapLayout() );
 
@@ -343,7 +336,7 @@ class GridWidgetFace
 
     toolkit.createLabel( compConversion, Messages.getString( "GridWidgetFace.9" ), SWT.NULL ); //$NON-NLS-1$
 
-    return rootPanel;
+    return m_rootPanel;
   }
 
   private final void createWorkStatus( Section workStatusSection )
@@ -351,10 +344,10 @@ class GridWidgetFace
 
     workStatusSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( workStatusSection, SWT.FLAT );
+    Composite clientComposite = m_toolkit.createComposite( workStatusSection, SWT.FLAT );
     workStatusSection.setClient( clientComposite );
     clientComposite.setLayout( new GridLayout() );
-    Table table = toolkit.createTable( clientComposite, SWT.FILL );
+    Table table = m_toolkit.createTable( clientComposite, SWT.FILL );
 
     GridData gridData = new GridData( SWT.BEGINNING, SWT.FILL, false, true );
     table.setLayoutData( gridData );
@@ -380,47 +373,47 @@ class GridWidgetFace
 
     table.pack();
 
-    tableViewer = new TableViewer( table );
-    tableViewer.setContentProvider( getTableContentProvider() );
-    tableViewer.setLabelProvider( getTableLabelProvider() );
+    m_tableViewer = new TableViewer( table );
+    m_tableViewer.setContentProvider( getTableContentProvider() );
+    m_tableViewer.setLabelProvider( getTableLabelProvider() );
   }
 
   public void disposeControl( )
   {
     preferenceStore.removePropertyChangeListener( storePropertyChangeListener );
-    if( rootPanel == null )
+    if( m_rootPanel == null )
     {
       System.out.println( Messages.getString( "GridWidgetFace.13" ) ); //$NON-NLS-1$
       return;
     }
-    if( !rootPanel.isDisposed() )
+    if( !m_rootPanel.isDisposed() )
     {
       handleWidth.setPropertyChangeListener( null );
       handleWidth.store();
-      rootPanel.dispose();
+      m_rootPanel.dispose();
     }
 
   }
 
   public void setInput( Object input )
   {
-    Object oldInput = tableViewer.getInput();
+    Object oldInput = m_tableViewer.getInput();
     if( oldInput == input )
     {
-      tableViewer.refresh();
+      m_tableViewer.refresh();
     }
     else
     {
-      tableViewer.setInput( input );
+      m_tableViewer.setInput( input );
       if( input instanceof GridPointCollector )
       {
         LinePointCollectorConfig currentLPCConfig = ((GridPointCollector) input).getCurrentLPCConfig();
         if( currentLPCConfig != null )
         {
-          tableViewer.setSelection( new StructuredSelection( currentLPCConfig ) );
+          m_tableViewer.setSelection( new StructuredSelection( currentLPCConfig ) );
         }
-        this.gridPointCollector = (GridPointCollector) input;
-        this.gridPointCollector.addGridPointCollectorStateChangeListener( tableUpdater );
+        this.m_gridPointCollector = (GridPointCollector) input;
+        this.m_gridPointCollector.addGridPointCollectorStateChangeListener( tableUpdater );
       }
 
     }
@@ -502,7 +495,7 @@ class GridWidgetFace
   {
     configSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( configSection, SWT.FLAT );
+    Composite clientComposite = m_toolkit.createComposite( configSection, SWT.FLAT );
     configSection.setClient( clientComposite );
     clientComposite.setLayout( new GridLayout() );
 
@@ -541,13 +534,13 @@ class GridWidgetFace
   {
     helpSection.setLayout( new FillLayout() );
 
-    Composite clientComposite = toolkit.createComposite( helpSection, SWT.FILL );
+    Composite clientComposite = m_toolkit.createComposite( helpSection, SWT.FILL );
     helpSection.setClient( clientComposite );
     clientComposite.setLayout( new FillLayout() );
     helpSection.setSize( 350, 350 );
     Browser browser = new Browser( clientComposite, SWT.FILL );
     // browser.setSize( browser.computeSize( clientComposite.getSize().x, 300, false ) );
-    toolkit.adapt( browser );
+    m_toolkit.adapt( browser );
 
     try
     {
@@ -604,6 +597,7 @@ class GridWidgetFace
     return new IPropertyChangeListener()
     {
 
+      @SuppressWarnings("synthetic-access")
       public void propertyChange( PropertyChangeEvent event )
       {
         Object source = event.getSource();
@@ -621,23 +615,23 @@ class GridWidgetFace
         }
         else if( LINE_COLOR_0.equals( property ) )
         {
-          gridPointCollector.setColor( 0, makeAWTColor( (RGB) event.getNewValue() ) );
+          m_gridPointCollector.setColor( 0, makeAWTColor( (RGB) event.getNewValue() ) );
         }
         else if( LINE_COLOR_1.equals( property ) )
         {
-          gridPointCollector.setColor( 1, makeAWTColor( (RGB) event.getNewValue() ) );
+          m_gridPointCollector.setColor( 1, makeAWTColor( (RGB) event.getNewValue() ) );
         }
         else if( LINE_COLOR_2.equals( property ) )
         {
-          gridPointCollector.setColor( 2, makeAWTColor( (RGB) event.getNewValue() ) );
+          m_gridPointCollector.setColor( 2, makeAWTColor( (RGB) event.getNewValue() ) );
         }
         else if( LINE_COLOR_3.equals( property ) )
         {
-          gridPointCollector.setColor( 3, makeAWTColor( (RGB) event.getNewValue() ) );
+          m_gridPointCollector.setColor( 3, makeAWTColor( (RGB) event.getNewValue() ) );
         }
         else if( HANDLE_WIDTH_NAME.equals( property ) )
         {
-          gridPointCollector.setPointRectSize( (Integer) event.getNewValue() );
+          m_gridPointCollector.setPointRectSize( (Integer) event.getNewValue() );
         }
         else
         {
@@ -650,7 +644,6 @@ class GridWidgetFace
 
   static private final java.awt.Color makeAWTColor( RGB rgb )
   {
-
     return new java.awt.Color( rgb.red, rgb.green, rgb.blue );
   }
 

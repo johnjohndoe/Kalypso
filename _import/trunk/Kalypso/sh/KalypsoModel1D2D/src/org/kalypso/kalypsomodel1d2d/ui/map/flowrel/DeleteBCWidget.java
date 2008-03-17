@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -73,6 +74,7 @@ public class DeleteBCWidget extends AbstractDelegateWidget
     super( "Randbedingung löschen", "Randbedingung löschen", new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie die Randbedingungen in der Karte.\n    'Del': selektierte Randbed. löschen." );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
   /**

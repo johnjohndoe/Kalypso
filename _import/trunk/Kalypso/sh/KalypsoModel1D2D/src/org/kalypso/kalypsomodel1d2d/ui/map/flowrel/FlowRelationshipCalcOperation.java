@@ -309,7 +309,16 @@ public class FlowRelationshipCalcOperation implements IAdaptable
       for( final Object o : resultList )
       {
         final QIntervallResult qresult = new QIntervallResult( FeatureHelper.getFeature( qresultsWorkspace, o ) );
-        final BigDecimal station = flowRel.getStation();
+        // HACK: we set a scale here in order to get a right comparison with the station value that was read from the
+        // profile. if a rounded station value occurs in the flow relation, the result of the comparison is always
+        // false, because the station value of the flow relation gets rounded and the one of the profile gets not
+        // rounded (read from string with fixed length).
+        // TODO: implement the right setting of the station value for the flow relation with a fixed scale of 4!
+        final BigDecimal station = flowRel.getStation().setScale( 4, BigDecimal.ROUND_HALF_UP );
+
+        // REMARK: sometimes it could be, that the user wants to assign a profile to a new created flow relation. in
+        // this case he is able to to this and to calculate the data, but the assignment will never happen, if the
+        // station is not equal to the station of the assigned profile.
         if( ObjectUtils.equals( station, qresult.getStation() ) )
           return qresult;
       }

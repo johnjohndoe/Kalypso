@@ -1,5 +1,6 @@
 package org.kalypso.model.flood.ui.map;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -32,6 +33,7 @@ public class DeleteFloodPolygonWidget extends AbstractDelegateWidget
     super( "WSP-Anpassungen löschen", "löscht WSP-Anpassungen", new SelectFeatureWidget( "", "", new QName[] { IFloodPolygon.QNAME }, IFloodPolygon.QNAME_PROP_AREA ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie die WSP-Anpassungen in der Karte.\n    'Del': selektierte WSP-Anpassungen löschen." );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
   /**

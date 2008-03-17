@@ -1,5 +1,6 @@
 package org.kalypso.model.flood.ui.map;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -29,6 +30,7 @@ public class EditFloodPolygonWidget extends AbstractDelegateWidget
     super( "WSP-Anpassungen bearbeiten", "bearbeitet WSP-Anpassungen", new SelectFeatureWidget( "", "", new QName[] { IFloodPolygon.QNAME }, IFloodPolygon.QNAME_PROP_AREA ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie WSP-Anpassungenen in der Karte.\n" );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
   /**

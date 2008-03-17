@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -70,6 +71,7 @@ public class EditBCWidget extends AbstractDelegateWidget
     super( "Randbedingungen bearbeiten", "Randbedingungen bearbeiten", new SelectFeatureWidget( "", "", new QName[] { IBoundaryCondition.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie die Randbedingung in der Karte.\n" );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
   /**

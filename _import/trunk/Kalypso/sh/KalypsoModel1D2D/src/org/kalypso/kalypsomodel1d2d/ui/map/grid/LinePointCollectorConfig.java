@@ -42,8 +42,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import java.awt.Color;
 
-
-
 /**
  * Hold config data for a line point collector
  * 
@@ -51,63 +49,60 @@ import java.awt.Color;
  */
 public class LinePointCollectorConfig
 {
-  
-  
-  private String name;
-  private Color color;
-  private int pointRectSize;
-  private LinePointCollector configLinePointCollector;
-  
-  public LinePointCollectorConfig(
-            String name,
-            Color color,
-            LinePointCollector linePointCollector)
+
+  private String m_name;
+
+  private Color m_color;
+
+  private int m_pointRectSize;
+
+  private LinePointCollector m_configLinePointCollector;
+
+  public LinePointCollectorConfig( String name, Color color, LinePointCollector linePointCollector )
   {
-    this.name=name;
-    this.configLinePointCollector = configLinePointCollector;
-    this.color=color;
+    m_name = name;
+    m_configLinePointCollector = linePointCollector;
+    m_color = color;
   }
-  
-  
 
   public Color getColor( )
   {
-    return color;
+    return m_color;
   }
 
   public void setColor( Color color )
   {
-    this.color = color;
+    m_color = color;
   }
 
   public LinePointCollector getConfigLinePointCollector( )
   {
-    return configLinePointCollector;
+    return m_configLinePointCollector;
   }
 
   public void setConfigLinePointCollector( LinePointCollector configLinePointCollector )
   {
-    this.configLinePointCollector = configLinePointCollector;
+    m_configLinePointCollector = configLinePointCollector;
   }
 
   public String getName( )
   {
-    return name;
+    return m_name;
   }
 
   public void setName( String name )
   {
-    this.name = name;
+    m_name = name;
   }
-  
-   public int getPointRectSize( )
+
+  public int getPointRectSize( )
   {
-    return pointRectSize;
+    return m_pointRectSize;
   }
-   
+
   public void setPointRectSize( int pointRectSize )
   {
-    this.pointRectSize = pointRectSize;
+    m_pointRectSize = pointRectSize;
   }
-  
+
 }

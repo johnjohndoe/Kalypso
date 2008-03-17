@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.flowrel;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -75,6 +76,7 @@ public class DeleteParameter1DWidget extends AbstractDelegateWidget
         IBuildingFlowRelation.QNAME }, IFlowRelationship.QNAME_PROP_POSITION ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie Parameter in der Karte.\n    'Enter': selektierte Parameter neu berechnen" );
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
   }
 
   /**
