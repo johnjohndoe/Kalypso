@@ -78,14 +78,6 @@ public class SHPNullShape implements ISHPGeometry
 {
 
   /**
-   * constructor: gets a stream and the start index <BR>
-   * of point on it <BR>
-   */
-  public SHPNullShape( byte[] recBuf )
-  {
-  }
-
-  /**
    * method: writeNullShape: writes a NullShape Object to a recBuffer <BR>
    */
   public byte[] writeShape( )

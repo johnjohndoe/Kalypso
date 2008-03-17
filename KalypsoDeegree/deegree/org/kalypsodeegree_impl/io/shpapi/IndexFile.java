@@ -345,25 +345,21 @@ public class IndexFile
     rafShx.seek( offset );
     rafShx.write( record.writeIndexRecord() );
     offset = offset + INDEX_RECORD_LENGTH;
-    // actualize mbr
-    if( fileMBR.west > mbr.west )
+
+    if( mbr != null )
     {
-      fileMBR.west = mbr.west;
+      // actualize mbr
+      if( fileMBR.west > mbr.west )
+        fileMBR.west = mbr.west;
+      if( fileMBR.east < mbr.east )
+        fileMBR.east = mbr.east;
+      if( fileMBR.south > mbr.south )
+        fileMBR.south = mbr.south;
+      if( fileMBR.north < mbr.north )
+        fileMBR.north = mbr.north;
+      rafShx.seek( 36 );
+      rafShx.write( fileMBR.writeLESHPEnvelope() );
     }
-    if( fileMBR.east < mbr.east )
-    {
-      fileMBR.east = mbr.east;
-    }
-    if( fileMBR.south > mbr.south )
-    {
-      fileMBR.south = mbr.south;
-    }
-    if( fileMBR.north < mbr.north )
-    {
-      fileMBR.north = mbr.north;
-    }
-    rafShx.seek( 36 );
-    rafShx.write( fileMBR.writeLESHPEnvelope() );
 
     // actualize file length
     filelength = (int) offset / 2;

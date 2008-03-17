@@ -826,19 +826,25 @@ public class ShapeFile
 
       /* create a new SHP type entry in the specified shape type */
       /* convert feature geometry into output geometry */
-      final ISHPGeometry shpGeom = getShapeGeometry( dataProvider.getGeometry( i ), dataProvider.getOutputShapeConstant() );
+      ISHPGeometry shpGeom = getShapeGeometry( dataProvider.getGeometry( i ), dataProvider.getOutputShapeConstant() );
       if( shpGeom == null )
         throw new UnsupportedOperationException( "Data type (" + dataProvider.getGeometry( i ).toString() + ") cannot converted into the specified shape type ("
             + ShapeConst.getShapeConstantAsString( dataProvider.getOutputShapeConstant() ) + ") or geometry is null." );
 
-      final byte[] byteArray = shpGeom.writeShape();
-      final int nbyte = shpGeom.size();
+      byte[] byteArray = shpGeom.writeShape();
+
+      /* check for null geometry */
+      if( byteArray == null )
+      {
+        shpGeom = new SHPNullShape();
+        byteArray = shpGeom.writeShape();
+      }
+
       final SHPEnvelope mbr = shpGeom.getEnvelope();
 
+      final int nbyte = shpGeom.size();
       if( i == 0 )
-      {
         shpmbr = mbr;
-      }
 
       // write bytearray to the shape file
       final IndexRecord record = new IndexRecord( offset / 2, nbyte / 2 );
@@ -850,30 +856,24 @@ public class ShapeFile
       // write record (bytearray) including recordheader to the shape file
       shp.write( byteArray, record, mbr );
 
-      // actualize shape file minimum boundary rectangle
-
-      if( mbr.west < shpmbr.west )
-      {
-        shpmbr.west = mbr.west;
-      }
-
-      if( mbr.east > shpmbr.east )
-      {
-        shpmbr.east = mbr.east;
-      }
-
-      if( mbr.south < shpmbr.south )
-      {
-        shpmbr.south = mbr.south;
-      }
-
-      if( mbr.north > shpmbr.north )
-      {
-        shpmbr.north = mbr.north;
-      }
-
       // icrement offset for pointing at the end of the file
       offset += (nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH);
+
+      // actualize shape file minimum boundary rectangle
+      if( mbr != null )
+      {
+        if( mbr.west < shpmbr.west )
+          shpmbr.west = mbr.west;
+
+        if( mbr.east > shpmbr.east )
+          shpmbr.east = mbr.east;
+
+        if( mbr.south < shpmbr.south )
+          shpmbr.south = mbr.south;
+
+        if( mbr.north > shpmbr.north )
+          shpmbr.north = mbr.north;
+      }
     }
 
     m_dbf.writeAllToFile();

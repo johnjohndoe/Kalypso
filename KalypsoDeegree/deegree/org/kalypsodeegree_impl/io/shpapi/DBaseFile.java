@@ -66,7 +66,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -801,8 +800,8 @@ public class DBaseFile
       }
     }
 
-//    return FeatureFactory.createFeature( parent, parentRelation, rowNo + "_" + m_suffix, m_featureType, fp );
-    return FeatureFactory.createFeature( parent, parentRelation, ""+rowNo , m_featureType, fp );
+// return FeatureFactory.createFeature( parent, parentRelation, rowNo + "_" + m_suffix, m_featureType, fp );
+    return FeatureFactory.createFeature( parent, parentRelation, "" + rowNo, m_featureType, fp );
   }
 
   /**
@@ -929,17 +928,13 @@ public class DBaseFile
   public void writeAllToFile( ) throws IOException, DBaseException
   {
     if( filemode == 0 )
-    {
       throw new DBaseException( "class is initialized in read-only mode" );
-    }
 
     // if a file with the retrieved filename exists, delete it!
     File file = new File( fname + ".dbf" );
 
     if( file.exists() )
-    {
       file.delete();
-    }
 
     file = null;
 
