@@ -78,7 +78,7 @@ public class ToolTipRenderer
   /** content of tooltip (rows which will be rendered) */
   private String[] m_rows;
 
-  private final Color m_backgroundColor;
+  private Color m_backgroundColor;
 
   private final Color m_borderColor;
 
@@ -197,7 +197,7 @@ public class ToolTipRenderer
     final String tooltip = text.toString();
 
     final int drawFlags = SWT.DRAW_DELIMITER; // SWT.DRAW_DELIMITER | SWT.DRAW_MNEMONIC | SWT.DRAW_TAB /* |
-                                              // SWT.DRAW_TRANSPARENT
+    // SWT.DRAW_TRANSPARENT
     // */;
     final org.eclipse.swt.graphics.Point textBoxSize = gc.textExtent( tooltip, drawFlags );
 
@@ -268,5 +268,10 @@ public class ToolTipRenderer
   public void setTooltip( final String tooltip )
   {
     setInputData( tooltip == null ? null : LINE_SPLIT.split( tooltip ) );
+  }
+
+  public void setBackgroundColor( final Color backgroundColor )
+  {
+    m_backgroundColor = backgroundColor;
   }
 }
