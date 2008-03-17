@@ -141,22 +141,29 @@ public class WehrRule extends AbstractValidatorRule
     IProfileObject building = null;
     if( profileObjects.length > 0 )
       building = profileObjects[0];
+    final IComponent cmp = building.getObjectProperty(  IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART  );
+    if(IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG.equals(  building.getValue( cmp )) )
+      return;
     if( deviders != null )
       for( final IProfilPointMarker devider : deviders )
       {
         final Object objValue = devider.getValue();
-        if( (objValue == null) || !(objValue instanceof Double)||(((Double) objValue).isNaN()) || ((Double) objValue == 0.0) )
+        if( (objValue == null) || !(objValue instanceof Double) || (((Double) objValue).isNaN()) || ((Double) objValue == 0.0) )
         {
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiger Kronenparameter: 0.0", "", profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
           break;
         }
       }
+
     for( final IComponent property : building.getObjectProperties() )
     {
       final Object prop = building.getValue( property );
-      if( prop instanceof Double && ((Double) prop).isNaN() )
+      if( !(prop instanceof Double) )
+        continue;
+
+      if( ((Double) prop).isNaN() || (Double) prop == 0.0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> ist ungültig", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
         break;
       }
     }
