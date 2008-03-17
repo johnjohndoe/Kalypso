@@ -1,98 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:gml="http://www.opengis.net/gml"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:common="org.kalypso.gml.common"
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
-	elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel" xmlns:kr_common="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:common="org.kalypso.gml.common" targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
-	<xs:import namespace="http://www.opengis.net/gml" />
-	<xs:import namespace="org.kalypso.gml.common" />
+	<xs:import namespace="http://www.opengis.net/gml"/>
+	<xs:import namespace="org.kalypso.gml.common"/>
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common" schemaLocation="Common.xsd"/>
 	<!-- =================================================================
 		RasterizationControlModel
 		================================================================== -->
-	<xs:element name="RasterizationControlModel"
-		type="krrcm:RasterizationControlModelType"
-		substitutionGroup="gml:_Feature" />
+	<xs:element name="RasterizationControlModel" type="krrcm:RasterizationControlModelType" substitutionGroup="gml:_Feature"/>
 	<xs:complexType name="RasterizationControlModelType">
 		<xs:complexContent>
 			<xs:restriction base="gml:AbstractFeatureCollectionType">
 				<xs:sequence>
-					<xs:element ref="krrcm:landuseClassMember"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="krrcm:damageFunctionMember"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="krrcm:assetValueClassMember"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="krrcm:administrationUnitMember"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="krrcm:landuseRiskTypeMember"
-						minOccurs="0" maxOccurs="unbounded" />
-					<xs:element ref="krrcm:riskZoneDefinitionMember"
-						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element ref="krrcm:landuseClassMember" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="krrcm:damageFunctionMember" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="krrcm:assetValueClassMember" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="krrcm:administrationUnitMember" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="krrcm:landuseRiskTypeMember" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="krrcm:riskZoneDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:restriction>
 		</xs:complexContent>
 	</xs:complexType>
-
 	<!-- =================================================================
 		landuseClassMember (root property)
 		================================================================== -->
-	<xs:element name="landuseClassMember"
-		type="krrcm:LanduseClassPropertyType" />
-
+	<xs:element name="landuseClassMember" type="krrcm:LanduseClassPropertyType"/>
 	<xs:complexType name="LanduseClassPropertyType">
 		<xs:sequence>
-			<xs:element ref="krrcm:LanduseClass" minOccurs="0" />
+			<xs:element ref="krrcm:LanduseClass" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
 	<!-- =================================================================
 		Landuse classes
 		================================================================== -->
-	<xs:element name="LanduseClass" type="krrcm:LanduseClassType"
-		substitutionGroup="gml:_Feature">
+	<xs:element name="LanduseClass" type="krrcm:LanduseClassType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
 				</xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
 				</xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
 	<xs:complexType name="LanduseClassType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription" kapp:property="krrcm:name">
+					<kapp:parameter>
+						<kapp:name>shallOverwrite</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="kr_common:EmptyFeatureBaseType">
 				<xs:sequence>
-					<xs:element name="ordinalNumber" type="xs:int" />
-					<xs:element name="damageFunctionLink"
-						type="krrcm:DamageFunctionLinkType" nillable="true">
+					<xs:element name="name" type="xs:string"/>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element name="ordinalNumber" type="xs:int"/>
+					<xs:element name="damageFunctionLink" type="krrcm:DamageFunctionLinkType" nillable="true">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Schadensfunktion</xs:label>
-								<xs:tooltip>
-									Liefert für den jeweiligen Nutzungstyp den Schädigungsgrad (Vulnerabilität) in Prozent in Abhängigkeit der Einstauhöhe.
-								</xs:tooltip>
+								<xs:tooltip> Liefert für den jeweiligen Nutzungstyp den Schädigungsgrad (Vulnerabilität) in Prozent in Abhängigkeit der Einstauhöhe. </xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Damage function</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="landuseRiskTypeLink"
-						type="krrcm:LanduseRiskTypeLinkType" nillable="true">
+					<xs:element name="landuseRiskTypeLink" type="krrcm:LanduseRiskTypeLinkType" nillable="true">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Kategorie</xs:label>
@@ -103,20 +92,26 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="AssetValueClassLink" type="krrcm:AssetValueClassLinkType" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Vermögenswert-Klasse</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Asset Value Class</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					
 					<xs:element name="colorStyle" type="common:color">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Farbdarstellung</xs:label>
-								<xs:tooltip>
-									Farbdarstellung der
-									Landnutzungsklasse in der Karte
-								</xs:tooltip>
+								<xs:tooltip> Farbdarstellung der Landnutzungsklasse in der Karte </xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Color style</xs:label>
-								<xs:tooltip>
-									Color of landuse class in the map
-								</xs:tooltip>
+								<xs:tooltip> Color of landuse class in the map </xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
@@ -160,63 +155,56 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					
+					<xs:element ref="kr_common:inscriptionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-
 	<!-- =================================================================
 		assetValueClassMember property
 		================================================================== -->
-	<xs:element name="assetValueClassMember"
-		type="krrcm:AssetValueClassPropertyType" />
-
+	<xs:element name="assetValueClassMember" type="krrcm:AssetValueClassPropertyType"/>
 	<xs:complexType name="AssetValueClassPropertyType">
 		<xs:sequence>
-			<xs:element ref="krrcm:AssetValueClass" minOccurs="0" />
+			<xs:element ref="krrcm:AssetValueClass" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
 	<!-- =================================================================
 		Asset value classes
 		================================================================== -->
-	<xs:element name="AssetValueClass" type="krrcm:AssetValueClassType"
-		substitutionGroup="gml:_Feature">
+	<xs:element name="AssetValueClass" type="krrcm:AssetValueClassType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
 				</xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
 				</xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
 	<xs:complexType name="AssetValueClassType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription" kapp:property="krrcm:name">
+					<kapp:parameter>
+						<kapp:name>shallOverwrite</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="kr_common:EmptyFeatureBaseType">
 				<xs:sequence>
-					<xs:element name="landuseClassLink"
-						type="krrcm:LanduseClassLinkType" nillable="true">
-						<xs:annotation>
-							<xs:documentation xml:lang="de">
-								<xs:label>Landnutzungsklasse</xs:label>
-							</xs:documentation>
-							<xs:documentation xml:lang="en">
-								<xs:label>Landuse class</xs:label>
-							</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="administrationUnitLink"
-						type="krrcm:AdministrationUnitLinkType" nillable="true">
+					<xs:element name="name" type="xs:string"/>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element name="administrationUnitLink" type="krrcm:AdministrationUnitLinkType" nillable="true">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Verwaltungseinheit</xs:label>
@@ -226,197 +214,216 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="value" type="xs:double"
-						default="0.0">
+					<xs:element name="value" type="xs:double" default="0.0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>spezifischer Vermögenswert [€/m²]</xs:label>
-								<xs:tooltip>
-									maximaler Vermögenswert (für jede Landnutzungsklasse)
-								</xs:tooltip>
+								<xs:tooltip> maximaler Vermögenswert (für jede Landnutzungsklasse) </xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Asset value [€/m²]</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element ref="kr_common:inscriptionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-
 	<!-- =================================================================
 		damageFunctionMember (root property)
 		================================================================== -->
-	<xs:element name="damageFunctionMember"
-		type="krrcm:DamageFunctionPropertyType" />
-
+	<xs:element name="damageFunctionMember" type="krrcm:DamageFunctionPropertyType"/>
 	<xs:complexType name="DamageFunctionPropertyType">
 		<xs:sequence>
-			<xs:element ref="krrcm:DamageFunction" minOccurs="0" />
+			<xs:element ref="krrcm:DamageFunction" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
 	<!-- =================================================================
 		Asset value classes
 		================================================================== -->
-	<xs:element name="DamageFunction" type="krrcm:DamageFunctionType"
-		substitutionGroup="gml:_Feature">
+	<xs:element name="DamageFunction" type="krrcm:DamageFunctionType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
 				</xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
 				</xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
 	<xs:complexType name="DamageFunctionType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription" kapp:property="krrcm:name">
+					<kapp:parameter>
+						<kapp:name>shallOverwrite</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="kr_common:EmptyFeatureBaseType">
 				<xs:sequence>
-					<xs:element name="function" type="xs:string">
-					</xs:element>
+					<xs:element name="name" type="xs:string"/>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element name="function" type="xs:string"> </xs:element>
+					<xs:element ref="kr_common:inscriptionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-
 	<!-- =================================================================
 		administrationUnitMember property
 		================================================================== -->
-	<xs:element name="administrationUnitMember"
-		type="krrcm:AdministrationUnitPropertyType" />
-
+	<xs:element name="administrationUnitMember" type="krrcm:AdministrationUnitPropertyType"/>
 	<xs:complexType name="AdministrationUnitPropertyType">
 		<xs:sequence>
-			<xs:element ref="krrcm:AdministrationUnit" minOccurs="0" />
+			<xs:element ref="krrcm:AdministrationUnit" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
 	<!-- =================================================================
 		Administration units
 		================================================================== -->
-	<xs:element name="AdministrationUnit"
-		type="krrcm:AdministrationUnitType"
-		substitutionGroup="gml:_Feature">
+	<xs:element name="AdministrationUnit" type="krrcm:AdministrationUnitType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
 				</xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
 				</xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
 	<xs:complexType name="AdministrationUnitType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription" kapp:property="krrcm:name">
+					<kapp:parameter>
+						<kapp:name>shallOverwrite</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
-				<xs:sequence />
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+			<xs:extension base="kr_common:EmptyFeatureBaseType">
+				<xs:sequence>
+					<xs:element name="name" type="xs:string"/>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element ref="kr_common:inscriptionMember" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
 	<!-- =================================================================
 		landuseRiskTypeMember (root property)
 		================================================================== -->
-	<xs:element name="landuseRiskTypeMember"
-		type="krrcm:LanduseRiskTypePropertyType" />
-
+	<xs:element name="landuseRiskTypeMember" type="krrcm:LanduseRiskTypePropertyType"/>
 	<xs:complexType name="LanduseRiskTypePropertyType">
 		<xs:sequence>
-			<xs:element ref="krrcm:LanduseRiskType" minOccurs="0" />
+			<xs:element ref="krrcm:LanduseRiskType" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
 	<!-- =================================================================
 		LanduseRiskType
 		================================================================== -->
-	<xs:element name="LanduseRiskType" type="krrcm:LanduseRiskTypeType"
-		substitutionGroup="gml:_Feature">
+	<xs:element name="LanduseRiskType" type="krrcm:LanduseRiskTypeType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
 				</xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
 				</xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
 	<xs:complexType name="LanduseRiskTypeType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription" kapp:property="krrcm:name">
+					<kapp:parameter>
+						<kapp:name>shallOverwrite</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="kr_common:EmptyFeatureBaseType">
 				<xs:sequence>
-					<xs:element name="isUrbanLanduseType" type="xs:boolean" />
+					<xs:element name="name" type="xs:string"/>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element name="isUrbanLanduseType" type="xs:boolean"/>
+					<xs:element ref="kr_common:inscriptionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
-
 	<!-- =================================================================
 		riskZoneDefinitionMember property
 		================================================================== -->
-	<xs:element name="riskZoneDefinitionMember"
-		type="krrcm:RiskZoneDefinitionPropertyType" />
-
+	<xs:element name="riskZoneDefinitionMember" type="krrcm:RiskZoneDefinitionPropertyType"/>
 	<xs:complexType name="RiskZoneDefinitionPropertyType">
 		<xs:sequence>
-			<xs:element ref="krrcm:RiskZoneDefinition" minOccurs="0" />
+			<xs:element ref="krrcm:RiskZoneDefinition" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
 	<!-- =================================================================
 		RiskZoneDefinition
 		================================================================== -->
-	<xs:element name="RiskZoneDefinition"
-		type="krrcm:RiskZoneDefinitionType"
-		substitutionGroup="gml:_Feature">
+	<xs:element name="RiskZoneDefinition" type="krrcm:RiskZoneDefinitionType" substitutionGroup="gml:_Feature">
 		<xs:annotation>
 			<xs:documentation xml:lang="de">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
 				</xs:label>
 			</xs:documentation>
 			<xs:documentation xml:lang="en">
 				<xs:label>
-					<![CDATA[${listProperty:http://www.opengis.net/gml#name;0;-no name-}]]>
+					<![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
 				</xs:label>
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-
 	<xs:complexType name="RiskZoneDefinitionType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:functionProperty kapp:functionId="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription" kapp:property="krrcm:name">
+					<kapp:parameter>
+						<kapp:name>shallOverwrite</kapp:name>
+						<kapp:value>true</kapp:value>
+					</kapp:parameter>
+				</kapp:functionProperty>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="gml:AbstractFeatureType">
+			<xs:extension base="kr_common:EmptyFeatureBaseType">
 				<xs:sequence>
-					<xs:element name="lowerBoundaryValue" type="xs:double"
-						default="0.0">
+					<xs:element name="name" type="xs:string"/>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element name="lowerBoundaryValue" type="xs:double" default="0.0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Wert der unteren Zonengrenze [€/m²/a]</xs:label>
@@ -430,21 +437,15 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Farbdarstellung</xs:label>
-								<xs:tooltip>
-									Farbdarstellung der
-									Rizikozone in der Karte
-								</xs:tooltip>
+								<xs:tooltip> Farbdarstellung der Rizikozone in der Karte </xs:tooltip>
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Color style</xs:label>
-								<xs:tooltip>
-									Color of risk zone in the map
-								</xs:tooltip>
+								<xs:tooltip> Color of risk zone in the map </xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="zoneInternalNumber" type="xs:int"
-						default="0">
+					<xs:element name="zoneInternalNumber" type="xs:int" default="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Ordinalzahl</xs:label>
@@ -464,19 +465,28 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="landuseRiskTypeLink" type="krrcm:LanduseRiskTypeLinkType" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Kategorie</xs:label>
+								<xs:tooltip>Für Einteilung in die Risikozonen</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>Category</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element ref="kr_common:inscriptionMember" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+				<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-
 	<!-- Link functions ======================================================== -->
-
 	<xs:complexType name="LanduseClassLinkType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-
 				<!--
 					IMPORTANT!!!
 					
@@ -490,22 +500,17 @@
 					than fix it manually...
 					
 				-->
-
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element ref="krrcm:LanduseClass" minOccurs="0"
-				maxOccurs="0" />
+			<xs:element ref="krrcm:LanduseClass" minOccurs="0" maxOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
-
 	<xs:complexType name="DamageFunctionLinkType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-
 				<!--
 					IMPORTANT!!!
 					
@@ -519,22 +524,17 @@
 					than fix it manually...
 					
 				-->
-
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element ref="krrcm:DamageFunction" minOccurs="0"
-				maxOccurs="0" />
+			<xs:element ref="krrcm:DamageFunction" minOccurs="0" maxOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
-
 	<xs:complexType name="AdministrationUnitLinkType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-
 				<!--
 					IMPORTANT!!!
 					
@@ -548,22 +548,17 @@
 					than fix it manually...
 					
 				-->
-
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element ref="krrcm:AdministrationUnit" minOccurs="0"
-				maxOccurs="0" />
+			<xs:element ref="krrcm:AdministrationUnit" minOccurs="0" maxOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
-
 	<xs:complexType name="LanduseRiskTypeLinkType">
 		<xs:annotation>
 			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-
 				<!--
 					IMPORTANT!!!
 					
@@ -577,15 +572,35 @@
 					than fix it manually...
 					
 				-->
-
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element ref="krrcm:LanduseRiskType" minOccurs="0"
-				maxOccurs="0" />
+			<xs:element ref="krrcm:LanduseRiskType" minOccurs="0" maxOccurs="0"/>
 		</xs:sequence>
-		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
 	</xs:complexType>
-
-
+	<xs:complexType name="AssetValueClassLinkType">
+		<xs:annotation>
+			<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+				<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+				<!--
+					IMPORTANT!!!
+					
+					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
+					should be written in one line, exactly like this!
+					
+					Please check if your auto-formatting breaks it into:
+					<kapp:documentReference>
+					RasterizationControlModel.gml
+					</kapp:documentReference>
+					than fix it manually...
+					
+				-->
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="krrcm:AssetValueClass" minOccurs="0" maxOccurs="0"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</xs:complexType>
 </xs:schema>

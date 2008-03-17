@@ -2,6 +2,7 @@
 <xs:schema xmlns:gml="http://www.opengis.net/gml"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:krpd="http://www.tu-harburg.de/wb/kalypso/risk/schemata/predefinedDataset"
+	xmlns:kr_common="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:common="org.kalypso.gml.common"
 	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/predefinedDataset"
@@ -13,7 +14,8 @@
 	</xs:annotation>
 	<xs:import namespace="http://www.opengis.net/gml" />
 	<xs:import namespace="org.kalypso.gml.common" />
-
+	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common" schemaLocation="Common.xsd"/>
+	
 	<xs:element name="PredefinedDataset"
 		type="krpd:PredefinedDataset"
 		substitutionGroup="gml:_Feature" />

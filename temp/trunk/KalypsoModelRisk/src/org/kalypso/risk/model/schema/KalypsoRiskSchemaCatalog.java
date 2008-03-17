@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -65,8 +65,12 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
   public static final String PREFIX_VECTOR_DATA_MODEL = "krvdm";
 
   public static final String NS_RASTER_DATA_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel";
-  
+
   public static final String PREFIX_RASTER_DATA_MODEL = "krrdm";
+
+  public static final String NS_COMMON = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/common";
+
+  public static final String PREFIX_COMMON = "kr_common";
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
@@ -82,6 +86,8 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
     prefixes.put( NS_VECTOR_DATA_MODEL, PREFIX_VECTOR_DATA_MODEL );
     catalog.put( NS_RASTER_DATA_MODEL, myClass.getResource( "schemata/RasterDataModel.xsd" ) );
     prefixes.put( NS_RASTER_DATA_MODEL, PREFIX_RASTER_DATA_MODEL );
+    catalog.put( NS_COMMON, myClass.getResource( "schemata/Common.xsd" ) );
+    prefixes.put( NS_COMMON, PREFIX_COMMON );
   }
 
 }

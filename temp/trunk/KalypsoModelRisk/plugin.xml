@@ -208,4 +208,19 @@
           projectName=" ">
     </project>
  </extension>
+   <extension
+                point="org.kalypso.deegree.functionProperty">
+                <function
+                    class="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription"
+                    id="org.kalypso.risk.model.schema.propertyFunctions.GetNameFromInscription"
+                    name="get name from inscription">
+                </function>
+            </extension>
+            <extension
+                point="org.kalypso.core.catalogContribution">
+                <catalogContribution
+                    class="org.kalypso.risk.model.schema.KalypsoRiskCatalogContribution"
+                    name="KalypsoRaiskCatalogContribution (Dictionaries)">
+                </catalogContribution>
+            </extension>
 </plugin>
