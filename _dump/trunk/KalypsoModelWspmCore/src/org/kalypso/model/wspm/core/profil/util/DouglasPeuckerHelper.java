@@ -84,7 +84,8 @@ public class DouglasPeuckerHelper
     private final double maxSegmentDistance( )
     {
       double maxDistance = Double.NEGATIVE_INFINITY;
-      if( endInd - startInd >= 2 )
+      final int deltaIndex = endInd - startInd;
+      if( deltaIndex > 2 )
         for( int i = 1; i < endInd - startInd - 1; i++ )
         {
           final double currentDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + i] );
@@ -94,12 +95,12 @@ public class DouglasPeuckerHelper
             distInd = startInd + i;
           }
         }
-      else if( endInd - startInd == 2 )
+      else if( deltaIndex == 2 )
       {
         maxDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + 1] );
         distInd = startInd + 1;
       }
-      else if( endInd - startInd == 1 )
+      else if( deltaIndex == 1 )
       {
         maxDistance = 0;
         distInd = startInd;
