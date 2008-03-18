@@ -20,7 +20,7 @@ public class GoogleEarthUtils
   /**
    * target coordinate system of google earth
    */
-  public static final String GOOGLE_EARTH_CS = "EPSG:4326";
+  public static final String GOOGLE_EARTH_CS = "EPSG:4326"; //$NON-NLS-1$
 
   /**
    * @param boundingBox

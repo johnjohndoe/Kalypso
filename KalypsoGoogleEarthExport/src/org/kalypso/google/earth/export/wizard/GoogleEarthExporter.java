@@ -63,11 +63,11 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
    */
   private File createTmpDir( ) throws IOException
   {
-    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURL();
+    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURL(); //$NON-NLS-1$
     Assert.assertNotNull( urlTmpDir );
 
     /* delete old test dir */
-    final URL urlBaseDir = new URL( urlTmpDir + "kalypsoGoogleEarthExport/" );
+    final URL urlBaseDir = new URL( urlTmpDir + "kalypsoGoogleEarthExport/" ); //$NON-NLS-1$
 
     final File fBaseDir = new File( urlBaseDir.getFile() );
     if( !fBaseDir.exists() )
@@ -107,7 +107,7 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       final JAXBElement<DocumentType> kmlDocument = factory.createDocument( documentType );
 
       final FolderType folderType = factory.createFolderType();
-      folderType.setName( "Kalypso Google Earth (TM) Export" );
+      folderType.setName( "Kalypso Google Earth (TM) Export" ); //$NON-NLS-1$
 
       /* process map */
       final KalypsoThemeVisitor visitor = new GoogleEarthThemeVisitor( mapPanel, folderType, new ThemeGoogleEarthExportable() );
@@ -124,7 +124,7 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       documentType.getFeature().add( factory.createFolder( folderType ) );
 
       /* marshalling */
-      final File file = new File( tmpDir, "doc.kml" );
+      final File file = new File( tmpDir, "doc.kml" ); //$NON-NLS-1$
       final JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
       final Marshaller m = jc.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -140,7 +140,7 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      return new Status( IStatus.ERROR, "GoogleEarthExporter", e.getMessage() );
+      return new Status( IStatus.ERROR, "GoogleEarthExporter", e.getMessage() ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

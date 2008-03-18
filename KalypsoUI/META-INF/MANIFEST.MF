@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoUI
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.ui; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/jcommon-0.9.6.jar,
@@ -8,7 +8,7 @@ Bundle-ClassPath: lib/jcommon-0.9.6.jar,
  lib/opencsv/opencsv-1.8.jar,
  build/bin
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: com.keypoint,
  org.jfree,

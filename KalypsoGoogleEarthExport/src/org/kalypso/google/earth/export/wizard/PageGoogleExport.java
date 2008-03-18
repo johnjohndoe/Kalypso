@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
+import org.kalypso.google.earth.export.Messages;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 
 /**
@@ -38,12 +39,12 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
    */
   protected PageGoogleExport( final File targetFile )
   {
-    super( "googleEarthExportPage" );
+    super( "googleEarthExportPage" ); //$NON-NLS-1$
 
     m_file = targetFile;
 
-    setTitle( "Google Earth (TM) Export" );
-    setDescription( "Define a name and description for Google Earth (TM) and choose a export KMZ-destination file." );
+    setTitle( Messages.PageGoogleExport_1 );
+    setDescription( Messages.PageGoogleExport_2 );
   }
 
   /**
@@ -55,7 +56,7 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
     if( m_name == null )
     {
       setMessage( null );
-      setErrorMessage( "Name is missing." );
+      setErrorMessage( Messages.PageGoogleExport_3 );
 
       setPageComplete( false );
       return;
@@ -64,7 +65,7 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
     if( m_file == null )
     {
       setMessage( null );
-      setErrorMessage( "File is missing." );
+      setErrorMessage( Messages.PageGoogleExport_4 );
 
       setPageComplete( false );
       return;
@@ -91,7 +92,7 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
 
     /* name */
     final Label lName = new Label( container, SWT.NONE );
-    lName.setText( "Name" );
+    lName.setText( Messages.PageGoogleExport_5 );
 
     final Text tName = new Text( container, SWT.BORDER );
     tName.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -107,7 +108,7 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
 
     /* description */
     final Label lDescription = new Label( container, SWT.NONE );
-    lDescription.setText( "Description" );
+    lDescription.setText( Messages.PageGoogleExport_6 );
     lDescription.setLayoutData( new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     final Text tDescription = new Text( container, SWT.BORDER | SWT.MULTI | SWT.WRAP );
@@ -128,14 +129,14 @@ public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSe
       @Override
       public String[] getFilterExtensions( )
       {
-        return new String[] { "kmz", "KMZ" };
+        return new String[] { "kmz", "KMZ" }; //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       @Override
       public String[] getFilterNames( )
       {
 
-        return new String[] { "Google Earth (TM) KMZ file" };
+        return new String[] { Messages.PageGoogleExport_9 };
       }
     };
 

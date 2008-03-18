@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoNofdpIDSSShape2Kml Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.google.earth.export;singleton:=true
 Bundle-Version: 1.0.0
 Require-Bundle: org.kalypso.core,
@@ -9,3 +9,4 @@ Require-Bundle: org.kalypso.core,
  org.kalypso.ui,
  org.eclipse.core.expressions
 Export-Package: org.kalypso.google.earth.export.constants
+Bundle-Localization: plugin

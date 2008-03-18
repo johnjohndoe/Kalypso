@@ -70,7 +70,7 @@ public class ZipUtils
       /**
        * openOffice don't like \ in zip archives!!!
        */
-      string = string.replaceAll( "\\\\", "/" );
+      string = string.replaceAll( "\\\\", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return string;
     }
@@ -102,7 +102,7 @@ public class ZipUtils
   {
     if( file.isDirectory() )
     {
-      final ZipEntry e = new ZipEntry( ZipUtils.convertFileName( packDir, file ) + "/" );
+      final ZipEntry e = new ZipEntry( ZipUtils.convertFileName( packDir, file ) + "/" ); //$NON-NLS-1$
       out.putNextEntry( e );
       out.closeEntry();
 
@@ -153,7 +153,7 @@ public class ZipUtils
 
   private static void saveEntry( final ZipFile zf, final File targetDir, final ZipEntry target ) throws ZipException, IOException
   {
-    final File file = new File( targetDir.getAbsolutePath() + "/" + target.getName() );
+    final File file = new File( targetDir.getAbsolutePath() + "/" + target.getName() ); //$NON-NLS-1$
 
     if( target.isDirectory() )
       file.mkdirs();
@@ -184,9 +184,9 @@ public class ZipUtils
     for( final Enumeration< ? extends ZipEntry> e = zf.entries(); e.hasMoreElements(); )
     {
       final ZipEntry target = e.nextElement();
-      System.out.print( target.getName() + " ." );
+      System.out.print( target.getName() + " ." ); //$NON-NLS-1$
       ZipUtils.saveEntry( zf, targetDir, target );
-      System.out.println( ". unpacked" );
+      System.out.println( ". unpacked" ); //$NON-NLS-1$
     }
   }
 

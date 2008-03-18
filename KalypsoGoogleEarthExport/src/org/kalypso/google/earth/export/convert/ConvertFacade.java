@@ -72,7 +72,7 @@ public class ConvertFacade
           throw new NotImplementedException();
       }
 
-      placemark.setStyleUrl( "#" + style.getId() );
+      placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
 
       placemarks.add( placemark );
     }

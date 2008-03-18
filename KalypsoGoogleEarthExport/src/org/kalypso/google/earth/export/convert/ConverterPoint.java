@@ -34,7 +34,7 @@ public class ConverterPoint
     final GM_Point kmlPoint = (GM_Point) transformer.transform( gmo );
 
     final List<String> coordinates = pointType.getCoordinates();
-    coordinates.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
+    coordinates.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) ); //$NON-NLS-1$
 
     return pointType;
   }

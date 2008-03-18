@@ -10,7 +10,7 @@ import java.io.File;
  */
 public interface IGoogleEarthExportSettings
 {
-  public static final String CONST_TARGET_FILE = "googleEarthExportTargetFile";
+  public static final String CONST_TARGET_FILE = "googleEarthExportTargetFile"; //$NON-NLS-1$
 
   public String getExportDescription( );
 

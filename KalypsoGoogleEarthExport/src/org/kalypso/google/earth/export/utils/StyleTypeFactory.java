@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.google.earth.export.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -85,7 +86,7 @@ public class StyleTypeFactory
   private int[] getColor( final Color color, final double opacity )
   {
     if( opacity > 1.0 )
-      throw (new IllegalStateException( "opacity must be a value in range of 0.0 - 1.0!" ));
+      throw (new IllegalStateException( Messages.StyleTypeFactory_0 ));
 
     final Double kmlOpacity = opacity * 255;
     // alpha=0x7f, blue=0xff, green=0x00, and red=0x00.
@@ -107,7 +108,7 @@ public class StyleTypeFactory
   {
     final StringBuffer buffer = new StringBuffer();
     for( final int i : color )
-      buffer.append( String.format( "%02x", i ) );
+      buffer.append( String.format( "%02x", i ) ); //$NON-NLS-1$
 
     return buffer.toString();
   }
@@ -146,7 +147,7 @@ public class StyleTypeFactory
       lineStyle.setColor( kmlColor );
 
       styleType.setLineStyle( lineStyle );
-      styleType.setId( "line" + idColor );
+      styleType.setId( "line" + idColor ); //$NON-NLS-1$
 
       m_lineStyles.put( idColor, styleType );
     }
@@ -179,7 +180,7 @@ public class StyleTypeFactory
     {
       m_labelStyleType = kmlFactory.createStyleType();
       m_labelStyleType.setLabelStyle( kmlFactory.createLabelStyleType() );
-      m_labelStyleType.setId( "id" + Integer.toString( m_labelStyleType.hashCode() ) );
+      m_labelStyleType.setId( "id" + Integer.toString( m_labelStyleType.hashCode() ) ); //$NON-NLS-1$
 
     }
 
@@ -214,7 +215,7 @@ public class StyleTypeFactory
       final PolyStyleType poly = kmlFactory.createPolyStyleType();
       poly.setColor( polyKmlColor );
       styleType.setPolyStyle( poly );
-      styleType.setId( "poly" + polyColorId );
+      styleType.setId( "poly" + polyColorId ); //$NON-NLS-1$
 
       m_polyStyles.put( polyColorId, styleType );
     }
@@ -236,7 +237,7 @@ public class StyleTypeFactory
 
     final Fill fill = symbolizer.getFill();
 
-    final CssParameter parameter = (CssParameter) fill.getCssParameters().get( "fill" );
+    final CssParameter parameter = (CssParameter) fill.getCssParameters().get( "fill" ); //$NON-NLS-1$
     final ParameterValueType value = parameter.getValue();
     final Object[] components = value.getComponents();
     final Color polyColor;
@@ -248,9 +249,9 @@ public class StyleTypeFactory
       final String green = color.substring( 3, 5 );
       final String blue = color.substring( 5, 7 );
 
-      final Integer r = Integer.decode( "0x" + red );
-      final Integer g = Integer.decode( "0x" + green );
-      final Integer b = Integer.decode( "0x" + blue );
+      final Integer r = Integer.decode( "0x" + red ); //$NON-NLS-1$
+      final Integer g = Integer.decode( "0x" + green ); //$NON-NLS-1$
+      final Integer b = Integer.decode( "0x" + blue ); //$NON-NLS-1$
 
       polyColor = new Color( r, g, b );
     }

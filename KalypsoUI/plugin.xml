@@ -27,7 +27,7 @@
         category="org.kalypso.ui.preferences.KalypsoPreferencePage"
         class="org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage"
         id="org.kalypso.ui.preferncePages.Screenshot"
-        name="Map screenshot">
+        name="%page.name.0">
   </page>
 	</extension>
 	<extension id="editors" name="editors"
@@ -97,7 +97,7 @@
 			id="org.kalypso.zml.grafik" extensions="zml,tpl,odt" />
 	</extension>
 	<extension id="views" name="views" point="org.eclipse.ui.views">
-		<category name="Kalypso" id="org.kalypso.ui.kalypso"></category>
+		<category name="%category.name.0" id="org.kalypso.ui.kalypso"></category>
 		<view
 			name="%org.kalypso.ui.repository.view.RepositoryExplorerPart"
 			icon="icons/repository/repository.gif"
@@ -143,7 +143,7 @@
         class="org.kalypso.ui.views.map.MapView"
         icon="icons/kalypso_gmt.gif"
         id="org.kalypso.ui.views.mapView"
-        name="Map"
+        name="%view.name.0"
         saveMapOnClose="true"
         reloadMapOnOpen="false"/>
   <view
@@ -159,14 +159,14 @@
         class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView"
         icon="icons/kalypso_gtt.gif"
         id="org.kalypso.ui.views.featuretemplateview"
-        name="Feature View"
+        name="%view.name.1"
         reloadMapOnOpen="false"/>
   <view
         allowMultiple="false"
         category="org.kalypso.ui.kalypso"
         class="org.kalypso.ui.views.map.MapOverView"
         id="org.kalypso.ui.views.mapOverView"
-        name="Übersichtskarte">
+        name="%view.name.2">
   </view>
 	</extension>
 	<extension id="editorActions" name="editorActions"
@@ -338,9 +338,9 @@
 				toolbarPath="karte/tools"
 				class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate"
 				icon="icons/map/select_feature.gif"
-				label="Edit Geometry"
+				label="%action.label.0"
 				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				tooltip="Die Geometrie des selektierten Features editieren">
+				tooltip="%action.tooltip.0">
 			</action>
 			<action
 				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label"
@@ -484,7 +484,7 @@
 		<editorContribution
 			targetID="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor"
 			id="org.kalypso.ui.editor.diagrameditor.EditorContribution">
-			<menu label="Diagramm" path="additions"
+			<menu label="%menu.label.0" path="additions"
 				id="org.kalypso.ui.editor.obsdiageditor.menu">
 				<separator name="separator1" />
 				<groupMarker name="tools" />
@@ -559,7 +559,7 @@
 				tooltip="%org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.tooltip" />
    <menu
          id="featureListMenu"
-         label="featureListMenu">
+         label="%menu.label.1">
       <separator name="featureListMenuSep"/>
    </menu>
 		</objectContribution>
@@ -577,49 +577,49 @@
 				id="org.kalypso.objectclass.filterencoding.operation.menu">
 				<separator name="operations" />
 			</menu>
-			<action label="Complex Filter"
+			<action label="%action.label.1"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComplexFilter"
 				menubarPath="org.kalypso.objectclass.filterencoding.filter.menu/filter"
 				icon="icons/util/filter.gif" style="push"
 				id="org.kalypso.objectclass.filter.create.complexfilter" />
-			<action label="Feature Filter" icon="icons/util/filter.gif"
+			<action label="%action.label.2" icon="icons/util/filter.gif"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCFeatureFilter"
 				menubarPath="org.kalypso.objectclass.filterencoding.filter.menu/filter"
 				id="org.kalypso.objectclass.filter.create.featurefilter" />
-			<action label="Else Filter" icon="icons/util/filter.gif"
+			<action label="%action.label.3" icon="icons/util/filter.gif"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCElseFilter"
 				menubarPath="org.kalypso.objectclass.filterencoding.filter.menu/filter"
 				id="org.kalypso.objectclass.filterencoding.create.elsefilter" />
-			<action label="Spatial Operation"
+			<action label="%action.label.4"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCSpatialOperationDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.filterencoding.create.spatialoperation" />
-			<action label="Comparison Operation"
+			<action label="%action.label.5"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComparisionOpsActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation" />
-			<action label="Between Operation"
+			<action label="%action.label.6"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCBetweenOperationActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.filterencoding.create.betweenopeartion" />
-			<action label="IsLike Operation"
+			<action label="%action.label.7"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsLikeOperationActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.filterencoding.create.islikeopeartion" />
-			<action label="AND"
+			<action label="%action.label.8"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalANDOpsActionDelegate"
 				style="push"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.filterencoding.create.operation.logicaloperationand" />
-			<action label="OR"
+			<action label="%action.label.9"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalOROpsActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.fiterencoding.create.logicaloperationor" />
-			<action label="NOT"
+			<action label="%action.label.10"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot" />
-			<action label="IsNull Operation"
+			<action label="%action.label.11"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsNullOperationActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.fiterencoding.create.isnulloperation" />
@@ -633,36 +633,36 @@
 				<separator name="operations" />
 				<groupMarker name="logicalgroup" />
 			</menu>
-			<action label="Spatial Operation"
+			<action label="%action.label.12"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCSpatialOperationDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.filterencoding.create.operation.spatialopeation" />
-			<action label="Comparison Operation"
+			<action label="%action.label.13"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCComparisionOpsActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objcetclass.filterencoding.create.comparisonoperation" />
-			<action label="Between Operation"
+			<action label="%action.label.14"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCBetweenOperationActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.filterencoding.create.betweenopeartion" />
-			<action label="IsLike Operation"
+			<action label="%action.label.15"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsLikeOperationActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.filterencoding.create.islikeopeartion" />
-			<action label="AND"
+			<action label="%action.label.16"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalANDOpsActionDelegate"
 				style="push"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
 				id="org.kalypso.objectclass.filterencoding.create.operation.logicaloperationand" />
-			<action label="OR"
+			<action label="%action.label.17"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalOROpsActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
 				id="org.kalypso.objectclass.fiterencoding.create.logicaloperationor" />
-			<action label="NOT"
+			<action label="%action.label.18"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCLogicalNOTOpsActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/logicalgroup"
 				id="org.kalypso.objectclass.fiterencoding.create.logicaloperationnot" />
-			<action label="IsNull Operation"
+			<action label="%action.label.19"
 				class="org.kalypso.ogc.gml.filterdialog.actions.CreateOGCIsNullOperationActionDelegate"
 				menubarPath="org.kalypso.objectclass.filterencoding.operation.menu/operations"
 				id="org.kalypso.objectclass.fiterencoding.create.isnulloperation" />
@@ -687,7 +687,7 @@
 				class="org.kalypso.ogc.gml.outline.SaveStyleAction2"
 				menubarPath="org.kalypso.objectclass.style.menu/styleops"
 				id="org.kalypso.ogc.gml.outline.SaveStyleAction2" />
-			<menu label="Style"
+			<menu label="%menu.label.2"
 				id="org.kalypso.objectclass.style.menu">
 				<separator name="styleops" />
 			</menu>
@@ -738,10 +738,10 @@
          <action
                class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate"
                id="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate"
-               label="Features sortieren"
+               label="%action.label.20"
                menubarPath="featureListMenu"
                style="push"
-               tooltip="Sortiert die Features der Liste anhand ausgewählter Eigenschaften"/>
+               tooltip="%action.tooltip.1"/>
       </objectContribution>
   <objectContribution
         adaptable="false"
@@ -754,24 +754,24 @@
            class="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate"
            icon="icons/feature/gis_feature_down.gif"
            id="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate"
-           label="Feature &amp;Down"
+           label="%action.label.21"
            menubarPath="featureListMenu"
-           tooltip="Moves the feature one position down"/>
+           tooltip="%action.tooltip.2"/>
      <action
            class="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate"
            icon="icons/feature/gis_feature_up.gif"
            id="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate"
-           label="Feature &amp;Up"
+           label="%action.label.22"
            menubarPath="featureListMenu"
-           tooltip="Moves the feature one position up"/>
+           tooltip="%action.tooltip.3"/>
      <action
            class="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate"
            icon="icons/feature/gis_feature_duplicate.gif"
            id="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate"
-           label="Feature duplizieren"
+           label="%action.label.23"
            menubarPath="featureListMenu"
            style="push"
-           tooltip="Dupliziert das selektierte Feature"/>
+           tooltip="%action.tooltip.4"/>
   </objectContribution>
   <objectContribution
         id="org.kalypso.objectclass.theme"
@@ -780,16 +780,16 @@
            class="org.kalypso.ui.actions.OpenPropertyViewThemeAction"
            icon="icons/full/elcl16/showThemeProps.gif"
            id="org.kalypso.ui.actions.OpenPropertyViewThemeAction"
-           label="Eigenschaften (View)"
+           label="%action.label.24"
            style="push"
-           tooltip="Die Eigenschaften des Themas in einer Ansicht anzeigen">
+           tooltip="%action.tooltip.5">
      </action>
      <action
            class="org.kalypso.ui.actions.OpenPropertyDialogAction"
            icon="icons/full/elcl16/showThemeProps.gif"
            id="org.kalypso.ui.actions.OpenPropertyDialogAction"
-           label="Eigenschaften (Dialog)"
-           tooltip="Öffnet den Eigenschaftendialog für das selektierte Thema">
+           label="%action.label.25"
+           tooltip="%action.tooltip.6">
      </action>
   </objectContribution>
   <objectContribution
@@ -799,10 +799,10 @@
            class="org.kalypso.ui.actions.ExportGml2ShapeThemeAction"
            icon="icons/full/obj16/exportGml2Shp.gif"
            id="org.kalypso.ui.actions.ExportGml2ShapeThemeAction"
-           label="Shape..."
+           label="%action.label.26"
            menubarPath="exports"
            style="push"
-           tooltip="Die Daten des Themas als ESRI Shape exportieren.">
+           tooltip="%action.tooltip.7">
      </action>
   </objectContribution>
   <objectContribution
@@ -812,10 +812,10 @@
            class="org.kalypso.ui.actions.ExportLegendAction"
            icon="icons/full/obj16/exportGml2Shp.gif"
            id="org.kalypso.ui.actions.ExportLegendAction"
-           label="Legenden..."
+           label="%action.label.27"
            menubarPath="exports"
            style="push"
-           tooltip="Die Legenden der Themen exportieren.">
+           tooltip="%action.tooltip.8">
      </action>
   </objectContribution>
 	</extension>
@@ -1027,7 +1027,7 @@
         targetType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"/>
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
-		<category id="org.kalypso.ui.newwizards.kalypso" name="Kalypso" />
+		<category id="org.kalypso.ui.newwizards.kalypso" name="%category.name.1" />
 		<wizard
         canFinishEarly="false"
         category="org.kalypso.ui.newwizards.kalypso"
@@ -1058,7 +1058,7 @@
        point="org.eclipse.ui.importWizards">
     <category
           id="org.kalypso.ui.importwizards.kalypso"
-          name="Kalypso"/>
+          name="%category.name.2"/>
  </extension>
  <extension
        point="org.eclipse.core.runtime.contentTypes">
@@ -1067,93 +1067,93 @@
           default-charset="CP1252"
           file-extensions="log"
           id="KalypsoUI.content-type1"
-          name="Log File"
+          name="%content-type.name.0"
           priority="low"/>
  </extension>
  <extension
       	point="org.eclipse.ui.commands">
 	   		<category
-		         description="Widget commands"
+		         description="%category.description.0"
 		         id="org.kalypso.ogc.gml.map.widgets.category"
-		         name="Widgets">
+		         name="%category.name.3">
 		    </category>
       <category
             id="org.kalypso.ui.commands.default"
-            name="Default"/>
+            name="%category.name.4"/>
       <category
-            description="Commands for the Kalypso Map-View"
+            description="%category.description.1"
             id="org.kalypso.ogc.gml.map.category"
-            name="Map Commands"/>
+            name="%category.name.5"/>
 		    <command
 		         categoryId="org.kalypso.ogc.gml.map.widgets.category"
-		         description="Select a widget"
+		         description="%command.description.0"
 		         id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand"
-		         name="Select widget">
+		         name="%command.name.0">
 			         <commandParameter
 	                 id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-	                 name="Widget"
+	                 name="%commandParameter.name.0"
 	                 optional="false"/>
 	                 <commandParameter
 	                 id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.context"
-	                 name="Context"
+	                 name="%commandParameter.name.1"
 	                 optional="false"/>
                   <commandParameter
                         id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-                        name="Plugin Id"
+                        name="%commandParameter.name.2"
                         optional="false"/>
 		    </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Zoom out"
+            description="%command.description.1"
             id="org.kalypso.ogc.gml.map.ZoomOutCommand"
-            name="Zoom Out">
+            name="%command.name.1">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Zoom in (statisch)"
+            description="%command.description.2"
             id="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
-            name="Zoom In (statisch)"/>
+            name="%command.name.2"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Move down"
+            description="%command.description.3"
             id="org.kalypso.ogc.gml.map.MoveDownCommand"
-            name="Move down"/>
+            name="%command.name.3"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Move up"
+            description="%command.description.4"
             id="org.kalypso.ogc.gml.map.MoveUpCommand"
-            name="Move up"/>
+            name="%command.name.4"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Move right"
+            description="%command.description.5"
             id="org.kalypso.ogc.gml.map.MoveRightCommand"
-            name="Move right">
+            name="%command.name.5">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Move left"
+            description="%command.description.6"
             id="org.kalypso.ogc.gml.map.MoveLeftCommand"
-            name="Move left"/>
+            name="%command.name.6"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Zoom to active layer"
+            description="%command.description.7"
             id="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
-            name="Zoom to active layer"/>
+            name="%command.name.7"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Zoom to selected features"
+            description="%command.description.8"
             id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"
-            name="Zoom to selected features"/>
+            name="%command.name.8"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Zoom to selected features of a layer"
+            description="%command.description.9"
             id="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"
-            name="Zoom to selected features of a layer"/>
+            name="%command.name.9"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
-            description="Pan to selected feature"
+            description="%command.description.10"
             id="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"
-            name="Pan to selected feature">
+            name="%command.name.10">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
@@ -1188,37 +1188,37 @@
             categoryId="org.kalypso.ogc.gml.map.category"
             defaultHandler="org.kalypso.ogc.gml.map.handlers.MapScreenShotHandler"
             id="org.kalypso.ogc.gml.map.Screenshot"
-            name="Map screenshot">
+            name="%command.name.11">
       </command>
       <command
             categoryId="org.kalypso.ui.views.outline.category"
             defaultHandler="org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler"
             id="org.kalypso.ui.views.outline.ShapeExport"
-            name="Shape Export">
+            name="%command.name.12">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.widgets.category"
-            description="Zeigt in einem Tooltip ortsbezogene Informationen zu den selektierten Themen"
+            description="%command.description.11"
             id="org.kalypso.ogc.gml.map.ThemeInfoCommand"
-            name="Quick-Info">
+            name="%command.name.13">
       </command>
       <command
             categoryId="org.kalypso.ogc.gml.map.widgets.category"
-            description="Öffnet die Gliederung oder schließt sie, falls sie bereits geöffnet ist."
+            description="%command.description.12"
             id="org.kalypso.ogc.gml.map.OpenOutlineCommand"
-            name="Gliederung öffnen/schließen">
+            name="%command.name.14">
       </command>
       <command
             categoryId="org.kalypso.ui.views.outline.category"
             defaultHandler="org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler"
             id="org.kalypso.ui.views.outline.GMLExport"
-            name="GML Export">
+            name="%command.name.15">
       </command>
       <command
             categoryId="org.kalypso.ui.views.outline.category"
             defaultHandler="org.kalypso.ogc.gml.outline.handler.LegendExportHandler"
             id="org.kalypso.ui.views.outline.LegendExport"
-            name="Legenden Export">
+            name="%command.name.16">
       </command>
       </extension>
  <extension
@@ -1262,7 +1262,7 @@
        </action>
        <menu
              id="org.kalypso.ui.views.outline.actions.tools"
-             label="Tools"
+             label="%menu.label.3"
              path="outline/tools"/>
     </viewContribution>
  </extension>
@@ -1382,7 +1382,7 @@
     <page
           class="org.kalypso.ui.views.properties.ThemePropertyPage"
           id="org.kalypso.ui.themeBasicPage"
-          name="Thema">
+          name="%page.name.1">
        <enabledWhen>
           <instanceof
                 value="org.kalypso.ogc.gml.IKalypsoTheme">
@@ -1392,7 +1392,7 @@
     <page
           class="org.kalypso.ui.views.properties.LegendPropertyPage"
           id="org.kalypso.ui.views.properties.LegendPropertyPage"
-          name="Legende">
+          name="%page.name.2">
        <enabledWhen>
           <instanceof
                 value="org.kalypso.ogc.gml.IKalypsoTheme">
@@ -1484,7 +1484,7 @@
        <menu
              id="org.kalypso.ui.menus.mapMenu"
              label="%org.kalypso.ui.editors.mapeditor.menu"
-             tooltip="Kartenmenü">
+             tooltip="%menu.tooltip.0">
           <visibleWhen
                 checkEnabled="false">
 			 <with variable="activeEditorId">
@@ -1645,15 +1645,15 @@
            locationURI="toolbar:org.kalypso.ui.views.mapView?after=mapExport">
         <command
               commandId="org.kalypso.ogc.gml.map.Screenshot"
-              label="Map screenshot"
+              label="%command.label.0"
               style="push"
-              tooltip="Map screenshot">
+              tooltip="%command.tooltip.0">
         </command>
         <command
               commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand"
-              label="Gliederung öffnen/schließen"
+              label="%command.label.1"
               style="push"
-              tooltip="Öffnet die Gliederung oder schließt sie, falls sie bereits geöffnet ist.">
+              tooltip="%command.tooltip.1">
         </command>
      </menuContribution>
      <menuContribution
@@ -1661,9 +1661,9 @@
         <command
               commandId="org.kalypso.ui.views.outline.ShapeExport"
               icon="icons/full/obj16/exportGml2Shp.gif"
-              label="Shape Export"
+              label="%command.label.2"
               style="push"
-              tooltip="selektierter Layer als Shape exportieren">
+              tooltip="%command.tooltip.2">
            <visibleWhen
                  checkEnabled="false">
               <with
@@ -1681,9 +1681,9 @@
         <command
               commandId="org.kalypso.ui.views.outline.GMLExport"
               icon="icons/full/obj16/exportGml2Shp.gif"
-              label="GML Export"
+              label="%command.label.3"
               style="push"
-              tooltip="selektierten Layer als GML exportieren">
+              tooltip="%command.tooltip.3">
            <visibleWhen
                  checkEnabled="false">
               <with
@@ -1701,9 +1701,9 @@
         <command
               commandId="org.kalypso.ui.views.outline.LegendExport"
               icon="icons/full/obj16/exportGml2Shp.gif"
-              label="Legenden Export"
+              label="%command.label.4"
               style="push"
-              tooltip="Die Legenden der selektierten Layer exportieren.">
+              tooltip="%command.tooltip.4">
            <visibleWhen
                  checkEnabled="false">
               <with
@@ -1730,7 +1730,7 @@
            locationURI="popup:org.kalypso.ui.editor.GmlEditor">
         <menu
               id="imports"
-              label="Import">
+              label="%menu.label.4">
            <command
                  commandId="org.kalypso.gml.ui.importGridCommand">
               <visibleWhen
@@ -1752,7 +1752,7 @@
         </menu>
         <menu
               id="exports"
-              label="Export">
+              label="%menu.label.5">
            <command
                  commandId="org.kalypso.gml.ui.exportGridCommand">
               <visibleWhen
@@ -1837,64 +1837,64 @@
        point="org.eclipse.ui.commands">
     <category
           id="org.kalypo.ui.commandCategory.repositoryContainer"
-          name="Repository Kommandos">
+          name="%category.name.6">
     </category>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
           defaultHandler="org.kalypso.ogc.sensor.view.actions.AddRepositoryHandler"
-          description="Fügt ein Repository hinzu..."
+          description="%command.description.13"
           id="org.kalypso.ui.command.repositoryAdd"
-          name="Repository hinzufügen">
+          name="%command.name.17">
     </command>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
-          description="Entfernt ein Repository..."
+          description="%command.description.14"
           id="org.kalypso.ui.command.repositoryRemove"
-          name="Repository entfernen">
+          name="%command.name.18">
     </command>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
-          description="Einstellungen der Zeitreihen-Vorschau setzen"
+          description="%command.description.15"
           id="org.kalypso.ui.command.repositoryConfigure"
-          name="Einstellungen">
+          name="%command.name.19">
     </command>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
-          description="Aktualisiert den aktuellen Repository"
+          description="%command.description.16"
           id="org.kalypso.ui.command.repositoryReload"
-          name="Aktualisieren">
+          name="%command.name.20">
     </command>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
-          description="Exportiert die Gesamtstruktur in der Zwischenablage"
+          description="%command.description.17"
           id="org.kalypso.ui.command.repositoryDumpStructure"
-          name="Struktur exportieren">
+          name="%command.name.21">
     </command>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
           defaultHandler="org.kalypso.ogc.sensor.view.actions.CollapseAllHandler"
-          description="Reduziert alle Zweige des Baums"
+          description="%command.description.18"
           id="org.kalypso.ui.command.repositoryCollapseAll"
-          name="Alles reduzieren">
+          name="%command.name.22">
     </command>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
-          description="Exportiert die selektierte Zeitreihe als lokale Datei"
+          description="%command.description.19"
           id="org.kalypso.ui.command.repositoryExportAsFile"
-          name="Datei herunterladen">
+          name="%command.name.23">
     </command>
 
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
-          description="Kopiert den Link auf die ausgewählte Zeitreihe in die Zwischenablage"
+          description="%command.description.20"
           id="org.kalypso.ui.command.repositoryCopyLink"
-          name="Link kopieren">
+          name="%command.name.24">
     </command>
     <command
           categoryId="org.kalypo.ui.commandCategory.repositoryContainer"
-          description="Öffnet einen Dialog zur Visualisierung der WQ-Beziehung"
+          description="%command.description.21"
           id="org.kalypso.ui.command.repositoryShowWQ"
-          name="WQ-Beziehung visualisieren">
+          name="%command.name.25">
     </command>
  </extension>
  <extension
@@ -2173,7 +2173,7 @@
        point="org.eclipse.ui.contexts">
     <context
           id="org.kalypso.ogc.gml.map.context"
-          name="Map View"
+          name="%context.name.0"
           parentId="org.eclipse.ui.contexts.window">
     </context>
  </extension>
@@ -2201,45 +2201,45 @@
  <extension
        point="org.eclipse.ui.commands">
     <category
-          description="Kommandos für tabellarische Observations"
+          description="%category.description.2"
           id="org.kalypso.ui.tupleResult.category"
-          name="Observation Kommandos">
+          name="%category.name.7">
     </category>
     <command
           categoryId="org.kalypso.ui.tupleResult.category"
-          description="Kopiert die aktuelle Selektion der Tabelle in die Zwischenablage"
+          description="%command.description.22"
           id="org.kalypso.ui.tupleResult.copyToClipboardCommand"
-          name="Kopieren">
+          name="%command.name.26">
     </command>
     <command
           categoryId="org.kalypso.ui.tupleResult.category"
-          description="......"
+          description="%command.description.23"
           id="org.kalypso.ui.tupleResult.pasteFromClipboardCommand"
-          name="Paste">
+          name="%command.name.27">
     </command>
     <command
           categoryId="org.kalypso.ui.tupleResult.category"
-          description="Löscht die selektierten Zeilen der Tabelle"
+          description="%command.description.24"
           id="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand"
-          name="Löschen">
+          name="%command.name.28">
     </command>
     <command
           categoryId="org.kalypso.ui.tupleResult.category"
-          description="verschiebt die selektierten Zeilen der Tabelle nach oben"
+          description="%command.description.25"
           id="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
-          name="nach Oben">
+          name="%command.name.29">
     </command>
     <command
           categoryId="org.kalypso.ui.tupleResult.category"
-          description="erzeugt einen neuen Punk"
+          description="%command.description.26"
           id="org.kalypso.ui.tupleResult.addRowCommand"
-          name="einfügen">
+          name="%command.name.30">
     </command>
     <command
           categoryId="org.kalypso.ui.tupleResult.category"
-          description="verschiebt die selektierten Zeilen der Tabelle nach unten"
+          description="%command.description.27"
           id="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
-          name="nach Unten">
+          name="%command.name.31">
     </command>
  </extension>
  <extension
