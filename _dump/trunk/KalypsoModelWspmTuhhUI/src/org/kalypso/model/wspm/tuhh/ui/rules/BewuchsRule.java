@@ -121,9 +121,9 @@ public class BewuchsRule extends AbstractValidatorRule
         if( profil.getProfileObjects().length == 0 )
         {
           if( VorlandLhasValues && (Double) points[lastIndex].getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "km "+Double.toString( profil.getStation()), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution(  ) } );
+            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km "+Double.toString( profil.getStation()), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution(  ) } );
           if( VorlandRhasValues && (Double) rightP.getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter an Trennflächen überprüfen", "km "+Double.toString( profil.getStation()), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( ) } );
+            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km "+Double.toString( profil.getStation()), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AbstractProfilMarkerResolution[] { new AddBewuchsResolution( ) } );
         }
       }
     }

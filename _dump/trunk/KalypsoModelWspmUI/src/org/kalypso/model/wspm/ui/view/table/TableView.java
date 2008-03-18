@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.view.table;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
@@ -60,6 +61,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
@@ -101,6 +103,10 @@ import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypsodeegree.model.feature.Feature;
+import org.osgi.framework.Bundle;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
@@ -125,6 +131,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   private TupleResultContentProvider m_tupleResultContentProvider;
 
   private TupleResultLabelProvider m_tupleResultLabelProvider;
+
+  private final XStream m_xstream = new XStream( new DomDriver() );
 
   // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
@@ -266,13 +274,42 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
   }
 
+  private IMarkerResolution2[] getResolutions( final IMarker marker )
+  {
+    final String pluginId = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID, (String) null );
+
+    final Bundle bundle = Platform.getBundle( pluginId );
+
+    final ClassLoader bundleLoader = new ClassLoader()
+    {
+      /**
+       * @see java.lang.ClassLoader#loadClass(java.lang.String)
+       */
+      @Override
+      public Class< ? > loadClass( final String name ) throws ClassNotFoundException
+      {
+        return bundle.loadClass( name );
+      }
+    };
+
+    final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
+    if( resolutions == null )
+      return new IMarkerResolution2[] {};
+    m_xstream.setClassLoader( bundleLoader );
+    final IMarkerResolution2[] mss = (IMarkerResolution2[]) m_xstream.fromXML( resolutions );
+    // reset class-loader in order to free the inner class
+    m_xstream.setClassLoader( this.getClass().getClassLoader() );
+
+    return mss;
+  }
+
   protected final void createProblemSection( final Composite parent, final IMarker[] markers, final int color, final String text )
   {
 
     Composite container = parent;
     if( markers.length > 1 )
     {
-      final Section section = m_toolkit.createSection( parent, Section.TWISTIE );// | Section.TITLE_BAR );
+      final Section section = m_toolkit.createSection( parent, Section.TWISTIE );
       section.setLayout( new GridLayout() );
       section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
       section.setTitleBarForeground( section.getDisplay().getSystemColor( color ) );
@@ -288,12 +325,32 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     for( final IMarker marker : markers )
     {
-      final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
+     // final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
       final ImageHyperlink quickFix = m_toolkit.createImageHyperlink( container, SWT.WRAP );
-      if( resolutions.equals( "<null/>" ) ) //$NON-NLS-1$
+      final IMarkerResolution2[] markerRes = getResolutions( marker );
+      if( markerRes==null || markerRes.length == 0 )
+      {
+        quickFix.setToolTipText("kein quickFix vorhanden");
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_DLCL_QUICK_FIX_DISABLED ) ) );
-      else
+      }
+        else
+      {
+        final String toolTip =  markerRes[0].getDescription();
+        quickFix.setToolTipText(toolTip==null?"quickFix":toolTip );
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ELCL_QUICK_FIX_ENABLED ) ) );
+        quickFix.addHyperlinkListener( new HyperlinkAdapter()
+        {
+
+          /**
+           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
+           */
+          @Override
+          public void linkActivated( HyperlinkEvent e )
+          {
+            markerRes[0].run( marker );
+          }
+        } );
+      }
       final ImageHyperlink link = m_toolkit.createImageHyperlink( container, SWT.WRAP );
       link.addHyperlinkListener( new HyperlinkAdapter()
       {
@@ -335,29 +392,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     m_toolkit = new FormToolkit( parent.getDisplay() );
     m_form = m_toolkit.createForm( parent );
     m_toolkit.decorateFormHeading( m_form );
-// m_form.addMessageHyperlinkListener( new HyperlinkAdapter()
-// {
-//
-// /**
-// * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-// */
-// @Override
-// public void linkActivated( HyperlinkEvent e )
-// {
-// final IProfil profil = getProfil();
-// if( profil == null )
-// return;
-// final MarkerIndex mi = getProfil().getProblemMarker();
-// final IMarker[] markers = mi.getMarkers();
-// if( markers.length == 0 )
-// return;
-// final int pointPos = markers[0].getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, -1 );
-// if( pointPos < 0 )
-// return;
-// final IRecord record = getProfil().getPoint( pointPos );
-// getProfil().setActivePoint( record );
-// }
-// } );
+
     final GridLayout bodyLayout = new GridLayout();
     bodyLayout.marginHeight = 0;
     bodyLayout.marginWidth = 0;

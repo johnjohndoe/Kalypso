@@ -80,7 +80,7 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   public BrueckeBuildingLayer( final ProfilChartView pcv )
 
   {
-    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brï¿½cke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] {
+    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] {
         IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE } ), false, false, false );
     setColors( setColor( pcv.getColorRegistry() ) );
 
@@ -89,7 +89,7 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   @Override
   public String toString( )
   {
-    return "Brï¿½cke";
+    return "Brücke";
   }
 
   private final Color[] setColor( final ColorRegistry cr )
