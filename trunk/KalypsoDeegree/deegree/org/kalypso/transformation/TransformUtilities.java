@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import javax.vecmath.Point3d;
 
 import org.deegree.crs.coordinatesystems.CoordinateSystem;
+import org.deegree.crs.exceptions.TransformationException;
 import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -105,7 +106,7 @@ public class TransformUtilities
    *            The transformation.
    * @return The transformed point.
    */
-  public static GM_Point transform( GM_Point geo, CRSTransformation trans )
+  public static GM_Point transform( GM_Point geo, CRSTransformation trans ) throws TransformationException
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
@@ -137,7 +138,7 @@ public class TransformUtilities
    *            The transformation.
    * @return The transformed position.
    */
-  public static GM_Position transform( GM_Position pos, CRSTransformation trans )
+  public static GM_Position transform( GM_Position pos, CRSTransformation trans ) throws TransformationException
   {
     /* If the flag is set to false, no transformation is allowed. */
     if( shouldTransform() == false )
@@ -169,7 +170,7 @@ public class TransformUtilities
    *            The transformation.
    * @return The array of transformed positions.
    */
-  public static GM_Position[] transform( GM_Position[] pos, CRSTransformation trans )
+  public static GM_Position[] transform( GM_Position[] pos, CRSTransformation trans ) throws TransformationException
   {
     ArrayList<GM_Position> newPos = new ArrayList<GM_Position>();
 
