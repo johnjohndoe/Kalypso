@@ -54,32 +54,32 @@ public class WspmUrlCatalog extends AbstractUrlCatalog implements IWspmConstants
   @Override
   protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( NS_WSPM, myClass.getResource( "schemata/wspm.xsd" ) );
-    prefixes.put( NS_WSPM, "wspm" );
+    catalog.put( NS_WSPM, myClass.getResource( "schemata/wspm.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPM, "wspm" ); //$NON-NLS-1$
 
-    catalog.put( NS_WSPMCOMMONS, myClass.getResource( "schemata/wspmCommons.xsd" ) );
-    prefixes.put( NS_WSPMCOMMONS, "wspmcommon" );
+    catalog.put( NS_WSPMCOMMONS, myClass.getResource( "schemata/wspmCommons.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPMCOMMONS, "wspmcommon" ); //$NON-NLS-1$
 
-    catalog.put( NS_WSPMPROJ, myClass.getResource( "schemata/wspmProject.xsd" ) );
-    prefixes.put( NS_WSPMPROJ, "wspmproj" );
+    catalog.put( NS_WSPMPROJ, myClass.getResource( "schemata/wspmProject.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPMPROJ, "wspmproj" ); //$NON-NLS-1$
 
-    catalog.put( NS_WSPMPROF, myClass.getResource( "schemata/profile.xsd" ) );
-    prefixes.put( NS_WSPMPROF, "prof" );
+    catalog.put( NS_WSPMPROF, myClass.getResource( "schemata/profile.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPMPROF, "prof" ); //$NON-NLS-1$
 
-    catalog.put( NS_WSPMPROF_ASSIGNMENT, myClass.getResource( "schemata/profilePointAssignment.xsd" ) );
-    prefixes.put( NS_WSPMPROF_ASSIGNMENT, "profass" );
+    catalog.put( NS_WSPMPROF_ASSIGNMENT, myClass.getResource( "schemata/profilePointAssignment.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPMPROF_ASSIGNMENT, "profass" ); //$NON-NLS-1$
 
-    catalog.put( NS_WSPMRUNOFF, myClass.getResource( "schemata/runOff.xsd" ) );
-    prefixes.put( NS_WSPMRUNOFF, "runoff" );
+    catalog.put( NS_WSPMRUNOFF, myClass.getResource( "schemata/runOff.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPMRUNOFF, "runoff" ); //$NON-NLS-1$
 
-    catalog.put( NS_NA_WSPM, myClass.getResource( "schemata/couplingNaWspm.xsd" ) );
-    prefixes.put( NS_NA_WSPM, "wspmna" );
+    catalog.put( NS_NA_WSPM, myClass.getResource( "schemata/couplingNaWspm.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_NA_WSPM, "wspmna" ); //$NON-NLS-1$
 
-    catalog.put( NS_WSPM_BREAKLINE, myClass.getResource( "schemata/breakline.xsd" ) );
-    prefixes.put( NS_WSPM_BREAKLINE, "breakline" );
+    catalog.put( NS_WSPM_BREAKLINE, myClass.getResource( "schemata/breakline.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPM_BREAKLINE, "breakline" ); //$NON-NLS-1$
 
-    catalog.put( NS_WSPM_BOUNDARY, myClass.getResource( "schemata/floodBoundary.xsd" ) );
-    prefixes.put( NS_WSPM_BOUNDARY, "boundary" );
+    catalog.put( NS_WSPM_BOUNDARY, myClass.getResource( "schemata/floodBoundary.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NS_WSPM_BOUNDARY, "boundary" ); //$NON-NLS-1$
 
   }
 }

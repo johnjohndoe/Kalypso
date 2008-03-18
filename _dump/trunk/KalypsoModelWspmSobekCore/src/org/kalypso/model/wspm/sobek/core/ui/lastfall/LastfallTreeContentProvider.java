@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -71,7 +72,7 @@ public class LastfallTreeContentProvider implements ITreeContentProvider
     if( parentElement instanceof ILastfall )
       return getLastfallChildren( (ILastfall) parentElement );
 
-    throw new IllegalStateException( "Only Lastfalls can have children." );
+    throw new IllegalStateException( Messages.LastfallTreeContentProvider_0 );
   }
 
   /**

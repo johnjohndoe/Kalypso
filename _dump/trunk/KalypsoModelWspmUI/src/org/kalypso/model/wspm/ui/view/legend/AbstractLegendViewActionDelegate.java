@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.kalypso.model.wspm.ui.Messages;
 
 public abstract class AbstractLegendViewActionDelegate implements IViewActionDelegate
 {
@@ -57,26 +58,26 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
 
   public final void init( final IViewPart view )
   {
-    m_view = (LegendView)view;
+    m_view = (LegendView) view;
   }
 
   protected final void handleError( final String msg )
   {
-    Logger.getLogger( getClass().getName() ).info( "Fehler beim Löschen eines Datensatz: " + msg );
+    Logger.getLogger( getClass().getName() ).info( Messages.AbstractLegendViewActionDelegate_0 + msg );
 
-    MessageDialog.openWarning( m_view.getViewSite().getShell(), "Datensatz löschen", msg );
+    MessageDialog.openWarning( m_view.getViewSite().getShell(), Messages.AbstractLegendViewActionDelegate_1, msg );
   }
 
   public final void selectionChanged( final IAction action, final ISelection selection )
   {
-    m_selection = (IStructuredSelection)selection;
+    m_selection = (IStructuredSelection) selection;
   }
-  
+
   protected final LegendView getView( )
   {
     return m_view;
   }
-  
+
   protected final IStructuredSelection getSelection( )
   {
     return m_selection;

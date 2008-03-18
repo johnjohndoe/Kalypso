@@ -50,13 +50,13 @@ public abstract class AbstractValidatorRule implements IValidatorRule
 
   private String m_type;
   
-  protected final String FMT_BREITE = "%.4f";
+  protected final String FMT_BREITE = "%.4f"; //$NON-NLS-1$
 
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_id = config.getAttribute( "id" );
-    m_type = config.getAttribute( "type" );
-    m_description = config.getAttribute( "description" );
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
+    m_type = config.getAttribute( "type" ); //$NON-NLS-1$
+    m_description = config.getAttribute( "description" ); //$NON-NLS-1$
   }
 
   public String getID( )

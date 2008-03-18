@@ -54,7 +54,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-
+import org.kalypso.model.wspm.sobek.core.Messages;
 /**
  * @author kuch
  */
@@ -95,7 +95,7 @@ public class LastfallDateChooser
     }
 
     final Button button = new Button( composite, SWT.NONE );
-    button.setText( "..." );
+    button.setText( Messages.LastfallDateChooser_0 );
 
     button.addSelectionListener( new SelectionAdapter()
     {

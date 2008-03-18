@@ -104,9 +104,9 @@ protected abstract void loadState( final IDialogSettings settings );
    */
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_id = config.getAttribute( "id" );
-    m_label = config.getAttribute( "label" );
-    m_description = config.getAttribute( "description" );
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
+    m_label = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_description = config.getAttribute( "description" ); //$NON-NLS-1$
   }
 
 }

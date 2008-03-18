@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -64,7 +65,7 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     final IProfil profil = profilChartView.getProfil();
     if( profil == null )
     {
-      handleError( "Es wird gerade kein Profil editiert." );
+      handleError( Messages.AddLayerActionDelegate_0 );
       return;
     }
 
@@ -95,8 +96,8 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
       }
     } );
     dialog.setInput( addables );
-    dialog.setMessage( "Folgende Datensätze können hinzugefügt werden:" );
-    dialog.setTitle( "Datensatz hinzufügen" );
+    dialog.setMessage( Messages.AddLayerActionDelegate_1 );
+    dialog.setTitle( Messages.AddLayerActionDelegate_2 );
 
     dialog.open();
 

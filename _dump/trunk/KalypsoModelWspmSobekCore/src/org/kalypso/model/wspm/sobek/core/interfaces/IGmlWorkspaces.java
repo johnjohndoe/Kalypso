@@ -45,5 +45,5 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
  */
 public interface IGmlWorkspaces
 {
-  public static String HYDRAUL_MODEL = "hydraulModel.gml";
+  public static String HYDRAUL_MODEL = "hydraulModel.gml"; //$NON-NLS-1$
 }

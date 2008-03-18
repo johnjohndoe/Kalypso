@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
@@ -83,7 +84,7 @@ public class WspmImportProfileHelper
 
       public String getDescription( )
       {
-        return "Profile importieren";
+        return Messages.WspmImportProfileHelper_0;
       }
 
       public boolean isUndoable( )
@@ -123,7 +124,7 @@ public class WspmImportProfileHelper
         }
       }
 
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       public void redo( ) throws Exception
       {
         m_profileList.addAll( Arrays.asList( m_addedFeatures ) );
@@ -131,7 +132,7 @@ public class WspmImportProfileHelper
         m_workspace.fireModellEvent( event );
       }
 
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       public void undo( ) throws Exception
       {
         m_profileList.removeAll( Arrays.asList( m_addedFeatures ) );

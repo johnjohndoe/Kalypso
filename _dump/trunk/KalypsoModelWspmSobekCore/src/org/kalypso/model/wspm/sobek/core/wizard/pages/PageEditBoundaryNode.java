@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.util.swt.FCVFeatureDelegate;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -68,10 +69,10 @@ public class PageEditBoundaryNode extends WizardPage
 
   public PageEditBoundaryNode( final IBoundaryNode boundaryNode )
   {
-    super( "editBoundaryNode" );
+    super( "editBoundaryNode" ); //$NON-NLS-1$
     m_boundaryNode = boundaryNode;
-    setTitle( "Edit boundary node" );
-    setDescription( "Enter boundary node parameters, please." );
+    setTitle( Messages.PageEditBoundaryNode_1 );
+    setDescription( Messages.PageEditBoundaryNode_2 );
   }
 
   protected void checkPageCompleted( )
@@ -79,7 +80,7 @@ public class PageEditBoundaryNode extends WizardPage
     if( m_name.getText() == null )
     {
       setMessage( null );
-      setErrorMessage( "Name not defined." );
+      setErrorMessage( Messages.PageEditBoundaryNode_3 );
       setPageComplete( false );
 
       return;
@@ -89,7 +90,7 @@ public class PageEditBoundaryNode extends WizardPage
     if( selection.getFirstElement() == null )
     {
       setMessage( null );
-      setErrorMessage( "Boundary Node type not set." );
+      setErrorMessage( Messages.PageEditBoundaryNode_4 );
       setPageComplete( false );
 
       return;
@@ -112,7 +113,7 @@ public class PageEditBoundaryNode extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, "Name", container );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, Messages.PageEditBoundaryNode_5, container );
 
     m_name = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -126,13 +127,13 @@ public class PageEditBoundaryNode extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, "Description", container, new GridData( GridData.FILL, GridData.FILL, false, false ) );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, Messages.PageEditBoundaryNode_6, container, new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.MULTI | SWT.WRAP );
 
     /* bc type */
-    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE, "Type of boundary condition", container );
+    new WizardFeatureLabel( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE, Messages.PageEditBoundaryNode_7, container );
 
     m_type = new FacadeComboViewer( new FCVFeatureDelegate( m_boundaryNode.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
     m_type.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );
@@ -151,7 +152,7 @@ public class PageEditBoundaryNode extends WizardPage
   public String getBoundaryDescription( )
   {
     if( m_description.getText() == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return m_description.getText();
   }

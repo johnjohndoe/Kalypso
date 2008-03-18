@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.action.WspmImportProfileHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -66,7 +67,7 @@ import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
  */
 public class ImportProfileWizard extends Wizard implements IWizard
 {
-  public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype";
+  public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
   protected ImportProfilePage m_ProfilePage;
 
@@ -90,8 +91,8 @@ public class ImportProfileWizard extends Wizard implements IWizard
   public void addPages( )
   {
     /* Choose profile data */
-    m_ProfilePage = new ImportProfilePage( "chooseProfileData", "Profildaten wählen", null );
-    m_ProfilePage.setDescription( "Bitte wählen Sie Profil-Datei(en) aus" );
+    m_ProfilePage = new ImportProfilePage( "chooseProfileData", Messages.ImportProfileWizard_2, null ); //$NON-NLS-1$
+    m_ProfilePage.setDescription( Messages.ImportProfileWizard_3 );
 
     addPage( m_ProfilePage );
   }
@@ -105,15 +106,15 @@ public class ImportProfileWizard extends Wizard implements IWizard
     /* Do import */
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Profile werden importiert", 2 );
+        monitor.beginTask( Messages.ImportProfileWizard_5, 2 );
 
         try
         {
           /* Import Trippel Data */
-          monitor.subTask( "- lade Profil-Daten..." );
+          monitor.subTask( Messages.ImportProfileWizard_6 );
 
           /* get file name from wizard */
           final File trippelFile = m_ProfilePage.getFile();
@@ -126,7 +127,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
           monitor.worked( 1 );
 
           /* Convert Trippel Data */
-          monitor.subTask( "- konvertiere Profil-Daten in GML..." );
+          monitor.subTask( Messages.ImportProfileWizard_7 );
 
           WspmImportProfileHelper.loadIntoGml( profiles, m_fate, m_workspace );
 

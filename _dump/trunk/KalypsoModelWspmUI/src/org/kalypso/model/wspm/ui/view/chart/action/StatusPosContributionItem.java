@@ -57,7 +57,7 @@ import de.belger.swtchart.mouse.IChartPosListener;
 
 public class StatusPosContributionItem extends ContributionItem
 {
-  private static final String POS_FORMAT = "%10.4f  /  %10.4f";
+  private static final String POS_FORMAT = "%10.4f  /  %10.4f"; //$NON-NLS-1$
 
   public final static int DEFAULT_CHAR_WIDTH = 40;
 
@@ -67,7 +67,7 @@ public class StatusPosContributionItem extends ContributionItem
   {
     public void onPosChanged( final Point2D logpoint, final boolean inScreen )
     {
-      final StringBuffer msg = new StringBuffer( "Pos: " );
+      final StringBuffer msg = new StringBuffer( "Pos: " ); //$NON-NLS-1$
       if( inScreen )
         msg.append( String.format( POS_FORMAT, new Object[] { logpoint.getX(), logpoint.getY() } ) );
 

@@ -56,13 +56,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author Belger
  */
 public class PointsSourceChooserPage extends WizardPage
 {
-  private static final String DLG_SETTINGS_SOURCE_ID = PointsSourceChooserPage.class.getName() + ".dialogSettings.selectedSourceID";
+  private static final String DLG_SETTINGS_SOURCE_ID = PointsSourceChooserPage.class.getName() + ".dialogSettings.selectedSourceID"; //$NON-NLS-1$
 
   private final IPointsSource[] m_sources = KalypsoModelWspmUIExtensions.createProfilPointSources();
 
@@ -74,7 +75,7 @@ public class PointsSourceChooserPage extends WizardPage
 
   public PointsSourceChooserPage( )
   {
-    super( "pointsSourceChooser", "Wählen Sie die Quelle der Punkte", null );
+    super( "pointsSourceChooser", Messages.PointsSourceChooserPage_2, null ); //$NON-NLS-1$
   }
 
   /**
@@ -101,7 +102,7 @@ public class PointsSourceChooserPage extends WizardPage
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 2, false ) );
 
-    new Label( panel, SWT.NONE ).setText( "Herkunft der Profilpunkte: " );
+    new Label( panel, SWT.NONE ).setText( Messages.PointsSourceChooserPage_3 );
 
     final ComboViewer comboViewer = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     comboViewer.setContentProvider( new ArrayContentProvider() );
@@ -137,7 +138,7 @@ public class PointsSourceChooserPage extends WizardPage
   {
     m_selectedSource = source;
 
-    m_sourceStack.setText( m_selectedSource == null ? "" : m_selectedSource.getDescription() );
+    m_sourceStack.setText( m_selectedSource == null ? "" : m_selectedSource.getDescription() ); //$NON-NLS-1$
     m_stackLayout.topControl = m_selectedSource == null ? null : m_selectedSource.getControl( getDialogSettings() );
     m_sourceStack.layout();
   }

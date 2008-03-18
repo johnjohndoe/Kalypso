@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
@@ -156,7 +157,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     if( m_profile == null )
     {
       final Label label = new Label( m_control, SWT.CENTER );
-      label.setText( "Kein Profil selektiert." );
+      label.setText( Messages.AbstractProfilPart_0 );
       final GridData gridData = new GridData();
       gridData.grabExcessHorizontalSpace = true;
       gridData.horizontalAlignment = SWT.FILL;
@@ -224,7 +225,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {

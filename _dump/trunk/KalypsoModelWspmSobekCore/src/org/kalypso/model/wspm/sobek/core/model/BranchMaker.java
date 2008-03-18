@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
@@ -68,7 +69,7 @@ public class BranchMaker implements IBranchMaker
   public void connectBranches( final IBranch[] branches, final GM_Curve curve ) throws Exception
   {
     if( branches.length != 2 )
-      throw (new IllegalStateException( "Can only connect two branches!" ));
+      throw (new IllegalStateException( Messages.BranchMaker_0 ));
 
     FNGmlUtils.connectBranches( m_model, branches, curve );
   }

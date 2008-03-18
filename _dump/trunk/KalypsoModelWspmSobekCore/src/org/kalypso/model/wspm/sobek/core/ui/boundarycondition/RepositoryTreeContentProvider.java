@@ -111,9 +111,9 @@ public class RepositoryTreeContentProvider extends org.kalypso.ui.repository.vie
         final IRepositoryItem item = (IRepositoryItem) object;
         final String name = item.getName();
 
-        if( name.startsWith( "." ) )
+        if( name.startsWith( "." ) ) //$NON-NLS-1$
           continue;
-        else if( name.equals( "CVS" ) )
+        else if( name.equals( "CVS" ) ) //$NON-NLS-1$
           continue;
 
         myChildren.add( object );

@@ -78,13 +78,14 @@ import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditLastfall;
 import org.kalypso.model.wspm.sobek.core.wizard.SobekWizardEditTimeSeriesObservation;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
  */
 public class LastFallExplorer
 {
-  static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD );
+  static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
   private static ViewerSorter m_sorter = new ViewerSorter()
   {
@@ -151,7 +152,7 @@ public class LastFallExplorer
   {
 
     /* label */
-    final Label lLastfalls = toolkit.createLabel( header, "Calculation Cases:" );
+    final Label lLastfalls = toolkit.createLabel( header, Messages.LastFallExplorer_1 );
     lLastfalls.setFont( LastFallExplorer.fTextBold );
 
     final ToolBar toolBar = new ToolBar( header, SWT.FLAT );
@@ -160,9 +161,9 @@ public class LastFallExplorer
 
     /* create calculation case */
     final ToolItem createCC = new ToolItem( toolBar, SWT.NONE );
-    final Image iAdd = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/add.gif" ) );
+    final Image iAdd = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/add.gif" ) ); //$NON-NLS-1$
     createCC.setImage( iAdd );
-    createCC.setToolTipText( "Create a new Calculation Case" );
+    createCC.setToolTipText( Messages.LastFallExplorer_3 );
 
     createCC.addSelectionListener( new SelectionAdapter()
     {
@@ -197,8 +198,8 @@ public class LastFallExplorer
 
     /* edit */
     final ToolItem edit = new ToolItem( toolBar, SWT.NONE );
-    final Image iEdit = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit.gif" ) );
-    edit.setToolTipText( "Edit selected tree item" );
+    final Image iEdit = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit.gif" ) ); //$NON-NLS-1$
+    edit.setToolTipText( Messages.LastFallExplorer_5 );
     edit.setImage( iEdit );
     edit.setEnabled( false );
 
@@ -231,8 +232,8 @@ public class LastFallExplorer
 
     /* edit time series observation */
     final ToolItem editObs = new ToolItem( toolBar, SWT.NONE );
-    final Image iEditObs = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit_ts_obs.gif" ) );
-    editObs.setToolTipText( "Edit condition time series observation" );
+    final Image iEditObs = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/edit_ts_obs.gif" ) ); //$NON-NLS-1$
+    editObs.setToolTipText( Messages.LastFallExplorer_7 );
     editObs.setImage( iEditObs );
     editObs.setEnabled( false );
 
@@ -276,8 +277,8 @@ public class LastFallExplorer
 
     /* delete */
     final ToolItem delete = new ToolItem( toolBar, SWT.NONE );
-    final Image iDelete = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/delete.gif" ) );
-    delete.setToolTipText( "Delete selected tree item" );
+    final Image iDelete = new Image( header.getDisplay(), getClass().getResourceAsStream( "icons/delete.gif" ) ); //$NON-NLS-1$
+    delete.setToolTipText( Messages.LastFallExplorer_9 );
     delete.setImage( iDelete );
     delete.setEnabled( false );
 
@@ -295,7 +296,7 @@ public class LastFallExplorer
         if( element instanceof ILastfall )
         {
           final ILastfall lastfall = (ILastfall) element;
-          if( MessageDialog.openConfirm( toolBar.getShell(), "Delete Lastfall", "Delete Lastfall: " + lastfall.getName() + "?" ) )
+          if( MessageDialog.openConfirm( toolBar.getShell(), Messages.LastFallExplorer_10, Messages.LastFallExplorer_11 + lastfall.getName() + Messages.LastFallExplorer_12 ) )
             try
             {
               FeatureUtils.deleteFeature( lastfall.getModelMember().getWorkspace(), lastfall.getFeature() );
@@ -389,10 +390,10 @@ public class LastFallExplorer
     {
       final TreePath[] path = selection.getPathsFor( element );
       if( path.length != 1 )
-        throw new IllegalStateException( "Tree path is incorrect" );
+        throw new IllegalStateException( Messages.LastFallExplorer_13 );
 
       if( path[0].getSegmentCount() != 2 )
-        throw new IllegalStateException( "Segment count of tree path is incorrect" );
+        throw new IllegalStateException( Messages.LastFallExplorer_14 );
 
       final ILastfall lastfall = (ILastfall) path[0].getFirstSegment();
       final IBoundaryNode node = (IBoundaryNode) element;

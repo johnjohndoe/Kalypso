@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
  */
 public class ProfilChartViewActionBarContributor implements IActionBarContributor, IAdapterEater
 {
-  private final StatusPosContributionItem m_statusPosItem = new StatusPosContributionItem( "profilChartViewStatusPosItem" );
+  private final StatusPosContributionItem m_statusPosItem = new StatusPosContributionItem( "profilChartViewStatusPosItem" ); //$NON-NLS-1$
 
   private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( ProfilChartView.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 

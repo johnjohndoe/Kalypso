@@ -62,9 +62,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class WspmProject extends AbstractFeatureBinder implements IWspmConstants
 {
-  private static final QName QNAME_WATER_BODY_MEMBER = new QName( NS_WSPM, "waterBodyMember" );
+  private static final QName QNAME_WATER_BODY_MEMBER = new QName( NS_WSPM, "waterBodyMember" ); //$NON-NLS-1$
 
-  public final static QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" );
+  public final static QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
 
   public WspmProject( final Feature wspProject )
   {
@@ -119,8 +119,8 @@ public class WspmProject extends AbstractFeatureBinder implements IWspmConstants
 
     // set default values
     wspmWaterBody.setName( name );
-    wspmWaterBody.setDescription( "" );
-    wspmWaterBody.setRefNr( "" );
+    wspmWaterBody.setDescription( "" ); //$NON-NLS-1$
+    wspmWaterBody.setRefNr( "" ); //$NON-NLS-1$
     wspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
 
     return wspmWaterBody;

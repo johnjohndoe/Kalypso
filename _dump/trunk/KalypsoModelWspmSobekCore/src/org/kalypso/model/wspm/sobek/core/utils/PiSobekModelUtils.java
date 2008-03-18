@@ -118,7 +118,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
+import org.kalypso.model.wspm.sobek.core.Messages;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -154,7 +154,7 @@ public class PiSobekModelUtils
       if( super.containsKey( key ) )
         return super.get( key );
 
-      throw new IllegalArgumentException( key.toString() + " can't be found in HashMap lookUpModelToPi." );
+      throw new IllegalArgumentException( key.toString() + Messages.PiSobekModelUtils_0 );
     }
 
     /**
@@ -168,10 +168,10 @@ public class PiSobekModelUtils
     public String put( final String key, final String value )
     {
       if( !(null == super.put( key, value )) )
-        throw new IllegalArgumentException( key + " is not unique in HashMap lookUpModelToPi." );
+        throw new IllegalArgumentException( key + Messages.PiSobekModelUtils_1 );
       if( !key.equals( value ) )
         if( !(null == super.put( value, key )) )
-          throw new IllegalArgumentException( value + " is not unique in HashMap lookUpModelToPi." );
+          throw new IllegalArgumentException( value + Messages.PiSobekModelUtils_2 );
       return null;
     }
   };
@@ -244,7 +244,7 @@ public class PiSobekModelUtils
         final LinkageNode ln = (LinkageNode) node;
         final IBranch linkedBranch = ln.getLinkToBranch();
         if( linkedBranch == null )
-          throw new IllegalArgumentException( "Missing linked branch for linkage node " + ln.getName() );
+          throw new IllegalArgumentException( Messages.PiSobekModelUtils_3 + ln.getName() );
         else
           location.setLocationType( lookUpModelToPi.get( ln.getType().toString() ) + "@" + linkedBranch.getId() ); //$NON-NLS-1$
 
@@ -385,7 +385,7 @@ public class PiSobekModelUtils
     else if( boundaryType.equals( BOUNDARY_TYPE.eW ) )
       valueComp = TupleResultUtilities.findComponentById( tupleResult, "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W" ); //$NON-NLS-1$
     else
-      throw new NotImplementedException( "Boundary condition of type " + boundaryType + " can't be transferred by PI format yet." );
+      throw new NotImplementedException( Messages.PiSobekModelUtils_4 + boundaryType + Messages.PiSobekModelUtils_5 );
 
     final Iterator<IRecord> itrResult = tupleResult.iterator();
     while( itrResult.hasNext() )
@@ -415,7 +415,7 @@ public class PiSobekModelUtils
     structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkDBStruct.getName();
     if( name == null )
-      name = "";
+      name = ""; //$NON-NLS-1$
     structureDefinition.setStructureDefinitionId( sbkDBStruct.getId() + "_dbStruct" ); //$NON-NLS-1$
     structureDefinition.setStructureDefinitionName( name + "_dbStruct" ); //$NON-NLS-1$
     structureDefinition.setStructureDefinitionType( "Sobek.Structures.DatabaseStructure" ); //$NON-NLS-1$
@@ -546,9 +546,9 @@ public class PiSobekModelUtils
     structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkGenStruct.getName();
     if( name == null )
-      name = "";
+      name = ""; //$NON-NLS-1$
     structureDefinition.setStructureDefinitionId( sbkGenStruct.getId() + "_genStruct" ); //$NON-NLS-1$
-    structureDefinition.setStructureDefinitionName( name + "_genStruct" );
+    structureDefinition.setStructureDefinitionName( name + "_genStruct" ); //$NON-NLS-1$
     structureDefinition.setStructureDefinitionType( "Sobek.Structures.GeneralStructure" ); //$NON-NLS-1$
 
     final Parameters parameters = factory.createParameters();
@@ -697,7 +697,7 @@ public class PiSobekModelUtils
     structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkPump.getName();
     if( name == null )
-      name = "";
+      name = ""; //$NON-NLS-1$
     structureDefinition.setStructureDefinitionId( sbkPump.getId() + "_pump" ); //$NON-NLS-1$
     structureDefinition.setStructureDefinitionName( name + "_pump" ); //$NON-NLS-1$
     structureDefinition.setStructureDefinitionType( "Sobek.Structures.Pump" ); //$NON-NLS-1$
@@ -770,51 +770,51 @@ public class PiSobekModelUtils
     final ISbkStructRiverWeir sbkRiverWeir = (ISbkStructRiverWeir) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkRiverWeir.getName();
     if( name == null )
-      name = "";
-    structureDefinition.setStructureDefinitionId( sbkRiverWeir.getId() + "_riverWeir" );
-    structureDefinition.setStructureDefinitionName( name + "_riverWeir" );
-    structureDefinition.setStructureDefinitionType( "Sobek.Structures.RiverWeir" );
+      name = ""; //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionId( sbkRiverWeir.getId() + "_riverWeir" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionName( name + "_riverWeir" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.RiverWeir" ); //$NON-NLS-1$
 
     final Parameters parameters = factory.createParameters();
 
     Parameter parameter = factory.createParameter();
-    parameter.setId( "crestLevel" );
+    parameter.setId( "crestLevel" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getCrestLevel() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "crestWidth" );
+    parameter.setId( "crestWidth" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getCrestWidth() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "crestShape" );
+    parameter.setId( "crestShape" ); //$NON-NLS-1$
     parameter.setType( cTypeString );
     parameter.getContent().add( sbkRiverWeir.getCrestShape() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveCorrectionCoefficient" );
+    parameter.setId( "positiveCorrectionCoefficient" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getPosCorrectionCeoff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveSubmergeLimit" );
+    parameter.setId( "positiveSubmergeLimit" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getPosSubmergeLimit() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "positiveReductionFactors" );
+    parameter.setId( "positiveReductionFactors" ); //$NON-NLS-1$
     parameter.setType( cTypeTable );
     final Table innerTablePos = factory.createTable();
-    innerTablePos.setName( "positiveReductionFactors" );
+    innerTablePos.setName( "positiveReductionFactors" ); //$NON-NLS-1$
 
     final Info tableInfoPos = factory.createInfo();
 
@@ -864,22 +864,22 @@ public class PiSobekModelUtils
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeCorrectionCoefficient" );
+    parameter.setId( "negativeCorrectionCoefficient" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getNegCorrectionCeoff() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeSubmergeLimit" );
+    parameter.setId( "negativeSubmergeLimit" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkRiverWeir.getNegSubmergeLimit() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "negativeReductionFactors" );
+    parameter.setId( "negativeReductionFactors" ); //$NON-NLS-1$
     parameter.setType( cTypeTable );
     final Table innerTableNeg = factory.createTable();
-    innerTableNeg.setName( "negativeReductionFactors" );
+    innerTableNeg.setName( "negativeReductionFactors" ); //$NON-NLS-1$
 
     final Info tableInfoNeg = factory.createInfo();
 
@@ -948,42 +948,42 @@ public class PiSobekModelUtils
     final ISbkStructWeir sbkWeir = (ISbkStructWeir) sbkStructure;
     final StructureDefinition structureDefinition = factory.createStructureDefinition();
 
-    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" );
+    structureDefinition.setCrossSectionType( "Sobek.Structure.CrossSection.None" ); //$NON-NLS-1$
     String name = sbkWeir.getName();
     if( name == null )
-      name = "";
-    structureDefinition.setStructureDefinitionId( sbkWeir.getId() + "_weir" );
-    structureDefinition.setStructureDefinitionName( name + "_weir" );
-    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Weir" );
+      name = ""; //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionId( sbkWeir.getId() + "_weir" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionName( name + "_weir" ); //$NON-NLS-1$
+    structureDefinition.setStructureDefinitionType( "Sobek.Structures.Weir" ); //$NON-NLS-1$
 
     final Parameters parameters = factory.createParameters();
 
     Parameter parameter = factory.createParameter();
-    parameter.setId( "flowDirection" );
+    parameter.setId( "flowDirection" ); //$NON-NLS-1$
     parameter.setType( cTypeString );
     parameter.getContent().add( sbkWeir.getFlowDirection() );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "crestLevel" );
+    parameter.setId( "crestLevel" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getCrestLevel() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "crestWidth" );
+    parameter.setId( "crestWidth" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getCrestWidth() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "dischargeCoef" );
+    parameter.setId( "dischargeCoef" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getDischargeCoeffCE() ) );
     parameters.getParameter().add( parameter );
 
     parameter = factory.createParameter();
-    parameter.setId( "lateralContractioncCoef" );
+    parameter.setId( "lateralContractioncCoef" ); //$NON-NLS-1$
     parameter.setType( cTypeDouble );
     parameter.getContent().add( Double.toString( sbkWeir.getLateralContractionCoeffCW() ) );
     parameters.getParameter().add( parameter );

@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetInfoComparator;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInfo;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.editor.actions.ChartActionHandler;
 import org.kalypso.model.wspm.ui.editor.actions.ShowTableAction;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
@@ -66,29 +67,29 @@ import org.kalypso.model.wspm.ui.view.chart.action.StatusPosContributionItem;
  */
 public class ProfilchartEditorContributor extends EditorActionBarContributor
 {
-  public static final String RETARGET_INSERT = "com.bce.profil.eclipse.editor.globalAction.insert";
+  public static final String RETARGET_INSERT = "com.bce.profil.eclipse.editor.globalAction.insert"; //$NON-NLS-1$
 
-  public static final String RETARGET_OPEN_TABLE = "com.bce.profil.eclipse.editor.globalAction.openTable";
+  public static final String RETARGET_OPEN_TABLE = "com.bce.profil.eclipse.editor.globalAction.openTable"; //$NON-NLS-1$
 
-  public static final String RETARGET_MAXIMIZE = "com.bce.profil.eclipse.editor.globalAction.maximizeChart";
+  public static final String RETARGET_MAXIMIZE = "com.bce.profil.eclipse.editor.globalAction.maximizeChart"; //$NON-NLS-1$
 
   private final ProfilPartListener m_profilPartListener = new ProfilPartListener();
 
-  private final StatusPosContributionItem m_statusLineItem = new StatusPosContributionItem( "pos" );
+  private final StatusPosContributionItem m_statusLineItem = new StatusPosContributionItem( "pos" ); //$NON-NLS-1$
 
   private final RetargetActionManager m_retargetManager = new RetargetActionManager();
 
-  private static final String MENU_ID_PROFIL = "com.bce.profil.wspprofilapp.profileditor";
+  private static final String MENU_ID_PROFIL = "com.bce.profil.wspprofilapp.profileditor"; //$NON-NLS-1$
 
   public ProfilchartEditorContributor( )
   {
-    final RetargetInfo insertPointInfo = m_retargetManager.addRetargetInfo( new RetargetActionManager.RetargetInfo( RETARGET_INSERT, "Punkt Einfügen", IAction.AS_PUSH_BUTTON ) );
-    insertPointInfo.getRetargetAction().setToolTipText( "Fügt einen neuen Punkt hinter dem aktiven Punkt ein." );
+    final RetargetInfo insertPointInfo = m_retargetManager.addRetargetInfo( new RetargetActionManager.RetargetInfo( RETARGET_INSERT, Messages.ProfilchartEditorContributor_5, IAction.AS_PUSH_BUTTON ) );
+    insertPointInfo.getRetargetAction().setToolTipText( Messages.ProfilchartEditorContributor_6 );
     insertPointInfo.setMenuPath( IWorkbenchActionConstants.M_EDIT + IWorkbenchActionConstants.SEP + IWorkbenchActionConstants.CUT_EXT );
 
-    final RetargetInfo showTableInfo = m_retargetManager.addRetargetInfo( new RetargetActionManager.RetargetInfo( RETARGET_OPEN_TABLE, "Tabelle anzeigen", IAction.AS_PUSH_BUTTON ) );
+    final RetargetInfo showTableInfo = m_retargetManager.addRetargetInfo( new RetargetActionManager.RetargetInfo( RETARGET_OPEN_TABLE, Messages.ProfilchartEditorContributor_7, IAction.AS_PUSH_BUTTON ) );
     showTableInfo.setActionHandler( new ShowTableAction() );
-    showTableInfo.getRetargetAction().setToolTipText( "Öffnet die Tabelle für den aktiven Profileditor" );
+    showTableInfo.getRetargetAction().setToolTipText( Messages.ProfilchartEditorContributor_8 );
     showTableInfo.getRetargetAction().setImageDescriptor( KalypsoModelWspmUIImages.ID_ENABLED_OPEN_TABLE );
     showTableInfo.setMenuPath( MENU_ID_PROFIL + IWorkbenchActionConstants.SEP + IWorkbenchActionConstants.MB_ADDITIONS );
     showTableInfo.setToolbarGroup( IWorkbenchActionConstants.MB_ADDITIONS );
@@ -193,7 +194,7 @@ public class ProfilchartEditorContributor extends EditorActionBarContributor
   public void contributeToMenu( final IMenuManager menuManager )
   {
     super.contributeToMenu( menuManager );
-    final MenuManager profilMenu = new MenuManager( "Profil", MENU_ID_PROFIL );
+    final MenuManager profilMenu = new MenuManager( "Profil", MENU_ID_PROFIL ); //$NON-NLS-1$
     menuManager.insertAfter( IWorkbenchActionConstants.MB_ADDITIONS, profilMenu );
 
     profilMenu.add( new Separator( RetargetActionManager.MENU_GROUP_PUSH ) );

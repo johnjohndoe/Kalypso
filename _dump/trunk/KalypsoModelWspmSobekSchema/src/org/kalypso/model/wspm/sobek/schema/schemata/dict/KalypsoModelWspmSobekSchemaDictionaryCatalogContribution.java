@@ -50,7 +50,7 @@ public class KalypsoModelWspmSobekSchemaDictionaryCatalogContribution implements
 {
   public void contributeTo( final CatalogManager catalogManager )
   {
-    final URL catalogURL = getClass().getResource( "catalog.xml" );
+    final URL catalogURL = getClass().getResource( "catalog.xml" ); //$NON-NLS-1$
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     baseCatalog.addNextCatalog( catalogURL );
   }

@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.model.wspm.core.Messages;
 
 /**
  * @author kimwerner
@@ -77,7 +78,7 @@ public class AddFixValueOperator implements IPointPropertyCalculator
           changes.add( new PointPropertyEdit( point, property, newValue ) );
         }
         else
-          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), property + " existiert nicht für Punkt[" + point.toString() + "]" ) );
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), property + Messages.AddFixValueOperator_0 + point.toString() + Messages.AddFixValueOperator_1 ) );
       }
     }
     return changes.toArray( new IProfilChange[changes.size()] );

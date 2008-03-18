@@ -62,6 +62,7 @@ import org.kalypso.chart.framework.util.ChartUtilities;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.util.swt.StatusComposite;
@@ -74,9 +75,9 @@ import org.ksp.chart.factory.ChartType;
 public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
   /** These settings are used locally to remember the last selected tab-folder. */
-  private final static IDialogSettings SETTINGS = new DialogSettings( "bla" );
+  private final static IDialogSettings SETTINGS = new DialogSettings( "bla" ); //$NON-NLS-1$
 
-  private final static String STR_SETTINGS_TAB = "tabIndex";
+  private final static String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
 
   private ChartComposite[] m_charts;
 
@@ -110,7 +111,7 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
     if( m_chartTabs.length == 0 )
     {
-      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, "No Charts available", null );
+      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, Messages.ChartFeatureControl_2, null );
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setStatus( warningStatus );
       return statusComposite;

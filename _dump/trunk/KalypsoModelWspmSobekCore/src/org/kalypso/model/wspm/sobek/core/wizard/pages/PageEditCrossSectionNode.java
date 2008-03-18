@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
@@ -71,21 +72,21 @@ public class PageEditCrossSectionNode extends WizardPage
 
   public PageEditCrossSectionNode( final Feature node, final IFCVDelegate delegate )
   {
-    super( "editFlowNetworkCrossSectionNode" );
+    super( "editFlowNetworkCrossSectionNode" ); //$NON-NLS-1$
     m_node = node;
     m_delegate = delegate;
-    setTitle( "Edit cross section node" );
-    setDescription( "Edit flow network cross section node" );
+    setTitle( Messages.PageEditCrossSectionNode_1 );
+    setDescription( Messages.PageEditCrossSectionNode_2 );
   }
 
   protected void checkPageCompleted( )
   {
     setPageComplete( false );
 
-    if( (m_name != null) && "".equals( m_name.getText() ) )
+    if( (m_name != null) && "".equals( m_name.getText() ) ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( "Name is missing" );
+      setErrorMessage( Messages.PageEditCrossSectionNode_4 );
 
       return;
     }
@@ -95,7 +96,7 @@ public class PageEditCrossSectionNode extends WizardPage
     if( element == null )
     {
       setMessage( null );
-      setErrorMessage( "Profile selection is missing" );
+      setErrorMessage( Messages.PageEditCrossSectionNode_5 );
 
       return;
     }
@@ -119,7 +120,7 @@ public class PageEditCrossSectionNode extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, "Name", container );
+    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, Messages.PageEditCrossSectionNode_6, container );
 
     m_name = new WizardFeatureTextBox( m_node, ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -133,14 +134,14 @@ public class PageEditCrossSectionNode extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, "Description", container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_node, ISobekConstants.QN_HYDRAULIC_NAME, Messages.PageEditCrossSectionNode_7, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_node, ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.WRAP | SWT.MULTI );
 
     /* profile */
     final Label lProfile = new Label( container, SWT.NONE );
-    lProfile.setText( "Cross section" );
+    lProfile.setText( Messages.PageEditCrossSectionNode_8 );
 
     m_viewer = new FacadeComboViewer( m_delegate );
     m_viewer.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.READ_ONLY | SWT.SINGLE | SWT.BORDER );
@@ -166,6 +167,6 @@ public class PageEditCrossSectionNode extends WizardPage
     if( element instanceof Feature )
       return (Feature) element;
 
-    throw new IllegalStateException( "Object type not supported: " + element.toString() );
+    throw new IllegalStateException( Messages.PageEditCrossSectionNode_9 + element.toString() );
   }
 }

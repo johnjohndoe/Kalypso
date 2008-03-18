@@ -67,9 +67,9 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
  */
 public class ComponentUiProblemHandler implements IComponentUiHandler
 {
-  private static final String IMAGE_ERROR = "profilLabelProvider.img.error";
+  private static final String IMAGE_ERROR = "profilLabelProvider.img.error"; //$NON-NLS-1$
 
-  private static final String IMAGE_WARNING = "profilLabelProvider.img.warning";
+  private static final String IMAGE_WARNING = "profilLabelProvider.img.warning"; //$NON-NLS-1$
 
   private final ImageRegistry m_imgRegistry = new ImageRegistry();
 
@@ -122,7 +122,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    */
   public String getColumnLabel( )
   {
-    return "-";
+    return "-"; //$NON-NLS-1$
   }
 
   /**
@@ -162,7 +162,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    */
   public String getStringRepresentation( final IRecord record )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   public Image getImage( final IRecord record )

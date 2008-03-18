@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
 
 /**
@@ -69,7 +70,7 @@ public class ValidationProfilListener implements IProfilListener
 
   private final WorkspaceJob m_validateJob;
 
-   private String m_featureID;
+  private final String m_featureID;
 
   public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID, final String featureID )
   {
@@ -79,7 +80,7 @@ public class ValidationProfilListener implements IProfilListener
 
     m_featureID = featureID;
 
-    m_validateJob = new WorkspaceJob( "Profil wird validiert" )
+    m_validateJob = new WorkspaceJob( Messages.ValidationProfilListener_0 )
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -96,7 +97,7 @@ public class ValidationProfilListener implements IProfilListener
           collector.reset( featureID );
 
           // TODO: use monitor and check for cancel
-          final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) );
+          final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) ); //$NON-NLS-1$
 
           profile.setProblemMarker( collector.getMarkers() );
 
@@ -123,8 +124,6 @@ public class ValidationProfilListener implements IProfilListener
 
     revalidate();
   }
-
- 
 
   public void dispose( )
   {

@@ -73,7 +73,7 @@ public class SbkTable implements ISbkTable
       if( property instanceof Integer )
         m_value = new BigInteger( ((Number) property).toString() );
       else
-        m_value = new BigInteger( "0" );
+        m_value = new BigInteger( "0" ); //$NON-NLS-1$
     }
 
     public String getPeriod( )

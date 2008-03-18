@@ -98,6 +98,7 @@ import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
@@ -152,7 +153,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
 
   protected final Runnable m_dirtyRunnable = new Runnable()
   {
-    @SuppressWarnings("synthetic-access")
+    @SuppressWarnings("synthetic-access") //$NON-NLS-1$
     public void run( )
     {
       firePropertyChange( IEditorPart.PROP_DIRTY );
@@ -227,14 +228,14 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       // unhook resource listener, because we do change the local file
       workspace.removeResourceChangeListener( m_fileListener );
 
-      monitor.beginTask( "Profil speichern", 2000 );
+      monitor.beginTask( Messages.ProfilchartEditor_1, 2000 );
 
       final IEditorInput editorInput = getEditorInput();
       final IFile file = (IFile) editorInput.getAdapter( IFile.class );
 
       final StringWriter prfWriter = new StringWriter();
 
-      final IProfilSink prfSink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" );
+      final IProfilSink prfSink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" ); //$NON-NLS-1$
       prfSink.write( getProfil(), prfWriter );
       prfWriter.close();
 
@@ -251,11 +252,11 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getEditorSite().getShell(), "Profil speichern", "Profil konnte nicht gespeichert werden.\n" + e.getLocalizedMessage() );
+      MessageDialog.openError( getEditorSite().getShell(), Messages.ProfilchartEditor_3, Messages.ProfilchartEditor_4 + e.getLocalizedMessage() );
     }
     catch( final CoreException e )
     {
-      ErrorDialog.openError( getEditorSite().getShell(), "Profil speichern", "Profil konnte nicht gespeichert werden.", e.getStatus() );
+      ErrorDialog.openError( getEditorSite().getShell(), Messages.ProfilchartEditor_5, Messages.ProfilchartEditor_6, e.getStatus() );
 
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( e.getStatus() );
     }
@@ -292,10 +293,10 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     // erstmal nur ins file-system
     final FileDialog fd = new FileDialog( getEditorSite().getShell(), SWT.SAVE );
 
-    fd.setFileName( "neues Profil" );
-    fd.setFilterExtensions( new String[] { "*.prf", "*" } );
-    fd.setFilterNames( new String[] { "WspWin Profildatei (*.prf)", "Alle Dateien (*.*)" } );
-    fd.setText( "Profil speichern" );
+    fd.setFileName( Messages.ProfilchartEditor_7 );
+    fd.setFilterExtensions( new String[] { "*.prf", "*" } ); //$NON-NLS-1$ //$NON-NLS-2$
+    fd.setFilterNames( new String[] { Messages.ProfilchartEditor_10, Messages.ProfilchartEditor_11 } );
+    fd.setText( Messages.ProfilchartEditor_12 );
 
     final IFile fileFromInput = (IFile) getEditorInput().getAdapter( IFile.class );
     final String filterPath = fileFromInput == null ? null : fileFromInput.getParent().getLocation().toOSString();
@@ -305,24 +306,24 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
     if( path == null )
       return;
 
-    final Job job = new Job( "Profil speichern" )
+    final Job job = new Job( Messages.ProfilchartEditor_13 )
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Profil speichern", 1 );
+        monitor.beginTask( Messages.ProfilchartEditor_14, 1 );
         try
         {
           final File file = new File( path );
           final PrintWriter pw = new PrintWriter( file );
-          final IProfilSink prfSink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" );
+          final IProfilSink prfSink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" ); //$NON-NLS-1$
           prfSink.write( getProfil(), pw );
           pw.close();
           setInput( new JavaFileEditorInput( file ) );
         }
         catch( final Exception e )
         {
-          return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, "Fehler beim Speichern des Profils", e );
+          return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, Messages.ProfilchartEditor_16, e );
         }
         finally
         {
@@ -368,7 +369,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
 
     // TODO: get profiletype from input (possible if input represents a 'Zustand').
     // Use pasche as default.
-    final String profiletype = "org.kalypso.model.wspm.tuhh.profiletype";
+    final String profiletype = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
     final IStationResult[] results = (IStationResult[]) input.getAdapter( IStationResult[].class );
     setResults( results );
@@ -378,7 +379,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       loadFile( file, profiletype );
 
       if( name != null )
-        setPartName( "Profil km " + name );
+        setPartName( Messages.ProfilchartEditor_18 + name );
     }
   }
 
@@ -390,12 +391,12 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       return;
     }
 
-    final Job job = new Job( "Profil laden" )
+    final Job job = new Job( Messages.ProfilchartEditor_19 )
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Lade Profil: " + file.getName(), 2 );
+        monitor.beginTask( Messages.ProfilchartEditor_20 + file.getName(), 2 );
         InputStream contents = null;
         try
         {
@@ -403,9 +404,9 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
           final String charset = file.getCharset( true );
           final InputStreamReader reader = new InputStreamReader( contents, charset );
 
-          final IProfilSource source = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
+          final IProfilSource source = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
           if( source == null )
-            throw new Exception( "No Profil-Source found for type 'prf'." );
+            throw new Exception( Messages.ProfilchartEditor_22 );
 
           final IProfil profil = ProfilFactory.createProfil( profiletype );
           if( !source.read( profil, reader ) )
@@ -425,7 +426,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         catch( final Exception e )
         {
           setProfil( null );
-          return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, "Fehler beim Laden eines Profils:\n" + e.getLocalizedMessage(), e );
+          return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, Messages.ProfilchartEditor_23 + e.getLocalizedMessage(), e );
         }
         finally
         {
@@ -502,7 +503,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -640,7 +641,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         return;
 
       final IRecord point = profil.getPoints()[pointPos];
-      final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ActiveObjectEdit( profil, point, null ), true );
+      final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ActiveObjectEdit( profil, point, null ), true ); //$NON-NLS-1$
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();
       if( !status.isOK() )
@@ -686,7 +687,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         break;
 
       case IResourceDelta.REMOVED:
-        MessageDialog.openWarning( getEditorSite().getShell(), "Datei " + file.getLocation().toFile().getAbsoluteFile(), "Die Profildatei wurde gel�scht.\nSpeichern Sie das Profil, um die Datei wiederherzustellen." );
+        MessageDialog.openWarning( getEditorSite().getShell(), Messages.ProfilchartEditor_26 + file.getLocation().toFile().getAbsoluteFile(), Messages.ProfilchartEditor_27 );
         // todo: was tun? am besten vorschlagen:
         // - profileditor schliessen
         // - profil neu speichern
@@ -701,12 +702,12 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
         if( (delta.getFlags() & IResourceDelta.CONTENT) != 0 )
         {
           final StringBuffer message = new StringBuffer();
-          message.append( "Die Profildatei wurde ge�ndert.\n" );
-          message.append( "Soll die Datei neu geladen werden?\n" );
+          message.append( Messages.ProfilchartEditor_28 );
+          message.append( Messages.ProfilchartEditor_29 );
           if( isDirty() )
-            message.append( "ACHTUNG: Die �nderungen im Profileditor gehen verloren!" );
+            message.append( Messages.ProfilchartEditor_30 );
 
-          if( MessageDialog.openQuestion( getEditorSite().getShell(), "Datei " + file.getLocation().toFile().getAbsoluteFile(), message.toString() ) )
+          if( MessageDialog.openQuestion( getEditorSite().getShell(), Messages.ProfilchartEditor_31 + file.getLocation().toFile().getAbsoluteFile(), message.toString() ) )
             setInput( getEditorInput() );
         }
         break;

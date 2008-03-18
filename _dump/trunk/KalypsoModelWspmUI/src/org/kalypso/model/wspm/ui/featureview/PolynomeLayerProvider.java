@@ -75,19 +75,19 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public PolynomeChartLayer getLayer( final URL context )
   {
     LayerType lt = getLayerType();
 
     final IParameterContainer parameterContainer = getParameterContainer();
 
-    final String domainId = parameterContainer.getParameterValue( "domainId", null );
-    final boolean showPoints = Boolean.parseBoolean( parameterContainer.getParameterValue( "showPoints", "false" ) );
-    final int pixelsPerTick = Integer.parseInt( parameterContainer.getParameterValue( "pixelsPerTick", "5" ) );
+    final String domainId = parameterContainer.getParameterValue( "domainId", null ); //$NON-NLS-1$
+    final boolean showPoints = Boolean.parseBoolean( parameterContainer.getParameterValue( "showPoints", "false" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final int pixelsPerTick = Integer.parseInt( parameterContainer.getParameterValue( "pixelsPerTick", "5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String featureKey = parameterContainer.getParameterValue( "featureKey", null );
-    final String propertyNameStr = parameterContainer.getParameterValue( "propertyName", null );
+    final String featureKey = parameterContainer.getParameterValue( "featureKey", null ); //$NON-NLS-1$
+    final String propertyNameStr = parameterContainer.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
 
     final Feature feature = ChartDataProvider.FEATURE_MAP.get( featureKey );

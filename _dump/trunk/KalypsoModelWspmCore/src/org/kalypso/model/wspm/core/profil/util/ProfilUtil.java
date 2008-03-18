@@ -57,6 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypso.model.wspm.core.Messages;
 
 /**
  * @author kimwerner
@@ -142,7 +143,7 @@ public class ProfilUtil
     final HashMap<String, IComponent> properties = getComponentsFromProfile( profile );
     final IComponent cmpBreite = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     if( cmpBreite == null )
-      throw new IllegalStateException( "Das Profil muss eine Breiteninformation haben" );
+      throw new IllegalStateException( Messages.ProfilUtil_0 );
     final IRecord[] points = profile.getPoints();
     for( final IRecord point : points )
     {
@@ -321,7 +322,7 @@ public class ProfilUtil
 
     final int i = points.indexOf( point );
     if( i == -1 )
-      throw new IllegalArgumentException( "Punkt nicht im Profil: " + point );
+      throw new IllegalArgumentException( Messages.ProfilUtil_1 + point );
 
     return points.get( i - 1 );
   }
@@ -361,7 +362,7 @@ public class ProfilUtil
     if( points.isEmpty() || pos == points.size() - 1 )
       return null;
     if( pos == -1 )
-      throw new IllegalArgumentException( "Punkt nicht im Profil: " + point );
+      throw new IllegalArgumentException( Messages.ProfilUtil_2 + point );
 
     return points.get( pos + 1 );
   }
@@ -605,7 +606,7 @@ public class ProfilUtil
     startPoint = splitSegment( profile, segment1[0], segment1[1] );
     if( startPoint == null )
     {
-      System.out.println( "Profil konnte nicht abgeschnitten werden. Startpunkt nicht auf Profil. Setze ersten Profilpunkt." );
+      System.out.println( Messages.ProfilUtil_3 );
       startPoint = profile.getPoints()[0];
       index1 = 0;
     }
@@ -617,7 +618,7 @@ public class ProfilUtil
     endPoint = splitSegment( profile, segment2[0], segment2[1] );
     if( endPoint == null )
     {
-      System.out.println( "Profil konnte nicht abgeschnitten werden. Endpunkt nicht auf Profil. Setze letzten Profilpunkt." );
+      System.out.println( Messages.ProfilUtil_4 );
       endPoint = points.get( points.size() - 1 );
       index2 = points.size() - 1;
     }

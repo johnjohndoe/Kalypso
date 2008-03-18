@@ -58,6 +58,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -118,7 +119,7 @@ public class DA50Importer
     }
     catch( final IOException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Zugriff auf die DA50 Datei" );
+      final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.DA50Importer_0 );
       throw new CoreException( status );
     }
     finally
@@ -145,7 +146,7 @@ public class DA50Importer
     final double vl = Math.sqrt( vx * vx + vy * vy );
     if( vl == 0.0 )
     {
-      final String message = String.format( "Station %.4f: Start und Endpunkt liegen an der gleichen Stelle", entry.station );
+      final String message = String.format( Messages.DA50Importer_1, entry.station );
       throw new CoreException( StatusUtilities.createErrorStatus( message ) );
     }
 
@@ -188,7 +189,7 @@ public class DA50Importer
   {
     final List<DA50Entry> result = new ArrayList<DA50Entry>();
 
-    final MultiStatus logStatus = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, "Fehler beim DA50 Import", null );
+    final MultiStatus logStatus = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, Messages.DA50Importer_2, null );
 
     while( lnr.ready() )
     {
@@ -199,7 +200,7 @@ public class DA50Importer
       try
       {
 
-        if( line.length() < 60 || !line.startsWith( "50" ) )
+        if( line.length() < 60 || !line.startsWith( "50" ) ) //$NON-NLS-1$
           continue;
 
         // Station auslesen und mit 0en auff�llen, sonst klappt das umrechnen in m nicht immer
@@ -242,7 +243,7 @@ public class DA50Importer
       }
       catch( final Exception e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler in Zeile " + lnr.getLineNumber() );
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.DA50Importer_4 + lnr.getLineNumber() );
         logStatus.add( status );
       }
     }
@@ -261,9 +262,9 @@ public class DA50Importer
 
     public final GM_Point end;
 
-    public DA50Entry( @SuppressWarnings("hiding")
-    final double station, @SuppressWarnings("hiding")
-    final GM_Point start, @SuppressWarnings("hiding")
+    public DA50Entry( @SuppressWarnings("hiding") //$NON-NLS-1$
+    final double station, @SuppressWarnings("hiding") //$NON-NLS-1$
+    final GM_Point start, @SuppressWarnings("hiding") //$NON-NLS-1$
     final GM_Point end )
     {
       this.station = station;

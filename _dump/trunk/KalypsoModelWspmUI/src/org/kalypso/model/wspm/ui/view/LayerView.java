@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
@@ -178,7 +179,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
       if( !c.isDisposed() )
         c.dispose();
     }
-    group.setText( "" );
+    group.setText( "" ); //$NON-NLS-1$
 
     if( profilLayer != null )
     {
@@ -201,7 +202,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
     {
       // alles gescheitert -> Meldung
       final Label label = new Label( group, SWT.CENTER );
-      final GridData gridData = new GridData(  );
+      final GridData gridData = new GridData();
       gridData.grabExcessHorizontalSpace = true;
       gridData.horizontalAlignment = SWT.FILL;
       gridData.horizontalIndent = 10;
@@ -210,7 +211,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
       gridData.verticalIndent = 10;
 
       label.setLayoutData( gridData );
-      label.setText( "Keine Legende vorhanden" );
+      label.setText( Messages.LayerView_1 );
     }
 
     group.layout();

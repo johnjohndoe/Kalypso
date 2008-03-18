@@ -12,7 +12,7 @@
         <page
               class="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"
               category="com.bce.profil.eclipse.preferences.ProfileditorPreferencePage"
-              name="Tabelle"
+              name="%page.name.0"
               id="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"/>
      </extension>
 
@@ -44,7 +44,7 @@
                  label="%com.bce.profil.eclipse.view.legend.RemoveLayerAction"
                  style="push"
                  toolbarPath="additions"
-                 tooltip="com.bce.profil.eclipse.view.legend.RemoveLayerAction.tooltip"/>
+                 tooltip="%action.tooltip.0"/>
            <action
                  class="org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate"
                  icon="icons/etool16/add_layer.gif"
@@ -59,7 +59,7 @@
               targetID="org.kalypso.model.wspm.ui.view.table.TableView">
            <menu
                  id="tableViewMenu"
-                 label="Profiltabelle">
+                 label="%menu.label.0">
               <groupMarker name="points"/>
               <separator name="additions"/>
            </menu>
@@ -82,10 +82,10 @@
            <action
                  class="org.kalypso.model.wspm.ui.view.table.PropertyEditDelegate"
                  id="com.bce.profil.eclipse.view.table.propertyedit"
-                 label="Eigenschaften ändern ..."
+                 label="%action.label.0"
                  menubarPath="points"
                  style="push"
-                 tooltip="ändert mehrere Punkteigenschaften auf einmal">
+                 tooltip="%action.tooltip.1">
            </action>
         </viewContribution>
      </extension>
@@ -105,7 +105,7 @@
            point="org.eclipse.ui.views">
         <category
               id="org.kalypso.model.wspm.profil.view.category"
-              name="Profil"
+              name="%category.name.0"
               />
         <view
               allowMultiple="false"
@@ -227,12 +227,12 @@
                class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
                icon="icons/obj16/openProfile.gif"
                id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="Profil anzeigen"
+               label="%action.label.1"
                tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate"
                id="org.kalypso.model.wspm.ui.action.PropertyEditAction"
-               label="Profileigenschaften ändern">
+               label="%action.label.2">
          </action>
       </objectContribution>
             <objectContribution
@@ -246,8 +246,8 @@
                class="org.kalypso.model.wspm.ui.action.FlipProfileAction"
                icon="icons/obj16/flipProfile.gif"
                id="org.kalypso.model.wspm.ui.action.FlipProfileAction"
-               label="Profil spiegeln"
-               tooltip="spiegelt das Profil anhand der Breitenkoordinate"/>
+               label="%action.label.3"
+               tooltip="%action.tooltip.2"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -255,20 +255,20 @@
             objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
          <menu
                id="wspmProfileActions"
-               label="Profile"/>
+               label="%menu.label.1"/>
          <filter
                name="featureAssociationQname"
                value="org.kalypso.model.wspmprofile#Profile"/>
          <menu
                id="org.kalypso.model.wspm.ui.menu.export"
-               label="&amp;Export"
+               label="%menu.label.2"
                path="additions">
             <groupMarker name="exports"/>
             <separator name="additions"/>
          </menu>
          <menu
                id="org.kalypso.model.wspm.ui.menu.import"
-               label="&amp;Import"
+               label="%menu.label.3"
                path="additions">
             <groupMarker name="imports"/>
             <separator name="additions"/>
@@ -276,32 +276,32 @@
          <action
                class="org.kalypso.model.wspm.ui.action.ExportProfilePrfAction"
                id="KalypsoModelWspmUI.action1"
-               label="als .&amp;prf Datei(en)"
+               label="%action.label.4"
                menubarPath="org.kalypso.model.wspm.ui.menu.export/exports"
                style="push"
-               tooltip="Exportiert die markierten Profile im .prf Format"/>
+               tooltip="%action.tooltip.3"/>
          <action
                class="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
                id="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
-               label=".&amp;prf Dateien"
+               label="%action.label.5"
                menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
                style="push"
-               tooltip="Importiert eine oder mehrere WspWin .prf Dateien in diese Profil-Liste"/>
+               tooltip="%action.tooltip.4"/>
          <action
                class="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
                id="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
-               label=".&amp;txt Dateien"
+               label="%action.label.6"
                menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
                style="push"
-               tooltip="Importiert eine oder mehrere Trippel-Dateien in diese Profil-Liste"/>
+               tooltip="%action.tooltip.5"/>
          <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
                id="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
-               label="In neuer Karte anzeigen"
+               label="%action.label.7"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="Erzeugt eine neue Karte, welche die selektierten Profile anzeigt."/>
+               tooltip="%action.tooltip.6"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -313,10 +313,10 @@
          <action
                class="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
                id="org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"
-               label="Rauheiten zuweisen"
+               label="%action.label.8"
                menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"
                style="push"
-               tooltip="Weist den selektierten Profilen Rauheiten über ein Polygon-Thema zu."/>
+               tooltip="%action.tooltip.7"/>
       </objectContribution>
         <objectContribution
               adaptable="true"
@@ -369,7 +369,7 @@
               fixed="false"
               icon="icons/eview16/wsp16.gif"
               id="org.kalypso.model.wspm.ui.product.ProfileManagerPerspective"
-              name="Profil Manager"/>
+              name="%perspective.name.0"/>
      </extension>
      <extension
            point="org.kalypso.model.wspm.core.profileFeatureProvider">
@@ -399,7 +399,7 @@
             point="org.eclipse.ui.contexts">
          <context
                id="org.kalypso.model.wspm.ui.view.table.swt.context"
-               name="Table View"
+               name="%context.name.0"
                parentId="org.eclipse.ui.contexts.window"/>
       </extension>
       <extension

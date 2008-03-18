@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.jface.preference.ChecklistFieldEditor;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 
 
 /**
@@ -72,7 +73,7 @@ public class ValidatorPreferencePage extends FieldEditorPreferencePage implement
       if( element instanceof IValidatorRule )
         return ((IValidatorRule)element).getDescription();
       
-      return "";
+      return ""; //$NON-NLS-1$
     }
   }
   
@@ -82,17 +83,17 @@ public class ValidatorPreferencePage extends FieldEditorPreferencePage implement
     
     setPreferenceStore( KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore() );
     
-    setDescription( "Profil Validierung" );
+    setDescription( Messages.ValidatorPreferencePage_1 );
   }
 
   @Override
   public void createFieldEditors( )
   {
     addField( new BooleanFieldEditor( PreferenceConstants.P_VALIDATE_PROFILE,
-        "Profile &validieren", getFieldEditorParent() ) );
+        Messages.ValidatorPreferencePage_2, getFieldEditorParent() ) );
 
     final Object[] elements = KalypsoModelWspmCorePlugin.getDefault().getValidatorFactory().getAllRules();
-    addField( new ChecklistFieldEditor( elements, "getID", new ValidatorLabelProvider(),  PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "", getFieldEditorParent() ) );
+    addField( new ChecklistFieldEditor( elements, "getID", new ValidatorLabelProvider(),  PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "", getFieldEditorParent() ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

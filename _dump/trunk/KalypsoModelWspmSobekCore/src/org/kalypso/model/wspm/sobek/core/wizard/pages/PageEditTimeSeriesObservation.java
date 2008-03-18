@@ -75,6 +75,7 @@ import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.contribs.java.util.DoubleComparator;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -93,18 +94,18 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 public class PageEditTimeSeriesObservation extends WizardPage
 {
 
-  public static final String OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE";
+  public static final String OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE"; //$NON-NLS-1$
 
-  QName DATE_AXIS = new QName( "http://www.w3.org/2001/XMLSchema", "dateTime" );
+  QName DATE_AXIS = new QName( "http://www.w3.org/2001/XMLSchema", "dateTime" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final IBoundaryNodeLastfallCondition m_condition;
 
   public PageEditTimeSeriesObservation( final IBoundaryNodeLastfallCondition condition )
   {
-    super( "editTimeSeriesObservation" );
+    super( "editTimeSeriesObservation" ); //$NON-NLS-1$
     m_condition = condition;
-    setTitle( "Edit Time Series" );
-    setDescription( "Edit Time Series" );
+    setTitle( Messages.PageEditTimeSeriesObservation_4 );
+    setDescription( Messages.PageEditTimeSeriesObservation_5 );
   }
 
   /**
@@ -141,9 +142,9 @@ public class PageEditTimeSeriesObservation extends WizardPage
 
       IComponentUiHandler handler;
       if( DATE_AXIS.equals( qname ) )
-        handler = new ComponentUiDateHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%tF %tH:%tM", "%s", "" );
+        handler = new ComponentUiDateHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%tF %tH:%tM", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       else
-        handler = new ComponentUiStringHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" );
+        handler = new ComponentUiStringHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       provider.add( i, handler );
     }
@@ -175,9 +176,9 @@ public class PageEditTimeSeriesObservation extends WizardPage
       if( DATE_AXIS.equals( qname ) )
       {
         if( calendar != null )
-          throw new IllegalStateException( "two date axes defined!" );
+          throw new IllegalStateException( Messages.PageEditTimeSeriesObservation_12 );
 
-        calendar = new CalendarAxis( qname.getLocalPart(), "Date", PROPERTY.CONTINUOUS, POSITION.BOTTOM, DIRECTION.POSITIVE, "yy-MM-dd\nhh:mm" );
+        calendar = new CalendarAxis( qname.getLocalPart(), "Date", PROPERTY.CONTINUOUS, POSITION.BOTTOM, DIRECTION.POSITIVE, "yy-MM-dd\nhh:mm" ); //$NON-NLS-1$ //$NON-NLS-2$
         calendarComp = component;
         mapperRegistry.addMapper( calendar );
       }
@@ -193,7 +194,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
 
     final RGB rgbFG = new RGB( 0, 0, 255 );
     final RGB rgbBG = new RGB( 255, 255, 255 );
-    final FontData fontData = new FontData( "Arial", 8, SWT.NONE );
+    final FontData fontData = new FontData( "Arial", 8, SWT.NONE ); //$NON-NLS-1$
     final Insets inset = new Insets( 1, 1, 1, 1 );
 
     final CalendarAxisRenderer calRenderer = new CalendarAxisRenderer( calendar.getIdentifier(), rgbFG, rgbBG, 1, 5, inset, inset, 0, fontData, fontData );
@@ -208,13 +209,13 @@ public class PageEditTimeSeriesObservation extends WizardPage
 
       final IChartLayer< ? , ? > layer = new TupleResultLineLayer( data, calendar, axis );
       final LayerStyle layerStyle = new LayerStyle();
-      final IStyledElement line = new StyledLine( "line", 2, new RGB( 0, 0, 255 ), SWT.LINE_SOLID, 255 );
+      final IStyledElement line = new StyledLine( "line", 2, new RGB( 0, 0, 255 ), SWT.LINE_SOLID, 255 ); //$NON-NLS-1$
       layerStyle.add( line );
       layer.setStyle( layerStyle );
 
       layerManager.addLayer( layer );
 
-      final NumberAxisRenderer axisRenderer = new NumberAxisRenderer( axis.getIdentifier(), rgbFG, rgbBG, 1, 5, inset, inset, 0, fontData, fontData, 0, 0, false, "%s" );
+      final NumberAxisRenderer axisRenderer = new NumberAxisRenderer( axis.getIdentifier(), rgbFG, rgbBG, 1, 5, inset, inset, 0, fontData, fontData, 0, 0, false, "%s" ); //$NON-NLS-1$
       mapperRegistry.setRenderer( axis.getIdentifier(), axisRenderer );
 
       model.autoscale( new IAxis[] { calendar, axis } );

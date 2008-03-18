@@ -77,6 +77,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -105,11 +106,11 @@ public class OperationChooserPage extends WizardPage
     }
   }
 
-  private final String SETTINGS_FILTER_IDS = "operationChooserPage.selectedfilters";
+  private final String SETTINGS_FILTER_IDS = "operationChooserPage.selectedfilters"; //$NON-NLS-1$
 
-  private final String SETTINGS_CALCULATOR_ID = "operationChooserPage.selectedcalculator";
+  private final String SETTINGS_CALCULATOR_ID = "operationChooserPage.selectedcalculator"; //$NON-NLS-1$
 
-  private final String SETTINGS_CALCULATOR_VALUE = "operationChooserPage.calculatorvalue";
+  private final String SETTINGS_CALCULATOR_VALUE = "operationChooserPage.calculatorvalue"; //$NON-NLS-1$
 
   private List<PropertyCalculator> m_calculators = null;
 
@@ -119,7 +120,7 @@ public class OperationChooserPage extends WizardPage
 
   public OperationChooserPage( )
   {
-    super( "operationChooserPage", "Änderung festlegen", null );
+    super( "operationChooserPage", Messages.OperationChooserPage_4, null ); //$NON-NLS-1$
   }
 
   /**
@@ -137,8 +138,8 @@ public class OperationChooserPage extends WizardPage
     buttonpanel.setData( buttonpaneldata );
 
     final Set<String> selectedFilters = new HashSet<String>();
-    String selectedCalculator = "";
-    String doubleValue = "";
+    String selectedCalculator = ""; //$NON-NLS-1$
+    String doubleValue = ""; //$NON-NLS-1$
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
     {
@@ -152,7 +153,7 @@ public class OperationChooserPage extends WizardPage
 
       // get doubleValue
       doubleValue = dialogSettings.get( SETTINGS_CALCULATOR_VALUE );
-      if( doubleValue != null && doubleValue != "" )
+      if( doubleValue != null && doubleValue != "" ) //$NON-NLS-1$
       {
         m_value = new Double( doubleValue );
       }
@@ -199,8 +200,8 @@ public class OperationChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
-    group.setText( "Profilpunkte filtern:" );
-    new Label( group, SWT.NONE ).setText( "&Wählen Sie die anzuwendenden Filter:" );
+    group.setText( Messages.OperationChooserPage_8 );
+    new Label( group, SWT.NONE ).setText( Messages.OperationChooserPage_9 );
 
     if( m_filters == null )
     {
@@ -219,9 +220,9 @@ public class OperationChooserPage extends WizardPage
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 2, false ) );
-    group.setText( "Operation auswählen:" );
+    group.setText( Messages.OperationChooserPage_10 );
     final Label lbl = new Label( group, SWT.NONE );
-    lbl.setText( "&Wählen Sie die anzuwendende Rechenoperation:" );
+    lbl.setText( Messages.OperationChooserPage_11 );
     final GridData labelData = new GridData();
     labelData.horizontalSpan = 2;
     lbl.setLayoutData( labelData );
@@ -245,15 +246,15 @@ public class OperationChooserPage extends WizardPage
     {
       m_calculators = new ArrayList<PropertyCalculator>();
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.pointPropertyCalculator" );
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( Messages.OperationChooserPage_12 );
       for( final IConfigurationElement element : elements )
       {
-        final String id = element.getAttribute( "id" );
-        final String label = element.getAttribute( "label" );
-        final String tooltip = element.getAttribute( "tooltip" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
+        final String label = element.getAttribute( "label" ); //$NON-NLS-1$
+        final String tooltip = element.getAttribute( "tooltip" ); //$NON-NLS-1$
         try
         {
-          final IPointPropertyCalculator calculator = (IPointPropertyCalculator) element.createExecutableExtension( "class" );
+          final IPointPropertyCalculator calculator = (IPointPropertyCalculator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
           final PropertyCalculator propCalc = new PropertyCalculator( id, label, tooltip, calculator );
           m_calculators.add( propCalc );
           combo.add( label );
@@ -288,7 +289,7 @@ public class OperationChooserPage extends WizardPage
         final IDialogSettings dialogSettings = getDialogSettings();
         if( dialogSettings != null )
         {
-          dialogSettings.put( SETTINGS_CALCULATOR_VALUE, m_value.isNaN() ? "" : m_value.toString() );
+          dialogSettings.put( SETTINGS_CALCULATOR_VALUE, m_value.isNaN() ? "" : m_value.toString() ); //$NON-NLS-1$
           setPageComplete( m_value.isNaN() );
         }
       }
@@ -297,7 +298,7 @@ public class OperationChooserPage extends WizardPage
     combo.addSelectionListener( new SelectionAdapter()
     {
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -325,7 +326,7 @@ public class OperationChooserPage extends WizardPage
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {

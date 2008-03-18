@@ -45,10 +45,10 @@ package org.kalypso.model.wspm.sobek.core;
  */
 public interface IWspmSobekConstants
 {
-  public static String NS_WSPM_SOBEK_PROJECT = "org.kalypso.model.wspm.sobek.project";
+  public static String NS_WSPM_SOBEK_PROJECT = "org.kalypso.model.wspm.sobek.project"; //$NON-NLS-1$
 
-  public static String NS_WSPM_SOBEK = "org.kalypso.model.wspm.sobek";
+  public static String NS_WSPM_SOBEK = "org.kalypso.model.wspm.sobek"; //$NON-NLS-1$
 
-  public static String NS_WSPM_SOBEK_COMMON = "org.kalypso.model.wspm.sobek.common";
+  public static String NS_WSPM_SOBEK_COMMON = "org.kalypso.model.wspm.sobek.common"; //$NON-NLS-1$
 
 }

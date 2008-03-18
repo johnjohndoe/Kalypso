@@ -51,6 +51,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.product.ProfileManagerPerspective;
 import org.kalypso.model.wspm.ui.view.chart.ChartView;
 
@@ -88,7 +89,7 @@ public class ShowProfileAction extends ActionDelegate
     }
     catch( final PartInitException e )
     {
-      ErrorDialog.openError( event.display.getActiveShell(), "Profil anzeigen", "Profil konnte nicht angezeigt werden.", e.getStatus() );
+      ErrorDialog.openError( event.display.getActiveShell(), Messages.ShowProfileAction_0, Messages.ShowProfileAction_1, e.getStatus() );
     }
   }
 }

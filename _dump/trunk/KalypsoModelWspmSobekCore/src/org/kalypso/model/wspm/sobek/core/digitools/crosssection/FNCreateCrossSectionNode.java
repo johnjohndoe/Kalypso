@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
@@ -84,9 +85,9 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
 
   public FNCreateCrossSectionNode( )
   {
-    super( "Create a new Flow Network geometry", "Create a new Flow Network geometry" );
+    super( Messages.FNCreateCrossSectionNode_0, Messages.FNCreateCrossSectionNode_1 );
 
-    new UIJob( "loading gml workspace of hydraulic model" )
+    new UIJob( Messages.FNCreateCrossSectionNode_2 )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -116,7 +117,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
     super.activate( commandPoster, mapPanel );
 
     getMapPanel().setCursor( FNCreateCrossSectionNode.CURSOR_CROSSHAIR );
-    getMapPanel().setMessage( "select profile by drawing a rectangle with help of left mouse button..." );
+    getMapPanel().setMessage( Messages.FNCreateCrossSectionNode_3 );
   }
 
   protected Feature getCrossSection( )
@@ -174,7 +175,7 @@ public class FNCreateCrossSectionNode extends AbstractWidget implements IGeometr
   {
     final GM_Point point = MapUtilities.transform( getMapPanel(), p );
 
-    new UIJob( "processing..." )
+    new UIJob( Messages.FNCreateCrossSectionNode_4 )
     {
 
       @Override

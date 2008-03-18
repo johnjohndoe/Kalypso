@@ -50,7 +50,7 @@ public class WspmDictionaryCatalogContribution implements ICatalogContribution
 {
   public void contributeTo( final CatalogManager catalogManager )
   {
-    final URL catalogURL = getClass().getResource( "dict/catalog.xml" );
+    final URL catalogURL = getClass().getResource( "dict/catalog.xml" ); //$NON-NLS-1$
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     baseCatalog.addNextCatalog( catalogURL );
   }

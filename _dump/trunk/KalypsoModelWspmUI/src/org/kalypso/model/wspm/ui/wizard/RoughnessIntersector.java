@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -94,10 +95,10 @@ public class RoughnessIntersector
     m_pointFilters = pointFilters;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public FeatureChange[] intersect( final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( "Rauheiten zuweisen - ", m_profileFeatures.length );
+    monitor.beginTask( Messages.RoughnessIntersector_1, m_profileFeatures.length );
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -132,7 +133,7 @@ public class RoughnessIntersector
     return changes.toArray( new FeatureChange[changes.size()] );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private List<Object> assignValueToPoint( final IProfil profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
   {
     /* find polygon for location */

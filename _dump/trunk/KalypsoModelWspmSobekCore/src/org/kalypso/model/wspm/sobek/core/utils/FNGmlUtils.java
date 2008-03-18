@@ -69,6 +69,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -152,7 +153,7 @@ public class FNGmlUtils
   public static INode[] createBranch( final IModelMember model, final GM_Curve curve, final INode[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
   {
     if( curve.getAsLineString().getNumberOfPoints() < 2 )
-      throw new IllegalStateException( "Geometry is not a line!" );
+      throw new IllegalStateException( Messages.FNGmlUtils_0 );
 
     /* create linkage nodes at start and end position of linestring */
     final IGMLSchema schema = model.getFeature().getFeatureType().getGMLSchema();
@@ -232,8 +233,8 @@ public class FNGmlUtils
     final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
 
     /* link branch and profile */
-    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, IGmlWorkspaces.HYDRAUL_MODEL + "#" + branch.getFeature().getId() );
-    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() );
+    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, IGmlWorkspaces.HYDRAUL_MODEL + "#" + branch.getFeature().getId() ); //$NON-NLS-1$
+    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() ); //$NON-NLS-1$
 
     node.getFeature().invalidEnvelope();
   }

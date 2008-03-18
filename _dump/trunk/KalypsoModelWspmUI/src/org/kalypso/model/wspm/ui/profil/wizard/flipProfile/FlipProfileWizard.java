@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -78,12 +79,12 @@ public class FlipProfileWizard extends Wizard
     m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
-    setWindowTitle( "Profile spiegeln" );
+    setWindowTitle( Messages.FlipProfileWizard_0 );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", "Profile auswählen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.FlipProfileWizard_2, null ); //$NON-NLS-1$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welche Profile gespiegelt werden sollen." );
+    m_profileChooserPage.setMessage( Messages.FlipProfileWizard_3 );
   }
 
   /**
@@ -98,7 +99,7 @@ public class FlipProfileWizard extends Wizard
 
   private IProfil[] toProfiles( final Object[] features )
   {
-   
+
     final IProfil[] choosenProfiles = new IProfil[features.length];
     for( int i = 0; i < features.length; i++ )
     {

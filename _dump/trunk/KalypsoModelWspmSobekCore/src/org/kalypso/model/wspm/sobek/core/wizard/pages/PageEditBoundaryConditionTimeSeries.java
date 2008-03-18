@@ -85,6 +85,7 @@ import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -112,13 +113,13 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
   public PageEditBoundaryConditionTimeSeries( final ISobekModelMember model, final IBoundaryNodeLastfallCondition condition, final IBoundaryConditionGeneral settings )
   {
-    super( "editBoundaryConditionTimeSeries" );
+    super( "editBoundaryConditionTimeSeries" ); //$NON-NLS-1$
     m_model = model;
     m_condition = condition;
     m_settings = settings;
 
-    setTitle( "Edit boundary condition" );
-    setDescription( "Enter boundary condition parameters, please." );
+    setTitle( Messages.PageEditBoundaryConditionTimeSeries_1 );
+    setDescription( Messages.PageEditBoundaryConditionTimeSeries_2 );
 
     m_type = condition.getLastUsedType();
   }
@@ -132,7 +133,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       if( m_selectedTreeItem == null )
       {
         setMessage( null );
-        setErrorMessage( "No time series repository item selected." );
+        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_3 );
         setPageComplete( false );
 
         return;
@@ -142,7 +143,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       if( !(adapter instanceof IObservation) )
       {
         setMessage( null );
-        setErrorMessage( "No time series data found." );
+        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_4 );
         setPageComplete( false );
 
         return;
@@ -163,7 +164,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
         if( values.getCount() <= 0 )
         {
           setMessage( null );
-          setErrorMessage( "No time series values in given date range found." );
+          setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_5 );
           setPageComplete( false );
 
           return;
@@ -172,7 +173,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       catch( final SensorException e )
       {
         setMessage( null );
-        setErrorMessage( "Error reading time series repository:" + e.getMessage() );
+        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_6 + e.getMessage() );
         setPageComplete( false );
 
         return;
@@ -180,10 +181,10 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     }
     else if( BOUNDARY_CONDITION_TYPE.eConstant.equals( m_type ) )
     {
-      if( (m_tConstant.getText() == null) || "".equals( m_tConstant.getText().trim() ) )
+      if( (m_tConstant.getText() == null) || "".equals( m_tConstant.getText().trim() ) ) //$NON-NLS-1$
       {
         setMessage( null );
-        setErrorMessage( "No constant value defined." );
+        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_8 );
         setPageComplete( false );
 
         return;
@@ -195,7 +196,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       catch( final NumberFormatException e )
       {
         setMessage( null );
-        setErrorMessage( "Constant value is not a number." );
+        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_9 );
         setPageComplete( false );
 
         return;
@@ -204,14 +205,14 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       try
       {
         final String text = m_tConstantIntervall.getText();
-        if( (text != null) || !"".equals( text.trim() ) )
+        if( (text != null) || !"".equals( text.trim() ) ) //$NON-NLS-1$
         {
           final Integer value = Integer.valueOf( m_tConstantIntervall.getText() );
 
           if( value <= 0 )
           {
             setMessage( null );
-            setErrorMessage( "Constant value intervall can't be zero or smaller than zero." );
+            setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_11 );
             setPageComplete( false );
 
             return;
@@ -222,7 +223,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       catch( final NumberFormatException e )
       {
         setMessage( null );
-        setErrorMessage( "Constant value intervall is not a number (type of integer)." );
+        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_12 );
         setPageComplete( false );
 
         return;
@@ -258,7 +259,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     final Group gMapping = new Group( container, SWT.NONE );
     gMapping.setLayout( new GridLayout() );
     gMapping.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    gMapping.setText( "Type of boundary condition data input" );
+    gMapping.setText( Messages.PageEditBoundaryConditionTimeSeries_13 );
 
     final BOUNDARY_CONDITION_TYPE[] input = new BOUNDARY_CONDITION_TYPE[] { BOUNDARY_CONDITION_TYPE.eZml, BOUNDARY_CONDITION_TYPE.eConstant };
 
@@ -295,7 +296,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
             break;
 
           default:
-            throw new IllegalStateException( "Type not supported: " + m_type.name() );
+            throw new IllegalStateException( Messages.PageEditBoundaryConditionTimeSeries_14 + m_type.name() );
         }
 
         container.layout();
@@ -399,10 +400,10 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     m_subGroup = new Group( parent, SWT.NULL );
     m_subGroup.setLayout( new GridLayout( 2, false ) );
     m_subGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    m_subGroup.setText( "Constant value for coorosponding discharge, waterlevel or Q-H relation" );
+    m_subGroup.setText( Messages.PageEditBoundaryConditionTimeSeries_15 );
 
     /* const value */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, "Constant value", m_subGroup );
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, Messages.PageEditBoundaryConditionTimeSeries_16, m_subGroup );
 
     m_tConstant = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
     m_tConstant.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -416,7 +417,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     } );
 
     /* const intervall */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, "Intervall of value", m_subGroup );
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, Messages.PageEditBoundaryConditionTimeSeries_17, m_subGroup );
 
     m_tConstantIntervall = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
     m_tConstantIntervall.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -499,7 +500,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     m_subGroup = new Group( parent, SWT.NULL );
     m_subGroup.setLayout( new GridLayout( 2, false ) );
     m_subGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_subGroup.setText( "Time Series Repository" );
+    m_subGroup.setText( Messages.PageEditBoundaryConditionTimeSeries_18 );
 
     final Composite cBrowser = new Composite( m_subGroup, SWT.NULL );
     final GridData ld = new GridData( GridData.FILL, GridData.FILL, false, true );

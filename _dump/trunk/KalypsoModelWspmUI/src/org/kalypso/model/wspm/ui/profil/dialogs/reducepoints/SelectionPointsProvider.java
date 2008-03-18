@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -68,7 +69,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
     if( selection.isEmpty() )
     {
-      m_errorMessage = "Die Selektion ist leer.";
+      m_errorMessage = Messages.SelectionPointsProvider_0;
       return;
     }
 
@@ -80,7 +81,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
       if( structSel.size() < 3 )
       {
-        m_errorMessage = "Die Selektion beinhaltet weniger als drei Punkte.";
+        m_errorMessage = Messages.SelectionPointsProvider_1;
         return;
       }
 
@@ -95,7 +96,7 @@ public class SelectionPointsProvider implements IPointsProvider
           final IRecord point = (IRecord) object;
           if( lastPoint != null && lastPoint != ProfilUtil.getPointBefore( m_profil, point ) )
           {
-            m_errorMessage = "Die Selektion ist nicht kontinuierlich.";
+            m_errorMessage = Messages.SelectionPointsProvider_2;
             return;
           }
 
@@ -104,7 +105,7 @@ public class SelectionPointsProvider implements IPointsProvider
         }
         else
         {
-          m_errorMessage = "Die Selektion besteht nicht auschliesslich aus Profilpunkten.";
+          m_errorMessage = Messages.SelectionPointsProvider_3;
           return;
         }
       }
@@ -120,7 +121,7 @@ public class SelectionPointsProvider implements IPointsProvider
 // }
     }
 
-    m_errorMessage = "Ungültige Selektion.";
+    m_errorMessage = Messages.SelectionPointsProvider_4;
   }
 
   /**
@@ -144,6 +145,6 @@ public class SelectionPointsProvider implements IPointsProvider
    */
   public String getName( )
   {
-    return "aus der aktuellen Selektion";
+    return Messages.SelectionPointsProvider_5;
   }
 }

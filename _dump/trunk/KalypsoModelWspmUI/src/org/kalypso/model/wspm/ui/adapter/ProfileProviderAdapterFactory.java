@@ -87,7 +87,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IProfilProvider2.class )
@@ -128,7 +128,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Class[] getAdapterList( )
   {
     return new Class[] { IProfilProvider2.class };

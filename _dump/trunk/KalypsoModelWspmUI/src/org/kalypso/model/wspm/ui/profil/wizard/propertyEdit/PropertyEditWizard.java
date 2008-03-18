@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IComponent;
@@ -73,7 +74,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class PropertyEditWizard extends Wizard
 {
 
-  private String m_profiletype = "";
+  private String m_profiletype = ""; //$NON-NLS-1$
 
   final private ArrayChooserPage m_profileChooserPage;
 
@@ -97,12 +98,12 @@ public class PropertyEditWizard extends Wizard
     m_selectedProfiles = selection;
 
     m_profiletype = (String) profiles.get( 0 ).getProperty( ProfileFeatureFactory.QNAME_TYPE );
-    setWindowTitle( "Profileigenschaften zuweisen" );
+    setWindowTitle( Messages.PropertyEditWizard_1 );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", "Profile auswählen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.PropertyEditWizard_3, null ); //$NON-NLS-1$
     m_profileChooserPage.setLabelProvider( new GMLLabelProvider() );
-    m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Werte zugeweisen werden sollen." );
+    m_profileChooserPage.setMessage( Messages.PropertyEditWizard_4 );
   }
 
   public PropertyEditWizard( final IProfil profile )
@@ -132,7 +133,7 @@ public class PropertyEditWizard extends Wizard
     for( final IComponent property : provider.getPointProperties() )
       properties.add( property );
 
-    m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IComponent[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", "Profileigenschaften auswählen", null );
+    m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IComponent[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", Messages.PropertyEditWizard_6, null ); //$NON-NLS-1$
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
       /**
@@ -147,7 +148,7 @@ public class PropertyEditWizard extends Wizard
           return element.toString();
       }
     } );
-    m_propertyChooserPage.setMessage( "Bitte wählen Sie aus, welche Werte geändert werden sollen." );
+    m_propertyChooserPage.setMessage( Messages.PropertyEditWizard_7 );
     m_operationChooserPage = new OperationChooserPage();
     m_operationChooserPage.setPageComplete( false );
 
@@ -225,7 +226,7 @@ public class PropertyEditWizard extends Wizard
     }
     else
     {
-      final ProfilOperation operation = new ProfilOperation( "Profilpunkteigenschaften ändern", m_profile, profilChanges, true );
+      final ProfilOperation operation = new ProfilOperation( Messages.PropertyEditWizard_8, m_profile, profilChanges, true );
       new ProfilOperationJob( operation ).schedule();
     }
 

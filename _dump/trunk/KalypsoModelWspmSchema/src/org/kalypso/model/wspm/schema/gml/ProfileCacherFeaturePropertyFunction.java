@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.model.wspm.schema.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -126,7 +127,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
         else
         {
           if( compBreite == -1 )
-            throw new IllegalStateException( "Profil ohne Breitenwerte und ohne RW/HW gefunden, Geometrieermittlung nicht möglich" );
+            throw new IllegalStateException( Messages.ProfileCacherFeaturePropertyFunction_0 );
 
           rw = (Double) point.getValue( compBreite );
           hw = profil.getStation() * 1000;

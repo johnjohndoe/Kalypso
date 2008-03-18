@@ -72,11 +72,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgress
 {
-  public static final String OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE";
+  public static final String OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE"; //$NON-NLS-1$
 
-  public static final String OBS_W = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W";
+  public static final String OBS_W = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#W"; //$NON-NLS-1$
 
-  public static final String OBS_Q = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#Q";
+  public static final String OBS_Q = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#Q"; //$NON-NLS-1$
 
   private final ILastfall m_lastfall;
 
@@ -144,7 +144,7 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
       m_provider.fillTupleResult( result );
 
       /* add observation to workspace */
-      final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() );
+      final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       // maybe set phenomenon?
       ObservationFeatureFactory.toFeature( obs, fObs );

@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -69,7 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderExtensionProvider
 {
 
-  protected static String MAP_VIEW_ID = "org.kalypso.nofdpidss.core.common.viewpart.flow.network.map";
+  protected static String MAP_VIEW_ID = "org.kalypso.nofdpidss.core.common.viewpart.flow.network.map"; //$NON-NLS-1$
 
   private IGeometryBuilder m_geoBuilder = null;
 
@@ -81,9 +82,9 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
 
   public FNExtendBranch( )
   {
-    super( "Create a new Flow Network geometry", "Create a new Flow Network geometry" );
+    super( Messages.FNExtendBranch_1, Messages.FNExtendBranch_2 );
 
-    new UIJob( "loading hydraulic model workspcae" )
+    new UIJob( Messages.FNExtendBranch_3 )
     {
 
       @Override
@@ -144,7 +145,7 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
       final ISobekModelMember model = SobekModelMember.getModel();
 
       if( model == null )
-        throw new IllegalStateException( "Flow Network Model can't be null" );
+        throw new IllegalStateException( Messages.FNExtendBranch_4 );
 
       final GM_Curve curve = (GM_Curve) m_geoBuilder.finish();
       if( curve == null )
@@ -170,8 +171,8 @@ public class FNExtendBranch extends AbstractWidget implements IGeometryBuilderEx
    */
   public String[] getTooltip( )
   {
-    return new String[] { "Left mouse button - create a new branch or point of branch.", "Double-click left mouse button - finish drawing branch.",
-        "Right mouse button - remove last drawed point of branch." };
+    return new String[] { Messages.FNExtendBranch_5, Messages.FNExtendBranch_6,
+        Messages.FNExtendBranch_7 };
   }
 
   /**

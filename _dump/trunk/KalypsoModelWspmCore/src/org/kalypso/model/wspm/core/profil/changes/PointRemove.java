@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IRecord;
-
+import org.kalypso.model.wspm.core.Messages;
 /**
  * @author kimwerner
  */
@@ -84,8 +84,8 @@ public class PointRemove implements IProfilChange
     {
       m_profil.setActivePoint( m_point );
 
-      m_info = "Breite: " + String.format( "%.4f", m_point.getValue( ProfilObsHelper.getPropertyFromId( m_profil, IWspmConstants.POINT_PROPERTY_BREITE ) ) );
-      throw new IllegalProfileOperationException( "Punkt kann nicht gelöscht werden", this );
+      m_info = Messages.PointRemove_0 + String.format( Messages.PointRemove_1, m_point.getValue( ProfilObsHelper.getPropertyFromId( m_profil, IWspmConstants.POINT_PROPERTY_BREITE ) ) );
+      throw new IllegalProfileOperationException( Messages.PointRemove_2, this );
     }
   }
 

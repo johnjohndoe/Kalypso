@@ -66,6 +66,7 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -82,7 +83,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class FlipProfileAction extends ActionDelegate
 {
-  private static final String STR_DIALOG_TITLE = "spiegeln";
+  private static final String STR_DIALOG_TITLE = Messages.FlipProfileAction_0;
 
   private IFeatureSelection m_selection;
 
@@ -114,15 +115,15 @@ public class FlipProfileAction extends ActionDelegate
 
     final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public IStatus execute( final IProgressMonitor monitor )
       {
         final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
-        final MultiStatus resultStatus = new MultiStatus( id, 1, "Eines oder mehrere Profile konnten nicht gespiegelt werden", null );
+        final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.FlipProfileAction_2, null );
 
         final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
 
-        monitor.beginTask( "Profile werden gespiegelt - ", features.size() );
+        monitor.beginTask( Messages.FlipProfileAction_3, features.size() );
 
         for( int i = 0; i < features.size(); i++ )
         {
@@ -133,7 +134,7 @@ public class FlipProfileAction extends ActionDelegate
 
           monitor.worked( 1 );
           if( monitor.isCanceled() )
-            return new Status( IStatus.CANCEL, id, 1, "Abbruch durch den Benutzer", null );
+            return new Status( IStatus.CANCEL, id, 1, Messages.FlipProfileAction_4, null );
 
           featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( profile, feature ) ) );
         }
@@ -148,23 +149,23 @@ public class FlipProfileAction extends ActionDelegate
           catch( Exception e )
           {
             e.printStackTrace();
-            return StatusUtilities.statusFromThrowable( e, "Fehler bei Spiegelung eines Profils." );
+            return StatusUtilities.statusFromThrowable( e, Messages.FlipProfileAction_5 );
           }
         }
         else
-          return StatusUtilities.createErrorStatus( "Fehler beim Schreiben der gespiegelten Profile." );
+          return StatusUtilities.createErrorStatus( Messages.FlipProfileAction_6 );
 
         return resultStatus;
       }
     };
-    final IStatus status = ProgressUtilities.busyCursorWhile( op, "Konnte Profil nicht spiegeln" );
-    ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
+    final IStatus status = ProgressUtilities.busyCursorWhile( op, Messages.FlipProfileAction_7 );
+    ErrorDialog.openError( shell, STR_DIALOG_TITLE, Messages.FlipProfileAction_8, status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
   }
 
   /**
    * @return profiles
    */
-  @SuppressWarnings( { "unchecked", "unchecked" })
+  @SuppressWarnings( { "unchecked", "unchecked" }) //$NON-NLS-1$ //$NON-NLS-2$
   private final List<Feature> getProfiles( )
   {
     /* retrieve selected profiles, abort if none */

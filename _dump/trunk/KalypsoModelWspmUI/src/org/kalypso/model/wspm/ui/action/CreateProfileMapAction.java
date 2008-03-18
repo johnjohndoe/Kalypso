@@ -30,6 +30,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.gismapview.Gismapview;
@@ -78,7 +79,7 @@ public class CreateProfileMapAction extends ActionDelegate
 
     if( selectedFeatures.size() == 0 )
     {
-      MessageDialog.openWarning( shell, "Karte erzeugen", "Es wurden keine Feature-Listen in der Selektion gefunden." );
+      MessageDialog.openWarning( shell, Messages.CreateProfileMapAction_0, Messages.CreateProfileMapAction_1 );
       return;
     }
 
@@ -91,7 +92,7 @@ public class CreateProfileMapAction extends ActionDelegate
     if( mapTemplate == null )
       return;
 
-    final UIJob uijob = new UIJob( "Open GML Editor" )
+    final UIJob uijob = new UIJob( Messages.CreateProfileMapAction_2 )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -105,7 +106,7 @@ public class CreateProfileMapAction extends ActionDelegate
 
           final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
           final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
-          final IEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmt", mapTemplate, null ) );
+          final IEditorInput input = new StorageEditorInput( new StringStorage( Messages.CreateProfileMapAction_3, mapTemplate, null ) );
 
           page.openEditor( input, editorDescription.getId(), true );
         }
@@ -127,7 +128,7 @@ public class CreateProfileMapAction extends ActionDelegate
     {
       final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
       final StringWriter stringWriter = new StringWriter();
-      GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" );
+      GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" ); //$NON-NLS-1$
       stringWriter.close();
 
       return stringWriter.toString();
@@ -136,7 +137,7 @@ public class CreateProfileMapAction extends ActionDelegate
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( shell, action.getText(), "Kartenvorlage konnte nicht erzeugt werden", status );
+      ErrorDialog.openError( shell, action.getText(), Messages.CreateProfileMapAction_5, status );
       return null;
     }
     catch( final IOException e )

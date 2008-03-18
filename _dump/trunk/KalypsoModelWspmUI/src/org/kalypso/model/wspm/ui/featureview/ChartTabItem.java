@@ -112,7 +112,7 @@ public class ChartTabItem extends Composite implements IChartPart
         final String cmdId = entry.getKey();
         final Integer cmdStyle = entry.getValue();
 
-        final CommandContributionItem contribItem = new CommandContributionItem( serviceLocator, cmdId + "_item_", cmdId, new HashMap<Object, Object>(), null, null, null, null, null, null, cmdStyle );
+        final CommandContributionItem contribItem = new CommandContributionItem( serviceLocator, cmdId + "_item_", cmdId, new HashMap<Object, Object>(), null, null, null, null, null, null, cmdStyle ); //$NON-NLS-1$
         manager.add( contribItem );
       }
       manager.update( true );
@@ -224,7 +224,7 @@ public class ChartTabItem extends Composite implements IChartPart
     return m_axisDragHandlerDelegate;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getAdapter( final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )

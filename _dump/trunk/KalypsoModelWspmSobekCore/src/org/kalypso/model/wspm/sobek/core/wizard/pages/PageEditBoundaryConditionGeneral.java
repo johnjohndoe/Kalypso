@@ -60,6 +60,7 @@ import org.kalypso.util.swt.FCVFeatureDelegate;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -74,11 +75,11 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
   public PageEditBoundaryConditionGeneral( final IBoundaryNodeLastfallCondition condition )
   {
-    super( "editBoundaryConditionGeneral" );
+    super( "editBoundaryConditionGeneral" ); //$NON-NLS-1$
     m_condition = condition;
 
-    setTitle( "Edit boundary condition" );
-    setDescription( "Enter boundary condition parameters, please." );
+    setTitle( Messages.PageEditBoundaryConditionGeneral_1 );
+    setDescription( Messages.PageEditBoundaryConditionGeneral_2 );
   }
 
   protected void checkPageCompleted( )
@@ -86,7 +87,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     if( m_tsBegins.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "Start date not defined" );
+      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_3 );
       setPageComplete( false );
 
       return;
@@ -95,7 +96,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     if( m_tsEnds.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "End date not defined" );
+      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_4 );
       setPageComplete( false );
 
       return;
@@ -104,7 +105,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     if( m_tsEnds.getDateTime().before( m_tsBegins.getDateTime() ) )
     {
       setMessage( null );
-      setErrorMessage( "End date is before start date" );
+      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_5 );
       setPageComplete( false );
 
       return;
@@ -123,7 +124,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     if( m_tsBegins.getDateTime().after( lastfallGregorianStart ) )
     {
       setMessage( null );
-      setErrorMessage( "Boundary condition starting date is after lastfall starting date! (" + df.format( lastfallGregorianStart.getTime() ) + ")" );
+      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_6 + df.format( lastfallGregorianStart.getTime() ) + Messages.PageEditBoundaryConditionGeneral_7 );
       setPageComplete( false );
 
       return;
@@ -132,7 +133,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     if( m_tsEnds.getDateTime().before( lastfallGregorianEnd ) )
     {
       setMessage( null );
-      setErrorMessage( "Boundary condition ending date is before lastfall ending date! (" + df.format( lastfallGregorianEnd.getTime() ) + ")" );
+      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_8 + df.format( lastfallGregorianEnd.getTime() ) + Messages.PageEditBoundaryConditionGeneral_9 );
       setPageComplete( false );
 
       return;
@@ -157,31 +158,31 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     final Group iGroup = new Group( container, SWT.NONE );
     iGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
     iGroup.setLayout( new GridLayout( 2, false ) );
-    iGroup.setText( "Info" );
+    iGroup.setText( Messages.PageEditBoundaryConditionGeneral_10 );
 
     /* lastfall */
-    new WizardFeatureLabel( "Calculation case", iGroup );
+    new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_11, iGroup );
 
     final WizardFeatureTextBox lf = new WizardFeatureTextBox( m_condition.getLastfall().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     lf.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     lf.setEnabled( false );
 
     /* boundary node */
-    new WizardFeatureLabel( "Boundary node", iGroup );
+    new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_12, iGroup );
 
     final WizardFeatureTextBox bn = new WizardFeatureTextBox( m_condition.getBoundaryNode().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     bn.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bn.setEnabled( false );
 
     /* bc type */
-    new WizardFeatureLabel( "Type of boundary node", iGroup );
+    new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_13, iGroup );
 
     final FacadeComboViewer bt = new FacadeComboViewer( new FCVFeatureDelegate( m_condition.getBoundaryNode().getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
     bt.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );
     bt.setEnabled( false );
 
     /* begin date */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, "Start date", container );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, Messages.PageEditBoundaryConditionGeneral_14, container );
 
     /* newly created boundary condition? */
     if( m_condition.getObservationStart() == null )
@@ -201,7 +202,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     /* end date */
     /* newly created boundary condition? */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, "End date", container );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, Messages.PageEditBoundaryConditionGeneral_15, container );
 
     if( m_condition.getObservationEnd() == null )
       m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getLastfallEnd() );

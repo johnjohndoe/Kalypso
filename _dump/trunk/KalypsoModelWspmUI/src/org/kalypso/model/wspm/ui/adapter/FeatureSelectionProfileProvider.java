@@ -300,7 +300,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
             // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
             // and directly set the prefered type.
             if( ProfileFeatureFactory.getProfileType( pf ) == null )
-              ProfileFeatureFactory.setProfileType( pf, "org.kalypso.model.wspm.tuhh.profiletype" );
+              ProfileFeatureFactory.setProfileType( pf, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
 
             profile = ProfileFeatureFactory.toProfile( pf );
             results = findResults( profileMember );

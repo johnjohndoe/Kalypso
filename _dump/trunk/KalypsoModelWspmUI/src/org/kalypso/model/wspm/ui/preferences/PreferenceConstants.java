@@ -45,9 +45,9 @@ package org.kalypso.model.wspm.ui.preferences;
  */
 public class PreferenceConstants
 {
-  public static final String P_ALLWAYSOPENTABLE = "allwaysOpenTablePreference";
+  public static final String P_ALLWAYSOPENTABLE = "allwaysOpenTablePreference"; //$NON-NLS-1$
 
-  public static final String P_VALIDATE_PROFILE = "validateProfile";
+  public static final String P_VALIDATE_PROFILE = "validateProfile"; //$NON-NLS-1$
 
-  public static final String P_VALIDATE_RULES_TO_EXCLUDE = "validateRulesToApply";
+  public static final String P_VALIDATE_RULES_TO_EXCLUDE = "validateRulesToApply"; //$NON-NLS-1$
 }

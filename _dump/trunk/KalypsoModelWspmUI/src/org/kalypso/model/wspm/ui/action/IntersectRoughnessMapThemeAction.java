@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites;
 import org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
@@ -30,7 +31,7 @@ public class IntersectRoughnessMapThemeAction extends ActionDelegate
 
     if( foundProfiles == null || foundProfiles.foundProfiles.length == 0 )
     {
-      MessageDialog.openWarning( shell, "Rauheiten zuweisen", "Es wurden keine Profile in der Selektion gefunden." );
+      MessageDialog.openWarning( shell, Messages.IntersectRoughnessMapThemeAction_0, Messages.IntersectRoughnessMapThemeAction_1 );
       return;
     }
 

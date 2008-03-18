@@ -65,6 +65,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IPropertyTypeFilter;
 import org.kalypso.gmlschema.property.PropertyUtils;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
@@ -85,9 +86,9 @@ public class ThemeAndPropertyChooserGroup
 
     public final IPropertyTypeFilter filter;
 
-    public PropertyDescriptor( @SuppressWarnings("hiding")
-    final String label, @SuppressWarnings("hiding")
-    final IPropertyTypeFilter filter, @SuppressWarnings("hiding")
+    public PropertyDescriptor( @SuppressWarnings("hiding")//$NON-NLS-1$
+    final String label, @SuppressWarnings("hiding")//$NON-NLS-1$
+    final IPropertyTypeFilter filter, @SuppressWarnings("hiding")//$NON-NLS-1$
     final boolean hideIfUnique )
     {
       this.label = label;
@@ -96,9 +97,9 @@ public class ThemeAndPropertyChooserGroup
     }
   }
 
-  private final static String SETTINGS_THEME = "settings.choosen.theme";
+  private final static String SETTINGS_THEME = "settings.choosen.theme"; //$NON-NLS-1$
 
-  private final static String SETTINGS_PROPERTIES = "settings.choosen.properties";
+  private final static String SETTINGS_PROPERTIES = "settings.choosen.properties"; //$NON-NLS-1$
 
   private final IUpdateable m_updatable;
 
@@ -114,7 +115,7 @@ public class ThemeAndPropertyChooserGroup
 
   /**
    * @param filer
-   *          only themes accepted by this filter are shown to the user
+   *            only themes accepted by this filter are shown to the user
    */
   public ThemeAndPropertyChooserGroup( final IUpdateable updatable, final IMapModell modell, final IKalypsoThemeFilter themeFilter, final PropertyDescriptor[] properties )
   {
@@ -137,7 +138,7 @@ public class ThemeAndPropertyChooserGroup
     group.setLayout( new GridLayout( 2, false ) );
 
     /* theme chooser */
-    new Label( group, SWT.NONE ).setText( "&Thema" );
+    new Label( group, SWT.NONE ).setText( Messages.ThemeAndPropertyChooserGroup_5 );
     final ComboViewer themeComboViewer = new ComboViewer( group, SWT.DROP_DOWN | SWT.READ_ONLY );
     themeComboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     themeComboViewer.setContentProvider( new ArrayContentProvider() );
@@ -312,7 +313,7 @@ public class ThemeAndPropertyChooserGroup
     }
 
     if( m_dialogSettings != null )
-      m_dialogSettings.put( SETTINGS_THEME, m_choosenTheme == null ? "" : m_choosenTheme.getName() );
+      m_dialogSettings.put( SETTINGS_THEME, m_choosenTheme == null ? "" : m_choosenTheme.getName() ); //$NON-NLS-1$
 
     for( final ComboViewer comboViewer : propertyCombos.values() )
       comboViewer.getControl().setEnabled( theme != null );

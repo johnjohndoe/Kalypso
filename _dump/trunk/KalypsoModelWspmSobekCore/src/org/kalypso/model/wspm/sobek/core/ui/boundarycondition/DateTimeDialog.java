@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.vafada.swtcalendar.SWTCalendar;
 import org.vafada.swtcalendar.SWTCalendarEvent;
 import org.vafada.swtcalendar.SWTCalendarListener;
@@ -82,7 +83,7 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( "Choose date / time" );
+    setTitle( Messages.DateTimeDialog_0 );
     setMessage( null );
 
     return contents;
@@ -110,7 +111,7 @@ public class DateTimeDialog extends TitleAreaDialog
 
     /* time of day */
     final Label lTime = new Label( composite, SWT.NONE );
-    lTime.setText( "Time of day" );
+    lTime.setText( Messages.DateTimeDialog_1 );
 
     final DateTime time = new DateTime( composite, SWT.TIME );
     time.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

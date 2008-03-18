@@ -64,7 +64,7 @@ public class TupleResultChange implements IProfilChange
    */
   public String getInfo( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

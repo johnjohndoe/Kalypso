@@ -48,6 +48,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.LastfallDateChooser;
@@ -77,18 +78,18 @@ public class PageEditLastfall extends WizardPage
 
   public PageEditLastfall( final ILastfall lastfall )
   {
-    super( "createLastfall" );
+    super( "createLastfall" ); //$NON-NLS-1$
     m_lastfall = lastfall;
-    setTitle( "Create a new Calculation Case" );
-    setDescription( "Enter name and description for the Calculation Case which will be created, please." );
+    setTitle( Messages.PageEditLastfall_1 );
+    setDescription( Messages.PageEditLastfall_2 );
   }
 
   protected void checkPageCompleted( )
   {
-    if( (m_name.getText() == null) || "".equals( m_name.getText().trim() ) )
+    if( (m_name.getText() == null) || "".equals( m_name.getText().trim() ) ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( "Name not defined" );
+      setErrorMessage( Messages.PageEditLastfall_4 );
       setPageComplete( false );
 
       return;
@@ -97,7 +98,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateBegin.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "Start of Simulation not defined" );
+      setErrorMessage( Messages.PageEditLastfall_5 );
       setPageComplete( false );
 
       return;
@@ -106,7 +107,7 @@ public class PageEditLastfall extends WizardPage
     if( m_dateEnd.getDateTime() == null )
     {
       setMessage( null );
-      setErrorMessage( "End of Simulation not defined" );
+      setErrorMessage( Messages.PageEditLastfall_6 );
       setPageComplete( false );
 
       return;
@@ -115,34 +116,34 @@ public class PageEditLastfall extends WizardPage
     if( m_dateEnd.getDateTime().before( m_dateBegin.getDateTime() ) )
     {
       setMessage( null );
-      setErrorMessage( "End date is before simulation start date" );
+      setErrorMessage( Messages.PageEditLastfall_7 );
       setPageComplete( false );
 
       return;
     }
 
-    if( (m_pre.getText() == null) || "".equals( m_pre.getText().trim() ) )
+    if( (m_pre.getText() == null) || "".equals( m_pre.getText().trim() ) ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( "Pre simulation time not defined" );
+      setErrorMessage( Messages.PageEditLastfall_9 );
       setPageComplete( false );
 
       return;
     }
 
-    if( (m_timeStep.getText() == null) || "".equals( m_timeStep.getText().trim() ) )
+    if( (m_timeStep.getText() == null) || "".equals( m_timeStep.getText().trim() ) ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( "Timestep not defined" );
+      setErrorMessage( Messages.PageEditLastfall_11 );
       setPageComplete( false );
 
       return;
     }
 
-    if( (m_multiplier.getText() == null) || "".equals( m_multiplier.getText().trim() ) )
+    if( (m_multiplier.getText() == null) || "".equals( m_multiplier.getText().trim() ) ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( "Timestep multiplier not defined" );
+      setErrorMessage( Messages.PageEditLastfall_13 );
       setPageComplete( false );
 
       return;
@@ -155,7 +156,7 @@ public class PageEditLastfall extends WizardPage
     catch( final NumberFormatException e )
     {
       setMessage( null );
-      setErrorMessage( "Pre simulation time is not an integer" );
+      setErrorMessage( Messages.PageEditLastfall_14 );
       setPageComplete( false );
 
       return;
@@ -168,7 +169,7 @@ public class PageEditLastfall extends WizardPage
     catch( final NumberFormatException e )
     {
       setMessage( null );
-      setErrorMessage( "Timestep is not an integer" );
+      setErrorMessage( Messages.PageEditLastfall_15 );
       setPageComplete( false );
 
       return;
@@ -181,7 +182,7 @@ public class PageEditLastfall extends WizardPage
     catch( final NumberFormatException e )
     {
       setMessage( null );
-      setErrorMessage( "Timestep multiplier is not an integer" );
+      setErrorMessage( Messages.PageEditLastfall_16 );
       setPageComplete( false );
 
       return;
@@ -213,7 +214,7 @@ public class PageEditLastfall extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, "Name", container );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME, Messages.PageEditLastfall_17, container );
 
     m_name = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -227,7 +228,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, "Description", container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION, Messages.PageEditLastfall_18, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.MULTI | SWT.WRAP );
@@ -237,7 +238,7 @@ public class PageEditLastfall extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
 
     /* begin date */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, "Start date", group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, Messages.PageEditLastfall_19, group );
 
     m_dateBegin = new LastfallDateChooser( m_lastfall.getLastfallStart() );
     m_dateBegin.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -251,7 +252,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* end date */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, "End date", group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, Messages.PageEditLastfall_20, group );
 
     m_dateEnd = new LastfallDateChooser( m_lastfall.getLastfallEnd() );
     m_dateEnd.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -265,7 +266,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* pre simulation time */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, "Pre simulation time", group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, Messages.PageEditLastfall_21, group );
 
     m_pre = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME );
     m_pre.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -279,7 +280,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* Simulation time step */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP, "Simulation Timestep", group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP, Messages.PageEditLastfall_22, group );
 
     m_timeStep = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP );
     m_timeStep.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -293,7 +294,7 @@ public class PageEditLastfall extends WizardPage
     } );
 
     /* Simulation time step multiplier */
-    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER, "Simulation Timestep Multiplier", group );
+    new WizardFeatureLabel( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER, Messages.PageEditLastfall_23, group );
 
     m_multiplier = new WizardFeatureTextBox( m_lastfall.getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER );
     m_multiplier.draw( group, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -312,7 +313,7 @@ public class PageEditLastfall extends WizardPage
   public String getLastfallDescription( )
   {
     if( m_description.getText() == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return m_description.getText();
   }

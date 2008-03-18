@@ -61,15 +61,15 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrapper2
 {
-  public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
+  public final static QName QNAME_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
-  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
+  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
 
-  public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" );
+  public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
 
-  public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" );
+  public final static QName QNAME_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" ); //$NON-NLS-1$
 
-  public static final QName QNAME_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" );
+  public static final QName QNAME_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
 
   /**
    * The scale (i.e. fraction digits) for station values.
@@ -86,7 +86,7 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
   public WspmWaterBody getWater( )
   {
     final Feature parent = getFeature().getParent();
-    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) )
+    if( parent != null && QNameUtilities.equals( parent.getFeatureType().getQName(), IWspmConstants.NS_WSPM, "WaterBody" ) ) //$NON-NLS-1$
       return new WspmWaterBody( parent );
 
     return null;
@@ -168,6 +168,6 @@ public class WspmProfile extends AbstractFeatureBinder implements IFeatureWrappe
   @Override
   public String toString( )
   {
-    return "" + getStation();
+    return "" + getStation(); //$NON-NLS-1$
   }
 }

@@ -79,13 +79,13 @@ public interface INode
       switch( type )
       {
         case eBoundaryNode:
-          return "boundaryCondition";
+          return "boundaryCondition"; //$NON-NLS-1$
 
         case eConnectionNode:
-          return "base";
+          return "base"; //$NON-NLS-1$
 
         case eLinkageNode:
-          return "linkage";
+          return "linkage"; //$NON-NLS-1$
 
         default:
           return null;

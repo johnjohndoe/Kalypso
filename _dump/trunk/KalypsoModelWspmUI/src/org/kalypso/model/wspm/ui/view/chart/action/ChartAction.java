@@ -50,13 +50,13 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
  */
 public class ChartAction extends Action implements IAction
 {
-  public static final String MENU_GROUP_PUSH = "push";
+  public static final String MENU_GROUP_PUSH = "push"; //$NON-NLS-1$
 
-  public static final String MENU_GROUP_RADIO = "radio";
+  public static final String MENU_GROUP_RADIO = "radio"; //$NON-NLS-1$
 
-  public static final String MENU_GROUP_CHECK = "check";
+  public static final String MENU_GROUP_CHECK = "check"; //$NON-NLS-1$
 
-  public static final String MENU_GROUP_MENU = "menu";
+  public static final String MENU_GROUP_MENU = "menu"; //$NON-NLS-1$
 
   private ProfilChartView m_profilChartView;
 

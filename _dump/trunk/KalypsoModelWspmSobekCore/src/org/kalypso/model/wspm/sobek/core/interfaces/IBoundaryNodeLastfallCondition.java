@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -60,9 +61,9 @@ public interface IBoundaryNodeLastfallCondition
 
     public static BOUNDARY_CONDITION_TYPE getType( final String gml )
     {
-      if( "zml".equals( gml ) )
+      if( "zml".equals( gml ) ) //$NON-NLS-1$
         return BOUNDARY_CONDITION_TYPE.eZml;
-      else if( "const".equals( gml ) )
+      else if( "const".equals( gml ) ) //$NON-NLS-1$
         return BOUNDARY_CONDITION_TYPE.eConstant;
 
       return BOUNDARY_CONDITION_TYPE.eZml;
@@ -74,10 +75,10 @@ public interface IBoundaryNodeLastfallCondition
       switch( type )
       {
         case eConstant:
-          return "const";
+          return "const"; //$NON-NLS-1$
 
         case eZml:
-          return "zml";
+          return "zml"; //$NON-NLS-1$
 
         default:
           throw new NotImplementedException();
@@ -91,10 +92,10 @@ public interface IBoundaryNodeLastfallCondition
       switch( type )
       {
         case eConstant:
-          return "Set a constant value for corrosponding discharge, waterlevel or Q-H relation";
+          return Messages.IBoundaryNodeLastfallCondition_4;
 
         case eZml:
-          return "Select a time series from the time series repository.";
+          return Messages.IBoundaryNodeLastfallCondition_5;
 
         default:
           throw new NotImplementedException();

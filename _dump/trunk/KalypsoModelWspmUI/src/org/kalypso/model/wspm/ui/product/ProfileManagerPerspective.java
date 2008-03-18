@@ -14,7 +14,7 @@ import org.kalypso.model.wspm.ui.view.table.TableView;
  */
 public class ProfileManagerPerspective implements IPerspectiveFactory
 {
-  public final static String ID = "org.kalypso.model.wspm.ui.product.ProfileManagerPerspective";
+  public final static String ID = "org.kalypso.model.wspm.ui.product.ProfileManagerPerspective"; //$NON-NLS-1$
   
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)

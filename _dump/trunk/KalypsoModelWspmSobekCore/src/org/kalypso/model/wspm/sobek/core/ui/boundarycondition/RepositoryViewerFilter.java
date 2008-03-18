@@ -90,9 +90,9 @@ public class RepositoryViewerFilter extends ViewerFilter
     if( element instanceof FileItem )
     {
       final FileItem item = (FileItem) element;
-      if( item.getName().startsWith( "." ) )
+      if( item.getName().startsWith( "." ) ) //$NON-NLS-1$
         return false;
-      else if( "CVS".equals( item.getName() ) )
+      else if( "CVS".equals( item.getName() ) ) //$NON-NLS-1$
         return false;
     }
 

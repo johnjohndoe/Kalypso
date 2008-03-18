@@ -47,5 +47,5 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  */
 public class KalypsoModelWspmUIDebug
 {
-  public final static Debug DEBUG_VALIDATION_MARKER = new Debug( KalypsoModelWspmUIPlugin.getDefault(), "/debug/validationMarkers/table" );
+  public final static Debug DEBUG_VALIDATION_MARKER = new Debug( KalypsoModelWspmUIPlugin.getDefault(), "/debug/validationMarkers/table" ); //$NON-NLS-1$
 }

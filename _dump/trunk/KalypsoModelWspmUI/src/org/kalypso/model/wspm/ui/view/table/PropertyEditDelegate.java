@@ -50,9 +50,8 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
-
-
 
 /**
  * @author Belger
@@ -84,26 +83,23 @@ public class PropertyEditDelegate implements IViewActionDelegate
 
     // get profilpoints from selection and view
     // TODO: this does not work any more
-    //final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
-    final IProfil profile = (m_view instanceof TableView)?((TableView)m_view).getProfil():null;
-    
+    // final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
+    final IProfil profile = (m_view instanceof TableView) ? ((TableView) m_view).getProfil() : null;
+
     if( profile == null )
     {
       // should never happen
-      MessageDialog.openError( viewShell, "Profileigenschaften ändern", "Die aktive Ansicht unterstütz diese Aktion nicht." );
+      MessageDialog.openError( viewShell, Messages.PropertyEditDelegate_0, Messages.PropertyEditDelegate_1 );
       return;
     }
 
-    
-    final IWizard propertyEditWizard = new PropertyEditWizard(profile );
+    final IWizard propertyEditWizard = new PropertyEditWizard( profile );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( viewShell, propertyEditWizard );
     dialog.setRememberSize( true );
     dialog.open();
-    
-    
-    
+
   }
 
   /**

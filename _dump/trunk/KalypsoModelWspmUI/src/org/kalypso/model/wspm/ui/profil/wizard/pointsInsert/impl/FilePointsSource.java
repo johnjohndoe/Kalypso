@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
 import org.kalypso.observation.result.IRecord;
 
@@ -91,11 +92,11 @@ public class FilePointsSource extends AbstractPointsSource
 
     try
     {
-      final IProfilSource prfS = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
+      final IProfilSource prfS = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
       // TODO: here the profile type is directly given (always read as pasche)
       // change this later to let the user choose how to read
 
-      final IProfil profil = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" );
+      final IProfil profil = ProfilFactory.createProfil( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
       if( prfS.read( profil, fr ) )
         return profil.getResult();
     }
@@ -115,12 +116,12 @@ public class FilePointsSource extends AbstractPointsSource
 
     final Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData() );
-    label.setText( "Datei: " );
+    label.setText( Messages.FilePointsSource_2 );
     m_fileName = new Text( panel, SWT.BORDER );
     m_fileName.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL ) );
 
     final Button button = new Button( panel, SWT.NONE );
-    button.setText( "..." );
+    button.setText( Messages.FilePointsSource_3 );
     button.setLayoutData( new GridData() );
 
     button.addSelectionListener( new SelectionAdapter()
@@ -141,7 +142,7 @@ public class FilePointsSource extends AbstractPointsSource
   @Override
   protected void loadState( final IDialogSettings settings )
   {
-    final String fileName = settings.get( "DLG_SETTINGS_FILENAME" );
+    final String fileName = settings.get( "DLG_SETTINGS_FILENAME" ); //$NON-NLS-1$
     if( fileName != null )
       m_fileName.setText( fileName );
 
@@ -149,7 +150,7 @@ public class FilePointsSource extends AbstractPointsSource
 
   public void saveState( final IDialogSettings settings )
   {
-    settings.put( "DLG_SETTINGS_FILENAME", m_fileName.getText() );
+    settings.put( "DLG_SETTINGS_FILENAME", m_fileName.getText() ); //$NON-NLS-1$
 
   }
 }

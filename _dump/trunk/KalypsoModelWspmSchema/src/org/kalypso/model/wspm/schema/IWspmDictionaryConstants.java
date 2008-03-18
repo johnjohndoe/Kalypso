@@ -46,22 +46,22 @@ package org.kalypso.model.wspm.schema;
  */
 public interface IWspmDictionaryConstants
 {
-  public final static String LS_COMPONENT_URN = "urn:ogc:gml:dict:kalypso:model:wspm:components";
+  public final static String LS_COMPONENT_URN = "urn:ogc:gml:dict:kalypso:model:wspm:components"; //$NON-NLS-1$
 
-  public final static String LS_COMPONENT_STATION = LS_COMPONENT_URN + "#LengthSectionStation";
+  public final static String LS_COMPONENT_STATION = LS_COMPONENT_URN + "#LengthSectionStation"; //$NON-NLS-1$
 
-  public static final String LS_COMPONENT_GROUND = LS_COMPONENT_URN + "#LengthSectionGround";
+  public static final String LS_COMPONENT_GROUND = LS_COMPONENT_URN + "#LengthSectionGround"; //$NON-NLS-1$
 
-  public static final String LS_COMPONENT_WATERLEVEL = LS_COMPONENT_URN + "#LengthSectionWaterlevel";
+  public static final String LS_COMPONENT_WATERLEVEL = LS_COMPONENT_URN + "#LengthSectionWaterlevel"; //$NON-NLS-1$
 
-  public static final String LS_COMPONENT_DEPTH = LS_COMPONENT_URN + "#LengthSectionDepth";
+  public static final String LS_COMPONENT_DEPTH = LS_COMPONENT_URN + "#LengthSectionDepth"; //$NON-NLS-1$
 
-  public static final String LS_COMPONENT_VELOCITY = LS_COMPONENT_URN + "#LengthSection_v_m";
+  public static final String LS_COMPONENT_VELOCITY = LS_COMPONENT_URN + "#LengthSection_v_m"; //$NON-NLS-1$
 
-  public static final String LS_COMPONENT_SLOPE = LS_COMPONENT_URN + "#LengthSectionSlope";
+  public static final String LS_COMPONENT_SLOPE = LS_COMPONENT_URN + "#LengthSectionSlope"; //$NON-NLS-1$
 
-  public static final String LS_COMPONENT_RUNOFF = LS_COMPONENT_URN + "#LengthSectionRunOff";
+  public static final String LS_COMPONENT_RUNOFF = LS_COMPONENT_URN + "#LengthSectionRunOff"; //$NON-NLS-1$
 
-  public static final String LS_COMPONENT_TYPE = LS_COMPONENT_URN + "#LengthSectionProfileType";
+  public static final String LS_COMPONENT_TYPE = LS_COMPONENT_URN + "#LengthSectionProfileType"; //$NON-NLS-1$
 
 }

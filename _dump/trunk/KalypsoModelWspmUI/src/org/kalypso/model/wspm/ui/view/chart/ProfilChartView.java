@@ -85,9 +85,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
   private static final Insets LABEL_INSETS = new Insets( 5, 0, 5, 0 );
 
-  private static final String MEM_LAYER_VIS = "layerVisibility";
+  private static final String MEM_LAYER_VIS = "layerVisibility"; //$NON-NLS-1$
 
-  private static final String MEM_ACTION_CHECK = "actionCheckState";
+  private static final String MEM_ACTION_CHECK = "actionCheckState"; //$NON-NLS-1$
 
   private static final Insets TICK_INSETS = new Insets( 2, 10, 10, 10 );
 
@@ -143,7 +143,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     }
   }
 
-  @SuppressWarnings("boxing")
+  @SuppressWarnings("boxing") //$NON-NLS-1$
   protected void createLayer( )
   {
     // get visibility
@@ -447,7 +447,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     for( final IChartLayer layer : m_chart.getLayers() )
     {
       final IMemento layermem = memento.createChild( MEM_LAYER_VIS, layer.toString() );
-      layermem.putTextData( "" + m_chart.isVisible( layer ) );
+      layermem.putTextData( "" + m_chart.isVisible( layer ) ); //$NON-NLS-1$
     }
 
     if( m_actions != null )

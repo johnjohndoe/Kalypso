@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -63,20 +64,20 @@ public class PageEditBranch extends WizardPage
 
   public PageEditBranch( final Feature branch )
   {
-    super( "editFlowNetworkBranch" );
+    super( "editFlowNetworkBranch" ); //$NON-NLS-1$
     m_branch = branch;
-    setTitle( "Edit branch" );
-    setDescription( "Edit flow network branch" );
+    setTitle( Messages.PageEditBranch_1 );
+    setDescription( Messages.PageEditBranch_2 );
   }
 
   protected void checkPageCompleted( )
   {
     setPageComplete( false );
 
-    if( (m_name != null) && "".equals( m_name.getText() ) )
+    if( (m_name != null) && "".equals( m_name.getText() ) ) //$NON-NLS-1$
     {
       setMessage( null );
-      setErrorMessage( "Name is missing" );
+      setErrorMessage( Messages.PageEditBranch_4 );
 
       return;
     }
@@ -100,7 +101,7 @@ public class PageEditBranch extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_NAME, "Name", container );
+    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_NAME, Messages.PageEditBranch_5, container );
 
     m_name = new WizardFeatureTextBox( m_branch, ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -114,13 +115,13 @@ public class PageEditBranch extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_DESCRIPTION, "Description", container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_DESCRIPTION, Messages.PageEditBranch_6, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_branch, ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.WRAP | SWT.MULTI );
 
     /* length */
-    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, "Length", container );
+    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, Messages.PageEditBranch_7, container );
 
     final WizardFeatureTextBox tLength = new WizardFeatureTextBox( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH );
     tLength.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );

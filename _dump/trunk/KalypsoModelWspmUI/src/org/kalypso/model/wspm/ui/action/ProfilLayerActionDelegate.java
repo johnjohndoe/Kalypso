@@ -48,6 +48,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author Belger
@@ -66,12 +67,12 @@ public class ProfilLayerActionDelegate implements IObjectActionDelegate
     final IWorkbenchPartSite site = m_targetPart.getSite();
     try
     {
-      site.getPage().showView( "com.bce.profil.eclipse.view.LayerView" );
+      site.getPage().showView( "com.bce.profil.eclipse.view.LayerView" ); //$NON-NLS-1$
     }
     catch( final PartInitException ex )
     {
-      ErrorDialog.openError( site.getShell(), "Profil-Legende",
-          "Konnte Themeneigenschaften nicht öffnen", ex.getStatus() );
+      ErrorDialog.openError( site.getShell(), Messages.ProfilLayerActionDelegate_1,
+          Messages.ProfilLayerActionDelegate_2, ex.getStatus() );
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( ex.getStatus() );
     }
   }

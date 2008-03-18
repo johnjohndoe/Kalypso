@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Collection;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -59,6 +58,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
@@ -96,7 +96,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     }
   }
 
-  protected final static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [m]";
+  protected final static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [m]"; //$NON-NLS-1$
 
   protected Color[] m_colors;
 
@@ -180,7 +180,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
     final Point2D logPoint = screen2logical( moveTo );
 
-    final ProfilOperation profilOperation = new ProfilOperation( "Gel�ndeh�he �ndern", getProfil(), true );
+    final ProfilOperation profilOperation = new ProfilOperation( Messages.AbstractPolyLineLayer_1, getProfil(), true );
 
     final IComponent property = editData.getProperty();
     if( getViewData().isEditvert() )
@@ -193,8 +193,6 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     new ProfilOperationJob( profilOperation ).schedule();
 
   }
-
-  
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getBounds()
@@ -238,8 +236,8 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
           final int index = ArrayUtils.indexOf( getProfil().getPoints(), found[0] );
 
-          return isPointVisible( found[0] ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { "Breite", element.getX(), property.getName(),
-              element.getY() } ) ) : null;
+          return isPointVisible( found[0] ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { Messages.AbstractPolyLineLayer_2,
+              element.getX(), property.getName(), element.getY() } ) ) : null;
         }
       }
     }
@@ -249,7 +247,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   public abstract IRecord[] getPoints( );
 
-  protected boolean isPointVisible( @SuppressWarnings("unused")
+  protected boolean isPointVisible( @SuppressWarnings("unused")//$NON-NLS-1$
   final IRecord point )
   {
     return true;
@@ -354,7 +352,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     {
       final EditData editData = (EditData) data;
       final IRecord activePoint = getProfil().getPoints()[editData.getIndex()];
-      final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ActiveObjectEdit( getProfil(), activePoint, null ), true );
+      final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ActiveObjectEdit( getProfil(), activePoint, null ), true ); //$NON-NLS-1$
       final IStatus status = operation.execute( new NullProgressMonitor(), null );
       operation.dispose();
       if( !status.isOK() )

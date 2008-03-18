@@ -85,6 +85,7 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
@@ -133,7 +134,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     {
       if( hint.isActivePointChanged() )
       {
-        new UIJob( "updating cross section table..." )
+        new UIJob( Messages.TableView_0 )
         {
           @Override
           public IStatus runInUIThread( IProgressMonitor monitor )
@@ -173,19 +174,19 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
           {
             if( form == null )
               form = m_toolkit.createComposite( m_form.getHead() );
-            createProblemSection( form, error, SWT.COLOR_RED, "Fehler" );
+            createProblemSection( form, error, SWT.COLOR_RED, Messages.TableView_1 );
           }
           if( warning.length > 0 )
           {
             if( form == null )
               form = m_toolkit.createComposite( m_form.getHead() );
-            createProblemSection( form, warning, SWT.COLOR_DARK_YELLOW, "Warnungen" );
+            createProblemSection( form, warning, SWT.COLOR_DARK_YELLOW, Messages.TableView_2 );
           }
           if( info.length > 0 )
           {
             if( form == null )
               form = m_toolkit.createComposite( m_form.getHead() );
-            createProblemSection( form, info, SWT.COLOR_DARK_BLUE, "Hinweise" );
+            createProblemSection( form, info, SWT.COLOR_DARK_BLUE, Messages.TableView_3 );
           }
           if( form != null )
           {
@@ -277,7 +278,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       section.setTitleBarForeground( section.getDisplay().getSystemColor( color ) );
       section.setToggleColor( section.getDisplay().getSystemColor( color ) );
 
-      section.setText( markers.length + " " + text + " im Profil" );
+      section.setText( markers.length + " " + text + Messages.TableView_5 ); //$NON-NLS-1$
       final Composite expanded = m_toolkit.createComposite( section );
       expanded.setLayout( new GridLayout( 2, false ) );
       expanded.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -287,11 +288,11 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     for( final IMarker marker : markers )
     {
-      final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String)null );
+      final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
       final ImageHyperlink quickFix = m_toolkit.createImageHyperlink( container, SWT.WRAP );
-      if( resolutions.equals( "<null/>"))
+      if( resolutions.equals( "<null/>" ) ) //$NON-NLS-1$
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_DLCL_QUICK_FIX_DISABLED ) ) );
-      else 
+      else
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ELCL_QUICK_FIX_ENABLED ) ) );
       final ImageHyperlink link = m_toolkit.createImageHyperlink( container, SWT.WRAP );
       link.addHyperlinkListener( new HyperlinkAdapter()
@@ -314,7 +315,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
           getProfil().setActivePoint( record );
         }
       } );
-      link.setText( marker.getAttribute( IMarker.MESSAGE, "" ) );
+      link.setText( marker.getAttribute( IMarker.MESSAGE, "" ) ); //$NON-NLS-1$
       link.setImage( JFaceResources.getResources().createImageWithDefault( getImageDescriptor( marker ) ) );
       link.setForeground( container.getDisplay().getSystemColor( color ) );
     }
@@ -329,7 +330,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   {
     final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
     if( contextService != null )
-      contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" );
+      contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" ); //$NON-NLS-1$
 
     m_toolkit = new FormToolkit( parent.getDisplay() );
     m_form = m_toolkit.createForm( parent );
@@ -411,7 +412,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     if( m_profile == null || pvd == null )
     {
-      m_form.setMessage( "Kein Profil geladen", IMessageProvider.INFORMATION );
+      m_form.setMessage( Messages.TableView_9, IMessageProvider.INFORMATION );
       final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
       tableGrid.exclude = true;
       m_view.getTable().setVisible( false );
@@ -420,7 +421,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
 
     /* Create handlers for this profile */
-    setContentDescription( "" );
+    setContentDescription( "" ); //$NON-NLS-1$
     final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
     tableGrid.exclude = false;
     m_view.getTable().setVisible( true );
@@ -508,7 +509,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {

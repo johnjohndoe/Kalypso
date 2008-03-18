@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoModelWspmSobekCore Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.sobek.core;singleton:=true
 Bundle-Version: 0.0.1
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.sobek.core;

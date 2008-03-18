@@ -105,7 +105,7 @@ public class SobekWizardEditCrossSectionNode extends Wizard implements INewWizar
       values.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, description );
 
       FeatureUtils.updateFeature( m_workspace, m_node, values );
-      FeatureUtils.updateLinkedFeature( m_workspace, m_node, ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + profile.getId() );
+      FeatureUtils.updateLinkedFeature( m_workspace, m_node, ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + profile.getId() ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

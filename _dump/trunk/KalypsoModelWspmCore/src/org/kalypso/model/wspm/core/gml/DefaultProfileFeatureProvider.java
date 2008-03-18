@@ -56,7 +56,7 @@ public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
    */
   public WspmProfile getProfile( final Feature feature )
   {
-    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) )
+    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName( IWspmConstants.NS_WSPMPROF, "Profile" ) ) ) //$NON-NLS-1$
       return new WspmProfile( feature );
 
     return null;

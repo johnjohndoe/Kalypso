@@ -44,6 +44,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 
 
 /**
@@ -65,7 +66,7 @@ public class ProfileditorPreferencePage extends FieldEditorPreferencePage
     super( GRID );
     setPreferenceStore( KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore() );
     
-    setDescription( "Allgmeines Einstellungen des Profileditor Plugins" );
+    setDescription( Messages.ProfileditorPreferencePage_0 );
   }
 
   @Override

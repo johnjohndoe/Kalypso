@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoModelWspmCore
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.core; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.gml,
@@ -31,3 +31,4 @@ Require-Bundle: org.junit,
  org.kalypso.wspwin.core,
  org.eclipse.core.resources;visibility:=reexport
 Eclipse-LazyStart: true
+Bundle-Localization: plugin

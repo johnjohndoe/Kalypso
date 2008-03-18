@@ -45,17 +45,17 @@ import org.eclipse.core.runtime.CoreException;
 
 public interface IValidatorMarkerCollector
 {
-  public static final String MARKER_ATTRIBUTE_POINTPOS = "profile.marker.attribute.pointpos";
+  public static final String MARKER_ATTRIBUTE_POINTPOS = "profile.marker.attribute.pointpos"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_POINTPROPERTY = "profile.marker.attribute.pointProperty";
+  public static final String MARKER_ATTRIBUTE_POINTPROPERTY = "profile.marker.attribute.pointProperty"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID = "profile.marker.attribute.quickFix.pluginid";
+  public static final String MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID = "profile.marker.attribute.quickFix.pluginid"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS = "profile.marker.attribute.quickFix.resolutions";
+  public static final String MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS = "profile.marker.attribute.quickFix.resolutions"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_PROFILE_ID = "profile.marker.attribute.profileId";
+  public static final String MARKER_ATTRIBUTE_PROFILE_ID = "profile.marker.attribute.profileId"; //$NON-NLS-1$
 
-  public static final String MARKER_ATTRIBUTE_STATION = "profile.marker.attribute.station";
+  public static final String MARKER_ATTRIBUTE_STATION = "profile.marker.attribute.station"; //$NON-NLS-1$
 
   /**
    * Creates a (profile-)marker on the given resource. All validation rules should use this method, so changes in the

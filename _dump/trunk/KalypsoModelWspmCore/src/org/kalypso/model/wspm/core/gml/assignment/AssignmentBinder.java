@@ -59,15 +59,15 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class AssignmentBinder
 {
-  private static final QName QNAME_ASSIGNMENT_MEMBER = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "assignmentMember" );
+  private static final QName QNAME_ASSIGNMENT_MEMBER = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "assignmentMember" ); //$NON-NLS-1$
 
-  private static final QName QNAME_SOURCE_ID = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "sourceId" );
+  private static final QName QNAME_SOURCE_ID = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "sourceId" ); //$NON-NLS-1$
 
-  private static final QName QNAME_POINT_ASSIGNMENT_MEMBER = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "pointAssignmentMember" );
+  private static final QName QNAME_POINT_ASSIGNMENT_MEMBER = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "pointAssignmentMember" ); //$NON-NLS-1$
 
-  private static final QName QNAME_POINT_PROPERTY = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "pointProperty" );
+  private static final QName QNAME_POINT_PROPERTY = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "pointProperty" ); //$NON-NLS-1$
 
-  private static final QName QNAME_VALUE = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "value" );
+  private static final QName QNAME_VALUE = new QName( IWspmConstants.NS_WSPMPROF_ASSIGNMENT, "value" ); //$NON-NLS-1$
 
   private final GMLWorkspace m_assignmentWorkspace;
 
@@ -78,7 +78,7 @@ public class AssignmentBinder
     m_assignmentWorkspace = assignmentWorkspace;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Map<String, Double> getAssignmentsFor( final String value )
   {
     final Map<String, Double> map = getValueToAssignment().get( value );

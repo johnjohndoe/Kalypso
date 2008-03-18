@@ -72,6 +72,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable;
 import org.kalypso.observation.result.IRecord;
@@ -81,17 +82,17 @@ import org.kalypso.observation.result.IRecord;
  */
 public class DouglasPeuckerDialog extends TitleAreaDialog
 {
-  private static final String SETTINGS_SECTION = "douglasPeuckerDialogSettings";
+  private static final String SETTINGS_SECTION = "douglasPeuckerDialogSettings"; //$NON-NLS-1$
 
-  private static final String SETTINGS_WIDTH = "width";
+  private static final String SETTINGS_WIDTH = "width"; //$NON-NLS-1$
 
-  private static final String SETTINGS_HEIGHT = "height";
+  private static final String SETTINGS_HEIGHT = "height"; //$NON-NLS-1$
 
-  private static final String SETTINGS_X = "posx";
+  private static final String SETTINGS_X = "posx"; //$NON-NLS-1$
 
-  private static final String SETTINGS_Y = "posy";
+  private static final String SETTINGS_Y = "posy"; //$NON-NLS-1$
 
-  private static final String SETTINGS_DISTANCE = "distance";
+  private static final String SETTINGS_DISTANCE = "distance"; //$NON-NLS-1$
 
   private static final String SETTINGS_PROVIDER = null;
 
@@ -144,8 +145,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
   {
     super.create();
 
-    getShell().setText( "Profil ausdünnen" );
-    setTitle( "Unnötige Profilpunkte löschen." );
+    getShell().setText( Messages.DouglasPeuckerDialog_6 );
+    setTitle( Messages.DouglasPeuckerDialog_7 );
 
     updateDialog();
   }
@@ -173,7 +174,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     }
 
     if( status != null )
-      ErrorDialog.openError( shell, shell.getText(), "Fehler beim Zurücksetzen des Profils", status );
+      ErrorDialog.openError( shell, shell.getText(), Messages.DouglasPeuckerDialog_8, status );
 
     // save dialog settings
     final Point size = shell.getSize();
@@ -264,7 +265,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   private Control createHelpArea( final FormToolkit toolkit, final Composite groupComposite )
   {
-    final Label label = toolkit.createLabel( groupComposite, "Geben Sie ein, wie ausgedünnt werden soll. Die Änderung werden sofort wirksam.", SWT.WRAP );
+    final Label label = toolkit.createLabel( groupComposite, Messages.DouglasPeuckerDialog_9, SWT.WRAP );
     return label;
   }
 
@@ -273,8 +274,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR | Section.EXPANDED );
 
     section.setLayout( new GridLayout( 1, false ) );
-    section.setText( "Aus diesen Punkten ausdünnen" );
-    section.setDescription( "Hier können Sie auswählen, aus welchen Punkten ausgedünnt wird." );
+    section.setText( Messages.DouglasPeuckerDialog_10 );
+    section.setDescription( Messages.DouglasPeuckerDialog_11 );
 
     final Composite sectionClient = toolkit.createComposite( section );
     sectionClient.setLayout( new GridLayout() );
@@ -325,14 +326,14 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | Section.TITLE_BAR | Section.EXPANDED );
 
     section.setLayout( new GridLayout( 2, false ) );
-    section.setText( "Mit dieser Toleranz ausdünnen" );
-    section.setDescription( "Hier können Sie eingeben, mit welcher Toleranz die Punkte ausgedünnt werden. Je grösser die Toleranz, desto mehr Punkte werden ausgedünnt." );
+    section.setText( Messages.DouglasPeuckerDialog_12 );
+    section.setDescription( Messages.DouglasPeuckerDialog_13 );
 
     final Composite sectionClient = toolkit.createComposite( section );
     sectionClient.setLayout( new GridLayout( 2, false ) );
     section.setClient( sectionClient );
 
-    toolkit.createLabel( section, "maximaler Abstand [m]", SWT.NONE );
+    toolkit.createLabel( section, Messages.DouglasPeuckerDialog_14, SWT.NONE );
 
     final String lastDistanceStr = m_dialogSettings.get( SETTINGS_DISTANCE );
     m_distance = NumberUtils.parseQuietDouble( lastDistanceStr );
@@ -358,7 +359,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
       }
     } );
 
-    toolkit.createLabel( sectionClient, "[m]", SWT.LEFT );
+    toolkit.createLabel( sectionClient, Messages.DouglasPeuckerDialog_15, SWT.LEFT );
 
     toolkit.paintBordersFor( sectionClient );
 
@@ -409,7 +410,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
     if( Double.isNaN( m_distance ) )
     {
-      setErrorMessage( "Dies ist keine Dezimalzahl." );
+      setErrorMessage( Messages.DouglasPeuckerDialog_16 );
       return;
     }
 
@@ -440,7 +441,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
   private IStatus performReduce( )
   {
     if( m_provider == null || Double.isNaN( m_distance ) )
-      return StatusUtilities.createWarningStatus( "Eingaben sind nicht vollständig." );
+      return StatusUtilities.createWarningStatus( Messages.DouglasPeuckerDialog_17 );
 
     /* Get important values. */
     final double allowedDistance = m_distance;
@@ -449,10 +450,10 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     /* Get the profile changes. */
     IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, m_profile );
     if( removeChanges.length == 0 )
-      return StatusUtilities.createOkStatus( "Keine Punkte gelöscht." );
+      return StatusUtilities.createOkStatus( Messages.DouglasPeuckerDialog_18 );
 
     /* Create the profile operation. */
-    m_operation = new ProfilOperation( "Profil ausdünnen", m_profile, removeChanges, false );
+    m_operation = new ProfilOperation( Messages.DouglasPeuckerDialog_19, m_profile, removeChanges, false );
 
     /* Create the runnable. */
     final ProfilOperationRunnable operationRunnable = new ProfilOperationRunnable( m_operation );
@@ -463,7 +464,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
       return operationStatus;
 
     /* Message for the user. */
-    final String message = "Es wurden " + removeChanges.length + " von " + points.length + " Punkten gelöscht.";
+    final String message = Messages.DouglasPeuckerDialog_20 + removeChanges.length + Messages.DouglasPeuckerDialog_21 + points.length + Messages.DouglasPeuckerDialog_22;
 
     return StatusUtilities.createOkStatus( message );
   }

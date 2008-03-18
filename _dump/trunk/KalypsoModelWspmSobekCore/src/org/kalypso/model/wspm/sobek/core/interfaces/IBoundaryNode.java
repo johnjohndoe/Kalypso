@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 
 /**
@@ -66,7 +67,7 @@ public interface IBoundaryNode extends IAbstractConnectionNode
       else if( BOUNDARY_TYPE.eWQ.toString().equals( type ) )
         return BOUNDARY_TYPE.eWQ;
 
-      throw new IllegalStateException( "Can't handle type: " + type );
+      throw new IllegalStateException( Messages.IBoundaryNode_0 + type );
     }
 
     /**
@@ -79,14 +80,14 @@ public interface IBoundaryNode extends IAbstractConnectionNode
       switch( type )
       {
         case eW:
-          return "bc_w";
+          return "bc_w"; //$NON-NLS-1$
         case eQ:
-          return "bc_q";
+          return "bc_q"; //$NON-NLS-1$
         case eWQ:
-          return "bc_wq";
+          return "bc_wq"; //$NON-NLS-1$
 
         default:
-          throw new IllegalStateException( "Can't handle type: " + name() );
+          throw new IllegalStateException( Messages.IBoundaryNode_4 + name() );
       }
     }
 
@@ -96,9 +97,9 @@ public interface IBoundaryNode extends IAbstractConnectionNode
       switch( type )
       {
         case eW:
-          return "W";
+          return "W"; //$NON-NLS-1$
         case eQ:
-          return "Q";
+          return "Q"; //$NON-NLS-1$
 
         default:
           throw new NotImplementedException();

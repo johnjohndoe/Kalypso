@@ -57,6 +57,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
@@ -94,7 +95,7 @@ public class NodeUtils implements INodeUtils
 
     /* set linked lastfall! */
     final Feature condition = command.getNewFeature();
-    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, IGmlWorkspaces.HYDRAUL_MODEL + "#" + lastfall.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, IGmlWorkspaces.HYDRAUL_MODEL + "#" + lastfall.getFeature().getId() ); //$NON-NLS-1$
 
     return command.getNewFeature();
   }
@@ -163,7 +164,7 @@ public class NodeUtils implements INodeUtils
     for( final IBranch branch : outflowing )
       updateBranchNode( branch, boundaryNode );
 
-    new UIJob( "setting boundary node parameters..." )
+    new UIJob( Messages.NodeUtils_1 )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

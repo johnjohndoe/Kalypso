@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoUIModelWspm Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.ui; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Bundle-ClassPath: build/bin
 Require-Bundle: org.kalypso.ui,

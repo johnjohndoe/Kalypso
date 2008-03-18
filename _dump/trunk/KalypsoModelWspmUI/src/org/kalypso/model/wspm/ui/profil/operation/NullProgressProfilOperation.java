@@ -53,7 +53,7 @@ public class NullProgressProfilOperation
 {
   final public static IStatus execute( final IProfil profile, IProfilChange[] changes )
   {
-    final ProfilOperation operation = new ProfilOperation( "", profile, changes, true );
+    final ProfilOperation operation = new ProfilOperation( "", profile, changes, true ); //$NON-NLS-1$
     final IStatus status = operation.execute( new NullProgressMonitor(), null );
     operation.dispose();
     if( !status.isOK() )

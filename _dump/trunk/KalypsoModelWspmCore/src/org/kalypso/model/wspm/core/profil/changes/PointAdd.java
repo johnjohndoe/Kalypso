@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IRecord;
@@ -76,7 +77,7 @@ public class PointAdd implements IProfilChange
     else if( m_pointBefore != null )
       pointToAdd = m_pointBefore.cloneRecord();
     if( pointToAdd == null )
-      return new IllegalChange( "Profilpunkt existiert nicht.", this );
+      return new IllegalChange( Messages.PointAdd_0, this );
 
     final IRecord[] points = m_profil.getPoints();
 
@@ -86,7 +87,7 @@ public class PointAdd implements IProfilChange
     {
       final int index = ArrayUtils.indexOf( points, m_pointBefore );
       if( index < 0 )
-        return new IllegalChange( "Profilpunkt existiert nicht.", this );
+        return new IllegalChange( Messages.PointAdd_1, this );
 
       m_profil.getResult().add( index + 1, pointToAdd );
     }

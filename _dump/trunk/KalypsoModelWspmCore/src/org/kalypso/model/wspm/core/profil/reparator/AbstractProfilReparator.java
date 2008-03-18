@@ -74,9 +74,9 @@ public abstract class AbstractProfilReparator implements IProfilReparator
   public final void setInitializationData( final IConfigurationElement config, final String propertyName,
       final Object data )
   {
-    m_id = config.getAttribute( "id" );
-    m_type = config.getAttribute( "type" );
-    m_description = config.getAttribute( "description" );
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
+    m_type = config.getAttribute( "type" ); //$NON-NLS-1$
+    m_description = config.getAttribute( "description" ); //$NON-NLS-1$
   }
 
   public final String getID( )

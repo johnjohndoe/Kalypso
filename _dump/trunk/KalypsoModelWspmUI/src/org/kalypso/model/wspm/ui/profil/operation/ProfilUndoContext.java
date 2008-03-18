@@ -66,7 +66,7 @@ public class ProfilUndoContext implements IUndoContext
    */
   public String getLabel( )
   {
-    return "ProfilUndoContext";
+    return "ProfilUndoContext"; //$NON-NLS-1$
   }
 
   /**

@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionT
 import org.kalypso.model.wspm.sobek.core.wizard.worker.AbstractTimeSeriesProvider;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.FinishWorkerEditBoundaryCondition;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -132,7 +133,7 @@ public class SobekWizardEditBoundaryCondition extends Wizard implements INewWiza
     final ICoreRunnableWithProgress worker = new FinishWorkerEditBoundaryCondition( m_lastfall, m_node, provider );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, worker );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Error updating boundary condition.", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.SobekWizardEditBoundaryCondition_0, status );
 
     m_provider.updateIcons();
 

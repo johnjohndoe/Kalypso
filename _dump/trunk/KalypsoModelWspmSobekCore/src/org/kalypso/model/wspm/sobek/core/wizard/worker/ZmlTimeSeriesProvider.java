@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
@@ -83,7 +84,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     super( settings, pageTS );
   }
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation")//$NON-NLS-1$
   private void addResult( final TupleResult result, final Date date, final List<Double> myValues )
   {
     /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
@@ -113,7 +114,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       /* read zml observation - not destination result obs!!!! */
       final Object adapter = m_item.getAdapter( IObservation.class );
       if( !(adapter instanceof IObservation) )
-        throw new IllegalStateException( "Invalid ZML Timeseries." );
+        throw new IllegalStateException( Messages.ZmlTimeSeriesProvider_1 );
 
       final IObservation observation = (IObservation) adapter;
 
@@ -124,7 +125,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
 
       final ITuppleModel values = observation.getValues( provider.getArguments() );
       if( values.getCount() == 0 )
-        throw new IllegalStateException( "No Timeseries value in specified date range found!" );
+        throw new IllegalStateException( Messages.ZmlTimeSeriesProvider_2 );
 
       final IAxis dateAxis = getDateAxis( values.getAxisList() );
       final IAxis[] valueAxis = getValueAxis( getBoundaryNodeType(), values.getAxisList() );
@@ -190,7 +191,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       if( Date.class.equals( axis.getDataClass() ) )
         return axis;
 
-    throw new IllegalStateException( "No time series date axis defined!" );
+    throw new IllegalStateException( Messages.ZmlTimeSeriesProvider_3 );
   }
 
   /**
@@ -214,7 +215,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     for( final IAxis axis : axisList )
     {
       final String type = axis.getType();
-      if( (type == null) || "".equals( type.trim() ) )
+      if( (type == null) || "".equals( type.trim() ) ) //$NON-NLS-1$
         continue;
 
       if( ArrayUtils.contains( compare, type ) )
@@ -229,7 +230,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
 
     for( final IAxis a : myAxis )
       if( a == null )
-        throw new IllegalStateException( "Time series value axis not found." );
+        throw new IllegalStateException( Messages.ZmlTimeSeriesProvider_5 );
 
     return myAxis;
   }

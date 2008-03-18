@@ -56,7 +56,7 @@ public class ChartActionHandler extends AbstractEditorPartAction implements IEdi
 
   public ChartActionHandler( final ProfilChartActionsEnum chartAction )
   {
-    super( "", chartAction.getStyle() );
+    super( "", chartAction.getStyle() ); //$NON-NLS-1$
     
     m_chartAction = chartAction;
   }

@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
@@ -80,20 +81,20 @@ public class ChartFeatureControlFactory implements IFeatureviewControlFactory
    */
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    final String configurationUrn = arguments.getProperty( "configuration", null );
-    final String chartName = arguments.getProperty( "chart", null );
-    final String featureKeyName = arguments.getProperty( "featureKeyName", null );
-    final String cmdIds = arguments.getProperty( "commands", "" );
-    final String cmdStyles = arguments.getProperty( "commandStyles", "" );
+    final String configurationUrn = arguments.getProperty( "configuration", null ); //$NON-NLS-1$
+    final String chartName = arguments.getProperty( "chart", null ); //$NON-NLS-1$
+    final String featureKeyName = arguments.getProperty( "featureKeyName", null ); //$NON-NLS-1$
+    final String cmdIds = arguments.getProperty( "commands", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String cmdStyles = arguments.getProperty( "commandStyles", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String[] commandIds = cmdIds.split( ";" );
-    final String[] commandStyles = cmdStyles.split( ";" );
+    final String[] commandIds = cmdIds.split( ";" ); //$NON-NLS-1$
+    final String[] commandStyles = cmdStyles.split( ";" ); //$NON-NLS-1$
 
     final Map<String, Integer> commands = new LinkedHashMap<String, Integer>();
 
     if( commandIds.length != commandStyles.length )
     {
-      final String msg = String.format( "Number of command-ids (%s - %d) is not queal to number of command styles (%s - %d)", commandIds, commandIds.length, cmdStyles, commandStyles.length );
+      final String msg = String.format( Messages.ChartFeatureControlFactory_9, commandIds, commandIds.length, cmdStyles, commandStyles.length );
       StatusUtilities.createStatus( IStatus.WARNING, msg, null );
     }
     else

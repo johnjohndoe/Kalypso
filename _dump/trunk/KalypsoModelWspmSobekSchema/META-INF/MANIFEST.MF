@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: KalypsoModelWspmTuhhSchema Plugin-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.sobek.schema;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Localization: plugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: %Bundle-Vendor.0
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypso.model.wspm.sobek.schema.KalypsoModelWspmSobekSchemaPlugin
 Require-Bundle: org.kalypso.contribs.java,

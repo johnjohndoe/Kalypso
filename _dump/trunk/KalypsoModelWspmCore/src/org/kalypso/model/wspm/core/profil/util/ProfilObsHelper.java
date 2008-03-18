@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public class ProfilObsHelper
 {
-  private static final QName QNAME_PROFIL_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" );
+  private static final QName QNAME_PROFIL_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
 
   public static LinkedList<IRecord> toProfilPoints( final TupleResult result )
   {

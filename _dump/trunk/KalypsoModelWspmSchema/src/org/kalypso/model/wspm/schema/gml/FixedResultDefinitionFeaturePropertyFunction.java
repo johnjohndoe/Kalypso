@@ -62,11 +62,11 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropertyFunction
 {
-  private static final QName QNAME_RECORD_DEFINITION = new QName( NS.SWE, "RecordDefinition" );
+  private static final QName QNAME_RECORD_DEFINITION = new QName( NS.SWE, "RecordDefinition" ); //$NON-NLS-1$
 
-  private static final QName QNAME_RECORD_COMPONENT = new QName( NS.SWE, "component" );
+  private static final QName QNAME_RECORD_COMPONENT = new QName( NS.SWE, "component" ); //$NON-NLS-1$
 
-  private static final QName QNAME_RECORD_RECORDSCHEMA = new QName( NS.SWE, "SWE_RecordSchema" );
+  private static final QName QNAME_RECORD_RECORDSCHEMA = new QName( NS.SWE, "SWE_RecordSchema" ); //$NON-NLS-1$
 
   private final List<String> m_compHrefs = new ArrayList<String>();
 
@@ -78,7 +78,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
   {
     for( final Map.Entry<String, String> entry : properties.entrySet() )
     {
-      if( entry.getKey().startsWith( "component" ) )
+      if( entry.getKey().startsWith( "component" ) ) //$NON-NLS-1$
         m_compHrefs.add( entry.getValue() );
     }
   }
@@ -101,7 +101,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
     return getConstValue( feature, (IRelationType) pt );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   /**
    * Produces the a feature of the following kind:
    * 
@@ -114,7 +114,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
    */
   private Object getConstValue( final Feature parent, final IRelationType parentRelation )
   {
-    final String id = parent.getId() + "_fixedResultDefinitionId";
+    final String id = parent.getId() + "_fixedResultDefinitionId"; //$NON-NLS-1$
 
     final IGMLSchema schema = parent.getFeatureType().getGMLSchema();
     final IFeatureType featureType = schema.getFeatureType( QNAME_RECORD_DEFINITION );
@@ -124,7 +124,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
     final FeatureList components = (FeatureList) feature.getProperty( QNAME_RECORD_COMPONENT );
 
     for( final String href : m_compHrefs )
-      components.add( new XLinkedFeature_Impl( components.getParentFeature(), components.getParentFeatureTypeProperty(), recordSchemaType, href, "", "", "", "", "" ) );
+      components.add( new XLinkedFeature_Impl( components.getParentFeature(), components.getParentFeatureTypeProperty(), recordSchemaType, href, "", "", "", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     return feature;
   }

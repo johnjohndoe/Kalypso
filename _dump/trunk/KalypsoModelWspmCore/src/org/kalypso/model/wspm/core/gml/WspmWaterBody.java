@@ -57,13 +57,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstants
 {
-  public final static QName QNAME = new QName( NS_WSPM, "WaterBody" );
+  public final static QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
-  public final static QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" );
+  public final static QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_REACH_MEMBER = new QName( NS_WSPM, "reachMember" );
+  public static final QName QNAME_REACH_MEMBER = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" );
+  public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
   public WspmWaterBody( final Feature water )
   {
@@ -79,22 +79,22 @@ public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstan
 
   public void setRefNr( final String refNr )
   {
-    setProperty( new QName( NS_WSPM, "refNr" ), refNr );
+    setProperty( new QName( NS_WSPM, "refNr" ), refNr ); //$NON-NLS-1$
   }
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
   {
-    setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) );
+    setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), new Boolean( directionIsUpstream ) ); //$NON-NLS-1$
   }
 
   public Feature createRunOffEvent( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) );
+    return FeatureHelper.addFeature( getFeature(), new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public Feature createWspFix( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( getFeature(), QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) );
+    return FeatureHelper.addFeature( getFeature(), QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) ); //$NON-NLS-1$
   }
 
   public List< ? > getWspFixations( )
@@ -104,7 +104,7 @@ public class WspmWaterBody extends AbstractFeatureBinder implements IWspmConstan
 
   public boolean isDirectionUpstreams( )
   {
-    return getProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.class );
+    return getProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.class ); //$NON-NLS-1$
   }
 
   public WspmReach[] getReaches( )

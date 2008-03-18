@@ -83,8 +83,8 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_id = config.getAttribute( "id" );
-    m_name = config.getAttribute( "name" );
-    m_description = config.getAttribute( "description" );
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
+    m_name = config.getAttribute( "name" ); //$NON-NLS-1$
+    m_description = config.getAttribute( "description" ); //$NON-NLS-1$
   }
 }

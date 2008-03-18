@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContributor;
@@ -193,7 +194,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   {
     unhookProvider();
 
-    setPartNames( "Profil Diagrammansicht", "Kein Profil selektiert" );
+    setPartNames( Messages.AbstractProfilViewPart2_0, Messages.AbstractProfilViewPart2_1 );
 
     m_profile = newProfile;
     m_viewData = newViewData;
@@ -285,7 +286,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   /** Used internally. Must be called in the SWT-Thread. */
   protected void handleProfilChanged( )
   {
-    final String partName = m_profile == null ? "Profil Diagrammansicht" : "Station km " + m_profile.getStation();
+    final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + m_profile.getStation();
     final String tooltip = null;
 
     setPartNames( partName, tooltip );

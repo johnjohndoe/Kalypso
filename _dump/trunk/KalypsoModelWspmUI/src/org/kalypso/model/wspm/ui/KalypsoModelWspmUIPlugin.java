@@ -53,7 +53,7 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
   // The shared instance.
   private static KalypsoModelWspmUIPlugin plugin;
 
-  public static final String MARKER_ID = "org.kalypso.model.wspm.ui.profilemarker";
+  public static final String MARKER_ID = "org.kalypso.model.wspm.ui.profilemarker"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -99,7 +99,7 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
    */
   public static ImageDescriptor getImageDescriptor( final String path )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.wspm", path );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( "org.kalypso.model.wspm", path ); //$NON-NLS-1$
   }
 
 }

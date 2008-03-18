@@ -70,6 +70,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
@@ -83,9 +84,9 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   // constants
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
-  private static final String TAB = "<TAB>";
+  private static final String TAB = "<TAB>"; //$NON-NLS-1$
 
-  private static final String[] SEPARATOR = new String[] { ",", ";", TAB };
+  private static final String[] SEPARATOR = new String[] { ",", ";", TAB }; //$NON-NLS-1$ //$NON-NLS-2$
 
   // widgets
   private Group m_group;
@@ -156,7 +157,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     m_crsPanel = new CRSSelectionPanel();
     Control crsControl = m_crsPanel.createControl( m_topComposite );
     crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    crsControl.setToolTipText( "Koordinatensystem der Profil Datei" );
+    crsControl.setToolTipText( Messages.ImportProfilePage_3 );
 
     m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -172,12 +173,12 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     } );
 
     final Label seperatorLabel = new Label( m_group, SWT.NONE );
-    seperatorLabel.setText( "Trennzeichen:" );
+    seperatorLabel.setText( Messages.ImportProfilePage_4 );
 
     m_separatorCombo = new Combo( m_group, SWT.NONE );
     final GridData sepData = new GridData( SWT.FILL, SWT.FILL, false, false );
 
-    m_separatorCombo.setToolTipText( "Wählen Sie das Spalten-Trennzeichen aus." );
+    m_separatorCombo.setToolTipText( Messages.ImportProfilePage_5 );
     m_separatorCombo.setLayoutData( sepData );
     m_separatorCombo.addSelectionListener( this );
     m_separatorCombo.addKeyListener( this );
@@ -252,7 +253,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     else
     {
       if( sepText.equals( TAB ) )
-        m_seperator = "\t";
+        m_seperator = "\t"; //$NON-NLS-1$
       else
         m_seperator = sepText;
 

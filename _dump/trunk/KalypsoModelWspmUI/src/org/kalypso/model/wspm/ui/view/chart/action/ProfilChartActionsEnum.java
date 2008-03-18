@@ -44,23 +44,29 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 public enum ProfilChartActionsEnum
 {
-  ZOOM_OUT("Verkleinern", "Ausschnitt verkleinern", KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON),
-  ZOOM_IN("Vergrössern", "Ausschnitt vergrössern", KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON),
-  PAN("Verschieben", "Ausschnitt verschieben", KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON),
-//  TODO: KIM Ansicht Seitenverhältnis überarbeiten
-//  FIX_RATIO("Seitenverhältnis", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null, IAction.AS_DROP_DOWN_MENU),
-//  FIX_RATIO_0("auto", "Seitenverhältnis anpassen", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null, IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
-//  FIX_RATIO_1("1:1", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null, IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
-//  FIX_RATIO_2("1:2", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null, IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
-//  FIX_RATIO_3("1:5", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null, IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
+  ZOOM_OUT(Messages.ProfilChartActionsEnum_0, Messages.ProfilChartActionsEnum_1, KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON),
+  ZOOM_IN(Messages.ProfilChartActionsEnum_2, Messages.ProfilChartActionsEnum_3, KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON),
+  PAN(Messages.ProfilChartActionsEnum_4, Messages.ProfilChartActionsEnum_5, KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON),
+// TODO: KIM Ansicht Seitenverhältnis überarbeiten
+// FIX_RATIO("Seitenverhältnis", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
+// IAction.AS_DROP_DOWN_MENU),
+// FIX_RATIO_0("auto", "Seitenverhältnis anpassen", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
+// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
+// FIX_RATIO_1("1:1", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
+// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
+// FIX_RATIO_2("1:2", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
+// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
+// FIX_RATIO_3("1:5", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
+// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
 
-  EDIT("Editeren", "Daten editieren", KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_CHECK_BOX),
-  MAXIMIZE("Maximieren", "Ausschnitt maximieren", KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON),
-  EXPORT_IMAGE("Bild exportieren...", "Aktuellen Ausschnitt als Bild speichern", KalypsoModelWspmUIImages.ID_CHART_EXPORT, null, IAction.AS_PUSH_BUTTON);
+  EDIT(Messages.ProfilChartActionsEnum_6, Messages.ProfilChartActionsEnum_7, KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_CHECK_BOX),
+  MAXIMIZE(Messages.ProfilChartActionsEnum_8, Messages.ProfilChartActionsEnum_9, KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON),
+  EXPORT_IMAGE(Messages.ProfilChartActionsEnum_10, Messages.ProfilChartActionsEnum_11, KalypsoModelWspmUIImages.ID_CHART_EXPORT, null, IAction.AS_PUSH_BUTTON);
 
   private final String m_label;
 
@@ -124,7 +130,7 @@ public enum ProfilChartActionsEnum
   {
     final int style = chartAction.getStyle();
     final String label = chartAction.toString();
-    
+
     final IAction action = new Action( label, style )
     {
       /**

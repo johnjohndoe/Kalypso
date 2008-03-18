@@ -99,7 +99,7 @@ public class ObservationStationResult implements IStationResult
 
       final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_feature );
       final TupleResult result = obs.getResult();
-      final IComponent stationComp = TupleResultUtilities.findComponentById( result, "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" );
+      final IComponent stationComp = TupleResultUtilities.findComponentById( result, "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" ); //$NON-NLS-1$
       if( stationComp != null )
       {
         for( final IRecord record : result )

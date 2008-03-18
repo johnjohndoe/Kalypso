@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -81,7 +82,7 @@ public class FlipProfileActionDelegate extends ActionDelegate
    * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
    *      org.eclipse.swt.widgets.Event)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public void runWithEvent( IAction action, Event event )
   {
@@ -122,7 +123,7 @@ public class FlipProfileActionDelegate extends ActionDelegate
 
     if( foundProfiles.size() == 0 )
     {
-      MessageDialog.openWarning( shell, "profile spiegeln", "Es wurden keine Profile in der Selektion gefunden." );
+      MessageDialog.openWarning( shell, Messages.FlipProfileActionDelegate_1, Messages.FlipProfileActionDelegate_2 );
       return;
     }
     final IWizard flipProfileWizard = new FlipProfileWizard(ws, foundProfiles, selectedProfiles );

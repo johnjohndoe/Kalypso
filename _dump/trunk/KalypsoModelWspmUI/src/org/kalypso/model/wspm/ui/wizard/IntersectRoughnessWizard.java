@@ -64,6 +64,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -89,7 +90,7 @@ public class IntersectRoughnessWizard extends Wizard
   {
     m_foundProfiles = foundProfiles;
 
-    setWindowTitle( "Rauheiten zuweisen" );
+    setWindowTitle( Messages.IntersectRoughnessWizard_0 );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -100,9 +101,9 @@ public class IntersectRoughnessWizard extends Wizard
   @Override
   public void addPages( )
   {
-    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 0, "profileFeaturesChooserPage", "Profile auswählen", null );
+    m_profileChooserPage = new ArrayChooserPage( m_foundProfiles.foundProfiles, new Object[] {}, m_foundProfiles.selectedProfiles, 0, "profileFeaturesChooserPage", Messages.IntersectRoughnessWizard_2, null ); //$NON-NLS-1$
     m_profileChooserPage.setLabelProvider( m_chooserPageLabelProvider );
-    m_profileChooserPage.setMessage( "Bitte wählen Sie aus, welchen Profilen Rauheiten zugeweisen werden sollen." );
+    m_profileChooserPage.setMessage( Messages.IntersectRoughnessWizard_3 );
 
     m_roughnessIntersectPage = new IntersectRoughnessPage( m_foundProfiles.theme.getMapModell() );
 
@@ -145,12 +146,12 @@ public class IntersectRoughnessWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Rauheiten zuweisen", 1 + choosen.length );
+        monitor.beginTask( Messages.IntersectRoughnessWizard_4, 1 + choosen.length );
 
         try
         {
           /* Load assignment */
-          monitor.subTask( "Zuordnungen werden geladen" );
+          monitor.subTask( Messages.IntersectRoughnessWizard_5 );
           final IWorkspace workspace = ResourcesPlugin.getWorkspace();
           final IFile assignmentFile = workspace.getRoot().getFile( assignmentPath );
           final URL assignmentUrl = ResourceUtilities.createURL( assignmentFile );
@@ -182,7 +183,7 @@ public class IntersectRoughnessWizard extends Wizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, runnable );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler beim Zuweisen der Rauheiten", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.IntersectRoughnessWizard_6, status );
 
     return status.isOK();
   }

@@ -55,7 +55,7 @@ import org.kalypso.observation.result.IComponent;
  */
 public class ChartView extends AbstractProfilViewPart2
 {
-  public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView";
+  public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
 
   private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
 
@@ -111,7 +111,7 @@ public class ChartView extends AbstractProfilViewPart2
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {

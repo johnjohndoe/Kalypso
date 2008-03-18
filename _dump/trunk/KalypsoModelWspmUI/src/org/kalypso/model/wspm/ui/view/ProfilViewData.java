@@ -100,9 +100,9 @@ public class ProfilViewData
       e.printStackTrace();
     }
 
-    final Element legendelement = m_document.createElement( "legendView" );
+    final Element legendelement = m_document.createElement( "legendView" ); //$NON-NLS-1$
     m_legendMemento = new XMLMemento( m_document, legendelement );
-    final Element chartelement = m_document.createElement( "chartView" );
+    final Element chartelement = m_document.createElement( "chartView" ); //$NON-NLS-1$
     m_chartMemento = new XMLMemento( m_document, chartelement );
   }
 

@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.sobek.core.model;
 import java.util.List;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
@@ -116,7 +117,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
       final Feature fLastfall = wrapper.getFeature();
       if( fLastfall == null )
-        throw new IllegalStateException( "Calculation case is null" );
+        throw new IllegalStateException( Messages.BoundaryNode_0 );
 
       // $ANALYSIS-IGNORE
       if( lastfall.getFeature().equals( fLastfall ) )

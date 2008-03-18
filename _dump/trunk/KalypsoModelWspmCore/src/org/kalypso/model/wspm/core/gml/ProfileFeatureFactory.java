@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.observation.IObservation;
@@ -75,13 +76,13 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class ProfileFeatureFactory implements IWspmConstants
 {
-  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" );
+  public static final QName QNAME_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
 
-  public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" );
+  public static final QName QNAME_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
 
-  public final static QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" );
+  public final static QName QN_PROF_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
-  public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#";
+  public static final String DICT_COMP_PROFILE_PREFIX = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 
   private final static ProfileFeatureManager m_profileManager = new ProfileFeatureManager();
 
@@ -118,13 +119,13 @@ public class ProfileFeatureFactory implements IWspmConstants
    * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
    * changes.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static FeatureChange[] toFeatureAsChanges( final IProfil profile, final Feature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ProfileFeatureFactory.QN_PROF_PROFILE ) )
-      throw new IllegalArgumentException( "Feature ist not a profile: " + targetFeature );
+      throw new IllegalArgumentException( Messages.ProfileFeatureFactory_5 + targetFeature );
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
     try
@@ -168,14 +169,14 @@ public class ProfileFeatureFactory implements IWspmConstants
       Collections.addAll( changes, obsChanges );
 
       /* Building */
-      final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" );
+      final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
       final IRelationType buildingRT = (IRelationType) featureType.getProperty( memberQName );
       final FeatureList buildingList = FeatureFactory.createFeatureList( targetFeature, buildingRT, new Feature[] {} );
 
       final IProfileObject[] buildings = profile.getProfileObjects();
       for( final IProfileObject profileObject : buildings )
       {
-        final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) );
+        final IFeatureType buildingType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) ); //$NON-NLS-1$
         final IRelationType buildingParentRelation = buildingList.getParentFeatureTypeProperty();
         final Feature buildingFeature = targetFeature.getWorkspace().createFeature( targetFeature, buildingParentRelation, buildingType );
         buildingList.add( buildingFeature );

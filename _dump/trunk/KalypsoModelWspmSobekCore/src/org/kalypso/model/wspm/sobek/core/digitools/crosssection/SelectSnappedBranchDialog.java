@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.pub.ISnapPainter.SnappedBranch;
 
 /**
@@ -80,8 +81,8 @@ public class SelectSnappedBranchDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( "Select branch" );
-    setMessage( "Clicked point is in the near of serveral branches. Choose the right branch from the lower combo box." );
+    setTitle( Messages.SelectSnappedBranchDialog_0 );
+    setMessage( Messages.SelectSnappedBranchDialog_1 );
 
     return contents;
   }
@@ -102,7 +103,7 @@ public class SelectSnappedBranchDialog extends TitleAreaDialog
 
     final Label label = new Label( composite, SWT.NONE );
     label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    label.setText( "Select branch" );
+    label.setText( Messages.SelectSnappedBranchDialog_2 );
 
     final ComboViewer viewer = new ComboViewer( composite, SWT.READ_ONLY | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -119,7 +120,7 @@ public class SelectSnappedBranchDialog extends TitleAreaDialog
         {
           final SnappedBranch snapped = (SnappedBranch) element;
 
-          return "Branch: " + snapped.m_branch.getName();
+          return Messages.SelectSnappedBranchDialog_3 + snapped.m_branch.getName();
         }
 
         return super.getText( element );

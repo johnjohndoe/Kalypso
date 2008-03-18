@@ -60,14 +60,14 @@ public class ValidatorFactory
   public ValidatorFactory( )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    m_ruleElements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.validatorrule" );
-    m_typeElements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.validatortype" );
+    m_ruleElements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.validatorrule" ); //$NON-NLS-1$
+    m_typeElements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.validatortype" ); //$NON-NLS-1$
 
     final Collection<String> types = new ArrayList<String>();
     
     for( final IConfigurationElement element : m_typeElements )
     {
-        final String type = element.getAttribute( "name" );
+        final String type = element.getAttribute( "name" ); //$NON-NLS-1$
         if( type != null )
           types.add( type );
     }
@@ -80,7 +80,7 @@ public class ValidatorFactory
     {
         try
         {
-          final Object protoRule = element.createExecutableExtension( "class" );
+          final Object protoRule = element.createExecutableExtension( "class" ); //$NON-NLS-1$
           if( protoRule instanceof IValidatorRule )
             rules.add( (IValidatorRule)protoRule );
         }

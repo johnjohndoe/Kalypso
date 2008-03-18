@@ -60,6 +60,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer
 
     store.setDefault( PreferenceConstants.P_VALIDATE_PROFILE, true );
 
-    store.setDefault( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "" );
+    store.setDefault( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "" ); //$NON-NLS-1$
   }
 }

@@ -50,6 +50,7 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -78,10 +79,10 @@ public class ImportTrippleHelper
   public static List<IProfil> importTrippelData( final File trippleFile, final String separator, final String profileType )
   {
 
-    final IComponent rechtswert = new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert" ) );
-    final IComponent hochwert = new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert" ) );
-    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
-    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite" ) );
+    final IComponent rechtswert = new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, Messages.ImportTrippleHelper_0, Messages.ImportTrippleHelper_1, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, Messages.ImportTrippleHelper_4, Messages.ImportTrippleHelper_5 ) ); //$NON-NLS-3$ //$NON-NLS-4$
+    final IComponent hochwert = new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, Messages.ImportTrippleHelper_6, Messages.ImportTrippleHelper_7, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, Messages.ImportTrippleHelper_10, Messages.ImportTrippleHelper_11 ) ); //$NON-NLS-3$ //$NON-NLS-4$
+    final IComponent hoehe = new Component( IWspmConstants.POINT_PROPERTY_HOEHE, Messages.ImportTrippleHelper_12, Messages.ImportTrippleHelper_13, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, Messages.ImportTrippleHelper_16, Messages.ImportTrippleHelper_17 ) ); //$NON-NLS-3$ //$NON-NLS-4$
+    final IComponent breite = new Component( IWspmConstants.POINT_PROPERTY_BREITE, Messages.ImportTrippleHelper_18, Messages.ImportTrippleHelper_19, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, Messages.ImportTrippleHelper_22, Messages.ImportTrippleHelper_23 ) ); //$NON-NLS-3$ //$NON-NLS-4$
 
     IProfil profile = ProfilFactory.createProfil( profileType );
 
@@ -161,7 +162,7 @@ public class ImportTrippleHelper
         else
         {
           // inform the user that his profile has not enough values...
-          final String message = "Import failed; profile no: \n" + (numStations + 1) + "(line no. " + count + ") has wrong number of values;\n necessary are: station, x, y, z";
+          final String message = Messages.ImportTrippleHelper_24 + (numStations + 1) + Messages.ImportTrippleHelper_25 + count + Messages.ImportTrippleHelper_26;
           throw new Exception( message );
           // continue;
         }
@@ -206,8 +207,8 @@ public class ImportTrippleHelper
       profile.addPoint( point );
 
     profile.setStation( station );
-    profile.setName( "Import" );
-    profile.setDescription( "Trippel-Import" );
+    profile.setName( Messages.ImportTrippleHelper_27 );
+    profile.setDescription( Messages.ImportTrippleHelper_28 );
 
     profiles.add( profile );
   }

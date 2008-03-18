@@ -50,6 +50,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -115,16 +116,16 @@ public class FNNodeUtils
         if( nodeId == null )
           continue;
 
-        final String[] split = nodeId.split( "_" );
+        final String[] split = nodeId.split( "_" ); //$NON-NLS-1$
         if( split.length != 2 )
-          throw new IllegalStateException( "Node id is incorrect" );
+          throw new IllegalStateException( Messages.FNNodeUtils_1 );
 
         final Integer iBranch = new Integer( split[1] );
         if( iBranch > count )
           count = iBranch;
       }
 
-    return String.format( "%s%05d", FNNodeUtils.getDelimiter( targetFeatureType ), ++count );
+    return String.format( "%s%05d", FNNodeUtils.getDelimiter( targetFeatureType ), ++count ); //$NON-NLS-1$
   }
 
   private static String getDelimiter( final IFeatureType targetFeatureType )
@@ -132,31 +133,31 @@ public class FNNodeUtils
     final QName qn = targetFeatureType.getQName();
 
     if( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE.equals( qn ) )
-      return "ln_";
+      return "ln_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE.equals( qn ) )
-      return "bn_";
+      return "bn_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_CONNECTION_NODE.equals( qn ) )
-      return "cn_";
+      return "cn_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE.equals( qn ) )
-      return "csn_";
+      return "csn_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_NOFDP_POLDER_NODE.equals( qn ) )
-      return "pn_";
+      return "pn_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( qn ) )
-      return "rbn_";
+      return "rbn_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_NOFDP_WEIR_NODE.equals( qn ) )
-      return "wn_";
+      return "wn_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR.equals( qn ) )
-      return "sbkW_";
+      return "sbkW_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_RIVER_WEIR.equals( qn ) )
-      return "sbkRW_";
+      return "sbkRW_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE.equals( qn ) )
-      return "sbkComp_";
+      return "sbkComp_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE.equals( qn ) )
-      return "sbkDB_";
+      return "sbkDB_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_GENERAL_STRUCTURE.equals( qn ) )
-      return "sbkGen_";
+      return "sbkGen_"; //$NON-NLS-1$
     else if( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP.equals( qn ) )
-      return "sbkP_";
+      return "sbkP_"; //$NON-NLS-1$
     else
       throw new NotImplementedException();
   }

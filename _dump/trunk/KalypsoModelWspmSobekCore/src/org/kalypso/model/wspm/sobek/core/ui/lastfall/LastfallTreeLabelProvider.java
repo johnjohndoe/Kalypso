@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallConditi
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -71,9 +72,9 @@ public class LastfallTreeLabelProvider extends LabelProvider
   public Image getImage( final Object element )
   {
     if( element instanceof ILastfall )
-      return new Image( null, getClass().getResourceAsStream( "icons/tree_lastfall.gif" ) );
+      return new Image( null, getClass().getResourceAsStream( "icons/tree_lastfall.gif" ) ); //$NON-NLS-1$
 
-    return new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) );
+    return new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -86,13 +87,13 @@ public class LastfallTreeLabelProvider extends LabelProvider
     {
       final ILastfall lastfall = (ILastfall) element;
 
-      return "Calculation Case: " + lastfall.getName();
+      return Messages.LastfallTreeLabelProvider_2 + lastfall.getName();
     }
     else if( element instanceof INode )
     {
       final INode node = (INode) element;
 
-      return "Condition: " + node.getName();
+      return Messages.LastfallTreeLabelProvider_3 + node.getName();
     }
 
     return super.getText( element );
@@ -122,31 +123,31 @@ public class LastfallTreeLabelProvider extends LabelProvider
 
           final BOUNDARY_CONDITION_TYPE type = condition.getLastUsedType();
           if( type == null )
-            item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) );
+            item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
 
           if( IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eZml.equals( type ) )
           {
             // REMARK: empty obs throws Nullpointer exception!
             condition.getTimeSeriesObservation();
 
-            item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) );
+            item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) ); //$NON-NLS-1$
           }
           else if( IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eConstant.equals( type ) )
           {
             final Double value = condition.getConstantValue();
 
             if( value == null )
-              item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) );
+              item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
             else
-              item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) );
+              item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) ); //$NON-NLS-1$
 
           }
           else
-            item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) );
+            item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
         }
         catch( final Exception e )
         {
-          item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) );
+          item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
         }
     }
 

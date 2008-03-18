@@ -75,6 +75,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
@@ -91,9 +92,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class ExportProfilePrfAction extends ActionDelegate implements IObjectActionDelegate, IActionDelegate2
 {
-  private static final String STR_DIALOG_TITLE = ".prf Export";
+  private static final String STR_DIALOG_TITLE = ".prf Export"; //$NON-NLS-1$
 
-  private static final String SETTINGS_FILTER_PATH = "prfImportInitialDirectory";
+  private static final String SETTINGS_FILTER_PATH = "prfImportInitialDirectory"; //$NON-NLS-1$
 
   private IFeatureSelection m_selection;
 
@@ -134,7 +135,7 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
 
     try
     {
-      final IProfilSink sink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" );
+      final IProfilSink sink = KalypsoModelWspmCoreExtensions.createProfilSink( "prf" ); //$NON-NLS-1$
       final Map<IProfil, String> profiles = getProfiles();
 
       final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
@@ -142,9 +143,9 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
         public IStatus execute( final IProgressMonitor monitor )
         {
           final String id = PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() );
-          final MultiStatus resultStatus = new MultiStatus( id, 1, "Ein oder mehrere Profile konnten nicht geschrieben werden", null );
+          final MultiStatus resultStatus = new MultiStatus( id, 1, Messages.ExportProfilePrfAction_3, null );
 
-          monitor.beginTask( "Profile werden gespeichert - ", profiles.size() );
+          monitor.beginTask( Messages.ExportProfilePrfAction_4, profiles.size() );
 
           for( final Map.Entry<IProfil, String> entry : profiles.entrySet() )
           {
@@ -166,18 +167,18 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
 
             monitor.worked( 1 );
             if( monitor.isCanceled() )
-              return new Status( IStatus.CANCEL, id, 1, "Abbruch durch den Benutzer", null );
+              return new Status( IStatus.CANCEL, id, 1, Messages.ExportProfilePrfAction_5, null );
           }
           return resultStatus;
         }
       };
-      final IStatus status = ProgressUtilities.busyCursorWhile( op, "Konnte Datei nicht schreiben" );
-      ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Umwandeln der Profile", status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
+      final IStatus status = ProgressUtilities.busyCursorWhile( op, Messages.ExportProfilePrfAction_6 );
+      ErrorDialog.openError( shell, STR_DIALOG_TITLE, Messages.ExportProfilePrfAction_7, status, IStatus.ERROR | IStatus.WARNING | IStatus.CANCEL );
     }
     catch( final CoreException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, STR_DIALOG_TITLE, "Fehler beim Profilexport", status );
+      ErrorDialog.openError( shell, STR_DIALOG_TITLE, Messages.ExportProfilePrfAction_8, status );
     }
   }
 
@@ -209,7 +210,7 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
       if( feature != null )
       {
         final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-        final String filename = convertToWspwinFilename( label ) + ".prf";
+        final String filename = convertToWspwinFilename( label ) + ".prf"; //$NON-NLS-1$
 
         final IProfil profile = ProfileFeatureFactory.toProfile( feature );
 
@@ -237,7 +238,7 @@ public class ExportProfilePrfAction extends ActionDelegate implements IObjectAct
 
     final DirectoryDialog dialog = new DirectoryDialog( shell );
     dialog.setText( STR_DIALOG_TITLE );
-    dialog.setMessage( "Bitte wählen Sie das Verzeichnis zum Speichern der Profile:" );
+    dialog.setMessage( Messages.ExportProfilePrfAction_10 );
     dialog.setFilterPath( initialFilterPath );
 
     final String result = dialog.open();

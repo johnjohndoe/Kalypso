@@ -72,6 +72,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
@@ -102,9 +103,9 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
   private final SelectionProviderDelegator m_selectionProviderDelegator = new SelectionProviderDelegator();
 
-  private final MenuManager m_menuMgr = new MenuManager( "#PopupMenu" );
+  private final MenuManager m_menuMgr = new MenuManager( Messages.LegendView_0 );
 
-  private List<IActiveLayerChangeListener> m_layerListener = new ArrayList<IActiveLayerChangeListener>( 5 );
+  private final List<IActiveLayerChangeListener> m_layerListener = new ArrayList<IActiveLayerChangeListener>( 5 );
 
   @Override
   public void init( final IViewSite site ) throws PartInitException
@@ -219,7 +220,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
       gridData.verticalAlignment = SWT.CENTER;
       gridData.verticalIndent = 10;
       label.setLayoutData( gridData );
-      label.setText( "Keine Profildiagrammansicht mit Profildaten gefunden." );
+      label.setText( Messages.LegendView_1 );
       return label;
     }
     else
@@ -262,11 +263,11 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     // just open layer view
     try
     {
-      getSite().getPage().showView( "org.kalypso.model.wspm.ui.view.LayerView" );
+      getSite().getPage().showView( "org.kalypso.model.wspm.ui.view.LayerView" ); //$NON-NLS-1$
     }
     catch( final PartInitException ex )
     {
-      ErrorDialog.openError( getSite().getShell(), "Profil-Legende", "Konnte Themeneigenschaften nicht öffnen", ex.getStatus() );
+      ErrorDialog.openError( getSite().getShell(), Messages.LegendView_3, Messages.LegendView_4, ex.getStatus() );
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( ex.getStatus() );
     }
   }

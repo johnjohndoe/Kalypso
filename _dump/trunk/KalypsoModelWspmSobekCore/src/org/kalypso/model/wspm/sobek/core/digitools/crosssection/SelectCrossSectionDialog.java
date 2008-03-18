@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -84,8 +85,8 @@ public class SelectCrossSectionDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( "Select cross section" );
-    setMessage( "Clicked point is in the near of serveral cross sections. Choose the right cross section from the lower combo box." );
+    setTitle( Messages.SelectCrossSectionDialog_0 );
+    setMessage( Messages.SelectCrossSectionDialog_1 );
 
     return contents;
   }
@@ -106,7 +107,7 @@ public class SelectCrossSectionDialog extends TitleAreaDialog
 
     final Label label = new Label( composite, SWT.NONE );
     label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    label.setText( "Select cross section" );
+    label.setText( Messages.SelectCrossSectionDialog_2 );
 
     final ComboViewer viewer = new ComboViewer( composite, SWT.READ_ONLY | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -122,11 +123,11 @@ public class SelectCrossSectionDialog extends TitleAreaDialog
         if( element instanceof Feature )
         {
           final Feature crossSection = (Feature) element;
-          final QName qStation = new QName( "org.kalypso.model.wspmprofile", "station" );
+          final QName qStation = new QName( "org.kalypso.model.wspmprofile", "station" ); //$NON-NLS-1$ //$NON-NLS-2$
 
           final BigDecimal station = (BigDecimal) crossSection.getProperty( qStation );
 
-          return "Station: " + station.toString();
+          return Messages.SelectCrossSectionDialog_5 + station.toString();
         }
 
         return super.getText( element );

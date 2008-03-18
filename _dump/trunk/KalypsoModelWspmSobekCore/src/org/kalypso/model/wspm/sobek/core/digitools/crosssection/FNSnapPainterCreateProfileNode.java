@@ -97,9 +97,9 @@ public class FNSnapPainterCreateProfileNode implements ISnapPainter
 
   private void discoverCrossSections( final Feature root )
   {
-    final List< ? > waterbodies = (List< ? >) root.getProperty( new QName( "org.kalypso.nofdpidss.1dmodel", "waterBodyMember" ) );
+    final List< ? > waterbodies = (List< ? >) root.getProperty( new QName( "org.kalypso.nofdpidss.1dmodel", "waterBodyMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final QName qProfileMember = new QName( "org.kalypso.nofdpidss.1dmodel", "profileMember" );
+    final QName qProfileMember = new QName( "org.kalypso.nofdpidss.1dmodel", "profileMember" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     for( final Object objWaterbody : waterbodies )
     {

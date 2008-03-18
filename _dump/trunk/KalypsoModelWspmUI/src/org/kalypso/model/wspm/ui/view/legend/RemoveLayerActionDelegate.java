@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view.legend;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
@@ -51,7 +52,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
     final IStructuredSelection selection = getSelection();
     if( selection == null || selection.isEmpty() )
     {
-      handleError( "Es muss mindestens ein Datensatz selektiert sein." );
+      handleError( Messages.RemoveLayerActionDelegate_0 );
       return;
     }
 
@@ -63,7 +64,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
     }
     catch( final UnsupportedOperationException e )
     {
-      handleError( "Dieser Datensatz kann nicht gelöscht werden." );
+      handleError( Messages.RemoveLayerActionDelegate_1 );
       return;
     }
   }

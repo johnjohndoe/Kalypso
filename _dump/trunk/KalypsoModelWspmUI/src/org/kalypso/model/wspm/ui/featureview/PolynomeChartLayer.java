@@ -92,7 +92,7 @@ public class PolynomeChartLayer extends AbstractChartLayer<Number, Number>
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void paint( final GCWrapper gc )
   {
     final IDataRange domainRange = getDataContainer().getDomainRange();

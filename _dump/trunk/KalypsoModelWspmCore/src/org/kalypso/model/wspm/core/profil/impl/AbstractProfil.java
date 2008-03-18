@@ -72,6 +72,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.kalypso.model.wspm.core.Messages;
 
 /**
  * Basisprofil mit Events
@@ -80,7 +81,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public abstract class AbstractProfil implements IProfil
 {
-  protected static String PROFILE_OBJECTS = "org.kalypso.model.wspm.core.profilobjects";
+  protected static String PROFILE_OBJECTS = "org.kalypso.model.wspm.core.profilobjects"; //$NON-NLS-1$
 
   private final String m_type;
 
@@ -172,7 +173,7 @@ public abstract class AbstractProfil implements IProfil
   public void addPointProperty( final IComponent pointProperty )
   {
     if( pointProperty == null )
-      throw new IllegalStateException( "property can't be null!" );
+      throw new IllegalStateException( Messages.AbstractProfil_1 );
 
     final IComponent[] pointProperties = getPointProperties();
     if( ArrayUtils.contains( pointProperties, pointProperty ) )
@@ -184,7 +185,7 @@ public abstract class AbstractProfil implements IProfil
   public void addPointProperty( final IComponent pointProperty, final IComponent initialValues )
   {
     if( pointProperty == null )
-      throw new IllegalStateException( "property can't be null!" );
+      throw new IllegalStateException( Messages.AbstractProfil_2 );
 
     final IComponent[] pointProperties = getPointProperties();
     if( ArrayUtils.contains( pointProperties, pointProperty ) )
@@ -196,7 +197,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
   {
     if( m_additionalProfileSettings.get( PROFILE_OBJECTS ) == null )
@@ -250,7 +251,7 @@ public abstract class AbstractProfil implements IProfil
   {
     final String description = getDescription();
     if( description == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return description;
   }
@@ -302,7 +303,7 @@ public abstract class AbstractProfil implements IProfil
    */
   public IRecord getPoint( final int index )
   {
-    
+
     return getResult().get( index );
   }
 
@@ -393,7 +394,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IProfileObject[] getProfileObjects( )
   {
     final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );
@@ -513,15 +514,15 @@ public abstract class AbstractProfil implements IProfil
     }
     catch( ArrayIndexOutOfBoundsException e )
     {
-       e.printStackTrace();
-       return false;
+      e.printStackTrace();
+      return false;
     }
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public boolean removeProfileObject( final IProfileObject profileObject )
   {
     final List<IProfileObject> profileObjectList = (ArrayList<IProfileObject>) m_additionalProfileSettings.get( PROFILE_OBJECTS );

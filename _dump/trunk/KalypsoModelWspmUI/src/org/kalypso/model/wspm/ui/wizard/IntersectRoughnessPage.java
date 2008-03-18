@@ -73,6 +73,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -86,9 +87,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class IntersectRoughnessPage extends WizardPage implements IUpdateable, IKalypsoThemeFilter
 {
-  private final static String SETTINGS_FILTER_IDS = "settings.filters.ids";
+  private final static String SETTINGS_FILTER_IDS = "settings.filters.ids"; //$NON-NLS-1$
 
-  private final ResourceChooserGroup m_assignmentGroup = new ResourceChooserGroup( this, "Zuordnung", "Datei" );
+  private final ResourceChooserGroup m_assignmentGroup = new ResourceChooserGroup( this, Messages.IntersectRoughnessPage_1, Messages.IntersectRoughnessPage_2 );
 
   private final ThemeAndPropertyChooserGroup m_themeGroup;
 
@@ -102,9 +103,9 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
   public IntersectRoughnessPage( final IMapModell modell )
   {
-    super( "intersectRoughnessPage", "Rauheiten zuweisen", null );
+    super( "intersectRoughnessPage", Messages.IntersectRoughnessPage_4, null ); //$NON-NLS-1$
 
-    setMessage( "Bitte wählen Sie aus, wie die Rauheiten zugewiesen werden sollen." );
+    setMessage( Messages.IntersectRoughnessPage_5 );
 
     m_modell = modell;
 
@@ -124,8 +125,8 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
       }
     };
 
-    m_geoPd = new PropertyDescriptor( "&Geometry", geoFilter, true );
-    m_valuePd = new PropertyDescriptor( "&Wert", valueFilter, false );
+    m_geoPd = new PropertyDescriptor( Messages.IntersectRoughnessPage_6, geoFilter, true );
+    m_valuePd = new PropertyDescriptor( Messages.IntersectRoughnessPage_7, valueFilter, false );
 
     final PropertyDescriptor[] pds = new PropertyDescriptor[] { m_geoPd, m_valuePd };
     m_themeGroup = new ThemeAndPropertyChooserGroup( this, m_modell, this, pds );
@@ -143,14 +144,14 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     m_themeGroup.setDialogSettings( getDialogSettings() );
     final Group polygoneGroup = m_themeGroup.createControl( composite );
     polygoneGroup.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    polygoneGroup.setText( "Polygone" );
+    polygoneGroup.setText( Messages.IntersectRoughnessPage_8 );
 
     /* Assignment Group */
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
     m_assignmentGroup.setDialogSettings( getDialogSettings() );
     final IResource initialSelection = getAssignmentPath() == null ? null : root.findMember( getAssignmentPath() );
-    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, "Zuordnungsdatei", new String[] { "gml" }, root, new ResourceSelectionValidator() );
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, Messages.IntersectRoughnessPage_9, new String[] { "gml" }, root, new ResourceSelectionValidator() ); //$NON-NLS-2$
     m_assignmentGroup.setSelectionDialog( dialog );
 
     final Control assignmentGroup = m_assignmentGroup.createControl( composite );
@@ -168,10 +169,10 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
     group.setLayout( new GridLayout( 1, false ) );
-    group.setText( "Profilpunkte filtern:" );
+    group.setText( Messages.IntersectRoughnessPage_11 );
 
     /* theme chooser */
-    new Label( group, SWT.NONE ).setText( "&Wählen Sie die anzuwendenden Filter:" );
+    new Label( group, SWT.NONE ).setText( Messages.IntersectRoughnessPage_12 );
 
     final Set<String> ids = new HashSet<String>();
     final IDialogSettings dialogSettings = getDialogSettings();
@@ -239,7 +240,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   {
     return (IKalypsoFeatureTheme) m_themeGroup.getTheme();
   }
-  
+
   public FeatureList getPolygoneFeatures( )
   {
     final IKalypsoFeatureTheme polygoneTheme = getPolygoneTheme();
@@ -279,18 +280,18 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     setPageComplete( pageComplete );
 
     if( polygoneTheme == null )
-      setErrorMessage( "Es sind keine Polygon-Themen in der Karte vorhanden. Zuweisung nicht möglich." );
+      setErrorMessage( Messages.IntersectRoughnessPage_13 );
     else if( polygoneValueProperty == null )
-      setErrorMessage( "Das gewählte Thema hat keine Wert-Eigenschaften. Zuweisung nicht möglich." );
+      setErrorMessage( Messages.IntersectRoughnessPage_14 );
     else if( assignmentPath == null )
-      setErrorMessage( "Ess muss ein Pfad auf eine Zuordnungsdatei angegeben werden." );
+      setErrorMessage( Messages.IntersectRoughnessPage_15 );
     else
     {
       setErrorMessage( null );
-      setMessage( "Bitte wählen Sie aus, wie die Rauheiten zugewiesen werden sollen." );
+      setMessage( Messages.IntersectRoughnessPage_16 );
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoThemeFilter#accept(org.kalypso.ogc.gml.IKalypsoTheme)
    */
@@ -307,7 +308,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
           return true;
       }
     }
-    
+
     return false;
   }
 

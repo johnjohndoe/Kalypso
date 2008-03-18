@@ -71,7 +71,7 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
 
   private ActionGroup m_actionGroup;
 
-  private StatusPosContributionItem m_statusLineItem = new StatusPosContributionItem( "pos" );
+  private StatusPosContributionItem m_statusLineItem = new StatusPosContributionItem( "pos" ); //$NON-NLS-1$
 
   @Override
   public void init( final IViewSite site ) throws PartInitException
@@ -141,8 +141,8 @@ public abstract class AbstractProfilViewPart extends ViewPart implements IProfil
     if( m_editor == editor )
       return;
 
-    setContentDescription( "" );
-    setPartName( "" );
+    setContentDescription( "" ); //$NON-NLS-1$
+    setPartName( "" ); //$NON-NLS-1$
 
     if( m_editor != null )
     {

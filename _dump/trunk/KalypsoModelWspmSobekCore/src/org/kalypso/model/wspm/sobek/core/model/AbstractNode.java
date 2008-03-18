@@ -45,6 +45,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -92,7 +93,7 @@ public abstract class AbstractNode implements INode
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR );
 
     else
-      throw new IllegalStateException( "Can't handle node type" + nodeType.name() );
+      throw new IllegalStateException( Messages.AbstractNode_0 + nodeType.name() );
 
     return FNNodeUtils.createNode( model, targetFeatureType, point, nodeType );
   }

@@ -63,15 +63,15 @@ public class KalypsoModelWspmUIExtensions
 
   public static IPointsTarget[] createProfilPointTargets( )
   {
-    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsTarget", new IPointsTarget[0] );
+    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsTarget", new IPointsTarget[0] ); //$NON-NLS-1$
   }
 
   public static IPointsSource[] createProfilPointSources( )
   {
-    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsSource", new IPointsSource[0] );
+    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsSource", new IPointsSource[0] ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static <T> T[] createExtensions( final String extensionPoint, final T[] a )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -86,7 +86,7 @@ public class KalypsoModelWspmUIExtensions
       final IConfigurationElement element = elements[i];
       try
       {
-        targets.add( (T) element.createExecutableExtension( "class" ) );
+        targets.add( (T) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
       }
       catch( final CoreException e )
       {
@@ -99,7 +99,7 @@ public class KalypsoModelWspmUIExtensions
 
   public static IPointPropertyCalculator[] createPointPropertyCalculator( )
   {
-    return createExtensions( "org.kalypso.model.wspm.ui.pointPropertyCalculator", new IPointPropertyCalculator[0] );
+    return createExtensions( "org.kalypso.model.wspm.ui.pointPropertyCalculator", new IPointPropertyCalculator[0] ); //$NON-NLS-1$
   }
 
   /**
@@ -108,12 +108,12 @@ public class KalypsoModelWspmUIExtensions
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype, final String providerId )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" ); //$NON-NLS-1$
 
     for( final IConfigurationElement element : elements )
     {
-      final String type = element.getAttribute( "profiletype" );
-      final String id = element.getAttribute( "id" );
+      final String type = element.getAttribute( "profiletype" ); //$NON-NLS-1$
+      final String id = element.getAttribute( "id" ); //$NON-NLS-1$
 
       /*
        * If a provider id is given, only accept this one, else use the first one. TODO: Kim: if providerID == null,
@@ -123,7 +123,7 @@ public class KalypsoModelWspmUIExtensions
       {
         try
         {
-          final Object layerProvider = element.createExecutableExtension( "provider" );
+          final Object layerProvider = element.createExecutableExtension( "provider" ); //$NON-NLS-1$
           if( layerProvider instanceof IProfilLayerProvider )
             return (IProfilLayerProvider) layerProvider;
         }
@@ -133,7 +133,7 @@ public class KalypsoModelWspmUIExtensions
         }
       }
     }
-    final IStatus status = StatusUtilities.createWarningStatus( "No profile layer provider for type: " + profiletype );
+    final IStatus status = StatusUtilities.createWarningStatus( Messages.KalypsoModelWspmUIExtensions_9 + profiletype );
     KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
     return null;
 
@@ -145,16 +145,16 @@ public class KalypsoModelWspmUIExtensions
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" ); //$NON-NLS-1$
 
     for( final IConfigurationElement element : elements )
     {
-      final String type = element.getAttribute( "profiletype" );
+      final String type = element.getAttribute( "profiletype" ); //$NON-NLS-1$
       if( type.equals( profiletype ) )
       {
         try
         {
-          final Object layerProvider = element.createExecutableExtension( "provider" );
+          final Object layerProvider = element.createExecutableExtension( "provider" ); //$NON-NLS-1$
           if( layerProvider instanceof IProfilLayerProvider )
             return (IProfilLayerProvider) layerProvider;
         }
@@ -164,7 +164,7 @@ public class KalypsoModelWspmUIExtensions
         }
       }
     }
-    final IStatus status = StatusUtilities.createWarningStatus( "No profile layer provider for type: " + profiletype );
+    final IStatus status = StatusUtilities.createWarningStatus( Messages.KalypsoModelWspmUIExtensions_13 + profiletype );
     KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
     return null;
   }

@@ -136,7 +136,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
         continue;
       else if( curve.intersects( point ) )
       {
-        final String id = "#" + branch.getFeature().getId();
+        final String id = "#" + branch.getFeature().getId(); //$NON-NLS-1$
         FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, id );
       }
 

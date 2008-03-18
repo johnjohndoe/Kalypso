@@ -58,14 +58,14 @@ public class WspmSobekUrlCatalog extends AbstractUrlCatalog implements IWspmSobe
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK_PROJECT, myClass.getResource( "wspmSobekProj.xsd" ) );
-    prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK_PROJECT, "wspmSobekProj" );
+    catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK_PROJECT, myClass.getResource( "wspmSobekProj.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK_PROJECT, "wspmSobekProj" ); //$NON-NLS-1$
 
-    catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK_COMMON, myClass.getResource( "wspmSobekCommons.xsd" ) );
-    prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK_COMMON, "wspmSobekCommon" );
+    catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK_COMMON, myClass.getResource( "wspmSobekCommons.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK_COMMON, "wspmSobekCommon" ); //$NON-NLS-1$
 
-    catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK, myClass.getResource( "wspmSobek.xsd" ) );
-    prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK, "wspmSobek" );
+    catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK, myClass.getResource( "wspmSobek.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK, "wspmSobek" ); //$NON-NLS-1$
 
   }
 

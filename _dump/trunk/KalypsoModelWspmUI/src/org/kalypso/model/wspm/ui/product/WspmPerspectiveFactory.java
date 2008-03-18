@@ -50,7 +50,7 @@ import org.kalypso.featureview.views.FeatureView;
  */
 public class WspmPerspectiveFactory implements IPerspectiveFactory
 {
-  public static final String ID = "org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory";
+  public static final String ID = "org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory"; //$NON-NLS-1$
   
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
@@ -108,7 +108,7 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
 
     // Top right.
     final IFolderLayout topRight = layout.createFolder( "topRight", IPageLayout.RIGHT, (float) 0.55, editorArea );//$NON-NLS-1$
-    topRight.addView( "org.kalypso.featureview.views.FeatureView" );
+    topRight.addView( "org.kalypso.featureview.views.FeatureView" ); //$NON-NLS-1$
 //    topLeft.addPlaceholder( IPageLayout.ID_BOOKMARKS );
 
     

@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
@@ -77,16 +78,16 @@ public class Branch implements IBranch
       if( branchId == null )
         continue;
 
-      final String[] split = branchId.split( "_" );
+      final String[] split = branchId.split( "_" ); //$NON-NLS-1$
       if( split.length != 2 )
-        throw new IllegalStateException( "Branch id isn't correct" );
+        throw new IllegalStateException( Messages.Branch_1 );
 
       final Integer iBranch = new Integer( split[1] );
       if( iBranch > count )
         count = iBranch;
     }
 
-    return String.format( "b_%05d", ++count );
+    return String.format( "b_%05d", ++count ); //$NON-NLS-1$
   }
 
   protected final Feature m_branch;
@@ -254,7 +255,7 @@ public class Branch implements IBranch
    */
   public void setLowerNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + node.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + node.getFeature().getId() ); //$NON-NLS-1$
   }
 
   /**
@@ -262,6 +263,6 @@ public class Branch implements IBranch
    */
   public void setUpperNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + node.getFeature().getId() );
+    FeatureUtils.updateLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, IGmlWorkspaces.HYDRAUL_MODEL + "#" + node.getFeature().getId() ); //$NON-NLS-1$
   }
 }

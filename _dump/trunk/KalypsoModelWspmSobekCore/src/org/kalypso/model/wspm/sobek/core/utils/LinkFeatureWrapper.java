@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.core.utils;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -79,7 +80,7 @@ public class LinkFeatureWrapper
     else if( property == null )
       return null;
 
-    throw new IllegalStateException( "Type not supported: " + property.toString() );
+    throw new IllegalStateException( Messages.LinkFeatureWrapper_0 + property.toString() );
   }
 
 }

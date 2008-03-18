@@ -53,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-
+import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author Gernot
@@ -75,13 +75,13 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     try
     {
       final IOperationHistory operationHistory = PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
-      
+
       // give "this" as adaptable, it can deliver a shell (used for message dialogs for instance)
       return operationHistory.execute( m_operation, monitor, this );
     }
     catch( final ExecutionException e )
     {
-      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, "Operation '" + m_operation.getLabel() + "' konnte nicht durchgeführt werden", e );
+      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, 0, Messages.ProfilOperationRunnable_0 + m_operation.getLabel() + Messages.ProfilOperationRunnable_1, e );
     }
   }
 
@@ -94,12 +94,12 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     {
       final Display display = PlatformUI.getWorkbench().getDisplay();
       final GetShellFromDisplay getShellFromDisplay = new GetShellFromDisplay( display );
-      
+
       display.asyncExec( getShellFromDisplay );
-      
+
       return getShellFromDisplay.getShell();
     }
-    
+
     return null;
   }
 }

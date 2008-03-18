@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
  */
 public abstract class WspmReach extends AbstractFeatureBinder implements IWspmConstants
 {
-  public final static QName QNAME_WSPM_REACH = new QName( NS_WSPM, "AbstractReach" );
+  public final static QName QNAME_WSPM_REACH = new QName( NS_WSPM, "AbstractReach" ); //$NON-NLS-1$
 
   protected WspmReach( final Feature reach, final QName qname )
   {

@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -80,7 +81,7 @@ public class PropertyEditActionDelegate extends ActionDelegate
    * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
    *      org.eclipse.swt.widgets.Event)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public void runWithEvent( IAction action, Event event )
   {
@@ -121,7 +122,7 @@ public class PropertyEditActionDelegate extends ActionDelegate
 
     if( foundProfiles.size() == 0 )
     {
-      MessageDialog.openWarning( shell, "Feature Werte überschreiben", "Es wurden keine Profile in der Selektion gefunden." );
+      MessageDialog.openWarning( shell, Messages.PropertyEditActionDelegate_1, Messages.PropertyEditActionDelegate_2 );
       return;
     }
     final IWizard propertyEditWizard = new PropertyEditWizard(ws, foundProfiles, selectedProfiles );

@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider;
@@ -89,12 +90,11 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
     if( profile == null )
     {
       // should never happen
-      MessageDialog.openError( viewShell, "Profil ausd�nnnen", "Die aktive Ansicht unterst�tz diese Aktion nicht." );
+      MessageDialog.openError( viewShell, Messages.DouglasPeuckerActionDelegate_0, Messages.DouglasPeuckerActionDelegate_1 );
       return;
     }
 
-
-    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "aus allen Punkten des Profils", profile.getPoints() );
+    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( Messages.DouglasPeuckerActionDelegate_2, profile.getPoints() );
     final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profile, m_selection );
 
     final DouglasPeuckerDialog dialog = new DouglasPeuckerDialog( viewShell, profile, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );

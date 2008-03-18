@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
@@ -80,7 +81,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
   private IFeatureSelection m_selection;
 
-  private static final String SETTINGS_FILTER_PATH = "fileDialogPath";
+  private static final String SETTINGS_FILTER_PATH = "fileDialogPath"; //$NON-NLS-1$
 
   // private static final DateFormat DF = DateFormat.getDateInstance( DateFormat.LONG );
 
@@ -141,13 +142,13 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
 
     if( profiles.size() == 0 )
     {
-      MessageDialog.openInformation( shell, action.getText(), "Es konnten keine Profile gelesen werden." );
+      MessageDialog.openInformation( shell, action.getText(), Messages.ImportProfilePrfAction_1 );
       return;
     }
 
     if( !prfReadStatus.isOK() )
     {
-      if( !MessageDialog.openConfirm( shell, action.getText(), "Trotz Fehler beim Lesen der .prf Dateien fortfahren?" ) )
+      if( !MessageDialog.openConfirm( shell, action.getText(), Messages.ImportProfilePrfAction_2 ) )
         return;
     }
 
@@ -161,23 +162,23 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( shell, m_action.getText(), "Fehler beim Konvertieren der Profile", status );
+      ErrorDialog.openError( shell, m_action.getText(), Messages.ImportProfilePrfAction_3, status );
     }
   }
 
   private MultiStatus readProfiles( final IAction action, final Shell shell, final File[] files, final List<IProfil> profiles )
   {
-    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, "Eine oder mehrere der .prf Dateien konnten nicht gelesen werden.", null );
+    final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, Messages.ImportProfilePrfAction_4, null );
     // final Date today = new Date();
     // final String todayString = DF.format( today );
     for( final File file : files )
     {
       try
       {
-        final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" );
-        final IProfil profil = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" );
+        final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
+        final IProfil profil = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
 
-        profil.setName( "Import" );
+        profil.setName( Messages.ImportProfilePrfAction_7 );
 
         // do not overwrite original comment from wspwin profile
         // TODO: put this information into metadata strings
@@ -188,18 +189,18 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
       }
       catch( final IOException e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " );
+        final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " ); //$NON-NLS-1$
         prfReadStatus.add( status );
       }
       catch( final CoreException e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " );
+        final IStatus status = StatusUtilities.statusFromThrowable( e, file.getName() + ": " ); //$NON-NLS-1$
         prfReadStatus.add( status );
       }
     }
 
     if( prfReadStatus.getChildren().length > 0 )
-      ErrorDialog.openError( shell, action.getText(), "Fehler beim Import der .prf Dateien", prfReadStatus );
+      ErrorDialog.openError( shell, action.getText(), Messages.ImportProfilePrfAction_10, prfReadStatus );
     return prfReadStatus;
   }
 
@@ -209,8 +210,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     final String initialFilterPath = dialogSettings.get( SETTINGS_FILTER_PATH );
 
     final FileDialog dialog = new FileDialog( shell, SWT.OPEN | SWT.MULTI );
-    dialog.setText( ".prf Import" );
-    dialog.setFilterExtensions( new String[] { "*.prf", "*.*" } );
+    dialog.setText( ".prf Import" ); //$NON-NLS-1$
+    dialog.setFilterExtensions( new String[] { "*.prf", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.setFilterPath( initialFilterPath );
 
     final String result = dialog.open();

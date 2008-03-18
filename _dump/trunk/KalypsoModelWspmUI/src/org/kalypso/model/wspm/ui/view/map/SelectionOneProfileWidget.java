@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.view.map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.map.widgets.SelectionWidget;
 import org.kalypso.ogc.gml.map.widgets.changers.SingleSelectionChanger;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.SelectFeaturesMapFunction;
@@ -55,6 +56,6 @@ public class SelectionOneProfileWidget extends SelectionWidget
 {
   public SelectionOneProfileWidget( )
   {
-    super( "Selektions-Widget", "Selektiert ein Profil", new SelectFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( new QName( "org.kalypso.model.wspmprofile", "Profile" ) ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() ), null );
+    super( Messages.SelectionOneProfileWidget_0, Messages.SelectionOneProfileWidget_1, new SelectFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( new QName( "org.kalypso.model.wspmprofile", "Profile" ) ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() ), null ); //$NON-NLS-3$ //$NON-NLS-4$
   }
 }

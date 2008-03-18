@@ -45,6 +45,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
 
 /**
  * @author gernot
@@ -57,7 +58,7 @@ public class TablePreferencePage extends FieldEditorPreferencePage implements IW
     super( GRID );
     setPreferenceStore( KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore() );
 
-    setDescription( "Einstellungen der tabellarischen Profilansicht" );
+    setDescription( Messages.TablePreferencePage_0 );
   }
 
   @Override
@@ -66,7 +67,7 @@ public class TablePreferencePage extends FieldEditorPreferencePage implements IW
 // addField( new DirectoryFieldEditor( PreferenceConstants.P_PATH,
 // "&Directory preference:", getFieldEditorParent() ) );
 
-    addField( new BooleanFieldEditor( PreferenceConstants.P_ALLWAYSOPENTABLE, "&Tabellenansicht mit Profileditor öffnen", getFieldEditorParent() ) );
+    addField( new BooleanFieldEditor( PreferenceConstants.P_ALLWAYSOPENTABLE, Messages.TablePreferencePage_1, getFieldEditorParent() ) );
 
 // addField( new StringFieldEditor( PreferenceConstants.P_STRING,
 // "A &text preference:", getFieldEditorParent() ) );

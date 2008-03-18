@@ -130,7 +130,7 @@ public class SobekModelMember implements ISobekModelMember
   public static ISobekModelMember getModel( final CommandableWorkspace workspace, final Feature modelMember, final IRepositoryContainer reposContainer ) throws CoreException
   {
     if( workspace == null )
-      throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), "workspace can't be null" ) );
+      throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), Messages.SobekModelMember_0 ) );
 
     final SobekModelMember model = m_models.get( workspace );
 
@@ -138,7 +138,7 @@ public class SobekModelMember implements ISobekModelMember
       return model;
 
     if( modelMember == null )
-      throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), "can't create a new ISobekModel Member with null valued parameters" ) );
+      throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), Messages.SobekModelMember_1 ) );
 
     return new SobekModelMember( workspace, modelMember, reposContainer );
   }
@@ -155,10 +155,10 @@ public class SobekModelMember implements ISobekModelMember
     m_reposContainer = reposContainer;
 
     if( modelMember == null )
-      throw new IllegalStateException( "modelMember is null" );
+      throw new IllegalStateException( Messages.SobekModelMember_2 );
 
     if( !ISobekConstants.QN_SOBEK_MODEL.equals( modelMember.getFeatureType().getQName() ) )
-      throw new IllegalStateException( "modelMember is not of type: " + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
+      throw new IllegalStateException( Messages.SobekModelMember_3 + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
 
     m_modelMember = modelMember;
 
@@ -356,7 +356,7 @@ public class SobekModelMember implements ISobekModelMember
     // ensure existence of targetDir
     final File fleTargetDir = new File( targetDir.getFile() );
     if( !fleTargetDir.isDirectory() )
-      throw new IOException( "'" + targetDir + "' is not a directory" );
+      throw new IOException( "'" + targetDir + Messages.SobekModelMember_5 ); //$NON-NLS-1$
     if( !fleTargetDir.exists() )
       FileUtils.forceMkdir( fleTargetDir );
 
@@ -381,7 +381,7 @@ public class SobekModelMember implements ISobekModelMember
           locationsComplexType.getLocation().add( location );
         }
         // name of target file
-        sFleXml = "nodes.xml";
+        sFleXml = "nodes.xml"; //$NON-NLS-1$
       }
       else if( TARGET.eBranches.equals( target ) )
       {
@@ -397,7 +397,7 @@ public class SobekModelMember implements ISobekModelMember
           branchesComplexType.getBranch().add( piBranch );
         }
         // name of target file
-        sFleXml = "Branches.xml";
+        sFleXml = "Branches.xml"; //$NON-NLS-1$
       }
       else if( TARGET.eCrossSections.equals( target ) )
       {
@@ -412,7 +412,7 @@ public class SobekModelMember implements ISobekModelMember
           final CrossSection cs = PiSobekModelUtils.getInstance().createCrossSectionFromCSNode( factory, csNode );
           crossSectionsComplexType.getCrossSection().add( cs );
         }
-        sFleXml = "CrossSections.xml";
+        sFleXml = "CrossSections.xml"; //$NON-NLS-1$
       }
       else if( TARGET.eStructures.equals( target ) )
       {
@@ -426,7 +426,7 @@ public class SobekModelMember implements ISobekModelMember
           structures.getStructure().add( piStruct );
         }
         xmlElements = structures;
-        sFleXml = "Structures.xml";
+        sFleXml = "Structures.xml"; //$NON-NLS-1$
       }
       else
         throw new NotImplementedException();
@@ -442,7 +442,7 @@ public class SobekModelMember implements ISobekModelMember
         m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
 
         final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-        final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/Delft_PI.xsd" );
+        final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/Delft_PI.xsd" ); //$NON-NLS-1$ //$NON-NLS-2$
         final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
         // TODO remove comment
         // m.setSchema( schema );
@@ -471,7 +471,7 @@ public class SobekModelMember implements ISobekModelMember
     else
     {
       // for each calculation case (loading case) export timeseries.xml
-      sFleXml = "Timeseries.xml";
+      sFleXml = "Timeseries.xml"; //$NON-NLS-1$
       final ILastfall[] lastfaelle = getLastfallMembers();
       for( final ILastfall lastfall : lastfaelle )
       {
@@ -489,7 +489,7 @@ public class SobekModelMember implements ISobekModelMember
           timeSeriesComplexType.getSeries().add( ts );
         }
         // marshall
-        final String validatedLastfallName = FileUtilities.validateName( "calcCase_" + lastfall.getName(), "_" );
+        final String validatedLastfallName = FileUtilities.validateName( "calcCase_" + lastfall.getName(), "_" ); //$NON-NLS-1$ //$NON-NLS-2$
         final File dirLastfall = new File( targetDir.getFile(), validatedLastfallName );
         if( !dirLastfall.exists() )
           FileUtils.forceMkdir( dirLastfall );
@@ -504,7 +504,7 @@ public class SobekModelMember implements ISobekModelMember
           m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE );
 
           final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-          final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/Delft_PI.xsd" );
+          final URL schemaURL = PluginUtilities.findResource( "org.kalypso.model.wspm.sobek.core", "etc/schemas/pi/Delft_PI.xsd" ); //$NON-NLS-1$ //$NON-NLS-2$
           final Schema schema = SCHEMA_FACTORY.newSchema( schemaURL );
           m.setSchema( schema );
 
