@@ -49,6 +49,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.google.earth.export.Messages;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.ui.views.map.MapView;
 
@@ -76,7 +77,7 @@ public class WizardGoogleExport extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    setWindowTitle( "Google Earth (TM) export" );
+    setWindowTitle( Messages.WizardGoogleExport_0 );
 
     m_page = new PageGoogleExport( m_targetFile );
     addPage( m_page );
@@ -105,7 +106,7 @@ public class WizardGoogleExport extends Wizard implements INewWizard
     final GoogleEarthExporter googleEarthExporter = new GoogleEarthExporter( m_mapView, m_page );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, googleEarthExporter );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Error adding geodata set.", status );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.WizardGoogleExport_1, status );
 
     if( status.isOK() )
       return true;

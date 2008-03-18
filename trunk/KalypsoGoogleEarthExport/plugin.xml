@@ -12,14 +12,14 @@
          point="org.eclipse.ui.commands">
       <category
             id="org.kalypso.google.earth.export"
-            name="Google Earth (TM) export">
+            name="%category.name.0">
       </category>
       <command
             categoryId="org.kalypso.google.earth.export"
             defaultHandler="org.kalypso.google.earth.export.GoogleEarthExportCommandHandler"
-            description="Google Earth (TM) export"
+            description="%command.description.0"
             id="org.kalypso.google.earth.export.command"
-            name="Google Earth (TM) export">
+            name="%command.name.0">
       </command>
    </extension>
 

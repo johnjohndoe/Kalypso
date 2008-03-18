@@ -44,7 +44,7 @@ public class ConverterCurve
       final GM_Point point = GeometryFactory.createGM_Point( position, curve.getCoordinateSystem() );
       final GM_Point kmlPoint = (GM_Point) transformer.transform( point );
 
-      coordinates.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) );
+      coordinates.add( String.format( Locale.ENGLISH, "%f,%f", kmlPoint.getX(), kmlPoint.getY() ) ); //$NON-NLS-1$
     }
 
     return lineStringType;
