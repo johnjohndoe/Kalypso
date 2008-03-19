@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.core.model;
 
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
@@ -54,7 +55,12 @@ import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
 import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author kuch
@@ -156,8 +162,27 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
    */
   public GM_Object[] getSperrzone( IBranch branch )
   {
-    // FIXME
-    throw new NotImplementedException();
+    try
+    {
+      IBranch[] inflowingBranches = getInflowingBranches();
+      IBranch[] outflowingBranches = getOutflowingBranches();
+
+      if( !ArrayUtils.contains( inflowingBranches, branch ) && !ArrayUtils.contains( outflowingBranches, branch ) )
+        return new GM_Object[] {};
+
+      GM_Point location = getLocation();
+      Geometry geometry = JTSAdapter.export( location );
+      Geometry buffer = geometry.buffer( 10 );
+
+      GM_Object buffered = JTSAdapter.wrap( buffer );
+      return new GM_Object[] { buffered };
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return new GM_Object[] {};
   }
 
 }
