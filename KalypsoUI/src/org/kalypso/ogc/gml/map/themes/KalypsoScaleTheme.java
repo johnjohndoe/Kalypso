@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.math.BigDecimal;
@@ -233,6 +235,14 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   {
     /* Setup the graphics context. */
     g.setColor( Color.BLACK );
+
+    /* If it is the right graphic type, setup it further. */
+    if( g instanceof Graphics2D )
+    {
+      Graphics2D g2 = (Graphics2D) g;
+      g2.setBackground( Color.WHITE );
+      g2.setStroke( new BasicStroke( 1 ) );
+    }
 
     /* The gap beetween each lines. */
     int GAP = 5;
