@@ -40,11 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProviderChangedEvent;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -78,46 +74,6 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
   public void elementsChanged( final Object... elements )
   {
     super.fireLabelProviderChanged( new LabelProviderChangedEvent( this, elements ) );
-  }
-
-  /**
-   * @see org.eclipse.ui.model.WorkbenchLabelProvider#decorateImage(org.eclipse.jface.resource.ImageDescriptor,
-   *      java.lang.Object)
-   */
-  @Override
-  protected ImageDescriptor decorateImage( ImageDescriptor input, Object element )
-  {
-    int height = input.getImageData().height;
-    int width = input.getImageData().width;
-
-    if( height == 16 && width == 16 )
-      return input;
-
-    // TODO Is the new image disposed somewhere?
-    Image resize = resize( input.createImage(), 16, 16 );
-    return ImageDescriptor.createFromImage( resize );
-  }
-
-  /**
-   * This function resizes the given image.
-   * 
-   * @param image
-   *            The old image.
-   * @param witdth
-   *            The new width.
-   * @param height
-   *            The new height.
-   */
-  private Image resize( Image image, int width, int height )
-  {
-    Image scaled = new Image( image.getDevice(), width, height );
-    GC gc = new GC( scaled );
-    gc.setAntialias( SWT.ON );
-    gc.setInterpolation( SWT.HIGH );
-    gc.drawImage( image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height );
-    gc.dispose();
-    image.dispose(); // don't forget about me!
-    return scaled;
   }
 
   /**
