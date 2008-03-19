@@ -44,6 +44,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
+import org.kalypso.ui.catalogs.LinkedFeatureTypeImageCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -52,11 +53,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
+ * This is a label provider for GML features.
+ * 
  * @author Christoph Kuepferle
+ * @author Holger Albert
  */
 public class GMLLabelProvider extends LabelProvider
 {
-  private final Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
+  /**
+   * Hash for descriptors and its images.
+   */
+  private Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
 
   /**
    * @see org.eclipse.jface.viewers.LabelProvider#dispose()
@@ -66,7 +73,13 @@ public class GMLLabelProvider extends LabelProvider
   {
     super.dispose();
 
-    new DisposeHelper( m_images.values() ).dispose();
+    /* Helper for disposing objects. */
+    DisposeHelper disposeHelper = new DisposeHelper( m_images.values() );
+
+    /* Dispose the images. */
+    disposeHelper.dispose();
+
+    /* Clear the map. */
     m_images.clear();
   }
 
@@ -74,32 +87,53 @@ public class GMLLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public Image getImage( final Object element )
+  public Image getImage( Object element )
   {
-    final ImageDescriptor descriptor = getDescriptor( element );
-
+    /* Get the descriptor. */
+    ImageDescriptor descriptor = getDescriptor( element );
     if( descriptor == null )
       return null;
 
+    /* If its image is already there, take it. */
     if( m_images.containsKey( descriptor ) )
       return m_images.get( descriptor );
 
-    final Image createImage = descriptor.createImage();
+    /* Otherwise create it. */
+    Image createImage = descriptor.createImage();
+
+    /* Store the image. */
     m_images.put( descriptor, createImage );
 
     return createImage;
   }
 
-  private ImageDescriptor getDescriptor( final Object element )
+  /**
+   * This function retrieves the image descriptor from an catalog or other sources.
+   * 
+   * @param element
+   *            The element, for which the image descriptor should be obtained.
+   * @return The image descriptor.
+   */
+  private ImageDescriptor getDescriptor( Object element )
   {
-    final QName qname = getQName( element );
+    /* Get the qname. */
+    QName qname = getQName( element );
     if( qname != null )
     {
-      final ImageDescriptor catalogImage = FeatureTypeImageCatalog.getImage( null, qname );
+      /* Check the catalogs for this qname. */
+      if( element instanceof LinkedFeatureElement2 )
+      {
+        ImageDescriptor catalogImage = LinkedFeatureTypeImageCatalog.getImage( null, qname );
+        if( catalogImage != null )
+          return catalogImage;
+      }
+
+      ImageDescriptor catalogImage = FeatureTypeImageCatalog.getImage( null, qname );
       if( catalogImage != null )
         return catalogImage;
     }
 
+    /* Take the default images. */
     if( element instanceof Feature )
       return ImageProvider.IMAGE_FEATURE;
 
@@ -114,7 +148,7 @@ public class GMLLabelProvider extends LabelProvider
 
     if( element instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
+      IValuePropertyType vpt = (IValuePropertyType) element;
       if( GeometryUtilities.isPointGeometry( vpt ) )
         return ImageProvider.IMAGE_GEOM_PROP_POINT;
       if( GeometryUtilities.isMultiPointGeometry( vpt ) )
@@ -139,7 +173,7 @@ public class GMLLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element instanceof GMLWorkspace )
       return "GML";
@@ -152,7 +186,7 @@ public class GMLLabelProvider extends LabelProvider
 
     if( element instanceof FeatureAssociationTypeElement )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
+      IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
       if( annotation != null )
         return annotation.getLabel();
       return "<-> ";
@@ -160,13 +194,13 @@ public class GMLLabelProvider extends LabelProvider
 
     if( element instanceof LinkedFeatureElement2 )
     {
-      final Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
+      Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
       return "-> " + getText( decoratedFeature );
     }
 
     if( element instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
+      IValuePropertyType vpt = (IValuePropertyType) element;
       return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
     }
 
@@ -179,26 +213,42 @@ public class GMLLabelProvider extends LabelProvider
     return element.toString();
   }
 
-  private QName getQName( final Object element )
+  /**
+   * This function tries to obtain the qname of the element.
+   * 
+   * @param element
+   *            The element.
+   * @return The qname of the element or null.
+   */
+  private QName getQName( Object element )
   {
     if( element instanceof Feature )
     {
-      final IFeatureType featureType = ((Feature) element).getFeatureType();
+      IFeatureType featureType = ((Feature) element).getFeatureType();
       return featureType.getQName();
     }
     else if( element instanceof IFeatureWrapper2 )
     {
-      final IFeatureType featureType = ((IFeatureWrapper2) element).getFeature().getFeatureType();
+      IFeatureType featureType = ((IFeatureWrapper2) element).getFeature().getFeatureType();
       return featureType.getQName();
     }
     else if( element instanceof FeatureAssociationTypeElement )
     {
-      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
+      FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
       return fate.getAssociationTypeProperty().getQName();
     }
     else if( element instanceof LinkedFeatureElement2 )
     {
-      return null;
+      LinkedFeatureElement2 linkedFeature = (LinkedFeatureElement2) element;
+      Feature decoratedFeature = linkedFeature.getDecoratedFeature();
+      if( decoratedFeature == null )
+        return null;
+
+      IFeatureType featureType = decoratedFeature.getFeatureType();
+      if( featureType == null )
+        return null;
+
+      return featureType.getQName();
     }
 
     return null;
