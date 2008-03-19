@@ -40,13 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.pub;
 
-import org.apache.commons.lang.NotImplementedException;
+import javax.xml.namespace.QName;
+
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * Objects of class EmptyNodeImplementation will be returned for all created nodes which this plugin doesn't recognize
@@ -89,7 +96,24 @@ public class EmptyNodeImplementation extends AbstractNode
    */
   public GM_Object[] getSperrzone( IBranch branch )
   {
-    // FIXME
-    throw new NotImplementedException();
+    try
+    {
+      GM_Point location = getLocation();
+      Geometry geometry = JTSAdapter.export( location );
+      QName name = getFeature().getFeatureType().getQName();
+
+      if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( name ) )
+      {
+        return new GM_Object[] { JTSAdapter.wrap( geometry.buffer( 15 ) ) };
+      }
+
+      return new GM_Object[] { JTSAdapter.wrap( geometry.buffer( 10 ) ) };
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return new GM_Object[] {};
   }
 }
