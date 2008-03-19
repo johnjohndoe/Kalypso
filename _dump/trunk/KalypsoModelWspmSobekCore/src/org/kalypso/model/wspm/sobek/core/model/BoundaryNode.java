@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
 import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * @author kuch
@@ -148,6 +149,15 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       return true;
 
     return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public GM_Object[] getSperrzone( IBranch branch )
+  {
+    // FIXME
+    throw new NotImplementedException();
   }
 
 }

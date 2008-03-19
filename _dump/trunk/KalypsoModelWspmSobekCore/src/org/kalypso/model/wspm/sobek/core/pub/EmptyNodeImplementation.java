@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.pub;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Objects of class EmptyNodeImplementation will be returned for all created nodes which this plugin doesn't recognize
@@ -81,4 +84,12 @@ public class EmptyNodeImplementation extends AbstractNode
     return true;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public GM_Object[] getSperrzone( IBranch branch )
+  {
+    // FIXME
+    throw new NotImplementedException();
+  }
 }

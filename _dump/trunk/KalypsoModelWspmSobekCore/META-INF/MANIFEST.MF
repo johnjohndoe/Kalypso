@@ -20,13 +20,6 @@ Export-Package: org.kalypso.model.wspm.sobek.core;
    org.kalypso.model.wspm.sobek.core.interfaces,
    org.kalypso.ogc.gml.map,
    org.kalypsodeegree.model.geometry",
- org.kalypso.model.wspm.sobek.core.digitools.crosssection;
-  uses:="org.kalypso.model.wspm.sobek.core.pub,
-   org.kalypso.ogc.gml.map.widgets,
-   org.kalypso.commons.command,
-   org.kalypso.model.wspm.sobek.core.interfaces,
-   org.kalypso.ogc.gml.map,
-   org.kalypsodeegree.model.geometry",
  org.kalypso.model.wspm.sobek.core.interfaces;
   uses:="org.kalypsodeegree.model.feature,
    org.kalypso.model.wspm.sobek.core.model,

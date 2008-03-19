@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -114,4 +115,7 @@ public interface INode
   public boolean isEmpty( );
 
   public boolean relaysOnGeometry( Geometry geometry ) throws GM_Exception;
+
+  /** sperrzone for a specific branch - needed for spacing between different flow network elements */
+  public GM_Object[] getSperrzone( IBranch branch );
 }

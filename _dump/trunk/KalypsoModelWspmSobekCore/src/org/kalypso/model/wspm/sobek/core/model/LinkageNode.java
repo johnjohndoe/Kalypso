@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.model;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
@@ -48,6 +49,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -139,8 +141,15 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
         final String id = "#" + branch.getFeature().getId(); //$NON-NLS-1$
         FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, id );
       }
-
     }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public GM_Object[] getSperrzone( IBranch branch )
+  {
+    // FIXME
+    throw new NotImplementedException();
+  }
 }

@@ -48,7 +48,13 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author kuch
@@ -75,7 +81,13 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
   {
     final Object objBranch = getFeature().getProperty( ISobekConstants.QN_LN_LINKS_TO_BRANCH );
     final Feature f;
-    if( objBranch instanceof Feature )
+
+    if( objBranch instanceof XLinkedFeature_Impl )
+    {
+      XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) objBranch;
+      f = lnk.getFeature();
+    }
+    else if( objBranch instanceof Feature )
       // this branch should never be reached according to the schema file
       f = (Feature) objBranch;
     else
@@ -146,5 +158,27 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
       f = feature.getWorkspace().getFeature( (String) objCsData );
 
     return f;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public GM_Object[] getSperrzone( IBranch branch )
+  {
+    if( !getLinkToBranch().equals( branch ) )
+      return new GM_Object[] {};
+
+    try
+    {
+      GM_Point location = getLocation();
+      Geometry geometry = JTSAdapter.export( location );
+      return new GM_Object[] { JTSAdapter.wrap( geometry.buffer( 10 ) ) };
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return new GM_Object[] {};
   }
 }

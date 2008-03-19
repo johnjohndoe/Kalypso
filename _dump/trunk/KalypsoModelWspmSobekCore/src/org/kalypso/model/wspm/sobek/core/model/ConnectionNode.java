@@ -40,12 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author kuch
@@ -87,4 +94,31 @@ public class ConnectionNode extends AbstractConnectionNode implements IConnectio
     return false;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public GM_Object[] getSperrzone( IBranch branch )
+  {
+    try
+    {
+      IBranch[] inflowingBranches = getInflowingBranches();
+      IBranch[] outflowingBranches = getOutflowingBranches();
+
+      if( !ArrayUtils.contains( inflowingBranches, branch ) && !ArrayUtils.contains( outflowingBranches, branch ) )
+        return new GM_Object[] {};
+
+      GM_Point location = getLocation();
+      Geometry geometry = JTSAdapter.export( location );
+      Geometry buffer = geometry.buffer( 10 );
+
+      GM_Object buffered = JTSAdapter.wrap( buffer );
+      return new GM_Object[] { buffered };
+    }
+    catch( GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return new GM_Object[] {};
+  }
 }
