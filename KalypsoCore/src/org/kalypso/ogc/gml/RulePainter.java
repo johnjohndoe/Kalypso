@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+
 import org.eclipse.swt.graphics.GC;
+import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LegendGraphic;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -53,21 +58,122 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl;
  */
 public class RulePainter
 {
-  public static void paint( final Rule rule, final GC gc ) throws Exception
+  public static void paint( Rule rule, GC gc ) throws Exception
   {
-    final Feature feature = Symbolizer_Impl.createPseudoFeature();
+    Feature feature = Symbolizer_Impl.createPseudoFeature();
 
-    final LegendGraphic legendGraphic = rule.getLegendGraphic();
+    LegendGraphic legendGraphic = rule.getLegendGraphic();
     if( legendGraphic != null )
     {
-      final Graphic graphic = legendGraphic.getGraphic();
+      Graphic graphic = legendGraphic.getGraphic();
       graphic.paint( gc, feature );
     }
     else
     {
-      final Symbolizer[] symbolizers = rule.getSymbolizers();
-      for( final Symbolizer symbolizer : symbolizers )
+      Symbolizer[] symbolizers = rule.getSymbolizers();
+      for( Symbolizer symbolizer : symbolizers )
         symbolizer.paint( gc, feature );
     }
+  }
+
+  /**
+   * This function returns the size an image should have, for showing the complete symbol without scaling. It can only
+   * check for legend graphics and point symbolizers.
+   * 
+   * @param rule
+   *            The rule.
+   * @return The size an image should have, for showing the complete symbol without scaling. It can only check for
+   *         legend graphics and point symbolizers.
+   */
+  public static Rectangle getSize( Rule rule )
+  {
+    try
+    {
+      LegendGraphic legendGraphic = rule.getLegendGraphic();
+      if( legendGraphic != null )
+      {
+        /* Get the legend graphic. */
+        Graphic graphic = legendGraphic.getGraphic();
+
+        return getSize( graphic );
+      }
+
+      Symbolizer[] symbolizers = rule.getSymbolizers();
+
+      int maxWidth = 0;
+      int maxHeight = 0;
+      for( Symbolizer symbolizer : symbolizers )
+      {
+        if( symbolizer instanceof PointSymbolizer )
+        {
+          PointSymbolizer pointSymbolizer = (PointSymbolizer) symbolizer;
+          Graphic graphic = pointSymbolizer.getGraphic();
+          if( graphic != null )
+          {
+            Rectangle size = getSize( graphic );
+
+            if( maxWidth < size.width )
+              maxWidth = size.width;
+
+            if( maxHeight < size.height )
+              maxHeight = size.height;
+          }
+
+          continue;
+        }
+
+        // TODO How to find out the size from the other symbolizers?
+      }
+
+      return new Rectangle( maxWidth, maxHeight );
+    }
+    catch( Exception ex )
+    {
+      ex.printStackTrace();
+      return new Rectangle( 0, 0 );
+    }
+  }
+
+  /**
+   * This function returns the original size of the image inside this graphic (not the destination size).
+   * 
+   * @param graphic
+   *            The graphic, which normally contains an image or some marks.
+   * @return The original size of the image.
+   */
+  private static Rectangle getSize( Graphic graphic )
+  {
+    int maxWidth = 0;
+    int maxHeight = 0;
+
+    Object[] marksAndExtGraphics = graphic.getMarksAndExtGraphics();
+    for( int i = 0; i < marksAndExtGraphics.length; i++ )
+    {
+      Object o = marksAndExtGraphics[i];
+      if( o instanceof ExternalGraphic )
+      {
+        ExternalGraphic externalGraphic = (ExternalGraphic) o;
+        BufferedImage asImage = externalGraphic.getAsImage();
+
+        if( asImage == null )
+          continue;
+
+        int width = asImage.getWidth();
+        int height = asImage.getWidth();
+
+        if( maxWidth < width )
+          maxWidth = width;
+
+        if( maxHeight < height )
+          maxHeight = height;
+
+        continue;
+      }
+
+      /* Ignore the marks. */
+      // Mark mark = (Mark) o;
+    }
+
+    return new Rectangle( maxWidth, maxHeight );
   }
 }

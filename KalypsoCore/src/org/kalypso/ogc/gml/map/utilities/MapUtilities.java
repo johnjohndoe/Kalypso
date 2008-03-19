@@ -114,14 +114,14 @@ public class MapUtilities
   }
 
   /**
-   * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
+   * Snaps the given GM_Point to a given geometry, if it lies into a specified radius.
    * 
    * @param mapPanel
    *            The MapPanel of the map.
-   * @param p
-   *            The AWT-Point which should be snapped.
+   * @param point
+   *            The GM_Point which should be snapped.
    * @param radiusPx
-   *            This radius will be converted to a world coord radius. Within this circle, the AWT-Point is beeing
+   *            This radius will be converted to a world coord radius. Within this circle, the GM_Point is beeing
    *            snapped.
    * @param type
    *            This type of snapping will be used. {@link SNAP_TYPE}

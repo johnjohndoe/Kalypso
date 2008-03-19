@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.awt.Rectangle;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
@@ -52,19 +54,19 @@ import org.kalypsodeegree.graphics.sld.Rule;
 
 public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
 {
-  private static final Object[] EMPTY_CHILDREN = new Object[] {};
+  private static Object[] EMPTY_CHILDREN = new Object[] {};
 
   private Rule m_rule = null;
 
   private ThemeStyleTreeObject m_parent = null;
 
-  public RuleTreeObject( final Rule rule, final ThemeStyleTreeObject parent )
+  public RuleTreeObject( Rule rule, ThemeStyleTreeObject parent )
   {
     m_rule = rule;
     m_parent = parent;
   }
 
-  public RuleTreeObject( final Object ruleObject, final ThemeStyleTreeObject parent )
+  public RuleTreeObject( Object ruleObject, ThemeStyleTreeObject parent )
   {
     // can be either a simple Rule or a collection of Pattern-Rules
     if( ruleObject instanceof Rule )
@@ -101,7 +103,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
    */
-  public Object[] getChildren( final Object o )
+  public Object[] getChildren( Object o )
   {
     return EMPTY_CHILDREN;
   }
@@ -109,7 +111,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
    */
-  public ImageDescriptor getImageDescriptor( final Object object )
+  public ImageDescriptor getImageDescriptor( Object object )
   {
     if( object != this )
       throw new IllegalStateException();
@@ -117,24 +119,48 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( m_rule == null )
       return null;
 
-    final Display display = Display.getCurrent();
+    /* Get the size of the symbol. It may be 0 / 0. */
+    Rectangle size = RulePainter.getSize( getRule() );
+
+    /* The default size. */
+    int width = 16;
+    int height = 16;
+
+    /* Adjust if neccessary. */
+    if( size != null && size.width > 0 )
+      width = size.width;
+
+    /* Adjust if neccessary. */
+    if( size != null && size.height > 0 )
+      height = size.height;
 
     /*
      * Draw the image on the fly to avoid the need to dispose it later. This is probably ok, because we wont have too
      * many RuleTreeObjects.
      */
-    final Image image = new Image( display, 16, 16 );
-    final GC gc = new GC( image );
+    Display display = Display.getCurrent();
+    Image image = new Image( display, width, height );
+    GC gc = new GC( image );
 
     try
     {
       gc.setAntialias( SWT.ON );
       RulePainter.paint( m_rule, gc );
 
-      final ImageData imageData = image.getImageData();
+      /* No need to resize. */
+      if( width == 16 && height == 16 )
+      {
+        ImageData imageData = image.getImageData();
+        return ImageDescriptor.createFromImageData( imageData );
+      }
+
+      /* Resize, if the image is not 16 / 16. */
+      Image resize = resize( image, 16, 16 );
+      ImageData imageData = resize.getImageData();
+
       return ImageDescriptor.createFromImageData( imageData );
     }
-    catch( final Throwable t )
+    catch( Throwable t )
     {
       t.printStackTrace();
 
@@ -145,13 +171,34 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
       gc.dispose();
       image.dispose();
     }
+  }
 
+  /**
+   * This function resizes the given image.
+   * 
+   * @param image
+   *            The old image.
+   * @param witdth
+   *            The new width.
+   * @param height
+   *            The new height.
+   */
+  private Image resize( Image image, int width, int height )
+  {
+    Image scaled = new Image( image.getDevice(), width, height );
+    GC gc = new GC( scaled );
+    gc.setAntialias( SWT.ON );
+    gc.setInterpolation( SWT.HIGH );
+    gc.drawImage( image, 0, 0, image.getBounds().width, image.getBounds().height, 0, 0, width, height );
+    gc.dispose();
+    image.dispose(); // don't forget about me!
+    return scaled;
   }
 
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
    */
-  public String getLabel( final Object o )
+  public String getLabel( Object o )
   {
     if( o != this )
       throw new IllegalStateException();
@@ -171,7 +218,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
    */
-  public Object getParent( final Object o )
+  public Object getParent( Object o )
   {
     if( o != this )
       throw new IllegalStateException();
@@ -192,7 +239,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   /**
    * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
    */
-  public String getTooltip( final Object element )
+  public String getTooltip( Object element )
   {
     if( element != this )
       throw new IllegalStateException();
