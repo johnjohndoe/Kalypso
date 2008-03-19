@@ -46,7 +46,7 @@ import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 
 /**
- * TODO: thow away and merge with {@link org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer}.
+ * TODO: throw away and merge with {@link org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer}.
  * 
  * @author kuch
  */

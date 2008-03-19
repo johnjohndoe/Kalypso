@@ -105,13 +105,32 @@ public class MapUtilities
    */
   public static GM_Point snap( MapPanel mapPanel, GM_Object geometry, Point p, int radiusPx, SNAP_TYPE type ) throws GM_Exception
   {
-    /* Get the JTS geometry. */
-    Geometry geometryJTS = JTSAdapter.export( geometry );
-
     /* Transform the point to a GM_Point. */
     GM_Point point = MapUtilities.transform( mapPanel, p );
     if( point == null )
       return null;
+
+    return snap( mapPanel, geometry, point, radiusPx, type );
+  }
+
+  /**
+   * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
+   * 
+   * @param mapPanel
+   *            The MapPanel of the map.
+   * @param p
+   *            The AWT-Point which should be snapped.
+   * @param radiusPx
+   *            This radius will be converted to a world coord radius. Within this circle, the AWT-Point is beeing
+   *            snapped.
+   * @param type
+   *            This type of snapping will be used. {@link SNAP_TYPE}
+   * @return The GM_Point snapped on the geometry.
+   */
+  public static GM_Point snap( MapPanel mapPanel, GM_Object geometry, GM_Point point, int radiusPx, SNAP_TYPE type ) throws GM_Exception
+  {
+    /* Get the JTS geometry. */
+    Geometry geometryJTS = JTSAdapter.export( geometry );
 
     com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
 
