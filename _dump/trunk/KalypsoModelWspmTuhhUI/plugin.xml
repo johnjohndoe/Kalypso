@@ -219,4 +219,12 @@
             </category>
          </provider>
       </extension>
+      <extension
+            point="org.kalypso.model.wspm.core.reparatorrule">
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution"
+               name="Bewuchs hinzufügen">
+         </reparator>
+      </extension>
 </plugin>

@@ -87,21 +87,25 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
       Double DP_l = (Double) point_l.getValue( iDP );
       for( int i = leftIndex - 1; i >= 0; i-- )
       {
-        if( AX_l * AY_l * DP_l != 0.0 )
-        {
-          profil.setActivePoint( point_l );
-          break;
-        }
         final IRecord point = profil.getPoint( i );
         final Double AX = (Double) point.getValue( iAX );
         final Double AY = (Double) point.getValue( iAY );
         final Double DP = (Double) point.getValue( iDP );
         if( AX_l == 0.0 & AX != 0.0 )
-          point_l.setValue( iAX, AX );
+          AX_l = AX;
         if( AY_l == 0.0 & AY != 0.0 )
-          point_l.setValue( iAY, AY );
+          AY_l = AY;
         if( DP_l == 0.0 & DP != 0.0 )
-          point_l.setValue( iDP, DP );
+          DP_l = DP;
+        if( AX_l * AY_l * DP_l != 0.0 )
+        {
+          point_l.setValue( iAX, AX_l );
+          point_l.setValue( iAY, AY_l );
+          point_l.setValue( iDP, DP_l );
+          profil.setActivePoint( point_l );
+          break;
+        }
+
       }
     }
     final int rightIndex = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
@@ -123,11 +127,19 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
         final Double AY = (Double) point.getValue( iAY );
         final Double DP = (Double) point.getValue( iDP );
         if( AX_r == 0.0 & AX != 0.0 )
-          point_r.setValue( iAX, AX );
+          AX_r= AX;
         if( AY_r == 0.0 & AY != 0.0 )
-          point_r.setValue( iAY, AY );
+          AY_r = AY ;
         if( DP_r == 0.0 & DP != 0.0 )
-          point_r.setValue( iDP, DP );
+          DP_r =  DP ;
+        if( AX_r * AY_r * DP_r != 0.0 )
+        {
+          point_r.setValue( iAX, AX_r );
+          point_r.setValue( iAY, AY_r );
+          point_r.setValue( iDP, DP_r );
+          profil.setActivePoint( point_r );
+          break;
+        }
       }
     }
     return true;

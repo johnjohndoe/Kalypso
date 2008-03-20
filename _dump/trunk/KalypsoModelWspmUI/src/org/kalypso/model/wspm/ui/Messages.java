@@ -153,6 +153,12 @@ public class Messages extends NLS
 
   public static String ResourceValidatorMarkerCollector_2;
 
+  public static String TableView_10;
+
+  public static String TableView_11;
+
+  public static String ValidateProfilesActionDelegate_0;
+
   public static String ValidationProfilListener_0;
 
   public static String AbstractLegendViewActionDelegate_0;
@@ -426,8 +432,8 @@ public class Messages extends NLS
   public static String PropertyEditActionDelegate_1;
 
   public static String PropertyEditActionDelegate_2;
-
-  public static String SelectionPointsProvider_0;
+  
+   public static String SelectionPointsProvider_0;
 
   public static String SelectionPointsProvider_1;
 

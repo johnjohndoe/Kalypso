@@ -49,21 +49,24 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.ui.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author kimwerner
  */
-public class FlipProfileActionDelegate extends ActionDelegate
+public class ValidateProfilesActionDelegate extends ActionDelegate
 {
   private IFeatureSelection m_selection;
 
@@ -81,7 +84,7 @@ public class FlipProfileActionDelegate extends ActionDelegate
    * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
    *      org.eclipse.swt.widgets.Event)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public void runWithEvent( IAction action, Event event )
   {
@@ -90,12 +93,13 @@ public class FlipProfileActionDelegate extends ActionDelegate
     final List<Feature> selectedProfiles = new ArrayList<Feature>();
 
     final Shell shell = event.display.getActiveShell();
+
     final Object fe = m_selection.getFirstElement();
-    CommandableWorkspace ws=null;
+    CommandableWorkspace ws = null;
 
     if( fe instanceof FeatureAssociationTypeElement )
     {
-      final  FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
       final IRelationType rt = fate.getAssociationTypeProperty();
       final Feature parentFeature = fate.getParentFeature();
       if( rt.isList() )
@@ -104,14 +108,14 @@ public class FlipProfileActionDelegate extends ActionDelegate
       {
         foundProfiles.add( (Feature) parentFeature.getProperty( rt ) );
       }
-      ws=m_selection.getWorkspace( parentFeature );
+      ws = m_selection.getWorkspace( parentFeature );
     }
     else if( fe instanceof Feature )
     {
       final IRelationType rt = ((Feature) fe).getParentRelation();
       final Feature parentFeature = ((Feature) fe).getParent();
       selectedProfiles.addAll( m_selection.toList() );
-      ws=m_selection.getWorkspace( parentFeature );
+      ws = m_selection.getWorkspace( parentFeature );
       if( rt.isList() )
         foundProfiles.addAll( (FeatureList) parentFeature.getProperty( rt ) );
       else
@@ -122,13 +126,14 @@ public class FlipProfileActionDelegate extends ActionDelegate
 
     if( foundProfiles.size() == 0 )
     {
-      MessageDialog.openWarning( shell, Messages.FlipProfileActionDelegate_1, Messages.FlipProfileActionDelegate_2 );
+      MessageDialog.openWarning( shell, Messages.PropertyEditActionDelegate_1, Messages.PropertyEditActionDelegate_2 );
       return;
     }
-    final IWizard flipProfileWizard = new FlipProfileWizard(ws, foundProfiles, selectedProfiles );
+
+    final IWizard validateProfilesWizard = new ValidateProfilesWizard( ws,  foundProfiles, selectedProfiles );
 
     /* show wizard */
-    final WizardDialog2 dialog = new WizardDialog2( shell, flipProfileWizard );
+    final WizardDialog2 dialog = new WizardDialog2( shell, validateProfilesWizard );
     dialog.setRememberSize( true );
     dialog.open();
   }

@@ -234,6 +234,11 @@
                id="org.kalypso.model.wspm.ui.action.PropertyEditAction"
                label="%action.label.2">
          </action>
+         <action
+               class="org.kalypso.model.wspm.ui.action.ValidateProfilesActionDelegate"
+               id="org.kalypso.model.wspm.ui.action.ValidateProfilesAction"
+               label="Profile validieren">
+         </action>
       </objectContribution>
             <objectContribution
             adaptable="false"

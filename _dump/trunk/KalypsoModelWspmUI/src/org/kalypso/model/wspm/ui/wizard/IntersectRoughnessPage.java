@@ -151,7 +151,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
 
     m_assignmentGroup.setDialogSettings( getDialogSettings() );
     final IResource initialSelection = getAssignmentPath() == null ? null : root.findMember( getAssignmentPath() );
-    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, Messages.IntersectRoughnessPage_9, new String[] { "gml" }, root, new ResourceSelectionValidator() ); //$NON-NLS-2$
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), initialSelection, Messages.IntersectRoughnessPage_9, new String[] { "gml" }, root, new ResourceSelectionValidator() ); //$NON-NLS-2$ //$NON-NLS-1$
     m_assignmentGroup.setSelectionDialog( dialog );
 
     final Control assignmentGroup = m_assignmentGroup.createControl( composite );

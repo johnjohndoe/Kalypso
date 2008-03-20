@@ -53,6 +53,9 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypsodeegree.model.feature.Feature;
@@ -67,26 +70,34 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
    */
   public void run( IMarker marker )
   {
-    final Feature feature = getFeature( marker );
-    if( feature != null )
+    final CommandableWorkspace ws = getWorkspace( marker );
+
+    Feature feature;
+    try
     {
-      final IProfil profil = ProfileFeatureFactory.toProfile( feature );
-      if( profil != null )
+      feature = ws == null ? null : ws.getFeature( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString() );
+
+      if( feature != null )
       {
-        final boolean resolved = resolve( profil );
-        ProfileFeatureFactory.toFeature( profil, feature );
-        if( resolved )
-          try
-          {
-            marker.delete();
-          }
-          catch( CoreException e )
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
+        final IProfil profil = ProfileFeatureFactory.toProfile( feature );
+        if( profil != null )
+        {
+          final boolean resolved = resolve( profil );
+          final FeatureChange[] changes = ProfileFeatureFactory.toFeatureAsChanges( profil, feature );
+
+          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( ws, changes );
+
+          ws.postCommand( command );
+
+        }
       }
     }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
   }
 
   private final String m_label;
@@ -95,7 +106,7 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
 
   private final Image m_image;
 
-  private Feature getFeature( final IMarker marker )
+  private CommandableWorkspace getWorkspace( final IMarker marker )
   {
     try
     {
@@ -109,8 +120,7 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
         {
           final IEditorPart editor = editorRef.getEditor( false );
           final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
-          final CommandableWorkspace ws = (gmlEditor.getTreeView() == null) ? null : gmlEditor.getTreeView().getWorkspace();
-          return (ws == null) ? null : ws.getFeature( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString() );
+          return gmlEditor.getTreeView() == null ? null : gmlEditor.getTreeView().getWorkspace();
         }
       }
     }
@@ -128,7 +138,7 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
   public AbstractProfilMarkerResolution( final String label, final String description, final Image image )
   {
     m_label = label;
-    m_description = description==null?label:description;
+    m_description = description == null ? label : description;
     m_image = image;
   }
 

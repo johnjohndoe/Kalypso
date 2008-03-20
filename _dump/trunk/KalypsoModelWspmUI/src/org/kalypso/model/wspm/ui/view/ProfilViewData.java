@@ -50,7 +50,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.XMLMemento;
-import org.kalypso.observation.result.IComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

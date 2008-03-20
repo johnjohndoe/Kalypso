@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.ui.Messages;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
+final public class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
 {
   private final IResource m_resource;
 

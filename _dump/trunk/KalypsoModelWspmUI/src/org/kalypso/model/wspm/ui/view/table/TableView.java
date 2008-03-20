@@ -330,13 +330,13 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       final IMarkerResolution2[] markerRes = getResolutions( marker );
       if( markerRes==null || markerRes.length == 0 )
       {
-        quickFix.setToolTipText("kein quickFix vorhanden");
+        quickFix.setToolTipText(Messages.TableView_10);
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_DLCL_QUICK_FIX_DISABLED ) ) );
       }
         else
       {
         final String toolTip =  markerRes[0].getDescription();
-        quickFix.setToolTipText(toolTip==null?"quickFix":toolTip );
+        quickFix.setToolTipText(toolTip==null?Messages.TableView_11:toolTip );
         quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ELCL_QUICK_FIX_ENABLED ) ) );
         quickFix.addHyperlinkListener( new HyperlinkAdapter()
         {

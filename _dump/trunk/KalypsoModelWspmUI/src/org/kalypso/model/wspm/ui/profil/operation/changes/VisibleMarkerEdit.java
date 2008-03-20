@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.profil.operation.changes;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
-import org.kalypso.observation.result.IComponent;
 
 public class VisibleMarkerEdit implements IProfilChange
 {
