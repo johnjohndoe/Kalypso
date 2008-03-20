@@ -40,13 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-import java.io.IOException;
-import java.net.URL;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-
 import org.kalypso.repository.container.IRepositoryContainer;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 
 /**
  * @author kuch
@@ -64,21 +58,6 @@ public interface ISobekModelMember extends IModelMember
   }
 
   public IRepositoryContainer getRepositoryContainer( );
-
-  /**
-   * @param targetDir
-   *            directory into which result is written
-   */
-  public void writePi( URL targetDir ) throws IOException, GM_Exception, DatatypeConfigurationException, Exception;
-
-  /**
-   * @param targetDir
-   *            directory into which result is written
-   * @param target
-   *            part of a Sobek model that shall be written into an XML file (with fixed filename)
-   */
-
-  public void writePi( final URL targetDir, final TARGET target ) throws IOException, GM_Exception, DatatypeConfigurationException, Exception;
 
   public void dispose( );
 }
