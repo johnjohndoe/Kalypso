@@ -46,6 +46,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -181,4 +182,46 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
 
     return new GM_Object[] {};
   }
+
+  public enum DEFAULT_ROUGHNESS
+  {
+    eChezy,
+    eManning,
+    eStricklerKn,
+    eStricklerKs,
+    eWhiteColebrook,
+    eNikuradse, // can't be set in Sobek GUI
+    eEngelund, // can't be set in Sobek GUI
+    eInherited, // can't be set in Sobek GUI, TODO roughness type = inherited?!?
+    eDeBosAndBijkerk;
+
+    public double getDefaultRoughness( )
+    {
+      final DEFAULT_ROUGHNESS defRoughness = DEFAULT_ROUGHNESS.valueOf( name() );
+      switch( defRoughness )
+      {
+        case eChezy:
+          return 45; // [m^(1/2)*s^(-1)]
+
+        case eManning:
+          return 0.03; // [s*m^(-1/3)]
+
+        case eStricklerKn:
+          return 0.2; // [m]
+
+        case eStricklerKs:
+          return 33; // [m^(1/3)*s^(-1)]
+
+        case eWhiteColebrook:
+          return 0.2; // [m]
+
+        case eDeBosAndBijkerk:
+          return 33.8; // [-]
+
+        default:
+          return Double.NaN;
+      }
+    }
+  }
+
 }
