@@ -227,7 +227,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
           break;
 
         case DB_USE_PREDEFINED:
-          importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, scenarioFolder, landuseProperty, assetValuesCollectionName, damageFunctionsCollectionName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
+          importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, landuseProperty, assetValuesCollectionName, damageFunctionsCollectionName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
 
           break;
 

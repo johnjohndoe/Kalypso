@@ -1,6 +1,10 @@
 package org.kalypso.risk.model.schema.binding;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
+import org.kalypso.risk.model.utils.RiskPolygonStatistics;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -12,6 +16,8 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   private long m_statisticsNumberOfRasterCells = 0;
 
   private double m_statisticsAverageAnnualDamage = 0.0;
+
+  private final Map<Double, RiskPolygonStatistics> m_statistics = new HashMap<Double, RiskPolygonStatistics>();
 
   //
   // private double m_riskBorderLowMiddle = Double.NaN;
@@ -93,12 +99,15 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     try
     {
       // the returned calculated damage value must not be greater than the input asset value!
-      // So, the value of the damage function must be less than 1, because there can be no greater damage than the
-      // specified asset value!
-      final double damagefunctionValue = damageFunction.getResult( depth ) / 100;
+      // So, the value of the damage function must be less than or equal '1', because there can be no greater damage
+      // than the specified asset value!
+      double damagefunctionValue = damageFunction.getResult( depth ) / 100;
 
       if( damagefunctionValue > 1 )
-        KalypsoRiskDebug.OPERATION.printf( "%s", "WARNING: damage value > asset value!\n" );
+      {
+        KalypsoRiskDebug.OPERATION.printf( "%s", "WARNING: damage function vlaue > '1'! Change value to '1'\n" );
+        damagefunctionValue = 1.0;
+      }
 
       return assetValue * damagefunctionValue;
     }
@@ -107,6 +116,18 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
       e.printStackTrace();
       return Double.NaN;
     }
+  }
+
+  public void updateStatistics( final double value, final double returnPeriod )
+  {
+    RiskPolygonStatistics polygonStatistics = m_statistics.get( returnPeriod );
+    if( polygonStatistics == null )
+    {
+      polygonStatistics = new RiskPolygonStatistics( returnPeriod );
+      m_statistics.put( returnPeriod, polygonStatistics );
+    }
+
+    polygonStatistics.update( value );
   }
 
   /**

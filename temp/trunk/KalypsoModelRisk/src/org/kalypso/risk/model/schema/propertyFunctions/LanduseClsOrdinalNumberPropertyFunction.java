@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" );
 
   private final static QName PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" );
 
@@ -78,7 +78,7 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
     {
       final Feature member = (Feature) feature.getProperty( XLINKED_FEATURE );
       if( member == null )
-        return new Integer(-1);
+        return new Integer( -1 );
       else
       {
         final Object object = member.getProperty( PROPERTY );

@@ -177,7 +177,7 @@ public class TestRiskModel extends TestCase
     /* IMPORT PREDEFINED DATA */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Konvertiere Landnutzung in GML...\n" );
 
-    final ICoreRunnableWithProgress importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, folder, landUseProperty, assetValuesCollectionName, damageFunctionsCollectionName, predefinedAssetValueClassesCollection, predefinedDamageFunctionsCollection, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
+    final ICoreRunnableWithProgress importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, landUseProperty, assetValuesCollectionName, damageFunctionsCollectionName, predefinedAssetValueClassesCollection, predefinedDamageFunctionsCollection, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
     RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importLanduseRunnable );
 
     /* IMPORT WATERDEPTH */
@@ -227,7 +227,7 @@ public class TestRiskModel extends TestCase
 
     /* CREATE SPECIFIC DAMAGE */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge spezifischen Schaden je Fliesstiefe...\n" );
-    final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterDataModel, vectorDataModel, folder );
+    final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterControlDataModel, rasterDataModel, vectorDataModel, folder );
     RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
 
     /* CREATE RSIK ZONES */

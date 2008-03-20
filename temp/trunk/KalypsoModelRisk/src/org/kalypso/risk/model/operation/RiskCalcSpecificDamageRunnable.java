@@ -3,6 +3,8 @@
  */
 package org.kalypso.risk.model.operation;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -11,8 +13,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
+import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -28,8 +32,11 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
 
   private final IVectorDataModel m_vectorDataModel;
 
-  public RiskCalcSpecificDamageRunnable( final IRasterDataModel rasterDataModel, final IVectorDataModel vectorDataModel, final IFolder scenarioFolder )
+  private final IRasterizationControlModel m_controlModel;
+
+  public RiskCalcSpecificDamageRunnable( final IRasterizationControlModel controlModel, final IRasterDataModel rasterDataModel, final IVectorDataModel vectorDataModel, final IFolder scenarioFolder )
   {
+    m_controlModel = controlModel;
     m_rasterDataModel = rasterDataModel;
     m_vectorDataModel = vectorDataModel;
     m_scenarioFolder = scenarioFolder;
@@ -38,6 +45,8 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
   public IStatus execute( IProgressMonitor monitor )
   {
     final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = m_rasterDataModel.getSpecificDamageCoverageCollection();
+    final List<ILanduseClass> landuseClassesList = m_controlModel.getLanduseClassesList();
+
     final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = m_vectorDataModel.getLandusePolygonCollection();
 
     if( m_rasterDataModel.getWaterlevelCoverageCollection().size() == 0 )
@@ -62,7 +71,7 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
         monitor.subTask( Messages.getString( "DamagePotentialCalculationHandler.10" ) + srcAnnualCoverages.getReturnPeriod() ); //$NON-NLS-1$
 
         /* create annual damage coverage collection */
-        final IAnnualCoverageCollection dstSpecificDamageCoverages = RiskModelHelper.createSpecificDamageCoverages( m_scenarioFolder, polygonCollection, srcAnnualCoverages, specificDamageCoverageCollection );
+        final IAnnualCoverageCollection dstSpecificDamageCoverages = RiskModelHelper.createSpecificDamageCoverages( m_scenarioFolder, polygonCollection, srcAnnualCoverages, specificDamageCoverageCollection, landuseClassesList );
 
         /* fireModellEvent to redraw a map */
         final GMLWorkspace workspace = m_rasterDataModel.getFeature().getWorkspace();

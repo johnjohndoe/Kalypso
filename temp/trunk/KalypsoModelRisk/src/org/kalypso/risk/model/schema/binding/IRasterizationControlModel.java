@@ -5,6 +5,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 
 public interface IRasterizationControlModel extends IModel
@@ -29,19 +31,17 @@ public interface IRasterizationControlModel extends IModel
 
   public static final QName PROPERTY_ASSET_VALUE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "assetValueClassMember" );
 
-  public static final QName PROPERTY_ADMINISTRATION_UNIT_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "administrationUnitMember" );
-
   public static final QName PROPERTY_DAMAGE_FUNCTION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionMember" );
 
   public static final QName PROPERTY_RISKZONE_DEFINITION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskZoneDefinitionMember" );
+
+  public static final QName PROPERTY_STATISTIC_OBS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskStatisticResultMember" );
 
   public List<ILanduseClass> getLanduseClassesList( );
 
   public List<IAssetValueClass> getAssetValueClassesList( );
 
   public List<IDamageFunction> getDamageFunctionsList( );
-
-  public List<IAdministrationUnit> getAdministrationUnits( );
 
   public ILanduseClass createNewLanduseClass( );
 
@@ -59,18 +59,14 @@ public interface IRasterizationControlModel extends IModel
    * @return new IAssetValueClass, or <code>null</code> if landuse class or administration unit with the given ID does
    *         not exists
    */
-  public IAssetValueClass createNewAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final Double value, final String description );
-
-  public IAssetValueClass getAssetValueClass( final String landuseClassGmlID, final String administrationUnitGmlID, final boolean createIfNotExists );
+  public IAssetValueClass createNewAssetValueClass( final Double value, final String name, final String description );
 
   public boolean containsLanduseClass( final String landuseClassName );
 
   public int getNextAvailableLanduseClassOrdinalNumber( );
 
-  public IAdministrationUnit createNewAdministrationUnit( final String name, final String description );
-
   /**
-   * The list of GmlIDs of the Landuse classes with the given name (because there is no guarantee that landuse name is
+   * The list of GmlIDs of the landuse classes with the given name (because there is no guarantee that landuse name is
    * unique)
    * 
    * @param landuseClassName
@@ -82,5 +78,9 @@ public interface IRasterizationControlModel extends IModel
   public void resetStatistics( );
 
   public void fixStatisticsForShowingToUser( );
+
+  public IDamageFunction getDamageFunction( String name );
+
+  public IObservation<TupleResult> getStatisticObs( );
 
 }

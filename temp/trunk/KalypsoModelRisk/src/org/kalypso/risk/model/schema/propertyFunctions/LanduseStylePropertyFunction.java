@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -45,7 +45,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.Feature;
@@ -56,9 +55,9 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class LanduseStylePropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName m_clsMember = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+  private final static QName m_clsMember = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" );
 
-  private final static QName m_name = new QName( NS.GML3, "name" );
+  private final static QName m_name = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "name" );
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)

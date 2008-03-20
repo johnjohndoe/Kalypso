@@ -57,11 +57,11 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
         final IEvaluationContext context = handlerService.getCurrentState();
         final SzenarioDataProvider scenarioDataProvider = (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
         final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-        final IRasterDataModel model = scenarioDataProvider.getModel( IRasterDataModel.class );
 
+        final IRasterDataModel rasterDataModel = scenarioDataProvider.getModel( IRasterDataModel.class );
         final IVectorDataModel vectorDataModel = scenarioDataProvider.getModel( IVectorDataModel.class );
         final IRasterizationControlModel rasterizationControlModel = scenarioDataProvider.getModel( IRasterizationControlModel.class );
-        // TODO: check needed? this model is not used in the following code....
+
         if( rasterizationControlModel.getAssetValueClassesList().size() == 0 )
         {
           MessageDialog.openError( shell, Messages.getString( "DamagePotentialCalculationHandler.7" ), Messages.getString( "DamagePotentialCalculationHandler.8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -71,26 +71,26 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
         final MapPanel mapPanel = mapView.getMapPanel();
 
         /* wait for map to load */
-        if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Berechne Schadenspotential", "Fehler beim Öffnen der Karte" ) )
+        if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "Berechne spezifischer Schaden", "Fehler beim Öffnen der Karte" ) )
           return null;
 
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
 
-        final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( model, vectorDataModel, scenarioFolder );
+        final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterizationControlModel, rasterDataModel, vectorDataModel, scenarioFolder );
 
         IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
         ErrorDialog.openError( shell, "Fehler", "Fehler bei der Schadensberechnung", execute );
 
         if( !execute.isOK() )
-        {
           KalypsoRiskPlugin.getDefault().getLog().log( execute );
-        }
 
         scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+        scenarioDataProvider.postCommand( IRasterizationControlModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$
+
         /* Undoing this operation is not possible because old raster files are deleted */
         scenarioDataProvider.saveModel( new NullProgressMonitor() );
 
-        RiskModelHelper.updateDamageLayers( scenarioFolder, model, mapModell );
+        RiskModelHelper.updateDamageLayers( scenarioFolder, rasterDataModel, mapModell );
 
         if( mapView != null )
           mapPanel.invalidateMap();

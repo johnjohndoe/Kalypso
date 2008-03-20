@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.utils;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,12 +65,12 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.model.actions.dataImport.landuse.Messages;
-import org.kalypso.risk.model.schema.binding.IAdministrationUnit;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -83,10 +84,10 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * @author Thomas Jung
  * 
  */
-public class RiskImportLanduseHelper
+public class RiskLanduseHelper
 {
 
-  public static void createNewLanduseClasses( final HashSet<String> landuseTypeSet, final IRasterizationControlModel controlModel, final List<IAdministrationUnit> administrationUnits, List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
+  public static void createNewLanduseClasses( final HashSet<String> landuseTypeSet, final IRasterizationControlModel controlModel, List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final String landuseType : landuseTypeSet )
     {
@@ -96,11 +97,26 @@ public class RiskImportLanduseHelper
         landuseClass.setName( landuseType );
         landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
         landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-        landuseClass.setDescription( "Created as value of imported landuse shape" ); //$NON-NLS-1$
-        for( final IAdministrationUnit administrationUnit : administrationUnits )
-          controlModel.createNewAssetValueClass( landuseClass.getGmlID(), administrationUnit.getGmlID(), 0.0, "" ); //$NON-NLS-1$
+        landuseClass.setDescription( "Created as value of imported landuse shape" );
       }
     }
+  }
+
+  public static IRiskLanduseStatistic getLanduseStatisticEntry( final ILanduseClass landuseClass, final int returnPeriod, final double cellSize )
+  {
+    if( !landuseClass.containsStatisticEntry( returnPeriod ) )
+    {
+      final IRiskLanduseStatistic entry = landuseClass.createNewStatisticEntry();
+      final String entryName = String.format( "HQ%d", returnPeriod );
+
+      entry.setName( entryName );
+      entry.setReturnPeriod( returnPeriod );
+      entry.setCellSize( new BigDecimal( cellSize ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+      entry.setDescription( "statistics for the flood event with a return period " + returnPeriod + " [a]" );
+      return entry;
+    }
+
+    return landuseClass.getStatistic( returnPeriod );
   }
 
   @SuppressWarnings("unchecked")
@@ -147,13 +163,12 @@ public class RiskImportLanduseHelper
     {
       final Map<String, String> landuseClassesGmlIDsMap = new HashMap<String, String>();
       final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<String, String>();
-      final Map<String, String> administrationUnitsGmlIDsMap = new HashMap<String, String>();
       final URL url = scenarioFolder.getProject().getParent().getRawLocation().append( "/" + externalProjectName + "/Basis/models/RasterizationControlModel.gml" ).toFile().toURL(); //$NON-NLS-1$ //$NON-NLS-2$
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, new UrlResolver(), null );
       final List<Feature> landuseClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
       final List<Feature> assetValueClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
       final List<Feature> damageFunctionsFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
-      final List<Feature> administrationUnitsFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ADMINISTRATION_UNIT_MEMBER );
+
       for( final Feature importedFeature : damageFunctionsFeatureList )
       {
         final IDamageFunction entry = (IDamageFunction) importedFeature.getAdapter( IDamageFunction.class );
@@ -166,16 +181,7 @@ public class RiskImportLanduseHelper
           damageFunctionsGmlIDsMap.put( entry.getGmlID(), newDamageFunction.getGmlID() );
         }
       }
-      for( final Feature importedFeature : administrationUnitsFeatureList )
-      {
-        final IAdministrationUnit entry = (IAdministrationUnit) importedFeature.getAdapter( IAdministrationUnit.class );
-        if( entry != null )
-        {
-          final String description = "[Import from " + externalProjectName + "] " + entry.getDescription(); //$NON-NLS-1$ //$NON-NLS-2$
-          final IAdministrationUnit newAdministrationUnit = controlModel.createNewAdministrationUnit( entry.getName(), description );
-          administrationUnitsGmlIDsMap.put( entry.getGmlID(), newAdministrationUnit.getGmlID() );
-        }
-      }
+
       for( final Feature importedFeature : landuseClassesFeatureList )
       {
         final ILanduseClass entry = (ILanduseClass) importedFeature.getAdapter( ILanduseClass.class );
@@ -198,10 +204,9 @@ public class RiskImportLanduseHelper
         final IAssetValueClass entry = (IAssetValueClass) importedFeature.getAdapter( IAssetValueClass.class );
         if( entry != null )
         {
-          final String landuseClassGmlID = landuseClassesGmlIDsMap.get( entry.getLanduseClassGmlID() );
-          final String administrationUnitGmlID = administrationUnitsGmlIDsMap.get( entry.getAdministrationUnitGmlID() );
           final String description = "[Import from " + externalProjectName + "] " + entry.getDescription(); //$NON-NLS-1$ //$NON-NLS-2$
-          controlModel.createNewAssetValueClass( landuseClassGmlID, administrationUnitGmlID, entry.getAssetValue(), description );
+          final String name = entry.getName();
+          controlModel.createNewAssetValueClass( entry.getAssetValue(), name, description );
         }
       }
     }
@@ -212,42 +217,24 @@ public class RiskImportLanduseHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static void handleUserDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<IAdministrationUnit> administrationUnits, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, List<Feature> predefinedLanduseColorsCollection )
+  public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, List<Feature> predefinedLanduseColorsCollection )
   {
-    for( final Feature feature : predefinedDamageFunctionsCollection )
+    createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
+
+    createAssetValues( assetValuesCollectionName, controlModel, predefinedAssetValueClassesCollection, propName, propDataMember, propValue, predefinedLanduseColorsCollection );
+  }
+
+  @SuppressWarnings("unchecked")
+  private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, List<Feature> predefinedLanduseColorsCollection )
+  {
+    /* asset values */
+    for( final Feature assetFeatureClass : predefinedAssetValueClassesCollection )
     {
-      final List<String> names = (List<String>) feature.getProperty( propName );
-      if( names != null && names.size() > 0 )
-        if( names.get( 0 ).equals( damageFunctionsCollectionName ) )
-        {
-          final List<Feature> dataMemberList = (List<Feature>) feature.getProperty( propDataMember );
-          for( final Feature featureMember : dataMemberList )
-          {
-            final List<String> nameList = ((List<String>) featureMember.getProperty( propName ));
-            if( nameList != null && nameList.size() > 0 )
-            {
-              final String name = nameList.get( 0 );
-              final String value = featureMember.getProperty( propValue ).toString();
-              final String description = (String) featureMember.getProperty( propDesc );
-              final IDamageFunction damageFunction = controlModel.createNewDamageFunction();
-              damageFunction.setName( name );
-              if( description != null && description.length() > 0 )
-                damageFunction.setDescription( description + " [" + damageFunctionsCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
-              else
-                damageFunction.setDescription( "[" + damageFunctionsCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
-              damageFunction.setFunction( value );
-            }
-          }
-          break;
-        }
-    }
-    for( final Feature feature : predefinedAssetValueClassesCollection )
-    {
-      final List<String> names = (List<String>) feature.getProperty( propName );
+      final List<String> names = (List<String>) assetFeatureClass.getProperty( propName );
       if( names != null && names.size() > 0 )
         if( names.get( 0 ).equals( assetValuesCollectionName ) )
         {
-          final List<Feature> dataMemberList = (List<Feature>) feature.getProperty( propDataMember );
+          final List<Feature> dataMemberList = (List<Feature>) assetFeatureClass.getProperty( propDataMember );
           for( final Feature featureMember : dataMemberList )
           {
             final List<String> nameList = ((List<String>) featureMember.getProperty( propName ));
@@ -256,28 +243,24 @@ public class RiskImportLanduseHelper
               final String landuseClassName = nameList.get( 0 );
               final Double assetValue = new Double( featureMember.getProperty( propValue ).toString() );
 
+              /* create new landuse classes */
               if( !controlModel.containsLanduseClass( landuseClassName ) )
               {
                 final ILanduseClass newLanduseClass = controlModel.createNewLanduseClass();
                 newLanduseClass.setName( landuseClassName );
                 newLanduseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-                newLanduseClass.setColorStyle( RiskImportLanduseHelper.getLanduseClassDefaultColor( landuseClassName, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
-
-                newLanduseClass.setDescription( "Created by " + assetValuesCollectionName + " asset values import" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-                final String landuseClassGmlID = newLanduseClass.getGmlID();
-                for( final IAdministrationUnit administrationUnit : administrationUnits )
-                  controlModel.createNewAssetValueClass( landuseClassGmlID, administrationUnit.getGmlID(), assetValue, "[" + assetValuesCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
+                newLanduseClass.setColorStyle( RiskLanduseHelper.getLanduseClassDefaultColor( landuseClassName, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
+                newLanduseClass.setDescription( "Created by " + assetValuesCollectionName + " asset values import" );
               }
-              else
+
+              // we assign here the asset value to the landuse class
+              final IAssetValueClass assetValueClass = controlModel.createNewAssetValueClass( assetValue, landuseClassName, "[" + assetValuesCollectionName + "]" );
+
+              final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
+              for( ILanduseClass landuseClass : landuseClassesList )
               {
-                final String landuseClassGmlID = controlModel.getLanduseClassID( landuseClassName ).get( 0 );
-                for( final IAdministrationUnit administrationUnit : administrationUnits )
-                {
-                  final IAssetValueClass assetValueClass = controlModel.getAssetValueClass( landuseClassGmlID, administrationUnit.getGmlID(), true );
-                  assetValueClass.setAssetValue( assetValue );
-                  assetValueClass.setDescription( "[" + assetValuesCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
-                }
+                if( landuseClass.getName().equals( landuseClassName ) )
+                  landuseClass.setAssetValue( assetValueClass );
               }
             }
           }
@@ -287,7 +270,48 @@ public class RiskImportLanduseHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final IFolder scenarioFolder, final List shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
+  private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
+  {
+    /* damage functions */
+    for( final Feature damageFeatureClass : predefinedDamageFunctionsCollection )
+    {
+      final List<String> names = (List<String>) damageFeatureClass.getProperty( propName );
+      if( names != null && names.size() > 0 )
+        if( names.get( 0 ).equals( damageFunctionsCollectionName ) )
+        {
+          final List<Feature> dataMemberList = (List<Feature>) damageFeatureClass.getProperty( propDataMember );
+          for( final Feature featureMember : dataMemberList )
+          {
+            final List<String> nameList = ((List<String>) featureMember.getProperty( propName ));
+            if( nameList != null && nameList.size() > 0 )
+            {
+              final String name = nameList.get( 0 );
+              final String value = featureMember.getProperty( propValue ).toString();
+              final String description = (String) featureMember.getProperty( propDesc );
+
+              /* create a new damage function */
+              // check, if damage function already exists
+              IDamageFunction damageFunction = controlModel.getDamageFunction( name );
+              if( damageFunction == null )
+              {
+                damageFunction = controlModel.createNewDamageFunction();
+                damageFunction.setName( name );
+
+                if( description != null && description.length() > 0 )
+                  damageFunction.setDescription( description + " [" + damageFunctionsCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
+                else
+                  damageFunction.setDescription( "[" + damageFunctionsCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
+                damageFunction.setFunction( value );
+              }
+            }
+          }
+          break;
+        }
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
     final List<Feature> createdFeatures = new ArrayList<Feature>();
@@ -297,7 +321,6 @@ public class RiskImportLanduseHelper
       final Feature shpFeature = (Feature) shapeFeatureList.get( i );
       final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
       final String shpPropertyValue = shpFeature.getProperty( shpPropQName ).toString();
-      // final String shpPropertyValue = shpPropQName.toString();
       final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
       final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
 
@@ -309,16 +332,16 @@ public class RiskImportLanduseHelper
         for( int k = 0; k < surfaces.length; k++ )
         {
           polygon.setGeometry( surfaces[k] );
-          polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), scenarioFolder, shpPropertyValue, landuseClassesList ) );
+          polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
           polygon.getFeature().invalidEnvelope();
           createdFeatures.add( polygon.getFeature() );
-          // stule and landuse class ordinal number will be set automatically (property functions)
+          // style and landuse class ordinal number will be set automatically (property functions)
         }
       }
       else if( shpGeometryProperty instanceof GM_Surface )
       {
         polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
-        polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), scenarioFolder, shpPropertyValue, landuseClassesList ) );
+        polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
         // polygon.setStyleType( shpPropertyValue );
         polygon.getFeature().invalidEnvelope();
         createdFeatures.add( polygon.getFeature() );
@@ -329,9 +352,10 @@ public class RiskImportLanduseHelper
     return createdFeatures;
   }
 
-  private static Feature getLanduseClassByName( final Feature feature, final IFolder projectFolder, final String className, List<ILanduseClass> landuseClassesList )
+  private static Feature getLanduseClassByName( final Feature feature, final String className, List<ILanduseClass> landuseClassesList )
   {
-    final String linkedFeaturePath = "project:/" + projectFolder.getProjectRelativePath().toPortableString() + "/models/RasterizationControlModel.gml#"; //$NON-NLS-1$ //$NON-NLS-2$
+    // TODO: is this good?
+    final String linkedFeaturePath = "RasterizationControlModel.gml#";
     for( final Object object : landuseClassesList )
       if( object instanceof ILanduseClass )
       {
@@ -339,7 +363,7 @@ public class RiskImportLanduseHelper
         if( landuseClass.getName().equals( className ) )
         {
           final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getGmlID();
-          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getFeature().getParentRelation(), landuseClass.getFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getFeature().getParentRelation(), landuseClass.getFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" );
           return linkedFeature_Impl;
         }
       }

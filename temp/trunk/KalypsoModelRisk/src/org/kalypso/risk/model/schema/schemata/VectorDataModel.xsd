@@ -117,7 +117,8 @@
 				<xs:sequence>
 					<xs:element name="polygonGeometry"
 						type="gml:PolygonPropertyType" />
-					<xs:element ref="krrcm:landuseClassMember" />
+					<!-- <xs:element ref="krrcm:landuseClassMember" /> -->
+					<xs:element name="landuseClassLink" type="krrcm:LanduseClassLinkType"/>
 					<xs:element name="sldStyle" type="xs:string" />
 					<xs:element name="clsOrdinalNumber" type="xs:int" />
 					<xs:element name="assetValue" type="xs:double" />

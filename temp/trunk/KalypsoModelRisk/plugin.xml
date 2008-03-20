@@ -86,6 +86,7 @@
        <adapter type="org.kalypso.risk.model.schema.binding.IVectorDataModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IRasterDataModel"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILanduseClass"/>
+       <adapter type="org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygonCollection"/>
        <adapter type="org.kalypso.risk.model.schema.binding.ILandusePolygon"/>
        <adapter type="org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection"/>

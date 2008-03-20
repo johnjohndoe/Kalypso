@@ -14,13 +14,12 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.model.actions.dataImport.landuse.Messages;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypso.risk.model.schema.binding.IAdministrationUnit;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
-import org.kalypso.risk.model.utils.RiskImportLanduseHelper;
+import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -97,7 +96,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
       if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
       {
         IStatus status = null;
-        status = RiskImportLanduseHelper.isRightParameterUsed( m_landuseProperty );
+        status = RiskLanduseHelper.isRightParameterUsed( m_landuseProperty );
         synchronized( this )
         {
           // while( status == null )
@@ -115,15 +114,10 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
       landusePolygonCollection.clear();
 
-      /* if there is no administration units defined, define the default one */
-      final List<IAdministrationUnit> administrationUnits = m_controlModel.getAdministrationUnits();
-      if( administrationUnits.size() == 0 )
-        m_controlModel.createNewAdministrationUnit( "Default administration unit", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      RiskImportLanduseHelper.handleDBImport( m_externalProjectName, m_controlModel, m_scenarioFolder );
+      RiskLanduseHelper.handleDBImport( m_externalProjectName, m_controlModel, m_scenarioFolder );
 
       /* create new landuse classes */
-      RiskImportLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, administrationUnits, m_predefinedLanduseColorsCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_VALUE );
+      RiskLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, m_predefinedLanduseColorsCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_VALUE );
 
       /* if there is no damage functions defined, define the default one */
       if( m_controlModel.getDamageFunctionsList().size() == 0 )
@@ -139,7 +133,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
       // TODO try to guess damage function if no function is linked to the landuse class
 
       /* creating landuse polygons */
-      final List<Feature> createdFeatures = RiskImportLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_scenarioFolder, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
+      final List<Feature> createdFeatures = RiskLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
       final GMLWorkspace workspace = m_vectorModel.getFeature().getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 

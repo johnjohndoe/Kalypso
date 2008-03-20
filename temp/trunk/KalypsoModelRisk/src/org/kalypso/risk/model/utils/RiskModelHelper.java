@@ -33,8 +33,10 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
+import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
+import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
@@ -123,15 +125,18 @@ public class RiskModelHelper
    * @return {@link CoverageCollection} with the annual damage values
    * @throws Exception
    */
-  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection ) throws Exception
+  public static IAnnualCoverageCollection createSpecificDamageCoverages( final IFolder scenarioFolder, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IAnnualCoverageCollection sourceCoverageCollection, final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection, final List<ILanduseClass> landuseClassesList ) throws Exception
   {
     final IAnnualCoverageCollection destCoverageCollection = specificDamageCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
+
+    final int returnPeriod = sourceCoverageCollection.getReturnPeriod();
 
     for( int i = 0; i < sourceCoverageCollection.size(); i++ )
     {
       final ICoverage inputCoverage = sourceCoverageCollection.get( i );
 
       final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
+      final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
 
       final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
       {
@@ -160,6 +165,7 @@ public class RiskModelHelper
               {
                 if( polygon.contains( positionAt ) )
                 {
+                  final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
                   final double damageValue = polygon.getDamageValue( value );
 
                   if( Double.isNaN( damageValue ) )
@@ -168,6 +174,8 @@ public class RiskModelHelper
                   if( damageValue < 0.0 )
                     return Double.NaN;
 
+                  /* set statistic for landuse class */
+                  fillStatistics( returnPeriod, landuseClassesList, polygon, damageValue, landuseClassOrdinalNumber, cellSize );
                   return damageValue;
                 }
               }
@@ -185,8 +193,11 @@ public class RiskModelHelper
 
       final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
 
+      for( final ILanduseClass landuseClass : landuseClassesList )
+      {
+        landuseClass.updateStatistic( returnPeriod );
+      }
       newCoverage.setName( Messages.getString( "DamagePotentialCalculationHandler.14" ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" );
-      // TODO: check for right time zone?
       newCoverage.setDescription( Messages.getString( "DamagePotentialCalculationHandler.17" ) + new Date().toString() );
 
       inputGrid.dispose();
@@ -194,6 +205,24 @@ public class RiskModelHelper
     /* set the return period of the specific damage grid */
     destCoverageCollection.setReturnPeriod( sourceCoverageCollection.getReturnPeriod() );
     return destCoverageCollection;
+  }
+
+  protected static void fillStatistics( final int returnPeriod, final List<ILanduseClass> landuseClassesList, final ILandusePolygon polygon, final double damageValue, final int landuseClassOrdinalNumber, final double cellSize )
+  {
+    /* add the current damage value to all landuse polygons that covers the current raster cell */
+    polygon.updateStatistics( damageValue, returnPeriod );
+
+    /* find the right landuse class that holds the polygon */
+    for( final ILanduseClass landuseClass : landuseClassesList )
+    {
+      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
+      {
+        final IRiskLanduseStatistic statistic = RiskLanduseHelper.getLanduseStatisticEntry( landuseClass, returnPeriod, cellSize );
+
+        final BigDecimal value = new BigDecimal( damageValue ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+        statistic.updateStatistic( value );
+      }
+    }
   }
 
   /**
@@ -206,22 +235,9 @@ public class RiskModelHelper
    * @param scenarioFolder
    * @throws Exception
    */
-  public static void createDamagePotentialMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection, final IResource scenarioFolder ) throws Exception
+  public static void createSpecificDamageMapLayer( final AbstractCascadingLayerTheme parentKalypsoTheme, final IAnnualCoverageCollection coverageCollection, final IResource scenarioFolder ) throws Exception
   {
     final String layerName = Messages.getString( "DamagePotentialCalculationHandler.13" ) + coverageCollection.getReturnPeriod() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-
-    // TODO: this is dangerous!
-    // it is better to delete all damage layers, because what happens if the user changes the annuality and
-    // re-calculates.
-    // remove themes that are showing invalid coverages
-    // final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
-    // final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
-    // for( int i = 0; i < childThemes.length; i++ )
-    // the existing layer with the previous annuality gets not deleted.
-    // if( childThemes[i].getName().equals( layerName ) )
-    // themesToRemove.add( childThemes[i] );
-    // for( final IKalypsoTheme themeToRemove : themesToRemove )
-    // parentKalypsoTheme.removeTheme( themeToRemove );
 
     final StyledLayerType layer = new StyledLayerType();
     layer.setName( layerName );
@@ -407,7 +423,7 @@ public class RiskModelHelper
     /* add the coverage collections to the map */
     IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
     for( IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
-      createDamagePotentialMapLayer( parentKalypsoTheme, annualCoverageCollection, scenarioFolder );
+      createSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection, scenarioFolder );
 
     final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
     updateDamageStyle( sldFile, model );

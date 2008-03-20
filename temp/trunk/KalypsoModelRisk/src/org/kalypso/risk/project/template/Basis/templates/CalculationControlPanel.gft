@@ -30,15 +30,17 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Landnutzungsklasse" name="name" width="200" />
+							format="" label="Landnutzungsklasse" name="name" width="150" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="landuseRiskTypeLink" width="120" />
+							format="" name="landuseRiskTypeLink" width="140" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="damageFunctionLink" width="150" />
+							format="" name="damageFunctionLink" width="140" />
+						<ns1:column alignment="SWT.LEFT" editable="true"
+							format="" name="AssetValueClassLink" width="140" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="colorStyle" width="120" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Beschreibung" name="description" width="1600" />
+							format="" label="Beschreibung" name="description" width="400" />
 						<ns1:sort propertyName="name" />
 					</ns1:layer>
 				</ns1:gistableview>
@@ -59,9 +61,9 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Schadenfunktionsname" name="name" width="200" />
+							format="" label="Schadenfunktionsname" name="name" width="180" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" label="Funktion" name="function" width="200" />
+							format="" label="Funktion" name="function" width="180" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" label="Beschreibung" name="description" width="250" />
 						<ns1:sort propertyName="name" />
@@ -83,13 +85,13 @@
 				<ns1:gistableview>
 					<ns1:layer>
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="landuseClassLink" width="150" />
+							format="" name="name" width="150" />
 						<!-- 
 							<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" name="administrationUnitLink" width="150" />
 						-->
 						<ns1:column alignment="SWT.LEFT" editable="true"
-							format="" name="value" width="150" />
+							format="" name="value" width="180" />
 						<ns1:column alignment="SWT.LEFT" editable="true"
 							format="" label="Beschreibung" name="description" width="200" />
 						<ns1:sort propertyName="name" />

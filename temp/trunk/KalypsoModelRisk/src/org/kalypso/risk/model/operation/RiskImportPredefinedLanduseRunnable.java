@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -14,13 +13,12 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.risk.model.actions.dataImport.landuse.Messages;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
-import org.kalypso.risk.model.schema.binding.IAdministrationUnit;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
-import org.kalypso.risk.model.utils.RiskImportLanduseHelper;
+import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -62,18 +60,15 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  private final IFolder m_scenarioFolder;
-
   @SuppressWarnings("unchecked")
   private final List m_shapeFeatureList;
 
   @SuppressWarnings("unchecked")
-  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection, boolean wrongLanduseSelectedStatus )
+  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection, boolean wrongLanduseSelectedStatus )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
     m_shapeFeatureList = shapeFeatureList;
-    m_scenarioFolder = scenarioFolder;
     m_assetValuesCollectionName = assetValuesCollectionName;
     m_landuseProperty = landuseProperty;
     m_damageFunctionsCollectionName = damageFunctionsCollectionName;
@@ -109,7 +104,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
       if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
       {
         IStatus status = null;
-        status = RiskImportLanduseHelper.isRightParameterUsed( m_landuseProperty );
+        status = RiskLanduseHelper.isRightParameterUsed( m_landuseProperty );
         synchronized( this )
         {
           // while( status == null )
@@ -127,15 +122,10 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
       landusePolygonCollection.clear();
 
-      /* if there is no administration units defined, define the default one */
-      final List<IAdministrationUnit> administrationUnits = m_controlModel.getAdministrationUnits();
-      if( administrationUnits.size() == 0 )
-        m_controlModel.createNewAdministrationUnit( "Default administration unit", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      RiskImportLanduseHelper.handleUserDefinedData( m_damageFunctionsCollectionName, m_assetValuesCollectionName, m_controlModel, administrationUnits, m_predefinedDamageFunctionsCollection, m_predefinedAssetValueClassesCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_DESCRIPTION, PROP_VALUE, m_predefinedLanduseColorsCollection );
+      RiskLanduseHelper.handleUsePreDefinedData( m_damageFunctionsCollectionName, m_assetValuesCollectionName, m_controlModel, m_predefinedDamageFunctionsCollection, m_predefinedAssetValueClassesCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_DESCRIPTION, PROP_VALUE, m_predefinedLanduseColorsCollection );
 
       /* create new landuse classes */
-      RiskImportLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, administrationUnits, m_predefinedLanduseColorsCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_VALUE );
+      RiskLanduseHelper.createNewLanduseClasses( landuseTypeSet, m_controlModel, m_predefinedLanduseColorsCollection, PROP_NAME, PROP_DATA_MEMBER, PROP_VALUE );
 
       /* if there is no damage functions defined, define the default one */
       if( m_controlModel.getDamageFunctionsList().size() == 0 )
@@ -151,7 +141,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
       // TODO try to guess damage function if no function is linked to the landuse class
 
       /* creating landuse polygons */
-      final List<Feature> createdFeatures = RiskImportLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_scenarioFolder, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
+      final List<Feature> createdFeatures = RiskLanduseHelper.createLandusePolygons( m_landuseProperty, monitor, m_shapeFeatureList, landusePolygonCollection, landuseClassesList );
       final GMLWorkspace workspace = m_vectorModel.getFeature().getWorkspace();
       workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, landusePolygonCollection.getFeature(), createdFeatures.toArray( new Feature[0] ), FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 

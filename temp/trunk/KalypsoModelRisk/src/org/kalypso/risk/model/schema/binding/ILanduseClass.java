@@ -1,5 +1,7 @@
 package org.kalypso.risk.model.schema.binding;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.kalypsosimulationmodel.core.modeling.IColorStyledFeatureWrapper;
@@ -12,11 +14,17 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 {
   public static final QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "LanduseClass" );
 
+  public static final QName PROP_NAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "name" );
+
+  public static final QName PROP_DESCRIPTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "description" );
+
   public static final QName PROP_ORDINAL_NUMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" );
 
   public static final QName PROP_COLOR_STYLE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "colorStyle" );
 
   public static final QName PROP_DAMAGE_FUNCTION_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" );
+
+  public static final QName PROP_ASSET_VALUE_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "AssetValueClassLink" );
 
   public static final QName PROP_RISK_LANDUSE_CATEGORY_LINK = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseRiskTypeLink" );
 
@@ -28,27 +36,56 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   public static final QName PROP_ANNUAL_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "averageAnnualDamage" );
 
+  public static final QName PROP_DAMAGE_STATISTIC_LIST = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statisticClassMember" );
+
+  public void setName( final String name );
+
+  public void setDescription( final String description );
+
   public void setOrdinalNumber( final int value );
 
-  public void setMinDamage( final double value );
+  public void setMinAnnualDamage( final double value );
 
-  public void setMaxDamage( final double value );
-
-  public void setTotalDamage( final double value );
+  public void setMaxAnnualDamage( final double value );
 
   public void setAverageAnnualDamage( final double value );
 
-  public double getMinDamage( );
+  public void setTotalDamage( final double value );
 
-  public double getMaxDamage( );
+  public void setAssetValue( final IAssetValueClass assetValueClass );
 
-  public double getTotalDamage( );
+  public IAssetValueClass getAssetValue( );
+
+  public double getMinAnnualDamage( );
+
+  public double getMaxAnnualDamage( );
 
   public double getAverageAnnualDamage( );
+
+  public double getTotalDamage( );
 
   public String getDamageFunctionGmlID( );
 
   public void setDamageFunction( final IDamageFunction damageFunction );
 
-  public IAssetValueClass getAssetValue( );
+  public String getDescription( );
+
+  public String getName( );
+
+  public void updateStatistic( final int returnPeriod );
+
+  public IRiskLanduseStatistic getStatistic( final int returnPeriod );
+
+  public IRiskLanduseStatistic createNewStatisticEntry( );
+
+  public boolean containsStatisticEntry( final int returnPeriod );
+
+  public List<IRiskLanduseStatistic> getLanduseStatisticList( );
+
+  public void updateStatisticsAverageAnnualDamage( final double value );
+
+  public void setCellSize( final double size );
+
+  public double getCellSize( );
+
 }

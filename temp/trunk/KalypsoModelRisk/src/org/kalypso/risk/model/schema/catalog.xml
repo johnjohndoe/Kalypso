@@ -5,6 +5,7 @@
         Component Dictionaries
     -->
     <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:languages" uri="schemata/dict/dict_languageDef.gml"/>
+    <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:riskresultstat" uri="schemata/dict/dict_risk_result_statistic.gml"/>
     <!-- 
         Inscription of  "kr_common:DicDefinition" 
     -->

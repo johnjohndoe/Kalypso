@@ -14,7 +14,7 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public QName PROPERTY_GEOMETRY = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "polygonGeometry" );
 
-  public QName PROPERTY_LANDUSE_CLASS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+  public QName PROPERTY_LANDUSE_CLASS = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" );
 
   public QName PROPERTY_SLDSTYLE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "sldStyle" );
 
@@ -49,4 +49,6 @@ public interface ILandusePolygon extends IFeatureWrapper2
   public void updateStatisticsAverageAnnualDamage( final double value );
 
   public double getStatisticsAverageAnnualDamage( );
+
+  void updateStatistics( final double value, final double returnPeriod );
 }

@@ -141,7 +141,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
         final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
 
         /* set statistic for landuse class */
-        fillStatistics( polygon, averageAnnualDamageValue, landuseClassOrdinalNumber );
+        fillStatistics( averageAnnualDamageValue, landuseClassOrdinalNumber );
 
         final double riskZoneValue = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
 
@@ -158,29 +158,21 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     return Double.NaN;
   }
 
-  private void fillStatistics( final ILandusePolygon polygon, final double averageAnnualDamageValue, final int landuseClassOrdinalNumber )
+  private void fillStatistics( final double averageAnnualDamageValue, final int landuseClassOrdinalNumber )
   {
     /* add the current average annual damage value to all landuse polygons that covers the current raster cell */
-    polygon.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
-
+    // polygon.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
     /* find the right landuse class that holds the polygon */
     for( final ILanduseClass landuseClass : m_landuseClassesList )
     {
-      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
+      final double cellSize = landuseClass.getCellSize();
+      if( Double.isNaN( cellSize ) )
       {
-        /* check for min / max */
-        if( averageAnnualDamageValue < landuseClass.getMinDamage() )
-          landuseClass.setMinDamage( averageAnnualDamageValue );
-        if( averageAnnualDamageValue > landuseClass.getMaxDamage() )
-          landuseClass.setMaxDamage( averageAnnualDamageValue );
-
-        /* update total damage value of the current landuse class */
-        final double totalDamage = landuseClass.getTotalDamage() + averageAnnualDamageValue * m_cellSize;
-        landuseClass.setTotalDamage( totalDamage );
-
-        /* update the average annual damage value for the landuse class */
-        landuseClass.setAverageAnnualDamage( polygon.getStatisticsAverageAnnualDamage() );
+        landuseClass.setCellSize( m_cellSize );
       }
+
+      if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
+        landuseClass.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );
     }
   }
 
