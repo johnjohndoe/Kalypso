@@ -84,7 +84,7 @@ public class AscGridExporter
    * Writes a grid into a file in the ESRI Ascii Grid format.
    * 
    * @throws IOException
-   *             If write acces to the output file fails.
+   *             If write access to the output file fails.
    */
   public void export( final IGeoGrid inputGrid, final File outputFile, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
