@@ -57,6 +57,7 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -131,7 +132,6 @@ public class MapUtilities
   {
     /* Get the JTS geometry. */
     Geometry geometryJTS = JTSAdapter.export( geometry );
-
     com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
 
     /* Buffer the point. */
@@ -144,19 +144,49 @@ public class MapUtilities
     {
       com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPoint( pointJTS );
       if( snapPoint != null )
-        return (GM_Point) JTSAdapter.wrap( snapPoint );
+      {
+        GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
+        /**
+         * has no crs! see
+         * 
+         * @link{JTSAdapter}
+         */
+        myPoint.setCoordinateSystem( point.getCoordinateSystem() );
+
+        return myPoint;
+      }
     }
     else if( geometryJTS instanceof LineString )
     {
       com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
-        return (GM_Point) JTSAdapter.wrap( snapPoint );
+      {
+        GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
+        /**
+         * has no crs! see
+         * 
+         * @link{JTSAdapter}
+         */
+        myPoint.setCoordinateSystem( point.getCoordinateSystem() );
+
+        return myPoint;
+      }
     }
     else if( geometryJTS instanceof Polygon )
     {
       com.vividsolutions.jts.geom.Point snapPoint = SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
       if( snapPoint != null )
-        return (GM_Point) JTSAdapter.wrap( snapPoint );
+      {
+        GM_Point myPoint = (GM_Point) JTSAdapter.wrap( snapPoint );
+        /**
+         * has no crs! see
+         * 
+         * @link{JTSAdapter}
+         */
+        myPoint.setCoordinateSystem( point.getCoordinateSystem() );
+
+        return myPoint;
+      }
     }
 
     return null;
@@ -178,6 +208,8 @@ public class MapUtilities
       return null;
 
     String coordinatesSystem = mapModell.getCoordinatesSystem();
+    if( coordinatesSystem == null )
+      coordinatesSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
     double x = p.getX();
     double y = p.getY();
