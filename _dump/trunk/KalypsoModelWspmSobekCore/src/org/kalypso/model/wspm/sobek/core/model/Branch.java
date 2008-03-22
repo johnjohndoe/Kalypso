@@ -48,8 +48,8 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.model.wspm.sobek.core.Messages;
-import org.kalypso.model.wspm.sobek.core.interfaces.IAbstractConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
@@ -113,13 +113,13 @@ public class Branch implements IBranch
     nodes.add( getLowerNode() );
 
     for( final INode node : nodes )
-      if( node instanceof IAbstractConnectionNode )
+      if( node instanceof IConnectionNode )
       {
-        final IAbstractConnectionNode n = (IAbstractConnectionNode) node;
+        final IConnectionNode n = (IConnectionNode) node;
         n.removeBranch( this );
       }
 
-    // deletes empty nodes
+    // remove empty nodes
     FNGmlUtils.cleanUpNodes( m_model, this );
 
     // delete branch

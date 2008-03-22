@@ -132,19 +132,19 @@ public class FNGmlUtils
     final INode[] nodes = model.getNodeMembers();
     for( final INode node : nodes )
     {
+      if( node instanceof LinkageNode )
+      {
+        LinkageNode ln = (LinkageNode) node;
+        if( branch.equals( ln.getLinkToBranch() ) )
+          NodeUtils.convertLinkageNodeToConnectionNode( (LinkageNode) node );
+      }
+
       if( node.isEmpty() )
       {
         // branch has been delete take linkage node and transform it to an new connection node for the incomplete branch
-        if( node instanceof LinkageNode )
-        {
-          NodeUtils.convertLinkageNodeToConnectionNode( (LinkageNode) node );
-        }
-        else
-          node.delete();
-
+        node.delete();
       }
     }
-
   }
 
   public static void connectBranches( final IModelMember model, final IBranch[] branches, final GM_Curve curve ) throws Exception

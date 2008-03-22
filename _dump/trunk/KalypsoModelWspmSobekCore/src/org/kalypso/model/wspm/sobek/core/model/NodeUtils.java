@@ -227,7 +227,18 @@ public class NodeUtils implements INodeUtils
 
     IConnectionNode cn = (IConnectionNode) FNGmlUtils.createNode( node.getModelMember(), TYPE.eConnectionNode, node.getLocation(), new INode[] {} );
 
+    for( IBranch branch : inflowingBranches )
+    {
+      cn.addInflowingBranch( branch );
+      branch.setLowerNode( cn ); // update the branch too!
+    }
+
+    for( IBranch branch : outflowingBranches )
+    {
+      cn.addOutflowingBranch( branch );
+      branch.setUpperNode( cn );// update the branch too!
+    }
+
     node.delete();
-    int asdfdasf = 0;
   }
 }
