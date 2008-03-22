@@ -47,9 +47,9 @@ import org.kalypso.model.wspm.sobek.core.model.Branch;
  */
 public interface IAbstractConnectionNode extends INode
 {
-  public void addInflowingBranch( IBranch branch );
+  public void addInflowingBranch( IBranch branch ) throws Exception;
 
-  public void addOutflowingBranch( IBranch branch );
+  public void addOutflowingBranch( IBranch branch ) throws Exception;
 
   IBranch[] getInflowingBranches( );
 

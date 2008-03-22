@@ -219,4 +219,15 @@ public class NodeUtils implements INodeUtils
     else if( curve.getEndPoint().intersects( pn ) )
       branch.setLowerNode( node );
   }
+
+  public static void convertLinkageNodeToConnectionNode( LinkageNode node ) throws Exception
+  {
+    IBranch[] inflowingBranches = node.getInflowingBranches();
+    IBranch[] outflowingBranches = node.getOutflowingBranches();
+
+    IConnectionNode cn = (IConnectionNode) FNGmlUtils.createNode( node.getModelMember(), TYPE.eConnectionNode, node.getLocation(), new INode[] {} );
+
+    node.delete();
+    int asdfdasf = 0;
+  }
 }

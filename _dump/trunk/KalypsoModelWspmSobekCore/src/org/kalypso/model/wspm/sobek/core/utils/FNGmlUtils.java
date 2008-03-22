@@ -52,6 +52,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
@@ -63,19 +64,22 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode.TYPE;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
+import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
+import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
  */
 public class FNGmlUtils
 {
+
+  // FIXME don't iterate over all branches - give newly created branch as parameter
   private static void addBranchesToLinkToNodes( final IModelMember model, final INode[] nodes ) throws Exception
   {
     final IBranch[] branches = model.getBranchMembers();
@@ -103,7 +107,9 @@ public class FNGmlUtils
 
     }
 
-    /* node is an linkage node? set linkToBranch (ln lays on branch x - lnk to this branch!) */
+    /**
+     * LinkageNodes need a special handling, they define a linked branch <br> - here we're setting this linked branch!
+     */
     for( final INode node : nodes )
     {
       if( !(node instanceof ILinkageNode) )
@@ -117,13 +123,28 @@ public class FNGmlUtils
 
   /**
    * removes all empty nodes
+   * 
+   * @param branch
+   *            the branch which will be removed from the model
    */
   public static void cleanUpNodes( final IModelMember model, final IBranch branch ) throws Exception
   {
     final INode[] nodes = model.getNodeMembers();
     for( final INode node : nodes )
+    {
       if( node.isEmpty() )
-        node.delete();
+      {
+        // branch has been delete take linkage node and transform it to an new connection node for the incomplete branch
+        if( node instanceof LinkageNode )
+        {
+          NodeUtils.convertLinkageNodeToConnectionNode( (LinkageNode) node );
+        }
+        else
+          node.delete();
+
+      }
+    }
+
   }
 
   public static void connectBranches( final IModelMember model, final IBranch[] branches, final GM_Curve curve ) throws Exception

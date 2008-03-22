@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.interfaces;
+package org.kalypso.model.wspm.sobek.core.utils;
+
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuch
  */
-public interface ILinkageNode extends IConnectionNode
+public class AtomarAddRelationCommand extends AddRelationCommand
 {
-  public IBranch getLinkToBranch( );
 
-  public void setLinkToBranch( IBranch[] branches ) throws Exception;
+  public AtomarAddRelationCommand( final Feature srcFE, final IRelationType propertyName, final int pos, final Feature destFE )
+  {
+    super( srcFE, propertyName, pos, destFE );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand#isUndoable()
+   */
+  @Override
+  public boolean isUndoable( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand#redo()
+   */
+  @Override
+  public void redo( ) throws Exception
+  {
+
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand#undo()
+   */
+  @Override
+  public void undo( ) throws Exception
+  {
+
+  }
 }

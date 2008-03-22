@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 /**
  * @author kuch
  */
-public interface IBoundaryNode extends IAbstractConnectionNode
+public interface IBoundaryNode extends IConnectionNode
 {
   public enum BOUNDARY_TYPE
   {
