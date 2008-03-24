@@ -54,12 +54,16 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
 
   private int m_numberOfEntries = 0;
 
+  // minimal occurred cell value
   private BigDecimal m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
+  // maximal occured cell value
   private BigDecimal m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
+  // average value of all cells
   private BigDecimal m_average = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
+  // summation of all values
   private BigDecimal m_sum = new BigDecimal( 0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
   private BigDecimal m_cellSize = null;

@@ -167,9 +167,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     {
       final double cellSize = landuseClass.getCellSize();
       if( Double.isNaN( cellSize ) )
-      {
         landuseClass.setCellSize( m_cellSize );
-      }
 
       if( landuseClass.getOrdinalNumber() == landuseClassOrdinalNumber )
         landuseClass.updateStatisticsAverageAnnualDamage( averageAnnualDamageValue );

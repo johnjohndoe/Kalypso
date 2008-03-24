@@ -93,6 +93,6 @@ public interface IRiskLanduseStatistic extends IFeatureWrapper2
 
   public void setCellSize( final BigDecimal cellSize );
 
-  void finish( );
+  public void finish( );
 
 }

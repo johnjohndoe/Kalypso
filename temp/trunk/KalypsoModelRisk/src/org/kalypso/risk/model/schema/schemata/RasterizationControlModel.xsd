@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om" xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
-	xmlns:kr_common="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:common="org.kalypso.gml.common"
-	targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om"
+	xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel" xmlns:kr_common="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:common="org.kalypso.gml.common" targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:annotation>
 		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
 		</xs:appinfo>
 	</xs:annotation>
 	<xs:import namespace="http://www.opengis.net/gml" />
-	<xs:import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+	<xs:import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
 	<xs:import namespace="org.kalypso.gml.common" />
 	<xs:import namespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common" schemaLocation="Common.xsd" />
 	<!-- =================================================================
@@ -729,8 +730,26 @@
 	<!-- =================================================================
 		riskStatisticResultMember property
 		================================================================== -->
-	<xs:element name="riskStatisticResultMember" type="krrcm:RiskStatisticResultMemberType"  substitutionGroup="om:Observation"/>
-	<xs:complexType name="RiskStatisticResultMemberType">
+	<xs:element name="riskStatisticResultMember" type="krrcm:RiskStatisticResultPropertyType"/>
+
+	<xs:complexType name="RiskStatisticResultPropertyType">
+		<xs:sequence>
+			<xs:element ref="krrcm:RiskStatisticResult" minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="RiskStatisticResult" type="krrcm:RiskStatisticResultType" substitutionGroup="om:Observation">
+		<xs:annotation>
+			<xs:documentation xml:lang="de">
+				<xs:label>Statistische Auswertung</xs:label>
+			</xs:documentation>
+			<xs:documentation xml:lang="en">
+				<xs:label>Statistical Overview</xs:label>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="RiskStatisticResultType">
 		<xs:complexContent>
 			<xs:extension base="om:ObservationType" />
 		</xs:complexContent>

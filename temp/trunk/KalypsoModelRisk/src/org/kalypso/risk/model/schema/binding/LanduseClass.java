@@ -313,5 +313,4 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   {
     return m_cellSize;
   }
-
 }
