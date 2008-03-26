@@ -85,6 +85,6 @@ public class SbkStructCompoundStructure extends SbkStructure implements ISbkStru
   @Override
   public TYPE getType( )
   {
-    return TYPE.eSbkStructCompundStructure;
+    return TYPE.eSbkStructCompoundStructure;
   }
 }

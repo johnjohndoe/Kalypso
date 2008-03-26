@@ -67,7 +67,7 @@ public interface INode
     eCrossSectionNode,
     eLinkageNode,
     eSbkStructure,
-    eSbkStructCompundStructure,
+    eSbkStructCompoundStructure,
     eSbkStructDatabaseStructure,
     eSbkStructGeneralStructure,
     eSbkStructPump,

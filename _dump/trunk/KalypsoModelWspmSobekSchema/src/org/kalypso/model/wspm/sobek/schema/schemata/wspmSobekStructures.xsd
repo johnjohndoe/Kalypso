@@ -442,7 +442,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="posCorrectionCoeff" type="double" nillable="false">
+                                        <element name="posCorrectionCoeff" type="double" default="1.0" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <name>Correction Coefficient (Flow)</name>
@@ -458,7 +458,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="posSubmergeLimit" type="double" nillable="false">
+                                        <element name="posSubmergeLimit" type="double" default="0.82" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <name>Submerge Limit (Flow)</name>
@@ -490,7 +490,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="negCorrectionCoeff" type="double" nillable="false">
+                                        <element name="negCorrectionCoeff" type="double" default="0.82" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <name>Correction Coefficient (Reverse)</name>
@@ -506,7 +506,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="negSubmergeLimit" type="double" nillable="false">
+                                        <element name="negSubmergeLimit" type="double" default="1.0" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <name>Submerge Limit (Reverse)</name>
@@ -642,10 +642,10 @@
                                                                 <description>Sohlhöhe stromaufwärts [m NN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Upstream [m NN]</name>
-                                                                <label>Bed Level Upstream [m NN]</label>
-                                                                <tooltip>Bed Level Upstream [m NN]</tooltip>
-                                                                <description>Bed Level Upstream [m NN]</description>
+                                                                <name>Bed Level Upstream [m asl]</name>
+                                                                <label>Bed Level Upstream [m asl]</label>
+                                                                <tooltip>Bed Level Upstream [m asl]</tooltip>
+                                                                <description>Bed Level Upstream [m asl]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -658,10 +658,10 @@
                                                                 <description>Sohlhöhe am Einlass [m NN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Suction Side [m NN]</name>
-                                                                <label>Bed Level Suction Side [m NN]</label>
-                                                                <tooltip>Bed Level Suction Side [m NN]</tooltip>
-                                                                <description>Bed Level Suction Side [m NN]</description>
+                                                                <name>Bed Level Suction Side [m asl]</name>
+                                                                <label>Bed Level Suction Side [m asl]</label>
+                                                                <tooltip>Bed Level Suction Side [m asl]</tooltip>
+                                                                <description>Bed Level Suction Side [m asl]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -674,10 +674,10 @@
                                                                 <description>Sohlhöhe Durchlass [m NN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level [m NN]</name>
-                                                                <label>Bed Level [m NN]</label>
-                                                                <tooltip>Bed Level [m NN]</tooltip>
-                                                                <description>Bed Level [m NN]</description>
+                                                                <name>Bed Level [m asl]</name>
+                                                                <label>Bed Level [m asl]</label>
+                                                                <tooltip>Bed Level [m asl]</tooltip>
+                                                                <description>Bed Level [m asl]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -690,10 +690,10 @@
                                                                 <description>Sohlhöhe Auslass [m NN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Pressure Side [m NN]</name>
-                                                                <label>Bed Level Pressure Side [m NN]</label>
-                                                                <tooltip>Bed Level Pressure Side [m NN]</tooltip>
-                                                                <description>Bed Level Pressure Side [m NN]</description>
+                                                                <name>Bed Level Pressure Side [m asl]</name>
+                                                                <label>Bed Level Pressure Side [m asl]</label>
+                                                                <tooltip>Bed Level Pressure Side [m asl]</tooltip>
+                                                                <description>Bed Level Pressure Side [m asl]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -706,10 +706,10 @@
                                                                 <description>Sohlhöhe stromabwärts [m NN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Downstream [m NN]</name>
-                                                                <label>Bed Level Downstream [m NN]</label>
-                                                                <tooltip>Bed Level Downstream [m NN]</tooltip>
-                                                                <description>Bed Level Downstream [m NN]</description>
+                                                                <name>Bed Level Downstream [m asl]</name>
+                                                                <label>Bed Level Downstream [m asl]</label>
+                                                                <tooltip>Bed Level Downstream [m asl]</tooltip>
+                                                                <description>Bed Level Downstream [m asl]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -889,7 +889,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="extraResistence" type="double" nillable="false" default="1.0">
+                                        <element name="extraResistence" type="double" nillable="false" default="0.0">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <name>extraResistence</name>
@@ -920,19 +920,19 @@
                 <complexContent>
                         <extension base="wspmSobekStructures:AbstractSbkCompoundableStructureNodeType">
                                 <sequence>
-                                        <element name="crestHeight" type="double" nillable="false">
+                                        <element name="crestHeight" type="double" nillable="false" default="0.0">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Überfallhöhe [m NN]</name>
-                                                                <label>Überfallhöhe [m NN]</label>
-                                                                <tooltip>Überfallhöhe [m NN]</tooltip>
-                                                                <description>Überfallhöhe [m NN]</description>
+                                                                <name>Referenzhöhe [m NN]</name>
+                                                                <label>Referenzhöhe [m NN]</label>
+                                                                <tooltip>Referenzhöhe [m NN]</tooltip>
+                                                                <description>Referenzhöhe [m NN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Crest Height [m asl]</name>
-                                                                <label>Crest Height [m asl]</label>
-                                                                <tooltip>Crest Height [m asl]</tooltip>
-                                                                <description>Crest Height [m asl]</description>
+                                                                <name>Reference Height [m asl]</name>
+                                                                <label>Reference Height [m asl]</label>
+                                                                <tooltip>Reference Height [m asl]</tooltip>
+                                                                <description>Reference Height [m asl]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>

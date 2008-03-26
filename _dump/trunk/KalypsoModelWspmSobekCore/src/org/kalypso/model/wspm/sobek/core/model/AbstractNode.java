@@ -79,7 +79,7 @@ public abstract class AbstractNode implements INode
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE );
     else if( TYPE.eLinkageNode.equals( nodeType ) )
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_LINKAGE_NODE );
-    else if( TYPE.eSbkStructCompundStructure.equals( nodeType ) )
+    else if( TYPE.eSbkStructCompoundStructure.equals( nodeType ) )
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_COMPOUND_STRUCTURE );
     else if( TYPE.eSbkStructDatabaseStructure.equals( nodeType ) )
       targetFeatureType = schema.getFeatureType( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE );
