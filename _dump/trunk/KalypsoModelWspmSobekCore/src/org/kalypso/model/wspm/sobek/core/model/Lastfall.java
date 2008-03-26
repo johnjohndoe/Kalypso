@@ -115,4 +115,25 @@ public class Lastfall implements ILastfall
     return FeatureUtils.getFeatureName( ISobekConstants.NS_SOBEK, m_lastfall );
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( Object obj )
+  {
+    if( obj instanceof ILastfall )
+    {
+      ILastfall lastfall = (ILastfall) obj;
+      if( lastfall.getFeature().equals( getFeature() ) )
+        return true;
+    }
+    else if( obj instanceof Feature )
+    {
+      Feature f = (Feature) obj;
+      if( f.equals( getFeature() ) )
+        return true;
+    }
+
+    return super.equals( obj );
+  }
 }
