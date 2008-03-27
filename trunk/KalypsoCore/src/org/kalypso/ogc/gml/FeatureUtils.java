@@ -177,6 +177,18 @@ public class FeatureUtils
     FeatureUtils.updateFeature( workspace, feature, map );
   }
 
+  public static void updateInternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Feature linkedFeature ) throws Exception
+  {
+    final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
+    
+    final String linkId = linkedFeature == null ? null : linkedFeature.getId();
+    
+    final FeatureChange change = new FeatureChange( feature, chgProp, linkId );
+    final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
+    
+    workspace.postCommand( chgCmd );
+  }
+
   public static void updateLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
