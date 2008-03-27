@@ -94,7 +94,7 @@ public class DeegreeWMSUtilities
    * @param monitor
    *            A progress monitor.
    */
-  public static WMSCapabilities loadCapabilities( ICapabilitiesLoader loader, IProgressMonitor monitor ) throws CoreException
+  public static WMSCapabilities loadCapabilities( final ICapabilitiesLoader loader, final IProgressMonitor monitor ) throws CoreException
   {
     /* The input stream. */
     InputStream inputStream = null;
@@ -108,19 +108,19 @@ public class DeegreeWMSUtilities
       inputStream = loader.getCapabilitiesStream( monitor );
 
       /* This is a capabilities document from deegree, which was overwritten by Kalypso. */
-      KalypsoWMSCapabilitiesDocument doc = new KalypsoWMSCapabilitiesDocument();
+      final KalypsoWMSCapabilitiesDocument doc = new KalypsoWMSCapabilitiesDocument();
 
       /* Load the capabilities xml. */
       doc.load( new InputStreamReader( inputStream ), XMLFragment.DEFAULT_URL );
 
       /* Create the capabilities. */
-      WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
+      final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
       if( capabilities == null )
         throw new Exception( "The capabilities are not allowed to be null ..." );
 
       return capabilities;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( ex ) );
     }
@@ -143,10 +143,10 @@ public class DeegreeWMSUtilities
    *            The format.
    * @return The get feature info request.
    */
-  public static HashMap<String, String> createGetFeatureinfoRequest( WMSCapabilities capabilities, String layers, Point pointOfInterest, String format ) throws CoreException
+  public static HashMap<String, String> createGetFeatureinfoRequest( final WMSCapabilities capabilities, final String layers, final Point pointOfInterest, final String format ) throws CoreException
   {
     // TODO: does not work at the moment
-    HashMap<String, String> parameterMap = prepareRequestParameters( capabilities, "GetFeatureInfo" );
+    final HashMap<String, String> parameterMap = prepareRequestParameters( capabilities, "GetFeatureInfo" );
     parameterMap.put( "QUERY_LAYERS", layers );
 
     if( format != null && format.length() > 0 )
@@ -188,11 +188,11 @@ public class DeegreeWMSUtilities
    *            The local coordinate system.
    * @return The get map request.
    */
-  public static GetMap createGetMapRequest( WMSCapabilities capabilities, String negotiatedSRS, String themeName, String layers, String styles, int width, int height, GM_Envelope requestedEnvLocalSRS, String localSRS ) throws CoreException
+  public static GetMap createGetMapRequest( final WMSCapabilities capabilities, final String negotiatedSRS, final String themeName, final String layers, final String styles, final int width, final int height, final GM_Envelope requestedEnvLocalSRS, final String localSRS ) throws CoreException
   {
     try
     {
-      HashMap<String, String> wmsParameter = prepareRequestParameters( capabilities, "GetMap" );
+      final HashMap<String, String> wmsParameter = prepareRequestParameters( capabilities, "GetMap" );
 
       wmsParameter.put( "LAYERS", layers );
       if( styles != null )
@@ -207,8 +207,8 @@ public class DeegreeWMSUtilities
       wmsParameter.put( "HEIGHT", "" + height );
       wmsParameter.put( "SRS", negotiatedSRS );
 
-      GeoTransformer gt = new GeoTransformer( negotiatedSRS );
-      GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( requestedEnvLocalSRS, localSRS );
+      final GeoTransformer gt = new GeoTransformer( negotiatedSRS );
+      final GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( requestedEnvLocalSRS, localSRS );
 
       if( targetEnvRemoteSRS.getMax().getX() - targetEnvRemoteSRS.getMin().getX() <= 0 )
         throw new Exception( "invalid bbox" );
@@ -216,21 +216,21 @@ public class DeegreeWMSUtilities
       if( targetEnvRemoteSRS.getMax().getY() - targetEnvRemoteSRS.getMin().getY() <= 0 )
         throw new Exception( "invalid bbox" );
 
-      String targetEnvRemoteSRSstring = DeegreeWMSUtilities.env2bboxString( targetEnvRemoteSRS );
+      final String targetEnvRemoteSRSstring = DeegreeWMSUtilities.env2bboxString( targetEnvRemoteSRS );
       wmsParameter.put( "BBOX", targetEnvRemoteSRSstring );
 
       /* Add the ID parameter to them. */
       wmsParameter.put( "ID", "KalypsoWMSRequest" + themeName + new Date().getTime() );
 
       /* Create the GetMap request. */
-      GetMap request = GetMap.create( wmsParameter );
+      final GetMap request = GetMap.create( wmsParameter );
 
       return request;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* Create the error status. */
-      IStatus status = StatusUtilities.statusFromThrowable( ex, "Could not create map request: " );
+      final IStatus status = StatusUtilities.statusFromThrowable( ex, "Could not create map request: " );
 
       throw new CoreException( status );
     }
@@ -245,33 +245,33 @@ public class DeegreeWMSUtilities
    *            The name of the operation.
    * @return The request parameter.
    */
-  private static HashMap<String, String> prepareRequestParameters( WMSCapabilities capabilities, String operationName ) throws CoreException
+  private static HashMap<String, String> prepareRequestParameters( final WMSCapabilities capabilities, final String operationName ) throws CoreException
   {
     final HashMap<String, String> wmsParameter = new HashMap<String, String>();
 
     /* HACK: in order to keep any existing query parts, add existing query parts from base url. */
-    Operation operation = checkOperation( capabilities, operationName );
-    List<DCP> types = operation.getDCP();
+    final Operation operation = checkOperation( capabilities, operationName );
+    final List<DCP> types = operation.getDCP();
 
-    for( DCP type : types )
+    for( final DCP type : types )
     {
       if( type instanceof HTTP )
       {
         final HTTP httpProtocol = (HTTP) type;
-        List<URL> getOnlineResources = httpProtocol.getGetOnlineResources();
-        for( URL url : getOnlineResources )
+        final List<URL> getOnlineResources = httpProtocol.getGetOnlineResources();
+        for( final URL url : getOnlineResources )
         {
           if( url != null )
           {
-            String query = url.getQuery();
+            final String query = url.getQuery();
             if( query != null && query.length() > 0 )
             {
               /* The base URL may already contain a query part, we do not want to delete it Quotation from WMS-Spec: */
               /* "An OGC Web Service shall be prepared to encounter parameters that are not part of this specification." */
-              String[] requestParts = query.split( "&" );
-              for( String requestPart : requestParts )
+              final String[] requestParts = query.split( "&" );
+              for( final String requestPart : requestParts )
               {
-                String[] queryParts = requestPart.split( "=" );
+                final String[] queryParts = requestPart.split( "=" );
                 if( queryParts.length != 2 )
                   continue;
 
@@ -308,9 +308,9 @@ public class DeegreeWMSUtilities
    * @throws CoreException
    *             If this service does not supports this operation.
    */
-  private static Operation checkOperation( WMSCapabilities capabilities, String name ) throws CoreException
+  private static Operation checkOperation( final WMSCapabilities capabilities, final String name ) throws CoreException
   {
-    Operation operation = capabilities.getOperationMetadata().getOperation( new QualifiedName( name ) );
+    final Operation operation = capabilities.getOperationMetadata().getOperation( new QualifiedName( name ) );
     if( operation == null )
       throw new CoreException( StatusUtilities.createErrorStatus( "Operation nicht unterstützt: " + name ) );
 
@@ -330,15 +330,15 @@ public class DeegreeWMSUtilities
    *            The layers that have to be matched to the local srs.
    * @return An array of possible coordiante systems.
    */
-  public static String[] negotiateCRS( String localCRS, WMSCapabilities capabilities, String[] layerNames )
+  public static String[] negotiateCRS( final String localCRS, final WMSCapabilities capabilities, final String[] layerNames )
   {
-    Layer topLayer = capabilities.getLayer();
-    String crs = matchCrs( topLayer, layerNames, localCRS );
+    final Layer topLayer = capabilities.getLayer();
+    final String crs = matchCrs( topLayer, layerNames, localCRS );
     if( crs != null )
       return new String[] { localCRS };
 
     /* Get crs from top layer. */
-    String[] topLayerSRS = topLayer.getSrs();
+    final String[] topLayerSRS = topLayer.getSrs();
 
     return topLayerSRS;
   }
@@ -355,15 +355,15 @@ public class DeegreeWMSUtilities
    * @return Null, if one element of the layers to be matched is not available in the local coordinate system, otherwise
    *         it returns the local crs.
    */
-  private static String matchCrs( Layer topLayer, String[] layerSelection, String localCRS )
+  private static String matchCrs( final Layer topLayer, final String[] layerSelection, final String localCRS )
   {
-    HashSet<Layer> collector = new HashSet<Layer>();
+    final HashSet<Layer> collector = new HashSet<Layer>();
 
     collect( collector, topLayer, layerSelection );
 
-    for( Layer layer : collector )
+    for( final Layer layer : collector )
     {
-      String[] layerSRS = layer.getSrs();
+      final String[] layerSRS = layer.getSrs();
       if( contains( layerSRS, localCRS ) )
         continue;
 
@@ -385,7 +385,7 @@ public class DeegreeWMSUtilities
    * @param layerSelection
    *            An array of layer names to search for.
    */
-  private static void collect( Set<Layer> collector, Layer layer, String[] layerSelection )
+  private static void collect( final Set<Layer> collector, final Layer layer, final String[] layerSelection )
   {
     final Layer[] layerTree = layer.getLayer();
     for( final Layer newLayer : layerTree )
@@ -426,25 +426,25 @@ public class DeegreeWMSUtilities
    *            The layers in the map in an array.
    * @return The max bounding box of a wms layer.
    */
-  public static GM_Envelope getMaxExtent( String[] layers, WMSCapabilities capabilites, String srs ) throws Exception
+  public static GM_Envelope getMaxExtent( final String[] layers, final WMSCapabilities capabilites, final String srs ) throws Exception
   {
-    GeoTransformer geoTransformer = new GeoTransformer( srs );
+    final GeoTransformer geoTransformer = new GeoTransformer( srs );
 
-    Layer topLayer = capabilites.getLayer();
-    HashSet<Layer> layerCollector = new HashSet<Layer>();
+    final Layer topLayer = capabilites.getLayer();
+    final HashSet<Layer> layerCollector = new HashSet<Layer>();
 
     collect( layerCollector, topLayer, layers );
 
     GM_Envelope resultEnvelope = null;
-    for( Layer layer : layerCollector )
+    for( final Layer layer : layerCollector )
     {
-      LayerBoundingBox[] bbox = layer.getBoundingBoxes();
-      for( LayerBoundingBox env : bbox )
+      final LayerBoundingBox[] bbox = layer.getBoundingBoxes();
+      for( final LayerBoundingBox env : bbox )
       {
-        GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env.getMin().getY(), env.getMax().getX(), env.getMax().getY() );
+        final GM_Envelope kalypsoEnv = GeometryFactory.createGM_Envelope( env.getMin().getX(), env.getMin().getY(), env.getMax().getX(), env.getMax().getY() );
         GM_Envelope kalypsoEnvTransformed = null;
 
-        boolean transformNeeded = !env.getSRS().equals( srs );
+        final boolean transformNeeded = !env.getSRS().equals( srs );
         if( transformNeeded )
           kalypsoEnvTransformed = geoTransformer.transformEnvelope( kalypsoEnv, env.getSRS() );
         else
@@ -463,8 +463,8 @@ public class DeegreeWMSUtilities
       return null;
 
     /* Convert top layer env to request srs. */
-    GM_Envelope envLatLon = GeometryFactory.createGM_Envelope( topLayer.getLatLonBoundingBox().getMin().getX(), topLayer.getLatLonBoundingBox().getMin().getY(), topLayer.getLatLonBoundingBox().getMax().getX(), topLayer.getLatLonBoundingBox().getMax().getY() );
-    String latlonSRS = "EPSG:4326";
+    final GM_Envelope envLatLon = GeometryFactory.createGM_Envelope( topLayer.getLatLonBoundingBox().getMin().getX(), topLayer.getLatLonBoundingBox().getMin().getY(), topLayer.getLatLonBoundingBox().getMax().getX(), topLayer.getLatLonBoundingBox().getMax().getY() );
+    final String latlonSRS = "EPSG:4326";
 
     return geoTransformer.transformEnvelope( envLatLon, latlonSRS );
   }
@@ -477,14 +477,14 @@ public class DeegreeWMSUtilities
    * @param set
    *            The Set, where the layers are collected in.
    */
-  public static void getAllLayers( WMSCapabilities capabilites, Set<Layer> set )
+  public static void getAllLayers( final WMSCapabilities capabilites, final Set<Layer> set )
   {
     try
     {
-      Layer topLayer = capabilites.getLayer();
+      final Layer topLayer = capabilites.getLayer();
       collect( set, topLayer, null );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
     }
@@ -501,11 +501,11 @@ public class DeegreeWMSUtilities
    *            The local coordinate system.
    * @return The transformed envelope.
    */
-  public static GM_Envelope getTransformedEnvelope( GM_Envelope serverEnv, String serverCRS, String local )
+  public static GM_Envelope getTransformedEnvelope( final GM_Envelope serverEnv, final String serverCRS, final String local )
   {
     try
     {
-      GeoTransformer gt = new GeoTransformer( local );
+      final GeoTransformer gt = new GeoTransformer( local );
 
       return gt.transformEnvelope( serverEnv, serverCRS );
     }
@@ -524,7 +524,7 @@ public class DeegreeWMSUtilities
    *            The envelope.
    * @return The string representation of the envelope.
    */
-  public static String env2bboxString( GM_Envelope env )
+  public static String env2bboxString( final GM_Envelope env )
   {
     return env.getMin().getX() + "," + env.getMin().getY() + "," + env.getMax().getX() + "," + env.getMax().getY();
   }

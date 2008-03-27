@@ -199,6 +199,8 @@ public interface GMLWorkspace extends ModellEventProvider
   /** Return the factory which creates feature providers used to load linked features. */
   public IFeatureProviderFactory getFeatureProviderFactory( );
 
+  GMLWorkspace getLinkedWorkspace( String uri );
+
   /**
    * The namespace context with which this workspace was read from a gm file (if any).<br>
    * May be <code>null</code>.<br>
@@ -208,4 +210,5 @@ public interface GMLWorkspace extends ModellEventProvider
   public NamespaceContext getNamespaceContext( );
 
   public void setSchemaLocation( final String schemaLocation );
+
 }

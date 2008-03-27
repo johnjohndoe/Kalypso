@@ -23,6 +23,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
@@ -51,7 +52,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final IGMLSchema m_schema;
 
-  private final IFeatureProviderFactory m_factory;
+  private final FeatureProviderFactoryCache m_factory;
 
   /** The url-context against which to resolve any references inside this workspace. */
   private URL m_context;
@@ -64,7 +65,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     m_namespaceContext = namespaceContext;
     m_schemaLocation = schemaLocation;
     m_rootFeature = feature;
-    m_factory = factory;
+
+    m_factory = new FeatureProviderFactoryCache( factory );
 
     if( m_rootFeature != null )
       m_rootFeature.setWorkspace( this );
@@ -87,7 +89,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public void dispose( )
   {
     m_listener.clear();
-    // release other references?
+    m_factory.dispose();
   }
 
   /**
@@ -852,7 +854,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    */
   public IFeatureProviderFactory getFeatureProviderFactory( )
   {
-    return m_factory;
+    return m_factory.getFactory();
   }
 
   /**
@@ -869,5 +871,17 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   public void setSchemaLocation( final String schemaLocation )
   {
     m_schemaLocation = schemaLocation;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getLinkedWorkspace(java.lang.String)
+   */
+  public GMLWorkspace getLinkedWorkspace( final String uri )
+  {
+    final IFeatureProvider provider = m_factory.getFeatureProvider( this, uri );
+    if( provider == null )
+      return null;
+
+    return provider.getWorkspace();
   }
 }

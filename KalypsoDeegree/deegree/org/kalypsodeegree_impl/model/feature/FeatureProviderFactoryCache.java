@@ -38,43 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.serialize;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
-import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * Abstract feature provider factory which parses the href and caches the providers.
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractFeatureProviderFactory implements IFeatureProviderFactory
+public class FeatureProviderFactoryCache
 {
-  private Map<String, IFeatureProvider> m_providers = new HashMap<String, IFeatureProvider>();
+  private final Map<String, IFeatureProvider> m_providers = new HashMap<String, IFeatureProvider>();
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory#createFeatureProvider(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.feature.IFeatureType, java.lang.String, java.lang.String, java.lang.String,
-   *      java.lang.String, java.lang.String, java.lang.String)
-   */
-  public IFeatureProvider createFeatureProvider( final Feature context, final String urn, final String role, final String arcrole, final String title, final String show, final String actuate )
+  private final IFeatureProviderFactory m_factory;
+
+  public FeatureProviderFactoryCache( final IFeatureProviderFactory factory )
   {
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
-
-    if( m_providers.containsKey( uri ) )
-      return m_providers.get( uri );
-
-    final IFeatureProvider provider = createProvider( context, uri, role, arcrole, title, show, actuate );
-    m_providers.put( uri, provider );
-    return provider;
+    m_factory = factory;
   }
 
-  protected abstract IFeatureProvider createProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate );
+  public void dispose( )
+  {
+    for( final IFeatureProvider provider : m_providers.values() )
+      provider.dispose();
+  }
+
+  public IFeatureProviderFactory getFactory( )
+  {
+    return m_factory;
+  }
+
+  public IFeatureProvider getFeatureProvider( final GMLWorkspace context, final String urn )
+  {
+    if( m_providers.containsKey( urn ) )
+      return m_providers.get( urn );
+
+    final IFeatureProvider provider = m_factory.createFeatureProvider( context, urn );
+    m_providers.put( urn, provider );
+    return provider;
+  }
 }

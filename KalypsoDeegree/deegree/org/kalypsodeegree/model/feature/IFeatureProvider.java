@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
-
 /**
  * Provides a {@link org.kalypsodeegree.model.feature.Feature} and its
  * {@link org.kalypso.gmlschema.feature.IFeatureType};
@@ -49,8 +48,6 @@ package org.kalypsodeegree.model.feature;
  */
 public interface IFeatureProvider
 {
-  public Feature getFeature( final String featureId );
-
   public void dispose( );
 
   public GMLWorkspace getWorkspace( );

@@ -47,7 +47,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
@@ -63,14 +62,14 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
 
   private final IUrlResolver m_urlResolver;
 
-  public GmlSerializerXlinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate, final IFeatureProviderFactory factory )
+  public GmlSerializerXlinkFeatureProvider( final GMLWorkspace context, final String uri, final IFeatureProviderFactory factory )
   {
-    this( context, uri, role, arcrole, title, show, actuate, factory, new UrlResolver() );
+    this( context, uri, factory, new UrlResolver() );
   }
 
-  public GmlSerializerXlinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate, final IFeatureProviderFactory factory, final IUrlResolver urlResolver )
+  public GmlSerializerXlinkFeatureProvider( final GMLWorkspace context, final String uri, final IFeatureProviderFactory factory, final IUrlResolver urlResolver )
   {
-    super( context, uri, role, arcrole, title, show, actuate );
+    super( context, uri );
 
     m_factory = factory;
     m_urlResolver = urlResolver;
@@ -87,8 +86,7 @@ public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvi
       try
       {
         // TODO: maybe add listener to workspace in order to be informed of deletion of my feature?
-        final Feature contextFeature = getContext();
-        final GMLWorkspace contextWorkspace = contextFeature.getWorkspace();
+        final GMLWorkspace contextWorkspace = getContext();
         /* We are probably still loading the workspace, just return null here. */
         if( contextWorkspace == null )
           return null;

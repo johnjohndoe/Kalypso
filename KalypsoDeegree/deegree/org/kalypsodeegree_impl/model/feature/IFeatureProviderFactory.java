@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
 /**
@@ -50,7 +50,7 @@ public interface IFeatureProviderFactory
 {
   /**
    * @param urn
-   *          Urn to the workspace ths feature provider gets features from.
+   *            Urn to the workspace this feature provider gets features from.
    */
-  public IFeatureProvider createFeatureProvider( final Feature context, final String urn, final String role, final String arcrole, final String title, final String show, final String actuate );
+  IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn );
 }

@@ -49,33 +49,18 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
  */
 public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
 {
-  private final String m_role;
-
-  private final String m_actuate;
-
-  private final String m_show;
-
-  private final String m_title;
-
-  private final String m_arcrole;
-
-  private final Feature m_context;
+  private final GMLWorkspace m_context;
 
   private final String m_uri;
 
   /**
    * @param context
-   *          The context is used to find the feature.
+   *            The context is used to find the feature.
    */
-  public AbstractXLinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public AbstractXLinkFeatureProvider( final GMLWorkspace context, final String uri )
   {
     m_context = context;
     m_uri = uri;
-    m_role = role;
-    m_arcrole = arcrole;
-    m_title = title;
-    m_show = show;
-    m_actuate = actuate;
   }
 
   /**
@@ -89,33 +74,8 @@ public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
     final GMLWorkspace workspace = getWorkspace();
     return workspace == null ? null : workspace.getFeature( featureId );
   }
-  
-  public String getActuate( )
-  {
-    return m_actuate;
-  }
 
-  public String getArcrole( )
-  {
-    return m_arcrole;
-  }
-
-  public String getRole( )
-  {
-    return m_role;
-  }
-
-  public String getShow( )
-  {
-    return m_show;
-  }
-
-  public String getTitle( )
-  {
-    return m_title;
-  }
-
-  protected Feature getContext( )
+  protected GMLWorkspace getContext( )
   {
     return m_context;
   }

@@ -10,7 +10,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
@@ -46,8 +45,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
   private final String m_show;
 
   private final String m_actuate;
-
-  private IFeatureProvider m_provider;
 
   private final IFeatureType m_basicFeatureType;
 
@@ -99,13 +96,13 @@ public class XLinkedFeature_Impl extends AbstractFeature
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
     if( workspace == null || m_featureId == null )
     {
-      // REMARK: This may happen while loading the gml, so we ignore it and all access to getFeature() should chek for
-      // null
+      // REMARK: This may happen while loading the gml, so we ignore it and all access to
+      // getFeature() should check for null
       return null;
     }
 
-    final IFeatureProvider provider = getProvider( workspace );
-    final Feature feature = provider == null ? null : provider.getFeature( m_featureId );
+    final GMLWorkspace linkedWorkspace = workspace.getLinkedWorkspace( m_uri );
+    final Feature feature = linkedWorkspace == null ? null : linkedWorkspace.getFeature( m_featureId );
 
     if( feature == null )
       throw new IllegalStateException( "No feature found at: " + m_uri + "#" + m_featureId );
@@ -117,17 +114,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
     return feature;
   }
 
-  // TODO: this is potentially not thread-safe! Synchronize
-  private IFeatureProvider getProvider( final GMLWorkspace workspace )
-  {
-    if( m_provider != null )
-      return m_provider;
-
-    final IFeatureProviderFactory featureProviderFactory = workspace.getFeatureProviderFactory();
-    m_provider = featureProviderFactory.createFeatureProvider( m_parentFeature, m_uri, m_role, m_arcrole, m_title, m_show, m_actuate );
-    return m_provider;
-  }
-
   /**
    * @see org.kalypsodeegree.model.feature.Feature#getId()
    */
@@ -136,7 +122,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
     // return null in order to let the workspace generate internal ids
     return null;
 
-    // do not access the provider/feature, because else we already acess the remote workspace while loading
+    // do not access the provider/feature, because else we already access the remote workspace while loading
     // the old one, this leading to dead-locks
     // final IFeatureProvider provider = getProvider( getWorkspace() );
     // return provider.getId();
