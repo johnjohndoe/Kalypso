@@ -2,9 +2,9 @@ package org.kalypso.risk.model.actions.dataImport.waterdepth;
 
 import java.io.File;
 
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.grid.AscciiGridReader;
 import org.kalypso.grid.ConvertAscii2Coverage;
+import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -31,7 +31,7 @@ public class AsciiRasterInfo
   public AsciiRasterInfo( final String rasterFileAbsolutePath ) throws Exception
   {
     m_rasterFile = new File( rasterFileAbsolutePath );
-    setCoordinateSystem( IKalypsoCorePreferences.DEFAULT_CRS );
+    setCoordinateSystem( IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
     init();
   }
 

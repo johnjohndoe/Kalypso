@@ -396,9 +396,9 @@ public class RiskModelHelper
     return maxCoveragesCollection;
   }
 
-  public static IStatus importAsBinaryRaster( final File srcFile, final File dstFile, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
+  public static IStatus importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
   {
-    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2 );
+    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2, sourceCRS );
     ascii2Binary.doConvert( monitor );
     return Status.OK_STATUS;
   }

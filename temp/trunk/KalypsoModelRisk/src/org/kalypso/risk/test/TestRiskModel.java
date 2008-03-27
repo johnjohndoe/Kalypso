@@ -211,7 +211,7 @@ public class TestRiskModel extends TestCase
     }
 
     // import the data into the IRasterDataModel
-    final ICoreRunnableWithProgress importDepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, folder );
+    final ICoreRunnableWithProgress importDepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, folder, null );
     RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importDepthRunnable );
 
     saveGml( riskVectorFile, riskVectorWorkspace );

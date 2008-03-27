@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
@@ -125,7 +125,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     new Label( container, SWT.NONE ).setText( Messages.getString( "ImportLanduseWizardPage.13" ) ); //$NON-NLS-1$
     cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
     cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
-    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoCorePreferences.DEFAULT_CRS );
+    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
     cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
     final GridData gd2 = new GridData();
     gd2.horizontalAlignment = GridData.FILL;

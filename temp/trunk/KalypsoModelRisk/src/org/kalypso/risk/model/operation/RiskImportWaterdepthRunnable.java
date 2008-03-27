@@ -29,22 +29,23 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * @author Thomas Jung
- * 
  */
 public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProgress
 {
-
   private final IFolder m_scenarioFolder;
 
   private final List<AsciiRasterInfo> m_rasterInfos;
 
   private final IRasterDataModel m_rasterDataModel;
 
-  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, final IFolder scenarioFolder )
+  private final String m_sourceCRS;
+
+  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, final IFolder scenarioFolder, final String sourceCRS )
   {
     m_rasterDataModel = rasterDataModel;
     m_rasterInfos = rasterInfos;
     m_scenarioFolder = scenarioFolder;
+    m_sourceCRS = sourceCRS;
   }
 
   public IStatus execute( final IProgressMonitor monitor )
@@ -67,7 +68,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
 
         // TODO Thomas: nofdpIDSS already have converted all .asc-files to .bin(ary) files
-        RiskModelHelper.importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
+        RiskModelHelper.importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, m_sourceCRS, monitor );
 
         // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
         final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
