@@ -68,8 +68,6 @@ import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
-import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor;
@@ -309,11 +307,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       if( ref == IDocumentReference.SELF_REFERENCE )
         workspace = localWorkspace;
       else
-      {
-        final IFeatureProviderFactory featureProviderFactory = localWorkspace.getFeatureProviderFactory();
-        final IFeatureProvider provider = featureProviderFactory.createFeatureProvider( parentFeature, uri, "", "", "", "", "" );
-        workspace = provider.getWorkspace();
-      }
+        workspace = localWorkspace.getLinkedWorkspace( uri );
 
       if( workspace == null )
         return new Feature[] {};

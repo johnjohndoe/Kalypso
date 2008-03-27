@@ -56,7 +56,6 @@ import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
@@ -73,9 +72,9 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
    * @param context
    *            The context is used to find the feature.
    */
-  public PooledXLinkFeatureProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public PooledXLinkFeatureProvider( final GMLWorkspace context, final String uri )
   {
-    super( context, uri, role, arcrole, title, show, actuate );
+    super( context, uri );
   }
 
   /**
@@ -98,7 +97,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
     {
       if( m_key == null )
       {
-        final GMLWorkspace contextWorkspace = getContext().getWorkspace();
+        final GMLWorkspace contextWorkspace = getContext();
 
         /* Immediately handle local features */
         final String uri = getUri();
@@ -113,17 +112,17 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         try
         {
           final URL gmlURL = UrlResolverSingleton.resolveUrl( contextWorkspace.getContext(), uri );
-          if( gmlURL.equals( contextWorkspace.getContext() ))
+          if( gmlURL.equals( contextWorkspace.getContext() ) )
           {
             m_workspace = contextWorkspace;
             return m_workspace;
           }
         }
-        catch( MalformedURLException e )
+        catch( final MalformedURLException e )
         {
           e.printStackTrace();
         }
-        
+
         final String type;
         final String source;
 

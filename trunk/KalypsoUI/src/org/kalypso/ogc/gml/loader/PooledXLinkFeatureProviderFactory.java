@@ -40,23 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author Gernot Belger
  */
-public class PooledXLinkFeatureProviderFactory extends AbstractFeatureProviderFactory
+public class PooledXLinkFeatureProviderFactory implements IFeatureProviderFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory#createProvider(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory#createFeatureProvider(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String)
    */
-  @Override
-  protected IFeatureProvider createProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn )
   {
-    return new PooledXLinkFeatureProvider( context, uri, role, arcrole, title, show, actuate );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    return new PooledXLinkFeatureProvider( context, uri );
   }
 
 }

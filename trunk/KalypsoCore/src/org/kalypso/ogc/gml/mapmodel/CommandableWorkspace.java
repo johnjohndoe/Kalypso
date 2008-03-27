@@ -429,8 +429,16 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getNamespaceContext();
   }
 
-  public void setSchemaLocation( String schemaLocation )
+  public void setSchemaLocation( final String schemaLocation )
   {
     m_workspace.setSchemaLocation( schemaLocation );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getLinkedWorkspace(java.lang.String)
+   */
+  public GMLWorkspace getLinkedWorkspace( final String uri )
+  {
+    return m_workspace.getLinkedWorkspace( uri );
   }
 }

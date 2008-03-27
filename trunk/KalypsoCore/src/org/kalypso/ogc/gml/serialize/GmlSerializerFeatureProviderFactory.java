@@ -40,22 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * A provider factory which directly loads the workspace.
  * 
  * @author Gernot Belger
  */
-public class GmlSerializerFeatureProviderFactory extends AbstractFeatureProviderFactory
+public class GmlSerializerFeatureProviderFactory implements IFeatureProviderFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.serialize.AbstractFeatureProviderFactory#createProvider(org.kalypsodeegree.model.feature.Feature, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory#createFeatureProvider(org.kalypsodeegree.model.feature.Feature,
+   *      java.lang.String)
    */
-  @Override
-  protected IFeatureProvider createProvider( final Feature context, final String uri, final String role, final String arcrole, final String title, final String show, final String actuate )
+  public IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn )
   {
-    return new GmlSerializerXlinkFeatureProvider( context, uri, role, arcrole, title, show, actuate, this );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    return new GmlSerializerXlinkFeatureProvider( context, uri, this );
   }
 }

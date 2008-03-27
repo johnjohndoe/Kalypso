@@ -284,9 +284,7 @@ public class GMLDocumentContentHandler extends DelegateContentHandler
   {
     final GMLContentHandler delegate = (GMLContentHandler) getDelegate();
     final Feature rootFeature = delegate.getRootFeature();
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( m_gmlSchema, rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
-
-    return workspace;
+    return FeatureFactory.createGMLWorkspace( m_gmlSchema, rootFeature, m_context, m_schemaLocationString, m_providerFactory, null );
   }
 
 }
