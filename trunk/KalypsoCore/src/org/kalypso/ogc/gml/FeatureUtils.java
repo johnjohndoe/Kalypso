@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -150,7 +151,7 @@ public class FeatureUtils
     return null;
   }
 
-  public static void updateFeature( final CommandableWorkspace workspace, final Feature feature, final Map<QName, Object> map ) throws Exception
+  public static void updateProperties( final CommandableWorkspace workspace, final Feature feature, final Map<QName, Object> map ) throws Exception
   {
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -169,27 +170,27 @@ public class FeatureUtils
     workspace.postCommand( chgCmd );
   }
 
-  public static void updateFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Object value ) throws Exception
+  public static void updateProperty( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Object value ) throws Exception
   {
     final Map<QName, Object> map = new HashMap<QName, Object>();
     map.put( qname, value );
 
-    FeatureUtils.updateFeature( workspace, feature, map );
+    FeatureUtils.updateProperties( workspace, feature, map );
   }
 
-  public static void updateInternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Feature linkedFeature ) throws Exception
+  public static void setInternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Feature linkedFeature ) throws Exception
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
-    
+
     final String linkId = linkedFeature == null ? null : linkedFeature.getId();
-    
+
     final FeatureChange change = new FeatureChange( feature, chgProp, linkId );
     final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
-    
+
     workspace.postCommand( chgCmd );
   }
 
-  public static void updateLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
+  public static void setExternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
     final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" );
@@ -212,5 +213,29 @@ public class FeatureUtils
       return (CommandableWorkspace) workspace;
     else
       return new CommandableWorkspace( workspace );
+  }
+
+  public static Feature resolveFeature( final GMLWorkspace workspace, final Object property )
+  {
+    if( property instanceof XLinkedFeature_Impl )
+    {
+      try
+      {
+        final XLinkedFeature_Impl xLnk = (XLinkedFeature_Impl) property;
+        return xLnk.getFeature();
+      }
+      catch( final IllegalStateException e )
+      {
+        e.printStackTrace();
+
+        return null;
+      }
+    }
+
+    final Feature result = FeatureHelper.getFeature( workspace, property );
+    if( result == null )
+      throw new IllegalStateException( "Feature with id " + property.toString() + "not found" );
+
+    return result;
   }
 }
