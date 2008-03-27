@@ -56,4 +56,14 @@ public interface IKalypsoDeegreePreferences
    * Defines the default values for available coordinate systems.
    */
   public static final String AVAILABLE_CRS_VALUE = "EPSG:3034;EPSG:3035;EPSG:4258;EPSG:4289;EPSG:4314;EPSG:4326;EPSG:31466;EPSG:31467;EPSG:31468;EPSG:31469;EPSG:25831;EPSG:25832;EPSG:25833;EPSG:32631;EPSG:32632;EPSG:32633";
+
+  /**
+   * Defines the key for the default coordinate system.
+   */
+  public static final String DEFAULT_CRS_SETTING = "org.kalypso.deegree.coordinate.systems.default";
+
+  /**
+   * Defines the default value for the default coordinate system.
+   */
+  public static final String DEFAULT_CRS_VALUE = "EPSG:31467";
 }

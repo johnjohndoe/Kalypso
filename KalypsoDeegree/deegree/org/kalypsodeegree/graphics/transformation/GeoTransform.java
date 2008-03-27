@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * <code>GeoTransformInterface</code> declares the methods which have to be implemented by each class that executes a
- * geographical coordinat transformation.
+ * geographical coordinate transformation.
  * 
  * @author Andreas Poth poth@lat-lon.de
  * @version 28.12.2000
@@ -82,15 +82,15 @@ public interface GeoTransform
 
   public void setSourceRect( GM_Envelope rect );
 
-  public void setSourceRect( double xMin, double yMin, double xMax, double yMax );
+  public void setSourceRect( double xMin, double yMin, double xMax, double yMax, String sourceCoordinateSystem );
 
-  public GM_Envelope getSourceRect();
+  public GM_Envelope getSourceRect( );
 
   public void setDestRect( GM_Envelope rect );
 
-  public void setDestRect( double xMin, double yMin, double xMax, double yMax );
+  public void setDestRect( double xMin, double yMin, double xMax, double yMax, String destCoordinateSystem );
 
-  public GM_Envelope getDestRect();
+  public GM_Envelope getDestRect( );
 
   public GM_Position getSourcePoint( GM_Position point );
 

@@ -136,7 +136,7 @@ public abstract class AbstractWidget implements IWidget
     final double gisY1 = gisMY - gisDY;
     final double gisY2 = gisMY + gisDY;
 
-    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2, m_mapPanel.getMapModell().getCoordinatesSystem() );
   }
 
   protected final double getRatio( )
@@ -154,7 +154,7 @@ public abstract class AbstractWidget implements IWidget
   {
 
     final GeoTransform gt = m_mapPanel.getProjection();
-    return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt.getSourceX( x2 ), gt.getSourceY( y2 ) );
+    return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt.getSourceX( x2 ), gt.getSourceY( y2 ), m_mapPanel.getMapModell().getCoordinatesSystem() );
   }
 
   /**

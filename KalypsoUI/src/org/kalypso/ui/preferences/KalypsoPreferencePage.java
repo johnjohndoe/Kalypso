@@ -48,9 +48,8 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.preferences.IKalypsoDeegreePreferences;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This class represents a preference page that is contributed to the Preferences dialog. By subclassing
@@ -67,7 +66,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   public KalypsoPreferencePage( )
   {
     super( GRID );
-    setPreferenceStore( KalypsoGisPlugin.getDefault().getPreferenceStore() );
+    setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
     setDescription( "Hier können Sie die Kalypso-Einstellungen ändern" );
   }
 
@@ -81,7 +80,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
     final StringFieldEditor sfeSrv = new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare KALYPSO-&Server:", getFieldEditorParent() );
     addField( sfeSrv );
 
-    m_sfeCrs = new StringFieldEditor( IKalypsoCorePreferences.GLOBAL_CRS, "Globales &Koordinatensystem:", getFieldEditorParent() );
+    m_sfeCrs = new StringFieldEditor( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, "Globales &Koordinatensystem:", getFieldEditorParent() );
     addField( m_sfeCrs );
     m_sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben
 
@@ -100,11 +99,11 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   protected void initialize( )
   {
     super.initialize();
-    
-    m_sfeCrs.setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
+
+    m_sfeCrs.setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
     m_sfeCrs.load();
   }
-  
+
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
@@ -123,7 +122,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
 
     // even if on shutdown the preferences are saved, we save them in case of a
     // platfrom crash
-    KalypsoGisPlugin.getDefault().savePluginPreferences();
+    KalypsoDeegreePlugin.getDefault().savePluginPreferences();
 
     return result;
   }

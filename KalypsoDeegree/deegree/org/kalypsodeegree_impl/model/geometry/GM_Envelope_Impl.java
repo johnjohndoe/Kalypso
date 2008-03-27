@@ -88,24 +88,35 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   private final GM_Position m_min;
 
   /**
+   * The coordinate system of the positions, contained in this envelope.
+   */
+  private String m_coordinateSystem;
+
+  /**
    * Creates a new GM_Envelope_Impl object.
    */
   public GM_Envelope_Impl( )
   {
     m_min = new GM_Position_Impl();
     m_max = new GM_Position_Impl();
+    m_coordinateSystem = null;
   }
 
   /**
    * Creates a new GM_Envelope_Impl object.
    * 
    * @param min
+   *            The min position.
    * @param max
+   *            The max position.
+   * @param coordinateSystem
+   *            The coordinate system of the positions, contained in this envelope.
    */
-  public GM_Envelope_Impl( final GM_Position min, final GM_Position max )
+  public GM_Envelope_Impl( final GM_Position min, final GM_Position max, final String coordinateSystem )
   {
     m_min = GeometryFactory.createGM_Position( min.getX() < max.getX() ? min.getX() : max.getX(), min.getY() < max.getY() ? min.getY() : max.getY() );
     m_max = GeometryFactory.createGM_Position( min.getX() > max.getX() ? min.getX() : max.getX(), min.getY() > max.getY() ? min.getY() : max.getY() );
+    m_coordinateSystem = coordinateSystem;
   }
 
   /**
@@ -114,7 +125,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   @Override
   public Object clone( )
   {
-    return new GM_Envelope_Impl( (GM_Position) ((GM_Position_Impl) m_min).clone(), (GM_Position) ((GM_Position_Impl) m_max).clone() );
+    return new GM_Envelope_Impl( (GM_Position) ((GM_Position_Impl) m_min).clone(), (GM_Position) ((GM_Position_Impl) m_max).clone(), m_coordinateSystem );
   }
 
   /**
@@ -318,7 +329,8 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     final GM_Position p1 = new GM_Position_Impl( xmin, ymin );
     final GM_Position p2 = new GM_Position_Impl( xmax, ymax );
 
-    return new GM_Envelope_Impl( p1, p2 );
+    // TODO Check coordinate systems, if equal.
+    return new GM_Envelope_Impl( p1, p2, m_coordinateSystem );
   }
 
   /**
@@ -328,18 +340,26 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   public boolean equals( final Object other )
   {
     if( (other == null) || !(other instanceof GM_Envelope_Impl) )
-    {
       return false;
-    }
 
-    return (m_min.equals( ((GM_Envelope) other).getMin() ) && m_max.equals( ((GM_Envelope) other).getMax() ));
+    GM_Envelope otherEnvelope = (GM_Envelope) other;
+
+    /* Is one of the coordinate systems null? */
+    if( (m_coordinateSystem == null && otherEnvelope.getCoordinateSystem() != null) || (m_coordinateSystem != null && otherEnvelope.getCoordinateSystem() == null) )
+      return false;
+
+    /* Now, either both or none are null. */
+    if( m_coordinateSystem != null && !m_coordinateSystem.equals( otherEnvelope.getCoordinateSystem() ) )
+      return false;
+
+    return (m_min.equals( otherEnvelope.getMin() ) && m_max.equals( otherEnvelope.getMax() ));
   }
 
   public GM_Envelope getBuffer( final double b )
   {
     final GM_Position bmin = new GM_Position_Impl( new double[] { m_min.getX() - b, m_min.getY() - b } );
     final GM_Position bmax = new GM_Position_Impl( new double[] { m_max.getX() + b, m_max.getY() + b } );
-    return GeometryFactory.createGM_Envelope( bmin, bmax );
+    return GeometryFactory.createGM_Envelope( bmin, bmax, m_coordinateSystem );
   }
 
   public GM_Envelope getMerged( final GM_Position pos )
@@ -359,7 +379,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
       if( pos.getY() > maxy )
         maxy = pos.getY();
     }
-    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
+
+    // TODO Check coordinate systems, if equal.
+    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
 
   }
 
@@ -383,7 +405,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
       if( envelope.getMax().getY() > maxy )
         maxy = envelope.getMax().getY();
     }
-    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
+
+    // TODO Check coordinate systems, if equal.
+    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
   }
 
   @Override
@@ -406,31 +430,54 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     final double maxx = center.getX() + dx / 2d;
     final double miny = center.getY() - dy / 2d;
     final double maxy = center.getY() + dy / 2d;
-    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy );
+
+    // TODO Check coordinate systems, if equal.
+    return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Envelope#getCoordinateSystem()
+   */
+  public String getCoordinateSystem( )
+  {
+    return m_coordinateSystem;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Envelope#setCoordinateSystem(java.lang.String)
+   */
+  public void setCoordinateSystem( String coordinateSystem )
+  {
+    m_coordinateSystem = coordinateSystem;
   }
 }
 
 /*
  * Changes to this class. What the people haven been up to: $Log$
- * Changes to this class. What the people haven been up to: Revision 1.18  2008/01/16 15:12:04  skurzbach
- * Changes to this class. What the people haven been up to: model adaptors based on gml feature type, theme factory extension for maps, adaptor for discretization model (dm): no inverted edges anymore, introduced version 1.0 of dm, removed wrappers for inverted edges, adapted geometry drawing and import/export (2d) of dm, removed double usage of xerces (profiling error)
+ * Changes to this class. What the people haven been up to: Revision 1.19  2008/03/27 17:18:20  albert
+ * Changes to this class. What the people haven been up to: - transformation of raster
  * Changes to this class. What the people haven been up to: Changes to this class. What
- * the people haven been up to: Revision 1.17 2007/08/09 17:58:20 devgernot Changes to this class. What the people haven
- * been up to: Some code cleanup for WMS-Theme. Removed unnecessary image transformation stuff. Changes to this class.
- * What the people haven been up to: Revision 1.16 2006/05/28 15:47:16 devgernot - GML-Version is now determined
- * automatically! Use annotations, default is 2.1; - some yellow thingies - repaired some tests (KalypsoCommon, Core is
- * clean, some Test in KalypsoTest are still not running due to GMLSchemaParser/Writer Problems) Revision 1.15
- * 2005/09/29 12:35:21 doemming *** empty log message *** Revision 1.14 2005/09/18 16:22:58 belger *** empty log message
- * *** Revision 1.13 2005/07/21 02:56:47 doemming *** empty log message *** Revision 1.12 2005/06/19 15:10:01 doemming
- * *** empty log message *** Revision 1.11 2005/04/17 21:19:24 doemming *** empty log message *** Revision 1.10
- * 2005/03/08 11:01:04 doemming *** empty log message *** Revision 1.9 2005/03/02 18:17:17 doemming *** empty log
- * message *** Revision 1.8 2005/02/20 18:56:50 doemming *** empty log message *** Revision 1.7 2005/02/15 17:13:49
- * doemming *** empty log message *** Revision 1.6 2005/01/18 12:50:41 doemming *** empty log message *** Revision 1.5
- * 2004/10/07 14:09:10 doemming *** empty log message *** Revision 1.1 2004/09/02 23:56:51 doemming *** empty log
- * message *** Revision 1.3 2004/08/31 13:54:32 doemming *** empty log message *** Revision 1.13 2004/03/02 07:38:14
- * poth no message Revision 1.12 2004/02/23 07:47:50 poth no message Revision 1.11 2004/01/27 07:55:44 poth no message
- * Revision 1.10 2004/01/08 09:50:22 poth no message Revision 1.9 2003/09/14 14:05:08 poth no message Revision 1.8
- * 2003/07/10 15:24:23 mrsnyder Started to implement LabelDisplayElements that are bound to a Polygon. Fixed error in
+ * the people haven been up to: Revision 1.18 2008/01/16 15:12:04 skurzbach Changes to this class. What the people haven
+ * been up to: model adaptors based on gml feature type, theme factory extension for maps, adaptor for discretization
+ * model (dm): no inverted edges anymore, introduced version 1.0 of dm, removed wrappers for inverted edges, adapted
+ * geometry drawing and import/export (2d) of dm, removed double usage of xerces (profiling error) Changes to this
+ * class. What the people haven been up to: Changes to this class. What the people haven been up to: Revision 1.17
+ * 2007/08/09 17:58:20 devgernot Changes to this class. What the people haven been up to: Some code cleanup for
+ * WMS-Theme. Removed unnecessary image transformation stuff. Changes to this class. What the people haven been up to:
+ * Revision 1.16 2006/05/28 15:47:16 devgernot - GML-Version is now determined automatically! Use annotations, default
+ * is 2.1; - some yellow thingies - repaired some tests (KalypsoCommon, Core is clean, some Test in KalypsoTest are
+ * still not running due to GMLSchemaParser/Writer Problems) Revision 1.15 2005/09/29 12:35:21 doemming *** empty log
+ * message *** Revision 1.14 2005/09/18 16:22:58 belger *** empty log message *** Revision 1.13 2005/07/21 02:56:47
+ * doemming *** empty log message *** Revision 1.12 2005/06/19 15:10:01 doemming *** empty log message *** Revision 1.11
+ * 2005/04/17 21:19:24 doemming *** empty log message *** Revision 1.10 2005/03/08 11:01:04 doemming *** empty log
+ * message *** Revision 1.9 2005/03/02 18:17:17 doemming *** empty log message *** Revision 1.8 2005/02/20 18:56:50
+ * doemming *** empty log message *** Revision 1.7 2005/02/15 17:13:49 doemming *** empty log message *** Revision 1.6
+ * 2005/01/18 12:50:41 doemming *** empty log message *** Revision 1.5 2004/10/07 14:09:10 doemming *** empty log
+ * message *** Revision 1.1 2004/09/02 23:56:51 doemming *** empty log message *** Revision 1.3 2004/08/31 13:54:32
+ * doemming *** empty log message *** Revision 1.13 2004/03/02 07:38:14 poth no message Revision 1.12 2004/02/23
+ * 07:47:50 poth no message Revision 1.11 2004/01/27 07:55:44 poth no message Revision 1.10 2004/01/08 09:50:22 poth no
+ * message Revision 1.9 2003/09/14 14:05:08 poth no message Revision 1.8 2003/07/10 15:24:23 mrsnyder Started to
+ * implement LabelDisplayElements that are bound to a Polygon. Fixed error in
  * GM_MultiSurface_Impl.calculateCentroidArea(). Revision 1.7 2003/07/03 12:32:26 poth no message Revision 1.6
  * 2003/03/20 12:10:29 mrsnyder Rewrote intersects() method. Revision 1.5 2003/03/19 15:30:04 axel_schaefer Intersects:
  * crossing envelopes, but points are not in envelope

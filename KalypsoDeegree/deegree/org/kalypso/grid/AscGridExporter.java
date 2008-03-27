@@ -58,10 +58,10 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
- * Helper class to export a {@link IDoubleGeoGrid} to the ESRI Ascii Grid file format.
+ * Helper class to export a {@link IGeoGrid} to the ESRI Ascii Grid file format.
  * <p>
- * REMARK: could not be implemented as a {@link IDoubleGeoGridWalker} as the walker does not garantuee the order of
- * walked cells.
+ * REMARK: could not be implemented as a {@link IGeoGridWalker} as the walker does not garantuee the order of walked
+ * cells.
  * </p>
  * 
  * @author Gernot Belger
@@ -128,7 +128,7 @@ public class AscGridExporter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Schreibe ASCII", 100 );
 
-    final Envelope boundingBox = inputGrid.getBoundingBox();
+    final Envelope envelope = inputGrid.getEnvelope();
     final int sizeX = inputGrid.getSizeX();
     final int sizeY = inputGrid.getSizeY();
     final double cellsize = inputGrid.getOffsetX().x;
@@ -137,12 +137,12 @@ public class AscGridExporter
 
     progress.setWorkRemaining( sizeY );
 
-    /* Haeder */
+    /* Header */
     // CellSize: .asc only support quadratic, cartesian cells, so we just take xOffset.x
     destination.format( Locale.US, "ncols         %d%n", sizeX );
     destination.format( "nrows         %d%n", sizeY );
-    destination.format( "xllcorner     %.3f%n", boundingBox.getMinX() ); // xllcorner
-    destination.format( "yllcorner     %.3f%n", boundingBox.getMinY() ); // yllcorner
+    destination.format( "xllcorner     %.3f%n", envelope.getMinX() ); // xllcorner
+    destination.format( "yllcorner     %.3f%n", envelope.getMinY() ); // yllcorner
     destination.format( "cellsize      " + m_valueFormat + "%n", cellsize );
     destination.format( "NODATA_value  " + m_valueFormat + "%n", m_noDataValue );
 

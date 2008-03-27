@@ -235,7 +235,7 @@ public class MapModellHelper
       final int w = bounds.width;
       final int h = bounds.height;
 
-      p.setDestRect( x - 2, y - 2, w + x, h + y );
+      p.setDestRect( x - 2, y - 2, w + x, h + y, null );
 
       final double scale = MapModellHelper.calcScale( model, bbox, bounds.width, bounds.height );
       try
@@ -271,7 +271,7 @@ public class MapModellHelper
   }
 
   /**
-   * Calculates the common extent o fall given themes.
+   * Calculates the common extent of all given themes.
    * 
    * @param predicate
    *            If not <code>null</code>, only themes applying to the predicate are considered.
@@ -287,6 +287,8 @@ public class MapModellHelper
       if( (predicate == null) || predicate.decide( kalypsoTheme ) )
       {
         final GM_Envelope boundingBox = kalypsoTheme.getFullExtent();
+        boundingBox.setCoordinateSystem( kalypsoTheme.getMapModell().getCoordinatesSystem() );
+
         if( result == null )
           result = boundingBox;
         else
@@ -327,7 +329,7 @@ public class MapModellHelper
     final double mx = (maxX + minX) / 2d;
     final double my = (maxY + minY) / 2d;
 
-    return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy );
+    return GeometryFactory.createGM_Envelope( mx - dx, my - dy, mx + dx, my + dy, env.getCoordinateSystem() );
   }
 
   /**

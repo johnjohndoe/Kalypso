@@ -47,7 +47,5 @@ package org.kalypso.core.preferences;
  */
 public interface IKalypsoCorePreferences
 {
-  public static final String DEFAULT_CRS = "EPSG:31467";
-
-  public static final String GLOBAL_CRS = "kalypso.global.crs";
+  // Moved to deegree
 }

@@ -49,10 +49,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -72,8 +71,6 @@ public class KalypsoCorePlugin extends Plugin
   private CatalogManager m_catalogManager = null;
 
   private CatalogSLD m_sldCatalog = null;
-
-  private String m_coordinateSystem = null;
 
   public static String getID( )
   {
@@ -149,24 +146,16 @@ public class KalypsoCorePlugin extends Plugin
     return m_selectionManager;
   }
 
+  /**
+   * This function returns the coordinate system set in the preferences.
+   * 
+   * @return The coordinate system.
+   * @deprecated Use {@link KalypsoDeegreePlugin#getDefault()#getCoordinateSystem()} instead.
+   */
+  @Deprecated
   public String getCoordinatesSystem( )
   {
-    if( m_coordinateSystem == null )
-    {
-      String crsName = getPluginPreferences().getString( IKalypsoCorePreferences.GLOBAL_CRS );
-      boolean knownCRS = CRSHelper.isKnownCRS( crsName );
-
-      if( crsName == null || !knownCRS )
-      {
-        getPluginPreferences().setValue( IKalypsoCorePreferences.GLOBAL_CRS, IKalypsoCorePreferences.DEFAULT_CRS );
-        System.out.println( "CRS \"" + crsName + "\" in preferences is unknown. setting preferences to CRS \"" + IKalypsoCorePreferences.DEFAULT_CRS + "\"" );
-        crsName = IKalypsoCorePreferences.DEFAULT_CRS;
-      }
-
-      m_coordinateSystem = crsName;
-    }
-
-    return m_coordinateSystem;
+    return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
   /**

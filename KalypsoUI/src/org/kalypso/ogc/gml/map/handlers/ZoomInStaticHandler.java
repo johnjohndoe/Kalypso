@@ -76,8 +76,8 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
       throw new ExecutionException( "Active part has no MapPanel." );
 
     final GM_Envelope currentBBox = mapPanel.getBoundingBox();
-    
-            GM_Envelope wishBBox = null;
+
+    GM_Envelope wishBBox = null;
 
     final GM_Position currentMax = currentBBox.getMax();
     final GM_Position currentMin = currentBBox.getMin();
@@ -90,8 +90,8 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
     final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
     final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
 
-    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
-    
+    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, currentBBox.getCoordinateSystem() );
+
     final GM_Envelope zoomBox = wishBBox;
     new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
 

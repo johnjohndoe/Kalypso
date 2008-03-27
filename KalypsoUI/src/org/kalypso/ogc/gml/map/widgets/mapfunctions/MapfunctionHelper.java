@@ -220,6 +220,6 @@ public class MapfunctionHelper
     final double minY = g1y < g2y ? g1y : g2y;
     final double maxY = g1y > g2y ? g1y : g2y;
 
-    return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
+    return GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, transform.getSourceRect().getCoordinateSystem() );
   }
 }

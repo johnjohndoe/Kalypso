@@ -88,7 +88,7 @@ public class Grid implements IGrid
     if( rafPath.exists() )
       rafPath.delete();
     m_gridValues = new RandomAccessFile( rafPath, "rw" );
-    GM_Envelope env = GeometryFactory.createGM_Envelope( llc.getX(), llc.getY(), llc.getX() + cellsize * c, llc.getY() + cellsize * r );
+    GM_Envelope env = GeometryFactory.createGM_Envelope( llc.getX(), llc.getY(), llc.getX() + cellsize * c, llc.getY() + cellsize * r, crs );
     m_env = GeometryFactory.createGM_Surface( env, crs );
     m_rows = r;
     m_cols = c;
@@ -127,7 +127,7 @@ public class Grid implements IGrid
     GM_Position llcGrid = GeometryFactory.createGM_Position( gridSize.getMin().getX() - cellsize, gridSize.getMin().getY() - cellsize );
     GM_Position urcGrid = GeometryFactory.createGM_Position( llcGrid.getX() + m_cols * cellsize, llcGrid.getY() + m_rows * cellsize );
 
-    /* GM_Envelope gridenv = */GeometryFactory.createGM_Envelope( llcGrid, urcGrid );
+    /* GM_Envelope gridenv = */GeometryFactory.createGM_Envelope( llcGrid, urcGrid, crs );
     m_env = GeometryFactory.createGM_Surface( gridSize, crs );
     if( rafPath.exists() )
       rafPath.delete();

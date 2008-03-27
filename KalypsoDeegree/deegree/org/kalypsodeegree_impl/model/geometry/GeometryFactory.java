@@ -94,21 +94,21 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 final public class GeometryFactory
 {
   /**
-   * creates a GM_Envelope object out from two croner coordinates
+   * creates a GM_Envelope object out from two corner coordinates
    */
-  public static GM_Envelope createGM_Envelope( final double minx, final double miny, final double maxx, final double maxy )
+  public static GM_Envelope createGM_Envelope( final double minx, final double miny, final double maxx, final double maxy, final String coordinateSystem )
   {
     final GM_Position min = GeometryFactory.createGM_Position( minx < maxx ? minx : maxx, miny < maxy ? miny : maxy );
     final GM_Position max = GeometryFactory.createGM_Position( minx > maxx ? minx : maxx, miny > maxy ? miny : maxy );
-    return new GM_Envelope_Impl( min, max );
+    return new GM_Envelope_Impl( min, max, coordinateSystem );
   }
 
   /**
-   * creates a GM_Envelope object out from two croner coordinates
+   * creates a GM_Envelope object out from two corner coordinates
    */
-  public static GM_Envelope createGM_Envelope( final GM_Position min, final GM_Position max )
+  public static GM_Envelope createGM_Envelope( final GM_Position min, final GM_Position max, final String coordinateSystem )
   {
-    return new GM_Envelope_Impl( min, max );
+    return new GM_Envelope_Impl( min, max, coordinateSystem );
   }
 
   /**

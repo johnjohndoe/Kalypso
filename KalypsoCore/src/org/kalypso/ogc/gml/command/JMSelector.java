@@ -151,7 +151,7 @@ public class JMSelector
    */
   public static List<Object> select( final GM_Position pos, final double r, final JMSpatialIndex<Object> list, final boolean withinStatus )
   {
-    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos.getY() + r );
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( pos.getX() - r, pos.getY() - r, pos.getX() + r, pos.getY() + r, null );
     final List<Object> resultDE = select( env, list, withinStatus );
 
     return resultDE;

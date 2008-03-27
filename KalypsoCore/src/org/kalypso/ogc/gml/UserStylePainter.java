@@ -62,6 +62,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -121,8 +123,11 @@ public class UserStylePainter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Rule", 100 );
 
-    final List visibleFeatures = features.query( bbox, null );
-
+    List<?> visibleFeatures = features.query( bbox, null );
+//    if (features.getParentFeatureTypeProperty().getQName().equals( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER )) {
+//      visibleFeatures = features;
+//    }
+    
     ProgressUtilities.worked( progress, 15 );
 
     final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( visibleFeatures.size() );

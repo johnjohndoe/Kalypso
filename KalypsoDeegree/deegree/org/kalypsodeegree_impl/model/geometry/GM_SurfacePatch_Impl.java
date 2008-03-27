@@ -191,7 +191,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
       }
     }
 
-    m_envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) );
+    m_envelope = new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() );
   }
 
   /**

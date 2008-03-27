@@ -310,7 +310,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
    * @deprecated Does not belong into the MapPanel. Use {@link IFeatureSelectionChanger} instead.
    */
   @Deprecated
-  private void changeSelection( final List features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
+  private void changeSelection( final List< ? > features, final IKalypsoFeatureTheme theme, final IFeatureSelectionManager selectionManager2, final int selectionMode )
   {
     // nothing was chosen by the user, clear selection
     if( features.isEmpty() )
@@ -554,7 +554,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final double gisY1 = gisMY - gisDY;
     final double gisY2 = gisMY + gisDY;
 
-    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2, getMapModell().getCoordinatesSystem() );
   }
 
   public GM_Envelope getPanToPixelBoundingBox( final double mx, final double my )
@@ -618,7 +618,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final double gisY1 = gisMY - gisDY;
     final double gisY2 = gisMY + gisDY;
 
-    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2 );
+    return GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2, getMapModell().getCoordinatesSystem() );
   }
 
   protected void globalSelectionChanged( final IFeatureSelection selection )
@@ -670,7 +670,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       else
       {
         // Why -2 ?
-        m_projection.setDestRect( x - 2, y - 2, w + x, h + y );
+        m_projection.setDestRect( x - 2, y - 2, w + x, h + y, getMapModell().getCoordinatesSystem() );
 
         m_modellPainter = m_mapModellPainter;
 
@@ -870,7 +870,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
         if( (minX != maxX) && (minY != maxY) )
         {
-          final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
+          final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, getMapModell().getCoordinatesSystem() );
           final List<Object> features = JMSelector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )

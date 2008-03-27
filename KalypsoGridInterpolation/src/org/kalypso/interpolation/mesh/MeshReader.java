@@ -442,7 +442,7 @@ public class MeshReader
       }
 
       // assigning BoundigBox of Mesh
-      m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax ), cs );
+      m_meshEnv = GeometryFactory.createGM_Surface( GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax, cs ), cs );
       // logWriter.newLine();
       System.out.println( "Total Nodes read: " + m_points.size() + " points created." );
       System.out.println( "Bounding Box of the Net: " + m_meshEnv.toString() );

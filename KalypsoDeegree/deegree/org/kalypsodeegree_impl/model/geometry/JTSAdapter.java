@@ -561,7 +561,7 @@ public class JTSAdapter
 
     final GM_Position min = wrap( crdMin );
     final GM_Position max = wrap( crdMax );
-    return new GM_Envelope_Impl( min, max );
+    return new GM_Envelope_Impl( min, max, null );
   }
 
   public static Envelope export( final GM_Envelope env )

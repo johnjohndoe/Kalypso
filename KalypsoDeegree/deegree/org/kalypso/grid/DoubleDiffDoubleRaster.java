@@ -61,7 +61,7 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
 
   public DoubleDiffDoubleRaster( final IGeoGrid raster, final IGeoValueProvider doubleProvider ) throws GeoGridException
   {
-    super( raster.getOrigin(), raster.getOffsetX(), raster.getOffsetY() );
+    super( raster.getOrigin(), raster.getOffsetX(), raster.getOffsetY(), raster.getSourceCRS() );
 
     m_raster = raster;
     m_doubleProvider = doubleProvider;

@@ -276,8 +276,8 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   {
     final double yborder = m_font.getSize() + 3;
     final double xborder = width / 3;
-    final GM_Envelope srcEnv = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
-    final GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder, height - yborder );
+    final GM_Envelope srcEnv = GeometryFactory.createGM_Envelope( 0, 0, 1, 1, null );
+    final GM_Envelope destEnv = GeometryFactory.createGM_Envelope( xborder, yborder, width - xborder, height - yborder, null );
     final GeoTransform transform = new WorldToScreenTransform( srcEnv, destEnv );
 
     final Image image = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );

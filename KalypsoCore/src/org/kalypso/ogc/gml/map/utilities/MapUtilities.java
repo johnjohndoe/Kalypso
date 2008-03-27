@@ -333,7 +333,7 @@ public class MapUtilities
     double newY = y - newHeight / 2;
 
     /* Create the new extent. */
-    GM_Envelope newExtent = GeometryFactory.createGM_Envelope( newX, newY, newX + newWidth, newY + newHeight );
+    GM_Envelope newExtent = GeometryFactory.createGM_Envelope( newX, newY, newX + newWidth, newY + newHeight, extent.getCoordinateSystem() );
 
     /* Set the new extent. */
     mapPanel.setBoundingBox( newExtent );

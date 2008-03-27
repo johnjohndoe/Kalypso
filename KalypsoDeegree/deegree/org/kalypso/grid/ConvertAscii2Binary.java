@@ -69,13 +69,16 @@ public class ConvertAscii2Binary
 
   private final int m_scale;
 
-  public ConvertAscii2Binary( final URL asciiFileURL, final File ascbinFile, final int scale )
+  private final String m_sourceCRS;
+
+  public ConvertAscii2Binary( final URL asciiFileURL, final File ascbinFile, final int scale, final String sourceCRS )
   {
     Assert.isTrue( scale >= 0, "Scale must not be negative" );
 
     m_asciiFileURL = asciiFileURL;
     m_ascbinFile = ascbinFile;
     m_scale = scale;
+    m_sourceCRS = sourceCRS;
   }
 
   public void doConvert( final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
@@ -108,7 +111,7 @@ public class ConvertAscii2Binary
       final BigDecimal noData = new BigDecimal( data[5] );
 
       /* Write header */
-      final BinaryGeoGrid binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, null, null, null );
+      final BinaryGeoGrid binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, null, null, null, m_sourceCRS );
       ProgressUtilities.worked( monitor, 1 );
 
       for( int y = 0; y < sizeY; y++ )

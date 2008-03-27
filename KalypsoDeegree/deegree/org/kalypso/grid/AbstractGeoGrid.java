@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import org.kalypsodeegree.model.geometry.GM_Surface;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -54,29 +56,72 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public abstract class AbstractGeoGrid implements IGeoGrid
 {
-  private final Coordinate m_offsetY;
-
+  /**
+   * The origin coordinates.
+   */
   private final Coordinate m_origin;
 
+  /**
+   * The offset in x direction.
+   */
   private final Coordinate m_offsetX;
 
-  public AbstractGeoGrid( final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY )
+  /**
+   * The offset in y direction.
+   */
+  private final Coordinate m_offsetY;
+
+  /**
+   * The source coordinate system. Could be null.
+   */
+  private final String m_sourceCRS;
+
+  /**
+   * The constructor.
+   * 
+   * @param origin
+   *            The origin coordinates.
+   * @param offsetX
+   *            The offset in x direction.
+   * @param offsetY
+   *            The offset in y direction.
+   * @param sourceCRS
+   *            The source coordinate system. Could be null.
+   */
+  public AbstractGeoGrid( final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS )
   {
     m_origin = origin;
     m_offsetX = offsetX;
     m_offsetY = offsetY;
+    m_sourceCRS = sourceCRS;
   }
 
   /**
-   * Calculates the envelope of the whole grid.
+   * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
-  public Envelope getBoundingBox( ) throws GeoGridException
+  public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
+  {
+    return GeoGridUtilities.createSurface( this, targetCRS );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
+   */
+  public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
+  {
+    return GeoGridUtilities.createCell( this, x, y, targetCRS );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getEnvelope()
+   */
+  public Envelope getEnvelope( ) throws GeoGridException
   {
     return GeoGridUtilities.toEnvelope( this );
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.IDoubleGeoGrid#getOrigin()
+   * @see org.kalypso.grid.IGeoGrid#getOrigin()
    */
   public Coordinate getOrigin( )
   {
@@ -84,7 +129,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.IDoubleGeoGrid#getOffsetX()
+   * @see org.kalypso.grid.IGeoGrid#getOffsetX()
    */
   public Coordinate getOffsetX( )
   {
@@ -92,11 +137,19 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.IDoubleGeoGrid#getOffsetY()
+   * @see org.kalypso.grid.IGeoGrid#getOffsetY()
    */
   public Coordinate getOffsetY( )
   {
     return m_offsetY;
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
+   */
+  public String getSourceCRS( )
+  {
+    return m_sourceCRS;
   }
 
   /**
@@ -113,7 +166,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.IDoubleProvider#getValue(Coordinate)
+   * @see org.kalypso.grid.IGeoValueProvider#getValue(com.vividsolutions.jts.geom.Coordinate, java.lang.String)
    */
   public double getValue( final Coordinate crd ) throws GeoGridException
   {
@@ -121,15 +174,20 @@ public abstract class AbstractGeoGrid implements IGeoGrid
     return getValue( cell );
   }
 
+  /**
+   * This function returns the value of the given cell.
+   * 
+   * @param cell
+   *            The cell.
+   * @return The value.
+   */
   private double getValue( final GeoGridCell cell ) throws GeoGridException
   {
     return getValue( cell.x, cell.y );
   }
 
   /**
-   * Does nothing on default.
-   * 
-   * @see org.kalypso.gis.doubleraster.IDoubleGrid#dispose()
+   * @see org.kalypso.grid.IGeoGrid#dispose()
    */
   public void dispose( )
   {
@@ -155,5 +213,4 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   {
     return new DefaultWalkingStrategy();
   }
-
 }
