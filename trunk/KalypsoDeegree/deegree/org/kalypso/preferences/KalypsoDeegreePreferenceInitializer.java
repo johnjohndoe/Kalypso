@@ -57,5 +57,6 @@ public class KalypsoDeegreePreferenceInitializer extends AbstractPreferenceIniti
   public void initializeDefaultPreferences( )
   {
     KalypsoDeegreePlugin.getDefault().getPluginPreferences().setDefault( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, IKalypsoDeegreePreferences.AVAILABLE_CRS_VALUE );
+    KalypsoDeegreePlugin.getDefault().getPluginPreferences().setDefault( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
   }
 }

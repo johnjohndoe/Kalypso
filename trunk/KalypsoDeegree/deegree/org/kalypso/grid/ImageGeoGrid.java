@@ -69,9 +69,9 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
 
   private RenderedOp m_image;
 
-  public ImageGeoGrid( final URL imageURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY )
+  public ImageGeoGrid( final URL imageURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS )
   {
-    super( origin, offsetX, offsetY );
+    super( origin, offsetX, offsetY, sourceCRS );
 
     m_image = JAI.create( "url", imageURL );
 

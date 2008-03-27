@@ -80,15 +80,15 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
     if( activeTheme == null )
       throw new ExecutionException( "Kein Thema aktiv" );
 
-//    final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) activeTheme;
-//    final FeatureList featureList = ft.getFeatureList();
-//    featureList.invalidate();
-//    for( Object object : featureList )
-//    {
-//      if( object instanceof Feature )
-//        ((Feature)object).invalidEnvelope();
-//    }
-    
+// final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) activeTheme;
+// final FeatureList featureList = ft.getFeatureList();
+// featureList.invalidate();
+// for( Object object : featureList )
+// {
+// if( object instanceof Feature )
+// ((Feature)object).invalidEnvelope();
+// }
+
     final GM_Envelope zoomBox = activeTheme.getFullExtent();
     if( zoomBox == null )
       throw new ExecutionException( "Aktives Thema hat keinen Extent." );
@@ -107,7 +107,7 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
     final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
     final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
 
-    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, zoomBox.getCoordinateSystem() );
 
     new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, wishBBox ), null );
 

@@ -90,9 +90,9 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGri
 
   private final double m_noDataValue;
 
-  public AsciiRandomAccessGeoGrid( final URL asciiFileURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  public AsciiRandomAccessGeoGrid( final URL asciiFileURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
-    super( origin, offsetX, offsetY );
+    super( origin, offsetX, offsetY, sourceCRS );
 
     /* Copy file to local folder, as we are going to open it as random access file */
     m_ascTmpFile = File.createTempFile( "ascTmp", ".asc" );

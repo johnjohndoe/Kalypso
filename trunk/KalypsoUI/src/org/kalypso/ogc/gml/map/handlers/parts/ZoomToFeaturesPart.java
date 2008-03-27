@@ -134,7 +134,7 @@ public class ZoomToFeaturesPart
     GM_Position newMax = GeometryFactory.createGM_Position( max_x, max_y );
 
     /* Create the new envelope. */
-    GM_Envelope newEnvelope = GeometryFactory.createGM_Envelope( newMin, newMax );
+    GM_Envelope newEnvelope = GeometryFactory.createGM_Envelope( newMin, newMax, envelope.getCoordinateSystem() );
 
     MapPanel mapPanel = (MapPanel) m_part.getAdapter( MapPanel.class );
     if( mapPanel == null )

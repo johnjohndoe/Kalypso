@@ -68,9 +68,9 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
 
   private double m_max;
 
-  public AsciiInMemoryGeoGrid( final URL asciiFileURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  public AsciiInMemoryGeoGrid( final URL asciiFileURL, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
-    super( origin, offsetX, offsetY );
+    super( origin, offsetX, offsetY, sourceCRS );
 
     BufferedReader br = null;
     try

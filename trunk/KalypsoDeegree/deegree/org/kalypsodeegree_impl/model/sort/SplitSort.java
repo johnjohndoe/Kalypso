@@ -182,7 +182,7 @@ public class SplitSort implements FeatureList
   {
     if( result == null )
       result = new ArrayList();
-    return query( GeometryFactory.createGM_Envelope( pos, pos ), result );
+    return query( GeometryFactory.createGM_Envelope( pos, pos, null ), result );
   }
 
   /**

@@ -143,7 +143,7 @@ public class IndexFrame extends JFrame implements ActionListener, ChangeListener
                 // System.out.println("geo-class: " +
                 // geometries[0].getClass().getName());
                 GM_Point pnt = (GM_Point) geometries[0];
-                envelope = GeometryFactory.createGM_Envelope( pnt.getX(), pnt.getY(), pnt.getX(), pnt.getY() );
+                envelope = GeometryFactory.createGM_Envelope( pnt.getX(), pnt.getY(), pnt.getX(), pnt.getY(), pnt.getCoordinateSystem() );
               }
               HyperBoundingBox box = new HyperBoundingBox( new HyperPoint( envelope.getMin().getAsArray() ), new HyperPoint( envelope.getMax().getAsArray() ) );
               rtree.insert( new Integer( i ), box );

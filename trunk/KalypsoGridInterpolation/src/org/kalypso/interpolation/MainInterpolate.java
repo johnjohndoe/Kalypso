@@ -79,7 +79,7 @@ public class MainInterpolate
       {
         try
         {
-          bbox = GeometryFactory.createGM_Envelope( Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ) );
+          bbox = GeometryFactory.createGM_Envelope( Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ), Double.parseDouble( args[++i] ), null );
         }
         catch( NumberFormatException e )
         {

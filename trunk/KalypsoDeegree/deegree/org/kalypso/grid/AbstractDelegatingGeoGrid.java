@@ -42,6 +42,8 @@ package org.kalypso.grid;
 
 import java.math.BigDecimal;
 
+import org.kalypsodeegree.model.geometry.GM_Surface;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -86,14 +88,14 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   }
 
   /**
-   * @see org.kalypso.grid.IGeoGrid#getBoundingBox()
+   * @see org.kalypso.grid.IGeoGrid#getEnvelope()
    */
-  public Envelope getBoundingBox( ) throws GeoGridException
+  public Envelope getEnvelope( ) throws GeoGridException
   {
     if( m_delegate == null )
       throw new GeoGridException( "No grid-delegate available", null );
 
-    return m_delegate.getBoundingBox();
+    return m_delegate.getEnvelope();
   }
 
   /**
@@ -116,6 +118,17 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
       throw new GeoGridException( "No grid-delegate available", null );
 
     return m_delegate.getOffsetY();
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
+   */
+  public String getSourceCRS( ) throws GeoGridException
+  {
+    if( m_delegate == null )
+      throw new GeoGridException( "No grid-delegate available", null );
+
+    return m_delegate.getSourceCRS();
   }
 
   /**
@@ -182,6 +195,28 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
       return Double.NaN;
 
     return getValue( x, y );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
+   */
+  public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
+  {
+    if( m_delegate == null )
+      throw new GeoGridException( "No grid-delegate available", null );
+
+    return m_delegate.getSurface( targetCRS );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
+   */
+  public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
+  {
+    if( m_delegate == null )
+      throw new GeoGridException( "No grid-delegate available", null );
+
+    return m_delegate.getCell( x, y, targetCRS );
   }
 
   /**

@@ -172,7 +172,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         }
       }
 
-      setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ) ) );
+      setEnvelope( new GM_Envelope_Impl( new GM_Position_Impl( min ), new GM_Position_Impl( max ), getCoordinateSystem() ) );
     }
     catch( final GM_Exception e )
     {

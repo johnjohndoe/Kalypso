@@ -29,5 +29,4 @@ public class DiffGeoValueProvider implements IGeoValueProvider
   {
     return m_higher.getValue( crd ) - m_lower.getValue( crd );
   }
-
 }

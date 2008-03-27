@@ -497,7 +497,7 @@ public class LegendElement_Impl implements LegendElement
       throw new LegendException( "IncompatibleGeometryTypeException occured during the creation of the legend:\n" + "The legendsymbol for the Polygon can't be processed.\n"
           + "Error in creating the PolygonDisplayElement.\n" );
 
-    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( p1, p3 );
+    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( p1, p3, null );
 
     final WorldToScreenTransform wtst = new WorldToScreenTransform( envelope, envelope );
     ((PolygonDisplayElement_Impl) pde).paint( g, wtst, new NullProgressMonitor() );
@@ -778,13 +778,15 @@ public class LegendElement_Impl implements LegendElement
 /***********************************************************************************************************************
  * **************************************************************************** Changes to this class. What the people
  * have been up to: $Log$
- * have been up to: Revision 1.15  2007/10/22 09:22:56  devgernot
- * have been up to: Kalypso-Grid support refactored and improved.
- * have been up to: have been up to: Revision 1.14 2007/07/04 21:17:20 devgernot have
- * been up to: Result map generation. have been up to: have been up to: Bugfix: default style not working any more due
- * to handling of gml:location. have been up to: have been up to: Revision 1.13 2007/05/03 07:07:47 devgernot have been
- * up to: SLD supports now SE 1.1.0 ish uom attribute for Symbolzers. have been up to: have been up to: Revision 1.12
- * 2005/06/29 10:41:17 belger have been up to: *** empty log message *** have been up to: have been up to: Revision 1.11
- * 2005/06/20 14:07:49 belger have been up to: Formatierung have been up to: Revision 1.12 2004/07/09 07:17:19 poth no
- * message Revision 1.11 2004/06/01 15:55:05 poth no message Revision 1.10 2004/04/07 10:58:46 axel_schaefer bugfix
+ * have been up to: Revision 1.16  2008/03/27 17:18:20  albert
+ * have been up to: - transformation of raster
+ * have been up to: have been up to: Revision 1.15 2007/10/22 09:22:56 devgernot have
+ * been up to: Kalypso-Grid support refactored and improved. have been up to: have been up to: Revision 1.14 2007/07/04
+ * 21:17:20 devgernot have been up to: Result map generation. have been up to: have been up to: Bugfix: default style
+ * not working any more due to handling of gml:location. have been up to: have been up to: Revision 1.13 2007/05/03
+ * 07:07:47 devgernot have been up to: SLD supports now SE 1.1.0 ish uom attribute for Symbolzers. have been up to: have
+ * been up to: Revision 1.12 2005/06/29 10:41:17 belger have been up to: *** empty log message *** have been up to: have
+ * been up to: Revision 1.11 2005/06/20 14:07:49 belger have been up to: Formatierung have been up to: Revision 1.12
+ * 2004/07/09 07:17:19 poth no message Revision 1.11 2004/06/01 15:55:05 poth no message Revision 1.10 2004/04/07
+ * 10:58:46 axel_schaefer bugfix
  **********************************************************************************************************************/

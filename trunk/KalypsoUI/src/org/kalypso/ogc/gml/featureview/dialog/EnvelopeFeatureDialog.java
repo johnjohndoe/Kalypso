@@ -96,7 +96,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
     {
       values = dialog.getValues();
 
-      envelope = GeometryFactory.createGM_Envelope( values[0], values[1], values[2], values[3] );
+      envelope = GeometryFactory.createGM_Envelope( values[0], values[1], values[2], values[3], null );
 
       m_change = new FeatureChange( m_feature, m_ftp, envelope );
     }
@@ -118,7 +118,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.EnvelopeFeatureDialog.editvalues"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.EnvelopeFeatureDialog.editvalues" ); //$NON-NLS-1$
   }
 
 }

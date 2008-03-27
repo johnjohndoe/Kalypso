@@ -12,6 +12,7 @@ import ogc31.www.opengis.net.gml.RangeSetType;
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -34,6 +35,8 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   private final Coordinate m_offsetX;
 
   private final Coordinate m_offsetY;
+
+  private String m_sourceCRS;
 
   private final RangeSetType m_rangeSet;
 
@@ -59,11 +62,15 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     m_origin = new Coordinate( origin.getX(), origin.getY() );
     m_offsetX = new Coordinate( domain.getOffsetX().getGeoX(), domain.getOffsetX().getGeoY() );
     m_offsetY = new Coordinate( domain.getOffsetY().getGeoX(), domain.getOffsetY().getGeoY() );
+    m_sourceCRS = domain.getCoordinateSystem();
 
     m_sizeX = domain.getNumColumns();
     m_sizeY = domain.getNumRows();
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getValue(int, int)
+   */
   public final double getValue( final int x, final int y ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
@@ -83,7 +90,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
         if( file != null )
         {
           final URL url = new URL( m_context, file.getFileName() );
-          m_grid = GeoGridUtilities.createGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY );
+          m_grid = GeoGridUtilities.createGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS );
         }
       }
       catch( final IOException e )
@@ -96,40 +103,55 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   }
 
   /**
-   * Calculates the envelope of the whole grid.
+   * @see org.kalypso.grid.IGeoGrid#getEnvelope()
    */
-  public Envelope getBoundingBox( ) throws GeoGridException
+  public Envelope getEnvelope( ) throws GeoGridException
   {
     return GeoGridUtilities.toEnvelope( this );
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getOrigin()
+   */
   public Coordinate getOrigin( )
   {
     return m_origin;
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getSizeX()
+   */
   public int getSizeX( )
   {
     return m_sizeX;
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getSizeY()
+   */
   public int getSizeY( )
   {
     return m_sizeY;
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getOffsetX()
+   */
   public Coordinate getOffsetX( )
   {
     return m_offsetX;
   }
 
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getOffsetY()
+   */
   public Coordinate getOffsetY( )
   {
     return m_offsetY;
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#dispose()
+   * @see org.kalypso.grid.IGeoGrid#dispose()
    */
   public void dispose( )
   {
@@ -139,7 +161,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.IDoubleGeoGrid#getValueChecked(int, int)
+   * @see org.kalypso.grid.IGeoGrid#getValueChecked(int, int)
    */
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
@@ -162,7 +184,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   }
 
   /**
-   * @see org.kalypso.gis.doubleraster.IDoubleProvider#getDouble(com.vividsolutions.jts.geom.Coordinate)
+   * @see org.kalypso.grid.IGeoValueProvider#getValue(com.vividsolutions.jts.geom.Coordinate)
    */
   public double getValue( final Coordinate crd ) throws GeoGridException
   {
@@ -215,5 +237,41 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     final IGeoGrid grid = getGrid();
     if( grid == null )
       grid.setMin( minValue );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
+   */
+  public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
+  {
+    final IGeoGrid grid = getGrid();
+    if( grid == null )
+      return null;
+
+    return grid.getCell( x, y, targetCRS );
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
+   */
+  public String getSourceCRS( ) throws GeoGridException
+  {
+    final IGeoGrid grid = getGrid();
+    if( grid == null )
+      return null;
+
+    return grid.getSourceCRS();
+  }
+
+  /**
+   * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
+   */
+  public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
+  {
+    final IGeoGrid grid = getGrid();
+    if( grid == null )
+      return null;
+
+    return grid.getSurface( targetCRS );
   }
 }

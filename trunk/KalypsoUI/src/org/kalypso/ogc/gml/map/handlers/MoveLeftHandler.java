@@ -94,7 +94,7 @@ public class MoveLeftHandler extends AbstractHandler implements IHandler
     final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, currentMin.getY() );
     final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, currentMax.getY() );
 
-    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax );
+    wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, currentBBox.getCoordinateSystem() );
 
     final GM_Envelope zoomBox = wishBBox;
     new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );

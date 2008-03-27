@@ -344,7 +344,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     else
       positions = createGM_Positions( boxType.getCoordinates() );
     if( positions.length == 2 )
-      return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
+      return GeometryFactory.createGM_Envelope( positions[0], positions[1], boxType.getSrsName() );
     throw new UnsupportedOperationException( "invalid bbox" );
   }
 

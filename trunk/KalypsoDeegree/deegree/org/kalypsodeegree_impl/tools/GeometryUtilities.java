@@ -718,7 +718,7 @@ public class GeometryUtilities
     if( geometry instanceof GM_Point )
     {
       final GM_Position pos = ((GM_Point) geometry).getPosition();
-      return GeometryFactory.createGM_Envelope( pos, pos );
+      return GeometryFactory.createGM_Envelope( pos, pos, geometry.getCoordinateSystem() );
     }
 
     return geometry.getEnvelope();
@@ -773,7 +773,7 @@ public class GeometryUtilities
     final GM_Position minPos = GeometryFactory.createGM_Position( posX - grabDistanceHalf, posY - grabDistanceHalf );
     final GM_Position maxPos = GeometryFactory.createGM_Position( posX + grabDistanceHalf, posY + grabDistanceHalf );
 
-    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
+    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos, position.getCoordinateSystem() );
     return reqEnvelope;
   }
 
@@ -892,7 +892,7 @@ public class GeometryUtilities
     final GM_Position newMin = GeometryFactory.createGM_Position( newMinX, newMinY );
     final GM_Position newMax = GeometryFactory.createGM_Position( newMaxX, newMaxY );
 
-    return GeometryFactory.createGM_Envelope( newMin, newMax );
+    return GeometryFactory.createGM_Envelope( newMin, newMax, zoomBox.getCoordinateSystem() );
   }
 
   /**

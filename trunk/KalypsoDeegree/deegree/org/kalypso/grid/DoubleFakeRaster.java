@@ -20,9 +20,9 @@ public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid
 
   private final int m_sizeY;
 
-  public DoubleFakeRaster( final int sizeX, final int sizeY, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final IGeoValueProvider dp )
+  public DoubleFakeRaster( final int sizeX, final int sizeY, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final IGeoValueProvider dp, final String sourceCRS )
   {
-    super( origin, offsetX, offsetY );
+    super( origin, offsetX, offsetY, sourceCRS );
 
     m_sizeX = sizeX;
     m_sizeY = sizeY;

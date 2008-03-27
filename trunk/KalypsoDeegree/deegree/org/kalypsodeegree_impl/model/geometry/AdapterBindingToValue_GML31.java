@@ -171,14 +171,14 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final CoordType max = coord.get( 1 );
       final GM_Position minPos = createGM_Position( min );
       final GM_Position maxPos = createGM_Position( max );
-      return GeometryFactory.createGM_Envelope( minPos, maxPos );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos, bindingEnvelope.getSrsName() );
     }
     final CoordinatesType coordinates = bindingEnvelope.getCoordinates();
     if( coordinates != null )
     {
 
       final GM_Position[] positions = createGM_Positions( coordinates );
-      return GeometryFactory.createGM_Envelope( positions[0], positions[1] );
+      return GeometryFactory.createGM_Envelope( positions[0], positions[1], bindingEnvelope.getSrsName() );
     }
     // TODO coordinates
 
@@ -190,7 +190,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final List<Double> max = upperCorner.getValue();
       final GM_Position minPos = GeometryFactory.createGM_Position( min.get( 0 ), min.get( 1 ) );
       final GM_Position maxPos = GeometryFactory.createGM_Position( max.get( 0 ), max.get( 1 ) );
-      return GeometryFactory.createGM_Envelope( minPos, maxPos );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos, bindingEnvelope.getSrsName() );
     }
 
     final List<DirectPositionType> pos = bindingEnvelope.getPos();
@@ -200,7 +200,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final List<Double> max = pos.get( 1 ).getValue();
       final GM_Position minPos = GeometryFactory.createGM_Position( min.get( 0 ), min.get( 1 ) );
       final GM_Position maxPos = GeometryFactory.createGM_Position( max.get( 0 ), max.get( 1 ) );
-      return GeometryFactory.createGM_Envelope( minPos, maxPos );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos, bindingEnvelope.getSrsName() );
     }
     throw new UnsupportedOperationException();
   }

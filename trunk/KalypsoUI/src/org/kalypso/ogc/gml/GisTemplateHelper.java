@@ -292,7 +292,7 @@ public class GisTemplateHelper
     if( extent == null )
       return null;
 
-    final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop(), extent.getSrs() );
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
       try
@@ -320,7 +320,7 @@ public class GisTemplateHelper
    */
   public static Gismapview emptyGisView( )
   {
-    final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 100, 100 );
+    final GM_Envelope dummyBBox = GeometryFactory.createGM_Envelope( 0, 0, 100, 100, null );
     final Gismapview gismapview = GisTemplateHelper.OF_GISMAPVIEW.createGismapview();
     final Layers layersType = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewLayers();
     layersType.setActive( null );
@@ -344,7 +344,7 @@ public class GisTemplateHelper
 
     if( CRSHelper.isKnownCRS( crsName ) )
     {
-      final GM_Envelope envelope = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop() );
+      final GM_Envelope envelope = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop(), crsName );
       final GM_Surface< ? > bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crsName );
       if( targetCS != null )
       {

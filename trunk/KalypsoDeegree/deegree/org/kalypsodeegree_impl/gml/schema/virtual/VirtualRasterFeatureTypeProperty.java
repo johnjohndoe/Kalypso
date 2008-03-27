@@ -42,6 +42,7 @@
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -65,10 +66,10 @@ public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyTyp
     final RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( "rectifiedGridDomain" );
     if( rgDomain == null )
       return null;
+
     try
     {
-      // ASK: convert to targetCrs with help of TransformVisitor?!?
-      return rgDomain.getGM_Surface( rgDomain.getCoordinateSystem() );
+      return rgDomain.getGM_Surface( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     }
     catch( final Exception e )
     {

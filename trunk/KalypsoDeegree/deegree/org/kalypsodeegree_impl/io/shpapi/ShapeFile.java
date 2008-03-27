@@ -295,7 +295,7 @@ public class ShapeFile
     final double ymin = shp.getFileMBR().south;
     final double ymax = shp.getFileMBR().north;
 
-    return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax );
+    return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax, null );
   }
 
   /**
@@ -309,7 +309,7 @@ public class ShapeFile
     final double ymin = shpenv.south;
     final double ymax = shpenv.north;
 
-    return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax );
+    return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax, null );
   }
 
   /**

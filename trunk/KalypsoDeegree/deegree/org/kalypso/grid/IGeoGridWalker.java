@@ -3,7 +3,7 @@ package org.kalypso.grid;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
- * Interface to iterate through all cells of a {@link IDoubleGeoGrid}.
+ * Interface to iterate through all cells of a {@link IGeoGrid}.
  * 
  * @author Gernot Belger
  */

@@ -113,7 +113,7 @@ public class EditGeometryWidget extends AbstractWidget
     final double maxX = transform.getSourceX( p.getX() + m_boxRadiusVisibleHandles );
     final double maxY = transform.getSourceY( p.getY() + m_boxRadiusVisibleHandles );
     // valid envelope with handles
-    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
+    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, getMapPanel().getMapModell().getCoordinatesSystem() );
     final JMSelector selector = new JMSelector();
 
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );

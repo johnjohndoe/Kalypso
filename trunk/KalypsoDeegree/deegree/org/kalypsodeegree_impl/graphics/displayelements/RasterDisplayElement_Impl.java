@@ -73,6 +73,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.GeoGridCell;
@@ -81,11 +82,16 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
+import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
+import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -141,7 +147,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       if( grid != null )
       {
         final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
-        paintGrid( (Graphics2D) g, grid, projection, symbolizer, monitor );
+        paintGrid( (Graphics2D) g, grid, projection, symbolizer, projection.getSourceRect().getCoordinateSystem(), monitor );
       }
     }
     catch( final Exception e )
@@ -154,34 +160,54 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
   }
 
-  private void paintGrid( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintGrid( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final RasterSymbolizer symbolizer, final String targetCRS, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
+    /* Progress monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting grid", 100 );
 
-    final Envelope gridEnvelope = grid.getBoundingBox();
-// paintEnvelope( g, projection, gridEnvelope, new Color( 128, 128, 128, 20 ) );
+    /* Get the envelope of the surface of the grid (it is transformed). */
+    GM_Envelope envelope = grid.getSurface( targetCRS ).getEnvelope();
 
+    /* Convert this to an JTS envelope. */
+    Envelope gridEnvelope = JTSAdapter.export( envelope );
+
+    /* Paint the envelope. */
+    // paintEnvelope( g, projection, gridEnvelope, new Color( 128, 128, 128, 20 ) );
+    
     /* Calculate cluster size */
+
+    /* The width of the envelope (in pixel) on the screen. */
     final double gridPixelWidth = projection.getDestX( gridEnvelope.getMaxX() ) - projection.getDestX( gridEnvelope.getMinX() );
+
+    /* The cell width (in pixel). */
     final double cellPixelWidth = gridPixelWidth / grid.getSizeX();
+
+    /* The cluster size. */
     final int clusterSize = (int) Math.ceil( CLUSTER_CELL_COUNT / cellPixelWidth );
 
+    /* The enevlope of the map extent (in geo coordinates). */
     final Envelope paintEnvelope = JTSAdapter.export( projection.getSourceRect() );
 
+    /* The intersection of the map extent envelope and the evelope of the surface (both in geo coordinates). */
     final Envelope env = gridEnvelope.intersection( paintEnvelope );
 
+    /* This coordinates (in geo coordinates) are in the target coordinate system. */
     final Coordinate min = new Coordinate( env.getMinX(), env.getMinY() );
     final Coordinate max = new Coordinate( env.getMaxX(), env.getMaxY() );
 
-    final GeoGridCell minCell = GeoGridUtilities.cellFromPosition( grid, min );
-    final GeoGridCell maxCell = GeoGridUtilities.cellFromPosition( grid, max );
+    /* Find the cells (transforming the coordinates in the coordinate system of the grid). */
+    final GeoGridCell minCell = GeoGridUtilities.cellFromPosition( grid, GeoGridUtilities.transformCoordinate( grid, min, targetCRS ) );
+    final GeoGridCell maxCell = GeoGridUtilities.cellFromPosition( grid, GeoGridUtilities.transformCoordinate( grid, max, targetCRS ) );
 
+    /* Normalize them. */
     final GeoGridCell normalizedMinCell = new GeoGridCell( Math.min( minCell.x, maxCell.x ), Math.min( minCell.y, maxCell.y ) );
     final GeoGridCell normaliedMaxCell = new GeoGridCell( Math.max( minCell.x, maxCell.x ), Math.max( minCell.y, maxCell.y ) );
 
+    /* Some default cells. */
     final GeoGridCell originCell = GeoGridUtilities.originAsCell( grid );
     final GeoGridCell maxGridCell = GeoGridUtilities.maxCell( grid );
 
+    /* They are clipped. */
     final GeoGridCell clippedMinCell = normalizedMinCell.max( originCell );
     final GeoGridCell clippedMaxCell = normaliedMaxCell.min( maxGridCell );
 
@@ -190,7 +216,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     if( cellPixelWidth < 1 || interpolation != Interpolation.none )
     {
-      // cell is smaller than one pixel, we iterate through all pixels and get their values
+      /* Cell is smaller than one pixel, we iterate through all pixels and get their values. */
 
       final int screenXfrom = (int) projection.getDestX( env.getMinX() );
       final int screenXto = (int) projection.getDestX( env.getMaxX() );
@@ -205,27 +231,33 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       {
         for( int x = screenXfrom; x < screenXto; x++ )
         {
+          /* These coordinates should be in the target coordinate system. */
           final double geoX = projection.getSourceX( x );
           final double geoY = projection.getSourceY( y );
 
           final Coordinate crd = new Coordinate( geoX, geoY );
 
           final double value;
-          // If cell size is lower than pixel size, we do not need to interpolate
+
+          /* If cell size is lower than pixel size, we do not need to interpolate. */
           if( cellPixelWidth < 1 )
           {
-            final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, crd );
+            /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
+            final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, GeoGridUtilities.transformCoordinate( grid, crd, targetCRS ) );
             value = grid.getValueChecked( cell.x, cell.y );
           }
           else
-            value = GeoGridUtilities.getValue( grid, crd, interpolation );
+          {
+            /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
+            value = GeoGridUtilities.getValue( grid, GeoGridUtilities.transformCoordinate( grid, crd, targetCRS ), interpolation );
+          }
 
           final Color color = symbolizer.getColor( value );
-          if( color != null )
-          {
-            g.setColor( color );
-            g.fillRect( x, y, 1, 1 );
-          }
+          if( color == null )
+            continue;
+
+          g.setColor( color );
+          g.fillRect( x, y, 1, 1 );
         }
 
         ProgressUtilities.worked( monitor, 1 );
@@ -249,11 +281,16 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
             if( color == null )
               continue;
 
-            final Coordinate currentCellCrd = GeoGridUtilities.toCoordinate( grid, i, j, null );
-            final Coordinate nextCellCrd = GeoGridUtilities.toCoordinate( grid, i + clusterSize, j + clusterSize, null );
-            final Envelope clusterEnvelope = new Envelope( currentCellCrd, nextCellCrd ); // Necessary to normalize the
-            // envelope
-            paintEnvelope( g, projection, clusterEnvelope, color );
+            /* Get the surface of the cell (in the target coordinate system). */
+            GM_Surface< ? > cell = grid.getCell( i, j, targetCRS );
+
+            /* Paint the cell. */
+            PolygonSymbolizer impl = new PolygonSymbolizer_Impl();
+            impl.getFill().setFill( color );
+            impl.getStroke().setStroke( color );
+            impl.getStroke().setWidth( 1 );
+            PolygonDisplayElement displayElement = DisplayElementFactory.buildPolygonDisplayElement( null, cell, impl );
+            displayElement.paint( g, projection, new SubProgressMonitor( monitor, 1 ) );
           }
         }
 

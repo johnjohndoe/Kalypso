@@ -41,7 +41,6 @@
 package org.kalypso.core.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * @author Gernot Belger
@@ -54,6 +53,6 @@ public class KalypsoCorePreferenceInitializer extends AbstractPreferenceInitiali
   @Override
   public void initializeDefaultPreferences( )
   {
-    KalypsoCorePlugin.getDefault().getPluginPreferences().setDefault( IKalypsoCorePreferences.GLOBAL_CRS, IKalypsoCorePreferences.DEFAULT_CRS );
+    //Moved to deegree
   }
 }

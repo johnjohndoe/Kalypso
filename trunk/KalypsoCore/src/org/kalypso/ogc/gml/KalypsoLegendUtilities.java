@@ -52,7 +52,7 @@ public class KalypsoLegendUtilities
   private static GM_Position[] DEFAULT_LINEPOSITIONS = new GM_Position[] { GeometryFactory.createGM_Position( 0.00, 0.3 ), GeometryFactory.createGM_Position( 0.33, 0.7 ),
       GeometryFactory.createGM_Position( 0.66, 0.3 ), GeometryFactory.createGM_Position( 1.00, 0.7 ), };
 
-  private static GM_Envelope DEFAULT_ENVELOPE = GeometryFactory.createGM_Envelope( 0, 0, 1, 1 );
+  private static GM_Envelope DEFAULT_ENVELOPE = GeometryFactory.createGM_Envelope( 0, 0, 1, 1, null );
 
   private static GM_Object DEFAULT_LINESTRING = null;
 
@@ -87,7 +87,7 @@ public class KalypsoLegendUtilities
    * e.g. all numeric properties will turn to a string (with annotation) </b>
    * 
    * @param legendFeature
-   *          feature to update with legend properties
+   *            feature to update with legend properties
    */
   public static void updatePropertiesForLegend( final Feature legendFeature )
   {

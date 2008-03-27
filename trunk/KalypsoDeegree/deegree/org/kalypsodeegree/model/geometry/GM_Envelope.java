@@ -64,7 +64,6 @@ package org.kalypsodeegree.model.geometry;
 /**
  * a boundingbox as child of a GM_Polygon isn't part of the iso19107 spec but it simplifies the geometry handling within
  * jago
- *  
  */
 public interface GM_Envelope extends Cloneable
 {
@@ -77,23 +76,23 @@ public interface GM_Envelope extends Cloneable
   /**
    * returns the width of bounding box
    */
-  double getWidth();
+  double getWidth( );
 
   /**
    * returns the height of bounding box
    */
-  double getHeight();
+  double getHeight( );
 
   /**
    * returns the minimum coordinates of bounding box
    */
-  GM_Position getMin();
+  GM_Position getMin( );
 
   /**
    * returns the maximum coordinates of bounding box
    */
-  GM_Position getMax();
-  
+  GM_Position getMax( );
+
   /**
    * returns true if the bounding box contains the submitted position
    */
@@ -135,5 +134,20 @@ public interface GM_Envelope extends Cloneable
 
   GM_Envelope getMerged( GM_Position position );
 
-  public Object clone();
+  public Object clone( );
+
+  /**
+   * This function returns the coordinate system, the coordinates of the contained positions are in.
+   * 
+   * @return The coordinate system.
+   */
+  public String getCoordinateSystem( );
+
+  /**
+   * This function sets the coordinate system, the coordinates of the contained positions are in.
+   * 
+   * @param coordinateSystem
+   *            The coordinate system.
+   */
+  public void setCoordinateSystem( String coordinateSystem );
 }

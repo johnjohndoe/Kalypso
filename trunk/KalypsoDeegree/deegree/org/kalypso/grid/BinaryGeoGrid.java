@@ -113,7 +113,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Opens an exsiting grid for read-only access.<br>
    * Dispose the grid after it is no more needed in order to release the given resource.
    */
-  public static BinaryGeoGrid openGrid( final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  public static BinaryGeoGrid openGrid( final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
     /* Tries to find a file from the given url. */
     File fileFromUrl = ResourceUtilities.findJavaFileFromURL( url );
@@ -134,7 +134,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     }
 
     final RandomAccessFile randomAccessFile = new RandomAccessFile( fileFromUrl, "r" );
-    return new BinaryGeoGrid( randomAccessFile, binFile, origin, offsetX, offsetY );
+    return new BinaryGeoGrid( randomAccessFile, binFile, origin, offsetX, offsetY, sourceCRS );
   }
 
   /**
@@ -142,19 +142,19 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * The grid is then opened in write mode, so its values can then be set.<br>
    * The grid must be disposed afterwards in order to flush the written information.
    */
-  public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
     final RandomAccessFile randomAccessFile = new RandomAccessFile( file, "rw" );
-    return new BinaryGeoGrid( randomAccessFile, sizeX, sizeY, scale, origin, offsetX, offsetY );
+    return new BinaryGeoGrid( randomAccessFile, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS );
   }
 
   /**
    * @param binFile
    *            If set, this file will be deleted on dispose
    */
-  private BinaryGeoGrid( final RandomAccessFile randomAccessFile, final File binFile, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  private BinaryGeoGrid( final RandomAccessFile randomAccessFile, final File binFile, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
-    super( origin, offsetX, offsetY );
+    super( origin, offsetX, offsetY, sourceCRS );
 
     m_binFile = binFile;
 
@@ -174,9 +174,9 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   }
 
-  public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
-    super( origin, offsetX, offsetY );
+    super( origin, offsetX, offsetY, sourceCRS );
 
     m_randomAccessFile = randomAccessFile;
     m_binFile = null;

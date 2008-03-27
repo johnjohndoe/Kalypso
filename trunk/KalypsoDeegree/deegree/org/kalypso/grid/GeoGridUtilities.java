@@ -45,13 +45,22 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 
+import junit.framework.Assert;
+
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.transformation.CachedTransformationFactory;
+import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -59,6 +68,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
+import org.kalypsodeegree_impl.model.geometry.GM_Ring_Impl;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -158,19 +169,19 @@ public class GeoGridUtilities
   /**
    * Creates a {@link IGeoGrid} for a resource of a given mime-type.
    */
-  public static IGeoGrid createGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  public static IGeoGrid createGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, String sourceCRS ) throws IOException
   {
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
-      return BinaryGeoGrid.openGrid( url, origin, offsetX, offsetY );
+      return BinaryGeoGrid.openGrid( url, origin, offsetX, offsetY, sourceCRS );
 
     if( mimeType.endsWith( "/asc" ) || mimeType.endsWith( "/asg" ) )
-      return new AsciiRandomAccessGeoGrid( url, origin, offsetX, offsetY );
+      return new AsciiRandomAccessGeoGrid( url, origin, offsetX, offsetY, sourceCRS );
 
     if( mimeType.startsWith( "image" ) )
-      return new ImageGeoGrid( url, origin, offsetX, offsetY );
+      return new ImageGeoGrid( url, origin, offsetX, offsetY, sourceCRS );
 
-    throw new UnsupportedOperationException( "Unknwon file type: " + mimeType );
+    throw new UnsupportedOperationException( "Unknown file type: " + mimeType );
   }
 
   /**
@@ -189,6 +200,118 @@ public class GeoGridUtilities
     final double y2 = y1 + offsetY.y * grid.getSizeY();
 
     return new Envelope( x1, x2, y1, y2 );
+  }
+
+  /**
+   * This function creates the surface of a grid.
+   * 
+   * @param grid
+   *            The grid.
+   * @param targetCRS
+   *            The coordinate system will be used to transform the surface, after it was created and before it is
+   *            returned.
+   * @return The surface of the given grid.
+   */
+  public static GM_Surface< ? > createSurface( IGeoGrid grid, final String targetCRS ) throws GeoGridException
+  {
+    try
+    {
+      final Coordinate origin = grid.getOrigin();
+      final Coordinate offsetX = grid.getOffsetX();
+      final Coordinate offsetY = grid.getOffsetY();
+
+      final double x1 = origin.x;
+      final double y1 = origin.y;
+
+      final double x2 = x1 + offsetX.x * grid.getSizeX();
+      final double y2 = y1 + offsetY.y * grid.getSizeY();
+
+      /* Create the coordinates for the outer ring. */
+      GM_Position c1 = GeometryFactory.createGM_Position( x1, y1 );
+      GM_Position c2 = GeometryFactory.createGM_Position( x2, y1 );
+      GM_Position c3 = GeometryFactory.createGM_Position( x2, y2 );
+      GM_Position c4 = GeometryFactory.createGM_Position( x1, y2 );
+
+      /* Create the outer ring. */
+      GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+
+      /* Create the surface patch. */
+      GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+
+      /* Create the surface. */
+      GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+
+      /* Transform it. */
+      Assert.assertNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
+
+      if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
+        return (GM_Surface< ? >) surface.transform( CachedTransformationFactory.getInstance().createFromCoordinateSystems( grid.getSourceCRS(), targetCRS ), targetCRS );
+
+      return surface;
+    }
+    catch( Exception ex )
+    {
+      throw new GeoGridException( "Error in creating the surface ...", ex );
+    }
+  }
+
+  /**
+   * This function creates the cell at the given (cell-)coordinates in a grid.
+   * 
+   * @param grid
+   *            The grid.
+   * @param x
+   *            The (cell-)coordinate x.
+   * @param y
+   *            The (cell-)coordinate y.
+   * @param targetCRS
+   *            The coordinate system will be used to transform the cell, after it was created and before it is
+   *            returned.
+   * @return The cell at the given (cell-)coordinates in the grid.
+   */
+  public static GM_Surface< ? > createCell( IGeoGrid grid, int x, int y, String targetCRS ) throws GeoGridException
+  {
+    try
+    {
+      Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
+
+      double cellX1 = cellCoordinate.x;
+      double cellY1 = cellCoordinate.y;
+
+      double offsetX = grid.getOffsetX().x;
+      double offsetY = grid.getOffsetY().y;
+
+      double cellX2 = cellX1 + offsetX;
+      double cellY2 = cellY1 + offsetY;
+
+      /* Create the coordinates for the outer ring. */
+      GM_Position c1 = GeometryFactory.createGM_Position( cellX1, cellY1 );
+      GM_Position c2 = GeometryFactory.createGM_Position( cellX2, cellY1 );
+      GM_Position c3 = GeometryFactory.createGM_Position( cellX2, cellY2 );
+      GM_Position c4 = GeometryFactory.createGM_Position( cellX1, cellY2 );
+
+      /* Create the outer ring. */
+      GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+
+      /* Create the surface patch. */
+      GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+
+      /* Create the surface. */
+      GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+
+      /* Transform it. */
+      Assert.assertNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
+
+      if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
+        return (GM_Surface< ? >) surface.transform( CachedTransformationFactory.getInstance().createFromCoordinateSystems( grid.getSourceCRS(), targetCRS ), targetCRS );
+
+      return surface;
+
+    }
+    catch( Exception ex )
+    {
+      throw new GeoGridException( "Error in creating the cell ...", ex );
+    }
   }
 
   /**
@@ -227,11 +350,11 @@ public class GeoGridUtilities
     }
   }
 
-  public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY ) throws IOException
+  public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
-      return BinaryGeoGrid.createGrid( file, sizeX, sizeY, scale, origin, offsetX, offsetY );
+      return BinaryGeoGrid.createGrid( file, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS );
 
     throw new UnsupportedOperationException( "Mime-Type not supported for writing: " + mimeType );
   }
@@ -267,7 +390,7 @@ public class GeoGridUtilities
     IWriteableGeoGrid outputGrid = null;
     try
     {
-      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY() );
+      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS() );
 
       ProgressUtilities.worked( monitor, 20 );
 
@@ -328,7 +451,7 @@ public class GeoGridUtilities
     IWriteableGeoGrid outputGrid = null;
     try
     {
-      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY() );
+      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS() );
       ProgressUtilities.worked( monitor, 20 );
       final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
       grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );
@@ -478,7 +601,31 @@ public class GeoGridUtilities
     minmax[1] = maxValue;
 
     return minmax;
-
   }
 
+  /**
+   * This function transforms the coordinate crd from its coordinate system to the grid coordinate system.
+   * 
+   * @param grid
+   *            The grid.
+   * @param crd
+   *            The coordinate.
+   * @param positionCRS
+   *            The coordinate system of the position.
+   * @return The transformed coordinate.
+   */
+  public static Coordinate transformCoordinate( final IGeoGrid grid, final Coordinate crd, final String positionCRS ) throws GeoGridException
+  {
+    try
+    {
+      CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( positionCRS, grid.getSourceCRS() );
+      GM_Position position = TransformUtilities.transform( JTSAdapter.wrap( crd ), transformation );
+
+      return JTSAdapter.export( position );
+    }
+    catch( Exception ex )
+    {
+      throw new GeoGridException( "Could not transform the coordinate ...", ex );
+    }
+  }
 }

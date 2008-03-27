@@ -224,7 +224,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
       }
     }
 
-    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( dbl_values[0], dbl_values[1], dbl_values[2], dbl_values[3] );
+    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( dbl_values[0], dbl_values[1], dbl_values[2], dbl_values[3], null );
 
     return envelope;
   }
