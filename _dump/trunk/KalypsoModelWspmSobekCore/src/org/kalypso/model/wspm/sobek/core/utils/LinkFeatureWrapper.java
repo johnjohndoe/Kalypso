@@ -40,29 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.utils;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author kuch
  */
 public class LinkFeatureWrapper
 {
-  private final ILinkFeatureWrapperDelegate m_wrapper;
-
-  public LinkFeatureWrapper( final ILinkFeatureWrapperDelegate wrapper )
+  public static Feature getFeature( final GMLWorkspace workspace, final Object property )
   {
-    m_wrapper = wrapper;
-  }
-
-  public Feature getFeature( )
-  {
-    final Object property = m_wrapper.getProperty();
-
-    if( property instanceof String )
-      return m_wrapper.getLinkedFeature( (String) property );
-    else if( property instanceof XLinkedFeature_Impl )
+    if( property instanceof XLinkedFeature_Impl )
     {
       try
       {
@@ -71,16 +62,17 @@ public class LinkFeatureWrapper
       }
       catch( final IllegalStateException e )
       {
+        e.printStackTrace();
+
         return null;
       }
-
     }
-    else if( property instanceof Feature )
-      return (Feature) property;
-    else if( property == null )
-      return null;
 
-    throw new IllegalStateException( Messages.LinkFeatureWrapper_0 + property.toString() );
+    final Feature result = FeatureHelper.getFeature( workspace, property );
+    if( result == null )
+      throw new IllegalStateException( Messages.LinkFeatureWrapper_0 + property.toString() );
+
+    return result;
   }
 
 }

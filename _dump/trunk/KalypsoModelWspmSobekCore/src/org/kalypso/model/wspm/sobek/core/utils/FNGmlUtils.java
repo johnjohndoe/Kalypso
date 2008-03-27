@@ -228,6 +228,8 @@ public class FNGmlUtils
   public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point, final INode[] nodes ) throws Exception
   {
     // a new node must be created?!?
+    
+    // TODO: use query to search for nodes! Else: performance problems
     for( final INode node : nodes )
     {
       final GM_Point pNode = node.getLocation();
