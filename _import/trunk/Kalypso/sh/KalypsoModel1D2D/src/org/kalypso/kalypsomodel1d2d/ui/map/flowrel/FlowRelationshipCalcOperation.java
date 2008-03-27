@@ -273,7 +273,7 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     {
       tmpDir = SimulationUtilitites.createSimulationTmpDir( "" + System.currentTimeMillis() );
 
-      final TuhhCalculation calculation = createCalculation( flowRel, templateCalculation, profiles, flowRel.getFeature().getWorkspace().getFeatureProviderFactory() );
+      final TuhhCalculation calculation = createCalculation( flowRel, templateCalculation, profiles );
 
       // Prepare wspm model
       final File modelFile = new File( tmpDir, "modell.gml" );
@@ -364,8 +364,10 @@ public class FlowRelationshipCalcOperation implements IAdaptable
     return m_running;
   }
 
-  private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfil[] profiles, final IFeatureProviderFactory factory ) throws GMLSchemaException, InvocationTargetException
+  private TuhhCalculation createCalculation( final IFlowRelation1D flowRel, final TuhhCalculation template, final IProfil[] profiles ) throws GMLSchemaException, InvocationTargetException
   {
+    final IFeatureProviderFactory factory = flowRel.getFeature().getWorkspace().getFeatureProviderFactory();
+
     // Create empty project with one calculation and one reach
     final TuhhWspmProject project = TuhhWspmProject.create( null, factory );
     final TuhhCalculation calculation = project.createReibConstCalculation();
