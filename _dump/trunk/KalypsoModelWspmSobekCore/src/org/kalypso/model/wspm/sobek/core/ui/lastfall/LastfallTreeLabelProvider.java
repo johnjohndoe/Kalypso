@@ -44,12 +44,12 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TreeItem;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
-import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -87,7 +87,7 @@ public class LastfallTreeLabelProvider extends LabelProvider
     {
       final ILastfall lastfall = (ILastfall) element;
 
-      return Messages.LastfallTreeLabelProvider_2 + lastfall.getName();
+      return lastfall.getName();
     }
     else if( element instanceof INode )
     {

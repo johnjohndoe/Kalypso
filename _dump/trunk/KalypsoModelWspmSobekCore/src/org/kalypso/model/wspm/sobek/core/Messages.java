@@ -44,7 +44,6 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author kuch
- *
  */
 public class Messages extends NLS
 {
@@ -80,8 +79,6 @@ public class Messages extends NLS
 
   public static String LastfallTreeContentProvider_0;
 
-  public static String LastfallTreeLabelProvider_2;
-
   public static String LastfallTreeLabelProvider_3;
 
   public static String LinkFeatureWrapper_0;
@@ -111,7 +108,7 @@ public class Messages extends NLS
   public static String PiSobekModelUtils_5;
 
   public static String SobekWizardEditBoundaryCondition_0;
-  
+
   public static String PageEditBoundaryConditionGeneral_1;
 
   public static String PageEditBoundaryConditionGeneral_10;
@@ -185,7 +182,7 @@ public class Messages extends NLS
   public static String ZmlTimeSeriesProvider_3;
 
   public static String ZmlTimeSeriesProvider_5;
-  
+
   public static String PageEditBoundaryConditionTimeSeries_1;
 
   public static String PageEditBoundaryConditionTimeSeries_11;
@@ -255,6 +252,7 @@ public class Messages extends NLS
   public static String PageEditLastfall_7;
 
   public static String PageEditLastfall_9;
+
   public static String AbstractNode_0;
 
   public static String BoundaryNode_0;
