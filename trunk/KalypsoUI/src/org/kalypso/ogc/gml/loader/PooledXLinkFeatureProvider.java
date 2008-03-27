@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.AbstractXLinkFeatureProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -104,6 +108,22 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
           return m_workspace;
         }
 
+        // Special case: if the uri references the local workspace, we just return it
+        // Works only for gml-workspaces (not for shape)
+        try
+        {
+          final URL gmlURL = UrlResolverSingleton.resolveUrl( contextWorkspace.getContext(), uri );
+          if( gmlURL.equals( contextWorkspace.getContext() ))
+          {
+            m_workspace = contextWorkspace;
+            return m_workspace;
+          }
+        }
+        catch( MalformedURLException e )
+        {
+          e.printStackTrace();
+        }
+        
         final String type;
         final String source;
 
