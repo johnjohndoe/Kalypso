@@ -156,7 +156,46 @@ public class FNGmlUtils
       nodes.add( branch.getLowerNode() );
     }
 
-    FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eConnectionNode );
+    /*
+     * extend branch at ends or somewhere else. if the branch will be extended at the end point, exististing connection
+     * nodes will be used - otherwise new linkage nodes will be created.
+     */
+
+    final List<INode> intersections = new ArrayList<INode>();
+
+    for( final INode node : nodes )
+    {
+      final GM_Point location = node.getLocation();
+      if( location.intersects( curve.getStartPoint() ) )
+        intersections.add( node );
+      else if( location.intersects( curve.getEndPoint() ) )
+        intersections.add( node );
+    }
+
+    if( intersections.size() == 2 )
+    {
+      // existing nodes will be used
+      FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eConnectionNode );
+    }
+    else if( intersections.size() == 1 )
+    {
+      // one point connects an existing branch
+      final INode node = intersections.get( 0 );
+      final GM_Point location = node.getLocation();
+      if( location.intersects( curve.getStartPoint() ) )
+        FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eLinkageNode );
+      else if( location.intersects( curve.getEndPoint() ) )
+        FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eLinkageNode, TYPE.eConnectionNode );
+
+    }
+    else if( intersections.size() == 0 )
+    {
+      // new branch is connection somewhere on existing branches - new linkage nodes will be created
+      FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eLinkageNode, TYPE.eLinkageNode );
+    }
+
+    else
+      throw new IllegalStateException();
   }
 
   // $ANALYSIS-IGNORE
