@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.sobek.core.model;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
@@ -51,8 +50,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
-import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -102,27 +99,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
 
       final Feature member = (Feature) object;
 
-      final ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
-      {
-        public Feature getLinkedFeature( final String id )
-        {
-          ILastfall[] lastfalls = lastfall.getModelMember().getLastfallMembers();
-          for( ILastfall l : lastfalls )
-            // $ANALYSIS-IGNORE
-            if( l.getFeature().getId().equals( id ) )
-              return l.getFeature();
-
-          throw new NotImplementedException();
-        }
-
-        public Object getProperty( )
-        {
-          return member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL );
-        }
-      };
-
-      final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-      final Feature fLastfall = wrapper.getFeature();
+      final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
       if( fLastfall == null )
         throw new IllegalStateException( Messages.BoundaryNode_0 );
 
@@ -160,24 +137,24 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
    */
-  public GM_Object[] getSperrzone( IBranch branch )
+  public GM_Object[] getSperrzone( final IBranch branch )
   {
     try
     {
-      IBranch[] inflowingBranches = getInflowingBranches();
-      IBranch[] outflowingBranches = getOutflowingBranches();
+      final IBranch[] inflowingBranches = getInflowingBranches();
+      final IBranch[] outflowingBranches = getOutflowingBranches();
 
       if( !ArrayUtils.contains( inflowingBranches, branch ) && !ArrayUtils.contains( outflowingBranches, branch ) )
         return new GM_Object[] {};
 
-      GM_Point location = getLocation();
-      Geometry geometry = JTSAdapter.export( location );
-      Geometry buffer = geometry.buffer( 10 );
+      final GM_Point location = getLocation();
+      final Geometry geometry = JTSAdapter.export( location );
+      final Geometry buffer = geometry.buffer( 10 );
 
-      GM_Object buffered = JTSAdapter.wrap( buffer );
+      final GM_Object buffered = JTSAdapter.wrap( buffer );
       return new GM_Object[] { buffered };
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }

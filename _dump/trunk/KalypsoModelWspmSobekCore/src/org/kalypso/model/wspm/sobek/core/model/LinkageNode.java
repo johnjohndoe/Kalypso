@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.sobek.core.model;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
-import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -84,7 +83,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
     final Feature f;
     if( objBranch instanceof XLinkedFeature_Impl )
     {
-      XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) objBranch;
+      final XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) objBranch;
       f = lnk.getFeature();
     }
     else if( objBranch instanceof Feature )
@@ -148,8 +147,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
         continue;
       else if( curve.intersects( point ) )
       {
-        final String id = IGmlWorkspaces.HYDRAUL_MODEL + "#" + branch.getFeature().getId(); //$NON-NLS-1$
-        FeatureUtils.updateLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, id );
+        FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getFeature() );
       }
     }
   }
@@ -157,20 +155,20 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
    */
-  public GM_Object[] getSperrzone( IBranch branch )
+  public GM_Object[] getSperrzone( final IBranch branch )
   {
     if( !branch.equals( getLinkToBranch() ) )
       return new GM_Object[] {};
 
-    GM_Point location = getLocation();
+    final GM_Point location = getLocation();
 
     try
     {
-      Geometry geometry = JTSAdapter.export( location );
+      final Geometry geometry = JTSAdapter.export( location );
 
       return new GM_Object[] { JTSAdapter.wrap( geometry.buffer( 10 ) ) };
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }

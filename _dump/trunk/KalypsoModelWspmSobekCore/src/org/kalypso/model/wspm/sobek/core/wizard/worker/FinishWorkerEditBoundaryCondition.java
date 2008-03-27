@@ -103,7 +103,7 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
 
       // map with feature changes
       final Map<QName, Object> changes = m_provider.getBasicChanges();
-      FeatureUtils.updateFeature( m_lastfall.getModelMember().getWorkspace(), condition.getFeature(), changes );
+      FeatureUtils.updateProperties( m_lastfall.getModelMember().getWorkspace(), condition.getFeature(), changes );
 
       generateTimeSeriesObs( condition );
     }

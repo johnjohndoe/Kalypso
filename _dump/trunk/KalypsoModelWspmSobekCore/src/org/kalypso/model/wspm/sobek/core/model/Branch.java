@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
-import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -209,7 +208,7 @@ public class Branch implements IBranch
     final Object property = m_branch.getProperty( lnkBranch );
     final GMLWorkspace workspace = getFeature().getWorkspace();
 
-    return FNNodeUtils.getNode( m_model, LinkFeatureWrapper.getFeature( workspace, property ) );
+    return FNNodeUtils.getNode( m_model, FeatureUtils.resolveFeature( workspace, property ) );
   }
 
   /**
@@ -234,7 +233,7 @@ public class Branch implements IBranch
    */
   public void setLowerNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
   }
 
   /**
@@ -242,6 +241,6 @@ public class Branch implements IBranch
    */
   public void setUpperNode( final INode node ) throws Exception
   {
-    FeatureUtils.updateInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
   }
 }

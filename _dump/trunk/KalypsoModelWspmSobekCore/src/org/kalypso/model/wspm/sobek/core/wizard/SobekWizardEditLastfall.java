@@ -102,7 +102,7 @@ public class SobekWizardEditLastfall extends Wizard implements INewWizard
 
     try
     {
-      FeatureUtils.updateFeature( m_lastfall.getModelMember().getWorkspace(), m_lastfall.getFeature(), update );
+      FeatureUtils.updateProperties( m_lastfall.getModelMember().getWorkspace(), m_lastfall.getFeature(), update );
     }
     catch( final Exception e )
     {

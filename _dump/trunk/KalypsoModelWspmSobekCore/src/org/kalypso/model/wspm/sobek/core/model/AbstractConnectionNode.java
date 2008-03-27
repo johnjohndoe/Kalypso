@@ -50,8 +50,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddRelationCommand;
-import org.kalypso.model.wspm.sobek.core.utils.ILinkFeatureWrapperDelegate;
-import org.kalypso.model.wspm.sobek.core.utils.LinkFeatureWrapper;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -72,18 +71,18 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
    */
   public void addInflowingBranch( final IBranch branch ) throws Exception
   {
-    List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
-    for( Object object : inflowing )
+    final List< ? > inflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+    for( final Object object : inflowing )
     {
       if( object instanceof XLinkedFeature_Impl )
       {
-        XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) object;
+        final XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) object;
         if( lnk.getFeature().equals( branch.getFeature() ) )
           return;
       }
       else if( object instanceof Feature )
       {
-        Feature feature = (Feature) object;
+        final Feature feature = (Feature) object;
         if( feature.equals( branch.getFeature() ) )
           return;
       }
@@ -96,11 +95,11 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
         throw new IllegalStateException();
     }
 
-    IRelationType lnkFeatureType = (IRelationType) getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
+    final IRelationType lnkFeatureType = (IRelationType) getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_INFLOWING_BRANCHES );
 
-    AtomarAddRelationCommand cmd = new AtomarAddRelationCommand( getFeature(), lnkFeatureType, -1, branch.getFeature() );
+    final AtomarAddRelationCommand cmd = new AtomarAddRelationCommand( getFeature(), lnkFeatureType, -1, branch.getFeature() );
 
-    CommandableWorkspace workspace = getModel().getWorkspace();
+    final CommandableWorkspace workspace = getModel().getWorkspace();
     workspace.postCommand( cmd );
   }
 
@@ -109,18 +108,18 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
    */
   public void addOutflowingBranch( final IBranch branch ) throws Exception
   {
-    List< ? > outflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
-    for( Object object : outflowing )
+    final List< ? > outflowing = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+    for( final Object object : outflowing )
     {
       if( object instanceof XLinkedFeature_Impl )
       {
-        XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) object;
+        final XLinkedFeature_Impl lnk = (XLinkedFeature_Impl) object;
         if( lnk.getFeature().equals( branch.getFeature() ) )
           return;
       }
       else if( object instanceof Feature )
       {
-        Feature feature = (Feature) object;
+        final Feature feature = (Feature) object;
         if( feature.equals( branch.getFeature() ) )
           return;
       }
@@ -133,11 +132,11 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
         throw new IllegalStateException();
     }
 
-    IRelationType lnkFeatureType = (IRelationType) getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
+    final IRelationType lnkFeatureType = (IRelationType) getFeature().getFeatureType().getProperty( ISobekConstants.QN_HYDRAULIC_NODE_LINKED_OUTFLOWING_BRANCHES );
 
-    AtomarAddRelationCommand cmd = new AtomarAddRelationCommand( getFeature(), lnkFeatureType, -1, branch.getFeature() );
+    final AtomarAddRelationCommand cmd = new AtomarAddRelationCommand( getFeature(), lnkFeatureType, -1, branch.getFeature() );
 
-    CommandableWorkspace workspace = getModel().getWorkspace();
+    final CommandableWorkspace workspace = getModel().getWorkspace();
     workspace.postCommand( cmd );
   }
 
@@ -147,31 +146,7 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
 
     for( final Object obj : inflowing )
     {
-      final ILinkFeatureWrapperDelegate delegate = new ILinkFeatureWrapperDelegate()
-      {
-
-        public Feature getLinkedFeature( String id )
-        {
-          IBranch[] myBranches = getModel().getBranchMembers();
-          for( IBranch branch : myBranches )
-            if( branch.getFeature().getId().equals( id ) )
-              return branch.getFeature();
-
-          // $ANALYSIS-IGNORE
-          return null;
-        }
-
-        public Object getProperty( )
-        {
-          return obj;
-        }
-      };
-
-      final LinkFeatureWrapper wrapper = new LinkFeatureWrapper( delegate );
-      final Feature feature = wrapper.getFeature();
-      if( feature == null )
-        continue;
-
+      final Feature feature = FeatureUtils.resolveFeature( getFeature().getWorkspace(), obj );
       branches.add( new Branch( getModel(), feature ) );
     }
 

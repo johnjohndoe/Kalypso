@@ -98,7 +98,7 @@ public class SobekWizardEditBranch extends Wizard implements INewWizard
       values.put( ISobekConstants.QN_HYDRAULIC_NAME, name );
       values.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, description );
 
-      FeatureUtils.updateFeature( m_workspace, m_branch, values );
+      FeatureUtils.updateProperties( m_workspace, m_branch, values );
     }
     catch( final Exception e )
     {

@@ -55,7 +55,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
-import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
@@ -134,7 +133,7 @@ public class FNGmlUtils
     {
       if( node instanceof LinkageNode )
       {
-        LinkageNode ln = (LinkageNode) node;
+        final LinkageNode ln = (LinkageNode) node;
         if( branch.equals( ln.getLinkToBranch() ) )
           NodeUtils.convertLinkageNodeToConnectionNode( (LinkageNode) node );
       }
@@ -203,7 +202,7 @@ public class FNGmlUtils
       values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
       values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
 
-      FeatureUtils.updateFeature( workspace, branch, values );
+      FeatureUtils.updateProperties( workspace, branch, values );
 
       final IBranch myBranch = new Branch( model, branch );
       myBranch.setUpperNode( upperNode );
@@ -228,7 +227,7 @@ public class FNGmlUtils
   public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point, final INode[] nodes ) throws Exception
   {
     // a new node must be created?!?
-    
+
     // TODO: use query to search for nodes! Else: performance problems
     for( final INode node : nodes )
     {
@@ -256,8 +255,8 @@ public class FNGmlUtils
     final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
 
     /* link branch and profile */
-    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, IGmlWorkspaces.HYDRAUL_MODEL + "#" + branch.getFeature().getId() ); //$NON-NLS-1$
-    FeatureUtils.updateLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, "#" + profile.getId() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, profile ); //$NON-NLS-1$
 
     node.getFeature().invalidEnvelope();
   }

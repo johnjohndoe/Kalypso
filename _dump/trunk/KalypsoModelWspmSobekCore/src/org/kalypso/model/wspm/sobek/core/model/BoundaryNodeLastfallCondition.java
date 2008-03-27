@@ -224,7 +224,7 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
   {
     try
     {
-      FeatureUtils.updateFeature( getLastfall().getModelMember().getWorkspace(), getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnk );
+      FeatureUtils.updateProperty( getLastfall().getModelMember().getWorkspace(), getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LNK_TIME_SERIES, lnk );
     }
     catch( final Exception e )
     {

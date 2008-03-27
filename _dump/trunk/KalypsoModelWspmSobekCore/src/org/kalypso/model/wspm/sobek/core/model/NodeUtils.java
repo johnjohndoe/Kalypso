@@ -61,7 +61,6 @@ import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
-import org.kalypso.model.wspm.sobek.core.interfaces.IGmlWorkspaces;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
@@ -95,7 +94,7 @@ public class NodeUtils implements INodeUtils
 
     /* set linked lastfall! */
     final Feature condition = command.getNewFeature();
-    FeatureUtils.updateLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, IGmlWorkspaces.HYDRAUL_MODEL + "#" + lastfall.getFeature().getId() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( cw, condition, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL, lastfall.getFeature() ); //$NON-NLS-1$
 
     return command.getNewFeature();
   }
@@ -116,7 +115,7 @@ public class NodeUtils implements INodeUtils
 // map.put( ISobekConstants.QN_HYDRAULIC_NAME, bn.getName() );
     map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, bn.getDescription() );
 
-    FeatureUtils.updateFeature( bn.getModel().getWorkspace(), connectionNode.getFeature(), map );
+    FeatureUtils.updateProperties( bn.getModel().getWorkspace(), connectionNode.getFeature(), map );
 
     for( final IBranch branch : bn.getInflowingBranches() )
       connectionNode.addInflowingBranch( branch );
@@ -147,7 +146,7 @@ public class NodeUtils implements INodeUtils
 // map.put( ISobekConstants.QN_HYDRAULIC_NAME, cn.getName() );
     map.put( ISobekConstants.QN_HYDRAULIC_DESCRIPTION, cn.getDescription() );
 
-    FeatureUtils.updateFeature( cn.getModelMember().getWorkspace(), boundaryNode.getFeature(), map );
+    FeatureUtils.updateProperties( cn.getModelMember().getWorkspace(), boundaryNode.getFeature(), map );
 
     for( final IBranch branch : cn.getInflowingBranches() )
       boundaryNode.addInflowingBranch( branch );
@@ -220,20 +219,20 @@ public class NodeUtils implements INodeUtils
       branch.setLowerNode( node );
   }
 
-  public static void convertLinkageNodeToConnectionNode( LinkageNode node ) throws Exception
+  public static void convertLinkageNodeToConnectionNode( final LinkageNode node ) throws Exception
   {
-    IBranch[] inflowingBranches = node.getInflowingBranches();
-    IBranch[] outflowingBranches = node.getOutflowingBranches();
+    final IBranch[] inflowingBranches = node.getInflowingBranches();
+    final IBranch[] outflowingBranches = node.getOutflowingBranches();
 
-    IConnectionNode cn = (IConnectionNode) FNGmlUtils.createNode( node.getModelMember(), TYPE.eConnectionNode, node.getLocation(), new INode[] {} );
+    final IConnectionNode cn = (IConnectionNode) FNGmlUtils.createNode( node.getModelMember(), TYPE.eConnectionNode, node.getLocation(), new INode[] {} );
 
-    for( IBranch branch : inflowingBranches )
+    for( final IBranch branch : inflowingBranches )
     {
       cn.addInflowingBranch( branch );
       branch.setLowerNode( cn ); // update the branch too!
     }
 
-    for( IBranch branch : outflowingBranches )
+    for( final IBranch branch : outflowingBranches )
     {
       cn.addOutflowingBranch( branch );
       branch.setUpperNode( cn );// update the branch too!

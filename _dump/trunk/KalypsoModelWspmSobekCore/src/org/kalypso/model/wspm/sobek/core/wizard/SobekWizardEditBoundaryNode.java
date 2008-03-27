@@ -98,7 +98,7 @@ public class SobekWizardEditBoundaryNode extends Wizard implements INewWizard
 
     try
     {
-      FeatureUtils.updateFeature( m_boundaryNode.getModelMember().getWorkspace(), m_boundaryNode.getFeature(), map );
+      FeatureUtils.updateProperties( m_boundaryNode.getModelMember().getWorkspace(), m_boundaryNode.getFeature(), map );
     }
     catch( final Exception e )
     {
