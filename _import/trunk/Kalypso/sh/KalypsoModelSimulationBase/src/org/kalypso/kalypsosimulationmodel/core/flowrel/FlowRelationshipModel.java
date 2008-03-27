@@ -167,7 +167,7 @@ public class FlowRelationshipModel extends FeatureWrapperCollection<IFlowRelatio
 
     final GM_Position minPos = GeometryFactory.createGM_Position( posX - searchWidthHalf, posY - searchWidthHalf );
     final GM_Position maxPos = GeometryFactory.createGM_Position( posX + searchWidthHalf, posY + searchWidthHalf );
-    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
+    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos, null );
 
     return nodeList.query( reqEnvelope, null );
   }

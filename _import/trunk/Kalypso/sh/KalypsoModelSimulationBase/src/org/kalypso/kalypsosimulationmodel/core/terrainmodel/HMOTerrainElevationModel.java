@@ -142,8 +142,8 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
       return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( union.getMinX(),// minx,
       union.getMinY(),// miny,
       union.getMaxX(),// maxx,
-      union.getMaxY()// maxy
-      );
+      union.getMaxY(),// maxy
+      getCoordinateSystem() );
     }
     catch( final Throwable th )
     {

@@ -1406,7 +1406,7 @@ public class SegmentData
     maxX = maxX + (maxX - minX) / 10;
     maxY = maxY + (maxY - minY) / 10;
 
-    return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY );
+    return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, null );
 
   }
 

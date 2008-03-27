@@ -795,7 +795,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
       final double newMinY = position.getY() - 30;
       GM_Position min = GeometryFactory.createGM_Position( newMinX, newMinY );
       GM_Position max = GeometryFactory.createGM_Position( newMaxX, newMaxY );
-      envelope = GeometryFactory.createGM_Envelope( min, max );
+      envelope = GeometryFactory.createGM_Envelope( min, max, point.getCoordinateSystem() );
     }
     else if( location instanceof GM_Curve )
     {

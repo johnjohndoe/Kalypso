@@ -119,7 +119,7 @@ public class HydrographCollection extends FeatureWrapperCollection<IHydrograph> 
 
     final GM_Position minPos = GeometryFactory.createGM_Position( posX - searchWidthHalf, posY - searchWidthHalf );
     final GM_Position maxPos = GeometryFactory.createGM_Position( posX + searchWidthHalf, posY + searchWidthHalf );
-    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos );
+    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos, null );
 
     final List<Feature> foundFeatures = nodeList.query( reqEnvelope, null );
     return foundFeatures;

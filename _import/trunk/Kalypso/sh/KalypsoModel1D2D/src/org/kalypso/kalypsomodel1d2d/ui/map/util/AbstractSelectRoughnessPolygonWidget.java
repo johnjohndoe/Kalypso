@@ -240,7 +240,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
           final GM_Point minPoint = MapUtilities.transform( mapPanel, pmin );
           final GM_Point maxPoint = MapUtilities.transform( mapPanel, pmax );
 
-          final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition() );
+          final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minPoint.getPosition(), maxPoint.getPosition(), minPoint.getCoordinateSystem() );
           final GMLWorkspace workspace = m_featureList.getParentFeature().getWorkspace();
           final List result = m_featureList.query( envelope, null );
           final Feature[] selectedFeatures = new Feature[result.size()];
@@ -277,12 +277,12 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
   @Override
   public void rightClicked( Point p )
   {
-//    super.rightClicked( p );
+    // super.rightClicked( p );
     try
     {
       final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
       final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-      selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] {  } );
+      selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] {} );
       getMapPanel().repaint();
     }
     catch( final Throwable e )
@@ -298,36 +298,36 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
         }
       } );
     }
-    
+
     // TODO: kill popup!
-    
- }
-  
+
+  }
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
    */
   @Override
   public void leftClicked( final Point p )
   {
-// final String problemMessage;
-// if( m_foundFeature == null )
-// problemMessage = "Kein Feature gefunden.";
-// else
-// problemMessage = null;
-//
-// if( problemMessage != null )
-// {
-// final Display display = PlatformUI.getWorkbench().getDisplay();
-// display.asyncExec( new Runnable()
-// {
-// public void run( )
-// {
-// final Shell shell = display.getActiveShell();
-// MessageDialog.openWarning( shell, getName(), problemMessage );
-// }
-// } );
-// return;
-// }
+    // final String problemMessage;
+    // if( m_foundFeature == null )
+    // problemMessage = "Kein Feature gefunden.";
+    // else
+    // problemMessage = null;
+    //
+    // if( problemMessage != null )
+    // {
+    // final Display display = PlatformUI.getWorkbench().getDisplay();
+    // display.asyncExec( new Runnable()
+    // {
+    // public void run( )
+    // {
+    // final Shell shell = display.getActiveShell();
+    // MessageDialog.openWarning( shell, getName(), problemMessage );
+    // }
+    // } );
+    // return;
+    // }
 
     /* Check preconditions */
     if( m_featureList == null )
@@ -341,7 +341,7 @@ public abstract class AbstractSelectRoughnessPolygonWidget extends AbstractWidge
       {
         final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
         final Feature[] featuresToRemove = FeatureSelectionHelper.getFeatures( selectionManager );
-        selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] {  } );
+        selectionManager.changeSelection( featuresToRemove, new EasyFeatureWrapper[] {} );
       }
 
       getMapPanel().repaint();

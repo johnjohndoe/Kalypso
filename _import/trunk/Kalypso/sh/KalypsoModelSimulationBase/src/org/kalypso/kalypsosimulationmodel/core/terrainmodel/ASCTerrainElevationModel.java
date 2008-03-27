@@ -207,10 +207,9 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
 
   private final GM_Envelope makeMaxEnvelope( )
   {
-
     final GM_Position posMin = GeometryFactory.createGM_Position( xllcorner, yllcorner );
     final GM_Position posMax = GeometryFactory.createGM_Position( xllcorner + cellSize * N_COLS, yllcorner + cellSize * N_ROWS );
-    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( posMin, posMax );
+    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( posMin, posMax, getCoordinateSystem() );
     return envelope;
 
   }

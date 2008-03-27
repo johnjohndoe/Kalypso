@@ -6,9 +6,9 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
+import org.kalypso.preferences.IKalypsoDeegreePreferences;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -19,7 +19,7 @@ public class DataContainer
 
   private String m_coordinateSystem;
 
-  private static final String m_defaultCoordinateSystem = IKalypsoCorePreferences.DEFAULT_CRS;
+  private static final String m_defaultCoordinateSystem = IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE;
 
   // private static final CS_CoordinateSystem m_defaultCoordinateSystem =
   // KalypsoCorePlugin.getDefault().getCoordinatesSystem();

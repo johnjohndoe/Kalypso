@@ -10,11 +10,11 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.core.preferences.IKalypsoCorePreferences;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessLayer;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRoughnessPolygonCollection;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainModel;
+import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
@@ -42,7 +42,7 @@ public class DataContainer
 
   private final String m_AbsolutePath = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
 
-  private static final String m_defaultCoordinateSystem = IKalypsoCorePreferences.DEFAULT_CRS;
+  private static final String m_defaultCoordinateSystem = IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE;
 
   private LinkedHashMap<String, String> m_userSelectionMap;
 

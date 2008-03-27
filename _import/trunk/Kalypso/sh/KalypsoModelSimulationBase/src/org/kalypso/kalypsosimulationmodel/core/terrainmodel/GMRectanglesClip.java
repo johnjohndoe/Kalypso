@@ -79,17 +79,16 @@ public class GMRectanglesClip
    */
   public static final GM_Envelope getIntersectionEnv( final GM_Envelope envOne, final GM_Envelope envTwo )
   {
+    // TODO Check, if the coordinate systems of both envelopes are equal.
     final GM_Position[] poses = getIntersectionPoints( envOne, envTwo );
     if( poses == null )
-    {
       return null;
-    }
 
     final GM_Envelope envelope = GeometryFactory.createGM_Envelope( poses[0].getX(),// minx,
     poses[1].getY(),// miny,
     poses[1].getX(),// maxx,
-    poses[0].getY()// maxy
-    );
+    poses[0].getY(),// maxy
+    envOne.getCoordinateSystem() );
     return envelope;
   }
 

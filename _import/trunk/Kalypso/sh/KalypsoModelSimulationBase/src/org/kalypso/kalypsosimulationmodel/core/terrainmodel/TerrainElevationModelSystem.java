@@ -142,7 +142,7 @@ public class TerrainElevationModelSystem extends AbstractFeatureBinder implement
       {
         GM_Position min = boundingBox.getMin();
         GM_Position max = boundingBox.getMax();
-        env = GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY() );
+        env = GeometryFactory.createGM_Envelope( min.getX(), min.getY(), max.getX(), max.getY(), boundingBox.getCoordinateSystem() );
         break firstNonNullEnv;
       }
     }
