@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
@@ -82,7 +83,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
   {
     try
     {
-      return new URL( context, viewRefUrl );
+      return UrlResolverSingleton.resolveUrl( context, viewRefUrl );
     }
     catch( final MalformedURLException e )
     {
@@ -175,7 +176,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
       final ObjectFactory extentFac = new ObjectFactory();
 
-      String legendIcon = getLegendIcon();
+      final String legendIcon = getLegendIcon();
       if( legendIcon != null )
         styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
