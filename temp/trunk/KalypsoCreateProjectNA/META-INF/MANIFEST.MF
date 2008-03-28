@@ -6,7 +6,6 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.KalypsoNewNAProjectPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Export-Package: org.kalypso,
  org.kalypso.wizard,
  org.kalypso.wizard.resources,

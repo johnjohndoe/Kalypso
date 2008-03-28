@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.kalypso.rrm.kalininmiljukov
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Bundle-Vendor: kalypso.org
-Bundle-ClassPath: bin
 Export-Package: org.kalypso.model.km
 Require-Bundle: org.junit,
  org.kalypso.commons
