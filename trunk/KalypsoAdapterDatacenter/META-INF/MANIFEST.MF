@@ -4,7 +4,7 @@ Bundle-Name: KalypsoDatacenterAdapter
 Bundle-SymbolicName: org.kalypso.dcadapter; singleton:=true
 Bundle-Version: 0.0.5
 Bundle-ClassPath: lib/edbc.jar,
- build/bin
+ kalypsodc.jar
 Bundle-Activator: org.kalypso.dcadapter.DataCenterPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

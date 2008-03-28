@@ -7,7 +7,6 @@ Bundle-ClassPath: KalypsoProduct.jar
 Bundle-Activator: org.kalypso.product.KalypsoProductPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.product,
  org.kalypso.ui,
  org.kalypso.ui.application

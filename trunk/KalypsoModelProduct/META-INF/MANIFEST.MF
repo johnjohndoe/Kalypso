@@ -6,7 +6,6 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.intro,

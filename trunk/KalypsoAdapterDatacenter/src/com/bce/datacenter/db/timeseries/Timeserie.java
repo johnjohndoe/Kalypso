@@ -8,10 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -52,7 +49,7 @@ public class Timeserie extends Persistent
    * Constructor
    * 
    * @param id
-   *          internal db identifier
+   *            internal db identifier
    */
   public Timeserie( final Connection con, int id )
   {
@@ -216,15 +213,16 @@ public class Timeserie extends Persistent
    * exports the timeserie owned by this wrapper to a file
    * 
    * @param filename
-   *          pathname of the file to create
+   *            pathname of the file to create
    * @param from
-   *          date from which to export (if null export from beginning)
+   *            date from which to export (if null export from beginning)
    * @param to
-   *          date up to export (if null export until end)
+   *            date up to export (if null export until end)
    * @param separator
-   *          string representing the separator between the tokens: date, value, and flag. (if null default is comma)
+   *            string representing the separator between the tokens: date, value, and flag. (if null default is comma)
    * @param dateFormatPattern
-   *          string such as in SimpleDateFormat representing the format of the date. (if null uses the locale default)
+   *            string such as in SimpleDateFormat representing the format of the date. (if null uses the locale
+   *            default)
    * @return amount of lines written if successfull, otherwise -1
    */
   public int ExportToFile( String filename, Date from, Date to, String separator, String dateFormatPattern )
@@ -454,7 +452,7 @@ public class Timeserie extends Persistent
    * 
    * @return list of all timeseries for a channel
    */
-  protected static List dbReadAll( final Connection con, int channelRef )
+  protected static List< ? > dbReadAll( final Connection con, int channelRef )
   {
     Vector<Timeserie> v = new Vector<Timeserie>();
 
