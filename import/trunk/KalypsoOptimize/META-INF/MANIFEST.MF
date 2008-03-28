@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.kalypso.optimize
 Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.optimize,
  org.kalypso.optimize.errorfunctions,
  org.kalypso.optimize.transform,
