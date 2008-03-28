@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: kalypso.org.dss
 Bundle-SymbolicName: org.kalypso.dss; singleton:=true
 Bundle-Version: 0.0.1
-Bundle-ClassPath: build/bin
+Bundle-ClassPath: KalypsoDSS.jar
 Bundle-Activator: org.kalypso.dss.KalypsoDSSPlugin
 Bundle-Vendor: University of Technology Hamburg-Harburg
 Bundle-Localization: plugin

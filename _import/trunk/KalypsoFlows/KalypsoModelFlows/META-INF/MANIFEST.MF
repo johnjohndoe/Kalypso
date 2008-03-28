@@ -4,7 +4,6 @@ Bundle-Name: KalypsoModelFlows Plug-in
 Bundle-SymbolicName: org.kalypso.model.KalypsoModelFlows; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Require-Bundle: org.kalypso.core,
  org.kalypso.workflow;visibility:=reexport,
  org.kalypso.ui
