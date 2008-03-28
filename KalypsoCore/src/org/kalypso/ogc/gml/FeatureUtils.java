@@ -217,6 +217,9 @@ public class FeatureUtils
 
   public static Feature resolveFeature( final GMLWorkspace workspace, final Object property )
   {
+    if( property == null )
+      return null;
+
     if( property instanceof XLinkedFeature_Impl )
     {
       try
