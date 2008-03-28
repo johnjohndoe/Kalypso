@@ -4,7 +4,7 @@ Bundle-Name: org.kalypso.metadoc Plug-in
 Bundle-SymbolicName: org.kalypso.metadoc; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/commons-configuration-1.1.jar,
- build/bin
+ .
 Bundle-Activator: org.kalypso.metadoc.KalypsoMetaDocPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin

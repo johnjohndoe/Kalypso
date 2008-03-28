@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.kalypso.repository; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.repository,
  org.kalypso.repository.conf,
  org.kalypso.repository.container,

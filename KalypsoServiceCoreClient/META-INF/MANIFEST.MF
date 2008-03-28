@@ -7,7 +7,6 @@ Bundle-ClassPath: KalypsoServiceClientCore.jar
 Bundle-Activator: org.kalypso.core.client.KalypsoServiceCoreClientPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Export-Package: org.kalypso.core.client
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.jwsdp,

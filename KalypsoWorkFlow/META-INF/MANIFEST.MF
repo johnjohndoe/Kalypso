@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.workflow.ui.KalypsoWorkFlowPlugin
 Bundle-Vendor: org.kalypso
 Bundle-Localization: plugin
-Bundle-ClassPath: bin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.contribs.eclipseplatform,
