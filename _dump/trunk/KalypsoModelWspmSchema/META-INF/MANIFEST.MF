@@ -6,7 +6,6 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.schema.KalypsoModelWspmSchemaPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Bundle-ClassPath: build/bin
 Require-Bundle: org.kalypso.model.wspm.core;visibility:=reexport,
  org.kalypso.core;visibility:=reexport
 Eclipse-LazyStart: true

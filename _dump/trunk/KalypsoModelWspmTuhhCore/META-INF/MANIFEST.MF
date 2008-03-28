@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.core; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin
 Bundle-Vendor: kalypso.org
-Bundle-ClassPath: build/bin
 Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.ui,
  org.junit,
