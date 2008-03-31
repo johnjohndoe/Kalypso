@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
-import java.util.List;
+import java.util.Set;
 
 import org.kalypso.contribs.eclipse.ui.IViewable;
 import org.kalypso.ogc.sensor.IObservation;
@@ -75,7 +75,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     obsProvider.addListener( this );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_obsProvider.removeListener( this );
     if( m_observation != null )
@@ -83,35 +83,35 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
     m_obsProvider.dispose();
   }
 
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return getName();
   }
 
-  public void setName( String name )
+  public void setName( final String name )
   {
     m_name = name;
 
     getView().refreshItemState( this, null );
   }
 
-  public ObsView getView()
+  public ObsView getView( )
   {
     return m_view;
   }
 
-  public boolean isShown()
+  public boolean isShown( )
   {
     return m_shown;
   }
 
-  public void setShown( boolean shown )
+  public void setShown( final boolean shown )
   {
     if( shown != m_shown )
     {
@@ -120,11 +120,11 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
       getView().refreshItemState( this, null );
     }
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProviderListener#obsProviderChanged()
    */
-  public void obsProviderChanged()
+  public void obsProviderChanged( )
   {
     if( m_observation != null )
       m_observation.removeListener( this );
@@ -138,7 +138,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation, java.lang.Object)
+   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
+   *      java.lang.Object)
    */
   public void observationChanged( final IObservation obs, final Object source )
   {
@@ -148,7 +149,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getObservation()
    */
-  public IObservation getObservation()
+  public IObservation getObservation( )
   {
     return m_obsProvider.getObservation();
   }
@@ -156,7 +157,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */
-  public IRequest getArguments()
+  public IRequest getArguments( )
   {
     return m_obsProvider.getArguments();
   }
@@ -164,7 +165,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
   /**
    * Return true if this item is concerned by the list of hidden axis-types
    * 
-   * @param hiddenTypes list of axis-types that the user does not want to see
+   * @param hiddenTypes
+   *            list of axis-types that the user does not want to see
    */
-  public abstract boolean shouldBeHidden( final List hiddenTypes );
+  public abstract boolean shouldBeHidden( final Set<String> hiddenTypes );
 }

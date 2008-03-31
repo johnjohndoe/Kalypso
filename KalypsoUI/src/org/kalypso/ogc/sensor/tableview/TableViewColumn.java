@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview;
 
-import java.util.List;
+import java.util.Set;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.template.IObsProvider;
@@ -69,7 +69,7 @@ public class TableViewColumn extends ObsViewItem
 
   private boolean m_shown = true;
 
-  private String m_format;
+  private final String m_format;
 
   private final int m_position;
 
@@ -118,9 +118,9 @@ public class TableViewColumn extends ObsViewItem
    * Set the dirty flag. Optionally an eventSource object can be passed, it designates the origin of the event.
    * 
    * @param eventSource
-   *          [optional, can be null] designates the origin of the event
+   *            [optional, can be null] designates the origin of the event
    */
-  public void setDirty( boolean dirty, final Object eventSource )
+  public void setDirty( final boolean dirty, final Object eventSource )
   {
     m_dirty = dirty;
 
@@ -158,7 +158,7 @@ public class TableViewColumn extends ObsViewItem
   }
 
   @Override
-  public void setShown( boolean shown )
+  public void setShown( final boolean shown )
   {
     if( shown != m_shown )
     {
@@ -190,7 +190,7 @@ public class TableViewColumn extends ObsViewItem
    * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
    */
   @Override
-  public boolean shouldBeHidden( final List hiddenTypes )
+  public boolean shouldBeHidden( final Set<String> hiddenTypes )
   {
     return hiddenTypes.contains( m_valueAxis.getType() );
   }

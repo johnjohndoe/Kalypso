@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.diagview;
 
 import java.awt.Color;
 import java.awt.Stroke;
-import java.util.List;
+import java.util.Set;
 
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.template.IObsProvider;
@@ -63,8 +63,7 @@ public class DiagViewCurve extends ObsViewItem
 
   private final AxisMapping[] m_mappings;
 
-  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color,
-      final Stroke stroke, final AxisMapping[] mappings )
+  public DiagViewCurve( final DiagView view, final IObsProvider obsProvider, final String name, final Color color, final Stroke stroke, final AxisMapping[] mappings )
   {
     super( view, obsProvider, name );
 
@@ -73,17 +72,17 @@ public class DiagViewCurve extends ObsViewItem
     m_mappings = mappings;
   }
 
-  public AxisMapping[] getMappings()
+  public AxisMapping[] getMappings( )
   {
     return m_mappings;
   }
 
-  public Color getColor()
+  public Color getColor( )
   {
     return m_color;
   }
 
-  public Stroke getStroke()
+  public Stroke getStroke( )
   {
     return m_stroke;
   }
@@ -91,12 +90,12 @@ public class DiagViewCurve extends ObsViewItem
   /**
    * @return true when this curve represents a Water-Level and the Water-Level-Feature is activated in the view
    */
-  public boolean isDisplayAlarmLevel()
+  public boolean isDisplayAlarmLevel( )
   {
     boolean hasWaterLevelAxis = false;
-    for( int i = 0; i < m_mappings.length; i++ )
+    for( final AxisMapping element : m_mappings )
     {
-      if( m_mappings[i].getObservationAxis().getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+      if( element.getObservationAxis().getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       {
         hasWaterLevelAxis = true;
         break;
@@ -109,7 +108,7 @@ public class DiagViewCurve extends ObsViewItem
   /**
    * @return the list of alarm-levels, or an empty array if nothing found
    */
-  public AlarmLevel[] getAlarmLevels()
+  public AlarmLevel[] getAlarmLevels( )
   {
     final String[] alarms = TimeserieUtils.findOutMDAlarmLevel( getObservation() );
     final AlarmLevel[] als = new AlarmLevel[alarms.length];
@@ -134,7 +133,9 @@ public class DiagViewCurve extends ObsViewItem
   public static class AlarmLevel
   {
     public final double value;
+
     public final String label;
+
     public final Color color;
 
     public AlarmLevel( final double val, final String lbl )
@@ -146,7 +147,7 @@ public class DiagViewCurve extends ObsViewItem
     }
 
     @Override
-    public String toString()
+    public String toString( )
     {
       return label;
     }
@@ -156,11 +157,13 @@ public class DiagViewCurve extends ObsViewItem
    * @see org.kalypso.ogc.sensor.template.ObsViewItem#shouldBeHidden(java.util.List)
    */
   @Override
-  public boolean shouldBeHidden( final List hiddenTypes )
+  public boolean shouldBeHidden( final Set<String> hiddenTypes )
   {
-    for( int i = 0; i < m_mappings.length; i++ )
-      if( hiddenTypes.contains( m_mappings[i].getObservationAxis().getType() ) )
+    for( final AxisMapping element : m_mappings )
+    {
+      if( hiddenTypes.contains( element.getObservationAxis().getType() ) )
         return true;
+    }
 
     return false;
   }

@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.abstractobseditor.actions;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -63,12 +64,11 @@ public class SetIgnoreTypesAction extends FullAction
 
   private final static String MSG = "Wählen Sie die Achsentypen die nicht dargestellt werden";
 
-  private ObservationEditorOutlinePage m_page;
+  private final ObservationEditorOutlinePage m_page;
 
   public SetIgnoreTypesAction( final ObservationEditorOutlinePage page )
   {
-    super( TITLE, ImageProvider.IMAGE_UTIL_FILTER,
-        "Erlaubt die Deaktivierung von ausgewählten Achsentypen (z.B. Wasserstand)" );
+    super( TITLE, ImageProvider.IMAGE_UTIL_FILTER, "Erlaubt die Deaktivierung von ausgewählten Achsentypen (z.B. Wasserstand)" );
 
     m_page = page;
   }
@@ -77,10 +77,9 @@ public class SetIgnoreTypesAction extends FullAction
   public void run( )
   {
     final ObsView obsView = m_page.getView();
-    final Set types = ObsViewUtils.retrieveAxisTypes( obsView.getItems(), true );
+    final Set<String> types = ObsViewUtils.retrieveAxisTypes( obsView.getItems(), true );
 
-    final ListSelectionDialog dlg = new ListSelectionDialog( m_page.getSite().getShell(), types.toArray(),
-        new ArrayContentProvider(), new LabelProvider(), MSG );
+    final ListSelectionDialog dlg = new ListSelectionDialog( m_page.getSite().getShell(), types.toArray(), new ArrayContentProvider(), new LabelProvider(), MSG );
     dlg.setTitle( TITLE );
     dlg.setInitialSelections( obsView.getHiddenTypes().toArray() );
 
@@ -90,7 +89,12 @@ public class SetIgnoreTypesAction extends FullAction
       if( res == null )
         obsView.hideTypes( null );
       else
-        obsView.hideTypes( java.util.Arrays.asList( res ) );
+      {
+        final Set<String> hideSet = new LinkedHashSet<String>();
+        for( final Object string : res )
+          hideSet.add( string.toString() );
+        obsView.hideTypes( hideSet );
+      }
     }
   }
 }

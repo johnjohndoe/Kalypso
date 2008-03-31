@@ -173,7 +173,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
       // FIXME - wont update commands of view
       actionbar.getToolBarManager().update( true );
-
     }
   }
 

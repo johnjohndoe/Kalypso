@@ -103,7 +103,7 @@ public abstract class ObsView implements IObsViewEventProvider
   private String[] m_ignoreTypes = new String[] {};
 
   /** If set, the concerned items are not displayed. Note: this is not to be confused with ignoreTypes */
-  private List m_hiddenTypes = new ArrayList();
+  private Set<String> m_hiddenTypes = new HashSet<String>();
 
   /**
    * By default the timezone is the default one. It can be overriden by the value of the template.
@@ -363,10 +363,10 @@ public abstract class ObsView implements IObsViewEventProvider
    * @param types
    *            list of types that should be hidden
    */
-  public void hideTypes( final List types )
+  public void hideTypes( final Set<String> types )
   {
     if( types == null )
-      m_hiddenTypes = new ArrayList();
+      m_hiddenTypes = new HashSet<String>();
     else
       m_hiddenTypes = types;
 
@@ -378,7 +378,7 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * @return the list of hidden types
    */
-  public List getHiddenTypes( )
+  public Set<String> getHiddenTypes( )
   {
     return m_hiddenTypes;
   }
