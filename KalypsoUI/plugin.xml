@@ -168,6 +168,14 @@
         id="org.kalypso.ui.views.mapOverView"
         name="%view.name.2">
   </view>
+  <view
+        allowMultiple="false"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ogc.gml.outline.simple.SimpleMapOutline"
+        icon="icons/kalypso_gmt.gif"
+        id="org.kalypso.ui.views.simpleMapOutline"
+        name="Simple Map Outline">
+  </view>
 	</extension>
 	<extension id="editorActions" name="editorActions"
 		point="org.eclipse.ui.editorActions">
@@ -283,176 +291,6 @@
 				menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate"
 				style="push" toolbarPath="navigate"
 				tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate.tooltip" />
-		</editorContribution>
-		<editorContribution
-			targetID="org.kalypso.ui.editor.mapeditor.GisMapEditor"
-			id="org.kalypso.ogc.widgets.GisMapEditorActionDelegate">
-			<menu label="%org.kalypso.ui.editors.mapeditor.menu"
-				path="additions" id="org.kalypso.ui.editors.mapeditor.menu">
-				<separator name="sep1" />
-				<groupMarker name="export" />
-				<groupMarker name="tools"></groupMarker>
-				<separator name="sep2"></separator>
-				<groupMarker name="actions"></groupMarker>
-				<separator name="sep3"></separator>
-				<groupMarker name="edit"></groupMarker>
-			</menu>
-			<action
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.label"
-				icon="icons/map/zoomout.gif" style="push"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomOutDelegate.tooltip"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
-				toolbarPath="karte/actions"
-				id="org.kalypso.ui.editor.mapeditor.action.ZoomOutAction">
-			</action>
-			<action
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.label"
-				icon="icons/map/maximize2.gif" style="push"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.FullExtentDelegate"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/actions"
-				toolbarPath="karte/actions"
-				id="org.kalypso.ui.editor.mapeditor.action.FullExtentAction">
-			</action>
-			<action state="true" style="radio"
-				id="org.kalypso.ui.editor.mapeditor.action.PanAction"
-				toolbarPath="karte/tools"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate"
-				icon="icons/map/pan.gif"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip">
-			</action>
-			<action state="false" style="radio"
-				id="org.kalypso.ui.editor.mapeditor.action.SelectFeatureAction"
-				toolbarPath="karte/tools"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate"
-				icon="icons/map/select_feature.gif"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
-			</action>
-			<action state="false" style="radio"
-				id="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate"
-				toolbarPath="karte/tools"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditFeatureGeometryWidgetDelegate"
-				icon="icons/map/select_feature.gif"
-				label="%action.label.0"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				tooltip="%action.tooltip.0">
-			</action>
-			<action
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label"
-				icon="icons/map/zoomin.gif" style="radio"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				toolbarPath="karte/tools"
-				id="org.kalypso.ui.editor.mapeditor.action.ZoomInAction">
-			</action>
-			<action disabledIcon="icons/map/geoInfo_gray.gif"
-				toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.tooltip"
-				icon="icons/map/geoInfo.gif" style="radio"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				id="org.kalypso.ui.editor.mapeditor.action.CoordinateInfoAction">
-			</action>
-			<action disabledIcon="icons/map/wmsInfo_gray.gif"
-				toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label"
-				icon="icons/map/wmsInfo.gif"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate"
-				style="radio"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				id="org.kalypso.ui.editor.mapeditor.action.WMSGetfeatureInfoWidget">
-			</action>
-			<action disabledIcon="icons/map/edit_relation_gray.gif"
-				toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip"
-				icon="icons/map/edit_relation.gif" style="radio"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				id="org.kalypso.ui.editor.mapeditor.action.NewRelationAction">
-			</action>
-			<action disabledIcon="icons/map/save_edit_disabled.gif"
-				toolbarPath="karte/edit"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.tooltip"
-				icon="icons/feature/save_GML.gif"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate"
-				style="push"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				id="org.kalypso.ui.editor.mapeditor.action.SaveDataAction">
-			</action>
-
-			<action
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate"
-				disabledIcon="icons/map/undo_edit_disabled.gif"
-				icon="icons/map/undo_edit.gif"
-				id="org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.label"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				style="push" toolbarPath="karte/edit"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.tooltip">
-			</action>
-			<action
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate"
-				disabledIcon="icons/map/redo_edit_disabled.gif"
-				icon="icons/map/redo_edit.gif"
-				id="org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.label"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				style="push" toolbarPath="karte/edit"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.tooltip">
-			</action>
-			<action toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate.label"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.EditGeometryWidgetDelegate"
-				icon="icons/feature/geom_edit.gif" style="radio" state="false"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				id="org.kalypso.ui.editor.mapeditor.action.EditGeometry" />
-			<action toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate.label"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateAnyGeometryWidgetDelegate"
-				icon="icons/feature/geom_multipoint.gif" style="radio" state="false"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				id="org.kalypso.ui.editor.mapeditor.action.CreateGeometry" />
-			<action toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate.label"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePolygonWidgetDelegate"
-				icon="icons/feature/geom_polygon.gif" style="radio" state="false"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				id="org.kalypso.ui.editor.mapeditor.action.CreatePolygon" />
-			<action toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate.label"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreateLineStringWidgetDelegate"
-				icon="icons/feature/geom_line.gif" style="radio" state="false"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				id="org.kalypso.ui.editor.mapeditor.action.CreatePolyline" />
-			<action toolbarPath="karte/tools"
-				label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate.label"
-				tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate.tooltip"
-				class="org.kalypso.ui.editor.mapeditor.actiondelegates.CreatePointWidgetDelegate"
-				icon="icons/feature/geom_point.gif" style="radio" state="false"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/edit"
-				id="org.kalypso.ui.editor.mapeditor.action.CreatePoint" />
-			<action
-				class="org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate"
-				icon="icons/filterdialog/filter_ps.gif"
-				id="org.kalypso.ogc.filterdialog.actions.openfilterdialog"
-				label="%org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.label"
-				menubarPath="org.kalypso.ui.editors.mapeditor.menu/tools"
-				style="push"
-				tooltip="%org.kalypso.ogc.gml.filterdialog.actions.KalypsoOpenFilterDialogActionDelegate.tooltip" />
 		</editorContribution>
 		<editorContribution
 			targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor"
@@ -1174,6 +1012,7 @@
          </defaultHandler>
       </command>
       <command
+            categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.PanToCommand"
             name="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label">
          <defaultHandler
@@ -1455,6 +1294,12 @@
                    value="org.kalypso.ogc.gml.map.ZoomOutCommand">
              </parameter>
           </class>
+          <visibleWhen
+                checkEnabled="false">
+             <reference
+                   definitionId="mapContext">
+             </reference>
+          </visibleWhen>
        </dynamic>
        <dynamic
              id="org.kalypso.ogc.gml.map.move">
@@ -1477,6 +1322,12 @@
                    value="org.kalypso.ogc.gml.map.MoveRightCommand">
              </parameter>
           </class>
+          <visibleWhen
+                checkEnabled="false">
+             <reference
+                   definitionId="mapContext">
+             </reference>
+          </visibleWhen>
        </dynamic>
     </menuContribution>
      <menuContribution
@@ -2302,4 +2153,491 @@
           factory="org.kalypso.ui.KalypsoGuiTypeHandlerFactory">
     </typeHandler>
  </extension>
+ <extension
+            point="org.eclipse.ui.commands">
+            <command
+                  categoryId="org.kalypso.ogc.gml.map.category"
+                  id="org.kalypso.ogc.gml.map.EditRelationsCommand"
+                  name="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label">
+                  
+            </command>
+            <command
+                  categoryId="org.kalypso.ogc.gml.map.category"
+                  id="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand"
+                  name="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label">
+                  
+            </command>
+            <command
+                  categoryId="org.kalypso.ogc.gml.map.category"
+                  id="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
+                  name="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label">
+                  
+            </command>
+            <command
+                  categoryId="org.kalypso.ogc.gml.map.category"
+                  id="org.kalypso.ogc.gml.map.SelectFeatureCommand"
+                  name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label">
+                  
+            </command>
+            <command
+                  categoryId="org.kalypso.ogc.gml.map.category"
+                  id="org.kalypso.ogc.gml.map.SaveThemeCommand"
+                  name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label">
+            </command>
+            <command
+                  categoryId="org.kalypso.ogc.gml.map.category"
+                  id="org.kalypso.ogc.gml.map.UndoCommand"
+                  name="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.label">
+            </command>
+            <command
+                  categoryId="org.kalypso.ogc.gml.map.category"
+                  id="org.kalypso.ogc.gml.map.RedoCommand"
+                  name="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.label">
+            </command>
+      </extension>
+      <extension
+            point="org.eclipse.ui.menus">
+
+            
+            
+            <menuContribution
+                  locationURI="menu:org.kalypso.ui.menus.mapMenu?after=additions">
+                        <visibleWhen
+                              checkEnabled="true">
+                           <reference
+                                 definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                           </reference>
+                        </visibleWhen>
+                        <separator
+                              name="navigation"
+                              visible="true">
+                        </separator>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.EditRelationsCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip">
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip">
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.tooltip">
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.UndoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.label"
+                              style="push"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.tooltip">
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.RedoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.label"
+                              style="push"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.tooltip">
+                        </command>
+                        <separator
+                              name="tools"
+                              visible="true">
+                        </separator>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.SaveThemeCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label"
+                              style="push"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.tooltip">
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.Screenshot"
+                              label="%command.label.0"
+                              tooltip="%command.tooltip.0">
+                        </command>
+            </menuContribution>
+            <menuContribution
+                  locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+                  <toolbar
+                        id="org.kalypso.ui.menus.mapToolbar"
+                        >
+                        <dynamic
+             				id="org.kalypso.ogc.gml.map.zoom">
+					        <class
+					              class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
+					           <parameter
+					                 name="command1"
+					                 value="org.kalypso.ogc.gml.map.FullExtentCommand">
+					           </parameter>
+					           <parameter
+					                 name="command2"
+					                 value="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand">
+					           </parameter>
+					           <parameter
+					                 name="command3"
+					                 value="org.kalypso.ogc.gml.map.ZoomInStaticCommand">
+					           </parameter>
+					           <parameter
+					                 name="command4"
+					                 value="org.kalypso.ogc.gml.map.ZoomOutCommand">
+					           </parameter>
+					        </class>
+             <visibleWhen
+                   checkEnabled="true">
+                <reference
+                      definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                </reference>
+             </visibleWhen>
+					     </dynamic>
+					     <dynamic
+					           id="org.kalypso.ogc.gml.map.move">
+					        <class
+					              class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
+					           <parameter
+					                 name="command1"
+					                 value="org.kalypso.ogc.gml.map.MoveLeftCommand">
+					           </parameter>
+					           <parameter
+					                 name="command2"
+					                 value="org.kalypso.ogc.gml.map.MoveUpCommand">
+					           </parameter>
+					           <parameter
+					                 name="command3"
+					                 value="org.kalypso.ogc.gml.map.MoveDownCommand">
+					           </parameter>
+					           <parameter
+					                 name="command4"
+					                 value="org.kalypso.ogc.gml.map.MoveRightCommand">
+					           </parameter>
+					        </class>
+             <visibleWhen
+                   checkEnabled="true">
+                <reference
+                      definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                </reference>
+             </visibleWhen>
+					    </dynamic>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.PanToCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="true">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="true">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <separator
+                              name="navigation"
+                              visible="true">
+                        </separator>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.EditRelationsCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="true">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="true">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="true">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="true">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.UndoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.label"
+                              style="push"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.tooltip">
+                           <visibleWhen
+                                 checkEnabled="true">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.RedoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.label"
+                              style="push"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.RedoDelegate.tooltip">
+                           <visibleWhen
+                                 checkEnabled="true">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
+                        <separator
+                              name="tools"
+                              visible="true">
+                        </separator>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.SaveThemeCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.label"
+                              style="push"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="true">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.Screenshot"
+                              label="%command.label.0"
+                              style="push"
+                              tooltip="%command.tooltip.0">
+                           <visibleWhen
+                                 checkEnabled="true">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
+                  </toolbar>
+            </menuContribution>
+            
+      </extension>
+      
+      <extension
+            point="org.eclipse.ui.commandImages">
+            <image
+                  commandId="org.kalypso.ogc.gml.map.EditRelationsCommand"
+                  disabledIcon="icons/map/edit_relation_gray.gif"
+                  icon="icons/map/edit_relation.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand"
+                  disabledIcon="icons/map/wmsInfo_gray.gif"
+                  icon="icons/map/wmsInfo.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
+                  disabledIcon="icons/map/geoInfo_gray.gif"
+                  icon="icons/map/geoInfo.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand"
+                  icon="icons/map/select_feature.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ogc.gml.map.SaveThemeCommand"
+                  disabledIcon="icons/map/save_edit_disabled.gif"
+                  icon="icons/feature/save_GML.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ogc.gml.map.UndoCommand"
+                  disabledIcon="icons/map/undo_edit_disabled.gif"
+                  icon="icons/map/undo_edit.gif">
+            </image>
+            <image
+                  commandId="org.kalypso.ogc.gml.map.RedoCommand"
+                  disabledIcon="icons/map/redo_edit_disabled.gif"
+                  icon="icons/map/redo_edit.gif">
+            </image>
+      </extension>
+      <extension
+            point="org.eclipse.ui.handlers">
+            
+            <handler
+                  commandId="org.kalypso.ogc.gml.map.EditRelationsCommand">
+                  <class
+                        class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+                        <parameter
+                              name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                              value="org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget">
+                        </parameter>
+                  </class>
+                  <enabledWhen>
+                        <reference
+                              definitionId="mapContext">
+                        </reference>
+                  </enabledWhen>
+            </handler>
+            
+            <handler
+                  commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand">
+                  <class
+                        class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+                        <parameter
+                              name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                              value="org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget">
+                        </parameter></class>
+                  <enabledWhen>
+                        <reference
+                              definitionId="mapContext">
+                        </reference>
+                  </enabledWhen>
+            </handler>
+            <handler
+                  commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand">
+                  <class
+                        class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+                        <parameter
+                              name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                              value="org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget">
+                        </parameter>
+                  </class>
+                  <enabledWhen>
+                        <reference
+                              definitionId="mapContext">
+                        </reference>
+                  </enabledWhen>
+            </handler>
+            <handler
+                  commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand">
+                  <class
+                        class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+                        <parameter
+                              name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                              value="org.kalypso.ogc.gml.map.widgets.SelectWidget">
+                        </parameter>
+                  </class>
+                  <enabledWhen>
+                        <reference
+                              definitionId="mapContext">
+                        </reference>
+                  </enabledWhen>
+            </handler>
+            <handler
+                  class="org.kalypso.ogc.gml.map.handlers.SaveThemeHandler"
+                  commandId="org.kalypso.ogc.gml.map.SaveThemeCommand">
+               <enabledWhen>
+                  <reference
+                        definitionId="mapContext">
+                  </reference>
+               </enabledWhen>
+            </handler>
+            <handler
+                  class="org.kalypso.ogc.gml.map.handlers.UndoHandler"
+                  commandId="org.kalypso.ogc.gml.map.UndoCommand">
+               <enabledWhen>
+                  <reference
+                        definitionId="mapContext">
+                  </reference>
+               </enabledWhen>
+            </handler>
+            <handler
+                  class="org.kalypso.ogc.gml.map.handlers.RedoHandler"
+                  commandId="org.kalypso.ogc.gml.map.RedoCommand">
+               <enabledWhen>
+                  <reference
+                        definitionId="mapContext">
+                  </reference>
+               </enabledWhen>
+            </handler>
+            
+            
+            
+      </extension>
+      <extension
+            point="org.eclipse.core.expressions.definitions">
+            <definition
+                  id="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                  <with
+                        variable="activeEditorId">
+                        <equals
+                              value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                        </equals>
+                  </with>
+            </definition>
+            <definition
+                  id="org.kalypso.ogc.gml.map.GisEditorOrMapIsActive">
+               <or>
+                  <with
+                        variable="activeEditorId">
+                     <instanceof
+                           value="org.kalypso.ui.editor.mapeditor.AbstractMapPart">
+                     </instanceof>
+                  </with>
+                  <with
+                        variable="activePartId">
+                     <instanceof
+                           value="org.kalypso.ui.editor.mapeditor.AbstractMapPart">
+                     </instanceof>
+                  </with>
+               </or>
+            </definition>
+            <definition
+                  id="org.kalypso.ogc.gml.map.GisEditorIsActivePart">
+               <with
+                     variable="activePartId">
+                  <equals
+                        value="org.kalypso.ui.editor.mapeditor.GisMapEditor">
+                  </equals>
+               </with>
+            </definition>
+            <definition
+                  id="featureSelected">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                        <or>
+                              <instanceof
+                                    value="org.kalypsodeegree_impl.model.feature.Feature_Impl">
+                              </instanceof>
+                        </or>
+                  </iterate>
+            </definition>
+      </extension>
+ 
 </plugin>

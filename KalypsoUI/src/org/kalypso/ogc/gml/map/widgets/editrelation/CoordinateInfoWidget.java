@@ -87,6 +87,14 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   }
 
   /**
+   * empty constructor so widget can be used with SelectWidgetHandler
+   */
+  public CoordinateInfoWidget( )
+  {
+    super( "coordinate info", "" );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
   @Override

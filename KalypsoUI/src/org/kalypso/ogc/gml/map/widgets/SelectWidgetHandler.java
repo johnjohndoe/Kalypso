@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -173,5 +174,35 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     {
       element.setTooltip( m_widgetTooltipFromExtension );
     }
+
+    // update check state for menu contributions of current widget
+    IWorkbenchPart activePart = null;
+    try
+    {
+      activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
+      final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
+      if( mapPanel != null )
+      {
+
+        IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();
+        // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
+        if( actualWidget != null )
+        {
+          String actualWidgetClass = actualWidget.getClass().getName();
+          if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
+            element.setChecked( true );
+          else
+            element.setChecked( false );
+        }
+        else
+          element.setChecked( false );
+      }
+    }
+    catch( NullPointerException e )
+    {
+      // the first time this method gets called, there might be some uninitialized classes above
+      return;
+    }
+
   }
 }

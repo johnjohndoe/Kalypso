@@ -46,8 +46,6 @@ import java.util.Set;
 
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.EditorActionBarContributor;
-import org.kalypso.metadoc.IExportTargetModes;
-import org.kalypso.metadoc.ui.ExportActionContributor;
 
 /**
  * @author schlienger
@@ -77,8 +75,9 @@ public class GisMapEditorContributor extends EditorActionBarContributor
 
     if( !m_editors.contains( targetEditor ) )
     {
-      ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.mapeditor.menu/export", "edit", IExportTargetModes.MODE_EXPERT );
-      m_editors.add( targetEditor );
+// ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.mapeditor.menu/export", "edit",
+// IExportTargetModes.MODE_EXPERT );
+// m_editors.add( targetEditor );
     }
   }
 }
