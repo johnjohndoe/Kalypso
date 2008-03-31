@@ -99,13 +99,11 @@ public class PointMarker implements IProfilPointMarker
   /* Interpreted ui values to obtain backward compability */
   public Object getIntepretedValue( )
   {
-
     return getValue();
   }
 
   public void setInterpretedValue( final Object value )
   {
-
     setValue( value );
   }
 

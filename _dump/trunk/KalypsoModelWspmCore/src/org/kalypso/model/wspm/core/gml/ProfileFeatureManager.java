@@ -71,6 +71,7 @@ public class ProfileFeatureManager
     }
   }
 
+  // TODO: cahce is deactivated at th emoment, remove if no more used
   private static final int CACHE_SIZE = 1;
 
   private final CachedFeature[] m_cache = new CachedFeature[CACHE_SIZE];
@@ -79,7 +80,7 @@ public class ProfileFeatureManager
 
   public IProfil getProfile( final Feature profileFeature )
   {
-    IProfil profil = getFromCache( profileFeature );
+    IProfil profil = null; // getFromCache( profileFeature );
 
     if( profil == null )
     {
@@ -108,8 +109,8 @@ public class ProfileFeatureManager
       final IObservation<TupleResult>[] profileObjects = ProfilObsHelper.getProfileObjects( profileFeature );
       if( profileObjects.length > 0 )
         profil.createProfileObjects( profileObjects );
-
-      appendToCache( profileFeature, profil );
+// TODO: see above
+// appendToCache( profileFeature, profil );
     }
 
     return profil;
