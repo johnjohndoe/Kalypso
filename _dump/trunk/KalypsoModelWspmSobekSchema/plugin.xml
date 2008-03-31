@@ -13,6 +13,10 @@
             class="org.kalypso.model.wspm.sobek.schema.schemata.dict.KalypsoModelWspmSobekSchemaDictionaryCatalogContribution"
             name="WspmSobekDictionaryCatalogContribution">
       </catalogContribution>
+      <catalogContribution
+            class="org.kalypso.model.wspm.sobek.schema.resources.catalog.FeatureTypeCatalogContribution"
+            name="WspmSobekUICatalogContribution">
+      </catalogContribution>
    </extension>
 
 </plugin>
