@@ -94,6 +94,11 @@ public class EditGeometryWidget extends AbstractWidget
     super( name, toolTip );
   }
 
+  public EditGeometryWidget( )
+  {
+    super( "edit geometry", "" );
+  }
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
    */

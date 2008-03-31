@@ -44,6 +44,7 @@ import java.awt.Rectangle;
 import java.net.URL;
 
 import org.apache.commons.configuration.Configuration;
+import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -76,9 +77,11 @@ import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.metadoc.IExportableObject;
@@ -135,6 +138,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   private IResourceChangeListener m_resourceChangeListener;
 
   protected boolean m_saving;
+
+  public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category";
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
@@ -280,10 +285,59 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_mapModellContextSwitcher.setMapModell( m_mapPanel.getMapModell() );
 
-// final IWorkbench workbench = site.getWorkbenchWindow().getWorkbench();
-// final IContextService workbenchContextService = (IContextService) workbench.getService( IContextService.class );
-// if( workbenchContextService != null )
-// m_mapModellContextSwitcher.addContextService( workbenchContextService );
+    final AbstractMapPart thisPart = this;
+    getSite().getPage().addPartListener( new IPartListener2()
+    {
+
+      public void partActivated( IWorkbenchPartReference partRef )
+      {
+        try
+        {
+          CommandUtilities.refreshElementsForWindow( thisPart.getSite().getWorkbenchWindow(), MAP_COMMAND_CATEGORY );
+        }
+        catch( CommandException e )
+        {
+          KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
+      }
+
+      public void partBroughtToTop( IWorkbenchPartReference partRef )
+      {
+        // nothing to do
+      }
+
+      public void partClosed( IWorkbenchPartReference partRef )
+      {
+        // nothing to do
+      }
+
+      public void partDeactivated( IWorkbenchPartReference partRef )
+      {
+        // nothing to do
+      }
+
+      public void partHidden( IWorkbenchPartReference partRef )
+      {
+        // nothing to do
+      }
+
+      public void partInputChanged( IWorkbenchPartReference partRef )
+      {
+        // nothing to do
+      }
+
+      public void partOpened( IWorkbenchPartReference partRef )
+      {
+        // nothing to do
+
+      }
+
+      public void partVisible( IWorkbenchPartReference partRef )
+      {
+        // nothing to do
+      }
+
+    } );
 
     final IContextService siteContextService = (IContextService) site.getService( IContextService.class );
     if( siteContextService != null )
@@ -537,6 +591,13 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     if( IExportableObjectFactory.class.equals( adapter ) )
       return this;
+
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      final GisMapOutlinePage page = new GisMapOutlinePage( getCommandTarget() );
+      page.setMapPanel( getMapPanel() );
+      return page;
+    }
 
     if( adapter == IFile.class )
     {

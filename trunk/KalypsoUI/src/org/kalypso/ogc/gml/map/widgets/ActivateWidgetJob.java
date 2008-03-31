@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.map.widgets;
 
+import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -7,9 +8,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 
@@ -25,6 +30,8 @@ public final class ActivateWidgetJob extends UIJob
   private final MapPanel m_mapPanel;
 
   private final IWorkbenchPart m_activePart;
+
+  public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category";
 
   public ActivateWidgetJob( final Display jobDisplay, final String name, final IWidget widget, final MapPanel mapPanel, final IWorkbenchPart activePart )
   {
@@ -46,12 +53,21 @@ public final class ActivateWidgetJob extends UIJob
       }
       else
         m_mapPanel.getWidgetManager().setActualWidget( m_widget );
+
+      CommandUtilities.refreshElementsForWindow( PlatformUI.getWorkbench().getActiveWorkbenchWindow(), MAP_COMMAND_CATEGORY );
+      return Status.OK_STATUS;
     }
     catch( final PartInitException e )
     {
       return e.getStatus();
     }
+    catch( CommandException e )
+    {
+      IStatus status = StatusUtilities.statusFromThrowable( e );
 
-    return Status.OK_STATUS;
+      KalypsoGisPlugin.getDefault().getLog().log( status );
+
+      return status;
+    }
   }
 }

@@ -143,6 +143,14 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     super( name, toolTip );
   }
 
+  /**
+   * empty constructor so widget can be used with SelectWidgetHandler
+   */
+  public EditRelationWidget( )
+  {
+    super( "edit relations", "" );
+  }
+
   @Override
   public void leftPressed( final Point p )
   {

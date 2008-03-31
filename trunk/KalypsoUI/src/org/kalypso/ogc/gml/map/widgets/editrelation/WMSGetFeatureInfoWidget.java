@@ -89,6 +89,14 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
   }
 
   /**
+   * empty constructor so widget can be used with SelectWidgetHandler
+   */
+  public WMSGetFeatureInfoWidget( )
+  {
+    super( "wms get feature info", "" );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
    */
   @Override

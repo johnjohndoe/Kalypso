@@ -79,6 +79,11 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
     update( getMapPanel() );
   }
 
+  public EditFeatureGeometryWidget( )
+  {
+    this( "Replace Geometry", "Replace The First Geometry Of The Selected Feature", null, null, null );
+  }
+
   @Override
   protected Object createFeatureToEdit( final IKalypsoFeatureTheme theme )
   {

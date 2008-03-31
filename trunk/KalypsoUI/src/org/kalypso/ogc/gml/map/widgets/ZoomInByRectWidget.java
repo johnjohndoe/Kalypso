@@ -55,16 +55,17 @@ import org.kalypso.ogc.gml.map.MapPanel;
 public class ZoomInByRectWidget extends AbstractWidget
 {
 
-  public ZoomInByRectWidget(String name, String tooltip )
+  public ZoomInByRectWidget( String name, String tooltip )
   {
-    super(name,tooltip);
+    super( name, tooltip );
   }
+
   /*
    * @author doemming
    */
   public ZoomInByRectWidget( )
   {
-    super( "zoom in", "");
+    super( "zoom in", "" );
 
   }
 
@@ -82,9 +83,9 @@ public class ZoomInByRectWidget extends AbstractWidget
     {
       m_endPoint = p;
     }
-    //TODO: check if this repaint is really necessary
+    // TODO: check if this repaint is really necessary
     MapPanel panel = getMapPanel();
-    if (panel != null)
+    if( panel != null )
       panel.repaint();
 
   }

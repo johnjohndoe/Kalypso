@@ -53,6 +53,12 @@ public class SelectWidget extends AbstractSelectWidget
 
   }
 
+  public SelectWidget( )
+  {
+    super( "select widget", "" );
+
+  }
+
   @Override
   protected int getSelectionMode( )
   {
