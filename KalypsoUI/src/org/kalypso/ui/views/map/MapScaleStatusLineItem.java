@@ -236,6 +236,9 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
       if( m_text != null )
       {
         double mapScale = MapUtilities.getMapScale( m_panel );
+        if( Double.isNaN( mapScale ) || Double.isInfinite( mapScale ) )
+          mapScale = 0;
+
         BigDecimal bigScale = new BigDecimal( mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
         String scaleString = bigScale.toPlainString();
 
@@ -260,6 +263,9 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
           if( m_text != null && !m_text.isDisposed() )
           {
             double mapScale = MapUtilities.getMapScale( source );
+            if( Double.isNaN( mapScale ) || Double.isInfinite( mapScale ) )
+              mapScale = 0;
+
             BigDecimal bigScale = new BigDecimal( mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
             String scaleString = bigScale.toPlainString();
 
