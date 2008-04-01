@@ -185,4 +185,16 @@ public class ComboBoxViewerCellEditor extends CellEditor
       m_viewer.setSelection( selection );
     }
   }
+
+  /**
+   * @see org.eclipse.jface.viewers.CellEditor#focusLost()
+   */
+  @Override
+  protected void focusLost( )
+  {
+    if( isActivated() )
+    {
+      applyEditorValueAndDeactivate();
+    }
+  }
 }
