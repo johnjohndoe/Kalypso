@@ -76,11 +76,15 @@ public class TupleResultFeatureControlWrapper
     this( observation, handlerProvider, true, false );
   }
 
+  public void draw( final Composite composite, final GridData gridData )
+  {
+    m_tblControl = m_control.createControl( composite, SWT.BORDER | SWT.FULL_SELECTION );
+    m_tblControl.setLayoutData( gridData );
+  }
+
   public void draw( final Composite composite )
   {
-
-    m_tblControl = m_control.createControl( composite, SWT.BORDER | SWT.FULL_SELECTION );
-    m_tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    draw( composite, new GridData( GridData.FILL, GridData.FILL, true, true ) );
   }
 
   public void addChangeListener( final IFeatureChangeListener listener )
@@ -97,4 +101,5 @@ public class TupleResultFeatureControlWrapper
   {
     m_tblControl.setEnabled( b );
   }
+
 }
