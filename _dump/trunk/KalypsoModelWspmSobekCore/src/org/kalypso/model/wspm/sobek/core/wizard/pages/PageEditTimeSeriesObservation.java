@@ -55,7 +55,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ext.base.axis.CalendarAxis;
 import org.kalypso.chart.ext.base.axis.NumberAxis;
 import org.kalypso.chart.ext.base.axisrenderer.CalendarAxisRenderer;
@@ -74,17 +73,26 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.java.util.DoubleComparator;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControl;
+import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlWrapper;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
 import org.kalypso.ogc.gml.om.table.handlers.FixedComponentUIHandlerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard page with table of time series observation
@@ -149,10 +157,40 @@ public class PageEditTimeSeriesObservation extends WizardPage
       provider.add( i, handler );
     }
     // obsTable
-    final TupleResultFeatureControl control = new TupleResultFeatureControl( m_condition.getTimeSeriesObservationFeature(), null, provider, false, false );
+    final TupleResultFeatureControlWrapper control = new TupleResultFeatureControlWrapper( m_condition.getTimeSeriesObservationFeature(), provider );
+    control.draw( container );
 
-    final Control tblControl = control.createControl( container, SWT.BORDER );
-    tblControl.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
+    final GMLWorkspace gmlWorkspace = m_condition.getTimeSeriesObservationFeature().getWorkspace();
+    final CommandableWorkspace workspace;
+    if( gmlWorkspace instanceof CommandableWorkspace )
+      workspace = (CommandableWorkspace) gmlWorkspace;
+    else
+      workspace = new CommandableWorkspace( gmlWorkspace );
+
+    control.addChangeListener( new IFeatureChangeListener()
+    {
+      public void featureChanged( final ICommand changeCommand )
+      {
+        if( changeCommand instanceof ChangeFeatureCommand )
+        {
+          final ChangeFeatureCommand chg = (ChangeFeatureCommand) changeCommand;
+
+          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { chg.asFeatureChange() } );
+          try
+          {
+            workspace.postCommand( command );
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      public void openFeatureRequested( final Feature feature, final IPropertyType pt )
+      {
+      }
+    } );
 
     /* diagram */
     final Composite cDiagram = new Composite( container, SWT.NULL );
