@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -82,17 +84,14 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlWrapper;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
 import org.kalypso.ogc.gml.om.table.handlers.FixedComponentUIHandlerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard page with table of time series observation
@@ -105,6 +104,8 @@ public class PageEditTimeSeriesObservation extends WizardPage
   public static final String OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs#DATE"; //$NON-NLS-1$
 
   QName DATE_AXIS = new QName( "http://www.w3.org/2001/XMLSchema", "dateTime" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+  protected List<FeatureChange> m_commands = new ArrayList<FeatureChange>();
 
   private final IBoundaryNodeLastfallCondition m_condition;
 
@@ -121,7 +122,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
    */
   public void createControl( final Composite parent )
   {
-    setPageComplete( false );
+    setPageComplete( true );
 
     final Object layoutData = parent.getLayoutData();
     if( layoutData instanceof GridData )
@@ -152,20 +153,13 @@ public class PageEditTimeSeriesObservation extends WizardPage
       if( DATE_AXIS.equals( qname ) )
         handler = new ComponentUiDateHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%tF %tH:%tM", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       else
-        handler = new ComponentUiStringHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        handler = new ComponentUiDoubleHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       provider.add( i, handler );
     }
     // obsTable
     final TupleResultFeatureControlWrapper control = new TupleResultFeatureControlWrapper( m_condition.getTimeSeriesObservationFeature(), provider );
-    control.draw( container );
-
-    final GMLWorkspace gmlWorkspace = m_condition.getTimeSeriesObservationFeature().getWorkspace();
-    final CommandableWorkspace workspace;
-    if( gmlWorkspace instanceof CommandableWorkspace )
-      workspace = (CommandableWorkspace) gmlWorkspace;
-    else
-      workspace = new CommandableWorkspace( gmlWorkspace );
+    control.draw( container, new GridData( GridData.FILL, GridData.FILL, false, false ) );
 
     control.addChangeListener( new IFeatureChangeListener()
     {
@@ -174,16 +168,10 @@ public class PageEditTimeSeriesObservation extends WizardPage
         if( changeCommand instanceof ChangeFeatureCommand )
         {
           final ChangeFeatureCommand chg = (ChangeFeatureCommand) changeCommand;
+          final FeatureChange featureChange = chg.asFeatureChange();
 
-          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, new FeatureChange[] { chg.asFeatureChange() } );
-          try
-          {
-            workspace.postCommand( command );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
+          /* add feature change */
+          m_commands.add( featureChange );
         }
       }
 
@@ -236,7 +224,6 @@ public class PageEditTimeSeriesObservation extends WizardPage
     final Insets inset = new Insets( 1, 1, 1, 1 );
 
     final CalendarAxisRenderer calRenderer = new CalendarAxisRenderer( calendar.getIdentifier(), rgbFG, rgbBG, 1, 5, inset, inset, 0, fontData, fontData );
-
     mapperRegistry.setRenderer( calendar.getIdentifier(), calRenderer );
 
     for( final Entry<IComponent, IAxis> entry : setAxes )
@@ -257,9 +244,13 @@ public class PageEditTimeSeriesObservation extends WizardPage
       mapperRegistry.setRenderer( axis.getIdentifier(), axisRenderer );
 
       model.autoscale( new IAxis[] { calendar, axis } );
-
     }
 
-    final ChartComposite cc = new ChartComposite( cDiagram, SWT.BORDER, model, new RGB( 255, 255, 255 ) );
+    new ChartComposite( cDiagram, SWT.BORDER, model, new RGB( 255, 255, 255 ) );
+  }
+
+  public FeatureChange[] getCommands( )
+  {
+    return m_commands.toArray( new FeatureChange[] {} );
   }
 }

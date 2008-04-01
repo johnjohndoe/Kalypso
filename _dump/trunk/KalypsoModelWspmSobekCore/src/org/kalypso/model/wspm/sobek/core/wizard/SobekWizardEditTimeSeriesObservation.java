@@ -46,6 +46,10 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditTimeSeriesObservation;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author kuch
@@ -82,8 +86,28 @@ public class SobekWizardEditTimeSeriesObservation extends Wizard implements INew
   @Override
   public boolean performFinish( )
   {
-// ObservationFeatureFactory.toFeature( myObs, fConflictAttributeTable );
-    return false;
+    final FeatureChange[]  changes = m_page.getCommands();
+
+    final GMLWorkspace gmlWorkspace = m_condition.getTimeSeriesObservationFeature().getWorkspace();
+    final CommandableWorkspace workspace;
+    if( gmlWorkspace instanceof CommandableWorkspace )
+      workspace = (CommandableWorkspace) gmlWorkspace;
+    else
+      workspace = new CommandableWorkspace( gmlWorkspace );
+
+    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, changes );
+    try
+    {
+      workspace.postCommand( command );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+
+      return false;
+    }
+
+    return true;
   }
 
 }
