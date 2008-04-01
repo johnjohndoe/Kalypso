@@ -45,8 +45,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.mapmodel.IMapModellView;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -75,7 +78,22 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
       }
 
       final GM_Envelope wishBBox = GeometryUtilities.scaleEnvelope( zoomBox, 1.05 );
-      panel.setBoundingBox( wishBBox );
+
+      IMapModellView view = getView();
+      ChangeExtentCommand changeExtentCommand = new ChangeExtentCommand( panel, wishBBox );
+
+      if( view instanceof GisMapOutlineView )
+      {
+        GisMapOutlineView gisView = (GisMapOutlineView) view;
+        gisView.postCommand( changeExtentCommand, null );
+      }
+      else if( view instanceof GisMapOutlinePage )
+      {
+        GisMapOutlinePage page = (GisMapOutlinePage) view;
+        page.postCommand( changeExtentCommand, null );
+      }
+      else
+        panel.setBoundingBox( wishBBox );
     }
   }
 
