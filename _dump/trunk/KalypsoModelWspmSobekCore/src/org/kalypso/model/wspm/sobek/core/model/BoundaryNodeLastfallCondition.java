@@ -166,7 +166,11 @@ public class BoundaryNodeLastfallCondition implements IBoundaryNodeLastfallCondi
    */
   public IObservation<TupleResult> getTimeSeriesObservation( )
   {
-    return ObservationFeatureFactory.toObservation( getTimeSeriesObservationFeature() );
+    final Feature feature = getTimeSeriesObservationFeature();
+    if( feature == null )
+      return null;
+
+    return ObservationFeatureFactory.toObservation( feature );
   }
 
   /**
