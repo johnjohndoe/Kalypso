@@ -118,6 +118,7 @@ public class GeoGridUtilities
    */
   public static GeoGridCell cellFromPosition( final IGeoGrid raster, final Coordinate pos ) throws GeoGridException
   {
+    // TODO Eventually transform pos always to the coordinate system of the grid.
     final Coordinate origin = raster.getOrigin();
     final Coordinate offsetX = raster.getOffsetX();
     final Coordinate offsetY = raster.getOffsetY();
