@@ -87,7 +87,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 public class RiskLanduseHelper
 {
 
-  public static void createNewLanduseClasses( final HashSet<String> landuseTypeSet, final IRasterizationControlModel controlModel, List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
+  public static void createNewLanduseClasses( final HashSet<String> landuseTypeSet, final IRasterizationControlModel controlModel, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final String landuseType : landuseTypeSet )
     {
@@ -157,7 +157,7 @@ public class RiskLanduseHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static void handleDBImport( final String externalProjectName, final IRasterizationControlModel controlModel, IFolder scenarioFolder )
+  public static void handleDBImport( final String externalProjectName, final IRasterizationControlModel controlModel, final IFolder scenarioFolder )
   {
     try
     {
@@ -217,7 +217,7 @@ public class RiskLanduseHelper
   }
 
   @SuppressWarnings("unchecked")
-  public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, List<Feature> predefinedLanduseColorsCollection )
+  public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
 
@@ -225,7 +225,7 @@ public class RiskLanduseHelper
   }
 
   @SuppressWarnings("unchecked")
-  private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, List<Feature> predefinedLanduseColorsCollection )
+  private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     /* asset values */
     for( final Feature assetFeatureClass : predefinedAssetValueClassesCollection )
@@ -257,7 +257,7 @@ public class RiskLanduseHelper
               final IAssetValueClass assetValueClass = controlModel.createNewAssetValueClass( assetValue, landuseClassName, "[" + assetValuesCollectionName + "]" );
 
               final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
-              for( ILanduseClass landuseClass : landuseClassesList )
+              for( final ILanduseClass landuseClass : landuseClassesList )
               {
                 if( landuseClass.getName().equals( landuseClassName ) )
                   landuseClass.setAssetValue( assetValueClass );
@@ -270,7 +270,7 @@ public class RiskLanduseHelper
   }
 
   @SuppressWarnings("unchecked")
-  private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
+  private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
   {
     /* damage functions */
     for( final Feature damageFeatureClass : predefinedDamageFunctionsCollection )
@@ -352,7 +352,7 @@ public class RiskLanduseHelper
     return createdFeatures;
   }
 
-  private static Feature getLanduseClassByName( final Feature feature, final String className, List<ILanduseClass> landuseClassesList )
+  private static Feature getLanduseClassByName( final Feature feature, final String className, final List<ILanduseClass> landuseClassesList )
   {
     // TODO: is this good?
     final String linkedFeaturePath = "RasterizationControlModel.gml#";
@@ -388,6 +388,22 @@ public class RiskLanduseHelper
     runnable.setUser( true );
     runnable.schedule();
     return null;
+  }
+
+  public static HashSet<String> getLanduseTypeSet( final List shapeFeatureList, final String propertyLanduse )
+  {
+    final HashSet<String> set = new HashSet<String>();
+
+    for( int i = 0; i < shapeFeatureList.size(); i++ )
+    {
+      final Feature shpFeature = (Feature) shapeFeatureList.get( i );
+      final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), propertyLanduse );
+      final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
+      if( !set.contains( shpPropertyValue ) )
+        set.add( shpPropertyValue );
+    }
+
+    return set;
   }
 
 }

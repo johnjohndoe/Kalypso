@@ -64,7 +64,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
   private final List m_shapeFeatureList;
 
   @SuppressWarnings("unchecked")
-  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection, boolean wrongLanduseSelectedStatus )
+  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection, final boolean wrongLanduseSelectedStatus )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -79,7 +79,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
   }
 
   @SuppressWarnings("unchecked")
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
@@ -89,16 +89,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
       final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection = m_vectorModel.getLandusePolygonCollection();
 
       /* create entries for landuse database */
-      final HashSet<String> landuseTypeSet = new HashSet<String>();
-
-      for( int i = 0; i < m_shapeFeatureList.size(); i++ )
-      {
-        final Feature shpFeature = (Feature) m_shapeFeatureList.get( i );
-        final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), m_landuseProperty );
-        final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
-        if( !landuseTypeSet.contains( shpPropertyValue ) )
-          landuseTypeSet.add( shpPropertyValue );
-      }
+      final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
       m_wrongLanduseSelectedStatus = false;
       if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )

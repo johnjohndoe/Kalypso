@@ -77,7 +77,7 @@ public final class RiskImportLanduseRunnable implements ICoreRunnableWithProgres
 
   private final IFolder m_scenarioFolder;
 
-  public RiskImportLanduseRunnable( IRasterizationControlModel controlModel, IVectorDataModel vectorDataModel, String coordinateSystem, IFolder scenarioFolder, int selectedDatabaseOption, String assetValuesCollectionName, String landuseProperty, String damageFunctionsCollectionName, String sourceShapeFilePath, String externalProjectName, List<Feature> predefinedAssetValueClassesCollection, List<Feature> predefinedDamageFunctionsCollection, List<Feature> predefinedLanduseColorsCollection, boolean wrongLanduseSelectedStatus )
+  public RiskImportLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final String coordinateSystem, final IFolder scenarioFolder, final int selectedDatabaseOption, final String assetValuesCollectionName, final String landuseProperty, final String damageFunctionsCollectionName, final String sourceShapeFilePath, final String externalProjectName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection, final boolean wrongLanduseSelectedStatus )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -96,7 +96,7 @@ public final class RiskImportLanduseRunnable implements ICoreRunnableWithProgres
   }
 
   @SuppressWarnings("unchecked")
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
     try
@@ -110,16 +110,7 @@ public final class RiskImportLanduseRunnable implements ICoreRunnableWithProgres
       final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* create entries for landuse database */
-      final HashSet<String> landuseTypeSet = new HashSet<String>();
-
-      for( int i = 0; i < shapeFeatureList.size(); i++ )
-      {
-        final Feature shpFeature = (Feature) shapeFeatureList.get( i );
-        final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), m_landuseProperty );
-        final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
-        if( !landuseTypeSet.contains( shpPropertyValue ) )
-          landuseTypeSet.add( shpPropertyValue );
-      }
+      final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( shapeFeatureList, m_landuseProperty );
 
       m_wrongLanduseSelectedStatus = false;
       if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
