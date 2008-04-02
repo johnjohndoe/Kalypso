@@ -63,8 +63,7 @@ public class WizardFeatureLabel
 
   public WizardFeatureLabel( final Feature feature, final QName qname, final Composite body )
   {
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType().getProperty( qname ) );
-    draw( annotation.getLabel(), body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
+    this( feature, qname, body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
   }
 
   public WizardFeatureLabel( final Feature feature, final QName qname, final Composite body, final GridData gridData )
@@ -78,19 +77,13 @@ public class WizardFeatureLabel
     draw( text, body, gridData );
   }
 
+  @Deprecated
   public WizardFeatureLabel( final Feature feature, final QName qname, final String fallback, final Composite body )
   {
-    if( feature == null )
-
-      draw( fallback, body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
-    else
-    {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType().getProperty( qname ) );
-      draw( annotation.getLabel(), body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
-    }
-
+    this( feature, qname, fallback, body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
   }
 
+  @Deprecated
   public WizardFeatureLabel( final Feature feature, final QName qname, final String fallback, final Composite body, final GridData gridData )
   {
     if( feature == null )
@@ -124,6 +117,5 @@ public class WizardFeatureLabel
     }
     else
       toolkit.createLabel( body, text ).setLayoutData( gridData );
-
   }
 }
