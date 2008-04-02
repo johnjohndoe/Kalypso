@@ -619,6 +619,9 @@ public class GeoGridUtilities
   {
     try
     {
+      if( grid.getSourceCRS() == null || positionCRS == null )
+        return crd;
+
       CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( positionCRS, grid.getSourceCRS() );
       GM_Position position = TransformUtilities.transform( JTSAdapter.wrap( crd ), transformation );
 
