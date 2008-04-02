@@ -59,6 +59,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -85,7 +86,6 @@ import org.kalypso.ogc.sensor.template.PlainObsProvider;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
-import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -403,7 +403,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     m_subGroup.setText( Messages.PageEditBoundaryConditionTimeSeries_15 );
 
     /* const value */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, Messages.PageEditBoundaryConditionTimeSeries_16, m_subGroup );
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, m_subGroup );
 
     m_tConstant = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
     m_tConstant.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -417,7 +417,7 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     } );
 
     /* const intervall */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, Messages.PageEditBoundaryConditionTimeSeries_17, m_subGroup );
+    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, m_subGroup );
 
     m_tConstantIntervall = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
     m_tConstantIntervall.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );

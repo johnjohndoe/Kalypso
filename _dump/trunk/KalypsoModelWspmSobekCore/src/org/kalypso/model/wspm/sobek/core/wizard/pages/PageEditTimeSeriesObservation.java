@@ -75,6 +75,7 @@ import org.kalypso.chart.framework.model.mapper.registry.IMapperRegistry;
 import org.kalypso.chart.framework.model.styles.IStyledElement;
 import org.kalypso.chart.framework.model.styles.impl.LayerStyle;
 import org.kalypso.chart.framework.view.ChartComposite;
+import org.kalypso.chart.framework.view.PlotCanvas;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -108,6 +109,10 @@ public class PageEditTimeSeriesObservation extends WizardPage
   protected List<FeatureChange> m_commands = new ArrayList<FeatureChange>();
 
   private final IBoundaryNodeLastfallCondition m_condition;
+
+  private ILayerManager m_layerManager;
+
+  private PlotCanvas m_plot;
 
   public PageEditTimeSeriesObservation( final IBoundaryNodeLastfallCondition condition )
   {
@@ -170,6 +175,8 @@ public class PageEditTimeSeriesObservation extends WizardPage
           final ChangeFeatureCommand chg = (ChangeFeatureCommand) changeCommand;
           final FeatureChange featureChange = chg.asFeatureChange();
 
+          m_plot.invalidate( null );
+
           /* add feature change */
           m_commands.add( featureChange );
         }
@@ -181,14 +188,9 @@ public class PageEditTimeSeriesObservation extends WizardPage
     } );
 
     /* diagram */
-    final Composite cDiagram = new Composite( container, SWT.NULL );
-    cDiagram.setLayout( new GridLayout() );
-    cDiagram.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
     final ChartModel model = new ChartModel();
     final IMapperRegistry mapperRegistry = model.getMapperRegistry();
-    final ILayerManager layerManager = model.getLayerManager();
-
+    m_layerManager = model.getLayerManager();
     IAxis calendar = null;
     IComponent calendarComp = null;
 
@@ -204,8 +206,9 @@ public class PageEditTimeSeriesObservation extends WizardPage
         if( calendar != null )
           throw new IllegalStateException( Messages.PageEditTimeSeriesObservation_12 );
 
-        calendar = new CalendarAxis( qname.getLocalPart(), "Date", PROPERTY.CONTINUOUS, POSITION.BOTTOM, DIRECTION.POSITIVE, "yy-MM-dd\nhh:mm" ); //$NON-NLS-1$ //$NON-NLS-2$
+        calendar = new CalendarAxis( component.getId(), "Date", PROPERTY.CONTINUOUS, POSITION.BOTTOM, DIRECTION.POSITIVE, "yy-MM-dd\nhh:mm" ); //$NON-NLS-1$ //$NON-NLS-2$
         calendarComp = component;
+
         mapperRegistry.addMapper( calendar );
       }
       else
@@ -238,7 +241,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
       layerStyle.add( line );
       layer.setStyle( layerStyle );
 
-      layerManager.addLayer( layer );
+      m_layerManager.addLayer( layer );
 
       final NumberAxisRenderer axisRenderer = new NumberAxisRenderer( axis.getIdentifier(), rgbFG, rgbBG, 1, 5, inset, inset, 0, fontData, fontData, 0, 0, false, "%s" ); //$NON-NLS-1$
       mapperRegistry.setRenderer( axis.getIdentifier(), axisRenderer );
@@ -246,7 +249,10 @@ public class PageEditTimeSeriesObservation extends WizardPage
       model.autoscale( new IAxis[] { calendar, axis } );
     }
 
-    new ChartComposite( cDiagram, SWT.BORDER, model, new RGB( 255, 255, 255 ) );
+    final ChartComposite chartComposite = new ChartComposite( container, SWT.BORDER | SWT.FILL, model, new RGB( 255, 255, 255 ) );
+    chartComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    m_plot = chartComposite.getPlot();
   }
 
   public FeatureChange[] getCommands( )

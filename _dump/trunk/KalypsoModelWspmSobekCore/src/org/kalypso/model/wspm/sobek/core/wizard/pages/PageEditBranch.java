@@ -45,11 +45,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -101,7 +101,7 @@ public class PageEditBranch extends WizardPage
     setControl( container );
 
     /* name */
-    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_NAME, Messages.PageEditBranch_5, container );
+    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_NAME, container );
 
     m_name = new WizardFeatureTextBox( m_branch, ISobekConstants.QN_HYDRAULIC_NAME );
     m_name.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
@@ -115,13 +115,13 @@ public class PageEditBranch extends WizardPage
     } );
 
     /* description */
-    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_DESCRIPTION, Messages.PageEditBranch_6, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
+    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_DESCRIPTION, container, new GridData( GridData.FILL, GridData.BEGINNING, false, false ) );
 
     m_description = new WizardFeatureTextBox( m_branch, ISobekConstants.QN_HYDRAULIC_DESCRIPTION );
     m_description.draw( container, new GridData( GridData.FILL, GridData.FILL, true, true ), SWT.BORDER | SWT.WRAP | SWT.MULTI );
 
     /* length */
-    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, Messages.PageEditBranch_7, container );
+    new WizardFeatureLabel( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, container );
 
     final WizardFeatureTextBox tLength = new WizardFeatureTextBox( m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH );
     tLength.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );

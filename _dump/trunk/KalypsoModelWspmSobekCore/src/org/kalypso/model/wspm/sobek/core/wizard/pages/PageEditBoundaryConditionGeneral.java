@@ -52,6 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
@@ -60,7 +61,6 @@ import org.kalypso.util.swt.FCVFeatureDelegate;
 import org.kalypso.util.swt.WizardFeatureLabel;
 import org.kalypso.util.swt.WizardFeatureTextBox;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch
@@ -182,7 +182,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     bt.setEnabled( false );
 
     /* begin date */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, Messages.PageEditBoundaryConditionGeneral_14, container );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
 
     /* newly created boundary condition? */
     if( m_condition.getObservationStart() == null )
@@ -202,7 +202,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     /* end date */
     /* newly created boundary condition? */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, Messages.PageEditBoundaryConditionGeneral_15, container );
+    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
 
     if( m_condition.getObservationEnd() == null )
       m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getLastfallEnd() );
