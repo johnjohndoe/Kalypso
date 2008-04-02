@@ -48,13 +48,16 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -137,7 +140,8 @@ public class ComboBoxModifier implements IFeatureModifier
     final int counter = ((Integer) value).intValue();
     if( counter >= 0 )
       return m_entries.get( counter );
-    else //TODO: catch -1 and return null feature, is this correct?
+    else
+      // TODO: catch -1 and return null feature, is this correct?
       return null;
   }
 
@@ -176,16 +180,23 @@ public class ComboBoxModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
-    // TODO: GUITypeHandler konsequent einsetzen
-    // besser: abhängig vom IPropertyType etwas machen
     final IPropertyType ftp = getFeatureTypeProperty();
     final Object fprop = f.getProperty( ftp );
-    if( fprop != null )
-    {
-      return fprop.toString();
-    }
-    else
+
+    if( fprop == null )
       return NO_LINK_STRING;
+
+    if( ftp instanceof IRelationType )
+    {
+      Feature resolvedFeature = FeatureUtils.resolveFeature( f.getWorkspace(), fprop );
+      if( resolvedFeature == null )
+        return NO_LINK_STRING;
+
+      return FeatureHelper.getAnnotationValue( resolvedFeature, IAnnotation.ANNO_LABEL );
+    }
+
+    // we should never reach this code, as the ComboBoxModifier is only used for relation types
+    return fprop.toString();
   }
 
   /**
