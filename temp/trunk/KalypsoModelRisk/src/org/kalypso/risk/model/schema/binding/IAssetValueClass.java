@@ -15,11 +15,16 @@ public interface IAssetValueClass extends IFeatureWrapper2
 
   public QName PROP_DESCRIPTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "description" );
 
-  public Double getAssetValue( );
-
-  public void setAssetValue( final Double assetValue );
-
   public void setName( final String name );
 
   public void setDescription( final String description );
+
+  public void setAssetValue( final Double assetValue );
+
+  public String getName( );
+
+  public String getDescription( );
+
+  public Double getAssetValue( );
+
 }

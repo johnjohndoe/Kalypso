@@ -33,12 +33,6 @@
     </krpd:DataMember>
    </krpd:dataMember>
    <krpd:dataMember>
-    <krpd:DataMember gml:id="DataMember119444483903114">
-     <gml:name>Gruenland</gml:name>
-     <krpd:value>#00B75B</krpd:value>
-    </krpd:DataMember>
-   </krpd:dataMember>
-   <krpd:dataMember>
     <krpd:DataMember gml:id="DataMember119444496729619">
      <gml:name>Verkehr</gml:name>
      <krpd:value>#C0C0C0</krpd:value>
@@ -262,12 +256,6 @@
     </krpd:DataMember>
    </krpd:dataMember>
    <krpd:dataMember>
-    <krpd:DataMember gml:id="DataMember11944459948906">
-     <gml:name>Gruenland</gml:name>
-     <krpd:value>0.67</krpd:value>
-    </krpd:DataMember>
-   </krpd:dataMember>
-   <krpd:dataMember>
     <krpd:DataMember gml:id="DataMember119427393292110">
      <gml:name>Forst</gml:name>
      <krpd:value>0.67</krpd:value>
@@ -305,12 +293,6 @@
    <krpd:dataMember>
     <krpd:DataMember gml:id="DataMember119444583209317">
      <gml:name>Grünland</gml:name>
-     <krpd:value>0.10</krpd:value>
-    </krpd:DataMember>
-   </krpd:dataMember>
-   <krpd:dataMember>
-    <krpd:DataMember gml:id="DataMember119444592876534">
-     <gml:name>Gruenland</gml:name>
      <krpd:value>0.10</krpd:value>
     </krpd:DataMember>
    </krpd:dataMember>
@@ -356,12 +338,6 @@
     </krpd:DataMember>
    </krpd:dataMember>
    <krpd:dataMember>
-    <krpd:DataMember gml:id="DataMember119444602423437">
-     <gml:name>Gruenland</gml:name>
-     <krpd:value>7.00</krpd:value>
-    </krpd:DataMember>
-   </krpd:dataMember>
-   <krpd:dataMember>
     <krpd:DataMember gml:id="DataMember119444573295322">
      <gml:name>Forst</gml:name>
      <krpd:value>1.00</krpd:value>
@@ -387,12 +363,6 @@
    <krpd:dataMember>
     <krpd:DataMember gml:id="DataMember11942743094537">
      <gml:name>Grünland</gml:name>
-     <krpd:value>0.038</krpd:value>
-    </krpd:DataMember>
-   </krpd:dataMember>
-   <krpd:dataMember>
-    <krpd:DataMember gml:id="DataMember119444605059341">
-     <gml:name>Gruenland</gml:name>
      <krpd:value>0.038</krpd:value>
     </krpd:DataMember>
    </krpd:dataMember>

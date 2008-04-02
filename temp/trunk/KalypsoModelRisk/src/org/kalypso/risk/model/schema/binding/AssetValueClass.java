@@ -25,6 +25,18 @@ public class AssetValueClass extends AbstractFeatureBinder implements IAssetValu
     return Double.NaN;
   }
 
+  @Override
+  public String getName( )
+  {
+    return (String) getFeature().getProperty( IAssetValueClass.PROP_NAME );
+  }
+
+  @Override
+  public String getDescription( )
+  {
+    return (String) getFeature().getProperty( IAssetValueClass.PROP_DESCRIPTION );
+  }
+
   public void setAssetValue( final Double assetValue )
   {
     getFeature().setProperty( IAssetValueClass.PROP_ASSET_VALUE, assetValue );

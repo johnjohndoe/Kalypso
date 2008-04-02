@@ -50,16 +50,12 @@ public interface IRasterizationControlModel extends IModel
   public List<IRiskZoneDefinition> getRiskZoneDefinitionsList( );
 
   /**
-   * Created new asset value class with the given values.
+   * Creates a new asset value class with the specified values.
    * 
-   * @param landuseClassGmlID
-   * @param administrationUnitGmlID
-   * @param value
-   * @param string
-   * @return new IAssetValueClass, or <code>null</code> if landuse class or administration unit with the given ID does
-   *         not exists
    */
-  public IAssetValueClass createNewAssetValueClass( final Double value, final String name, final String description );
+  public IAssetValueClass createNewAssetValueClass( );
+
+  public IAssetValueClass getAssetValueClass( final Double value, final String name, final String description );
 
   public boolean containsLanduseClass( final String landuseClassName );
 
@@ -79,7 +75,7 @@ public interface IRasterizationControlModel extends IModel
 
   public void fixStatisticsForShowingToUser( );
 
-  public IDamageFunction getDamageFunction( String name );
+  public IDamageFunction getDamageFunction( final String name, final String value, final String description );
 
   public IObservation<TupleResult> getStatisticObs( );
 

@@ -206,7 +206,12 @@ public class RiskLanduseHelper
         {
           final String description = "[Import from " + externalProjectName + "] " + entry.getDescription(); //$NON-NLS-1$ //$NON-NLS-2$
           final String name = entry.getName();
-          controlModel.createNewAssetValueClass( entry.getAssetValue(), name, description );
+          final Double assetValue = entry.getAssetValue();
+
+          final IAssetValueClass newAssetValueClass = controlModel.createNewAssetValueClass();
+          newAssetValueClass.setName( name );
+          newAssetValueClass.setDescription( description );
+          newAssetValueClass.setAssetValue( assetValue );
         }
       }
     }
@@ -227,6 +232,9 @@ public class RiskLanduseHelper
   @SuppressWarnings("unchecked")
   private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
+    // delete already existing asset values
+    controlModel.getAssetValueClassesList().clear();
+
     /* asset values */
     for( final Feature assetFeatureClass : predefinedAssetValueClassesCollection )
     {
@@ -244,18 +252,18 @@ public class RiskLanduseHelper
               final Double assetValue = new Double( featureMember.getProperty( propValue ).toString() );
 
               /* create new landuse classes */
-              if( !controlModel.containsLanduseClass( landuseClassName ) )
-              {
-                final ILanduseClass newLanduseClass = controlModel.createNewLanduseClass();
-                newLanduseClass.setName( landuseClassName );
-                newLanduseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-                newLanduseClass.setColorStyle( RiskLanduseHelper.getLanduseClassDefaultColor( landuseClassName, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
-                newLanduseClass.setDescription( "Created by " + assetValuesCollectionName + " asset values import" );
-              }
+              // if( !controlModel.containsLanduseClass( landuseClassName ) )
+              // {
+              // final ILanduseClass newLanduseClass = controlModel.createNewLanduseClass();
+              // newLanduseClass.setName( landuseClassName );
+              // newLanduseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
+              // newLanduseClass.setColorStyle( RiskLanduseHelper.getLanduseClassDefaultColor( landuseClassName,
+              // predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
+              // newLanduseClass.setDescription( "Created by " + assetValuesCollectionName + " asset values import" );
+              // }
+              final IAssetValueClass assetValueClass = controlModel.getAssetValueClass( assetValue, landuseClassName, "[" + assetValuesCollectionName + "]" );
 
               // we assign here the asset value to the landuse class
-              final IAssetValueClass assetValueClass = controlModel.createNewAssetValueClass( assetValue, landuseClassName, "[" + assetValuesCollectionName + "]" );
-
               final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
               for( final ILanduseClass landuseClass : landuseClassesList )
               {
@@ -272,6 +280,9 @@ public class RiskLanduseHelper
   @SuppressWarnings("unchecked")
   private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
   {
+    // delete already existing damage functions
+    controlModel.getDamageFunctionsList().clear();
+
     /* damage functions */
     for( final Feature damageFeatureClass : predefinedDamageFunctionsCollection )
     {
@@ -291,7 +302,7 @@ public class RiskLanduseHelper
 
               /* create a new damage function */
               // check, if damage function already exists
-              IDamageFunction damageFunction = controlModel.getDamageFunction( name );
+              IDamageFunction damageFunction = controlModel.getDamageFunction( name, value, description );
               if( damageFunction == null )
               {
                 damageFunction = controlModel.createNewDamageFunction();

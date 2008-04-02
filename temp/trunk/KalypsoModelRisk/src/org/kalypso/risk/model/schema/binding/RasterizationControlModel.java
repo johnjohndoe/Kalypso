@@ -9,25 +9,21 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 public class RasterizationControlModel extends UnversionedModel implements IRasterizationControlModel
 {
   private final FeatureList m_landuseClassesFeatureList;
 
-  private final FeatureList m_assetValueClassesFeatureList;
-
-  private final FeatureList m_damageFunctionsFeatureList;
-
-  private final FeatureList m_riskZoneDefinitionsFeatureList;
 
   private final List<ILanduseClass> m_landuseClasses;
 
-  private final List<IAssetValueClass> m_assetValueClasses;
+  private final FeatureWrapperCollection<IAssetValueClass> m_assetValueClasses;
 
-  private final List<IDamageFunction> m_damageFunctions;
+  private final FeatureWrapperCollection<IDamageFunction> m_damageFunctions;
 
-  private final List<IRiskZoneDefinition> m_riskZoneDefinitions;
+  private final FeatureWrapperCollection<IRiskZoneDefinition> m_riskZoneDefinitions;
 
   public RasterizationControlModel( final Feature featureToBind )
   {
@@ -37,20 +33,10 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
     for( final Object object : m_landuseClassesFeatureList )
       m_landuseClasses.add( (ILanduseClass) ((Feature) object).getAdapter( ILanduseClass.class ) );
 
-    m_assetValueClassesFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
-    m_assetValueClasses = new ArrayList<IAssetValueClass>();
-    for( final Object object : m_assetValueClassesFeatureList )
-      m_assetValueClasses.add( (IAssetValueClass) ((Feature) object).getAdapter( IAssetValueClass.class ) );
+    m_assetValueClasses = new FeatureWrapperCollection<IAssetValueClass>( getFeature(), IAssetValueClass.class, IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
+    m_damageFunctions = new FeatureWrapperCollection<IDamageFunction>( getFeature(), IDamageFunction.class, IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
+    m_riskZoneDefinitions = new FeatureWrapperCollection<IRiskZoneDefinition>( getFeature(), IRiskZoneDefinition.class, IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
 
-    m_damageFunctionsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );
-    m_damageFunctions = new ArrayList<IDamageFunction>();
-    for( final Object object : m_damageFunctionsFeatureList )
-      m_damageFunctions.add( (IDamageFunction) ((Feature) object).getAdapter( IDamageFunction.class ) );
-
-    m_riskZoneDefinitionsFeatureList = (FeatureList) getFeature().getProperty( IRasterizationControlModel.PROPERTY_RISKZONE_DEFINITION_MEMBER );
-    m_riskZoneDefinitions = new ArrayList<IRiskZoneDefinition>();
-    for( final Object object : m_riskZoneDefinitionsFeatureList )
-      m_riskZoneDefinitions.add( (IRiskZoneDefinition) ((Feature) object).getAdapter( IRiskZoneDefinition.class ) );
   }
 
   public List<ILanduseClass> getLanduseClassesList( )
@@ -77,43 +63,30 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
 
   public IDamageFunction createNewDamageFunction( )
   {
-    try
-    {
-      final Feature feature = FeatureHelper.createFeatureForListProp( m_damageFunctionsFeatureList, IDamageFunction.QNAME, -1 );
-      final IDamageFunction damageFunction = (IDamageFunction) feature.getAdapter( IDamageFunction.class );
-      m_damageFunctions.add( damageFunction );
-      return damageFunction;
-    }
-    catch( final GMLSchemaException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
+    return m_damageFunctions.addNew( IDamageFunction.QNAME );
   }
 
-  public IAssetValueClass createNewAssetValueClass( final Double value, final String name, final String description )
+  public IAssetValueClass getAssetValueClass( final Double value, final String name, final String description )
   {
-    try
+    for( IAssetValueClass assetClass : m_assetValueClasses )
     {
-      /* create new asset value feature */
-      final Feature assetValueFeature = FeatureHelper.createFeatureForListProp( m_assetValueClassesFeatureList, IAssetValueClass.QNAME, -1 );
-      final IAssetValueClass assetValueClass = (IAssetValueClass) assetValueFeature.getAdapter( IAssetValueClass.class );
-
-      assetValueClass.setAssetValue( value );
-      assetValueClass.setName( name );
-      assetValueClass.setDescription( description );
-
-      m_assetValueClasses.add( assetValueClass );
-
-      return assetValueClass;
+      if( assetClass.getName().equals( name ) && assetClass.getAssetValue().equals( value ) && assetClass.getDescription().equals( description ) )
+        return assetClass;
     }
-    catch( final GMLSchemaException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return null;
-    }
+
+    final IAssetValueClass assetValueClass = createNewAssetValueClass();
+
+    assetValueClass.setAssetValue( value );
+    assetValueClass.setName( name );
+    assetValueClass.setDescription( description );
+
+    return assetValueClass;
+
+  }
+
+  public IAssetValueClass createNewAssetValueClass( )
+  {
+    return m_assetValueClasses.addNew( IAssetValueClass.QNAME );
   }
 
   public List<IAssetValueClass> getAssetValueClassesList( )
@@ -186,17 +159,15 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   }
 
   /**
-   * checks if a damageFunction with the same name is already existing and returns the existing one. Otherwise null is
-   * returned
+   * checks if a damageFunction with the same name, description and value (function) is already existing and returns the
+   * existing one. Otherwise null is returned
    */
-  public IDamageFunction getDamageFunction( final String name )
+  public IDamageFunction getDamageFunction( final String name, final String value, final String description )
   {
     for( IDamageFunction damageFunction : m_damageFunctions )
     {
-      if( damageFunction.getName().equals( name ) )
-      {
+      if( damageFunction.getName().equals( name ) && damageFunction.getDescription().equals( description ) && damageFunction.getFunction().equals( value ) )
         return damageFunction;
-      }
     }
     return null;
   }
