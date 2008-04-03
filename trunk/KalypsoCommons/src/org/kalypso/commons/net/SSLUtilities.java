@@ -75,11 +75,11 @@ public class SSLUtilities
   /**
    * This function configures the whole thing, provided a key- and truststore are available.
    * 
-   * @param keyCert
+   * @param keyStore
    *            The keystore.
    * @param keyPassphrase
    *            The passphrase of the client certificate.
-   * @param trustCert
+   * @param trustStore
    *            The truststore.
    * @param trustPassphrase
    */
