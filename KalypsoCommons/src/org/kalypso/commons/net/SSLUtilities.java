@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.net;
 
-import org.apache.commons.httpclient.HttpClient;
+import java.net.URL;
+
+import org.apache.commons.httpclient.contrib.ssl.AuthSSLProtocolSocketFactory;
 import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
@@ -60,27 +62,7 @@ public class SSLUtilities
   }
 
   /**
-   * This function will configure a given http client with the following options:<br>
-   * <ol>
-   * <li>Accept every certificate, including self signed ones.</li>
-   * <li>Certificates, signed by own CAs will also be accepted.</li>
-   * </ol>
-   * 
-   * @param host
-   *            The host, from which all certificates will be accepted.
-   * @param client
-   *            The http client, which should be configured.
-   */
-  public static void configuredHttpClient( String host, HttpClient client )
-  {
-    ProtocolSocketFactory easyfactory = new EasySSLProtocolSocketFactory();
-    Protocol easyhttps = new Protocol( "https", easyfactory, 443 );
-
-    client.getHostConfiguration().setHost( host, 443, easyhttps );
-  }
-
-  /**
-   * This function will register a the https protocol, which will accept all certificates.<br>
+   * This function will register the https protocol, which will accept all certificates.<br>
    * This setting will apply, as long as your application is running.
    */
   public static void acceptSelfSignedCertificatesSSL( )
@@ -88,5 +70,23 @@ public class SSLUtilities
     ProtocolSocketFactory easyfactory = new EasySSLProtocolSocketFactory();
     Protocol easyhttps = new Protocol( "https", easyfactory, 443 );
     Protocol.registerProtocol( "https", easyhttps );
+  }
+
+  /**
+   * This function configures the whole thing, provided a key- and truststore are available.
+   * 
+   * @param keyCert
+   *            The keystore.
+   * @param keyPassphrase
+   *            The passphrase of the client certificate.
+   * @param trustCert
+   *            The truststore.
+   * @param trustPassphrase
+   */
+  public static void configureWhole( URL keyStore, String keyPassphrase, URL trustStore, String trustPassphrase ) throws Exception
+  {
+    ProtocolSocketFactory authfactory = new AuthSSLProtocolSocketFactory( keyStore, keyPassphrase, trustStore, trustPassphrase );
+    Protocol authhttps = new Protocol( "https", authfactory, 443 );
+    Protocol.registerProtocol( "https", authhttps );
   }
 }
