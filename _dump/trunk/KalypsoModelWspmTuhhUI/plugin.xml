@@ -226,5 +226,25 @@
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddBewuchsResolution"
                name="Bewuchs hinzufügen">
          </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution"
+               name="Bewuchs entfernen">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.AddDeviderResolution"
+               name="Marker einfügen">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution"
+               name="Marker verschieben">
+         </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution"
+               name="Werte ändern">
+         </reparator>
       </extension>
 </plugin>

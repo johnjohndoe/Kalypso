@@ -25,9 +25,10 @@ Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.strang,
  org.kalypso.model.wspm.core.util,
  org.kalypso.model.wspm.core.util.pointpropertycalculator
-Require-Bundle: org.junit,
+Require-Bundle: org.eclipse.ui.ide,
+ org.junit,
  org.kalypso.core,
  org.kalypso.wspwin.core,
  org.eclipse.core.resources;visibility:=reexport
 Eclipse-LazyStart: true
-Bundle-Localization: plugin
+

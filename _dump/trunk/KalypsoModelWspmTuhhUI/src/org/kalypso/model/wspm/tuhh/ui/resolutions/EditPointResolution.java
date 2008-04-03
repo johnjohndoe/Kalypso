@@ -50,11 +50,13 @@ import org.kalypso.observation.result.IRecord;
 
 public class EditPointResolution extends AbstractProfilMarkerResolution
 {
-  final private int m_index;
+   private int m_index;
 
-  final private String m_propertyId;
+   private String m_propertyId;
 
-  final private double m_value;
+   private double m_value;
+   
+   private boolean m_initialized = false;
 
   /**
    * @param deviderTyp,deviderIndex
@@ -66,14 +68,20 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
     m_index = index;
     m_propertyId = property.getId();
     m_value = value;
+    m_initialized = true;
   }
-
+  public EditPointResolution()
+  {
+    super( "Ändern ungültiger Werte", null, null );
+    m_index = -1;
+    m_propertyId = "";
+    m_value = Double.NaN;
+  }
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
-  @Override
-  protected boolean resolve( final IProfil profil )
+ public boolean resolve( final IProfil profil )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
@@ -88,5 +96,33 @@ public class EditPointResolution extends AbstractProfilMarkerResolution
       return true;
     }
     return false;
+  }
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
+   */
+  @Override
+  public String getSerializedParameter( )
+  {
+     return super.getSerializedParameter()+m_index+";"+m_propertyId+";"+m_value;
+  }
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
+   */
+  @Override
+  public void setData( String parameterStream )
+  {
+    final String[] params = getParameter( parameterStream );
+    try
+    {
+      m_index = new Integer( params[1] );
+      m_propertyId = params[2];
+      m_value= new Double( params[3] );
+      m_initialized = true;
+    }
+    catch( Exception e )
+    {
+      throw new IllegalArgumentException();
+    }
+
   }
 }

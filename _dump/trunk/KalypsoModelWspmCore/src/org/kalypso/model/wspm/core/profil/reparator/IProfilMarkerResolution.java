@@ -40,20 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.reparator;
 
-import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.model.wspm.core.profil.IProfil;
-
-
-/** A profile reparator is intended to repair a profile, which has inconsistent data. */
-public interface IProfilReparator extends IExecutableExtension
+/**
+ * @author kimwerner
+ */
+public interface IProfilMarkerResolution extends IMarkerResolution2
 {
-  public String getID();
-  
-  public String getName( );
-  
-  public String getDescription();
-  
-  public boolean hasChanges( final IProfil profil );
+  public boolean resolve( final IProfil profile );
 
-  public boolean doChanges( final IProfil profil );
+  public String getSerializedParameter( );
+
+  public void setData( final String parameterStream );
+  
 }

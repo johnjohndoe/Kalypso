@@ -45,7 +45,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -84,8 +83,7 @@ public class TrennerRule extends AbstractValidatorRule
 
     if( db.length == 0 )
     {
-      final IMarkerResolution2[] mr = new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) };
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "keine durchströmten Bereiche vorhanden", "km "+Double.toString( profil.getStation()), 0, null, pluginId, mr );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "keine durchströmten Bereiche vorhanden", "km " + Double.toString( profil.getStation() ), 0, null, pluginId, new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     }
 
     final IProfileObject[] profileObjects = profil.getProfileObjects();
@@ -96,8 +94,7 @@ public class TrennerRule extends AbstractValidatorRule
     // TUHH-Hack
     if( tf.length == 0 && !isDurchlass( building ) )
     {
-      final IMarkerResolution2[] mr = new IMarkerResolution2[] { new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) };
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "keine Trennflächen vorhanden", "km "+Double.toString( profil.getStation()), 0, null, pluginId, mr );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "keine Trennflächen vorhanden", "km " + Double.toString( profil.getStation() ), 0, null, pluginId, new AddDeviderResolution( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     }
     validatePosition( db, tf, profil, collector );
     validatePosition( db, bv, profil, collector );
@@ -125,13 +122,11 @@ public class TrennerRule extends AbstractValidatorRule
       final String type = toValidate[0].getId().getId();
       if( xleft < left || xleft > right )
       {
-        final IMarkerResolution2[] mr = new IMarkerResolution2[] { new MoveDeviderResolution( 0, type, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) };
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km "+Double.toString( profil.getStation()), profil.indexOfPoint( toValidate[0].getPoint() ), null, pluginId, mr );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( toValidate[0].getPoint() ), null, pluginId, new MoveDeviderResolution( 0, type, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) );
       }
       if( xright < left || xright > right )
       {
-        final IMarkerResolution2[] mr = new IMarkerResolution2[] { new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) };
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km "+Double.toString( profil.getStation()), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, mr );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) );
       }
     }
     catch( final Exception e )

@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil.validator;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 
 public interface IValidatorMarkerCollector
 {
@@ -69,7 +70,7 @@ public interface IValidatorMarkerCollector
    *            these classes must not contain references to Objects, only simple Datatypes are allowed
    * @throws CoreException
    */
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] markerResolutions ) throws CoreException;
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final IProfilMarkerResolution markerResolution ) throws CoreException;
 
   /**
    * Clear all markers which may apply to this collector

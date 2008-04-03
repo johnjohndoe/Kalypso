@@ -41,26 +41,16 @@
 package org.kalypso.model.wspm.ui.profil.validation;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
-import org.osgi.framework.Bundle;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * @author kimwerner
  */
 public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerator2
 {
-  private XStream m_xstream;
-
-  public ProfilMarkerResolutionGenerator( )
-  {
-    m_xstream = new XStream( new DomDriver() );
-  }
 
   /**
    * @see org.eclipse.ui.IMarkerResolutionGenerator2#hasResolutions(org.eclipse.core.resources.IMarker)
@@ -76,30 +66,12 @@ public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerat
    */
   public IMarkerResolution2[] getResolutions( final IMarker marker )
   {
-    final String pluginId = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID, (String) null );
-
-    final Bundle bundle = Platform.getBundle( pluginId );
-
-    final ClassLoader bundleLoader = new ClassLoader()
-    {
-      /**
-       * @see java.lang.ClassLoader#loadClass(java.lang.String)
-       */
-      @Override
-      public Class< ? > loadClass( final String name ) throws ClassNotFoundException
-      {
-        return bundle.loadClass( name );
-      }
-    };
-
     final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
     if( resolutions == null )
       return new IMarkerResolution2[] {};
-    m_xstream.setClassLoader( bundleLoader );
-    final IMarkerResolution2[] mss = (IMarkerResolution2[]) m_xstream.fromXML( resolutions );
-    // reset class-loader in order to free the inner class
-    m_xstream.setClassLoader( this.getClass().getClassLoader() );
-
-    return mss;
+    final IMarkerResolution2 mr = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions );
+    if( mr == null )
+      return new IMarkerResolution2[] {};
+    return new IMarkerResolution2[] { mr };
   }
 }

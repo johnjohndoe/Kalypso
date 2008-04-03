@@ -53,7 +53,7 @@ import org.kalypso.observation.result.IComponent;
 
 public class AddDeviderResolution extends AbstractProfilMarkerResolution
 {
-  final private String m_deviderType;
+  private String m_deviderType;
 
   /**
    * erzeugt fehlende Trennfläche
@@ -64,13 +64,21 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
     m_deviderType = deviderType;
   }
 
+  public AddDeviderResolution( )
+  {
+    super( "fehlende Trennflächen erzeugen", null, null );
+    m_deviderType = "";
+  }
+
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
-  @Override
-  protected boolean resolve( final IProfil profil )
+
+  public boolean resolve( final IProfil profil )
   {
+    if( m_deviderType == "" || profil.getPoints().length <1)
+      throw new IllegalStateException();
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
 
     final IComponent cTarget = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
@@ -80,10 +88,12 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
       {
         final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
         final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
-        m1.setInterpretedValue(true);
+        m1.setInterpretedValue( true );
         m2.setInterpretedValue( true );
         profil.setActivePoint( profil.getPoint( 0 ) );
       }
+      else
+        return false;
     }
     else
     {
@@ -92,7 +102,7 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
       {
         final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, markers[0].getPoint() );
         final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
-        m1.setInterpretedValue(true);
+        m1.setInterpretedValue( true );
         m2.setInterpretedValue( true );
         profil.setActivePoint( markers[0].getPoint() );
       }
@@ -100,12 +110,39 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
       {
         final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
         final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
-        m1.setInterpretedValue(true);
+        m1.setInterpretedValue( true );
         m2.setInterpretedValue( true );
         profil.setActivePoint( profil.getPoint( 0 ) );
       }
+      return true;
     }
-    return true;
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
+   */
+  @Override
+  public void setData( String parameterStream )
+  {
+    final String[] params = getParameter( parameterStream );
+    try
+    {
+      m_deviderType = params[1];
+    }
+    catch( Exception e )
+    {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
+   */
+  @Override
+  public String getSerializedParameter( )
+  {
+    return super.getSerializedParameter() + ";" + m_deviderType;
   }
 
 }

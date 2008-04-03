@@ -40,16 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -61,19 +57,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
@@ -85,7 +75,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.editor.ProfilchartEditor;
@@ -103,10 +92,6 @@ import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypsodeegree.model.feature.Feature;
-import org.osgi.framework.Bundle;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
@@ -116,6 +101,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  */
 public class TableView extends ViewPart implements IAdapterEater<IProfilProvider2>, IProfilProviderListener, ITupleResultViewerProvider
 {
+  @SuppressWarnings("unchecked")
   private final AdapterPartListener<IProfilProvider2> m_profilProviderListener = new AdapterPartListener<IProfilProvider2>( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   protected Form m_form;
@@ -132,7 +118,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private TupleResultLabelProvider m_tupleResultLabelProvider;
 
-  private final XStream m_xstream = new XStream( new DomDriver() );
+  protected ProfileProblemView m_problemView = null;
 
   // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
@@ -161,47 +147,13 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
      */
     public void onProblemMarkerChanged( IProfil source )
     {
-      final IProfil profil = source;
+      //final IProfil profil = source;
       Display.getDefault().asyncExec( new Runnable()
       {
         public void run( )
         {
-          final IMarker[] error = profil.getProblemMarker().get( IMarker.SEVERITY_ERROR );
-          final IMarker[] warning = profil.getProblemMarker().get( IMarker.SEVERITY_WARNING );
-          final IMarker[] info = profil.getProblemMarker().get( IMarker.SEVERITY_INFO );
           m_view.refresh();
-
-          if( m_form.getHeadClient() != null )
-          {
-            m_form.getHeadClient().dispose();
-            m_form.setHeadClient( null );
-          }
-          Composite form = null;
-
-          if( error.length > 0 )
-          {
-            if( form == null )
-              form = m_toolkit.createComposite( m_form.getHead() );
-            createProblemSection( form, error, SWT.COLOR_RED, Messages.TableView_1 );
-          }
-          if( warning.length > 0 )
-          {
-            if( form == null )
-              form = m_toolkit.createComposite( m_form.getHead() );
-            createProblemSection( form, warning, SWT.COLOR_DARK_YELLOW, Messages.TableView_2 );
-          }
-          if( info.length > 0 )
-          {
-            if( form == null )
-              form = m_toolkit.createComposite( m_form.getHead() );
-            createProblemSection( form, info, SWT.COLOR_DARK_BLUE, Messages.TableView_3 );
-          }
-          if( form != null )
-          {
-            form.setLayout( new GridLayout( 2, false ) );
-            form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-            m_form.setHeadClient( form );
-          }
+          m_problemView.updateSections( m_profile );
         }
       } );
 
@@ -258,127 +210,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
   }
 
-  private ImageDescriptor getImageDescriptor( final IMarker marker )
-  {
-
-    switch( marker.getAttribute( IMarker.SEVERITY, 0 ) )
-    {
-      case IMarker.SEVERITY_ERROR:
-        return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
-      case IMarker.SEVERITY_WARNING:
-        return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
-      case IMarker.SEVERITY_INFO:
-        return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
-      default:
-        return null;
-    }
-  }
-
-  private IMarkerResolution2[] getResolutions( final IMarker marker )
-  {
-    final String pluginId = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_PLUGINID, (String) null );
-
-    final Bundle bundle = Platform.getBundle( pluginId );
-
-    final ClassLoader bundleLoader = new ClassLoader()
-    {
-      /**
-       * @see java.lang.ClassLoader#loadClass(java.lang.String)
-       */
-      @Override
-      public Class< ? > loadClass( final String name ) throws ClassNotFoundException
-      {
-        return bundle.loadClass( name );
-      }
-    };
-
-    final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
-    if( resolutions == null )
-      return new IMarkerResolution2[] {};
-    m_xstream.setClassLoader( bundleLoader );
-    final IMarkerResolution2[] mss = (IMarkerResolution2[]) m_xstream.fromXML( resolutions );
-    // reset class-loader in order to free the inner class
-    m_xstream.setClassLoader( this.getClass().getClassLoader() );
-
-    return mss;
-  }
-
-  protected final void createProblemSection( final Composite parent, final IMarker[] markers, final int color, final String text )
-  {
-
-    Composite container = parent;
-    if( markers.length > 1 )
-    {
-      final Section section = m_toolkit.createSection( parent, Section.TWISTIE );
-      section.setLayout( new GridLayout() );
-      section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-      section.setTitleBarForeground( section.getDisplay().getSystemColor( color ) );
-      section.setToggleColor( section.getDisplay().getSystemColor( color ) );
-
-      section.setText( markers.length + " " + text + Messages.TableView_5 ); //$NON-NLS-1$
-      final Composite expanded = m_toolkit.createComposite( section );
-      expanded.setLayout( new GridLayout( 2, false ) );
-      expanded.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-      container = expanded;
-      section.setClient( container );
-    }
-
-    for( final IMarker marker : markers )
-    {
-     // final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
-      final ImageHyperlink quickFix = m_toolkit.createImageHyperlink( container, SWT.WRAP );
-      final IMarkerResolution2[] markerRes = getResolutions( marker );
-      if( markerRes==null || markerRes.length == 0 )
-      {
-        quickFix.setToolTipText(Messages.TableView_10);
-        quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_DLCL_QUICK_FIX_DISABLED ) ) );
-      }
-        else
-      {
-        final String toolTip =  markerRes[0].getDescription();
-        quickFix.setToolTipText(toolTip==null?Messages.TableView_11:toolTip );
-        quickFix.setImage( JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_ELCL_QUICK_FIX_ENABLED ) ) );
-        quickFix.addHyperlinkListener( new HyperlinkAdapter()
-        {
-
-          /**
-           * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-           */
-          @Override
-          public void linkActivated( HyperlinkEvent e )
-          {
-            markerRes[0].run( marker );
-          }
-        } );
-      }
-      final ImageHyperlink link = m_toolkit.createImageHyperlink( container, SWT.WRAP );
-      link.addHyperlinkListener( new HyperlinkAdapter()
-      {
-
-        /**
-         * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-         */
-        @Override
-        public void linkActivated( HyperlinkEvent e )
-        {
-          final IProfil profil = getProfil();
-          if( profil == null )
-            return;
-
-          final int pointPos = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, -1 );
-          if( pointPos < 0 )
-            return;
-          final IRecord record = getProfil().getPoint( pointPos );
-          getProfil().setActivePoint( record );
-        }
-      } );
-      link.setText( marker.getAttribute( IMarker.MESSAGE, "" ) ); //$NON-NLS-1$
-      link.setImage( JFaceResources.getResources().createImageWithDefault( getImageDescriptor( marker ) ) );
-      link.setForeground( container.getDisplay().getSystemColor( color ) );
-    }
-
-  }
-
   /**
    * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -420,6 +251,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         }
       }
     } );
+    m_problemView = new ProfileProblemView( m_toolkit, m_form );
 
     updateControl();
   }
@@ -532,8 +364,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         public void run( )
         {
           updateControl();
+          m_problemView.updateSections( m_profile );
         }
       } );
+
   }
 
   public IProfil getProfil( )

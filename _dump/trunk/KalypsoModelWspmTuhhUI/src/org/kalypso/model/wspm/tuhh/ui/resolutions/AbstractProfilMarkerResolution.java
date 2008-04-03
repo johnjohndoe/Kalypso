@@ -40,20 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
+import java.util.StringTokenizer;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IMarkerResolution2;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
-import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -63,74 +65,13 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilMarkerResolution implements IMarkerResolution2
+public abstract class AbstractProfilMarkerResolution implements IProfilMarkerResolution
 {
-  /**
-   * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
-   */
-  public void run( IMarker marker )
-  {
-    final CommandableWorkspace ws = getWorkspace( marker );
-
-    Feature feature;
-    try
-    {
-      feature = ws == null ? null : ws.getFeature( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString() );
-
-      if( feature != null )
-      {
-        final IProfil profil = ProfileFeatureFactory.toProfile( feature );
-        if( profil != null )
-        {
-          final boolean resolved = resolve( profil );
-          final FeatureChange[] changes = ProfileFeatureFactory.toFeatureAsChanges( profil, feature );
-
-          final ChangeFeaturesCommand command = new ChangeFeaturesCommand( ws, changes );
-
-          ws.postCommand( command );
-
-        }
-      }
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-  }
-
   private final String m_label;
 
   private final String m_description;
 
   private final Image m_image;
-
-  private CommandableWorkspace getWorkspace( final IMarker marker )
-  {
-    try
-    {
-      final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
-      final IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-      if( editorReferences == null )
-        return null;
-      for( final IEditorReference editorRef : editorReferences )
-      {
-        if( editorRef.getId().equals( editorId ) )
-        {
-          final IEditorPart editor = editorRef.getEditor( false );
-          final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
-          return gmlEditor.getTreeView() == null ? null : gmlEditor.getTreeView().getWorkspace();
-        }
-      }
-    }
-    catch( final CoreException e )
-    {
-      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      return null;
-    }
-    return null;
-  }
 
   /**
    * 
@@ -140,11 +81,6 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
     m_label = label;
     m_description = description == null ? label : description;
     m_image = image;
-  }
-
-  public String getLabel( )
-  {
-    return m_label;
   }
 
   /**
@@ -164,5 +100,104 @@ public abstract class AbstractProfilMarkerResolution implements IMarkerResolutio
     return m_image;
   }
 
-  protected abstract boolean resolve( final IProfil profil );
+  public String getLabel( )
+  {
+    return m_label;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#getSerializedParameter()
+   */
+  public String getSerializedParameter( )
+  {
+    return getClass().getName();
+  }
+
+  private CommandableWorkspace getWorkspace( final IMarker marker )
+  {
+    try
+    {
+      final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
+      final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();// .getActiveWorkbenchWindow();
+      for( final IWorkbenchWindow wbw : wbws )
+      {
+        final IEditorReference[] editorReferences = wbw == null ? null : wbw.getActivePage().getEditorReferences();
+
+        if( editorReferences == null )
+          return null;
+        for( final IEditorReference editorRef : editorReferences )
+        {
+          if( editorRef.getId().equals( editorId ) )
+          {
+            final IEditorPart editor = editorRef.getEditor( false );
+            final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
+            return gmlEditor.getTreeView() == null ? null : gmlEditor.getTreeView().getWorkspace();
+          }
+        }
+      }
+    }
+    catch( final CoreException e )
+    {
+      KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      return null;
+    }
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.ui.IMarkerResolution#run(org.eclipse.core.resources.IMarker)
+   */
+  public void run( IMarker marker )
+  {
+    final CommandableWorkspace ws = getWorkspace( marker );
+
+    Feature feature;
+    try
+    {
+      feature = ws == null ? null : ws.getFeature( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).toString() );
+
+      if( feature != null )
+      {
+        final IProfil profil = ProfileFeatureFactory.toProfile( feature );
+        if( profil != null )
+        {
+          if (resolve( profil ))
+            //unnötig wenn der event rausgeschickt wird
+            marker.delete();
+          ProfileFeatureFactory.toFeature( profil, feature );
+          
+          // TODO: modell event rausschicken!
+        }
+      }
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+  }
+
+  protected final String[] getParameter( final String parameterStream )
+  {
+    StringTokenizer st = new StringTokenizer( parameterStream, ";" );
+    final int size = st.countTokens();
+    final String[] params = new String[size];
+    for( int i = 0; i < size; i++ )
+    {
+      params[i] = st.nextToken();
+    }
+    if( !(params[0].equals( getClass().getName() )) )
+      throw new IllegalArgumentException();
+
+    return params;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution#setData(java.lang.String)
+   */
+  public void setData( String parameterStream )
+  {
+    getParameter( parameterStream );
+  }
 }

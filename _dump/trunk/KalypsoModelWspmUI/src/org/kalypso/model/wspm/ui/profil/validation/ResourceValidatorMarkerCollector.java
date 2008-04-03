@@ -49,12 +49,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 final public class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
 {
@@ -70,8 +68,6 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
 
   private final IProfil m_profile;
 
-  private final XStream m_xstream;
-
   private final String m_profileFeatureID;
 
   public ResourceValidatorMarkerCollector( final IResource resource, final String editorID, final IProfil profile, String profileID )
@@ -80,8 +76,6 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     m_editorID = editorID;
     m_profile = profile;
     m_profileFeatureID = profileID;
-    m_xstream = new XStream( new DomDriver() );
-
   }
 
   /**
@@ -90,21 +84,19 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
    * 
    * @throws CoreException
    */
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final Object[] resolutionMarkers ) throws CoreException
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final IProfilMarkerResolution resolutionMarker ) throws CoreException
   {
     if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       final String debugMsg = String.format( Messages.ResourceValidatorMarkerCollector_2, severity, message, location, pointPos );
       System.out.println( debugMsg );
     }
-
-    final String resSerialised = m_xstream.toXML( resolutionMarkers );
-
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
 
     final String station = String.format( "%.4f", m_profile.getStation() ); //$NON-NLS-1$
 
-    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, resSerialised, m_profileFeatureID, station };
+    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId,
+        resolutionMarker == null ? null : resolutionMarker.getSerializedParameter(), m_profileFeatureID, station };
 
     marker.setAttributes( USED_ATTRIBUTES, values );
 

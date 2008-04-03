@@ -62,8 +62,7 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
-  @Override
-  protected boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfil profil )
   {
     final IComponent cTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     if( cTrennF == null )

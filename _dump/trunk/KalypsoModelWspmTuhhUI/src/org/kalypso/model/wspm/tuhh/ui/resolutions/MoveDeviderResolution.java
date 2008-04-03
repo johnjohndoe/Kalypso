@@ -52,11 +52,13 @@ import org.kalypso.observation.result.IRecord;
 
 public class MoveDeviderResolution extends AbstractProfilMarkerResolution
 {
-  final private int m_deviderIndex;
+  private int m_deviderIndex;
 
-  final private String m_deviderTyp;
+  private String m_deviderTyp;
 
-  final private int m_pointIndex;
+  private int m_pointIndex;
+
+  private boolean m_initialized = false;
 
   /**
    * verschieben der Trennfläche auf den Profilpunkt IProfil.getPoints().get(index)
@@ -70,26 +72,68 @@ public class MoveDeviderResolution extends AbstractProfilMarkerResolution
     m_deviderIndex = deviderIndex;
     m_deviderTyp = deviderTyp;
     m_pointIndex = pointIndex;
+    m_initialized = true;
+  }
+
+  public MoveDeviderResolution( )
+  {
+    super( "verschieben der Trennfläche in den Gültigkeitsbereich", null, null );
+    m_deviderIndex = -1;
+    m_deviderTyp = "";
+    m_pointIndex = -1;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
+   */
+  @Override
+  public String getSerializedParameter( )
+  {
+    return super.getSerializedParameter() + ";" + m_deviderIndex + ";" + m_deviderTyp + ";" + m_pointIndex;
   }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
-  @Override
-  protected boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfil profil )
   {
-    final IComponent comp = profil.hasPointProperty( m_deviderTyp );
-    final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final IProfilPointMarker[] markers = profil.getPointMarkerFor( comp );
-    final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
-    final IRecord[] points = profil.getPoints();
-    if( marker == null || cBreite==null||m_pointIndex < 0 || m_pointIndex >= points.length )
-      return false;
-    final IRecord point = points[m_pointIndex];
-    marker.setPoint(point);
-    profil.setActivePoint( point );
-    return true;
+    if( m_initialized )
+    {
+      final IComponent comp = profil.hasPointProperty( m_deviderTyp );
+      final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      final IProfilPointMarker[] markers = profil.getPointMarkerFor( comp );
+      final IProfilPointMarker marker = m_deviderIndex < markers.length ? markers[m_deviderIndex] : null;
+      final IRecord[] points = profil.getPoints();
+      if( marker == null || cBreite == null || m_pointIndex < 0 || m_pointIndex >= points.length )
+        return false;
+      final IRecord point = points[m_pointIndex];
+      marker.setPoint( point );
+      profil.setActivePoint( point );
+      return true;
+    }
+    throw new IllegalStateException();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
+   */
+  @Override
+  public void setData( String parameterStream )
+  {
+    final String[] params = getParameter( parameterStream );
+    try
+    {
+      m_deviderIndex = new Integer( params[1] );
+      m_deviderTyp = params[2];
+      m_pointIndex = new Integer( params[3] );
+      m_initialized = true;
+    }
+    catch( Exception e )
+    {
+      throw new IllegalArgumentException();
+    }
+
   }
 
 }

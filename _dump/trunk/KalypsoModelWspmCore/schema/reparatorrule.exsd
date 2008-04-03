@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="reparator"/>
+            <element ref="reparator" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -76,7 +76,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.kalypso.model.wspm.core.profil.reparator.IProfilReparator"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution"/>
                </appInfo>
             </annotation>
          </attribute>

@@ -18,7 +18,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfileType;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilReparator;
+import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 
@@ -35,19 +35,19 @@ public class KalypsoModelWspmCoreExtensions
 
   private static Map<String, List<IProfileObjectProvider>> THE_OBJECT_PROVIDER_MAP = null;
 
-  public static IProfilReparator[] createReaparatorRules( )
+  public static IProfilMarkerResolution[] createReparatorRules( )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.reparatorrule" ); //$NON-NLS-1$
 
-    final Collection<IProfilReparator> reparators = new ArrayList<IProfilReparator>( elements.length );
+    final Collection<IProfilMarkerResolution> reparators = new ArrayList<IProfilMarkerResolution>( elements.length );
     final Collection<IStatus> stati = new ArrayList<IStatus>( elements.length );
 
     for( final IConfigurationElement element : elements )
     {
       try
       {
-        final IProfilReparator rule = (IProfilReparator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+        final IProfilMarkerResolution rule = (IProfilMarkerResolution) element.createExecutableExtension( "class" ); //$NON-NLS-1$
         reparators.add( rule );
       }
       catch( final CoreException e )
@@ -68,7 +68,34 @@ public class KalypsoModelWspmCoreExtensions
       }
     }
 
-    return reparators.toArray( new IProfilReparator[reparators.size()] );
+    return reparators.toArray( new IProfilMarkerResolution[reparators.size()] );
+  }
+
+  public static IProfilMarkerResolution getReparatorRule( final String parameterStream )
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.reparatorrule" ); //$NON-NLS-1$
+
+    for( final IConfigurationElement element : elements )
+    {
+
+      try
+      {
+        final IProfilMarkerResolution rule = (IProfilMarkerResolution) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+        if( parameterStream.startsWith( rule.getClass().getName() ) )
+        {
+          rule.setData( parameterStream );
+          return rule;
+        }
+      }
+      catch( CoreException e )
+      {
+        e.printStackTrace();
+      }
+
+    }
+
+    return null;
   }
 
   public static IProfilSink createProfilSink( final String fileExtension ) throws CoreException

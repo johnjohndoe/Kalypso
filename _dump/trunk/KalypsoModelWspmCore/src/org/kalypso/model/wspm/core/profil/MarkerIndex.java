@@ -132,6 +132,11 @@ public class MarkerIndex
     return markers.toArray( new IMarker[markers.size()] );
   }
 
+  final public boolean hasMarkers( )
+  {
+    return m_markers.length > 0;
+  }
+
   /**
    * Return all markers associated to the given severity.
    */

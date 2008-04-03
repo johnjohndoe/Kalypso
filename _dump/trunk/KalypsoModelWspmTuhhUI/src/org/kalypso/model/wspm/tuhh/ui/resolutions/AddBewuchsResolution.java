@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -54,23 +52,28 @@ import org.kalypso.observation.result.IRecord;
 public class AddBewuchsResolution extends AbstractProfilMarkerResolution
 {
 
+  Integer m_pointIndex;
+
+  boolean m_orientationLeft;
+
+  public AddBewuchsResolution( final int pointIndex, final boolean orientationLeft )
+  {
+    super( "Bewuchsparameter erzeugen", null, null );
+    m_pointIndex = pointIndex;
+    m_orientationLeft = orientationLeft;
+  }
   public AddBewuchsResolution( )
   {
-    super( "Bewuchsparameter an der Trennfläche erzeugen", null, null );
+    super( "Bewuchsparameter erzeugen", null, null );
+    m_pointIndex = -1;
+    m_orientationLeft = false;
   }
-
   /**
    * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#resolve(org.kalypso.model.wspm.core.profil.IProfil,
    *      org.eclipse.core.resources.IMarker)
    */
-  @Override
-  protected boolean resolve( final IProfil profil )
+  public boolean resolve( final IProfil profil )
   {
-    final IComponent CTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( CTrennF );
-    if( deviders.length < 2 )
-      return false;
-    final int leftIndex = profil.indexOfPoint( deviders[0].getPoint() );
     final IComponent cAX = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
     final IComponent cAY = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
     final IComponent cDP = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
@@ -79,69 +82,63 @@ public class AddBewuchsResolution extends AbstractProfilMarkerResolution
     final int iAY = profil.indexOfProperty( cAY );
     final int iDP = profil.indexOfProperty( cDP );
 
-    if( leftIndex > 0 )
-    {
-      final IRecord point_l = profil.getPoint( leftIndex - 1 );
-      Double AX_l = (Double) point_l.getValue( iAX );
-      Double AY_l = (Double) point_l.getValue( iAY );
-      Double DP_l = (Double) point_l.getValue( iDP );
-      for( int i = leftIndex - 1; i >= 0; i-- )
-      {
-        final IRecord point = profil.getPoint( i );
-        final Double AX = (Double) point.getValue( iAX );
-        final Double AY = (Double) point.getValue( iAY );
-        final Double DP = (Double) point.getValue( iDP );
-        if( AX_l == 0.0 & AX != 0.0 )
-          AX_l = AX;
-        if( AY_l == 0.0 & AY != 0.0 )
-          AY_l = AY;
-        if( DP_l == 0.0 & DP != 0.0 )
-          DP_l = DP;
-        if( AX_l * AY_l * DP_l != 0.0 )
-        {
-          point_l.setValue( iAX, AX_l );
-          point_l.setValue( iAY, AY_l );
-          point_l.setValue( iDP, DP_l );
-          profil.setActivePoint( point_l );
-          break;
-        }
+    final int step = m_orientationLeft ? -1 : 1;
 
-      }
-    }
-    final int rightIndex = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
-    if( rightIndex < profil.getPoints().length )
+    final IRecord point = profil.getPoint( m_pointIndex );
+    Double AX_P = (Double) point.getValue( iAX );
+    Double AY_P = (Double) point.getValue( iAY );
+    Double DP_P = (Double) point.getValue( iDP );
+
+    for( int i = m_pointIndex + step; i > -1 && i < profil.getPoints().length; i = i + step )
     {
-      final IRecord point_r = profil.getPoint( rightIndex );
-      Double AX_r = (Double) point_r.getValue( iAX );
-      Double AY_r = (Double) point_r.getValue( iAY );
-      Double DP_r = (Double) point_r.getValue( iDP );
-      for( int i = rightIndex; i < profil.getPoints().length; i++ )
+
+      final IRecord p = profil.getPoint( i );
+      final Double AX = (Double) p.getValue( iAX );
+      final Double AY = (Double) p.getValue( iAY );
+      final Double DP = (Double) p.getValue( iDP );
+      if( AX_P == 0.0 & AX != 0.0 )
+        AX_P = AX;
+      if( AY_P == 0.0 & AY != 0.0 )
+        AY_P = AY;
+      if( DP_P == 0.0 & DP != 0.0 )
+        DP_P = DP;
+      if( AX_P * AY_P * DP_P != 0.0 )
       {
-        if( AX_r * AY_r * DP_r != 0.0 )
-        {
-          profil.setActivePoint( point_r );
-          break;
-        }
-        final IRecord point = profil.getPoint( i );
-        final Double AX = (Double) point.getValue( iAX );
-        final Double AY = (Double) point.getValue( iAY );
-        final Double DP = (Double) point.getValue( iDP );
-        if( AX_r == 0.0 & AX != 0.0 )
-          AX_r= AX;
-        if( AY_r == 0.0 & AY != 0.0 )
-          AY_r = AY ;
-        if( DP_r == 0.0 & DP != 0.0 )
-          DP_r =  DP ;
-        if( AX_r * AY_r * DP_r != 0.0 )
-        {
-          point_r.setValue( iAX, AX_r );
-          point_r.setValue( iAY, AY_r );
-          point_r.setValue( iDP, DP_r );
-          profil.setActivePoint( point_r );
-          break;
-        }
+        point.setValue( iAX, AX_P );
+        point.setValue( iAY, AY_P );
+        point.setValue( iDP, DP_P );
+        profil.setActivePoint( point );
+        break;
       }
+
     }
     return true;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
+   */
+  @Override
+  public String getSerializedParameter( )
+  {
+    return super.getSerializedParameter()+";" + m_pointIndex + ";" + m_orientationLeft;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
+   */
+  @Override
+  public void setData( String parameterStream )
+  {
+    final String[] params = getParameter( parameterStream );
+    try
+    {
+      m_pointIndex = new Integer( params[1] );
+      m_orientationLeft = new Boolean( params[2] );
+    }
+    catch( Exception e )
+    {
+      throw new IllegalArgumentException();
+    }
   }
 }
