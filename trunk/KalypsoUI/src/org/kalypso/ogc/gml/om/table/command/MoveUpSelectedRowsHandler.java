@@ -44,6 +44,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.observation.result.TupleResult;
 
@@ -57,6 +58,7 @@ public class MoveUpSelectedRowsHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -66,16 +68,20 @@ public class MoveUpSelectedRowsHandler extends AbstractHandler
       throw new ExecutionException( "No tuple result viewer available" );
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-    
-    final int index = tupleResult.indexOf( selection.getFirstElement() );
-    if (index > 0)
-    {
-    final int newPosition = index -1;
-    
-    tupleResult.removeAll( selection.toList() );
-    tupleResult.addAll( newPosition, selection.toList() );
+
    
-       }
+    final Object firstElement = selection.getFirstElement() ;
+    final int index = tupleResult.indexOf(firstElement );
+    if( index > 0 )
+    {
+      final int newPosition = index - 1;
+      tupleResult.removeAll( selection.toList() );
+      tupleResult.addAll( newPosition, selection.toList() );
+
+    viewer.setSelection(new StructuredSelection(tupleResult.get( newPosition )));
+    viewer.refresh();
+    }
+   
     return null;
   }
 
