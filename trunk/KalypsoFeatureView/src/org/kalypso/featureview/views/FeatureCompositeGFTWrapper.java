@@ -117,6 +117,8 @@ public class FeatureCompositeGFTWrapper
     final InputSource is = new InputSource( r );
     final Unmarshaller unmarshaller = FeatureCompositeGFTWrapper.JC.createUnmarshaller();
 
+    // TODO close reader and stream!
+
     final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
     final List<FeatureviewType> view = m_template.getView();
 

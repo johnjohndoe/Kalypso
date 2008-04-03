@@ -60,7 +60,9 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -82,12 +84,12 @@ import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationSt
 import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
@@ -112,6 +114,10 @@ import org.kalypso.template.gistableview.Gistableview.Layer.Column;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.swt.SWTUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
+import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -330,6 +336,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   {
     m_isApplyTemplate = true;
 
+    setFilters( new ViewerFilter[0] );
+
     if( tableView != null )
     {
       final Layer layer = tableView.getLayer();
@@ -339,7 +347,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
         // TODO: check this: sometimes we get a theme from outside... what to do in that case?
         disposeTheme( getInput() );
 
-        final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
+        final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
         final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null, true );
         setInput( theme );
@@ -347,6 +355,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final Sort sort = layer.getSort();
       final List<Column> columnList = layer.getColumn();
       setSortAndColumns( sort, columnList );
+
+      applyFilter( layer );
     }
 
     refreshAll();
@@ -358,6 +368,8 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     m_isApplyTemplate = true;
     clearColumns();
 
+    setFilters( new ViewerFilter[0] );
+
     if( getContentProvider() != null )
       setInput( null );
 
@@ -368,7 +380,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       final Layer layer = tableView.getLayer();
 
-      final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
+      final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
       final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null, true );
       setInput( theme );
@@ -376,11 +388,48 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       final Sort sort = layer.getSort();
       final List<Column> columnList = layer.getColumn();
       setSortAndColumns( sort, columnList );
+
+      applyFilter( layer );
     }
 
     refreshAll();
     checkColumns();
     m_isApplyTemplate = false;
+  }
+
+  private void applyFilter( final Layer layer )
+  {
+    try
+    {
+      final Filter filter = GisTemplateHelper.getFilter( layer );
+      if( filter == null )
+        return;
+
+      final ViewerFilter viewerFilter = new ViewerFilter()
+      {
+        @Override
+        public boolean select( Viewer viewer, Object parentElement, Object element )
+        {
+          try
+          {
+            final Feature feature = (Feature) element;
+            return filter.evaluate( feature );
+          }
+          catch( FilterEvaluationException e )
+          {
+            e.printStackTrace();
+
+            return false;
+          }
+        }
+      };
+
+      addFilter( viewerFilter );
+    }
+    catch( final FilterConstructionException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   private void setSortAndColumns( final Sort sort, final List<Column> columnList )

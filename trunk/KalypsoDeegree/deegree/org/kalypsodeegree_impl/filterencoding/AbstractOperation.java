@@ -81,7 +81,7 @@ public abstract class AbstractOperation implements Operation
    */
   protected int m_operatorId;
 
-  AbstractOperation( int operatorId )
+  AbstractOperation( final int operatorId )
   {
     m_operatorId = operatorId;
   }
@@ -91,14 +91,13 @@ public abstract class AbstractOperation implements Operation
    * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
-
     // check if root element's name is a known operator
-    String name = element.getLocalName();
-    int type = OperationDefines.getTypeByName( name );
+    final String name = element.getLocalName();
+    final int type = OperationDefines.getTypeByName( name );
     Operation operation = null;
 
     switch( type )

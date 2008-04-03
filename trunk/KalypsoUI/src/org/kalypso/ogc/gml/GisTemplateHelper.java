@@ -88,17 +88,24 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.gistableview.Gistableview;
+import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.filterencoding.Filter;
+import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -478,10 +485,10 @@ public class GisTemplateHelper
       layer.setActuate( "onRequest" ); //$NON-NLS-1$
       layer.setType( "simple" ); //$NON-NLS-1$
 
-      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
@@ -540,10 +547,10 @@ public class GisTemplateHelper
 
       layer.setLinktype( "legend" );
 
-      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
@@ -567,10 +574,10 @@ public class GisTemplateHelper
 
       layer.setLinktype( "scrab" );
 
-      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
@@ -591,10 +598,10 @@ public class GisTemplateHelper
       layer.setId( "ID_" + count );
       layer.setLinktype( "scale" );
 
-      org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
@@ -610,4 +617,23 @@ public class GisTemplateHelper
 
     return null;
   }
+
+  public static Filter getFilter( final Layer layer ) throws FilterConstructionException
+  {
+    final Object filterObject = layer.getFilter();
+    if( !(filterObject instanceof Element) )
+      return null;
+
+    final Element filterElement = (Element) filterObject;
+    final NodeList childNodes = filterElement.getChildNodes();
+    for( int i = 0; i < childNodes.getLength(); i++ )
+    {
+      final Node item = childNodes.item( i );
+      if( item instanceof Element )
+        return AbstractFilter.buildFromDOM( (Element) item );
+    }
+
+    return null;
+  }
+
 }
