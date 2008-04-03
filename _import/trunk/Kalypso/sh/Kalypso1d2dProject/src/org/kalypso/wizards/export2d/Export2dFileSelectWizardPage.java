@@ -57,22 +57,29 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.ui.ImageProvider;
 
-public class FileSelectWizardPage extends WizardPage
+public class Export2dFileSelectWizardPage extends WizardPage
 {
   private Text m_destinationFileField;
 
-  private String[] m_filenameFilters;
+  private final String[] m_filenameExtensions;
+
+  private final String[] m_fileTypes;
+
+  private String m_selectedExtension;
 
   private Button m_btnExportMiddleNodes;
 
   private Button m_btnExportRoughness;
 
-  public FileSelectWizardPage( final String pageName, final String[] fileExtensions )
+  public Export2dFileSelectWizardPage( final String pageName, final String[] fileNameExtensions, final String[] fileTypes )
   {
     super( pageName, "", ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-    setTitle( "FE Netz exportieren" );
-    setDescription( "Bitte wählen Sie eine Datei aus, welche Sie als FE Netz exportieren möchten." );
-    m_filenameFilters = fileExtensions;
+
+    setTitle( "FE-Netz exportieren" );
+    setDescription( "Bitte wählen Sie eine Datei aus, in welche Sie das FE-Netz exportieren möchten." );
+
+    m_filenameExtensions = fileNameExtensions;
+    m_fileTypes = fileTypes;
   }
 
   /**
@@ -89,7 +96,7 @@ public class FileSelectWizardPage extends WizardPage
     final Label label_1 = new Label( container, SWT.NONE );
     final GridData gridData_1 = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
     label_1.setLayoutData( gridData_1 );
-    label_1.setText( "Destination file name:" );
+    label_1.setText( "Ziel-Dateiname:" );
 
     m_destinationFileField = new Text( container, SWT.BORDER );
     m_destinationFileField.addModifyListener( new ModifyListener()
@@ -110,13 +117,13 @@ public class FileSelectWizardPage extends WizardPage
         browseForFile();
       }
     } );
-    button.setText( "Browse" );
+    button.setText( "Durchsuchen" );
     final Label label_2 = new Label( container, SWT.NONE );
     label_2.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_2.setText( " " );
     m_btnExportMiddleNodes = new Button( container, SWT.CHECK );
-    m_btnExportMiddleNodes.setText( "Export middle nodes" );
-    m_btnExportMiddleNodes.setSelection( true );
+    m_btnExportMiddleNodes.setText( "Mittseitknoten berücksichtigen" );
+    m_btnExportMiddleNodes.setSelection( false );
     final Label label_3 = new Label( container, SWT.NONE );
     label_3.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_3.setText( " " );
@@ -125,7 +132,7 @@ public class FileSelectWizardPage extends WizardPage
     label_4.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
     label_4.setText( " " );
     m_btnExportRoughness = new Button( container, SWT.CHECK );
-    m_btnExportRoughness.setText( "Export roughness data" );
+    m_btnExportRoughness.setText( "Rauheiten berücksichtigen" );
     m_btnExportRoughness.setSelection( false );
 
     GridData gd = new GridData();
@@ -144,16 +151,18 @@ public class FileSelectWizardPage extends WizardPage
     setPageComplete( false );
     final File file = new File( getFilePath() );
     boolean regularExtension = false;
-    for( int i = 0; i < m_filenameFilters.length; i++ )
-      if( file.getName().endsWith( m_filenameFilters[i].substring( 1 ) ) )
+    for( int i = 0; i < m_filenameExtensions.length; i++ )
+      if( file.getName().endsWith( m_filenameExtensions[i].substring( 1 ) ) )
       {
         regularExtension = true;
+        m_selectedExtension = m_filenameExtensions[i];
         break;
       }
     if( !regularExtension )
     {
       setMessage( null );
-      setErrorMessage( "Irregular file extension" );
+      setErrorMessage( "Ungültige Dateiendung" );
+      m_selectedExtension = null;
       return;
     }
     setMessage( null );
@@ -168,11 +177,16 @@ public class FileSelectWizardPage extends WizardPage
 
   private String browse( final String path )
   {
-    final FileDialog dialog = new FileDialog( getShell(), SWT.OPEN );
-    dialog.setFilterExtensions( m_filenameFilters );
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SAVE );
+    dialog.setFilterExtensions( m_filenameExtensions );
+    dialog.setFilterNames( m_fileTypes );
     if( path != "" )
       dialog.setFileName( path );
     final String fileName = dialog.open();
+
+    if( fileName == null )
+      return "";
+
     final String[] filterExtensions = dialog.getFilterExtensions();
     boolean regularExtension = false;
     for( int i = 0; i < filterExtensions.length; i++ )
@@ -199,5 +213,10 @@ public class FileSelectWizardPage extends WizardPage
   public boolean isSelectedExportRoughessData( )
   {
     return m_btnExportRoughness.getSelection();
+  }
+
+  public String getSelectedExtension( )
+  {
+    return m_selectedExtension;
   }
 }

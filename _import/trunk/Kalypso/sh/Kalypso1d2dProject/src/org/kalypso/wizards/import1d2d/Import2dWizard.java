@@ -24,7 +24,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class ImportWizard extends Wizard implements INewWizard
+public class Import2dWizard extends Wizard implements INewWizard
 {
   protected DataContainer m_data; // the data model
 
@@ -38,7 +38,7 @@ public class ImportWizard extends Wizard implements INewWizard
   // flag indicated whether the wizard can be completed or not
   protected boolean wizardCompleted = false;
 
-  public ImportWizard( )
+  public Import2dWizard( )
   {
     super();
     m_data = new DataContainer();

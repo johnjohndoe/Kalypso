@@ -25,11 +25,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.wizards.imports.Messages;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -112,7 +112,7 @@ public class ImportBaseMapImportShpPage extends WizardPage
 
     crsControl.setToolTipText( "Koordinatensystem der Shape-Datei" );
 
-    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
