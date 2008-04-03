@@ -67,7 +67,6 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IFile dstRasterIFile = m_scenarioFolder.getFile( dstFileName );
         final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
 
-        // TODO Thomas: nofdpIDSS already have converted all .asc-files to .bin(ary) files
         RiskModelHelper.importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, m_sourceCRS, monitor );
 
         // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
