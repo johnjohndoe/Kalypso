@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.kalypso.grid.AscciiGridReader;
 import org.kalypso.grid.ConvertAscii2Coverage;
-import org.kalypso.preferences.IKalypsoDeegreePreferences;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -24,14 +24,14 @@ public class AsciiRasterInfo
 
   private int m_rasterSizeY;
 
-  private File m_rasterFile;
+  private final File m_rasterFile;
 
   private RectifiedGridDomain m_gridDomain;
 
   public AsciiRasterInfo( final String rasterFileAbsolutePath ) throws Exception
   {
     m_rasterFile = new File( rasterFileAbsolutePath );
-    setCoordinateSystem( IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
+    setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     init();
   }
 
@@ -104,14 +104,14 @@ public class AsciiRasterInfo
       init();
       return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_coordinateSystem = oldCoordinateSystem;
       try
       {
         init();
       }
-      catch( Exception e1 )
+      catch( final Exception e1 )
       {
         e1.printStackTrace();
       }
