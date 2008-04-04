@@ -170,7 +170,7 @@ public class GeoGridUtilities
   /**
    * Creates a {@link IGeoGrid} for a resource of a given mime-type.
    */
-  public static IGeoGrid createGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, String sourceCRS ) throws IOException
+  public static IGeoGrid createGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
   {
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
@@ -213,7 +213,7 @@ public class GeoGridUtilities
    *            returned.
    * @return The surface of the given grid.
    */
-  public static GM_Surface< ? > createSurface( IGeoGrid grid, final String targetCRS ) throws GeoGridException
+  public static GM_Surface< ? > createSurface( final IGeoGrid grid, final String targetCRS ) throws GeoGridException
   {
     try
     {
@@ -228,19 +228,19 @@ public class GeoGridUtilities
       final double y2 = y1 + offsetY.y * grid.getSizeY();
 
       /* Create the coordinates for the outer ring. */
-      GM_Position c1 = GeometryFactory.createGM_Position( x1, y1 );
-      GM_Position c2 = GeometryFactory.createGM_Position( x2, y1 );
-      GM_Position c3 = GeometryFactory.createGM_Position( x2, y2 );
-      GM_Position c4 = GeometryFactory.createGM_Position( x1, y2 );
+      final GM_Position c1 = GeometryFactory.createGM_Position( x1, y1 );
+      final GM_Position c2 = GeometryFactory.createGM_Position( x2, y1 );
+      final GM_Position c3 = GeometryFactory.createGM_Position( x2, y2 );
+      final GM_Position c4 = GeometryFactory.createGM_Position( x1, y2 );
 
       /* Create the outer ring. */
-      GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+      final GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
       /* Create the surface patch. */
-      GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+      final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
       /* Create the surface. */
-      GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
       Assert.assertNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
@@ -250,7 +250,7 @@ public class GeoGridUtilities
 
       return surface;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new GeoGridException( "Error in creating the surface ...", ex );
     }
@@ -270,35 +270,35 @@ public class GeoGridUtilities
    *            returned.
    * @return The cell at the given (cell-)coordinates in the grid.
    */
-  public static GM_Surface< ? > createCell( IGeoGrid grid, int x, int y, String targetCRS ) throws GeoGridException
+  public static GM_Surface< ? > createCell( final IGeoGrid grid, final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     try
     {
-      Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
+      final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
 
-      double cellX1 = cellCoordinate.x;
-      double cellY1 = cellCoordinate.y;
+      final double cellX1 = cellCoordinate.x;
+      final double cellY1 = cellCoordinate.y;
 
-      double offsetX = grid.getOffsetX().x;
-      double offsetY = grid.getOffsetY().y;
+      final double offsetX = grid.getOffsetX().x;
+      final double offsetY = grid.getOffsetY().y;
 
-      double cellX2 = cellX1 + offsetX;
-      double cellY2 = cellY1 + offsetY;
+      final double cellX2 = cellX1 + offsetX;
+      final double cellY2 = cellY1 + offsetY;
 
       /* Create the coordinates for the outer ring. */
-      GM_Position c1 = GeometryFactory.createGM_Position( cellX1, cellY1 );
-      GM_Position c2 = GeometryFactory.createGM_Position( cellX2, cellY1 );
-      GM_Position c3 = GeometryFactory.createGM_Position( cellX2, cellY2 );
-      GM_Position c4 = GeometryFactory.createGM_Position( cellX1, cellY2 );
+      final GM_Position c1 = GeometryFactory.createGM_Position( cellX1, cellY1 );
+      final GM_Position c2 = GeometryFactory.createGM_Position( cellX2, cellY1 );
+      final GM_Position c3 = GeometryFactory.createGM_Position( cellX2, cellY2 );
+      final GM_Position c4 = GeometryFactory.createGM_Position( cellX1, cellY2 );
 
       /* Create the outer ring. */
-      GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+      final GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
       /* Create the surface patch. */
-      GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+      final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
       /* Create the surface. */
-      GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
       Assert.assertNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
@@ -309,7 +309,7 @@ public class GeoGridUtilities
       return surface;
 
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new GeoGridException( "Error in creating the cell ...", ex );
     }
@@ -409,7 +409,6 @@ public class GeoGridUtilities
 
       /* create new coverage and fill domain/range */
       final ICoverage coverage = CoverageCollection.addCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
-
       ProgressUtilities.worked( progress, 10 );
 
       return coverage;
@@ -580,19 +579,19 @@ public class GeoGridUtilities
   /**
    * gets the min and max values for the given {@link ICoverageCollection}
    */
-  public static BigDecimal[] getMinMax( ICoverageCollection covCollection ) throws Exception
+  public static BigDecimal[] getMinMax( final ICoverageCollection covCollection ) throws Exception
   {
-    BigDecimal[] minmax = new BigDecimal[2];
+    final BigDecimal[] minmax = new BigDecimal[2];
 
     BigDecimal minValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     BigDecimal maxValue = new BigDecimal( Double.MIN_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
-    for( ICoverage coverage : covCollection )
+    for( final ICoverage coverage : covCollection )
     {
-      IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+      final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
 
-      BigDecimal min = grid.getMin();
-      BigDecimal max = grid.getMax();
+      final BigDecimal min = grid.getMin();
+      final BigDecimal max = grid.getMax();
 
       minValue = minValue.min( min );
       maxValue = maxValue.max( max );
@@ -622,12 +621,12 @@ public class GeoGridUtilities
       if( grid.getSourceCRS() == null || positionCRS == null )
         return crd;
 
-      CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( positionCRS, grid.getSourceCRS() );
-      GM_Position position = TransformUtilities.transform( JTSAdapter.wrap( crd ), transformation );
+      final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( positionCRS, grid.getSourceCRS() );
+      final GM_Position position = TransformUtilities.transform( JTSAdapter.wrap( crd ), transformation );
 
       return JTSAdapter.export( position );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new GeoGridException( "Could not transform the coordinate ...", ex );
     }
