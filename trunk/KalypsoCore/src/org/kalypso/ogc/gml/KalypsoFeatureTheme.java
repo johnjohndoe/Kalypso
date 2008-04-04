@@ -408,10 +408,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     final String label = super.getLabel( o );
 
-    final CommandableWorkspace workspace = getWorkspace();
-    // TODO: change this later to a label decorator?
-    if( (workspace != null) && workspace.isDirty() )
-      return label + "*";
+//    final CommandableWorkspace workspace = getWorkspace();
+//    // TODO: change this later to a label decorator?
+//    // or use pool.dirty flag?
+//    if( (workspace != null) && workspace.isDirty() )
+//      return label + "*";
 
     return label;
   }
