@@ -96,7 +96,7 @@ public class RiskModelHelper
     BigDecimal maxDamageValue = new BigDecimal( Double.MIN_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     BigDecimal minDamageValue = new BigDecimal( Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
-    for( ICoverageCollection collection : specificDamageCoverageCollections )
+    for( final ICoverageCollection collection : specificDamageCoverageCollections )
     {
       try
       {
@@ -105,7 +105,7 @@ public class RiskModelHelper
         minDamageValue = minDamageValue.min( extrema[0] );
         maxDamageValue = maxDamageValue.max( extrema[1] );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -273,7 +273,7 @@ public class RiskModelHelper
     parentKalypsoTheme.addLayer( layer );
   }
 
-  public static void deleteExistingMapLayers( CascadingKalypsoTheme parentKalypsoTheme )
+  public static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme )
   {
     final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
     for( int i = 0; i < childThemes.length; i++ )
@@ -362,13 +362,14 @@ public class RiskModelHelper
 
         final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
         final File file = new File( ifile.getRawLocation().toPortableString() );
+
         GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
         inputGrid.dispose();
       }
 
       return Status.OK_STATUS;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return StatusUtilities.statusFromThrowable( e, "Fehler bei Erzeugung des Ländnutzungsrasters." );
     }
@@ -381,7 +382,7 @@ public class RiskModelHelper
    *            raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
    */
-  public static IAnnualCoverageCollection getMaxReturnPeriodCollection( IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection )
+  public static IAnnualCoverageCollection getMaxReturnPeriodCollection( final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection )
   {
     int maxReturnPeriod = Integer.MIN_VALUE;
     IAnnualCoverageCollection maxCoveragesCollection = null;
@@ -425,8 +426,8 @@ public class RiskModelHelper
     parentKalypsoTheme.setVisible( true );
 
     /* add the coverage collections to the map */
-    IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
-    for( IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
+    final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = model.getSpecificDamageCoverageCollection();
+    for( final IAnnualCoverageCollection annualCoverageCollection : specificDamageCoverageCollection )
       createSpecificDamageMapLayer( parentKalypsoTheme, annualCoverageCollection, scenarioFolder );
 
     final IFile sldFile = scenarioFolder.getFile( "/styles/SpecificDamagePotentialCoverage.sld" ); //$NON-NLS-1$
@@ -455,7 +456,7 @@ public class RiskModelHelper
 
     parentKalypsoTheme.setVisible( true );
 
-    IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = model.getWaterlevelCoverageCollection();
+    final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection = model.getWaterlevelCoverageCollection();
 
     for( int i = 0; i < rasterInfos.size(); i++ )
     {
@@ -466,7 +467,7 @@ public class RiskModelHelper
     }
   }
 
-  private static void deleteExistingMapLayers( CascadingKalypsoTheme parentKalypsoTheme, List<AsciiRasterInfo> rasterInfos )
+  private static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )
   {
     final List<IKalypsoTheme> themesToRemove = new ArrayList<IKalypsoTheme>();
 
@@ -553,7 +554,7 @@ public class RiskModelHelper
         periodSortedMap.put( period, riskLanduseStatistic );
       }
 
-      Set<Double> keySet = periodSortedMap.keySet();
+      final Set<Double> keySet = periodSortedMap.keySet();
 
       final Double[] periods = keySet.toArray( new Double[keySet.size()] );
 

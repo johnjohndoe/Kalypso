@@ -6,8 +6,14 @@ import java.util.List;
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.RangeSetType;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -60,11 +66,12 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
 
         // range set
         // @hack: append .bin to path to get the binary ascii grid file
-        final String path = raster.getSourceFile().getAbsolutePath() + "." + BIN_EXTENSION; //$NON-NLS-1$
-        final String binFileName = raster.getSourceFile().getName() + "." + BIN_EXTENSION; //$NON-NLS-1$
+        final IFile iFile = raster.getiSourceFile();
 
         final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-        rangeSetFile.setFileName( path ); //$NON-NLS-1$
+
+        final String binFileName = "platform:/resource//" + iFile.getProject().getName() + "/" + iFile.getProjectRelativePath().toString() + "." + BIN_EXTENSION;
+        rangeSetFile.setFileName( binFileName ); //$NON-NLS-1$
         rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
         final RangeSetType rangeSet = KalypsoOGC31JAXBcontext.GML3_FAC.createRangeSetType();
@@ -103,5 +110,31 @@ public final class RiskImportBinaryWaterdepthRunnable implements ICoreRunnableWi
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, "Fliesstiefen-Import fehlgeschlagen" );
     }
+  }
+
+  /** REMARK: copies only files - not foldes or recursive through folders */
+  public void copy( final IFolder srcFolder, final IFolder destFolder, final String fileNamePart ) throws CoreException
+  {
+    srcFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    destFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
+    if( !srcFolder.exists() )
+      throw new CoreException( StatusUtilities.createErrorStatus( "source folder doesn't exists." ) );
+    if( !destFolder.exists() )
+      throw new CoreException( StatusUtilities.createErrorStatus( "destination folder doesn't exists." ) );
+
+    srcFolder.accept( new IResourceVisitor()
+    {
+      public boolean visit( final IResource resource ) throws CoreException
+      {
+        if( resource instanceof IFile )
+        {
+          if( resource.getName().contains( fileNamePart ) )
+            resource.copy( destFolder.getFullPath().append( resource.getName() ), true, new NullProgressMonitor() );
+        }
+
+        return true;
+      }
+    } );
   }
 }

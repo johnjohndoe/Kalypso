@@ -2,6 +2,7 @@ package org.kalypso.risk.model.actions.dataImport.waterdepth;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IFile;
 import org.kalypso.grid.AscciiGridReader;
 import org.kalypso.grid.ConvertAscii2Coverage;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -28,9 +29,20 @@ public class AsciiRasterInfo
 
   private RectifiedGridDomain m_gridDomain;
 
+  private final IFile m_iFile;
+
   public AsciiRasterInfo( final String rasterFileAbsolutePath ) throws Exception
   {
+    m_iFile = null;
     m_rasterFile = new File( rasterFileAbsolutePath );
+    setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    init();
+  }
+
+  public AsciiRasterInfo( final IFile file ) throws Exception
+  {
+    m_iFile = file;
+    m_rasterFile = m_iFile.getLocation().toFile();
     setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     init();
   }
@@ -97,26 +109,8 @@ public class AsciiRasterInfo
    */
   public boolean setCoordinateSystem( final String cs )
   {
-    final String oldCoordinateSystem = m_coordinateSystem;
     m_coordinateSystem = cs;
-    try
-    {
-      init();
-      return true;
-    }
-    catch( final Exception e )
-    {
-      m_coordinateSystem = oldCoordinateSystem;
-      try
-      {
-        init();
-      }
-      catch( final Exception e1 )
-      {
-        e1.printStackTrace();
-      }
-      return false;
-    }
+    return true;
   }
 
   public int getReturnPeriod( )
@@ -132,5 +126,10 @@ public class AsciiRasterInfo
   public File getSourceFile( )
   {
     return m_rasterFile;
+  }
+
+  public IFile getiSourceFile( )
+  {
+    return m_iFile;
   }
 }
