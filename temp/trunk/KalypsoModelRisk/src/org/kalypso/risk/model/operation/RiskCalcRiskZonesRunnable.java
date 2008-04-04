@@ -3,7 +3,6 @@
  */
 package org.kalypso.risk.model.operation;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,7 +68,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   private final IFolder m_scenarioFolder;
 
-  public RiskCalcRiskZonesRunnable( IRasterDataModel rasterModel, IVectorDataModel vectorModel, IRasterizationControlModel controlModel, IFolder scenarioFolder )
+  public RiskCalcRiskZonesRunnable( final IRasterDataModel rasterModel, final IVectorDataModel vectorModel, final IRasterizationControlModel controlModel, final IFolder scenarioFolder )
   {
     m_rasterModel = rasterModel;
     m_controlModel = controlModel;
@@ -77,7 +76,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     m_vectorModel = vectorModel;
   }
 
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "RiskZonesCalculationHandler.7" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
@@ -104,11 +103,10 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
         // TODO: change name: better: use input name
         final String outputFilePath = "raster/output/RiskZonesCoverage" + i + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
-        final IFile ifile = m_scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
-        final File file = new File( ifile.getRawLocation().toPortableString() );
+        final IFile iFile = m_scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
+        final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, iFile.getLocation().toFile(), outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
 
-        final ICoverage coverage = GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
-
+        outputGrid.dispose();
         inputGrid.dispose();
 
         coverage.setName( "Risikozonen [" + i + "]" );
@@ -200,7 +198,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     final int numOfLanduses = landuseClassesList.size();
 
     /* fill for every landuse class */
-    for( ILanduseClass landuseClass : landuseClassesList )
+    for( final ILanduseClass landuseClass : landuseClassesList )
     {
       /* add the data to the observation */
       final IRecord newRecord = result.createRecord();
@@ -265,7 +263,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
     // calculate overall average annual damage value
     double overAllAverageDamage = 0.0;
-    for( ILanduseClass landuseClass : landuseClassesList )
+    for( final ILanduseClass landuseClass : landuseClassesList )
     {
       final double averageAnnualDamage = landuseClass.getAverageAnnualDamage();
       overAllAverageDamage = overAllAverageDamage + averageAnnualDamage;

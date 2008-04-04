@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
@@ -105,6 +107,25 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 4, BigDecimal.ROUND_HALF_UP );
   }
 
+  /**
+   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    final Set<Entry<String, List<IGeoGrid>>> entrySet = m_gridMap.entrySet();
+    for( final Entry<String, List<IGeoGrid>> entry : entrySet )
+    {
+      final List<IGeoGrid> myList = entry.getValue();
+      for( final IGeoGrid geoGrid : myList )
+      {
+        geoGrid.dispose();
+      }
+    }
+
+    super.dispose();
+  }
+
   @Override
   public final double getValue( final int x, final int y ) throws GeoGridException
   {
@@ -122,7 +143,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
 
     /* calculate average annual damage */
-    double averageAnnualDamageValue = RiskModelHelper.calcAverageAnnualDamageValue( damage, probability );
+    final double averageAnnualDamageValue = RiskModelHelper.calcAverageAnnualDamageValue( damage, probability );
 
     if( averageAnnualDamageValue == 0 || Double.isNaN( averageAnnualDamageValue ) )
       return Double.NaN;
