@@ -1208,10 +1208,10 @@
                                                                 <description>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the waterlevel on suction side below this mark [m NN] the pump will be switched on</name>
-                                                                <label>If the waterlevel on suction side below this mark [m NN] the pump will be switched on</label>
-                                                                <tooltip>If the waterlevel on suction side below this mark [m NN] the pump will be switched on</tooltip>
-                                                                <description>If the waterlevel on suction side falls below this mark [m NN] the pump will be switched on</description>
+                                                                <name>If the water level on suction side below this mark [m NN], the pump will be switched on</name>
+                                                                <label>If the water level on suction side below this mark [m NN], the pump will be switched on</label>
+                                                                <tooltip>If the water level on suction side below this mark [m NN], the pump will be switched on</tooltip>
+                                                                <description>If the water level on suction side falls below this mark [m NN], the pump will be switched on</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -1224,10 +1224,10 @@
                                                                 <description>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the waterlevel on suction side rises above this mark [m NN] the pump will be switched off</name>
-                                                                <label>If the waterlevel on suction side rises above this mark [m NN] the pump will be switched off</label>
-                                                                <tooltip>If the waterlevel on suction side rises above this mark [m NN] the pump will be switched off</tooltip>
-                                                                <description>If the waterlevel on suction side rises above this mark [m NN] the pump will be switched off</description>
+                                                                <name>If the water level on suction side rises above this mark [m NN], the pump will be switched off</name>
+                                                                <label>If the water level on suction side rises above this mark [m NN], the pump will be switched off</label>
+                                                                <tooltip>If the water level on suction side rises above this mark [m NN], the pump will be switched off</tooltip>
+                                                                <description>If the water level on suction side rises above this mark [m NN], the pump will be switched off</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -1240,10 +1240,10 @@
                                                                 <description>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the waterlevel on pressure side falls below this mark [m NN] the pump will be switched on</name>
-                                                                <label>If the waterlevel on pressure side falls below this mark [m NN] the pump will be switched on</label>
-                                                                <tooltip>If the waterlevel on pressure side falls below this mark [m NN] the pump will be switched on</tooltip>
-                                                                <description>If the waterlevel on pressure side falls below this mark [m NN] the pump will be switched on</description>
+                                                                <name>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</name>
+                                                                <label>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</label>
+                                                                <tooltip>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</tooltip>
+                                                                <description>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -1256,10 +1256,10 @@
                                                                 <description>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the waterlevel on pressure side rises above this mark [m NN] the pump will be switched off</name>
-                                                                <label>If the waterlevel on pressure side rises above this mark [m NN] the pump will be switched off</label>
-                                                                <tooltip>If the waterlevel on pressure side rises above this mark [m NN] the pump will be switched off</tooltip>
-                                                                <description>If the waterlevel on pressure side rises above this mark [m NN] the pump will be switched off</description>
+                                                                <name>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</name>
+                                                                <label>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</label>
+                                                                <tooltip>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</tooltip>
+                                                                <description>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
