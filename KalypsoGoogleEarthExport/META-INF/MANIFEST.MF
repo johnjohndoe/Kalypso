@@ -8,5 +8,6 @@ Require-Bundle: org.kalypso.core,
  org.junit4,
  org.kalypso.ui,
  org.eclipse.core.expressions
-Export-Package: org.kalypso.google.earth.export.constants
+Export-Package: org.kalypso.google.earth.export.constants,
+ org.kalypso.google.earth.export.interfaces
 Bundle-Localization: plugin
