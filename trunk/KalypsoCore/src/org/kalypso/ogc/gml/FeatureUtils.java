@@ -215,7 +215,7 @@ public class FeatureUtils
       return new CommandableWorkspace( workspace );
   }
 
-  public static Feature resolveFeature( final GMLWorkspace workspace, final Object property )
+  public static Feature resolveFeature( final GMLWorkspace targetWorkspace, final Object property )
   {
     if( property == null )
       return null;
@@ -235,7 +235,7 @@ public class FeatureUtils
       }
     }
 
-    final Feature result = FeatureHelper.getFeature( workspace, property );
+    final Feature result = FeatureHelper.getFeature( targetWorkspace, property );
     if( result == null )
       throw new IllegalStateException( "Feature with id " + property.toString() + "not found" );
 
