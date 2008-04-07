@@ -191,4 +191,12 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
       return null;
   }
 
+  /**
+   * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getGeometry()
+   */
+  public GM_Surface< ? > getGeometry( )
+  {
+    return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Surface.class );
+  }
+
 }

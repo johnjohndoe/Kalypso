@@ -38,14 +38,11 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
 
   private final IRasterDataModel m_rasterDataModel;
 
-  private final String m_sourceCRS;
-
-  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, final IFolder scenarioFolder, final String sourceCRS )
+  public RiskImportWaterdepthRunnable( final IRasterDataModel rasterDataModel, final List<AsciiRasterInfo> rasterInfos, final IFolder scenarioFolder )
   {
     m_rasterDataModel = rasterDataModel;
     m_rasterInfos = rasterInfos;
     m_scenarioFolder = scenarioFolder;
-    m_sourceCRS = sourceCRS;
   }
 
   public IStatus execute( final IProgressMonitor monitor )
@@ -67,7 +64,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IFile dstRasterIFile = m_scenarioFolder.getFile( dstFileName );
         final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
 
-        RiskModelHelper.importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, m_sourceCRS, monitor );
+        RiskModelHelper.importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, asciiRasterInfo.getCoordinateSystem(), monitor );
 
         // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
         final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();

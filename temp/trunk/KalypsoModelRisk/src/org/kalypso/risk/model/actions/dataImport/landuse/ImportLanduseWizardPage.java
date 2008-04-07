@@ -27,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -34,9 +35,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.preferences.IKalypsoDeegreePreferences;
-import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.ui.CRSSelectionListener;
+import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 
 /**
@@ -46,9 +48,9 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
 {
   private Text txt_InputFile;
 
-  private Combo cmb_ShapeProperty;
+  protected String m_crs;
 
-  private Combo cmb_CoordinateSystem;
+  private Combo cmb_ShapeProperty;
 
   private IPath initialSourcePath;
 
@@ -63,6 +65,8 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
   private Combo m_cmbDamageFunctionsSources;
 
   private Combo m_cmbAssetValuesSources;
+
+  private CRSSelectionPanel m_crsPanel;
 
   private Button btn_existingDatabaseBrowse;
 
@@ -119,77 +123,85 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     gd0.widthHint = 75;
     cmb_ShapeProperty.setEnabled( false );
     cmb_ShapeProperty.setLayoutData( gd0 );
-    new Label( container, SWT.NONE ).setText( " " ); //$NON-NLS-1$
-
-    // Coordinate system combo box
-    new Label( container, SWT.NONE ).setText( Messages.getString( "ImportLanduseWizardPage.13" ) ); //$NON-NLS-1$
-    cmb_CoordinateSystem = new Combo( container, SWT.BORDER | SWT.READ_ONLY );
-    cmb_CoordinateSystem.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
-    final int indexOfDefaultCRS = cmb_CoordinateSystem.indexOf( IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
-    cmb_CoordinateSystem.select( indexOfDefaultCRS > -1 ? indexOfDefaultCRS : 0 );
-    final GridData gd2 = new GridData();
-    gd2.horizontalAlignment = GridData.FILL;
-    gd2.widthHint = 75;
-    cmb_CoordinateSystem.setEnabled( true );
-    cmb_CoordinateSystem.setLayoutData( gd2 );
-    new Label( container, SWT.NONE ).setText( " " ); //$NON-NLS-1$
 
     new Label( container, SWT.NONE ).setText( " " ); //$NON-NLS-1$
-    new Label( container, SWT.NONE ).setText( " " ); //$NON-NLS-1$
-    new Label( container, SWT.NONE ).setText( " " ); //$NON-NLS-1$
 
-    final Group group = new Group( container, SWT.NONE );
+    /* Coordinate system combo */
+    final Composite crsContainer = new Composite( container, SWT.NULL );
+    final GridLayout crsGridLayout = new GridLayout();
+    crsGridLayout.numColumns = 1;
+    crsContainer.setLayout( crsGridLayout );
+
+    final GridData crsGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    crsGridData.horizontalSpan = 3;
+    crsContainer.setLayoutData( crsGridData );
+
+    m_crsPanel = new CRSSelectionPanel();
+    Control crsControl = m_crsPanel.createControl( crsContainer );
+    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    crsControl.setToolTipText( "Koordinatensystem der Shape-Datei" );
+
+    m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    m_crsPanel.setSelectedCRS( m_crs );
+    m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
+    {
+      @Override
+      protected void selectionChanged( String selectedCRS )
+      {
+        m_crs = selectedCRS;
+        updatePageComplete();
+      }
+    } );
+
+    final Group dbGroup = new Group( crsContainer, SWT.NONE );
     final GridLayout groupGridLayout = new GridLayout();
     groupGridLayout.numColumns = 3;
-    final GridData groupGridData = new GridData();
+    final GridData groupGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     groupGridData.horizontalSpan = 3;
-    groupGridData.grabExcessHorizontalSpace = true;
-    groupGridData.grabExcessVerticalSpace = true;
-    group.setLayout( groupGridLayout );
-    group.setLayoutData( groupGridData );
-    group.setText( Messages.getString( "ImportLanduseWizardPage.14" ) ); //$NON-NLS-1$
+    dbGroup.setLayout( groupGridLayout );
+    dbGroup.setLayoutData( groupGridData );
+    dbGroup.setText( Messages.getString( "ImportLanduseWizardPage.14" ) ); //$NON-NLS-1$
 
-    final GridData radioLayoutData = new GridData();
+    final GridData radioLayoutData = new GridData( SWT.FILL, SWT.FILL, true, true );
     radioLayoutData.horizontalSpan = 3;
-    radioLayoutData.grabExcessHorizontalSpace = true;
-    radioLayoutData.widthHint = 300;
-    final GridData comboLayoutData = new GridData();
+    final GridData comboLayoutData = new GridData( SWT.FILL, SWT.FILL, true, true );
     comboLayoutData.horizontalSpan = 2;
 
     m_radioButtons = new Button[3];
-    m_radioButtons[0] = new Button( group, SWT.RADIO );
+    m_radioButtons[0] = new Button( dbGroup, SWT.RADIO );
     m_radioButtons[0].setSelection( true );
     m_radioButtons[0].setText( Messages.getString( "ImportLanduseWizardPage.15" ) ); //$NON-NLS-1$
     m_radioButtons[0].setLayoutData( radioLayoutData );
 
-    m_radioButtons[1] = new Button( group, SWT.RADIO );
+    m_radioButtons[1] = new Button( dbGroup, SWT.RADIO );
     m_radioButtons[1].setText( Messages.getString( "ImportLanduseWizardPage.16" ) ); //$NON-NLS-1$
     m_radioButtons[1].setLayoutData( radioLayoutData );
-    m_lblRadioSelection_1 = new Label( group, SWT.NONE );
+    m_lblRadioSelection_1 = new Label( dbGroup, SWT.NONE );
     m_lblRadioSelection_1.setText( Messages.getString( "ImportLanduseWizardPage.17" ) ); //$NON-NLS-1$
     m_lblRadioSelection_1.setEnabled( false );
-    m_txtExternalProjectPath = new Text( group, SWT.BORDER );
+    m_txtExternalProjectPath = new Text( dbGroup, SWT.BORDER );
     m_txtExternalProjectPath.setEnabled( false );
     m_txtExternalProjectPath.setEditable( false );
     m_txtExternalProjectPath.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL ) );
-    btn_existingDatabaseBrowse = new Button( group, SWT.NONE );
+    btn_existingDatabaseBrowse = new Button( dbGroup, SWT.NONE );
     btn_existingDatabaseBrowse.setText( Messages.getString( "ImportLanduseWizardPage.11" ) ); //$NON-NLS-1$
     btn_existingDatabaseBrowse.setEnabled( false );
 
-    m_radioButtons[2] = new Button( group, SWT.RADIO );
+    m_radioButtons[2] = new Button( dbGroup, SWT.RADIO );
     m_radioButtons[2].setText( Messages.getString( "ImportLanduseWizardPage.18" ) ); //$NON-NLS-1$
     m_radioButtons[2].setLayoutData( radioLayoutData );
-    m_lblRadioSelection_21 = new Label( group, SWT.NONE );
+    m_lblRadioSelection_21 = new Label( dbGroup, SWT.NONE );
     m_lblRadioSelection_21.setText( Messages.getString( "ImportLanduseWizardPage.19" ) ); //$NON-NLS-1$
     m_lblRadioSelection_21.setEnabled( false );
-    m_cmbDamageFunctionsSources = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
+    m_cmbDamageFunctionsSources = new Combo( dbGroup, SWT.BORDER | SWT.READ_ONLY );
     m_cmbDamageFunctionsSources.setEnabled( false );
     m_cmbDamageFunctionsSources.setLayoutData( comboLayoutData );
 
-    m_lblRadioSelection_22 = new Label( group, SWT.NONE );
+    m_lblRadioSelection_22 = new Label( dbGroup, SWT.NONE );
     m_lblRadioSelection_22.setText( Messages.getString( "ImportLanduseWizardPage.20" ) ); //$NON-NLS-1$
     m_lblRadioSelection_22.setEnabled( false );
-    m_cmbAssetValuesSources = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
+    m_cmbAssetValuesSources = new Combo( dbGroup, SWT.BORDER | SWT.READ_ONLY );
     m_cmbAssetValuesSources.setEnabled( false );
     m_cmbAssetValuesSources.setLayoutData( comboLayoutData );
 
@@ -462,7 +474,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
 
   public String getCoordinateSystem( )
   {
-    return cmb_CoordinateSystem.getText();
+    return m_crs;
   }
 
   public String getLanduseProperty( )

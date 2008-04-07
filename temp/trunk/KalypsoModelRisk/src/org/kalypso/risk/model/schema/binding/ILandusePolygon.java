@@ -28,6 +28,8 @@ public interface ILandusePolygon extends IFeatureWrapper2
 
   public void setGeometry( final GM_Surface< ? > surface );
 
+  public GM_Surface< ? > getGeometry( );
+
   public void setStyleType( final String styleType );
 
   public String getStyleType( );

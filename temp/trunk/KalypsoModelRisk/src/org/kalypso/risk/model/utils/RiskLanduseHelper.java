@@ -333,6 +333,7 @@ public class RiskLanduseHelper
       final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
       final String shpPropertyValue = shpFeature.getProperty( shpPropQName ).toString();
       final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
+
       final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
 
       // we don't like multi surfaces, so...

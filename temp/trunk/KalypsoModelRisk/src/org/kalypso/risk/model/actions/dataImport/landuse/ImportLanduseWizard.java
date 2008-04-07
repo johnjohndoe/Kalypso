@@ -75,9 +75,12 @@ import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
@@ -211,7 +214,10 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
       final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, coordinateSystem );
 
+      final TransformVisitor visitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+      landuseShapeWS.accept( visitor, shapeRootFeature, FeatureVisitor.DEPTH_INFINITE );
+
       final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
       ICoreRunnableWithProgress importLanduseRunnable = null;

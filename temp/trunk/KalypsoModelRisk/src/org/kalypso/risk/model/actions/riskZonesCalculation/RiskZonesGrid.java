@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -57,6 +58,8 @@ import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRiskZoneDefinition;
 import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.transformation.CachedTransformationFactory;
+import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -82,9 +85,12 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private final List<IRiskZoneDefinition> m_riskZoneDefinitionsList;
 
+  private final IGeoGrid m_resultGrid;
+
   public RiskZonesGrid( final IGeoGrid resultGrid, final IFeatureWrapperCollection<IAnnualCoverageCollection> annualCoverageCollection, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList, final List<IRiskZoneDefinition> riskZoneDefinitionsList ) throws Exception
   {
     super( resultGrid );
+    m_resultGrid = resultGrid;
 
     m_cellSize = Math.abs( resultGrid.getOffsetX().x - resultGrid.getOffsetY().x ) * Math.abs( resultGrid.getOffsetX().y - resultGrid.getOffsetY().y );
     m_annualCoverageCollection = annualCoverageCollection;
@@ -129,54 +135,74 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   @Override
   public final double getValue( final int x, final int y ) throws GeoGridException
   {
-    final double[] damage = new double[m_annualCoverageCollection.size()];
-    final double[] probability = new double[m_annualCoverageCollection.size()];
-
-    /* fill the probabilies and damages */
-    for( int i = 0; i < probability.length; i++ )
+    try
     {
-      final IAnnualCoverageCollection collection = m_annualCoverageCollection.get( i );
+      final double[] damage = new double[m_annualCoverageCollection.size()];
+      final double[] probability = new double[m_annualCoverageCollection.size()];
 
-      final double value = getValue( collection, x, y );
-      damage[i] = Double.isNaN( value ) ? 0.0 : value;
-      probability[i] = 1.0 / collection.getReturnPeriod();
-    }
-
-    /* calculate average annual damage */
-    final double averageAnnualDamageValue = RiskModelHelper.calcAverageAnnualDamageValue( damage, probability );
-
-    if( averageAnnualDamageValue == 0 || Double.isNaN( averageAnnualDamageValue ) )
-      return Double.NaN;
-
-    final Coordinate coordinate = GeoGridUtilities.toCoordinate( this, x, y, null );
-    final GM_Position position = JTSAdapter.wrap( coordinate );
-    final List<ILandusePolygon> list = m_landusePolygonCollection.query( position );
-
-    if( list == null || list.size() == 0 )
-      return Double.NaN;
-
-    for( final ILandusePolygon polygon : list )
-    {
-      if( polygon.contains( position ) )
+      /* fill the probabilies and damages */
+      for( int i = 0; i < probability.length; i++ )
       {
-        final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+        final IAnnualCoverageCollection collection = m_annualCoverageCollection.get( i );
 
-        /* set statistic for landuse class */
-        fillStatistics( averageAnnualDamageValue, landuseClassOrdinalNumber );
-
-        final double riskZoneValue = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
-
-        /* check min/max */
-        m_min = m_min.min( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-        m_max = m_max.max( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-
-        // TODO: maybe in addition we should provide the real grid values (not the ordinal numbers), too
-
-        return riskZoneValue;
+        final double value = getValue( collection, x, y );
+        damage[i] = Double.isNaN( value ) ? 0.0 : value;
+        probability[i] = 1.0 / collection.getReturnPeriod();
       }
-    }
 
-    return Double.NaN;
+      /* calculate average annual damage */
+      final double averageAnnualDamageValue = RiskModelHelper.calcAverageAnnualDamageValue( damage, probability );
+
+      if( averageAnnualDamageValue == 0 || Double.isNaN( averageAnnualDamageValue ) )
+        return Double.NaN;
+
+      /* This coordinate has the cs of the input grid! */
+      final Coordinate coordinate = GeoGridUtilities.toCoordinate( m_resultGrid, x, y, null );
+
+      if( m_landusePolygonCollection.size() == 0 )
+        return Double.NaN;
+
+      final ILandusePolygon landusePolygon = m_landusePolygonCollection.get( 0 );
+      final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+      final GM_Position positionAt = JTSAdapter.wrap( coordinate );
+
+      /* Transform query position into the cs of the polygons. */
+      final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( m_resultGrid.getSourceCRS(), coordinateSystem );
+      final GM_Position position = TransformUtilities.transform( positionAt, transformation );
+
+      /* This list has some unknown cs. */
+      final List<ILandusePolygon> list = m_landusePolygonCollection.query( position );
+
+      if( list == null || list.size() == 0 )
+        return Double.NaN;
+
+      for( final ILandusePolygon polygon : list )
+      {
+        if( polygon.contains( position ) )
+        {
+          final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+
+          /* set statistic for landuse class */
+          fillStatistics( averageAnnualDamageValue, landuseClassOrdinalNumber );
+
+          final double riskZoneValue = getRiskZone( averageAnnualDamageValue, polygon.isUrbanLanduseType() );
+
+          /* check min/max */
+          m_min = m_min.min( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+          m_max = m_max.max( new BigDecimal( riskZoneValue ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
+
+          // TODO: maybe in addition we should provide the real grid values (not the ordinal numbers), too
+
+          return riskZoneValue;
+        }
+      }
+
+      return Double.NaN;
+    }
+    catch( Exception ex )
+    {
+      throw new GeoGridException( "Could not generate the value ...", ex );
+    }
   }
 
   private void fillStatistics( final double averageAnnualDamageValue, final int landuseClassOrdinalNumber )

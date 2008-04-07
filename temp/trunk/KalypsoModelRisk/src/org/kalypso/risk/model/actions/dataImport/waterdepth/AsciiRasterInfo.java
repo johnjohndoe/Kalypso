@@ -31,11 +31,14 @@ public class AsciiRasterInfo
 
   private final IFile m_iFile;
 
+  /**
+   * generates a data collecting for a ascii raster file. <br>
+   * At first, the coordinate is set to default. The real crs has to be set from outside!
+   */
   public AsciiRasterInfo( final String rasterFileAbsolutePath ) throws Exception
   {
     m_iFile = null;
     m_rasterFile = new File( rasterFileAbsolutePath );
-    setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     init();
   }
 
@@ -43,12 +46,15 @@ public class AsciiRasterInfo
   {
     m_iFile = file;
     m_rasterFile = m_iFile.getLocation().toFile();
-    setCoordinateSystem( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     init();
   }
 
   private void init( ) throws Exception
   {
+    // At first the coordinate system is set to default
+    if( m_coordinateSystem == null )
+      m_coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
     final AscciiGridReader reader = new AscciiGridReader( m_rasterFile );
     m_gridDomain = ConvertAscii2Coverage.importGridArc( reader, m_coordinateSystem );
     m_rasterSizeX = m_gridDomain.getNumColumns();
@@ -110,6 +116,19 @@ public class AsciiRasterInfo
   public boolean setCoordinateSystem( final String cs )
   {
     m_coordinateSystem = cs;
+    try
+    {
+      final GM_Point origin = m_gridDomain.getOrigin( null );
+      origin.setCoordinateSystem( cs );
+
+      m_gridDomain = new RectifiedGridDomain( origin, m_gridDomain.getOffsetX(), m_gridDomain.getOffsetY(), m_gridDomain.getGridRange() );
+      // TODO
+    }
+    catch( Exception e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
     return true;
   }
 

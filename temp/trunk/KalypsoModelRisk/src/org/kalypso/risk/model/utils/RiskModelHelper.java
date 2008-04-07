@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.deegree.crs.transformations.CRSTransformation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -44,6 +45,8 @@ import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypso.transformation.CachedTransformationFactory;
+import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -112,6 +115,8 @@ public class RiskModelHelper
     }
 
     SLDHelper.exportRasterSymbolyzerSLD( sldFile, minDamageValue.doubleValue(), maxDamageValue.doubleValue() * 1.05, 20, new Color( 237, 80, 25 ), "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    // TODO: maybe refreshing...
   }
 
   /**
@@ -152,39 +157,60 @@ public class RiskModelHelper
         @Override
         public double getValue( int x, int y ) throws GeoGridException
         {
-          final Double value = super.getValue( x, y );
-          if( value.equals( Double.NaN ) )
-            return Double.NaN;
-          else
+          try
           {
-            final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
-            final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-
-            final List<ILandusePolygon> list = polygonCollection.query( positionAt );
-            if( list == null || list.size() == 0 )
+            final Double value = super.getValue( x, y );
+            if( value.equals( Double.NaN ) )
               return Double.NaN;
             else
             {
-              for( final ILandusePolygon polygon : list )
+
+              /* This coordinate has the cs of the input grid! */
+              final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
+
+              if( polygonCollection.size() == 0 )
+                return Double.NaN;
+
+              final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
+              final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+              final GM_Position positionAt = JTSAdapter.wrap( coordinate );
+
+              /* Transform query position into the cs of the polygons. */
+              final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( inputGrid.getSourceCRS(), coordinateSystem );
+              final GM_Position position = TransformUtilities.transform( positionAt, transformation );
+
+              /* This list has some unknown cs. */
+
+              final List<ILandusePolygon> list = polygonCollection.query( position );
+              if( list == null || list.size() == 0 )
+                return Double.NaN;
+              else
               {
-                if( polygon.contains( positionAt ) )
+                for( final ILandusePolygon polygon : list )
                 {
-                  final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
-                  final double damageValue = polygon.getDamageValue( value );
+                  if( polygon.contains( position ) )
+                  {
+                    final int landuseClassOrdinalNumber = polygon.getLanduseClassOrdinalNumber();
+                    final double damageValue = polygon.getDamageValue( value );
 
-                  if( Double.isNaN( damageValue ) )
-                    return Double.NaN;
+                    if( Double.isNaN( damageValue ) )
+                      return Double.NaN;
 
-                  if( damageValue < 0.0 )
-                    return Double.NaN;
+                    if( damageValue < 0.0 )
+                      return Double.NaN;
 
-                  /* set statistic for landuse class */
-                  fillStatistics( returnPeriod, landuseClassesList, polygon, damageValue, landuseClassOrdinalNumber, cellSize );
-                  return damageValue;
+                    /* set statistic for landuse class */
+                    fillStatistics( returnPeriod, landuseClassesList, polygon, damageValue, landuseClassOrdinalNumber, cellSize );
+                    return damageValue;
+                  }
                 }
               }
+              return Double.NaN;
             }
-            return Double.NaN;
+          }
+          catch( Exception ex )
+          {
+            throw new GeoGridException( "Could not generate the value ...", ex );
           }
         }
       };
@@ -326,6 +352,7 @@ public class RiskModelHelper
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
 
+        /* This grid should have the cs of the input grid. */
         final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
         {
           /**
@@ -336,23 +363,43 @@ public class RiskModelHelper
           @Override
           public double getValue( int x, int y ) throws GeoGridException
           {
-            final Double value = super.getValue( x, y );
-            if( value.equals( Double.NaN ) )
-              return Double.NaN;
-            else
+            try
             {
-              final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
-              final GM_Position positionAt = JTSAdapter.wrap( coordinate );
-              final List<ILandusePolygon> list = polygonCollection.query( positionAt );
-              if( list == null || list.size() == 0 )
+              final Double value = super.getValue( x, y );
+              if( value.equals( Double.NaN ) )
                 return Double.NaN;
               else
-                for( final ILandusePolygon polygon : list )
-                {
-                  if( polygon.contains( positionAt ) )
-                    return polygon.getLanduseClassOrdinalNumber();
-                }
-              return Double.NaN;
+              {
+                /* This coordinate has the cs of the input grid! */
+                final Coordinate coordinate = GeoGridUtilities.toCoordinate( inputGrid, x, y, null );
+
+                if( polygonCollection.size() == 0 )
+                  return Double.NaN;
+
+                final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
+                final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+                final GM_Position positionAt = JTSAdapter.wrap( coordinate );
+
+                /* Transform query position into the cs of the polygons. */
+                final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( inputGrid.getSourceCRS(), coordinateSystem );
+                final GM_Position position = TransformUtilities.transform( positionAt, transformation );
+
+                /* This list has some unknown cs. */
+                final List<ILandusePolygon> list = polygonCollection.query( position );
+                if( list == null || list.size() == 0 )
+                  return Double.NaN;
+                else
+                  for( final ILandusePolygon polygon : list )
+                  {
+                    if( polygon.contains( position ) )
+                      return polygon.getLanduseClassOrdinalNumber();
+                  }
+                return Double.NaN;
+              }
+            }
+            catch( Exception ex )
+            {
+              throw new GeoGridException( "Could not generate the value ...", ex );
             }
           }
         };
@@ -461,10 +508,26 @@ public class RiskModelHelper
     for( int i = 0; i < rasterInfos.size(); i++ )
     {
       final AsciiRasterInfo asciiRasterInfo = rasterInfos.get( i );
-      final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
+      int returnPeriod = asciiRasterInfo.getReturnPeriod();
+      final String layerName = "HQ " + returnPeriod; //$NON-NLS-1$
 
-      createWaterdepthLayer( scenarioFolder, parentKalypsoTheme, waterdepthCoverageCollection.get( i ), layerName );
+      final int collectionIndex = getCollectionIndex( waterdepthCoverageCollection, returnPeriod );
+      createWaterdepthLayer( scenarioFolder, parentKalypsoTheme, waterdepthCoverageCollection.get( collectionIndex ), layerName );
     }
+  }
+
+  private static int getCollectionIndex( final IFeatureWrapperCollection<IAnnualCoverageCollection> waterdepthCoverageCollection, final int returnPeriod )
+  {
+    int index = 0;
+
+    for( int i = 0; i < waterdepthCoverageCollection.size(); i++ )
+    {
+      final IAnnualCoverageCollection collection = waterdepthCoverageCollection.get( i );
+      if( collection.getReturnPeriod().equals( returnPeriod ) )
+        index = i;
+    }
+    return index;
+
   }
 
   private static void deleteExistingMapLayers( final CascadingKalypsoTheme parentKalypsoTheme, final List<AsciiRasterInfo> rasterInfos )

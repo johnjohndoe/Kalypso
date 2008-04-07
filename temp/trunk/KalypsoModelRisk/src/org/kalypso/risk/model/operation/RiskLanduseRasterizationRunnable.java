@@ -53,6 +53,8 @@ public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWith
     final ICoverageCollection inputCoverages = maxCoveragesCollection;
     final ICoverageCollection outputCoverages = m_rasterModel.getLanduseCoverage();
 
+    outputCoverages.clear();
+
     final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = m_vectorDataModel.getLandusePolygonCollection();
 
     // remove existing (invalid) coverages from the model

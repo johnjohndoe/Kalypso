@@ -204,6 +204,7 @@ public class TestRiskModel extends TestCase
     final List<AsciiRasterInfo> rasterInfos = new ArrayList<AsciiRasterInfo>();
     for( final String rasterFile : fileNames )
     {
+      // TODO: handle coordinate Systems EPSG:31467)
       final AsciiRasterInfo rasterInfo = new AsciiRasterInfo( rasterFile );
       // guess the return period from file name or set it by hand...
       rasterInfo.setReturnPeriod( RiskModelHelper.guessReturnPeriodFromName( rasterFile ) );
@@ -211,7 +212,7 @@ public class TestRiskModel extends TestCase
     }
 
     // import the data into the IRasterDataModel
-    final ICoreRunnableWithProgress importDepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, folder, null );
+    final ICoreRunnableWithProgress importDepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, folder );
     RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importDepthRunnable );
 
     saveGml( riskVectorFile, riskVectorWorkspace );

@@ -46,9 +46,12 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dejan Antanaskovic
@@ -83,7 +86,10 @@ public class PF_LandusePolygon_DamageFunction extends FeaturePropertyFunction
         return "";
       else
       {
-        final Feature damageFunction = (Feature) landuseClass.getProperty( XLINKED_DAMAGE_FUNCTION );
+        final XLinkedFeature_Impl landuseXlink = (XLinkedFeature_Impl) landuseClass;
+        final GMLWorkspace controlWorkspace = landuseXlink.getFeature().getWorkspace();
+
+        final Feature damageFunction = FeatureUtils.resolveFeature( controlWorkspace, landuseClass.getProperty( XLINKED_DAMAGE_FUNCTION ) );
         if( damageFunction == null )
           return "";
         else

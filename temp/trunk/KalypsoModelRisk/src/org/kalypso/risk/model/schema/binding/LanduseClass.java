@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
@@ -133,41 +134,12 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   public IAssetValueClass getAssetValue( )
   {
     final Object property = getFeature().getProperty( ILanduseClass.PROP_ASSET_VALUE_LINK );
-    if( property != null && property instanceof XLinkedFeature_Impl )
-    {
-      XLinkedFeature_Impl xLinkedFeature = (XLinkedFeature_Impl) property;
+    Feature assetFeature = FeatureUtils.resolveFeature( getFeature().getWorkspace(), property );
+    if( assetFeature == null )
+      return null;
 
-      Feature assetFeature = xLinkedFeature.getFeature();
-      IAssetValueClass assetValueClass = (IAssetValueClass) assetFeature.getAdapter( IAssetValueClass.class );
-      return assetValueClass;
-    }
-    return null;
-
-    // Feature parent = getFeature().getParent();
-    // if( parent == null )
-    // return null;
-    //
-    // final IRasterizationControlModel model = (IRasterizationControlModel) parent.getAdapter(
-    // IRasterizationControlModel.class );
-    // if( model == null )
-    // return null;
-    //
-    // final List<IAssetValueClass> assetValueClassesList = model.getAssetValueClassesList();
-
-    // TODO: probably the data model is not correctly modelled; this reverse search is not nice at all
-    // Possible solutions: 1) link from landuseClass to assesValue instead
-    // or 2) link from landusePolygon to assetValue
-
-    // // TODO For the moment, administration units are ignored; consider using administration units
-    //
-    // final String landuseClassGmlID = getGmlID();
-    // for( final IAssetValueClass assetValueClass : assetValueClassesList )
-    // {
-    // if( assetValueClass.getLanduseClassGmlID().equals( landuseClassGmlID ) )
-    // return assetValueClass;
-    // }
-    //
-    // return null;
+    IAssetValueClass assetValueClass = (IAssetValueClass) assetFeature.getAdapter( IAssetValueClass.class );
+    return assetValueClass;
   }
 
   /**

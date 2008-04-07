@@ -66,8 +66,11 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Run this test as plug-in test.
@@ -127,7 +130,11 @@ public class CopyOfTestRiskModel extends TestCase
     final boolean wrongLandUseselectedStatus = false; // status of landuse selection
 
     final GMLWorkspace landuseShapeWS = ShapeSerializer.deserialize( sourceShapeFilePath, crs );
+
+    final TransformVisitor visitor = new TransformVisitor( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     final Feature shapeRootFeature = landuseShapeWS.getRootFeature();
+    landuseShapeWS.accept( visitor, shapeRootFeature, FeatureVisitor.DEPTH_INFINITE );
+
     final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     /* IMPORT DATA */
