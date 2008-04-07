@@ -40,14 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -67,7 +70,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.IKalypsoCoreConstants;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -77,10 +79,12 @@ import org.kalypso.util.pool.IModelAdaptor;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.ModelAdapterExtension;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
+import org.xml.sax.InputSource;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
@@ -124,6 +128,7 @@ public class GmlLoader extends AbstractLoader
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
     final List<IStatus> resultList = new ArrayList<IStatus>();
 
+    InputStream is = null;
     try
     {
       monitor.beginTask( "GML laden", 1000 );
@@ -132,7 +137,10 @@ public class GmlLoader extends AbstractLoader
 
       final PooledXLinkFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
 
-      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( gmlURL, m_urlResolver, factory );
+      is = new BufferedInputStream( gmlURL.openStream() );
+      final InputSource inputSource = new InputSource( is );
+      final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( inputSource, gmlURL, factory );
+      is.close();
 
       CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
@@ -144,7 +152,7 @@ public class GmlLoader extends AbstractLoader
         perfLogger = new TimeLogger( "Start transforming gml workspace" );
       }
 
-      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       monitor.subTask( "in das Zielkoordinatensystem transformieren." );
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
@@ -161,7 +169,6 @@ public class GmlLoader extends AbstractLoader
       }
 
       final Feature rootFeature = workspace.getRootFeature();
-// final String version = FeatureHelper.getAsString( rootFeature, "version" );
       final IModelAdaptor[] modelAdaptors = ModelAdapterExtension.getModelAdaptor( rootFeature.getFeatureType().getQName().toString() );
 
       for( final IModelAdaptor modelAdaptor : modelAdaptors )
@@ -206,6 +213,8 @@ public class GmlLoader extends AbstractLoader
     finally
     {
       monitor.done();
+
+      IOUtils.closeQuietly( is );
     }
   }
 
