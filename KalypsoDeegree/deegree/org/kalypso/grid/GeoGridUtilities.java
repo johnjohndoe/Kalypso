@@ -471,6 +471,7 @@ public class GeoGridUtilities
   {
     final Point jtsOrigin = JTSAdapter.jtsFactory.createPoint( grid.getOrigin() );
     final GM_Point gmOrigin = (GM_Point) JTSAdapter.wrap( jtsOrigin );
+    gmOrigin.setCoordinateSystem( grid.getSourceCRS() );
 
     final Coordinate jtsOffsetX = grid.getOffsetX();
     final Coordinate jtsOffsetY = grid.getOffsetY();

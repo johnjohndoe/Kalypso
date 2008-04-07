@@ -82,8 +82,6 @@ public class GridImportWizardPage extends WizardPage implements ModifyListener, 
 
   private IPath m_path;
 
-  private FilterRootElement m_root;
-
   public GridImportWizardPage( String pageName )
   {
     super( pageName );

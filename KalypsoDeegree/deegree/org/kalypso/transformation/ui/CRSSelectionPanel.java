@@ -201,6 +201,11 @@ public class CRSSelectionPanel
     }
   }
 
+  public void setEnabled( final boolean enabled )
+  {
+    m_viewer.getControl().setEnabled( enabled );
+  }
+
   /**
    * This function returns the name of the selected coordinate system.
    * 
