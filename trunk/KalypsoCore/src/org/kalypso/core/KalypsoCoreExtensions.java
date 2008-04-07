@@ -259,11 +259,6 @@ public class KalypsoCoreExtensions
     {
       final String providerId = providerElement.getAttribute( "id" );
 
-      // HACK!
-      final Boolean hackIt = Boolean.getBoolean( "kalypso.sourceProvider.externalFile.hack" );
-      if( !hackIt && providerId.equals( "org.kalypso.model.flood.ui.map.ExternalFileGmlSourceProvider" ) )
-        continue;
-
       final IConfigurationElement[] categoryElements = providerElement.getChildren( "category" );
       for( final IConfigurationElement categoryElement : categoryElements )
       {
