@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,8 +63,6 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -233,10 +230,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   public Control createControl( final Composite parent, final int style, final IFeatureType ft )
   {
-
     final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
-
-// m_formToolkit = new FormToolkit( parent.getDisplay() );
 
     if( m_formToolkit != null )
       m_formToolkit.adapt( parent );
@@ -269,7 +263,29 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private Control createControl( final Composite parent, final int style, final ControlType controlType )
   {
-    final Control control = createControlFromControlType( parent, style, controlType );
+    final Feature feature = getFeature();
+
+    final IPropertyType ftp;
+    final IAnnotation annotation;
+
+    if( controlType instanceof PropertyControlType )
+    {
+      ftp = getProperty( feature, (PropertyControlType) controlType );
+      annotation = ftp == null ? null : AnnotationUtilities.getAnnotation( ftp );
+    }
+    else
+    {
+      ftp = null;
+      annotation = null;
+    }
+
+    final Control control = createControlFromControlType( parent, style, controlType, ftp, annotation );
+
+    // Set tooltip: an explicitly set tooltip always wins
+    final String tooltipControlText = controlType.getTooltip();
+
+    final String tooltipText = getAnnotation( annotation, tooltipControlText, IAnnotation.ANNO_TOOLTIP );
+    control.setToolTipText( tooltipText );
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -292,10 +308,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         control.setBackground( new Color( control.getDisplay(), rgb ) );
     }
 
-    // einen bereits gesetzten Tooltip nicht überschreiben
-    if( control.getToolTipText() == null )
-      control.setToolTipText( controlType.getTooltip() );
-
     final JAXBElement< ? extends LayoutDataType> jaxLayoutData = controlType.getLayoutData();
     final LayoutDataType layoutDataType;
     if( jaxLayoutData == null )
@@ -307,6 +319,20 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     updateLayoutData( control );
 
     return control;
+  }
+
+  /**
+   * Return the desired annotation value. A given explicit value is preferred, if not empty.
+   */
+  private String getAnnotation( final IAnnotation annotation, final String explicitValue, final String annoElement )
+  {
+    if( annotation == null )
+      return explicitValue == null ? "" : explicitValue;
+
+    if( explicitValue != null && explicitValue.length() > 0 )
+      return explicitValue;
+
+    return annotation.getValue( annoElement );
   }
 
   private void updateLayoutData( final Control control )
@@ -390,25 +416,25 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     catch( final FilterConstructionException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
     }
     catch( final FilterEvaluationException e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
     }
 
     return defaultValue;
   }
 
-  private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType )
+  private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType, final IPropertyType ftp, final IAnnotation annotation )
   {
     final Feature feature = getFeature();
     if( controlType instanceof CompositeType )
     {
       final CompositeType compositeType = (CompositeType) controlType;
-      final Composite composite = createCompositeFromCompositeType( parent, style, compositeType );
+      final Composite composite = createCompositeFromCompositeType( parent, style, compositeType, annotation );
 
       // Layout setzen
       final LayoutType layoutType = compositeType.getLayout().getValue();
@@ -429,27 +455,16 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, tabStyle );
 
-      tabFolder.addSelectionListener( new SelectionAdapter()
-      {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          super.widgetSelected( e );
-// TODO: remove me
-        }
-      } );
-
       final List<org.kalypso.template.featureview.TabFolder.TabItem> tabItem = tabFolderType.getTabItem();
       for( final org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
       {
         final String label = tabItemType.getTabLabel();
+        final String itemLabel = getAnnotation( annotation, label, IAnnotation.ANNO_LABEL );
+
         final ControlType control = tabItemType.getControl().getValue();
 
         final TabItem item = new TabItem( tabFolder, SWT.NONE );
-        item.setText( label );
+        item.setText( itemLabel );
 
         final Control tabControl = createControl( tabFolder, SWT.NONE, control );
 
@@ -459,22 +474,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return tabFolder;
     }
 
-    final IPropertyType ftp;
-    if( controlType instanceof PropertyControlType )
-      ftp = getProperty( feature, (PropertyControlType) controlType );
-    else
-      ftp = null;
-
-    // control erzeugen!
     if( controlType instanceof LabelType )
     {
       final LabelType labelType = (LabelType) controlType;
       final Label label = new Label( parent, SWTUtilities.createStyleFromString( labelType.getStyle() ) );
-      label.setText( labelType.getText() );
 
-      final QName property = labelType.getProperty();
-      if( property != null )
-        applyAnnotation( label, property, feature );
+      final String labelControlText = labelType.getText();
+
+      label.setText( getAnnotation( annotation, labelControlText, IAnnotation.ANNO_LABEL ) );
 
       return label;
     }
@@ -489,7 +496,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
         final Control control = vfc.createControl( parent, SWTUtilities.createStyleFromString( validatorLabelType.getStyle() ) );
         addFeatureControl( vfc );
-        // System.out.println( this );
 
         return control;
       }
@@ -542,7 +548,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     else if( controlType instanceof Checkbox )
     {
       final Checkbox checkboxType = (Checkbox) controlType;
-      final String text = checkboxType.getText();
+
+      final String text = getAnnotation( annotation, checkboxType.getText(), IAnnotation.ANNO_LABEL );
 
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt, text );
@@ -672,7 +679,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final Radiobutton radioType = (Radiobutton) controlType;
 
       final Object valueToSet = radioType.getValueToSet();
-      final String text = radioType.getText();
+
+      final String text = getAnnotation( annotation, radioType.getText(), IAnnotation.ANNO_LABEL );
+
       final RadioFeatureControl rfc = new RadioFeatureControl( feature, ftp, valueToSet, text );
 
       final int radioStyle = SWTUtilities.createStyleFromString( radioType.getStyle() );
@@ -776,13 +785,18 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return label;
   }
 
-  private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType )
+  private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType, final IAnnotation annotation )
   {
     final int compStyle = style | SWTUtilities.createStyleFromString( compositeType.getStyle() );
     if( compositeType instanceof org.kalypso.template.featureview.Group )
     {
       final Group group = new org.eclipse.swt.widgets.Group( parent, compStyle );
-      group.setText( ((org.kalypso.template.featureview.Group) compositeType).getText() );
+
+      final String groupControlText = ((org.kalypso.template.featureview.Group) compositeType).getText();
+
+      final String groupText = getAnnotation( annotation, groupControlText, IAnnotation.ANNO_LABEL );
+      group.setText( groupText );
+
       return group;
     }
 
@@ -868,34 +882,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public Control getControl( )
   {
     return m_control;
-  }
-
-  private void applyAnnotation( final Control label, final QName propertyName, final Feature feature )
-  {
-    if( propertyName != null )
-    {
-      final IPropertyType ftp = getPropertyTypeForQName( feature.getFeatureType(), propertyName );
-      if( ftp != null )
-      {
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
-
-        if( annotation != null )
-        {
-          try
-          {
-            final Method method = label.getClass().getMethod( "setText", new Class[] { String.class } ); //$NON-NLS-1$
-            if( method != null )
-              method.invoke( label, annotation.getLabel() );
-          }
-          catch( final Exception e )
-          {
-            // ignore, this control has no 'setText'
-          }
-
-          label.setToolTipText( annotation.getTooltip() );
-        }
-      }
-    }
   }
 
   private IPropertyType getProperty( final Feature feature, final PropertyControlType propertyControl )

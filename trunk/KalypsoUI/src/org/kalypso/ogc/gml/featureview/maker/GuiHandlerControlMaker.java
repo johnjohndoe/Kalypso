@@ -94,7 +94,7 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
       // TODO: what to do?
       return null;
     }
-    
+
     final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( valueQName );
 
     final JAXBElement< ? extends ControlType> controlElement = handler.createFeatureviewControl( pt, TemplateUtilitites.OF_FEATUREVIEW );
@@ -103,8 +103,6 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
 
     if( type instanceof CompositeType )
     {
-      // TODO Is it safe to remove the following two lines, because the composite should not grab more space than
-      // needed. */
       griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
       griddata.setGrabExcessHorizontalSpace( true );
       griddata.setHorizontalSpan( 2 );
@@ -114,22 +112,8 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
       griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       griddata.setHorizontalSpan( 1 );
 
-      // TODO is this ok for all controls?
-      //griddata.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
       griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
       griddata.setGrabExcessHorizontalSpace( true );
-
-      // if( tweakBorderFlag )
-      // {
-      // final String style = type.getStyle();
-      // final int swtStyle = SWTUtilities.createStyleFromString( style );
-      // final int swtStyleWithoutBorder = swtStyle & (0xfffffff ^ SWT.BORDER);
-      //
-      // // TODO: SWTUtilities.createStringFromStyle( );
-      // final String styleWithoutBorder = "SWT.NONE";// SWTUtilities.createStringFromStyle( swtStyleWithoutBorder );
-      //
-      // type.setStyle( styleWithoutBorder );
-      // }
     }
 
     return controlElement;

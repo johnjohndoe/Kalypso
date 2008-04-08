@@ -95,9 +95,6 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 
     final QName qname = rt.getQName();
 
-// final IAnnotation annotation = getAnnotation( rt );
-    final String groupText = "";// annotation == null ? qname.getLocalPart() : annotation.getLabel();
-
     /* Create the UI components */
     final GridDataType listData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
     listData.setHorizontalAlignment( "GridData.FILL" );
@@ -109,7 +106,6 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
     extensioncontrol.setExtensionId( ChecklistOfLinksFeatureviewControlFactory.class.getName() );
     extensioncontrol.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( listData ) );
     extensioncontrol.setStyle( "SWT.NONE" );
-// extensioncontrol.setTooltip( "" );
     extensioncontrol.setVisible( true );
     extensioncontrol.setProperty( qname );
 
@@ -122,7 +118,7 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 
     final Group group = TemplateUtilitites.OF_FEATUREVIEW.createGroup();
     group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( groupLayout ) );
-    group.setText( groupText );
+    group.setText( " " );
     group.setStyle( "SWT.NONE" );
 
     group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol( extensioncontrol ) );
