@@ -43,10 +43,12 @@ package org.kalypso.model.wspm.core.util;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -59,7 +61,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypso.model.wspm.core.Messages;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -495,11 +496,7 @@ public class WspmProfileHelper
     throw new IllegalStateException( Messages.WspmProfileHelper_24 );
   }
 
-  /**
-   * Adds a recory by its width. If this record(point) already exists in the profile, the existing record will be
-   * updated
-   */
-  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record )
+  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record, boolean overwritePointMarkers )
   {
     final IComponent cBreite = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BREITE );
     final Double width = (Double) record.getValue( cBreite );
@@ -513,10 +510,18 @@ public class WspmProfileHelper
 
       if( Math.abs( width - rw ) < FUZZINESS )
       {
-        // copy values to existing record
+        /* record already exists - copy values */
         final IComponent[] components = record.getOwner().getComponents();
+
+        // don't overwrite existing point markers!
+        final IComponent[] markers = profile.getPointMarkerTypes();
+
         for( final IComponent component : components )
         {
+          if( !overwritePointMarkers )
+            if( ArrayUtils.contains( markers, component ) )
+              continue;
+
           r.setValue( component, record.getValue( component ) );
         }
         return r;
@@ -535,6 +540,15 @@ public class WspmProfileHelper
     profile.addPoint( record );
 
     return record;
+  }
+
+  /**
+   * Adds a recory by its width. If this record(point) already exists in the profile, the existing record will be
+   * updated
+   */
+  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record )
+  {
+    return addRecordByWidth( profile, record, false );
   }
 
 }
