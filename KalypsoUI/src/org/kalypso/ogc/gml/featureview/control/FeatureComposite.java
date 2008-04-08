@@ -549,7 +549,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     {
       final Checkbox checkboxType = (Checkbox) controlType;
 
-      final String text = getAnnotation( annotation, checkboxType.getText(), IAnnotation.ANNO_LABEL );
+      final String checkboxControlText = checkboxType.getText();
+      final String text = getAnnotation( annotation, checkboxControlText, IAnnotation.ANNO_LABEL );
 
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final CheckboxFeatureControl cfc = new CheckboxFeatureControl( feature, vpt, text );
