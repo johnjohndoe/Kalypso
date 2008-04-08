@@ -58,7 +58,7 @@ import org.kalypso.template.types.StyledLayerType;
 /**
  * @author kuch
  */
-public class AddCascadingThemeCommand implements ICommand
+public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 {
   private final IKalypsoLayerModell m_mapModell;
 
@@ -70,6 +70,8 @@ public class AddCascadingThemeCommand implements ICommand
 
   private CascadingLayerKalypsoTheme m_theme;
 
+  private final ADD_THEME_POSITION m_position;
+
   /**
    * Add Cascading theme constructor
    * 
@@ -80,18 +82,24 @@ public class AddCascadingThemeCommand implements ICommand
    * @param layerCommands
    *            cmd for adding sub-layers
    */
-  public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name, final ICommand[] layerCommands )
+  public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name, final ICommand[] layerCommands, final ADD_THEME_POSITION position )
   {
     m_mapModell = mapModell;
     m_name = name;
+    m_position = position;
 
     for( final ICommand command : layerCommands )
       m_layerCommands.add( command );
   }
 
+  public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name, final ADD_THEME_POSITION position )
+  {
+    this( mapModell, name, new ICommand[] {}, position );
+  }
+
   public AddCascadingThemeCommand( final IKalypsoLayerModell mapModell, final String name )
   {
-    this( mapModell, name, new ICommand[] {} );
+    this( mapModell, name, new ICommand[] {}, ADD_THEME_POSITION.eBack );
   }
 
   public void addCommand( final ICommand command )
@@ -181,7 +189,11 @@ public class AddCascadingThemeCommand implements ICommand
     final List<JAXBElement< ? extends StyledLayerType>> layers = m_layer.getLayer();
     getSubLayer( factory, layers, m_layerCommands.toArray( new ICommand[] {} ) );
 
-    m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, 0 );
+    if( ADD_THEME_POSITION.eFront.equals( m_position ) )
+      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, 0 );
+    else if( ADD_THEME_POSITION.eBack.equals( m_position ) )
+      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.addLayer( m_layer );
+
     m_mapModell.activateTheme( m_theme );
   }
 
