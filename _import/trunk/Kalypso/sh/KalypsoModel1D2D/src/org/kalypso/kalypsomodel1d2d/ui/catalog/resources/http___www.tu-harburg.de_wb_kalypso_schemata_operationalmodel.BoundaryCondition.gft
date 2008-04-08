@@ -64,6 +64,7 @@
 				</ogc:PropertyIsNull>
 			</gft:excludeOperation>
 		</gft:gridData>
+		<gft:text>%20</gft:text>
 	</gft:checkbox>
 	<gft:validatorlabel property="op1d2d:absolute" visible="true" style="SWT.NONE">
 		<gft:visibleOperation>
