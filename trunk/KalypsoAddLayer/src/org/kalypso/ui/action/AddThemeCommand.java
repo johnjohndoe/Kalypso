@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -54,7 +53,7 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 
-public class AddThemeCommand implements ICommand
+public class AddThemeCommand implements IThemeCommand
 {
   private final Map<String, String> m_properties = new HashMap<String, String>();
 
