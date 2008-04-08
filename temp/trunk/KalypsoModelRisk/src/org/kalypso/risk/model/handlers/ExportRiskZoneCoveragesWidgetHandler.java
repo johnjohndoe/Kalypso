@@ -18,6 +18,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.risk.Messages;
 import org.kalypso.ui.views.map.MapView;
 
 public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implements IHandler
@@ -61,7 +62,7 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
+    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();

@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.risk.model.actions.dataImport.landuse.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -47,7 +47,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   private final String m_damageFunctionsCollectionName;
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   private boolean m_wrongLanduseSelectedStatus;
 
   private final IRasterizationControlModel m_controlModel;
@@ -60,10 +60,10 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private final List m_shapeFeatureList;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection, final boolean wrongLanduseSelectedStatus )
   {
     m_controlModel = controlModel;
@@ -78,7 +78,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     m_wrongLanduseSelectedStatus = wrongLanduseSelectedStatus;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -141,7 +141,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Fehler beim Rastern der Landnutzung" );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("RiskImportPredefinedLanduseRunnable.4") ); //$NON-NLS-1$
     }
   }
 

@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.risk.Messages;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
@@ -140,7 +141,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     Control crsControl = m_crsPanel.createControl( crsContainer );
     crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    crsControl.setToolTipText( "Koordinatensystem der Shape-Datei" );
+    crsControl.setToolTipText( Messages.getString("ImportLanduseWizardPage.21") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -231,7 +232,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * @param assetValueClassesList
    * @param damageFunctionNamesList
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void init( final ISelection selection, final List<String> damageFunctionNamesList, final List<String> assetValueClassesList )
   {
     m_damageFunctionNamesList = damageFunctionNamesList;

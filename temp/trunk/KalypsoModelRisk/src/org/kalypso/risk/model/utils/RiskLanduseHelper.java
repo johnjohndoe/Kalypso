@@ -64,7 +64,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypso.risk.model.actions.dataImport.landuse.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAssetValueClass;
 import org.kalypso.risk.model.schema.binding.IDamageFunction;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -97,7 +97,7 @@ public class RiskLanduseHelper
         landuseClass.setName( landuseType );
         landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
         landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-        landuseClass.setDescription( "Created as value of imported landuse shape" );
+        landuseClass.setDescription( Messages.getString("RiskLanduseHelper.0") ); //$NON-NLS-1$
       }
     }
   }
@@ -107,19 +107,19 @@ public class RiskLanduseHelper
     if( !landuseClass.containsStatisticEntry( returnPeriod ) )
     {
       final IRiskLanduseStatistic entry = landuseClass.createNewStatisticEntry();
-      final String entryName = String.format( "HQ%d", returnPeriod );
+      final String entryName = String.format( Messages.getString("RiskLanduseHelper.1"), returnPeriod ); //$NON-NLS-1$
 
       entry.setName( entryName );
       entry.setReturnPeriod( returnPeriod );
       entry.setCellSize( new BigDecimal( cellSize ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      entry.setDescription( "statistics for the flood event with a return period " + returnPeriod + " [a]" );
+      entry.setDescription( Messages.getString("RiskLanduseHelper.2") + returnPeriod + Messages.getString("RiskLanduseHelper.3") ); //$NON-NLS-1$ //$NON-NLS-2$
       return entry;
     }
 
     return landuseClass.getStatistic( returnPeriod );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static RGB getLanduseClassDefaultColor( final String landuseClassName, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final Feature feature : predefinedLanduseColorsCollection )
@@ -156,7 +156,7 @@ public class RiskLanduseHelper
     return new RGB( new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue() );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static void handleDBImport( final String externalProjectName, final IRasterizationControlModel controlModel, final IFolder scenarioFolder )
   {
     try
@@ -221,7 +221,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
@@ -229,7 +229,7 @@ public class RiskLanduseHelper
     createAssetValues( assetValuesCollectionName, controlModel, predefinedAssetValueClassesCollection, propName, propDataMember, propValue, predefinedLanduseColorsCollection );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     // delete already existing asset values
@@ -261,7 +261,7 @@ public class RiskLanduseHelper
               // predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
               // newLanduseClass.setDescription( "Created by " + assetValuesCollectionName + " asset values import" );
               // }
-              final IAssetValueClass assetValueClass = controlModel.getAssetValueClass( assetValue, landuseClassName, "[" + assetValuesCollectionName + "]" );
+              final IAssetValueClass assetValueClass = controlModel.getAssetValueClass( assetValue, landuseClassName, "[" + assetValuesCollectionName + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
 
               // we assign here the asset value to the landuse class
               final List<ILanduseClass> landuseClassesList = controlModel.getLanduseClassesList();
@@ -277,7 +277,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
   {
     // delete already existing damage functions
@@ -321,7 +321,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
@@ -367,7 +367,7 @@ public class RiskLanduseHelper
   private static Feature getLanduseClassByName( final Feature feature, final String className, final List<ILanduseClass> landuseClassesList )
   {
     // TODO: is this good?
-    final String linkedFeaturePath = "RasterizationControlModel.gml#";
+    final String linkedFeaturePath = "RasterizationControlModel.gml#"; //$NON-NLS-1$
     for( final Object object : landuseClassesList )
       if( object instanceof ILanduseClass )
       {
@@ -375,7 +375,7 @@ public class RiskLanduseHelper
         if( landuseClass.getName().equals( className ) )
         {
           final String xlinkedFeaturePath = linkedFeaturePath + landuseClass.getGmlID();
-          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getFeature().getParentRelation(), landuseClass.getFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" );
+          final XLinkedFeature_Impl linkedFeature_Impl = new XLinkedFeature_Impl( feature, landuseClass.getFeature().getParentRelation(), landuseClass.getFeature().getFeatureType(), xlinkedFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
           return linkedFeature_Impl;
         }
       }

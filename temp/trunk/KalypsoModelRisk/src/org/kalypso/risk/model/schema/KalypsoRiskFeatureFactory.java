@@ -203,7 +203,7 @@ public class KalypsoRiskFeatureFactory implements IAdapterFactory
 
     cTor = new AdapterConstructor()
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       public Object constructAdapter( final Feature feature, final Class cls ) throws IllegalArgumentException
       {
         final QName featureQName = feature.getFeatureType().getQName();

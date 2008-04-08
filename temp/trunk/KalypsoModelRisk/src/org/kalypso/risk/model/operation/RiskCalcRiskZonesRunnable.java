@@ -52,13 +52,13 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgress
 {
-  private static final String DICT_URN = "urn:ogc:gml:dict:kalypso:risk:model:riskresultstat";
+  private static final String DICT_URN = "urn:ogc:gml:dict:kalypso:risk:model:riskresultstat"; //$NON-NLS-1$
 
-  private static final String DICT_LANDUSE = DICT_URN + "#ROW_TITLE";
+  private static final String DICT_LANDUSE = DICT_URN + "#ROW_TITLE"; //$NON-NLS-1$
 
-  private static final String DICT_EVENT = DICT_URN + "#EVENT";
+  private static final String DICT_EVENT = DICT_URN + "#EVENT"; //$NON-NLS-1$
 
-  private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL";
+  private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL"; //$NON-NLS-1$
 
   private final IRasterDataModel m_rasterModel;
 
@@ -109,7 +109,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         outputGrid.dispose();
         inputGrid.dispose();
 
-        coverage.setName( "Risikozonen [" + i + "]" );
+        coverage.setName( org.kalypso.risk.Messages.getString("RiskCalcRiskZonesRunnable.4") + i + org.kalypso.risk.Messages.getString("RiskCalcRiskZonesRunnable.5") ); //$NON-NLS-1$ //$NON-NLS-2$
         coverage.setDescription( Messages.getString( "RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
@@ -132,7 +132,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Fehler bei Berechnung der Risikozonen" );
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString("RiskCalcRiskZonesRunnable.6") ); //$NON-NLS-1$
     }
   }
 
@@ -164,7 +164,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     fillResultWithData( result, landuseClassesList );
 
     /* add observation to workspace */
-    final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() );
+    final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
     // maybe set phenomenon?
     ObservationFeatureFactory.toFeature( obs, fObs );
   }
@@ -180,7 +180,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     for( int i = 0; i < numOfDataColumns; i++ )
     {
       final String eventName = eventList.get( i ).getName();
-      final IComponent valueComponent = new Component( eventName, eventName, eventName, "none", "", new QName( NS.XSD_SCHEMA, "decimal" ), "", new DictionaryPhenomenon( DICT_EVENT, eventName, eventName ) );
+      final IComponent valueComponent = new Component( eventName, eventName, eventName, "none", "", new QName( NS.XSD_SCHEMA, "decimal" ), "", new DictionaryPhenomenon( DICT_EVENT, eventName, eventName ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       result.addComponent( valueComponent );
     }
 
@@ -235,7 +235,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     final IRecord lastRecord = result.createRecord();
 
     // name
-    lastRecord.setValue( 0, "Summation" );
+    lastRecord.setValue( 0, "Summation" ); //$NON-NLS-1$
 
     // specific damage values per event
     for( int i = 0; i < numOfEvents; i++ )

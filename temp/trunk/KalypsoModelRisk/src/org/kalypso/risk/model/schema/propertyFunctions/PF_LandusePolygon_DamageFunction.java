@@ -58,11 +58,11 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class PF_LandusePolygon_DamageFunction extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" );
+  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" ); //$NON-NLS-1$
 
-  private final static QName XLINKED_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" );
+  private final static QName XLINKED_DAMAGE_FUNCTION = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionLink" ); //$NON-NLS-1$
 
-  private final static QName DAMAGE_FUNCTION_PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "function" );
+  private final static QName DAMAGE_FUNCTION_PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "function" ); //$NON-NLS-1$
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -76,14 +76,14 @@ public class PF_LandusePolygon_DamageFunction extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     try
     {
       final Feature landuseClass = (Feature) feature.getProperty( XLINKED_LANDUSE_CLS );
       if( landuseClass == null )
-        return "";
+        return ""; //$NON-NLS-1$
       else
       {
         final XLinkedFeature_Impl landuseXlink = (XLinkedFeature_Impl) landuseClass;
@@ -91,7 +91,7 @@ public class PF_LandusePolygon_DamageFunction extends FeaturePropertyFunction
 
         final Feature damageFunction = FeatureUtils.resolveFeature( controlWorkspace, landuseClass.getProperty( XLINKED_DAMAGE_FUNCTION ) );
         if( damageFunction == null )
-          return "";
+          return ""; //$NON-NLS-1$
         else
         {
           final Object object = damageFunction.getProperty( DAMAGE_FUNCTION_PROPERTY );

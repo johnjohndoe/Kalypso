@@ -11,7 +11,7 @@ import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 
 public interface IRasterizationControlModel extends IModel
 {
-  public static final String MODEL_NAME = "RasterizationControlModel.gml";
+  public static final String MODEL_NAME = "RasterizationControlModel.gml"; //$NON-NLS-1$
 
   public static final double RISKZONE_URBANAREA_LOW = 1.0;
 
@@ -25,17 +25,17 @@ public interface IRasterizationControlModel extends IModel
 
   public static final double RISKZONE_NONURBANAREA_HIGH = 6.0;
 
-  public static final QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "RasterizationControlModel" );
+  public static final QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "RasterizationControlModel" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_LANDUSE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" );
+  public static final QName PROPERTY_LANDUSE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "landuseClassMember" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_ASSET_VALUE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "assetValueClassMember" );
+  public static final QName PROPERTY_ASSET_VALUE_CLASS_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "assetValueClassMember" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_DAMAGE_FUNCTION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionMember" );
+  public static final QName PROPERTY_DAMAGE_FUNCTION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "damageFunctionMember" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_RISKZONE_DEFINITION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskZoneDefinitionMember" );
+  public static final QName PROPERTY_RISKZONE_DEFINITION_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskZoneDefinitionMember" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_STATISTIC_OBS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskStatisticResultMember" );
+  public static final QName PROPERTY_STATISTIC_OBS = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "riskStatisticResultMember" ); //$NON-NLS-1$
 
   public List<ILanduseClass> getLanduseClassesList( );
 

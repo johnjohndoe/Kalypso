@@ -75,7 +75,7 @@ public class SzenarioController implements IScenarioDataListener
       return;
     if( model instanceof IRasterizationControlModel )
     {
-      final Path path = new Path( "/models/RasterizationControlModel.gml" );
+      final Path path = new Path( "/models/RasterizationControlModel.gml" ); //$NON-NLS-1$
       final IFile file = m_scenarioDataPath.getFile( path );
       m_landuseStyleUpdateListener.startStyleUpdateJob( file );
     }

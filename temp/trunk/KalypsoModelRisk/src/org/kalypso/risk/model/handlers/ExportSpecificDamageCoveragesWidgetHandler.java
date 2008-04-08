@@ -62,7 +62,7 @@ public class ExportSpecificDamageCoveragesWidgetHandler extends AbstractHandler 
     coverageManagementWidget.setShowStyle( false );
     coverageManagementWidget.setShowAddRemoveButtons( false );
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
+    coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();

@@ -1,4 +1,4 @@
-package org.kalypso.risk.model.actions.dataImport.landuse;
+package org.kalypso.risk;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

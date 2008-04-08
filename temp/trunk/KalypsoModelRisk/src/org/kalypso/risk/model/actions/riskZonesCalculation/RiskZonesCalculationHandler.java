@@ -19,6 +19,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -59,7 +60,7 @@ public class RiskZonesCalculationHandler extends AbstractHandler
       final ICoreRunnableWithProgress riskCalcRiskZonesRunnable = new RiskCalcRiskZonesRunnable( rasterModel, vectorModel, controlModel, scenarioFolder );
 
       final IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, riskCalcRiskZonesRunnable );
-      ErrorDialog.openError( shell, "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );
+      ErrorDialog.openError( shell, Messages.getString("RiskZonesCalculationHandler.5"), Messages.getString("RiskZonesCalculationHandler.6"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

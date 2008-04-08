@@ -55,21 +55,21 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  */
 public interface IRiskLanduseStatistic extends IFeatureWrapper2
 {
-  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "StatisticClass" );
+  public QName QNAME = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "StatisticClass" ); //$NON-NLS-1$
 
-  public QName PROPERTY_RETURN_PERIOD = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statReturnPeriod" );
+  public QName PROPERTY_RETURN_PERIOD = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statReturnPeriod" ); //$NON-NLS-1$
 
-  public QName PROPERTY_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMinDamage" );
+  public QName PROPERTY_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMinDamage" ); //$NON-NLS-1$
 
-  public QName PROPERTY_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMaxDamage" );
+  public QName PROPERTY_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMaxDamage" ); //$NON-NLS-1$
 
-  public QName PROPERTY_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageDamage" );
+  public QName PROPERTY_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageDamage" ); //$NON-NLS-1$
 
-  public QName PROPERTY_AVERAGE_ANNUAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageAnnualDamage" );
+  public QName PROPERTY_AVERAGE_ANNUAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageAnnualDamage" ); //$NON-NLS-1$
 
-  public QName PROPERTY_DAMAGE_SUM = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statSumDamage" );
+  public QName PROPERTY_DAMAGE_SUM = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statSumDamage" ); //$NON-NLS-1$
 
-  public QName PROPERTY_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statTotalDamage" );
+  public QName PROPERTY_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statTotalDamage" ); //$NON-NLS-1$
 
   public void updateStatistic( final BigDecimal value );
 

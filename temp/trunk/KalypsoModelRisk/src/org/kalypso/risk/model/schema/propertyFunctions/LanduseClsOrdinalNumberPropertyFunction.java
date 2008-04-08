@@ -55,9 +55,9 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" );
+  private final static QName XLINKED_FEATURE = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" ); //$NON-NLS-1$
 
-  private final static QName PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" );
+  private final static QName PROPERTY = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "ordinalNumber" ); //$NON-NLS-1$
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -71,7 +71,7 @@ public class LanduseClsOrdinalNumberPropertyFunction extends FeaturePropertyFunc
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     try

@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
 {
-  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" );
+  private final static QName XLINKED_LANDUSE_CLS = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" ); //$NON-NLS-1$
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -72,7 +72,7 @@ public class PF_LandusePolygon_AssetValue extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final XLinkedFeature_Impl landuseClassLink = (XLinkedFeature_Impl) feature.getProperty( XLINKED_LANDUSE_CLS );

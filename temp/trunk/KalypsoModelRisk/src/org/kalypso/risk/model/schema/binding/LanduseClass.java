@@ -121,13 +121,13 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
     final Object property = getFeature().getProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK );
     if( property != null && property instanceof XLinkedFeature_Impl )
       return ((XLinkedFeature_Impl) property).getFeatureId();
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   public void setDamageFunction( final IDamageFunction damageFunction )
   {
-    final String xFeaturePath = IRasterizationControlModel.MODEL_NAME + "#" + damageFunction.getGmlID();
-    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), damageFunction.getFeature().getParentRelation(), damageFunction.getFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" );
+    final String xFeaturePath = IRasterizationControlModel.MODEL_NAME + "#" + damageFunction.getGmlID(); //$NON-NLS-1$
+    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), damageFunction.getFeature().getParentRelation(), damageFunction.getFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     getFeature().setProperty( ILanduseClass.PROP_DAMAGE_FUNCTION_LINK, xFeature );
   }
 
@@ -147,8 +147,8 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
    */
   public void setAssetValue( IAssetValueClass assetValueClass )
   {
-    final String xFeaturePath = IRasterizationControlModel.MODEL_NAME + "#" + assetValueClass.getGmlID();
-    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), assetValueClass.getFeature().getParentRelation(), assetValueClass.getFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" );
+    final String xFeaturePath = IRasterizationControlModel.MODEL_NAME + "#" + assetValueClass.getGmlID(); //$NON-NLS-1$
+    final XLinkedFeature_Impl xFeature = new XLinkedFeature_Impl( getFeature(), assetValueClass.getFeature().getParentRelation(), assetValueClass.getFeature().getFeatureType(), xFeaturePath, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     getFeature().setProperty( ILanduseClass.PROP_ASSET_VALUE_LINK, xFeature );
   }
 

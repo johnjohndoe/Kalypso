@@ -20,6 +20,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskLanduseRasterizationRunnable;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -52,18 +53,18 @@ public class LanduseRasterizationHandler extends AbstractHandler
 
       if( waterDepthCoverageCollection.size() == 0 )
       {
-        ErrorDialog.openError( shell, "Fehler", "Keine Fliesstiefen Rasterdaten vorhanden. Bitte importieren Sie zuerst die Fliesstiefen.", Status.CANCEL_STATUS );
+        ErrorDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.0"), Messages.getString("LanduseRasterizationHandler.1"), Status.CANCEL_STATUS ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
       final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( waterDepthCoverageCollection );
       final Integer maxReturnPeriod = maxCoveragesCollection.getReturnPeriod();
 
       if( maxReturnPeriod == Integer.MIN_VALUE )
-        return StatusUtilities.createErrorStatus( "Missing HQ data. No waterlevel data loaded. Please load waterlevel raster data before rasterizing landuse classes." );
+        return StatusUtilities.createErrorStatus( Messages.getString("LanduseRasterizationHandler.2") ); //$NON-NLS-1$
 
       /* info dialog, that the rasterisation is don by using the extend of the grid with the max return period */
-      final String dialogTitle = "Rasterung der Landnutzung";
-      final String dialogMessage = "Erstellung der Landnutzungsraster (Basisraster ist HQ" + maxReturnPeriod + ")?";
+      final String dialogTitle = Messages.getString("LanduseRasterizationHandler.3"); //$NON-NLS-1$
+      final String dialogMessage = Messages.getString("LanduseRasterizationHandler.4") + maxReturnPeriod + Messages.getString("LanduseRasterizationHandler.5"); //$NON-NLS-1$ //$NON-NLS-2$
 
       final Dialog dialog = new MessageDialog( shell, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -73,7 +74,7 @@ public class LanduseRasterizationHandler extends AbstractHandler
       final ICoreRunnableWithProgress runnableWithProgress = new RiskLanduseRasterizationRunnable( rasterModel, vectorDataModel, scenarioFolder );
 
       IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
-      ErrorDialog.openError( shell, "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );
+      ErrorDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.6"), Messages.getString("LanduseRasterizationHandler.7"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

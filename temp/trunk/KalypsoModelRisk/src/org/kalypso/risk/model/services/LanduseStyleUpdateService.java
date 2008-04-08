@@ -57,6 +57,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -85,15 +86,15 @@ public class LanduseStyleUpdateService extends Job
 
   public LanduseStyleUpdateService( final IFile file )
   {
-    super( "Aktualisere SLD Dienst" );
+    super( Messages.getString("LanduseStyleUpdateService.0") ); //$NON-NLS-1$
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IFolder scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     m_dbFile = file;
-    m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" );
-    m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" );
-    m_riskZonesSymbolyzerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" );
+    m_landuseVectorSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseVector.sld" ); //$NON-NLS-1$
+    m_landuseRasterSymbolyzerSldFile = scenarioFolder.getFile( "/styles/LanduseCoverage.sld" ); //$NON-NLS-1$
+    m_riskZonesSymbolyzerSldFile = scenarioFolder.getFile( "/styles/RiskZonesCoverage.sld" ); //$NON-NLS-1$
   }
 
   /**
@@ -105,7 +106,7 @@ public class LanduseStyleUpdateService extends Job
     try
     {
       final URL databaseUrl = ResourceUtilities.createURL( m_dbFile );
-      final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl );
+      final PoolableObjectType poolKey = new PoolableObjectType( "gml", databaseUrl.toExternalForm(), databaseUrl ); //$NON-NLS-1$
 
       final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
       GMLWorkspace workspace;

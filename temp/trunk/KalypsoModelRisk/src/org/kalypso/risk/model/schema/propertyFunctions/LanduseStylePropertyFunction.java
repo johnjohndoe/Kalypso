@@ -55,9 +55,9 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class LanduseStylePropertyFunction extends FeaturePropertyFunction
 {
-  private final static QName m_clsMember = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" );
+  private final static QName m_clsMember = new QName( KalypsoRiskSchemaCatalog.NS_VECTOR_DATA_MODEL, "landuseClassLink" ); //$NON-NLS-1$
 
-  private final static QName m_name = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "name" );
+  private final static QName m_name = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "name" ); //$NON-NLS-1$
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -71,14 +71,14 @@ public class LanduseStylePropertyFunction extends FeaturePropertyFunction
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     try
     {
       final Feature member = (Feature) feature.getProperty( m_clsMember );
       if( member == null )
-        return "_DEFAULT_STYLE_";
+        return "_DEFAULT_STYLE_"; //$NON-NLS-1$
       else
       {
         final Object object = member.getProperty( m_name );

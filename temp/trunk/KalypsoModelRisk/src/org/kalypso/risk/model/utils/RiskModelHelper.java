@@ -210,25 +210,25 @@ public class RiskModelHelper
           }
           catch( Exception ex )
           {
-            throw new GeoGridException( "Could not generate the value ...", ex );
+            throw new GeoGridException( org.kalypso.risk.Messages.getString("RiskModelHelper.0"), ex ); //$NON-NLS-1$
           }
         }
       };
 
       /* add the new coverage to the collection */
-      final String outputFilePath = "raster/output/specificDamage_HQ" + sourceCoverageCollection.getReturnPeriod() + "_part" + i + ".bin";
+      final String outputFilePath = "raster/output/specificDamage_HQ" + sourceCoverageCollection.getReturnPeriod() + "_part" + i + ".bin"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-      final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) );
+      final IFile ifile = scenarioFolder.getFile( new Path( "models/" + outputFilePath ) ); //$NON-NLS-1$
       final File file = new File( ifile.getRawLocation().toPortableString() );
 
-      final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() );
+      final ICoverage newCoverage = GeoGridUtilities.addCoverage( destCoverageCollection, outputGrid, file, outputFilePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
 
       for( final ILanduseClass landuseClass : landuseClassesList )
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName( Messages.getString( "DamagePotentialCalculationHandler.14" ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" );
-      newCoverage.setDescription( Messages.getString( "DamagePotentialCalculationHandler.17" ) + new Date().toString() );
+      newCoverage.setName( Messages.getString( org.kalypso.risk.Messages.getString("RiskModelHelper.6") ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      newCoverage.setDescription( Messages.getString( org.kalypso.risk.Messages.getString("RiskModelHelper.9") ) + new Date().toString() ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
@@ -399,7 +399,7 @@ public class RiskModelHelper
             }
             catch( Exception ex )
             {
-              throw new GeoGridException( "Could not generate the value ...", ex );
+              throw new GeoGridException( org.kalypso.risk.Messages.getString("RiskModelHelper.10"), ex ); //$NON-NLS-1$
             }
           }
         };
@@ -418,7 +418,7 @@ public class RiskModelHelper
     }
     catch( final Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e, "Fehler bei Erzeugung des Ländnutzungsrasters." );
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString("RiskModelHelper.11") ); //$NON-NLS-1$
     }
   }
 
@@ -465,7 +465,7 @@ public class RiskModelHelper
   public static void updateDamageLayers( final IFolder scenarioFolder, final IRasterDataModel model, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, "Schadenspotentiale" );
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString("RiskModelHelper.12") ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -495,7 +495,7 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, "HQi" );
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString("RiskModelHelper.13") ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -593,7 +593,7 @@ public class RiskModelHelper
    * The value is calculated by integrating the specific damage values.<br>
    * 
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
   {
     /* get the landuse classes */

@@ -8,11 +8,12 @@ import java.util.Properties;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
+import org.kalypso.risk.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThemeInfo
 {
-  public static final String DEFAULT_FORMAT_STRING = "Zone: %s";
+  public static final String DEFAULT_FORMAT_STRING = Messages.getString("RiskZonesThemeInfo.0"); //$NON-NLS-1$
 
   private static Map<Double, String> RISK_ZONES_MAP = new HashMap<Double, String>();
 
@@ -50,7 +51,7 @@ public class RiskZonesThemeInfo extends CoverageThemeInfo implements IKalypsoThe
     catch( Exception e )
     {
       e.printStackTrace();
-      formatter.format( "Fehler: %s%n", e.toString() );
+      formatter.format( Messages.getString("RiskZonesThemeInfo.1"), e.toString() ); //$NON-NLS-1$
     }
   }
 

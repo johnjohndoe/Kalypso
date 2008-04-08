@@ -83,49 +83,53 @@ public class CopyOfTestRiskModel extends TestCase
   public void testRiskModel( ) throws MalformedURLException, Exception
   {
     // unzip test project into workspace
-    IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    IProject project = workspace.getRoot().getProject( "RiskTest" );
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IProject project = workspace.getRoot().getProject( "RiskTest" ); //$NON-NLS-1$
     project.create( new NullProgressMonitor() );
 
-    final URL zipLocation = getClass().getResource( "resources/testProject.zip" );
+    final URL zipLocation = getClass().getResource( "resources/testProject.zip" ); //$NON-NLS-1$
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run risk model
-    final IFolder folder = project.getFolder( "testScenario" );
+    final IFolder folder = project.getFolder( "testScenario" ); //$NON-NLS-1$
 
-    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade VectorDataModel.gml...\n" );
-    final IFile riskVectorFile = folder.getFile( new Path( "models/VectorDataModel.gml" ) );
-    GMLWorkspace riskVectorWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskVectorFile ), null );
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade VectorDataModel.gml...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFile riskVectorFile = folder.getFile( new Path( "models/VectorDataModel.gml" ) ); //$NON-NLS-1$
+    final GMLWorkspace riskVectorWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskVectorFile ), null );
 
-    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade RasterizationControlModel.gml...\n" );
-    final IFile riskControlFile = folder.getFile( new Path( "models/RasterizationControlModel.gml" ) );
-    GMLWorkspace riskControlWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskControlFile ), null );
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade RasterizationControlModel.gml...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFile riskControlFile = folder.getFile( new Path( "models/RasterizationControlModel.gml" ) ); //$NON-NLS-1$
+    final GMLWorkspace riskControlWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskControlFile ), null );
 
-    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade RasterDataModel.gml...\n" );
-    final IFile riskRasterFile = folder.getFile( new Path( "models/RasterDataModel.gml" ) );
-    GMLWorkspace riskRasterWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskRasterFile ), null );
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Lade RasterDataModel.gml...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFile riskRasterFile = folder.getFile( new Path( "models/RasterDataModel.gml" ) ); //$NON-NLS-1$
+    final GMLWorkspace riskRasterWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( riskRasterFile ), null );
 
-    KalypsoRiskDebug.OPERATION.printf( "%s", "Modelle geladen..." );
+    KalypsoRiskDebug.OPERATION.printf( "%s", "Modelle geladen..." ); //$NON-NLS-1$ //$NON-NLS-2$
     // TODO: start operation on scenario folder
 
     final IVectorDataModel vectorDataModel = (IVectorDataModel) riskVectorWorkspace.getRootFeature().getAdapter( IVectorDataModel.class );
     final IRasterDataModel rasterDataModel = (IRasterDataModel) riskRasterWorkspace.getRootFeature().getAdapter( IRasterDataModel.class );
     final IRasterizationControlModel rasterControlDataModel = (IRasterizationControlModel) riskControlWorkspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
 
-    String landUseProperty = "LANDUSE"; // name of the shape file field that represents the landuse classes
-    String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template
-    String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template
+    final String landUseProperty = "LANDUSE"; // name of the shape file field that represents the landuse classes
+                                              // //$NON-NLS-1$
+    final String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template
+                                                                                              // //$NON-NLS-1$
+    final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template
+                                                                                            // //$NON-NLS-1$
 
-    final String crs = "EPSG:31467"; // the coordinate system of the shape file
-    String sourceShapeFilePath = null; // path to the landuse shapefile
+    final String crs = "EPSG:31467"; // the coordinate system of the shape file //$NON-NLS-1$
+    final String sourceShapeFilePath = null; // path to the landuse shapefile
 
-    String externalProjectName = ""; // name of the external project from which the database will be taken
+    final String externalProjectName = ""; // name of the external project from which the database will be taken
+                                            // //$NON-NLS-1$
     // (selectDatabaseOption = 1)
 
     /* pre-definitions from template */
-    List<Feature> predefinedAssetValueClassesCollection = null;
-    List<Feature> predefinedDamageValueClassesCollection = null;
-    List<Feature> predefinedLanduseColorsCollection = null;
+    final List<Feature> predefinedAssetValueClassesCollection = null;
+    final List<Feature> predefinedDamageValueClassesCollection = null;
+    final List<Feature> predefinedLanduseColorsCollection = null;
 
     final boolean wrongLandUseselectedStatus = false; // status of landuse selection
 
@@ -138,14 +142,14 @@ public class CopyOfTestRiskModel extends TestCase
     final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     /* IMPORT DATA */
-    RiskImportDBLanduseRunnable importLanduseRunnable = new RiskImportDBLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, folder, landUseProperty, externalProjectName, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
+    final RiskImportDBLanduseRunnable importLanduseRunnable = new RiskImportDBLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, folder, landUseProperty, externalProjectName, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
 
     RunnableContextHelper.execute( new ProgressMonitorDialog( Workbench.getInstance().getActiveWorkbenchWindow().getShell() ), true, false, importLanduseRunnable );
 
     /* raster landuse classes */
     final IFolder outputFolder = folder;
 
-    RiskLanduseRasterizationRunnable landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel, vectorDataModel, outputFolder );
+    final RiskLanduseRasterizationRunnable landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel, vectorDataModel, outputFolder );
 
     // check results?
     // TODO?

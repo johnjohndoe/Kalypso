@@ -53,6 +53,7 @@ import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -201,7 +202,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
     catch( Exception ex )
     {
-      throw new GeoGridException( "Could not generate the value ...", ex );
+      throw new GeoGridException( Messages.getString("RiskZonesGrid.0"), ex ); //$NON-NLS-1$
     }
   }
 

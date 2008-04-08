@@ -3,6 +3,7 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
 import org.kalypso.risk.model.utils.RiskPolygonStatistics;
 import org.kalypso.risk.plugin.KalypsoRiskDebug;
@@ -61,7 +62,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public String getStyleType( )
   {
     final Object styleProp = getFeature().getProperty( ILandusePolygon.PROPERTY_SLDSTYLE );
-    return (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_";
+    return (styleProp != null && styleProp != "") ? styleProp.toString() : "_DEFAULT_STYLE_"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void setLanduseClass( final Feature landuseClassFeature )
@@ -105,7 +106,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
       if( damagefunctionValue > 1 )
       {
-        KalypsoRiskDebug.OPERATION.printf( "%s", "WARNING: damage function vlaue > '1'! Change value to '1'\n" );
+        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString("LandusePolygon.3") ); //$NON-NLS-1$ //$NON-NLS-2$
         damagefunctionValue = 1.0;
       }
 
@@ -167,13 +168,13 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   {
     final Object damageFunctionProp = getDamageFunctionProp();
 
-    if( damageFunctionProp != null && getDamageFunctionProp() != "" )
+    if( damageFunctionProp != null && getDamageFunctionProp() != "" ) //$NON-NLS-1$
     {
       final ParseFunction damageFunction = new ParseFunction( damageFunctionProp.toString() );
 
       // check if function is parsable
       if( !damageFunction.parse() )
-        throw new IllegalArgumentException( "Damage function not parsable: " + getDamageFunctionProp().toString() );
+        throw new IllegalArgumentException( Messages.getString("LandusePolygon.5") + getDamageFunctionProp().toString() ); //$NON-NLS-1$
       else
         return damageFunction;
     }

@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
 import org.kalypso.transformation.ui.CRSSelectionListener;
@@ -166,8 +167,8 @@ public class ImportWaterdepthPage extends WizardPage
 
   private void createControlButtonsPart( final Composite parent )
   {
-    final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" );
-    final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" );
+    final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( Messages.getString("ImportWaterdepthPage.28") ); //$NON-NLS-1$
+    final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( Messages.getString("ImportWaterdepthPage.29") ); //$NON-NLS-1$
 
     m_btnAddNew = new Button( parent, SWT.PUSH );
     m_btnAddNew.setImage( new Image( parent.getDisplay(), addBtnID.getImageData() ) );
@@ -284,7 +285,7 @@ public class ImportWaterdepthPage extends WizardPage
     Control crsControl = m_crsPanel.createControl( crsContainer );
     crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    crsControl.setToolTipText( "Koordinatensystem der Raster-Datei" );
+    crsControl.setToolTipText( Messages.getString("ImportWaterdepthPage.30") ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );

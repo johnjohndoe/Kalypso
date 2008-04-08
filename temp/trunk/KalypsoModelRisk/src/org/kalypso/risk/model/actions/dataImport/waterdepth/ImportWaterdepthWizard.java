@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskImportWaterdepthRunnable;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -134,7 +135,7 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
       final ICoreRunnableWithProgress importWaterdepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, scenarioFolder );
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importWaterdepthRunnable );
-      ErrorDialog.openError( getShell(), "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );
+      ErrorDialog.openError( getShell(), Messages.getString("ImportWaterdepthWizard.9"), Messages.getString("ImportWaterdepthWizard.10"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

@@ -58,7 +58,7 @@ public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements
 
     final CoverageManagementWidget widget = new CoverageManagementWidget( Messages.getString( "WaterdepthCoveragesWidgetHandler.4" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final IFolder scenarioFolder = ScenarioHelper.getScenarioFolder();
-    widget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
+    widget.setGridFolder( scenarioFolder.getFolder( "grids" ) ); //$NON-NLS-1$
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();

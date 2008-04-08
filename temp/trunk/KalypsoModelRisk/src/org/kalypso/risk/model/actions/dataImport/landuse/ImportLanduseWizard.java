@@ -67,6 +67,7 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskImportDBLanduseRunnable;
 import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
@@ -130,7 +131,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     m_initialSelection = selection;
@@ -152,7 +153,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public void addPages( )
   {
@@ -189,7 +190,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public boolean performFinish( )
   {
@@ -245,7 +246,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         return false;
 
       final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importLanduseRunnable );
-      ErrorDialog.openError( getShell(), "Fehler", "Fehler bei der Rasterung der Landnutzung", execute );
+      ErrorDialog.openError( getShell(), Messages.getString("ImportLanduseWizard.4"), Messages.getString("ImportLanduseWizard.5"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

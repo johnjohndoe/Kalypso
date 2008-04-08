@@ -50,7 +50,7 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
     final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = m_vectorDataModel.getLandusePolygonCollection();
 
     if( m_rasterDataModel.getWaterlevelCoverageCollection().size() == 0 )
-      return StatusUtilities.createErrorStatus( Messages.getString( "DamagePotentialCalculationHandler.6" ) );
+      return StatusUtilities.createErrorStatus( Messages.getString( org.kalypso.risk.Messages.getString("RiskCalcSpecificDamageRunnable.0") ) ); //$NON-NLS-1$
 
     for( final IAnnualCoverageCollection collection : m_rasterDataModel.getWaterlevelCoverageCollection() )
     {
@@ -83,7 +83,7 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Fehler beim Berechnen der Schadenswerte." );
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString("RiskCalcSpecificDamageRunnable.1") ); //$NON-NLS-1$
     }
   }
 }

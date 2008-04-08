@@ -82,7 +82,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
           waterdepthCoverageCollection.remove( coverageToRemove );
 
         final IAnnualCoverageCollection annualCoverageCollection = waterdepthCoverageCollection.addNew( IAnnualCoverageCollection.QNAME );
-        annualCoverageCollection.setName( "HQ " + asciiRasterInfo.getReturnPeriod() );
+        annualCoverageCollection.setName( org.kalypso.risk.Messages.getString("RiskImportWaterdepthRunnable.0") + asciiRasterInfo.getReturnPeriod() ); //$NON-NLS-1$
         annualCoverageCollection.setReturnPeriod( asciiRasterInfo.getReturnPeriod() );
         final IFeatureType rgcFeatureType = workspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
         final IRelationType parentRelation = (IRelationType) annualCoverageCollection.getFeature().getFeatureType().getProperty( IAnnualCoverageCollection.PROP_COVERAGE );
@@ -92,7 +92,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         coverage.setRangeSet( rangeSet );
         coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
         coverage.setName( binFileName );
-        coverage.setDescription( "Imported from " + asciiRasterInfo.getSourceFile().getName() );
+        coverage.setDescription( org.kalypso.risk.Messages.getString("RiskImportWaterdepthRunnable.1") + asciiRasterInfo.getSourceFile().getName() ); //$NON-NLS-1$
       }
 
       return Status.OK_STATUS;
@@ -100,7 +100,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, "Fliesstiefen-Import fehlgeschlagen" );
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString("RiskImportWaterdepthRunnable.2") ); //$NON-NLS-1$
     }
   }
 }

@@ -100,6 +100,7 @@ import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.plugin.KalypsoRiskPlugin;
@@ -314,9 +315,9 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
   private void initalizeTreeActions( final FormToolkit toolkit, final Composite parent )
   {
     // We are reusing images of KalypsoGmlUi here
-    final ImageDescriptor addEventID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" );
-    final ImageDescriptor changeID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_change_annuality.gif" );
-    final ImageDescriptor removeID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" );
+    final ImageDescriptor addEventID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" ); //$NON-NLS-1$
+    final ImageDescriptor changeID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_change_annuality.gif" ); //$NON-NLS-1$
+    final ImageDescriptor removeID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" ); //$NON-NLS-1$
     final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
     final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
 
@@ -385,11 +386,11 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
     };
     moveDownAction.setDescription( Messages.getString( "WaterdepthCollectionsManagementWidget.19" ) ); //$NON-NLS-1$
 
-    createButton( toolkit, parent, addEventAction, "ADD" );
-    createButton( toolkit, parent, changeAction, "CHANGE" );
-    createButton( toolkit, parent, removeAction, "REMOVE" );
-    createButton( toolkit, parent, moveUpAction, "MOVEUP" );
-    createButton( toolkit, parent, moveDownAction, "MOVEDOWN" );
+    createButton( toolkit, parent, addEventAction, "ADD" ); //$NON-NLS-1$
+    createButton( toolkit, parent, changeAction, "CHANGE" ); //$NON-NLS-1$
+    createButton( toolkit, parent, removeAction, "REMOVE" ); //$NON-NLS-1$
+    createButton( toolkit, parent, moveUpAction, "MOVEUP" ); //$NON-NLS-1$
+    createButton( toolkit, parent, moveDownAction, "MOVEDOWN" ); //$NON-NLS-1$
   }
 
   private void createButton( final FormToolkit toolkit, final Composite parent, final IAction action, final String key )

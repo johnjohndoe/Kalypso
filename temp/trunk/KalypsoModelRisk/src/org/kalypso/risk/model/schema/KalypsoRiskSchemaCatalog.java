@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypso.risk.Messages;
 
 /**
  * FloodRisk namespace catalog
@@ -52,25 +53,25 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
 {
-  public static final String NS_PREDEFINED_DATASET = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/predefinedDataset";
+  public static final String NS_PREDEFINED_DATASET = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/predefinedDataset"; //$NON-NLS-1$
 
-  public static final String PREFIX_PREDEFINED_DATASET = "krpd";
+  public static final String PREFIX_PREDEFINED_DATASET = "krpd"; //$NON-NLS-1$
 
-  public static final String NS_RASTERIZATION_CONTROL_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel";
+  public static final String NS_RASTERIZATION_CONTROL_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"; //$NON-NLS-1$
 
-  public static final String PREFIX_RASTERIZATION_CONTROL_MODEL = "krrcm";
+  public static final String PREFIX_RASTERIZATION_CONTROL_MODEL = "krrcm"; //$NON-NLS-1$
 
-  public static final String NS_VECTOR_DATA_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel";
+  public static final String NS_VECTOR_DATA_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/vectorDataModel"; //$NON-NLS-1$
 
-  public static final String PREFIX_VECTOR_DATA_MODEL = "krvdm";
+  public static final String PREFIX_VECTOR_DATA_MODEL = "krvdm"; //$NON-NLS-1$
 
-  public static final String NS_RASTER_DATA_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel";
+  public static final String NS_RASTER_DATA_MODEL = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterDataModel"; //$NON-NLS-1$
 
-  public static final String PREFIX_RASTER_DATA_MODEL = "krrdm";
+  public static final String PREFIX_RASTER_DATA_MODEL = "krrdm"; //$NON-NLS-1$
 
-  public static final String NS_COMMON = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/common";
+  public static final String NS_COMMON = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/common"; //$NON-NLS-1$
 
-  public static final String PREFIX_COMMON = "kr_common";
+  public static final String PREFIX_COMMON = "kr_common"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
@@ -78,15 +79,15 @@ public class KalypsoRiskSchemaCatalog extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( NS_PREDEFINED_DATASET, myClass.getResource( "schemata/PredefinedDataset.xsd" ) );
+    catalog.put( NS_PREDEFINED_DATASET, myClass.getResource( "schemata/PredefinedDataset.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_PREDEFINED_DATASET, PREFIX_PREDEFINED_DATASET );
-    catalog.put( NS_RASTERIZATION_CONTROL_MODEL, myClass.getResource( "schemata/RasterizationControlModel.xsd" ) );
+    catalog.put( NS_RASTERIZATION_CONTROL_MODEL, myClass.getResource( "schemata/RasterizationControlModel.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_RASTERIZATION_CONTROL_MODEL, PREFIX_RASTERIZATION_CONTROL_MODEL );
-    catalog.put( NS_VECTOR_DATA_MODEL, myClass.getResource( "schemata/VectorDataModel.xsd" ) );
+    catalog.put( NS_VECTOR_DATA_MODEL, myClass.getResource( "schemata/VectorDataModel.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_VECTOR_DATA_MODEL, PREFIX_VECTOR_DATA_MODEL );
-    catalog.put( NS_RASTER_DATA_MODEL, myClass.getResource( "schemata/RasterDataModel.xsd" ) );
+    catalog.put( NS_RASTER_DATA_MODEL, myClass.getResource( "schemata/RasterDataModel.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_RASTER_DATA_MODEL, PREFIX_RASTER_DATA_MODEL );
-    catalog.put( NS_COMMON, myClass.getResource( "schemata/Common.xsd" ) );
+    catalog.put( NS_COMMON, myClass.getResource( "schemata/Common.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_COMMON, PREFIX_COMMON );
   }
 

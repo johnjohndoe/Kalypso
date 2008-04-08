@@ -23,7 +23,7 @@ public class AnnualCoverage extends CoverageCollection implements IAnnualCoverag
 
   public void setReturnPeriod( final Integer value )
   {
-    getFeature().setProperty( IAnnualCoverageCollection.PROP_ANNUALITY, value == null ? "" : value.intValue() );
+    getFeature().setProperty( IAnnualCoverageCollection.PROP_ANNUALITY, value == null ? "" : value.intValue() ); //$NON-NLS-1$
   }
 
 }

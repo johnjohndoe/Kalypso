@@ -7,6 +7,7 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.risk.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -175,7 +176,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   /**
    * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getStatisticObs()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public IObservation<TupleResult> getStatisticObs( )
   {
     return (IObservation<TupleResult>) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );

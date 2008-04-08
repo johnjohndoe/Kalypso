@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
@@ -37,7 +38,7 @@ public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWith
 
   public IStatus execute( IProgressMonitor monitor )
   {
-    monitor.beginTask( "Erstelle Rasterung aus Landnutzungs Vektordaten...", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( Messages.getString("RiskLanduseRasterizationRunnable.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection = m_rasterModel.getWaterlevelCoverageCollection();
 
@@ -48,7 +49,7 @@ public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWith
     final Integer maxReturnPeriod = maxCoveragesCollection.getReturnPeriod();
 
     if( maxReturnPeriod == Integer.MIN_VALUE )
-      return StatusUtilities.createErrorStatus( "Missing HQ data. No waterlevel data loaded. Please load waterlevel raster data before rasterizing landuse classes." );
+      return StatusUtilities.createErrorStatus( Messages.getString("RiskLanduseRasterizationRunnable.1") ); //$NON-NLS-1$
 
     final ICoverageCollection inputCoverages = maxCoveragesCollection;
     final ICoverageCollection outputCoverages = m_rasterModel.getLanduseCoverage();

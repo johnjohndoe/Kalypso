@@ -75,7 +75,7 @@ public class GetNameFromInscription extends FeaturePropertyFunction
 
   private static final String P_STATE_INSCRIPTION_LANGUAGE = "language"; //$NON-NLS-1$
 
-  private static final String NS_COMMON = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/common";
+  private static final String NS_COMMON = "http://www.tu-harburg.de/wb/kalypso/risk/schemata/common"; //$NON-NLS-1$
 
   private static final QName QN_STATE_INSCRIPTION_MEMBER = new QName( NS_COMMON, F_STATE_INSCRIPTION_MEMBER );
 

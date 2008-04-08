@@ -31,7 +31,7 @@ public class KalypsoModelRiskProjectsContentProvider extends SimulationProjectsC
     final Workflow workflow = nature.getCurrentWorklist();
     final String uri = workflow.getURI();
 
-    return uri.contains( "http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk" );
+    return uri.contains( "http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk" ); //$NON-NLS-1$
   }
 
 }
