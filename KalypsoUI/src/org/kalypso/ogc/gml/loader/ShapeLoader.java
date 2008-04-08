@@ -53,11 +53,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
@@ -101,21 +102,19 @@ public class ShapeLoader extends AbstractLoader
       }
       else
       {
-        sourceSrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+        sourceSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         shpSource = location;
       }
-
-      final UrlResolver urlResolver = new UrlResolver();
 
       IResource shpResource = null;
       IResource dbfResource = null;
       IResource shxResource = null;
 
-      final URL sourceURL = urlResolver.resolveURL( context, shpSource );
+      final URL sourceURL = UrlResolverSingleton.resolveUrl( context, shpSource );
 
-      final URL shpURL = urlResolver.resolveURL( context, shpSource + ".shp" );
-      final URL dbfURL = urlResolver.resolveURL( context, shpSource + ".dbf" );
-      final URL shxURL = urlResolver.resolveURL( context, shpSource + ".shx" );
+      final URL shpURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shp" );
+      final URL dbfURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".dbf" );
+      final URL shxURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shx" );
 
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       final File sourceFile;
@@ -157,7 +156,7 @@ public class ShapeLoader extends AbstractLoader
 
       // Workspace laden
       final String sourceCrs = sourceSrs;
-      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
       final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
@@ -203,9 +202,7 @@ public class ShapeLoader extends AbstractLoader
       final IFile file = ResourceUtilities.findFileFromURL( shpURL );
       if( file != null )
       {
-
         ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath(), null );
-
       }
       else
         throw new LoaderException( "Die URL kann nicht beschrieben werden: " + shpURL );
@@ -220,6 +217,5 @@ public class ShapeLoader extends AbstractLoader
       e.printStackTrace();
       throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
     }
-
   }
 }
