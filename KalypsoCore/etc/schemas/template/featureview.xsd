@@ -130,18 +130,14 @@
 	<xs:element name="geometrylabel" type="fv:GeometryLabelType" substitutionGroup="fv:control" />
 	<xs:complexType name="GeometryLabelType">
 		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType">
-				<xs:attribute name="text" type="xs:string" use="optional" default="" />
-			</xs:extension>
+			<xs:extension base="fv:PropertyControlType"/>
 		</xs:complexContent>
 	</xs:complexType>
 
 	<xs:element name="colorlabel" type="fv:ColorLabelType" substitutionGroup="fv:control" />
 	<xs:complexType name="ColorLabelType">
 		<xs:complexContent>
-			<xs:extension base="fv:PropertyControlType">
-				<xs:attribute name="text" type="xs:string" use="optional" default="" />
-			</xs:extension>
+			<xs:extension base="fv:PropertyControlType"/>
 		</xs:complexContent>
 	</xs:complexType>
 
@@ -235,7 +231,7 @@
 			<xs:complexContent>
 				<xs:extension base="fv:PropertyControlType">
 					<xs:sequence>
-						<xs:element name="text" type="xs:string" />
+						<xs:element name="text" type="xs:string" minOccurs="0"/>
 					</xs:sequence>
 					<xs:attribute name="editable" type="xs:boolean" use="optional" default="true" />
 				</xs:extension>

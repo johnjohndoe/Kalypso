@@ -41,7 +41,9 @@
 
 package org.kalypso.featureview.views.actions;
 
-import java.io.OutputStreamWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +71,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.dialogs.SaveAsDialog;
-import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.jwsdp.JaxbUtilities;
@@ -120,7 +121,6 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
       return;
     }
 
-    
     final SaveAsDialog dialog = new SaveAsDialog( shell );
     dialog.setBlockOnOpen( true );
     dialog.setTitle( STR_ALS_VORLAGE_SPEICHERN );
@@ -164,18 +164,20 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
           final Map<String, String> prefixes = new HashMap<String, String>( 1 );
           prefixes.put( "featureview.template.kalypso.org", "gft" );
-          
-          final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC, true, prefixes );
-          final SetContentHelper helper = new SetContentHelper()
-          {
-            @Override
-            protected void write( final OutputStreamWriter writer ) throws Throwable
-            {
-              marshaller.marshal( template, writer );
-            }
-          };
 
-          helper.setFileContents( file, false, true, monitor );
+          final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC, true, prefixes );
+
+          final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+          marshaller.marshal( template, bos );
+          bos.close();
+
+          final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+
+          if( file.exists() )
+            file.setContents( bis, false, true, monitor );
+          else
+            file.create( bis, false, monitor );
+          bis.close();
         }
         catch( final JAXBException e )
         {
@@ -184,6 +186,10 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         catch( final CoreException e )
         {
           return e.getStatus();
+        }
+        catch( IOException e )
+        {
+          return StatusUtilities.createStatus( IStatus.ERROR, "Vorlage konnte nicht erstellt werden", e );
         }
 
         return Status.OK_STATUS;

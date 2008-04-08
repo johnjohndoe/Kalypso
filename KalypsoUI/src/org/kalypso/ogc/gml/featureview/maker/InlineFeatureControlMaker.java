@@ -45,8 +45,6 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.kalypso.core.jaxb.TemplateUtilitites;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -69,7 +67,7 @@ public class InlineFeatureControlMaker implements IControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
    *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
-  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature )
+  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IFeatureType ft, final IPropertyType ftp, final Feature feature )
   {
     if( !(ftp instanceof IRelationType) )
       return false;
@@ -103,13 +101,7 @@ public class InlineFeatureControlMaker implements IControlMaker
     groupdata.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     groupdata.setHorizontalSpan( ((GridLayout) parentLayout).getNumColumns() );
 
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
-    final String text = annotation == null ? ftp.getQName().getLocalPart() : annotation.getLabel();
-    final String tooltip = annotation == null ? null : annotation.getTooltip();
-
     group.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( groupdata ) );
-    group.setText( text );
-    group.setTooltip( tooltip );
     group.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();

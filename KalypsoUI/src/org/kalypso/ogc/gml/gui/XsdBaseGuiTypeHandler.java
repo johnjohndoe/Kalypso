@@ -73,9 +73,9 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
  */
 public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  private final XsdBaseTypeHandler<?> m_handler;
+  private final XsdBaseTypeHandler< ? > m_handler;
 
-  public XsdBaseGuiTypeHandler( final XsdBaseTypeHandler<?> handler )
+  public XsdBaseGuiTypeHandler( final XsdBaseTypeHandler< ? > handler )
   {
     m_handler = handler;
   }
@@ -98,7 +98,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     // if we get a ClassCastException here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) property;
 
-    final Class<?> valueClass = getValueClass();
+    final Class< ? > valueClass = getValueClass();
     final QName qname = property.getQName();
 
     // Booleans get a check box
@@ -108,6 +108,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
       checkbox.setStyle( "SWT.NONE" );
       checkbox.setEditable( true );
       checkbox.setProperty( qname );
+      checkbox.setText( " " ); // set invisible string to suppress automatic text from property
 
       return factory.createCheckbox( checkbox );
     }
@@ -144,7 +145,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-    final Class<?> valueClass = getValueClass();
+    final Class< ? > valueClass = getValueClass();
 
     if( Boolean.class == valueClass )
       return new BooleanModifier( vpt );
@@ -152,14 +153,14 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     final Map<Object, String> comboEntries = PropertyUtils.createComboEntries( vpt );
     if( comboEntries.size() > 0 )
       return new ComboModifier( vpt );
-    
+
     return new StringModifier( vpt, format );
   }
 
   /**
    * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
    */
-  public Class<?> getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return m_handler.getValueClass();
   }

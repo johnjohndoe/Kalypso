@@ -92,9 +92,6 @@ public abstract class AbstractValueControlMaker implements IControlMaker
 
     /* Some common values i need */
     final QName property = ftp.getQName();
-    final IAnnotation annotation = getAnnotation( ftp );
-    final String text = annotation == null ? property.getLocalPart() : annotation.getLabel();
-    final String tooltip = annotation == null ? null : annotation.getTooltip();
 
     /* The cellcount is needed to fill the layout afterwards. */
     int cellCount = 0;
@@ -104,8 +101,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       final LabelType label = TemplateUtilitites.OF_FEATUREVIEW.createLabelType();
       label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
-      label.setText( text );
-      label.setTooltip( tooltip );
+      label.setProperty( property );
       label.setVisible( true );
 
       final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
@@ -125,8 +121,6 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       final LayoutDataType layoutData = type.getLayoutData().getValue();
       if( layoutData instanceof GridDataType )
         cellCount += ((GridDataType) layoutData).getHorizontalSpan();
-
-      type.setTooltip( tooltip );
 
       controlList.add( controlElement );
     }
