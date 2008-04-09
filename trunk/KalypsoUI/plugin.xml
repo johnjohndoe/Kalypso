@@ -919,6 +919,10 @@
             id="org.kalypso.ui.commands.default"
             name="%category.name.4"/>
       <category
+            id="org.kalypso.ui.views.outline.category"
+            name="Outline">
+      </category>
+      <category
             description="%category.description.1"
             id="org.kalypso.ogc.gml.map.category"
             name="%category.name.5"/>
