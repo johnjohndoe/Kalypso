@@ -48,7 +48,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -202,7 +202,7 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     }
     catch( Exception ex )
     {
-      throw new GeoGridException( Messages.getString("RiskZonesGrid.0"), ex ); //$NON-NLS-1$
+      throw new GeoGridException( Messages.getString( "RiskZonesGrid.0" ), ex ); //$NON-NLS-1$
     }
   }
 

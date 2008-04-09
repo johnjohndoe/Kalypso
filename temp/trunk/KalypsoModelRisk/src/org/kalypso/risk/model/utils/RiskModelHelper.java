@@ -13,7 +13,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
