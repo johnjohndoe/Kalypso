@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.namespace.QName;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -19,16 +19,16 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.metadata.MetadataObject;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
+import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -156,12 +156,13 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     // new observation
     final TupleResult result = new TupleResult();
 
-    final List<IRiskLanduseStatistic> eventList = landuseClassesList.get( 0 ).getLanduseStatisticList();
+    // iterate over landuses and get set of events
+    final IRiskLanduseStatistic[] events = getEvents( landuseClassesList.toArray( new ILanduseClass[] {} ) );
 
-    addComponentsToObs( fObs, result, eventList );
+    addComponentsToObs( fObs, result, events );
 
     /* fill TupleResult with data */
-    fillResultWithData( result, landuseClassesList );
+    fillResultWithData( result, landuseClassesList, events );
 
     /* add observation to workspace */
     final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -169,18 +170,33 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     ObservationFeatureFactory.toFeature( obs, fObs );
   }
 
-  private static void addComponentsToObs( final Feature fObs, final TupleResult result, final List<IRiskLanduseStatistic> eventList )
+  private static IRiskLanduseStatistic[] getEvents( final ILanduseClass[] classes )
+  {
+    final Set<IRiskLanduseStatistic> mySet = new TreeSet<IRiskLanduseStatistic>();
+
+    for( final ILanduseClass member : classes )
+    {
+      final List<IRiskLanduseStatistic> landuseStatisticList = member.getLanduseStatisticList();
+      mySet.addAll( landuseStatisticList );
+    }
+
+    return mySet.toArray( new IRiskLanduseStatistic[] {} );
+  }
+
+  private static void addComponentsToObs( final Feature fObs, final TupleResult result, final IRiskLanduseStatistic[] riskLanduseStatistics )
   {
     /* add the landuse class name component */
-    result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_LANDUSE ) );
+    final Component componentLanduse = new Component( DICT_LANDUSE, "Landuse", "Landuse", "", "", IWspmConstants.Q_STRING, "null", new Phenomenon( DICT_LANDUSE, "Landuse", "Landuse" ) );
+    result.addComponent( componentLanduse );
 
-    final int numOfDataColumns = eventList.size();
+    final int numOfDataColumns = riskLanduseStatistics.length;
 
     /* for each dataColumn add an attr_member */
     for( int i = 0; i < numOfDataColumns; i++ )
     {
-      final String eventName = eventList.get( i ).getName();
-      final IComponent valueComponent = new Component( eventName, eventName, eventName, "none", "", new QName( NS.XSD_SCHEMA, "decimal" ), "", new DictionaryPhenomenon( DICT_EVENT, eventName, eventName ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      final String eventName = riskLanduseStatistics[i].getName();
+
+      final IComponent valueComponent = new Component( DICT_EVENT, eventName, eventName, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( DICT_EVENT, eventName, eventName ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       result.addComponent( valueComponent );
     }
 
@@ -188,15 +204,10 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL ) );
   }
 
-  private static void fillResultWithData( final TupleResult result, final List<ILanduseClass> landuseClassesList )
+  private static void fillResultWithData( final TupleResult result, final List<ILanduseClass> landuseClassesList, final IRiskLanduseStatistic[] events )
   {
     /* get the size of the table */
     // number of columns is the one for the landuse names + number of flood events + last column
-    final int numOfEvents = landuseClassesList.get( 0 ).getLanduseStatisticList().size();
-
-    // number of rows is number of landuse classes + last row
-    final int numOfLanduses = landuseClassesList.size();
-
     /* fill for every landuse class */
     for( final ILanduseClass landuseClass : landuseClassesList )
     {
@@ -210,67 +221,78 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
       // specific damage values for each event
       final List<IRiskLanduseStatistic> landuseStatisticList = landuseClass.getLanduseStatisticList();
 
-      for( int i = 0; i < numOfEvents; i++ )
+      for( final IRiskLanduseStatistic statistic : landuseStatisticList )
       {
-        if( landuseStatisticList.size() == 0 )
-        {
-          // fill with zeros, if the landuse was not getting flooded
-          newRecord.setValue( i + 1, new BigDecimal( 0.0 ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
-        }
-        else
-        {
-          final IRiskLanduseStatistic riskLanduseStatistics = landuseStatisticList.get( i );
-          final BigDecimal damageSum = riskLanduseStatistics.getDamageSum();
+        final int tableIndex = getIndex( events, statistic );
+        if( tableIndex == -1 )
+          continue;
+        newRecord.setValue( tableIndex + 1, statistic.getDamageSum() );
+      }
 
-          newRecord.setValue( i + 1, damageSum );
+      final int recordSize = newRecord.getOwner().getComponents().length;
+      for( int i = 1; i < recordSize - 1; i++ )
+      {
+        final Object value = newRecord.getValue( i );
+        if( value == null )
+        {
+          newRecord.setValue( i, new BigDecimal( 0.0 ).setScale( 2, BigDecimal.ROUND_HALF_UP ) );
         }
       }
 
       // average annual damage value for the whole landuse class
-      newRecord.setValue( numOfEvents + 1, landuseClass.getAverageAnnualDamage() );
+      newRecord.setValue( recordSize - 1, landuseClass.getAverageAnnualDamage() );
+
       result.add( newRecord );
     }
 
     /* specific damage value for each event */
     final IRecord lastRecord = result.createRecord();
+    final int columnSize = result.getComponents().length;
 
     // name
     lastRecord.setValue( 0, "Summation" ); //$NON-NLS-1$
 
     // specific damage values per event
-    for( int i = 0; i < numOfEvents; i++ )
+    for( int index = 1; index < columnSize; index++ )
     {
-      BigDecimal eventSummation = new BigDecimal( 0.0 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
-      for( int j = 0; j < numOfLanduses; j++ )
+      BigDecimal sum = new BigDecimal( 0.0 );
+
+      for( int rowIndex = 0; rowIndex < result.size(); rowIndex++ )
       {
-        final List<IRiskLanduseStatistic> statisticList = landuseClassesList.get( j ).getLanduseStatisticList();
-        if( statisticList.size() == 0 )
+        final IRecord record = result.get( 0 );
+
+        // @hack last value (annual) is type of double
+        final Object object = record.getValue( index );
+        if( object instanceof BigDecimal )
         {
-          lastRecord.setValue( i + 1, 0.0 );
+          final BigDecimal value = (BigDecimal) record.getValue( index );
+          sum = sum.add( value );
         }
-        else
+        else if( object instanceof Double )
         {
-          final IRiskLanduseStatistic riskLanduseStatistic = statisticList.get( i );
-          if( riskLanduseStatistic != null )
-          {
-            final BigDecimal damageSum = riskLanduseStatistic.getDamageSum();
-            eventSummation = eventSummation.add( damageSum );
-          }
+          final Double value = (Double) record.getValue( index );
+          sum = sum.add( BigDecimal.valueOf( value ) );
         }
-        lastRecord.setValue( i + 1, eventSummation );
       }
-    }
 
-    // calculate overall average annual damage value
-    double overAllAverageDamage = 0.0;
-    for( final ILanduseClass landuseClass : landuseClassesList )
-    {
-      final double averageAnnualDamage = landuseClass.getAverageAnnualDamage();
-      overAllAverageDamage = overAllAverageDamage + averageAnnualDamage;
+      // @hack last value (annual) is type of double
+      if( index == columnSize - 1 )
+        lastRecord.setValue( index, sum.doubleValue() );
+      else
+        lastRecord.setValue( index, sum );
     }
-
-    lastRecord.setValue( numOfEvents + 1, overAllAverageDamage );
 
     result.add( lastRecord );
+  }
+
+  private static int getIndex( final IRiskLanduseStatistic[] events, final IRiskLanduseStatistic statistic )
+  {
+    for( int i = 0; i < events.length; i++ )
+    {
+      if( ("" + events[i].getName()).equals( "" + statistic.getName() ) )
+        return i;
+    }
+
+    return -1;
   }
 }
