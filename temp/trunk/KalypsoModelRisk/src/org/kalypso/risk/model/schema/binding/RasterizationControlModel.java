@@ -3,11 +3,11 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.kalypsosimulationmodel.core.UnversionedModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.risk.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
@@ -16,7 +16,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 public class RasterizationControlModel extends UnversionedModel implements IRasterizationControlModel
 {
   private final FeatureList m_landuseClassesFeatureList;
-
 
   private final List<ILanduseClass> m_landuseClasses;
 
@@ -69,7 +68,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
 
   public IAssetValueClass getAssetValueClass( final Double value, final String name, final String description )
   {
-    for( IAssetValueClass assetClass : m_assetValueClasses )
+    for( final IAssetValueClass assetClass : m_assetValueClasses )
     {
       if( assetClass.getName().equals( name ) && assetClass.getAssetValue().equals( value ) && assetClass.getDescription().equals( description ) )
         return assetClass;
@@ -165,7 +164,7 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
    */
   public IDamageFunction getDamageFunction( final String name, final String value, final String description )
   {
-    for( IDamageFunction damageFunction : m_damageFunctions )
+    for( final IDamageFunction damageFunction : m_damageFunctions )
     {
       if( damageFunction.getName().equals( name ) && damageFunction.getDescription().equals( description ) && damageFunction.getFunction().equals( value ) )
         return damageFunction;
@@ -176,10 +175,19 @@ public class RasterizationControlModel extends UnversionedModel implements IRast
   /**
    * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getStatisticObs()
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IObservation<TupleResult> getStatisticObs( )
   {
-    return (IObservation<TupleResult>) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+    final Feature feature = getStatisticObsFeature();
+    // FIXME
+    throw new NotImplementedException();
   }
 
+  /**
+   * @see org.kalypso.risk.model.schema.binding.IRasterizationControlModel#getStatisticObsFeature()
+   */
+  public Feature getStatisticObsFeature( )
+  {
+    return (Feature) getFeature().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
+  }
 }

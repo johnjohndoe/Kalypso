@@ -47,7 +47,7 @@
 			<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="administrationUnitsPolygonCollection">
 		<xs:complexType>
 			<xs:sequence>

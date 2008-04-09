@@ -40,10 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.widget;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.observation.IObservation;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlWrapper;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
+import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 
 /**
@@ -64,14 +77,37 @@ public class StatisticResultComposite extends Composite
   private void paint( final IRasterizationControlModel model )
   {
     final FormToolkit toolkit = new FormToolkit( getDisplay() );
-    toolkit.createLabel( this, "I'm a composite" );
 
-    final IObservation<TupleResult> statisticObs = model.getStatisticObs();
+    final IComponentUiHandlerProvider provider = new IComponentUiHandlerProvider()
+    {
+      public Map<Integer, IComponentUiHandler> createComponentHandler( TupleResult tupleResult )
+      {
+        Map<Integer, IComponentUiHandler> myMap = new LinkedHashMap<Integer, IComponentUiHandler>();
 
-    // final TupleResultFeatureControlWrapper control = new TupleResultFeatureControlWrapper( fObs, new
-    // DefaultComponentUiHandlerProvider(), false, true );
+        IComponent[] components = tupleResult.getComponents();
+
+        int count = 0;
+        for( IComponent component : components )
+        {
+          QName valueTypeName = component.getValueTypeName();
+          if( valueTypeName.equals( IWspmConstants.Q_STRING ) )
+            myMap.put( count, new ComponentUiStringHandler( count, false, true, false, component.getName(), SWT.NONE, 200, 30, "%s", "", "" ) );
+          else if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
+            myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) );
+          else if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
+            myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) );
+
+          count++;
+        }
+
+        return myMap;
+      }
+
+    };
+
+    final TupleResultFeatureControlWrapper control = new TupleResultFeatureControlWrapper( model.getStatisticObsFeature(), provider, false, true );
+    control.draw( this );
 
     toolkit.adapt( this );
   }
-
 }

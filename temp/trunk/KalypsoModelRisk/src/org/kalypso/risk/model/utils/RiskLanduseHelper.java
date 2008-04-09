@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.utils;
 
@@ -45,8 +45,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,6 +73,7 @@ import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
+import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -97,7 +100,7 @@ public class RiskLanduseHelper
         landuseClass.setName( landuseType );
         landuseClass.setColorStyle( getLanduseClassDefaultColor( landuseType, predefinedLanduseColorsCollection, propName, propDataMember, propValue ) );
         landuseClass.setOrdinalNumber( controlModel.getNextAvailableLanduseClassOrdinalNumber() );
-        landuseClass.setDescription( Messages.getString("RiskLanduseHelper.0") ); //$NON-NLS-1$
+        landuseClass.setDescription( Messages.getString( "RiskLanduseHelper.0" ) ); //$NON-NLS-1$
       }
     }
   }
@@ -107,19 +110,19 @@ public class RiskLanduseHelper
     if( !landuseClass.containsStatisticEntry( returnPeriod ) )
     {
       final IRiskLanduseStatistic entry = landuseClass.createNewStatisticEntry();
-      final String entryName = String.format( Messages.getString("RiskLanduseHelper.1"), returnPeriod ); //$NON-NLS-1$
+      final String entryName = String.format( Messages.getString( "RiskLanduseHelper.1" ), returnPeriod ); //$NON-NLS-1$
 
       entry.setName( entryName );
       entry.setReturnPeriod( returnPeriod );
       entry.setCellSize( new BigDecimal( cellSize ).setScale( 4, BigDecimal.ROUND_HALF_UP ) );
-      entry.setDescription( Messages.getString("RiskLanduseHelper.2") + returnPeriod + Messages.getString("RiskLanduseHelper.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+      entry.setDescription( Messages.getString( "RiskLanduseHelper.2" ) + returnPeriod + Messages.getString( "RiskLanduseHelper.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return entry;
     }
 
     return landuseClass.getStatistic( returnPeriod );
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static RGB getLanduseClassDefaultColor( final String landuseClassName, final List<Feature> predefinedLanduseColorsCollection, final QName propName, final QName propDataMember, final QName propValue )
   {
     for( final Feature feature : predefinedLanduseColorsCollection )
@@ -156,7 +159,7 @@ public class RiskLanduseHelper
     return new RGB( new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue(), new Double( 255.0 * Math.random() ).intValue() );
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static void handleDBImport( final String externalProjectName, final IRasterizationControlModel controlModel, final IFolder scenarioFolder )
   {
     try
@@ -221,7 +224,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static void handleUsePreDefinedData( final String damageFunctionsCollectionName, final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     createDamageFunctions( damageFunctionsCollectionName, controlModel, predefinedDamageFunctionsCollection, propName, propDataMember, propDesc, propValue );
@@ -229,7 +232,7 @@ public class RiskLanduseHelper
     createAssetValues( assetValuesCollectionName, controlModel, predefinedAssetValueClassesCollection, propName, propDataMember, propValue, predefinedLanduseColorsCollection );
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private static void createAssetValues( final String assetValuesCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedAssetValueClassesCollection, final QName propName, final QName propDataMember, final QName propValue, final List<Feature> predefinedLanduseColorsCollection )
   {
     // delete already existing asset values
@@ -277,7 +280,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private static void createDamageFunctions( final String damageFunctionsCollectionName, final IRasterizationControlModel controlModel, final List<Feature> predefinedDamageFunctionsCollection, final QName propName, final QName propDataMember, final QName propDesc, final QName propValue )
   {
     // delete already existing damage functions
@@ -321,7 +324,7 @@ public class RiskLanduseHelper
     }
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static List<Feature> createLandusePolygons( final String landuseProperty, final IProgressMonitor monitor, final List shapeFeatureList, final IFeatureWrapperCollection<ILandusePolygon> landusePolygonCollection, final List<ILanduseClass> landuseClassesList ) throws CloneNotSupportedException
   {
     monitor.subTask( Messages.getString( "ImportLanduseWizard.9" ) ); //$NON-NLS-1$
@@ -416,6 +419,27 @@ public class RiskLanduseHelper
     }
 
     return set;
+  }
+
+  public static ILanduseClass[] getLanduseTypeSet( final IRasterizationControlModel conrolModel, final IVectorDataModel vectorModel )
+  {
+    final ILanduseClass[] classes = conrolModel.getLanduseClassesList().toArray( new ILanduseClass[] {} );
+
+    final Set<ILanduseClass> myTypes = new LinkedHashSet<ILanduseClass>();
+    for( final ILandusePolygon polygon : vectorModel.getLandusePolygonCollection() )
+    {
+      final ILanduseClass landuse = polygon.getLanduseClass( conrolModel );
+      for( final ILanduseClass c : classes )
+      {
+        if( c.getName().equals( landuse.getName() ) )
+        {
+          myTypes.add( c );
+          break;
+        }
+      }
+    }
+
+    return myTypes.toArray( new ILanduseClass[] {} );
   }
 
 }

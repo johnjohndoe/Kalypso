@@ -8,6 +8,7 @@ import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
+import org.kalypsodeegree.model.feature.Feature;
 
 public interface IRasterizationControlModel extends IModel
 {
@@ -78,5 +79,7 @@ public interface IRasterizationControlModel extends IModel
   public IDamageFunction getDamageFunction( final String name, final String value, final String description );
 
   public IObservation<TupleResult> getStatisticObs( );
+
+  public Feature getStatisticObsFeature( );
 
 }

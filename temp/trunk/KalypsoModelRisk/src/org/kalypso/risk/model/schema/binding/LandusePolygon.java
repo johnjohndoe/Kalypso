@@ -3,6 +3,7 @@ package org.kalypso.risk.model.schema.binding;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.tools.functionParser.ParseFunction;
 import org.kalypso.risk.model.utils.RiskPolygonStatistics;
@@ -49,12 +50,12 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     // }
   }
 
-  public void setGeometry( GM_Surface< ? > surface )
+  public void setGeometry( final GM_Surface< ? > surface )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_GEOMETRY, surface );
   }
 
-  public void setStyleType( String styleType )
+  public void setStyleType( final String styleType )
   {
     getFeature().setProperty( ILandusePolygon.PROPERTY_SLDSTYLE, styleType );
   }
@@ -89,7 +90,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
     return getFeature().getDefaultGeometryProperty().contains( position );
   }
 
-  public double getDamageValue( double depth )
+  public double getDamageValue( final double depth )
   {
     final ParseFunction damageFunction = getDamageFunction();
     final Double assetValue = getAssetValue();
@@ -106,13 +107,13 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
       if( damagefunctionValue > 1 )
       {
-        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString("LandusePolygon.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoRiskDebug.OPERATION.printf( "%s", Messages.getString( "LandusePolygon.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         damagefunctionValue = 1.0;
       }
 
       return assetValue * damagefunctionValue;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return Double.NaN;
@@ -174,7 +175,7 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
 
       // check if function is parsable
       if( !damageFunction.parse() )
-        throw new IllegalArgumentException( Messages.getString("LandusePolygon.5") + getDamageFunctionProp().toString() ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "LandusePolygon.5" ) + getDamageFunctionProp().toString() ); //$NON-NLS-1$
       else
         return damageFunction;
     }
@@ -198,6 +199,17 @@ public class LandusePolygon extends AbstractFeatureBinder implements ILandusePol
   public GM_Surface< ? > getGeometry( )
   {
     return getProperty( ILandusePolygon.PROPERTY_GEOMETRY, GM_Surface.class );
+  }
+
+  /**
+   * @see org.kalypso.risk.model.schema.binding.ILandusePolygon#getLanduseClass()
+   */
+  public ILanduseClass getLanduseClass( final IRasterizationControlModel model )
+  {
+    final Object property = getFeature().getProperty( ILandusePolygon.PROPERTY_LANDUSE_CLASS );
+    final Feature feature = FeatureUtils.resolveFeature( model.getFeature().getWorkspace(), property );
+
+    return new LanduseClass( feature );
   }
 
 }

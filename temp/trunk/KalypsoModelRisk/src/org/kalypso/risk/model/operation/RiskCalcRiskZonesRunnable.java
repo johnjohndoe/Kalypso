@@ -43,6 +43,7 @@ import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
+import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -121,7 +122,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
       // calculate average annual damage value for each landuse class
       RiskModelHelper.calcLanduseAnnualAverageDamage( m_controlModel );
 
-      createResultObsTable( m_controlModel );
+      createResultObsTable( m_controlModel, m_vectorModel );
 
       // TODO: what gets fixed here? the data should be valid!
       // if not, then there is a general error in the calculation of the values!
@@ -136,7 +137,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     }
   }
 
-  private static void createResultObsTable( final IRasterizationControlModel controlModel ) throws Exception
+  private static void createResultObsTable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorModel ) throws Exception
   {
     Assert.isNotNull( controlModel );
 
@@ -162,7 +163,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     addComponentsToObs( fObs, result, events );
 
     /* fill TupleResult with data */
-    fillResultWithData( result, landuseClassesList, events );
+    fillResultWithData( result, controlModel, vectorModel, events );
 
     /* add observation to workspace */
     final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -204,12 +205,14 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL ) );
   }
 
-  private static void fillResultWithData( final TupleResult result, final List<ILanduseClass> landuseClassesList, final IRiskLanduseStatistic[] events )
+  private static void fillResultWithData( final TupleResult result, final IRasterizationControlModel controlModel, final IVectorDataModel vectorModel, final IRiskLanduseStatistic[] events )
   {
     /* get the size of the table */
     // number of columns is the one for the landuse names + number of flood events + last column
     /* fill for every landuse class */
-    for( final ILanduseClass landuseClass : landuseClassesList )
+    final ILanduseClass[] classes = RiskLanduseHelper.getLanduseTypeSet( controlModel, vectorModel );
+
+    for( final ILanduseClass landuseClass : classes )
     {
       /* add the data to the observation */
       final IRecord newRecord = result.createRecord();
@@ -259,7 +262,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
       for( int rowIndex = 0; rowIndex < result.size(); rowIndex++ )
       {
-        final IRecord record = result.get( 0 );
+        final IRecord record = result.get( rowIndex );
 
         // @hack last value (annual) is type of double
         final Object object = record.getValue( index );
