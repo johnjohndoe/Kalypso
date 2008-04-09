@@ -320,6 +320,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       g.drawString( unitName, startUnitName, START_Y + FONT_HEIGHT );
 
       /* Draw the scale (but only, if there is enough space after the unit name). */
+      /* The +5 makes sure there are at least 5 pixels left, between the unit name and the scale. */
       if( startScaleString > startUnitName + unitWidth + 5 )
         g.drawString( scaleString, startScaleString, START_Y + FONT_HEIGHT );
     }
