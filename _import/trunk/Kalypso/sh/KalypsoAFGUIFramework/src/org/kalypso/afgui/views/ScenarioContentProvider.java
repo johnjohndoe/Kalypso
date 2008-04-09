@@ -230,4 +230,22 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     activeWorkContext.removeActiveContextChangeListener( this );
     super.dispose();
   }
+
+  /**
+   * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getElements(java.lang.Object)
+   */
+  @Override
+  public Object[] getElements( Object element )
+  {
+    if( element instanceof IProject )
+      return super.getElements( element );
+
+    if( !(element instanceof Scenario) )
+      return new Object[0];
+
+    Scenario scenario = (Scenario) element;
+    ScenarioList derivedScenarios = scenario.getDerivedScenarios();
+
+    return derivedScenarios.getScenarios().toArray();
+  }
 }

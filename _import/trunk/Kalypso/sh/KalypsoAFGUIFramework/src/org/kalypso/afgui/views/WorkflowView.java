@@ -89,7 +89,11 @@ public class WorkflowView extends ViewPart
           try
           {
             final WorkflowProjectNature workflowNature = WorkflowProjectNature.toThisNature( newProject.getProject() );
-            if( workflowNature != null )
+            if( workflowNature == null )
+            {
+              m_workflowControl.setWorkflow( null );
+            }
+            else
             {
               final Workflow currentWorklist = workflowNature.getCurrentWorklist();
               m_workflowControl.setWorkflow( currentWorklist );
@@ -98,10 +102,6 @@ public class WorkflowView extends ViewPart
               {
                 m_workflowControl.doTask( defaultTask );
               }
-            }
-            else
-            {
-              m_workflowControl.setWorkflow( null );
             }
           }
           catch( final CoreException e )

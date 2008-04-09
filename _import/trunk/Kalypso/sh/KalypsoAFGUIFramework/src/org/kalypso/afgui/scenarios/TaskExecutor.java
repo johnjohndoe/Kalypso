@@ -80,9 +80,9 @@ public class TaskExecutor implements ITaskExecutor
 
   private final ITaskExecutionAuthority m_authority;
 
-  private final ICommandService m_commandService;
+  private ICommandService m_commandService;
 
-  private final IHandlerService m_handlerService;
+  private IHandlerService m_handlerService;
 
   private final IContextHandlerFactory m_contextHandlerFactory;
 
@@ -252,6 +252,12 @@ public class TaskExecutor implements ITaskExecutor
    */
   private IStatus internalActivateContext( final ContextType context )
   {
+    if( m_commandService == null )
+      m_commandService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+
+    if( m_handlerService == null )
+      m_handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+
     // then execute the associated handler
     final IHandler handler = m_contextHandlerFactory.getHandler( context );
     final Command contextCommand = getCommand( m_commandService, context.getId(), TaskExecutionListener.CATEGORY_CONTEXT );
