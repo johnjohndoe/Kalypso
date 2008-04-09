@@ -124,7 +124,7 @@ public class CoverageProfile
 
     /* STEP 2: Compute the width and height for each point of the new line. */
     /* STEP 3: Create the new profile. */
-    IProfil profile = calculatePointsAndCreateProfile( GeoGridUtilities.toGrid( m_coverage ), points );
+    IProfil profile = calculatePointsAndCreateProfile( GeoGridUtilities.toGrid( m_coverage ), points, curve.getCoordinateSystem() );
 
     /* STEP 4: Thin the profile. */
     thinProfile( profile, 10 );
@@ -139,9 +139,11 @@ public class CoverageProfile
    *            The grid.
    * @param points
    *            All points of the new geo line.
+   * @param csOfPoints
+   *            The coordinate system of the points.
    * @return The new profile.
    */
-  private IProfil calculatePointsAndCreateProfile( IGeoGrid grid, TreeMap<Double, Point> points ) throws Exception
+  private IProfil calculatePointsAndCreateProfile( IGeoGrid grid, TreeMap<Double, Point> points, String csOfPoints ) throws Exception
   {
     /* Create the new profile. */
     IProfil profile = ProfilFactory.createProfil( m_type );
@@ -164,7 +166,12 @@ public class CoverageProfile
 
       /* Get grid value. */
       Coordinate coordinate = point.getCoordinate();
-      double value = grid.getValue( coordinate );
+
+      /* Transform the coordinate into the CS of the grid. */
+      Coordinate transformedCoordinate = GeoGridUtilities.transformCoordinate( grid, coordinate, csOfPoints );
+
+      /* Get the value with the coordinate in the coordinate system of the grid. */
+      double value = grid.getValue( transformedCoordinate );
       if( value == Double.NaN )
         continue;
 
