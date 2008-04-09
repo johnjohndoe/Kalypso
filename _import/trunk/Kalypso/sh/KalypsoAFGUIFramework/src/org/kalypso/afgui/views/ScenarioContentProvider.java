@@ -246,7 +246,13 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
 
     Scenario scenario = (Scenario) element;
     ScenarioList derivedScenarios = scenario.getDerivedScenarios();
+    if( derivedScenarios == null )
+      return new Object[0];
 
-    return derivedScenarios.getScenarios().toArray();
+    List<Scenario> scenarios = derivedScenarios.getScenarios();
+    if( scenarios == null || scenarios.size() == 0 )
+      return new Object[0];
+
+    return scenarios.toArray();
   }
 }
