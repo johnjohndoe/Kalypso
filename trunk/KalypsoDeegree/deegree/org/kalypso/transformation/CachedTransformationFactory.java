@@ -44,8 +44,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.deegree.crs.exceptions.TransformationException;
-import org.deegree.crs.transformations.CRSTransformation;
 import org.deegree.crs.transformations.TransformationFactory;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.deegree.model.crs.CoordinateSystem;
 import org.deegree.model.crs.UnknownCRSException;
 
