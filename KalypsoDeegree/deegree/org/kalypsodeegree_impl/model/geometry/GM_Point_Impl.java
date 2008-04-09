@@ -62,7 +62,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.transformation.TransformUtilities;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;

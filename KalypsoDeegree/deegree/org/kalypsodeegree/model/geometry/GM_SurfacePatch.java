@@ -61,7 +61,7 @@
 
 package org.kalypsodeegree.model.geometry;
 
-import org.deegree.crs.transformations.CRSTransformation;
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
 
 /**
  * Defining the iso geometry <code>GM_SurfacePatch</code> which is used for building surfaces. A surface patch is made

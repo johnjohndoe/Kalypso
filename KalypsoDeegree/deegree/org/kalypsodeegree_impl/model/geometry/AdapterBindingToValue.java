@@ -41,7 +41,6 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.w3c.dom.Node;
 
 /**
