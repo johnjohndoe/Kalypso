@@ -19,6 +19,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.risk.Messages;
 import org.kalypso.ui.views.map.MapView;
 
 public class WaterdepthCoveragesWidgetHandler extends AbstractHandler implements IHandler

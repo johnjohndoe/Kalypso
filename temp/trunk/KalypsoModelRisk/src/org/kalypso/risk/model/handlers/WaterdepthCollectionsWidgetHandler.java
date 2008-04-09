@@ -16,6 +16,7 @@ import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.manageWaterdepthCollections.WaterdepthCollectionsManagementWidget;
 import org.kalypso.ui.views.map.MapView;
 
@@ -37,12 +38,12 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final MapView mapView = (MapView) window.getActivePage().findView( MapView.ID );
     if( mapView == null )
-      throw new ExecutionException( Messages.getString("WaterdepthCollectionsWidgetHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "WaterdepthCollectionsWidgetHandler.0" ) ); //$NON-NLS-1$
 
     final MapPanel mapPanel = mapView.getMapPanel();
 
     /* wait for map to load */
-    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("WaterdepthCollectionsWidgetHandler.1"), Messages.getString("WaterdepthCollectionsWidgetHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "WaterdepthCollectionsWidgetHandler.1" ), Messages.getString( "WaterdepthCollectionsWidgetHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return null;
 
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -59,7 +60,7 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
 
-    ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
+    final ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
     job.schedule();
 
     return null;

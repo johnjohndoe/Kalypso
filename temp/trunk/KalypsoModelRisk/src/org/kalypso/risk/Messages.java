@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.risk.model.actions.dataImport.landuse.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.risk.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
@@ -13,13 +13,13 @@ public class Messages
   {
   }
 
-  public static String getString( String key )
+  public static String getString( final String key )
   {
     try
     {
       return RESOURCE_BUNDLE.getString( key );
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       return '!' + key + '!';
     }

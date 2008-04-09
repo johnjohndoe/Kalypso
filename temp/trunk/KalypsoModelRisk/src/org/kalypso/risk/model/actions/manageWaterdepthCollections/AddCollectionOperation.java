@@ -19,6 +19,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.template.types.StyledLayerType;
@@ -59,7 +60,7 @@ public final class AddCollectionOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( Messages.getString("AddCollectionOperation.0"), 7 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "AddCollectionOperation.0" ), 7 ); //$NON-NLS-1$
 
       /* Create a unique name */
       final IFeatureWrapperCollection<IAnnualCoverageCollection> waterlevelCoverageCollection = m_model.getWaterlevelCoverageCollection();

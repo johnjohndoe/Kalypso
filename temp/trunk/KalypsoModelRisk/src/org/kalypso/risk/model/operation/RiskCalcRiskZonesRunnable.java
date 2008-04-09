@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.risk.model.operation;
 
@@ -35,7 +35,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.risk.model.actions.riskZonesCalculation.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesGrid;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -109,7 +109,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         outputGrid.dispose();
         inputGrid.dispose();
 
-        coverage.setName( org.kalypso.risk.Messages.getString("RiskCalcRiskZonesRunnable.4") + i + org.kalypso.risk.Messages.getString("RiskCalcRiskZonesRunnable.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+        coverage.setName( org.kalypso.risk.Messages.getString( "RiskCalcRiskZonesRunnable.4" ) + i + org.kalypso.risk.Messages.getString( "RiskCalcRiskZonesRunnable.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         coverage.setDescription( Messages.getString( "RiskZonesCalculationHandler.9" ) + new Date().toString() ); //$NON-NLS-1$
 
         /* fireModellEvent to redraw a map */
@@ -132,7 +132,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString("RiskCalcRiskZonesRunnable.6") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString( "RiskCalcRiskZonesRunnable.6" ) ); //$NON-NLS-1$
     }
   }
 

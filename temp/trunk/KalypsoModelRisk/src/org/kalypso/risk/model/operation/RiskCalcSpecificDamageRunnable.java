@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.risk.model.operation;
 
@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -42,7 +42,7 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
     m_scenarioFolder = scenarioFolder;
   }
 
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
     final IFeatureWrapperCollection<IAnnualCoverageCollection> specificDamageCoverageCollection = m_rasterDataModel.getSpecificDamageCoverageCollection();
     final List<ILanduseClass> landuseClassesList = m_controlModel.getLanduseClassesList();
@@ -50,7 +50,7 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
     final IFeatureWrapperCollection<ILandusePolygon> polygonCollection = m_vectorDataModel.getLandusePolygonCollection();
 
     if( m_rasterDataModel.getWaterlevelCoverageCollection().size() == 0 )
-      return StatusUtilities.createErrorStatus( Messages.getString( org.kalypso.risk.Messages.getString("RiskCalcSpecificDamageRunnable.0") ) ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( org.kalypso.risk.Messages.getString( "RiskCalcSpecificDamageRunnable.0" ) ) ); //$NON-NLS-1$
 
     for( final IAnnualCoverageCollection collection : m_rasterDataModel.getWaterlevelCoverageCollection() )
     {
@@ -83,7 +83,7 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString("RiskCalcSpecificDamageRunnable.1") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString( "RiskCalcSpecificDamageRunnable.1" ) ); //$NON-NLS-1$
     }
   }
 }

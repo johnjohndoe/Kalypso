@@ -22,7 +22,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskCalcSpecificDamageRunnable;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -71,15 +71,15 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
         final MapPanel mapPanel = mapView.getMapPanel();
 
         /* wait for map to load */
-        if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, org.kalypso.risk.Messages.getString("SpecificDamageCalculationHandler.0"), org.kalypso.risk.Messages.getString("SpecificDamageCalculationHandler.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.0" ), org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
           return null;
 
         final GisTemplateMapModell mapModell = (GisTemplateMapModell) mapPanel.getMapModell();
 
         final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterizationControlModel, rasterDataModel, vectorDataModel, scenarioFolder );
 
-        IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
-        ErrorDialog.openError( shell, org.kalypso.risk.Messages.getString("SpecificDamageCalculationHandler.2"), org.kalypso.risk.Messages.getString("SpecificDamageCalculationHandler.3"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+        final IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
+        ErrorDialog.openError( shell, org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.2" ), org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.3" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
         if( !execute.isOK() )
           KalypsoRiskPlugin.getDefault().getLog().log( execute );
@@ -97,10 +97,10 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
       }
       catch( final Exception e )
       {
-        IStatus status = StatusUtilities.statusFromThrowable( e );
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoRiskPlugin.getDefault().getLog().log( status );
 
-        ErrorDialog.openError( shell, org.kalypso.risk.Messages.getString("SpecificDamageCalculationHandler.4"), org.kalypso.risk.Messages.getString("SpecificDamageCalculationHandler.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.4" ), org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     return null;

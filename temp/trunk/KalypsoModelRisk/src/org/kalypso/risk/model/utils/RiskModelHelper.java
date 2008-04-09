@@ -34,8 +34,8 @@ import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
-import org.kalypso.risk.model.actions.dataImport.waterdepth.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
 import org.kalypso.risk.model.schema.binding.ILandusePolygon;
@@ -210,7 +210,7 @@ public class RiskModelHelper
           }
           catch( Exception ex )
           {
-            throw new GeoGridException( org.kalypso.risk.Messages.getString("RiskModelHelper.0"), ex ); //$NON-NLS-1$
+            throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.0" ), ex ); //$NON-NLS-1$
           }
         }
       };
@@ -227,8 +227,8 @@ public class RiskModelHelper
       {
         landuseClass.updateStatistic( returnPeriod );
       }
-      newCoverage.setName( Messages.getString( org.kalypso.risk.Messages.getString("RiskModelHelper.6") ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      newCoverage.setDescription( Messages.getString( org.kalypso.risk.Messages.getString("RiskModelHelper.9") ) + new Date().toString() ); //$NON-NLS-1$
+      newCoverage.setName( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.6" ) ) + sourceCoverageCollection.getReturnPeriod() + " [" + i + "]" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      newCoverage.setDescription( Messages.getString( org.kalypso.risk.Messages.getString( "RiskModelHelper.9" ) ) + new Date().toString() ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
@@ -399,7 +399,7 @@ public class RiskModelHelper
             }
             catch( Exception ex )
             {
-              throw new GeoGridException( org.kalypso.risk.Messages.getString("RiskModelHelper.10"), ex ); //$NON-NLS-1$
+              throw new GeoGridException( org.kalypso.risk.Messages.getString( "RiskModelHelper.10" ), ex ); //$NON-NLS-1$
             }
           }
         };
@@ -418,7 +418,7 @@ public class RiskModelHelper
     }
     catch( final Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString("RiskModelHelper.11") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, org.kalypso.risk.Messages.getString( "RiskModelHelper.11" ) ); //$NON-NLS-1$
     }
   }
 
@@ -465,7 +465,7 @@ public class RiskModelHelper
   public static void updateDamageLayers( final IFolder scenarioFolder, final IRasterDataModel model, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString("RiskModelHelper.12") ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ) ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -495,7 +495,7 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString("RiskModelHelper.13") ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ) ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
@@ -508,7 +508,7 @@ public class RiskModelHelper
     for( int i = 0; i < rasterInfos.size(); i++ )
     {
       final AsciiRasterInfo asciiRasterInfo = rasterInfos.get( i );
-      int returnPeriod = asciiRasterInfo.getReturnPeriod();
+      final int returnPeriod = asciiRasterInfo.getReturnPeriod();
       final String layerName = "HQ " + returnPeriod; //$NON-NLS-1$
 
       final int collectionIndex = getCollectionIndex( waterdepthCoverageCollection, returnPeriod );
@@ -593,7 +593,7 @@ public class RiskModelHelper
    * The value is calculated by integrating the specific damage values.<br>
    * 
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )
   {
     /* get the landuse classes */

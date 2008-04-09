@@ -13,6 +13,7 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
 import org.kalypso.template.types.StyledLayerType;
@@ -47,7 +48,7 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( Messages.getString("ChangeAnnualityOperation.0"), 7 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "ChangeAnnualityOperation.0" ), 7 ); //$NON-NLS-1$
       final int oldReturnPeriod = m_coverageCollection.getReturnPeriod();
       m_coverageCollection.setReturnPeriod( m_newReturnPeriod );
       m_coverageCollection.setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$
@@ -81,13 +82,14 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
       if( themes[i].getName().equals( "HQ " + oldReturnPeriod ) ) //$NON-NLS-1$
       {
         themes[i].setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$
-        themeFound=true;
+        themeFound = true;
         break;
       }
     // if theme had no annuality before (z.B. imported from flood modeler), create new layer
-    if(!themeFound){
+    if( !themeFound )
+    {
       final StyledLayerType layer = new StyledLayerType();
-      layer.setName( "HQ "+ m_newReturnPeriod); //$NON-NLS-1$
+      layer.setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$
       layer.setFeaturePath( "#fid#" + m_coverageCollection.getGmlID() + "/coverageMember" ); //$NON-NLS-1$ //$NON-NLS-2$
       layer.setLinktype( "gml" ); //$NON-NLS-1$
       layer.setType( "simple" ); //$NON-NLS-1$
