@@ -102,9 +102,9 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * @param parent
    *            the parent composite
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    Composite container = new Composite( parent, SWT.NULL );
+    final Composite container = new Composite( parent, SWT.NULL );
     final GridLayout gridLayout = new GridLayout();
     gridLayout.numColumns = 3;
     container.setLayout( gridLayout );
@@ -138,17 +138,17 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     crsContainer.setLayoutData( crsGridData );
 
     m_crsPanel = new CRSSelectionPanel();
-    Control crsControl = m_crsPanel.createControl( crsContainer );
+    final Control crsControl = m_crsPanel.createControl( crsContainer );
     crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    crsControl.setToolTipText( Messages.getString("ImportLanduseWizardPage.21") ); //$NON-NLS-1$
+    crsControl.setToolTipText( Messages.getString( "ImportLanduseWizardPage.21" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
         updatePageComplete();
@@ -232,7 +232,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
    * @param assetValueClassesList
    * @param damageFunctionNamesList
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void init( final ISelection selection, final List<String> damageFunctionNamesList, final List<String> assetValueClassesList )
   {
     m_damageFunctionNamesList = damageFunctionNamesList;
@@ -248,7 +248,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
       Object item = iter.next();
       if( item instanceof IFile )
       {
-        IFile file = (IFile) item;
+        final IFile file = (IFile) item;
         if( m_fileExtensions.contains( file.getFileExtension() ) )
         {
           initialSourcePath = file.getLocation();
@@ -275,7 +275,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
       setPageComplete( false );
       return;
     }
-    IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+    final IPath rootLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     IPath path = initialSourcePath;
     if( rootLoc.isPrefixOf( path ) )
       path = path.setDevice( null ).removeFirstSegments( rootLoc.segmentCount() );
@@ -292,7 +292,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
   {
     setPageComplete( false );
 
-    IPath sourceLoc = getSourceLocation();
+    final IPath sourceLoc = getSourceLocation();
     // if( sourceLoc == null || !(fileExtensions.contains( sourceLoc.getFileExtension() )) )
     if( sourceLoc == null || !sourceLoc.toFile().isFile() )
     {
@@ -445,7 +445,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
           if( file.exists() && file.isFile() && file.canRead() )
           {
             final ShapeFile shape = new ShapeFile( FileUtilities.nameWithoutExtension( txt_InputFile.getText() ) );
-            String[] propertyNames = shape.getProperties();
+            final String[] propertyNames = shape.getProperties();
             shape.close();
             cmb_ShapeProperty.setItems( propertyNames );
             cmb_ShapeProperty.select( 0 );
@@ -461,7 +461,7 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
           cmb_ShapeProperty.setEnabled( false );
         }
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         status = new Status( IStatus.ERROR, "not_used", 0, "", null ); //$NON-NLS-1$ //$NON-NLS-2$
         msg_StatusLine = status;

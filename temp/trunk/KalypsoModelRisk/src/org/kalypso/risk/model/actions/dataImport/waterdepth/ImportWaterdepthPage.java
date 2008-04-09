@@ -156,9 +156,9 @@ public class ImportWaterdepthPage extends WizardPage
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        int[] selection = m_tableViewer.getSelectionIndices();
+        final int[] selection = m_tableViewer.getSelectionIndices();
         m_selectedRasterIndex = new Integer( selection[0] ).intValue();
         updateComposite();
       }
@@ -167,8 +167,8 @@ public class ImportWaterdepthPage extends WizardPage
 
   private void createControlButtonsPart( final Composite parent )
   {
-    final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( Messages.getString("ImportWaterdepthPage.28") ); //$NON-NLS-1$
-    final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( Messages.getString("ImportWaterdepthPage.29") ); //$NON-NLS-1$
+    final ImageDescriptor addBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_add.gif" ); //$NON-NLS-1$
+    final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" ); //$NON-NLS-1$
 
     m_btnAddNew = new Button( parent, SWT.PUSH );
     m_btnAddNew.setImage( new Image( parent.getDisplay(), addBtnID.getImageData() ) );
@@ -182,7 +182,7 @@ public class ImportWaterdepthPage extends WizardPage
       public void widgetSelected( final SelectionEvent e )
       {
         final List<String> rasterFiles = getFilenamesFromDialog();
-        
+
         for( int i = 0; i < rasterFiles.size(); i++ )
         {
 
@@ -198,7 +198,7 @@ public class ImportWaterdepthPage extends WizardPage
             updateComposite();
             getWizard().getContainer().updateButtons();
           }
-          catch( Exception e1 )
+          catch( final Exception e1 )
           {
             // TODO Auto-generated catch block
             e1.printStackTrace();
@@ -262,7 +262,7 @@ public class ImportWaterdepthPage extends WizardPage
     {
       @SuppressWarnings("synthetic-access")//$NON-NLS-1$
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_rasterInfos.get( m_selectedRasterIndex ).setReturnPeriod( m_fldReturnPeriod.getSelection() );
         m_tableViewer.getItem( m_selectedRasterIndex ).setText( 1, Integer.toString( m_fldReturnPeriod.getSelection() ) );
@@ -282,10 +282,10 @@ public class ImportWaterdepthPage extends WizardPage
     crsContainer.setLayoutData( crsGridData );
 
     m_crsPanel = new CRSSelectionPanel();
-    Control crsControl = m_crsPanel.createControl( crsContainer );
+    final Control crsControl = m_crsPanel.createControl( crsContainer );
     crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    crsControl.setToolTipText( Messages.getString("ImportWaterdepthPage.30") ); //$NON-NLS-1$
+    crsControl.setToolTipText( Messages.getString( "ImportWaterdepthPage.30" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -296,7 +296,7 @@ public class ImportWaterdepthPage extends WizardPage
        * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
        */
       @Override
-      protected void selectionChanged( String selectedCRS )
+      protected void selectionChanged( final String selectedCRS )
       {
         m_crs = selectedCRS;
 
