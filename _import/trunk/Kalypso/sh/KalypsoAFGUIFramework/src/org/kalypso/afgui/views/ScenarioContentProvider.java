@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -237,7 +238,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   @Override
   public Object[] getElements( Object element )
   {
-    if( element instanceof IProject )
+    if( element instanceof IResource )
       return super.getElements( element );
 
     if( !(element instanceof Scenario) )
