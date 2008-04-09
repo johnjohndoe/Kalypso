@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map.themes;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -235,6 +236,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   {
     /* Setup the graphics context. */
     g.setColor( Color.BLACK );
+    g.setFont( new Font( "Arial", Font.PLAIN, 10 ) );
 
     /* If it is the right graphic type, setup it further. */
     if( g instanceof Graphics2D )
@@ -290,7 +292,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     LinkedList<Rectangle2D> bounds = new LinkedList<Rectangle2D>();
     for( int i = 0; i < values.size(); i++ )
     {
-      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( String.format( "%,.1f%n", values.get( i ) ), g );
+      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( String.format( "%,.1f%n", (values.get( i ) / scaleUnit.getFactor()) ), g );
 
       int x = START_X + (i * WIDTH_SUB_RECT) - (int) stringBounds.getWidth() / 2;
       int y = START_Y + MAX_HEIGHT;
@@ -303,11 +305,23 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     /* Draw the unit name. */
     if( scale > 0 )
     {
-      g.drawString( scaleUnit.getName(), START_X, START_Y + FONT_HEIGHT );
+      /* Calculate some things for the unit name. */
+      String unitName = scaleUnit.getName();
+      int unitWidth = g.getFontMetrics().stringWidth( unitName );
+      int startUnitName = START_X;
+
+      /* Calculate some things for the scale string. */
       BigDecimal bigScale = new BigDecimal( scale, new MathContext( 3, RoundingMode.HALF_UP ) );
       String scaleString = "1:" + bigScale.toPlainString();
-      int stringWidth = g.getFontMetrics().stringWidth( scaleString );
-      g.drawString( scaleString, START_X + WIDTH_SCALE - stringWidth, START_Y + FONT_HEIGHT );
+      int scaleWidth = g.getFontMetrics().stringWidth( scaleString );
+      int startScaleString = START_X + WIDTH_SCALE - scaleWidth;
+
+      /* Draw the name of the unit. */
+      g.drawString( unitName, startUnitName, START_Y + FONT_HEIGHT );
+
+      /* Draw the scale (but only, if there is enough space after the unit name). */
+      if( startScaleString > startUnitName + unitWidth + 5 )
+        g.drawString( scaleString, startScaleString, START_Y + FONT_HEIGHT );
     }
     else
     {
@@ -335,7 +349,8 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       Rectangle2D stringBounds = bounds.get( i );
 
       /* The text is not drawn, if it is overlapping the last drawn text or the last text. */
-      if( ((stringBounds.getX() > endPointDrawnText) && (stringBounds.getMaxX() < startPointLastText)) || i == values.size() - 1 )
+      /* The summand +5 makes sure, there are some bounds preserverd between the texts. */
+      if( ((stringBounds.getX() > endPointDrawnText + 5) && (stringBounds.getMaxX() < startPointLastText - 5)) || i == values.size() - 1 )
       {
         /* Draw the text. */
         g.drawString( String.format( "%,.1f%n", values.get( i ).doubleValue() / scaleUnit.getFactor() ), (int) stringBounds.getX(), (int) stringBounds.getY() );
