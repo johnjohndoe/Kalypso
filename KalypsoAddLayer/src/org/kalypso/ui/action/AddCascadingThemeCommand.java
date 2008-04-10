@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 
 /**
  * @author kuch
@@ -71,6 +72,8 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   private CascadingLayerKalypsoTheme m_theme;
 
   private final ADD_THEME_POSITION m_position;
+
+  private Property[] m_properties = new StyledLayerType.Property[] {};
 
   /**
    * Add Cascading theme constructor
@@ -105,6 +108,11 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   public void addCommand( final ICommand command )
   {
     m_layerCommands.add( command );
+  }
+
+  public void addProperties( final StyledLayerType.Property[] properties )
+  {
+    m_properties = properties;
   }
 
   private ICommand[] getCommands( )
@@ -185,6 +193,12 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   {
     final org.kalypso.template.gismapview.ObjectFactory factory = new org.kalypso.template.gismapview.ObjectFactory();
     m_layer = init( factory );
+
+    final List<Property> properties = m_layer.getProperty();
+    for( final Property property : m_properties )
+    {
+      properties.add( property );
+    }
 
     final List<JAXBElement< ? extends StyledLayerType>> layers = m_layer.getLayer();
     getSubLayer( factory, layers, m_layerCommands.toArray( new ICommand[] {} ) );
