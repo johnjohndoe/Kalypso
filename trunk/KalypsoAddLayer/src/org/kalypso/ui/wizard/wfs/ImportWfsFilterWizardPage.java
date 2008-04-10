@@ -455,7 +455,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       final Object firstElement = ((IKalypsoFeatureTheme) activeTheme).getSelectionManager().getFirstElement();
-      m_themeName = activeTheme.getName();
+      m_themeName = activeTheme.getLabel();
       if( firstElement instanceof Feature && firstElement != null )
       {
         final Feature feature = (Feature) firstElement;

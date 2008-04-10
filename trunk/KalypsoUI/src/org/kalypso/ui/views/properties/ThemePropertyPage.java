@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -71,12 +72,12 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createContents( Composite parent )
+  protected Control createContents( final Composite parent )
   {
     /* Get the theme. */
-    IKalypsoTheme theme = getTheme();
+    final IKalypsoTheme theme = getTheme();
 
-    Composite composite = new Composite( parent, SWT.NONE );
+    final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 2, false ) );
 
     if( theme == null )
@@ -85,17 +86,17 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
       return composite;
     }
 
-    Label label = new Label( composite, SWT.NONE );
+    final Label label = new Label( composite, SWT.NONE );
     label.setText( "Name:" );
 
     final Text text = new Text( composite, SWT.NONE );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    text.setText( theme.getName() );
+    text.setText( theme.getLabel() );
     text.addModifyListener( new ModifyListener()
     {
       public void modifyText( final ModifyEvent e )
       {
-        String name = text.getText();
+        final String name = text.getText();
         setThemeName( name );
       }
     } );
@@ -110,8 +111,8 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
    */
   private IKalypsoTheme getTheme( )
   {
-    IAdaptable element = getElement();
-    IKalypsoTheme theme = (IKalypsoTheme) (element instanceof IKalypsoTheme ? element : element.getAdapter( IKalypsoTheme.class ));
+    final IAdaptable element = getElement();
+    final IKalypsoTheme theme = (IKalypsoTheme) (element instanceof IKalypsoTheme ? element : element.getAdapter( IKalypsoTheme.class ));
 
     return theme;
   }
@@ -122,9 +123,9 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
   @Override
   public boolean performOk( )
   {
-    IKalypsoTheme theme = getTheme();
+    final IKalypsoTheme theme = getTheme();
     if( theme != null )
-      theme.setName( m_themeName );
+      theme.setName( new I10nString( m_themeName ) );
 
     return super.performOk();
   }
@@ -135,7 +136,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
    * @param name
    *            The name of the theme.
    */
-  protected void setThemeName( String name )
+  protected void setThemeName( final String name )
   {
     m_themeName = name;
 

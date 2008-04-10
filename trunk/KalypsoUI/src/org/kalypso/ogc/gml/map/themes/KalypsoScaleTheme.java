@@ -55,6 +55,7 @@ import java.util.LinkedList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
@@ -74,7 +75,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   /**
    * The constructor.
    */
-  public KalypsoScaleTheme( String name, String type, IMapModell mapModel, String legendIcon, URL context, boolean shouldShowChildren )
+  public KalypsoScaleTheme( final I10nString name, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, type, mapModel, legendIcon, context, shouldShowChildren );
   }
@@ -83,7 +84,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  public void setExtent( int width, int height, GM_Envelope extent )
+  public void setExtent( final int width, final int height, final GM_Envelope extent )
   {
   }
 
@@ -118,43 +119,43 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( Graphics g, GeoTransform p, double scale, GM_Envelope bbox, boolean selected, IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform p, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     if( selected == true )
       return;
 
     /* The number of sub rectangles. */
-    int NUMBER_SUBS = 5;
+    final int NUMBER_SUBS = 5;
 
     /* Determine the offsets. */
-    int offset_x = -30;
-    int offset_y = -5;
+    final int offset_x = -30;
+    final int offset_y = -5;
 
     /* The maximal available width (25% of map) for drawing the scale. */
-    Rectangle bounds = g.getClipBounds();
-    double max_width = (bounds.getWidth() / 4) + offset_x;
+    final Rectangle bounds = g.getClipBounds();
+    final double max_width = (bounds.getWidth() / 4) + offset_x;
 
     /* Determine the distance from offset_x to max_width and check its value. */
-    double offsetX = p.getSourceX( offset_x );
-    double offsetY = p.getSourceY( offset_y );
+    final double offsetX = p.getSourceX( offset_x );
+    final double offsetY = p.getSourceY( offset_y );
 
-    double maxX = p.getSourceX( max_width );
-    double maxY = p.getSourceY( offset_y );
+    final double maxX = p.getSourceX( max_width );
+    final double maxY = p.getSourceY( offset_y );
 
-    GM_Point startGMPoint = GeometryFactory.createGM_Point( offsetX, offsetY, getMapModell().getCoordinatesSystem() );
-    GM_Point coordGMPoint = GeometryFactory.createGM_Point( maxX, maxY, getMapModell().getCoordinatesSystem() );
+    final GM_Point startGMPoint = GeometryFactory.createGM_Point( offsetX, offsetY, getMapModell().getCoordinatesSystem() );
+    final GM_Point coordGMPoint = GeometryFactory.createGM_Point( maxX, maxY, getMapModell().getCoordinatesSystem() );
 
-    double distance = startGMPoint.distance( coordGMPoint );
+    final double distance = startGMPoint.distance( coordGMPoint );
 
     /* Round the distance to a good value. */
-    double roundedDistance = round( distance );
-    double subDistance = roundedDistance / NUMBER_SUBS;
+    final double roundedDistance = round( distance );
+    final double subDistance = roundedDistance / NUMBER_SUBS;
 
     /* Determine the width for a sub rectangle. */
-    int width = (int) p.getDestX( offsetX + subDistance ) - offset_x;
+    final int width = (int) p.getDestX( offsetX + subDistance ) - offset_x;
 
     /* Calculate the values for each sub rectangle. */
-    LinkedList<Double> values = new LinkedList<Double>();
+    final LinkedList<Double> values = new LinkedList<Double>();
 
     for( int i = 0; i <= NUMBER_SUBS; i++ )
       values.add( subDistance * i );
@@ -170,7 +171,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
    *            The original distance.
    * @return The modified distance.
    */
-  private double round( double distance )
+  private double round( final double distance )
   {
     int n = 0;
     double remaining = distance;
@@ -183,7 +184,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     if( n > 0 )
       n = n - 1;
 
-    double rest = distance % Math.pow( 10, n );
+    final double rest = distance % Math.pow( 10, n );
 
     return distance - rest;
   }
@@ -195,18 +196,18 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
    *            The current values.
    * @return The unit, that should be used.
    */
-  private ScaleUnit determineUnit( LinkedList<Double> values )
+  private ScaleUnit determineUnit( final LinkedList<Double> values )
   {
     /* A one value scale makes no sense. */
     if( values.size() <= 1 )
       return new ScaleUnit( "Meter", 1 );
 
     /* Need for kilometers? */
-    Double firstValue = values.get( 0 );
+    final Double firstValue = values.get( 0 );
     if( firstValue.doubleValue() > 1000 )
       return new ScaleUnit( "Kilometer", 1000 );
 
-    Double secondValue = values.get( 1 );
+    final Double secondValue = values.get( 1 );
     if( secondValue.doubleValue() > 1000 )
       return new ScaleUnit( "Kilometer", 1000 );
 
@@ -232,7 +233,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
    * @param scale
    *            The global scale which represents 1 to xxx.
    */
-  public void paintScale( Graphics g, int offset_x, int offset_y, ScaleUnit scaleUnit, LinkedList<Double> values, int width, double scale )
+  public void paintScale( final Graphics g, final int offset_x, final int offset_y, final ScaleUnit scaleUnit, final LinkedList<Double> values, final int width, final double scale )
   {
     /* Setup the graphics context. */
     g.setColor( Color.BLACK );
@@ -241,33 +242,33 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     /* If it is the right graphic type, setup it further. */
     if( g instanceof Graphics2D )
     {
-      Graphics2D g2 = (Graphics2D) g;
+      final Graphics2D g2 = (Graphics2D) g;
       g2.setBackground( Color.WHITE );
       g2.setStroke( new BasicStroke( 1 ) );
     }
 
     /* The gap beetween each lines. */
-    int GAP = 5;
+    final int GAP = 5;
 
     /* The number of sub rectangles. */
-    int NUMBER_SUB = values.size() - 1;
+    final int NUMBER_SUB = values.size() - 1;
 
     /* The width for the sub rectangles. */
-    int WIDTH_SUB_RECT = width;
+    final int WIDTH_SUB_RECT = width;
 
     /* The height for the base and sub rectangles. */
-    int HEIGHT_SCALE = 10;
+    final int HEIGHT_SCALE = 10;
 
     /* The width of the base rectangle. */
-    int WIDTH_SCALE = WIDTH_SUB_RECT * NUMBER_SUB;
+    final int WIDTH_SCALE = WIDTH_SUB_RECT * NUMBER_SUB;
 
     /* The font height. */
-    int FONT_HEIGHT = g.getFontMetrics().getHeight();
+    final int FONT_HEIGHT = g.getFontMetrics().getHeight();
 
-    int MAX_HEIGHT = HEIGHT_SCALE + 2 * FONT_HEIGHT + 1 * GAP;
+    final int MAX_HEIGHT = HEIGHT_SCALE + 2 * FONT_HEIGHT + 1 * GAP;
 
     /* Get the clip bounds. */
-    Rectangle clipBounds = g.getClipBounds();
+    final Rectangle clipBounds = g.getClipBounds();
 
     /* Offset to the border of the map in screen pixel. */
     int START_X = offset_x;
@@ -343,11 +344,11 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
     /* Draw the values (values from list). */
     double endPointDrawnText = 0;
-    double startPointLastText = bounds.getLast().getX();
+    final double startPointLastText = bounds.getLast().getX();
     for( int i = 0; i < values.size(); i++ )
     {
       /* Get the positions and dimensions of the text. */
-      Rectangle2D stringBounds = bounds.get( i );
+      final Rectangle2D stringBounds = bounds.get( i );
 
       /* The text is not drawn, if it is overlapping the last drawn text or the last text. */
       /* The summand +5 makes sure, there are some bounds preserverd between the texts. */

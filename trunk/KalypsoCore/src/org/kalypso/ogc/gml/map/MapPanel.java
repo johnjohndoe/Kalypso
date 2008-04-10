@@ -469,7 +469,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final SelectionChangedEvent e = new SelectionChangedEvent( this, getSelection() );
     for( final ISelectionChangedListener l : listenersArray )
     {
-      Display display = PlatformUI.getWorkbench().getDisplay();
+      final Display display = PlatformUI.getWorkbench().getDisplay();
       display.asyncExec( new Runnable()
       {
 
@@ -712,6 +712,9 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   @Override
   public void paint( final Graphics outerG )
   {
+    if( !m_shouldPaint )
+      return;
+
     final Graphics2D outerG2 = (Graphics2D) outerG;
     outerG2.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
     outerG2.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
@@ -889,9 +892,6 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   public synchronized void setBoundingBox( final GM_Envelope wishBBox )
   {
-    // TODO: if the map is still about to be painted (e.g. from the last pan-drag); we get an ugly effect here (map
-    // flashes on the old position)
-
     m_wishBBox = wishBBox;
 
     final GM_Envelope oldExtent = m_boundingBox;
@@ -915,6 +915,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       // onModellChange( null );
 
       // instead invalidate the map yourself
+      m_shouldPaint = false;
       xOffset = 0;
       yOffset = 0;
       invalidateMap();
@@ -1007,5 +1008,18 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     final IMapPanelListener[] listeners = m_mapPanelListeners.toArray( new IMapPanelListener[] {} );
     for( final IMapPanelListener mpl : listeners )
       mpl.onMouseMoveEvent( this, gmPoint, mousePoint );
+  }
+
+  /**
+   * Causes any pending paint to be stopped, and nothing will be painted until ne next call to invalidateMap (called if
+   * setBoundingBox is called).<br>
+   * Fixes the ugly pan flicker bug (map gets drawn on old position after pan has been released).
+   */
+  public void stopPaint( )
+  {
+    m_shouldPaint = false;
+
+    if( m_mapModellPainter != null )
+      m_mapModellPainter.cancel();
   }
 }

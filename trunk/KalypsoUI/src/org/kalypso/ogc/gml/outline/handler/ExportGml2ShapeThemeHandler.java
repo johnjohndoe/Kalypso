@@ -97,7 +97,7 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
 
     final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
-    Object[] array = sel.toArray();
+    final Object[] array = sel.toArray();
 
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) sel.getFirstElement();
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
@@ -122,10 +122,10 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     if( lastDirPath != null )
     {
       fileDialog.setFilterPath( lastDirPath );
-      fileDialog.setFileName( theme.getName() );
+      fileDialog.setFileName( theme.getLabel() );
     }
     else
-      fileDialog.setFileName( theme.getName() );
+      fileDialog.setFileName( theme.getLabel() );
     final String result = fileDialog.open();
     if( result == null )
       return Status.CANCEL_STATUS;

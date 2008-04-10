@@ -46,6 +46,7 @@ import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.grid.GridFileVerifier;
 import org.kalypso.grid.IGridMetaReader;
@@ -63,10 +64,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 {
-
-  public KalypsoPictureThemeWorldFile( final StyledLayerType layerType, final URL context, final IMapModell modell, final String system, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
+  public KalypsoPictureThemeWorldFile( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String system, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType, context, modell, legendGraphic, shouldShowChildren );
+    super( layerName, layerType, context, modell, legendGraphic, shouldShowChildren );
 
     final String href = layerType.getHref();
     if( href == null || !href.contains( "." ) )

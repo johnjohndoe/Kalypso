@@ -289,50 +289,50 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     getSite().getPage().addPartListener( new IPartListener2()
     {
 
-      public void partActivated( IWorkbenchPartReference partRef )
+      public void partActivated( final IWorkbenchPartReference partRef )
       {
         try
         {
           CommandUtilities.refreshElementsForWindow( thisPart.getSite().getWorkbenchWindow(), MAP_COMMAND_CATEGORY );
         }
-        catch( CommandException e )
+        catch( final CommandException e )
         {
           KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
         }
       }
 
-      public void partBroughtToTop( IWorkbenchPartReference partRef )
+      public void partBroughtToTop( final IWorkbenchPartReference partRef )
       {
         // nothing to do
       }
 
-      public void partClosed( IWorkbenchPartReference partRef )
+      public void partClosed( final IWorkbenchPartReference partRef )
       {
         // nothing to do
       }
 
-      public void partDeactivated( IWorkbenchPartReference partRef )
+      public void partDeactivated( final IWorkbenchPartReference partRef )
       {
         // nothing to do
       }
 
-      public void partHidden( IWorkbenchPartReference partRef )
+      public void partHidden( final IWorkbenchPartReference partRef )
       {
         // nothing to do
       }
 
-      public void partInputChanged( IWorkbenchPartReference partRef )
+      public void partInputChanged( final IWorkbenchPartReference partRef )
       {
         // nothing to do
       }
 
-      public void partOpened( IWorkbenchPartReference partRef )
+      public void partOpened( final IWorkbenchPartReference partRef )
       {
         // nothing to do
 
       }
 
-      public void partVisible( IWorkbenchPartReference partRef )
+      public void partVisible( final IWorkbenchPartReference partRef )
       {
         // nothing to do
       }
@@ -443,9 +443,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       setMapModell( null );
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( storage );
-      // TODO: !!! this is not thre right place, hack code!
-      // please give name to map-model and retrieve it from there...
-      partName = gisview.getName();
       monitor.worked( 1 );
 
       final URL context;
@@ -465,8 +462,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       if( !m_disposed )
       {
         final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoCorePlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
-        setMapModell( mapModell );
         mapModell.createFromTemplate( gisview );
+        setMapModell( mapModell );
 
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
         m_mapPanel.setBoundingBox( env );
@@ -520,8 +517,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       monitor.beginTask( "Kartenvorlage speichern", 2000 );
       final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
       final String srsName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-      final String customName = getCustomName();
-      m_mapModell.createGismapTemplate( boundingBox, srsName, customName, monitor, file );
+      m_mapModell.createGismapTemplate( boundingBox, srsName, monitor, file );
     }
     catch( final CoreException e )
     {
@@ -546,6 +542,22 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
     m_mapModellContextSwitcher.setMapModell( mapModell );
 
+    final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+    if( !workbench.isClosing() )
+    {
+      workbench.getDisplay().asyncExec( new Runnable()
+      {
+        @SuppressWarnings("synthetic-access")
+        public void run( )
+        {
+          if( m_mapModell == null )
+            setPartName( "<Keine Karte geladen>" );
+          else
+            setPartName( m_mapModell.getLabel( m_mapModell ) );
+        }
+      } );
+    }
+
     if( m_mapPanel != null )
       m_mapPanel.setMapModell( m_mapModell );
   }
@@ -563,16 +575,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     return m_mapPanel;
   }
 
-  public String getCustomName( )
-  {
-    return m_partName;
-  }
-
   public void setCustomName( final String name )
   {
     m_partName = name;
     final IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
     if( !workbench.isClosing() )
+    {
       workbench.getDisplay().asyncExec( new Runnable()
       {
         @SuppressWarnings("synthetic-access")
@@ -581,6 +589,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
           setPartName( m_partName );
         }
       } );
+    }
   }
 
   /**

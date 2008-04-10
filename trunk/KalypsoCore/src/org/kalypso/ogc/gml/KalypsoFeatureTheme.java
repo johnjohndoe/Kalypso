@@ -57,6 +57,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCoreExtensions;
@@ -103,7 +104,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   private Image m_featureThemeIcon;
 
-  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final String name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, "FeatureTheme", mapModel, legendIcon, context, shouldShowChildren );
 
@@ -398,36 +399,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLabel(java.lang.Object)
-   */
-  @Override
-  public String getLabel( final Object o )
-  {
-    final String label = super.getLabel( o );
-
-//    final CommandableWorkspace workspace = getWorkspace();
-//    // TODO: change this later to a label decorator?
-//    // or use pool.dirty flag?
-//    if( (workspace != null) && workspace.isDirty() )
-//      return label + "*";
-
-    return label;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getImageDescriptor(java.lang.Object)
-   */
-  @Override
-  public ImageDescriptor getImageDescriptor( final Object object )
-  {
-// final Object[] children = getChildren( this );
-// if( (children.length > 0) && (children[0] instanceof IWorkbenchAdapter) )
-// return ((IWorkbenchAdapter) children[0]).getImageDescriptor( children[0] );
-
-    return super.getImageDescriptor( object );
   }
 
   /**

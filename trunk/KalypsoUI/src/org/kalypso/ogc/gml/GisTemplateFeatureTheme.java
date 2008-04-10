@@ -58,6 +58,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -130,9 +131,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final List<GisTemplateUserStyle> m_gisTemplateUserStyles = new ArrayList<GisTemplateUserStyle>();
 
-  public GisTemplateFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren )
+  public GisTemplateFeatureTheme( final I10nString layerName, final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren )
   {
-    super( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.noname" ), layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( layerName, layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren );
 
     m_selectionManager = selectionManager;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
@@ -145,7 +146,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     {
       final StyledLayerType mapLayerType = (StyledLayerType) layerType;
       setType( type.toUpperCase() );
-      setName( mapLayerType.getName() );
       final List<Style> stylesList = mapLayerType.getStyle();
 
       for( final Style style : stylesList )
@@ -261,11 +261,11 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( layer instanceof StyledLayerType )
     {
       final StyledLayerType styledLayerType = (StyledLayerType) layer;
-      styledLayerType.setName( getName() );
+      styledLayerType.setName( getName().getKey() );
       styledLayerType.setVisible( isVisible );
       styledLayerType.getDepends();
 
-      String legendIcon = getLegendIcon();
+      final String legendIcon = getLegendIcon();
       if( legendIcon != null )
         styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
@@ -604,7 +604,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getName()
    */
   @Override
-  public String getName( )
+  public I10nString getName( )
   {
     if( m_theme != null )
       return m_theme.getName();
@@ -613,10 +613,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setName(java.lang.String)
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
    */
   @Override
-  public void setName( final String name )
+  public void setName( final I10nString name )
   {
     if( m_theme != null )
       m_theme.setName( name );
@@ -731,11 +731,11 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( Font font ) throws CoreException
+  public Image getLegendGraphic( final Font font ) throws CoreException
   {
     if( m_theme != null )
     {
-      FeatureThemeLegendProvider provider = new FeatureThemeLegendProvider( m_theme );
+      final FeatureThemeLegendProvider provider = new FeatureThemeLegendProvider( m_theme );
       return provider.getLegendGraphic( font );
     }
 

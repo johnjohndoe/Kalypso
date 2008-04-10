@@ -47,6 +47,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.CascadingLayer;
@@ -61,13 +62,13 @@ import org.kalypso.template.types.StyledLayerType;
 // themes.
 public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 {
-  public CascadingLayerKalypsoTheme( final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
+  public CascadingLayerKalypsoTheme( final I10nString layerName, final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType.getName(), layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren );
+    super( layerName, layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren );
 
     GisTemplateFeatureTheme.configureProperties( this, layerType );
 
-    setInnerMapModel( new GisTemplateMapModell( context, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
+    final GisTemplateMapModell innerMapModell = new GisTemplateMapModell( context, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
       /**
        * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
@@ -77,12 +78,13 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
       {
         return CascadingLayerKalypsoTheme.this;
       }
-    } );
+    };
+    innerMapModell.setName( layerName );
+    setInnerMapModel( innerMapModell );
 
     final List<JAXBElement< ? extends StyledLayerType>> layers = layerType.getLayer();
     // TODO: maybe get active layer from top-most Gismapview
     getInnerMapModel().createFromTemplate( layers, null );
-
   }
 
   /**
@@ -105,13 +107,13 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
     layer.setType( "simple" ); //$NON-NLS-1$
 
-    layer.setName( getName() );
+    layer.setName( getName().getKey() );
     layer.setVisible( isVisible );
     layer.getDepends();
 
     final ObjectFactory extentFac = new ObjectFactory();
 
-    String legendIcon = getLegendIcon();
+    final String legendIcon = getLegendIcon();
     if( legendIcon != null )
       layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
@@ -132,4 +134,5 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     for( final IKalypsoTheme theme : themes )
       GisTemplateHelper.addLayer( layers, theme, count++, getFullExtent(), srsName, monitor );
   }
+
 }

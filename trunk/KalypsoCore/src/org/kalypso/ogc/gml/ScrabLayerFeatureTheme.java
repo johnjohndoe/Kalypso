@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -84,7 +85,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
    */
   private org.eclipse.swt.graphics.Image m_scrapThemeIcon;
 
-  public ScrabLayerFeatureTheme( final String layerName, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public ScrabLayerFeatureTheme( final I10nString layerName, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( layerName, "scrab", mapModel, legendIcon, context, shouldShowChildren );
 
@@ -109,7 +110,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
     }
 
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, ScrabLayerFeatureTheme.FEATURE_MEMBER, "Skizzier-Thema", selectionManager, mapModel, legendIcon, context, shouldShowChildren );
+    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, ScrabLayerFeatureTheme.FEATURE_MEMBER, new I10nString( "Skizzier-Thema" ), selectionManager, mapModel, legendIcon, context, shouldShowChildren );
     // add styles for visualisation
     final ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
     symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), new PropertyName( ScrabLayerFeatureTheme.POINT_GEOM_PROP_NAME ) ) );
@@ -230,7 +231,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getName()
    */
   @Override
-  public String getName( )
+  public I10nString getName( )
   {
     if( m_scrabLayerTheme != null )
       return m_scrabLayerTheme.getName();
@@ -238,10 +239,10 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
    */
   @Override
-  public void setName( final String name )
+  public void setName( final I10nString name )
   {
     if( m_scrabLayerTheme != null )
       m_scrabLayerTheme.setName( name );
@@ -284,15 +285,6 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   }
 
   /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return getName();
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#paintInternal(org.kalypso.ogc.gml.IPaintInternalDelegate)
    */
   public void paintInternal( final IPaintInternalDelegate delegate )
@@ -310,5 +302,16 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
       m_scrapThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/scrapTheme.gif" ) );
 
     return ImageDescriptor.createFromImage( m_scrapThemeIcon );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLabel()
+   */
+  public String getLabel( )
+  {
+    if( m_scrabLayerTheme == null )
+      return null;
+
+    return m_scrabLayerTheme.getLabel();
   }
 }

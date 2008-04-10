@@ -58,6 +58,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.commons.KalypsoCommonsExtensions;
+import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
@@ -72,6 +75,7 @@ import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
+import org.kalypso.template.gismapview.Gismapview.Translator;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -109,7 +113,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
     try
     {
-      setName( gisview.getName() );
+      final ITranslator translator = createTranslator( gisview );
+      final I10nString name = new I10nString( gisview.getName(), translator );
+      setName( name );
 
       for( final IKalypsoTheme theme : getAllThemes() )
         if( !(theme instanceof KalypsoLegendTheme || theme instanceof ScrabLayerFeatureTheme) )
@@ -130,6 +136,18 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
   }
 
+  private ITranslator createTranslator( final Gismapview gisview )
+  {
+    final Translator translatorElement = gisview.getTranslator();
+    if( translatorElement == null )
+      return null;
+
+    final ITranslator translator = KalypsoCommonsExtensions.createTranslator( translatorElement.getId() );
+    if( translator != null )
+      translator.configure( m_context, translatorElement.getAny() );
+    return translator;
+  }
+
   public void createFromTemplate( final List<JAXBElement< ? extends StyledLayerType>> layerList, final Object activeLayer ) throws Exception
   {
     for( final JAXBElement< ? extends StyledLayerType> layerType : layerList )
@@ -140,7 +158,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
   }
 
-  public void setName( final String name )
+  public void setName( final I10nString name )
   {
     m_modell.setName( name );
   }
@@ -181,22 +199,23 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     if( lg != null )
       legendIcon = lg.getValue();
 
-    JAXBElement<Boolean> sC = layerType.getShowChildren();
+    final JAXBElement<Boolean> sC = layerType.getShowChildren();
     boolean showChildren = true;
     if( sC != null )
       showChildren = sC.getValue().booleanValue();
 
-    if( layerType instanceof CascadingLayer )
-      return new CascadingLayerKalypsoTheme( (CascadingLayer) layerType, context, m_selectionManager, this, legendIcon, showChildren );
-
     final String linktype = layerType.getLinktype();
-    final String layerName = layerType.getName();
+    final ITranslator translator = getName().getTranslator();
+    final I10nString layerName = new I10nString( layerType.getName(), translator );
 
-    final IKalypsoThemeFactory themeFactory = getThemeFactory( linktype );
+    if( layerType instanceof CascadingLayer )
+      return new CascadingLayerKalypsoTheme( layerName, (CascadingLayer) layerType, context, m_selectionManager, this, legendIcon, showChildren );
+
+    final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( linktype );
     if( themeFactory != null )
-      return themeFactory.createTheme( linktype, layerType, context, this, m_selectionManager );
-    // TODO: move all code into different factories
-    else if( "wms".equals( linktype ) ) //$NON-NLS-1$
+      return themeFactory.createTheme( linktype, layerName, layerType, context, this, m_selectionManager );
+
+    if( "wms".equals( linktype ) ) //$NON-NLS-1$
     {
       final String source = layerType.getHref();
 
@@ -210,32 +229,32 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
 
       /* Create the image provider. */
-      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName, layers, styles, service, providerID );
+      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID );
 
       return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, this, legendIcon, context, showChildren );
     }
-    else if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
-      return KalypsoPictureTheme.getPictureTheme( layerType, context, this, legendIcon, showChildren );
-    else if( "gmt".equals( linktype ) )
-      return new CascadingKalypsoTheme( layerType, context, m_selectionManager, this, legendIcon, showChildren );
-    else if( "legend".equals( linktype ) )
-      return new KalypsoLegendTheme( layerName, this, legendIcon, context, showChildren );
-    else if( "scrab".equals( linktype ) )
-      return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this, legendIcon, context, showChildren );
-    else if( "scale".equals( linktype ) )
-      return new KalypsoScaleTheme( layerName, linktype, this, legendIcon, context, showChildren );
-    else
-      // TODO: returns handling of gml files - part of else?!? dont assume it, proof it!
-      return new GisTemplateFeatureTheme( layerType, context, m_selectionManager, this, legendIcon, showChildren );
-  }
 
-  private IKalypsoThemeFactory getThemeFactory( final String linktype )
-  {
-    return ThemeFactoryExtension.getThemeFactory( linktype );
+    if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
+      return KalypsoPictureTheme.getPictureTheme( layerName, layerType, context, this, legendIcon, showChildren );
+
+    if( "gmt".equals( linktype ) )
+      return new CascadingKalypsoTheme( layerName, layerType, context, m_selectionManager, this, legendIcon, showChildren );
+
+    if( "legend".equals( linktype ) )
+      return new KalypsoLegendTheme( layerName, this, legendIcon, context, showChildren );
+
+    if( "scrab".equals( linktype ) )
+      return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this, legendIcon, context, showChildren );
+
+    if( "scale".equals( linktype ) )
+      return new KalypsoScaleTheme( layerName, linktype, this, legendIcon, context, showChildren );
+
+    // TODO: returns handling of gml files - part of else?!? do not assume it, proof it!
+    return new GisTemplateFeatureTheme( layerName, layerType, context, m_selectionManager, this, legendIcon, showChildren );
   }
 
   // Helper
-  public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final String customName, IProgressMonitor monitor, final IFile file ) throws CoreException
+  public void createGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor, final IFile file ) throws CoreException
   {
     if( monitor == null )
       monitor = new NullProgressMonitor();
@@ -250,8 +269,13 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
       final Gismapview gismapview = maptemplateFactory.createGismapview();
       final Layers layersType = maptemplateFactory.createGismapviewLayers();
-      if( customName != null )
-        gismapview.setName( customName );
+      final I10nString name = getName();
+      gismapview.setName( name.getKey() );
+      final Translator translator = maptemplateFactory.createGismapviewTranslator();
+      translator.setId( name.getTranslator().getId() );
+      translator.getAny().addAll( name.getTranslator().getConfiguration() );
+      gismapview.setTranslator( translator );
+
       if( bbox != null )
       {
         final ExtentType extentType = extentFac.createExtentType();
@@ -445,7 +469,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getName()
    */
-  public String getName( )
+  public I10nString getName( )
   {
     return m_modell.getName();
   }

@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -82,7 +83,7 @@ public class MapModell implements IMapModell
 
   private IProject m_project;
 
-  private String m_name;
+  private I10nString m_name;
 
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
   {
@@ -267,7 +268,7 @@ public class MapModell implements IMapModell
     }
     catch( final CoreException e )
     {
-// e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -379,15 +380,15 @@ public class MapModell implements IMapModell
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getName()
    */
-  public String getName( )
+  public I10nString getName( )
   {
     return m_name;
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#setName(java.lang.String)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#setName(org.kalypso.contribs.java.lang.I10nString)
    */
-  public void setName( final String name )
+  public void setName( final I10nString name )
   {
     m_name = name;
   }
@@ -413,7 +414,7 @@ public class MapModell implements IMapModell
    */
   public String getLabel( final Object o )
   {
-    return getName();
+    return getName().getValue();
   }
 
   /**

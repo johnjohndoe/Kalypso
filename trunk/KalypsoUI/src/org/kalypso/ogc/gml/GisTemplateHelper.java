@@ -472,147 +472,143 @@ public class GisTemplateHelper
 
       return layer;
     }
-    else if( theme instanceof KalypsoWMSTheme )
+    else
     {
-      final String name = theme.getName();
+      final String themeNameKey = theme.getName().getKey();
+      if( theme instanceof KalypsoWMSTheme )
+      {
+        layer.setName( themeNameKey );
+        layer.setFeaturePath( "" ); //$NON-NLS-1$
+        layer.setVisible( theme.isVisible() );
+        layer.setId( "ID_" + count );
+        layer.setHref( ((KalypsoWMSTheme) theme).getSource() );
+        layer.setLinktype( WMSImageProvider.TYPE_NAME );
+        layer.setActuate( "onRequest" ); //$NON-NLS-1$
+        layer.setType( "simple" ); //$NON-NLS-1$
 
-      layer.setName( name );
-      layer.setFeaturePath( "" ); //$NON-NLS-1$
-      layer.setVisible( theme.isVisible() );
-      layer.setId( "ID_" + count );
-      layer.setHref( ((KalypsoWMSTheme) theme).getSource() );
-      layer.setLinktype( WMSImageProvider.TYPE_NAME );
-      layer.setActuate( "onRequest" ); //$NON-NLS-1$
-      layer.setType( "simple" ); //$NON-NLS-1$
+        final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+        final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+        final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+        if( legendIcon != null )
+          layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
-      if( legendIcon != null )
-        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+        layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
-      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
+        final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
 
-      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+        layerList.add( layerElement );
+        monitor.worked( 1000 );
 
-      layerList.add( layerElement );
-      monitor.worked( 1000 );
+        return layer;
+      }
+      else if( theme instanceof KalypsoPictureTheme )
+      {
+        ((KalypsoPictureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
 
-      return layer;
-    }
-    else if( theme instanceof KalypsoPictureTheme )
-    {
-      ((KalypsoPictureTheme) theme).fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
+        final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
 
-      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+        layerList.add( layerElement );
+        monitor.worked( 1000 );
+      }
+      else if( theme instanceof CascadingKalypsoTheme )
+      {
+        final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) theme);
+        cascadingKalypsoTheme.fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
 
-      layerList.add( layerElement );
-      monitor.worked( 1000 );
-    }
-    else if( theme instanceof CascadingKalypsoTheme )
-    {
-      final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) theme);
-      cascadingKalypsoTheme.fillLayerType( layer, "ID_" + count, theme.isVisible() ); //$NON-NLS-1$
+        final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
 
-      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
+        layerList.add( layerElement );
 
-      layerList.add( layerElement );
+        cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
 
-      cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
+        return layer;
+      }
+      else if( theme instanceof CascadingLayerKalypsoTheme )
+      {
+        final CascadingLayer cascadingLayer = maptemplateFactory.createCascadingLayer();
 
-      return layer;
-    }
-    else if( theme instanceof CascadingLayerKalypsoTheme )
-    {
-      final CascadingLayer cascadingLayer = maptemplateFactory.createCascadingLayer();
+        final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
+        cascadingKalypsoTheme.fillLayerType( cascadingLayer, "ID_" + count, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
 
-      final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
-      cascadingKalypsoTheme.fillLayerType( cascadingLayer, "ID_" + count, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
+        final JAXBElement<CascadingLayer> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
+        layerList.add( layerElement );
 
-      final JAXBElement<CascadingLayer> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
-      layerList.add( layerElement );
+        return cascadingLayer;
+      }
+      else if( theme instanceof KalypsoLegendTheme )
+      {
+        layer.setName( themeNameKey );
+        layer.setFeaturePath( "" ); //$NON-NLS-1$
+        layer.setVisible( theme.isVisible() );
+        layer.setId( "ID_" + count );
+        layer.setHref( "" );
 
-      return cascadingLayer;
-    }
-    else if( theme instanceof KalypsoLegendTheme )
-    {
-      final String name = theme.getName();
+        layer.setLinktype( "legend" );
 
-      layer.setName( name );
-      layer.setFeaturePath( "" ); //$NON-NLS-1$
-      layer.setVisible( theme.isVisible() );
-      layer.setId( "ID_" + count );
-      layer.setHref( "" );
+        final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+        final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      layer.setLinktype( "legend" );
+        final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+        if( legendIcon != null )
+          layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+        layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
-      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
-      if( legendIcon != null )
-        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+        layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
 
-      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
+        monitor.worked( 1000 );
 
-      layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
+        return layer;
+      }
+      else if( theme instanceof ScrabLayerFeatureTheme )
+      {
+        layer.setName( themeNameKey );
+        layer.setFeaturePath( "" ); //$NON-NLS-1$
+        layer.setVisible( theme.isVisible() );
+        layer.setId( "ID_" + count );
+        layer.setHref( "" );
 
-      monitor.worked( 1000 );
+        layer.setLinktype( "scrab" );
 
-      return layer;
-    }
-    else if( theme instanceof ScrabLayerFeatureTheme )
-    {
-      final String name = theme.getName();
+        final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+        final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      layer.setName( name );
-      layer.setFeaturePath( "" ); //$NON-NLS-1$
-      layer.setVisible( theme.isVisible() );
-      layer.setId( "ID_" + count );
-      layer.setHref( "" );
+        final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+        if( legendIcon != null )
+          layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      layer.setLinktype( "scrab" );
+        layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
-      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+        layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
 
-      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
-      if( legendIcon != null )
-        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+        monitor.worked( 1000 );
 
-      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
+        return layer;
+      }
+      else if( theme instanceof KalypsoScaleTheme )
+      {
+        layer.setName( themeNameKey );
+        layer.setVisible( theme.isVisible() );
+        layer.setId( "ID_" + count );
+        layer.setLinktype( "scale" );
 
-      layerList.add( TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer ) );
+        final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+        final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      monitor.worked( 1000 );
+        final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+        if( legendIcon != null )
+          layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      return layer;
-    }
-    else if( theme instanceof KalypsoScaleTheme )
-    {
-      final String name = theme.getName();
+        layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
 
-      layer.setName( name );
-      layer.setVisible( theme.isVisible() );
-      layer.setId( "ID_" + count );
-      layer.setLinktype( "scale" );
+        final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
 
-      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+        layerList.add( layerElement );
+        monitor.worked( 1000 );
 
-      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
-      if( legendIcon != null )
-        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
-      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowChildren() ) );
-
-      final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
-
-      layerList.add( layerElement );
-      monitor.worked( 1000 );
-
-      return layer;
+        return layer;
+      }
     }
 
     return null;

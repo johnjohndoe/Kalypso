@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -173,7 +174,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 
   };
 
-  public AbstractCascadingLayerTheme( final String name, final String linktype, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public AbstractCascadingLayerTheme( final I10nString name, final String linktype, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, linktype, mapModel, legendIcon, context, shouldShowChildren );
   }
@@ -516,7 +517,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  public void setExtent( int width, int height, GM_Envelope extent )
+  public void setExtent( final int width, final int height, final GM_Envelope extent )
   {
     /* If the extent is changed, it is memorized, so that the theme could set it to its added childs. */
     m_width = width;
@@ -528,10 +529,19 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( Font font ) throws CoreException
+  public Image getLegendGraphic( final Font font ) throws CoreException
   {
-    CascadingThemeLegendProvider provider = new CascadingThemeLegendProvider( this );
+    final CascadingThemeLegendProvider provider = new CascadingThemeLegendProvider( this );
 
     return provider.getLegendGraphic( font );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    return m_innerMapModel.getLabel( m_innerMapModel );
   }
 }
