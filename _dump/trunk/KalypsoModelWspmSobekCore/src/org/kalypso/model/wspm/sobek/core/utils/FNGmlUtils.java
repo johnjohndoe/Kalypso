@@ -2,48 +2,50 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -148,13 +150,15 @@ public class FNGmlUtils
 
   public static void connectBranches( final IModelMember model, final IBranch[] branches, final GM_Curve curve ) throws Exception
   {
-    final List<INode> nodes = new ArrayList<INode>();
+    final Set<INode> myNodes = new LinkedHashSet<INode>();
 
     for( final IBranch branch : branches )
     {
-      nodes.add( branch.getUpperNode() );
-      nodes.add( branch.getLowerNode() );
+      myNodes.add( branch.getUpperNode() );
+      myNodes.add( branch.getLowerNode() );
     }
+
+    final INode[] nodes = myNodes.toArray( new INode[] {} );
 
     /*
      * extend branch at ends or somewhere else. if the branch will be extended at the end point, exististing connection
@@ -175,7 +179,7 @@ public class FNGmlUtils
     if( intersections.size() == 2 )
     {
       // existing nodes will be used
-      FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eConnectionNode );
+      FNGmlUtils.createBranch( model, curve, nodes, TYPE.eConnectionNode, TYPE.eConnectionNode );
     }
     else if( intersections.size() == 1 )
     {
@@ -183,15 +187,15 @@ public class FNGmlUtils
       final INode node = intersections.get( 0 );
       final GM_Point location = node.getLocation();
       if( location.intersects( curve.getStartPoint() ) )
-        FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eConnectionNode, TYPE.eLinkageNode );
+        FNGmlUtils.createBranch( model, curve, nodes, TYPE.eConnectionNode, TYPE.eLinkageNode );
       else if( location.intersects( curve.getEndPoint() ) )
-        FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eLinkageNode, TYPE.eConnectionNode );
+        FNGmlUtils.createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eConnectionNode );
 
     }
     else if( intersections.size() == 0 )
     {
       // new branch is connection somewhere on existing branches - new linkage nodes will be created
-      FNGmlUtils.createBranch( model, curve, nodes.toArray( new INode[] {} ), TYPE.eLinkageNode, TYPE.eLinkageNode );
+      FNGmlUtils.createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eLinkageNode );
     }
 
     else
