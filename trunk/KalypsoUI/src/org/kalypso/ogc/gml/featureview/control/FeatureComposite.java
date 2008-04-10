@@ -265,19 +265,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final Feature feature = getFeature();
 
-    final IPropertyType ftp;
-    final IAnnotation annotation;
-
-    if( controlType instanceof PropertyControlType )
-    {
-      ftp = getProperty( feature, (PropertyControlType) controlType );
-      annotation = ftp == null ? null : AnnotationUtilities.getAnnotation( ftp );
-    }
-    else
-    {
-      ftp = null;
-      annotation = null;
-    }
+    final IPropertyType ftp = getProperty( feature, controlType );
+    final IAnnotation annotation = ftp == null ? null : AnnotationUtilities.getAnnotation( ftp );
 
     final Control control = createControlFromControlType( parent, style, controlType, ftp, annotation );
 
@@ -885,10 +874,15 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return m_control;
   }
 
-  private IPropertyType getProperty( final Feature feature, final PropertyControlType propertyControl )
+  private IPropertyType getProperty( final Feature feature, final ControlType controlType )
   {
-    final QName property = propertyControl.getProperty();
-    return getPropertyTypeForQName( feature.getFeatureType(), property );
+    if( controlType instanceof PropertyControlType )
+      return getPropertyTypeForQName( feature.getFeatureType(), ((PropertyControlType) controlType).getProperty() );
+
+    if( controlType instanceof CompositeType )
+      return getPropertyTypeForQName( feature.getFeatureType(), ((CompositeType) controlType).getProperty() );
+
+    return null;
   }
 
   /**

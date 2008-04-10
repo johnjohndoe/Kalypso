@@ -79,6 +79,7 @@
 					<xs:element ref="fv:layout" />
 					<xs:element ref="fv:control" minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>
+				<xs:attribute name="property" type="xs:QName" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
