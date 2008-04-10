@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -81,7 +82,7 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
     for( int i = 0; i < themes.length; i++ )
       if( themes[i].getName().equals( "HQ " + oldReturnPeriod ) ) //$NON-NLS-1$
       {
-        themes[i].setName( "HQ " + m_newReturnPeriod ); //$NON-NLS-1$
+        themes[i].setName( new I10nString( "HQ " + m_newReturnPeriod ) ); //$NON-NLS-1$
         themeFound = true;
         break;
       }
@@ -95,7 +96,7 @@ public class ChangeAnnualityOperation implements ICoreRunnableWithProgress
       layer.setType( "simple" ); //$NON-NLS-1$
       layer.setVisible( true );
       layer.setActuate( "onRequest" ); //$NON-NLS-1$
-      layer.setHref( "../models/RasterDataModel.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
+      layer.setHref( "../models/RasterDataModel.gml" ); //$NON-NLS-1$ 
       layer.setVisible( true );
       final Property layerPropertyDeletable = new Property();
       layerPropertyDeletable.setName( IKalypsoTheme.PROPERTY_DELETEABLE );
