@@ -94,14 +94,14 @@ public class URLActionGenerateHTMLConflictAnalysis extends AbstractURLActionAnal
     final StringBuffer result = new StringBuffer( "<html><body bgcolor=\"" + BGColor + "\">" );
     generateHTMLFragmentTitle( result, title );
     final ArrayList<IKalypsoFeatureTheme> allThemes = new ArrayList<IKalypsoFeatureTheme>();
-    for( IKalypsoTheme theme : themes )
+    for( final IKalypsoTheme theme : themes )
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
         final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) theme;
         if( ArrayUtils.contains( linkTypes, kft.getType() ) )
         {
-          generateHTMLFragmentTheme( result, pathGMT, kft.getName(), linkTypeString );
+          generateHTMLFragmentTheme( result, pathGMT, kft.getLabel(), linkTypeString );
           allThemes.add( kft );
         }
       }
@@ -113,7 +113,7 @@ public class URLActionGenerateHTMLConflictAnalysis extends AbstractURLActionAnal
     {
       writeHTMLFile( resource, result );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
       return false;
@@ -121,7 +121,7 @@ public class URLActionGenerateHTMLConflictAnalysis extends AbstractURLActionAnal
     return true;
   }
 
-  private void generateHTMLFragementAllThemes( final StringBuffer result, IKalypsoTheme[] allThemes, final String linkTypes, final String pathGMT )
+  private void generateHTMLFragementAllThemes( final StringBuffer result, final IKalypsoTheme[] allThemes, final String linkTypes, final String pathGMT )
   {
     String propList = "";
     for( int i = 0; i < allThemes.length; i++ )
@@ -141,7 +141,7 @@ public class URLActionGenerateHTMLConflictAnalysis extends AbstractURLActionAnal
 
   }
 
-  private void generateHTMLFragmentTheme( StringBuffer result, String pathGMT, String themeTitle, String linkTypes )
+  private void generateHTMLFragmentTheme( final StringBuffer result, final String pathGMT, final String themeTitle, final String linkTypes )
   {
     result.append( "<b><font face=\"verdana, arial, helvetica\" color=\"#00257E\" size=\"2\">" + themeTitle + "<br></font>" );
     result.append( "<a href=\"kalypso://openFLOWSFilterDialog?" );
@@ -152,7 +152,7 @@ public class URLActionGenerateHTMLConflictAnalysis extends AbstractURLActionAnal
     result.append( "\">Filter anpassen</a><br><br>" );
   }
 
-  private void generateHTMLFragmentTitle( StringBuffer result, String title )
+  private void generateHTMLFragmentTitle( final StringBuffer result, final String title )
   {
     result.append( " <table width=\"100%\"><tr><td align=\"left\">" );
     result.append( "<b><font face=\"verdana, arial, helvetica\" color=\"#00257E\" size=\"+1\">" + title + "<br></font></b>" );
@@ -175,7 +175,7 @@ public class URLActionGenerateHTMLConflictAnalysis extends AbstractURLActionAnal
       IOUtils.write( content, htmlOutputStream );
       file.getParent().refreshLocal( IFile.DEPTH_INFINITE, null );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       generateMessageDialog( "Error while writing file: " + urlHtml.toExternalForm(), IStatus.ERROR );

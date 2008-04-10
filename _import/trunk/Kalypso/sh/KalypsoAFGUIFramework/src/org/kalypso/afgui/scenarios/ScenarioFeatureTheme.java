@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -106,9 +107,9 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
 
   private final JobExclusiveCommandTarget m_commandTarget;
 
-  public ScenarioFeatureTheme( final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModell, final String legendIcon, final boolean shouldShowChildren ) throws CoreException
+  public ScenarioFeatureTheme( final I10nString layerName, final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModell, final String legendIcon, final boolean shouldShowChildren ) throws CoreException
   {
-    super( "<no name>", layerType.getLinktype(), mapModell, legendIcon, context, shouldShowChildren );
+    super( layerName, layerType.getLinktype(), mapModell, legendIcon, context, shouldShowChildren );
 
     m_featurePath = layerType.getFeaturePath();
     m_selectionManager = selectionManager;
@@ -116,7 +117,6 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
     {
       final StyledLayerType mapLayerType = (StyledLayerType) layerType;
       setType( layerType.getLinktype().toUpperCase() );
-      setName( mapLayerType.getName() );
       final List<Style> stylesList = mapLayerType.getStyle();
 
       for( final Style style : stylesList )
@@ -430,7 +430,7 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getName()
    */
   @Override
-  public String getName( )
+  public I10nString getName( )
   {
     if( m_theme != null )
       return m_theme.getName();
@@ -439,15 +439,13 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setName(java.lang.String)
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
    */
   @Override
-  public void setName( final String name )
+  public void setName( final I10nString name )
   {
     if( m_theme != null )
-    {
       m_theme.setName( name );
-    }
 
     super.setName( name );
   }

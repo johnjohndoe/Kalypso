@@ -48,6 +48,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
@@ -78,7 +79,7 @@ public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 
   private final ImageIcon imgIcon = new ImageIcon( PluginUtilities.findResource( KalypsoModel1D2DPlugin.getDefault().getBundle().getSymbolicName(), "icons/elcl16/apply.png" ) ); //$NON-NLS-1$
 
-  public Model1d2dCalUnitTheme( final String name, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public Model1d2dCalUnitTheme( final I10nString name, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, Messages.getString( "Model1d2dCalUnitTheme.3" ), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
   }

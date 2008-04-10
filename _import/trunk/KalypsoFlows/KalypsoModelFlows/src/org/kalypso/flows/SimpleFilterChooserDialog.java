@@ -126,15 +126,15 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
 
   /**
    * @param parent
-   *          the parent shell to host the dialog
+   *            the parent shell to host the dialog
    * @param kfThemes
-   *          the themes to generate a filter for
+   *            the themes to generate a filter for
    * @param propertyNames
-   *          the list of geometry properties to apply the filter to
+   *            the list of geometry properties to apply the filter to
    * @param mapPanel
-   *          the active map panel from the GisMapEditor
+   *            the active map panel from the GisMapEditor
    * @param spatialOperationType
-   *          the spatial operation as int from the OperationsDefines
+   *            the spatial operation as int from the OperationsDefines
    * @see org.kalypsodeegree_impl.filterencoding.OperationDefines
    */
   public SimpleFilterChooserDialog( final Shell parent, final IKalypsoFeatureTheme[] kfThemes, final QName[] propertyNames, final MapPanel mapPanel, final int spatialOperationType )
@@ -150,13 +150,13 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
-    Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite) super.createDialogArea( parent );
     m_top = new Composite( main, SWT.NONE );
-    GridLayout gridLayout = new GridLayout( 2, true );
+    final GridLayout gridLayout = new GridLayout( 2, true );
     m_top.setLayout( gridLayout );
-    GridData data2 = new GridData( GridData.FILL_BOTH );
+    final GridData data2 = new GridData( GridData.FILL_BOTH );
     data2.grabExcessHorizontalSpace = true;
     data2.grabExcessVerticalSpace = true;
     m_top.setLayoutData( data2 );
@@ -172,7 +172,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_bufferSelection = bufferButton.getSelection();
         if( m_bufferSelection )
@@ -193,7 +193,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         m_bufferString = m_bufferDistance.getText();
         setPageComplete( validate() );
@@ -209,7 +209,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         if( m_activeSelectionButton.getSelection() )
           m_geomComboViewer.getCombo().setEnabled( true );
@@ -220,7 +220,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
     } );
     final Combo geomCombo = new Combo( topGroup, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     geomCombo.setEnabled( false );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     // data.widthHint = STANDARD_WIDTH_FIELD;
     geomCombo.setLayoutData( data );
     m_geomComboViewer = new ComboViewer( geomCombo );
@@ -231,12 +231,12 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
     m_geomComboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
 
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        ISelection selection = event.getSelection();
+        final ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          IStructuredSelection ss = (IStructuredSelection) selection;
+          final IStructuredSelection ss = (IStructuredSelection) selection;
           m_selectedGeom = (GM_Object) ss.getFirstElement();
         }
         setPageComplete( validate() );
@@ -251,7 +251,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_bboxSelection = bboxButton.getSelection();
         getBBoxFromActiveMap();
@@ -275,7 +275,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
     {
 
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         m_maxFeaturesAsString = maxFeatureField.getText();
         setPageComplete( validate() );
@@ -287,7 +287,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
     {
 
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_doFilterMaxFeature = !m_doFilterMaxFeature;
         maxFeatureField.setEnabled( m_doFilterMaxFeature );
@@ -305,13 +305,13 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       final Object firstElement = ((IKalypsoFeatureTheme) activeTheme).getSelectionManager().getFirstElement();
-      m_themeName = activeTheme.getName();
+      m_themeName = activeTheme.getLabel();
       if( firstElement instanceof Feature && firstElement != null )
       {
         final Feature feature = (Feature) firstElement;
         final Object[] properties = feature.getProperties();
         final ArrayList<Object> list = new ArrayList<Object>();
-        for( Object prop : properties )
+        for( final Object prop : properties )
         {
           if( prop != null )
             list.add( prop );
@@ -349,7 +349,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
           return false;
         }
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         setErrorMessage( "maximale Anzahl Feature muss ein Zahlenwert sein" );
         return false;
@@ -363,7 +363,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
         Double.parseDouble( m_bufferString );
         // Integer.parseInt( text );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
         setErrorMessage( "Es können nur Zahlen in das Textfeld eingegeben werden" );
         m_bufferDistance.setText( "" );
@@ -447,7 +447,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
     return hashMap;
   }
 
-  public void setPageComplete( boolean complete )
+  public void setPageComplete( final boolean complete )
   {
     final Button okButton = getButton( IDialogConstants.OK_ID );
     okButton.setEnabled( complete );
@@ -459,7 +459,7 @@ public class SimpleFilterChooserDialog extends TitleAreaDialog
     {
       return GeometryFactory.createGM_Surface( m_mapPanel.getBoundingBox(), m_mapPanel.getMapModell().getCoordinatesSystem() );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return null;

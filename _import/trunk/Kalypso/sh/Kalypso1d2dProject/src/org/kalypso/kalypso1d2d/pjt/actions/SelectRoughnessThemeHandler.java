@@ -102,7 +102,7 @@ public class SelectRoughnessThemeHandler extends AbstractHandler implements IHan
       public String getText( final Object element )
       {
         final IKalypsoTheme theme = (IKalypsoTheme) element;
-        return theme.getName();
+        return theme.getLabel();
       }
     } );
 

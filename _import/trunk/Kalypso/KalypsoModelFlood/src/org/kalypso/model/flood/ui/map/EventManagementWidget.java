@@ -104,6 +104,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -1103,38 +1104,38 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
             if( poolKey.getLocation().equals( styleLocationForEventWsp ) )
             {
-              final String name = kalypsoTheme.getName();
+              final String name = kalypsoTheme.getLabel();
 
               // HACK!
 
               if( name.contains( "Wasserspiegel" ) )
               {
-                kalypsoTheme.setName( "Wasserspiegel (" + event.getName() + ")" );
+                kalypsoTheme.setName( new I10nString( "Wasserspiegel (" + event.getName() + ")" ) );
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Wasserspiegel (" + event.getName()
                     + ") %.2f NN+m" );
               }
               if( name.contains( "Flieﬂtiefen" ) )
               {
-                kalypsoTheme.setName( "Flieﬂtiefen (" + event.getName() + ")" );
+                kalypsoTheme.setName( new I10nString( "Flieﬂtiefen (" + event.getName() + ")" ) );
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" );
               }
               if( name.contains( "Fliesstiefen" ) )
               {
-                kalypsoTheme.setName( "Flieﬂtiefen (" + event.getName() + ")" );
+                kalypsoTheme.setName( new I10nString( "Flieﬂtiefen (" + event.getName() + ")" ) );
                 kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" );
               }
 
               if( name.contains( "Anpassungen" ) )
-                kalypsoTheme.setName( "Anpassungen (" + event.getName() + ")" );
+                kalypsoTheme.setName( new I10nString( "Anpassungen (" + event.getName() + ")" ) );
 
             }
           }
         }
         // check for result coverages
-        FeatureList featureList = featureTheme.getFeatureList();
+        final FeatureList featureList = featureTheme.getFeatureList();
         if( featureList != null )
         {
-          for( Object object : featureList )
+          for( final Object object : featureList )
           {
             if( object instanceof Feature )
             {
@@ -1146,17 +1147,17 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
               {
                 if( parent.getId().equals( event.getGmlID() ) )
                 {
-                  final String name = kalypsoTheme.getName();
+                  final String name = kalypsoTheme.getLabel();
 
                   // HACK!
                   if( name.contains( "Flieﬂtiefen" ) )
                   {
-                    kalypsoTheme.setName( "Flieﬂtiefen (" + event.getName() + ")" );
+                    kalypsoTheme.setName( new I10nString( "Flieﬂtiefen (" + event.getName() + ")" ) );
                     kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" );
                   }
                   if( name.contains( "Fliesstiefen" ) )
                   {
-                    kalypsoTheme.setName( "Flieﬂtiefen (" + event.getName() + ")" );
+                    kalypsoTheme.setName( new I10nString( "Flieﬂtiefen (" + event.getName() + ")" ) );
                     kalypsoTheme.setProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, "org.kalypso.gml.ui.map.CoverageThemeInfo?format=Flieﬂtiefen (" + event.getName() + ") %.2f NN+m" );
                   }
                 }

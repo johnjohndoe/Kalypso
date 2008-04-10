@@ -54,6 +54,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -155,7 +156,7 @@ public class CalculationUnitPerformWidget implements IWidgetWithOptions, IWidget
       // TODO: ulgy! This also causes a whole map repaint if selection in this widget changes
       // Directly paint this stuff onto the map? Drawback: in that case, no buffering occurs so it is also slow...
       final String imageUrn = "urn:kalypso:map:theme:swtimage:calculationunittheme:default";
-      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( Messages.getString( "CalculationUnitPerformWidget.2" ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
+      final Model1d2dCalUnitTheme calcUnitTheme = new Model1d2dCalUnitTheme( new I10nString( Messages.getString( "CalculationUnitPerformWidget.2" ) ), mapModell, imageUrn, null, true ); //$NON-NLS-1$
       mapModell.insertTheme( calcUnitTheme, 0 );
 
       final CalculationUnitDataModel dataModel = m_dataModel;
