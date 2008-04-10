@@ -86,9 +86,9 @@ public class ThemeAndPropertyChooserGroup
 
     public final IPropertyTypeFilter filter;
 
-    public PropertyDescriptor( @SuppressWarnings("hiding")//$NON-NLS-1$
-    final String label, @SuppressWarnings("hiding")//$NON-NLS-1$
-    final IPropertyTypeFilter filter, @SuppressWarnings("hiding")//$NON-NLS-1$
+    public PropertyDescriptor( @SuppressWarnings("hiding")
+    final String label, @SuppressWarnings("hiding")
+    final IPropertyTypeFilter filter, @SuppressWarnings("hiding")
     final boolean hideIfUnique )
     {
       this.label = label;
@@ -313,7 +313,7 @@ public class ThemeAndPropertyChooserGroup
     }
 
     if( m_dialogSettings != null )
-      m_dialogSettings.put( SETTINGS_THEME, m_choosenTheme == null ? "" : m_choosenTheme.getName() ); //$NON-NLS-1$
+      m_dialogSettings.put( SETTINGS_THEME, m_choosenTheme == null ? "" : m_choosenTheme.getLabel() ); //$NON-NLS-1$
 
     for( final ComboViewer comboViewer : propertyCombos.values() )
       comboViewer.getControl().setEnabled( theme != null );
