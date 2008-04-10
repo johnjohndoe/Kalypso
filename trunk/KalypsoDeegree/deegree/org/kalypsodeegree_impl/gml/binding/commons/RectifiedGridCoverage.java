@@ -17,7 +17,7 @@ public class RectifiedGridCoverage extends AbstractFeatureBinder implements ICov
 {
   public static final QName QNAME = new QName( NS.GML3, "RectifiedGridCoverage" );
 
-  private static final QName QNAME_PROP_GRID_DOMAIN = new QName( NS.GML3, "rectifiedGridDomain" );
+  public static final QName QNAME_PROP_GRID_DOMAIN = new QName( NS.GML3, "rectifiedGridDomain" );
 
   private static final QName QNAME_PROP_RANGE_SET = new QName( NS.GML3, "rangeSet" );
 
