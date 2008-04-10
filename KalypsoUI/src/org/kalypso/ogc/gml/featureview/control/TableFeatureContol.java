@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.DefaultCommandManager;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -107,7 +108,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
   public Control createControl( final Composite parent, final int style )
   {
     /* Create a new Composite for the toolbar. */
-    Composite client = new Composite( parent, style );
+    final Composite client = new Composite( parent, style );
     if( m_showToolbar )
       client.setLayout( new GridLayout( 2, false ) );
     else
@@ -127,7 +128,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_toolbarManager = new ToolBarManager( SWT.VERTICAL );
 
       /* IAction for adding a feature. */
-      IAction addAction = new Action( "Neues Feature", ImageProvider.IMAGE_FEATURE_NEW )
+      final IAction addAction = new Action( "Neues Feature", ImageProvider.IMAGE_FEATURE_NEW )
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -183,7 +184,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_toolbarManager.add( addAction );
 
       /* IAction for removing a feature. */
-      IAction removeAction = new Action( "Features Löschen", ImageProvider.IMAGE_FEATURE_DELETE )
+      final IAction removeAction = new Action( "Features Löschen", ImageProvider.IMAGE_FEATURE_DELETE )
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -247,7 +248,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_toolbarManager.add( removeAction );
 
       /* Create the toolbar. */
-      ToolBar toolbar = m_toolbarManager.createControl( client );
+      final ToolBar toolbar = m_toolbarManager.createControl( client );
       toolbar.setLayoutData( new GridData( GridData.CENTER, GridData.BEGINNING, false, true ) );
     }
 
@@ -255,7 +256,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     if( m_showContextMenu )
     {
       /* Need a menu manager for the context menu. */
-      MenuManager menuManager = new MenuManager();
+      final MenuManager menuManager = new MenuManager();
       menuManager.setRemoveAllWhenShown( true );
       menuManager.addMenuListener( new IMenuListener()
       {
@@ -266,9 +267,9 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
         }
       } );
 
-      IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-      IWorkbenchPart activeEditor = activePage.getActivePart();
+      final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+      final IWorkbenchPart activeEditor = activePage.getActivePart();
       if( activeEditor != null )
       {
         /* Set the context menu. */
@@ -330,7 +331,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       final MapModell pseudoModell = new MapModell( KalypsoCorePlugin.getDefault().getCoordinatesSystem(), null );
 
-      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), ftpName, m_selectionManager, pseudoModell, null, null, true );
+      m_kft = new KalypsoFeatureTheme( c_workspace, featurePath.toString(), new I10nString( ftpName ), m_selectionManager, pseudoModell, null, null, true );
 
       pseudoModell.addTheme( m_kft );
 

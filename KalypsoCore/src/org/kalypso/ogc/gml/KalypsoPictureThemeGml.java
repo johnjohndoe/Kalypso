@@ -52,6 +52,7 @@ import ogc31.www.opengis.net.gml.RangeSetType;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -71,9 +72,9 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 {
   private final ICoverageCollection m_coverages;
 
-  public KalypsoPictureThemeGml( final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon, final boolean shouldShowChildren ) throws Exception
+  public KalypsoPictureThemeGml( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType, context, modell, legendIcon, shouldShowChildren );
+    super( layerName, layerType, context, modell, legendIcon, shouldShowChildren );
 
     // TODO: botch... find a better way of loading gml workspace!
     // maybe it could be treated as normal gm with a special display element?

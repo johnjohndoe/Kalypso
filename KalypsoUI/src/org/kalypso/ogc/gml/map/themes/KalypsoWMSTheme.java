@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Font;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
@@ -115,7 +116,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * This variable stores a listener, which will be notified about job events.
    */
-  private JobChangeAdapter m_adapter = new JobChangeAdapter()
+  private final JobChangeAdapter m_adapter = new JobChangeAdapter()
   {
     /**
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
@@ -171,7 +172,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * The source string. Do not remove this, because it is needed, when the template is saved.
    */
-  private String m_source;
+  private final String m_source;
 
   /**
    * The constructor.
@@ -186,7 +187,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *            The map modell.
    */
-  public KalypsoWMSTheme( String source, String linktype, String themeName, IKalypsoImageProvider imageProvider, IMapModell mapModel, String legendIcon, URL context, boolean shouldShowChildren )
+  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( themeName, linktype.toUpperCase(), mapModel, legendIcon, context, shouldShowChildren );
 
@@ -215,7 +216,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    *      org.kalypsodeegree.graphics.transformation.GeoTransform, double,
    *      org.kalypsodeegree.model.geometry.GM_Envelope, boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void paint( Graphics g, GeoTransform world2screen, double scale, GM_Envelope bbox, boolean selected, IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform world2screen, final double scale, final GM_Envelope bbox, final boolean selected, final IProgressMonitor monitor )
   {
     /* The image can not be selected. */
     if( selected )
@@ -261,7 +262,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setExtent(int, int, org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  public void setExtent( int width, int height, GM_Envelope extent )
+  public void setExtent( final int width, final int height, final GM_Envelope extent )
   {
     /* If the theme is not visible, do not restart the loading. */
     if( isVisible() == false )
@@ -312,7 +313,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       Debug.WMS.printf( "WMS (" + getName() + "): Creating a new loader ... \n" );
 
       /* Create a new loader. */
-      m_loader = new KalypsoImageLoader( getName(), m_provider, width, height, extent );
+      m_loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
 
       /* Make sure, only one job is running at a time. */
       m_loader.setRule( m_jobMutexRule );
@@ -343,7 +344,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
   @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
   {
     if( m_provider == null )
       return super.getLegendGraphic( font );
@@ -353,7 +354,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     if( m_legend == null )
     {
-      IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
+      final IKalypsoLegendProvider legendProvider = (IKalypsoLegendProvider) m_provider;
       m_legend = legendProvider.getLegendGraphic( font );
     }
 
@@ -366,7 +367,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
    */
-  public String getTooltip( Object element )
+  public String getTooltip( final Object element )
   {
     Assert.isTrue( element == this, "'Element' must be this" );
 
@@ -382,7 +383,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param image
    *            The newly loaded image.
    */
-  protected synchronized void setImage( Image image )
+  protected synchronized void setImage( final Image image )
   {
     /* Reset buffer. */
     if( m_buffer != null )
@@ -422,7 +423,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @throws Exception
    */
   @SuppressWarnings("unused")
-  public void performGetFeatureinfoRequest( Point pointOfInterest, String format, IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
+  public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format, final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
   {
 // KalypsoRemoteWMService remoteWMS = m_remoteWMS;
 // if( remoteWMS == null )

@@ -54,6 +54,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -95,9 +97,9 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   private final IFile m_file;
 
-  public CascadingKalypsoTheme( final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
+  public CascadingKalypsoTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerType.getName(), "Cascading", mapModel, legendIcon, context, shouldShowChildren );
+    super( layerName, "Cascading", mapModel, legendIcon, context, shouldShowChildren );
 
     m_mapViewRefUrl = layerType.getHref();
 
@@ -135,7 +137,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
         /* Remove resource listener while saving: prohibits unnecessary reloading when file is saved */
         m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
 
-        getInnerMapModel().createGismapTemplate( bbox, srsName, getName(), monitor, m_file );
+        getInnerMapModel().createGismapTemplate( bbox, srsName, monitor, m_file );
       }
       finally
       {
@@ -170,7 +172,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     if( layer instanceof StyledLayerType )
     {
       final StyledLayerType styledLayerType = (StyledLayerType) layer;
-      styledLayerType.setName( getName() );
+      styledLayerType.setName( getName().getKey() );
       styledLayerType.setVisible( isVisible );
       styledLayerType.getDepends();
 
@@ -208,6 +210,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   protected void startLoadJob( )
   {
+    final IFile file = m_file;
     final UIJob job = new UIJob( "Kaskadierendes Thema laden: " + m_file.getName() )
     {
       @Override
@@ -216,20 +219,22 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
         InputStream contents = null;
         try
         {
-          contents = m_file.getContents();
+          contents = file.getContents();
           final InputSource inputSource = new InputSource( contents );
           final Gismapview innerGisView = GisTemplateHelper.loadGisMapView( inputSource );
-          final String innerName = innerGisView.getName();
-          if( innerName != null )
+          if( innerGisView.getName() != null )
           {
+            final ITranslator translator = getMapModell().getName().getTranslator();
+            final I10nString innerName = new I10nString( innerGisView.getName(), translator );
             CascadingKalypsoTheme.this.setName( innerName );
           }
+
           getInnerMapModel().createFromTemplate( innerGisView );
           fireContextChanged();
         }
         catch( final Throwable e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, "Konnte " + m_file.getName() + " nicht laden." );
+          final IStatus status = StatusUtilities.statusFromThrowable( e, "Konnte " + file.getName() + " nicht laden." );
           setStatus( status );
           return status;
         }

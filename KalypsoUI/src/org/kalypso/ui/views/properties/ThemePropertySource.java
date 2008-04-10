@@ -44,6 +44,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource2;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -59,7 +60,7 @@ public class ThemePropertySource implements IPropertySource2
 
   private final IKalypsoTheme m_theme;
 
-  private IPropertyDescriptor[] m_descriptors;
+  private final IPropertyDescriptor[] m_descriptors;
 
   public ThemePropertySource( final IKalypsoTheme theme )
   {
@@ -73,7 +74,7 @@ public class ThemePropertySource implements IPropertySource2
     nameDesc.setCategory( "Allgemein" );
     final PropertyDescriptor typeDesc = new PropertyDescriptor( DESC_TYPE, "Typ" );
     typeDesc.setCategory( "Allgemein" );
-    
+
     return new IPropertyDescriptor[] { nameDesc, typeDesc };
   }
 
@@ -115,7 +116,7 @@ public class ThemePropertySource implements IPropertySource2
   public Object getPropertyValue( final Object id )
   {
     if( DESC_NAME.equals( id ) )
-      return m_theme.getName();
+      return m_theme.getLabel();
 
     if( DESC_TYPE.equals( id ) )
       return m_theme.getType();
@@ -138,7 +139,7 @@ public class ThemePropertySource implements IPropertySource2
   {
     if( DESC_NAME.equals( id ) )
     {
-      m_theme.setName( (String) value );
+      m_theme.setName( new I10nString( (String) value ) );
       return;
     }
 

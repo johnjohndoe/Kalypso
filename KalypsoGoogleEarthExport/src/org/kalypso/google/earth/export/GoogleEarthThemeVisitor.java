@@ -58,7 +58,7 @@ public class GoogleEarthThemeVisitor extends KalypsoThemeVisitor
     {
       final FolderType folderType = factory.createFolderType();
 
-      folderType.setName( theme.getName() );
+      folderType.setName( theme.getLabel() );
 
       final AbstractCascadingLayerTheme cascading = (AbstractCascadingLayerTheme) theme;
       final GisTemplateMapModell inner = cascading.getInnerMapModel();
@@ -75,7 +75,7 @@ public class GoogleEarthThemeVisitor extends KalypsoThemeVisitor
       try
       {
         final FolderType folderType = factory.createFolderType();
-        folderType.setName( theme.getName() );
+        folderType.setName( theme.getLabel() );
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final GoogleExportDelegate delegate = new GoogleExportDelegate( mapPanel, factory, folderType );
 

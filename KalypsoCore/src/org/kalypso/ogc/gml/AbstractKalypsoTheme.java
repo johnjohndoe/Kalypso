@@ -64,6 +64,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -114,7 +115,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   private org.eclipse.swt.graphics.Image m_externIcon;
 
-  private String m_name;
+  private I10nString m_name;
 
   private String m_type;
 
@@ -134,7 +135,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * True, if the theme should show its children in an outline. Otherwise false.
    */
-  private boolean m_shouldShowChildren;
+  private final boolean m_shouldShowChildren;
 
   /**
    * The constructor.
@@ -152,7 +153,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * @param shouldShowChildren
    *            True, if the theme should show its children in an outline. Otherwise false.
    */
-  public AbstractKalypsoTheme( final String name, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public AbstractKalypsoTheme( final I10nString name, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     Assert.isNotNull( mapModel );
 
@@ -467,27 +468,23 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getLabel()
+   */
+  public String getLabel( )
+  {
+    return getName().getValue();
+  }
+
+  /**
    * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
    */
   public String getLabel( final Object o )
   {
     final StringBuffer sb = new StringBuffer();
 
-    // REMARK: as the type is now clear from the properties view
-    // This is not needed any more
-// final String type = getType();
-// if( type != null && type.length() > 0 )
-// {
-// sb.append( "[" );
-// sb.append( type );
-// sb.append( "] " );
-// }
+    final I10nString themeName = getName();
 
-    final String themeName = getName();
-    sb.append( themeName );
-
-// if( !isLoaded() )
-// sb.append( " (wird geladen...)" );
+    sb.append( themeName.getValue() );
 
     final IStatus status = getStatus();
     if( !status.isOK() )
@@ -502,20 +499,21 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  public org.eclipse.swt.graphics.Image getLegendGraphic( org.eclipse.swt.graphics.Font font ) throws CoreException
+  @SuppressWarnings("unused")
+  public org.eclipse.swt.graphics.Image getLegendGraphic( final org.eclipse.swt.graphics.Font font ) throws CoreException
   {
-    int BORDER = 0;
-    int ICON_SIZE = 16;
-    int GAP = 4;
+    final int BORDER = 0;
+    final int ICON_SIZE = 16;
+    final int GAP = 4;
 
-    int width = 300;
-    int height = 16;
+    final int width = 300;
+    final int height = 16;
 
     /* Create the image. */
-    org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( Display.getCurrent(), width, height );
+    final org.eclipse.swt.graphics.Image image = new org.eclipse.swt.graphics.Image( Display.getCurrent(), width, height );
 
     /* Need a graphical context. */
-    GC gc = new GC( image );
+    final GC gc = new GC( image );
 
     /* Set the font. */
     gc.setFont( font );
@@ -530,10 +528,10 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
 
     /* Get the icon. */
-    ImageDescriptor descriptor = getImageDescriptor( this );
+    final ImageDescriptor descriptor = getImageDescriptor( this );
 
     /* Draw the icon. */
-    org.eclipse.swt.graphics.Image icon = descriptor.createImage();
+    final org.eclipse.swt.graphics.Image icon = descriptor.createImage();
     gc.drawImage( icon, BORDER, 0 );
 
     /* Draw the text. */
@@ -550,7 +548,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_mapModel;
   }
 
-  public String getName( )
+  public I10nString getName( )
   {
     return m_name;
   }
@@ -637,14 +635,12 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(java.lang.String)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
    */
-  public void setName( final String name )
+  public void setName( final I10nString name )
   {
     m_name = name;
     setStatus( Status.OK_STATUS );
-
-    fireStatusChanged();
   }
 
   /**
@@ -687,7 +683,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   @Override
   public String toString( )
   {
-    return m_name;
+    return getLabel( this );
   }
 
   /**
@@ -699,7 +695,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   {
     if( adapter == IKalypsoThemeInfo.class )
     {
-      /* If an explizit info is configured for this map, use it */
+      /* If an explicit info is configured for this map, use it */
       final String themeInfoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
       if( themeInfoId != null )
         return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );

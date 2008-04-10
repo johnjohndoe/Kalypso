@@ -199,7 +199,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
       return;
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme != null )
-      themeName = activeTheme.getName();
+      themeName = activeTheme.getLabel();
     else
       themeName = "<Bitte Layer aktivieren>";
     final Point pointOfInterest = m_pointOfInterest;

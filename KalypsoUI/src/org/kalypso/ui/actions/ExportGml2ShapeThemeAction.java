@@ -121,10 +121,10 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
     if( lastDirPath != null )
     {
       fileDialog.setFilterPath( lastDirPath );
-      fileDialog.setFileName( theme.getName() );
+      fileDialog.setFileName( theme.getLabel() );
     }
     else
-      fileDialog.setFileName( theme.getName() );
+      fileDialog.setFileName( theme.getLabel() );
     final String result = fileDialog.open();
     if( result == null )
       return;

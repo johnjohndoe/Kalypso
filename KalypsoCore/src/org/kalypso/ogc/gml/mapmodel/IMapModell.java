@@ -44,6 +44,7 @@ import java.awt.Graphics;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -129,9 +130,9 @@ public interface IMapModell extends IWorkbenchAdapter
    */
   public void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
 
-  public void setName( final String name );
+  public void setName( final I10nString name );
 
-  public String getName( );
+  public I10nString getName( );
 
   public void invalidate( final GM_Envelope bbox );
 

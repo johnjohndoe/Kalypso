@@ -80,6 +80,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.command.InvisibleCommand;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -349,7 +350,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
         final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null, true );
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( "<no name>" ), layer, context, m_selectionManager, pseudoModell, null, true );
         setInput( theme );
       }
       final Sort sort = layer.getSort();
@@ -382,7 +383,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( layer, context, m_selectionManager, pseudoModell, null, true );
+      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( "<no name>" ), layer, context, m_selectionManager, pseudoModell, null, true );
       setInput( theme );
 
       final Sort sort = layer.getSort();

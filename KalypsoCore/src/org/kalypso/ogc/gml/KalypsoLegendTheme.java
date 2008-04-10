@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -128,7 +129,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
    */
   private org.eclipse.swt.graphics.Image m_legendThemeIcon;
 
-  public KalypsoLegendTheme( final String name, final IMapModell mapModell, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModell, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, "legend", mapModell, legendIcon, context, shouldShowChildren );
 
@@ -227,7 +228,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
         {
           g.setFont( m_font );
           g.setColor( Color.black );
-          final String title = featureTheme.getName();
+          final String title = featureTheme.getLabel();
           if( title != null )
             g.drawString( title, 2, m_font.getSize() );
         }

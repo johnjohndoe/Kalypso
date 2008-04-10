@@ -109,10 +109,10 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     if( lastDirPath != null )
     {
       fileDialog.setFilterPath( lastDirPath );
-      fileDialog.setFileName( theme.getName() );
+      fileDialog.setFileName( theme.getLabel() );
     }
     else
-      fileDialog.setFileName( theme.getName() );
+      fileDialog.setFileName( theme.getLabel() );
     final String result = fileDialog.open();
     final File gmlFile;
     final File xsdFile;

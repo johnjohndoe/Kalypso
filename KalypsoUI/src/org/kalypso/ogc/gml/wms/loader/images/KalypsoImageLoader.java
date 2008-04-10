@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class KalypsoImageLoader extends Job
 {
   /**
-   * This variable stores the image provider, whoch will retrieve the image.
+   * This variable stores the image provider, which will retrieve the image.
    */
   private IKalypsoImageProvider m_provider;
 

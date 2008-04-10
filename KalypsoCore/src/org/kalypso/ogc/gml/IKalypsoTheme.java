@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -88,11 +89,19 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
   /**
    * returns the name of the layer
    */
-  public String getName( );
+  public I10nString getName( );
+
+  /**
+   * Returns the label of this label, in the current locale.
+   * <p>
+   * No status texts are added here
+   * </p>.
+   */
+  public String getLabel( );
 
   public String getType( );
 
-  public void setName( final String name );
+  public void setName( final I10nString name );
 
   /**
    * Returns the full extent bounding box for the theme.

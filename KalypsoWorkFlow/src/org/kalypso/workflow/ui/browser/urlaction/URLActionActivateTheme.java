@@ -72,10 +72,10 @@ public class URLActionActivateTheme extends AbstractURLAction
   /**
    * @see org.kalypso.workflow.ui.browser.IURLAction#run(org.kalypso.workflow.ui.browser.ICommandURL)
    */
-  public boolean run( ICommandURL commandURL )
+  public boolean run( final ICommandURL commandURL )
   {
     final IEditorPart activePage = getActiveEditor();
-    String theme = commandURL.getParameter( PARAM_THEME );
+    final String theme = commandURL.getParameter( PARAM_THEME );
     if( activePage instanceof GisMapEditor )
     {
       final GisMapEditor editor = (GisMapEditor) activePage;
@@ -86,10 +86,9 @@ public class URLActionActivateTheme extends AbstractURLAction
         if( mapModell != null )
         {
           final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-          for( int i = 0; i < allThemes.length; i++ )
+          for( final IKalypsoTheme layer : allThemes )
           {
-            final IKalypsoTheme layer = allThemes[i];
-            final String name = layer.getName();
+            final String name = layer.getLabel();
             if( name.equals( theme ) )
             {
               mapModell.activateTheme( layer );
