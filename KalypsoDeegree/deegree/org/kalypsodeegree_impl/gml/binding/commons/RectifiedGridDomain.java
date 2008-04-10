@@ -1,5 +1,8 @@
 package org.kalypsodeegree_impl.gml.binding.commons;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -71,6 +74,8 @@ public class RectifiedGridDomain
   private final GridRange m_gridRange;
 
   private final GM_Surface<GM_SurfacePatch> m_rasterBoundaryAsSurface;
+
+  public static final QName QNAME = new QName( NS.GML3, "RectifiedGrid" );
 
   /**
    * constructs a RectifiedGridDomain with the given origin, offset and gridRange
