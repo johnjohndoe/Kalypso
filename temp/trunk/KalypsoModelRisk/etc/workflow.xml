@@ -125,15 +125,15 @@
 					<con:Parameter name="input"
 						value="templates/RiskZonesPanel.gft" />
 				</con:ExtensionContext>
-				<con:ExtensionContext id="StatisticsPanel"
-					parent="FeatureView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-					<con:Parameter name="type"
-						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/StatisticsPanel.gft" />
-				</con:ExtensionContext>
 			</con:ViewContext>
+			<con:ViewContext id="RiskStatisticsView"
+				partId="org.kalypso.risk.views.RiskStatisticsResultView"
+				parent="ContextRiskModelling">
+				<con:ExtensionContext id="StatisticsPanel"
+					parent="RiskStatisticsView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+				</con:ExtensionContext>
+			</con:ViewContext>			
 			<con:WorkbenchSiteContext id="MapContext"
 				parent="ContextRiskModelling">
 				<con:ViewContext id="MapOutlineView"

@@ -224,4 +224,13 @@
                     name="KalypsoRaiskCatalogContribution (Dictionaries)">
                 </catalogContribution>
             </extension>
+            <extension
+                  point="org.eclipse.ui.views">
+               <view
+                     allowMultiple="false"
+                     class="org.kalypso.risk.views.RiskStatisticsResultView"
+                     id="org.kalypso.risk.views.RiskStatisticsResultView"
+                     name="Risk Statistics View">
+               </view>
+            </extension>
 </plugin>

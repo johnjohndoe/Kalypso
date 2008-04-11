@@ -75,7 +75,7 @@ public class RiskModelHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( name ) ) //$NON-NLS-1$
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( name ) ) //$NON-NLS-1$
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
     return null;
