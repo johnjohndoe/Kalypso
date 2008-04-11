@@ -73,6 +73,9 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author kuch
@@ -269,13 +272,16 @@ public class FNGmlUtils
 
   public static INode createNode( final IModelMember model, final TYPE nodeType, final GM_Point point, final INode[] nodes ) throws Exception
   {
-    // a new node must be created?!?
+    // buffer point
+    final Point myPoint = (Point) JTSAdapter.export( point );
 
     // TODO: use query to search for nodes! Else: performance problems
     for( final INode node : nodes )
     {
       final GM_Point pNode = node.getLocation();
-      if( pNode.intersects( point ) )
+      final Point nodePoint = (Point) JTSAdapter.export( pNode );
+
+      if( nodePoint.buffer( 0.5 ).intersects( myPoint ) )
         return node;
     }
 
