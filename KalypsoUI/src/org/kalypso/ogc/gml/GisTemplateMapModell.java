@@ -271,10 +271,14 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       final Layers layersType = maptemplateFactory.createGismapviewLayers();
       final I10nString name = getName();
       gismapview.setName( name.getKey() );
-      final Translator translator = maptemplateFactory.createGismapviewTranslator();
-      translator.setId( name.getTranslator().getId() );
-      translator.getAny().addAll( name.getTranslator().getConfiguration() );
-      gismapview.setTranslator( translator );
+      final ITranslator i10nTranslator = name.getTranslator();
+      if( i10nTranslator != null )
+      {
+        final Translator translator = maptemplateFactory.createGismapviewTranslator();
+        translator.setId( i10nTranslator.getId() );
+        translator.getAny().addAll( i10nTranslator.getConfiguration() );
+        gismapview.setTranslator( translator );
+      }
 
       if( bbox != null )
       {
