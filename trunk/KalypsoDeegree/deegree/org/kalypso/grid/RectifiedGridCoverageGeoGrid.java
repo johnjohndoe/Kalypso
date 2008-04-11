@@ -165,7 +165,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
    */
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
-    if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeX()) )
+    if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeY()) )
       return Double.NaN;
 
     return getValue( x, y );

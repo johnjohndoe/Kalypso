@@ -250,8 +250,11 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           {
             /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
             value = GeoGridUtilities.getValue( grid, GeoGridUtilities.transformCoordinate( grid, crd, targetCRS ), interpolation );
-          }
+          } 
 
+          if( Double.isNaN( value ) )
+              continue;
+          
           final Color color = symbolizer.getColor( value );
           if( color == null )
             continue;
@@ -274,7 +277,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       {
         for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
         {
-          final double value = grid.getValueChecked( i, j );
+          final double value = grid.getValueChecked( i, j );    
           if( !Double.isNaN( value ) )
           {
             final Color color = symbolizer.getColor( value );
@@ -347,26 +350,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 // }
 // }
 
-  private void paintEnvelope( final Graphics2D g, final GeoTransform projection, final Envelope currentCellEnv, final Color color )
-  {
-    // We assume the envelope is normalized here, so we can safely switch minY anc maxY
-    final double paintMinX = projection.getDestX( currentCellEnv.getMinX() );
-    final double paintMinY = projection.getDestY( currentCellEnv.getMinY() );
-    final double paintMaxX = projection.getDestX( currentCellEnv.getMaxX() );
-    final double paintMaxY = projection.getDestY( currentCellEnv.getMaxY() );
-
-    final int x1 = (int) Math.ceil( paintMinX );
-    final int y1 = (int) Math.ceil( paintMaxY );
-
-    final int x2 = (int) Math.ceil( paintMaxX );
-    final int y2 = (int) Math.ceil( paintMinY );
-
-    final int width = x2 - x1;
-    final int height = y2 - y1;
-
-    g.setColor( color );
-    g.fillRect( x1, y1, width, height );
-  }
+ 
 
   //
   // THE GRID CACHE
