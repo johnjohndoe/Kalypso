@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.google.earth.export.geometry.GeoUtils;
 import org.kalypso.google.earth.export.geometry.GeoUtils.GEOMETRY_TYPE;
+import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
+import org.kalypso.google.earth.export.interfaces.IPlacemarker;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -26,19 +28,9 @@ import com.google.earth.kml.StyleType;
  */
 public class ConvertFacade
 {
-  private static ObjectFactory m_factory = new ObjectFactory();
-
-  /**
-   * @param feature
-   * @return
-   * @throws Exception
-   */
-  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature feature, final IFeatureGeometryFilter filter, final StyleType style ) throws Exception
+  public static PlacemarkType[] convert( final IGoogleEarthAdapter[] providers, final ObjectFactory factory, final GM_Object[] geometries, final StyleType style, final Feature feature ) throws Exception
   {
     final List<PlacemarkType> placemarks = new ArrayList<PlacemarkType>();
-
-    /* geometry type of feature? */
-    final GM_Object[] geometries = filter.getGeometries( feature );
 
     for( final GM_Object gmo : geometries )
     {
@@ -46,56 +38,44 @@ public class ConvertFacade
       placemark.setName( feature.getId() );
 
       final GEOMETRY_TYPE gt = GeoUtils.getGeoType( gmo );
-      switch( gt )
+      if( GEOMETRY_TYPE.eMultiCurve.equals( gt ) )
       {
-        case eMultiCurve:
-          placemark.setGeometry( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo ) ) );
-          break;
-
-        case eCurve:
-          placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
-          break;
-
-        case eMultiSurface:
-          placemark.setGeometry( factory.createMultiGeometry( ConverterMultiSurface.convert( factory, (GM_MultiSurface) gmo ) ) );
-          break;
-
-        case eSurface:
-          placemark.setGeometry( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo ) ) );
-          break;
-
-        case ePoint:
-          placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo ) ) );
-          break;
-
-        default:
-          throw new NotImplementedException();
+        placemark.setGeometry( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo ) ) );
       }
+      else if( GEOMETRY_TYPE.eCurve.equals( gt ) )
+      {
+
+        placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
+      }
+      else if( GEOMETRY_TYPE.eMultiSurface.equals( gt ) )
+      {
+
+        placemark.setGeometry( factory.createMultiGeometry( ConverterMultiSurface.convert( factory, (GM_MultiSurface) gmo ) ) );
+      }
+      else if( GEOMETRY_TYPE.eSurface.equals( gt ) )
+      {
+        placemark.setGeometry( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo ) ) );
+      }
+      else if( GEOMETRY_TYPE.ePoint.equals( gt ) )
+      {
+        IPlacemarker myMarker = null;
+        for( final IGoogleEarthAdapter adapter : providers )
+        {
+          myMarker = adapter.getPlacemarker( feature );
+          if( myMarker != null )
+            break;
+        }
+
+        placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo ) ) );
+      }
+      else
+        throw new NotImplementedException();
 
       placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
-
       placemarks.add( placemark );
     }
 
     return placemarks.toArray( new PlacemarkType[] {} );
   }
 
-  /**
-   * @param factory
-   * @param features
-   * @throws Exception
-   */
-  public static PlacemarkType[] convert( final ObjectFactory factory, final Feature[] features, final IFeatureGeometryFilter filter, final StyleType style ) throws Exception
-  {
-    final List<PlacemarkType> placemarks = new ArrayList<PlacemarkType>();
-
-    for( final Feature feature : features )
-    {
-      final PlacemarkType[] converted = ConvertFacade.convert( factory, feature, filter, style );
-      for( final PlacemarkType placemark : converted )
-        placemarks.add( placemark );
-    }
-
-    return placemarks.toArray( new PlacemarkType[] {} );
-  }
 }
