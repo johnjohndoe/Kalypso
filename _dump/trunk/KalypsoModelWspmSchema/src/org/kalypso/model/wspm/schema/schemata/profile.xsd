@@ -61,13 +61,13 @@
 						<annotation>
 							<documentation xml:lang="de">
 								Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.
-								<label>Station</label>
-								<tooltip>Stationierung</tooltip>
+								<label>Station [km]</label>
+								<tooltip>Stationierung [km]</tooltip>
 							</documentation>
 							<documentation xml:lang="en">
 								The profile stationing, important for editing cross sections.
-								<label>Station</label>
-								<tooltip>Station</tooltip>
+								<label>Station [km]</label>
+								<tooltip>Station [km]</tooltip>
 							</documentation>
 						</annotation>
 					</element>

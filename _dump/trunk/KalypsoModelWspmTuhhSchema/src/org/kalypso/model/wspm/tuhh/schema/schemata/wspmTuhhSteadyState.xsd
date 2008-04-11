@@ -199,15 +199,15 @@
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Profil-Strangsegment - stationär (TU-HH)</name>
-				<label>Station km ${property:org.kalypso.model.wspm.tuhh#station}</label>
-				<tooltip>Station km ${property:org.kalypso.model.wspm.tuhh#station}</tooltip>
-				<description>Station km ${property:org.kalypso.model.wspm.tuhh#station}</description>
+				<label>Station km ${property:org.kalypso.model.wspm.tuhh#station;-}</label>
+			        <tooltip>Station km ${property:org.kalypso.model.wspm.tuhh#station;-}</tooltip>
+			        <description>Station km ${property:org.kalypso.model.wspm.tuhh#station;-}</description>
 			</documentation>
 			<documentation xml:lang="en">
 				<name>Profile string segment - steady (TU-HH)</name>
-				<label>Station km ${property:org.kalypso.model.wspm.tuhh#station}</label>
-				<tooltip>Station km ${property:org.kalypso.model.wspm.tuhh#station}</tooltip>
-				<description>Station km ${property:org.kalypso.model.wspm.tuhh#station}</description>
+			        <label>Station km ${property:org.kalypso.model.wspm.tuhh#station;-}</label>
+			        <tooltip>Station km ${property:org.kalypso.model.wspm.tuhh#station;-}</tooltip>
+			        <description>Station km ${property:org.kalypso.model.wspm.tuhh#station;-}</description>
 			</documentation>
 		</annotation>
 	</element>
@@ -1401,7 +1401,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						<annotation>
 							<appinfo>This property is backuped by the observation (profileMember) itself.</appinfo>
 							<documentation xml:lang="de">
-								<label>Station km</label>
+								<label>Station [km]</label>
 								<tooltip>
 									Stelle im Gewässerstrang, an dem das unten selektierte Profil platziert wird.
 								</tooltip>
@@ -1410,7 +1410,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 								</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Station km</label>
+								<label>Station [km]</label>
 								<tooltip>Station in string, where the profile selected below will be placed.</tooltip>
 								<description>
 									Station in string, where the profile selected below will be placed.

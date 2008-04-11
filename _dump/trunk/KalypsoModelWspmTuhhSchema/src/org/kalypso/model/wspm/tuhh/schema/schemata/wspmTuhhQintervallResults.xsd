@@ -93,14 +93,14 @@
 					<element name="station" type="wspmcommon:stationDouble">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Station</label>
-								<tooltip>Station</tooltip>
-								<description>Station</description>
+								<label>Station [km]</label>
+							        <tooltip>Station [km]</tooltip>
+							        <description>Station [km]</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>Station</label>
-								<tooltip>Station</tooltip>
-								<description>Station</description>
+							        <label>Station [km]</label>
+							        <tooltip>Station [km]</tooltip>
+							        <description>Station [km]</description>
 							</documentation>
 						</annotation>
 					</element>
