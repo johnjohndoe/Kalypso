@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.google.earth.export.convert.ConvertFacade;
 import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
@@ -22,6 +23,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 import com.google.earth.kml.FeatureType;
 import com.google.earth.kml.FolderType;
+import com.google.earth.kml.GroundOverlayType;
 import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.PlacemarkType;
 import com.google.earth.kml.StyleType;
@@ -117,13 +119,24 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
           adapter.registerExportedFeature( feature );
         }
 
-        // TODO get rendered GM_Point geometry from symbolizer
+        // TODO perhaps, get rendered GM_Point geometry from symbolizer
 
-        final PlacemarkType[] placemarks = ConvertFacade.convert( m_provider, m_factory, element.getGeometry(), styleType, feature );
+        final FeatureType[] featureTypes = ConvertFacade.convert( m_provider, m_factory, element.getGeometry(), styleType, feature );
 
         final List<JAXBElement< ? extends FeatureType>> features = m_folderType.getFeature();
-        for( final PlacemarkType placemark : placemarks )
-          features.add( m_factory.createPlacemark( placemark ) );
+        for( final FeatureType featureType : featureTypes )
+        {
+          if( featureType instanceof PlacemarkType )
+          {
+            features.add( m_factory.createPlacemark( (PlacemarkType) featureType ) );
+          }
+          else if( featureType instanceof GroundOverlayType )
+          {
+            features.add( m_factory.createGroundOverlay( (GroundOverlayType) featureType ) );
+          }
+          else
+            throw new NotImplementedException();
+        }
 
       }
       catch( final Exception e )

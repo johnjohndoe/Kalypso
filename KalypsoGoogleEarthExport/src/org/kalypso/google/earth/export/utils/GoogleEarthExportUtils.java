@@ -41,7 +41,7 @@ public class GoogleEarthExportUtils
     else if( symbolizer instanceof PolygonSymbolizer )
       return styleFactory.getPolygonSymbolizer( (PolygonSymbolizer) symbolizer );
     else if( symbolizer instanceof TextSymbolizer )
-      throw (new NotImplementedException());
+      return null;
 
     throw (new NotImplementedException());
   }

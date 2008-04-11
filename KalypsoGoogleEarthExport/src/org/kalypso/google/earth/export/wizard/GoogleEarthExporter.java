@@ -29,7 +29,7 @@ import org.kalypso.google.earth.export.GoogleEarthThemeVisitor;
 import org.kalypso.google.earth.export.GoogleExportDelegate;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
-import org.kalypso.google.earth.export.interfaces.IPlacemarker;
+import org.kalypso.google.earth.export.interfaces.IGroundOverlay;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypso.google.earth.export.utils.StyleTypeFactory;
@@ -165,7 +165,7 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       /* add additional place marks and clean up providers */
       for( final IGoogleEarthAdapter adapter : m_provider )
       {
-        final IPlacemarker[] placemarkers = adapter.getAdditionalPlacemarkers();
+        final IGroundOverlay[] placemarkers = adapter.getAdditionalPlacemarkers();
 
         adapter.cleanUp();
       }
