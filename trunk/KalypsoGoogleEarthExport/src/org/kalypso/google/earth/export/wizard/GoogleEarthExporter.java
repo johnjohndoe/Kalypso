@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -21,12 +22,16 @@ import org.eclipse.core.runtime.Status;
 import org.junit.Assert;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.google.earth.export.GoogleEarthThemeVisitor;
+import org.kalypso.google.earth.export.GoogleExportDelegate;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypso.google.earth.export.utils.StyleTypeFactory;
 import org.kalypso.google.earth.export.utils.ThemeGoogleEarthExportable;
 import org.kalypso.google.earth.export.utils.ZipUtils;
+import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -34,6 +39,7 @@ import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
 
 import com.google.earth.kml.DocumentType;
+import com.google.earth.kml.FeatureType;
 import com.google.earth.kml.FolderType;
 import com.google.earth.kml.ObjectFactory;
 
@@ -46,6 +52,8 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
   private final IGoogleEarthExportSettings m_settings;
 
   private final MapView m_view;
+
+  private MapPanel m_mapPanel;
 
   /**
    * @param view
@@ -85,43 +93,46 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-
     try
     {
       /* basic data stuff for processing */
       final File tmpDir = createTmpDir();
-      final MapPanel mapPanel = m_view.getMapPanel();
-      final IMapModell mapModell = mapPanel.getMapModell();
+      m_mapPanel = m_view.getMapPanel();
+      final IMapModell mapModell = m_mapPanel.getMapModell();
 
       /* kml document root */
-      final ObjectFactory factory = new ObjectFactory();
-      final DocumentType documentType = factory.createDocumentType();
+      final ObjectFactory googleEarthFactory = new ObjectFactory();
+      final DocumentType documentType = googleEarthFactory.createDocumentType();
 
       /* basic kml settings */
-      GoogleEarthUtils.setMapBoundary( mapPanel.getBoundingBox(), mapModell.getCoordinatesSystem(), factory, documentType );
-      GoogleEarthUtils.setLookAt( mapPanel.getBoundingBox(), mapModell.getCoordinatesSystem(), factory, documentType );
+      GoogleEarthUtils.setMapBoundary( m_mapPanel.getBoundingBox(), mapModell.getCoordinatesSystem(), googleEarthFactory, documentType );
+      GoogleEarthUtils.setLookAt( m_mapPanel.getBoundingBox(), mapModell.getCoordinatesSystem(), googleEarthFactory, documentType );
 
       documentType.setName( m_settings.getExportName() );
       documentType.setDescription( m_settings.getExportDescription() );
 
-      final JAXBElement<DocumentType> kmlDocument = factory.createDocument( documentType );
+      final JAXBElement<DocumentType> kmlDocument = googleEarthFactory.createDocument( documentType );
 
-      final FolderType folderType = factory.createFolderType();
+      final FolderType folderType = googleEarthFactory.createFolderType();
       folderType.setName( "Kalypso Google Earth (TM) Export" ); //$NON-NLS-1$
 
       /* process map */
-      final KalypsoThemeVisitor visitor = new GoogleEarthThemeVisitor( mapPanel, folderType, new ThemeGoogleEarthExportable() );
-
-      final IKalypsoTheme[] themes = mapModell.getAllThemes();
-      for( final IKalypsoTheme theme : themes )
+      final KalypsoThemeVisitor visitor = new GoogleEarthThemeVisitor( new ThemeGoogleEarthExportable() );
+      for( final IKalypsoTheme theme : mapModell.getAllThemes() )
         visitor.visit( theme );
 
-      final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( factory );
+      final IKalypsoTheme[] themes = visitor.getFoundThemes();
+      for( final IKalypsoTheme theme : themes )
+      {
+        processTheme( folderType, theme );
+      }
+
+      final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( googleEarthFactory );
       styleFactory.addStylesToDocument( documentType );
 
       GoogleEarthExportUtils.removeEmtpyFolders( folderType );
 
-      documentType.getFeature().add( factory.createFolder( folderType ) );
+      documentType.getFeature().add( googleEarthFactory.createFolder( folderType ) );
 
       /* marshalling */
       final File file = new File( tmpDir, "doc.kml" ); //$NON-NLS-1$
@@ -144,5 +155,47 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
     }
 
     return Status.OK_STATUS;
+  }
+
+  private void processTheme( final FolderType parentFolderType, final IKalypsoTheme theme )
+  {
+    final ObjectFactory factory = new ObjectFactory();
+    final List<JAXBElement< ? extends FeatureType>> myList = parentFolderType.getFeature();
+
+    /* get inner themes */
+    if( theme instanceof AbstractCascadingLayerTheme )
+    {
+      final FolderType folderType = factory.createFolderType();
+
+      folderType.setName( theme.getLabel() );
+
+      final AbstractCascadingLayerTheme cascading = (AbstractCascadingLayerTheme) theme;
+      final GisTemplateMapModell inner = cascading.getInnerMapModel();
+
+      final IKalypsoTheme[] themes = inner.getAllThemes();
+      for( final IKalypsoTheme t : themes )
+      {
+        processTheme( folderType, t );
+      }
+
+      myList.add( factory.createFolder( folderType ) );
+    }
+    /* "paint" inner themes */
+    else if( theme instanceof IKalypsoFeatureTheme )
+      try
+      {
+        final FolderType folderType = factory.createFolderType();
+        folderType.setName( theme.getLabel() );
+        final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+        final GoogleExportDelegate delegate = new GoogleExportDelegate( m_mapPanel, factory, folderType );
+        ft.paintInternal( delegate );
+
+        myList.add( factory.createFolder( folderType ) );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+
   }
 }
