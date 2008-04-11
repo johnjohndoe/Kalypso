@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -16,14 +17,19 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.junit.Assert;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.google.earth.export.GoogleEarthThemeVisitor;
 import org.kalypso.google.earth.export.GoogleExportDelegate;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
+import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
+import org.kalypso.google.earth.export.interfaces.IPlacemarker;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypso.google.earth.export.utils.StyleTypeFactory;
@@ -55,6 +61,8 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
 
   private MapPanel m_mapPanel;
 
+  private final IGoogleEarthAdapter[] m_provider;
+
   /**
    * @param view
    * @param m_page
@@ -63,6 +71,26 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
   {
     m_view = view;
     m_settings = settings;
+
+    /* get extension points for rendering geometries and adding additional geometries */
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IGoogleEarthAdapter.ID ); //$NON-NLS-1$
+
+    // TODO handling of several providers, which provider wins / rules, returns a special geometry, aso
+    final List<IGoogleEarthAdapter> provider = new ArrayList<IGoogleEarthAdapter>( elements.length );
+    for( final IConfigurationElement element : elements )
+    {
+      try
+      {
+        provider.add( (IGoogleEarthAdapter) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    m_provider = provider.toArray( new IGoogleEarthAdapter[] {} );
   }
 
   /**
@@ -134,6 +162,14 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
 
       documentType.getFeature().add( googleEarthFactory.createFolder( folderType ) );
 
+      /* add additional place marks and clean up providers */
+      for( final IGoogleEarthAdapter adapter : m_provider )
+      {
+        final IPlacemarker[] placemarkers = adapter.getAdditionalPlacemarkers();
+
+        adapter.cleanUp();
+      }
+
       /* marshalling */
       final File file = new File( tmpDir, "doc.kml" ); //$NON-NLS-1$
       final JAXBContext jc = JAXBContext.newInstance( ObjectFactory.class );
@@ -187,7 +223,7 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
         final FolderType folderType = factory.createFolderType();
         folderType.setName( theme.getLabel() );
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
-        final GoogleExportDelegate delegate = new GoogleExportDelegate( m_mapPanel, factory, folderType );
+        final GoogleExportDelegate delegate = new GoogleExportDelegate( m_provider, m_mapPanel, factory, folderType );
         ft.paintInternal( delegate );
 
         myList.add( factory.createFolder( folderType ) );

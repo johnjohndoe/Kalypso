@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.google.earth.export.convert.ConvertFacade;
-import org.kalypso.google.earth.export.convert.IFeatureGeometryFilter;
+import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.ogc.gml.IPaintInternalDelegate;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -19,9 +19,6 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.google.earth.kml.FeatureType;
 import com.google.earth.kml.FolderType;
@@ -40,15 +37,19 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
 
   private final ObjectFactory m_factory;
 
+  private final IGoogleEarthAdapter[] m_provider;
+
   /**
    * @param factory
    * @param folderType
    */
-  public GoogleExportDelegate( final MapPanel mapPanel, final ObjectFactory factory, final FolderType folderType )
+  public GoogleExportDelegate( final IGoogleEarthAdapter[] provider, final MapPanel mapPanel, final ObjectFactory factory, final FolderType folderType )
   {
+    m_provider = provider;
     m_mapPanel = mapPanel;
     m_factory = factory;
     m_folderType = folderType;
+
   }
 
   /*
@@ -98,39 +99,37 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
    */
   public void paint( final DisplayElement displayElement, final IProgressMonitor monitor )
   {
-    try
+
+    final StyleType styleType;
+
+    if( displayElement instanceof GeometryDisplayElement )
     {
-      final StyleType styleType;
+      final GeometryDisplayElement element = (GeometryDisplayElement) displayElement;
+      final Symbolizer symbolizer = element.getSymbolizer();
 
-      if( displayElement instanceof GeometryDisplayElement )
+      try
       {
-        final GeometryDisplayElement element = (GeometryDisplayElement) displayElement;
-        final Symbolizer symbolizer = element.getSymbolizer();
-
         styleType = GoogleEarthExportUtils.getStyleType( m_factory, displayElement.getFeature(), symbolizer );
-      }
-      else
-        throw (new NotImplementedException());
 
-      final IFeatureGeometryFilter filter = new IFeatureGeometryFilter()
-      {
-        public GM_Object[] getGeometries( Feature f )
+        final Feature feature = displayElement.getFeature();
+        for( final IGoogleEarthAdapter adapter : m_provider )
         {
-          GM_Object geometryProperty = f.getDefaultGeometryProperty();
-          return new GM_Object[] { geometryProperty };
+          adapter.registerExportedFeature( feature );
         }
-      };
 
-      final Feature feature = displayElement.getFeature();
-      final PlacemarkType[] placemarks = ConvertFacade.convert( m_factory, feature, filter, styleType );
+        // TODO get rendered GM_Point geometry from symbolizer
 
-      final List<JAXBElement< ? extends FeatureType>> features = m_folderType.getFeature();
-      for( final PlacemarkType placemark : placemarks )
-        features.add( m_factory.createPlacemark( placemark ) );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
+        final PlacemarkType[] placemarks = ConvertFacade.convert( m_provider, m_factory, element.getGeometry(), styleType, feature );
+
+        final List<JAXBElement< ? extends FeatureType>> features = m_folderType.getFeature();
+        for( final PlacemarkType placemark : placemarks )
+          features.add( m_factory.createPlacemark( placemark ) );
+
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 }
