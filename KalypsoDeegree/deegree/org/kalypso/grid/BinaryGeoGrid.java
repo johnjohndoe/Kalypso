@@ -110,7 +110,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   private BigDecimal m_max;
 
   /**
-   * Opens an exsiting grid for read-only access.<br>
+   * Opens an existing grid for read-only access.<br>
    * Dispose the grid after it is no more needed in order to release the given resource.
    */
   public static BinaryGeoGrid openGrid( final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
@@ -140,12 +140,16 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * Crates a new grid file with the given size and scale.<br>
    * The grid is then opened in write mode, so its values can then be set.<br>
-   * The grid must be disposed afterwards in order to flush the written information.
+   * The grid must be disposed afterwards in order to flush the written information. *
+   * 
+   * @param fillGrid
+   *            If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid
+   *            values are undetermined.
    */
-  public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws IOException
   {
     final RandomAccessFile randomAccessFile = new RandomAccessFile( file, "rw" );
-    return new BinaryGeoGrid( randomAccessFile, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS );
+    return new BinaryGeoGrid( randomAccessFile, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS, fillGrid );
   }
 
   /**
@@ -174,7 +178,12 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   }
 
-  public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  /**
+   * @param fillGrid
+   *            If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid
+   *            values are undetermined.
+   */
+  public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws IOException
   {
     super( origin, offsetX, offsetY, sourceCRS );
 
@@ -199,15 +208,19 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     writeInt( scale );
 
     /* Set everything to non-data */
-    for( int y = 0; y < sizeY; y++ )
+    if( fillGrid )
     {
-      for( int x = 0; x < sizeX; x++ )
-        writeInt( NO_DATA );
+      for( int y = 0; y < sizeY; y++ )
+      {
+        for( int x = 0; x < sizeX; x++ )
+          writeInt( NO_DATA );
+      }
     }
 
     /* Read statistical data */
-    writeBigDecimal( m_min );
-    writeBigDecimal( m_max );
+    saveStatistically();
+// writeBigDecimal( m_min );
+// writeBigDecimal( m_max );
   }
 
   private BigDecimal readBigDecimal( ) throws IOException
@@ -433,6 +446,5 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   {
     if( m_min != null && m_max != null )
       setStatistically( getMin(), getMax() );
-
   }
 }

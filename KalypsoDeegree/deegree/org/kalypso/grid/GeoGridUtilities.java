@@ -351,11 +351,11 @@ public class GeoGridUtilities
     }
   }
 
-  public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws IOException
   {
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
-      return BinaryGeoGrid.createGrid( file, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS );
+      return BinaryGeoGrid.createGrid( file, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS, fillGrid );
 
     throw new UnsupportedOperationException( "Mime-Type not supported for writing: " + mimeType );
   }
@@ -391,7 +391,7 @@ public class GeoGridUtilities
     IWriteableGeoGrid outputGrid = null;
     try
     {
-      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS() );
+      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
 
       ProgressUtilities.worked( monitor, 20 );
 
@@ -451,7 +451,7 @@ public class GeoGridUtilities
     IWriteableGeoGrid outputGrid = null;
     try
     {
-      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS() );
+      outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
       ProgressUtilities.worked( monitor, 20 );
       final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
       grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );

@@ -111,16 +111,19 @@ public class ConvertAscii2Binary
       final BigDecimal noData = new BigDecimal( data[5] );
 
       /* Write header */
-      final BinaryGeoGrid binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, null, null, null, m_sourceCRS );
+      final BinaryGeoGrid binaryGrid = BinaryGeoGrid.createGrid( m_ascbinFile, sizeX, sizeY, m_scale, null, null, null, m_sourceCRS, false );
       ProgressUtilities.worked( monitor, 1 );
 
+      final Double nan = Double.NaN;
       for( int y = 0; y < sizeY; y++ )
       {
         for( int x = 0; x < sizeX; x++ )
         {
           final String next = scanner.next(); // do not use 'nextDouble' it is much too slow
           final BigDecimal currentValue = new BigDecimal( next );
-          if( !currentValue.equals( noData ) )
+          if( currentValue.equals( noData ) )
+            binaryGrid.setValue( x, y, nan );
+          else            
             binaryGrid.setValue( x, y, currentValue );
         }
 
