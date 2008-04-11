@@ -3,7 +3,6 @@
  */
 package org.kalypso.google.earth.export.convert;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +21,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 import com.google.earth.kml.FeatureType;
 import com.google.earth.kml.GroundOverlayType;
-import com.google.earth.kml.LatLonBoxType;
-import com.google.earth.kml.LinkType;
+import com.google.earth.kml.IconStyleIconType;
 import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.PlacemarkType;
 import com.google.earth.kml.StyleType;
@@ -94,27 +92,21 @@ public class ConvertFacade
 
         if( myOverlay != null )
         {
+          final PlacemarkType placemark = factory.createPlacemarkType();
+          placemark.setName( feature.getId() );
+
           final GroundOverlayType overlay = factory.createGroundOverlayType();
           overlay.setName( myOverlay.getName() );
+          placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo ) ) );
 
-          /* icon */
-          final URL urlIcon = myOverlay.getIcon();
+          // TODO styleFactory.getIconStyle
+          final IconStyleIconType iconStyle = factory.createIconStyleIconType();
 
-          // TODO copy icon
-          final LinkType lnkIcon = factory.createLinkType();
-// lnkIcon.setHref( myOverlay.getIconHref() );
-          lnkIcon.setViewBoundScale( myOverlay.getIconViewBoundScale() );
-          overlay.setIcon( lnkIcon );
+// iconStyle.setHref( "http://www.heise.de/icons/ho/heise.gif" );
+//          
+// placemark.setStyleUrl( "#" + iconStyle.getId() )
 
-          /* latlonbox */
-          final LatLonBoxType latLon = factory.createLatLonBoxType();
-          latLon.setNorth( myOverlay.getNorth() );
-          latLon.setSouth( myOverlay.getSouth() );
-          latLon.setWest( myOverlay.getWest() );
-          latLon.setEast( myOverlay.getEast() );
-          overlay.setLatLonBox( latLon );
-
-          featureTypes.add( overlay );
+          featureTypes.add( placemark );
         }
         else
         {
