@@ -137,7 +137,6 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
           else
             throw new NotImplementedException();
         }
-
       }
       catch( final Exception e )
       {
