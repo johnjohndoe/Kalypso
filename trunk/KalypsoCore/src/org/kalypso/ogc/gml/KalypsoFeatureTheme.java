@@ -247,7 +247,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( ((changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
+      if( ((m_workspace != null) && (changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
