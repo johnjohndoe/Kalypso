@@ -37,6 +37,8 @@ public class PlacemarkUtil
     final FolderType folderType = googleEarthFactory.createFolderType();
     folderType.setName( "Interesting Places" );
 
+    final List<JAXBElement< ? extends FeatureType>> myFeatures = folderType.getFeature();
+
     for( final IPlacemark placemark : placemarks )
     {
       try
@@ -47,10 +49,11 @@ public class PlacemarkUtil
 
         final PointType point = googleEarthFactory.createPointType();
         final List<String> coordinates = point.getCoordinates();
-        coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
-        coordinates.add( placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
+        coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) + "," + placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
 
         placemarkType.setGeometry( googleEarthFactory.createPoint( point ) );
+
+        myFeatures.add( googleEarthFactory.createPlacemark( placemarkType ) );
       }
       catch( final Exception e )
       {
