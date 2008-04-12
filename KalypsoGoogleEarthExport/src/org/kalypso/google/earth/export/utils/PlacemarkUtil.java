@@ -39,16 +39,24 @@ public class PlacemarkUtil
 
     for( final IPlacemark placemark : placemarks )
     {
-      final PlacemarkType placemarkType = googleEarthFactory.createPlacemarkType();
-      placemarkType.setName( placemark.getName() );
-      placemarkType.setDescription( placemark.getDescription() );
+      try
+      {
+        final PlacemarkType placemarkType = googleEarthFactory.createPlacemarkType();
+        placemarkType.setName( placemark.getName() );
+        placemarkType.setDescription( placemark.getDescription() );
 
-      final PointType point = googleEarthFactory.createPointType();
-      final List<String> coordinates = point.getCoordinates();
-      coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
-      coordinates.add( placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
+        final PointType point = googleEarthFactory.createPointType();
+        final List<String> coordinates = point.getCoordinates();
+        coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
+        coordinates.add( placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
 
-      placemarkType.setGeometry( googleEarthFactory.createPoint( point ) );
+        placemarkType.setGeometry( googleEarthFactory.createPoint( point ) );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+
     }
 
     // add to base
