@@ -10,18 +10,16 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.google.earth.export.geometry.GeoUtils;
 import org.kalypso.google.earth.export.geometry.GeoUtils.GEOMETRY_TYPE;
 import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
-import org.kalypso.google.earth.export.interfaces.IGroundOverlay;
+import org.kalypso.google.earth.export.interfaces.IPlacemarkIcon;
+import org.kalypso.google.earth.export.utils.StyleTypeFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 import com.google.earth.kml.FeatureType;
-import com.google.earth.kml.GroundOverlayType;
-import com.google.earth.kml.IconStyleIconType;
 import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.PlacemarkType;
 import com.google.earth.kml.StyleType;
@@ -81,44 +79,39 @@ public class ConvertFacade
       }
       else if( GEOMETRY_TYPE.ePoint.equals( gt ) )
       {
-        IGroundOverlay myOverlay = null;
+        IPlacemarkIcon myPlacemark = null;
 
         for( final IGoogleEarthAdapter adapter : providers )
         {
-          myOverlay = adapter.getGroundOverlay( feature );
-          if( myOverlay != null )
+          myPlacemark = adapter.getPlacemarkIcon( feature );
+          if( myPlacemark != null )
             break;
         }
 
-        if( myOverlay != null )
-        {
-          final PlacemarkType placemark = factory.createPlacemarkType();
-          placemark.setName( feature.getId() );
+// if( myPlacemark != null )
+// {
+        final PlacemarkType placemark = factory.createPlacemarkType();
+        placemark.setName( feature.getId() );
 
-          final GroundOverlayType overlay = factory.createGroundOverlayType();
-          overlay.setName( myOverlay.getName() );
-          placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo ) ) );
+        // TODO styleFactory.getIconStyle
+        final StyleTypeFactory styleTypeFactory = StyleTypeFactory.getStyleFactory( factory );
 
-          // TODO styleFactory.getIconStyle
-          final IconStyleIconType iconStyle = factory.createIconStyleIconType();
+        final StyleType iconStyle = styleTypeFactory.createIconStyle( "http://www.heise.de/icons/ho/heise.gif" );
+        placemark.setStyleUrl( "#" + iconStyle.getId() );
 
-// iconStyle.setHref( "http://www.heise.de/icons/ho/heise.gif" );
-//          
-// placemark.setStyleUrl( "#" + iconStyle.getId() )
-
-          featureTypes.add( placemark );
-        }
-        else
-        {
-          final PlacemarkType placemark = factory.createPlacemarkType();
-          placemark.setName( feature.getId() );
-
-          placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo ) ) );
-          if( style != null )
-            placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
-
-          featureTypes.add( placemark );
-        }
+        featureTypes.add( placemark );
+// }
+// else
+// {
+// final PlacemarkType placemark = factory.createPlacemarkType();
+// placemark.setName( feature.getId() );
+//
+// placemark.setGeometry( factory.createPoint( ConverterPoint.convert( factory, (GM_Point) gmo ) ) );
+// if( style != null )
+// placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+//
+// featureTypes.add( placemark );
+// }
 
       }
       else
