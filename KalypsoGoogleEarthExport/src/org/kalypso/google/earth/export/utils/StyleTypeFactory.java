@@ -23,6 +23,8 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
 import com.google.earth.kml.DocumentType;
+import com.google.earth.kml.IconStyleIconType;
+import com.google.earth.kml.IconStyleType;
 import com.google.earth.kml.LineStyleType;
 import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.PolyStyleType;
@@ -55,6 +57,8 @@ public class StyleTypeFactory
 
   private final Map<String, StyleType> m_lineStyles = new HashMap<String, StyleType>();
 
+  private final Map<String, StyleType> m_iconStyles = new HashMap<String, StyleType>();
+
   /**
    * @param factory
    */
@@ -79,6 +83,10 @@ public class StyleTypeFactory
       styles.add( kmlFactory.createStyle( entry.getValue() ) );
 
     set = m_lineStyles.entrySet();
+    for( final Entry<String, StyleType> entry : set )
+      styles.add( kmlFactory.createStyle( entry.getValue() ) );
+
+    set = m_iconStyles.entrySet();
     for( final Entry<String, StyleType> entry : set )
       styles.add( kmlFactory.createStyle( entry.getValue() ) );
   }
@@ -261,5 +269,30 @@ public class StyleTypeFactory
     final double polyOpacity = fill.getOpacity( null );
 
     return getPolygonSymbolizer( lineColor, lineOpacity, polyColor, polyOpacity );
+  }
+
+  public StyleType createIconStyle( final String href )
+  {
+
+    StyleType styleType = m_iconStyles.get( href );
+    if( styleType == null )
+    {
+      styleType = kmlFactory.createStyleType();
+      styleType.setId( Integer.valueOf( href.hashCode() ).toString() );
+
+      final IconStyleType iconStyleType = kmlFactory.createIconStyleType();
+      iconStyleType.setId( Integer.valueOf( styleType.hashCode() ).toString() );
+
+      final IconStyleIconType icon = kmlFactory.createIconStyleIconType();
+      icon.setId( Integer.valueOf( iconStyleType.hashCode() ).toString() );
+      icon.setHref( href );
+
+      iconStyleType.setIcon( icon );
+      styleType.setIconStyle( iconStyleType );
+
+      m_iconStyles.put( href, styleType );
+    }
+
+    return styleType;
   }
 }

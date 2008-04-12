@@ -2,7 +2,7 @@ package org.kalypso.google.earth.export.interfaces;
 
 import java.net.URL;
 
-public interface IGroundOverlay
+public interface IPlacemarkIcon
 {
 
   String getName( );
