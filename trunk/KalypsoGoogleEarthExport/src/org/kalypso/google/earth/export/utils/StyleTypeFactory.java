@@ -96,11 +96,13 @@ public class StyleTypeFactory
     if( opacity > 1.0 )
       throw (new IllegalStateException( Messages.StyleTypeFactory_0 ));
 
-    final Double kmlOpacity = opacity * 255;
+    final Double kmlOpacity = opacity * 255 + 40;
     // alpha=0x7f, blue=0xff, green=0x00, and red=0x00.
 
+    // FIXME - adjust opacity
     final int[] bs = new int[4];
-    bs[0] = kmlOpacity.intValue();
+
+    bs[0] = Math.min( kmlOpacity.intValue(), 230 );
     bs[1] = color.getBlue();
     bs[2] = color.getGreen();
     bs[3] = color.getRed();
@@ -278,13 +280,13 @@ public class StyleTypeFactory
     if( styleType == null )
     {
       styleType = kmlFactory.createStyleType();
-      styleType.setId( Integer.valueOf( href.hashCode() ).toString() );
+      styleType.setId( "icon" + Integer.valueOf( href.hashCode() ).toString() );
 
       final IconStyleType iconStyleType = kmlFactory.createIconStyleType();
-      iconStyleType.setId( Integer.valueOf( styleType.hashCode() ).toString() );
+      iconStyleType.setId( "iconStyleType" + Integer.valueOf( styleType.hashCode() ).toString() );
 
       final IconStyleIconType icon = kmlFactory.createIconStyleIconType();
-      icon.setId( Integer.valueOf( iconStyleType.hashCode() ).toString() );
+      icon.setId( "iconStyleIconType" + Integer.valueOf( iconStyleType.hashCode() ).toString() );
       icon.setHref( href );
 
       iconStyleType.setIcon( icon );
@@ -294,5 +296,13 @@ public class StyleTypeFactory
     }
 
     return styleType;
+  }
+
+  public void dispose( )
+  {
+    m_iconStyles.clear();
+    m_lineStyles.clear();
+    m_polyStyles.clear();
+
   }
 }

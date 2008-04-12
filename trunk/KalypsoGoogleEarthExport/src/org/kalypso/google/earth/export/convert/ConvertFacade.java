@@ -10,8 +10,6 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.google.earth.export.geometry.GeoUtils;
 import org.kalypso.google.earth.export.geometry.GeoUtils.GEOMETRY_TYPE;
 import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
-import org.kalypso.google.earth.export.interfaces.IPlacemarkIcon;
-import org.kalypso.google.earth.export.utils.StyleTypeFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -79,27 +77,28 @@ public class ConvertFacade
       }
       else if( GEOMETRY_TYPE.ePoint.equals( gt ) )
       {
-        IPlacemarkIcon myPlacemark = null;
 
-        for( final IGoogleEarthAdapter adapter : providers )
-        {
-          myPlacemark = adapter.getPlacemarkIcon( feature );
-          if( myPlacemark != null )
-            break;
-        }
-
+        // FIXME implement
+// IPlacemarkIcon myPlacemark = null;
+//
+// for( final IGoogleEarthAdapter adapter : providers )
+// {
+// myPlacemark = adapter.getPlacemarkIcon( feature );
+// if( myPlacemark != null )
+// break;
+// }
+//
 // if( myPlacemark != null )
 // {
-        final PlacemarkType placemark = factory.createPlacemarkType();
-        placemark.setName( feature.getId() );
-
-        // TODO styleFactory.getIconStyle
-        final StyleTypeFactory styleTypeFactory = StyleTypeFactory.getStyleFactory( factory );
-
-        final StyleType iconStyle = styleTypeFactory.createIconStyle( "http://www.heise.de/icons/ho/heise.gif" );
-        placemark.setStyleUrl( "#" + iconStyle.getId() );
-
-        featureTypes.add( placemark );
+// final PlacemarkType placemark = factory.createPlacemarkType();
+// placemark.setName( feature.getId() );
+//
+// final StyleTypeFactory styleTypeFactory = StyleTypeFactory.getStyleFactory( factory );
+//
+// final StyleType iconStyle = styleTypeFactory.createIconStyle( "http://www.heise.de/icons/ho/heise.gif" );
+// placemark.setStyleUrl( "#" + iconStyle.getId() );
+//
+// featureTypes.add( placemark );
 // }
 // else
 // {
@@ -112,7 +111,6 @@ public class ConvertFacade
 //
 // featureTypes.add( placemark );
 // }
-
       }
       else
         throw new NotImplementedException();
