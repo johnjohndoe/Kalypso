@@ -15,7 +15,7 @@ public interface IGoogleEarthAdapter
   /**
    * additional place markers, perhaps for measures and their details (images, links, aso)...
    */
-  public IPlacemarkIcon[] getAdditionalPlacemarkers( );
+  public IPlacemark[] getAdditionalPlacemarkers( );
 
   /**
    * needed for additional place marks - all rendered features will be registered.

@@ -29,7 +29,7 @@ import org.kalypso.google.earth.export.GoogleEarthThemeVisitor;
 import org.kalypso.google.earth.export.GoogleExportDelegate;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
-import org.kalypso.google.earth.export.interfaces.IPlacemarkIcon;
+import org.kalypso.google.earth.export.interfaces.IPlacemark;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypso.google.earth.export.utils.StyleTypeFactory;
@@ -159,16 +159,18 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       styleFactory.addStylesToDocument( documentType );
 
       GoogleEarthExportUtils.removeEmtpyFolders( folderType );
-
       documentType.getFeature().add( googleEarthFactory.createFolder( folderType ) );
 
       /* add additional place marks and clean up providers */
       for( final IGoogleEarthAdapter adapter : m_provider )
       {
-        final IPlacemarkIcon[] placemarkers = adapter.getAdditionalPlacemarkers();
+        final IPlacemark[] placemarkers = adapter.getAdditionalPlacemarkers();
 
         adapter.cleanUp();
       }
+
+      // TODO dispose styleFactoryStyles (singelton)
+      styleFactory.dispose();
 
       /* marshalling */
       final File file = new File( tmpDir, "doc.kml" ); //$NON-NLS-1$
