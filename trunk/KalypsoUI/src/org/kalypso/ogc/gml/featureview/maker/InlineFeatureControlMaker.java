@@ -104,6 +104,8 @@ public class InlineFeatureControlMaker implements IControlMaker
     group.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( groupdata ) );
     group.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
+    group.setProperty( ftp.getQName() );
+    
     final GridLayout gridLayout = TemplateUtilitites.OF_FEATUREVIEW.createGridLayout();
     gridLayout.setNumColumns( 2 );
     group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( gridLayout ) );
