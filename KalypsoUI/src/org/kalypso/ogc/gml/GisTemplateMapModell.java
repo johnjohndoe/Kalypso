@@ -99,6 +99,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_context = context;
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
+
+    setName( new I10nString( "name not defined", null ) );
   }
 
   /**
