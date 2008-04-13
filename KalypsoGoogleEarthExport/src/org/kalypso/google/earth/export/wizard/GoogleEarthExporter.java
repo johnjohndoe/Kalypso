@@ -29,6 +29,7 @@ import org.kalypso.google.earth.export.GoogleEarthThemeVisitor;
 import org.kalypso.google.earth.export.GoogleExportDelegate;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
 import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
+import org.kalypso.google.earth.export.utils.FolderUtil;
 import org.kalypso.google.earth.export.utils.GoogleEarthExportUtils;
 import org.kalypso.google.earth.export.utils.GoogleEarthUtils;
 import org.kalypso.google.earth.export.utils.PlacemarkUtil;
@@ -156,14 +157,17 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       }
 
       final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( googleEarthFactory );
-      styleFactory.addStylesToDocument( documentType );
+      styleFactory.addStylesToDocument( documentType, googleEarthFactory );
 
       GoogleEarthExportUtils.removeEmtpyFolders( folderType );
       documentType.getFeature().add( googleEarthFactory.createFolder( folderType ) );
 
       PlacemarkUtil.addAdditional( folderType, m_provider, googleEarthFactory );
 
-      // TODO dispose styleFactoryStyles (singelton)
+      // remove empty folders / layers
+      FolderUtil.removeEmptyFolders( folderType );
+
+      // dispose styles (singelton!)
       styleFactory.dispose();
 
       /* marshalling */
