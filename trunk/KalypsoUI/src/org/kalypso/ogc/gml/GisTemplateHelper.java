@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -71,6 +73,7 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -112,7 +115,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
- * 
+ *
  * @author Belger
  */
 public class GisTemplateHelper
@@ -252,7 +255,7 @@ public class GisTemplateHelper
   /**
    * Führt ein Pattern-Ersetzen durch, bevor die Gistableview geparst wird Jeder key der Properties wird durch seinen
    * value ersetzt. Funktioniert nur zeilenweise, d.h.
-   * 
+   *
    * @param file
    * @param replaceProps
    * @return Gistableview
@@ -322,7 +325,7 @@ public class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
-   * 
+   *
    * @return gismapview new empty map with a layer list
    */
   public static Gismapview emptyGisView( )
@@ -630,6 +633,22 @@ public class GisTemplateHelper
     }
 
     return null;
+  }
+
+  public static void saveGisMapView( final Gismapview mapview, final IFile mapFile, final String encoding ) throws JAXBException, IOException, CoreException
+  {
+
+    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    GisTemplateHelper.saveGisMapView( mapview, bos, encoding );
+    bos.close();
+
+    final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+    if( mapFile.exists() )
+      mapFile.setContents( bis, false, true, new NullProgressMonitor() );
+    else
+      mapFile.create( bis, true, new NullProgressMonitor() );
+
+    bis.close();
   }
 
 }
