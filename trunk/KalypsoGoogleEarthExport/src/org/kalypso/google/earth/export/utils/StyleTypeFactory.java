@@ -71,8 +71,9 @@ public class StyleTypeFactory
    * adding all styles to kml root document!
    * 
    * @param documentType
+   * @param googleEarthFactory
    */
-  public void addStylesToDocument( final DocumentType documentType )
+  public void addStylesToDocument( final DocumentType documentType, final ObjectFactory googleEarthFactory )
   {
     final List<JAXBElement< ? extends StyleSelectorType>> styles = documentType.getStyleSelector();
 
@@ -80,15 +81,24 @@ public class StyleTypeFactory
 
     Set<Entry<String, StyleType>> set = m_polyStyles.entrySet();
     for( final Entry<String, StyleType> entry : set )
-      styles.add( kmlFactory.createStyle( entry.getValue() ) );
+    {
+      final StyleType style = entry.getValue();
+      styles.add( kmlFactory.createStyle( style ) );
+    }
 
     set = m_lineStyles.entrySet();
     for( final Entry<String, StyleType> entry : set )
-      styles.add( kmlFactory.createStyle( entry.getValue() ) );
+    {
+      final StyleType style = entry.getValue();
+      styles.add( kmlFactory.createStyle( style ) );
+    }
 
     set = m_iconStyles.entrySet();
     for( final Entry<String, StyleType> entry : set )
-      styles.add( kmlFactory.createStyle( entry.getValue() ) );
+    {
+      final StyleType style = entry.getValue();
+      styles.add( kmlFactory.createStyle( style ) );
+    }
   }
 
   private int[] getColor( final Color color, final double opacity )
