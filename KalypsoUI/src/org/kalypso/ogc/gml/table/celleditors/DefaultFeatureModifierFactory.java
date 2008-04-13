@@ -80,10 +80,8 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     if( ftp instanceof IRelationType )
     {
       final IRelationType rpt = (IRelationType) ftp;
-      if( !rpt.isInlineAble() && rpt.isLinkAble() )
-      {
+      if( !rpt.isInlineAble() && rpt.isLinkAble() && !rpt.isList() )
         return new ComboBoxModifier( rpt );
-      }
       else
         return new ButtonModifier( rpt, fcl );
     }

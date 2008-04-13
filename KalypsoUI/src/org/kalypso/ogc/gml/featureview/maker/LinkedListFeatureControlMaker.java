@@ -118,7 +118,6 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 
     final Group group = TemplateUtilitites.OF_FEATUREVIEW.createGroup();
     group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( groupLayout ) );
-    group.setText( " " );
     group.setStyle( "SWT.NONE" );
 
     group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol( extensioncontrol ) );
