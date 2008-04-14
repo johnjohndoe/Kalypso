@@ -197,7 +197,9 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     {
       final String eventName = riskLanduseStatistics[i].getName();
 
-      final IComponent valueComponent = new Component( DICT_EVENT, eventName, eventName, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( DICT_EVENT, eventName, eventName ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      final String headerName = "Damage " + eventName + " [€/m²]";
+
+      final IComponent valueComponent = new Component( DICT_EVENT, headerName, headerName, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( DICT_EVENT, headerName, headerName ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       result.addComponent( valueComponent );
     }
 

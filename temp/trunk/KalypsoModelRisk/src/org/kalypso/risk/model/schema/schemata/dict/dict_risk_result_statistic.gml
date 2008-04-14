@@ -47,10 +47,10 @@
 	</gml:dictionaryEntry>
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="ANNUAL">
-			<gml:name>Annual</gml:name>
+			<gml:name>Annual Average Damage [€/m²/a]</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_Annual">
-					<gml:description>Annual</gml:description>
+					<gml:description>Averaged Annual Damage [€/m²/a]</gml:description>
 					<gml:name>Value</gml:name>
 				</swe:Phenomenon>
 			</swe:property>
