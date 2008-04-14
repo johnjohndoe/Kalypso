@@ -505,7 +505,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
         if( comp != components[0] )
           buffer.append( " " );
 
-        final Object value = record.getValue( comp );
+        final Object value = record.getValue( i );
         final String bufferValue = ObservationFeatureFactory.recordValueToString( value, handler );
         buffer.append( bufferValue );
       }
