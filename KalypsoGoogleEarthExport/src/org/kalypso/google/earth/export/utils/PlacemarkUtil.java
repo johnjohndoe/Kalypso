@@ -19,7 +19,6 @@ public class PlacemarkUtil
 
   public static void addAdditional( final FolderType base, final IGoogleEarthAdapter[] provider, final ObjectFactory googleEarthFactory )
   {
-
     /* add additional place marks and clean up providers */
     final List<IPlacemark> placemarks = new ArrayList<IPlacemark>();
     for( final IGoogleEarthAdapter adapter : provider )
@@ -50,7 +49,6 @@ public class PlacemarkUtil
         final PointType point = googleEarthFactory.createPointType();
         final List<String> coordinates = point.getCoordinates();
         coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) + "," + placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
-
         placemarkType.setGeometry( googleEarthFactory.createPoint( point ) );
 
         myFeatures.add( googleEarthFactory.createPlacemark( placemarkType ) );

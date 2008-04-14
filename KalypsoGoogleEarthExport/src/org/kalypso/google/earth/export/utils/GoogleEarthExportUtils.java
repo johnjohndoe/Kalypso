@@ -11,8 +11,6 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.google.earth.kml.FolderType;
 import com.google.earth.kml.ObjectFactory;
 import com.google.earth.kml.StyleType;
@@ -43,7 +41,9 @@ public class GoogleEarthExportUtils
     else if( symbolizer instanceof TextSymbolizer )
       return null;
 
-    throw (new NotImplementedException());
+    return null;
+    // FIXME
+// throw (new NotImplementedException());
   }
 
   /**
