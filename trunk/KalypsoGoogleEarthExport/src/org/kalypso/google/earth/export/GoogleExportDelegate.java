@@ -112,6 +112,8 @@ public class GoogleExportDelegate implements IPaintInternalDelegate
       try
       {
         styleType = GoogleEarthExportUtils.getStyleType( m_factory, displayElement.getFeature(), symbolizer );
+        if( styleType == null )
+          return;
 
         final Feature feature = displayElement.getFeature();
         for( final IGoogleEarthAdapter adapter : m_provider )
