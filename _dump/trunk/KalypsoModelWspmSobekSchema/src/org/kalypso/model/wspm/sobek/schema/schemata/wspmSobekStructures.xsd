@@ -397,16 +397,16 @@
                                         <element name="crestHeight" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Überfallhöhe [m NN]</name>
-                                                                <label>Überfallhöhe [m NN]</label>
-                                                                <tooltip>Überfallhöhe [m NN]</tooltip>
-                                                                <description>Überfallhöhe [m NN]</description>
+                                                                <name>Überfallhöhe [m NHN]</name>
+                                                                <label>Überfallhöhe [m NHN]</label>
+                                                                <tooltip>Überfallhöhe [m NHN]</tooltip>
+                                                                <description>Überfallhöhe [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Crest Height [m NN]</name>
-                                                                <label>Crest Height [m NN]</label>
-                                                                <tooltip>Crest Height [m NN]</tooltip>
-                                                                <description>Crest Height [m NN]</description>
+                                                                <name>Crest Height [m NHN]</name>
+                                                                <label>Crest Height [m NHN]</label>
+                                                                <tooltip>Crest Height [m NHN]</tooltip>
+                                                                <description>Crest Height [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -636,80 +636,80 @@
                                         <element name="bedLevelUpstream" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Sohlhöhe stromaufwärts [m NN]</name>
-                                                                <label>Sohlhöhe stromaufwärts [m NN]</label>
-                                                                <tooltip>Sohlhöhe stromaufwärts [m NN]</tooltip>
-                                                                <description>Sohlhöhe stromaufwärts [m NN]</description>
+                                                                <name>Sohlhöhe stromaufwärts [m NHN]</name>
+                                                                <label>Sohlhöhe stromaufwärts [m NHN]</label>
+                                                                <tooltip>Sohlhöhe stromaufwärts [m NHN]</tooltip>
+                                                                <description>Sohlhöhe stromaufwärts [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Upstream [m NN]</name>
-                                                                <label>Bed Level Upstream [m NN]</label>
-                                                                <tooltip>Bed Level Upstream [m NN]</tooltip>
-                                                                <description>Bed Level Upstream [m NN]</description>
+                                                                <name>Bed Level Upstream [m NHN]</name>
+                                                                <label>Bed Level Upstream [m NHN]</label>
+                                                                <tooltip>Bed Level Upstream [m NHN]</tooltip>
+                                                                <description>Bed Level Upstream [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
                                         <element name="bedLevelStructureLeft" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Sohlhöhe am Einlass [m NN]</name>
-                                                                <label>Sohlhöhe am Einlass [m NN]</label>
-                                                                <tooltip>Sohlhöhe am Einlass [m NN]</tooltip>
-                                                                <description>Sohlhöhe am Einlass [m NN]</description>
+                                                                <name>Sohlhöhe am Einlass [m NHN]</name>
+                                                                <label>Sohlhöhe am Einlass [m NHN]</label>
+                                                                <tooltip>Sohlhöhe am Einlass [m NHN]</tooltip>
+                                                                <description>Sohlhöhe am Einlass [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Suction Side [m NN]</name>
-                                                                <label>Bed Level Suction Side [m NN]</label>
-                                                                <tooltip>Bed Level Suction Side [m NN]</tooltip>
-                                                                <description>Bed Level Suction Side [m NN]</description>
+                                                                <name>Bed Level Suction Side [m NHN]</name>
+                                                                <label>Bed Level Suction Side [m NHN]</label>
+                                                                <tooltip>Bed Level Suction Side [m NHN]</tooltip>
+                                                                <description>Bed Level Suction Side [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
                                         <element name="bedLevelStructure" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Sohlhöhe Durchlass [m NN]</name>
-                                                                <label>Sohlhöhe Durchlass [m NN]</label>
-                                                                <tooltip>Sohlhöhe Durchlass [m NN]</tooltip>
-                                                                <description>Sohlhöhe Durchlass [m NN]</description>
+                                                                <name>Sohlhöhe Durchlass [m NHN]</name>
+                                                                <label>Sohlhöhe Durchlass [m NHN]</label>
+                                                                <tooltip>Sohlhöhe Durchlass [m NHN]</tooltip>
+                                                                <description>Sohlhöhe Durchlass [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level [m NN]</name>
-                                                                <label>Bed Level [m NN]</label>
-                                                                <tooltip>Bed Level [m NN]</tooltip>
-                                                                <description>Bed Level [m NN]</description>
+                                                                <name>Bed Level [m NHN]</name>
+                                                                <label>Bed Level [m NHN]</label>
+                                                                <tooltip>Bed Level [m NHN]</tooltip>
+                                                                <description>Bed Level [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
                                         <element name="bedLevelStructureRight" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Sohlhöhe Auslass [m NN]</name>
-                                                                <label>Sohlhöhe Auslass [m NN]</label>
-                                                                <tooltip>Sohlhöhe Auslass [m NN]</tooltip>
-                                                                <description>Sohlhöhe Auslass [m NN]</description>
+                                                                <name>Sohlhöhe Auslass [m NHN]</name>
+                                                                <label>Sohlhöhe Auslass [m NHN]</label>
+                                                                <tooltip>Sohlhöhe Auslass [m NHN]</tooltip>
+                                                                <description>Sohlhöhe Auslass [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Pressure Side [m NN]</name>
-                                                                <label>Bed Level Pressure Side [m NN]</label>
-                                                                <tooltip>Bed Level Pressure Side [m NN]</tooltip>
-                                                                <description>Bed Level Pressure Side [m NN]</description>
+                                                                <name>Bed Level Pressure Side [m NHN]</name>
+                                                                <label>Bed Level Pressure Side [m NHN]</label>
+                                                                <tooltip>Bed Level Pressure Side [m NHN]</tooltip>
+                                                                <description>Bed Level Pressure Side [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
                                         <element name="bedLevelDownstream" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Sohlhöhe stromabwärts [m NN]</name>
-                                                                <label>Sohlhöhe stromabwärts [m NN]</label>
-                                                                <tooltip>Sohlhöhe stromabwärts [m NN]</tooltip>
-                                                                <description>Sohlhöhe stromabwärts [m NN]</description>
+                                                                <name>Sohlhöhe stromabwärts [m NHN]</name>
+                                                                <label>Sohlhöhe stromabwärts [m NHN]</label>
+                                                                <tooltip>Sohlhöhe stromabwärts [m NHN]</tooltip>
+                                                                <description>Sohlhöhe stromabwärts [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Bed Level Downstream [m NN]</name>
-                                                                <label>Bed Level Downstream [m NN]</label>
-                                                                <tooltip>Bed Level Downstream [m NN]</tooltip>
-                                                                <description>Bed Level Downstream [m NN]</description>
+                                                                <name>Bed Level Downstream [m NHN]</name>
+                                                                <label>Bed Level Downstream [m NHN]</label>
+                                                                <tooltip>Bed Level Downstream [m NHN]</tooltip>
+                                                                <description>Bed Level Downstream [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -923,16 +923,16 @@
                                         <element name="crestHeight" type="double" nillable="false" default="0.0">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Referenzhöhe [m NN]</name>
-                                                                <label>Referenzhöhe [m NN]</label>
-                                                                <tooltip>Referenzhöhe [m NN]</tooltip>
-                                                                <description>Referenzhöhe [m NN]</description>
+                                                                <name>Referenzhöhe [m NHN]</name>
+                                                                <label>Referenzhöhe [m NHN]</label>
+                                                                <tooltip>Referenzhöhe [m NHN]</tooltip>
+                                                                <description>Referenzhöhe [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Reference Height [m NN]</name>
-                                                                <label>Reference Height [m NN]</label>
-                                                                <tooltip>Reference Height [m NN]</tooltip>
-                                                                <description>Reference Height [m NN]</description>
+                                                                <name>Reference Height [m NHN]</name>
+                                                                <label>Reference Height [m NHN]</label>
+                                                                <tooltip>Reference Height [m NHN]</tooltip>
+                                                                <description>Reference Height [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -1043,16 +1043,16 @@
                                         <element name="crestHeight" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Überfallhöhe [m NN]</name>
-                                                                <label>Überfallhöhe [m NN]</label>
-                                                                <tooltip>Überfallhöhe [m NN]</tooltip>
-                                                                <description>Überfallhöhe [m NN]</description>
+                                                                <name>Überfallhöhe [m NHN]</name>
+                                                                <label>Überfallhöhe [m NHN]</label>
+                                                                <tooltip>Überfallhöhe [m NHN]</tooltip>
+                                                                <description>Überfallhöhe [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Crest Height [m NN]</name>
-                                                                <label>Crest Height [m NN]</label>
-                                                                <tooltip>Crest Height [m NN]</tooltip>
-                                                                <description>Crest Height [m NN]</description>
+                                                                <name>Crest Height [m NHN]</name>
+                                                                <label>Crest Height [m NHN]</label>
+                                                                <tooltip>Crest Height [m NHN]</tooltip>
+                                                                <description>Crest Height [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -1202,64 +1202,64 @@
                                         <element name="switchOnLevelSuctionSide" type="double" default="0.0" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</name>
-                                                                <label>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</label>
-                                                                <tooltip>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</tooltip>
-                                                                <description>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe angeschaltet</description>
+                                                                <name>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe angeschaltet</name>
+                                                                <label>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe angeschaltet</label>
+                                                                <tooltip>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe angeschaltet</tooltip>
+                                                                <description>Bei Unterschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe angeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the water level on suction side below this mark [m NN], the pump will be switched on</name>
-                                                                <label>If the water level on suction side below this mark [m NN], the pump will be switched on</label>
-                                                                <tooltip>If the water level on suction side below this mark [m NN], the pump will be switched on</tooltip>
-                                                                <description>If the water level on suction side falls below this mark [m NN], the pump will be switched on</description>
+                                                                <name>If the water level on suction side below this mark [m NHN], the pump will be switched on</name>
+                                                                <label>If the water level on suction side below this mark [m NHN], the pump will be switched on</label>
+                                                                <tooltip>If the water level on suction side below this mark [m NHN], the pump will be switched on</tooltip>
+                                                                <description>If the water level on suction side falls below this mark [m NHN], the pump will be switched on</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
                                         <element name="switchOffLevelSuctionSide" type="double" default="0.0" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</name>
-                                                                <label>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</label>
-                                                                <tooltip>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</tooltip>
-                                                                <description>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NN] wird die Pumpe ausgeschaltet</description>
+                                                                <name>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe ausgeschaltet</name>
+                                                                <label>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe ausgeschaltet</label>
+                                                                <tooltip>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe ausgeschaltet</tooltip>
+                                                                <description>Bei Überschreitung dieses Wasserstandes auf Ansaugseite [m NHN] wird die Pumpe ausgeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the water level on suction side rises above this mark [m NN], the pump will be switched off</name>
-                                                                <label>If the water level on suction side rises above this mark [m NN], the pump will be switched off</label>
-                                                                <tooltip>If the water level on suction side rises above this mark [m NN], the pump will be switched off</tooltip>
-                                                                <description>If the water level on suction side rises above this mark [m NN], the pump will be switched off</description>
+                                                                <name>If the water level on suction side rises above this mark [m NHN], the pump will be switched off</name>
+                                                                <label>If the water level on suction side rises above this mark [m NHN], the pump will be switched off</label>
+                                                                <tooltip>If the water level on suction side rises above this mark [m NHN], the pump will be switched off</tooltip>
+                                                                <description>If the water level on suction side rises above this mark [m NHN], the pump will be switched off</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
                                         <element name="switchOnLevelPressureSide" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</name>
-                                                                <label>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</label>
-                                                                <tooltip>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</tooltip>
-                                                                <description>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe angeschaltet</description>
+                                                                <name>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe angeschaltet</name>
+                                                                <label>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe angeschaltet</label>
+                                                                <tooltip>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe angeschaltet</tooltip>
+                                                                <description>Bei Unterschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe angeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</name>
-                                                                <label>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</label>
-                                                                <tooltip>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</tooltip>
-                                                                <description>If the water level on pressure side falls below this mark [m NN], the pump will be switched on</description>
+                                                                <name>If the water level on pressure side falls below this mark [m NHN], the pump will be switched on</name>
+                                                                <label>If the water level on pressure side falls below this mark [m NHN], the pump will be switched on</label>
+                                                                <tooltip>If the water level on pressure side falls below this mark [m NHN], the pump will be switched on</tooltip>
+                                                                <description>If the water level on pressure side falls below this mark [m NHN], the pump will be switched on</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
                                         <element name="switchOffLevelPressureSide" type="double" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <name>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</name>
-                                                                <label>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</label>
-                                                                <tooltip>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</tooltip>
-                                                                <description>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NN] wird die Pumpe ausgeschaltet</description>
+                                                                <name>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe ausgeschaltet</name>
+                                                                <label>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe ausgeschaltet</label>
+                                                                <tooltip>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe ausgeschaltet</tooltip>
+                                                                <description>Bei Überschreitung dieses Wasserstandes auf Abgabeseite [m NHN] wird die Pumpe ausgeschaltet</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</name>
-                                                                <label>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</label>
-                                                                <tooltip>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</tooltip>
-                                                                <description>If the water level on pressure side rises above this mark [m NN], the pump will be switched off</description>
+                                                                <name>If the water level on pressure side rises above this mark [m NHN], the pump will be switched off</name>
+                                                                <label>If the water level on pressure side rises above this mark [m NHN], the pump will be switched off</label>
+                                                                <tooltip>If the water level on pressure side rises above this mark [m NHN], the pump will be switched off</tooltip>
+                                                                <description>If the water level on pressure side rises above this mark [m NHN], the pump will be switched off</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
