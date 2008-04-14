@@ -2,44 +2,45 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.worker;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -85,7 +86,7 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
   }
 
   @SuppressWarnings("deprecation")//$NON-NLS-1$
-  private void addResult( final TupleResult result, final Date date, final List<Double> myValues )
+  private void addResult( final TupleResult result, final Date date, final List<BigDecimal> myValues )
   {
     /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
     final IComponent[] components = result.getComponents();
@@ -130,11 +131,14 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       final IAxis dateAxis = getDateAxis( values.getAxisList() );
       final IAxis[] valueAxis = getValueAxis( getBoundaryNodeType(), values.getAxisList() );
 
-      final List<Double> myValues = new ArrayList<Double>();
+      final List<BigDecimal> myValues = new ArrayList<BigDecimal>();
 
       /* get first segment -> boundary condition start value -> timeseries start value */
       for( final IAxis axis : valueAxis )
-        myValues.add( (Double) values.getElement( 0, axis ) );
+      {
+        final Double value = (Double) values.getElement( 0, axis );
+        myValues.add( BigDecimal.valueOf( value ) );
+      }
 
       addResult( result, cStart.getTime(), myValues );
       myValues.clear();
@@ -144,14 +148,20 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       {
         final Date date = (Date) values.getElement( i, dateAxis );
         for( final IAxis axis : valueAxis )
-          myValues.add( (Double) values.getElement( i, axis ) );
+        {
+          final Double value = (Double) values.getElement( i, axis );
+          myValues.add( BigDecimal.valueOf( value ) );
+        }
 
         addResult( result, date, myValues );
         myValues.clear();
       }
       /* get last segment -> boundary condition end value */
       for( final IAxis axis : valueAxis )
-        myValues.add( (Double) values.getElement( values.getCount() - 1, axis ) );
+      {
+        final Double value = (Double) values.getElement( values.getCount() - 1, axis );
+        myValues.add( BigDecimal.valueOf( value ) );
+      }
 
       addResult( result, cEnd.getTime(), myValues );
       myValues.clear();
