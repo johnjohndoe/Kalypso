@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
@@ -57,9 +57,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.Messages;
@@ -132,7 +130,7 @@ public class ProfileProblemView
            * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
            */
           @Override
-          public void linkActivated( HyperlinkEvent e )
+          public void linkActivated( final HyperlinkEvent e )
           {
             if( markerRes instanceof IProfilMarkerResolution )
             {
@@ -150,7 +148,7 @@ public class ProfileProblemView
          * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
          */
         @Override
-        public void linkActivated( HyperlinkEvent e )
+        public void linkActivated( final HyperlinkEvent e )
         {
 
           if( profil == null )
@@ -198,9 +196,13 @@ public class ProfileProblemView
     if( profil == null )
       return;
     Composite form = null;
-    final IMarker[] error = profil.getProblemMarker().get( IMarker.SEVERITY_ERROR );
-    final IMarker[] warning = profil.getProblemMarker().get( IMarker.SEVERITY_WARNING );
-    final IMarker[] info = profil.getProblemMarker().get( IMarker.SEVERITY_INFO );
+    final MarkerIndex problemMarker = profil.getProblemMarker();
+    if( problemMarker == null )
+      return;
+
+    final IMarker[] error = problemMarker.get( IMarker.SEVERITY_ERROR );
+    final IMarker[] warning = problemMarker.get( IMarker.SEVERITY_WARNING );
+    final IMarker[] info = problemMarker.get( IMarker.SEVERITY_INFO );
 
     if( error.length > 0 )
     {
