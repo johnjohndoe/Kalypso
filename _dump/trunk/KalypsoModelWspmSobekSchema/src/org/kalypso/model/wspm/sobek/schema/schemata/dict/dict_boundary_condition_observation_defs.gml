@@ -11,7 +11,7 @@
         <gml:name>Boundary Condition Component Dictionary</gml:name>
         <gml:dictionaryEntry>
                 <swe:ItemDefinition gml:id="W">
-                        <gml:name>Waterlevel [m NN]</gml:name>
+                        <gml:name>Waterlevel [m NHN]</gml:name>
                         <swe:property>
                                 <swe:Phenomenon gml:id="Phenomenon_W">
                                         <gml:description>Waterlevel </gml:description>
@@ -23,13 +23,13 @@
                                         <xst:restriction base="decimal">
                                                 <xst:fractionDigits value="2"/>
                                         </xst:restriction>
-                                        <gml:unitOfMeasure uom="m NN"/>
+                                        <gml:unitOfMeasure uom="m NHN"/>
                                 </swe:SimpleType>
                         </swe:representation>
                         <!--
                         <swe:representation>
                                 <swe:Number>
-                                        <gml:unitOfMeasure uom="m NN"/>
+                                        <gml:unitOfMeasure uom="m NHN"/>
                                 </swe:Number>
                         </swe:representation>-->
                 </swe:ItemDefinition>
