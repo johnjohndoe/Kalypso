@@ -66,9 +66,17 @@ public class FeatureComponent extends AbstractComponent
 {
   private final Feature m_itemDef;
 
-  public FeatureComponent( final Feature itemDef )
+  private String m_uri;
+
+  public FeatureComponent( final Feature itemDef, final String uri )
   {
     m_itemDef = itemDef;
+    m_uri = uri;
+  }
+
+  public FeatureComponent( final Feature itemDef )
+  {
+    this( itemDef, null );
   }
 
   /**
@@ -114,7 +122,10 @@ public class FeatureComponent extends AbstractComponent
     if( m_itemDef instanceof XLinkedFeature_Impl )
       return ((XLinkedFeature_Impl) m_itemDef).getHref();
 
-    return m_itemDef.getId();
+    if( m_uri == null )
+      return m_itemDef.getId();
+
+    return m_uri + "#" + m_itemDef.getId();
   }
 
   public Feature getItemDefinition( )

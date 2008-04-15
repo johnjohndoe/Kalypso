@@ -41,6 +41,8 @@
 package org.kalypso.observation.result;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.gmlschema.property.restriction.FractionDigitRestriction;
+import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
@@ -56,7 +58,16 @@ public abstract class AbstractComponent implements IComponent
    */
   public Double getPrecision( )
   {
-    return 0.0;
+    for( final IRestriction restriction : getRestrictions() )
+    {
+      if( restriction instanceof FractionDigitRestriction )
+      {
+        final int fractionDigit = ((FractionDigitRestriction) restriction).getFractionDigits();
+        return fractionDigit == 0 ? 0.0 : Math.pow( 10, -fractionDigit );
+      }
+    }
+
+    return 0.0000;
   }
 
   /**

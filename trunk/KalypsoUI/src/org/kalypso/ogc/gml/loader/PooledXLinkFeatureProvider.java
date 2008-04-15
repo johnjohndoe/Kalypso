@@ -47,7 +47,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.serialize.AbstractXLinkFeatureProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.IPoolListener;
@@ -56,6 +55,7 @@ import org.kalypso.util.pool.KeyComparator;
 import org.kalypso.util.pool.KeyInfo;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 
@@ -109,10 +109,11 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
 
         // Special case: if the uri references the local workspace, we just return it
         // Works only for gml-workspaces (not for shape)
+        final URL contextUrl = contextWorkspace == null ? null : contextWorkspace.getContext();
         try
         {
-          final URL gmlURL = UrlResolverSingleton.resolveUrl( contextWorkspace.getContext(), uri );
-          if( gmlURL.equals( contextWorkspace.getContext() ) )
+          final URL gmlURL = UrlResolverSingleton.resolveUrl( contextUrl, uri );
+          if( gmlURL.equals( contextUrl ) )
           {
             m_workspace = contextWorkspace;
             return m_workspace;
@@ -131,7 +132,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         {
           type = "shape";
           // TODO: get the crs from somewhere...
-          source = FileUtilities.nameWithoutExtension( uri ) + "#" + KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+          source = FileUtilities.nameWithoutExtension( uri ) + "#" + KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         }
         else
         {
@@ -139,7 +140,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
           source = uri;
         }
 
-        m_key = new PoolableObjectType( type, source, contextWorkspace.getContext() );
+        m_key = new PoolableObjectType( type, source, contextUrl );
 
         final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
