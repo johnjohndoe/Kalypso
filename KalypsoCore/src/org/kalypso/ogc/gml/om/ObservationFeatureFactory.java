@@ -466,8 +466,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String unit = component.getUnit();
 
     final String frame = component.getFrame();
+    
+    final IRestriction[] restrictions =  component.getRestrictions();
 
-    return new RepresentationType( ObservationFeatureFactory.toKind( valueTypeName ), valueTypeName, unit, frame, new IRestriction[0], classification );
+    return new RepresentationType( ObservationFeatureFactory.toKind( valueTypeName ), valueTypeName, unit, frame, restrictions, classification );
   }
 
   /**

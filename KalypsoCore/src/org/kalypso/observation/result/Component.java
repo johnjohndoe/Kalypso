@@ -50,6 +50,8 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
  */
 public class Component extends AbstractComponent
 {
+  private  final IRestriction[] m_restrictions = new IRestriction[]{};
+
   private final String m_name;
 
   private final String m_description;
@@ -66,9 +68,7 @@ public class Component extends AbstractComponent
 
   private final IPhenomenon m_phenomenon;
   
-  private final Double m_precision;
-
-  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon, final Double precision )
+  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon)
   {
     if( name == null )
       throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
@@ -83,13 +83,9 @@ public class Component extends AbstractComponent
     m_description = description;
     m_valueTypeName = valueTypeName;
     m_defaultValue = defaultValue;
-    
-    m_precision = precision;
+   
   }
-  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon )
-  {
-    this(id,name, description, unit,  frame, valueTypeName, defaultValue, phenomenon,0.0001 );
-  }
+  
   /**
    * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
    */
@@ -165,15 +161,7 @@ public class Component extends AbstractComponent
    */
   public IRestriction[] getRestrictions( )
   {
-    // TODO define restrictions for programmatically create components?
-    return new IRestriction[0];
+    return m_restrictions;
   }
-  /**
-   * @see org.kalypso.observation.result.AbstractComponent#getPrecision()
-   */
-  @Override
-  public Double getPrecision( )
-  {
-    return m_precision;
-  }
+  
 }
