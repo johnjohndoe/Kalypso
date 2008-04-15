@@ -62,7 +62,7 @@ public interface IProfilPointPropertyProvider
    * @return all PointPropertyIds handled by this provider NOTE: the natural order in this Array is the initial
    *         columnsort used in the tableview
    */
-  public IComponent[] getPointProperties( );
+  public String[] getPointProperties( );
 
   public IComponent getPointProperty( String propertyId );
 

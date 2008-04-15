@@ -99,9 +99,9 @@ public class WehrRule extends AbstractValidatorRule
     final int index3 = profil.indexOfPoint( deviders[0].getPoint() );
     final int index4 = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
     if( index1 < index3 )
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "1. Wehrfeldtrenner außerhalb der Wehrgeometrie", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "1. Wehrfeldtrenner außerhalb der Wehrgeometrie", "", index1, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
     if( index2 > index4 )
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "letzter Wehrfeldtrenner außerhalb der Wehrgeometrie", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );// new
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "letzter Wehrfeldtrenner außerhalb der Wehrgeometrie", "", index2, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
   }
 
   private void validateBewuchs( final IProfil profil, final IValidatorMarkerCollector collector, final String pluginId ) throws Exception
@@ -126,7 +126,7 @@ public class WehrRule extends AbstractValidatorRule
       final Double vDP = (Double) point.getValue( iDP );
       if( vAX + vAY + vDP > 0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchs im Wehrbereich", "", i, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchs im Wehrbereich", "", i, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId );
         break;
       }
     }
@@ -150,7 +150,7 @@ public class WehrRule extends AbstractValidatorRule
         final Object objValue = devider.getValue();
         if( (objValue == null) || !(objValue instanceof Double) || (((Double) objValue).isNaN()) || ((Double) objValue == 0.0) )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiger Kronenparameter: 0.0", "", profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiger Kronenparameter: 0.0", "", profil.indexOfPoint( devider.getPoint() ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId);
           break;
         }
       }
@@ -163,7 +163,7 @@ public class WehrRule extends AbstractValidatorRule
 
       if( ((Double) prop).isNaN() || (Double) prop == 0.0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> ist ungültig", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> ist ungültig", "", 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId);
         break;
       }
     }
@@ -189,7 +189,7 @@ public class WehrRule extends AbstractValidatorRule
       final Object h = point.getValue( profil.indexOfProperty( cHoehe ) );
       final Object wk = point.getValue( profil.indexOfProperty( cOKWehr ) );
       if( (h instanceof Double) && (wk instanceof Double) && (Double) wk < (Double) h )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Wehrkante unter Geländehöhe", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Wehrkante unter Geländehöhe", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId);
     }
   }
 
@@ -218,7 +218,7 @@ public class WehrRule extends AbstractValidatorRule
       point = lastPoint;
     if( point != null )
     {
-      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-Wehrkante", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId, null );
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-Wehrkante", "", profil.indexOfPoint( point ), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, pluginId);
     }
   }
 }

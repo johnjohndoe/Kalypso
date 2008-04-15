@@ -41,10 +41,12 @@
 package org.kalypso.model.wspm.ui.profil.wizard.validateProfiles;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -53,7 +55,6 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -64,7 +65,6 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
@@ -134,7 +134,7 @@ public class ValidateProfilesWizard extends Wizard
     m_validatorChooserPage = new ArrayChooserPage( rules, new IValidatorRule[0], new IValidatorRule[0], 1, "validatorChooserPage", "Regeln auswählen", null ); //$NON-NLS-1$
     m_validatorChooserPage.setLabelProvider( new LabelProvider() );
     m_validatorChooserPage.setMessage( "Bitte wählen Sie aus, welche Regeln angewand werden sollen" );
-    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 1, "quickFixChoosePage", "QuickFix auswählen", null ); //$NON-NLS-1$
+    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 0, "quickFixChoosePage", "QuickFix auswählen", null ); //$NON-NLS-1$
     m_quickFixChoosePage.setLabelProvider( new LabelProvider()
     {
 
@@ -172,6 +172,11 @@ public class ValidateProfilesWizard extends Wizard
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
     final Object[] choosenRules = m_validatorChooserPage.getChoosen();
     final Object[] quickFixes = m_quickFixChoosePage.getChoosen();
+    final int size = (profilFeatures.length);
+    final IProfil[] profiles = new IProfil[size];
+    final String[] featureIDs = new String[size];
+    final ArrayList<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
+
     final URL workspaceContext = m_workspace.getContext();
     final IFile resource = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
@@ -179,34 +184,67 @@ public class ValidateProfilesWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Profilvalidierung", profilFeatures.length );
-        for( int i = 0; i < profilFeatures.length; i++ )
+        monitor.beginTask( "Profilvalidierung", size + size );
+        for( int i = 0; i < size; i++ )
         {
           if( profilFeatures[i] instanceof Feature )
           {
-            final Feature profilFeature = (Feature) profilFeatures[i];
-            final WspmProfile wspmProfile = new WspmProfile( profilFeature );
-            final IProfil profil = wspmProfile.getProfil();
-            final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource, GmlEditor.ID, profil, profilFeature.getId() );
+            final WspmProfile wspmProfil = new WspmProfile( (Feature) profilFeatures[i] );
+            profiles[i] = wspmProfil == null ? null : wspmProfil.getProfil();
+            featureIDs[i] = ((Feature) profilFeatures[i]).getId();
+          }
+
+          if( profiles[i] != null )
+          {
             try
             {
-              collector.reset( profilFeature.getId() );
+              final IMarker[] markers = resource.findMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
+              for( final IMarker marker : markers )
+              {
+                if( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( featureIDs[i] ) )
+                  marker.delete();
+              }
+            }
+            catch( CoreException e )
+            {
+              monitor.done();
+              return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), e.getLocalizedMessage() );
+            }
+          }
+          monitor.worked( i );
+        }
+
+        for( int i = 0; i < size; i++ )
+        {
+          if( profiles[i] != null )
+          {
+            final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource, GmlEditor.ID, "" + profiles[i].getStation(), featureIDs[i] );
+            try
+            {
               for( final Object rule : choosenRules )
               {
-                ((IValidatorRule) rule).validate( profil, collector );
+                ((IValidatorRule) rule).validate( profiles[i], collector );
               }
               final IMarker[] markers = collector.getMarkers();
-
               for( IMarker marker : markers )
               {
-                final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
-                if( resolutions != null && quickFixes.length > 0 )
+                final String quickFixRes = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
+                if( quickFixRes != null && quickFixes.length > 0 )
                 {
-                  final IMarkerResolution2 mr = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions );
+                  final IProfilMarkerResolution mr = KalypsoModelWspmCoreExtensions.getReparatorRule( quickFixRes );
+                  boolean resolved = false;
                   for( final Object quickFix : quickFixes )
                   {
                     if( mr.getClass().getName().equals( quickFix.getClass().getName() ) )
-                      mr.run( marker );
+                    {
+                      resolved = mr.resolve( profiles[i] );
+                    }
+                  }
+                  if( resolved )
+                  {
+                    marker.delete();
+                    for( final FeatureChange change : ProfileFeatureFactory.toFeatureAsChanges( profiles[i], (Feature) profilFeatures[i] ) )
+                      featureChanges.add( change );
                   }
                 }
               }
@@ -216,9 +254,8 @@ public class ValidateProfilesWizard extends Wizard
               monitor.done();
               return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), e.getLocalizedMessage() );
             }
-
           }
-          monitor.worked( i );
+          monitor.worked( size + i );
         }
         monitor.done();
         return Status.OK_STATUS;
@@ -229,17 +266,17 @@ public class ValidateProfilesWizard extends Wizard
       public void run( )
       {
         RunnableContextHelper.execute( new ProgressMonitorDialog( getShell() ), true, true, m_validateJob );
+
         try
         {
-          m_workspace.postCommand( new ChangeFeaturesCommand( m_workspace, new FeatureChange[] {} ) );
+          m_workspace.postCommand( new ChangeFeaturesCommand( m_workspace, featureChanges.toArray( new FeatureChange[] {} ) ) );
         }
         catch( Exception e )
         {
-          // do nothing
+          e.printStackTrace();
         }
       }
     } );
-
     return true;
   }
 }

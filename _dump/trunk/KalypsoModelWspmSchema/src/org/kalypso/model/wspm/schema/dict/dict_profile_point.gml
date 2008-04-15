@@ -23,9 +23,12 @@
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
-    <swe:Number>
-     <gml:unitOfMeasure uom="m"/>
-    </swe:Number>
+	   <swe:SimpleType>
+	        <xst:restriction base="double">
+	             <xst:fractionDigits value="4"/>
+	        </xst:restriction>
+	        <gml:unitOfMeasure uom="m"/>
+	   </swe:SimpleType>
    </swe:representation>
   </swe:ItemDefinition>
  </gml:dictionaryEntry>

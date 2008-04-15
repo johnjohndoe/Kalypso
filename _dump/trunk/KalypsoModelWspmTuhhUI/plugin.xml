@@ -246,5 +246,10 @@
                id="org.kalypso.model.wspm.tuhh.ui.resolutions.EditPointResolution"
                name="Werte ändern">
          </reparator>
+         <reparator
+               class="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
+               id="org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution"
+               name="Marker löschen">
+         </reparator>
       </extension>
 </plugin>

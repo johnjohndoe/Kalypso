@@ -53,6 +53,7 @@ import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -72,7 +73,6 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import org.kalypso.model.wspm.core.Messages;
 
 /**
  * Basisprofil mit Events
@@ -643,5 +643,5 @@ public abstract class AbstractProfil implements IProfil
 
     fireProblemMarkerChanged();
   }
-
+  
 }

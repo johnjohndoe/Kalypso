@@ -79,14 +79,14 @@ public class DurchlassRule extends AbstractValidatorRule
       final Double b = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
       final Double h = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
       if( h <= b )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Eiprofil muss per Definition höher sein als breit", "km "+Double.toString( profil.getStation()), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Eiprofil muss per Definition höher sein als breit", "km "+Double.toString( profil.getStation()), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
     }
     else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( building.getId() ) )
     {
       final Double b = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
       final Double h = (Double) building.getValue( building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
       if( b <= h )
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Maulprofil muss per Definition breiter sein als hoch", "km "+Double.toString( profil.getStation()), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Maulprofil muss per Definition breiter sein als hoch", "km "+Double.toString( profil.getStation()), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId);
 
     }
 
@@ -97,7 +97,7 @@ public class DurchlassRule extends AbstractValidatorRule
         final Object oValue = building.getValue( property );
         if( oValue == null || ((Double) oValue).isNaN() )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "km "+Double.toString( profil.getStation()), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "km "+Double.toString( profil.getStation()), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
           break;
         }
       }

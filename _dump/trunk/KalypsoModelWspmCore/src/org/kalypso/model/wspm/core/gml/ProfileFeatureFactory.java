@@ -191,6 +191,7 @@ public class ProfileFeatureFactory implements IWspmConstants
     }
     catch( final Exception e )
     {
+      // nothing TODO?
       final int i = changes.size();
     }
     return changes.toArray( new FeatureChange[changes.size()] );

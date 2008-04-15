@@ -72,6 +72,10 @@ public interface IValidatorMarkerCollector
    */
   public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final IProfilMarkerResolution markerResolution ) throws CoreException;
 
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId, final IProfilMarkerResolution[] markerResolutions ) throws CoreException;
+  
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final String resolutionPluginId) throws CoreException;
+
   /**
    * Clear all markers which may apply to this collector
    * 

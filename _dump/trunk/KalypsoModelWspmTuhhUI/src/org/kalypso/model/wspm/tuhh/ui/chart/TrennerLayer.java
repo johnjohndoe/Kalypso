@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -87,12 +86,11 @@ public class TrennerLayer extends AbstractProfilChartLayer
     super( IWspmTuhhConstants.LAYER_DEVIDER, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Flieﬂzonen" );
     m_colorRegistry = pcv.getColorRegistry();
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR );
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL,IWspmTuhhConstants.MARKER_TYP_BORDVOLL_COLOR );
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
-
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE_COLOR );
   }
 
   @Override

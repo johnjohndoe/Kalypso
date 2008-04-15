@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -69,13 +73,31 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   {
     final String plgn = KalypsoModelWspmTuhhCorePlugin.getDefault().toString();
     if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
-      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col4.gif" );
+    {
+      final ImageData imageData = new ImageData( 16, 16, 2, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ),IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR , IWspmTuhhConstants.MARKER_TYP_BORDVOLL_COLOR  } ) );// {IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR
+                                                                                                                        // } )
+                                                                                                                        // ) );
+      byte[] values = new byte[4];
+      // imageData.getPixels( 0, 0, 8, values, 0 ) ;
+
+      Arrays.fill( values, (byte) 1);
+      for( int i = 0; i < 16; i++ )
+        imageData.setPixels( 4, i, 4, values, 0 );
+      Arrays.fill( values, (byte) 2);
+      for( int i = 0; i < 16; i++ )
+        imageData.setPixels( 8, i, 4, values, 0 );
+      return ImageDescriptor.createFromImageData( imageData );
+
+      // return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[]{})));//
+      // {IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR } ) ) );
+      // return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col4.gif" );
+    }
     if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) )
-      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col3.gif" );
+      return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE_COLOR } ) ) );
     if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
-      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col1.gif" );
+      return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { IWspmTuhhConstants.MARKER_TYP_BORDVOLL_COLOR } ) ) );
     if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId ) )
-      return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col2.gif" );
+      return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { IWspmTuhhConstants.MARKER_TYP_WEHR_COLOR } ) ) );
     return null;
   }
 

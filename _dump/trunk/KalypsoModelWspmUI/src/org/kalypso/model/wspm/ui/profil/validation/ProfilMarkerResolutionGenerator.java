@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.IMarkerResolutionGenerator2;
@@ -66,12 +70,17 @@ public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerat
    */
   public IMarkerResolution2[] getResolutions( final IMarker marker )
   {
-    final String resolutions = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
-    if( resolutions == null )
+    final String resArray = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
+    if( resArray == null )
       return new IMarkerResolution2[] {};
-    final IMarkerResolution2 mr = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions );
-    if( mr == null )
-      return new IMarkerResolution2[] {};
-    return new IMarkerResolution2[] { mr };
+    final String[] resolutions = StringUtils.split( resArray, '\u0000');
+    final List<IMarkerResolution2> markers = new ArrayList<IMarkerResolution2>(resolutions.length);
+    for( int i = 0; i < resolutions.length; i++ )
+    {
+      final IMarkerResolution2 markerRes = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
+      if (markerRes != null)
+        markers.add( markerRes );
+    }
+    return markers.toArray(new IMarkerResolution2[]{});
   }
 }

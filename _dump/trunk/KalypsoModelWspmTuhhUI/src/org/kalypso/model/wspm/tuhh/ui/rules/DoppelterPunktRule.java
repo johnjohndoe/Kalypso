@@ -81,7 +81,7 @@ public class DoppelterPunktRule extends AbstractValidatorRule
           if( ProfilUtil.comparePoints( new IComponent[] { cB, cH }, prevPoint, point ) )
           {
             final String msg = "Doppelter Punkt bei Breite = " + String.format( FMT_BREITE, point.getValue( iB ) );
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), cB.getId(), pluginId, null );
+            collector.createProfilMarker( IMarker.SEVERITY_WARNING, msg, "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), cB.getId(), pluginId );
           }
         prevPoint = point;
       }

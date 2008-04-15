@@ -113,12 +113,12 @@ public class RauheitenPanel extends AbstractProfilView
     super( profile, viewdata );
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getProfil().getType() );
-    final IComponent[] components = provider.getPointProperties();
-    for( final IComponent component : components )
+    final String[] components = provider.getPointProperties();
+    for( final String component : components )
     {
-      if( component.getId().startsWith( IWspmTuhhConstants.POINT_PROPERTY + "RAUHEIT" ) )
+      if( component.startsWith( IWspmTuhhConstants.POINT_PROPERTY + "RAUHEIT" ) )
       {
-        m_RauheitTypes.put( component.getId(), component );
+        m_RauheitTypes.put( component, provider.getPointProperty( component ) );
       }
     }
     m_RauheitMap.put( "manuelle Eingabe", null );

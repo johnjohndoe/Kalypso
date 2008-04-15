@@ -46,8 +46,12 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -71,6 +75,8 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   private static final String IMAGE_WARNING = "profilLabelProvider.img.warning"; //$NON-NLS-1$
 
+  private static final String IMAGE_INFO = "profilLabelProvider.img.info"; //$NON-NLS-1$
+
   private final ImageRegistry m_imgRegistry = new ImageRegistry();
 
 // private final Color m_colorError;
@@ -83,8 +89,12 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   {
     m_profile = profile;
 
-    m_imgRegistry.put( IMAGE_ERROR, KalypsoModelWspmUIImages.ID_MARKER_ERROR );
-    m_imgRegistry.put( IMAGE_WARNING, KalypsoModelWspmUIImages.ID_MARKER_WARNING );
+    m_imgRegistry.put( IMAGE_ERROR, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_ERROR
+                                                                                                                                      // );
+    m_imgRegistry.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+    
+    m_imgRegistry.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+                                                                                                                                          // );
 
     final IProfilPointMarkerProvider[] mps = KalypsoModelWspmCoreExtensions.getAllMarkerProviders();
     for( final IProfilPointMarkerProvider mp : mps )
@@ -167,6 +177,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   public Image getImage( final IRecord record )
   {
+
     final MarkerIndex markerIndex = m_profile.getProblemMarker();
     if( markerIndex == null )
       return null;
@@ -180,8 +191,8 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
         return m_imgRegistry.get( IMAGE_ERROR );
       if( IMarker.SEVERITY_WARNING == severity )
         return m_imgRegistry.get( IMAGE_WARNING );
-// if( IMarker.SEVERITY_INFO == severity )
-// return m_imgRegistry.get( IMAGE_INFO );
+      if( IMarker.SEVERITY_INFO == severity )
+        return m_imgRegistry.get( IMAGE_INFO );
     }
 
     final IComponent deviderTyp = getDeviderTyp( record );

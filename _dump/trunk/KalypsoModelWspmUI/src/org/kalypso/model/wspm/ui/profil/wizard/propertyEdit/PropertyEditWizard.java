@@ -130,8 +130,8 @@ public class PropertyEditWizard extends Wizard
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profiletype );
     final List<IComponent> properties = new ArrayList<IComponent>();
-    for( final IComponent property : provider.getPointProperties() )
-      properties.add( property );
+    for( final String property : provider.getPointProperties() )
+      properties.add( provider.getPointProperty( property ) );
 
     m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IComponent[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", Messages.PropertyEditWizard_6, null ); //$NON-NLS-1$
     m_propertyChooserPage.setLabelProvider( new LabelProvider()

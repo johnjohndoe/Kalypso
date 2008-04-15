@@ -49,10 +49,14 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -81,13 +85,13 @@ public class BrueckeRule extends AbstractValidatorRule
       {
         if( ((Double) building.getValue( property )).isNaN() )
         {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
           break;
         }
       }
       final IRecord[] points = profil.getPoints();
 
-      final double delta = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ).getPrecision();
+      final double delta = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getPrecision();
       final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
       final int iOK = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
       final int iUK = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
@@ -112,12 +116,12 @@ public class BrueckeRule extends AbstractValidatorRule
       }
       if( innerLeft == -1 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückengeometrie unvollständig", "km " + Double.toString( profil.getStation() ), 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückengeometrie unvollständig", "km " + Double.toString( profil.getStation() ), 0, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
         return;
       }
       if( innerLeft == outerLeft )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten treffen in einem Punkt auf die Geländeoberfläche", "km " + Double.toString( profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten treffen in einem Punkt auf die Geländeoberfläche", "km " + Double.toString( profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
       }
 
       // ermitteln der rechten Grenzen
@@ -138,7 +142,7 @@ public class BrueckeRule extends AbstractValidatorRule
       }
       if( innerRight == outerRight )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten treffen in einem Punkt auf die Geländeoberfläche", "km " + Double.toString( profil.getStation() ), outerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten treffen in einem Punkt auf die Geländeoberfläche", "km " + Double.toString( profil.getStation() ), outerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
       }
 
       // Trennflächen
@@ -146,15 +150,22 @@ public class BrueckeRule extends AbstractValidatorRule
       if( trenner.length > 1 )
       {
         if( profil.indexOfPoint( trenner[0].getPoint() ) != innerLeft )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), innerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );// new
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), innerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
         if( profil.indexOfPoint( trenner[trenner.length - 1].getPoint() ) != innerRight )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), innerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );// new
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), innerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
       }
       // Bordvollpunkte
       final IProfilPointMarker[] brdvp = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
       if( brdvp.length > 0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bordvollpunkte sind zu entfernen", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( brdvp[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );// new
+        final IProfilMarkerResolution[] delRes = new IProfilMarkerResolution[brdvp.length];
+        // the last devider must be deleted first
+        for( int i = 0;i<brdvp.length  ; i++ )
+        {
+          delRes[i] = new DelDeviderResolution( brdvp.length-1-i, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+        }
+
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bordvollpunkte sind zu entfernen", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( brdvp[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, delRes );
       }
       Double minOK = Double.MAX_VALUE;
       Double maxUK = Double.MIN_VALUE;
@@ -173,20 +184,20 @@ public class BrueckeRule extends AbstractValidatorRule
         }
         // Schnittkanten
         if( uk - ok > delta )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten schneiden sich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten schneiden sich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
         if( h - ok > delta || h - uk > delta )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten unter Geländehöhe", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten unter Geländehöhe", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
 
         // Bewuchs unter der Brücke
         if( iAX < 0 )
           continue;
         final Double bewuchs = (Double) points[i].getValue( iAX );
         if( bewuchs != 0.0 )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution() );
       }
       if( minmax > 0 )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "kleinste Höhe der Oberkante liegt unter größter Höhe der Unterkante", "km " + Double.toString( profil.getStation() ), minmax, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, null );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "kleinste Höhe der Oberkante liegt unter größter Höhe der Unterkante", "km " + Double.toString( profil.getStation() ), minmax, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
       }
 
     }

@@ -120,9 +120,9 @@ public class BewuchsRule extends AbstractValidatorRule
         if( profil.getProfileObjects().length == 0 )
         {
           if( VorlandLhasValues && (Double) points[lastIndex].getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + Double.toString( profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AddBewuchsResolution(lastIndex,true) );
+            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + Double.toString( profil.getStation() ), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId);//, new AddBewuchsResolution(lastIndex,true) );
           if( VorlandRhasValues && (Double) rightP.getValue( iAX ) == 0.0 )
-            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + Double.toString( profil.getStation() ), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new AddBewuchsResolution(rightIndex,false) );
+            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + Double.toString( profil.getStation() ), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId);//, new AddBewuchsResolution(rightIndex,false) );
         }
       }
     }
@@ -157,7 +157,7 @@ public class BewuchsRule extends AbstractValidatorRule
           if( dp == 0.0 )
             stringBuffer.append( "dP" );
           stringBuffer.append( ") fehlt" );
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, stringBuffer.toString(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, null );
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, stringBuffer.toString(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId);
         }
         else
           hasValues = true;

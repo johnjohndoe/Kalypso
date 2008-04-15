@@ -89,7 +89,7 @@ public class ValidationProfilListener implements IProfilListener
         final boolean validate = preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
         final String excludes = preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
 
-        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID, profile, m_featureID );
+        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID, ""+profile.getStation(), m_featureID );
 
         try
         {

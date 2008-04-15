@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.tuhh.core;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 
 /**
@@ -135,6 +136,18 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static final String MARKER_TYP_TRENNFLAECHE = MARKER_TYP + "TRENNFLAECHE";
 
   public static final String MARKER_TYP_WEHR = MARKER_TYP + "WEHR";
+  
+  /* MARKER_TYP_COLOR */
+  public static final RGB MARKER_TYP_BORDVOLL_COLOR = new RGB( 200, 50, 0 );
+
+  public static final RGB MARKER_TYP_DURCHSTROEMTE_COLOR = new RGB( 0, 0, 255 );
+
+  public static final RGB MARKER_TYP_TRENNFLAECHE_COLOR = new RGB( 0, 180, 0 );
+
+  public static final RGB MARKER_TYP_WEHR_COLOR = new RGB( 0, 128, 0 );
+  
+  
+  
 
   /* POINTMARKER_PROPERTY */
   public static final String POINTMARKER_PROPERTY_BEIWERT = POINTMARKER_PROPERTY + "BEIWERT";

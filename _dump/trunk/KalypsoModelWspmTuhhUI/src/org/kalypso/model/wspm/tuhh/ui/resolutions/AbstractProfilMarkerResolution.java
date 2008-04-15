@@ -50,6 +50,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -57,9 +58,9 @@ import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
-import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -118,7 +119,7 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
     try
     {
       final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
-      final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();// .getActiveWorkbenchWindow();
+      final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();
       for( final IWorkbenchWindow wbw : wbws )
       {
         final IEditorReference[] editorReferences = wbw == null ? null : wbw.getActivePage().getEditorReferences();
@@ -131,7 +132,8 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
           {
             final IEditorPart editor = editorRef.getEditor( false );
             final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
-            return gmlEditor.getTreeView() == null ? null : gmlEditor.getTreeView().getWorkspace();
+            final GmlTreeView gmlTreeView = gmlEditor == null ? null : gmlEditor.getTreeView();
+            return gmlTreeView == null ? null : gmlTreeView.getWorkspace();
           }
         }
       }
@@ -161,19 +163,18 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
         final IProfil profil = ProfileFeatureFactory.toProfile( feature );
         if( profil != null )
         {
-          if (resolve( profil ))
-            //unnötig wenn der event rausgeschickt wird
-            marker.delete();
-          ProfileFeatureFactory.toFeature( profil, feature );
-          
-          // TODO: modell event rausschicken!
+          if( resolve( profil ) )
+          {
+            marker.delete();// delete marker because ProblemView is no Listener on GMLWorkspace
+            final ICommand command = new ChangeFeaturesCommand( ws, ProfileFeatureFactory.toFeatureAsChanges( profil, feature ) );
+            ws.postCommand( command );
+          }
         }
       }
     }
     catch( Exception e )
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new UnknownError(e.getLocalizedMessage());
     }
 
   }
