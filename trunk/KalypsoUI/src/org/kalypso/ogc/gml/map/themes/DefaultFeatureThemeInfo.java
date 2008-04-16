@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * The default implementation if {@link IKalypsoThemeInfo}.<br>
- * This implementation will be used, if no explizit info is configured with a theme.<br>
+ * This implementation will be used, if no explicit info is configured with a theme.<br>
  * This implementation tires first to determine a theme-info registered for a certain qname.<br>
  * If this fails, a default message is provided<br>
  * Else, all calls are delegated to the found theme info.

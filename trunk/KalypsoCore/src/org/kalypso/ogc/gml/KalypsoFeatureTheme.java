@@ -467,14 +467,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( featureType == null )
       return null; // no data available; maybe show some status-message?
 
-    /* If an explizit info is configured for this map, use it */
-    // REMARK: ist necessary to copy this from AbstractFeatureTheme, as this adapter must be called first
+    /* If an explicit info is configured for this map, use it */
+    // REMARK: is necessary to copy this from AbstractFeatureTheme, as this adapter must be called first
     final String themeInfoId = getProperty( IKalypsoTheme.PROPERTY_THEME_INFO_ID, null );
     if( themeInfoId != null )
       return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );
 
     // HACK: use featureThemeInfo from KalypsoUI as a default. This is needed, because this feature info the
-    // featureType-properties machnisms from KalypsoUI in order find a registered featureThemeInfo for the current
+    // featureType-properties mechanisms from KalypsoUI in order find a registered featureThemeInfo for the current
     // qname
     final IKalypsoThemeInfo defaultFeatureThemeInfo = KalypsoCoreExtensions.createThemeInfo( "org.kalypso.ui.featureThemeInfo.default", this );
     if( defaultFeatureThemeInfo != null )
