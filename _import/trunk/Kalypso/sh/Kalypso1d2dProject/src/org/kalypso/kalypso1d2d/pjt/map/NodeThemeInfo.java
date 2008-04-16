@@ -3,7 +3,6 @@ package org.kalypso.kalypso1d2d.pjt.map;
 import java.util.Formatter;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -28,7 +27,7 @@ public class NodeThemeInfo implements IKalypsoThemeInfo
 
   }
 
-  public void init( IKalypsoTheme theme, Properties props ) throws CoreException
+  public void init( IKalypsoTheme theme, Properties props )
   {
     // TODO Auto-generated method stub
 
