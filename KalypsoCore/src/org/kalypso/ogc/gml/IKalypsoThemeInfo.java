@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Implementors of this interface provide information about a particular theme.<br>
- * Implementors of this interface must provide a default constructor. This class is excpected to be initialized with a
+ * Implementors of this interface must provide a default constructor. This class is expected to be initialized with a
  * call to {@link #init(IKalypsoTheme)}.
  * 
  * @author Gernot Belger
@@ -63,7 +63,7 @@ public interface IKalypsoThemeInfo
 
   /**
    * Provide information at a given position.<br>
-   * This method should return as quickly as possible, as it is usually used to show a ooltip on the map.
+   * This method should return as quickly as possible, as it is usually used to show a tooltip on the map.
    * 
    * @parm pos A geographic position. Must be in the same coordinate system as the current map context.
    * @parm formatter The information gets written to this formatter
