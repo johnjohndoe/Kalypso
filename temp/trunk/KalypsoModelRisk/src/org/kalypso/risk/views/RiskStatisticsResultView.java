@@ -74,9 +74,11 @@ public class RiskStatisticsResultView extends ViewPart
       final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class );
 
-      m_compResult = new StatisticResultComposite( model, parent, SWT.NONE );
-      m_compResult.setLayout( new GridLayout() );
-      // compResult.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+      m_compResult = new StatisticResultComposite( model, parent, SWT.BORDER );
+      GridLayout gridLayout = new GridLayout();
+      gridLayout.marginWidth = 0;
+      gridLayout.marginHeight = 0;
+      m_compResult.setLayout( gridLayout );
     }
     catch( CoreException e )
     {
@@ -93,6 +95,16 @@ public class RiskStatisticsResultView extends ViewPart
   {
     if( m_compResult != null )
       m_compResult.setFocus();
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_compResult.dispose();
+    super.dispose();
   }
 
 }

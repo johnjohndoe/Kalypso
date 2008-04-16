@@ -5,6 +5,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<Help>NONE</Help>
 	<Name>KalypsoRisk-Workflow</Name>
+	
+	<!-- TASK DEFINITIONS -->
+	
 	<Task context="ImportWaterdepthRasterContext"
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportLanduseShapeData">
 		<Help><![CDATA[Öffnen Map-view]]></Help>
@@ -86,8 +89,8 @@
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Postprocessing">
 		<Help><![CDATA[Ergebnisauswertungen]]></Help>
 		<Name>Postprocessing: Ergebnisauswertungen</Name>
-		<Task context="StatisticsPanel"
-			URI="http___www.tu-harburg.de_wb_kalypso_risk__StatisticsPanel">
+		<Task context="RiskStatisticsView"
+			URI="org.kalypso.risk.model.handlers.RiskShowResultStatisticHandler">
 			<Help><![CDATA[Statistische Auswertung]]></Help>
 			<Name>Statistische Auswertung</Name>
 		</Task>
@@ -102,6 +105,11 @@
 			<Name>Exportieren der Risikozonen</Name>
 		</Task>
 	</TaskGroup>
+	
+	
+	
+	<!-- PERSPECTIVE DEFINITIONS -->
+	
 	<Perspectives>
 		<con:PerspectiveContext id="ContextRiskModelling"
 			perspectiveId="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
@@ -117,23 +125,13 @@
 					<con:Parameter name="input"
 						value="templates/CalculationControlPanel.gft" />
 				</con:ExtensionContext>
-				<con:ExtensionContext id="RiskZonesPanel"
-					parent="FeatureView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-					<con:Parameter name="type"
-						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/RiskZonesPanel.gft" />
-				</con:ExtensionContext>
 			</con:ViewContext>
+			
 			<con:ViewContext id="RiskStatisticsView"
 				partId="org.kalypso.risk.views.RiskStatisticsResultView"
 				parent="ContextRiskModelling">
-				<con:ExtensionContext id="StatisticsPanel"
-					parent="RiskStatisticsView"
-					handlerFactoryId="kalypsoContextHandlerFactory">
-				</con:ExtensionContext>
-			</con:ViewContext>			
+			</con:ViewContext>	
+					
 			<con:WorkbenchSiteContext id="MapContext"
 				parent="ContextRiskModelling">
 				<con:ViewContext id="MapOutlineView"
@@ -195,6 +193,7 @@
 					</con:ExtensionContext>
 				</con:ViewContext>
 			</con:WorkbenchSiteContext>
+			
 			<con:ViewContext id="FeatureSelectionView"
 				partId="org.kalypso.featureview.views.FeatureView"
 				parent="ContextRiskModelling" />

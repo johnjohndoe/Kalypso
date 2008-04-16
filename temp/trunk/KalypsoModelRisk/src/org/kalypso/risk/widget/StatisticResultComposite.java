@@ -46,18 +46,25 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlWrapper;
+import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
+import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Composite which is showing the statistic result of a flood risk calculation
@@ -71,10 +78,10 @@ public class StatisticResultComposite extends Composite
   {
     super( parent, style );
 
-    paint( model );
+    paint( parent, model );
   }
 
-  private void paint( final IRasterizationControlModel model )
+  private void paint( final Composite parent, final IRasterizationControlModel model )
   {
     final FormToolkit toolkit = new FormToolkit( getDisplay() );
 
@@ -105,8 +112,24 @@ public class StatisticResultComposite extends Composite
 
     };
 
-    final TupleResultFeatureControlWrapper control = new TupleResultFeatureControlWrapper( model.getStatisticObsFeature(), provider, false, true );
-    control.draw( this );
+    DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
+
+    final Table table = viewer.getTable();
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+
+    TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
+    TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
+
+    viewer.setContentProvider( tupleResultContentProvider );
+    viewer.setLabelProvider( tupleResultLabelProvider );
+
+    final Feature observation = model.getStatisticObsFeature();
+    final IObservation<TupleResult> obs = observation == null ? null : ObservationFeatureFactory.toObservation( observation );
+    final TupleResult tupleResult = obs == null ? null : obs.getResult();
+
+    viewer.setInput( tupleResult );
 
     toolkit.adapt( this );
   }
