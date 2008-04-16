@@ -123,7 +123,7 @@ public class ConvertAscii2Binary
           final BigDecimal currentValue = new BigDecimal( next );
           if( currentValue.equals( noData ) )
             binaryGrid.setValue( x, y, nan );
-          else            
+          else
             binaryGrid.setValue( x, y, currentValue );
         }
 
