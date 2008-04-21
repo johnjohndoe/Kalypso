@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   22 Nov 2007    8:01 pm
+C     Last change:  WP    8 Apr 2008    5:13 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -51,6 +51,7 @@ C
       REAL (KIND = 8) :: calcpolynomial
       REAL (KIND = 8) :: h, rhy
       REAL (KIND = 8) :: F
+      REAL (KIND = 8) :: lamP, lamKS, lamDunes, lamTot
 
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
@@ -747,18 +748,33 @@ cipk jul06 use perim
 
         !calculate lambda
         !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
-        call darcy(lambdaTot(nn), vecq, rhy,
+        call darcy(lamTot, vecq, rhy,
      +             ort(imat(nn),15) * correctionKS(nn),
      +             abst(nn)         * correctionAxAy(nn),
      +             durchbaum(nn)    * correctionDp(nn),
      +             nn, morph, gl_bedform, mel, c_wr(nn), 1,
                    !store values for output
-     +             lambdaKS(nn),
-     +             lambdaP(nn),
-     +             lambdaDunes(nn))
+     +             lamKS,
+     +             lamP,
+     +             lamDunes)
 
         !calculation of friction factor for roughness term in differential equation
-        FFACT = lambdaTot(nn)/8.0
+
+        FFACT = lamTot / 8.0
+
+        !initialize in new run
+        if (i == 1) then
+          lambdaKS (nn) = 0.0
+          lambdaP (nn) = 0.0
+          lambdaDunes (nn) = 0.0
+          lambdaTot (nn) = 0.0
+        ENDIF
+
+        !accumulate lambda of element weighted with Gauss integration weights
+        lambdaTot (nn) = lambdaTot (nn) + lamTot * hfact(i) / 2.0
+        lambdaP (nn) = lambdaP (nn) + lamP * hfact(i) / 2.0
+        lambdaKS (nn) = lambdaKS (nn) + lamKS * hfact(i) / 2.0
+        lambdaDunes (nn) = lambdaDunes (nn) + lamDunes * hfact(i) / 2.0
       !-
 
       ENDIF
