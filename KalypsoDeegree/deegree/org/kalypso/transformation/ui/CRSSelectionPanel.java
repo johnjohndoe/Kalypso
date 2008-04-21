@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,6 +56,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -79,6 +81,8 @@ public class CRSSelectionPanel
    * A hash of the displayed coordinate systems.
    */
   protected HashMap<String, CoordinateSystem> m_coordHash;
+
+  private final List<Image> m_imageList = new ArrayList<Image>();
 
   /**
    * The constructor.
@@ -133,8 +137,11 @@ public class CRSSelectionPanel
       imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
       /* Set the image. */
-      ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) );
-      imageLabel.setImage( imgDesc.createImage() );
+      final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) );
+      final Image infoImage = imgDesc.createImage();
+      m_imageList.add( infoImage );
+
+      imageLabel.setImage( infoImage );
 
       /* Refresh the tooltip. */
       m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -264,5 +271,12 @@ public class CRSSelectionPanel
   {
     if( m_viewer != null )
       m_viewer.removeSelectionChangedListener( listener );
+  }
+
+  public void dispose( )
+  {
+    // dispose all images and colors
+    for( Image image : m_imageList )
+      image.dispose();
   }
 }
