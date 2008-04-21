@@ -661,12 +661,12 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       if( m_model == null )
       {
         if( m_modellPainter == null )
-          m_modellPainter = new TextPainter( "Kartenvorlage wird geladen...", w, h );
+          m_modellPainter = new TextPainter( "Loading map...", w, h );
         else
-          m_modellPainter = new TextPainter( "Keine Daten vorhanden...", w, h );
+          m_modellPainter = new TextPainter( "No data available...", w, h );
       }
       else if( (m_model != null) && (m_model.getThemeSize() == 0) )
-        m_modellPainter = new TextPainter( "Keine Kartenthemen vorhanden", w, h );
+        m_modellPainter = new TextPainter( "No map themes", w, h );
       else
       {
         // Why -2 ?
