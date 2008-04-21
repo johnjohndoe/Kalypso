@@ -116,6 +116,9 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
   {
     m_contentProvider.dispose();
     m_labelProvider.dispose();
+
+    if( m_viewer != null )
+      m_viewer.getTree().dispose();
   }
 
   public void createControl( final Composite parent )
