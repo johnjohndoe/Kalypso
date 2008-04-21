@@ -1,3 +1,4 @@
+C     Last change:  WP   10 Apr 2008    3:07 pm
 cipk  last update FEB 26 2007 REFINE TEST FOR SUBMERGENCE
 cipk  last update nov 28 2006 allow for 1-d control structures
 cipk  last update JUNE 22 2005 ADD TO rma10
@@ -16,11 +17,11 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 *-
       if(maxn .eq. 1) then
         DO N=1,NP
-	    IF(NFIX(N)/100 .EQ. 12) THEN
+          IF (NFIX (N) / 100 .EQ. 12) THEN
             ISUBM(N)=0
-	    ELSEIF(NFIX(N)/100 .EQ. 102) THEN
+          ELSEIF (NFIX (N) / 100 .EQ. 102) THEN
             ISUBM(N)=0
-          ELSEIF(NFIX(N)/100 .GT. 100) THEN
+          ELSEIF (NFIX (N) / 100 .GT. 100) THEN
 C
 C     This indicates a boundary node
 C
@@ -33,29 +34,32 @@ C
    
 CIPK JUL04 Use TRC to allow for units
       IF(GRAV .GT. 30.) THEN
-	  TRC=0.25
-	ELSE
-	  TRC=0.1
-	ENDIF
+        TRC=0.25
+      ELSE
+        TRC=0.1
+      ENDIF
 
       DO  NN=1,NE
         IF(IMAT(NN) .NE. 0) THEN
-          !NiS,Com: only for control structure elements (this if-clause nearly the whole subroutine)
+
+          !check, whether element is really a control structure element
           IF(IMAT(NN) .GT. 903   .AND.  IMAT(NN) .LT. 990) THEN
 CIPK JUN05
 cipk outnov06           IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
 cipk dec00
-	      if(njt(imat(nn)-900) .eq. 10) then
+
+            !this is a weir or a control structure defined by tabular data
+            if(njt(imat(nn)-900) .eq. 10) then
 cipk outnov06              if(maxn .ne. 1) go to 332
 cipk outnov06              ISUBMEL(nn)=0
 cipk jul04
               ncn=ncorn(nn)
-      	      DO K=1,NCN,2
-	          IF(TRANSEL(NOP(NN,K)) .LT. -9000.) THEN
-	            TRANSEL(NOP(NN,K))=10000.
-	            WHGT(NOP(NN,K))=10000.
-	          ENDIF
-	        ENDDO
+       	      DO K=1,NCN,2
+                IF(TRANSEL(NOP(NN,K)) .LT. -9000.) THEN
+                  TRANSEL(NOP(NN,K))=10000.
+                  WHGT(NOP(NN,K))=10000.
+                ENDIF
+              ENDDO
 CIPK nov06
               IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
                 if(maxn .ne. 1) go to 332
@@ -75,14 +79,14 @@ CIPK JUL04            IF(WSLL(NOP(NN,1)) .LT. WHGT(NOP(NN,1))+.35) THEN
      +      
                       IF(WSLL(NOP(NN,7)) .LT. WHGT(NOP(NN,7))) THEN
                         GO TO 331
-	                ENDIF
+                      ENDIF
                       IF(WSLL(NOP(NN,1)) .LT. WHGT(NOP(NN,1))) THEN
                         GO TO 331
-	                ENDIF
-	              ELSE
-	                GO TO 331
-	              ENDIF
-	            ENDIF
+                      ENDIF
+                    ELSE
+                      GO TO 331
+                    ENDIF
+                  ENDIF
 
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,3),WSLL(NOP(NN,3)),WSLL(NOP(NN,5)),
@@ -95,14 +99,14 @@ CIPK JUL04            IF(WSLL(NOP(NN,3)) .LT. WHGT(NOP(NN,3))+.35) THEN
             
                       IF(WSLL(NOP(NN,5)) .LT. WHGT(NOP(NN,5))) THEN
                         GO TO 331
- 	                ENDIF
+                      ENDIF
                       IF(WSLL(NOP(NN,3)) .LT. WHGT(NOP(NN,3))) THEN
                         GO TO 331
-	                ENDIF
-	              ELSE
-	                GO TO 331
-	              ENDIF
-	            ENDIF
+                      ENDIF
+                    ELSE
+                      GO TO 331
+                    ENDIF
+                  ENDIF
 
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,5),WSLL(NOP(NN,5)),WSLL(NOP(NN,3)),
@@ -115,14 +119,14 @@ CIPK JUL04            IF(WSLL(NOP(NN,5)) .LT. WHGT(NOP(NN,5))+.35) THEN
              
                       IF(WSLL(NOP(NN,3)) .LT. WHGT(NOP(NN,3))) THEN
                         GO TO 331
-	                ENDIF
+                      ENDIF
                       IF(WSLL(NOP(NN,5)) .LT. WHGT(NOP(NN,5))) THEN
                         GO TO 331
-	                ENDIF
-	              ELSE
-	                GO TO 331
-	              ENDIF
-	            ENDIF
+                      ENDIF
+                    ELSE
+                      GO TO 331
+                    ENDIF
+                  ENDIF
 
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,7),WSLL(NOP(NN,7)),WSLL(NOP(NN,1)),
@@ -131,22 +135,20 @@ CIPK JUL04            IF(WSLL(NOP(NN,5)) .LT. WHGT(NOP(NN,5))+.35) THEN
 CIPK JUL04            IF(WSLL(NOP(NN,7)) .LT. WHGT(NOP(NN,7))+.35) THEN
                   IF(WSLL(NOP(NN,7)) .LT. TRANSEL(NOP(NN,7))) THEN
                     IF(ABS(WSLL(NOP(NN,1))-WSLL(NOP(NN,7))) .LT. TRC)
-     + 	 	  	    THEN
+     + 	 	  	     THEN
              
                       IF(WSLL(NOP(NN,1)) .LT. WHGT(NOP(NN,1))) THEN
                         GO TO 331
-	                ENDIF
+                      ENDIF
                       IF(WSLL(NOP(NN,7)) .LT. WHGT(NOP(NN,7))) THEN
                         GO TO 331
-	                ENDIF
-	              ELSE
-	                GO TO 331
-	              ENDIF
-	            ENDIF
-
+                      ENDIF
+                    ELSE
+                      GO TO 331
+                    ENDIF
+                  ENDIF
 
 c          set isubm for all nodes around a weir element
-
                   DO L=1,NCORN(NN)
 cipk oct00 
                     if(isubm(nop(nn,l)) .eq. -1) then
@@ -160,7 +162,7 @@ cipk oct00
                   ISUBMEL(nn)=1
 CIPK NOV06 ISUBMEL =1 MEANS SUBMERGED
                   GO TO 332
-	          ELSE
+                ELSE
 
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,1),WSLL(NOP(NN,1)),WSLL(NOP(NN,3)),
@@ -173,14 +175,14 @@ CIPK JUL04            IF(WSLL(NOP(NN,1)) .LT. WHGT(NOP(NN,1))+.35) THEN
      +       
                       IF(WSLL(NOP(NN,3)) .LT. WHGT(NOP(NN,3))) THEN
                         GO TO 331
-	                ENDIF
+                      ENDIF
                       IF(WSLL(NOP(NN,1)) .LT. WHGT(NOP(NN,1))) THEN
                         GO TO 331
-	                ENDIF
-	              ELSE
-	                GO TO 331
-	              ENDIF
-	            ENDIF
+                      ENDIF
+                    ELSE
+                      GO TO 331
+                    ENDIF
+                  ENDIF
 
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,3),WSLL(NOP(NN,3)),WSLL(NOP(NN,1)),
@@ -193,19 +195,19 @@ CIPK JUL04            IF(WSLL(NOP(NN,3)) .LT. WHGT(NOP(NN,3))+.35) THEN
             
                       IF(WSLL(NOP(NN,1)) .LT. WHGT(NOP(NN,1))) THEN
                         GO TO 331
-	                ENDIF
+                      ENDIF
                       IF(WSLL(NOP(NN,3)) .LT. WHGT(NOP(NN,3))) THEN
                         GO TO 331
-	                ENDIF
-	              ELSE
-	                GO TO 331
-	              ENDIF
-	            ENDIF
+                      ENDIF
+                    ELSE
+                      GO TO 331
+                    ENDIF
+                  ENDIF
 
 
 c          set isubm for all nodes around a weir element
 
-                 DO L=1,3
+                  DO L=1,3
 cipk oct00 
                     if(isubm(nop(nn,l)) .eq. -1) then
                       ISUBM(NOP(NN,L))=1
@@ -239,25 +241,25 @@ CIPK NOV06 ISUBMEL =1 MEANS SUBMERGED
 c             WRITE(75,*) 'SUBSET2',NN,ISUBMEL(NN),ISUBM(24)
 
                 if(isubmel(nn) .eq. 1) then
-	            write(75,*) 'At step',icyc,' element ',nn,' submerged'
-	          elseif(WSLL(NOP(NN,1)) .GT. WHGT(NOP(NN,1))  .OR.
+                  write(75,*) 'At step',icyc,' element ',nn,' submerged'
+                elseif(WSLL(NOP(NN,1)) .GT. WHGT(NOP(NN,1))  .OR.
      +            WSLL(NOP(NN,3)) .GT. WHGT(NOP(NN,3))  .OR.
      +            WSLL(NOP(NN,5)) .GT. WHGT(NOP(NN,5))  .OR.
      +            WSLL(NOP(NN,7)) .GT. WHGT(NOP(NN,7)))  THEN
-	            write(75,*) 'At step',icyc,' element ',nn,' flowing'
+                  write(75,*) 'At step',icyc,' element ',nn,' flowing'
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,1),WSLL(NOP(NN,1)),WSLL(NOP(NN,3)),
      +            WHGT(NOP(NN,1)),WHGT(NOP(NN,3)),TRANSEL(NOP(NN,1))
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,5),WSLL(NOP(NN,5)),WSLL(NOP(NN,7)),
      +            WHGT(NOP(NN,5)),WHGT(NOP(NN,7)),TRANSEL(NOP(NN,5))
-		      endif
+                endif
 
-	        else
+              else
                 DO L=1,NCORN(NN)
                   ISUBM(NOP(NN,L))=0
                 ENDDO
-	        endif
+              endif
             ELSE
 
               ISUBMEL(nn)=0
