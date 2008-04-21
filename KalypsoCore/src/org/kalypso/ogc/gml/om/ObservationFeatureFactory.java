@@ -425,8 +425,17 @@ public class ObservationFeatureFactory implements IAdapterFactory
   private static Feature itemDefinitionFromComponent( final Feature recordDefinition, final IRelationType itemDefinitionRelation, final IGMLSchema schema, final IComponent comp )
   {
     // TODO set name and description
+
+    final String id = comp.getId();
+    // try to find a dictionary entry for this component, if it exists, create xlinked-feature to it
+    final XLinkedFeature_Impl xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION ), id, "", "", "", "", "" );
+    if( xlink.getFeature() != null )
+      return xlink;
+
     if( comp instanceof FeatureComponent )
     {
+      // TODO: dangerous, we should always create a new feature here, don't we?
+
       final FeatureComponent fc = (FeatureComponent) comp;
       return fc.getItemDefinition();
     }
@@ -466,8 +475,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String unit = component.getUnit();
 
     final String frame = component.getFrame();
-    
-    final IRestriction[] restrictions =  component.getRestrictions();
+
+    final IRestriction[] restrictions = component.getRestrictions();
 
     return new RepresentationType( ObservationFeatureFactory.toKind( valueTypeName ), valueTypeName, unit, frame, restrictions, classification );
   }
