@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.featureview.views;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -59,7 +58,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -85,7 +83,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.xml.sax.InputSource;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class FeatureCompositeGFTWrapper
 {
@@ -228,12 +226,12 @@ public class FeatureCompositeGFTWrapper
    * @param gmlId
    *            the id which will be replaced
    */
-  public static void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final String gmlId ) throws IOException, CoreException
+  public static void createGftFile( final IFile iTemplate, final IFile iDestination, final String gmlId ) throws IOException, CoreException
   {
     final HashMap<String, String> replacement = new HashMap<String, String>();
     replacement.put( "%PLACEHOLDER%", gmlId );
 
-    FeatureCompositeGFTWrapper.createGftFile( project, templateFilePath, gftFile, replacement );
+    FeatureCompositeGFTWrapper.createGftFile( iTemplate, iDestination, replacement );
   }
 
   /**
@@ -248,37 +246,31 @@ public class FeatureCompositeGFTWrapper
    * @param hReplacements
    *            index[key, value] - keys will be replaced with their assigned values
    */
-  public static void createGftFile( final IProject project, final String templateFilePath, final File gftFile, final Map<String, String> hReplacements ) throws IOException, CoreException
+  public static void createGftFile( final IFile iTemplate, final IFile iDestination, final Map<String, String> hReplacements ) throws IOException, CoreException
   {
-    if( (project == null) || (templateFilePath == null) || (gftFile == null) || (hReplacements == null) )
-      return;
-
-    final IFile iFile = project.getFile( templateFilePath );
-    final String sTempLocation = iFile.getLocation().toOSString();
-
-    final FileReader input = new FileReader( sTempLocation );
-
+    final InputStreamReader input = new InputStreamReader( iTemplate.getContents() );
     if( input == null )
       return;
 
-    String content = "";
+    final StringBuffer buffer = new StringBuffer();
     int c;
 
     while( (c = input.read()) != -1 )
-      // $ANALYSIS-IGNORE,codereview.java.rules.casting.RuleCastingPrimitives
-      content += (char) c;
+      buffer.append( (char) c );
 
     input.close();
 
     final Set<Entry<String, String>> entrySet = hReplacements.entrySet();
 
+    String content = buffer.toString();
+
     for( final Entry<String, String> entry : entrySet )
       content = content.replaceAll( entry.getKey(), entry.getValue() );
 
-    final FileWriter writer = new FileWriter( gftFile );
+    final BufferedWriter writer = new BufferedWriter( new FileWriter( iDestination.getLocation().toFile() ) );
     writer.write( content );
     writer.close();
 
-    project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    iDestination.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
 }
