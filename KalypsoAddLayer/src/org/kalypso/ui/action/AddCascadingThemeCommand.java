@@ -75,6 +75,8 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
   private Property[] m_properties = new StyledLayerType.Property[] {};
 
+  private boolean m_visibility = true;
+
   /**
    * Add Cascading theme constructor
    * 
@@ -194,11 +196,15 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     final org.kalypso.template.gismapview.ObjectFactory factory = new org.kalypso.template.gismapview.ObjectFactory();
     m_layer = init( factory );
 
+    /* add properties */
     final List<Property> properties = m_layer.getProperty();
     for( final Property property : m_properties )
     {
       properties.add( property );
     }
+
+    /* set visibility */
+    m_layer.setVisible( m_visibility );
 
     final List<JAXBElement< ? extends StyledLayerType>> layers = m_layer.getLayer();
     getSubLayer( factory, layers, m_layerCommands.toArray( new ICommand[] {} ) );
@@ -223,5 +229,10 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
    */
   public void undo( ) throws Exception
   {
+  }
+
+  public void setVisible( final boolean visibility )
+  {
+    m_visibility = visibility;
   }
 }
