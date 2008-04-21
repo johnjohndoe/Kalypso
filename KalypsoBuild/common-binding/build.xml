@@ -63,7 +63,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 			<schema dir="${project}">
 				<patternset refid="binding.schemata" />
 			</schema>
-
+<!--  <binding dir="${project}">
+		  	<patternset refid="binding.binding" />
+			</binding>-->
 			<!--
 			<classpath>
 			      <pathelement path="${classpath}"/>
