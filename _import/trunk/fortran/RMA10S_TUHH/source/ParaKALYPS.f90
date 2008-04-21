@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Feb 2008    4:32 pm
+!     Last change:  WP   17 Apr 2008   10:04 am
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -44,6 +44,7 @@ real (KIND=4),allocatable :: gl_bedform(:,:)
 !nis,jun07: Adding specific discharge and difference quotients of that over h and v for alle transition nodes
 !           Add pointer for all nodes to be part of a transition or not
 logical, allocatable :: TransitionMember(:), TransitionElement(:)
+INTEGER, allocatable :: TransLinePart (:)
 REAL   , allocatable :: dspecdh (:), dspecdv (:)
 REAL                 :: q2d(1:50), dq2ddh (1: 50)
 !-

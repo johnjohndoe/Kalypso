@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  NIS  13 Jan 2008    6:14 pm
+C     Last change:  WP   17 Apr 2008   11:57 am
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -1156,16 +1156,21 @@ C.......  Force widths and slopes equal for main stem nodes
           !nis,com: get the two corner nodes of the coupling (2D-corners of connected 2D-element)
           N1=NOP(N,4)
           N2=NOP(N,5)
+
           !nis,com: calculate the x- and y-distances
           DX=CORD(N1,1)-CORD(N2,1)
           DY=CORD(N1,2)-CORD(N2,2)
+
           !nis,com: calculate the chord length between the two transition corner nodes
           WIDTT=SQRT(DX**2+DY**2)
+
 cipk aug97 add fix for alfak
           ANG=ATAN2(DX,-DY)
+
           !nis,com: Bring vector-direction into 1. or 4. quadrant of Cartesian coordinate system
           IF(ANG .GT. 1.5707963) ANG=ANG-3.1415926
           IF(ANG .LT. -1.5707963) ANG=ANG+3.1415926
+
 cipk aug97 end of change
           !nis,com: Get the transition node
           N3=NOP(N,3)
@@ -1176,19 +1181,23 @@ C-
           CORD(N3,1)=(CORD(N1,1)+CORD(N2,1))/2.
           CORD(N3,2)=(CORD(N1,2)+CORD(N2,2))/2.
 
-          !nis,nov06,com: It has to be a rectangular channel at the coupling with no side-slopes!!!
-          IF(SS1(N3) .NE. 0.  .OR.  SS2(N3) .NE. 0.) THEN
-            WRITE(*,*) ' **ERROR**  SIDE SLOPES AT NODE',N3,' NON-ZERO'
-            WRITE(*,*) '   VALUES FORCED TO ZERO'
-            !nis,nov06,com: Set side slopes to zero
-            SS1(N3)=0.0
-            SS2(N3)=0.0
-          ENDIF
-          !nis,com: Resetting the width of the transition with the chord length between the transition-corner-nodes
-          WIDTO=WIDTH(N3)
-          WIDTH(N3)=WIDTT
+          !only for geometry approach
+          if (imat (n) /= 89) then
+            !nis,nov06,com: It has to be a rectangular channel at the coupling with no side-slopes!!!
+            IF (SS1(N3) .NE. 0.  .OR.  SS2(N3) .NE. 0.) THEN
+              WRITE(*,*)' **ERROR**  SIDE SLOPES AT NODE',N3,' NON-ZERO'
+              WRITE(*,*)'   VALUES FORCED TO ZERO'
+              !nis,nov06,com: Set side slopes to zero
+              SS1(N3)=0.0
+              SS2(N3)=0.0
+            ENDIF
+            !nis,com: Resetting the width of the transition with the chord length between the transition-corner-nodes
+            WIDTO=WIDTH(N3)
+            WIDTH(N3)=WIDTT
+          end if
+
 cipk aug97 2nd part of change for alfak
-           IF(ANG .NE. 0.) THEN
+          IF(ANG .NE. 0.) THEN
             !nis,nov06,com: Overgive the angle to the coupling node
             ALFAK(N3)=ANG
           ELSE
@@ -1198,8 +1207,11 @@ cipk aug97 2nd part of change for alfak
           ENDIF
 cipk aug97 end changes
 !NiS,may06: adding alfak to output
-          WRITE(*,*) ' SETTING ALFAK, WIDTH, OLD WIDTH',N3, alfak(n3)
-     +                , WIDTH(N3), WIDTO
+
+          if (imat(n) /= 89)
+     +    WRITE(*,*) ' SETTING WIDTH, OLD WIDTH',N3, WIDTH(N3), WIDTO
+
+          WRITE(*,*) ' SETTING ALFAK',N3, alfak(n3)
 !-
 !nis,nov06: Adding fixes for direction of 1D-2D-line-transitions:
         !nis,nov06: MaxLT shows the number of line-transitions within network

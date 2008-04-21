@@ -1,4 +1,4 @@
-!Last change:  WP   12 Mar 2008    3:18 pm
+!Last change:  WP   17 Apr 2008   10:01 am
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -809,6 +809,14 @@ Gaussloop: DO I = 1, NGP
       sfwicint(i) = sfwicht(1) * xm(1) + sfwicht(2) * xm(2)
       !Sf at GP
       sfint(i) = sfwicint(i) * s0schint(i) * vflowint(i) * ABS (vflowint(i)) * areaint(i)**2 / qschint(i)**2
+
+      !ATTENTION ATTENTION ATTENTION
+      !this is only valid for a rectangular channel of the width of 14.0 meters
+      !calculation of lambda at that place
+      if (i == 1) lambdaTot (nn) = 0.0
+      lambdaTot (nn) = lambdaTot (nn) + sfint(i) * 8.0 * grav * 14.0*hhint(i) / (14.0+2.0*hhint(i)) / vflowint(i)**2 * HFACT(i)/2.0
+      !-
+
       !dSf/dh at GP
       dsfintdh1(i) = s0schint(i) * vflowint(i) * ABS(vflowint(i))                      &
       &              * (QSchint(i)**2 * 2 * areaint(i) * dareaintdh(i) - areaint(i)**2 &
@@ -831,136 +839,136 @@ Gaussloop: DO I = 1, NGP
     end if
 
     !mass center calculations
-    if (byparts == 3) then
-      !polynomial position for a(h)-calculations
-      PP(1) = findPolynom (polyRangeA (n1, :), hhint(i), PolySplitsA (n1))
-      PP(2) = findPolynom (polyRangeA (n3, :), hhint(i), PolySplitsA (n3))
-
-      !dAintdx
-      daintdx1(i) = daintdh1(i) * dhhintdx(i)
-      daintdx2(i) = daintdh2(i) * dhhintdx(i)
-      !d2aintdxdh
-      d2aintdxdh1(i) = d2aintdh1(i) * dhhintdx(i)
-      d2aintdxdh2(i) = d2aintdh2(i) * dhhintdx(i)
-      !Fint
-      Fint1(i) = 0.0
-      Fint2(i) = 0.0
-      do j = 0, 12
-        Fint1(i) = Fint1(i) + (j / (j+1.)) * apoly (PP(1), n1, j) * hhint(i)**(j+1)
-        Fint2(i) = Fint2(i) + (j / (j+1.)) * apoly (PP(2), n3, j) * hhint(i)**(j+1)
-      enddo
-      !dFintdh
-      dFintdh1(i) = 0.0
-      dFintdh2(i) = 0.0
-      do j = 0, 12
-        dFintdh1(i) = dFintdh1(i) + (j) * apoly (PP(1), n1, j) * hhint(i)**j
-        dFintdh2(i) = dFintdh2(i) + (j) * apoly (PP(2), n3, j) * hhint(i)**j
-      end do
-      !d2Fintdh
-      d2Fintdh1(i) = 0.0
-      d2Fintdh2(i) = 0.0
-      do j = 0, 12
-        d2Fintdh1(i) = d2Fintdh1(i) + (j**2) * apoly (PP(1), n1,j) * hhint(i)**(j-1)
-        d2Fintdh2(i) = d2Fintdh2(i) + (j**2) * apoly (PP(2), n3,j) * hhint(i)**(j-1)
-      end do
-      !dFintdx
-      dFintdx1(i) = 0.0
-      dFintdx2(i) = 0.0
-      dFintdx1(i) = dFintdh1(i) * dhhintdx(i)
-      dFintdx2(i) = dFintdh2(i) * dhhintdx(i)
-      !d2Fintdxdh1
-      d2Fintdxdh1(i) = d2Fintdh1(i) * dhhintdx(i)
-      d2Fintdxdh2(i) = d2Fintdh2(i) * dhhintdx(i)
-      if (testoutput == 3) then
-        WRITE(*,*)
-        WRITE(*,*) 'F1: ', fint1(i)
-        WRITE(*,*) 'F2: ', fint2(i)
-        WRITE(*,*) 'dF1/dh: ', dFintdh1(i)
-        WRITE(*,*) 'dF2/dh: ', dFintdh2(i)
-        WRITE(*,*) 'd2F1/dh2: ', d2Fintdh1(i)
-        WRITE(*,*) 'd2F2/dh2: ', d2fintdh2(i)
-        WRITE(*,*) 'd2F1/dhdx: ', d2Fintdxdh1(i)
-        WRITE(*,*) 'd2F2/dhdx: ', d2Fintdxdh2(i)
-        WRITE(*,*)
-      end if
-
-      !zS-Calculations
-      !zS
-      zsint(i) = xm(1) * Fint1(i) / aint1(i) &
-      &        + xm(2) * Fint2(i) / aint2(i)
-
-      !dzS/dh
-      dzsintdh(i) = xm(1) * (aint1(i) * dFintdh1(i) - fint1(i) * daintdh1(i)) / aint1(i)**2 &
-      &           + xm(2) * (aint2(i) * dFintdh2(i) - fint2(i) * daintdh2(i)) / aint2(i)**2
-
-      !d2zS/dh2
-      d2zsintdh(i) = xm(1) * (aint1(i) * d2Fintdh1(i) - fint1(i) * d2aintdh1(i)                                            &
-      &                       - 2. * dFintdh1(i) * daintdh1(i) + 2. * fint1(i) / aint1(i) * daintdh1(i)**2) / aint1(i)**2  &
-      &            + xm(2) * (aint2(i) * d2Fintdh2(i) - fint2(i) * d2aintdh2(i)                                            &
-      &                       - 2. * dFintdh2(i) * daintdh2(i) + 2. * fint2(i) / aint2(i) * daintdh2(i)**2) / aint2(i)**2
-
-      !d2zS/(dhdx)
-      d2zsintdhdx(i) = xm(1) * (- daintdx1(i) * dFintdh1(i) + aint1(1) * d2Fintdxdh1(i) - dFintdx1(i) * daintdh1(i)                &
-      &                         - fint1(i) * d2aintdxdh1(i) + 2. * daintdx1(i) * fint1(i) / aint1(i) * daintdh1(i)) / aint1(i)**2  &
-      &              + xm(2) * (- daintdx2(i) * dFintdh2(i) + aint2(1) * d2Fintdxdh2(i) - dFintdx2(i) * daintdh2(i)                &
-      &                         - fint2(i) * d2aintdxdh2(i) + 2. * daintdx2(i) * fint2(i) / aint2(i) * daintdh2(i)) / aint2(i)**2
-
-      !ypsilon
-      yps(i)  = xm(1) * (1. - 1. / hhint(i) * fint1(i) / aint1(i)) &
-      &       + xm(2) * (1. - 1. / hhint(i) * fint2(i) / aint2(i))
-
-      !dypsilon/dh
-      dypsdh(i)  = - xm(1) * (  hhint(i) * aint1(i) * dFintdh1(i) - fint1(i) * (aint1(i) &
-      &                       + hhint(i) * daintdh1(i))) / (hhint(i) * aint1(i))**2      &
-      &            - xm(2) * (  hhint(i) * aint2(i) * dFintdh2(i) - fint2(i) * (aint2(i) &
-      &                       + hhint(i) * daintdh2(i))) / (hhint(i) * aint2(i))**2
-
-      !d2ypsilon/dh2
-      d2ypsdh(i) = - xm(1) * (- 2. * hhint(i) * daintdh1(i) * dFintdh1(i) + 2. * fint1(i) * daintdh1(i) - aint1(i) * dFintdh1(i) &
-      &                       + 2. * fint1(i) * aint1(i) / hhint(i) + hhint(i) * aint1(i) * d2Fintdh1(i)                         &
-      &                       - hhint(i) * fint1(i) * d2aintdh1(i) + 2. * fint1(i) * hhint(i) / aint1(i) * (daintdh1(i))**2)     &
-      &                    / (hhint(i) * aint1(i) )**2                                                                           &
-      &            - xm(2) * (- 2. * hhint(i) * daintdh2(i) * dFintdh2(i) + 2. * fint2(i) * daintdh2(i) - aint2(i) * dFintdh2(i) &
-      &                       + 2. * fint2(i) * aint2(i) / hhint(i) + hhint(i) * aint2(i) * d2Fintdh2(i)                         &
-      &                       - hhint(i) * fint2(i) * d2aintdh2(i) + 2. * fint2(i) * hhint(i) / aint2(i) * (daintdh2(i))**2)     &
-      &                    / (hhint(i) * aint2(i) )**2
-      !dypsilon/dx
-      dypsdx(i) = dmx(1) * (1. - fint1(i) / hhint(i) / aint1(i))                                                &
-      &         + xm(1) * (dFintdh1(i) - fint1(i) / hhint(i) - fint1(i) / aint1(i) * daintdh1(i)) * dhhintdx(i) &
-      &         + dmx(2) * (1. - fint2(i) / hhint(i) / aint2(i))                                                &
-      &         + xm(1) * (dFintdh2(i) - fint2(i) / hhint(i) - fint2(i) / aint2(i) * daintdh2(i)) * dhhintdx(i)
-
-      !d2ypsilon/(dhdx)
-      d2ypsdhdx(i) = - xm(1) * (dhhintdx(i) * (2. * aint1(i) / hhint(i) * fint1(i) - aint1(i) * dFintdh1(i) - daintdh1(i) * fint1(i))&
-      &                       + daintdx1(i) * (fint1(i) - hhint(i) * dFintdh1(i) - 2. * hhint(i) / aint1(i) * daintdh1(i) * fint1(i))&
-      &                       + dFintdx1(i) * (hhint(i) * daintdh1(i) - aint1(i))                                                    &
-      &                       + hhint(i) * aint1(i) * d2Fintdxdh1(i) + hhint(i) * fint1(i) * d2aintdxdh1(i))                         &
-      &                    / (hhint(i) * aint1(i) )**2                                                                               &
-      &              - dmx(1) * (hhint(i) * aint1(i) * dFintdh1(i) - fint1(i) * aint1(i) + fint1(i) * hhint(i) * daintdh1(i))        &
-      &                     / (hhint(i) * aint1(i))**2                                                                               &
-      &              - xm(2) * (dhhintdx(i) * (2. * aint2(i) / hhint(i) * fint2(i) - aint2(i) * dFintdh2(i) - daintdh2(i) * fint2(i))&
-      &                       + daintdx2(i) * (fint2(i) - hhint(i) * dFintdh2(i) - 2. * hhint(i) / aint2(i) * daintdh2(i) * fint2(i))&
-      &                       + dFintdx2(i) * (hhint(i) * daintdh2(i) - aint2(i))                                                    &
-      &                       + hhint(i) * aint2(i) * d2Fintdxdh2(i) + hhint(i) * fint2(i) * d2aintdxdh2(i))                         &
-      &                    / (hhint(i) * aint2(i) )**2                                                                               &
-      &              - dmx(2) * (hhint(i) * aint2(i) * dFintdh2(i) - fint2(i) * aint2(i) + fint2(i) * hhint(i) * daintdh2(i))        &
-      &                     / (hhint(i) * aint2(i))**2
-
-      if (testoutput == 3 .or. testoutput == 1) then
-        WRITE(*,*) 'Element: ', nn, 'GP: ', i
-        WRITE(*,*) 'h: ', hhint(i)
-        WRITE(*,*) 'zS: ', zsint(i)
-        WRITE(*,*) 'dzsintdh: ', dzsintdh(i)
-        WRITE(*,*) 'd2zsintdh: ', d2zsintdh(i)
-        WRITE(*,*) 'd2zsintdhdx: ', d2zsintdhdx(i)
-        WRITE(*,*) 'ypsilon: ', yps(i)
-        WRITE(*,*) 'dypsdh: ', dypsdh(i)
-        WRITE(*,*) 'd2ypsdh: ', d2ypsdh(i)
-        WRITE(*,*) 'dypsdx: ', dypsdx(i)
-        WRITE(*,*) 'd2ypsdhdx: ', d2ypsdhdx(i)
-        if (i == 4) pause
-      end if
-    end if
+!    if (byparts == 3) then
+!      !polynomial position for a(h)-calculations
+!      PP(1) = findPolynom (polyRangeA (n1, :), hhint(i), PolySplitsA (n1))
+!      PP(2) = findPolynom (polyRangeA (n3, :), hhint(i), PolySplitsA (n3))
+!
+!      !dAintdx
+!      daintdx1(i) = daintdh1(i) * dhhintdx(i)
+!      daintdx2(i) = daintdh2(i) * dhhintdx(i)
+!      !d2aintdxdh
+!      d2aintdxdh1(i) = d2aintdh1(i) * dhhintdx(i)
+!      d2aintdxdh2(i) = d2aintdh2(i) * dhhintdx(i)
+!      !Fint
+!      Fint1(i) = 0.0
+!      Fint2(i) = 0.0
+!      do j = 0, 12
+!        Fint1(i) = Fint1(i) + (j / (j+1.)) * apoly (PP(1), n1, j) * hhint(i)**(j+1)
+!        Fint2(i) = Fint2(i) + (j / (j+1.)) * apoly (PP(2), n3, j) * hhint(i)**(j+1)
+!      enddo
+!      !dFintdh
+!      dFintdh1(i) = 0.0
+!      dFintdh2(i) = 0.0
+!      do j = 0, 12
+!        dFintdh1(i) = dFintdh1(i) + (j) * apoly (PP(1), n1, j) * hhint(i)**j
+!        dFintdh2(i) = dFintdh2(i) + (j) * apoly (PP(2), n3, j) * hhint(i)**j
+!      end do
+!      !d2Fintdh
+!      d2Fintdh1(i) = 0.0
+!      d2Fintdh2(i) = 0.0
+!      do j = 0, 12
+!        d2Fintdh1(i) = d2Fintdh1(i) + (j**2) * apoly (PP(1), n1,j) * hhint(i)**(j-1)
+!        d2Fintdh2(i) = d2Fintdh2(i) + (j**2) * apoly (PP(2), n3,j) * hhint(i)**(j-1)
+!      end do
+!      !dFintdx
+!      dFintdx1(i) = 0.0
+!      dFintdx2(i) = 0.0
+!      dFintdx1(i) = dFintdh1(i) * dhhintdx(i)
+!      dFintdx2(i) = dFintdh2(i) * dhhintdx(i)
+!      !d2Fintdxdh1
+!      d2Fintdxdh1(i) = d2Fintdh1(i) * dhhintdx(i)
+!      d2Fintdxdh2(i) = d2Fintdh2(i) * dhhintdx(i)
+!      if (testoutput == 3) then
+!        WRITE(*,*)
+!        WRITE(*,*) 'F1: ', fint1(i)
+!        WRITE(*,*) 'F2: ', fint2(i)
+!        WRITE(*,*) 'dF1/dh: ', dFintdh1(i)
+!        WRITE(*,*) 'dF2/dh: ', dFintdh2(i)
+!        WRITE(*,*) 'd2F1/dh2: ', d2Fintdh1(i)
+!        WRITE(*,*) 'd2F2/dh2: ', d2fintdh2(i)
+!        WRITE(*,*) 'd2F1/dhdx: ', d2Fintdxdh1(i)
+!        WRITE(*,*) 'd2F2/dhdx: ', d2Fintdxdh2(i)
+!        WRITE(*,*)
+!      end if
+!
+!      !zS-Calculations
+!      !zS
+!      zsint(i) = xm(1) * Fint1(i) / aint1(i) &
+!      &        + xm(2) * Fint2(i) / aint2(i)
+!
+!      !dzS/dh
+!      dzsintdh(i) = xm(1) * (aint1(i) * dFintdh1(i) - fint1(i) * daintdh1(i)) / aint1(i)**2 &
+!      &           + xm(2) * (aint2(i) * dFintdh2(i) - fint2(i) * daintdh2(i)) / aint2(i)**2
+!
+!      !d2zS/dh2
+!      d2zsintdh(i) = xm(1) * (aint1(i) * d2Fintdh1(i) - fint1(i) * d2aintdh1(i)                                            &
+!      &                       - 2. * dFintdh1(i) * daintdh1(i) + 2. * fint1(i) / aint1(i) * daintdh1(i)**2) / aint1(i)**2  &
+!      &            + xm(2) * (aint2(i) * d2Fintdh2(i) - fint2(i) * d2aintdh2(i)                                            &
+!      &                       - 2. * dFintdh2(i) * daintdh2(i) + 2. * fint2(i) / aint2(i) * daintdh2(i)**2) / aint2(i)**2
+!
+!      !d2zS/(dhdx)
+!      d2zsintdhdx(i) = xm(1) * (- daintdx1(i) * dFintdh1(i) + aint1(1) * d2Fintdxdh1(i) - dFintdx1(i) * daintdh1(i)                &
+!      &                         - fint1(i) * d2aintdxdh1(i) + 2. * daintdx1(i) * fint1(i) / aint1(i) * daintdh1(i)) / aint1(i)**2  &
+!      &              + xm(2) * (- daintdx2(i) * dFintdh2(i) + aint2(1) * d2Fintdxdh2(i) - dFintdx2(i) * daintdh2(i)                &
+!      &                         - fint2(i) * d2aintdxdh2(i) + 2. * daintdx2(i) * fint2(i) / aint2(i) * daintdh2(i)) / aint2(i)**2
+!
+!      !ypsilon
+!      yps(i)  = xm(1) * (1. - 1. / hhint(i) * fint1(i) / aint1(i)) &
+!      &       + xm(2) * (1. - 1. / hhint(i) * fint2(i) / aint2(i))
+!
+!      !dypsilon/dh
+!      dypsdh(i)  = - xm(1) * (  hhint(i) * aint1(i) * dFintdh1(i) - fint1(i) * (aint1(i) &
+!      &                       + hhint(i) * daintdh1(i))) / (hhint(i) * aint1(i))**2      &
+!      &            - xm(2) * (  hhint(i) * aint2(i) * dFintdh2(i) - fint2(i) * (aint2(i) &
+!      &                       + hhint(i) * daintdh2(i))) / (hhint(i) * aint2(i))**2
+!
+!      !d2ypsilon/dh2
+!      d2ypsdh(i) = - xm(1) * (- 2. * hhint(i) * daintdh1(i) * dFintdh1(i) + 2. * fint1(i) * daintdh1(i) - aint1(i) * dFintdh1(i) &
+!      &                       + 2. * fint1(i) * aint1(i) / hhint(i) + hhint(i) * aint1(i) * d2Fintdh1(i)                         &
+!      &                       - hhint(i) * fint1(i) * d2aintdh1(i) + 2. * fint1(i) * hhint(i) / aint1(i) * (daintdh1(i))**2)     &
+!      &                    / (hhint(i) * aint1(i) )**2                                                                           &
+!      &            - xm(2) * (- 2. * hhint(i) * daintdh2(i) * dFintdh2(i) + 2. * fint2(i) * daintdh2(i) - aint2(i) * dFintdh2(i) &
+!      &                       + 2. * fint2(i) * aint2(i) / hhint(i) + hhint(i) * aint2(i) * d2Fintdh2(i)                         &
+!      &                       - hhint(i) * fint2(i) * d2aintdh2(i) + 2. * fint2(i) * hhint(i) / aint2(i) * (daintdh2(i))**2)     &
+!      &                    / (hhint(i) * aint2(i) )**2
+!      !dypsilon/dx
+!      dypsdx(i) = dmx(1) * (1. - fint1(i) / hhint(i) / aint1(i))                                                &
+!      &         + xm(1) * (dFintdh1(i) - fint1(i) / hhint(i) - fint1(i) / aint1(i) * daintdh1(i)) * dhhintdx(i) &
+!      &         + dmx(2) * (1. - fint2(i) / hhint(i) / aint2(i))                                                &
+!      &         + xm(1) * (dFintdh2(i) - fint2(i) / hhint(i) - fint2(i) / aint2(i) * daintdh2(i)) * dhhintdx(i)
+!
+!      !d2ypsilon/(dhdx)
+!      d2ypsdhdx(i) = - xm(1) * (dhhintdx(i) * (2. * aint1(i) / hhint(i) * fint1(i) - aint1(i) * dFintdh1(i) - daintdh1(i) * fint1(i))&
+!      &                       + daintdx1(i) * (fint1(i) - hhint(i) * dFintdh1(i) - 2. * hhint(i) / aint1(i) * daintdh1(i) * fint1(i))&
+!      &                       + dFintdx1(i) * (hhint(i) * daintdh1(i) - aint1(i))                                                    &
+!      &                       + hhint(i) * aint1(i) * d2Fintdxdh1(i) + hhint(i) * fint1(i) * d2aintdxdh1(i))                         &
+!      &                    / (hhint(i) * aint1(i) )**2                                                                               &
+!      &              - dmx(1) * (hhint(i) * aint1(i) * dFintdh1(i) - fint1(i) * aint1(i) + fint1(i) * hhint(i) * daintdh1(i))        &
+!      &                     / (hhint(i) * aint1(i))**2                                                                               &
+!      &              - xm(2) * (dhhintdx(i) * (2. * aint2(i) / hhint(i) * fint2(i) - aint2(i) * dFintdh2(i) - daintdh2(i) * fint2(i))&
+!      &                       + daintdx2(i) * (fint2(i) - hhint(i) * dFintdh2(i) - 2. * hhint(i) / aint2(i) * daintdh2(i) * fint2(i))&
+!      &                       + dFintdx2(i) * (hhint(i) * daintdh2(i) - aint2(i))                                                    &
+!      &                       + hhint(i) * aint2(i) * d2Fintdxdh2(i) + hhint(i) * fint2(i) * d2aintdxdh2(i))                         &
+!      &                    / (hhint(i) * aint2(i) )**2                                                                               &
+!      &              - dmx(2) * (hhint(i) * aint2(i) * dFintdh2(i) - fint2(i) * aint2(i) + fint2(i) * hhint(i) * daintdh2(i))        &
+!      &                     / (hhint(i) * aint2(i))**2
+!
+!      if (testoutput == 3 .or. testoutput == 1) then
+!        WRITE(*,*) 'Element: ', nn, 'GP: ', i
+!        WRITE(*,*) 'h: ', hhint(i)
+!        WRITE(*,*) 'zS: ', zsint(i)
+!        WRITE(*,*) 'dzsintdh: ', dzsintdh(i)
+!        WRITE(*,*) 'd2zsintdh: ', d2zsintdh(i)
+!        WRITE(*,*) 'd2zsintdhdx: ', d2zsintdhdx(i)
+!        WRITE(*,*) 'ypsilon: ', yps(i)
+!        WRITE(*,*) 'dypsdh: ', dypsdh(i)
+!        WRITE(*,*) 'd2ypsdh: ', d2ypsdh(i)
+!        WRITE(*,*) 'dypsdx: ', dypsdx(i)
+!        WRITE(*,*) 'd2ypsdhdx: ', d2ypsdhdx(i)
+!        if (i == 4) pause
+!      end if
+!    end if
   end do
 
  !*****************************************************************************************************************************************
@@ -1051,59 +1059,12 @@ Gaussloop: DO I = 1, NGP
     f(ia) = f(ia) - AMS * (xn(l) * FRN + dnx(l) * FRNX) * qfact(l)
   enddo
 
-  !**********************************************************************
-  !testoutput  testoutput  testoutput  testoutput  testoutput  testoutput
-  !**********************************************************************
-  if (testoutput == 1) then
-    WRITE(*,*) 'Momentum equation, element: ', nn, 'GaussPt.: ', i
-    WRITE(*,*) 'FRN'
-    if (icyc > 0) then
-      if (optin == 1) then
-        WRITE(*,*) 'Term A1: ', + areaint(i) * dvintdt(i)
-        WRITE(*,*) 'Term A2: ', + vflowint(i) * daintdt(i)
-      ELSEIF (optin == 2) then
-        WRITE(*,*) ' Term A: ', + areaint(i) * dvintdt(i)
-      end if
-    end if
+  !testoutput
+  if (testoutput == 1) &
+  &  call Mom (nn, i, optin, icyc, byparts, areaint(i), daintdt(i), daintdx(i), dareaintdh(i), vflowint(i), dvintdt(i), &
+            & dvintdx(i), hhint(i), dhhintdx(i), beiint(i), dbeiintdx(i), zsint(i), yps(i), dypsdx(i), sfint(i), sbot, &
+            & xn, dnx, frn, frnx, ams, grav, sidft)
 
-    if (optin == 1) then
-      WRITE(*,*) ' Term B: ', + vflowint(i)**2 * areaint(i) * dbeiintdx(i)
-      WRITE(*,*) ' Term C: ', + beiint(i) * vflowint(i)**2 * daintdx(i)
-      WRITE(*,*) ' Term D: ', + 2 * beiint(i) * vflowint(i) * areaint(i) * dvintdx(i)
-    ELSEIF (optin == 2) then
-      WRITE(*,*) ' Term D: ', + vflowint(i) * areaint(i) * dvintdx(i)
-    endif
-
-    if     (byparts == 1) then
-      WRITE(*,*) ' Term E: ',  + grav * areaint(i) * dhhintdx(i)
-    ELSEIF (byparts == 2) then
-      WRITE(*,*) 'Term E1: ', - grav * dhhintdx(i) * (dareaintdh(i) * hhint(i)   - areaint(i))/ 2.0
-    ELSEIF (byparts == 3) then
-      WRITE(*,*) 'Term E1: ', - grav * (daintdx(i) * zsint(i)) &
-                            & + grav * areaint(i) * (hhint(i) * dypsdx(i) + yps(i) * dhhintdx(i) )
-    end if
-
-    WRITE(*,*) ' Term F: ', + grav * areaint(i) * sfint(i)
-    WRITE(*,*) ' Term G: ', - grav * areaint(i) * sbot
-    WRITE(*,*) ' Term H: ', + sidft * vflowint(i)
-
-    if (byparts == 2) then
-      WRITE(*,*) 'FRNX'
-      WRITE(*,*) 'Term E2: ', - grav * areaint(i) * hhint(i) / 2.0
-    ELSEIF (byparts == 3) then
-      WRITE(*,*) 'FRNX'
-      WRITE(*,*) 'Term E2: ', - grav * areaint(i) * zsint(i)
-    end if
-
-    WRITE(*,*) 'Einzelterme: ', FRN, FRNX
-    do l = 1, 3
-      WRITE(*,*) 'weighting: ', l,  xn(l), dnx(l)
-      WRITE(*,*) 'assembled value without weighting: ', (xn(l) * FRN + dnx(l) * FRNX)
-      WRITE(*,*) 'assembled value    with weighting: ', ams * (xn(l) * FRN + dnx(l) * FRNX)
-    end do
-
-    pause
-  endif
 
   !*********************************************************************************************************************************
   !continuity equation   continuity equation   continuity equation   continuity equation   continuity equation   continuity equation
@@ -1255,60 +1216,11 @@ Gaussloop: DO I = 1, NGP
     enddo
   enddo
 
-  !**********************************************************************
-  !testoutput  testoutput  testoutput  testoutput  testoutput  testoutput
-  !**********************************************************************
-  if (testoutput == 1) then
-    WRITE(*,*) 'Momentum over depth'
-    WRITE(*,*) 'Direktterme FEEAN'
-
-    if (icyc > 0) then
-      if     (optin == 1) then
-        WRITE(*,*) 'Term A1: ', + dareaintdh(i) * dvintdt(i)
-        WRITE(*,*) 'Term A2: ', + dareaintdh(i) * dhintdt(i)
-      ELSEIF (optin == 2) then
-        WRITE(*,*) 'Term A1: ', + dareaintdh(i) * dvintdt(i)
-      end if
-    end if
-
-    IF     (optin == 1) then
-      WRITE(*,*) ' Term B: ', + vflowint(i)**2 * (dareaintdh(i) * dbeiintdh(i) + areaint(i) * d2beiintdhdx(i))
-      WRITE(*,*) ' Term C: ', + vflowint(i)**2 * (dbeiintdh(i) * daintdx(i) + beiint(i) * d2aidhdx(i))
-      WRITE(*,*) ' Term D: ', + 2.0 * vflowint(i) * dvintdx(i) * (beiint(i) * dareaintdh(i) + areaint(i) * dbeiintdh(i))
-    ELSEIF (optin == 2) then
-      WRITE(*,*) ' Term D', + vflowint(i) * dvintdx(i) * dareaintdh(i)
-    ENDIF
-
-    if     (byparts == 1) then
-      WRITE(*,*) 'Term E1: ', + grav * dareaintdh(i) * dhhintdx(i)
-    ELSEIF (byparts == 2) then
-      WRITE(*,*) 'Term E1: ', - 0.5  * grav * hhint(i) * d2areaintdh(i) * dhhintdx(i)
-    ELSEIF (byparts == 3) then
-      WRITE(*,*) 'Term E1: ', + grav *                                                                            &
-      &     (hhint(i) * dypsdx(i) * dareaintdh(i) + areaint(i) * dypsdx(i) + areaint(i) * hhint(i) * d2ypsdhdx(i) &
-      &      + yps(i) * dhhintdx(i) * dareaintdh(i) + areaint(i) * dhhintdx(i) * dypsdh(i)                        &
-      &      - dzsintdh(i) * daintdx(i) - zsint(i) * d2areaintdh(i))
-    end if
-
-    WRITE(*,*) ' Term F: ', + grav * (areaint(i) * dsfintdh1(i) + sfint(i) * dareaintdh(i))
-    WRITE(*,*) ' Term G: ', - grav * sbot * dareaintdh(i)
-    WRITE(*,*) 'Ableitungsterme FEEBN'
-    if (byparts == 1) then
-      WRITE(*,*) 'Term E2: ', + grav * areaint(i)
-    ELSEIF (byparts == 2) then
-      WRITE(*,*) 'Term E2: ', - grav * 0.5 * (hhint(i) * dareaintdh(i) - areaint(i))
-    ELSEIF (byparts == 3) then
-      WRITE(*,*) 'Term E2: ', + grav * (areaint(i) * yps(i) + areaint(i) * hhint(i) * dypsdh(i) - zsint(i) * dareaintdh(i) )
-    end if
-    if (byparts == 2) then
-      WRITE(*,*) 'Ableitungsterme FEECN'
-      WRITE(*,*) 'Term E3: ', - 0.5 * grav * (hhint(i) * dareaintdh(i) + areaint(i))
-    ELSEIF (byparts == 3) then
-      WRITE(*,*) 'Ableitungsterme FEECN'
-      WRITE(*,*) 'Term E3: ', - grav * (zsint(i) * dareaintdh(i) + areaint(i) * dzsintdh(i))
-    end if
-    pause
-  endif
+  !testoutput
+  if (testoutput == 1) &
+  & call MomOvDep (vflowint(i), dvintdt(i), dvintdx(i), hhint(i), dhintdt(i), dhhintdx(i), beiint(i), dbeiintdh(i), &
+  & d2beiintdhdx(i), areaint(i), daintdx(i), dareaintdh(i), d2areaintdh(i), d2aidhdx(i), sfint(i), dsfintdh1(i), yps(i), &
+  & dypsdx(i), dypsdh(i), d2ypsdhdx(i), zsint(i), dzsintdh(i), grav, sbot, optin, icyc, byparts)
 
 
   !**************************************************************************************************************************
@@ -1374,36 +1286,10 @@ Gaussloop: DO I = 1, NGP
     enddo
   enddo
 
-  !**********************************************************************
-  !testoutput  testoutput  testoutput  testoutput  testoutput  testoutput
-  !**********************************************************************
-  if (testoutput == 1) then
-    WRITE(*,*) 'Momentum over velocity'
-    WRITE(*,*) 'Direktterme FEEAN'
-    if (icyc > 0) then
-      if (optin == 1) then
-        WRITE(*,*) 'Term A1: ', + daintdt(i)
-      end if
-    end if
+  !testoutput
+  if (testoutput == 1) call MomOvVel (daintdt(i), areaint(i), vflowint(i), dbeiintdx(i), beiint(i), &
+                            &              daintdx(i), dvintdx(i), grav, sfint(i), optin, icyc, sidft)
 
-    IF     (optin == 1) then
-      WRITE(*,*) ' Term B: ', + 2.0 * areaint(i)* vflowint(i) * dbeiintdx(i)
-      WRITE(*,*) ' Term C: ', + 2.0 * vflowint(i) * beiint(i) * daintdx(i)
-      WRITE(*,*) ' Term D: ', + 2.0 * beiint(i) * areaint(i) * dvintdx(i)
-    ELSEIF (optin == 2) then
-      WRITE(*,*) ' Term D: ', + areaint(i) * dvintdx(i)
-    ENDIF
-
-    WRITE(*,*) ' Term F: ', + 2.0 * grav * sfint(i) * areaint(i) / vflowint(i)
-    WRITE(*,*) ' Term H: ', + sidft
-    WRITE(*,*) 'Ableitungsterme FEEBN'
-    IF     (optin == 1) then
-      WRITE(*,*) ' Term D: ', + 2.0 * beiint(i) * areaint(i) * vflowint(i)
-    ELSEIF (optin == 2) then
-      WRITE(*,*) ' Term D: ', + vflowint(i) * areaint(i)
-    ENDIF
-    pause
-  end if
 
   !*********************************************************************************************************************
   !CONTINUITY over DEPTH   CONTINUITY over DEPTH   CONTINUITY over DEPTH   CONTINUITY over DEPTH   CONTINUITY over DEPTH
@@ -1482,6 +1368,7 @@ HBCAssign: DO L=1, NCN, 2
     !TODO: This should be replaced by a binary search
     PPA(1) = findPolynom (polyRangeA (n1, :), speclocal, PolySplitsA (n1))
 
+    !1. Implementation; currently in use!!!
     !Do not apply differentiation by parts
     if (byparts == 1) then
       NA = (L-1) * NDF + 1
@@ -1491,7 +1378,10 @@ HBCAssign: DO L=1, NCN, 2
 
       estifm(na, na + 2) = 1.0
       f(na)              = 0.0
-    !Differentiation by parts with half a depth as natural boundary term
+
+    !2. Implementation; not working properly
+    !Differentiation by parts with half a depth in natural boundary term
+    !result is the application of a not physically senseful term
     ELSEIF (byparts == 2) then
       NA = (L-1) * ndf + 1
 
@@ -1511,6 +1401,10 @@ HBCAssign: DO L=1, NCN, 2
 
       f(na) = f(na) - ppl * (spec (n1,3) - vel (3,n1) / 2.)
       estifm (na, na+2) = estifm (na, na+2) - ppl / 2.
+
+    !3. Implementation; not working yet
+    !Differentiation by parts with the real mass center point of the boundary cross section
+    !result would be a physically senseful boundary term
     ELSEIF (byparts == 3) then
       NA = (L-1) * ndf + 1
 
@@ -1562,17 +1456,18 @@ ENDDO HBCAssign
 
 !Boundary conditions - DISCHARGE Q
 QBCAssign: DO N=1, NCN, 2
-  M=NCON(N)
+
+  M = NCON (N)
 
   !EFa aug07, stage-flow boundaries
   IF(ISTLIN(M) .NE. 0) THEN
-    J=ISTLIN(M)
-    AC1=STQ(J)
-    AC2=STQA(J)
-    E0=STQE(J)
-    CP=STQC(J)
+    J   = ISTLIN (M)
+    AC1 = STQ (J)
+    AC2 = STQA (J)
+    E0  = STQE (J)
+    CP  = STQC (J)
   ELSE
-    AC2=0.
+    AC2 = 0.
   ENDIF
   !-
 
@@ -1585,11 +1480,11 @@ QBCAssign: DO N=1, NCN, 2
   IRH = IRW + 2
 
   !cosinus and sinus of nodal direction angle
-  CX = COS(ALFA(M))
-  SA = SIN(ALFA(M))
+  CX = COS (ALFA (M))
+  SA = SIN (ALFA (M))
 
-  !actual velocity
-  VT = VEL(1,M) * CX + VEL(2,M) * SA
+  !current velocity
+  VT = VEL (1, M) * CX + VEL(2,M) * SA
 
   !all other entrees are zero
   DO J=1,NEF
@@ -1682,12 +1577,29 @@ TransitionCorrection: do l = 1, ncn, 2
       ESTIFM (irw, j) = 0.0
     end do
 
-    !set residual entry for 1D-node - 2D-line identity
-    f (irw)           = areacorrection * ah(m) * VT - q2D (TrID)
-    !set derivative over velocity
-    estifm (irw, irw) = - ah(m) * areacorrection
-    !set derivative over depth
-    estifm (irw, irh) = - VT * dahdh(m) * areacorrection
+    !2D-1D: TransLines (i, 4) = 1
+    !1D-2D: TransLines (i, 4) = 2
+
+    FindTransition: do i = 1, MaxLT
+      if (TransLines (i, 1) == nn) EXIT FindTransition
+    end do FindTransition
+
+    !2D-1D:
+    if (TransLines (i, 4) == 1) then
+      !set residual entry for 1D-node - 2D-line identity
+      f (irw)           = areacorrection * ah(m) * VT - q2D (TrID)
+      !set derivative over velocity
+      estifm (irw, irw) = - ah(m) * areacorrection
+      !set derivative over depth
+      estifm (irw, irh) = - VT * dahdh(m) * areacorrection
+    !1D-2D:
+    ELSEIF (TransLines (i, 4) == 2) then
+      !set residual entry for 1D-node - water stage restriction
+      WRITE(*,*) spec(m, 3), VEL (3, m), ao(m)
+      f (irw)           = VEL (3, m) - (spec(m, 3) - ao (m))
+      estifm (irw, irw) = 0.0
+      estifm (irw, irh) = - 1.0
+    end if
   end if
 end do TransitionCorrection
 !-
@@ -1706,64 +1618,26 @@ outer: DO I=1,NCN
 enddo outer
 
 !control output
-if (testoutput == 2) then
-  n3 = ncon(3)
-  n1 = ncon(1)
-  WRITE(*,*) '*************************'
-  WRITE(*,*) 'Knotendaten, Element: ', nn
-  WRITE(*,*) '*************************'
-  WRITE(*,'(a18,2(6x,i4))')    '          Knoten: ', nop(nn,1), nop(nn,3)
-  WRITE(*,'(a18, 1x,f13.8)')   '    Sohlgefaelle: ', sbot
-  WRITE(*,'(a18,2(1x,f13.8))') '          Laenge: ', xl(1), xl(3)
-  WRITE(*,*) area(nn)
-  WRITE(*,'(a18,2(1x,f13.8))') '    Wassertiefen: ', h1, h3
-  WRITE(*,'(a18,2(1x,f13.8))') '      Schl-kurve: ', qh(n1), qh(n3)
-  WRITE(*,'(a18,2(1x,f13.8))') '    akt. Abfluss: ', vel_res(1)*ah(n3), vel_res(3)*ah(n3)
-  WRITE(*,'(a18,2(1x,f13.8))') '    Fliessgeschw: ', vel_res(1), vel_res(3)
-  WRITE(*,'(a18,2(1x,f13.8))') '   Fliessflaeche: ', ah(n1), ah(n3)
-  WRITE(*,'(a18,2(1x,f13.8))') '    Reibgefaelle: ', sfnod(1), sfnod(2)
-  WRITE(*,'(a18,2(1x,f13.8))') '    Wichtung    : ', sfwicht(1), sfwicht(2)
+if (testoutput == 2) &
+  & call ElementResult (nn, ncon(1), ncon(3), nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), qh(n1), qh(n3), vel_res, &
+                       &  ah(n1), ah(n3), sfnod, sfwicht, dahdh(n1), dahdh(n3), d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, &
+                       &  dareaintdh, d2areaintdh, daintdx, d2aintdx, d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schin, &
+                       &  sfint, sdfintdh1, vflowint, dvintdx)
 
-  WRITE(*,'(a18,2(1x,f13.8))') '           dahdh: ', dahdh(n1), dahdh(n3)
-  WRITE(*,'(a18,2(1x,f13.8))') '         d2ahdh2: ', d2ahdh(1), d2ahdh(2)
-  WRITE(*,'(a18,2(1x,f13.8))') '         dQSchdh: ', dqhdh(1), dqhdh(2)
-  WRITE(*,'(a18,2(1x,f13.8))') '       d2QSchdh2: ', d2qhdh(1), d2qhdh(2)
-  WRITE(*,*)                   '******************'
-  WRITE(*,'(a18,4(1x,i4))'  )  '     Gausspunkte: ', (i,i = 1, 4)
-  WRITE(*,*)                   '******************'
-  WRITE(*,'(a18,4(1x,f13.8))') '           hhint: ', (hhint(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '        dhhintdx: ', (dhhintdx(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '         areaint: ', (areaint(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '      dareaintdh: ', (dareaintdh(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '     d2areaintdh: ', (d2areaintdh(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '         daintdx: ', (daintdx(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '        d2aintdx: ', (d2aintdx(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '      d2aintdhdx: ', (d2aidhdx(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '         qschint: ', (qschint(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '        dqsintdh: ', (dqsintdh(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '         d2qsidh: ', (d2qsidh(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '        dqsintdx: ', (dqsintdx(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '        s0schint: ', (s0schint(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '           sfint: ', (sfint(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '       dsfintdh1: ', (dsfintdh1(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '        vflowint: ', (vflowint(i), i = 1, 4)
-  WRITE(*,'(a18,4(1x,f13.8))') '         dvintdx: ', (dvintdx(i), i = 1, 4)
-  pause
-ENDIF
 
 !estifm-testoutput
 !if (testoutput > -1) then
 !
 !  !testing
-!  do i = 1, 3, 2
-!    if (TransitionMember (nop (nn, i)) ) then
-!      WRITE(*,*) '1D-Knoten: ', nop(nn, i)
-!      WRITE(*,*) '***********'
-!      IA = NDF * (i - 1) + 3
-!      WRITE(*,*) 'Gleichung: ', NBC (nop (nn, i), 3)
-!      WRITE(*,*) 'Residuum : ', f (ia), 'Gesamt: ', r1(NBC (nop(nn,i), 3))
-!    end if
-!  end do
+!  !do i = 1, 3, 2
+!  !  if (TransitionMember (nop (nn, i)) ) then
+!  !    WRITE(*,*) '1D-Knoten: ', nop(nn, i)
+!  !    WRITE(*,*) '***********'
+!  !    IA = NDF * (i - 1) + 3
+!  !    WRITE(*,*) 'Gleichung: ', NBC (nop (nn, i), 3)
+!  !    WRITE(*,*) 'Residuum : ', f (ia), 'Gesamt: ', r1(NBC (nop(nn,i), 3))
+!  !  end if
+!  !end do
 !  !testing-
 !
 !  if (Transitionelement (nn)) then
@@ -1841,3 +1715,5 @@ IF(IMAT(NN) .GT. 903) THEN
 ENDIF
 
 END subroutine
+
+

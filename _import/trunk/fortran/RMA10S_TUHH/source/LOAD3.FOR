@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   27 Feb 2008   10:29 am
+C     Last change:  WP   15 Apr 2008    2:17 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -30,7 +30,8 @@ CIPK DEC06
 
 !nis,feb08: for line transitions
       REAL (KIND = 8) :: dset
-      LOGICAL, ALLOCATABLE :: NodeIsDry (:)
+      LOGICAL :: NodeIsDry (1:350)
+      integer :: dea_stat
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -883,20 +884,23 @@ cipk oct98 update to f90
 
 
       !nis,jan07: Add control for 1D-2D-line-transitions
+      do k = 1, 350
+        NodeIsDry (nd) = .false.
+      end do
+
       if (maxLT.ne.0) then
 
         !test for all possible transitions
-        EquationAdjustment: do i=1,MaxLT
+        EquationAdjustment: do i = 1, MaxLT
 
           !look, whether element is part of a transition, if not test next transition
           if (NN .ne. TransLines(i,1)) CYCLE EquationAdjustment
 
           !Get the Line Number and it's length as well as the connecting node number
-          LiNo   = TransLines(i,2)
-          LiLe   = LMT(LiNo)
-          CoNode = TransLines(i,3)
+          LiNo   = TransLines (i, 2)
+          LiLe   = LMT (LiNo)
+          CoNode = TransLines (i, 3)
 
-          ALLOCATE (NodeIsDry(LiLe))
           do k = 1, LiLe
             nd = line (LiNo, k)
 
@@ -935,7 +939,7 @@ cipk oct98 update to f90
           equationassigning: DO K=1, LiLe
 
             !get copy of node number
-            nd = line(LiNo,k)
+            nd = line (LiNo, k)
 
             !deactivating nodes that are dry
             if (NodeIsDry (nd)) then
@@ -950,7 +954,7 @@ cipk oct98 update to f90
               NBC(ND,2) = 0
 
               !the same node must not be processed on
-              IF(NLN == nd) then
+              IF (NLN == nd) then
                 nbc (nd, 3) = 1
                 nbc (nd, 4) = 0
                 nbc (nd, 5) = 0
@@ -971,7 +975,7 @@ cipk oct98 update to f90
 
               !assign equation references
               DO eqdof = 3, 6
-                NBC(ND,eqdof) = -NLN
+                NBC (ND, eqdof) = -NLN
               ENDDO
             endif
 
@@ -983,20 +987,15 @@ cipk oct98 update to f90
           nbc(CoNode,2) = 0
           nbc(CoNode,3) = 1
           DO eqdof = 4,6
-          !DO eqdof = 3,6
-            !NBC (CoNode, eqdof) = -NLN
-            write (*,*) 'CoNode: ', CoNode, 'NLN ', NLN
-            WRITE (*,*) nbc (NLN, eqdof)
             NBC(CoNode,eqdof) = 0
           ENDDO
-          !pause
 
           !if element was found, jump out of Loop; Reason: This loop was only done for the 1D-transitioning element nn.
-          deallocate (NodeIsDry)
+
+
           EXIT EquationAdjustment
         ENDDO EquationAdjustment
       end if
-      !-
 
   260 CONTINUE
 

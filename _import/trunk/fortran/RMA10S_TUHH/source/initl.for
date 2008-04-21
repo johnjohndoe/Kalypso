@@ -1,4 +1,4 @@
-C     Last change:  WP   26 Feb 2008    4:32 pm
+C     Last change:  WP   17 Apr 2008   10:04 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -767,7 +767,7 @@ CIPK MAR01
 
 !nis,jun07: Add initializaton of membership of nodes in a transition
       ALLOCATE (TransitionMember (1: MaxP))
-      ALLOCATE (TransitionElement (1: MaxE))
+      ALLOCATE (TransitionElement (1: MaxE), TransLinePart (1: MaxE))
       ALLOCATE (dspecdh(1:MaxP), dspecdv(1:MaxP))
       do i = 1, MaxP
         TransitionMember(i) = .false.
@@ -776,6 +776,7 @@ CIPK MAR01
       end do
       do i = 1, MaxE
         TransitionElement (i) = .false.
+        TransLinePart (i) = 0
       end do
 !-
 
@@ -783,9 +784,9 @@ CIPK MAR01
 !           1. 1D element number of the coupling
 !           2. continuity line number of the transtion
 !           3. 1D coupling node [nop(TransLines(i,1),3) = TransLines(i,3)]
-      ALLOCATE (TransLines (MaxLT,1:3))
+      ALLOCATE (TransLines (MaxLT,1:4))
       DO i = 1, MaxLT
-        DO j = 1,2
+        DO j = 1,4
           TransLines (i,j) = 0
         ENDDO
       ENDDO

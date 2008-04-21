@@ -1,4 +1,4 @@
-!     Last change:  WP   27 Feb 2008    9:06 am
+!     Last change:  WP   17 Apr 2008   12:57 pm
 subroutine TransVelDistribution
 
 !description
@@ -150,7 +150,7 @@ transitionloop: do i = 1, MaxLT
     if (j < 4) then
 
       !Getting the specific discharges at the transition
-      WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
+      !WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
       call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
       !input:
@@ -260,6 +260,9 @@ transitionloop: do i = 1, MaxLT
   !get original WSLL again
   call GetLineAverageWaterLevel (TransLi, waspi)
 
+  !get water stage restriction for 1D-2D-case on 1D-side
+  spec (TransNo, 3) = waspi
+
   !Calculate velocity-derivative vor every 2D-node
   do j = 1, lmt(TransLines (i, 2))
 
@@ -270,7 +273,7 @@ transitionloop: do i = 1, MaxLT
     vel (1, node) = vel (1, node) + Dv * COS (alfa(node))
     vel (2, node) = vel (2, node) + Dv * SIN (alfa(node))
 
-    WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
+    !WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
     call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
     !Restore velocities

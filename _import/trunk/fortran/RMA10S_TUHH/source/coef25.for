@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   27 Feb 2008   11:48 am
+C     Last change:  WP   17 Apr 2008    4:52 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -57,6 +57,7 @@ CIPK  LAST UPDATED SEP 7 1995
 !EFa aug07, stage-flow-boundaries
       REAL(KIND=8) :: hm1
 !-
+      integer :: TransLine, transtype
 
 C
 !nis,jun07: Changes for matrix output
@@ -66,6 +67,7 @@ C
       CHARACTER (LEN = 16) :: FMT1
       CHARACTER (LEN = 38) :: FMT2
 !-
+
 cycw aug94 add double precision salt
       REAL*8 SALT
 CIPK AUG05      INCLUDE 'BLK10.COM'
@@ -1656,13 +1658,27 @@ C-
 cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 660
 C       COMPUTE BOUNDARY FORCES
+
+
+      !2D-1D: TransLines (i, 4) = 1
+      !1D-2D: TransLines (i, 4) = 2
+      ! with i == no. of connected Transition Line
+      TransLine = TransLinePart (nn)
+      if (TransLine /= 0) then
+        transtype = 0
+      else
+        transtype = TransLines (TransLine, 4)
+      endif
+
+
       DO 650 L=1,NCN,2
         N2=NCON(L+1)
 CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         IF(IBN(N2) .NE. 1  .AND.  IBN(N2) .NE. 10
      +    .AND.  IBN(N2) .NE. 11  .AND.  IBN(N2) .NE. 21
       !nis,feb08: for transition
-     +    .AND. (IBN (n2) /= 2 .AND. (.NOT. TransitionMember (n2))))
+     +    .AND. (IBN (n2) /= 2 .AND. (.NOT. TransitionMember (n2))
+     +           .and. (.not. transtype == 2)))
       !-
      +    GO TO 650
 
@@ -1689,10 +1705,12 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
         ENDIF
         IF(MOD(NFIX(N2)/100,10) .EQ. 2) THEN
           IHD=1
+
         !nis,feb08: for transition
-        ELSEIF (TransitionMember (n2)) then
+        ELSEIF (TransitionMember (n2)) THEN
           IHD = 1
         !-
+
         ELSE
           IHD=0
         ENDIF
@@ -1703,8 +1721,8 @@ CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
             AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
 CIPK APR01 FIX BUG            AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
             IF(IDNOPT .LT. 0) THEN
-              AZER  = AME((L+1)/2)+ADO(N1)  + 
-     +		AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
+              AZER = AME((L+1)/2)+ADO(N1)  +
+     +		           AFACT(N)*(AME((NA+1)/2)+ADO(N3)-AME((L+1)/2)-ADO(N1))
             ELSE
               AZER=AO(N1)+AFACT(N)*(AO(N3)-AO(N1))
             ENDIF
@@ -1872,152 +1890,244 @@ C-
 
         ENDIF
  1050 CONTINUE
-      IF(NR .GT. 90) GO TO 1310
+
+
+      IF(NR <= 90) then
 C-
 C......INSERT EXPERIMENTAL UPSTREAM BOUNDARY FLOWS
 C-
-      DO 1300 N=1,NCN
-      M=NCON(N)
+      throughnodes: DO N=1,NCN
+        !current node number at position n in current element nn
+        M = NCON (N)
+
 C-
 C...... Test for and then retrieve stage flow constants
 C-
-      IF(ISTLIN(M) .NE. 0) THEN
-        !line number to apply h-Q-relationship as BC
-        J=ISTLIN(M)
-        !coefficients/ parameters of h-Q-relationship equation
-        AC1=STQ(J)
-        AC2=STQA(J)
-        E0=STQE(J)
-        CP=STQC(J)
-        !cross sectional area depending on actual water depth, generated in AGEN.sub
-        ASC=ALN(J)
-      ELSE
-        AC2=0.
-      ENDIF
-
-      !nis,jul07: Write 1D-2D-line-Transition values to equation system
-      !if (TransitionMember(M)) then
-      !
-      !  !get momentum equation of 2D-node at transition
-      !  IRW = NDF * (N - 1) + 1
-      !  IRH = NDF * (N - 1) + 3
-      !
-      !  !calculate resulting velocity
-      !  VX  = VEL (1,M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
-      !
-      !  !reset Jacobian line
-      !  do j = 1, nef
-      !    estifm(irw, j) = 0.0
-      !  enddo
-      !
-      !  !form specific discharge values like inner boundary condition
-      !  F (IRW)           = spec(M, 1) - vx * vel(3, M)
-      !  ESTIFM (IRW, IRW) = vel(3, M)  !- dspecdv(M)
-      !  ESTIFM (IRW, IRH) = vx         !- dspecdh(M)
-      !end if
-      !-
-
-      NFX=NFIX(M)/1000
-      IF(NFX .LT. 13) GO TO 1300
-      IRW=NDF*(N-1)+1
-      IF(NFX .EQ. 13) IRW=IRW+1
-      IRH=NDF*(N-1)+3
-      VX=VEL(1,M)*COS(ALFA(M))+VEL(2,M)*SIN(ALFA(M))
-      DO 1200 J=1,NEF
- 1200 ESTIFM(IRW,J)=0.
-
-      IF(MOD(N,2) .EQ. 0) GO TO 1250
-      !nis,com: AC2.eq.0, if there was no h-Q-relationship, but just a water level BC
-      IF(AC2 .EQ. 0.) THEN
-        ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)
-        ESTIFM(IRW,IRH)=AREA(NN)*VX
-        F(IRW)=AREA(NN)*(SPEC(M,1)-VX*VEL(3,M))
-        !EFa aug07, stage-flow boundaries (table)
-        if (istab(m).gt.0.) then
-          af = vel(3,m) / asc
-          if (spec(m,1).lt.0.) then
-            adir = -1.
-          else
-            adir = 1.
-          end if
-          srfel = hel(m) + ao(m)
-          call stfltab(m,srfel,dfdh,ff,1)
-          f(irw) = area(nn) * (af * adir * ff - vx * vel(3,m))
-          estifm(irw,irw) = area(nn) * vel(3,m)
-          estifm(irw,irh) = area(nn) * (vx - af * adir * dfdh)
-        end if
-        !-
-      !nis,com: Otherwise (AC2.ne.0), there is an h-Q-relationship present
-      ELSE
-        AF=VEL(3,M)/ASC
-CIPK NOV97    F(IRW)=AREA(NN)*(AF*(AC1+AC2*(VEL(3,M)+AO(M)-E0)**CP)-VX
-CIPK NOV97     1         *VEL(3,M))
-        IF (IDNOPT.GE.0) THEN
-          WSEL=VEL(3,M)+AO(M)
+        IF (ISTLIN (M) /= 0) THEN
+          !line number to apply h-Q-relationship as BC
+          J = ISTLIN (M)
+          !coefficients/ parameters of h-Q-relationship equation
+          AC1 = STQ (J)
+          AC2 = STQA (J)
+          E0  = STQE (J)
+          CP  = STQC (J)
+          !cross sectional area depending on actual water depth, generated in AGEN.sub
+          ASC = ALN (J)
         ELSE
-          HM = VEL(3,M)
-          CALL AMF(HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
-          WSEL = HS+ADO(M)
+          !if there was no h-Q-relationship in form of a formula, then fix AC2 to 0.0, because this is used as a checker
+          AC2 = 0.
         ENDIF
-        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(WSEL-E0)**CP)-VX
-     1            *VEL(3,M))
-CIPK NOV97
-        ESTIFM(IRW,IRW)=AREA(NN)*VEL(3,M)
-CIPK NOV97        ESTIFM(IRW,IRH)=AREA(NN)*(VX-AF*AC2*CP*(VEL(3,M)+AO(M)-E0)**
-CIPK NOV97     1                  (CP-1.0))
-        ESTIFM(IRW,IRH)=AREA(NN)*(VX-AF*AC2*CP*(WSEL-E0)
-     1                     **(CP-1.0))
-CIPK NOV97
-      ENDIF
-      GO TO 1300
- 1250 N1=NCON(N-1)
-      N2=MOD(N+1,NCN)
-      N3=NCON(N2)
-      HM=(VEL(3,N1)+VEL(3,N3))/2.
-      IRI=(N2-1)*NDF+3
-      IF(AC2 .EQ. 0.) THEN
-        ESTIFM(IRW,IRW)=AREA(NN)*HM
-        ESTIFM(IRW,IRH-NDF)=AREA(NN)*VX/2.
-        ESTIFM(IRW,IRI)=AREA(NN)*VX/2.
-        F(IRW)=AREA(NN)*(SPEC(M,1)-VX*HM)
-        !EFa aug07, stage-flow boundaries (table)
-        if (istab(m).gt.0.) then
-          af = vel(3,m) / asc
-          if (spec(m,1).lt.0.) then
-            adir = -1.
+
+        !nis,jul07: Write 1D-2D-line-Transition values to equation system
+        if (TransitionMember (M) .and. transtype == 2) then
+
+
+          if (n == 2) then
+            !get neighbouring node
+            N1 = NCON (N - 1)
+            N2 = MOD (N + 1, NCN)
+            N3 = NCON (N2)
+            hm = 0.5 * (vel (3, n1) + vel (3, n3))
+            !get equation number for midside node's second neighbour derivative over water depth
+            IRI = (N2 - 1) * NDF + 3
           else
-            adir = 1.
+            hm = vel (3, m)
           end if
-          hm1 = (hel(n1) + hel(n3)) / 2.
-          srfel = hm1 + ao(m)
-          call stfltab(m,srfel,dfdh,ff,1)
-          f(irw) = area(nn) * (af * adir * ff - vx * hm)
-          estifm(irw,irw) = area(nn) * hm
-          estifm(irw,irh-ndf) = area(nn) / 2. * (vx - af * adir * dfdh)
-          estifm(irw,iri) = estifm(irw,irh-ndf)
+
+          !get momentum equation of 2D-node at transition
+          IRW = NDF * (N - 1) + 1
+          IRH = NDF * (N - 1) + 3
+
+          !calculate resulting velocity
+          VX  = VEL (1, M) * COS (ALFA (M)) + VEL (2,M) * SIN (ALFA (M))
+
+          !reset Jacobian line
+          do j = 1, nef
+            estifm(irw, j) = 0.0
+          enddo
+
+          !form specific discharge values like inner boundary condition
+          F (IRW)           = spec(M, 1) - vx * hm
+          ESTIFM (IRW, IRW) = hm  ! - dspecdv(M)
+
+          if (n == 2) then
+            ESTIFM (IRW, IRH) = vx  ! - dspecdh(M)
+          else
+            ESTIFM (irw, IRH - ndf) = 0.5 * vx
+            ESTIFM (irw, iri)       = ESTIFM (irw, IRH - ndf)
+          end if
         end if
-        !-
-      ELSE
-        AF=HM/ASC
-CIPK NOV97        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(HM+AO(M)-E0)**CP)-VX*HM)
-        IF (IDNOPT.GE.0) THEN
-          AOL=AO(M)
-        ELSE
-          CALL AMF(HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
-          AOL = ADO(M) +HS
+
+        !check for boundary condition type
+        NFX = NFIX (M) / 1000
+
+        !nfx >= means flow boundary condition
+        IF (NFX >= 13) then
+
+          !get the local line number of the boundary condition equation
+          IRW = NDF * (N - 1) + 1
+          IF (NFX == 13) IRW = IRW + 1
+          IRH = NDF * (N - 1) + 3
+
+          !calculate the velocity
+          VX = VEL (1, M) * COS (ALFA (M)) + VEL (2, M) * SIN (ALFA (M))
+
+          !initialize the line of the matrix, where the boundary condition will be inserted
+          DO J = 1, NEF
+            ESTIFM (IRW, J) = 0.
+          enddo
+
+          !no midside node!
+          IF (MOD (N, 2) /= 0) then
+
+            !AC2 == 0 means, that there is no h-Q-relationship defined with a formula, but just a discharge boundary condition
+            IF (AC2 .EQ. 0.) THEN
+
+              !derivatives over velocity and waterdepth of specific discharge boundary condition
+              ESTIFM (IRW, IRW) = AREA (NN) * VEL (3, M)
+              ESTIFM (IRW, IRH) = AREA (NN) * VX
+              !residual equation for specific discharge boundary condition
+              F (IRW) = AREA (NN) * (SPEC (M, 1) - VX * VEL (3, M))
+
+              !istab(m) > 0 means h-Q-relationship in tabular data form
+              if (istab (m) > 0.) then
+
+                !get reciprocal of averaged cross sectional width
+                af = vel (3, m) / asc
+
+                !get direction factor of flow
+                if (spec (m, 1) < 0.) then
+                  adir = -1.
+                else
+                  adir = 1.
+                end if
+                !calculate surface elevation
+                srfel = hel(m) + ao(m)
+
+                !calculate flow and derivative of flow over h from tabular data
+                call stfltab (m, srfel, dfdh, ff, 1)
+
+                !form residual equation
+                f(irw) = area(nn) * (af * adir * ff - vx * vel(3, m))
+                !form derivatives over v and h from residual equation
+                estifm (irw, irw) = area (nn) * vel(3, m)
+                estifm (irw, irh) = area (nn) * (vx - af * adir * dfdh)
+              end if
+
+            !Otherwise (AC2 /= 0), h-Q-relationship is present in formula form
+            ELSE
+
+              !get reciprocal of averaged cross sectional width
+              AF = VEL (3, M) / ASC
+
+              !Calculate the water stage without considering the marsh algorithm
+              IF (IDNOPT >= 0) THEN
+                WSEL = VEL (3, M) + AO (M)
+              !Calculate the water stage with Marsh option being active, if idnopt == -1 or idnopt == -2
+              ELSE
+                HM = VEL (3, M)
+                CALL AMF (HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
+                WSEL = HS + ADO (M)
+              ENDIF
+              !calculate residual equation
+              F (IRW) = AREA (NN) *
+     1          (AF * (AC1 + AC2 * (WSEL - E0)**CP) - VX * VEL (3, M))
+              !Calculate derivatives over v and h
+              ESTIFM (IRW, IRW) = AREA (NN) * VEL (3, M)
+              ESTIFM (IRW, IRH) = AREA (NN) *
+     1          (VX - AF * AC2 * CP * (WSEL - E0)**(CP - 1.0))
+
+            ENDIF
+          !for midside node (mod (n,2) == 0)
+          ELSE
+
+            !get neighbouring node
+            N1 = NCON (N - 1)
+            N2 = MOD (N + 1, NCN)
+            N3 = NCON (N2)
+            !get water depth at midside node, by linear averaging
+            HM = (VEL (3, N1) + VEL (3, N3)) / 2.
+            !get equation number for midside node flow boundary condition
+            IRI = (N2 - 1) * NDF + 3
+
+            !AC2 == 0. means flow boundary condition without h-Q-relationship in formula form
+            IF (AC2 == 0.) THEN
+
+              !set up derivatives over v at midside node and water depth at neighbouring nodes
+              ESTIFM (IRW, IRW) = AREA (NN) * HM
+              !first neighbouring water depth
+              ESTIFM (IRW, IRH - NDF) = AREA (NN) * VX / 2.
+              !second neighbouring water depth; the formula becomes the same!
+              ESTIFM (IRW, IRI) = ESTIFM (IRW, IRH - NDF)
+              !residual equation
+              F (IRW) = AREA (NN) * (SPEC (M, 1) - VX * HM)
+
+              !istab(m) > 0 means h-Q-relationship in tabular data form
+              if (istab (m) > 0.) then
+
+                !get reciprocal of averaged cross sectional width
+                af = vel(3,m) / asc
+
+                !get direction factor of flow
+                if (spec(m,1).lt.0.) then
+                  adir = -1.
+                else
+                  adir = 1.
+                end if
+
+                !get water stage at midside node
+                hm1 = (hel (n1) + hel (n3)) / 2.
+                srfel = hm1 + ao(m)
+
+                !calculate flow and derivative of flow over h from tabular data
+                call stfltab (m, srfel, dfdh, ff, 1)
+
+                !calculate residual equation
+                f(irw) = area(nn) * (af * adir * ff - vx * hm)
+                !set up derivatives over v at midside node and water depth at neighbouring nodes
+                estifm (irw, irw) = area(nn) * hm
+                !derivative over first neighbouring water depth
+                estifm (irw, irh - ndf) = area (nn) / 2. *
+     +            (vx - af * adir * dfdh)
+                !derivative over second neighbouring water depth; the formula becomes the same!
+                estifm (irw, iri) = estifm (irw, irh - ndf)
+
+              end if
+
+            !Otherwise (AC2 /= 0), h-Q-relationship is present in formula form
+            ELSE
+
+              !get reciprocal of averaged cross sectional width
+              AF = HM / ASC
+
+              !Calculate the water stage without considering the marsh algorithm
+              IF (IDNOPT.GE.0) THEN
+                AOL=AO(M)
+
+              !Calculate the water stage with Marsh option being active, if idnopt == -1 or idnopt == -2
+              ELSE
+                CALL AMF(HS,HM,AKP(M),ADT(M),ADB(M),AMEL,DUM2,0)
+                AOL = ADO(M) +HS
+              ENDIF
+
+              !calculate residual equation
+              F (IRW) = AREA (NN) *
+     1          (AF * (AC1 + AC2 * (HM + AOL - E0)**CP) - VX * HM)
+              !Calculate derivatives over v and h
+              ESTIFM (IRW, IRW) = AREA (NN) * HM
+              !derivative over first neighbouring water depth
+              ESTIFM (IRW, IRH - NDF) = AREA (NN) / 2. *
+     1          (VX - AF * AC2 * CP * (HM + AOL - E0)**(CP - 1.0))
+              !derivative over second neighbouring water depth; the formula becomes the same!
+              ESTIFM (IRW, IRI) = ESTIFM (IRW, IRH - NDF)
+
+            ENDIF
+          ENDIF
         ENDIF
-        F(IRW)=AREA(NN)*(AF*(AC1+AC2*(HM+AOL-E0)**CP)-VX*HM)
-CIPK NOV97
-        ESTIFM(IRW,IRW)=AREA(NN)*HM
-CIPK NOV97        ESTIFM(IRW,IRH-NDF)=AREA(NN)/2.*(VX-AF*AC2*CP*(HM+AO(M)-E0)**
-CIPK NOV97     1                    (CP-1.0))
-        ESTIFM(IRW,IRH-NDF)=AREA(NN)/2.*(VX-AF*AC2*CP*
-     1                         (HM+AOL-E0)**(CP-1.0))
-CIPK NOV97
-        ESTIFM(IRW,IRI)=ESTIFM(IRW,IRH-NDF)
+      ENDDO throughnodes
+
       ENDIF
- 1300 CONTINUE
- 1310 CONTINUE
+
 CIPK JUN05
  1320 CONTINUE
 c      IF(IDNOPT .LT. 0) THEN

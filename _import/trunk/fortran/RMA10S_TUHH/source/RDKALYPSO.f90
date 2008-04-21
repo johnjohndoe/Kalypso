@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2008    2:54 pm
+!     Last change:  WP   17 Apr 2008    1:01 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1482,7 +1482,7 @@ reading: do
         READ (linie, '(a2,i10)') id_local, i
         IF (i.gt.elcnt) elcnt = i
       ELSE
-        READ (linie, '(a2,6i10)') id_local, i, (nop(i,k),k=1,5)
+        READ (linie, *) id_local, i, (nop(i,k),k=1,5)
         !Increase number of 1D-2D-TRANSITION ELEMENTS
         MaxT = MaxT + 1
       END IF
@@ -1490,9 +1490,10 @@ reading: do
     !-
 
     !NiS,nov06: Transition line elements between 1D- and 2D-networks with an element to line connection
-    !           TransLines(i,1) : transitioning element
-    !           TransLines(i,2) : transitioning line
-    !           TransLines(i,3) : node, which is connected on the 1D side of the transition element
+    !           TransLines(i,1): transitioning element
+    !           TransLines(i,2): transitioning line
+    !           TransLines(i,3): node, which is connected on the 1D side of the transition element
+    !           TransLines(i,4):
     if (linie(1:2).eq.'TL') then
       IF (KSWIT.eq.1) THEN
         READ (linie,'(a2,i10)') id_local, i
@@ -1500,7 +1501,13 @@ reading: do
         IF (i.gt.TLcnt) TLcnt = i
       ELSE
         WRITE(*,*) MaxLT
-        READ (linie, '(a2,4i10)') id_local, i, (TransLines(i,k),k=1,3)
+        READ (linie, '(a2,5i10)') id_local, i, (TransLines (i, k), k = 1, 4)
+
+        !Apply default TransLines (i)
+        if (istat /= 0 .and. TransLines(i, 4) == 0 .or. (TransLines (i, 4) /= 1 .and. TransLines (i, 4) /= 2) ) then
+          TransLines (i, 4) = 1
+        end if
+
         TransitionElement (TransLines(i, 1)) = .true.
 !        MaxLT = MaxLT + 1
       END IF
@@ -1755,12 +1762,12 @@ DO i = 1, arccnt
       !the ARC, that defines the 1D-ELEMENT for later NODE extraction
       ELSE
         !No 4th NODE at normal 1D-ELEMENTS
-        IF (nop(arc(i,3),4).eq.0) THEN
+        IF (nop(j,4).eq.0) THEN
           elem(j,1) = -1
         !4th NODE at 1D-2D-transition ELEMENTS; nodes for 1D-2D-TRANSITION ELEMENTS were already assigned in the reading section
         ELSE
           elem(j,1) = -2
-        ENDIF 
+        ENDIF
         !Remember the ARC of the 1D-ELEMENT
         elem(j,2) = i
       ENDIF
@@ -2251,10 +2258,10 @@ DO i = 1, elcnt
   IF (imat (nfixh (i) ) .gt.0) elfix (nfixh (i) ) = elfix (nfixh (i) ) + 1
 END DO
 
-
 DO i = 1, elcnt
   IF ( (imat (i) .gt. 0) .and. (elfix (i) .ne. 1) ) goto 4003
 END DO
+
 !NiS,mar06: unit name changed; changed iout to Lout
 write (Lout, 107)
 write ( * ,  107)
@@ -2384,19 +2391,7 @@ neighbours: do i=1,MaxE
       !array resetting for next transition, that is probably be from other size
       DEALLOCATE(nop_temp)
 
-
-      !nis,feb07: Here is a conflict!!!
-
-!nis,may07
-!Add midside node for polynom approach; at the moment there neighbourhood relation between the nodes must not be calculated
-    !nis,may07 Change if-question for numbered Polynom elements
-    !EFa Nov06, gesonderte Berechnung für 1D-Teschke-Elemente
-    !elseIF(nop(i,2).EQ.-9999) then
-    !ELSEIF(nop(i,2) < -1000) then
     ELSEIF(imat(i) == 89) then
-    !-
-!Add midside node for polynom approach
-!-
       node1 = nop(i,1)
       node2 = nop(i,3)
       nconnect(node1) = nconnect(node1)+1
@@ -2409,13 +2404,9 @@ neighbours: do i=1,MaxE
 
 !nis,dec06: for increasing speed of program, bring line to outside of loop
         node1 = nop(i,j)
-!-
 
         inner: do l=1,ncorn(i)
 
-!nis,dec06: for increasing speed of program, bring line to outside of loop
-!          node1 = nop(i,j)
-!-
           node2 = nop(i,l)
 
           IF (node1 .ne. node2) THEN
