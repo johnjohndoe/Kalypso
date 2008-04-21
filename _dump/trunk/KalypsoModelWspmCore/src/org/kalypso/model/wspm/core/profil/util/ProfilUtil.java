@@ -48,6 +48,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IComponent;
@@ -57,7 +58,6 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypso.model.wspm.core.Messages;
 
 /**
  * @author kimwerner
@@ -446,7 +446,6 @@ public class ProfilUtil
     int i = 0;
     for( final IRecord p : points )
     {
-
       final IComponent cBreite = ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE );
       final Object x = p.getValue( cBreite );
       final Object y = p.getValue( pointProperty );

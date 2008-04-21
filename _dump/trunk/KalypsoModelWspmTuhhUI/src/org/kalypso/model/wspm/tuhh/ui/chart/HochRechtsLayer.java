@@ -66,7 +66,7 @@ import de.belger.swtchart.layer.IChartLayer;
 
 public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
-  private IProfil m_profile;
+  private final IProfil m_profile;
 
   private final Color m_color;
 
