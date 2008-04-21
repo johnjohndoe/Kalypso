@@ -1,4 +1,4 @@
-C     Last change:  EF   25 May 2007   10:57 am
+C     Last change:  WP   11 Apr 2008    2:33 pm
 cipk  last update dec 2003   add iedsw dependence
 CIPK  LAST UPDATE MAR 18 2003 add diffusion switch ( default of  0 uses old formulations
 cipk  last update Jan 12 2001 add test for IMAT
@@ -24,8 +24,8 @@ C
       IF (IMAT(LL) .EQ. 0) GO TO 90
 
 cipk dec03 add iedsw depedence
-	LLL=MOD(IMAT(LL),1000)
-	IEDSW=IEDSW1(LLL)
+        LLL=MOD(IMAT(LL),1000)
+        IEDSW=IEDSW1(LLL)
 
 cipk OCT 96 add new options
 cipk nov97 clarify options see below      IF(IEDSW .EQ. 0  ) GO TO 90
@@ -75,10 +75,10 @@ cipk apr97
 CIPK MAR03 add diffusion switch ( default of  0 uses old formulations)
 
        IF(IEDSW .EQ. 4) THEN
-	   IF(IDIFSW .EQ. 0  .OR. IDIFSW .EQ. 5) THEN
-	     GO TO 90
-	   ENDIF
-	 ENDIF
+         IF(IDIFSW .EQ. 0  .OR. IDIFSW .EQ. 5) THEN
+           GO TO 90
+         ENDIF
+       ENDIF
 C
       DO 10 N=1,8
          ND = NOP(LL,N)
@@ -228,7 +228,7 @@ CIPK NOV97     open(75,file='elemdir.dat')
            if (imat(j) /= 89) then
            !-
 cipk jan01 put in test
-	     if(imat(j) .gt. 0) then
+             if(imat(j) .gt. 0) then
                angx = th(j)
 c              if (angx .lt. 0.)  angx = angx + 3.14159
 CC             write(75,1500) j, (nop(j,k),k=1,8), nfixh(j),angx
