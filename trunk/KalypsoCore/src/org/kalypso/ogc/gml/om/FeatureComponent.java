@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
- * A component wich was previously read from a feature.
+ * A component which was previously read from a feature.
  * 
  * @author schlienger
  */
@@ -66,7 +66,7 @@ public class FeatureComponent extends AbstractComponent
 {
   private final Feature m_itemDef;
 
-  private String m_uri;
+  private final String m_uri;
 
   public FeatureComponent( final Feature itemDef, final String uri )
   {
