@@ -69,7 +69,7 @@ public class CascadingThemeHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().equals( themeName ) )
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
     return null;
