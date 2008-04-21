@@ -1,4 +1,4 @@
-!Last change:  WP   17 Apr 2008   10:01 am
+!Last change:  NIS  18 Apr 2008   10:37 am
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1577,8 +1577,10 @@ TransitionCorrection: do l = 1, ncn, 2
       ESTIFM (irw, j) = 0.0
     end do
 
-    !2D-1D: TransLines (i, 4) = 1
-    !1D-2D: TransLines (i, 4) = 2
+    !2D -> 1D (H-Q): TransLines (i, 4) = 1
+    !2D <- 1D (Q-H): TransLines (i, 4) = 2
+    !2D <> 1D (H-H): TransLines (i, 4) = 3
+
 
     FindTransition: do i = 1, MaxLT
       if (TransLines (i, 1) == nn) EXIT FindTransition
@@ -1593,7 +1595,7 @@ TransitionCorrection: do l = 1, ncn, 2
       !set derivative over depth
       estifm (irw, irh) = - VT * dahdh(m) * areacorrection
     !1D-2D:
-    ELSEIF (TransLines (i, 4) == 2) then
+    ELSEIF (TransLines (i, 4) == 2 .or. TransLines (i, 4) == 3) then
       !set residual entry for 1D-node - water stage restriction
       WRITE(*,*) spec(m, 3), VEL (3, m), ao(m)
       f (irw)           = VEL (3, m) - (spec(m, 3) - ao (m))

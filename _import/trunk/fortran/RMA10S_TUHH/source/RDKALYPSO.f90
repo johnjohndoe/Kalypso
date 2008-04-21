@@ -1,4 +1,4 @@
-!     Last change:  WP   17 Apr 2008    1:01 pm
+!     Last change:  NIS  18 Apr 2008   10:28 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1504,7 +1504,9 @@ reading: do
         READ (linie, '(a2,5i10)') id_local, i, (TransLines (i, k), k = 1, 4)
 
         !Apply default TransLines (i)
-        if (istat /= 0 .and. TransLines(i, 4) == 0 .or. (TransLines (i, 4) /= 1 .and. TransLines (i, 4) /= 2) ) then
+        if (istat /= 0 .and. TransLines(i, 4) == 0 &
+        &   .or. &
+        &   (TransLines (i, 4) /= 1 .and. TransLines (i, 4) /= 2 .and. TransLines (i, 4) /= 3) ) then
           TransLines (i, 4) = 1
         end if
 

@@ -1,4 +1,4 @@
-!     Last change:  WP   17 Apr 2008   12:57 pm
+!     Last change:  NIS  18 Apr 2008    3:40 pm
 subroutine TransVelDistribution
 
 !description
@@ -150,7 +150,7 @@ transitionloop: do i = 1, MaxLT
     if (j < 4) then
 
       !Getting the specific discharges at the transition
-      !WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
+      WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'      
       call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
       !input:

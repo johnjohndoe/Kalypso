@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   17 Apr 2008    4:52 pm
+C     Last change:  NIS  18 Apr 2008    3:41 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1659,28 +1659,39 @@ cipk jun05
       IF(NR .GT. 90  .and.  nr .lt. 100) GO TO 660
 C       COMPUTE BOUNDARY FORCES
 
+      !2D -> 1D (h-Q): TransLines (i, 4) = 1
+      !2D <- 1D (Q-h): TransLines (i, 4) = 2
+      !2D <> 1D (h-h): TransLines (i, 4) = 3
 
-      !2D-1D: TransLines (i, 4) = 1
-      !1D-2D: TransLines (i, 4) = 2
       ! with i == no. of connected Transition Line
       TransLine = TransLinePart (nn)
-      if (TransLine /= 0) then
+
+      if (TransLine == 0) then
         transtype = 0
       else
         transtype = TransLines (TransLine, 4)
       endif
 
-
-      DO 650 L=1,NCN,2
+      BoundaryForces: DO L=1,NCN,2
         N2=NCON(L+1)
 CIPK JUN05        IF(IBN(N2) .NE. 1) GO TO 650
-        IF(IBN(N2) .NE. 1  .AND.  IBN(N2) .NE. 10
-     +    .AND.  IBN(N2) .NE. 11  .AND.  IBN(N2) .NE. 21
-      !nis,feb08: for transition
-     +    .AND. (IBN (n2) /= 2 .AND. (.NOT. TransitionMember (n2))
-     +           .and. (.not. transtype == 2)))
+        IF (IBN (N2) /= 1  .AND. IBN (N2) /= 10 .AND.
+     +      IBN (N2) /= 11 .AND. IBN (N2) /= 21 .AND.
+            !nis,feb08: for transition, has to be checked further, se below
+     +      IBN (n2) /= 2)
+     +    CYCLE BoundaryForces
+
+        !Force only TransitionMember-nodes with transtype == 1 and transtype == 3 to be
+        if (IBN (N2) == 2) then
+          !all ibn == 2 - nodes are potentially transition nodes; consider only the TransitionMember - nodes
+          if (.not. TransitionMember (N2)) CYCLE BoundaryForces
+
+          !from the TransitionMember - nodes only types 1 and 3 are considerable
+          if ((.NOT. transtype == 1) .and. (.NOT. transtype == 3))
+     +      CYCLE BoundaryForces
+
+        end if
       !-
-     +    GO TO 650
 
         N1=NCON(L)
         NA=MOD(L+2,NCN)
@@ -1807,7 +1818,7 @@ CMAY93              TFRIC=TEMP*FFACT*FTF(2)
   575       CONTINUE
   580     CONTINUE
   600   CONTINUE
-  650 CONTINUE
+      ENDDO BoundaryForces
   660 CONTINUE
 C-
 C- APPLY TRANSFORMATIONS TO STIFFNESS AND FORCE MATRICES FOR SLOPING B. C.
@@ -1921,7 +1932,7 @@ C-
         !nis,jul07: Write 1D-2D-line-Transition values to equation system
         if (TransitionMember (M) .and. transtype == 2) then
 
-
+          !for midside nodes
           if (n == 2) then
             !get neighbouring node
             N1 = NCON (N - 1)
@@ -1930,6 +1941,8 @@ C-
             hm = 0.5 * (vel (3, n1) + vel (3, n3))
             !get equation number for midside node's second neighbour derivative over water depth
             IRI = (N2 - 1) * NDF + 3
+
+          !for corner nodes
           else
             hm = vel (3, m)
           end if
