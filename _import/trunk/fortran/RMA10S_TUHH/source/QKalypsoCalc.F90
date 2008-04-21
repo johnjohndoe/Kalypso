@@ -1,4 +1,4 @@
-!     Last change:  WP   26 Feb 2008    3:53 pm
+!     Last change:  WP   11 Apr 2008    2:29 pm
 !purpose of the subroutine is to calculate the average water level along a CCL.
 
 subroutine getLineAverageWaterLevel(CCL, waspi)
@@ -30,12 +30,6 @@ waspi = 0
 
 !Counter of dry nodes
 lump = lmt (CCL)
-
-!CCL-Fliesstiefen control output
-WRITE(999,*) 'Fliesstiefenkontrolle an der Linie',CCL
-WRITE(999,*) 'Anzahl der Knoten ist', lmt(CCL)
-WRITE(999,*)
-WRITE(999,'(a7,2a11)') '   node', '    calcFt.', '   marshFt.'
 
 !Process every node of CCL
 DO k = 1, lmt (CCL)

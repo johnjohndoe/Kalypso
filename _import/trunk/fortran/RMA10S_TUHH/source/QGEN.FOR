@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Nov 2007    9:20 am
+C     Last change:  WP   17 Apr 2008    1:02 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -64,13 +64,6 @@ C-
 cipk aug05      INCLUDE 'BLK10.COM'
 C-
       DATA VOID/-1.E20/
-
-      !nis,sep06,testfileouput-------------------------------------
-      iostaterror = 0
-      WRITE(filename,'(a,i2.2,a)')  'Randbedingungen_Linie',J,'.txt'
-      open (999,filename,iostat = iostaterror)
-      if (iostaterror.ne.0) STOP 'file does not work'
-      !------------------------------------------------------------
 
       NullVal = 0.0
 
@@ -187,6 +180,7 @@ C-
      +               'boundary conditions'
         WRITE(*,*) 'Linie CCL: ', J
         WRITE(*,*) 'Anzahl Knoten: ', lmt(J)
+        WRITE(*,*) 'required Q: ', QREQ
         WRITE(*,*)
         !---------------------------------------------------------------
 

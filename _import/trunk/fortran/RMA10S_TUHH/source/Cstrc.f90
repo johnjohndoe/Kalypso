@@ -1,4 +1,4 @@
-!     Last change:  WP   22 Feb 2008   12:07 pm
+!     Last change:  WP   10 Apr 2008    2:06 pm
 !     Last change:  NIS  21 Feb 2008    8:15 am
 !ipk  last update nov 28 2006 allow for all 1-d control structure options
 SUBROUTINE CSTRC(NN)
@@ -78,15 +78,7 @@ ELSE
   F(1)=AJ(NM)
 ENDIF
 
-!testing
-!WRITE(*,*) 'general informations'
-!WRITE(*,*) 'Evaluating equation 1'
-!WRITE(*,*) '   Element: ', nn
-!WRITE(*,*) '  upstream: ', NOP(nn, 1)
-!WRITE(*,*) 'downstream: ', NOP(nn, 3)
-!testing-
-
-!     skip mid-side in loop
+!skip mid-side in loop
 DO  KK = 1, NCN, 2
   !NN = Element ID
   !KK = No of node in element (here only 1st and 3rd necessary)
@@ -112,7 +104,8 @@ DO  KK = 1, NCN, 2
     if (width(n1) == 0.0) then
       !estifm (1, EqA) = dir (n1) * ah (n1)
       estifm (1, EqA) = - dirfact * ah (n1)! * u (kk) / ABS (u (kk))
-    !geometric approach
+
+    !geometric approach, using absolute discharge
     else
       !ESTIFM (1, EqA) = DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
       ESTIFM (1, EqA) = DIRfact * (WIDTH (N1) + (SS1 (N1) + SS2 (N1)) / 2. * VEL (3, N1)) * VEL (3, N1)
@@ -127,8 +120,8 @@ DO  KK = 1, NCN, 2
     !WRITE(*,*) '    dF/dv: ', estifm (1, Eqa)
     !WRITE(*,*)
     !testing-
-
     !-
+
     CX=COS(ALFA(N1))
     SA=SIN(ALFA(N1))
     R=VEL(1,N1)*CX+VEL(2,N1)*SA
@@ -224,16 +217,23 @@ ENDDO
         ENDIF
 !ipk nov06 revise
         NodA=2*NDF+1
+        !dA/dh = average width
         AWD1=WIDTH(N1)+(SS1(N1)+SS2(N1))/2.*VEL(3,N1)
         AWD2=WIDTH(N2)+(SS1(N2)+SS2(N2))/2.*VEL(3,N2)
+        !A
         ACR1=AWD1*VEL(3,N1)
         ACR2=AWD2*VEL(3,N2)
+        !average current discharge in element
         Q=(ACR1*RX1*RSWT1+ACR2*RX2*RSWT2)/2.
+        !water surface elevations up- and downstream
         WS1=HEL(N1)+AO(N1)
         WS2=HEL(N2)+AO(N2)
+        !elevation loss between upstream and downstream
         HLOS=ABS(WS1-WS2)
+        !constant energy loss parameterized in element characteristic CJ
         HLOS=HLOS-CJ(NM)
         HLD=SIGN(1.,WS1-WS2)
+        !residual  equation
         F(NodA)=Q-AJ(NM)-BJ(NM)*HLD*HLOS**GAMJ(NM)
         IF(HLOS .LT. HCUT)   HLOS=HCUT
         ESTIFM(NodA,1)=-(ACR1*RSWT1)/2.
