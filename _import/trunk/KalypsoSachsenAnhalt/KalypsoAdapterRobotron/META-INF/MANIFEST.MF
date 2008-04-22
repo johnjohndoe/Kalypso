@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoAdapterRobotron
-Bundle-SymbolicName: org.kalypso.adapter.robotron
+Bundle-SymbolicName: org.kalypso.adapter.robotron;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/axis/axis.jar,
  lib/axis/axis-ant.jar,
@@ -136,7 +136,7 @@ Export-Package: .,
  org.globus.test.bigType,
  org.globus.test.otherTypes,
  org.kalypso.robotronadapter
-Require-Bundle: org.kalypso.services.user,
- org.kalypso.auth,
- org.kalypso.metadoc,
- org.kalypso.jwsdp
+Require-Bundle: org.kalypso.metadoc,
+ org.kalypso.jwsdp,
+ org.kalypso.hwv.services,
+ org.kalypso.auth

@@ -35,21 +35,21 @@ public final class PSICompactFactory
    * 
    * @return PSICompact instance
    */
-  public final static PSICompact getConnection()
+  public final static PSICompact getConnection( )
   {
     if( m_psiCompact != null )
     {
       try
       {
         // fake Aufruf nur um zu testen ob die SST da ist
-        m_psiCompact.getDataModelVersion(  );
+        m_psiCompact.getDataModelVersion();
       }
       catch( final ECommException e )
       {
         m_psiCompact = null; // damit wird es neu initialisiert
       }
     }
-    
+
     if( m_psiCompact == null )
     {
       InputStream stream = null;
@@ -67,15 +67,16 @@ public final class PSICompactFactory
         // path of class which implements the PSICompact interface
         PSI_CLASS = m_factoryProperties.getProperty( "PSI_CLASS", "de.psi.go.lhwz.PSICompactImpl" );
 
-        m_psiCompact = (PSICompact)ClassUtilities.newInstance( PSI_CLASS, PSICompact.class, PSICompactFactory.class
-            .getClassLoader() );
+        m_psiCompact = (PSICompact) ClassUtilities.newInstance( PSI_CLASS, PSICompact.class, PSICompactFactory.class.getClassLoader() );
 
         // Wichtig! init() aufrufen damit die PSI-Schnittstelle sich
         // initialisieren kann
         m_psiCompact.init();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
+        // TODO: why not set m_psiCompact to null?
+
         throw new IllegalStateException( "Error while creating PSICompact: " + e.toString() );
       }
       finally
@@ -90,7 +91,7 @@ public final class PSICompactFactory
   /**
    * @return factory properties
    */
-  public final static Properties getProperties()
+  public final static Properties getProperties( )
   {
     if( m_factoryProperties == null )
       getConnection();
@@ -98,14 +99,14 @@ public final class PSICompactFactory
     return m_factoryProperties;
   }
 
-  public final static Calendar getCalendarForPSICompact()
+  public final static Calendar getCalendarForPSICompact( )
   {
     if( m_psiCalendar == null )
       m_psiCalendar = Calendar.getInstance( TimeZone.getTimeZone( getProperties().getProperty( TIMEZONE_ID ) ) );
 
     return m_psiCalendar;
   }
-  
+
   public final static String toKalypsoRight( final String psiRight )
   {
     return getProperties().getProperty( "RIGHT_" + psiRight );

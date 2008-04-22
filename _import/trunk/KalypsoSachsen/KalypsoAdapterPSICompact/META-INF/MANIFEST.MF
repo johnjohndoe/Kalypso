@@ -7,7 +7,6 @@ Bundle-ClassPath: KalypsoPSICompactAdapter.jar,
  lib/PSICompact.jar,
  lib/OB.jar
 Bundle-Vendor: kalypso.org
-Bundle-Localization: plugin
 Export-Package: .,
  arc.arv.idl,
  arc.epr.idl,
@@ -85,9 +84,9 @@ Export-Package: .,
 Require-Bundle: org.kalypso.core,
  org.kalypso.repository,
  org.kalypso.commons,
- org.kalypso.services.user,
  org.kalypso.metadoc,
  org.kalypso.jwsdp,
  org.eclipse.ui,
- org.junit
+ org.junit,
+ org.kalypso.hwv.services
 Eclipse-LazyStart: true

@@ -42,15 +42,15 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
 import org.kalypso.auth.user.UserRights;
-import org.kalypso.services.user.IUserRightsProvider;
-import org.kalypso.services.user.UserRightsException;
+import org.kalypso.hwv.services.user.UserServiceSimulation;
 
 /**
- * RobotronRightsProvider
+ * TODO: cannot work at the moment: init method is never called... TODO: implement IExecutableExtension and initalize
+ * like they do
  * 
  * @author schlienger (13.05.2005)
  */
-public class RobotronRightsProvider implements IUserRightsProvider
+public class RobotronRightsProvider extends UserServiceSimulation
 {
   private final static Logger LOG = Logger.getLogger( RobotronRightsProvider.class.getName() );
 
@@ -75,7 +75,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
    * 
    * @see IUserRightsProvider#init(java.util.Properties)
    */
-  public void init( Properties props )
+  public void init( final Properties props )
   {
     m_url = props.getProperty( "LDAP_CONNECTION" );
     m_principal = props.getProperty( "LDAP_PRINCIPAL" );
@@ -84,7 +84,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
     LOG.info( "RobotronRightsProvider initialised" );
   }
 
-  private DirContext getDirContext() throws NamingException
+  private DirContext getDirContext( ) throws NamingException
   {
     final Hashtable<String, Object> env = new Hashtable<String, Object>();
 
@@ -97,29 +97,27 @@ public class RobotronRightsProvider implements IUserRightsProvider
     return new InitialDirContext( env );
   }
 
-  public void dispose()
+  public void dispose( )
   {
-  // empty
+    // empty
   }
 
-  public String[] getRights( String username ) throws UserRightsException
-  {
-    // this method doesn't make sense for the Sachsen-Anhalt project
-    throw new UserRightsException( "Method not implemented" );
-  }
-
-  public String[] getRights( final String username, final String password )
+  /**
+   * @see org.kalypso.hwv.services.user.UserServiceSimulation#getRights(java.lang.String, java.lang.String,
+   *      java.lang.String)
+   */
+  @Override
+  public String[] getRights( final String username, final String password, final String scenarioId )
   {
     DirContext dirCtxt = null;
-    
+
     try
     {
       dirCtxt = getDirContext();
-      
-      final Attributes userAtts = dirCtxt.getAttributes( "cn=" + username + ",ou=benutzer", new String[]
-      { "gidNumber", "userPassword" } );
 
-      final byte[] pw1 = (byte[])userAtts.get( "userPassword" ).get();
+      final Attributes userAtts = dirCtxt.getAttributes( "cn=" + username + ",ou=benutzer", new String[] { "gidNumber", "userPassword" } );
+
+      final byte[] pw1 = (byte[]) userAtts.get( "userPassword" ).get();
       final byte[] pw2 = password.getBytes();
       if( !Arrays.equals( pw1, pw2 ) )
       {
@@ -127,7 +125,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
         return UserRights.NO_RIGHTS;
       }
 
-      final String groupName = (String)userAtts.get( "gidNumber" ).get();
+      final String groupName = (String) userAtts.get( "gidNumber" ).get();
       LOG.info( "User " + username + " found in group: " + groupName );
 
       final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
@@ -144,8 +142,7 @@ public class RobotronRightsProvider implements IUserRightsProvider
       }
 
       // Benutzer existiert, aber darf nicht Modellieren: Vorhersage
-      return new String[]
-      { UserRights.RIGHT_PROGNOSE };
+      return new String[] { UserRights.RIGHT_PROGNOSE };
     }
     catch( final NamingException e )
     {

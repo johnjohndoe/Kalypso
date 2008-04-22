@@ -11,5 +11,12 @@
             name="PSICompact"
             factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"/>
    </extension>
+     <extension
+           point="org.kalypso.simulation.core.simulation">
+        <simulation
+              simulationClass="org.kalypso.psiadapter.users.PSICompactRightsProvider"
+              typeID="hwvUserService1.0">
+        </simulation>
+     </extension>
    
 </plugin>
