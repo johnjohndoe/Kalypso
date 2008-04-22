@@ -82,6 +82,7 @@ public class KalypsoUserService implements IUserService
   private static final String PROP_IMPERSONATE_USER = "IMPERSONATE_USER";
 
   private static final String PROP_SCENARIO_ID_LIST = "SCENARIO_ID_LIST";
+
   private static final String PROP_SCENARIO_INI_LIST = "SCENARIO_INI_LIST";
 
   private static final String PROP_CHOOSE_SCENARIO = "CHOOSE_SCENARIO";
@@ -92,7 +93,7 @@ public class KalypsoUserService implements IUserService
 
   private ScenarioBean[] m_scenarios;
 
-  public KalypsoUserService() throws UserRightsException
+  public KalypsoUserService( ) throws UserRightsException
   {
     m_logger.info( "Initialisiere UserService" );
 
@@ -104,7 +105,7 @@ public class KalypsoUserService implements IUserService
    * 
    * @throws RemoteException
    */
-  private final void init() throws UserRightsException
+  private final void init( ) throws UserRightsException
   {
     InputStream stream = null;
     try
@@ -121,9 +122,8 @@ public class KalypsoUserService implements IUserService
 
       // try to instanciate our commiter
       final String className = props.getProperty( PROP_PROVIDER );
-      m_rightsProvider = (IUserRightsProvider)ClassUtilities.newInstance( className, IUserRightsProvider.class,
-          getClass().getClassLoader() );
-      m_rightsProvider.init( props );
+      m_rightsProvider = (IUserRightsProvider) ClassUtilities.newInstance( className, IUserRightsProvider.class, getClass().getClassLoader() );
+// m_rightsProvider.init( props );
 
       final String iu = props.getProperty( PROP_IMPERSONATE_USER, "false" );
       m_impersonateUser = Boolean.valueOf( iu ).booleanValue();
@@ -186,20 +186,23 @@ public class KalypsoUserService implements IUserService
    * @see java.lang.Object#finalize()
    */
   @Override
-  protected void finalize() throws Throwable
+  protected void finalize( ) throws Throwable
   {
     if( m_rightsProvider != null )
       m_rightsProvider.dispose();
   }
 
-  public String[] getRights( final String username ) throws UserRightsException
+  /**
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String)
+   */
+  public String[] getRights( final String username, final String currentScenarioId ) throws UserRightsException
   {
     if( m_rightsProvider == null )
       return null;
 
     try
     {
-      return m_rightsProvider.getRights( username );
+      return m_rightsProvider.getRights( username, currentScenarioId );
     }
     catch( final UserRightsException e )
     {
@@ -209,25 +212,28 @@ public class KalypsoUserService implements IUserService
     }
   }
 
-  public int getServiceVersion()
+  public int getServiceVersion( )
   {
     return 0;
   }
 
-  public String[] getRightsWithAuth( String username, String password ) throws UserRightsException
+  /**
+   * @see org.kalypso.services.user.IUserService#getRights(java.lang.String, java.lang.String, java.lang.String)
+   */
+  public String[] getRightsWithAuth( final String username, final String password, final String currentScenarioId ) throws UserRightsException
   {
     if( m_rightsProvider == null )
       return null;
 
     try
     {
-      return m_rightsProvider.getRights( username, password );
+      return m_rightsProvider.getRights( username, password, currentScenarioId );
     }
     catch( final UserRightsException e )
     {
       m_logger.info( e.getLocalizedMessage() );
 
-      throw e; //new RemoteException( "Exception in getRights()", e );
+      throw e; // new RemoteException( "Exception in getRights()", e );
     }
 
   }
@@ -235,7 +241,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#isAskForLogin()
    */
-  public boolean isAskForLogin()
+  public boolean isAskForLogin( )
   {
     return m_impersonateUser;
   }
@@ -243,7 +249,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#isAskForScenario()
    */
-  public boolean isAskForScenario()
+  public boolean isAskForScenario( )
   {
     return m_chooseScenario;
   }
@@ -251,7 +257,7 @@ public class KalypsoUserService implements IUserService
   /**
    * @see org.kalypso.services.user.IUserService#getScenarios()
    */
-  public ScenarioBean[] getScenarios()
+  public ScenarioBean[] getScenarios( )
   {
     return m_scenarios;
   }

@@ -7,31 +7,43 @@ import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.services.user.IUserRightsProvider;
-import org.kalypso.services.user.UserRightsException;
 
 /**
  * Delivers the rights from a simple property file
  * 
  * @author Jessica Huebsch
  */
-public class DefaultRightsProvider implements IUserRightsProvider
+@SuppressWarnings("restriction")
+public class DefaultRightsProvider implements IUserRightsProvider, IExecutableExtension
 {
-  public final static String PROP_RIGHTSFILE_URL = "RIGHTSFILE_URL";
+  public final static String PROP_RIGHTSFILE_URL = "kalypso.user.defaultProvider.rightsFile";
 
   private final Properties m_rights = new Properties();
 
   /**
-   * @see org.kalypso.services.user.IUserRightsProvider#init(java.util.Properties)
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
    */
-  public void init( final Properties props ) throws UserRightsException
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
-    final String locURLString = props.getProperty( PROP_RIGHTSFILE_URL );
-
     InputStream ins = null;
+
     try
     {
-      final URL locURL = new URL( locURLString );
+      final String locURLString = FrameworkProperties.getProperty( PROP_RIGHTSFILE_URL, null );
+      if( locURLString == null )
+        throw new CoreException( StatusUtilities.createErrorStatus( "No rights file set for default-rights-provider. Use property '" + PROP_RIGHTSFILE_URL + "' to define the rights file." ) );
+
+      final URL configUrl = Platform.getConfigurationLocation().getURL();
+      final URL locURL = new URL( configUrl, locURLString );
+
       ins = new BufferedInputStream( locURL.openStream() );
 
       m_rights.load( ins );
@@ -39,7 +51,7 @@ public class DefaultRightsProvider implements IUserRightsProvider
     }
     catch( final IOException e )
     {
-      throw new UserRightsException( e );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
     finally
     {
@@ -50,24 +62,25 @@ public class DefaultRightsProvider implements IUserRightsProvider
   /**
    * @see org.kalypso.services.user.IUserRightsProvider#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-  // empty
-  }
-
-  /**
-   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String)
-   */
-  public String[] getRights( final String username )
-  {
-    return m_rights.getProperty( username, "" ).split( "," );
+    // empty
   }
 
   /**
    * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String)
    */
-  public String[] getRights( String username, String password )
+  public String[] getRights( final String username, final String scenarioId )
   {
-    return getRights( username );
+    return m_rights.getProperty( username, "" ).split( "," );
   }
+
+  /**
+   * @see org.kalypso.services.user.IUserRightsProvider#getRights(java.lang.String, java.lang.String, java.lang.String)
+   */
+  public String[] getRights( final String username, final String password, final String scenarioId )
+  {
+    return getRights( username, scenarioId );
+  }
+
 }

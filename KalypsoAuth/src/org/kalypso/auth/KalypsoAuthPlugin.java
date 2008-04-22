@@ -23,10 +23,10 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoAuthPlugin extends AbstractUIPlugin
 {
-  //The shared instance.
+  // The shared instance.
   private static KalypsoAuthPlugin plugin;
 
-  //Resource bundle.
+  // Resource bundle.
   private ResourceBundle resourceBundle;
 
   /**
@@ -34,13 +34,12 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    * kalypso bypassing the login procedure. Once the login procedure is started, the user is set to null unless
    * authentication succeeded.
    */
-  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS, "", new IScenario[]
-  { Scenario.DEFAULT_SCENARIO } );
+  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS, "", new IScenario[] { Scenario.DEFAULT_SCENARIO } );
 
   /**
    * The constructor.
    */
-  public KalypsoAuthPlugin()
+  public KalypsoAuthPlugin( )
   {
     super();
     plugin = this;
@@ -48,7 +47,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
     {
       resourceBundle = ResourceBundle.getBundle( "org.kalypso.auth.KalypsoAuthPluginResources" );
     }
-    catch( MissingResourceException x )
+    catch( final MissingResourceException x )
     {
       resourceBundle = null;
     }
@@ -58,7 +57,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -67,7 +66,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
   }
@@ -75,7 +74,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoAuthPlugin getDefault()
+  public static KalypsoAuthPlugin getDefault( )
   {
     return plugin;
   }
@@ -83,14 +82,14 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   /**
    * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
-  public static String getResourceString( String key )
+  public static String getResourceString( final String key )
   {
-    ResourceBundle bundle = KalypsoAuthPlugin.getDefault().getResourceBundle();
+    final ResourceBundle bundle = KalypsoAuthPlugin.getDefault().getResourceBundle();
     try
     {
-      return ( bundle != null ) ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       return key;
     }
@@ -99,7 +98,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   /**
    * Returns the plugin's resource bundle,
    */
-  public ResourceBundle getResourceBundle()
+  public ResourceBundle getResourceBundle( )
   {
     return resourceBundle;
   }
@@ -107,9 +106,9 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   /**
    * @return current user
    * @throws IllegalStateException
-   *           if login procedure was not started
+   *             if login procedure was not started
    */
-  public IKalypsoUser getCurrentUser()
+  public IKalypsoUser getCurrentUser( )
   {
     if( m_user == null )
       throw new IllegalStateException( "No user" );
@@ -122,9 +121,9 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    * authenticate the user. As last resort the DefaultAuthenticator is used.
    * 
    * @throws InterruptedException
-   *           means user cancels the login procedure
+   *             means user cancels the login procedure
    * @throws CoreException
-   *           means error while retrieving the extensions for org.kalypso.auth.login.IAuthenticator
+   *             means error while retrieving the extensions for org.kalypso.auth.login.IAuthenticator
    */
   public void startLoginProcedure( final Display display ) throws InterruptedException, CoreException
   {
@@ -141,11 +140,11 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
     try
     {
       final IAuthenticator[] authenticators = AuthenticatorExtensions.retrieveExtensions();
-      for( int i = 0; i < authenticators.length; i++ )
+      for( final IAuthenticator element : authenticators )
       {
         try
         {
-          m_user = authenticators[i].authenticate( shell );
+          m_user = element.authenticate( shell );
           return;
         }
         catch( final InterruptedException e )
@@ -165,7 +164,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
       // no authentication succeeded till now, so let's give a last chance
       // using the default authenticator
       m_user = new DefaultAuthenticator().authenticate( shell );
-      
+
       // if user is still null, then inform user
       if( m_user == null )
         MessageDialog.openWarning( shell, "Kalypso-Login", "Login fehlgeschlagen." );
@@ -183,26 +182,29 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   public IScenario getScenario( final String scenarioId )
   {
     final IScenario[] scenarios = m_user.getAvailableScenarios();
-    for( int i = 0; i < scenarios.length; i++ )
+    for( final IScenario scenario : scenarios )
     {
-      final IScenario scenario = scenarios[i];
       if( scenario.getId().equals( scenarioId ) )
         return scenario;
     }
 
     return null;
   }
-  
+
   /**
-   * This is a shorthand for calling
-   * <code>
+   * This is a shorthand for calling <code>
    * getScenario( getCurrentUser().getScenario() )
    * </code>
    * 
    * @return the scenario associated to the current user
    */
-  public IScenario getScenarioForCurrentUser()
+  public IScenario getScenarioForCurrentUser( )
   {
     return getScenario( getCurrentUser().getScenario() );
+  }
+
+  public void setCurrentUser( final IKalypsoUser user )
+  {
+    m_user = user;
   }
 }
