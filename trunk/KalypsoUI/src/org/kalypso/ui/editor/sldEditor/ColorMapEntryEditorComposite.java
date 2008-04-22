@@ -64,13 +64,14 @@ public class ColorMapEntryEditorComposite extends Composite
 
   private Fill m_fill;
 
+  private FillEditorComposite m_fillEditor;
+
   public ColorMapEntryEditorComposite( final Composite parent, final int style, final ColorMapEntry entry )
   {
     super( parent, style );
     m_entry = entry;
 
     createControl();
-
   }
 
   private void createControl( )
@@ -78,9 +79,9 @@ public class ColorMapEntryEditorComposite extends Composite
     setLayout( new GridLayout( 1, false ) );
 
     m_fill = StyleFactory.createFill( m_entry.getColor(), m_entry.getOpacity() );
-    final FillEditorComposite fillEditor = new FillEditorComposite( this, SWT.NONE, m_fill, true );
-    fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fillEditor.addModifyListener( new IFillModifyListener()
+    m_fillEditor = new FillEditorComposite( this, SWT.NONE, m_fill, true );
+    m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_fillEditor.addModifyListener( new IFillModifyListener()
     {
       public void onFillChanged( Object source, Fill fill )
       {
@@ -92,6 +93,7 @@ public class ColorMapEntryEditorComposite extends Composite
   protected void disposeControl( )
   {
     m_listeners.clear();
+    m_fillEditor.disposeControl();
   }
 
   /**

@@ -165,6 +165,7 @@ public class RasterColorMapLabelProvider extends LabelProvider implements ITable
     final GC gc = event.gc;
 
     final Color currentColor = gc.getBackground();
+
     final int currentAlpha = gc.getAlpha();
 
     final Color newColor = SWT_AWT_Utilities.getSWTFromAWT( color, m_viewer.getControl().getDisplay() );
@@ -176,5 +177,8 @@ public class RasterColorMapLabelProvider extends LabelProvider implements ITable
 
     gc.setBackground( currentColor );
     gc.setAlpha( currentAlpha );
+
+    newColor.dispose();
   }
+
 }
