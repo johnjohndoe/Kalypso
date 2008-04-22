@@ -112,6 +112,8 @@ public class VectorEditorComposite extends Composite
 
   private final PointSymbolizer m_symb;
 
+  private FillEditorComposite m_fillEditor;
+
   public VectorEditorComposite( final Composite parent, final int style, PointSymbolizer symb, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
     super( parent, style );
@@ -203,9 +205,9 @@ public class VectorEditorComposite extends Composite
       }
     } );
 
-    final FillEditorComposite fillEditor = new FillEditorComposite( fillColorMapGroup, SWT.NONE, m_fill, false );
-    fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fillEditor.addModifyListener( new IFillModifyListener()
+    m_fillEditor = new FillEditorComposite( fillColorMapGroup, SWT.NONE, m_fill, false );
+    m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_fillEditor.addModifyListener( new IFillModifyListener()
     {
       public void onFillChanged( Object source, Fill fill )
       {

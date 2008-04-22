@@ -95,6 +95,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
@@ -103,6 +104,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.kalypso1d2d.pjt.Kalypso1d2dProjectPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrograph;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.IHydrographCollection;
@@ -403,8 +405,10 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     m_addHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
     m_addHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um ein Teilmodell hinzuzufügen, für das Sie Ganglinien erstellen wollen." );
 
-    final ImageDescriptor addID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_COLLECTION_ADD;
-    m_addHydrographCollectionButton.setImage( addID.createImage() );
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final Image addImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_COLLECTION_ADD );
+
+    m_addHydrographCollectionButton.setImage( addImage );
 
     m_addHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
     {
@@ -439,8 +443,10 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     m_processHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
     m_processHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um das aktuelle Teilmodell inkl. Ganglinien zu entfernen." );
 
-    final ImageDescriptor removeID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_COLLECTION_REMOVE;
-    m_processHydrographCollectionButton.setImage( removeID.createImage() );
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final Image removeImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_COLLECTION_REMOVE );
+
+    m_processHydrographCollectionButton.setImage( removeImage );
 
     m_processHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
     {
@@ -464,8 +470,10 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
     m_processHydrographCollectionButton = toolkit.createButton( parent, null, SWT.PUSH );
     m_processHydrographCollectionButton.setToolTipText( "Klicken Sie hier, um anhand der Berechnungsergebnisse des Teilmodells die Ganglinien zu erzeugen." );
 
-    final ImageDescriptor processID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_COLLECTION_PROCESS;
-    m_processHydrographCollectionButton.setImage( processID.createImage() );
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final Image processImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_COLLECTION_PROCESS );
+
+    m_processHydrographCollectionButton.setImage( processImage );
 
     m_processHydrographCollectionButton.addSelectionListener( new SelectionAdapter()
     {
@@ -665,11 +673,13 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   private void initalizeHydrographActions( FormToolkit toolkit, Composite parent )
   {
-    final ImageDescriptor addID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_ADD;
-    final ImageDescriptor selectID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_SELECT;
-    final ImageDescriptor removeID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_REMOVE;
-    final ImageDescriptor jumptoID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_JUMP_TO;
-    final ImageDescriptor exportID = KalypsoModel1D2DUIImages.ID_HYDROGRAPH_EXPORT;
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+
+    final ImageDescriptor addID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.ADD );
+    final ImageDescriptor selectID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_SELECT );
+    final ImageDescriptor removeID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_REMOVE );
+    final ImageDescriptor jumptoID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_JUMP_TO );
+    final ImageDescriptor exportID = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.HYDROGRAPH_EXPORT );
 
     final Action addAction = new Action( "Add Coverage", addID )
     {
