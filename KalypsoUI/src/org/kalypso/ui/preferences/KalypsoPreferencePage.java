@@ -77,9 +77,6 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   @Override
   public void createFieldEditors( )
   {
-    final StringFieldEditor sfeSrv = new StringFieldEditor( IKalypsoPreferences.CLIENT_CONF_URLS, "Verfügbare KALYPSO-&Server:", getFieldEditorParent() );
-    addField( sfeSrv );
-
     m_sfeCrs = new StringFieldEditor( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, "Globales &Koordinatensystem:", getFieldEditorParent() );
     addField( m_sfeCrs );
     m_sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben
@@ -107,7 +104,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
-  public void init( IWorkbench workbench )
+  public void init( final IWorkbench workbench )
   {
     // empty
   }

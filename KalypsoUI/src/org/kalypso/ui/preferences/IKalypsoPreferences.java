@@ -47,19 +47,5 @@ package org.kalypso.ui.preferences;
  */
 public interface IKalypsoPreferences
 {
-  /** name of the property where the client conf files can be found */
-  public static final String CLIENT_CONF_URLS = "kalypso.client.conf";
-
-  public static final String HTTP_PROXY_USE = "kalypso.http.proxy.use";
-
-  public static final String HTTP_PROXY_HOST = "kalypso.http.proxy.host";
-
-  public static final String HTTP_PROXY_PORT = "kalypso.http.proxy.port";
-
-  public static final String HTTP_PROXY_USER = "kalypso.http.proxy.user";
-
-  public static final String HTTP_PROXY_PASS = "kalypso.http.proxy.pass";
-
   public static final String DISPLAY_TIMEZONE = "kalypso.global.display_timezone";
-
 }
