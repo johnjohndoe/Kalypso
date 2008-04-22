@@ -56,11 +56,12 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
@@ -151,12 +152,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     mainConf.putAll( System.getProperties() );
 
     // overwrite the user settings if list was provided as program argument or system property
-    final String confUrls = System.getProperty( "kalypso.client-ini-locations", null );
+    final String confUrls = System.getProperty( "kalypso.client-ini-locations", "" );
 
-    if( confUrls == null )
+    if( confUrls.length() == 0 )
     {
-      MessageDialog.openWarning( getWorkbench().getDisplay().getActiveShell(), "Konfiguration für Kalypso", "Keine Serverkonfiguration vorhanden. Funktionalität eingeschränkt." );
-      return;
+      final IStatus warningStatus = StatusUtilities.createWarningStatus( "Keine Serverkonfiguration vorhanden. Funktionalität eingeschränkt." );
+      getLog().log( warningStatus );
     }
 
     // try to load conf file
