@@ -64,7 +64,6 @@ import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
@@ -86,8 +85,6 @@ import org.osgi.framework.BundleContext;
 public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
   private static final String SCHEMA_CATALOG = "SCHEMA_CATALOG_URL";
-
-  private static final String PROGNOSE_MODELLIST = "PROGNOSE_MODELLIST_URL";
 
   private static final String MODELL_REPOSITORY = "MODELL_REPOSITORY";
 
@@ -153,7 +150,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // put system properties
     mainConf.putAll( System.getProperties() );
 
-    final String confUrls = getPluginPreferences().getString( IKalypsoPreferences.CLIENT_CONF_URLS );
+    // overwrite the user settings if list was provided as program argument or system property
+    final String confUrls = System.getProperty( "kalypso.client-ini-locations", null );
 
     if( confUrls == null )
     {
@@ -529,7 +527,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   @Deprecated
   public String getCoordinatesSystem( )
   {
-    return KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
   public IRepositoryContainer getRepositoryContainer( )
@@ -552,17 +550,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public void propertyChange( final PropertyChangeEvent event )
   {
-    if( event.getProperty().equals( IKalypsoPreferences.CLIENT_CONF_URLS ) )
-    {
-      try
-      {
-        reconfigure();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
   }
 
   public IFeatureModifierFactory createFeatureTypeCellEditorFactory( )
@@ -572,28 +559,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       m_defaultFeatureControlFactory = new DefaultFeatureModifierFactory();
     }
     return m_defaultFeatureControlFactory;
-  }
-
-  public URL getModellistLocation( )
-  {
-    try
-    {
-      final String location = m_mainConf.getProperty( KalypsoGisPlugin.PROGNOSE_MODELLIST, null );
-      if( location == null )
-        return null;
-
-      final String[] locations = location.split( "," );
-      if( locations.length == 0 )
-        return null;
-
-      return new URL( locations[0] );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      return null;
-    }
   }
 
   public File getServerModelRoot( )

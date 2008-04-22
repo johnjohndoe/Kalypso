@@ -41,7 +41,6 @@
 package org.kalypso.ui.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
@@ -54,12 +53,5 @@ public class KalypsoPreferenceInitializer extends AbstractPreferenceInitializer
   @Override
   public void initializeDefaultPreferences( )
   {
-    // location of the server configuration for the clients
-    
-    // BUGFIX: dont set this to a real value, because this can lead to a deadlock
-    // while starting Kalypso.
-    // If someone needs an initial value for a certain configuration, put an option into the
-    // config.ini file.
-    KalypsoGisPlugin.getDefault().getPluginPreferences().setDefault( IKalypsoPreferences.CLIENT_CONF_URLS, "" );
   }
 }
