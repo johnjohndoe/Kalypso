@@ -62,6 +62,8 @@ public class PolygonColorMapEntryEditorComposite extends Composite
 
   private final PolygonColorMapEntry m_entry;
 
+  private FillEditorComposite m_fillEditor;
+
   public PolygonColorMapEntryEditorComposite( final Composite parent, final int style, final PolygonColorMapEntry entry )
   {
     super( parent, style );
@@ -85,9 +87,9 @@ public class PolygonColorMapEntryEditorComposite extends Composite
       }
     } );
 
-    final FillEditorComposite fillEditor = new FillEditorComposite( this, SWT.NONE, m_entry.getFill(), true );
-    fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fillEditor.addModifyListener( new IFillModifyListener()
+    m_fillEditor = new FillEditorComposite( this, SWT.NONE, m_entry.getFill(), true );
+    m_fillEditor.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_fillEditor.addModifyListener( new IFillModifyListener()
     {
       public void onFillChanged( Object source, Fill fill )
       {
@@ -99,6 +101,7 @@ public class PolygonColorMapEntryEditorComposite extends Composite
   protected void disposeControl( )
   {
     m_listeners.clear();
+    m_fillEditor.disposeControl();
   }
 
   /**

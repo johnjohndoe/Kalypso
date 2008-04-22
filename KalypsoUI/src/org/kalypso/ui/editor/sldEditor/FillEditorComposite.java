@@ -154,6 +154,7 @@ public class FillEditorComposite extends Composite
 
     java.awt.Color fillColor = m_fill.getFill( null );
     m_color = new Color( m_colorLabel.getDisplay(), fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue() );
+
     m_colorLabel.setBackground( m_color );
 
     /* mouse listeners */

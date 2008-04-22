@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.sldEditor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -62,6 +65,8 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 public class PolygonColorMapLabelProvider extends LabelProvider implements ITableLabelProvider
 {
   private final TableViewer m_viewer;
+
+  private final List<Color> m_colorList = new ArrayList<Color>();
 
   public PolygonColorMapLabelProvider( final TableViewer viewer )
   {
@@ -201,9 +206,14 @@ public class PolygonColorMapLabelProvider extends LabelProvider implements ITabl
     final GC gc = event.gc;
 
     final Color currentColor = gc.getBackground();
+
+    m_colorList.add( currentColor );
+
     final int currentAlpha = gc.getAlpha();
 
     final Color newColor = SWT_AWT_Utilities.getSWTFromAWT( color, m_viewer.getControl().getDisplay() );
+
+    m_colorList.add( newColor );
 
     gc.setBackground( newColor );
     gc.setAlpha( (int) (opacity * 255) );
@@ -212,6 +222,7 @@ public class PolygonColorMapLabelProvider extends LabelProvider implements ITabl
 
     gc.setBackground( currentColor );
     gc.setAlpha( currentAlpha );
-  }
 
+    newColor.dispose();
+  }
 }
