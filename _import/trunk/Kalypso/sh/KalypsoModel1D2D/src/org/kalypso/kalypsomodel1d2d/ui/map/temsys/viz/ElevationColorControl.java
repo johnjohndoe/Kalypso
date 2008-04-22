@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.IElevationColorModel;
  */
 public class ElevationColorControl implements IColorModelPreferenceConstants
 {
-  static private IPreferenceStore preferenceStore = KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
+  static private IPreferenceStore m_preferenceStore = KalypsoModel1D2DPlugin.getDefault().getPreferenceStore();
 
   private static final Color DEFAULT_MIN_COLOR = Color.RED;
 
@@ -91,39 +91,39 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
   /* int colors from preferency store */
   static
   {
-    if( !preferenceStore.contains( LINE_COLOR_INDEX ) )
+    if( !m_preferenceStore.contains( LINE_COLOR_INDEX ) )
     {
       colorIndex = DEFAULT_COLOR_INDEX;
-      preferenceStore.setValue( LINE_COLOR_INDEX, DEFAULT_COLOR_INDEX );
+      m_preferenceStore.setValue( LINE_COLOR_INDEX, DEFAULT_COLOR_INDEX );
     }
     else
     {
-      colorIndex = preferenceStore.getInt( LINE_COLOR_INDEX );
+      colorIndex = m_preferenceStore.getInt( LINE_COLOR_INDEX );
     }
 
-    if( !preferenceStore.contains( LINE_TRANSPARENCY ) )
+    if( !m_preferenceStore.contains( LINE_TRANSPARENCY ) )
     {
       transparencyIndex = DEFAULT_TRANSPARENCY_INDEX;
-      preferenceStore.setValue( LINE_TRANSPARENCY, DEFAULT_TRANSPARENCY_INDEX );
+      m_preferenceStore.setValue( LINE_TRANSPARENCY, DEFAULT_TRANSPARENCY_INDEX );
     }
     else
     {
-      transparencyIndex = preferenceStore.getInt( LINE_TRANSPARENCY );
+      transparencyIndex = m_preferenceStore.getInt( LINE_TRANSPARENCY );
     }
 
-    if( !preferenceStore.contains( LINE_MIN_MAX ) )
+    if( !m_preferenceStore.contains( LINE_MIN_MAX ) )
     {
       minMaxStatus = DEFAULT_MINMAX;
-      preferenceStore.setValue( LINE_MIN_MAX, DEFAULT_MINMAX );
+      m_preferenceStore.setValue( LINE_MIN_MAX, DEFAULT_MINMAX );
     }
     else
     {
-      minMaxStatus = preferenceStore.getBoolean( LINE_MIN_MAX );
+      minMaxStatus = m_preferenceStore.getBoolean( LINE_MIN_MAX );
     }
 
-    if( !preferenceStore.contains( LINE_MAX_COLOR ) )
+    if( !m_preferenceStore.contains( LINE_MAX_COLOR ) )
     {
-      setPreferenceColor( LINE_MAX_COLOR, DEFAULT_MAX_COLOR );
+      setPreferenceColor( DEFAULT_MAX_COLOR );
       m_maxColor = DEFAULT_MAX_COLOR;
     }
     else
@@ -131,9 +131,9 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
       m_maxColor = ColorModelChangeComponent.getThisColor( LINE_MAX_COLOR );
     }
 
-    if( !preferenceStore.contains( LINE_MIN_COLOR ) )
+    if( !m_preferenceStore.contains( LINE_MIN_COLOR ) )
     {
-      setPreferenceColor( LINE_MIN_COLOR, DEFAULT_MIN_COLOR );
+      setPreferenceColor( DEFAULT_MIN_COLOR );
       m_minColor = DEFAULT_MIN_COLOR;
     }
     else
@@ -141,10 +141,10 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
       m_minColor = ColorModelChangeComponent.getThisColor( LINE_MIN_COLOR );
     }
 
-    if( !preferenceStore.contains( LINE_NO_COLOR ) )
+    if( !m_preferenceStore.contains( LINE_NO_COLOR ) )
     {
       noElevationColor = DEFAULT_NO_ELEVATION_COLOR;
-      setPreferenceColor( LINE_NO_COLOR, DEFAULT_NO_ELEVATION_COLOR );
+      setPreferenceColor( DEFAULT_NO_ELEVATION_COLOR );
     }
     else
     {
@@ -265,10 +265,10 @@ public class ElevationColorControl implements IColorModelPreferenceConstants
     return m_minElevation;
   }
 
-  private static final void setPreferenceColor( final String key, final Color color )
+  private static final void setPreferenceColor( final Color color )
   {
     final RGB rgb = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
-    PreferenceConverter.setValue( preferenceStore, LINE_NO_COLOR, rgb );
+    PreferenceConverter.setValue( m_preferenceStore, LINE_NO_COLOR, rgb );
   }
 
   public double getDiscretisationInterval( )

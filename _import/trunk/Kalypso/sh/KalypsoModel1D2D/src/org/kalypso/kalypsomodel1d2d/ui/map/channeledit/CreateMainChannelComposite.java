@@ -53,6 +53,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -74,9 +75,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
@@ -208,9 +211,10 @@ public class CreateMainChannelComposite extends Composite
 
         m_buttonConvertToModel = m_toolkit.createButton( compConversion, "", SWT.PUSH ); //$NON-NLS-1$
         m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
-        final Image convImage = KalypsoModel1D2DUIImages.ID_OK.createImage();
-        m_buttonConvertToModel.setImage( convImage );
 
+        PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+
+        m_buttonConvertToModel.setImage( imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.OK ) );
         m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
         {
           @Override
@@ -463,7 +467,9 @@ public class CreateMainChannelComposite extends Composite
     /* edit button for bankline 1 */
     m_buttonEditBank1 = m_toolkit.createButton( compSegmBanks1, "", SWT.TOGGLE ); //$NON-NLS-1$
     m_buttonEditBank1.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.9" ) ); //$NON-NLS-1$
-    final Image editImage = KalypsoModel1D2DUIImages.ID_EDIT.createImage();
+
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final Image editImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.EDIT );
     m_buttonEditBank1.setImage( editImage );
     m_buttonEditBank1.setSelection( m_bankEdit1 );
     m_buttonEditBank1.addSelectionListener( new SelectionAdapter()
@@ -562,7 +568,9 @@ public class CreateMainChannelComposite extends Composite
     m_buttonList.add( chooseFirstBankButton );
     chooseFirstBankButton.setLayoutData( new GridData( SWT.RIGHT, SWT.CENTER, true, false ) );
     chooseFirstBankButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.19" ) ); //$NON-NLS-1$
-    final Image selImage = KalypsoModel1D2DUIImages.ID_SELECT.createImage();
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final Image selImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.SELECT );
+
     chooseFirstBankButton.setImage( selImage );
     chooseFirstBankButton.addSelectionListener( new SelectionAdapter()
     {
@@ -780,7 +788,9 @@ public class CreateMainChannelComposite extends Composite
     chooseProfilesButton.setLayoutData( gridData );
     chooseProfilesButton.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.33" ) ); //$NON-NLS-1$
 
-    final Image selImage = KalypsoModel1D2DUIImages.ID_SELECT.createImage();
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final Image selImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.SELECT );
+
     chooseProfilesButton.setImage( selImage );
     chooseProfilesButton.addSelectionListener( new SelectionAdapter()
     {
@@ -971,7 +981,10 @@ public class CreateMainChannelComposite extends Composite
         }
       };
       action.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.14" ) ); //$NON-NLS-1$
-      action.setImageDescriptor( KalypsoModel1D2DUIImages.ID_CHANGE );
+
+      PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+      final ImageDescriptor changeImage = imageProvider.getImageDescriptor( KalypsoModel1D2DUIImages.IMGKEY.CHANGE );
+      action.setImageDescriptor( changeImage );
       manager.add( action );
 
       manager.update( true );
@@ -1032,7 +1045,7 @@ public class CreateMainChannelComposite extends Composite
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
       try
       {
-        final DragBankLineWidget widget = new DragBankLineWidget( getShell(), m_data, currentSegment, 1 );
+        final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 1 );
         m_widget.setDelegate( widget );
 
       }
@@ -1059,7 +1072,7 @@ public class CreateMainChannelComposite extends Composite
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
       try
       {
-        final DragBankLineWidget widget = new DragBankLineWidget( getShell(), m_data, currentSegment, 2 );
+        final DragBankLineWidget widget = new DragBankLineWidget( m_data, currentSegment, 2 );
         m_widget.setDelegate( widget );
       }
       catch( final GM_Exception e1 )

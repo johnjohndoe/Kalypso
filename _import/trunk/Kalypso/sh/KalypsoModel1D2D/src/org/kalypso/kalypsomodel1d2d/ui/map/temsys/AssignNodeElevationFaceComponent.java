@@ -261,9 +261,9 @@ public class AssignNodeElevationFaceComponent
 
   private Table m_table;
 
-  private final List<IFE1D2DNode> m_selectionNodeList = new ArrayList<IFE1D2DNode>();
+  protected final List<IFE1D2DNode> m_selectionNodeList = new ArrayList<IFE1D2DNode>();
 
-  private TableViewer m_nodeElevationViewer;
+  protected TableViewer m_nodeElevationViewer;
 
   private final ICellModifier m_cellModifier = new ICellModifierImplementation();
 

@@ -50,8 +50,5 @@ public class GridPointColectorChangeEvent
   {
     POINT_ADDED,
     LINE_COLECTOR_CHANGED,
-    
-  };
-  
-  
+  }
 }

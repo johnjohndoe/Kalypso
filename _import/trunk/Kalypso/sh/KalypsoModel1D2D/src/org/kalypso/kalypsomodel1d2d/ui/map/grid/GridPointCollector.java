@@ -53,7 +53,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.util.TempGrid;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -79,8 +78,6 @@ public class GridPointCollector /* implements IGeometryBuilder */
   private boolean m_hasAllSides = false;
 
   private final LinePointCollector m_sides[] = new LinePointCollector[SIDE_MAX_NUM];
-
-  private final LineGeometryBuilder[] m_lineBuilders = new LineGeometryBuilder[4];
 
   private final LinePointCollectorConfig m_lpcConfigs[] = new LinePointCollectorConfig[SIDE_MAX_NUM];
 
@@ -265,8 +262,6 @@ public class GridPointCollector /* implements IGeometryBuilder */
     }
 
     final Color curColor = g.getColor();
-
-    // TODO: ogottogott!!
 
     int i = 0;
     for( LinePointCollector b : m_sides )

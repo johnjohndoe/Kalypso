@@ -67,9 +67,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.ChangeTerrainElevationSystemCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ele.DeleteNativeTerrainElevationWrapper;
@@ -115,13 +116,7 @@ public class ElevationModelSystemEditorComponent
   /* ======================================================================== */
   private TableViewer m_elevationListViewer;
 
-  private ApplyElevationWidgetDataModel m_dataModel;
-
-  private Image m_image_goToTerrain;
-
-  private Image m_image_Down;
-
-  private Image m_image_Up;
+  protected ApplyElevationWidgetDataModel m_dataModel;
 
   private Group m_descriptionGroupText;
 
@@ -196,15 +191,18 @@ public class ElevationModelSystemEditorComponent
       }
     } );
 
+    PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( elevationListTable, 5 );
     elevFormData.top = new FormAttachment( terrainModelLabel, 5 );
-    final Button moveUpBtn = new Button( elevationComposite, SWT.PUSH );
-    m_image_Up = new Image( elevationComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_up.gif" ).getImageData() );
-    moveUpBtn.setImage( m_image_Up );
+    final Button buttonMoveUp = new Button( elevationComposite, SWT.PUSH );
 
-    moveUpBtn.setLayoutData( elevFormData );
-    moveUpBtn.addSelectionListener( new SelectionAdapter()
+    final Image moveUpImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_MOVE_UP );
+    buttonMoveUp.setImage( moveUpImage );
+
+    buttonMoveUp.setLayoutData( elevFormData );
+    buttonMoveUp.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -217,11 +215,12 @@ public class ElevationModelSystemEditorComponent
     } );
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( elevationListTable, 5 );
-    elevFormData.top = new FormAttachment( moveUpBtn, 3 );
+    elevFormData.top = new FormAttachment( buttonMoveUp, 3 );
 
     final Button moveDownBtn = new Button( elevationComposite, SWT.PUSH );
-    m_image_Down = new Image( elevationComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/list_down.gif" ).getImageData() );
-    moveDownBtn.setImage( m_image_Down );
+
+    final Image moveDownImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_MOVE_DOWN );
+    moveDownBtn.setImage( moveDownImage );
 
     moveDownBtn.setLayoutData( elevFormData );
     moveDownBtn.addSelectionListener( new SelectionAdapter()
@@ -239,15 +238,16 @@ public class ElevationModelSystemEditorComponent
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( elevationListTable, 5 );
     elevFormData.top = new FormAttachment( moveDownBtn, 2 );
-    // elevFormData.bottom = new FormAttachment( 100, 0 );
 
-    final Button showTerrain = new Button( elevationComposite, SWT.PUSH );
-    // showTerrain.setText( "Goto Terrain" );
-    showTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.10" ) ); //$NON-NLS-1$
-    m_image_goToTerrain = new Image( elevationComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/23_show_elevationmodel.gif" ).getImageData() );
-    showTerrain.setImage( m_image_goToTerrain );
-    showTerrain.setLayoutData( elevFormData );
-    showTerrain.addSelectionListener( new SelectionAdapter()
+    final Button buttonShowTerrain = new Button( elevationComposite, SWT.PUSH );
+
+    buttonShowTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.10" ) ); //$NON-NLS-1$
+
+    final Image showTerrainImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_SHOW );
+
+    buttonShowTerrain.setImage( showTerrainImage );
+    buttonShowTerrain.setLayoutData( elevFormData );
+    buttonShowTerrain.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent event )
@@ -261,20 +261,22 @@ public class ElevationModelSystemEditorComponent
 
     } );
 
-    // //delete
+    // delete
     elevFormData = new FormData();
     elevFormData.left = new FormAttachment( elevationListTable, 5 );
-    elevFormData.top = new FormAttachment( showTerrain, 2 );
+    elevFormData.top = new FormAttachment( buttonShowTerrain, 2 );
     elevFormData.bottom = new FormAttachment( 100, 0 );
-    final Button deleteTerrain = new Button( elevationComposite, SWT.PUSH );
-    // showTerrain.setText( "Goto Terrain" );
-    deleteTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.12" ) ); //$NON-NLS-1$
+    final Button buttonDeleteTerrain = new Button( elevationComposite, SWT.PUSH );
 
-    m_image_goToTerrain = new Image( elevationComposite.getDisplay(), KalypsoModel1D2DPlugin.imageDescriptorFromPlugin( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), "icons/elcl16/25_cut_elevationmodel.gif" ).getImageData() );
-    deleteTerrain.setImage( m_image_goToTerrain );
-    deleteTerrain.setLayoutData( elevFormData );
-    deleteTerrain.addSelectionListener( new SelectionAdapter()
+    buttonDeleteTerrain.setToolTipText( Messages.getString( "ElevationModelSystemEditorComponent.12" ) ); //$NON-NLS-1$
+
+    final Image deleteTerrainImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.ELEVATION_DELETE );
+
+    buttonDeleteTerrain.setImage( deleteTerrainImage );
+    buttonDeleteTerrain.setLayoutData( elevFormData );
+    buttonDeleteTerrain.addSelectionListener( new SelectionAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent event )
       {
@@ -286,7 +288,7 @@ public class ElevationModelSystemEditorComponent
     m_descriptionGroupText = new Group( elevationComposite, SWT.NONE );
     m_descriptionGroupText.setText( Messages.getString( "ElevationModelSystemEditorComponent.14" ) ); //$NON-NLS-1$
     elevFormData = new FormData();
-    elevFormData.left = new FormAttachment( moveUpBtn, 5 );
+    elevFormData.left = new FormAttachment( buttonMoveUp, 5 );
     elevFormData.top = new FormAttachment( terrainModelLabel, 10 );
     elevFormData.bottom = new FormAttachment( 100, 0 );
     elevFormData.right = new FormAttachment( 100, 0 );

@@ -41,6 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.grid;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -82,6 +84,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DUIImages;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
@@ -94,6 +97,8 @@ class GridWidgetFace
    */
   protected final class GridWorkStatusCnCProvider implements ITableLabelProvider, IColorProvider
   {
+    private final List<Color> m_colorList = new ArrayList<Color>();
+
     public Image getColumnImage( Object element, int columnIndex )
     {
       return null;
@@ -152,6 +157,11 @@ class GridWidgetFace
 
     public void dispose( )
     {
+      if( m_colorList == null )
+        return;
+
+      for( Color color : m_colorList )
+        color.dispose();
 
     }
 
@@ -170,22 +180,7 @@ class GridWidgetFace
      */
     public Color getBackground( Object element )
     {
-      if( element instanceof LinePointCollectorConfig )
-      {
-        // java.awt.Color awtColor=((LinePointCollectorConfig)element).getColor();
-        // awtColor = awtColor.brighter();
-        // return toolkit.getColors().createColor(
-        // ((LinePointCollectorConfig)element).getName(),
-        // awtColor.getRed(),
-        // awtColor.getGreen(),
-        // awtColor.getBlue() );
-
-        return null;
-      }
-      else
-      {
-        return null;
-      }
+      return null;
     }
 
     /**
@@ -199,7 +194,9 @@ class GridWidgetFace
         java.awt.Color awtColor = ((LinePointCollectorConfig) element).getColor();
         awtColor = awtColor.darker();
 
-        Color swtColor = m_toolkit.getColors().createColor( ((LinePointCollectorConfig) element).getName(), awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+        final Color swtColor = m_toolkit.getColors().createColor( ((LinePointCollectorConfig) element).getName(), awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
+        m_colorList.add( swtColor );
+
         return swtColor;
       }
       else
@@ -269,14 +266,6 @@ class GridWidgetFace
 
     scrolledForm.getBody().setLayout( new TableWrapLayout() );
 
-    // FormData fd;
-    //
-    // fd = new FormData();
-    // //fd.width = 270;// TODO check how not to use width
-    // fd.left = new FormAttachment( 0, 0 );
-    // fd.bottom = new FormAttachment( 100, 0 );
-    // fd.top = new FormAttachment( 0, 0 );
-
     Section workStatus = toolkit.createSection( scrolledForm.getBody(), Section.TREE_NODE | Section.CLIENT_INDENT | Section.TWISTIE | Section.DESCRIPTION | Section.TITLE_BAR );
     workStatus.setText( Messages.getString( "GridWidgetFace.5" ) ); //$NON-NLS-1$
     TableWrapData tableWrapData = new TableWrapData( TableWrapData.LEFT, TableWrapData.TOP, 1, 1 );
@@ -322,8 +311,11 @@ class GridWidgetFace
 
     final Button m_buttonConvertToModel = toolkit.createButton( compConversion, "", SWT.PUSH ); //$NON-NLS-1$
     m_buttonConvertToModel.setToolTipText( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.15" ) ); //$NON-NLS-1$
-    final Image convImage = KalypsoModel1D2DUIImages.ID_OK.createImage();
-    m_buttonConvertToModel.setImage( convImage );
+
+    final PluginImageProvider imageProvider = KalypsoModel1D2DPlugin.getImageProvider();
+    final Image okImage = imageProvider.getImage( KalypsoModel1D2DUIImages.IMGKEY.OK );
+
+    m_buttonConvertToModel.setImage( okImage );
 
     m_buttonConvertToModel.addSelectionListener( new SelectionAdapter()
     {
@@ -516,18 +508,6 @@ class GridWidgetFace
       colorFieldEditor.getColorSelector().addListener( storePropertyChangeListener );
       colorFieldEditor.load();
     }
-
-    // toolkit.adapt( handleWidth.get, true, true );
-
-    // Table table = toolkit.createTable( clientComposite, SWT.FILL );
-    //      
-    // // final int WIDTH=clientComposite.getClientArea().width;
-    // GridData gridData = new GridData(GridData.FILL_BOTH);
-    // gridData.grabExcessVerticalSpace = true;
-    // gridData.grabExcessHorizontalSpace = true;
-    // // gridData.widthHint=200;
-    // // gridData.horizontalSpan = 1;
-    // table.setLayoutData(gridData);
   }
 
   private void createHelp( Section helpSection )
@@ -539,17 +519,12 @@ class GridWidgetFace
     clientComposite.setLayout( new FillLayout() );
     helpSection.setSize( 350, 350 );
     Browser browser = new Browser( clientComposite, SWT.FILL );
-    // browser.setSize( browser.computeSize( clientComposite.getSize().x, 300, false ) );
     m_toolkit.adapt( browser );
 
     try
     {
       URL htmlURL = KalypsoModel1D2DPlugin.getDefault().getBundle().getEntry( "/help/grid_widget_small_help.html" ); //$NON-NLS-1$
-      // URL htmlURL =
-      // GridWidgetFace.class.getResource( "grid_widget_small_help.html" );
       browser.setUrl( FileLocator.toFileURL( htmlURL ).toExternalForm() );
-
-      // System.out.println( "URI=" + htmlURL.toURI().toASCIIString() );
     }
     catch( Exception e )
     {

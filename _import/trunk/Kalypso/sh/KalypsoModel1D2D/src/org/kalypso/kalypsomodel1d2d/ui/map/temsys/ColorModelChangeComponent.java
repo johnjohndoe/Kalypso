@@ -41,6 +41,8 @@
 package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,15 +100,15 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
   private final IPropertyChangeListener storePropertyChangeListener_ = createPropertyChangeLis();
 
-  Canvas windowCanvas;
+  protected Canvas windowCanvas;
 
   private int numOfClasses = 0;
 
-  GC gc;
-
-  Color colorAWTChoice;
+  protected GC gc;
 
   private Display disp;
+
+  private final List<org.eclipse.swt.graphics.Color> m_colorList = new ArrayList<org.eclipse.swt.graphics.Color>();
 
   private IElevationColorModel m_colorModel;
 
@@ -187,6 +189,9 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
   public void dispose( )
   {
     preferenceStore_.removePropertyChangeListener( storePropertyChangeListener_ );
+
+    for( org.eclipse.swt.graphics.Color color : m_colorList )
+      color.dispose();
   }
 
   /**
@@ -383,6 +388,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       {
         gc = new GC( windowCanvas );
         paintElevationColorSelection( gc );
+        gc.dispose();
       }
     };
 
@@ -482,11 +488,14 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
 
     // fill
     Color gotColor = m_colorModel.getColor( MAXI_ELEVATION );
-    graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
+    org.eclipse.swt.graphics.Color backgroundColor = new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) );
+    graphicCanvas.setBackground( backgroundColor );
     graphicCanvas.fillRectangle( 0, coordStart, 20, classHeigth );
+    backgroundColor.dispose();
 
     // border
-    graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) ) );
+    org.eclipse.swt.graphics.Color foregroundColor = new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) );
+    graphicCanvas.setForeground( foregroundColor );
     graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth );
 
     restHeigth = restHeigth - 2 * classHeigth; // substract the heigth for the first and last class
@@ -502,9 +511,12 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       restHeigth = restHeigth - classHeigth;
 
       gotColor = m_colorModel.getColor( selectElevation );
-      graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
+      backgroundColor = new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) );
+      graphicCanvas.setBackground( backgroundColor );
       graphicCanvas.fillRectangle( 0, coordStart, 20, classHeigth );
-      graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) ) );
+      backgroundColor.dispose();
+
+      graphicCanvas.setForeground( foregroundColor );
       graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth );
     }
 
@@ -514,10 +526,14 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     classHeigth = coordEnd - coordStart;
 
     gotColor = m_colorModel.getColor( MINI_ELEVATION );
-    graphicCanvas.setBackground( new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) ) );
+    backgroundColor = new org.eclipse.swt.graphics.Color( disp, (new RGB( gotColor.getRed(), gotColor.getGreen(), gotColor.getBlue() )) );
+    graphicCanvas.setBackground( backgroundColor );
     graphicCanvas.fillRectangle( 0, coordStart, 20, classHeigth );
-    graphicCanvas.setForeground( new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) ) );
+    backgroundColor.dispose();
+
+    graphicCanvas.setForeground( foregroundColor );
     graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth );
+    foregroundColor.dispose();
   }
 
   /**
@@ -787,12 +803,6 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     final float[] val = Color.RGBtoHSB( color.getRed(), color.getGreen(), color.getBlue(), null );
 
     return val;
-  }
-
-  public org.eclipse.swt.graphics.Color getSWTColor( final Display dis, final Color color )
-  {
-    final org.eclipse.swt.graphics.Color swtColor = new org.eclipse.swt.graphics.Color( dis, color.getRed(), color.getGreen(), color.getBlue() );
-    return swtColor;
   }
 
   /**

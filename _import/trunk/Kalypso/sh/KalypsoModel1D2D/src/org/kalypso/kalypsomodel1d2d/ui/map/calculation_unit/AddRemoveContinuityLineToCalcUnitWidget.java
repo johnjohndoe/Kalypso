@@ -116,7 +116,8 @@ public class AddRemoveContinuityLineToCalcUnitWidget extends AbstractDelegateWid
     super( "Randlinien zu Teilmodell hinzufügen / löschen", "Randlinien zu Teilmodell hinzufügen / löschen", new SelectFeatureWidget( "", "", new QName[] { IFELine.QNAME }, IFELine.PROP_GEOMETRY ) );
 
     m_toolTipRenderer.setTooltip( "Selektieren Sie Randlinien in der Karte.\n    '<Einfügen>': zum Teilmodell hinzufügen.\n    '<Entfernen>': aus Teilmodell löschen.\n" );
-    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
+    final Color color = new Color( 1f, 1f, 0.6f, 0.70f );
+    m_toolTipRenderer.setBackgroundColor( color );
 
     m_dataModel = dataModel;
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();

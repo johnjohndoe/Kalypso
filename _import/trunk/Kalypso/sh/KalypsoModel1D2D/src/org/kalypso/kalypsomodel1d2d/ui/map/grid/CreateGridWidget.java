@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
@@ -30,6 +29,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -40,7 +40,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private final GridWidgetFace gridWidgetFace = new GridWidgetFace( this );
+  private final GridWidgetFace m_gridWidgetFace = new GridWidgetFace( this );
 
   private Point m_currentPoint = null;
 
@@ -112,7 +112,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
 
     String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
     if( targetCrs == null )
-      targetCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      targetCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     m_gridPointCollector.reset( targetCrs );
   }
@@ -434,8 +434,8 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
    */
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Control control = gridWidgetFace.createControl( parent, toolkit, this );
-    gridWidgetFace.setInput( m_gridPointCollector );
+    final Control control = m_gridWidgetFace.createControl( parent, toolkit, this );
+    m_gridWidgetFace.setInput( m_gridPointCollector );
     return control;
   }
 
@@ -444,7 +444,7 @@ public class CreateGridWidget extends AbstractWidget implements IWidgetWithOptio
    */
   public void disposeControl( )
   {
-    gridWidgetFace.disposeControl();
+    m_gridWidgetFace.disposeControl();
   }
 
   public void convertToModell( )

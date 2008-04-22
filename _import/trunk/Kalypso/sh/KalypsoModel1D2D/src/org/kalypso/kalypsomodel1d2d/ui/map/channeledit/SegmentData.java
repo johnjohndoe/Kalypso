@@ -50,7 +50,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.PROF;
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateChannelData.WIDTHORDER;
@@ -70,6 +69,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -363,46 +363,50 @@ public class SegmentData
 
     // calculate the width of the the first and last segment and devide it by two (because of the triangle area of these
     // parts)
-    final double startSegmentWidth = (Double) points[1].getValue( breiteComponent ) - (Double) points[0].getValue( breiteComponent );
-    final double endSegmentWidth = (Double) points[numProfPoints - 1].getValue( breiteComponent ) - (Double) points[numProfPoints - 2].getValue( breiteComponent );
+
+    final TupleResult owner = points[1].getOwner();
+
+    final int indexBreite = owner.indexOfComponent( breiteComponent );
+    final int indexHoehe = owner.indexOfComponent( hoeheComponent );
+    final int indexRw = owner.indexOfComponent( rwComponent );
+    final int indexHw = owner.indexOfComponent( hwComponent );
+
+    final double startSegmentWidth = (Double) points[1].getValue( indexBreite ) - (Double) points[0].getValue( indexBreite );
+    final double endSegmentWidth = (Double) points[numProfPoints - 1].getValue( indexBreite ) - (Double) points[numProfPoints - 2].getValue( indexBreite );
 
     wi = 0.5 * (startSegmentWidth + endSegmentWidth);
     // add the width of the segments inbetween
     for( int i = 1; i < numProfPoints - 2; i++ )
-      wi = wi + (Double) points[i + 1].getValue( breiteComponent ) - (Double) points[i].getValue( breiteComponent );
+      wi = wi + (Double) points[i + 1].getValue( indexBreite ) - (Double) points[i].getValue( indexBreite );
     dZ = dArea / wi;
 
     // String t = String.format( "Schlauchgenerator: Anpassung der Profilh�hen um: %f ", dZ, " m." );
     // System.out.println( t );
 
     // start point will not be changed
+
+    final IRecord record = profilPointList[0];
+    final TupleResult result = record.getOwner();
+    final double startBreite = (Double) record.getValue( result.indexOfComponent( breiteComponent ) );
+    final double startHoehe = (Double) record.getValue( result.indexOfComponent( hoeheComponent ) );
+    final double startRw = (Double) record.getValue( result.indexOfComponent( rwComponent ) );
+    final double startHw = (Double) record.getValue( result.indexOfComponent( hwComponent ) );
+
     final IRecord profilStartPoint = tmpProfil.createProfilPoint();
 
-    final TupleResult pointListOwner = profilPointList[0].getOwner();
+    final TupleResult resultStartPoint = profilStartPoint.getOwner();
 
-    final int indexBreite = pointListOwner.indexOfComponent( breiteComponent );
-    final int indexHoehe = pointListOwner.indexOfComponent( hoeheComponent );
-    final int indexRw = pointListOwner.indexOfComponent( rwComponent );
-    final int indexHw = pointListOwner.indexOfComponent( hwComponent );
-
-    final double startBreite = (Double) profilPointList[0].getValue( indexBreite );
-    final double startHoehe = (Double) profilPointList[0].getValue( indexHoehe );
-    final double startRw = (Double) profilPointList[0].getValue( indexRw );
-    final double startHw = (Double) profilPointList[0].getValue( indexHw );
-
-    profilStartPoint.setValue( breiteComponent, startBreite );
-    profilStartPoint.setValue( hoeheComponent, startHoehe );
-    profilStartPoint.setValue( rwComponent, startRw );
-    profilStartPoint.setValue( hwComponent, startHw );
+    profilStartPoint.setValue( resultStartPoint.indexOfComponent( breiteComponent ), startBreite );
+    profilStartPoint.setValue( resultStartPoint.indexOfComponent( hoeheComponent ), startHoehe );
+    profilStartPoint.setValue( resultStartPoint.indexOfComponent( rwComponent ), startRw );
+    profilStartPoint.setValue( resultStartPoint.indexOfComponent( hwComponent ), startHw );
 
     tmpProfil.addPoint( profilStartPoint );
 
     // handle the points inbetween
     for( int i = 1; i < numProfPoints - 1; i++ )
     {
-      final IRecord point = tmpProfil.createProfilPoint();
-
-      final double width = (Double) points[i].getValue( breiteComponent );
+      final double width = (Double) points[i].getValue( indexBreite );
       double heigth = 0;
       try
       {
@@ -412,13 +416,16 @@ public class SegmentData
       {
         e.printStackTrace();
       }
-      final double x = (Double) points[i].getValue( rwComponent );
-      final double y = (Double) points[i].getValue( hwComponent );
+      final double x = (Double) points[i].getValue( indexRw );
+      final double y = (Double) points[i].getValue( indexHw );
 
-      point.setValue( breiteComponent, width );
-      point.setValue( hoeheComponent, heigth );
-      point.setValue( rwComponent, x );
-      point.setValue( hwComponent, y );
+      final IRecord point = tmpProfil.createProfilPoint();
+      final TupleResult resultPoint = point.getOwner();
+
+      point.setValue( resultPoint.indexOfComponent( breiteComponent ), width );
+      point.setValue( resultPoint.indexOfComponent( hoeheComponent ), heigth );
+      point.setValue( resultPoint.indexOfComponent( rwComponent ), x );
+      point.setValue( resultPoint.indexOfComponent( hwComponent ), y );
 
       tmpProfil.addPoint( point );
     }
@@ -426,15 +433,17 @@ public class SegmentData
     final IRecord profilEndPoint = tmpProfil.createProfilPoint();
 
     // end point will be the same
-    final double endBreite = (Double) profilPointList[profilPointList.length - 1].getValue( breiteComponent );
-    final double endHoehe = (Double) profilPointList[profilPointList.length - 1].getValue( hoeheComponent );
-    final double endRw = (Double) profilPointList[profilPointList.length - 1].getValue( rwComponent );
-    final double endHw = (Double) profilPointList[profilPointList.length - 1].getValue( hwComponent );
+    final double endBreite = (Double) profilPointList[profilPointList.length - 1].getValue( indexBreite );
+    final double endHoehe = (Double) profilPointList[profilPointList.length - 1].getValue( indexHoehe );
+    final double endRw = (Double) profilPointList[profilPointList.length - 1].getValue( indexRw );
+    final double endHw = (Double) profilPointList[profilPointList.length - 1].getValue( indexHw );
 
-    profilEndPoint.setValue( breiteComponent, endBreite );
-    profilEndPoint.setValue( hoeheComponent, endHoehe );
-    profilEndPoint.setValue( rwComponent, endRw );
-    profilEndPoint.setValue( hwComponent, endHw );
+    final TupleResult resultEndPoint = profilEndPoint.getOwner();
+
+    profilEndPoint.setValue( resultEndPoint.indexOfComponent( breiteComponent ), endBreite );
+    profilEndPoint.setValue( resultEndPoint.indexOfComponent( hoeheComponent ), endHoehe );
+    profilEndPoint.setValue( resultEndPoint.indexOfComponent( rwComponent ), endRw );
+    profilEndPoint.setValue( resultEndPoint.indexOfComponent( hwComponent ), endHw );
 
     tmpProfil.addPoint( profilEndPoint );
 
@@ -488,22 +497,18 @@ public class SegmentData
     if( numProfInters > numProfPoints )
     {
       // start point
-      IRecord pointRecord = tmpProfil.createProfilPoint();
 
+      /* get values */
       final IRecord pFirst = profilPointList[0];
-
       final TupleResult owner = pFirst.getOwner();
 
-      final int indexBreite = owner.indexOfComponent( breiteComponent );
-      final int indexHoehe = owner.indexOfComponent( hoeheComponent );
-      final int indexRw = owner.indexOfComponent( rwComponent );
-      final int indexHw = owner.indexOfComponent( hwComponent );
+      double width = (Double) pFirst.getValue( owner.indexOfComponent( breiteComponent ) );
+      double heigth = (Double) pFirst.getValue( owner.indexOfComponent( hoeheComponent ) );
+      double x = (Double) pFirst.getValue( owner.indexOfComponent( rwComponent ) );
+      double y = (Double) pFirst.getValue( owner.indexOfComponent( hwComponent ) );
 
-      double width = (Double) pFirst.getValue( indexBreite );
-      double heigth = (Double) pFirst.getValue( indexHoehe );
-      double x = (Double) pFirst.getValue( indexRw );
-      double y = (Double) pFirst.getValue( indexHw );
-
+      /* set values */
+      IRecord pointRecord = tmpProfil.createProfilPoint();
       final TupleResult createdResult = pointRecord.getOwner();
 
       pointRecord.setValue( createdResult.indexOfComponent( breiteComponent ), width );
@@ -514,19 +519,21 @@ public class SegmentData
       tmpProfil.addPoint( pointRecord );
 
       /* do it by equidistant points */
-      // keep in mind, that equidistants width doesn't get equidistant georeferenced lengths!
-      final double startWidth = (Double) profilPointList[0].getValue( indexBreite );
-      final double endWidth = (Double) profilPointList[profilPointList.length - 1].getValue( indexBreite );
+      // keep in mind, that equidistant widths doesn't get equidistant georeferenced lengths!
+      final double startWidth = (Double) profilPointList[0].getValue( owner.indexOfComponent( breiteComponent ) );
+      final double endWidth = (Double) profilPointList[profilPointList.length - 1].getValue( owner.indexOfComponent( breiteComponent ) );
       final double totalWidth = endWidth - startWidth;
       final double dWidth = totalWidth / (m_channelData.getNumProfileIntersections() - 1); // equidistant widths
 
       for( int i = 1; i < m_channelData.getNumProfileIntersections() - 1; i++ )
       {
-        pointRecord = tmpProfil.createProfilPoint();
-
+        /* get values */
         width = startWidth + i * dWidth;
         heigth = WspmProfileHelper.getHeigthPositionByWidth( width, profile );
         final GM_Point geoPoint = WspmProfileHelper.getGeoPosition( width, profile );
+
+        /* set values */
+        pointRecord = tmpProfil.createProfilPoint();
 
         pointRecord.setValue( createdResult.indexOfComponent( breiteComponent ), width );
         pointRecord.setValue( createdResult.indexOfComponent( hoeheComponent ), heigth );
@@ -537,12 +544,15 @@ public class SegmentData
       }
 
       // end point
-      pointRecord = tmpProfil.createProfilPoint();
 
-      width = (Double) profilPointList[profilPointList.length - 1].getValue( indexBreite );
-      heigth = (Double) profilPointList[profilPointList.length - 1].getValue( indexHoehe );
-      x = (Double) profilPointList[profilPointList.length - 1].getValue( indexRw );
-      y = (Double) profilPointList[profilPointList.length - 1].getValue( indexHw );
+      /* get values */
+      width = (Double) profilPointList[profilPointList.length - 1].getValue( owner.indexOfComponent( breiteComponent ) );
+      heigth = (Double) profilPointList[profilPointList.length - 1].getValue( owner.indexOfComponent( hoeheComponent ) );
+      x = (Double) profilPointList[profilPointList.length - 1].getValue( owner.indexOfComponent( rwComponent ) );
+      y = (Double) profilPointList[profilPointList.length - 1].getValue( owner.indexOfComponent( hwComponent ) );
+
+      /* set values */
+      pointRecord = tmpProfil.createProfilPoint();
 
       pointRecord.setValue( createdResult.indexOfComponent( breiteComponent ), width );
       pointRecord.setValue( createdResult.indexOfComponent( hoeheComponent ), heigth );
@@ -561,17 +571,22 @@ public class SegmentData
       Arrays.sort( DPpoints, new ProfilComparator( breiteComponent ) );
       for( final IRecord element : DPpoints )
       {
+        /* get values */
+        final TupleResult result = element.getOwner();
+
+        final double width = (Double) element.getValue( result.indexOfComponent( breiteComponent ) );
+        final double heigth = (Double) element.getValue( result.indexOfComponent( hoeheComponent ) );
+        final double x = (Double) element.getValue( result.indexOfComponent( rwComponent ) );
+        final double y = (Double) element.getValue( result.indexOfComponent( hwComponent ) );
+
+        /* set values */
         final IRecord point = tmpProfil.createProfilPoint();
+        TupleResult pointOwner = point.getOwner();
 
-        final double width = (Double) element.getValue( breiteComponent );
-        final double heigth = (Double) element.getValue( hoeheComponent );
-        final double x = (Double) element.getValue( rwComponent );
-        final double y = (Double) element.getValue( hwComponent );
-
-        point.setValue( breiteComponent, width );
-        point.setValue( hoeheComponent, heigth );
-        point.setValue( rwComponent, x );
-        point.setValue( hwComponent, y );
+        point.setValue( pointOwner.indexOfComponent( breiteComponent ), width );
+        point.setValue( pointOwner.indexOfComponent( hoeheComponent ), heigth );
+        point.setValue( pointOwner.indexOfComponent( rwComponent ), x );
+        point.setValue( pointOwner.indexOfComponent( hwComponent ), y );
 
         tmpProfil.addPoint( point );
       }
@@ -688,6 +703,9 @@ public class SegmentData
 
     final IRecord[] profilPointList = wspmprofile.getProfil().getPoints();
 
+    /* get / create components */
+    final IComponent breiteComponentOrig = ProfilObsHelper.getPropertyFromId( orgIProfil, IWspmConstants.POINT_PROPERTY_BREITE );
+
     final GM_Curve line = wspmprofile.getLine();
 
     final IProfil tmpProfil = ProfilFactory.createProfil( wspmprofile.getProfil().getType() );
@@ -703,48 +721,53 @@ public class SegmentData
     tmpProfil.addPointProperty( hoeheComponent );
     tmpProfil.addPointProperty( hwComponent );
     tmpProfil.addPointProperty( rwComponent );
-
     final IRecord point1 = tmpProfil.createProfilPoint();
     final IRecord point2 = tmpProfil.createProfilPoint();
 
+    final TupleResult ownerP1 = point1.getOwner();
+    final TupleResult ownerP2 = point2.getOwner();
+
     /* calculate the width of the intersected profile */
     // sort intersection points by width
-    point1.setValue( breiteComponent, startWidth );
-    point1.setValue( hoeheComponent, heigth1 );
-    point1.setValue( rwComponent, geoPoint1.getX() );
-    point1.setValue( hwComponent, geoPoint1.getY() );
+    point1.setValue( ownerP1.indexOfComponent( breiteComponent ), startWidth );
+    point1.setValue( ownerP1.indexOfComponent( hoeheComponent ), heigth1 );
+    point1.setValue( ownerP1.indexOfComponent( rwComponent ), geoPoint1.getX() );
+    point1.setValue( ownerP1.indexOfComponent( hwComponent ), geoPoint1.getY() );
 
-    point2.setValue( breiteComponent, endWidth );
-    point2.setValue( hoeheComponent, heigth2 );
-    point2.setValue( rwComponent, geoPoint2.getX() );
-    point2.setValue( hwComponent, geoPoint2.getY() );
+    point2.setValue( ownerP2.indexOfComponent( breiteComponent ), endWidth );
+    point2.setValue( ownerP2.indexOfComponent( hoeheComponent ), heigth2 );
+    point2.setValue( ownerP2.indexOfComponent( rwComponent ), geoPoint2.getX() );
+    point2.setValue( ownerP2.indexOfComponent( hwComponent ), geoPoint2.getY() );
 
     tmpProfil.addPoint( point1 );
+
     final GM_LineString lineString = line.getAsLineString(); // in the linestring the coordinates are already projected
 
     for( int i = 0; i < profilPointList.length; i++ )
     {
       final IRecord point = profilPointList[i];
+      final TupleResult owner = point.getOwner();
 
-      final double currentWidth = (Double) point.getValue( breiteComponent );
+      final double currentWidth = (Double) point.getValue( owner.indexOfComponent( breiteComponentOrig ) );
 
       if( currentWidth > startWidth & currentWidth < endWidth )
       {
         final IRecord pt = tmpProfil.createProfilPoint();
+        final TupleResult ptOwner = pt.getOwner();
 
-        final IComponent[] properties = orgIProfil.getPointProperties();
-        for( final IComponent property : properties )
+        final IComponent[] components = orgIProfil.getPointProperties();
+        for( final IComponent component : components )
         {
-          if( tmpProfil.hasPointProperty( property ) )
+          if( tmpProfil.hasPointProperty( component ) )
           {
-            final Object object = point.getValue( property );
-            pt.setValue( property, object );
+            final Object object = point.getValue( owner.indexOfComponent( component ) );
+            pt.setValue( ptOwner.indexOfComponent( component ), object );
           }
         }
 
         // set rw/hw to the projected coordinates
-        pt.setValue( rwComponent, lineString.getPositionAt( i ).getX() );
-        pt.setValue( hwComponent, lineString.getPositionAt( i ).getY() );
+        pt.setValue( ptOwner.indexOfComponent( rwComponent ), lineString.getPositionAt( i ).getX() );
+        pt.setValue( ptOwner.indexOfComponent( hwComponent ), lineString.getPositionAt( i ).getY() );
 
         tmpProfil.addPoint( pt );
       }
@@ -1152,7 +1175,7 @@ public class SegmentData
    */
   public void setIntersPoint( final GM_Point gmpoint, final PROF prof, final WIDTHORDER widthorder, final double width ) throws Exception
   {
-    final GeoTransformer transformer = new GeoTransformer( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+    final GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
     for( int i = 0; i < m_intersPoints.size(); i++ )
     {
@@ -1313,7 +1336,8 @@ public class SegmentData
 
     for( final IRecord point : profilPointList )
     {
-      final double currentWidth = (Double) point.getValue( breiteComponent );
+      final TupleResult result = point.getOwner();
+      final double currentWidth = (Double) point.getValue( result.indexOfComponent( breiteComponent ) );
 
       final IRecord pt = tmpProfil.createProfilPoint();
       final TupleResult owner = pt.getOwner();
@@ -1530,9 +1554,17 @@ public class SegmentData
 
     for( int i = 0; i < coords.length; i++ )
     {
-      final double x = (Double) profile.getPoints()[i].getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-      final double y = (Double) profile.getPoints()[i].getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-      final double z = (Double) profile.getPoints()[i].getValue( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final IRecord record = profile.getPoints()[i];
+      final TupleResult owner = record.getOwner();
+
+      final IComponent rwComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final IComponent hwComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final IComponent hoeheComponent = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+
+      final double x = (Double) record.getValue( owner.indexOfComponent( rwComponent ) );
+      final double y = (Double) record.getValue( owner.indexOfComponent( hwComponent ) );
+      final double z = (Double) record.getValue( owner.indexOfComponent( hoeheComponent ) );
+
       coords[i] = new Coordinate( x, y, z );
     }
     return coords;
