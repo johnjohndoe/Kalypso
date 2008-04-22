@@ -53,36 +53,35 @@ public interface IUserService extends IKalypsoService
    * Returns the rights of the given user
    * 
    * @param username
-   *          name of the user who has already authenticated himself against the operating system
-   * 
+   *            name of the user who has already authenticated himself against the operating system
    * @return list of rights
    */
-  public String[] getRights( final String username ) throws UserRightsException;
+  public String[] getRights( final String username, final String currentScenarioId ) throws UserRightsException;
 
   /**
    * Returns the rights of the given user
    * 
    * @param username
-   *          name of the user who is willing to authenticate himself. He might have logged in the operating system, but
-   *          must still log into some other entity.
+   *            name of the user who is willing to authenticate himself. He might have logged in the operating system,
+   *            but must still log into some other entity.
    * @param password
-   *          TODO encode password, make this call secure
+   *            TODO encode password, make this call secure
    * @return list of rights
    */
-  public String[] getRightsWithAuth( final String username, final String password ) throws UserRightsException;
+  public String[] getRightsWithAuth( final String username, final String password, final String currentScenarioId ) throws UserRightsException;
 
   /**
    * @return whether user should be asked to enter its login information or not
    */
-  public boolean isAskForLogin() throws UserRightsException;
+  public boolean isAskForLogin( ) throws UserRightsException;
 
   /**
    * @return whether user should be asked for scenario or not
    */
-  public boolean isAskForScenario() throws UserRightsException;
+  public boolean isAskForScenario( ) throws UserRightsException;
 
   /**
    * @return list of scenarios that must be managed by clients
    */
-  public ScenarioBean[] getScenarios() throws UserRightsException;
+  public ScenarioBean[] getScenarios( ) throws UserRightsException;
 }

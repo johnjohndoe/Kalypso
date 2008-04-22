@@ -111,7 +111,7 @@ public class UserServiceAuthenticator implements IAuthenticator
           if( askForLogin )
           {
             // using authentication
-            final String[] rights = srv.getRightsWithAuth( username, dlg.getPassword() ).toArray( new String[0]);
+            final String[] rights = srv.getRightsWithAuth( username, dlg.getPassword(), scenario.getId() ).toArray( new String[0]);
             if( rights == null )
               Logger.getLogger( getClass().getName() ).info(
                   "Keine Nutzerrechte für Nutzer '" + username + "' erhalten." );
@@ -125,7 +125,7 @@ public class UserServiceAuthenticator implements IAuthenticator
           else
           {
             // using single sign on
-            final String[] rights = srv.getRights( username ).toArray( new String[0] );
+            final String[] rights = srv.getRights( username, scenario.getId() ).toArray( new String[0] );
             if( rights == null )
               Logger.getLogger( getClass().getName() ).info(
                   "Keine Nutzerrechte für Nutzer '" + username + "' erhalten." );
@@ -144,7 +144,7 @@ public class UserServiceAuthenticator implements IAuthenticator
     else
     {
       // using single sign on
-      final String[] rights = srv.getRights( username ).toArray( new String[0] );
+      final String[] rights = srv.getRights( username, scenario.getId() ).toArray( new String[0] );
       if( rights != null && rights.length > 0 )
         return new KalypsoUser( username, rights, scenario.getId(), scenarios );
     }
