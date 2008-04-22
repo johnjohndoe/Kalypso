@@ -335,7 +335,6 @@ public class RiskLanduseHelper
       final Feature shpFeature = (Feature) shapeFeatureList.get( i );
       final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
       final String shpPropertyValue = shpFeature.getProperty( shpPropQName ).toString();
-      final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
 
       final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
 
@@ -346,6 +345,7 @@ public class RiskLanduseHelper
         final GM_Surface< ? >[] surfaces = multiSurface.getAllSurfaces();
         for( int k = 0; k < surfaces.length; k++ )
         {
+          final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
           polygon.setGeometry( surfaces[k] );
           polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
           polygon.getFeature().invalidEnvelope();
@@ -355,6 +355,7 @@ public class RiskLanduseHelper
       }
       else if( shpGeometryProperty instanceof GM_Surface )
       {
+        final ILandusePolygon polygon = landusePolygonCollection.addNew( ILandusePolygon.QNAME );
         polygon.setGeometry( (GM_Surface< ? >) shpGeometryProperty );
         polygon.setLanduseClass( getLanduseClassByName( polygon.getFeature(), shpPropertyValue, landuseClassesList ) );
         // polygon.setStyleType( shpPropertyValue );

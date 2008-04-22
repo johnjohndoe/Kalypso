@@ -59,16 +59,35 @@ public interface IRiskLanduseStatistic extends IFeatureWrapper2, Comparable<IRis
 
   public QName PROPERTY_RETURN_PERIOD = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statReturnPeriod" ); //$NON-NLS-1$
 
+  /**
+   * The minimum damage value of all flooded cells.
+   */
   public QName PROPERTY_MIN_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMinDamage" ); //$NON-NLS-1$
 
+  /**
+   * The maximum damage value of all flooded cells.
+   */
   public QName PROPERTY_MAX_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statMaxDamage" ); //$NON-NLS-1$
 
+  /**
+   * Average damage value [€/m²]. The same as the summation value divided by the number of flooded cells.
+   */
   public QName PROPERTY_AVERAGE_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageDamage" ); //$NON-NLS-1$
 
+  /**
+   * Average annual damage value [€/m²/a].
+   */
   public QName PROPERTY_AVERAGE_ANNUAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statAverageAnnualDamage" ); //$NON-NLS-1$
 
+  /**
+   * summation of all flooded cells [€/m²]
+   */
   public QName PROPERTY_DAMAGE_SUM = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statSumDamage" ); //$NON-NLS-1$
 
+  /**
+   * Total damage [€]. The average value multiplied by the number of flooded cells multiplied with the area of a single
+   * cell. Will only be calculated after the finish method was called.
+   */
   public QName PROPERTY_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statTotalDamage" ); //$NON-NLS-1$
 
   public void updateStatistic( final BigDecimal value );

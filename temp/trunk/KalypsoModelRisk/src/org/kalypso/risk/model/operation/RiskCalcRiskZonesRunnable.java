@@ -231,7 +231,11 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
         final int tableIndex = getIndex( events, statistic );
         if( tableIndex == -1 )
           continue;
-        newRecord.setValue( tableIndex + 1, statistic.getDamageSum() );
+
+        // here we have to set the total damage [€], because in the table we want to present the total damage values for
+        // each landuse class in €.
+        newRecord.setValue( tableIndex + 1, statistic.getTotalDamage() );
+        // newRecord.setValue( tableIndex + 1, statistic.getDamageSum() );
       }
 
       final int recordSize = newRecord.getOwner().getComponents().length;

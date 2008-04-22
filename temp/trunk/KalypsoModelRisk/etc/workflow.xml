@@ -125,6 +125,14 @@
 					<con:Parameter name="input"
 						value="templates/CalculationControlPanel.gft" />
 				</con:ExtensionContext>
+				<con:ExtensionContext id="RiskZonesPanel"
+					parent="FeatureView"
+					handlerFactoryId="kalypsoContextHandlerFactory">
+					<con:Parameter name="type"
+						value="featureViewInputContext" />
+					<con:Parameter name="input"
+						value="templates/RiskZonesPanel.gft" />
+				</con:ExtensionContext>
 			</con:ViewContext>
 			
 			<con:ViewContext id="RiskStatisticsView"

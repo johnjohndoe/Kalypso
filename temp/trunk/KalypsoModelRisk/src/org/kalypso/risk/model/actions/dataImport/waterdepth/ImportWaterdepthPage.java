@@ -60,6 +60,8 @@ public class ImportWaterdepthPage extends WizardPage
 
   private CRSSelectionPanel m_crsPanel;
 
+  private final List<Image> m_imageList = new ArrayList<Image>();
+
   public ImportWaterdepthPage( )
   {
     super( Messages.getString( "ImportWaterdepthPage.0" ), "", ImageProvider.IMAGE_NEW_FILE ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -171,7 +173,10 @@ public class ImportWaterdepthPage extends WizardPage
     final ImageDescriptor removeBtnID = KalypsoRiskPlugin.getImageProvider().getImageDescriptor( "icons/etool16/raster_delete.gif" ); //$NON-NLS-1$
 
     m_btnAddNew = new Button( parent, SWT.PUSH );
-    m_btnAddNew.setImage( new Image( parent.getDisplay(), addBtnID.getImageData() ) );
+    final Image addButtonImage = new Image( parent.getDisplay(), addBtnID.getImageData() );
+    m_imageList.add( addButtonImage );
+
+    m_btnAddNew.setImage( addButtonImage );
     m_btnAddNew.setToolTipText( Messages.getString( "ImportWaterdepthPage.11" ) ); //$NON-NLS-1$
     m_btnAddNew.addSelectionListener( new SelectionListener()
     {
@@ -207,7 +212,11 @@ public class ImportWaterdepthPage extends WizardPage
       }
     } );
     m_btnDeleteSelected = new Button( parent, SWT.PUSH );
-    m_btnDeleteSelected.setImage( new Image( parent.getDisplay(), removeBtnID.getImageData() ) );
+
+    final Image deleteButtonImage = new Image( parent.getDisplay(), removeBtnID.getImageData() );
+    m_imageList.add( deleteButtonImage );
+
+    m_btnDeleteSelected.setImage( deleteButtonImage );
     m_btnDeleteSelected.setToolTipText( Messages.getString( "ImportWaterdepthPage.16" ) ); //$NON-NLS-1$
     m_btnDeleteSelected.setEnabled( false );
     m_btnDeleteSelected.addSelectionListener( new SelectionListener()
@@ -382,5 +391,18 @@ public class ImportWaterdepthPage extends WizardPage
   public List<AsciiRasterInfo> getRasterInfos( )
   {
     return m_rasterInfos;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.DialogPage#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    // dispose all images and colors
+    for( Image image : m_imageList )
+      image.dispose();
+
+    m_crsPanel.dispose();
   }
 }

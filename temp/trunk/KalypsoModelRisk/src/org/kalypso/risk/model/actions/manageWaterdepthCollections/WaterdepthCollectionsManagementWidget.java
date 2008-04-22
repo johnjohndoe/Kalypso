@@ -543,6 +543,7 @@ public class WaterdepthCollectionsManagementWidget extends AbstractWidget implem
    */
   public void disposeControl( )
   {
+
   }
 
   /**

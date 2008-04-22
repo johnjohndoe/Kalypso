@@ -114,7 +114,8 @@ public class RiskModelHelper
       }
     }
 
-    SLDHelper.exportRasterSymbolyzerSLD( sldFile, minDamageValue.doubleValue(), maxDamageValue.doubleValue() * 1.05, 20, new Color( 237, 80, 25 ), "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
+    final Color color = new Color( 237, 80, 25 );
+    SLDHelper.exportRasterSymbolyzerSLD( sldFile, minDamageValue.doubleValue(), maxDamageValue.doubleValue() * 1.05, 20, color, "Kalypso style", "Kalypso style", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // TODO: maybe refreshing...
   }
