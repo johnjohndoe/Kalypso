@@ -127,7 +127,7 @@ public class CoverageProfile
     IProfil profile = calculatePointsAndCreateProfile( GeoGridUtilities.toGrid( m_coverage ), points, curve.getCoordinateSystem() );
 
     /* STEP 4: Thin the profile. */
-    thinProfile( profile, 10 );
+    thinProfile( profile, 0.10 );
 
     return profile;
   }
@@ -205,7 +205,7 @@ public class CoverageProfile
    * @param profile
    *            The profile, which should be thinned.
    * @param allowedDistance
-   *            The allowed distance.
+   *            The allowed distance [m].
    */
   private void thinProfile( IProfil profile, double allowedDistance ) throws IllegalProfileOperationException
   {
