@@ -431,17 +431,12 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
+   * @deprecated Use {@link #getResult()}.hasComponent( property )
    */
+  @Deprecated
   public boolean hasPointProperty( final IComponent property )
   {
-    if( property == null )
-      return false;
-
-    final IComponent[] components = getResult().getComponents();
-    if( ArrayUtils.contains( components, property ) )
-      return true;
-
-    return false;
+    return getResult().hasComponent( property );
   }
 
   /**
@@ -643,5 +638,5 @@ public abstract class AbstractProfil implements IProfil
 
     fireProblemMarkerChanged();
   }
-  
+
 }

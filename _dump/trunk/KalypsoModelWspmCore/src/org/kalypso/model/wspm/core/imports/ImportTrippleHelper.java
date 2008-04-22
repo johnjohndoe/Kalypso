@@ -80,15 +80,11 @@ public class ImportTrippleHelper
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
 
-    final IComponent breite = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final IComponent hoehe = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent rechtswert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     final IComponent hochwert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
     IProfil profile = ProfilFactory.createProfil( profileType );
 
-// profile.addPointProperty( breite );
-// profile.addPointProperty( hoehe );
     profile.addPointProperty( rechtswert );
     profile.addPointProperty( hochwert );
 
