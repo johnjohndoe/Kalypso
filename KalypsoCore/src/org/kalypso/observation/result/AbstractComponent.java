@@ -107,7 +107,8 @@ public abstract class AbstractComponent implements IComponent
       final FeatureComponent c1 = (FeatureComponent) this;
       final FeatureComponent c2 = (FeatureComponent) obj;
 
-      return c1.getItemDefinition().equals( c2.getItemDefinition() );
+      return c1.getId().equals( c2.getId() );
+// return c1.getItemDefinition().equals( c2.getItemDefinition() );
     }
     else if( this instanceof Component && obj instanceof Component )
     {
