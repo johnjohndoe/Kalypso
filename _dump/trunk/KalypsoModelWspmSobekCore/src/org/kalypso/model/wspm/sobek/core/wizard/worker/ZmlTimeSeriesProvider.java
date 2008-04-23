@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.core.wizard.worker;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -89,7 +90,17 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
     /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
     final IComponent[] components = result.getComponents();
 
-    final GregorianCalendar calendar = new GregorianCalendar( date.getYear(), date.getMonth(), date.getDay(), date.getHours(), date.getMinutes(), date.getSeconds() );
+    final Calendar instance = Calendar.getInstance();
+    instance.setTime( date );
+
+    final int year = instance.get( Calendar.YEAR );
+    final int month = instance.get( Calendar.MONTH );
+    final int day = instance.get( Calendar.DAY_OF_MONTH );
+    final int hour = instance.get( Calendar.HOUR_OF_DAY );
+    final int minute = instance.get( Calendar.MINUTE );
+    final int second = instance.get( Calendar.SECOND );
+
+    final GregorianCalendar calendar = new GregorianCalendar( year, month, day, hour, minute, second );
 
     final IRecord record = result.createRecord();
     record.setValue( components[0], new XMLGregorianCalendarImpl( calendar ) );

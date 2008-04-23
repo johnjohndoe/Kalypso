@@ -164,37 +164,38 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     final Feature lastfall = m_condition.getLastfall().getFeature();
 
     /* lastfall */
-    new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_11, iGroup );
+    new WizardFeatureLabel( lastfall, ISobekConstants.QN_HYDRAULIC_NAME, iGroup );
 
     final WizardFeatureTextBox lf = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_HYDRAULIC_NAME );
     lf.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     lf.setEnabled( false );
 
     /* boundary node */
-    new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_12, iGroup );
+    final Feature boundaryNode = m_condition.getBoundaryNode().getFeature();
+    new WizardFeatureLabel( "Boundary Node", iGroup );
 
-    final WizardFeatureTextBox bn = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_HYDRAULIC_NAME );
+    final WizardFeatureTextBox bn = new WizardFeatureTextBox( boundaryNode, ISobekConstants.QN_HYDRAULIC_NAME );
     bn.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bn.setEnabled( false );
 
     /* start of calculation case */
-    new WizardFeatureLabel( "Start of Calculation case", iGroup );
+    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, iGroup );
 
     final WizardFeatureTextBox bnStart = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
     bnStart.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bnStart.setEnabled( false );
 
     /* end of calculation case */
-    new WizardFeatureLabel( "End of Calculation case", iGroup );
+    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END, iGroup );
 
     final WizardFeatureTextBox bnEnd = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END );
     bnEnd.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bnEnd.setEnabled( false );
 
     /* bc type */
-    new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_13, iGroup );
+    new WizardFeatureLabel( boundaryNode, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE, iGroup );
 
-    final FacadeComboViewer bt = new FacadeComboViewer( new FCVFeatureDelegate( m_condition.getBoundaryNode().getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
+    final FacadeComboViewer bt = new FacadeComboViewer( new FCVFeatureDelegate( boundaryNode, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE ) );
     bt.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );
     bt.setEnabled( false );
 
