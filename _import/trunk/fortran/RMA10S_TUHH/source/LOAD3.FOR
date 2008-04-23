@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   15 Apr 2008    2:17 pm
+C     Last change:  WP   21 Apr 2008    4:14 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -907,11 +907,16 @@ cipk oct98 update to f90
             !first assumption: Node is not dry
             NodeIsDry (nd) = .false.
 
+            !node is dry, if depth is below deactivating depth
             if (vel (3, nd) <= dset) then
               NodeIsDry(nd) = .true.
+
+            !node is dry, if it is a midside node and the element is deactivated
             ELSEIF (MOD (k, 2) == 0 .AND. imat (lineelement (i, k)) < 0)
      +                                                              then
               NodeIsDry (nd) = .true.
+
+            !node is dry, if it is a corner node and the two neighbouring (at the boundary the related one) elements are deactivated
             elseif (mod (k, 2) /= 0) then
               if ((k == 1    .and. imat (lineelement (i, k+1)) < 0)
      +            .Or.
@@ -953,33 +958,38 @@ cipk oct98 update to f90
               NBC(ND,1) = 1
               NBC(ND,2) = 0
 
-              !the same node must not be processed on
-              IF (NLN == nd) then
-                nbc (nd, 3) = 1
-                nbc (nd, 4) = 0
-                nbc (nd, 5) = 0
-                nbc (nd, 6) = 0
-                !WRITE(*,*) nd, nbc(nd, 3)
-                CYCLE equationassigning
-              endif
-
-              !Stop, if there is a gap in CCline
-              if (nd == 0) then
+              !gap in line definition leads to error
+              IF (nd == 0 .or. NLN == 0) THEN
                 WRITE(*,*) 'ERROR - Definition gap in transition line.'
                 WRITE(*,*) 'the ', k, 'th slot has a zero entry'
                 WRITE(*,*) 'Have a look at your line definition'
                 WRITE(*,*) 'Program can not be executed'
                 WRITE(*,*) 'STOP'
                 STOP
-              endif
+              !the same node must not be processed on
+              ELSEIF (NLN == nd) THEN
+                nbc (nd, 3) = 1
+                nbc (nd, 4) = 0
+                nbc (nd, 5) = 0
+                nbc (nd, 6) = 0
+                CYCLE equationassigning
 
-              !assign equation references
-              DO eqdof = 3, 6
-                NBC (ND, eqdof) = -NLN
-              ENDDO
+              !this counts for corner nodes, where the continuity equation is active
+              ELSEIF (NLN /= nd .AND. MOD (k, 2) /= 0 ) THEN
+                !assign equation references
+                DO eqdof = 3, 6
+                  NBC (ND, eqdof) = -NLN
+                ENDDO
+
+              !this counts for midside nodes, where the continuity equation is not active
+              ELSEIF (NLN /= nd .AND. MOD (k, 2) == 0 ) then
+                !assign equation references
+                DO eqdof = 3, 6
+                  NBC (ND, eqdof) = 0
+                ENDDO
+
+              ENDIF
             endif
-
-
           ENDDO equationassigning
 
           !Process 1D-node, because this can't be member of the line
@@ -989,9 +999,6 @@ cipk oct98 update to f90
           DO eqdof = 4,6
             NBC(CoNode,eqdof) = 0
           ENDDO
-
-          !if element was found, jump out of Loop; Reason: This loop was only done for the 1D-transitioning element nn.
-
 
           EXIT EquationAdjustment
         ENDDO EquationAdjustment
