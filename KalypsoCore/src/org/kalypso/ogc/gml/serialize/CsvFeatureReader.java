@@ -51,7 +51,7 @@ public final class CsvFeatureReader
   }
 
   /** featureTypeProperty -> cvsinfo */
-  private Map<IPropertyType, CSVInfo> m_infos = new LinkedHashMap<IPropertyType, CSVInfo>();
+  private final Map<IPropertyType, CSVInfo> m_infos = new LinkedHashMap<IPropertyType, CSVInfo>();
 
   public final void addInfo( final IPropertyType ftp, final CSVInfo info )
   {
@@ -69,8 +69,6 @@ public final class CsvFeatureReader
     final IRelationType memberRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     loadCSVIntoList( rootFeature, memberRelation, ft, list, reader, comment, delemiter, lineskip );
 
-    // TODO: nothing is done with the list of feature, is this correct???
-    
     final GMLSchema schema = null;
     final URL context = null;
     final String schemaLocation = null;
@@ -114,9 +112,8 @@ public final class CsvFeatureReader
       final CSVInfo info = m_infos.get( ftp );
 
       // check column numbers
-      for( int j = 0; j < info.columns.length; j++ )
+      for( final int colNumber : info.columns )
       {
-        final int colNumber = info.columns[j];
         if( colNumber >= tokens.length )
           throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '" + ftp.getQName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
       }

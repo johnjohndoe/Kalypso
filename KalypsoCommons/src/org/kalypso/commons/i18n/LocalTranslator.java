@@ -40,25 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.w3c.dom.Element;
 
 /**
@@ -69,10 +61,6 @@ import org.w3c.dom.Element;
  */
 public class LocalTranslator implements ITranslator, IExecutableExtension
 {
-  private static final String EXTENSION = ".properties"; //$NON-NLS-1$
-
-  private static String[] NL_SUFFIXES;
-
   private final Map<Locale, Properties> m_properties = new HashMap<Locale, Properties>();
 
   private String m_id;
@@ -152,66 +140,8 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
     m_properties.put( locale, properties );
 
     // try to load the properties in order of suffixes
-    loadProperties( properties );
+    PropertiesUtilities.loadI18nProperties( properties, m_context, m_path );
 
     return properties;
-  }
-
-  private void loadProperties( final Properties properties )
-  {
-    final String[] suffixes = getLocalSuffixes();
-    for( final String suffix : suffixes )
-    {
-      InputStream is = null;
-      try
-      {
-        final String path = m_path + suffix;
-        final URL url = new URL( m_context, path );
-        is = new BufferedInputStream( url.openStream() );
-        properties.load( is );
-        is.close();
-        // On first success: stop loading
-        return;
-      }
-      catch( final FileNotFoundException e )
-      {
-        // ignore file not found exceptions, as we have several tries
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-      finally
-      {
-        IOUtils.closeQuietly( is );
-      }
-    }
-
-    // If we reach this line, nothing was found...
-    final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Message file not found: " + m_path + suffixes[0], null );
-    KalypsoCommonsPlugin.getDefault().getLog().log( status );
-  }
-
-  private static String[] getLocalSuffixes( )
-  {
-    if( NL_SUFFIXES == null )
-    {
-      // build list of suffixes for loading resource bundles
-      String nl = Locale.getDefault().toString();
-      final List<String> result = new ArrayList<String>( 4 );
-      int lastSeparator;
-      while( true )
-      {
-        result.add( '_' + nl + EXTENSION );
-        lastSeparator = nl.lastIndexOf( '_' );
-        if( lastSeparator == -1 )
-          break;
-        nl = nl.substring( 0, lastSeparator );
-      }
-      // add the empty suffix last (most general)
-      result.add( EXTENSION );
-      NL_SUFFIXES = result.toArray( new String[result.size()] );
-    }
-    return NL_SUFFIXES;
   }
 }

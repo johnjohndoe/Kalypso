@@ -278,6 +278,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     final Configuration targetProps = getProperties();
 
     // create featuretype from bean
+    final QName featureQName = new QName( "unknown", "docbean" );
     final Collection<IValuePropertyType> ftpColl = new ArrayList<IValuePropertyType>();
     final Map<IPropertyType, Object> fpColl = new LinkedHashMap<IPropertyType, Object>();
     final int[] ints = new int[map.size()];
@@ -304,28 +305,22 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
       }
 
       final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-      QName valueQName = new QName( NS.XSD, xmltype );
-      IMarshallingTypeHandler handler = registry.getTypeHandlerForTypeName( valueQName );
+      IMarshallingTypeHandler handler = registry.getTypeHandlerForTypeName( new QName( NS.XSD, xmltype ) );
       if( handler == null )
-      {
-        valueQName = new QName( NS.XSD, "string" );
-        handler = registry.getTypeHandlerForTypeName( valueQName );
-      }
+        handler = registry.getTypeHandlerForTypeName( new QName( NS.XSD, "string" ) );
+
       // String typename = null;
       Object realValue = null;
       try
       {
         realValue = value == null ? null : handler.parseType( value );
-        // typename = Mapper.mapXMLSchemaType2JavaType( xmltype );
-        // realValue = value == null ? null : Mapper.mapXMLValueToJava( value, typename );
       }
       catch( final Exception e )
       {
 
         e.printStackTrace();
-        // typename = "java.lang.String";
       }
-      final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( new QName( "unknown", name ), valueQName, handler, 0, 1, false );
+      final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( featureQName, new QName( "unknown", name ), handler, 0, 1, false );
       ftpColl.add( vpt );
       fpColl.put( vpt, realValue );
 
@@ -333,7 +328,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     }
 
     final IValuePropertyType[] ftps = ftpColl.toArray( new IValuePropertyType[ftpColl.size()] );
-    final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "unknown", "docbean" ), ftps );
+    final IFeatureType ft = GMLSchemaFactory.createFeatureType( featureQName, ftps );
 
     final Feature newFeature = FeatureFactory.createFeature( null, null, "0", ft, false );
     FeatureHelper.setProperties( newFeature, fpColl );

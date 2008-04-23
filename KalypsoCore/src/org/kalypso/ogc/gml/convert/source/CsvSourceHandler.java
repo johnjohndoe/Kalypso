@@ -19,6 +19,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader.CSVInfo;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -65,7 +66,7 @@ public class CsvSourceHandler implements ISourceHandler
         }
         final QName qname = new QName( "namespace", element.getName() );
         final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
-        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler.getTypeName(), typeHandler, 0, 1, false );
+        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, qname, typeHandler, 0, 1, false );
         final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
         reader.addInfo( ftp, info );
       }
