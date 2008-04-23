@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -174,9 +175,8 @@ public class CoverageProfile
       /* Transform the coordinate into the CS of the grid. */
       Coordinate transformedCoordinate = GeoGridUtilities.transformCoordinate( grid, coordinate, csOfPoints );
       /* Get the interpolated value with the coordinate in the coordinate system of the grid. */
-// double value = grid.getValue( transformedCoordinate );
       double value = GeoGridUtilities.getValue( grid, transformedCoordinate, Interpolation.bilinear );
-      if( value == Double.NaN )
+      if( Double.isNaN( value ) )
         continue;
 
       /* All neccessary values. */
@@ -188,13 +188,15 @@ public class CoverageProfile
       /* Create a new profile point. */
       IRecord profilePoint = profile.createProfilPoint();
 
+      final TupleResult owner = profilePoint.getOwner();
+
       /* Add geo values. */
-      profilePoint.setValue( cRechtswert, rechtswert );
-      profilePoint.setValue( cHochwert, hochwert );
+      profilePoint.setValue( owner.indexOfComponent( cRechtswert ), rechtswert );
+      profilePoint.setValue( owner.indexOfComponent( cHochwert ), hochwert );
 
       /* Add length section values. */
-      profilePoint.setValue( cBreite, breite );
-      profilePoint.setValue( cHoehe, hoehe );
+      profilePoint.setValue( owner.indexOfComponent( cBreite ), breite );
+      profilePoint.setValue( owner.indexOfComponent( cHoehe ), hoehe );
 
       /* Add the new point to the profile. */
       profile.addPoint( profilePoint );
