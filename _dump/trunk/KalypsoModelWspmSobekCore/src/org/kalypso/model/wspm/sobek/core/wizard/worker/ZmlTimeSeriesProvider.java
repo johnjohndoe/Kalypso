@@ -49,7 +49,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
@@ -77,7 +76,6 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
 {
-
   private ZmlObservationItem m_item;
 
   public ZmlTimeSeriesProvider( final IBoundaryConditionGeneral settings, final PageEditBoundaryConditionTimeSeries pageTS )
@@ -129,16 +127,13 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
         throw new IllegalStateException( Messages.ZmlTimeSeriesProvider_2 );
 
       final IAxis dateAxis = getDateAxis( values.getAxisList() );
-      final IAxis[] valueAxis = getValueAxis( getBoundaryNodeType(), values.getAxisList() );
+      final IAxis valueAxis = getValueAxis( getBoundaryNodeType(), values.getAxisList() );
 
       final List<BigDecimal> myValues = new ArrayList<BigDecimal>();
 
       /* get first segment -> boundary condition start value -> timeseries start value */
-      for( final IAxis axis : valueAxis )
-      {
-        final Double value = (Double) values.getElement( 0, axis );
-        myValues.add( BigDecimal.valueOf( value ) );
-      }
+      Double value = (Double) values.getElement( 0, valueAxis );
+      myValues.add( BigDecimal.valueOf( value ) );
 
       addResult( result, cStart.getTime(), myValues );
       myValues.clear();
@@ -147,21 +142,17 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       for( int i = 0; i < values.getCount(); i++ )
       {
         final Date date = (Date) values.getElement( i, dateAxis );
-        for( final IAxis axis : valueAxis )
-        {
-          final Double value = (Double) values.getElement( i, axis );
-          myValues.add( BigDecimal.valueOf( value ) );
-        }
+
+        value = (Double) values.getElement( i, valueAxis );
+        myValues.add( BigDecimal.valueOf( value ) );
 
         addResult( result, date, myValues );
         myValues.clear();
       }
+
       /* get last segment -> boundary condition end value */
-      for( final IAxis axis : valueAxis )
-      {
-        final Double value = (Double) values.getElement( values.getCount() - 1, axis );
-        myValues.add( BigDecimal.valueOf( value ) );
-      }
+      value = (Double) values.getElement( values.getCount() - 1, valueAxis );
+      myValues.add( BigDecimal.valueOf( value ) );
 
       addResult( result, cEnd.getTime(), myValues );
       myValues.clear();
@@ -207,20 +198,9 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
   /**
    * @return is boundary type == wq-relation {IAxis[0] = W, IAxis[1] = Q}
    */
-  private IAxis[] getValueAxis( final BOUNDARY_TYPE boundary_type, final IAxis[] axisList )
+  private IAxis getValueAxis( final BOUNDARY_TYPE boundary_type, final IAxis[] axisList )
   {
-    String[] compare;
-
-    if( BOUNDARY_TYPE.eW.equals( boundary_type ) )
-      compare = new String[] { boundary_type.toZmlString() };
-    else if( BOUNDARY_TYPE.eQ.equals( boundary_type ) )
-      compare = new String[] { boundary_type.toZmlString() };
-    else if( BOUNDARY_TYPE.eWQ.equals( boundary_type ) )
-      compare = new String[] { BOUNDARY_TYPE.eW.toZmlString(), BOUNDARY_TYPE.eQ.toZmlString() };
-    else
-      throw new NotImplementedException();
-
-    final IAxis[] myAxis = new IAxis[2];
+    final String compare = boundary_type.toZmlString();
 
     for( final IAxis axis : axisList )
     {
@@ -228,20 +208,13 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
       if( (type == null) || "".equals( type.trim() ) ) //$NON-NLS-1$
         continue;
 
-      if( ArrayUtils.contains( compare, type ) )
-        if( !BOUNDARY_TYPE.eWQ.equals( boundary_type ) )
-          return new IAxis[] { axis };
-        // $ANALYSIS-IGNORE
-        else if( BOUNDARY_TYPE.eW.toZmlString().equals( type ) )
-          myAxis[0] = axis;
+      if( compare.equals( type ) )
+        if( BOUNDARY_TYPE.eW.toZmlString().equals( type ) )
+          return axis;
         else if( BOUNDARY_TYPE.eQ.toZmlString().equals( type ) )
-          myAxis[1] = axis;
+          return axis;
     }
 
-    for( final IAxis a : myAxis )
-      if( a == null )
-        throw new IllegalStateException( Messages.ZmlTimeSeriesProvider_5 );
-
-    return myAxis;
+    throw new NotImplementedException();
   }
 }
