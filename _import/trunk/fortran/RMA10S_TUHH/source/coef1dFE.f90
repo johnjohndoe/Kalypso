@@ -1,4 +1,4 @@
-!Last change:  WP   23 Apr 2008    3:39 pm
+!Last change:  WP   23 Apr 2008    5:01 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -542,7 +542,7 @@ do i = 1, 2
 
         !initialize values of flow coefficient of course only in the first run
         if (j == 1) then
-          bei (i)     = 1.0
+          bei (i)     = 0.0
           dbeidh (i)  = 0.0
           d2beidh (i) = 0.0
         end if
@@ -569,6 +569,7 @@ do i = 1, 2
           WRITE (*, *) 'program goes on without flow parameter (default option beient = 0)'
           !Reset beient
           beient = 0
+          bei(i) = 1.0
         ENDIF
       endif
 
@@ -579,9 +580,10 @@ do i = 1, 2
         dbeidh (i)  = 0.0
         d2beidh (i) = 0.0
       end if
-      if (testoutput == 1) then
+      if (testoutput == 3) then
         WRITE(*,*) 'Beiwerte - Element: ', nn, ' Knoten: ', i
         WRITE(*,*) 'moment_off: ', moment_off, maxn, nb, icyc
+        WRITE(*,*) '  Depth(i): ', h
         WRITE(*,*) '    bei(i): ', bei(i)
         WRITE(*,*) ' dbeidh(i): ', dbeidh(i)
         WRITE(*,*) 'd2beidh(i): ', d2beidh(i)
@@ -1622,7 +1624,7 @@ enddo outer
 
 !control output
 if (testoutput == 2) &
-  & call ElementResult (nn, ncon(1), ncon(3), nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), qh(n1), qh(n3), vel_res, &
+  & call ElementResult (nn, nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), qh(n1), qh(n3), vel_res, &
                        &  ah(n1), ah(n3), sfnod, sfwicht, dahdh(n1), dahdh(n3), d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, &
                        &  dareaintdh, d2areaintdh, daintdx, d2aintdx, d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schin, &
                        &  sfint, sdfintdh1, vflowint, dvintdx)
