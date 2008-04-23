@@ -103,7 +103,11 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
       return;
     }
 
-    if( m_tsEnds.getDateTime().before( m_tsBegins.getDateTime() ) )
+    final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
+    final Integer pre = m_condition.getLastfall().getPreSimulationTime();
+    start.add( GregorianCalendar.HOUR, pre * -1 );
+
+    if( m_tsEnds.getDateTime().before( start.getTime() ) )
     {
       setMessage( null );
       setErrorMessage( Messages.PageEditBoundaryConditionGeneral_5 );
@@ -122,7 +126,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
 
-    if( m_tsBegins.getDateTime().after( lastfallGregorianStart ) )
+    if( start.after( lastfallGregorianStart ) )
     {
       setMessage( null );
       setErrorMessage( Messages.PageEditBoundaryConditionGeneral_6 + df.format( lastfallGregorianStart.getTime() ) + Messages.PageEditBoundaryConditionGeneral_7 );
@@ -192,6 +196,13 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     bnEnd.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bnEnd.setEnabled( false );
 
+    /* presimulation time */
+    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, iGroup );
+
+    final WizardFeatureTextBox preSim = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME );
+    preSim.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
+    preSim.setEnabled( false );
+
     /* bc type */
     new WizardFeatureLabel( boundaryNode, ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE, iGroup );
 
@@ -207,7 +218,13 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     /* newly created boundary condition? */
     if( m_condition.getObservationStart() == null )
-      m_tsBegins = new LastfallDateChooser( m_condition.getLastfall().getLastfallStart() );
+    {
+      final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
+      final Integer pre = m_condition.getLastfall().getPreSimulationTime();
+      start.add( GregorianCalendar.HOUR, pre * -1 );
+
+      m_tsBegins = new LastfallDateChooser( start );
+    }
     else
       m_tsBegins = new LastfallDateChooser( m_condition.getObservationStart() );
 
