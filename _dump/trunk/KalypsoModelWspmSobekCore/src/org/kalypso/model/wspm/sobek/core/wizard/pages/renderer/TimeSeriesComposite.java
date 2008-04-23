@@ -155,14 +155,34 @@ public class TimeSeriesComposite extends Composite
 
   private void renderTimeSeriesDiagrams( final TreeViewer reposTree, final Composite body )
   {
+    /* diagramm */
+
+    final BOUNDARY_TYPE boundaryNodeType = m_page.getSettings().getBoundaryNodeType();
+
+    if( BOUNDARY_TYPE.eW.equals( boundaryNodeType ) || BOUNDARY_TYPE.eQ.equals( boundaryNodeType ) )
+    {
+      renderNormal( reposTree, body );
+    }
+    else if( BOUNDARY_TYPE.eWQ.equals( boundaryNodeType ) )
+    {
+      renderWQRelation( reposTree, body );
+    }
+
+  }
+
+  private void renderWQRelation( final TreeViewer tree, final Composite body )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  private void renderNormal( final TreeViewer tree, final Composite parent )
+  {
     try
     {
-      /* diagramm */
-      final Composite cDiagram = new Composite( body, SWT.NULL );
+      final Composite cDiagram = new Composite( parent, SWT.NULL );
       cDiagram.setLayout( new FillLayout() );
       cDiagram.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
-      final BOUNDARY_TYPE boundaryNodeType = m_page.getSettings().getBoundaryNodeType();
 
       final DiagView diagView = new DiagView( true );
       final ObservationChart chart = new ObservationChart( diagView );
@@ -171,7 +191,7 @@ public class TimeSeriesComposite extends Composite
       dFrame.add( ChartFactory.createChartPanel( chart ) );
 
       /* table view */
-      final Composite cTable = new Composite( body, SWT.NULL );
+      final Composite cTable = new Composite( parent, SWT.NULL );
       cTable.setLayout( new FillLayout() );
       cTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
@@ -181,16 +201,15 @@ public class TimeSeriesComposite extends Composite
       final Frame tFrame = SWT_AWT.new_Frame( new Composite( cTable, SWT.RIGHT | SWT.EMBEDDED | SWT.Paint ) );
       tFrame.add( new ObservationTablePanel( table ) );
 
-      reposTree.addSelectionChangedListener( new ISelectionChangedListener()
+      tree.addSelectionChangedListener( new ISelectionChangedListener()
       {
-
         public void selectionChanged( final SelectionChangedEvent event )
         {
           // always remove items first (we don't know which selection we get)
           diagView.removeAllItems();
           tableView.removeAllItems();
 
-          final TreeSelection selection = (TreeSelection) reposTree.getSelection();
+          final TreeSelection selection = (TreeSelection) tree.getSelection();
           final Object element = selection.getFirstElement();
           if( !(element instanceof ZmlObservationItem) )
             return;
