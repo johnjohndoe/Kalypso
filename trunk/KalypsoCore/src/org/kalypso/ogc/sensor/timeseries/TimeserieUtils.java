@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
@@ -79,13 +79,13 @@ public class TimeserieUtils
 {
   private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/config.properties" );
 
+  private static String m_basename = "config";
+
   private static Properties m_config;
 
   private static HashMap<String, NumberFormat> m_formatMap = new HashMap<String, NumberFormat>();
 
   private static NumberFormat m_defaultFormat = null;
-
-  private static String m_basename;
 
   private TimeserieUtils( )
   {
