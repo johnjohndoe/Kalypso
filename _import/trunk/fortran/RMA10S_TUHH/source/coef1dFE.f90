@@ -1,4 +1,4 @@
-!Last change:  NIS  22 Apr 2008    8:09 pm
+!Last change:  WP   23 Apr 2008    3:39 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -542,7 +542,7 @@ do i = 1, 2
 
         !initialize values of flow coefficient of course only in the first run
         if (j == 1) then
-          bei (i)     = 0.0
+          bei (i)     = 1.0
           dbeidh (i)  = 0.0
           d2beidh (i) = 0.0
         end if
