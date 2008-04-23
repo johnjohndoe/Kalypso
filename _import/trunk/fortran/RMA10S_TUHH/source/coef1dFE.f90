@@ -1,4 +1,4 @@
-!Last change:  WP   23 Apr 2008    2:16 pm
+!Last change:  NIS  22 Apr 2008    8:09 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -240,7 +240,7 @@ init3: DO i = 1, 2
   d2beidh(i)    = 0.0
 ENDDO init3
 
-!initialice gravitation factor for unit system
+!initialize gravitation factor for unit system
 IF (GRAV .LT. 32.)  THEN
   grav = GRAV
 ELSE
@@ -274,7 +274,7 @@ do i = 1, 3, 2
   !fix waterdepth for h-boundaries
   if (byparts == 1) then
     IF (MOD(NFIX(N1)/100,10) .EQ. 2) THEN
-      vel(3,n1) = spec(n1,3)
+      vel (3, n1) = spec (n1, 3)
     end if
   endif
 
@@ -306,69 +306,70 @@ do i = 1, 3, 2
 enddo
 
 !Get the nodes of the element
-N1 = NOP(NN,1)
-N3 = NOP(NN,3)
+N1 = NOP (NN, 1)
+N3 = NOP (NN, 3)
 
 !****************************************************************
 !nis,mar07,com: Calculate 'area' of element and coordinate things
-TEL=AREA(NN)
-AREA(NN)=0.
+TEL = AREA (NN)
+AREA (NN) = 0.
 
 !cipk nov97
 !      TVOL(NN)=0.
 
 !getting local copy of corner node numbers
-NCN = NCORN(NN)
-DO N=1,NCN
-  NCON(N)=NOP(NN,N)
+NCN = NCORN (NN)
+DO N = 1, NCN
+  NCON (N) = NOP (NN, N)
 enddo
 
 !for 1D-2D-transition elements
-IF(NCN .EQ. 5  .AND.  IMAT(NN) .LT. 900) NCN=3
+IF (NCN == 5  .AND.  IMAT (NN) .LT. 900) NCN = 3
 
 !residual vector and Jacobi-Matrix (derivatives) arrays
-NEF=NCN*NDF
-DO I=1,NEF
-  F(I) = 0.0
-  DO J=1,NEF
-    ESTIFM(I,J) = 0.0
+NEF = NCN * NDF
+DO I = 1, NEF
+  F (I) = 0.0
+  DO J = 1, NEF
+    ESTIFM (I, J) = 0.0
   enddo
 enddo
 
 !process on element direction
-IF(NTX .EQ. 0) THEN
-  TH(NN) = ATAN2 (CORD(N3,2)-CORD(N1,2), CORD(N3,1) - CORD(N1,1))
+IF (NTX == 0) THEN
+  TH (NN) = ATAN2 (CORD (N3, 2) - CORD (N1, 2), CORD (N3, 1) - CORD (N1, 1))
 ENDIF
 
 !getting angles
-CXX = COS (TH(NN))
-SAA = SIN (TH(NN))
+CXX = COS (TH (NN))
+SAA = SIN (TH (NN))
+
 !Set number of Gauss-points
-NGP=4
-NCNX=2
+NGP = 4
+NCNX = 2
 
 !C-
 !C-.....COMPUTE LOCAL CORDS.....
 !C-
 
-!Get water depths at corner nodes
-h1=vel(3,n1)
-h3=vel(3,n3)
+!local copy of water depths at corner nodes
+h1 = vel (3, n1)
+h3 = vel (3, n3)
 
 !get reference node
-NR = NCON(1)
+NR = NCON (1)
 DO k = 1, ncn
-  N = NCON(K)
+  N = NCON (K)
   !Calculate angular difference between the principal element direction th and the direction at the node alfa
-  ANGDIF = TH(NN) - ALFA(N)
+  ANGDIF = TH (NN) - ALFA (N)
 
   !Set a direction factor in dependency of the defintion direction at a node and of an element
-  IF(ABS(ANGDIF) .GT. 1.5708  .AND.  ABS(ANGDIF) .LT. 4.71779) THEN
-    QFACT(K) = -1.0
-    QQFACT(K)= -1.0
+  IF (ABS (ANGDIF) > 1.5708  .AND.  ABS (ANGDIF) < 4.71779) THEN
+    QFACT (K)  = -1.0
+    QQFACT (K) = -1.0
   ELSE
-    QFACT(K) = 1.0
-    QQFACT(K)= 1.0
+    QFACT (K)  = 1.0
+    QQFACT (K) = 1.0
   ENDIF
 
   !Calculate x- and y- distance from node to reference node. With linear approach, an element might be curved
@@ -568,7 +569,6 @@ do i = 1, 2
           WRITE (*, *) 'program goes on without flow parameter (default option beient = 0)'
           !Reset beient
           beient = 0
-          bei (i) = 1.0
         ENDIF
       endif
 
