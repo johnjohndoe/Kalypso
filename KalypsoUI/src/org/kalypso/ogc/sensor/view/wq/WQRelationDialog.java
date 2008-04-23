@@ -60,12 +60,13 @@ import org.kalypso.ogc.sensor.view.wq.table.WQRelationTableViewer;
 public class WQRelationDialog extends ResizableDialog
 {
   private final WQTableSet m_wqs;
+
   private final String m_title;
 
   public WQRelationDialog( final Shell parentShell, final String title, final WQTableSet wqs )
   {
     super( parentShell, null );
-    
+
     m_title = title;
     m_wqs = wqs;
   }
@@ -73,7 +74,7 @@ public class WQRelationDialog extends ResizableDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite composite = (Composite)super.createDialogArea( parent );
+    final Composite composite = (Composite) super.createDialogArea( parent );
 
     final SashForm form = new SashForm( composite, SWT.HORIZONTAL );
     form.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -92,7 +93,7 @@ public class WQRelationDialog extends ResizableDialog
 
       MessageDialog.openError( getShell(), "WQ-Beziehung, Dialog öffnen", e.getLocalizedMessage() );
     }
-    
+
     getShell().setText( m_title );
 
     return composite;
