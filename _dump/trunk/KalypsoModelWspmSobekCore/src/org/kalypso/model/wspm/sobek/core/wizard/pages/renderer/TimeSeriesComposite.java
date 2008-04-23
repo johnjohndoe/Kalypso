@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages.renderer;
 
 import java.awt.Frame;
+import java.io.StringReader;
 import java.util.GregorianCalendar;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -75,7 +76,13 @@ import org.kalypso.ogc.sensor.tableview.swing.ObservationTablePanel;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ogc.sensor.template.PlainObsProvider;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
+import org.kalypso.ogc.sensor.view.wq.diagram.WQRelationDiagramViewer;
+import org.kalypso.ogc.sensor.view.wq.table.WQRelationTableViewer;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
+import org.xml.sax.InputSource;
 
 /**
  * @author kuch
@@ -172,7 +179,56 @@ public class TimeSeriesComposite extends Composite
 
   private void renderWQRelation( final TreeViewer tree, final Composite body )
   {
-    // TODO Auto-generated method stub
+    final WQRelationDiagramViewer diagViewer = new WQRelationDiagramViewer( body );
+    diagViewer.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    final WQRelationTableViewer tableViewer = new WQRelationTableViewer( body );
+    tableViewer.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    tree.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        try
+        {
+          final TreeSelection selection = (TreeSelection) tree.getSelection();
+          final Object element = selection.getFirstElement();
+          if( !(element instanceof ZmlObservationItem) )
+            return;
+
+          final ZmlObservationItem item = (ZmlObservationItem) element;
+          final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
+          final String wqrelation = observation.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+
+          final StringReader reader = new StringReader( wqrelation );
+          final WQTableSet set = WQTableFactory.parse( new InputSource( reader ) );
+          reader.close();
+
+          diagViewer.setInput( set );
+          tableViewer.setInput( set );
+
+          m_selectedTreeItem = item;
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
+
+        checkPageCompleted();
+      }
+    } );
+
+// try
+// {
+// diagViewer.setInput( m_wqs );
+// tableViewer.setInput( m_wqs );
+// }
+// catch( final SensorException e )
+// {
+// e.printStackTrace();
+//
+// MessageDialog.openError( getShell(), "WQ-Beziehung, Dialog öffnen", e.getLocalizedMessage() );
+// }
 
   }
 
