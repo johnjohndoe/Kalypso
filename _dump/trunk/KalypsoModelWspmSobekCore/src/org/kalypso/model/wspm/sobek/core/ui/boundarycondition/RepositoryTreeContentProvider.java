@@ -82,18 +82,23 @@ public class RepositoryTreeContentProvider extends org.kalypso.ui.repository.vie
 
         if( adapter instanceof WQTimeserieProxy )
         {
-          // WQTimeseries have both defined! W and Q!!!
-          final WQTimeserieProxy proxy = (WQTimeserieProxy) item.getAdapter( IObservation.class );
-          if( proxy == null )
-            continue;
+          /* W/Q relationship */
+          final BOUNDARY_TYPE bnt = m_settings.getBoundaryNodeType();
 
-          myChildren.add( item );
+          if( BOUNDARY_TYPE.eWQ.equals( bnt ) )
+          {
+            // WQTimeseries have both defined! W and Q!!!
+            final WQTimeserieProxy proxy = (WQTimeserieProxy) item.getAdapter( IObservation.class );
+            if( proxy == null )
+              continue;
+
+            myChildren.add( item );
+          }
         }
         else if( adapter instanceof SimpleObservation )
         {
+          /* w OR q values */
           final SimpleObservation obs = (SimpleObservation) adapter;
-
-          // FIXME w/q realtion
 
           final IAxis[] axisList = obs.getAxisList();
           for( final IAxis axis : axisList )
@@ -131,8 +136,8 @@ public class RepositoryTreeContentProvider extends org.kalypso.ui.repository.vie
   {
     final BOUNDARY_TYPE bnt = m_settings.getBoundaryNodeType();
 
-    // $ANALYSIS-IGNORE
-    if( bnt.toZmlString().contains( type ) )
+    final String nodeType = bnt.toZmlString();
+    if( nodeType.equals( type ) )
       return true;
 
     return false;
