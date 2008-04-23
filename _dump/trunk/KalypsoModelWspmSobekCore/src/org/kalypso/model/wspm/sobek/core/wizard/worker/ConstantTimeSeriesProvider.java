@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.worker;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
@@ -50,7 +51,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallConditi
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.IBoundaryConditionGeneral;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionTimeSeries;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -69,13 +69,10 @@ public class ConstantTimeSeriesProvider extends AbstractTimeSeriesProvider
   private void addResult( final TupleResult result, final GregorianCalendar calendar, final Double value )
   {
     /* if wq-relation -> components must have the order date, w, q otherwise -> date, w or q */
-    final IComponent[] components = result.getComponents();
 
     final IRecord record = result.createRecord();
-    record.setValue( components[0], new XMLGregorianCalendarImpl( calendar ) );
-
-    for( int i = 1; i < components.length; i++ )
-      record.setValue( components[i], value );
+    record.setValue( 0, new XMLGregorianCalendarImpl( calendar ) );
+    record.setValue( 1, BigDecimal.valueOf( value ) );
 
     result.add( record );
   }

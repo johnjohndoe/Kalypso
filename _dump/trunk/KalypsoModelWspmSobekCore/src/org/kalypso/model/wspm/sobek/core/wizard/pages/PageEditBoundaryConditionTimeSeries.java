@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.renderer.ConstantValueComposite;
 import org.kalypso.model.wspm.sobek.core.wizard.pages.renderer.TimeSeriesComposite;
@@ -126,7 +127,16 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     gMapping.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     gMapping.setText( Messages.PageEditBoundaryConditionTimeSeries_13 );
 
-    final BOUNDARY_CONDITION_TYPE[] input = new BOUNDARY_CONDITION_TYPE[] { BOUNDARY_CONDITION_TYPE.eZml, BOUNDARY_CONDITION_TYPE.eConstant };
+    final BOUNDARY_CONDITION_TYPE[] input;
+    final BOUNDARY_TYPE type = getSettings().getBoundaryNodeType();
+    if( BOUNDARY_TYPE.eWQ.equals( type ) )
+    {
+      input = new BOUNDARY_CONDITION_TYPE[] { BOUNDARY_CONDITION_TYPE.eZml };
+    }
+    else
+    {
+      input = new BOUNDARY_CONDITION_TYPE[] { BOUNDARY_CONDITION_TYPE.eZml, BOUNDARY_CONDITION_TYPE.eConstant };
+    }
 
     final ComboViewer viewer = new ComboViewer( gMapping, SWT.READ_ONLY | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -180,7 +190,15 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
       }
     } );
 
-    viewer.setSelection( new StructuredSelection( m_type ) );
+    if( BOUNDARY_TYPE.eWQ.equals( type ) )
+    {
+      viewer.setSelection( new StructuredSelection( BOUNDARY_CONDITION_TYPE.eZml ) );
+    }
+    else
+    {
+      viewer.setSelection( new StructuredSelection( m_type ) );
+    }
+
   }
 
   public ILastfall getLastfall( )
