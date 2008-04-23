@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
@@ -51,6 +51,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
@@ -160,19 +161,35 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     iGroup.setLayout( new GridLayout( 2, false ) );
     iGroup.setText( Messages.PageEditBoundaryConditionGeneral_10 );
 
+    final Feature lastfall = m_condition.getLastfall().getFeature();
+
     /* lastfall */
     new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_11, iGroup );
 
-    final WizardFeatureTextBox lf = new WizardFeatureTextBox( m_condition.getLastfall().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
+    final WizardFeatureTextBox lf = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_HYDRAULIC_NAME );
     lf.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     lf.setEnabled( false );
 
     /* boundary node */
     new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_12, iGroup );
 
-    final WizardFeatureTextBox bn = new WizardFeatureTextBox( m_condition.getBoundaryNode().getFeature(), ISobekConstants.QN_HYDRAULIC_NAME );
+    final WizardFeatureTextBox bn = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_HYDRAULIC_NAME );
     bn.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bn.setEnabled( false );
+
+    /* start of calculation case */
+    new WizardFeatureLabel( "Start of Calculation case", iGroup );
+
+    final WizardFeatureTextBox bnStart = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    bnStart.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
+    bnStart.setEnabled( false );
+
+    /* end of calculation case */
+    new WizardFeatureLabel( "End of Calculation case", iGroup );
+
+    final WizardFeatureTextBox bnEnd = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END );
+    bnEnd.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
+    bnEnd.setEnabled( false );
 
     /* bc type */
     new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_13, iGroup );
@@ -181,8 +198,11 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     bt.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY );
     bt.setEnabled( false );
 
+    // spacer
+    new Label( container, SWT.NULL ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 2, 0 ) );
+
     /* begin date */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
+    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
 
     /* newly created boundary condition? */
     if( m_condition.getObservationStart() == null )
@@ -202,7 +222,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     /* end date */
     /* newly created boundary condition? */
-    new WizardFeatureLabel( m_condition.getLastfall().getFeature(), ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
+    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
 
     if( m_condition.getObservationEnd() == null )
       m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getLastfallEnd() );
