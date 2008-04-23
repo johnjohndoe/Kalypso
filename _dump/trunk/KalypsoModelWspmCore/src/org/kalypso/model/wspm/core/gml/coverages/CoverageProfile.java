@@ -46,6 +46,7 @@ import java.util.Map.Entry;
 
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -100,7 +101,7 @@ public class CoverageProfile
    * <br>
    * The following steps are performed:<br>
    * <ol>
-   * <li>Adds points to the geometry, so that there is at least one every 1m.</li>
+   * <li>Adds points to the geometry, depending on the size of the grid cell (1/8 grid cell size).</li>
    * <li>Computes the width and height for each point.</li>
    * <li>Create a profile with each point and its width and height.</li>
    * <li>The new profile is thinned by Douglas Peucker.</li>
@@ -114,17 +115,20 @@ public class CoverageProfile
    */
   public IProfil createProfile( GM_Curve curve ) throws Exception
   {
+    final IGeoGrid grid = GeoGridUtilities.toGrid( m_coverage );
+    double x = grid.getOffsetX().x;
+
     /* STEP 1: Add the points every 1m to the profile. */
 
     /* Convert to a JTS geometry. */
     LineString jtsCurve = (LineString) JTSAdapter.export( curve );
 
-    /* Add every 1m a point. */
-    TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve );
+    /* Add every 1/8 raster size a point. */
+    TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve, x / 8 );
 
     /* STEP 2: Compute the width and height for each point of the new line. */
     /* STEP 3: Create the new profile. */
-    IProfil profile = calculatePointsAndCreateProfile( GeoGridUtilities.toGrid( m_coverage ), points, curve.getCoordinateSystem() );
+    IProfil profile = calculatePointsAndCreateProfile( grid, points, curve.getCoordinateSystem() );
 
     /* STEP 4: Thin the profile. */
     thinProfile( profile, 0.10 );
@@ -169,9 +173,9 @@ public class CoverageProfile
 
       /* Transform the coordinate into the CS of the grid. */
       Coordinate transformedCoordinate = GeoGridUtilities.transformCoordinate( grid, coordinate, csOfPoints );
-
-      /* Get the value with the coordinate in the coordinate system of the grid. */
-      double value = grid.getValue( transformedCoordinate );
+      /* Get the interpolated value with the coordinate in the coordinate system of the grid. */
+// double value = grid.getValue( transformedCoordinate );
+      double value = GeoGridUtilities.getValue( grid, transformedCoordinate, Interpolation.bilinear );
       if( value == Double.NaN )
         continue;
 
