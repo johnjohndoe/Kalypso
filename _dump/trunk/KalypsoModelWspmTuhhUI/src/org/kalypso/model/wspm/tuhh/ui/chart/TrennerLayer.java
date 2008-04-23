@@ -50,9 +50,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -84,13 +86,16 @@ public class TrennerLayer extends AbstractProfilChartLayer
   public TrennerLayer( final ProfilChartView pcv )
   {
     super( IWspmTuhhConstants.LAYER_DEVIDER, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Flieﬂzonen" );
+    IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType());
+
     m_colorRegistry = pcv.getColorRegistry();
+
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR );
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, provider.getColorFor(IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE));
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL,IWspmTuhhConstants.MARKER_TYP_BORDVOLL_COLOR );
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, provider.getColorFor(IWspmTuhhConstants.MARKER_TYP_BORDVOLL) );
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE_COLOR );
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, provider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE) );
   }
 
   @Override
@@ -108,9 +113,9 @@ public class TrennerLayer extends AbstractProfilChartLayer
     final IProfilPointMarker activeDevider = (IProfilPointMarker) data;
 
     final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
-//    final int index = getProfil().indexOfProperty( activeDevider.getId() );
+// final int index = getProfil().indexOfProperty( activeDevider.getId() );
 //
-//    final IRecord oldPos = activeDevider.getPoint();
+// final IRecord oldPos = activeDevider.getPoint();
     final IProfilPointMarker[] markers = getProfil().getPointMarkerFor( destinationPoint );
     for( final IProfilPointMarker marker : markers )
     {

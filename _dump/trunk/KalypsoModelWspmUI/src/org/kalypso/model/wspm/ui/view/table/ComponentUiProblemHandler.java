@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
+import java.util.HashSet;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
@@ -57,7 +60,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
@@ -77,11 +79,9 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   private static final String IMAGE_INFO = "profilLabelProvider.img.info"; //$NON-NLS-1$
 
-  private final ImageRegistry m_imgRegistry = new ImageRegistry();
+  private static final String IMAGE_NO_ERROR = "profilLabelProvider.img.no_error"; //$NON-NLS-1$
 
-// private final Color m_colorError;
-//
-// private final Color m_colorWarning;
+  private final ImageRegistry m_imgRegistry = new ImageRegistry();
 
   private final IProfil m_profile;
 
@@ -90,25 +90,13 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     m_profile = profile;
 
     m_imgRegistry.put( IMAGE_ERROR, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_ERROR
-                                                                                                                                      // );
-    m_imgRegistry.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
-    
-    m_imgRegistry.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
-                                                                                                                                          // );
 
-    final IProfilPointMarkerProvider[] mps = KalypsoModelWspmCoreExtensions.getAllMarkerProviders();
-    for( final IProfilPointMarkerProvider mp : mps )
-    {
-      for( final String markerId : mp.getMarkerTypes() )
-      {
-        final ImageDescriptor img = mp.getImageFor( markerId );
-        if( img != null )
-          m_imgRegistry.put( markerId, img );
-      }
-    }
-// final Display display = m_viewer.getControl().getDisplay();
-// m_colorError = display.getSystemColor( SWT.COLOR_RED );
-// m_colorWarning = display.getSystemColor( SWT.COLOR_YELLOW );
+    m_imgRegistry.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+
+    m_imgRegistry.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
+
+    m_imgRegistry.put( IMAGE_NO_ERROR, ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } ) ) ) );
+
   }
 
   /**
@@ -179,27 +167,63 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   {
 
     final MarkerIndex markerIndex = m_profile.getProblemMarker();
-    if( markerIndex == null )
-      return null;
-
-    final IMarker[] markers = markerIndex.get( record );
-    final IMarker worst = MarkerUtils.worstOf( markers );
-    if( worst != null )
+    Image backgroundImage = m_imgRegistry.get( IMAGE_NO_ERROR );
+    final StringBuffer buffer = new StringBuffer();
+    int severity = -1;
+    if( markerIndex != null )
     {
-      final int severity = MarkerUtils.getSeverity( worst );
-      if( IMarker.SEVERITY_ERROR == severity )
-        return m_imgRegistry.get( IMAGE_ERROR );
-      if( IMarker.SEVERITY_WARNING == severity )
-        return m_imgRegistry.get( IMAGE_WARNING );
-      if( IMarker.SEVERITY_INFO == severity )
-        return m_imgRegistry.get( IMAGE_INFO );
+      final IMarker[] markers = markerIndex.get( record );
+      final IMarker worst = MarkerUtils.worstOf( markers );
+      if( worst != null )
+      {
+        severity = MarkerUtils.getSeverity( worst );
+        if( IMarker.SEVERITY_ERROR == severity )
+          backgroundImage = m_imgRegistry.get( IMAGE_ERROR );
+        else if( IMarker.SEVERITY_WARNING == severity )
+          backgroundImage = m_imgRegistry.get( IMAGE_WARNING );
+        else if( IMarker.SEVERITY_INFO == severity )
+          backgroundImage = m_imgRegistry.get( IMAGE_INFO );
+      }
     }
+    final String[] deviderTypes = getDeviderTypes( record );
+    if( deviderTypes == null || deviderTypes.length == 0 )
+      return backgroundImage;
 
-    final IComponent deviderTyp = getDeviderTyp( record );
-    if( deviderTyp == null )
-      return null;
+    buffer.append( severity );
+    buffer.append( deviderTypes );
+    final String key = buffer.toString();
 
-    return m_imgRegistry.get( deviderTyp.getId() );
+    final IProfilPointMarkerProvider mp = KalypsoModelWspmCoreExtensions.getMarkerProviders( m_profile.getType() );
+    Image image = m_imgRegistry.get( key );
+    if( image == null )
+    {
+      final Display display = Display.getCurrent();
+      Image img = new Image( display, 16, 16 );
+      final GC gc = new GC( img );
+      try
+      {
+        mp.drawMarker ( deviderTypes, gc );
+        if( severity != -1 )
+          gc.drawImage( backgroundImage, 0, 0 );
+        if( img != null )
+          m_imgRegistry.put( key, img );
+//        
+// gc.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
+// gc.fillRectangle( 0, 0, 16, 16 );
+//
+// gc.setForeground( display.getSystemColor( SWT.COLOR_BLUE ) );
+// gc.drawLine( 0, 0, 16, 16 );
+
+// final ImageDescriptor img = mp.getImageFor( deviderTypes, backgroundImage );
+
+      }
+      finally
+      {
+        gc.dispose();
+      }
+    }
+    return m_imgRegistry.get( key );
+
   }
 
   /**
@@ -235,6 +259,10 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   {
   }
 
+  /**
+   * @return the first DeviderTyp for this point
+   */
+
   public final IComponent getDeviderTyp( final IRecord point )
   {
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
@@ -242,5 +270,25 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
       return null;
 
     return markers.length > 0 ? markers[0].getId() : null;
+  }
+
+  /**
+   * @return the all DeviderTypeIds for this point, maybe null
+   */
+
+  public final String[] getDeviderTypes( final IRecord point )
+  {
+    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
+    if( markers == null || markers.length == 0 )
+      return null;
+    final HashSet<String> types = new HashSet<String>();
+    for( final IProfilPointMarker marker : markers )
+    {
+      IComponent type = marker.getId();
+      if( !types.contains( type ) )
+        types.add( type.getId() );
+    }
+
+    return types.toArray( new String[] {} );
   }
 }

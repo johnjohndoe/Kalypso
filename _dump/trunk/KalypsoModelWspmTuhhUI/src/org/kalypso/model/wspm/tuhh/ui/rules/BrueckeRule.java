@@ -106,6 +106,8 @@ public class BrueckeRule extends AbstractValidatorRule
         final Double h = (Double) points[i].getValue( iHoehe );
         final Double okB = (Double) points[i].getValue( iOK );
         final Double ukB = (Double) points[i].getValue( iUK );
+        if( okB == null || ukB == null || okB.isNaN() || ukB.isNaN() )
+          continue;
         if( (outerLeft == -1) && (Math.abs( h - okB ) > delta) )
           outerLeft = i == 0 ? 0 : i - 1;
         if( (outerLeft > -1) && (Math.abs( h - ukB ) > delta) )
@@ -160,9 +162,9 @@ public class BrueckeRule extends AbstractValidatorRule
       {
         final IProfilMarkerResolution[] delRes = new IProfilMarkerResolution[brdvp.length];
         // the last devider must be deleted first
-        for( int i = 0;i<brdvp.length  ; i++ )
+        for( int i = 0; i < brdvp.length; i++ )
         {
-          delRes[i] = new DelDeviderResolution( brdvp.length-1-i, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+          delRes[i] = new DelDeviderResolution( brdvp.length - 1 - i, IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
         }
 
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bordvollpunkte sind zu entfernen", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( brdvp[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, delRes );

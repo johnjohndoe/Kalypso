@@ -115,53 +115,6 @@ public abstract class AbstractProfil implements IProfil
     setResult( result );
   }
 
-  public void addProfilListener( final IProfilListener pl )
-  {
-    m_listeners.add( pl );
-  }
-
-  public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
-    if( changes == null && changes.length == 0 )
-      return;
-
-    final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener l : listeners )
-    {
-      try
-      {
-        l.onProfilChanged( hint, changes );
-      }
-      catch( final Throwable e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
-      }
-    }
-  }
-
-  private void fireProblemMarkerChanged( )
-  {
-    final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener l : listeners )
-    {
-      try
-      {
-        l.onProblemMarkerChanged( this );
-      }
-      catch( final Throwable e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
-      }
-    }
-  }
-
-  public void removeProfilListener( final IProfilListener pl )
-  {
-    m_listeners.remove( pl );
-  }
-
   public boolean addPoint( final IRecord point )
   {
     return getResult().add( point );
@@ -210,6 +163,11 @@ public abstract class AbstractProfil implements IProfil
     return profileObjectList.toArray( new IProfileObject[] {} );
   }
 
+  public void addProfilListener( final IProfilListener pl )
+  {
+    m_listeners.add( pl );
+  }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso.observation.result.TupleResult>[])
    *      override this method if you have got the org.kalypso.model.wspm.core.profil.IProfileObjectProvider for your
@@ -227,6 +185,43 @@ public abstract class AbstractProfil implements IProfil
   public IRecord createProfilPoint( )
   {
     return m_result.createRecord();
+  }
+
+  private void fireProblemMarkerChanged( )
+  {
+    final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
+    for( final IProfilListener l : listeners )
+    {
+      try
+      {
+        l.onProblemMarkerChanged( this );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+      }
+    }
+  }
+
+  public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  {
+    if( changes == null && changes.length == 0 )
+      return;
+
+    final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
+    for( final IProfilListener l : listeners )
+    {
+      try
+      {
+        l.onProfilChanged( hint, changes );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+      }
+    }
   }
 
   /**
@@ -346,6 +341,17 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(java.lang.String)
+   */
+  public IProfilPointMarker[] getPointMarkerFor( String pointMarkerID )
+  {
+    final IComponent cmp = hasPointProperty( pointMarkerID );
+    if (cmp == null)
+      return new PointMarker[] {};
+    return getPointMarkerFor( cmp );
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerTypes()
    */
   public IComponent[] getPointMarkerTypes( )
@@ -392,6 +398,14 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getProblemMarker()
+   */
+  public MarkerIndex getProblemMarker( )
+  {
+    return m_markerIndex;
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
@@ -431,12 +445,17 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
-   * @deprecated Use {@link #getResult()}.hasComponent( property )
    */
-  @Deprecated
   public boolean hasPointProperty( final IComponent property )
   {
-    return getResult().hasComponent( property );
+    if( property == null )
+      return false;
+
+    final IComponent[] components = getResult().getComponents();
+    if( ArrayUtils.contains( components, property ) )
+      return true;
+
+    return false;
   }
 
   /**
@@ -526,6 +545,11 @@ public abstract class AbstractProfil implements IProfil
     return profileObjectList.remove( profileObject );
   }
 
+  public void removeProfilListener( final IProfilListener pl )
+  {
+    m_listeners.remove( pl );
+  }
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#removeProperty(java.lang.Object)
    */
@@ -588,6 +612,16 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProblemMarker(org.eclipse.core.resources.IMarker[])
+   */
+  public void setProblemMarker( final IMarker[] markers )
+  {
+    m_markerIndex = new MarkerIndex( this, markers );
+
+    fireProblemMarkerChanged();
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProperty(java.lang.Object, java.lang.Object)
    */
   public void setProperty( final Object key, final Object value )
@@ -620,23 +654,5 @@ public abstract class AbstractProfil implements IProfil
   {
     m_station = station;
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getProblemMarker()
-   */
-  public MarkerIndex getProblemMarker( )
-  {
-    return m_markerIndex;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#setProblemMarker(org.eclipse.core.resources.IMarker[])
-   */
-  public void setProblemMarker( final IMarker[] markers )
-  {
-    m_markerIndex = new MarkerIndex( this, markers );
-
-    fireProblemMarkerChanged();
-  }
-
+  
 }

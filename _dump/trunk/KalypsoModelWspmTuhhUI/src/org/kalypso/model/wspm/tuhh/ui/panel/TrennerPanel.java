@@ -68,6 +68,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -296,7 +297,8 @@ public class TrennerPanel extends AbstractProfilView
 
         if( bv_devs.length < 1 )
         {
-          final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+
+          final IProfilPointMarker[] db_devs = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
           if( db_devs.length < 2 )
             return;
           final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte einfügen:", getProfil(), true );
@@ -317,13 +319,17 @@ public class TrennerPanel extends AbstractProfilView
         }
         else
         {
-          final IProfilChange[] changes = new IProfilChange[bv_devs.length + 1];
-          for( int i = 0; i < bv_devs.length; i++ )
-          {
-            changes[i] = new PointMarkerEdit( bv_devs[i], null );
-          }
-          changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, false );
-          final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", getProfil(), changes, true );
+// final IProfilChange[] changes = new IProfilChange[bv_devs.length + 1];
+// for( int i = 0; i < bv_devs.length; i++ )
+// {
+// changes[i] = new PointMarkerEdit( bv_devs[i], null );
+// }
+// changes[bv_devs.length] = new VisibleMarkerEdit( getViewData(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL, false );
+
+          // final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", getProfil(), changes,
+          // true );
+          final ProfilOperation operation = new ProfilOperation( "Bordvollpunkte entfernen:", getProfil(), true );
+          operation.addChange( new PointPropertyRemove( getProfil(), profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ) );
           new ProfilOperationJob( operation ).schedule();
         }
       }

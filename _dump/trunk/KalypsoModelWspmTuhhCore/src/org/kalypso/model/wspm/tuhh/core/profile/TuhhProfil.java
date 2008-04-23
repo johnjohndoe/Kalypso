@@ -43,11 +43,18 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.TuhhBuildingHelper;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingKreis;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingMaul;
+import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingTrapez;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -68,8 +75,7 @@ public class TuhhProfil extends AbstractProfil
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
-   * @note for tuhh-profiles only ONE ProfileObject is allowed at same time, all other objects will be removed
-   * @see #removeProfileObject(IProfileObject)
+   * @note for tuhh-profiles only ONE ProfileObject is allowed at same time
    * @throws IllegalStateException
    */
   @Override
@@ -85,15 +91,35 @@ public class TuhhProfil extends AbstractProfil
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#createProfileObjects(org.kalypso.observation.IObservation<org.kalypso.observation.result.TupleResult>[])
+   * @note for tuhh-profiles only ONE ProfileObject is allowed at same time
+   * @throws IllegalStateException
    */
   @Override
   public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
   {
-    for( final IObservation<TupleResult> observation : profileObjects )
-    {
-      final IProfileObject profileObject = TuhhBuildingHelper.createProfileObject( this, observation );
-      addProfileObjects( new IProfileObject[] { profileObject } );
-    }
+    if( profileObjects == null || profileObjects.length > 1 )
+      throw new IllegalStateException( "only one profileObject allowed" );
+    final IProfileObject profileObject = createProfileObjectInternal(profileObjects[0] );
+    addProfileObjects( new IProfileObject[] { profileObject } );
+  }
+
+  private IProfileObject createProfileObjectInternal( final IObservation<TupleResult> observation )
+  {
+    final String id = observation.getName();
+
+    if( BuildingBruecke.ID.equals( id ) )
+      return new BuildingBruecke( this, observation );
+    else if( BuildingWehr.ID.equals( id ) )
+      return new BuildingWehr( this, observation );
+    else if( BuildingEi.ID.equals( id ) )
+      return new BuildingEi( this, observation );
+    else if( BuildingKreis.ID.equals( id ) )
+      return new BuildingKreis( this, observation );
+    else if( BuildingMaul.ID.equals( id ) )
+      return new BuildingMaul( this, observation );
+    else if( BuildingTrapez.ID.equals( id ) )
+      return new BuildingTrapez( this, observation );
+    return null;
   }
 
   /**

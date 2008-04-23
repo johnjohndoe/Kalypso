@@ -38,38 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.core.profile;
+package org.kalypso.model.wspm.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 
 /**
- * @author kuch
+ * @author kimwerner
  */
-public class TuhhMarkerHelper
+public class ProfilMarkerIconFactory
 {
-
-  public static IProfilPointMarker[] createPointMarkers( final IProfil profil, final IComponent markerColumn )
+  private ProfilMarkerIconFactory( )
   {
-    final List<IProfilPointMarker> myMarkers = new ArrayList<IProfilPointMarker>();
-
-    final TupleResult result = profil.getResult();
-    for( final IRecord record : result )
-    {
-      final Object value = record.getValue( markerColumn );
-      if( value != null )
-      {
-        myMarkers.add( new ProfilDevider( markerColumn, record ) );
-      }
-    }
-
-    return myMarkers.toArray( new IProfilPointMarker[] {} );
+    // HelperClass
   }
 
+  public static Image createImage16( final ImageRegistry imageRegistry, String[] markers, Image sourceImage )
+  {
+
+    final Image image = imageRegistry.get( markers[0] );
+
+    GC gc = new GC( sourceImage);
+//    try
+//    {final Color c = new Color(sourceImage.getDevice(),255,0,0);
+//      gc.setForeground(c);
+//      gc.drawLine( 2,2,8,8);
+      RGB[] bs = image.getImageData().getRGBs();
+      RGB rgb = bs[1];
+      Color c = new Color(Display.getDefault(), rgb);
+      gc.setForeground(c);
+      gc.drawLine( 2,2,8,8);
+      //gc.drawImage( image, 6, 0 );
+//   }
+//    finally
+//    {
+ gc.dispose();
+//    }
+    return sourceImage;
+  }
 }

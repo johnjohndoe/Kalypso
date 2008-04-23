@@ -40,18 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.util.Arrays;
+import java.util.HashMap;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -63,74 +63,34 @@ import org.kalypso.observation.result.IRecord;
  */
 public class DeviderProvider implements IProfilPointMarkerProvider
 {
-  private static final String[] m_markerTypes = { IWspmTuhhConstants.MARKER_TYP_BORDVOLL, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,
-      IWspmTuhhConstants.MARKER_TYP_WEHR };
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getImageFor(java.lang.String)
-   */
-  public ImageDescriptor getImageFor( final String markerId )
+  private static final HashMap<String, RGB> m_markerTypes = new HashMap<String, RGB>();
+
+  public DeviderProvider( )
   {
-    final String plgn = KalypsoModelWspmTuhhCorePlugin.getDefault().toString();
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerId ) )
-    {
-      final ImageData imageData = new ImageData( 16, 16, 2, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ),IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR , IWspmTuhhConstants.MARKER_TYP_BORDVOLL_COLOR  } ) );// {IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR
-                                                                                                                        // } )
-                                                                                                                        // ) );
-      byte[] values = new byte[4];
-      // imageData.getPixels( 0, 0, 8, values, 0 ) ;
-
-      Arrays.fill( values, (byte) 1);
-      for( int i = 0; i < 16; i++ )
-        imageData.setPixels( 4, i, 4, values, 0 );
-      Arrays.fill( values, (byte) 2);
-      for( int i = 0; i < 16; i++ )
-        imageData.setPixels( 8, i, 4, values, 0 );
-      return ImageDescriptor.createFromImageData( imageData );
-
-      // return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[]{})));//
-      // {IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE_COLOR } ) ) );
-      // return AbstractUIPlugin.imageDescriptorFromPlugin( plgn, "icons/obj16/legend_col4.gif" );
-    }
-    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerId ) )
-      return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE_COLOR } ) ) );
-    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerId ) )
-      return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { IWspmTuhhConstants.MARKER_TYP_BORDVOLL_COLOR } ) ) );
-    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerId ) )
-      return ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { IWspmTuhhConstants.MARKER_TYP_WEHR_COLOR } ) ) );
-    return null;
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, new RGB( 200, 50, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, new RGB( 0, 0, 255 ) );
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, new RGB( 0, 180, 0 ) );
+    m_markerTypes.put( IWspmTuhhConstants.MARKER_TYP_WEHR, new RGB( 0, 128, 0 ) );
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getMarkers()
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IRecord)
    */
-  public String[] getMarkerTypes( )
+  public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point )
   {
-    return m_markerTypes;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#isMarker(org.kalypso.observation.result.IComponent)
-   */
-  public boolean isMarker( final IComponent component )
-  {
-    return ArrayUtils.contains( m_markerTypes, component.getId() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#providesPointMarker(org.kalypso.observation.result.IComponent)
-   */
-  public boolean providesPointMarker( final IComponent marker )
-  {
-    try
+    /* first check, if provider provides markerType */
+    if( !m_markerTypes.containsKey(cmp.getId() ) )
+      throw new IllegalStateException( "ProfilPointMarkerProvider doesn't doesnt provides - " + cmp.getName() );
+    /* point has component already defined? */
+     if( !point.getOwner().hasComponent( cmp ) )
     {
-      PointPropertyProviderTUHH.createPointProperty( marker.getId() );
-      return true;
+      /* else create a new profile component */
+         point.getOwner().addComponent( cmp );
     }
-    catch( final IllegalStateException e )
-    {
-      return false;
-    }
+
+    /* create a new profile point marker */
+    return new ProfilDevider( cmp, point );
   }
 
   /**
@@ -140,7 +100,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   public IProfilPointMarker createProfilPointMarker( final String markerType, final IRecord point )
   {
     /* first check, if provider provides markerType */
-    if( !ArrayUtils.contains( m_markerTypes, markerType ) )
+    if( !m_markerTypes.containsKey( markerType ) )
       throw new IllegalStateException( "ProfilPointMarkerProvider doesn't doesnt provides - " + markerType );
 
     /* point has component already defined? */
@@ -155,6 +115,113 @@ public class DeviderProvider implements IProfilPointMarkerProvider
 
     /* create a new profile point marker */
     return new ProfilDevider( comp, point );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getImageFor(java.lang.String)
+   */
+  public void drawMarker( final String[] markers, GC gc )
+  {
+// final ArrayList<RGB> rgbs = new ArrayList<RGB>(m_markerTypes.values());
+// rgbs.add( 0, new RGB(255,255,255)) ;
+// final ImageData imageData = background.getImageData();
+ final int cnt = markers.length;
+ final int offset = (16 - (3 * cnt)) / 2;
+ int i = 0;
+    final Color oldColor = gc.getBackground();
+    for( final String marker : markers )
+    {
+      final Color color = new Color( gc.getDevice(), m_markerTypes.get( marker ) );
+      try
+      {
+        gc.setBackground( color );
+        gc.fillRectangle( offset+4*i++ , 0, 3, 16 );
+      }
+      finally
+      {
+        gc.setBackground( oldColor );
+        color.dispose();
+      }
+
+    }
+    // return ImageDescriptor.createFromImageData( imageData );
+  }
+
+  private void fillColor( ImageData imageData, final int x, final RGB color )
+  {
+    // final byte[] values = new byte[3];
+
+// final RGB[] rgbs = imageData.getRGBs();
+// if( rgbs == null )
+// {
+// // TODO: shift from Mask
+// }
+// else
+// {
+// byte pos = 0;
+// for( final RGB rgb : rgbs )
+// {
+// if( rgb.equals( color ) )
+// break;
+// pos++;
+// }
+    // Arrays.fill( values, pos );
+    for( int i = 0; i < 16; i++ )
+
+    {
+
+      for( int j = 0; j < 3; j++ )
+      {
+        if( imageData.getPixel( x + j, i ) == -256 )
+        {
+
+          imageData.setPixel( x + j, i, 0 );
+        }
+      }
+
+    }
+    // imageData.setPixels( x, i, 3, values, 0 );
+    // }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getColorFor(java.lang.String)
+   */
+  public RGB getColorFor( String marker )
+  {
+    return m_markerTypes.get( marker );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getMarkers()
+   */
+  public String[] getMarkerTypes( )
+  {
+    return m_markerTypes.keySet().toArray( new String[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#isMarker(org.kalypso.observation.result.IComponent)
+   */
+  public boolean isMarker( final IComponent component )
+  {
+    return m_markerTypes.containsKey( component.getId() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#providesPointMarker(org.kalypso.observation.result.IComponent)
+   */
+  public boolean providesPointMarker( final IComponent marker )
+  {
+    try
+    {
+      IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.NS_WSPM_TUHH );
+      return provider.providesPointProperty( marker.getId() );
+    }
+    catch( final IllegalStateException e )
+    {
+      return false;
+    }
   }
 
 }

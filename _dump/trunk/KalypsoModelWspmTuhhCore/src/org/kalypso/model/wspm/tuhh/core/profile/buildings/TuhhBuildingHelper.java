@@ -58,7 +58,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class TuhhBuildingHelper
 {
-
+  /**
+   * @deprecated Use {@link IProfil#createProfileObjects(IObservation[])} instead.
+   */
   public static IProfileObject createProfileObject( final IProfil profil, final IObservation<TupleResult> observation )
   {
     final String id = observation.getName();

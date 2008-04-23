@@ -134,12 +134,7 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
 
     final FeatureComponent featureComponent = new FeatureComponent( componentFeature, urn );
 
-    if( !featureComponent.getId().equals( property ) )
-    {
-      System.out.println();
-    }
-
-    return featureComponent;
+     return featureComponent;
 
     // FIXME phenomen
 // if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
@@ -226,7 +221,7 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
    */
-  public boolean providesPointProperty( final String profilPointProperty )
+  public  boolean providesPointProperty( final String profilPointProperty )
   {
     return m_properties.contains( profilPointProperty );
   }

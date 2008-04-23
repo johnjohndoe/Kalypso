@@ -174,7 +174,7 @@ public class RauheitenPanel extends AbstractProfilView
         {
           final ProfilOperation operation = new ProfilOperation( "Rauheitstyp ändern", getProfil(), true );
 
-          final Double[] oldValues = ProfilUtil.getValuesFor( getProfil(), old );
+          final Object[] oldValues = ProfilUtil.getValuesFor( getProfil(), old );
           operation.addChange( new PointPropertyAdd( getProfil(), component, oldValues ) );
           operation.addChange( new PointPropertyRemove( getProfil(), old ) );
           new ProfilOperationJob( operation ).schedule();

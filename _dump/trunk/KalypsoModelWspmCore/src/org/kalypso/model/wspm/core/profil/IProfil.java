@@ -111,6 +111,11 @@ public interface IProfil extends IObservation<TupleResult>
    * Gets all PointMarker of the given type in this profile.
    */
   public IProfilPointMarker[] getPointMarkerFor( IComponent pointMarker );
+  
+  /**
+   * Gets all PointMarker of the given type in this profile.
+   */
+  public IProfilPointMarker[] getPointMarkerFor( String pointMarkerID );
 
   /**
    * Gets all markers for this record.

@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -66,9 +67,19 @@ public interface IProfilPointMarkerProvider
   public boolean isMarker( final IComponent component );
 
   /**
-   * @return the icon for this markerId, used in the TableView
+   * @return the icon for this markerId, used in the TableView, using  context of background image
    */
-  public ImageDescriptor getImageFor( final String marker );
+  public void drawMarker( final String[] markers,final GC gc );
 
+  /**
+   * @return the color for this markerId, used in the TableView, ChartView
+   */
+  public RGB getColorFor( final String marker );
+  /**
+   * @deprecated Use {@link IProfilPointMarkerProvider#createProfilPointMarker(IComponent, IRecord)} instead.
+   */
   public IProfilPointMarker createProfilPointMarker( String markerTypTrennflaeche, IRecord p1 );
+  
+  public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point );
+  
 }

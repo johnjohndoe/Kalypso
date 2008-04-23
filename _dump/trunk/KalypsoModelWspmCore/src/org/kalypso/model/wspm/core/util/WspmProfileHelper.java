@@ -317,10 +317,11 @@ public class WspmProfileHelper
     final double lastX = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
     final double lastY = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
-    final Double[] breiteValues = ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final Double[] breiteValues = (Double[])ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
+    
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) ), 0.0001 );
+    final PolyLine profilLine = new PolyLine( breiteValues, (Double[])ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) ), 0.0001 );
 
     /* Same for RW and HW, but filter 0-values */
     final PolyLine rwLine = createPolyline( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ), ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );

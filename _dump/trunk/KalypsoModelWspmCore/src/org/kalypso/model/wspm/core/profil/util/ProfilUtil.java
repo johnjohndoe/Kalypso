@@ -67,10 +67,10 @@ public class ProfilUtil
   /**
    * @return the DoubleValues of each point for this pointProperty in the correct order
    */
-  public static Double[] getValuesFor( final IProfil profil, final IComponent pointProperty )
+  public static Object[] getValuesFor( final IProfil profil, final IComponent pointProperty )
   {
     final IRecord[] points = profil.getPoints();
-    final Double[] values = new Double[points.length];
+    final Object[] values = new Object[points.length];
     final int iProp = profil.indexOfProperty( pointProperty );
     if( iProp < 0 )
       return values;
@@ -78,7 +78,7 @@ public class ProfilUtil
 
     for( final IRecord point : points )
     {
-      values[i] = (Double) point.getValue( iProp );
+      values[i] =  point.getValue( iProp );
       i++;
     }
     return values;
