@@ -1,4 +1,4 @@
-!     Last change:  WP   22 Apr 2008    1:06 pm
+!     Last change:  WP   23 Apr 2008    4:59 pm
 !subroutines for testoutput from coef1DfE subroutine
 
 subroutine MomOvVel (daintdt, areaint, vflowint, dbeiintdx, beiint, daintdx, dvintdx, grav, sfint, optin, icyc, sidft)
@@ -169,12 +169,16 @@ subroutine Mom (nn, i, optin, icyc, byparts, areaint, daintdt, daintdx, dareaint
   pause
 end subroutine
 
-subroutine ElementResult (nn, ncon, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3, vel_res, ah1, ah3, sfnod, sfwicht, &
+subroutine ElementResult (nn, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3, vel_res, ah1, ah3, sfnod, sfwicht, &
            &  dahdh1, dahdh3, d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, dareaintdh, d2areaintdh, daintdx, d2aintdx, &
            &  d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schint, sfint, dsfintdh1, vflowint, dvintdx)
-  implicit none
 
-  INTEGER, INTENT (IN) :: ncon(8), nop1, nop3, nn
+!subroutine ElementResult (nn, nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), qh(n1), qh(n3), vel_res, &
+!                       &  ah(n1), ah(n3), sfnod, sfwicht, dahdh(n1), dahdh(n3), d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, &
+!                       &  dareaintdh, d2areaintdh, daintdx, d2aintdx, d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schin, &
+!                       &  sfint, sdfintdh1, vflowint, dvintdx)  implicit none
+
+  INTEGER, INTENT (IN) :: nop1, nop3, nn
   REAL (KIND = 8), INTENT (IN) :: sbot, xl (3), area
   real (kind = 8), intent (IN) :: qh1, qh3, ah1, ah3, dahdh1, dahdh3, vel_res (3), h1, h3
   REAL (KIND = 8), INTENT (IN), dimension (1:2) :: sfnod, sfwicht, d2ahdh, dqhdh, d2qhdh
@@ -184,8 +188,8 @@ subroutine ElementResult (nn, ncon, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3
   REAL (KIND = 8), INTENT (IN), dimension (1:4) :: vflowint, dvintdx
   INTEGER :: i, n1, n3
 
-  n3 = ncon(3)
-  n1 = ncon(1)
+  n3 = nop3
+  n1 = nop1
   WRITE(*,*) '*************************'
   WRITE(*,*) 'Knotendaten, Element: ', nn
   WRITE(*,*) '*************************'
