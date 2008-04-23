@@ -1,4 +1,4 @@
-!     Last change:  NIS  18 Apr 2008    3:40 pm
+!     Last change:  WP   21 Apr 2008    1:51 pm
 subroutine TransVelDistribution
 
 !description
@@ -325,11 +325,6 @@ transitionloop: do i = 1, MaxLT
   q2D(i) = 0.0
   dh = 0.01
   dq2ddh(i) = 0.0
-  !testing
-  !WRITE(*,*) 'Vor der 2D-Abflussberechnung'
-  !WRITE(*,*) lmt(TransLi), TransLi
-  !pause
-  !testing-
 
   do derivative = 1, 2
 
@@ -362,6 +357,7 @@ transitionloop: do i = 1, MaxLT
       !calculate discharge components
       SUMX = SUMX + DY * (VEL (1, NA) * D1 + 4.0 * VEL (1, NB) * D2 + VEL (1, NC) * D3) / 6.
       SUMY = SUMY + DX * (VEL (2, NA) * D1 + 4.0 * VEL (2, NB) * D2 + VEL (2, NC) * D3) / 6.
+
     end do GetDischarge
   !calculate discharge be cross product ([V] x [L])
   if (derivative == 1) then

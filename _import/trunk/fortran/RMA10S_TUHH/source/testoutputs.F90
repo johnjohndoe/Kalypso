@@ -1,4 +1,4 @@
-!     Last change:  WP   15 Apr 2008   12:05 pm
+!     Last change:  WP   22 Apr 2008    1:06 pm
 !subroutines for testoutput from coef1DfE subroutine
 
 subroutine MomOvVel (daintdt, areaint, vflowint, dbeiintdx, beiint, daintdx, dvintdx, grav, sfint, optin, icyc, sidft)
@@ -227,4 +227,81 @@ subroutine ElementResult (nn, ncon, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3
   WRITE(*,'(a18,4(1x,f13.8))') '         dvintdx: ', (dvintdx(i), i = 1, 4)
   pause
 end subroutine
+
+
+
+subroutine Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+
+implicit none
+
+!global copies
+!*************
+!nbc    : global equation number
+!nop    : array of nodes belonging to an element
+!f      : residual vector of element
+!estfim : 'element stiffnes matrix' of an element
+!nn     : element number
+!ncn    : number of corner nodes
+!maxp   : maximum node ID-number in the mesh
+!maxe   : maximum element ID-number in the mesh
+INTEGER         :: nbc (1:maxp, 1:6), nop (1: maxe, 1: 8)
+INTEGER         :: nn, ncn, maxp, maxe
+REAL (KIND = 8) :: f (80), estifm (80, 80)
+
+!local variables
+!***************
+!dca                  : counter of active degrees of freedom in element
+!nbct                 : means local nbc-array
+! nbct, first column  : local node number (position in nop-array)
+! nbct, second column : position of equation in nbc-array
+!sort                 : type of equation (momentum, continuity, sediment)
+!FMT1, FMT2           : Format-descriptor placeholders for data written to the file
+!i, j, k              : counter for loops; no special meaning
+INTEGER              :: dca
+INTEGER              :: nbct (1:32,1:2)
+INTEGER              :: i, j, k
+CHARACTER (LEN =  1) :: sort(1:32)
+CHARACTER (LEN = 16) :: FMT1
+CHARACTER (LEN = 38) :: FMT2
+
+WRITE(9919,*) 'Matrix for element: ', nn, ' calculated.'
+  !active degreecount
+  dca = 0
+  !active positions
+  do i = 1, 32
+    nbct(i,1) = 0
+    nbct(i,2) = 0
+    sort(i) = 'N'
+  end do
+
+  do i = 1, ncn
+    do j = 1, 4
+      if (nbc(nop(nn,i), j) /= 0) then
+        dca = dca + 1
+        if (j <=2) then
+          sort(dca) = 'I'
+        ELSEIF (j == 3) then
+          sort(dca) = 'C'
+        else
+          sort(dca) = 'S'
+        endif
+        nbct (dca,1) = i
+        nbct (dca,2) = j
+      endif
+    end do
+  end do
+
+  WRITE(FMT1, '(a5,i2.2,a9)') '(33x,', dca, '(1x,i10))'
+  write(FMT2, '(a18,i2.2,a18)') '(a1,i1,a2,2(1x,i8),', dca+1, '(1x,f10.2),1x,i10)'
+
+   WRITE(9919,*) 'Element ', nn, 'coef2 t'
+   WRITE(9919, FMT1) ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
+   DO i = 1, dca
+     k = (nbct(i,1) - 1) * 4 + nbct(i,2)
+     WRITE(9919, FMT2) sort(i), nbct(i,1), ': ', nbc( nop(nn, nbct(i,1)), nbct(i,2)), nop(nn, nbct(i,1)), f(k), &
+     & (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca), nbc( nop(nn, nbct(i,1)), nbct(i,2))
+   ENDDO
+   WRITE(9919,*)
+   WRITE(9919,*)
+ end subroutine
 

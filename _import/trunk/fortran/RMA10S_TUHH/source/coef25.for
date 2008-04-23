@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  NIS  18 Apr 2008    3:41 pm
+C     Last change:  WP   22 Apr 2008    1:06 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -60,13 +60,6 @@ CIPK  LAST UPDATED SEP 7 1995
       integer :: TransLine, transtype
 
 C
-!nis,jun07: Changes for matrix output
-      INTEGER :: dca
-      INTEGER :: nbct (1:32,1:2)
-      CHARACTER (LEN =  1) :: sort(1:32)
-      CHARACTER (LEN = 16) :: FMT1
-      CHARACTER (LEN = 38) :: FMT2
-!-
 
 cycw aug94 add double precision salt
       REAL*8 SALT
@@ -2166,55 +2159,8 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
  1450 CONTINUE
 
 !write matrix into file
-!if (nn == 92 .or. nn == 93 .or. nn == 95) then
-!      !WRITE(9919,*) 'Matrix for element: ', nn, ' calculated.'
-!      !if (nn < 0) then
-!      if (TransitionElement (nn)) then
-!        !active degreecount
-!        dca = 0
-!        !active positions
-!        do i = 1, 32
-!          nbct(i,1) = 0
-!          nbct(i,2) = 0
-!          sort(i) = 'N'
-!        end do
-!
-!        do i = 1, ncn
-!          do j = 1, 4
-!            if (nbc(nop(nn,i), j) /= 0) then
-!              dca = dca + 1
-!              if (j <=2) then
-!                sort(dca) = 'I'
-!              ELSEIF (j == 3) then
-!                sort(dca) = 'C'
-!              else
-!                sort(dca) = 'S'
-!              endif
-!              nbct (dca,1) = i
-!              nbct (dca,2) = j
-!            endif
-!          end do
-!        end do
-!
-!        WRITE(FMT1, '(a5,i2.2,a9)') '(33x,', dca, '(1x,i10))'
-!        write(FMT2, '(a18,i2.2,a18)')
-!     +    '(a1,i1,a2,2(1x,i8),', dca+1, '(1x,f10.2),1x,i10)'
-!
-!        WRITE(9919,*) 'Element ', nn, 'coef2 t', xht
-!        WRITE(9919, FMT1)
-!     +    ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
-!        DO i = 1, dca
-!          k = (nbct(i,1) - 1) * 4 + nbct(i,2)
-!          WRITE(9919, FMT2)
-!     +     sort(i), nbct(i,1), ': ',
-!     +     nbc( nop(nn, nbct(i,1)), nbct(i,2)),
-!     +     nop(nn, nbct(i,1)), f(k),
-!     +     (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
-!     +     nbc( nop(nn, nbct(i,1)), nbct(i,2))
-!        ENDDO
-!        WRITE(9919,*)
-!        WRITE(9919,*)
-!      endif
+      if (TransitionElement (nn))
+     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
 !-
 
       RETURN
@@ -2231,3 +2177,6 @@ C-
       ENDIF
       RETURN
       END
+
+
+

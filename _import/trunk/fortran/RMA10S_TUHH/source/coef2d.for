@@ -29,7 +29,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   27 Feb 2008   10:46 am
+C     Last change:  WP   22 Apr 2008   12:54 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
@@ -1873,53 +1873,9 @@ CIPK JUN05
  1400   CONTINUE
  1450 CONTINUE
 
-!matrix in datei
-!      if (nn >= 313 .and. nn <= 320) then
-!        !active degreecount
-!        dca = 0
-!        !active positions
-!        do i = 1, 32
-!          nbct(i,1) = 0
-!          nbct(i,2) = 0
-!          sort(i) = 'N'
-!        end do
-!
-!        do i = 1, ncn
-!          do j = 1, 4
-!            if (nbc(nop(nn,i), j) /= 0) then
-!              dca = dca + 1
-!              if (j <=2) then
-!                sort(dca) = 'I'
-!              ELSEIF (j == 3) then
-!                sort(dca) = 'C'
-!              else
-!                sort(dca) = 'S'
-!              endif
-!              nbct (dca,1) = i
-!              nbct (dca,2) = j
-!            endif
-!          end do
-!        end do
-!
-!        WRITE(FMT1, '(a5,i2.2,a9)') '(21x,', dca, '(1x,i10))'
-!        write(FMT2, '(a14,i2.2,a18)')
-!     +    '(a1,i1,a2,i10,', dca+1, '(1x,f10.2),1x,i10)'
-!
-!        WRITE(9919,*) 'Element ', nn, 'coef2 t Smago', xht
-!        WRITE(9919, FMT1)
-!     +    ( nbc (nop(nn, nbct(j,1)), nbct(j,2)), j=1, dca)
-!        DO i = 1, dca
-!          k = (nbct(i,1) - 1) * 4 + nbct(i,2)
-!          WRITE(9919, FMT2)
-!     +     sort(i), nbct(i,1), ': ',
-!     +     nbc( nop(nn, nbct(i,1)), nbct(i,2)),
-!     +     f(k),
-!     +     (estifm(k, (nbct(j,1) - 1) * 4 + nbct(j,2)), j=1, dca),
-!     +     nbc( nop(nn, nbct(i,1)), nbct(i,2))
-!        ENDDO
-!        WRITE(9919,*)
-!        WRITE(9919,*)
-!      endif
+!write matrix into file as control output
+      if (TransitionElement (nn))
+     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
 !-
 
       RETURN

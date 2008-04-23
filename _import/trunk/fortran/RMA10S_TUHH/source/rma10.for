@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Feb 2008   12:47 pm
+C     Last change:  WP   22 Apr 2008    4:41 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -93,18 +93,18 @@ C      CALL FILE(1)
 
 
 CIPK JUN05  Input control structure data
-      IF(INCSTR .EQ. 20) CALL INCSTRC
-
+      IF (INCSTR == 20) CALL INCSTRC
 CIPK JUN05  Input time series data
-      IF(INTIMS .EQ. 22) CALL INTIMES
+      IF (INTIMS == 22) CALL INTIMES
 
-      ND1=NSCR
-c      ICFL=1
-c     ICFL=0
+      ND1 = NSCR
+!     ICFL=1
+!     ICFL=0
       ICFL=6
       NDFF=9
       NDG=5
       IDRYC=0
+
 CIPK AUG95 MAKE ALPHA 1.8
       ALPHA=1.8
 CIPK JUN05      ALPHA=2.0
@@ -115,16 +115,11 @@ C......INPUT GEOMETRY ETC
 C-
       CALL INPUT(IBIN)
 
-      !EFa jun07, output for autoconverge
-      if (beiauto.ne.0.) then
 
-      call autoconverge(-1.0)
-  
-      end if
-      !-
+      !EFa jun07, output for autoconverge
+      if (beiauto.ne.0.) call autoconverge(-1.0)
 
 CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
-
       IF(IRMAFM .GT. 0) THEN
         WRITE(HEADER(41:60),'(2I10)') NP,NE
         HEADER(101:172)=TITLE   
@@ -132,7 +127,6 @@ CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
       ENDIF
 
 CIPK JUN02 ADD BED DATA OUTFILE HEADER
-
       IF(IBEDOT .GT. 0) THEN
         HEADER(1:5)='RMA11'
         WRITE(HEADER(41:60),'(2I10)') NP,NE
@@ -141,7 +135,6 @@ CIPK JUN02 ADD BED DATA OUTFILE HEADER
       ENDIF
 
 CIPK JAN03 ADD WAVE DATA OUTFILE HEADER
-
       IF(IWAVOT .GT. 0) THEN
         HEADER(1:5)='RMA11'
         WRITE(HEADER(41:60),'(2I10)') NP,NE
@@ -445,7 +438,7 @@ cipk apr01              ENDDO
 cipk apr01            ENDIF
 cipk apr01          ENDIF
 cipk apr01        ENDDO
-      
+
 CIPK DEC00      ENDIF
 CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
       TETT=(DAYOFY-1)*24.+TET
@@ -804,33 +797,60 @@ CIPK NOV97  458 CONTINUE
         IF (ITEQV(MAXN) .NE. 5  .AND.  IOPTZD .GT. 0
      +    .AND. IOPTZD .LT. 3 ) CALL MELLII
 
-        DO 460 J=1,NP
+
+        !nis,apr08,com: updating the time derivatives
+
+        ForallNodes: DO J=1,NP
 cipk mar98 add logic to update HEL
+
+          !vel(3, j) : virtual depth (calculation depth) of node j
+          !vtm       : copy of virtual depth (calculation depth) of node j
+          !hel (j)   : transformed depth (depth over slot minimum of node j
+
+          !get the transformed depth
           VTM=VEL(3,J)
           CALL AMF(HEL(J),VTM,AKP(J),ADT(J),ADB(J),D1,D2,0)
 
-          DO 450 K=NDL,NDF
+          !NDL : Lowest degree of freedom to work on, is set if something is read from an external file (?); normally NDL = 1
+          !NDF : Highest degree of freedom to work on
+          !IESPC(k, j) : (???)
+          !VEl (k, j) : k-th degree of freedom of node j (velocities, virtual water depth, concentrations)
+          !thetcn:
+
+          !check for all degrees of freedom
+          ForAllDOFs: DO K = NDL, NDF
 CIPK SEP96        VOLD(K,J)=VEL(K,J)
 CIPK SEP96        VDOTO(K,J)=VDOT(K,J)
-            IF(IESPC(K,J) .EQ. 0) THEN
+            IF (IESPC (K, J) == 0) THEN
 CIPK DEC00            VEL(K,J)=VEL(K,J)+DELT*VDOT(K,J)
 
 cipk dec00 rewrite projection approach add switch
 
-              IF(IPROJ .EQ. 0) THEN
-                VEL(K,J)=VEL(K,J)+DELT*VDOT(K,J)
-              ELSEIF(IPROJ .EQ. 2) THEN
-                dtfac=thetcn*vdot(k,j)+(1.-thetcn)*v2ol(k,j)
-                vel(k,j)=vel(k,j)+ delt*dtfac
-cc              VEL(K,J)=VEL(K,J)+VEL(K,J)-V2OL(K,J)
-               VDOT(K,J)=ALTM*(VEL(K,J)-VOLD(K,J))-VDOTO(K,J)*(ALPHA-1.)
+
+              !calculate the current value of variable and the derivative basing on the approach to be used
+              !apply transformation of variable, but don't use update of time derivative
+              IF(IPROJ == 0) THEN
+                VEL (K, J) = VEL (K, J) + DELT * VDOT (K, J)
+
+              !use projection for the variable of current run by the old variable and the variable of the penultimate calculation step
+              ELSEIF(IPROJ == 2) THEN
+                dtfac =
+     +            thetcn * vdot (k, j) + (1. - thetcn) * v2ol (k, j)
+                vel (k, j) =
+     +            vel (k, j) + delt * dtfac
+                VDOT (K, J) =
+     +            ALTM * (VEL (K, J) - VOLD (K, J))
+     +            - VDOTO (K, J) * (ALPHA - 1.)
+
+              !classical method without time projection, but just calculating the time derivative based on the Finite Difference Scheme
+              !IPROJ == 1 (normally)
               ELSE
                VDOT(K,J)=ALTM*(VEL(K,J)-VOLD(K,J))-VDOTO(K,J)*(ALPHA-1.)
               ENDIF
 
             ENDIF
+          ENDDO ForAllDOFs
 
-  450     CONTINUE
 
           IF(NDL .EQ. 1) THEN
             IF(IESPC(3,J) .EQ. 0) THEN
@@ -858,7 +878,7 @@ cipk apr01 insert consistent argument
               ENDIF
             ENDIF
           ENDIF
-  460   CONTINUE
+        ENDDO ForallNodes
 
 cipk dec00 set water surface elevation
 
