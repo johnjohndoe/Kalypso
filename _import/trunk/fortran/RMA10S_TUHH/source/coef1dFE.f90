@@ -1,4 +1,4 @@
-!Last change:  NIS  18 Apr 2008   10:37 am
+!Last change:  WP   23 Apr 2008    2:16 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -235,7 +235,7 @@ init3: DO i = 1, 2
   d2ahdh(i)     = 0.0
   d2qhdh(i)     = 0.0
   sfnod(i)      = 0.0
-  bei(i)        = 0.0
+  bei(i)        = 1.0
   dbeidh(i)     = 0.0
   d2beidh(i)    = 0.0
 ENDDO init3
@@ -568,6 +568,7 @@ do i = 1, 2
           WRITE (*, *) 'program goes on without flow parameter (default option beient = 0)'
           !Reset beient
           beient = 0
+          bei (i) = 1.0
         ENDIF
       endif
 
