@@ -131,12 +131,73 @@ public class CoverageProfile
     /* STEP 3: Create the new profile. */
     IProfil profile = calculatePointsAndCreateProfile( grid, points, curve.getCoordinateSystem() );
 
-    /* STEP 4: Thin the profile. */
-    thinProfile( profile, 0.10 );
+    if( profile.getPoints().length == 0 )
+    {
+      /* in this case the curve does not intersect the grid (all z-values of the points of the curve are NaN) */
+      return createDigitizedProfile( jtsCurve );
+    }
+    else
+    {
+      /* STEP 4: Thin the profile. */
+      thinProfile( profile, 0.10 );
+    }
 
-    grid.dispose();
+    if( grid != null )
+      grid.dispose();
 
     return profile;
+  }
+
+  // TODO: put this into helper class
+  private IProfil createDigitizedProfile( LineString jtsCurve )
+  {
+    // create a profile only with the digitized points and with 0.0 as z-value
+    /* Create the new profile. */
+    final IProfil digitizedProfile = ProfilFactory.createProfil( m_type );
+
+    /* The needed components. */
+    IComponent cRechtswert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    IComponent cHochwert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    IComponent cBreite = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_BREITE );
+    IComponent cHoehe = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    double breite = 0.0;
+
+    for( int i = 0; i < jtsCurve.getNumPoints(); i++ )
+    {
+      final Coordinate coordinate = jtsCurve.getCoordinateN( i );
+
+      double rechtswert = coordinate.x;
+      double hochwert = coordinate.y;
+
+      /* calculate breite */
+      double distance = 0;
+      if( i > 0 )
+        distance = coordinate.distance( jtsCurve.getCoordinateN( i - 1 ) );
+
+      breite = breite + distance;
+
+      /* elevation is set to 0.0 */
+      double hoehe = 0.0;
+
+      /* Create a new profile point. */
+      IRecord profilePoint = digitizedProfile.createProfilPoint();
+
+      final TupleResult owner = profilePoint.getOwner();
+
+      /* Add geo values. */
+      profilePoint.setValue( owner.indexOfComponent( cRechtswert ), rechtswert );
+      profilePoint.setValue( owner.indexOfComponent( cHochwert ), hochwert );
+
+      /* Add length section values. */
+      profilePoint.setValue( owner.indexOfComponent( cBreite ), breite );
+      profilePoint.setValue( owner.indexOfComponent( cHoehe ), hoehe );
+
+      /* Add the new point to the profile. */
+      digitizedProfile.addPoint( profilePoint );
+    }
+
+    return digitizedProfile;
   }
 
   /**
