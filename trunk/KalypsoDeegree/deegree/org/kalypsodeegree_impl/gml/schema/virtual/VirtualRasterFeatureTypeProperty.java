@@ -41,7 +41,6 @@
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
@@ -53,9 +52,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyType
 {
-  public VirtualRasterFeatureTypeProperty( final IFeatureType ftp )
+  public VirtualRasterFeatureTypeProperty( final QName featureQName )
   {
-    super( new QName( "virtual", "rasterGridDomainBoundary" ), 0, 1, GeometryUtilities.getPolygonClass() );
+    super( featureQName, new QName( "virtual", "rasterGridDomainBoundary" ), 0, 1, GeometryUtilities.getPolygonClass() );
   }
 
   /**

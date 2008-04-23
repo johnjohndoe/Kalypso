@@ -63,13 +63,16 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
 
   private final int m_maxOccurs;
 
+  private final QName m_featureQName;
+
   /**
    * @param qName
    *            of virtual property
    * @pt typehandler of virtual property
    */
-  public AbstractVirtualPropertyType( final QName qName, final int minOccurs, final int maxOccurs, final Class valueClazz )
+  public AbstractVirtualPropertyType( final QName featureQName, final QName qName, final int minOccurs, final int maxOccurs, final Class valueClazz )
   {
+    m_featureQName = featureQName;
     m_name = qName;
     m_minOccurs = minOccurs;
     m_maxOccurs = maxOccurs;
@@ -113,9 +116,18 @@ public abstract class AbstractVirtualPropertyType implements VirtualFeatureTypeP
   /**
    * @see org.kalypso.gmlschema.property.IPropertyType#getName()
    */
+  @Deprecated
   public String getName( )
   {
     return m_name.getLocalPart();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.property.IPropertyType#getFeatureQName()
+   */
+  public QName getFeatureQName( )
+  {
+    return m_featureQName;
   }
 
   /**

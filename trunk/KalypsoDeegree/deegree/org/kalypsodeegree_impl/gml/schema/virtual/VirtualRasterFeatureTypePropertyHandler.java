@@ -46,7 +46,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 
-/*
+/**
  * @author doemming
  */
 public class VirtualRasterFeatureTypePropertyHandler implements VirtualFeatureTypePropertyHandler
@@ -69,7 +69,7 @@ public class VirtualRasterFeatureTypePropertyHandler implements VirtualFeatureTy
    */
   public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( final IFeatureType ftp )
   {
-    return new VirtualFeatureTypeProperty[] { new VirtualRasterFeatureTypeProperty( ftp ) };
+    return new VirtualFeatureTypeProperty[] { new VirtualRasterFeatureTypeProperty( ftp.getQName() ) };
   }
 
   /**

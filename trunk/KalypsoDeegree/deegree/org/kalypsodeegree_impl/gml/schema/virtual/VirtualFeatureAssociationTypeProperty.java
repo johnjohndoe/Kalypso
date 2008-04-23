@@ -63,7 +63,7 @@ public class VirtualFeatureAssociationTypeProperty extends AbstractVirtualProper
 
   public VirtualFeatureAssociationTypeProperty( final IRelationType ftp )
   {
-    super( new QName( "virtual", "link_" + ftp.getName() ), 0, 1, GeometryUtilities.getLineStringClass() );
+    super( ftp.getFeatureQName(), new QName( "virtual", "link_" + ftp.getName() ), 0, 1, GeometryUtilities.getLineStringClass() );
     m_linkName = ftp;
   }
 

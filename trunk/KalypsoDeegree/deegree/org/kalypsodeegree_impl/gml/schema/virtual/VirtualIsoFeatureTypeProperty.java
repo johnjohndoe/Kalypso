@@ -64,9 +64,9 @@ public class VirtualIsoFeatureTypeProperty extends AbstractVirtualPropertyType
 
   private final static String PROP_GEOM = DECORATED_NS + ":polygonProperty";
 
-  public VirtualIsoFeatureTypeProperty( )
+  public VirtualIsoFeatureTypeProperty( final QName featureQName )
   {
-    super( new QName( "virtual", "iso_lines" ), 0, 1, GeometryUtilities.getLineStringClass() );
+    super( featureQName, new QName( "virtual", "iso_lines" ), 0, 1, GeometryUtilities.getLineStringClass() );
   }
 
   /**
