@@ -218,18 +218,6 @@ public class TimeSeriesComposite extends Composite
       }
     } );
 
-// try
-// {
-// diagViewer.setInput( m_wqs );
-// tableViewer.setInput( m_wqs );
-// }
-// catch( final SensorException e )
-// {
-// e.printStackTrace();
-//
-// MessageDialog.openError( getShell(), "WQ-Beziehung, Dialog öffnen", e.getLocalizedMessage() );
-// }
-
   }
 
   private void renderNormal( final TreeViewer tree, final Composite parent )
