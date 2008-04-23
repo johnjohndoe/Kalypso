@@ -134,6 +134,8 @@ public class CoverageProfile
     /* STEP 4: Thin the profile. */
     thinProfile( profile, 0.10 );
 
+    grid.dispose();
+
     return profile;
   }
 
