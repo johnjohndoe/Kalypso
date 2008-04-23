@@ -751,13 +751,15 @@ public class JTSUtilities
   }
 
   /**
-   * This function calculates points every 1m on the line.
+   * This function calculates points every x meter on the line.
    * 
    * @param curve
    *            The curve with original points.
+   * @param size
+   *            the definition at what length along the curve a point should be inserted.
    * @return A map containing the distance as key and the points as value (original and new points).
    */
-  public static TreeMap<Double, Point> calculatePointsOnLine( final LineString curve )
+  public static TreeMap<Double, Point> calculatePointsOnLine( final LineString curve, double size )
   {
     /* The length of the line. */
     final double length = curve.getLength();
@@ -765,18 +767,19 @@ public class JTSUtilities
     /* Memory for the new points. */
     final TreeMap<Double, Point> points = new TreeMap<Double, Point>();
 
-    /* If there is only 1 meter, the start- and endpoint have to suffice. */
-    double usedLength = 1.0;
-    while( usedLength < length )
+    double currentLength = size;
+
+    /* If there is only 1 meter, the start- and end point have to suffice. */
+    while( currentLength < length )
     {
       /* Create a new point. */
-      final Point pointOnLine = pointOnLine( curve, usedLength );
+      final Point pointOnLine = pointOnLine( curve, currentLength );
 
       /* Add the found point to the map. */
-      points.put( usedLength, pointOnLine );
+      points.put( currentLength, pointOnLine );
 
-      /* Increse the used length by 1 meter. */
-      usedLength = usedLength + 1;
+      /* Increase the used length by x meter. */
+      currentLength = currentLength + size;
     }
 
     /* Add the points of the line. */
