@@ -40,21 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
-import java.awt.Frame;
-import java.util.GregorianCalendar;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -62,54 +55,38 @@ import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
-import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryLabelProvider;
-import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryTreeContentProvider;
-import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryViewerFilter;
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITuppleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagView;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ChartFactory;
-import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
-import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.tableview.TableView;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTablePanel;
-import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.ogc.sensor.template.ObsViewUtils;
-import org.kalypso.ogc.sensor.template.PlainObsProvider;
+import org.kalypso.model.wspm.sobek.core.wizard.pages.renderer.ConstantValueComposite;
+import org.kalypso.model.wspm.sobek.core.wizard.pages.renderer.TimeSeriesComposite;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
-import org.kalypso.util.swt.WizardFeatureLabel;
-import org.kalypso.util.swt.WizardFeatureTextBox;
 
 /**
  * @author kuch
  */
 public class PageEditBoundaryConditionTimeSeries extends WizardPage
 {
-
   protected BOUNDARY_CONDITION_TYPE m_type;
-
-  protected ZmlObservationItem m_selectedTreeItem = null;
 
   protected final IBoundaryConditionGeneral m_settings;
 
   private final ISobekModelMember m_model;
 
-  private TreeViewer m_reposTree;
+  protected final IBoundaryNodeLastfallCondition m_condition;
 
-  private WizardFeatureTextBox m_tConstant;
+  protected TimeSeriesComposite m_ts;
 
-  protected Group m_subGroup;
+  protected ConstantValueComposite m_constant;
 
-  private final IBoundaryNodeLastfallCondition m_condition;
+  public IBoundaryConditionGeneral getSettings( )
+  {
+    return m_settings;
+  }
 
-  private WizardFeatureTextBox m_tConstantIntervall;
+  public ISobekModelMember getModel( )
+  {
+    return m_model;
+  }
 
   public PageEditBoundaryConditionTimeSeries( final ISobekModelMember model, final IBoundaryNodeLastfallCondition condition, final IBoundaryConditionGeneral settings )
   {
@@ -122,118 +99,6 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     setDescription( Messages.PageEditBoundaryConditionTimeSeries_2 );
 
     m_type = condition.getLastUsedType();
-  }
-
-  protected void checkPageCompleted( )
-  {
-    /* time series repository selected? check selection and values! */
-    if( BOUNDARY_CONDITION_TYPE.eZml.equals( m_type ) )
-    {
-
-      if( m_selectedTreeItem == null )
-      {
-        setMessage( null );
-        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_3 );
-        setPageComplete( false );
-
-        return;
-      }
-
-      final Object adapter = m_selectedTreeItem.getAdapter( IObservation.class );
-      if( !(adapter instanceof IObservation) )
-      {
-        setMessage( null );
-        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_4 );
-        setPageComplete( false );
-
-        return;
-      }
-
-      try
-      {
-        final IObservation observation = (IObservation) adapter;
-
-        final GregorianCalendar startDate = m_settings.getStartDate();
-        final GregorianCalendar endDate = m_settings.getEndDate();
-        final DateRange dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
-
-        final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
-        final IRequest request = provider.getArguments();
-
-        final ITuppleModel values = observation.getValues( request );
-        if( values.getCount() <= 0 )
-        {
-          setMessage( null );
-          setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_5 );
-          setPageComplete( false );
-
-          return;
-        }
-      }
-      catch( final SensorException e )
-      {
-        setMessage( null );
-        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_6 + e.getMessage() );
-        setPageComplete( false );
-
-        return;
-      }
-    }
-    else if( BOUNDARY_CONDITION_TYPE.eConstant.equals( m_type ) )
-    {
-      if( (m_tConstant.getText() == null) || "".equals( m_tConstant.getText().trim() ) ) //$NON-NLS-1$
-      {
-        setMessage( null );
-        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_8 );
-        setPageComplete( false );
-
-        return;
-      }
-      try
-      {
-        Double.valueOf( m_tConstant.getText() );
-      }
-      catch( final NumberFormatException e )
-      {
-        setMessage( null );
-        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_9 );
-        setPageComplete( false );
-
-        return;
-      }
-
-      try
-      {
-        final String text = m_tConstantIntervall.getText();
-        if( (text != null) || !"".equals( text.trim() ) ) //$NON-NLS-1$
-        {
-          final Integer value = Integer.valueOf( m_tConstantIntervall.getText() );
-
-          if( value <= 0 )
-          {
-            setMessage( null );
-            setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_11 );
-            setPageComplete( false );
-
-            return;
-          }
-        }
-
-      }
-      catch( final NumberFormatException e )
-      {
-        setMessage( null );
-        setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_12 );
-        setPageComplete( false );
-
-        return;
-      }
-
-    }
-
-    setMessage( null );
-    setErrorMessage( null );
-    setPageComplete( true );
   }
 
   /**
@@ -270,61 +135,52 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
 
     viewer.setInput( input );
 
+    final PageEditBoundaryConditionTimeSeries page = this;
+
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final StructuredSelection selection = (StructuredSelection) event.getSelection();
         m_type = (BOUNDARY_CONDITION_TYPE) selection.getFirstElement();
 
-        if( m_subGroup != null )
+        /* dispose old "widgets" */
+        if( m_constant != null )
         {
-          if( !m_subGroup.isDisposed() )
-            m_subGroup.dispose();
+          if( !m_constant.isDisposed() )
+            m_constant.dispose();
 
-          m_subGroup = null;
+          m_constant = null;
         }
 
-        switch( m_type )
+        if( m_ts != null )
         {
-          case eConstant:
-            renderConstantValue( container );
-            break;
+          if( !m_ts.isDisposed() )
+            m_ts.dispose();
 
-          case eZml:
-            renderTimeSeriesRepository( container );
-            break;
-
-          default:
-            throw new IllegalStateException( Messages.PageEditBoundaryConditionTimeSeries_14 + m_type.name() );
+          m_ts = null;
         }
+
+        if( BOUNDARY_CONDITION_TYPE.eConstant.equals( m_type ) )
+        {
+          m_constant = new ConstantValueComposite( page, container, SWT.NULL );
+          m_constant.render( m_condition );
+        }
+        else if( BOUNDARY_CONDITION_TYPE.eZml.equals( m_type ) )
+        {
+          m_ts = new TimeSeriesComposite( page, container, SWT.NULL );
+          m_ts.render();
+
+        }
+        else
+          throw new IllegalStateException( Messages.PageEditBoundaryConditionTimeSeries_14 + m_type.name() );
 
         container.layout();
-        checkPageCompleted();
       }
     } );
 
     viewer.setSelection( new StructuredSelection( m_type ) );
-
-    checkPageCompleted();
-  }
-
-  public Double getConstValue( )
-  {
-    return Double.valueOf( m_tConstant.getText() );
-  }
-
-  public Integer getConstValueIntervall( )
-  {
-    try
-    {
-      final Integer intervall = Integer.valueOf( m_tConstantIntervall.getText() );
-      return intervall;
-    }
-    catch( final NumberFormatException e )
-    {
-      return null;
-    }
   }
 
   public ILastfall getLastfall( )
@@ -332,165 +188,23 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     return m_condition.getLastfall();
   }
 
-  private TreeViewer getTSBrowser( final Composite body )
-  {
-    final TreeViewer viewer = new TreeViewer( body );
-    viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    viewer.setContentProvider( new RepositoryTreeContentProvider( m_settings ) );
-    viewer.setLabelProvider( new RepositoryLabelProvider() );
-
-    viewer.setInput( m_model.getRepositoryContainer() );
-    viewer.addFilter( new RepositoryViewerFilter() );
-
-    viewer.expandAll();
-
-    viewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-       */
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        checkPageCompleted();
-      }
-    } );
-
-    return viewer;
-  }
-
   public BOUNDARY_CONDITION_TYPE getTypeOfTimeSeries( )
   {
     return m_type;
   }
 
+  public Double getConstValue( )
+  {
+    return m_constant.getConstValue();
+  }
+
+  public Integer getConstValueIntervall( )
+  {
+    return m_constant.getConstValueIntervall();
+  }
+
   public ZmlObservationItem getZmlObservationItem( )
   {
-    return m_selectedTreeItem;
-  }
-
-  protected void renderConstantValue( final Composite parent )
-  {
-    m_subGroup = new Group( parent, SWT.NULL );
-    m_subGroup.setLayout( new GridLayout( 2, false ) );
-    m_subGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    m_subGroup.setText( Messages.PageEditBoundaryConditionTimeSeries_15 );
-
-    /* const value */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE, m_subGroup );
-
-    m_tConstant = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE );
-    m_tConstant.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
-
-    m_tConstant.addModifyListener( new Runnable()
-    {
-      public void run( )
-      {
-        checkPageCompleted();
-      }
-    } );
-
-    /* const intervall */
-    new WizardFeatureLabel( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL, m_subGroup );
-
-    m_tConstantIntervall = new WizardFeatureTextBox( m_condition.getFeature(), ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_CONST_VALUE_INTERVALL );
-    m_tConstantIntervall.draw( m_subGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER );
-
-    m_tConstantIntervall.addModifyListener( new Runnable()
-    {
-      public void run( )
-      {
-        checkPageCompleted();
-      }
-    } );
-  }
-
-  private void renderDetails( final TreeViewer reposTree, final Composite body )
-  {
-    try
-    {
-      /* diagramm */
-      final Composite cDiagram = new Composite( body, SWT.NULL );
-      cDiagram.setLayout( new FillLayout() );
-      cDiagram.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
-      final DiagView diagView = new DiagView( true );
-      final ObservationChart chart = new ObservationChart( diagView );
-
-      final Frame dFrame = SWT_AWT.new_Frame( new Composite( cDiagram, SWT.RIGHT | SWT.EMBEDDED | SWT.Paint ) );
-      dFrame.add( ChartFactory.createChartPanel( chart ) );
-
-      /* table view */
-      final Composite cTable = new Composite( body, SWT.NULL );
-      cTable.setLayout( new FillLayout() );
-      cTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
-      final TableView tableView = new TableView();
-      final ObservationTable table = new ObservationTable( tableView );
-
-      final Frame tFrame = SWT_AWT.new_Frame( new Composite( cTable, SWT.RIGHT | SWT.EMBEDDED | SWT.Paint ) );
-      tFrame.add( new ObservationTablePanel( table ) );
-
-      reposTree.addSelectionChangedListener( new ISelectionChangedListener()
-      {
-
-        public void selectionChanged( final SelectionChangedEvent event )
-        {
-          // always remove items first (we don't know which selection we get)
-          diagView.removeAllItems();
-          tableView.removeAllItems();
-
-          final TreeSelection selection = (TreeSelection) reposTree.getSelection();
-          final Object element = selection.getFirstElement();
-          if( !(element instanceof ZmlObservationItem) )
-            return;
-
-          final ZmlObservationItem item = (ZmlObservationItem) element;
-
-          final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
-
-          final GregorianCalendar startDate = m_settings.getStartDate();
-          final GregorianCalendar endDate = m_settings.getEndDate();
-          final DateRange dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
-
-          final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
-          diagView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
-          tableView.addObservation( provider, ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
-
-          m_selectedTreeItem = item;
-
-          checkPageCompleted();
-        }
-      } );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  protected void renderTimeSeriesRepository( final Composite parent )
-  {
-    m_subGroup = new Group( parent, SWT.NULL );
-    m_subGroup.setLayout( new GridLayout( 2, false ) );
-    m_subGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    m_subGroup.setText( Messages.PageEditBoundaryConditionTimeSeries_18 );
-
-    final Composite cBrowser = new Composite( m_subGroup, SWT.NULL );
-    final GridData ld = new GridData( GridData.FILL, GridData.FILL, false, true );
-    ld.widthHint = ld.minimumWidth = 200;
-    cBrowser.setLayoutData( ld );
-    final GridLayout bLayout = new GridLayout();
-    bLayout.marginWidth = bLayout.horizontalSpacing = 0;
-    cBrowser.setLayout( bLayout );
-
-    m_reposTree = getTSBrowser( cBrowser );
-
-    final Composite cClient = new Composite( m_subGroup, SWT.NULL );
-    cClient.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    final GridLayout cLayout = new GridLayout( 2, true );
-    cLayout.marginWidth = bLayout.horizontalSpacing = 0;
-    cClient.setLayout( cLayout );
-
-    renderDetails( m_reposTree, cClient );
+    return m_ts.getZmlObservationItem();
   }
 }
