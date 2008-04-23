@@ -62,10 +62,12 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.IFunctionExpression;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GmlWorkspaceListenerProxy;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.validation.IFeatureRule;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
+import org.kalypsodeegree_impl.model.feature.GmlWorkspaceListener;
 
 /**
  * Helper class to read extension-points of this plugin.
@@ -74,6 +76,18 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  */
 public class KalypsoDeegreeExtensions
 {
+  /* Empty implementation which does nothing. */
+  private static final IGmlWorkspaceListener INVALID_PROXY = new GmlWorkspaceListener()
+  {
+    public void init( GMLWorkspace workspace )
+    {
+    }
+
+    public void onModellChange( ModellEvent modellEvent )
+    {
+    }
+  };
+
   private final static String FUNCTION_EXTENSION_POINT = "org.kalypso.deegree.functionProperty";
 
   private final static String LISTENER_EXTENSION_POINT = "org.kalypso.deegree.gmlWorkspaceListener";
@@ -86,7 +100,7 @@ public class KalypsoDeegreeExtensions
 
   private static Map<QName, List<IFeatureRule>> THE_RULES = null;
 
-  private static Map<QName, IGmlWorkspaceListener[]> QNAME_LISTENERS = null;
+  private static Map<QName, IConfigurationElement[]> QNAME_LISTENERS = null;
 
   private static Map<String, IConfigurationElement> FUNCTION_MAP = null;
 
@@ -119,7 +133,7 @@ public class KalypsoDeegreeExtensions
     return function;
   }
 
-  private static synchronized Map<QName, IGmlWorkspaceListener[]> getQNameListeners( )
+  private static synchronized Map<QName, IConfigurationElement[]> createQNameListeners( )
   {
     if( QNAME_LISTENERS == null )
     {
@@ -127,26 +141,25 @@ public class KalypsoDeegreeExtensions
 
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( LISTENER_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      final Map<QName, List<IGmlWorkspaceListener>> listeners = new HashMap<QName, List<IGmlWorkspaceListener>>( configurationElements.length );
+      final Map<QName, List<IConfigurationElement>> listeners = new HashMap<QName, List<IConfigurationElement>>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
       {
-        final IGmlWorkspaceListener listener = new GmlWorkspaceListenerProxy( element );
-        final QName[] qnames = listener.getQNames();
+        final QName[] qnames = parseQNames( element );
         if( qnames.length == 0 )
-          addQName( listeners, listener, null );
+          addQName( listeners, element, null );
         else
         {
           for( final QName qname : qnames )
-            addQName( listeners, listener, qname );
+            addQName( listeners, element, qname );
         }
       }
 
       /* Make arrays from list */
-      QNAME_LISTENERS = new HashMap<QName, IGmlWorkspaceListener[]>( listeners.size() );
-      for( final Map.Entry<QName, List<IGmlWorkspaceListener>> entry : listeners.entrySet() )
+      QNAME_LISTENERS = new HashMap<QName, IConfigurationElement[]>( listeners.size() );
+      for( final Map.Entry<QName, List<IConfigurationElement>> entry : listeners.entrySet() )
       {
-        final List<IGmlWorkspaceListener> value = entry.getValue();
-        final IGmlWorkspaceListener[] workspaceListeners = value.toArray( new IGmlWorkspaceListener[value.size()] );
+        final List<IConfigurationElement> value = entry.getValue();
+        final IConfigurationElement[] workspaceListeners = value.toArray( new IConfigurationElement[value.size()] );
 
         QNAME_LISTENERS.put( entry.getKey(), workspaceListeners );
       }
@@ -155,16 +168,32 @@ public class KalypsoDeegreeExtensions
     return QNAME_LISTENERS;
   }
 
+  public static QName[] parseQNames( final IConfigurationElement element )
+  {
+    final IConfigurationElement[] children = element.getChildren( "qname" );
+
+    final List<QName> qnames = new ArrayList<QName>( children.length );
+    for( final IConfigurationElement child : children )
+    {
+      final String namespace = child.getAttribute( "namespace" );
+      final String localPart = child.getAttribute( "localPart" );
+
+      qnames.add( new QName( namespace, localPart ) );
+    }
+
+    return qnames.toArray( new QName[qnames.size()] );
+  }
+
   /**
    * Helper method to add a new entry into the listener-lists
    */
-  private static void addQName( final Map<QName, List<IGmlWorkspaceListener>> listeners, final IGmlWorkspaceListener listener, final QName qname )
+  private static void addQName( final Map<QName, List<IConfigurationElement>> listeners, final IConfigurationElement element, final QName qname )
   {
     if( !listeners.containsKey( qname ) )
-      listeners.put( qname, new ArrayList<IGmlWorkspaceListener>() );
+      listeners.put( qname, new ArrayList<IConfigurationElement>() );
 
-    final List<IGmlWorkspaceListener> list = listeners.get( qname );
-    list.add( listener );
+    final List<IConfigurationElement> list = listeners.get( qname );
+    list.add( element );
   }
 
   /**
@@ -173,12 +202,28 @@ public class KalypsoDeegreeExtensions
    * @param qname
    *            If null, the listeners are returned which are not associated with any qname.
    */
-  public static IGmlWorkspaceListener[] getGmlWorkspaceListeners( final QName qname )
+  public static IGmlWorkspaceListener[] createGmlWorkspaceListeners( final QName qname )
   {
-    final Map<QName, IGmlWorkspaceListener[]> nameListeners = getQNameListeners();
-    final IGmlWorkspaceListener[] listeners = nameListeners.get( qname );
-    if( listeners == null )
+    final Map<QName, IConfigurationElement[]> nameListeners = createQNameListeners();
+    final IConfigurationElement[] elements = nameListeners.get( qname );
+    if( elements == null )
       return EMPTY_LISTENERS;
+
+    final IGmlWorkspaceListener[] listeners = new IGmlWorkspaceListener[elements.length];
+    for( int i = 0; i < elements.length; i++ )
+    {
+      try
+      {
+        listeners[i] = (IGmlWorkspaceListener) elements[i].createExecutableExtension( "class" );
+      }
+      catch( final Throwable e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to instantiate workspace listener: " + elements[i].getAttribute( "id" ) );
+        KalypsoDeegreePlugin.getDefault().getLog().log( status );
+
+        listeners[i] = INVALID_PROXY;
+      }
+    }
 
     return listeners;
   }
