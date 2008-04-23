@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.kalypsodeegree.KalypsoDeegreeExtensions;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
 
 /**
@@ -66,18 +64,8 @@ public abstract class GmlWorkspaceListener implements IGmlWorkspaceListener, IEx
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    final IConfigurationElement[] children = config.getChildren( "qname" );
-
-    final List<QName> qnames = new ArrayList<QName>( children.length );
-    for( final IConfigurationElement child : children )
-    {
-      final String namespace = child.getAttribute( "namespace" );
-      final String localPart = child.getAttribute( "localPart" );
-
-      qnames.add( new QName( namespace, localPart ) );
-    }
-
-    m_qnames = qnames.toArray( new QName[qnames.size()] );
+    // TODO: this is done twice at the moment
+    m_qnames = KalypsoDeegreeExtensions.parseQNames( config );
   }
 
   /**

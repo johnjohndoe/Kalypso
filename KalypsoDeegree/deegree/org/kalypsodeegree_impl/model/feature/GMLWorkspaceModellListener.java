@@ -74,7 +74,7 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
     m_workspace = workspace;
 
     /* Add qname-independent listeners. */
-    final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.getGmlWorkspaceListeners( null );
+    final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.createGmlWorkspaceListeners( null );
     for( final IGmlWorkspaceListener listener : listeners )
       addListener( listener );
 
@@ -99,7 +99,7 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
     {
       final QName substQname = substFeatureType.getQName();
 
-      final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.getGmlWorkspaceListeners( substQname );
+      final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.createGmlWorkspaceListeners( substQname );
       for( final IGmlWorkspaceListener listener : listeners )
         addListener( listener );
     }
