@@ -52,7 +52,7 @@ public class VirtualIdFeatureTypePropertyHandler implements VirtualFeatureTypePr
    * 
    * @author doemming
    */
-  public VirtualIdFeatureTypePropertyHandler( )
+  public VirtualIdFeatureTypePropertyHandler()
   {
     super();
   }
@@ -60,7 +60,7 @@ public class VirtualIdFeatureTypePropertyHandler implements VirtualFeatureTypePr
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public boolean isDekoratorOf( final IPropertyType ftp )
+  public boolean isDekoratorOf( IPropertyType ftp )
   {
     return false;
   }
@@ -68,7 +68,7 @@ public class VirtualIdFeatureTypePropertyHandler implements VirtualFeatureTypePr
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( final IPropertyType ftp )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp )
   {
     return new VirtualFeatureTypeProperty[0];
   }
@@ -76,7 +76,7 @@ public class VirtualIdFeatureTypePropertyHandler implements VirtualFeatureTypePr
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public boolean isDekoratorOf( final IFeatureType ft )
+  public boolean isDekoratorOf( IFeatureType ft )
   {
     return true;
   }
@@ -84,8 +84,9 @@ public class VirtualIdFeatureTypePropertyHandler implements VirtualFeatureTypePr
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( final IFeatureType ft )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft )
   {
-    return new VirtualFeatureTypeProperty[] { new VirtualIdFeatureTypeProperty( ft.getQName() ) };
+    return new VirtualFeatureTypeProperty[]
+    { new VirtualIdFeatureTypeProperty() };
   }
 }

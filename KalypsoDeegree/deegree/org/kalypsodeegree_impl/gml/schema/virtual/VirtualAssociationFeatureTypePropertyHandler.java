@@ -44,6 +44,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 
+
 /**
  * @author doemming
  */
@@ -52,7 +53,7 @@ public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeat
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public boolean isDekoratorOf( final IPropertyType ftp )
+  public boolean isDekoratorOf( IPropertyType ftp )
   {
     if( ftp instanceof IRelationType )
     {
@@ -65,7 +66,7 @@ public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeat
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( final IPropertyType ftp )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp )
   {
     return new VirtualFeatureTypeProperty[] { new VirtualFeatureAssociationTypeProperty( (IRelationType) ftp ) };
   }
@@ -73,7 +74,7 @@ public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeat
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public boolean isDekoratorOf( final IFeatureType ft )
+  public boolean isDekoratorOf( IFeatureType ft )
   {
     return false;
   }
@@ -81,7 +82,7 @@ public class VirtualAssociationFeatureTypePropertyHandler implements VirtualFeat
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( final IFeatureType ft )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft )
   {
     return new VirtualFeatureTypeProperty[0];
   }

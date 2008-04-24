@@ -61,9 +61,9 @@ public class VirtualVelocityFeatureTypeProperty extends AbstractVirtualPropertyT
 
   private final static String PROP_YVELOCITY = DECORATED_NS + ":yVelocity";
 
-  public VirtualVelocityFeatureTypeProperty( final QName featureQName )
+  public VirtualVelocityFeatureTypeProperty( )
   {
-    super( featureQName, new QName( "virtual", "arrow_velocity" ), 0, 1, GeometryUtilities.getLineStringClass() );
+    super( new QName( "virtual", "arrow_velocity" ), 0, 1, GeometryUtilities.getLineStringClass() );
   }
 
   /**

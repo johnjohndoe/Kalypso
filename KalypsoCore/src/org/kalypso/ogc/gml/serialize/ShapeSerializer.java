@@ -151,7 +151,7 @@ public class ShapeSerializer
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler typeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_SHAPE_TYPE, PROPERTY_GEOMETRY, typeHandler, 0, 1, false );
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, typeHandler.getTypeName(), typeHandler, 0, 1, false );
 
     int count = 1;
     for( final Map.Entry<String, String> entry : mapping.entrySet() )
@@ -161,7 +161,7 @@ public class ShapeSerializer
       // ftps[count] = FeatureFactory.createFeatureTypeProperty( (String) entry.getKey(), ftp.getValueClass(),
       // ftp.isNullable() );
       final IMarshallingTypeHandler typeHandler2 = ftp.getTypeHandler();
-      ftps[count] = GMLSchemaFactory.createValuePropertyType( PROPERTY_SHAPE_TYPE, new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler2, 1, 1, false );
+      ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler2.getTypeName(), typeHandler2, 1, 1, false );
       count++;
     }
 
@@ -230,7 +230,7 @@ public class ShapeSerializer
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_SHAPE_TYPE, PROPERTY_GEOMETRY, geoTypeHandler, 0, 1, false );
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, geoTypeHandler.getTypeName(), geoTypeHandler, 0, 1, false );
 
     int count = 1;
     for( final Entry<String, QName> entry : mapping.entrySet() )
@@ -241,14 +241,14 @@ public class ShapeSerializer
       {
         /* If it is the pseudo gml-id qname, create a string-property */
         final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-        ftps[count] = GMLSchemaFactory.createValuePropertyType( PROPERTY_SHAPE_TYPE, new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler, 1, 1, false );
+        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
       }
       else
       {
         /* for each given value property create a corresponding type */
         final IValuePropertyType ftp = (IValuePropertyType) featureType.getProperty( qname );
         final IMarshallingTypeHandler typeHandler = ftp.getTypeHandler();
-        ftps[count] = GMLSchemaFactory.createValuePropertyType( PROPERTY_SHAPE_TYPE, new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler, 1, 1, false );
+        ftps[count] = GMLSchemaFactory.createValuePropertyType( new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler.getTypeName(), typeHandler, 1, 1, false );
       }
       count++;
     }
@@ -329,9 +329,9 @@ public class ShapeSerializer
     final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
     final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
 
-    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.ROOT_FEATURETYPE, ShapeSerializer.PROPERTY_NAME, stringTH, 1, 1, false );
-    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.ROOT_FEATURETYPE, ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( ShapeSerializer.ROOT_FEATURETYPE, PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
+    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH.getTypeName(), stringTH, 1, 1, false );
+    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, PROPERTY_SHAPE_TYPE, intTH, 1, 1, false );
+    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
 

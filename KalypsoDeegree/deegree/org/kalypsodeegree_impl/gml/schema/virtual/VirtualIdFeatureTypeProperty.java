@@ -51,9 +51,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class VirtualIdFeatureTypeProperty extends AbstractVirtualPropertyType
 {
-  public VirtualIdFeatureTypeProperty( final QName featureQName )
+  public VirtualIdFeatureTypeProperty( )
   {
-    super( featureQName, new QName( "virtual", "GML_FID" ), 1, 1, String.class );
+    super( new QName( "virtual", "GML_FID" ), 1, 1, String.class );
   }
 
   /**
