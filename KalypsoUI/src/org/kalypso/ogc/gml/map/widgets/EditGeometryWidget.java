@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.map.widgets;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -206,7 +205,7 @@ public class EditGeometryWidget extends AbstractWidget
    * 
    * @return true to signal that features
    */
-  protected Collection<Feature> perform( )
+  protected Feature[] perform( )
   {
     final GeoTransform transform = getMapPanel().getProjection();
     final IKalypsoTheme activeTheme = getActiveTheme();
