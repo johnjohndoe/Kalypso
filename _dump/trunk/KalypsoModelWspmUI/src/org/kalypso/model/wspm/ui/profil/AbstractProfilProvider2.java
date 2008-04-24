@@ -71,8 +71,8 @@ public abstract class AbstractProfilProvider2 implements IProfilProvider2
 
   protected void fireOnProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
-    for( final IProfilProviderListener l : m_listeners )
+    final IProfilProviderListener[] ls = m_listeners.toArray( new IProfilProviderListener[m_listeners.size()] );
+    for( final IProfilProviderListener l : ls )
       l.onProfilProviderChanged( provider, oldProfile, newProfile, oldViewData, newViewData );
-
   }
 }

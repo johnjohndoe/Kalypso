@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
@@ -219,7 +220,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
         /**
          * TODO implement IStationResult to profiles
          */
-        final IStationResult[] results = null;// m_pem == null ? null : m_pem.getResults();
+        final IStationResult[] results = null;
         setProfile( profil, results, m_feature, m_workspace );
       }
       catch( final Exception e )
@@ -281,9 +282,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final IFeatureSelection fs = (IFeatureSelection) selection;
     final EasyFeatureWrapper[] features = fs.getAllFeatures();
 
-    IProfil profile = null;
     WspmProfile profileMember = null;
-    IStationResult[] results = null;
     try
     {
       for( final EasyFeatureWrapper eft : features )
@@ -296,14 +295,13 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
           if( profileMember != null )
           {
             final Feature pf = profileMember.getFeature();
+
             // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
             // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
             // and directly set the prefered type.
             if( ProfileFeatureFactory.getProfileType( pf ) == null )
               ProfileFeatureFactory.setProfileType( pf, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
 
-            profile = ProfileFeatureFactory.toProfile( pf );
-            results = findResults( profileMember );
             break;
           }
         }
@@ -315,20 +313,27 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
       wspmPlugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
+    // Check if this is the current feature, if true, do not set the profile agin
+    final Feature profileFeature = profileMember == null ? null : profileMember.getFeature();
+
+    if( ObjectUtils.equals( m_feature, profileFeature ) )
+      return;
+
     if( profileMember == null )
     {
-      setProfile( null, results, null, null );
+      setProfile( null, null, null, null );
       return;
     }
 
-    final Feature feature = profileMember == null ? null : profileMember.getFeature();
+    final Feature feature = profileMember.getFeature();
     final CommandableWorkspace workspace = fs.getWorkspace( feature );
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     // Fallback, if we do not have an editor, try the gml file itself
     if( m_file == null )
       m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
-    final Feature profileFeature = profileMember == null ? null : profileMember.getFeature();
+    IProfil profile = ProfileFeatureFactory.toProfile( profileFeature );
+    IStationResult[] results = findResults( profileMember );
     setProfile( profile, results, profileFeature, workspace );
   }
 
@@ -349,8 +354,8 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
       if( m_profile != null && m_file != null )
       {
-                 m_profilValidator = new ValidationProfilListener( m_profile, m_file, m_editorID, m_feature.getId() );
-       
+        m_profilValidator = new ValidationProfilListener( m_profile, m_file, m_editorID, m_feature.getId() );
+
         m_profile.addProfilListener( m_profilValidator );
       }
     }

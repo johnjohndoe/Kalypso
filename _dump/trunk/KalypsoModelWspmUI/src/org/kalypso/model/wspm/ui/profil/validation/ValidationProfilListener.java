@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.ui.profil.validation;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -99,7 +100,8 @@ public class ValidationProfilListener implements IProfilListener
           // TODO: use monitor and check for cancel
           final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) ); //$NON-NLS-1$
 
-          profile.setProblemMarker( collector.getMarkers() );
+          final IMarker[] markers = collector.getMarkers();
+          profile.setProblemMarker( markers );
 
           return status;
         }

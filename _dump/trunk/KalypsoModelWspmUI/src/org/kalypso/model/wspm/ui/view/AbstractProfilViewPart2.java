@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -51,6 +54,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -80,6 +84,16 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
 
   /** The part where the profile provider came from. */
   private IWorkbenchPart m_profilProviderPart = null;
+
+  private UIJob m_updateProfilJob = new UIJob( "Profilansicht aktualisieren..." )
+  {
+    @Override
+    public IStatus runInUIThread( IProgressMonitor monitor )
+    {
+      handleProfilChanged();
+      return Status.OK_STATUS;
+    }
+  };
 
   /**
    * Standard constructor.
@@ -143,10 +157,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     m_profilProviderPart = part;
 
     if( m_provider != null )
-    {
       m_provider.addProfilProviderListener( this );
-
-    }
 
     final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
     final ProfilViewData newViewData = m_provider == null ? null : m_provider.getViewData();
@@ -263,14 +274,10 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   /** Recreates the control */
   private final void onProfilChanged( )
   {
-    if( m_control != null && !m_control.isDisposed() )
-      m_control.getDisplay().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          handleProfilChanged();
-        }
-      } );
+    // REMARK: this makes this code a bit more robust, if too many profil changes go in... 
+    // we quickly cancel still pending jobs and reschedule again (with a small schedule)
+    m_updateProfilJob.cancel();
+    m_updateProfilJob.schedule( 100 );
   }
 
   protected Composite getControl( )
@@ -286,6 +293,9 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   /** Used internally. Must be called in the SWT-Thread. */
   protected void handleProfilChanged( )
   {
+    if( m_control == null || m_control.isDisposed() )
+      return;
+
     final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + m_profile.getStation();
     final String tooltip = null;
 
