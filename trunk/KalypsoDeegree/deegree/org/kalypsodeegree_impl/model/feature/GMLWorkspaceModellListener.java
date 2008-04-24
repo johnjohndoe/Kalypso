@@ -67,6 +67,8 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
 {
   private final Set<IGmlWorkspaceListener> m_validators = new HashSet<IGmlWorkspaceListener>();
 
+  private final Set<QName> m_handledQNames = new HashSet<QName>();
+
   private final GMLWorkspace m_workspace;
 
   public GMLWorkspaceModellListener( final GMLWorkspace workspace )
@@ -99,17 +101,19 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
     {
       final QName substQname = substFeatureType.getQName();
 
-      final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.createGmlWorkspaceListeners( substQname );
-      for( final IGmlWorkspaceListener listener : listeners )
-        addListener( listener );
+      if( !m_handledQNames.contains( substQname ) )
+      {
+        m_handledQNames.add( substQname );
+
+        final IGmlWorkspaceListener[] listeners = KalypsoDeegreeExtensions.createGmlWorkspaceListeners( substQname );
+        for( final IGmlWorkspaceListener listener : listeners )
+          addListener( listener );
+      }
     }
   }
 
   private void addListener( final IGmlWorkspaceListener listener )
   {
-    if( m_validators.contains( listener ) )
-      return;
-
     listener.init( m_workspace );
     m_validators.add( listener );
   }
@@ -146,7 +150,9 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
     }
 
     // simply inform all listeners of this workspace
-    for( final IGmlWorkspaceListener validator : m_validators )
+    final IGmlWorkspaceListener[] ls = m_validators.toArray( new IGmlWorkspaceListener[m_validators.size()] );
+    for( final IGmlWorkspaceListener validator : ls )
+    {
       try
       {
         validator.onModellChange( modellEvent );
@@ -155,5 +161,6 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
       {
         KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
+    }
   }
 }

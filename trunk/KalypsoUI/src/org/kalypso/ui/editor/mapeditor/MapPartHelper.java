@@ -95,7 +95,7 @@ public class MapPartHelper
     // will not be instantiated
   }
 
-  public static Control createMapPanelPartControl( final Composite parent, final MapPanel mapPanel, final IWorkbenchPartSite site )
+  public static Control createMapPanelPartControl( final Composite parent, final MapPanel mapPanel, final IWorkbenchPartSite site, boolean doCreateMenu )
   {
     final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.NO_BACKGROUND );
     // create MapPanel
@@ -113,33 +113,37 @@ public class MapPartHelper
       @Override
       public void focusGained( FocusEvent e )
       {
-        SwingUtilities.invokeLater( new Runnable() {
+        SwingUtilities.invokeLater( new Runnable()
+        {
           public void run( )
           {
             mapPanel.requestFocus();
-          }} );
+          }
+        } );
       }
     } );
 
     // create Context Menu
-    final MenuManager menuManager = new MenuManager();
-    menuManager.setRemoveAllWhenShown( true );
-    menuManager.addMenuListener( new IMenuListener()
+    if( doCreateMenu )
     {
-      public void menuAboutToShow( final IMenuManager manager )
+      final MenuManager menuManager = new MenuManager();
+      menuManager.setRemoveAllWhenShown( true );
+      menuManager.addMenuListener( new IMenuListener()
       {
-        handleMenuAboutToShow( site.getPart(), manager, mapPanel );
-      }
-    } );
+        public void menuAboutToShow( final IMenuManager manager )
+        {
+          handleMenuAboutToShow( site.getPart(), manager, mapPanel );
+        }
+      } );
 
-    final Menu mapMenu = menuManager.createContextMenu( composite );
-    composite.setMenu( mapMenu );
-    // register it
-    site.registerContextMenu( menuManager, mapPanel );
+      final Menu mapMenu = menuManager.createContextMenu( composite );
+      composite.setMenu( mapMenu );
+      // register it
+      site.registerContextMenu( menuManager, mapPanel );
+      mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
+    }
 
     site.setSelectionProvider( mapPanel );
-
-    mapPanel.addMouseListener( new SWTAWT_ContextMenuMouseAdapter( composite, mapMenu ) );
 
     return composite;
   }

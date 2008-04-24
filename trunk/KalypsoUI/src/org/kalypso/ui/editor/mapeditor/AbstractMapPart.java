@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener2;
@@ -278,7 +279,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   {
     final IWorkbenchPartSite site = getSite();
 
-    m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, site );
+    // HACK: at the moment views never have a menu... maybe we could get the information,
+    // if a context menu is desired from the defining extension
+    final boolean doCreateMenu = this instanceof IEditorPart;
+    
+    m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, site, doCreateMenu );
     site.setSelectionProvider( m_mapPanel );
 
     site.getPage().addPartListener( m_partListener );

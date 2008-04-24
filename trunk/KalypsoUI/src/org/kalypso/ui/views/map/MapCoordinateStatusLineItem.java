@@ -79,6 +79,37 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<MapPanel>, IMapPanelListener
 {
+  private final class UpdateLabelJob extends UIJob
+  {
+    private GM_Point m_gmPoint;
+
+    public UpdateLabelJob( String name )
+    {
+      super( name );
+    }
+
+    public void setGmPoint( GM_Point gmPoint )
+    {
+      m_gmPoint = gmPoint;
+    }
+
+    @Override
+    public IStatus runInUIThread( IProgressMonitor monitor )
+    {
+      if( m_gmPoint != null && !m_label.isDisposed() ) // Have to check twice, because meanwhile it could have been
+      // disposed
+      {
+        double x = m_gmPoint.getX();
+        double y = m_gmPoint.getY();
+
+        m_label.setText( String.format( MapCoordinateStatusLineItem.MAP_POSITION_TEXT, x, y ) );
+        m_label.getParent().layout();
+      }
+
+      return Status.OK_STATUS;
+    }
+  }
+
   protected static String MAP_POSITION_TEXT = "%.2f / %.2f";
 
   private IAdapterFinder<MapPanel> m_closeFinder = new EditorFirstAdapterFinder<MapPanel>();
@@ -92,6 +123,8 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   private Composite m_composite;
 
   private MapPanel m_panel;
+
+  private UpdateLabelJob m_updateLabelJob;
 
   /**
    * @see org.eclipse.jface.action.ContributionItem#dispose()
@@ -142,6 +175,8 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     if( activePage != null )
       m_adapterListener.init( activePage );
+
+    m_updateLabelJob = new UpdateLabelJob( "Updating position label ..." );
 
     return m_composite;
   }
@@ -194,27 +229,13 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
    */
   public void onMouseMoveEvent( MapPanel source, final GM_Point gmPoint, Point mousePosition )
   {
+    if( m_updateLabelJob != null )
+      m_updateLabelJob.cancel();
+
     if( m_label != null && !m_label.isDisposed() )
     {
-      UIJob job = new UIJob( "Updating position label ..." )
-      {
-        @Override
-        public IStatus runInUIThread( IProgressMonitor monitor )
-        {
-          if( !m_label.isDisposed() ) // Have to check twice, because meanwhile it could have been disposed
-          {
-            double x = gmPoint.getX();
-            double y = gmPoint.getY();
-
-            m_label.setText( String.format( MapCoordinateStatusLineItem.MAP_POSITION_TEXT, x, y ) );
-            m_label.getParent().layout();
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
-
-      job.schedule();
+      m_updateLabelJob.setGmPoint( gmPoint );
+      m_updateLabelJob.schedule();
     }
   }
 }
