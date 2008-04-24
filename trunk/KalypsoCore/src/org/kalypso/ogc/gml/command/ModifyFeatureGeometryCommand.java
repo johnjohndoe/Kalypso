@@ -41,8 +41,13 @@
 package org.kalypso.ogc.gml.command;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -66,15 +71,14 @@ public class ModifyFeatureGeometryCommand implements ICommand
   private final GMLWorkspace m_workspace;
 
   /**
-   * Holds the list of translated features,
-   * can be null. is only initialyse {@link #process()}
+   * Holds the list of translated features, can be null. is only initialyse {@link #process()}
    */
-  private List<Feature> translatedFeatures;
-  
+  private Feature[] m_translatedFeatures;
+
   /**
    * @param workspace
    * @param targetFeatures
-   *          features to modify
+   *            features to modify
    */
   public ModifyFeatureGeometryCommand( final GMLWorkspace workspace, final List<Handle> handles, final double translation[] )
   {
@@ -104,28 +108,76 @@ public class ModifyFeatureGeometryCommand implements ICommand
 
   private void doIt( final boolean undo )
   {
-    final List<Feature> feList = new ArrayList<Feature>();
-
+    // BUGIFX: it is NOT allowed to change positio nby position and invalidate while doing so
+    // Counter example: polygon: first and last point get translated at different times
+    // FIX: First, hash according to feature/property; then work by feature/property
+    final Map<List<Object>, Map<GM_Position, GM_Position>> handleHash = new HashMap<List<Object>, Map<GM_Position, GM_Position>>();
     for( final Handle handle : m_handles )
     {
-      final GM_Position position = handle.getPosition();
-      if( undo )
-        position.translate( m_undoTranslation );
-      else
-        position.translate( m_translation );
+      final List<Object> key = new ArrayList<Object>(  );
+      key.add( handle.getFeature() );
+      key.add( handle.getPropertyType() );
+      
+      if( !handleHash.containsKey( key ) )
+      {
+        // REMARK: we must use a IdentityHashMap (sadly, there is no such set) in order
+        // not to identify last and first point of polygones, if they are not the same object.
+        handleHash.put( key, new IdentityHashMap<GM_Position, GM_Position>() );
+      }
 
+      final Map<GM_Position, GM_Position> posSet = handleHash.get( key );
+      posSet.put( handle.getPosition(), handle.getPosition() );
+    }
+
+    final Set<Feature> changedFeatures = new HashSet<Feature>();
+
+    for( final Entry<List<Object>, Map<GM_Position, GM_Position>> hashEntry : handleHash.entrySet() )
+    {
+      final List<Object> key = hashEntry.getKey();
+      final Map<GM_Position, GM_Position> positions = hashEntry.getValue();
+
+      // First, translate ALL position of that property at once
+      for( final GM_Position position : positions.keySet() )
+      {
+        if( undo )
+          position.translate( m_undoTranslation );
+        else
+          position.translate( m_translation );
+      }
+
+      // Second, invalidate this property
       /* Reset the geometry value in order to invalidate the feature's envelope */
-      final Feature feature = handle.getFeature();
-      final IValuePropertyType propertyType = handle.getPropertyType();
+      final Feature feature = (Feature) key.get(0);
+      final IValuePropertyType propertyType = (IValuePropertyType) key.get(1);
       final GM_Object value = (GM_Object) feature.getProperty( propertyType );
       value.invalidate();
       feature.setProperty( propertyType, value );
 
-      if( !feList.contains( feature ) )
-        feList.add( feature );
+      if( !changedFeatures.contains( feature ) )
+        changedFeatures.add( feature );
     }
-    translatedFeatures = feList;
-    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, feList.toArray( new Feature[feList.size()] ) ) );
+
+// for( final Handle handle : m_handles )
+// {
+// final GM_Position position = handle.getPosition();
+// if( undo )
+// position.translate( m_undoTranslation );
+// else
+// position.translate( m_translation );
+//
+// /* Reset the geometry value in order to invalidate the feature's envelope */
+// final Feature feature = handle.getFeature();
+// final IValuePropertyType propertyType = handle.getPropertyType();
+// final GM_Object value = (GM_Object) feature.getProperty( propertyType );
+// value.invalidate();
+// feature.setProperty( propertyType, value );
+//
+// if( !feList.contains( feature ) )
+// feList.add( feature );
+// }
+
+    m_translatedFeatures = changedFeatures.toArray( new Feature[changedFeatures.size()] );
+    m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, changedFeatures.toArray( new Feature[changedFeatures.size()] ) ) );
   }
 
   /**
@@ -151,21 +203,17 @@ public class ModifyFeatureGeometryCommand implements ICommand
   {
     return "Geometrie ändern";
   }
-  
+
   /**
-   * To get the list of feature which geometry have being translated
-   * This method never return null.
+   * To get the list of feature which geometry have being translated This method never return null.
+   * 
    * @return the list of translated features
    */
-  public List<Feature> getTranslatedFeatures( )
+  public Feature[] getTranslatedFeatures( )
   {
-    if(translatedFeatures!=null)
-    {
-      return translatedFeatures;
-    }
-    else
-    {
-      return Collections.emptyList();
-    }
+    if( m_translatedFeatures != null )
+      return m_translatedFeatures;
+
+    return new Feature[0];
   }
 }

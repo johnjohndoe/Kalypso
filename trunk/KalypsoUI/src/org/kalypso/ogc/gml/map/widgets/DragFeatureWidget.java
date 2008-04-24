@@ -64,7 +64,6 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a widget for selecting and dragging a complete feature.
