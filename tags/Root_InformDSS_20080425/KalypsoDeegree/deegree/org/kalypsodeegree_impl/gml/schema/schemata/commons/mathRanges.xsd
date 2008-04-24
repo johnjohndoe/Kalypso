@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:mathRanges="org.kalypso.gml.common.math.ranges" targetNamespace="org.kalypso.gml.common.math.ranges"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://dev.bjoernsen.de/ogc/schema/gml/3.1.1/base/gml.xsd"/>
+	<!-- utility schema for gml application schemas -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+	<!-- 
+		_________________________________________________________________________________________
+		ELEMENTS
+		_________________________________________________________________________________________	
+	-->
+	<!-- double ranges -->
+	<element name="doubleRangeMember" type="mathRanges:AbstractDoubleRangePropertyType"/>
+	<element name="DoubleRange" abstract="true" type="mathRanges:AbstractDoubleRangeType" substitutionGroup="gml:_Feature"/>
+	<element name="DoubleOpenOpenRange" type="mathRanges:DoubleOpenOpenRangeType" substitutionGroup="mathRanges:DoubleRange"/>
+	<element name="DoubleOpenClosedRange" type="mathRanges:DoubleOpenClosedRangeType" substitutionGroup="mathRanges:DoubleRange"/>
+	<element name="DoubleClosedOpenRange" type="mathRanges:DoubleClosedOpenRangeType" substitutionGroup="mathRanges:DoubleRange"/>
+	<element name="DoubleClosedClosedRange" type="mathRanges:DoubleClosedClosedRangeType" substitutionGroup="mathRanges:DoubleRange"/>
+	<!-- float ranges -->
+	<element name="floatRangeMember" type="mathRanges:AbstractFloatRangePropertyType"/>
+	<element name="FloatRange" abstract="true" type="mathRanges:AbstractFloatRangeType" substitutionGroup="gml:_Feature"/>
+	<element name="FloatOpenOpenRange" type="mathRanges:FloatOpenOpenRangeType" substitutionGroup="mathRanges:FloatRange"/>
+	<element name="FloatOpenClosedRange" type="mathRanges:FloatOpenClosedRangeType" substitutionGroup="mathRanges:FloatRange"/>
+	<element name="FloatClosedOpenRange" type="mathRanges:FloatClosedOpenRangeType" substitutionGroup="mathRanges:FloatRange"/>
+	<element name="FloatClosedClosedRange" type="mathRanges:FloatClosedClosedRangeType" substitutionGroup="mathRanges:FloatRange"/>
+	<!-- decimal ranges -->
+	<element name="decimalRangeMember" type="mathRanges:AbstractDecimalRangePropertyType"/>
+	<element name="DecimalRange" abstract="true" type="mathRanges:AbstractDecimalRangeType" substitutionGroup="gml:_Feature"/>
+	<element name="DecimalOpenOpenRange" type="mathRanges:DecimalOpenOpenRangeType" substitutionGroup="mathRanges:DecimalRange"/>
+	<element name="DecimalOpenClosedRange" type="mathRanges:DecimalOpenClosedRangeType" substitutionGroup="mathRanges:DecimalRange"/>
+	<element name="DecimalClosedOpenRange" type="mathRanges:DecimalClosedOpenRangeType" substitutionGroup="mathRanges:DecimalRange"/>
+	<element name="DecimalClosedClosedRange" type="mathRanges:DecimalClosedClosedRangeType" substitutionGroup="mathRanges:DecimalRange"/>
+	<!-- int ranges -->
+	<element name="intRangeMember" type="mathRanges:AbstractIntRangePropertyType"/>
+	<element name="IntRange" abstract="true" type="mathRanges:AbstractIntRangeType" substitutionGroup="gml:_Feature"/>
+	<element name="IntOpenOpenRange" type="mathRanges:IntOpenOpenRangeType" substitutionGroup="mathRanges:IntRange"/>
+	<element name="IntOpenClosedRange" type="mathRanges:IntOpenClosedRangeType" substitutionGroup="mathRanges:IntRange"/>
+	<element name="IntClosedOpenRange" type="mathRanges:IntClosedOpenRangeType" substitutionGroup="mathRanges:IntRange"/>
+	<element name="IntClosedClosedRange" type="mathRanges:IntClosedClosedRangeType" substitutionGroup="mathRanges:IntRange"/>
+	<!-- integer ranges -->
+	<element name="integerRangeMember" type="mathRanges:AbstractIntegerRangePropertyType"/>
+	<element name="IntegerRange" abstract="true" type="mathRanges:AbstractIntegerRangeType" substitutionGroup="gml:_Feature"/>
+	<element name="IntegerOpenOpenRange" type="mathRanges:IntegerOpenOpenRangeType" substitutionGroup="mathRanges:IntegerRange"/>
+	<element name="IntegerOpenClosedRange" type="mathRanges:IntegerOpenClosedRangeType" substitutionGroup="mathRanges:IntegerRange"/>
+	<element name="IntegerClosedOpenRange" type="mathRanges:IntegerClosedOpenRangeType" substitutionGroup="mathRanges:IntegerRange"/>
+	<element name="IntegerClosedClosedRange" type="mathRanges:IntegerClosedClosedRangeType" substitutionGroup="mathRanges:IntegerRange"/>
+	<!-- long ranges -->
+	<element name="longRangeMember" type="mathRanges:AbstractLongRangePropertyType"/>
+	<element name="LongRange" abstract="true" type="mathRanges:AbstractLongRangeType" substitutionGroup="gml:_Feature"/>
+	<element name="LongOpenOpenRange" type="mathRanges:LongOpenOpenRangeType" substitutionGroup="mathRanges:LongRange"/>
+	<element name="LongOpenClosedRange" type="mathRanges:LongOpenClosedRangeType" substitutionGroup="mathRanges:LongRange"/>
+	<element name="LongClosedOpenRange" type="mathRanges:LongClosedOpenRangeType" substitutionGroup="mathRanges:LongRange"/>
+	<element name="LongClosedClosedRange" type="mathRanges:LongClosedClosedRangeType" substitutionGroup="mathRanges:LongRange"/>
+	<!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+	<!-- type definitions for several range (or interval) types -->
+	<!-- 
+		naming convention: <type>[Open|Closed][Open|Closed]Type, 
+		where "Open" resp. "Closed" describe if the boundary values are included in the range 
+	-->
+	<complexType name="AbstractRangeType" abstract="true">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType"/>
+		</complexContent>
+	</complexType>
+	<!-- double ranges -->
+	<complexType name="AbstractDoubleRangePropertyType">
+		<sequence>
+			<element ref="mathRanges:DoubleRange"/>
+		</sequence>
+	</complexType>
+	<complexType name="AbstractDoubleRangeType" abstract="true">
+		<complexContent>
+			<extension base="mathRanges:AbstractRangeType">
+				<sequence>
+					<element name="lowerBound" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Intervallgrenze</label>
+								<tooltip>Untere Intervallgrenze</tooltip>
+								<description>Untere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower Range Boundary</label>
+								<tooltip>Lower Range Boundary</tooltip>
+								<description>Lower Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="upperBound" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Obere Intervallgrenze</label>
+								<tooltip>Obere Intervallgrenze</tooltip>
+								<description>Obere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Upper Range Boundary</label>
+								<tooltip>Upper Range Boundary</tooltip>
+								<description>Upper Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- (d1, d2) -->
+	<complexType name="DoubleOpenOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDoubleRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- (d1, d2] -->
+	<complexType name="DoubleOpenClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDoubleRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [d1, d2) -->
+	<complexType name="DoubleClosedOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDoubleRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [d1, d2] -->
+	<complexType name="DoubleClosedClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDoubleRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- float ranges -->
+	<complexType name="AbstractFloatRangePropertyType">
+		<sequence>
+			<element ref="mathRanges:FloatRange"/>
+		</sequence>
+	</complexType>
+	<complexType name="AbstractFloatRangeType" abstract="true">
+		<complexContent>
+			<extension base="mathRanges:AbstractRangeType">
+				<sequence>
+					<element name="lowerBound" type="float">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Intervallgrenze</label>
+								<tooltip>Untere Intervallgrenze</tooltip>
+								<description>Untere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower Range Boundary</label>
+								<tooltip>Lower Range Boundary</tooltip>
+								<description>Lower Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="upperBound" type="float">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Obere Intervallgrenze</label>
+								<tooltip>Obere Intervallgrenze</tooltip>
+								<description>Obere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Upper Range Boundary</label>
+								<tooltip>Upper Range Boundary</tooltip>
+								<description>Upper Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- (f1, f2) -->
+	<complexType name="FloatOpenOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractFloatRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- (f1, f2] -->
+	<complexType name="FloatOpenClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractFloatRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [f1, f2) -->
+	<complexType name="FloatClosedOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractFloatRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [f1, f2] -->
+	<complexType name="FloatClosedClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractFloatRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- decimal ranges -->
+	<complexType name="AbstractDecimalRangePropertyType">
+		<sequence>
+			<element ref="mathRanges:DecimalRange"/>
+		</sequence>
+	</complexType>
+	<complexType name="AbstractDecimalRangeType" abstract="true">
+		<complexContent>
+			<extension base="mathRanges:AbstractRangeType">
+				<sequence>
+					<element name="lowerBound" type="decimal">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Intervallgrenze</label>
+								<tooltip>Untere Intervallgrenze</tooltip>
+								<description>Untere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower Range Boundary</label>
+								<tooltip>Lower Range Boundary</tooltip>
+								<description>Lower Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="upperBound" type="decimal">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Obere Intervallgrenze</label>
+								<tooltip>Obere Intervallgrenze</tooltip>
+								<description>Obere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Upper Range Boundary</label>
+								<tooltip>Upper Range Boundary</tooltip>
+								<description>Upper Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- (d1, d2) -->
+	<complexType name="DecimalOpenOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDecimalRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- (d1, d2] -->
+	<complexType name="DecimalOpenClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDecimalRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [d1, d2) -->
+	<complexType name="DecimalClosedOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDecimalRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [d1, d2] -->
+	<complexType name="DecimalClosedClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractDecimalRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- int ranges -->
+	<complexType name="AbstractIntRangePropertyType">
+		<sequence>
+			<element ref="mathRanges:IntRange"/>
+		</sequence>
+	</complexType>
+	<complexType name="AbstractIntRangeType" abstract="true">
+		<complexContent>
+			<extension base="mathRanges:AbstractRangeType">
+				<sequence>
+					<element name="lowerBound" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Intervallgrenze</label>
+								<tooltip>Untere Intervallgrenze</tooltip>
+								<description>Untere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower Range Boundary</label>
+								<tooltip>Lower Range Boundary</tooltip>
+								<description>Lower Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="upperBound" type="int">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Obere Intervallgrenze</label>
+								<tooltip>Obere Intervallgrenze</tooltip>
+								<description>Obere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Upper Range Boundary</label>
+								<tooltip>Upper Range Boundary</tooltip>
+								<description>Upper Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- (i1, i2) -->
+	<complexType name="IntOpenOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- (i1, i2] -->
+	<complexType name="IntOpenClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [i1, i2) -->
+	<complexType name="IntClosedOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [i1, i2] -->
+	<complexType name="IntClosedClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- integer ranges -->
+	<complexType name="AbstractIntegerRangePropertyType">
+		<sequence>
+			<element ref="mathRanges:IntegerRange"/>
+		</sequence>
+	</complexType>
+	<complexType name="AbstractIntegerRangeType" abstract="true">
+		<complexContent>
+			<extension base="mathRanges:AbstractRangeType">
+				<sequence>
+					<element name="lowerBound" type="integer">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Intervallgrenze</label>
+								<tooltip>Untere Intervallgrenze</tooltip>
+								<description>Untere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower Range Boundary</label>
+								<tooltip>Lower Range Boundary</tooltip>
+								<description>Lower Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="upperBound" type="integer">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Obere Intervallgrenze</label>
+								<tooltip>Obere Intervallgrenze</tooltip>
+								<description>Obere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Upper Range Boundary</label>
+								<tooltip>Upper Range Boundary</tooltip>
+								<description>Upper Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- (i1, i2) -->
+	<complexType name="IntegerOpenOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntegerRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- (i1, i2] -->
+	<complexType name="IntegerOpenClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntegerRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [i1, i2) -->
+	<complexType name="IntegerClosedOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntegerRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [i1, i2] -->
+	<complexType name="IntegerClosedClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractIntegerRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- long ranges -->
+	<complexType name="AbstractLongRangePropertyType">
+		<sequence>
+			<element ref="mathRanges:LongRange"/>
+		</sequence>
+	</complexType>
+	<complexType name="AbstractLongRangeType" abstract="true">
+		<complexContent>
+			<extension base="mathRanges:AbstractRangeType">
+				<sequence>
+					<element name="lowerBound" type="long">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Untere Intervallgrenze</label>
+								<tooltip>Untere Intervallgrenze</tooltip>
+								<description>Untere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Lower Range Boundary</label>
+								<tooltip>Lower Range Boundary</tooltip>
+								<description>Lower Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="upperBound" type="long">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Obere Intervallgrenze</label>
+								<tooltip>Obere Intervallgrenze</tooltip>
+								<description>Obere Intervallgrenze</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>Upper Range Boundary</label>
+								<tooltip>Upper Range Boundary</tooltip>
+								<description>Upper Range Boundary</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- (l1, l2) -->
+	<complexType name="LongOpenOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractLongRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- (l1, l2] -->
+	<complexType name="LongOpenClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractLongRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [l1, l2) -->
+	<complexType name="LongClosedOpenRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractLongRangeType"/>
+		</complexContent>
+	</complexType>
+	<!-- [l1, l2] -->
+	<complexType name="LongClosedClosedRangeType">
+		<complexContent>
+			<extension base="mathRanges:AbstractLongRangeType"/>
+		</complexContent>
+	</complexType>
+</schema>
