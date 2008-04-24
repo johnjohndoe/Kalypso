@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.kalypso.model.wspm.core; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin
+Bundle-Vendor: %Bundle-Vendor.0
+Export-Package: org.kalypso.model.wspm.core,
+ org.kalypso.model.wspm.core.gml,
+ org.kalypso.model.wspm.core.gml.assignment,
+ org.kalypso.model.wspm.core.gml.coverages,
+ org.kalypso.model.wspm.core.imports,
+ org.kalypso.model.wspm.core.profil,
+ org.kalypso.model.wspm.core.profil.changes,
+ org.kalypso.model.wspm.core.profil.filter,
+ org.kalypso.model.wspm.core.profil.impl,
+ org.kalypso.model.wspm.core.profil.impl.marker,
+ org.kalypso.model.wspm.core.profil.reparator,
+ org.kalypso.model.wspm.core.profil.serializer,
+ org.kalypso.model.wspm.core.profil.test,
+ org.kalypso.model.wspm.core.profil.util,
+ org.kalypso.model.wspm.core.profil.validator,
+ org.kalypso.model.wspm.core.result,
+ org.kalypso.model.wspm.core.result.impl,
+ org.kalypso.model.wspm.core.strang,
+ org.kalypso.model.wspm.core.util,
+ org.kalypso.model.wspm.core.util.pointpropertycalculator
+Require-Bundle: org.eclipse.ui.ide,
+ org.junit,
+ org.kalypso.core,
+ org.kalypso.wspwin.core,
+ org.eclipse.core.resources;visibility:=reexport
+Eclipse-LazyStart: true
+

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoWspWinCore Plug-in
+Bundle-SymbolicName: org.kalypso.wspwin.core
+Bundle-Version: 0.0.1
+Bundle-Activator: org.kalypso.wspwin.core.KalypsoWspWinCorePlugin
+Bundle-Vendor: kalypso.org
+Bundle-Localization: plugin
+Require-Bundle: org.kalypso.commons
+Eclipse-LazyStart: true
+Export-Package: org.kalypso.wspwin.core,
+ org.kalypso.wspwin.core.prf,
+ org.kalypso.wspwin.core.prf.datablock
