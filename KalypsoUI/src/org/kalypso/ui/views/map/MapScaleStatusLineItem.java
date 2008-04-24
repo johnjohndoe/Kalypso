@@ -84,6 +84,38 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<MapPanel>, IMapPanelListener
 {
+  private class UpdateScaleJob extends UIJob
+  {
+    private double m_mapScale;
+
+    public UpdateScaleJob( String name )
+    {
+      super( name );
+    }
+    
+    public void setMapScale(final double mapScale  )
+    {
+      m_mapScale = mapScale;
+    }
+
+    @Override
+    public IStatus runInUIThread( IProgressMonitor monitor )
+    {
+      if( m_text != null && !m_text.isDisposed() )
+      {
+        if( Double.isNaN( m_mapScale ) || Double.isInfinite( m_mapScale ) )
+          m_mapScale = 0;
+
+        BigDecimal bigScale = new BigDecimal( m_mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
+        String scaleString = bigScale.toPlainString();
+
+        m_text.setText( scaleString );
+      }
+
+      return Status.OK_STATUS;
+    }
+  }
+
   private IAdapterFinder<MapPanel> m_closeFinder;
 
   private IAdapterFinder<MapPanel> m_initFinder;
@@ -104,6 +136,8 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
    * The text field for displaying and typing the scale.
    */
   protected Text m_text;
+
+  private UpdateScaleJob m_updateScaleJob;
 
   /**
    * The constructor.
@@ -138,6 +172,8 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     m_adapterListener = new AdapterPartListener<MapPanel>( MapPanel.class, this, m_initFinder, m_closeFinder );
 
     m_text = null;
+    
+    m_updateScaleJob = new UpdateScaleJob("Updating scale box ...");
   }
 
   /**
@@ -253,30 +289,14 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
    */
   public void onExtentChanged( final MapPanel source, GM_Envelope oldExtent, GM_Envelope newExtent )
   {
+    if( m_updateScaleJob != null )
+      m_updateScaleJob.cancel();
+    
     if( m_text != null && !m_text.isDisposed() )
     {
-      final UIJob job = new UIJob( "Updating scale box ..." )
-      {
-        @Override
-        public IStatus runInUIThread( IProgressMonitor monitor )
-        {
-          if( m_text != null && !m_text.isDisposed() )
-          {
-            double mapScale = MapUtilities.getMapScale( source );
-            if( Double.isNaN( mapScale ) || Double.isInfinite( mapScale ) )
-              mapScale = 0;
-
-            BigDecimal bigScale = new BigDecimal( mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
-            String scaleString = bigScale.toPlainString();
-
-            m_text.setText( scaleString );
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
-
-      job.schedule();
+      double mapScale = MapUtilities.getMapScale( source );
+      m_updateScaleJob.setMapScale( mapScale );
+      m_updateScaleJob.schedule();
     }
   }
 
