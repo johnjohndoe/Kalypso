@@ -241,4 +241,17 @@ public class FeatureUtils
 
     return result;
   }
+
+  public static String getFeatureName( final Feature feature )
+  {
+    final IPropertyType[] properties = feature.getFeatureType().getProperties();
+    for( final IPropertyType propertyType : properties )
+    {
+      final QName name = propertyType.getQName();
+      if( "name".equals( name.getLocalPart() ) )
+        return getFeatureName( name.getNamespaceURI(), feature );
+    }
+
+    return "";
+  }
 }
