@@ -1,4 +1,4 @@
-C     Last change:  WP   29 Jan 2008    6:15 pm
+C     Last change:  WP   24 Apr 2008   10:42 am
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -357,7 +357,7 @@ cipk sep96 add to 3 lines below for ocean exchange percentantage and mixing
       READ(DLIN,5021) SALI,TEMPI,SEDI,UINP,VINP,prcnt,DMIX,beient
       write(*,*) 'read c4'
       !default values; what's that
-      if (beient /= 1 .and. beient /= 2) then
+      if (beient /= 1 .and. beient /= 2 .and. beient /= 3) then
         beient = 0
       end if
       !testoutput
@@ -452,7 +452,7 @@ cipk mar06 allow for output file rewind
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       !nis,jan08: New control line for additional output options
       if (ID(1:2) == 'C7') then
-        read (DLIN, '(I8)') WriteNodeBlock
+        read (DLIN, '(2I8)') WriteNodeBlock, testoutput
         call ginpt (lin, id, dlin)
       !Set the standard values
       else

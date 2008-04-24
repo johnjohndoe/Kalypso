@@ -1,4 +1,4 @@
-C     Last change:  WP   26 Feb 2008    3:32 pm
+C     Last change:  WP   24 Apr 2008   11:58 am
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -70,7 +70,8 @@ C-
 
         !introducing the restart values for interpolated profiles
         do i = 1, maxp
-          if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
+          !if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
+          if (IntPolProf (i)) then
             do j = 1, 3
               vel (j, i) =
      +                (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) +

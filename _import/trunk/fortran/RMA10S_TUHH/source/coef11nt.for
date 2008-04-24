@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP    8 Apr 2008    5:13 pm
+C     Last change:  WP   24 Apr 2008   10:11 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -46,7 +46,6 @@ CIPK LAST UPDATED SEP 7 1995
 !-
 
 C
-      INTEGER :: testoutput
       INTEGER :: PolyPos, findpolynom
       REAL (KIND = 8) :: calcpolynomial
       REAL (KIND = 8) :: h, rhy

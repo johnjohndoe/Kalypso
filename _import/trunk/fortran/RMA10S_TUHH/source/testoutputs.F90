@@ -1,45 +1,35 @@
-!     Last change:  WP   23 Apr 2008    4:59 pm
+!     Last change:  WP   24 Apr 2008   12:58 pm
 !subroutines for testoutput from coef1DfE subroutine
 
-subroutine MomOvVel (daintdt, areaint, vflowint, dbeiintdx, beiint, daintdx, dvintdx, grav, sfint, optin, icyc, sidft)
+subroutine MomOvVel (daintdt, areaint, vflowint, dbeiintdx, beiint, daintdx, dvintdx, grav, sfint, icyc, sidft)
   implicit none
   REAL (KIND = 8), INTENT (IN) :: areaint, daintdt, daintdx
   REAL (KIND = 8), INTENT (IN) :: vflowint, dvintdx
   REAL (KIND = 8), INTENT (IN) :: beiint, dbeiintdx
   REAL (KIND = 8), INTENT (IN) :: grav, sfint, sidft
-  INTEGER, INTENT (IN) :: optin, icyc
+  INTEGER, INTENT (IN) :: icyc
 
   WRITE(*,*) 'Momentum over velocity'
   WRITE(*,*) 'Direktterme FEEAN'
 
   if (icyc > 0) then
-    if (optin == 1) then
-      WRITE(*,*) 'Term A1: ', + daintdt
-    end if
+    WRITE(*,*) 'Term A1: ', + daintdt
   end if
 
-  IF     (optin == 1) then
-    WRITE(*,*) ' Term B: ', + 2.0 * areaint* vflowint * dbeiintdx
-    WRITE(*,*) ' Term C: ', + 2.0 * vflowint * beiint * daintdx
-    WRITE(*,*) ' Term D: ', + 2.0 * beiint * areaint * dvintdx
-  ELSEIF (optin == 2) then
-    WRITE(*,*) ' Term D: ', + areaint * dvintdx
-  ENDIF
+  WRITE(*,*) ' Term B: ', + 2.0 * areaint* vflowint * dbeiintdx
+  WRITE(*,*) ' Term C: ', + 2.0 * vflowint * beiint * daintdx
+  WRITE(*,*) ' Term D: ', + 2.0 * beiint * areaint * dvintdx
 
   WRITE(*,*) ' Term F: ', + 2.0 * grav * sfint * areaint / vflowint
   WRITE(*,*) ' Term H: ', + sidft
   WRITE(*,*) 'Ableitungsterme FEEBN'
-  IF     (optin == 1) then
-    WRITE(*,*) ' Term D: ', + 2.0 * beiint * areaint * vflowint
-  ELSEIF (optin == 2) then
-    WRITE(*,*) ' Term D: ', + vflowint * areaint
-  ENDIF
+  WRITE(*,*) ' Term D: ', + 2.0 * beiint * areaint * vflowint
   pause
 end subroutine
 
 subroutine MomOvDep (vflowint, dvintdt, dvintdx, hhint, dhintdt, dhhintdx, beiint, dbeiintdh, &
          & d2beiintdhdx, areaint, daintdx, dareaintdh, d2areaintdh, d2aidhdx, sfint, dsfintdh1, yps, &
-         & dypsdx, dypsdh, d2ypsdhdx, zsint, dzsintdh, grav, sbot, optin, icyc, byparts)
+         & dypsdx, dypsdh, d2ypsdhdx, zsint, dzsintdh, grav, sbot, icyc, byparts)
   implicit none
   REAL (KIND = 8), INTENT (IN) :: vflowint, dvintdt, dvintdx
   real (kind = 8), INTENT (IN) :: hhint, dhintdt, dhhintdx
@@ -49,27 +39,19 @@ subroutine MomOvDep (vflowint, dvintdt, dvintdx, hhint, dhintdt, dhhintdx, beiin
   real (kind = 8), INTENT (IN) :: yps, dypsdx, dypsdh, d2ypsdhdx
   real (kind = 8), INTENT (IN) :: zsint, dzsintdh
   real (kind = 8), INTENT (IN) :: grav, sbot
-  integer, INTENT (IN) :: optin, icyc, byparts
+  integer, INTENT (IN) :: icyc, byparts
 
   WRITE(*,*) 'Momentum over depth'
   WRITE(*,*) 'Direktterme FEEAN'
 
   if (icyc > 0) then
-    if     (optin == 1) then
-      WRITE(*,*) 'Term A1: ', + dareaintdh * dvintdt
-      WRITE(*,*) 'Term A2: ', + dareaintdh * dhintdt
-    ELSEIF (optin == 2) then
-      WRITE(*,*) 'Term A1: ', + dareaintdh * dvintdt
-    end if
+    WRITE(*,*) 'Term A1: ', + dareaintdh * dvintdt
+    WRITE(*,*) 'Term A2: ', + dareaintdh * dhintdt
   end if
 
-  IF     (optin == 1) then
-    WRITE(*,*) ' Term B: ', + vflowint**2 * (dareaintdh * dbeiintdh + areaint * d2beiintdhdx)
-    WRITE(*,*) ' Term C: ', + vflowint**2 * (dbeiintdh * daintdx + beiint * d2aidhdx)
-    WRITE(*,*) ' Term D: ', + 2.0 * vflowint * dvintdx * (beiint * dareaintdh + areaint * dbeiintdh)
-  ELSEIF (optin == 2) then
-    WRITE(*,*) ' Term D', + vflowint * dvintdx * dareaintdh
-  ENDIF
+  WRITE(*,*) ' Term B: ', + vflowint**2 * (dareaintdh * dbeiintdh + areaint * d2beiintdhdx)
+  WRITE(*,*) ' Term C: ', + vflowint**2 * (dbeiintdh * daintdx + beiint * d2aidhdx)
+  WRITE(*,*) ' Term D: ', + 2.0 * vflowint * dvintdx * (beiint * dareaintdh + areaint * dbeiintdh)
 
   if     (byparts == 1) then
     WRITE(*,*) 'Term E1: ', + grav * dareaintdh * dhhintdx
@@ -102,13 +84,13 @@ subroutine MomOvDep (vflowint, dvintdt, dvintdx, hhint, dhintdt, dhhintdx, beiin
   pause
 end subroutine
 
-subroutine Mom (nn, i, optin, icyc, byparts, areaint, daintdt, daintdx, dareaintdh, vflowint, dvintdt, &
+subroutine Mom (nn, i, icyc, byparts, areaint, daintdt, daintdx, dareaintdh, vflowint, dvintdt, &
        & dvintdx, hhint, dhhintdx, beiint, dbeiintdx, zsint, yps, dypsdx, sfint, sbot, xn, &
        & dnx, frn, frnx, ams, grav, sidft)
 
 
   implicit none
-  INTEGER, INTENT (IN) :: nn, i, optin, icyc, byparts
+  INTEGER, INTENT (IN) :: nn, i, icyc, byparts
   real (kind = 8), INTENT (IN) :: areaint, daintdt, daintdx, dareaintdh
   real (kind = 8), INTENT (IN) :: vflowint, dvintdt, dvintdx
   real (kind = 8), INTENT (IN) :: hhint, dhhintdx
@@ -122,21 +104,13 @@ subroutine Mom (nn, i, optin, icyc, byparts, areaint, daintdt, daintdx, dareaint
   WRITE(*,*) 'Momentum equation, element: ', nn, 'GaussPt.: ', i
   WRITE(*,*) 'FRN'
   if (icyc > 0) then
-    if (optin == 1) then
-      WRITE(*,*) 'Term A1: ', + areaint * dvintdt
-      WRITE(*,*) 'Term A2: ', + vflowint * daintdt
-    ELSEIF (optin == 2) then
-      WRITE(*,*) ' Term A: ', + areaint * dvintdt
-    end if
+    WRITE(*,*) 'Term A1: ', + areaint * dvintdt
+    WRITE(*,*) 'Term A2: ', + vflowint * daintdt
   end if
 
-  if (optin == 1) then
-    WRITE(*,*) ' Term B: ', + vflowint**2 * areaint * dbeiintdx
-    WRITE(*,*) ' Term C: ', + beiint * vflowint**2 * daintdx
-    WRITE(*,*) ' Term D: ', + 2 * beiint * vflowint * areaint * dvintdx
-  ELSEIF (optin == 2) then
-    WRITE(*,*) ' Term D: ', + vflowint * areaint * dvintdx
-  endif
+  WRITE(*,*) ' Term B: ', + vflowint**2 * areaint * dbeiintdx
+  WRITE(*,*) ' Term C: ', + beiint * vflowint**2 * daintdx
+  WRITE(*,*) ' Term D: ', + 2 * beiint * vflowint * areaint * dvintdx
 
   if     (byparts == 1) then
     WRITE(*,*) ' Term E: ',  + grav * areaint * dhhintdx

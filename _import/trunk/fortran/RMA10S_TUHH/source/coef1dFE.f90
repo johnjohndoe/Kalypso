@@ -1,4 +1,4 @@
-!Last change:  WP   23 Apr 2008    5:01 pm
+!Last change:  WP   24 Apr 2008   12:58 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -141,7 +141,7 @@ REAL (KIND = 8) :: vel_res(3)
 
 INTEGER :: PolyTest
 
-INTEGER :: optin, testoutput, byparts
+INTEGER :: byparts
 !estifm block-definition
 INCLUDE 'BLKE.COM'
 !weighting function etc. block-definition
@@ -257,16 +257,12 @@ byparts = 1
 !byparts = 2: Apply Differentiation by parts
 !byparts = 3: new trial for natural boundary condition; it doesn't work yet
 
-testoutput = 0
+
+!testoutput-Variable is now defined in control file, line C7
 !testoutput = 0: output switched off
 !testoutput = 1: output of partly values of equations and output of matrces
 !testoutput = 2: output of variables at the end
 !testoutput = 3: output of beiwert-variable
-
-optin = 1
-!optin-differences only occur in the convective terms
-!optin = 1: Calculation with flow coefficient in equations (standard formulation)
-!optin = 2: Calculation without flow coefficient
 
 do i = 1, 3, 2
   n1 = nop(nn,i)
@@ -446,7 +442,7 @@ do i = 1, 2
     PPQ(1) = findPolynom (polyRangeQ (n, :), vel(3, n), PolySplitsQ (n))
     PPA(2) = PPA(1)
     PPQ(2) = PPQ(1)
-    if (beient /= 0) then
+    if (beient == 1 .or. beient == 2) then
       PPB(1) = findPolynom (polyRangeB (n, :), h, PolySplitsB (n))
       PPB(2) = PPB(1)
     end if
@@ -455,7 +451,7 @@ do i = 1, 2
     PPA(2) = findPolynom (polyRangeA (NeighProf (n, 2), :), vel (3, n), PolySplitsA (NeighProf (n, 2)))
     PPQ(1) = findPolynom (polyRangeQ (NeighProf (n, 1), :), vel (3, n), PolySplitsQ (NeighProf (n, 1)))
     PPQ(2) = findPolynom (polyRangeQ (NeighProf (n, 2), :), vel (3, n), PolySplitsQ (NeighProf (n, 2)))
-    if (beient /= 0) then
+    if (beient == 1 .or. beient == 2) then
       PPB(1) = findPolynom (polyRangeB (NeighProf (n, 1), :), h, PolySplitsB (NeighProf (n, 1)))
       PPB(2) = findPolynom (polyRangeB (NeighProf (n, 2), :), h, PolySplitsB (NeighProf (n, 2)))
     endif
@@ -560,6 +556,8 @@ do i = 1, 2
           d2beidh(i) = d2beidh (i) + LocalWeight * calcPolynomial2ndDerivative (betapoly (PPB (j), node, 0:12), h)
         !This point is reached, if the waterlevel rises over the crest of bordful discharge. Then it will give a warning because of wrong switch
         !of using flow coeficient. Flow coeficient is then ignored.
+        ELSEIF (beient == 3) then
+          bei (i) = 0.0
         ELSE
           WRITE (lout, *) 'WARNING - wrong parameter beient'
           WRITE (lout, *) 'Check in input file, whether beient has a legal value (0, 1 or 2)'
@@ -987,20 +985,14 @@ Gaussloop: DO I = 1, NGP
   FRNX = 0.0
 
   !Terms B - D: Convective terms
-  IF     (optin == 1) THEN
-    FRN =                                                          &
-           !Term B: Convective term
-      &    + vflowint(i)**2 * areaint(i) * dbeiintdx(i)            &
-           !Term C: Convective term
-      &    + beiint(i) * vflowint(i)**2 * daintdx(i)               &
-           !Term D: Convective term
-      &    + 2. * beiint(i) * vflowint(i) * areaint(i) * dvintdx(i)
+  FRN =                                                          &
+         !Term B: Convective term
+    &    + vflowint(i)**2 * areaint(i) * dbeiintdx(i)            &
+         !Term C: Convective term
+    &    + beiint(i) * vflowint(i)**2 * daintdx(i)               &
+         !Term D: Convective term
+    &    + 2. * beiint(i) * vflowint(i) * areaint(i) * dvintdx(i)
 
-  ELSEIF (optin == 2) THEN
-    FRN =                                                          &
-           !Term B - D: Convective term
-       &   + vflowint(i) * areaint(i) * dvintdx(i)
-  ENDIF
 
   !Term E: Hydrostatic term
   if     (Byparts == 1) then
@@ -1040,18 +1032,12 @@ Gaussloop: DO I = 1, NGP
 
   !Term A: Unsteady terms
   IF (icyc > 0) THEN
-    IF (optin == 1) THEN
-      FRN = FRN                                                    &
-        !Term A1: Unsteady term
-        &    + areaint(i) * dvintdt(i)                             &
-        !Term A2: Unsteady term
-        &    + vflowint(i) * daintdt(i)
+    FRN = FRN                                                    &
+      !Term A1: Unsteady term
+      &    + areaint(i) * dvintdt(i)                             &
+      !Term A2: Unsteady term
+      &    + vflowint(i) * daintdt(i)
 
-    ELSEIF (optin == 2) THEN
-      FRN = FRN                                                    &
-        !Term A
-        &    + areaint(i) * dvintdt(i)
-    ENDIF
   ENDIF
 
   !Assemble equation values
@@ -1064,7 +1050,7 @@ Gaussloop: DO I = 1, NGP
 
   !testoutput
   if (testoutput == 1) &
-  &  call Mom (nn, i, optin, icyc, byparts, areaint(i), daintdt(i), daintdx(i), dareaintdh(i), vflowint(i), dvintdt(i), &
+  &  call Mom (nn, i, icyc, byparts, areaint(i), daintdt(i), daintdx(i), dareaintdh(i), vflowint(i), dvintdt(i), &
             & dvintdx(i), hhint(i), dhhintdx(i), beiint(i), dbeiintdx(i), zsint(i), yps(i), dypsdx(i), sfint(i), sbot, &
             & xn, dnx, frn, frnx, ams, grav, sidft)
 
@@ -1115,20 +1101,13 @@ Gaussloop: DO I = 1, NGP
   !FEEAN FEEAN FEEAN
   !*****************
   !Terms B - D: Convective terms
-  IF     (optin == 1) THEN
-    FEEAN =                                                                                          &
-            !Term B: Convective term
-      &   + vflowint(i)**2 * (dareaintdh(i) * dbeiintdh(i) + areaint(i) * d2beiintdhdx(i))           &
-            !Term C: Convective term
-      &   + vflowint(i)**2 * (dbeiintdh(i) * daintdx(i) + beiint(i) * d2aidhdx(i))                   &
-            !Term D: Convective term
-      &   + 2.0 * vflowint(i) * dvintdx(i) * (beiint(i) * dareaintdh(i) + areaint(i) * dbeiintdh(i)) 
-
-  ELSEIF (optin == 2) THEN
-    FEEAN =                                                                                          &
-            !Term B-D: Convective terms
-      &   + vflowint(i) * dvintdx(i) * dareaintdh(i)
-  ENDIF
+  FEEAN =                                                                                          &
+          !Term B: Convective term
+    &   + vflowint(i)**2 * (dareaintdh(i) * dbeiintdh(i) + areaint(i) * d2beiintdhdx(i))           &
+          !Term C: Convective term
+    &   + vflowint(i)**2 * (dbeiintdh(i) * daintdx(i) + beiint(i) * d2aidhdx(i))                   &
+          !Term D: Convective term
+    &   + 2.0 * vflowint(i) * dvintdx(i) * (beiint(i) * dareaintdh(i) + areaint(i) * dbeiintdh(i))
 
   !Term E: Hydrostatic term
   IF     (byparts == 1) THEN
@@ -1157,30 +1136,22 @@ Gaussloop: DO I = 1, NGP
 
   !Term A: unsteady term
   IF (icyc > 0) THEN
-    IF (optin == 1) THEN
-      FEEAN = FEEAN                    &
-           !Term A1
-      &   + dareaintdh(i) * dvintdt(i) &
-           !Term A2
-      &   + dareaintdh(i) * dhintdt(i)
+    FEEAN = FEEAN                    &
+         !Term A1
+    &   + dareaintdh(i) * dvintdt(i) &
+         !Term A2
+    &   + dareaintdh(i) * dhintdt(i)
 
-    ELSEIF (optin == 2) then
-      FEEAN = FEEAN                    &
-           !Term A1
-      &   + dareaintdh(i) * dvintdt(i)
-    ENDIF
   ENDIF
 
   !FEEBN FEEBN FEEBN
   !*****************
   !Terms B - D: Convective terms
-  IF (optin == 1) THEN
-    FEEBN =                                                   &
-            !Term B: Convective term
-      &   + vflowint(i)**2 * areaint(i) * dbeiintdh(i)        &
-            !Term C: Convective term
-      &   + vflowint(i)**2 * beiint(i) * dareaintdh(i)
-  ENDIF
+  FEEBN =                                                   &
+          !Term B: Convective term
+    &   + vflowint(i)**2 * areaint(i) * dbeiintdh(i)        &
+          !Term C: Convective term
+    &   + vflowint(i)**2 * beiint(i) * dareaintdh(i)
 
   !Term E: Hydrostatic term
   IF (byparts == 1) THEN
@@ -1223,7 +1194,7 @@ Gaussloop: DO I = 1, NGP
   if (testoutput == 1) &
   & call MomOvDep (vflowint(i), dvintdt(i), dvintdx(i), hhint(i), dhintdt(i), dhhintdx(i), beiint(i), dbeiintdh(i), &
   & d2beiintdhdx(i), areaint(i), daintdx(i), dareaintdh(i), d2areaintdh(i), d2aidhdx(i), sfint(i), dsfintdh1(i), yps(i), &
-  & dypsdx(i), dypsdh(i), d2ypsdhdx(i), zsint(i), dzsintdh(i), grav, sbot, optin, icyc, byparts)
+  & dypsdx(i), dypsdh(i), d2ypsdhdx(i), zsint(i), dzsintdh(i), grav, sbot, icyc, byparts)
 
 
   !**************************************************************************************************************************
@@ -1235,19 +1206,13 @@ Gaussloop: DO I = 1, NGP
   !FEEAN FEEAN FEEAN
   !*****************
   !Terms B-D: Convective terms
-  IF (optin == 1) THEN
-    FEEAN =                                                   &
-            !Term B: Convective term
-      &   + 2.0 * areaint(i)* vflowint(i) * dbeiintdx(i)      &
-            !Term C: Convective term
-      &   + 2.0 * vflowint(i) * beiint(i) * daintdx(i)        &
-            !Term D: Convective term
-      &   + 2.0 * beiint(i) * areaint(i) * dvintdx(i)
-  ELSEIF (optin == 2) THEN
-    FEEAN =                                                                    &
-            !Term B-D: Convective terms
-      &   + areaint(i) * dvintdx(i)
-  ENDIF
+  FEEAN =                                                   &
+          !Term B: Convective term
+    &   + 2.0 * areaint(i)* vflowint(i) * dbeiintdx(i)      &
+          !Term C: Convective term
+    &   + 2.0 * vflowint(i) * beiint(i) * daintdx(i)        &
+          !Term D: Convective term
+    &   + 2.0 * beiint(i) * areaint(i) * dvintdx(i)
 
   FEEAN = FEEAN                                               &
             !Term F: Friction term
@@ -1257,25 +1222,17 @@ Gaussloop: DO I = 1, NGP
 
   !Term A: unsteady term
   if (icyc > 0) then
-    if (optin == 1) then
-      FEEAN = FEEAN    &
-            !Term A2
-      &   + daintdt(i)
-    endif
+    FEEAN = FEEAN    &
+          !Term A2
+    &   + daintdt(i)
   end if
 
   !FEEBN FEEBN FEEBN
   !*****************
   !Terms B-D: Convective terms
-  if (optin == 1) then
-    FEEBN =                                                   &
-            !Term D: Convective term
-      &   + 2.0 * beiint(i) * areaint(i) * vflowint(i)
-  ELSEIF (optin == 2) then
-    FEEBN =                                                   &
-            !Term B-D: Convective term
-      &   + vflowint(i) * areaint(i)
-  endif
+  FEEBN =                                                   &
+          !Term D: Convective term
+    &   + 2.0 * beiint(i) * areaint(i) * vflowint(i)
 
   !Assemble equation values
   do l = 1, 3
@@ -1291,7 +1248,7 @@ Gaussloop: DO I = 1, NGP
 
   !testoutput
   if (testoutput == 1) call MomOvVel (daintdt(i), areaint(i), vflowint(i), dbeiintdx(i), beiint(i), &
-                            &              daintdx(i), dvintdx(i), grav, sfint(i), optin, icyc, sidft)
+                            &              daintdx(i), dvintdx(i), grav, sfint(i), icyc, sidft)
 
 
   !*********************************************************************************************************************

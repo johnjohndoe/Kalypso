@@ -1,4 +1,4 @@
-!     Last change:  WP   17 Apr 2008   10:04 am
+!     Last change:  WP   24 Apr 2008   10:09 am
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -98,5 +98,7 @@ CHARACTER (Len = 128), ALLOCATABLE :: CalcUnitName (:)
 
 !new parameters for weirs defined by linear functions
 REAL (KIND = 8), ALLOCATABLE :: cstrcRange (:,:,:), cstrcCoefs (:,:,:,:), cstrcdisch (:, :)
+
+INTEGER :: testoutput
 
 END MODULE 
