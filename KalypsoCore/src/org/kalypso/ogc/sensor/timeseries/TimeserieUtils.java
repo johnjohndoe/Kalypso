@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,10 +54,10 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
-import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -77,10 +78,6 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
  */
 public class TimeserieUtils
 {
-  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/config.properties" );
-
-  private static String m_basename = "config";
-
   private static Properties m_config;
 
   private static HashMap<String, NumberFormat> m_formatMap = new HashMap<String, NumberFormat>();
@@ -90,22 +87,6 @@ public class TimeserieUtils
   private TimeserieUtils( )
   {
     // no instanciation
-  }
-
-  /**
-   * Allows to overwrite the location of the config.properties file.<br>
-   * If international alternatives are present these will be used (i.e. config_de.properties instead of
-   * config.properties).
-   * 
-   * @param configUrl
-   *            Base location of the config file(s) (i.e. getClass().getResource("resources")).
-   * @param basename
-   *            base name of the config file (i.e. "config")
-   */
-  public static void setConfigUrl( final URL configUrl, final String basename )
-  {
-    m_configBaseUrl = configUrl;
-    m_basename = basename;
   }
 
   /**
@@ -163,7 +144,7 @@ public class TimeserieUtils
   }
 
   /**
-   * Lazy loading of the properties
+   * Layze loading of the properties
    * 
    * @return config of the timeseries package
    */
@@ -172,7 +153,21 @@ public class TimeserieUtils
     if( m_config == null )
     {
       m_config = new Properties();
-      PropertiesUtilities.loadI18nProperties( m_config, m_configBaseUrl, m_basename );
+
+      final InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
+
+      try
+      {
+        m_config.load( ins );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( ins );
+      }
     }
     return m_config;
   }

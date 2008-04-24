@@ -83,7 +83,7 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
 
       if( m_annotationCache.containsKey( cacheKey ) )
         return m_annotationCache.get( cacheKey );
-
+      
       // REMARK: catalog is registered for feature type, not for qname
       // Hint for a refaktoring on the CatalogManager
       final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
@@ -102,7 +102,7 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
         final List<String> enryURNS = baseCatalog.getEntryURNS( baseURN + "*:" + lang );
         if( enryURNS.size() == 0 )
         {
-          /* Always add cache value, so this lookup takes only place once (not finding anything is very expensive) */
+          /* Allways add cache value, so this lookup takes only place once (not finding anything is very expensive) */
           m_annotationCache.put( cacheKey, null );
 
           return null;
@@ -113,9 +113,9 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
         annotation.putValue( IAnnotation.ANNO_LABEL, resolveName( baseCatalog, baseURN, IAnnotation.ANNO_LABEL, lang ) );
         annotation.putValue( IAnnotation.ANNO_DESCRIPTION, resolveName( baseCatalog, baseURN, IAnnotation.ANNO_DESCRIPTION, lang ) );
         annotation.putValue( IAnnotation.ANNO_TOOLTIP, resolveName( baseCatalog, baseURN, IAnnotation.ANNO_TOOLTIP, lang ) );
-
+        
         m_annotationCache.put( cacheKey, annotation );
-
+        
         return annotation;
       }
       catch( final MalformedURLException e )
@@ -128,8 +128,8 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoGisPlugin.getDefault().getLog().log( status );
       }
-
-      /* Always add cache value, so this lookup takes only place once (not finding anything is very expensive) */
+      
+      /* Allways add cache value, so this lookup takes only place once (not finding anything is very expensive) */
       m_annotationCache.put( cacheKey, null );
     }
 

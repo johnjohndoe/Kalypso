@@ -339,9 +339,10 @@ public class GeoGridUtilities
       for( final ICoverage coverage : coverages )
       {
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+
         grid.getWalkingStrategy().walk( grid, walker, monitor );
+
         ProgressUtilities.worked( monitor, 1 );
-        grid.dispose();
       }
     }
     finally

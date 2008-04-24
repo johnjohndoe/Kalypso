@@ -48,9 +48,10 @@ public class VirtualVelocityFeatureTypePropertyHandler implements VirtualFeature
 {
 
   /*
+   * 
    * @author doemming
    */
-  public VirtualVelocityFeatureTypePropertyHandler( )
+  public VirtualVelocityFeatureTypePropertyHandler()
   {
     super();
   }
@@ -58,7 +59,7 @@ public class VirtualVelocityFeatureTypePropertyHandler implements VirtualFeature
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public boolean isDekoratorOf( final IFeatureType ft )
+  public boolean isDekoratorOf( IFeatureType ft )
   {
     return "http://elbe.wb.tu-harburg.de/2dModel".equals( ft.getNamespace() ) && "featurePoint".equals( ft.getName() );
   }
@@ -66,7 +67,7 @@ public class VirtualVelocityFeatureTypePropertyHandler implements VirtualFeature
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#isDekoratorOf(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public boolean isDekoratorOf( final IPropertyType ftp )
+  public boolean isDekoratorOf( IPropertyType ftp )
   {
     return false;
   }
@@ -74,15 +75,16 @@ public class VirtualVelocityFeatureTypePropertyHandler implements VirtualFeature
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IFeatureType)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( final IFeatureType ft )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IFeatureType ft )
   {
-    return new VirtualFeatureTypeProperty[] { new VirtualVelocityFeatureTypeProperty( ft.getQName() ) };
+    return new VirtualFeatureTypeProperty[]
+    { new VirtualVelocityFeatureTypeProperty() };
   }
 
   /**
    * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypePropertyHandler#createVirtualFeatureTypeProperties(org.kalypsodeegree.model.feature.IPropertyType)
    */
-  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( final IPropertyType ftp )
+  public VirtualFeatureTypeProperty[] createVirtualFeatureTypeProperties( IPropertyType ftp )
   {
     return null;
   }

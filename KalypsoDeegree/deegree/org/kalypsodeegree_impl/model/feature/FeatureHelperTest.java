@@ -55,13 +55,12 @@ public final class FeatureHelperTest extends TestCase
     // ) );
     // final IMarshallingTypeHandler dateTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) );
 
-    final QName sourceFeatureQName = new QName( NAMESPACE, "sourceFT" );
     final IPropertyType[] sourceProps = new IPropertyType[] {
     // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
-        GMLSchemaFactory.createValuePropertyType( sourceFeatureQName, SOURCE_STRING_PROP, stringTH, 1, 1, false ), //
-        GMLSchemaFactory.createValuePropertyType( sourceFeatureQName, SOURCE_DOUBLE_PROP, doubleTH, 1, 1, false ), //
-        GMLSchemaFactory.createValuePropertyType( sourceFeatureQName, SOURCE_INT_PROP, integerTH, 1, 1, false ) };
-    final IFeatureType sourceFTP = GMLSchemaFactory.createFeatureType( sourceFeatureQName, sourceProps );
+        GMLSchemaFactory.createValuePropertyType( SOURCE_STRING_PROP, stringTH.getTypeName(), stringTH, 1, 1, false ), //
+        GMLSchemaFactory.createValuePropertyType( SOURCE_DOUBLE_PROP, doubleTH.getTypeName(), stringTH, 1, 1, false ), //
+        GMLSchemaFactory.createValuePropertyType( SOURCE_INT_PROP, integerTH.getTypeName(), stringTH, 1, 1, false ) };
+    final IFeatureType sourceFTP = GMLSchemaFactory.createFeatureType( new QName( NAMESPACE, "sourceFT" ), sourceProps );
 
     // zwei features erzeugen
     final Feature sourcefeature = FeatureFactory.createFeature( null, null, "source", sourceFTP, new Object[] { "Hallo", new Double( 3.14 ), new Integer( 1 ) } );
