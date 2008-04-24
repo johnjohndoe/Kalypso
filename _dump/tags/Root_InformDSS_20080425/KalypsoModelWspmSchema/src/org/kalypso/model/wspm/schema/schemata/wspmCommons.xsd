@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmcommon="org.kalypso.model.wspmcommon" targetNamespace="org.kalypso.model.wspmcommon"
+	elementFormDefault="qualified" version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml"/>
+	<!-- schema for WSPM = 'water surface profile model' -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+
+	<complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType">
+				<!-- Force id attribute, because Kalypso needs it -->
+				<attribute ref="gml:id" use="required"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<!-- Station -->
+	<simpleType name="stationDouble">
+		<restriction base="decimal">
+			<fractionDigits value="4"/>
+		</restriction>
+	</simpleType>
+	
+	<element name="TriangulatedSurfaceFeature" type="wspmcommon:TriangulatedSurfaceFeatureType" substitutionGroup="gml:_Feature">
+	</element>
+	
+	<complexType name="TriangulatedSurfaceFeatureType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="triangulatedSurfaceMember" type="wspmcommon:TriangulatedSurfacePropertyType" />
+					<element name="unit" type="string"/>
+					<element name="parameter" type="string"/>
+					<element name="date" type="dateTime"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="TriangulatedSurfacePropertyType">
+		<sequence>
+			<element ref="gml:TriangulatedSurface" />
+		</sequence>
+	</complexType>
+</schema>
