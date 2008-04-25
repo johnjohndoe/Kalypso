@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders;
 
@@ -44,6 +44,8 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO: throw away and merge with {@link org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer}.
@@ -52,6 +54,8 @@ import java.awt.geom.Rectangle2D;
  */
 public class ToolTipRenderer
 {
+  private static final int MAX_TEXT_LENGTH = 60;
+
   private static final Color m_backgroundColor = new Color( 237, 213, 76, 200 );
 
   private static final Color m_borderColor = new Color( 0, 0, 0, 255 );
@@ -85,7 +89,7 @@ public class ToolTipRenderer
     if( m_tooltip == null )
       return;
 
-    final String[] tooltip = m_tooltip.getTooltip();
+    final String[] tooltip = adjustTooltip( m_tooltip.getTooltip() );
 
     if( tooltip == null || tooltip.length == 0 )
       return;
@@ -108,5 +112,36 @@ public class ToolTipRenderer
       g.drawString( row, 10, baseLineY );
       baseLineY += textHeight;
     }
+  }
+
+  private String[] adjustTooltip( final String[] tooltips )
+  {
+    final List<String> myTooltips = new ArrayList<String>();
+
+    for( final String tooltip : tooltips )
+    {
+      if( tooltip.length() > MAX_TEXT_LENGTH )
+      {
+        String myString = "";
+        final String[] splitted = tooltip.split( " " );
+
+        for( final String s : splitted )
+        {
+          myString += s + " ";
+
+          if( myString.length() > MAX_TEXT_LENGTH )
+          {
+            myTooltips.add( myString );
+            myString = "";
+          }
+        }
+
+        myTooltips.add( myString );
+      }
+      else
+        myTooltips.add( tooltip );
+    }
+
+    return myTooltips.toArray( new String[] {} );
   }
 }
