@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
@@ -52,12 +52,15 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -75,9 +78,19 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   /**
    * The constructor.
    */
-  public KalypsoScaleTheme( final I10nString name, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
+  public KalypsoScaleTheme( final I10nString name, final StyledLayerType layerType, final String type, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
     super( name, type, mapModel, legendIcon, context, shouldShowChildren );
+
+    configureProperties( layerType );
+
+  }
+
+  public void configureProperties( final StyledLayerType mapLayerType )
+  {
+    final List<Property> propertyList = mapLayerType.getProperty();
+    for( final Property property : propertyList )
+      setProperty( property.getName(), property.getValue() );
   }
 
   /**
@@ -290,13 +303,13 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       return;
 
     /* The position and bounds of the texts. */
-    LinkedList<Rectangle2D> bounds = new LinkedList<Rectangle2D>();
+    final LinkedList<Rectangle2D> bounds = new LinkedList<Rectangle2D>();
     for( int i = 0; i < values.size(); i++ )
     {
-      Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( String.format( "%,.1f%n", (values.get( i ) / scaleUnit.getFactor()) ), g );
+      final Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( String.format( "%,.1f%n", (values.get( i ) / scaleUnit.getFactor()) ), g );
 
-      int x = START_X + (i * WIDTH_SUB_RECT) - (int) stringBounds.getWidth() / 2;
-      int y = START_Y + MAX_HEIGHT;
+      final int x = START_X + (i * WIDTH_SUB_RECT) - (int) stringBounds.getWidth() / 2;
+      final int y = START_Y + MAX_HEIGHT;
 
       stringBounds.setRect( x, y, stringBounds.getWidth(), stringBounds.getHeight() );
 
@@ -307,15 +320,15 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     if( scale > 0 )
     {
       /* Calculate some things for the unit name. */
-      String unitName = scaleUnit.getName();
-      int unitWidth = g.getFontMetrics().stringWidth( unitName );
-      int startUnitName = START_X;
+      final String unitName = scaleUnit.getName();
+      final int unitWidth = g.getFontMetrics().stringWidth( unitName );
+      final int startUnitName = START_X;
 
       /* Calculate some things for the scale string. */
-      BigDecimal bigScale = new BigDecimal( scale, new MathContext( 3, RoundingMode.HALF_UP ) );
-      String scaleString = "1:" + bigScale.toPlainString();
-      int scaleWidth = g.getFontMetrics().stringWidth( scaleString );
-      int startScaleString = START_X + WIDTH_SCALE - scaleWidth;
+      final BigDecimal bigScale = new BigDecimal( scale, new MathContext( 3, RoundingMode.HALF_UP ) );
+      final String scaleString = "1:" + bigScale.toPlainString();
+      final int scaleWidth = g.getFontMetrics().stringWidth( scaleString );
+      final int startScaleString = START_X + WIDTH_SCALE - scaleWidth;
 
       /* Draw the name of the unit. */
       g.drawString( unitName, startUnitName, START_Y + FONT_HEIGHT );
@@ -327,7 +340,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     }
     else
     {
-      int stringWidth = g.getFontMetrics().stringWidth( scaleUnit.getName() );
+      final int stringWidth = g.getFontMetrics().stringWidth( scaleUnit.getName() );
       g.drawString( scaleUnit.getName(), START_X + (WIDTH_SCALE / 2) - (stringWidth / 2), START_Y + FONT_HEIGHT );
     }
 

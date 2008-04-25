@@ -249,7 +249,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this, legendIcon, context, showChildren );
 
     if( "scale".equals( linktype ) )
-      return new KalypsoScaleTheme( layerName, linktype, this, legendIcon, context, showChildren );
+      return new KalypsoScaleTheme( layerName, layerType, linktype, this, legendIcon, context, showChildren );
 
     // TODO: returns handling of gml files - part of else?!? do not assume it, proof it!
     return new GisTemplateFeatureTheme( layerName, layerType, context, m_selectionManager, this, legendIcon, showChildren );
