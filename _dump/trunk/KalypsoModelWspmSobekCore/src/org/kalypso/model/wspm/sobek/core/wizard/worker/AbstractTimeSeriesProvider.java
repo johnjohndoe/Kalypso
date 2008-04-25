@@ -103,13 +103,17 @@ public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
   {
     final Map<QName, Object> changes = new HashMap<QName, Object>();
 
-    /* start date */
-    final GregorianCalendar grStart = getStartDate();
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS, new XMLGregorianCalendarImpl( grStart ) );
+    final BOUNDARY_TYPE type = m_general.getBoundaryNodeType();
+    if( !BOUNDARY_TYPE.eWQ.equals( type ) )
+    {
+      /* start date */
+      final GregorianCalendar grStart = getStartDate();
+      changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS, new XMLGregorianCalendarImpl( grStart ) );
 
-    /* end date */
-    final GregorianCalendar grEnd = getEndDate();
-    changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS, new XMLGregorianCalendarImpl( grEnd ) );
+      /* end date */
+      final GregorianCalendar grEnd = getEndDate();
+      changes.put( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_ENDS, new XMLGregorianCalendarImpl( grEnd ) );
+    }
 
     return changes;
   }

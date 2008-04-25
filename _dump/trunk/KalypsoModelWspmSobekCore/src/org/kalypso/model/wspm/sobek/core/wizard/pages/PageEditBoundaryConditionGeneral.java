@@ -74,6 +74,8 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
   private LastfallDateChooser m_tsEnds;
 
+  private final BOUNDARY_TYPE m_boundaryType;
+
   public PageEditBoundaryConditionGeneral( final IBoundaryNodeLastfallCondition condition )
   {
     super( "editBoundaryConditionGeneral" ); //$NON-NLS-1$
@@ -81,67 +83,73 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     setTitle( Messages.PageEditBoundaryConditionGeneral_1 );
     setDescription( Messages.PageEditBoundaryConditionGeneral_2 );
+
+    m_boundaryType = m_condition.getBoundaryNode().getBoundaryType();
   }
 
   protected void checkPageCompleted( )
   {
-    if( m_tsBegins.getDateTime() == null )
+    if( !BOUNDARY_TYPE.eWQ.equals( m_boundaryType ) )
     {
-      setMessage( null );
-      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_3 );
-      setPageComplete( false );
 
-      return;
-    }
+      if( m_tsBegins.getDateTime() == null )
+      {
+        setMessage( null );
+        setErrorMessage( Messages.PageEditBoundaryConditionGeneral_3 );
+        setPageComplete( false );
 
-    if( m_tsEnds.getDateTime() == null )
-    {
-      setMessage( null );
-      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_4 );
-      setPageComplete( false );
+        return;
+      }
 
-      return;
-    }
+      if( m_tsEnds.getDateTime() == null )
+      {
+        setMessage( null );
+        setErrorMessage( Messages.PageEditBoundaryConditionGeneral_4 );
+        setPageComplete( false );
 
-    final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
-    final Integer pre = m_condition.getLastfall().getPreSimulationTime();
-    start.add( GregorianCalendar.HOUR, pre * -1 );
+        return;
+      }
 
-    if( m_tsEnds.getDateTime().before( start.getTime() ) )
-    {
-      setMessage( null );
-      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_5 );
-      setPageComplete( false );
+      final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
+      final Integer pre = m_condition.getLastfall().getPreSimulationTime();
+      start.add( GregorianCalendar.HOUR, pre * -1 );
 
-      return;
-    }
+      if( m_tsEnds.getDateTime().before( start.getTime() ) )
+      {
+        setMessage( null );
+        setErrorMessage( Messages.PageEditBoundaryConditionGeneral_5 );
+        setPageComplete( false );
 
-    /* check lastfall start and ending dates */
-    final Feature lastfall = m_condition.getLastfall().getFeature();
-    final XMLGregorianCalendar lastfallStart = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
-    final XMLGregorianCalendar lastfallEnd = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
+        return;
+      }
 
-    final GregorianCalendar lastfallGregorianStart = lastfallStart.toGregorianCalendar();
-    final GregorianCalendar lastfallGregorianEnd = lastfallEnd.toGregorianCalendar();
+      /* check lastfall start and ending dates */
+      final Feature lastfall = m_condition.getLastfall().getFeature();
+      final XMLGregorianCalendar lastfallStart = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+      final XMLGregorianCalendar lastfallEnd = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
 
-    final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+      final GregorianCalendar lastfallGregorianStart = lastfallStart.toGregorianCalendar();
+      final GregorianCalendar lastfallGregorianEnd = lastfallEnd.toGregorianCalendar();
 
-    if( start.after( lastfallGregorianStart ) )
-    {
-      setMessage( null );
-      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_6 + df.format( lastfallGregorianStart.getTime() ) + Messages.PageEditBoundaryConditionGeneral_7 );
-      setPageComplete( false );
+      final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
 
-      return;
-    }
+      if( start.after( lastfallGregorianStart ) )
+      {
+        setMessage( null );
+        setErrorMessage( Messages.PageEditBoundaryConditionGeneral_6 + df.format( lastfallGregorianStart.getTime() ) + Messages.PageEditBoundaryConditionGeneral_7 );
+        setPageComplete( false );
 
-    if( m_tsEnds.getDateTime().before( lastfallGregorianEnd ) )
-    {
-      setMessage( null );
-      setErrorMessage( Messages.PageEditBoundaryConditionGeneral_8 + df.format( lastfallGregorianEnd.getTime() ) + Messages.PageEditBoundaryConditionGeneral_9 );
-      setPageComplete( false );
+        return;
+      }
 
-      return;
+      if( m_tsEnds.getDateTime().before( lastfallGregorianEnd ) )
+      {
+        setMessage( null );
+        setErrorMessage( Messages.PageEditBoundaryConditionGeneral_8 + df.format( lastfallGregorianEnd.getTime() ) + Messages.PageEditBoundaryConditionGeneral_9 );
+        setPageComplete( false );
+
+        return;
+      }
     }
 
     setMessage( null );
@@ -213,48 +221,52 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     // spacer
     new Label( container, SWT.NULL ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false, 2, 0 ) );
 
-    /* begin date */
-    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
-
-    /* newly created boundary condition? */
-    if( m_condition.getObservationStart() == null )
+    if( !BOUNDARY_TYPE.eWQ.equals( m_boundaryType ) )
     {
-      final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
-      final Integer pre = m_condition.getLastfall().getPreSimulationTime();
-      start.add( GregorianCalendar.HOUR, pre * -1 );
 
-      m_tsBegins = new LastfallDateChooser( start );
+      /* begin date */
+      new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
+
+      /* newly created boundary condition? */
+      if( m_condition.getObservationStart() == null )
+      {
+        final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
+        final Integer pre = m_condition.getLastfall().getPreSimulationTime();
+        start.add( GregorianCalendar.HOUR, pre * -1 );
+
+        m_tsBegins = new LastfallDateChooser( start );
+      }
+      else
+        m_tsBegins = new LastfallDateChooser( m_condition.getObservationStart() );
+
+      m_tsBegins.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+      m_tsBegins.addModifyListener( new Runnable()
+      {
+        public void run( )
+        {
+          checkPageCompleted();
+        }
+      } );
+
+      /* end date */
+      /* newly created boundary condition? */
+      new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
+
+      if( m_condition.getObservationEnd() == null )
+        m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getLastfallEnd() );
+      else
+        m_tsEnds = new LastfallDateChooser( m_condition.getObservationEnd() );
+      m_tsEnds.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+      m_tsEnds.addModifyListener( new Runnable()
+      {
+        public void run( )
+        {
+          checkPageCompleted();
+        }
+      } );
     }
-    else
-      m_tsBegins = new LastfallDateChooser( m_condition.getObservationStart() );
-
-    m_tsBegins.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
-    m_tsBegins.addModifyListener( new Runnable()
-    {
-      public void run( )
-      {
-        checkPageCompleted();
-      }
-    } );
-
-    /* end date */
-    /* newly created boundary condition? */
-    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
-
-    if( m_condition.getObservationEnd() == null )
-      m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getLastfallEnd() );
-    else
-      m_tsEnds = new LastfallDateChooser( m_condition.getObservationEnd() );
-    m_tsEnds.draw( container, new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
-    m_tsEnds.addModifyListener( new Runnable()
-    {
-      public void run( )
-      {
-        checkPageCompleted();
-      }
-    } );
 
     checkPageCompleted();
   }

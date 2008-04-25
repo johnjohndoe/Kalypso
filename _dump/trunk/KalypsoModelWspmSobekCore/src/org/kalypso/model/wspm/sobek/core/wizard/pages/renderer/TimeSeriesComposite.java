@@ -95,6 +95,8 @@ public class TimeSeriesComposite extends Composite
 
   private TreeViewer m_reposTree;
 
+  private BOUNDARY_TYPE m_boundaryNodeType;
+
   public TimeSeriesComposite( final PageEditBoundaryConditionTimeSeries page, final Composite container, final int flags )
   {
     super( container, flags );
@@ -164,13 +166,12 @@ public class TimeSeriesComposite extends Composite
   {
     /* diagramm */
 
-    final BOUNDARY_TYPE boundaryNodeType = m_page.getSettings().getBoundaryNodeType();
-
-    if( BOUNDARY_TYPE.eW.equals( boundaryNodeType ) || BOUNDARY_TYPE.eQ.equals( boundaryNodeType ) )
+    m_boundaryNodeType = m_page.getSettings().getBoundaryNodeType();
+    if( BOUNDARY_TYPE.eW.equals( m_boundaryNodeType ) || BOUNDARY_TYPE.eQ.equals( m_boundaryNodeType ) )
     {
       renderNormal( reposTree, body );
     }
-    else if( BOUNDARY_TYPE.eWQ.equals( boundaryNodeType ) )
+    else if( BOUNDARY_TYPE.eWQ.equals( m_boundaryNodeType ) )
     {
       renderWQRelation( reposTree, body );
     }
@@ -303,34 +304,36 @@ public class TimeSeriesComposite extends Composite
       return;
     }
 
-    try
+    if( !BOUNDARY_TYPE.eWQ.equals( m_boundaryNodeType ) )
     {
-      final IObservation observation = (IObservation) adapter;
+      try
+      {
+        final IObservation observation = (IObservation) adapter;
+        final GregorianCalendar startDate = m_page.getSettings().getStartDate();
+        final GregorianCalendar endDate = m_page.getSettings().getEndDate();
+        final DateRange dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
 
-      final GregorianCalendar startDate = m_page.getSettings().getStartDate();
-      final GregorianCalendar endDate = m_page.getSettings().getEndDate();
-      final DateRange dateRange = new DateRange( startDate.getTime(), endDate.getTime() );
+        final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
+        final IRequest request = provider.getArguments();
 
-      final PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dateRange ) );
-      final IRequest request = provider.getArguments();
+        final ITuppleModel values = observation.getValues( request );
+        if( values.getCount() <= 0 )
+        {
+          m_page.setMessage( null );
+          m_page.setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_5 );
+          m_page.setPageComplete( false );
 
-      final ITuppleModel values = observation.getValues( request );
-      if( values.getCount() <= 0 )
+          return;
+        }
+      }
+      catch( final SensorException e )
       {
         m_page.setMessage( null );
-        m_page.setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_5 );
+        m_page.setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_6 + e.getMessage() );
         m_page.setPageComplete( false );
 
         return;
       }
-    }
-    catch( final SensorException e )
-    {
-      m_page.setMessage( null );
-      m_page.setErrorMessage( Messages.PageEditBoundaryConditionTimeSeries_6 + e.getMessage() );
-      m_page.setPageComplete( false );
-
-      return;
     }
 
     m_page.setMessage( null );
