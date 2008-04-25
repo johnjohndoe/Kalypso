@@ -210,11 +210,27 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     getSubLayer( factory, layers, m_layerCommands.toArray( new ICommand[] {} ) );
 
     if( ADD_THEME_POSITION.eFront.equals( m_position ) )
-      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, 0 );
+      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, getPosition( layers ) );
     else if( ADD_THEME_POSITION.eBack.equals( m_position ) )
       m_theme = (CascadingLayerKalypsoTheme) m_mapModell.addLayer( m_layer );
 
     m_mapModell.activateTheme( m_theme );
+  }
+
+  /**
+   * Scale Map Theme should always be the first map theme.
+   */
+  private int getPosition( final List<JAXBElement< ? extends StyledLayerType>> layers )
+  {
+    if( layers.size() > 0 )
+    {
+      final JAXBElement< ? extends StyledLayerType> element = layers.get( 0 );
+      final String id = element.getValue().getId();
+      if( "SCALE".equals( id ) )
+        return 1;
+    }
+
+    return 0;
   }
 
   /**
