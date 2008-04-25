@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   22 Apr 2008    1:06 pm
+C     Last change:  EF   25 Apr 2008    3:24 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -1323,10 +1323,12 @@ CMAY93      T3=AMS*(H*S+EPSXZ*DHDZ)
 cipk jan97      T2=AMS*(AKX*H*R-EPSX*DAODX*H/XHT)
 cipk jan97      T3=AMS*(H*S-EPSXZ*DAODZ*H/XHT)
       !EFa jul07, added dhdx*epsx and dhdz*epsxz
-      !T2=AMS*AKX*H*R
-      !T3=AMS*H*S
-      T2=AMS*(AKX*H*R+epsx*dhdx)
-      T3=AMS*(H*S+epsxz*dhdz)
+      !EFa apr08, delete dhdx*epsx and dhdz*epsxz (they are neglected in motion equation!)
+      T2=AMS*AKX*H*R
+      T3=AMS*H*S
+      !T2=AMS*(AKX*H*R+epsx*dhdx)
+      !T3=AMS*(H*S+epsxz*dhdz)
+      !-
       !-
 cipk mar01 add drag term      T4=AMS*(H*(DRDZ-OMEGA)+TFRIC*UBF*R*S*UBF*VBF)
       T4=AMS*(H*(DRDZ-OMEGA)+(TFRIC+TDRAGX*H)*UBF*R*S*UBF*VBF)
