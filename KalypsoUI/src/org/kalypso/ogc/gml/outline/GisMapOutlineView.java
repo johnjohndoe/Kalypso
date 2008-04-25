@@ -364,4 +364,9 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       SafeRunner.run( code );
     }
   }
+
+  public void updatePartName( final String name )
+  {
+    setPartName( name );
+  }
 }
