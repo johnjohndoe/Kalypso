@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -102,9 +103,17 @@ public class CoverageProfile
    * <br>
    * The following steps are performed:<br>
    * <ol>
+   * <li>the coverage is not set (=null) OR the line does not intersect with any data of the coverage (all line points
+   * have resulting NaN-values):
+   * <ol>
+   * <li>the line is converted into a profile with '0.0' as elevation
+   * </ol>
+   * <li>coverage is set:
+   * <ol>
    * <li>Adds points to the geometry, depending on the size of the grid cell (1/8 grid cell size).</li>
    * <li>Computes the width and height for each point.</li>
-   * <li>Create a profile with each point and its width and height.</li>
+   * <li>Create a profile with each point and its width and height (only points with elevation are being considered!)
+   * </li>
    * <li>The new profile is thinned by Douglas Peucker.</li>
    * </ol>
    * <br>
@@ -116,88 +125,43 @@ public class CoverageProfile
    */
   public IProfil createProfile( GM_Curve curve ) throws Exception
   {
-    final IGeoGrid grid = GeoGridUtilities.toGrid( m_coverage );
-    double x = grid.getOffsetX().x;
-
-    /* STEP 1: Add the points every 1m to the profile. */
-
     /* Convert to a JTS geometry. */
-    LineString jtsCurve = (LineString) JTSAdapter.export( curve );
+    final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
 
-    /* Add every 1/8 raster size a point. */
-    TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve, x / 8 );
-
-    /* STEP 2: Compute the width and height for each point of the new line. */
-    /* STEP 3: Create the new profile. */
-    IProfil profile = calculatePointsAndCreateProfile( grid, points, curve.getCoordinateSystem() );
-
-    if( profile.getPoints().length == 0 )
+    if( m_coverage == null )
     {
-      /* in this case the curve does not intersect the grid (all z-values of the points of the curve are NaN) */
-      return createDigitizedProfile( jtsCurve );
+      return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_type );
     }
     else
     {
-      /* STEP 4: Thin the profile. */
-      thinProfile( profile, 0.10 );
+      final IGeoGrid grid = GeoGridUtilities.toGrid( m_coverage );
+      double x = grid.getOffsetX().x;
+
+      /* STEP 1: Add the points every 1m to the profile. */
+
+      /* Add every 1/8 raster size a point. */
+      TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve, x / 8 );
+
+      /* STEP 2: Compute the width and height for each point of the new line. */
+      /* STEP 3: Create the new profile. */
+      IProfil profile = calculatePointsAndCreateProfile( grid, points, curve.getCoordinateSystem() );
+
+      if( profile.getPoints().length == 0 )
+      {
+        /* in this case the curve does not intersect the grid (all z-values of the points of the curve are NaN) */
+        return ProfilUtil.convertLinestringToEmptyProfile( jtsCurve, m_type );
+      }
+      else
+      {
+        /* STEP 4: Thin the profile. */
+        thinProfile( profile, 0.10 );
+      }
+
+      if( grid != null )
+        grid.dispose();
+
+      return profile;
     }
-
-    if( grid != null )
-      grid.dispose();
-
-    return profile;
-  }
-
-  // TODO: put this into helper class
-  private IProfil createDigitizedProfile( LineString jtsCurve )
-  {
-    // create a profile only with the digitized points and with 0.0 as z-value
-    /* Create the new profile. */
-    final IProfil digitizedProfile = ProfilFactory.createProfil( m_type );
-
-    /* The needed components. */
-    IComponent cRechtswert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    IComponent cHochwert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    IComponent cBreite = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_BREITE );
-    IComponent cHoehe = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOEHE );
-
-    double breite = 0.0;
-
-    for( int i = 0; i < jtsCurve.getNumPoints(); i++ )
-    {
-      final Coordinate coordinate = jtsCurve.getCoordinateN( i );
-
-      double rechtswert = coordinate.x;
-      double hochwert = coordinate.y;
-
-      /* calculate breite */
-      double distance = 0;
-      if( i > 0 )
-        distance = coordinate.distance( jtsCurve.getCoordinateN( i - 1 ) );
-
-      breite = breite + distance;
-
-      /* elevation is set to 0.0 */
-      double hoehe = 0.0;
-
-      /* Create a new profile point. */
-      IRecord profilePoint = digitizedProfile.createProfilPoint();
-
-      final TupleResult owner = profilePoint.getOwner();
-
-      /* Add geo values. */
-      profilePoint.setValue( owner.indexOfComponent( cRechtswert ), rechtswert );
-      profilePoint.setValue( owner.indexOfComponent( cHochwert ), hochwert );
-
-      /* Add length section values. */
-      profilePoint.setValue( owner.indexOfComponent( cBreite ), breite );
-      profilePoint.setValue( owner.indexOfComponent( cHoehe ), hoehe );
-
-      /* Add the new point to the profile. */
-      digitizedProfile.addPoint( profilePoint );
-    }
-
-    return digitizedProfile;
   }
 
   /**

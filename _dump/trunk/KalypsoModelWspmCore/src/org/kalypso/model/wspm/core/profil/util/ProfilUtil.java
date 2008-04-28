@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -58,6 +59,9 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author kimwerner
@@ -78,7 +82,7 @@ public class ProfilUtil
 
     for( final IRecord point : points )
     {
-      values[i] =  point.getValue( iProp );
+      values[i] = point.getValue( iProp );
       i++;
     }
     return values;
@@ -377,7 +381,12 @@ public class ProfilUtil
       return null;
     Double maxValue = Double.MIN_VALUE;
     for( final IRecord point : points )
-      maxValue = Math.max( maxValue, (Double) point.getValue( property ) );
+    {
+      final Double value = (Double) point.getValue( property );
+      if( value == null )
+        continue;
+      maxValue = Math.max( maxValue, value );
+    }
     return maxValue;
   }
 
@@ -479,8 +488,8 @@ public class ProfilUtil
     IRecord minPoint = null;
     for( final IRecord point : points )
     {
-      final double value = (Double) point.getValue( property );
-      if( value < minValue )
+      final Double value = (Double) point.getValue( property );
+      if( value != null && value < minValue )
       {
         minValue = value;
         minPoint = point;
@@ -682,5 +691,62 @@ public class ProfilUtil
 
     return curve;
 
+  }
+
+  /**
+   * creates a profile from {@link LineString} with '0.0' as z-values.
+   */
+  public static IProfil convertLinestringToEmptyProfile( final LineString jtsCurve, final String type )
+  {
+    // create a profile only with the digitized points and with 0.0 as z-value
+    /* Create the new profile. */
+    final IProfil digitizedProfile = ProfilFactory.createProfil( type );
+
+    /* The needed components. */
+    IComponent cRechtswert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    IComponent cHochwert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    IComponent cBreite = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_BREITE );
+    IComponent cHoehe = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    if( jtsCurve == null )
+      return null;
+
+    double breite = 0.0;
+
+    for( int i = 0; i < jtsCurve.getNumPoints(); i++ )
+    {
+      final Coordinate coordinate = jtsCurve.getCoordinateN( i );
+
+      double rechtswert = coordinate.x;
+      double hochwert = coordinate.y;
+
+      /* calculate breite */
+      double distance = 0;
+      if( i > 0 )
+        distance = coordinate.distance( jtsCurve.getCoordinateN( i - 1 ) );
+
+      breite = breite + distance;
+
+      /* elevation is set to 0.0 */
+      double hoehe = 0.0;
+
+      /* Create a new profile point. */
+      IRecord profilePoint = digitizedProfile.createProfilPoint();
+
+      final TupleResult owner = profilePoint.getOwner();
+
+      /* Add geo values. */
+      profilePoint.setValue( owner.indexOfComponent( cRechtswert ), rechtswert );
+      profilePoint.setValue( owner.indexOfComponent( cHochwert ), hochwert );
+
+      /* Add length section values. */
+      profilePoint.setValue( owner.indexOfComponent( cBreite ), breite );
+      profilePoint.setValue( owner.indexOfComponent( cHoehe ), hoehe );
+
+      /* Add the new point to the profile. */
+      digitizedProfile.addPoint( profilePoint );
+    }
+
+    return digitizedProfile;
   }
 }
