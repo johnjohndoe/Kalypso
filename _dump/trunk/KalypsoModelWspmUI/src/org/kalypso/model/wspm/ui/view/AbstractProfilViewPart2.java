@@ -85,7 +85,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   /** The part where the profile provider came from. */
   private IWorkbenchPart m_profilProviderPart = null;
 
-  private UIJob m_updateProfilJob = new UIJob( "Profilansicht aktualisieren..." )
+  private final UIJob m_updateProfilJob = new UIJob( "Profilansicht aktualisieren..." )
   {
     @Override
     public IStatus runInUIThread( IProgressMonitor monitor )
@@ -274,7 +274,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   /** Recreates the control */
   private final void onProfilChanged( )
   {
-    // REMARK: this makes this code a bit more robust, if too many profil changes go in... 
+    // REMARK: this makes this code a bit more robust, if too many profil changes go in...
     // we quickly cancel still pending jobs and reschedule again (with a small schedule)
     m_updateProfilJob.cancel();
     m_updateProfilJob.schedule( 100 );
@@ -296,7 +296,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     if( m_control == null || m_control.isDisposed() )
       return;
 
-    final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + m_profile.getStation();
+    final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + " " + m_profile.getStation();
     final String tooltip = null;
 
     setPartNames( partName, tooltip );

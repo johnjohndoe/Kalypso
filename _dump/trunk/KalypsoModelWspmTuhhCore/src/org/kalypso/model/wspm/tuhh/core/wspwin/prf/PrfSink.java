@@ -123,7 +123,7 @@ public class PrfSink implements IProfilSink
     }
     catch( final IOException e )
     {
-      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING,KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben des Kommentars", e ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben des Kommentars", e ) );
     }
   }
 
@@ -185,7 +185,13 @@ public class PrfSink implements IProfilSink
       try
       {
         Xs[i] = (Double) points[i].getValue( iBreite );
-        Ys[i] = (Double) points[i].getValue( iProp );
+
+        final Double value = (Double) points[i].getValue( iProp );
+
+        if( value != null )
+          Ys[i] = value;
+        else
+          Ys[i] = 0.0;
       }
       catch( final Exception e )
       {
@@ -242,7 +248,8 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR,KalypsoCommonsPlugin.getID(), 0, "Die Positionen der " + devider.getId().toString() + " konnten nicht geschrieben werden.", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Die Positionen der " + devider.getId().toString()
+            + " konnten nicht geschrieben werden.", e ) );
       }
     }
     dbw.setCoords( xs, ys );
@@ -358,7 +365,7 @@ public class PrfSink implements IProfilSink
       }
       catch( final Exception e )
       {
-        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR,KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
+        KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, "Fehler beim schreiben der Bauwerksparameter", e ) );
       }
       pw.addDataBlock( dbm );
     }

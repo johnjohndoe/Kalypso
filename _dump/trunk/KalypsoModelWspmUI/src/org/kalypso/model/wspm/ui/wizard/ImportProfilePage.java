@@ -69,11 +69,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.ui.CRSSelectionListener;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * @author Thomas Jung
@@ -159,7 +159,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     crsControl.setToolTipText( Messages.ImportProfilePage_3 );
 
-    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
@@ -175,7 +175,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     final Label seperatorLabel = new Label( m_group, SWT.NONE );
     seperatorLabel.setText( Messages.ImportProfilePage_4 );
 
-    m_separatorCombo = new Combo( m_group, SWT.NONE );
+    m_separatorCombo = new Combo( m_group, SWT.READ_ONLY );
     final GridData sepData = new GridData( SWT.FILL, SWT.FILL, false, false );
 
     m_separatorCombo.setToolTipText( Messages.ImportProfilePage_5 );

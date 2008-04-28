@@ -51,8 +51,10 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -65,7 +67,9 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 import de.belger.swtchart.EditInfo;
 import de.belger.swtchart.layer.IChartLayer;
@@ -78,6 +82,14 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   private static String TOOLTIP_FORMAT = " AX: %.4f %n AY: %.4f %n DP: %.4f";
 
+  private final IComponent m_axComponent;
+
+  private final IComponent m_ayComponent;
+
+  private final IComponent m_dpComponent;
+
+  private final IProfilPointPropertyProvider m_provider;
+
   public BewuchsLayer( final ProfilChartView pcv )
   {
     super( IWspmTuhhConstants.LAYER_BEWUCHS, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Bewuchs" );
@@ -87,6 +99,11 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     if( !cr.getKeySet().contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
       cr.put( IWspmTuhhConstants.LAYER_BEWUCHS, new RGB( 0, 255, 0 ) );
     m_color = cr.get( IWspmTuhhConstants.LAYER_BEWUCHS );
+
+    m_provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profile.getType() );
+    m_axComponent = m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    m_ayComponent = m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    m_dpComponent = m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
   }
 
   @Override
@@ -98,7 +115,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId(m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+    changes[0] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
     changes[1] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
     changes[2] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
     final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", m_profile, changes, true );
@@ -131,10 +148,18 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
       final IRecord[] ppoints = m_profile.getPoints();
       final Point2D[] points = new Point2D[ppoints.length];
       int i = 0;
+
+      final IComponent breiteComponent = m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      final IComponent hoeheComponent = m_provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+
       for( final IRecord p : ppoints )
       {
-        final Object x = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
-        final Object y = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+        final TupleResult owner = p.getOwner();
+        final int breiteIndex = owner.indexOfComponent( breiteComponent );
+        final int hoeheIndex = owner.indexOfComponent( hoeheComponent );
+
+        final Object x = p.getValue( breiteIndex );
+        final Object y = p.getValue( hoeheIndex );
         if( x == null || y == null )
           points[i++] = new Point2D.Double( 0, 0 );
         else
@@ -162,25 +187,34 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     final Point2D[] points = getPoints();
     for( int i = 0; i < points.length - 1; i++ )
     {
-      final IRecord pp =m_profile.getPoints()[i];
+      final IRecord pp = m_profile.getPoints()[i];
       try
       {
-        final double ax = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-        final double ay = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-        final double dp = (Double) pp.getValue( ProfilObsHelper.getPropertyFromId( pp, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
-        if( ax * ay * dp != 0 )
-        {
+        final TupleResult owner = pp.getOwner();
 
-          final Point pl = logical2screen( points[i] );
-          final double xl = points[i].getX();
-          final double yl = points[i].getY();
-          final double xr = points[i + 1].getX();
-          final double yr = points[i + 1].getY();
-          final Point2D pm = new Point2D.Double( xl + (xr - xl) / 2, yl + (yr - yl) / 2 );
-          final Point p = logical2screen( pm );
-          final Rectangle hover = new Rectangle( p.x - 10, p.y - 20, 20, 20 );// RectangleUtils.buffer( p );
-          if( hover.contains( mousePos ) & p.x - pl.x > 12 )
-            return new EditInfo( this, hover, i, String.format( TOOLTIP_FORMAT, new Object[] { ax, ay, dp } ) );
+        final Double ax = (Double) pp.getValue( owner.indexOfComponent( m_axComponent ) );
+        final Double ay = (Double) pp.getValue( owner.indexOfComponent( m_ayComponent ) );
+        final Double dp = (Double) pp.getValue( owner.indexOfComponent( m_dpComponent ) );
+
+        if( ax == null || ay == null || dp == null )
+        {
+          return null;
+        }
+        else
+        {
+          if( ax * ay * dp != 0 )
+          {
+            final Point pl = logical2screen( points[i] );
+            final double xl = points[i].getX();
+            final double yl = points[i].getY();
+            final double xr = points[i + 1].getX();
+            final double yr = points[i + 1].getY();
+            final Point2D pm = new Point2D.Double( xl + (xr - xl) / 2, yl + (yr - yl) / 2 );
+            final Point p = logical2screen( pm );
+            final Rectangle hover = new Rectangle( p.x - 10, p.y - 20, 20, 20 );// RectangleUtils.buffer( p );
+            if( hover.contains( mousePos ) & p.x - pl.x > 12 )
+              return new EditInfo( this, hover, i, String.format( TOOLTIP_FORMAT, new Object[] { ax, ay, dp } ) );
+          }
         }
       }
       catch( final Exception e1 )
@@ -227,9 +261,22 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
         if( p.x - logical2screen( p2dL ).x > 12 )
           drawIcon( gc, new Rectangle( p.x - 10, p.y - 20, 20, 20 ) );
       }
-      hasValue = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-          * (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) ) != 0.0;
+
+      final TupleResult owner = point.getOwner();
+
+      Double ax = (Double) point.getValue( owner.indexOfComponent( m_axComponent ) );
+      Double ay = (Double) point.getValue( owner.indexOfComponent( m_ayComponent ) );
+      Double dp = (Double) point.getValue( owner.indexOfComponent( m_dpComponent ) );
+
+      if( ax == null || ay == null || dp == null )
+      {
+        hasValue = false;
+// continue;
+      }
+      else
+      {
+        hasValue = ax * ay * dp != 0.0;
+      }
       p2dL = p2dR;
     }
   }

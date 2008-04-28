@@ -59,12 +59,14 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
-import org.kalypso.model.wspm.tuhh.core.profile.ProfilDevider;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
 import org.kalypso.observation.result.IComponent;
@@ -82,8 +84,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -317,12 +317,27 @@ public class CreateProfileDeviderWizard extends Wizard
     for( final IProfilPointMarker marker : existingMarkers )
       profil.removePointMarker( marker );
 
+    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
+
     for( final IRecord markerPoint : pointMap.values() )
     {
-      final ProfilDevider profilDevider = new ProfilDevider( markerType, markerPoint );
-      // FIXME debug - not defined boolean values in obs table are null or false?!?
-      throw new NotImplementedException();
-// profilDevider.setValue( markerType.getDefaultValue() );
+      final IProfilPointMarker marker = markerProvider.createProfilPointMarker( markerType, markerPoint );
+
+      // HACK: this is the only place where we use tuhh-stuff. Refaktor in order to reuse this code for other profile
+      // types.
+      final Object value;
+      if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerType.getId() ) )
+        value = Boolean.TRUE;
+      else if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerType.getId() ) )
+        value = "low";
+      else if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerType.getId() ) )
+        value = Boolean.TRUE;
+      else if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerType.getId() ) )
+        value = new Double( 0.0 );
+      else
+        value = null;
+
+      marker.setValue( value );
     }
 
     return pointMap.size() > 0;

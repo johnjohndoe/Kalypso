@@ -182,7 +182,7 @@ public class IntersectRoughnessWizard extends Wizard
       }
     };
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, runnable );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, runnable );
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.IntersectRoughnessWizard_6, status );
 
     return status.isOK();

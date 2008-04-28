@@ -46,6 +46,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -113,7 +115,14 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     {
       public boolean accept( final IPropertyType pt )
       {
-        return pt instanceof IValuePropertyType && ((IValuePropertyType) pt).getValueQName().equals( GeometryUtilities.QN_POLYGON_PROPERTY );
+        if( pt instanceof IValuePropertyType )
+        {
+          final QName valueQName = ((IValuePropertyType) pt).getValueQName();
+          if( valueQName.equals( GeometryUtilities.QN_POLYGON_PROPERTY ) || valueQName.equals( GeometryUtilities.QN_MULTI_POLYGON_PROPERTY ) )
+            return true;
+        }
+
+        return false;
       }
     };
 

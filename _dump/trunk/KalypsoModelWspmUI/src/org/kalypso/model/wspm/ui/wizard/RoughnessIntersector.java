@@ -46,17 +46,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -107,13 +110,19 @@ public class RoughnessIntersector
     {
       final Feature profileFeature = (Feature) object;
       final IProfil profil = ProfileFeatureFactory.toProfile( profileFeature );
-
+      // TODO: check if the profile has all components already.
+      // but how to do, we don't know here what components are necessary for the current profile...
       final String label = FeatureHelper.getAnnotationValue( profileFeature, IAnnotation.ANNO_LABEL );
-      monitor.subTask( label );
 
       final IRecord[] points = profil.getPoints();
+
+      int count = 1;
+      final int length = points.length;
+
       for( final IRecord point : points )
       {
+        monitor.subTask( label + " (" + count + "/" + length + ")" );
+
         if( !acceptPoint( profil, point ) )
           continue;
 
@@ -122,12 +131,15 @@ public class RoughnessIntersector
           continue;
         final Geometry jtsPoint = JTSAdapter.export( geoPoint );
         assignValueToPoint( profil, point, geoPoint, jtsPoint );
+
+        count++;
+
       }
 
       final FeatureChange[] fcs = ProfileFeatureFactory.toFeatureAsChanges( profil, profileFeature );
       Collections.addAll( changes, fcs );
 
-      monitor.worked( 1 );
+      ProgressUtilities.worked( monitor, 1 );
     }
 
     return changes.toArray( new FeatureChange[changes.size()] );
@@ -136,13 +148,15 @@ public class RoughnessIntersector
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   private List<Object> assignValueToPoint( final IProfil profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
   {
+    final TupleResult owner = point.getOwner();
+
     /* find polygon for location */
     final List<Object> foundPolygones = m_polygoneFeatures.query( geoPoint.getPosition(), null );
     for( final Object polyObject : foundPolygones )
     {
       final Feature polygoneFeature = (Feature) polyObject;
 
-      // BUGFIX: use any gm_object here, because we do not know what is it (surface, multusurface, ...)
+      // BUGFIX: use any gm_object here, because we do not know what it is (surface, multi surface, ...)
       final GM_Object gmObject = (GM_Object) polygoneFeature.getProperty( m_polygoneGeomType );
 
       final Geometry jtsGeom = JTSAdapter.export( gmObject );
@@ -162,10 +176,14 @@ public class RoughnessIntersector
             if( newValue != null )
               if( componentId != null )
               {
-                final IComponent property = ProfilObsHelper.getPropertyFromId( profil, componentId );
-                profil.addPointProperty( property );
+                final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+// final IComponent component = ProfilObsHelper.getPropertyFromId( profil, componentId );
 
-                point.setValue( property, newValue );
+                final IComponent component = provider.getPointProperty( componentId );
+
+                profil.addPointProperty( component );
+
+                point.setValue( owner.indexOfComponent( component ), newValue );
               }
           }
         }

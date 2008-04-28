@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -66,14 +67,20 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IPropertyTypeFilter;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -110,9 +117,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
         if( pt instanceof IValuePropertyType )
         {
           final QName valueQName = ((IValuePropertyType) pt).getValueQName();
-          return valueQName.equals( GeometryUtilities.QN_LINE_STRING_PROPERTY ) || valueQName.equals( GeometryUtilities.QN_POLYGON_PROPERTY );
+          return valueQName.equals( GeometryUtilities.QN_LINE_STRING_PROPERTY ) || valueQName.equals( GeometryUtilities.QN_POLYGON_PROPERTY )
+              || valueQName.equals( GeometryUtilities.QN_MULTI_LINE_STRING_PROPERTY ) || valueQName.equals( GeometryUtilities.QN_MULTI_POLYGON_PROPERTY );
         }
-
         return false;
       }
     };
@@ -195,26 +202,56 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final ComboViewer viewer = new ComboViewer( group, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setLabelProvider( new LabelProvider() );
+    viewer.setLabelProvider( new LabelProvider()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
+      @Override
+      public String getText( Object element )
+      {
+        final IComponent comp = (IComponent) element;
+        return comp.getName();
+      }
+    } );
+    viewer.setSorter( new ViewerSorter() );
 
-    viewer.setInput( new String[] { IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, IWspmTuhhConstants.MARKER_TYP_BORDVOLL } );
+    final Object object = m_profileTheme.getFeatureList().get( 0 );
+
+    final Feature feature = FeatureHelper.getFeature( m_profileTheme.getWorkspace(), object );
+    final WspmProfile profile = ProfileFeatureProvider.findProfile( feature );
+
+    final String type = profile.getProfil().getType();
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
+    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( type );
+
+    String[] markerTypes = markerProvider.getMarkerTypes();
+    IComponent[] markerComponents = new IComponent[markerTypes.length];
+    for( int i = 0; i < markerTypes.length; i++ )
+      markerComponents[i] = provider.getPointProperty( markerTypes[i] );
+
+    viewer.setInput( markerComponents );
+
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleDeviderChanged( (IComponent) ((IStructuredSelection) event.getSelection()).getFirstElement() );
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final Object firstElement = (selection).getFirstElement();
+        handleDeviderChanged( (IComponent) firstElement );
       }
     } );
 
     final IDialogSettings dialogSettings = getDialogSettings();
-    StructuredSelection deviderSelection = new StructuredSelection( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    StructuredSelection deviderSelection = new StructuredSelection( markerComponents[0] );
     if( dialogSettings != null )
     {
       final String typeName = dialogSettings.get( SETTINGS_DEVIDER );
-      if( typeName != null )
+      for( IComponent component : markerComponents )
       {
-        // final String type = MARKER_TYP.valueOf( typeName );
-        deviderSelection = new StructuredSelection( typeName );
+        if( component.getId().equals( typeName ) )
+          deviderSelection = new StructuredSelection( component );
       }
     }
     viewer.setSelection( deviderSelection );
