@@ -176,7 +176,7 @@ public class FeatureActionUtilities
     CommandableWorkspace workspace = null;
     if( selection instanceof IFeatureSelection )
       workspace = ((IFeatureSelection) selection).getWorkspace( parentFeature );
-    
+
     if( fatp == null || parentFeature == null || workspace == null )
       return newMenuManager;
 
@@ -186,14 +186,14 @@ public class FeatureActionUtilities
     if( !fatp.isInlineAble() )
       // Just return, hide menu
       return newMenuManager;
-    
+
     /* Direct properties (maxoccurs = 1) can only be added if not already there. */
     if( maxOccurs == 1 && parentFeature.getProperty( fatp ) != null )
     {
       // Just return, hide menu
       return newMenuManager;
     }
-    /* If maxoccurs < 0 we have a list, and we may tet if the list is already full. */
+    /* If maxoccurs < 0 we have a list, and we may test if the list is already full. */
     else if( maxOccurs > 1 )
     {
       final List list = (List) parentFeature.getProperty( fatp );
@@ -207,7 +207,7 @@ public class FeatureActionUtilities
 
     final GMLWorkspace contextWorkspace = parentFeature == null ? null : parentFeature.getWorkspace();
     final IGMLSchema contextSchema = contextWorkspace == null ? null : contextWorkspace.getGMLSchema();
-    
+
     final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, contextSchema, false, true );
     for( final IFeatureType ft : featureTypes )
     {
@@ -241,7 +241,7 @@ public class FeatureActionUtilities
    * Last, the local part of the feature type qname.
    * </p>
    */
-  private static String newFeatureActionLabel( final IFeatureType featureType )
+  public static String newFeatureActionLabel( final IFeatureType featureType )
   {
     final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
 
