@@ -84,7 +84,7 @@ public class KalypsoAddLayerWizard extends Wizard
   }
 
   /**
-   * This method must be overwirtten to only get import wizards that are declared in the org.kalypo.ui plugin. Further
+   * This method must be overwritten to only get import wizards that are declared in the org.kalypo.ui plugin. Further
    * the WizardsRegistryReader must be encapsuled in KalypsoWizardsRegistryReader to make shure only wizards from
    * org.kalypso.ui are read. And not as specified from the Workbench ui -> see WizardsRegistryReader.
    */
