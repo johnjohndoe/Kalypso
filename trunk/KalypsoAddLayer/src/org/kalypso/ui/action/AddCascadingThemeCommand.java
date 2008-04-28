@@ -50,6 +50,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.CascadingLayerKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -210,7 +212,10 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     getSubLayer( factory, layers, m_layerCommands.toArray( new ICommand[] {} ) );
 
     if( ADD_THEME_POSITION.eFront.equals( m_position ) )
-      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, getPosition( layers ) );
+    {
+      final IKalypsoTheme[] themes = m_mapModell.getAllThemes();
+      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, getPosition( themes ) );
+    }
     else if( ADD_THEME_POSITION.eBack.equals( m_position ) )
       m_theme = (CascadingLayerKalypsoTheme) m_mapModell.addLayer( m_layer );
 
@@ -220,13 +225,11 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   /**
    * Scale Map Theme should always be the first map theme.
    */
-  private int getPosition( final List<JAXBElement< ? extends StyledLayerType>> layers )
+  private int getPosition( final IKalypsoTheme[] themes )
   {
-    if( layers.size() > 0 )
+    if( themes.length > 0 )
     {
-      final JAXBElement< ? extends StyledLayerType> element = layers.get( 0 );
-      final String id = element.getValue().getId();
-      if( "SCALE".equals( id ) )
+      if( themes[0] instanceof KalypsoScaleTheme )
         return 1;
     }
 

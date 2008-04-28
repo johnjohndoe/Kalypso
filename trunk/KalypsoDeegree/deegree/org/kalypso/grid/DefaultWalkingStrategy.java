@@ -44,12 +44,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
  * @author Gernot Belger
  */
 public class DefaultWalkingStrategy implements IGeoWalkingStrategy
 {
+  private static GeometryFactory GF = new GeometryFactory();
+
   /**
    * Simple, straightforward implementation of the interface method.
    * <p>
@@ -57,25 +62,50 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
    * </p>
    * 
    * @see org.kalypso.grid.IGeoWalkingStrategy#walk(org.kalypso.grid.IGeoGrid, org.kalypso.grid.IGeoGridWalker,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      com.vividsolutions.jts.geom.Geometry, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public final Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
+  public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final Geometry walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
   {
     final int sizeX = grid.getSizeX();
     final int sizeY = grid.getSizeY();
     if( monitor != null )
       monitor.beginTask( "Raster wird durchlaufen", sizeY );
 
+    final int yStart;
+    final int yEnd;
+    final int xStart;
+    final int xEnd;
+
+    if( walkingArea == null )
+    {
+      yStart = 0;
+      yEnd = sizeY;
+      xStart = 0;
+      xEnd = sizeX;
+    }
+    else
+    {
+      final Envelope envelope = walkingArea.getEnvelopeInternal();
+      final GeoGridCell minMinCell = GeoGridUtilities.cellFromPosition( grid, new Coordinate( envelope.getMinX(), envelope.getMinY() ) );
+      final GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( grid, new Coordinate( envelope.getMaxX(), envelope.getMaxY() ) );
+
+      yStart = Math.max( 0, Math.min( minMinCell.y, maxMaxCell.y ) );
+      yEnd = Math.min( sizeY, Math.max( minMinCell.y, maxMaxCell.y ) );
+      xStart = Math.max( 0, Math.min( minMinCell.x, maxMaxCell.x ) );
+      xEnd = Math.min( sizeX, Math.max( minMinCell.x, maxMaxCell.x ) );
+    }
+
     pwo.start( grid );
 
     final Coordinate tmpCrd = new Coordinate();
 
-    for( int y = 0; y < sizeY; y++ )
+    for( int y = yStart; y < yEnd; y++ )
     {
-      for( int x = 0; x < sizeX; x++ )
+      for( int x = xStart; x < xEnd; x++ )
       {
         final Coordinate coordinate = GeoGridUtilities.calcCoordinate( grid, x, y, tmpCrd );
-        pwo.operate( x, y, coordinate );
+        if( walkingArea == null || walkingArea.contains( GF.createPoint( coordinate ) ) )
+          pwo.operate( x, y, coordinate );
       }
 
       if( monitor != null )
