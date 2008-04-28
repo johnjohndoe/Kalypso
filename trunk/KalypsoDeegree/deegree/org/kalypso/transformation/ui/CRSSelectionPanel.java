@@ -160,27 +160,7 @@ public class CRSSelectionPanel
           }
 
           /* Get the hashed coordinate system. */
-          CoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
-          if( coordinateSystem == null )
-          {
-            imageLabel.setToolTipText( "" );
-            return;
-          }
-
-          /* The tooltip. */
-          String tooltip = "Identifier:\n";
-
-          /* Get all identifiers. */
-          String[] identifiers = coordinateSystem.getCRS().getIdentifiers();
-          for( int i = 0; i < identifiers.length; i++ )
-          {
-            /* Get the identifier. */
-            String identifier = identifiers[i];
-
-            tooltip = tooltip + identifier + "\n";
-          }
-
-          imageLabel.setToolTipText( tooltip );
+          imageLabel.setToolTipText( CRSHelper.getTooltipText( selectedCRS ) );
         }
       } );
     }

@@ -72,6 +72,7 @@ public class ImageProvider
     IMAGE_THEME_SCRAP("icons/full/obj16/scrapTheme.gif"),
 
     STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"),
+    STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"),
 
     STATUS_IMAGE_OK("icons/full/elcl16/ok.gif");
 
