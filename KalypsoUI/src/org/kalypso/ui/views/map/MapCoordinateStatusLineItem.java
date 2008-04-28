@@ -67,8 +67,10 @@ import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -145,12 +147,12 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   {
     /* The composite. */
     m_composite = new Composite( parent, SWT.NONE );
-    GridLayout gridLayout = new GridLayout( 2, false );
+    GridLayout gridLayout = new GridLayout( 3, false );
     gridLayout.marginHeight = 0;
     gridLayout.marginWidth = 0;
     m_composite.setLayout( gridLayout );
 
-    /* The target image. */
+    /* The image. */
     ImageHyperlink lnk = new ImageHyperlink( m_composite, SWT.NONE );
     Image image = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );
     lnk.setImage( image );
@@ -164,6 +166,16 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     gridData.widthHint = 175;
     m_label.setLayoutData( gridData );
 
+    /* Create the info image. */
+    Label imageLabel = new Label( m_composite, SWT.NONE );
+    imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
+    Image infoImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_CRS_INFO );
+    imageLabel.setImage( infoImage );
+
+    /* Set the CRS info. */
+    imageLabel.setToolTipText( CRSHelper.getTooltipText( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) );
+
+    /* Add some listeners. */
     m_composite.addDisposeListener( new DisposeListener()
     {
       public void widgetDisposed( DisposeEvent e )

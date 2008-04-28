@@ -47,6 +47,7 @@ import java.util.List;
 import org.deegree.model.crs.CoordinateSystem;
 import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.core.runtime.Preferences;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -141,5 +142,53 @@ public class CRSHelper
     }
 
     return coordinateSystems;
+  }
+
+  /**
+   * This function returns a string, which is usable for a tooltip of a CRS. It contains the name and all IDs of the
+   * given CRS.
+   * 
+   * @param name
+   *            The name of the crs.
+   * @return The tooltip string.
+   */
+  public static String getTooltipText( String name )
+  {
+    try
+    {
+      CoordinateSystem coordinateSystem = CachedCRSFactory.getInstance().create( name );
+      if( coordinateSystem != null )
+      {
+        /* The tooltip. */
+        String tooltip = "Name:\n";
+        tooltip = tooltip + coordinateSystem.getCRS().getName() + "\n\n";
+
+        /* Add the identifiers. */
+        tooltip = tooltip + "Identifier:\n";
+
+        /* Get all identifiers. */
+        String[] identifiers = coordinateSystem.getCRS().getIdentifiers();
+        for( int i = 0; i < identifiers.length; i++ )
+        {
+          /* Get the identifier. */
+          String identifier = identifiers[i];
+
+          tooltip = tooltip + identifier + "\n";
+        }
+
+        return tooltip;
+      }
+
+      /* Leave the tooltip empty. */
+      return "No valid CRS: " + name;
+    }
+    catch( Exception ex )
+    {
+      /* Log the error. */
+      KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
+
+      /* Leave the tooltip empty. */
+      return "";
+    }
   }
 }
