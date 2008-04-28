@@ -190,7 +190,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_toolbarManager.add( addAction );
 
       /* IAction for removing a feature. */
-      final IAction removeAction = new Action( "Features Löschen", ImageProvider.IMAGE_FEATURE_DELETE )
+      final IAction removeAction = new Action( actionLabel + " löschen", ImageProvider.IMAGE_FEATURE_DELETE )
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -201,7 +201,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           if( canDelete() == false )
           {
             Shell shell = event.display.getActiveShell();
-            MessageDialog.openInformation( shell, "Features Löschen", "Es sind keine Features zum Löschen ausgewählt." );
+            MessageDialog.openInformation( shell, actionLabel + " löschen", "Es sind keine Objekte zum Löschen ausgewählt." );
             return;
           }
 
