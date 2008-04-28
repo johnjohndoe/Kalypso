@@ -95,7 +95,7 @@
 	<!--   target.folder - destination folder                                  -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
-		<copydir dest="${target.folder}/lib" src="C:/Albert/work/workspace/deegree2/lib"/>
+		<copydir dest="${target.folder}/lib" src="C:/Albert/work/workspace_informdss/deegree2/lib"/>
 	</target>
 		
 	<!-- ===================================================================== -->
@@ -113,7 +113,7 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.sources">
-		<copydir dest="${target.folder}/deegree" src="C:/Albert/work/workspace/deegree2/src"/>
+		<copydir dest="${target.folder}/deegree" src="C:/Albert/work/workspace_informdss/deegree2/src"/>
 	</target>
 
 	<!-- ===================================================================== -->
