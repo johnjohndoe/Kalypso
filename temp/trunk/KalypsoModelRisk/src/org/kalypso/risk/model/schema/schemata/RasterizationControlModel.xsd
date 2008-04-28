@@ -327,12 +327,12 @@
                 <xs:annotation>
                         <xs:documentation xml:lang="de">
                                 <xs:label>
-                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
-                                </xs:label>
+                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
+                                        </xs:label>
                         </xs:documentation>
                         <xs:documentation xml:lang="en">
                                 <xs:label>
-                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
+                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- no name-}]]>
                                 </xs:label>
                         </xs:documentation>
                 </xs:annotation>
@@ -351,7 +351,7 @@
                 <xs:complexContent>
                         <xs:extension base="kr_common:EmptyFeatureBaseType">
                                 <xs:sequence>
-                                        <xs:element name="name" type="xs:string">
+                                        <xs:element name="name" type="xs:string" default="---">
                                                 <xs:annotation>
                                                         <xs:documentation xml:lang="de">
                                                                 <xs:label>Vermögenswert-Klasse</xs:label>
@@ -413,18 +413,22 @@
                 <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
         </xs:complexType>
         <!-- =================================================================
-		Asset value classes
+		Damage Functions
 		================================================================== -->
         <xs:element name="DamageFunction" type="krrcm:DamageFunctionType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
                         <xs:documentation xml:lang="de">
                                 <xs:label>
-                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-kein Name-}]]>
+                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
                                 </xs:label>
+                               
                         </xs:documentation>
                         <xs:documentation xml:lang="en">
+                                
+                               
                                 <xs:label>
-                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;-no name-}]]>
+                                        
+                                        <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- no name-}]]>
                                 </xs:label>
                         </xs:documentation>
                 </xs:annotation>
@@ -443,7 +447,7 @@
                 <xs:complexContent>
                         <xs:extension base="kr_common:EmptyFeatureBaseType">
                                 <xs:sequence>
-                                        <xs:element name="name" type="xs:string">
+                                        <xs:element name="name" type="xs:string" default="---">
                                                 <xs:annotation>
                                                         <xs:documentation xml:lang="de">
                                                                 <xs:label>Schadenfunktionsname</xs:label>
@@ -734,120 +738,30 @@
         </xs:complexType>
         <!-- Link functions ======================================================== -->
         <xs:complexType name="LanduseClassLinkType">
-                <xs:annotation>
-                        <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-                                <kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-                                <!--
-					IMPORTANT!!!
-					
-					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-					should be written in one line, exactly like this!
-					
-					Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-					RasterizationControlModel.gml
-					</kapp:documentReference>
-					than fix it manually...
-					
-				-->
-                        </xs:appinfo>
-                </xs:annotation>
                 <xs:sequence>
                         <xs:element ref="krrcm:LanduseClass" minOccurs="0" maxOccurs="0"/>
                 </xs:sequence>
                 <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
         </xs:complexType>
         <xs:complexType name="DamageFunctionLinkType">
-                <xs:annotation>
-                        <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-                                <kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-                                <!--
-					IMPORTANT!!!
-					
-					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-					should be written in one line, exactly like this!
-					
-					Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-					RasterizationControlModel.gml
-					</kapp:documentReference>
-					than fix it manually...
-					
-				-->
-                        </xs:appinfo>
-                </xs:annotation>
                 <xs:sequence>
                         <xs:element ref="krrcm:DamageFunction" minOccurs="0" maxOccurs="0"/>
                 </xs:sequence>
                 <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
         </xs:complexType>
         <xs:complexType name="AdministrationUnitLinkType">
-                <xs:annotation>
-                        <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-                                <kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-                                <!--
-					IMPORTANT!!!
-					
-					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-					should be written in one line, exactly like this!
-					
-					Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-					RasterizationControlModel.gml
-					</kapp:documentReference>
-					than fix it manually...
-					
-				-->
-                        </xs:appinfo>
-                </xs:annotation>
                 <xs:sequence>
                         <xs:element ref="krrcm:AdministrationUnit" minOccurs="0" maxOccurs="0"/>
                 </xs:sequence>
                 <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
         </xs:complexType>
         <xs:complexType name="LanduseRiskTypeLinkType">
-                <xs:annotation>
-                        <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-                                <kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-                                <!--
-					IMPORTANT!!!
-					
-					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-					should be written in one line, exactly like this!
-					
-					Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-					RasterizationControlModel.gml
-					</kapp:documentReference>
-					than fix it manually...
-					
-				-->
-                        </xs:appinfo>
-                </xs:annotation>
                 <xs:sequence>
                         <xs:element ref="krrcm:LanduseRiskType" minOccurs="0" maxOccurs="0"/>
                 </xs:sequence>
                 <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
         </xs:complexType>
         <xs:complexType name="AssetValueClassLinkType">
-                <xs:annotation>
-                        <xs:appinfo xmlns:kapp="org.kalypso.appinfo">
-                                <kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-                                <!--
-					IMPORTANT!!!
-					
-					<kapp:documentReference>RasterizationControlModel.gml</kapp:documentReference>
-					should be written in one line, exactly like this!
-					
-					Please check if your auto-formatting breaks it into:
-					<kapp:documentReference>
-					RasterizationControlModel.gml
-					</kapp:documentReference>
-					than fix it manually...
-					
-				-->
-                        </xs:appinfo>
-                </xs:annotation>
                 <xs:sequence>
                         <xs:element ref="krrcm:AssetValueClass" minOccurs="0" maxOccurs="0"/>
                 </xs:sequence>
