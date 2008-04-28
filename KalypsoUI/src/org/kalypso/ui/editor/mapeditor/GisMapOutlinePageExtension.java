@@ -67,6 +67,8 @@ public class GisMapOutlinePageExtension
       for( final IConfigurationElement configurationElement : configurationElements )
       {
         final String title = configurationElement.getAttribute( "title" );
+        // TODO: i18n the title!?
+
         final String resource = configurationElement.getAttribute( "icon" );
         // gets the parent of this element (the plugin which implements this extension)
         final IExtension parent = (IExtension) configurationElement.getParent();
