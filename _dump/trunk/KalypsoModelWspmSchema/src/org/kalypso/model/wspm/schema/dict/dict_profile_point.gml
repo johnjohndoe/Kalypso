@@ -15,11 +15,11 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BREITE">
-   <gml:name>Breite</gml:name>
+   <gml:name>Breite [m]</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Breite">
      <gml:description/>
-     <gml:name>Breite</gml:name>
+            <gml:name>Breite [m]</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
@@ -35,16 +35,16 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="HOEHE">
-   <gml:name>Höhe</gml:name>
+          <gml:name>Höhe [m NHN]</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Hoehe">
      <gml:description/>
-     <gml:name>Höhe</gml:name>
+     <gml:name>Höhe [m NHN]</gml:name>
     </swe:Phenomenon>
    </swe:property>
    <swe:representation>
     <swe:Number>
-     <gml:unitOfMeasure uom="mNN"/>
+     <gml:unitOfMeasure uom="m NHN"/>
     </swe:Number>
    </swe:representation>
   </swe:ItemDefinition>
