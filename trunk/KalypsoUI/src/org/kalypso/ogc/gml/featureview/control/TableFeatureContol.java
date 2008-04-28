@@ -50,6 +50,7 @@ import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypso.ui.editor.actions.TableFeatureControlUtils;
 import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -119,7 +120,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
     m_viewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     /* Set the feature. */
-    setFeature( getFeature() );
+    final Feature feature = getFeature();
+    setFeature( feature );
 
     /* If wanted, add a toolbar. */
     if( m_showToolbar )
@@ -128,7 +130,11 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_toolbarManager = new ToolBarManager( SWT.VERTICAL );
 
       /* IAction for adding a feature. */
-      final IAction addAction = new Action( "Neues Feature", ImageProvider.IMAGE_FEATURE_NEW )
+
+      // TODO: consider the case, where multiple feature-types substitute the target feature type
+      final IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
+      final String actionLabel = parentRelation == null ? "Feature" : FeatureActionUtilities.newFeatureActionLabel( parentRelation.getTargetFeatureType() );
+      final IAction addAction = new Action( actionLabel + " neu", ImageProvider.IMAGE_FEATURE_NEW )
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
