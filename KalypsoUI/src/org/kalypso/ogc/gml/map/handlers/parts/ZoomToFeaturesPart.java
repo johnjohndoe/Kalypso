@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers.parts;
 
@@ -64,17 +64,17 @@ public class ZoomToFeaturesPart
   /**
    * A view part containing a map panel.
    */
-  private IWorkbenchPart m_part;
+  private final IWorkbenchPart m_part;
 
   /**
    * The list of features, to zoom to.
    */
-  private List<Feature> m_features;
+  private final Feature[] m_features;
 
   /**
    * This value specifies the amount of the new extent used to increase it for creating a border around the new extent.
    */
-  private int m_percent;
+  private final int m_percent;
 
   /**
    * The constructor.
@@ -87,7 +87,14 @@ public class ZoomToFeaturesPart
    *            This value specifies the amount of the new extent used to increase it for creating a border around the
    *            new extent.
    */
-  public ZoomToFeaturesPart( IWorkbenchPart part, List<Feature> features, int percent )
+  public ZoomToFeaturesPart( final IWorkbenchPart part, final List<Feature> features, final int percent )
+  {
+    m_part = part;
+    m_features = features.toArray( new Feature[] {} );
+    m_percent = percent;
+  }
+
+  public ZoomToFeaturesPart( final IWorkbenchPart part, final Feature[] features, final int percent )
   {
     m_part = part;
     m_features = features;
@@ -99,11 +106,11 @@ public class ZoomToFeaturesPart
    */
   public void zoomTo( )
   {
-    if( m_features.size() == 0 )
+    if( m_features.length == 0 )
       return;
 
     /* This is the envelope containing all features of this list. */
-    GM_Envelope envelope = FeatureHelper.getEnvelope( m_features.toArray( new Feature[] {} ) );
+    final GM_Envelope envelope = FeatureHelper.getEnvelope( m_features );
 
     /* Get the positions of the envelope. */
     double min_x = envelope.getMin().getX();
@@ -115,12 +122,12 @@ public class ZoomToFeaturesPart
     if( m_percent > 0 )
     {
       /* The dimensions of the envelope. */
-      double width = max_x - min_x;
-      double height = max_y - min_y;
+      final double width = max_x - min_x;
+      final double height = max_y - min_y;
 
       /* The border size. */
-      double border_x = m_percent * width / 100;
-      double border_y = m_percent * height / 100;
+      final double border_x = m_percent * width / 100;
+      final double border_y = m_percent * height / 100;
 
       /* Add/Substract it to the positions of the extent. */
       min_x = min_x - border_x;
@@ -130,18 +137,18 @@ public class ZoomToFeaturesPart
     }
 
     /* Create the new positions. */
-    GM_Position newMin = GeometryFactory.createGM_Position( min_x, min_y );
-    GM_Position newMax = GeometryFactory.createGM_Position( max_x, max_y );
+    final GM_Position newMin = GeometryFactory.createGM_Position( min_x, min_y );
+    final GM_Position newMax = GeometryFactory.createGM_Position( max_x, max_y );
 
     /* Create the new envelope. */
-    GM_Envelope newEnvelope = GeometryFactory.createGM_Envelope( newMin, newMax, envelope.getCoordinateSystem() );
+    final GM_Envelope newEnvelope = GeometryFactory.createGM_Envelope( newMin, newMax, envelope.getCoordinateSystem() );
 
-    MapPanel mapPanel = (MapPanel) m_part.getAdapter( MapPanel.class );
+    final MapPanel mapPanel = (MapPanel) m_part.getAdapter( MapPanel.class );
     if( mapPanel == null )
       return;
 
     /* Finally set the bounding box. */
-    WidgetActionPart part = new WidgetActionPart( m_part );
+    final WidgetActionPart part = new WidgetActionPart( m_part );
     part.postCommand( new ChangeExtentCommand( mapPanel, newEnvelope ), null );
   }
 }

@@ -36,13 +36,15 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
   private final Coordinate m_offsetY;
 
-  private String m_sourceCRS;
+  private final String m_sourceCRS;
 
   private final RangeSetType m_rangeSet;
 
   private final URL m_context;
 
   private IGeoGrid m_grid;
+
+  private final boolean m_writeable;
 
   public RectifiedGridCoverageGeoGrid( final Feature rgcFeature ) throws Exception
   {
@@ -51,6 +53,12 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
   public RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context ) throws Exception
   {
+    this( rgcFeature, context, false );
+  }
+
+  protected RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context, final boolean writeable ) throws Exception
+  {
+    m_writeable = writeable;
     if( context == null )
       m_context = rgcFeature.getWorkspace().getContext();
     else
@@ -80,7 +88,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     return grid.getValue( x, y );
   }
 
-  private synchronized IGeoGrid getGrid( ) throws GeoGridException
+  protected synchronized IGeoGrid getGrid( ) throws GeoGridException
   {
     if( m_grid == null )
     {
@@ -90,7 +98,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
         if( file != null )
         {
           final URL url = new URL( m_context, file.getFileName() );
-          m_grid = GeoGridUtilities.createGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS );
+          m_grid = GeoGridUtilities.openGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS, m_writeable );
         }
       }
       catch( final IOException e )
@@ -222,7 +230,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
-  public void setMax( BigDecimal maxValue ) throws GeoGridException
+  public void setMax( final BigDecimal maxValue ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
     if( grid == null )
@@ -232,7 +240,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
-  public void setMin( BigDecimal minValue ) throws GeoGridException
+  public void setMin( final BigDecimal minValue ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
     if( grid == null )
@@ -242,7 +250,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
    */
-  public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
+  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
     if( grid == null )
@@ -266,7 +274,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   /**
    * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
-  public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
+  public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
     if( grid == null )

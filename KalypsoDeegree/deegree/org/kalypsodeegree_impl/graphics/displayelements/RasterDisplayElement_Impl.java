@@ -166,14 +166,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting grid", 100 );
 
     /* Get the envelope of the surface of the grid (it is transformed). */
-    GM_Envelope envelope = grid.getSurface( targetCRS ).getEnvelope();
+    final GM_Envelope envelope = grid.getSurface( targetCRS ).getEnvelope();
 
     /* Convert this to an JTS envelope. */
-    Envelope gridEnvelope = JTSAdapter.export( envelope );
+    final Envelope gridEnvelope = JTSAdapter.export( envelope );
 
     /* Paint the envelope. */
     // paintEnvelope( g, projection, gridEnvelope, new Color( 128, 128, 128, 20 ) );
-    
     /* Calculate cluster size */
 
     /* The width of the envelope (in pixel) on the screen. */
@@ -244,17 +243,18 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           {
             /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
             final GeoGridCell cell = GeoGridUtilities.cellFromPosition( grid, GeoGridUtilities.transformCoordinate( grid, crd, targetCRS ) );
+
             value = grid.getValueChecked( cell.x, cell.y );
           }
           else
           {
             /* Transform the coordinate into the coordinate system of the grid, in order to find the cell. */
             value = GeoGridUtilities.getValue( grid, GeoGridUtilities.transformCoordinate( grid, crd, targetCRS ), interpolation );
-          } 
+          }
 
           if( Double.isNaN( value ) )
-              continue;
-          
+            continue;
+
           final Color color = symbolizer.getColor( value );
           if( color == null )
             continue;
@@ -277,7 +277,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       {
         for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
         {
-          final double value = grid.getValueChecked( i, j );    
+          final double value = grid.getValueChecked( i, j );
           if( !Double.isNaN( value ) )
           {
             final Color color = symbolizer.getColor( value );
@@ -285,14 +285,14 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
               continue;
 
             /* Get the surface of the cell (in the target coordinate system). */
-            GM_Surface< ? > cell = grid.getCell( i, j, targetCRS );
+            final GM_Surface< ? > cell = grid.getCell( i, j, targetCRS );
 
             /* Paint the cell. */
-            PolygonSymbolizer impl = new PolygonSymbolizer_Impl();
+            final PolygonSymbolizer impl = new PolygonSymbolizer_Impl();
             impl.getFill().setFill( color );
             impl.getStroke().setStroke( color );
             impl.getStroke().setWidth( 1 );
-            PolygonDisplayElement displayElement = DisplayElementFactory.buildPolygonDisplayElement( null, cell, impl );
+            final PolygonDisplayElement displayElement = DisplayElementFactory.buildPolygonDisplayElement( null, cell, impl );
             displayElement.paint( g, projection, new SubProgressMonitor( monitor, 1 ) );
           }
         }
@@ -349,8 +349,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 // image.dispose();
 // }
 // }
-
- 
 
   //
   // THE GRID CACHE

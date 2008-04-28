@@ -41,6 +41,7 @@
 package org.kalypso.grid;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigDecimal;
@@ -112,8 +113,11 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * Opens an existing grid for read-only access.<br>
    * Dispose the grid after it is no more needed in order to release the given resource.
+   * 
+   * @param writeable
+   *            If <code>true</code>, the grid is opened for writing and a {@link IWriteableGeoGrid} is returned.
    */
-  public static BinaryGeoGrid openGrid( final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  public static BinaryGeoGrid openGrid( final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean writeable ) throws IOException
   {
     /* Tries to find a file from the given url. */
     File fileFromUrl = ResourceUtilities.findJavaFileFromURL( url );
@@ -130,10 +134,12 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
       fileFromUrl = File.createTempFile( "local", ".bin" );
       fileFromUrl.deleteOnExit();
       FileUtils.copyURLToFile( url, fileFromUrl );
-      binFile = fileFromUrl; // set in order ot delete on dispose
+      binFile = fileFromUrl; // set in order to delete on dispose
     }
 
-    final RandomAccessFile randomAccessFile = new RandomAccessFile( fileFromUrl, "r" );
+    final String flags = writeable ? "rw" : "r";
+
+    final RandomAccessFile randomAccessFile = new RandomAccessFile( fileFromUrl, flags );
     return new BinaryGeoGrid( randomAccessFile, binFile, origin, offsetX, offsetY, sourceCRS );
   }
 
@@ -146,10 +152,17 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    *            If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid
    *            values are undetermined.
    */
-  public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws IOException
+  public static BinaryGeoGrid createGrid( final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
   {
-    final RandomAccessFile randomAccessFile = new RandomAccessFile( file, "rw" );
-    return new BinaryGeoGrid( randomAccessFile, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS, fillGrid );
+    try
+    {
+      final RandomAccessFile randomAccessFile = new RandomAccessFile( file, "rw" );
+      return new BinaryGeoGrid( randomAccessFile, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS, fillGrid );
+    }
+    catch( final FileNotFoundException e )
+    {
+      throw new GeoGridException( "Could not find binary grid file: " + file.getAbsolutePath(), e );
+    }
   }
 
   /**
@@ -183,44 +196,51 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    *            If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid
    *            values are undetermined.
    */
-  public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws IOException
+  public BinaryGeoGrid( final RandomAccessFile randomAccessFile, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
   {
     super( origin, offsetX, offsetY, sourceCRS );
 
-    m_randomAccessFile = randomAccessFile;
-    m_binFile = null;
-
-    m_sizeX = sizeX;
-    m_sizeY = sizeY;
-    m_scale = scale;
-    m_min = BigDecimal.valueOf( Double.MAX_VALUE );
-    m_max = BigDecimal.valueOf( Double.MIN_VALUE );
-
-    /* Initialize grid */
-    m_randomAccessFile.setLength( HEADER_SIZE + sizeX * sizeY * 4 + 2 * 4 );
-
-    /* Read header */
-    m_randomAccessFile.seek( 0 );
-
-    writeInt( 0 ); // Version number
-    writeInt( sizeX );
-    writeInt( sizeY );
-    writeInt( scale );
-
-    /* Set everything to non-data */
-    if( fillGrid )
+    try
     {
-      for( int y = 0; y < sizeY; y++ )
-      {
-        for( int x = 0; x < sizeX; x++ )
-          writeInt( NO_DATA );
-      }
-    }
+      m_randomAccessFile = randomAccessFile;
+      m_binFile = null;
 
-    /* Read statistical data */
-    saveStatistically();
+      m_sizeX = sizeX;
+      m_sizeY = sizeY;
+      m_scale = scale;
+      m_min = BigDecimal.valueOf( Double.MAX_VALUE );
+      m_max = BigDecimal.valueOf( Double.MIN_VALUE );
+
+      /* Initialize grid */
+      m_randomAccessFile.setLength( HEADER_SIZE + sizeX * sizeY * 4 + 2 * 4 );
+
+      /* Read header */
+      m_randomAccessFile.seek( 0 );
+
+      writeInt( 0 ); // Version number
+      writeInt( sizeX );
+      writeInt( sizeY );
+      writeInt( scale );
+
+      /* Set everything to non-data */
+      if( fillGrid )
+      {
+        for( int y = 0; y < sizeY; y++ )
+        {
+          for( int x = 0; x < sizeX; x++ )
+            writeInt( NO_DATA );
+        }
+      }
+
+      /* Read statistical data */
+      saveStatistically();
 // writeBigDecimal( m_min );
 // writeBigDecimal( m_max );
+    }
+    catch( final IOException e )
+    {
+      throw new GeoGridException( "Failed to initiate random access file", e );
+    }
   }
 
   private BigDecimal readBigDecimal( ) throws IOException
@@ -410,21 +430,28 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @throws IOException
    *             If the grid is not opened for write access.
    */
-  public void setStatistically( final BigDecimal min, final BigDecimal max ) throws IOException
+  public void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException
   {
-    final long pos = HEADER_SIZE + m_sizeY * m_sizeX * 4;
-    m_randomAccessFile.seek( pos );
-    writeBigDecimal( min );
-    writeBigDecimal( max );
+    try
+    {
+      final long pos = HEADER_SIZE + m_sizeY * m_sizeX * 4;
+      m_randomAccessFile.seek( pos );
+      writeBigDecimal( min );
+      writeBigDecimal( max );
 
-    m_min = min;
-    m_max = max;
+      m_min = min;
+      m_max = max;
+    }
+    catch( final IOException e )
+    {
+      throw new GeoGridException( "Failed to set statistical data", e );
+    }
   }
 
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#setMax(java.math.BigDecimal)
    */
-  public void setMax( BigDecimal max )
+  public void setMax( final BigDecimal max )
   {
     if( max != null )
       m_max = max;
@@ -433,7 +460,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#setMin(java.math.BigDecimal)
    */
-  public void setMin( BigDecimal min )
+  public void setMin( final BigDecimal min )
   {
     if( min != null )
       m_min = min;
@@ -442,7 +469,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /**
    * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
    */
-  public void saveStatistically( ) throws IOException
+  public void saveStatistically( ) throws GeoGridException
   {
     if( m_min != null && m_max != null )
       setStatistically( getMin(), getMax() );

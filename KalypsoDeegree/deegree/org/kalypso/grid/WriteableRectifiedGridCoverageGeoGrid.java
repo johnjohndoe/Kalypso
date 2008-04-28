@@ -41,15 +41,54 @@
 package org.kalypso.grid;
 
 import java.math.BigDecimal;
+import java.net.URL;
+
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * @author Gernot Belger
+ * @author kuch
  */
-public interface IWriteableGeoGrid extends IGeoGrid
+public class WriteableRectifiedGridCoverageGeoGrid extends RectifiedGridCoverageGeoGrid implements IWriteableGeoGrid
 {
-  public void setValue( final int x, final int y, final double value ) throws GeoGridException;
+  public WriteableRectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context ) throws Exception
+  {
+    super( rgcFeature, context, true );
+  }
 
-  void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException;
+  /**
+   * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
+   */
+  public void saveStatistically( ) throws GeoGridException
+  {
+    final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
+    if( grid == null )
+      return;
 
-  public void saveStatistically( ) throws GeoGridException;
+    grid.saveStatistically();
+  }
+
+  /**
+   * @see org.kalypso.grid.IWriteableGeoGrid#setStatistically(java.math.BigDecimal, java.math.BigDecimal)
+   */
+  public void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException
+  {
+    final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
+    if( grid == null )
+      return;
+
+    grid.setStatistically( min, max );
+  }
+
+  /**
+   * @see org.kalypso.grid.IWriteableGeoGrid#setValue(int, int, double)
+   */
+  public void setValue( final int x, final int y, final double value ) throws GeoGridException
+  {
+    final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
+    if( grid == null )
+      return;
+
+    grid.setValue( x, y, value );
+  }
+
 }

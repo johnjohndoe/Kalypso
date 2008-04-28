@@ -74,6 +74,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -168,13 +169,30 @@ public class GeoGridUtilities
   }
 
   /**
-   * Creates a {@link IGeoGrid} for a resource of a given mime-type.
+   * Opens a {@link IGeoGrid} for a resource of a given mime-type.<br/> The grid is opened read-only.
    */
-  public static IGeoGrid createGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  {
+    return openGrid( mimeType, url, origin, offsetX, offsetY, sourceCRS, false );
+  }
+
+  /**
+   * Opens a {@link IGeoGrid} for a resource of a given mime-type.
+   * 
+   * @param writeable
+   *            if <code>true</code>, the grid is opened for write-access. In that case a {@link IWriteableGeoGrid}
+   *            will be returned.
+   * @throws UnsupportedOperationException
+   *             If a grid is opened for write access that does not support it.
+   */
+  public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean writeable ) throws IOException
   {
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
-      return BinaryGeoGrid.openGrid( url, origin, offsetX, offsetY, sourceCRS );
+      return BinaryGeoGrid.openGrid( url, origin, offsetX, offsetY, sourceCRS, writeable );
+
+    if( writeable )
+      throw new UnsupportedOperationException( "Cannot open this grid for write access." );
 
     if( mimeType.endsWith( "/asc" ) || mimeType.endsWith( "/asg" ) )
       return new AsciiRandomAccessGeoGrid( url, origin, offsetX, offsetY, sourceCRS );
@@ -326,11 +344,35 @@ public class GeoGridUtilities
   }
 
   /**
+   * Converts a gml-coverage to a {@link IWriteableGeoGrid}.<br>
+   * After use, the grid has to be disposed.
+   */
+  public static IWriteableGeoGrid toWriteableGrid( final ICoverage coverage ) throws Exception
+  {
+    // REMARK: at the moment, only RectifiedGridCoverages are supported
+    return new WriteableRectifiedGridCoverageGeoGrid( coverage.getFeature(), null );
+  }
+
+  /**
    * Applies a {@link IGeoGridWalker} to all members of a {@link ICoverageCollection}.<br>
    * Calls {@link IGeoGridWalker#start(IGeoGrid)} for every visited grid. <br>
-   * ATTENTION: this does not work for every walker implementation!
+   * ATTENTION: this does not work for every walker implementation! *
    */
   public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final IProgressMonitor monitor ) throws Exception
+  {
+    walkCoverages( coverages, walker, null, monitor );
+  }
+
+  /**
+   * Applies a {@link IGeoGridWalker} to all members of a {@link ICoverageCollection} that lie inside a certain
+   * geometry.<br>
+   * Calls {@link IGeoGridWalker#start(IGeoGrid)} for every visited grid. <br>
+   * ATTENTION: this does not work for every walker implementation! *
+   * 
+   * @param walkingArea
+   *            If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
+   */
+  public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final Geometry walkingArea, final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( "Visiting coverages", coverages.size() );
 
@@ -339,7 +381,8 @@ public class GeoGridUtilities
       for( final ICoverage coverage : coverages )
       {
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
-        grid.getWalkingStrategy().walk( grid, walker, monitor );
+
+        grid.getWalkingStrategy().walk( grid, walker, walkingArea, monitor );
         ProgressUtilities.worked( monitor, 1 );
         grid.dispose();
       }
@@ -350,7 +393,7 @@ public class GeoGridUtilities
     }
   }
 
-  public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws IOException
+  public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
   {
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
@@ -396,7 +439,7 @@ public class GeoGridUtilities
 
       final CopyGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
 
-      grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );
+      grid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
 
       final BigDecimal min = walker.getMin();
       final BigDecimal max = walker.getMax();
@@ -453,7 +496,7 @@ public class GeoGridUtilities
       outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(), grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
       ProgressUtilities.worked( monitor, 20 );
       final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
-      grid.getWalkingStrategy().walk( grid, walker, progress.newChild( 70 ) );
+      grid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
       outputGrid.dispose();
       CoverageCollection.setCoverage( coverage, toGridDomain( grid ), filePath, mimeType );
       ProgressUtilities.worked( progress, 10 );
@@ -630,5 +673,13 @@ public class GeoGridUtilities
     {
       throw new GeoGridException( "Could not transform the coordinate ...", ex );
     }
+  }
+
+  public static void walkGeoGrid( final IWriteableGeoGrid grid, final IGeoGridWalker walker, final Geometry walkingArea, final IProgressMonitor monitor ) throws Exception
+  {
+    monitor.beginTask( "Visiting geoGrid", 1 );
+
+    grid.getWalkingStrategy().walk( grid, walker, walkingArea, monitor );
+    ProgressUtilities.worked( monitor, 1 );
   }
 }
