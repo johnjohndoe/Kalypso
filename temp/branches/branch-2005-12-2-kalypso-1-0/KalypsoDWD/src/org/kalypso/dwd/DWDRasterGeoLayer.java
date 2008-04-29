@@ -63,10 +63,11 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 import org.opengis.cs.CS_CoordinateSystem;
 
 /**
+ * TODO: this does not work correctly, as we are using deegree 1 here, which has a problem projecting 
+ * between crs with different datums (Datumverschiebung!).
+ * <br>
  * DWDRasterGeoLayer
- * <p>
- * 
- * created by
+ * <br>
  * 
  * @author doemming (15.06.2005)
  */
