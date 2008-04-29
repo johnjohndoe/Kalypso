@@ -69,6 +69,7 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/soap/wsdl4j-1.5.1.jar,
  lib/visad/visad.jar,
  lib/xml/jaxen-1.1-beta-8.jar,
+ lib/jfreechart/jfreechart-1.0.8.jar,
  build
 Export-Package: com.vividsolutions.jts;version="1.8.0",
  com.vividsolutions.jts.algorithm;version="1.8.0",
