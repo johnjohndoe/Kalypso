@@ -42,9 +42,9 @@ package org.kalypso.core.catalog.urn;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.contribs.java.net.URNUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.URNUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
@@ -66,7 +66,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#isURNGeneratorFor(java.lang.Object)
    */
-  public boolean isURNGeneratorFor( Object object )
+  public boolean isURNGeneratorFor( final Object object )
   {
     if( object instanceof FeatureTypeStyle )
       return true;
@@ -96,13 +96,13 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNPatternForRelated(java.lang.Object)
    */
-  public String generateURNPatternForRelated( Object related )
+  public String generateURNPatternForRelated( final Object related )
   {
     final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
     final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
     if( generator == null )
       return null;
-    final String baseURN =generator.generateURNFor( related );
+    final String baseURN = generator.generateURNFor( related );
     if( baseURN == null )
       return null;
     return baseURN + ":" + BASETYPE + ":*";
@@ -111,7 +111,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateDefaultURNForRelated(java.lang.Object)
    */
-  public String generateDefaultURNForRelated( Object related )
+  public String generateDefaultURNForRelated( final Object related )
   {
     final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
     final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );

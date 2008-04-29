@@ -42,7 +42,7 @@ package org.kalypso.core.catalog.urn;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.core.catalog.URNUtilities;
+import org.kalypso.contribs.java.net.URNUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
@@ -61,7 +61,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#isURNGeneratorFor(java.lang.Object)
    */
-  public boolean isURNGeneratorFor( Object object )
+  public boolean isURNGeneratorFor( final Object object )
   {
     if( object instanceof IFeatureType )
       return true;
@@ -93,7 +93,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateURNPatternForRelated(java.lang.Object)
    */
-  public String generateURNPatternForRelated( Object object )
+  public String generateURNPatternForRelated( final Object object )
   {
     // nothing
     return null;
@@ -102,7 +102,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#generateDefaultURNForRelated(java.lang.Object)
    */
-  public String generateDefaultURNForRelated( Object object )
+  public String generateDefaultURNForRelated( final Object object )
   {
     // nothing
     return null;
