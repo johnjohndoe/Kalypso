@@ -74,7 +74,19 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 {
   private static final String DUMMY = "dummy";
 
-  protected DefaultTableViewer m_tableViewer;
+  final UIJob m_updateColumnsJob = new UIJob( "Updating table... " )
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      refreshColumns();
+      getTableViewer().refresh();
+
+      return Status.OK_STATUS;
+    }
+  };
+
+  private DefaultTableViewer m_tableViewer;
 
   private TupleResult m_result;
 
@@ -219,6 +231,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     }
 
     final String[] props = properties.toArray( new String[properties.size()] );
+
     ViewerUtilities.update( m_tableViewer, records, props, true );
   }
 
@@ -282,17 +295,8 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    new UIJob( "updating table... " )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        refreshColumns();
-        m_tableViewer.refresh();
-
-        return Status.OK_STATUS;
-      }
-    }.schedule();
+    m_updateColumnsJob.cancel();
+    m_updateColumnsJob.schedule( 100 );
   }
 
   /**
@@ -315,5 +319,10 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   public IComponentUiHandlerProvider getFactory( )
   {
     return m_factory;
+  }
+
+  protected DefaultTableViewer getTableViewer( )
+  {
+    return m_tableViewer;
   }
 }
