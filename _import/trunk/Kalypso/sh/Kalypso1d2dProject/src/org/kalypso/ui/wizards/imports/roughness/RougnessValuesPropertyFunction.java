@@ -49,6 +49,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionValuePropertyType;
 import org.kalypso.kalypsosimulationmodel.schema.UrlCatalogRoughness;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
@@ -89,13 +90,13 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final QName ptQName = pt.getQName();
-    
+
     final IPropertyType property = feature.getFeatureType().getProperty( ptQName );
-    if(property != null && !(property instanceof VirtualFunctionValuePropertyType ) )
+    if( property != null && !(property instanceof VirtualFunctionValuePropertyType) )
       return getValue( feature.getProperty( ptQName ) );
-    
+
     Feature member = null;
-    
+
     if( ptQName.equals( m_groundTypeName ) )
     {
       member = (Feature) feature.getProperty( m_groundClsMember );
@@ -120,22 +121,42 @@ public class RougnessValuesPropertyFunction extends FeaturePropertyFunction
       else
         return getValue( member.getProperty( m_name ) );
     }
-    
-    if( member!=null && member.getFeatureType().getProperty( ptQName )!=null)
-      return getValue( member.getProperty( ptQName ) );
-    
-    member = (Feature) feature.getProperty( m_vegetationClsMember );
-    if( member!=null && member.getFeatureType().getProperty( ptQName )!=null)
-      return getValue( member.getProperty( ptQName ) );
-    
-    member = (Feature) feature.getProperty( m_groundClsMember );
-    if( member!=null && member.getFeatureType().getProperty( ptQName )!=null)
-      return getValue( member.getProperty( ptQName ) );
-    
-    member = (Feature) feature.getProperty( m_eddyViscosityClsMember );
-    if( member!=null && member.getFeatureType().getProperty( ptQName )!=null)
-      return getValue( member.getProperty( ptQName ) );
-    
+
+    return getRoughnessFeatureValue( feature, ptQName );
+  }
+
+  private Object getRoughnessFeatureValue( final Feature feature, final QName ptQName )
+  {
+    Object object = feature.getProperty( m_vegetationClsMember );
+
+    if( object != null )
+    {
+      Feature member = FeatureUtils.resolveFeature( feature.getWorkspace(), object );
+
+      if( member != null && member.getFeatureType().getProperty( ptQName ) != null )
+        return getValue( member.getProperty( ptQName ) );
+    }
+
+    object = feature.getProperty( m_groundClsMember );
+
+    if( object != null )
+    {
+      Feature member = FeatureUtils.resolveFeature( feature.getWorkspace(), object );
+
+      if( member != null && member.getFeatureType().getProperty( ptQName ) != null )
+        return getValue( member.getProperty( ptQName ) );
+    }
+
+    object = feature.getProperty( m_eddyViscosityClsMember );
+
+    if( object != null )
+    {
+      Feature member = FeatureUtils.resolveFeature( feature.getWorkspace(), object );
+
+      if( member != null && member.getFeatureType().getProperty( ptQName ) != null )
+        return getValue( member.getProperty( ptQName ) );
+    }
+
     return null;
   }
 
