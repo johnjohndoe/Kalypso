@@ -184,6 +184,7 @@ public class DBaseFile
     // m_prefix = fname.replaceAll( ".+[/|\\\\]", "" );
     m_suffix = "" + fname.hashCode();
     m_customNamespaceURI = "org.kalypso.shape.custom_" + m_suffix;
+    // TODO: name is wrong: feature normally have capitals as first char
     m_propertyCustomFeatureMember = new QName( m_customNamespaceURI, "featureMember" );
 
     m_defaultFileShapeType = defaultFileShapeType;
