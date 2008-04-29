@@ -326,11 +326,13 @@
         <xs:element name="AssetValueClass" type="krrcm:AssetValueClassType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
                         <xs:documentation xml:lang="de">
+                                <xs:name>spez. Vermögenswert</xs:name>
                                 <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
                                         </xs:label>
                         </xs:documentation>
                         <xs:documentation xml:lang="en">
+                                <xs:name>Asset Value</xs:name>
                                 <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- no name-}]]>
                                 </xs:label>
@@ -418,13 +420,14 @@
         <xs:element name="DamageFunction" type="krrcm:DamageFunctionType" substitutionGroup="gml:_Feature">
                 <xs:annotation>
                         <xs:documentation xml:lang="de">
+                                <xs:name>Schadensfunktion</xs:name>
                                 <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
                                 </xs:label>
                                
                         </xs:documentation>
                         <xs:documentation xml:lang="en">
-                                
+                                <xs:name>Damage Function</xs:name>
                                
                                 <xs:label>
                                         
