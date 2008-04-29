@@ -151,7 +151,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
           /* Get the needed properties. */
           Feature parentFeature = getFeature();
-          IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
           CommandableWorkspace workspace = m_kft.getWorkspace();
 
           AddFeatureCommand command = new AddFeatureCommand( workspace, parentRelation.getTargetFeatureType(), parentFeature, parentRelation, -1, null, null, 0 );
@@ -170,7 +169,6 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
           /* Get the needed properties. */
           Feature parentFeature = getFeature();
-          IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
 
           maxOccurs = parentRelation.getMaxOccurs();
           if( parentFeature instanceof List )
