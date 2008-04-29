@@ -138,6 +138,35 @@ public class ColorUtilities
   }
 
   /**
+   * Adds a (hsb-)distant vector to a given color.
+   */
+  public static Color addColor( final Color c, final float h, float s, float b, int times )
+  {
+    final float[] cHSB = Color.RGBtoHSB( c.getRed(), c.getGreen(), c.getBlue(), null );
+    final float[] vHSB = new float[3];
+    vHSB[0] = h;
+    vHSB[1] = s;
+    vHSB[2] = b;
+
+    final float[] hsb = new float[3];
+    for( int i = 0; i < hsb.length; i++ )
+    {
+      final float cHSBi = cHSB[i];
+      final float vHSBi = vHSB[i];
+      final float changedi = cHSBi + times * vHSBi;
+
+      hsb[i] = (float)( (int)( changedi * 0xff ) % 0x100 ) / 0xff;
+      
+      System.out.println( cHSB[i] + " - " + vHSB[i] + " - " + changedi + " - " + hsb[i] );
+    }
+
+    final int alpha = c.getAlpha();
+
+    final Color tmpColor = Color.getHSBColor( hsb[0], hsb[1], hsb[2] );
+    return new Color( tmpColor.getRed(), tmpColor.getGreen(), tmpColor.getBlue(), alpha );
+  }
+
+  /**
    * 
    * @param color
    * @param alpha

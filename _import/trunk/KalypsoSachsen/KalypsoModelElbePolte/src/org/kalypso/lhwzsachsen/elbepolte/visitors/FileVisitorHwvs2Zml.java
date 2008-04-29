@@ -57,11 +57,14 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.services.calculation.service.CalcJobServiceException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -127,7 +130,6 @@ public class FileVisitorHwvs2Zml implements FileVisitor
         final String id = (String)f.getProperty( "nr" );
         if( fleExt.equals( id ) )
         {
-
           final Object objTSLink = f.getProperty( m_propZmlLink );
           if( objTSLink instanceof TimeseriesLinkType )
           {
@@ -154,17 +156,24 @@ public class FileVisitorHwvs2Zml implements FileVisitor
 
               if( m_writeUmhuellende )
               {
+                final IAxis[] axisList = obsZml.getAxisList();
+                final String axisType;
+                if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_RUNOFF ) )
+                  axisType = TimeserieConstants.TYPE_RUNOFF;
+                else if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_WATERLEVEL ) )
+                  axisType = TimeserieConstants.TYPE_WATERLEVEL;
+                else
+                  throw new CalcJobServiceException(
+                      "Ergebniszeitreihe enthält weder Abfluss noch Wasserstand, Umhüllendenberechnung nicht möglich.",
+                      null );
 
                 // get first and last date of observation
-                final IAxis dateAxis = ObservationUtilities.findAxisByType( obsZml.getAxisList(),
-                    TimeserieConstants.TYPE_DATE );
-                final IAxis valueAxis = ObservationUtilities.findAxisByType( obsZml.getAxisList(),
-                    TimeserieConstants.TYPE_RUNOFF );
+                final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
+                final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
                 final ITuppleModel values = obsZml.getValues( null );
                 final int valueCount = values.getCount();
                 if( valueCount > 1 )
                 {
-
                   final org.kalypso.ogc.sensor.DateRange forecastRange = TimeserieUtils.isForecast( obsZml );
                   if( forecastRange != null )
                   {
@@ -188,12 +197,14 @@ public class FileVisitorHwvs2Zml implements FileVisitor
 
                     final double endOffset = Math.abs( endValue.doubleValue() * endAccuracy / 100 );
 
-                    TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "-",
-                        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(),
-                            sZmlFileBaseName + "_unten.zml" ), "- Spur Unten" );
-                    TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "+",
-                        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(),
-                            sZmlFileBaseName + "_oben.zml" ), "- Spur Oben" );
+                    final IRequest request = new ObservationRequest(calBegin.getTime(), calEnd.getTime());
+                    
+                    TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "-", axisType,
+                        KalypsoStati.BIT_DERIVATED,
+                        new File( fleZml.getParentFile(), sZmlFileBaseName + "_unten.zml" ), "- Spur Unten", request );
+                    TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "+", axisType,
+                        KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(), sZmlFileBaseName + "_oben.zml" ),
+                        "- Spur Oben", request );
 
                   }
                 }

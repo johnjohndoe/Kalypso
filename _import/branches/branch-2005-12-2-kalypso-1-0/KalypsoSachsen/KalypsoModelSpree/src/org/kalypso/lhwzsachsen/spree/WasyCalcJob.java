@@ -36,6 +36,8 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
@@ -628,11 +630,20 @@ public abstract class WasyCalcJob implements ICalcJob
     if( !writeUmhuellende )
       return;
 
+    /* The axis type for which to create umhüllende */
+    final IAxis[] axisList = observation.getAxisList();
+    final String axisType;
+    if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_RUNOFF ) )
+      axisType = TimeserieConstants.TYPE_RUNOFF;
+    else if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_WATERLEVEL ) )
+      axisType = TimeserieConstants.TYPE_WATERLEVEL;
+    else
+      throw new CalcJobServiceException(
+          "Ergebniszeitreihe enthält weder Abfluss noch Waserstand, Umhüllendenberechnung nicht möglich.", null );
+
     // get first and last date of observation
-    final IAxis dateAxis = ObservationUtilities
-        .findAxisByType( observation.getAxisList(), TimeserieConstants.TYPE_DATE );
-    final IAxis valueAxis = ObservationUtilities.findAxisByType( observation.getAxisList(),
-        TimeserieConstants.TYPE_RUNOFF );
+    final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
+    final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
     final ITuppleModel values = observation.getValues( null );
     final int valueCount = values.getCount();
     if( valueCount < 2 )
@@ -657,12 +668,12 @@ public abstract class WasyCalcJob implements ICalcJob
 
     final String baseName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( outFile.getName() );
 
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "-",
-        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
-            + "_unten.zml" ), "- Spur Unten" );
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "+",
-        TimeserieConstants.TYPE_RUNOFF, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName
-            + "_oben.zml" ), "- Spur Oben" );
+    final IRequest request = new ObservationRequest(calBegin.getTime(), calEnd.getTime());
+
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "-", axisType,
+        KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_unten.zml" ), "- Spur Unten", request );
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "+", axisType,
+        KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_oben.zml" ), "- Spur Oben", request );
   }
 
   protected abstract TSDesc[] TS_DESCRIPTOR();
