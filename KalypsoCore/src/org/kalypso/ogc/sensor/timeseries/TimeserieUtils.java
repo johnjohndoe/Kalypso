@@ -41,8 +41,10 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -59,8 +61,10 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
@@ -82,6 +86,8 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
  */
 public class TimeserieUtils
 {
+  private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties";
+
   private static Properties m_config;
 
   private static HashMap m_formatMap = new HashMap();
@@ -175,23 +181,55 @@ public class TimeserieUtils
   {
     if( m_config == null )
     {
-      m_config = new Properties();
+      final Properties defaultConfig = new Properties();
+      m_config = new Properties( defaultConfig );
 
-      InputStream ins = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
+      // The config file in the sources is used as defaults
+      InputStream configIs = null;
+      final InputStream defaultIs = TimeserieUtils.class.getResourceAsStream( "resource/config.properties" );
 
       try
       {
-        m_config.load( ins );
+        // Load default first, they always should exist
+        defaultConfig.load( defaultIs );
+        defaultIs.close();
+
+        // If we have a configured config file, use it as standard
+        final URL configUrl = Platform.getConfigurationLocation().getURL();
+        String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
+        final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl,
+            timeseriesConfigLocation );
+
+        try
+        {
+          if( timeseriesConfigUrl != null )
+            configIs = timeseriesConfigUrl.openStream();
+        }
+        catch( final FileNotFoundException ioe )
+        {
+          // ignore: there is no config file; we are using standard instead
+          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at "
+              + timeseriesConfigUrl.toExternalForm() + " does not exist. Using default settings.", null );
+          KalypsoCorePlugin.getDefault().getLog().log( status );
+        }
+
+        if( configIs != null )
+        {
+          m_config.load( configIs );
+          configIs.close();
+        }
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
       finally
       {
-        IOUtils.closeQuietly( ins );
+        IOUtils.closeQuietly( defaultIs );
+        IOUtils.closeQuietly( configIs );
       }
     }
+
     return m_config;
   }
 
@@ -282,15 +320,24 @@ public class TimeserieUtils
    * 
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
-  public static Color getColorFor( final String type )
+  public static Color[] getColorsFor( final String type )
   {
     final String strColor = getProperties().getProperty( "AXISCOLOR_" + type );
 
-    if( strColor != null )
-      return StringUtilities.stringToColor( strColor );
+    if( strColor == null )
+      return new Color[]
+      { ColorUtilities.random() };
 
-    // no color found? so return random one
-    return ColorUtilities.random();
+    final String[] strings = strColor.split( "#" );
+    if( strings.length == 0 )
+      return new Color[]
+      { ColorUtilities.random() };
+
+    final Color[] colors = new Color[strings.length];
+    for( int i = 0; i < colors.length; i++ )
+      colors[i] = StringUtilities.stringToColor( strings[i] );
+
+    return colors;
   }
 
   /**

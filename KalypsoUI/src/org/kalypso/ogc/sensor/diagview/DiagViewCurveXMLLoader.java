@@ -152,10 +152,11 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         {
           final IAxis axis = DiagViewUtils.getValueAxis( (AxisMapping[])mappings.toArray( new AxisMapping[mappings
               .size()] ) );
-          if( axis != null )
-            color = TimeserieUtils.getColorFor( axis.getType() );
-          else
+
+          if( axis == null )
             color = ColorUtilities.random();
+          else
+            color = TimeserieUtils.getColorsFor( axis.getType() )[0];
         }
 
         final String curveName = ObsViewUtils.replaceTokens( tcurve.getName(), obs, null );

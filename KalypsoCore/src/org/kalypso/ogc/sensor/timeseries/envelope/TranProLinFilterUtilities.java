@@ -46,7 +46,6 @@ import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.ObservationType;
 import org.kalypso.zml.filters.ObjectFactory;
@@ -54,15 +53,31 @@ import org.kalypso.zml.filters.TranProLinFilter;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class TranProLinFilterUtilities
 {
+  /**
+   * 
+   * @param baseObservation
+   * @param dateBegin
+   * @param dateEnd
+   * @param operandBegin
+   * @param operandEnd
+   * @param operator
+   * @param axisTypes
+   * @param statusToMerge
+   * @param resultFile
+   * @param sufix Will be appended to the name of the new observation
+   * @throws SensorException
+   * @throws JAXBException
+   * @throws FactoryException
+   * @throws UnsupportedEncodingException
+   * @throws FileNotFoundException
+   */
   public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin,
       final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator,
-      final String axisTypes, int statusToMerge, final File resultFile, String sufix ) throws SensorException,
+      final String axisTypes, int statusToMerge, final File resultFile, String sufix, final IRequest request ) throws SensorException,
       JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
   {
     if( resultFile == null )
@@ -85,7 +100,6 @@ public class TranProLinFilterUtilities
     final IObservation resultObservation = ZmlFactory.decorateObservation( baseObservation, filterInline, null );
 
     // write ZML
-    final IRequest request = new ObservationRequest( dateBegin.getTime(), dateEnd.getTime() );
     final ObservationType observationType = ZmlFactory.createXML( resultObservation, request );
     String name = observationType.getName();
     if( name == null )

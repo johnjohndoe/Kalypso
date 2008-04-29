@@ -497,7 +497,6 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      // insert timezone in the metadata if specified
       if( timezone == null )
         timezone = TimeZone.getDefault();
 

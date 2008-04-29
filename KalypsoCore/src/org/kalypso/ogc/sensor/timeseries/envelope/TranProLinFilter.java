@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
 
 /**
@@ -120,55 +121,45 @@ public class TranProLinFilter extends AbstractObservationFilter
     {
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 
-      Date dateBegin = m_dateBegin;
-      Date dateEnd = m_dateEnd;
+      //      Date dateBegin = m_dateBegin;
+      //      Date dateEnd = m_dateEnd;
 
-      // policy if beginn/end is null assume values in following order:
+      // Always use request/full range for the target
+      Date targetBegin = null;
+      Date targetEnd = null;
+
+      // If transformation start/end are null:
       // 1. use from/to from request
       // 2. use first/last from base observation
+      Date transformBegin = m_dateBegin;
+      Date transformEnd = m_dateEnd;
 
       // try to assume from request if needed
       if( args != null && args.getDateRange() != null )
       {
         final DateRange dateRange = args.getDateRange();
-        if( dateBegin == null && dateRange.getFrom() != null )
-          dateBegin = dateRange.getFrom();
-        if( dateEnd == null && dateRange.getTo() != null )
-          dateEnd = dateRange.getTo();
+        if( targetBegin == null && dateRange.getFrom() != null )
+          targetBegin = dateRange.getFrom();
+        if( targetEnd == null && dateRange.getTo() != null )
+          targetEnd = dateRange.getTo();
       }
       // try to assume from base tuppel model if needed
-      if( dateBegin == null )
-        dateBegin = (Date)outerSource.getElement( 0, dateAxis );
-      if( dateEnd == null )
-        dateEnd = (Date)outerSource.getElement( outerSourceCount - 1, dateAxis );
+      if( targetBegin == null )
+        targetBegin = (Date)outerSource.getElement( 0, dateAxis );
+      if( targetEnd == null )
+        targetEnd = (Date)outerSource.getElement( outerSourceCount - 1, dateAxis );
 
-      //      // iterate first time to know the real bounds
-      //      Date tranpolinBegin = null;
-      //      Date tranpolinEnd = null;
-      //      for( int i = 0; i < values.getCount(); i++ )
-      //      {
-      //        final Date date = (Date)values.getElement( i, dateAxis );
-      //
-      //        if( date.compareTo( dateBegin ) >= 0 && tranpolinBegin == null )
-      //          tranpolinBegin = date;
-      //
-      //        if( date.compareTo( dateEnd ) <= 0 )
-      //          tranpolinEnd = date;
-      //      }
+      if( transformBegin == null )
+        transformBegin = targetBegin;
+      if( transformEnd == null )
+        transformEnd = targetEnd;
 
-      final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateBegin, 0,
+      final int sourceIndexBegin = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, targetBegin, 0,
           outerSourceCount );
-      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, dateEnd,
+      final int sourceIndexEnd = ObservationUtilities.findNextIndexForDate( outerSource, dateAxis, targetEnd,
           sourceIndexBegin, outerSourceCount );
 
-      if( sourceIndexEnd > outerSourceCount - 1 )
-      {
-        System.out.println( "bloed" );
-      }
-
-      int targetMaxRows = sourceIndexEnd - sourceIndexBegin + 1;
-
-      final long distTime = dateEnd.getTime() - dateBegin.getTime();
+      final int targetMaxRows = sourceIndexEnd - sourceIndexBegin + 1;
 
       // sort axis
       final List axesListToCopy = new ArrayList();
@@ -221,55 +212,9 @@ public class TranProLinFilter extends AbstractObservationFilter
       else
         outerTarget = innerTarget;
 
-      double deltaOperand = m_operandEnd - m_operandBegin;
-      // iterate second time to perform transformation
-      int targetRow = 0;
-      for( int sourceRow = sourceIndexBegin; sourceRow < sourceIndexEnd + 1; sourceRow++ )
-      {
-        final Date date = (Date)outerSource.getElement( sourceRow, dateAxis );
+      performTransformation( outerSource, dateAxis, transformBegin, transformEnd, sourceIndexBegin, sourceIndexEnd,
+          axesStatus, axesCopy, axesTransform, outerTarget );
 
-        final long hereTime = date.getTime() - dateBegin.getTime();
-        final double hereCoeff = m_operandBegin + deltaOperand * ( (double)hereTime / (double)distTime );
-
-        // copy
-        for( int t = 0; t < axesCopy.length; t++ )
-        {
-          final IAxis axis = axesCopy[t];
-          final Object value = outerSource.getElement( sourceRow, axis );
-          outerTarget.setElement( targetRow, value, axis );
-        }
-        // transform
-        //        for( int t = 0; t < axesTransform.length; t++ )
-        //        {
-        //          final IAxis axis = axesTransform[t];
-        //          final Object value = outerSource.getElement( sourceRow, axis );
-        //          outerTarget.setElement( targetRow, value, axis );
-        //        }
-
-        // status
-        for( int t = 0; t < axesStatus.length; t++ )
-        {
-          final IAxis axis = axesStatus[t];
-          final Number oldValue = (Number)outerSource.getElement( sourceRow, axis );
-          final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(),
-              m_statusToMerge ) );
-          outerTarget.setElement( targetRow, newValue, axis );
-        }
-
-        //transform
-        for( int t = 0; t < axesTransform.length; t++ )
-        {
-          final IAxis axis = axesTransform[t];
-          Number value = (Number)outerSource.getElement( sourceRow, axis );
-          value = new Double( m_operation.calculate( new double[]
-          { value.doubleValue(), hereCoeff } ) );
-          // important to set transformed last, as there may
-          // be dependencies to other axes
-          // (e.g. WQ-Transformation)
-          outerTarget.setElement( targetRow, value, axis );
-        }
-        targetRow++;
-      }
       return outerTarget;
     }
     catch( final Exception e )
@@ -282,6 +227,99 @@ public class TranProLinFilter extends AbstractObservationFilter
       logger.log( Level.WARNING, "Umhüllende konnte nicht erzeugt werden. (WQ-Parameter vollständig ?)", e );
       return outerSource;
     }
+  }
+
+  /**
+   * @param outerSource
+   * @param dateAxis
+   * @param dateBegin
+   * @param dateEnd
+   * @param sourceIndexBegin
+   * @param sourceIndexEnd
+   * @param axesStatus
+   * @param axesCopy
+   * @param axesTransform
+   * @param outerTarget
+   * @throws SensorException
+   */
+  private void performTransformation( final ITuppleModel outerSource, final IAxis dateAxis, Date dateBegin,
+      Date dateEnd, final int sourceIndexBegin, final int sourceIndexEnd, final IAxis[] axesStatus,
+      final IAxis[] axesCopy, final IAxis[] axesTransform, final ITuppleModel outerTarget ) throws SensorException
+  {
+    final long distTime = dateEnd.getTime() - dateBegin.getTime();
+    final double deltaOperand = m_operandEnd - m_operandBegin;
+
+    // iterate second time to perform transformation
+    int targetRow = 0;
+    for( int sourceRow = sourceIndexBegin; sourceRow < sourceIndexEnd + 1; sourceRow++ )
+    {
+      // copy
+      for( int t = 0; t < axesCopy.length; t++ )
+      {
+        final IAxis axis = axesCopy[t];
+        final Object value = outerSource.getElement( sourceRow, axis );
+        outerTarget.setElement( targetRow, value, axis );
+      }
+
+      // status
+      for( int t = 0; t < axesStatus.length; t++ )
+      {
+        final IAxis axis = axesStatus[t];
+        final Number oldValue = (Number)outerSource.getElement( sourceRow, axis );
+        final Number newValue = new Integer( KalypsoStatusUtils
+            .performArithmetic( oldValue.intValue(), m_statusToMerge ) );
+        outerTarget.setElement( targetRow, newValue, axis );
+      }
+
+      //transform: important to set transformed last, as there may be dependencies to other axes
+      // (e.g. WQ-Transformation)
+      // TODO: why are we copying generated values at all? We shouldn't do it then there is no problem
+
+      final Date date = (Date)outerSource.getElement( sourceRow, dateAxis );
+
+      final long hereTime = date.getTime() - dateBegin.getTime();
+      final double hereCoeff = m_operandBegin + deltaOperand * ( (double)hereTime / (double)distTime );
+
+      for( int t = 0; t < axesTransform.length; t++ )
+      {
+        final IAxis axis = axesTransform[t];
+        final String type = axis.getType();
+
+        final double currentValue = ( (Number)outerSource.getElement( sourceRow, axis ) ).doubleValue();
+        final double changedValue;
+
+        // We do only transform within the specified interval
+        if( date.before( dateBegin ) || date.after( dateEnd ) )
+          changedValue = currentValue;
+        else
+        {
+          final double[] operands = new double[]
+          {
+              currentValue,
+              hereCoeff };
+
+          changedValue = m_operation.calculate( operands );
+        }
+
+        final double checkedValue = checkValue( type, changedValue );
+
+        outerTarget.setElement( targetRow, new Double( checkedValue ), axis );
+      }
+      targetRow++;
+    }
+  }
+
+  /**
+   * HACK we use this method to make some sanity checks here depending on the type of the axis. <b>Probably this should
+   * better be a parameter to this filter?
+   */
+  private double checkValue( final String axisType, final double value )
+  {
+    // Prohibit negative value for runoff
+    if( TimeserieConstants.TYPE_RUNOFF.equals( axisType ) )
+      return Math.max( 0.0, value );
+
+    return value;
   }
 
   /**
