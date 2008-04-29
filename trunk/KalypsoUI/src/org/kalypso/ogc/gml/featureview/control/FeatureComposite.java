@@ -266,6 +266,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final Feature feature = getFeature();
 
     final IPropertyType ftp = getProperty( feature, controlType );
+
+    // TODO: this is called much too often for the same ftp, we should cache it somehow
+    // TODO: even better: process annotation while schema is loaded... then we can get it from the ftp itself
     final IAnnotation annotation = ftp == null ? null : AnnotationUtilities.getAnnotation( ftp );
 
     final Control control = createControlFromControlType( parent, style, controlType, ftp, annotation );
