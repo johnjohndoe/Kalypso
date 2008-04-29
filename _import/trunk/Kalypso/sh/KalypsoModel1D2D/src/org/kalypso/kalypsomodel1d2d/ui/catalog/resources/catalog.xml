@@ -19,7 +19,7 @@
 		uri="Element1D.sld" />
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TransitionElement:sld:default"
-		uri="TransitionElement.sld" />
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_operationalmodel.TransitionElement.sld" />
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:JunctionElement:sld:default"
 		uri="JunctionElement.sld" />
@@ -67,6 +67,11 @@
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:RoughnessPolygon:featureview:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase.RoughnessPolygon.gft" />
+
+	<!--  Transition element -->
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2d:TransitionElement:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2d.TransitionElement.gft" />
 
 	<!-- urn for chart configuration of King- and TeschkeParameter-FeatureView -->
 	<catalog:system

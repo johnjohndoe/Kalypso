@@ -326,7 +326,19 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( element1D_ID == -1 )
       throw new CoreException( StatusUtilities.createErrorStatus( "Transition line cannot be exported: cannot find 1D element." ) );
 
-    formatter.format( "TL%10d%10d%10d%10d%n", transitionElementID, element1D_ID, line2D_ID, node1D_ID ); //$NON-NLS-1$
+    final int transitionElementType;
+    switch( transitionElement.getTransitionType() )
+    {
+      case TYPE2D1D:
+        transitionElementType = 1;
+        break;
+      case TYPE1D2D:
+      default:
+        transitionElementType = 2;
+        break;
+    }
+
+    formatter.format( "TL%10d%10d%10d%10d%10d%n", transitionElementID, element1D_ID, line2D_ID, node1D_ID, transitionElementType ); //$NON-NLS-1$
     FormatterUtils.checkIoException( formatter );
   }
 

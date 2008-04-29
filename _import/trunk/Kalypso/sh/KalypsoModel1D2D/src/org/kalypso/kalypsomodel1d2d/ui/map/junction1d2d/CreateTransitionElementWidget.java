@@ -48,11 +48,17 @@ import java.awt.event.KeyEvent;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.CreateTransitionElementCommand;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -71,7 +77,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 public class CreateTransitionElementWidget extends AbstractDelegateWidget
 {
-
   private IKalypsoFeatureTheme m_mapActiveTheme;
 
   private IFEDiscretisationModel1d2d m_discretisationModel;
@@ -79,6 +84,8 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
   private IContinuityLine1D m_line1D;
 
   private IContinuityLine2D m_line2D;
+
+  private ITransitionElement.TRANSITION_TYPE m_transition_type;
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
@@ -93,6 +100,7 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
 
     m_selDelegateWidget = (SelectFeatureWidget) getDelegate();
 
+    m_transition_type = ITransitionElement.TRANSITION_TYPE.TYPE1D2D;
   }
 
   /**
@@ -172,14 +180,17 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
 
     else if( e.getKeyChar() == KeyEvent.VK_ENTER )
     {
-
-      IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-
+      final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
       final EasyFeatureWrapper[] eFeatures = selectionManager.getAllFeatures();
-      CommandableWorkspace workspace = eFeatures[0].getWorkspace();
-
-      Feature[] features = FeatureSelectionHelper.getFeatures( selectionManager );
-
+      // If ENTER is pressed and no features are selected, java.lang.ArrayIndexOutOfBoundsException occurs.
+      // We will just ignore ENTER if no features are selected.
+      if( eFeatures.length == 0 )
+      {
+        super.keyPressed( e );
+        return;
+      }
+      final CommandableWorkspace workspace = eFeatures[0].getWorkspace();
+      final Feature[] features = FeatureSelectionHelper.getFeatures( selectionManager );
       for( int i = 0; i < features.length; i++ )
       {
         final Object object2d = features[i].getAdapter( IContinuityLine2D.class );
@@ -198,20 +209,38 @@ public class CreateTransitionElementWidget extends AbstractDelegateWidget
 
       if( m_line1D != null && m_line2D != null )
       {
-        final CreateTransitionElementCommand command = new CreateTransitionElementCommand( m_discretisationModel, m_line1D, m_line2D );
-        try
+        final Display display = PlatformUI.getWorkbench().getDisplay();
+
+        /* Ask user for type of new feature */
+        final TransitionElementTypeSelectionWizard wizard = new TransitionElementTypeSelectionWizard();
+
+        display.asyncExec( new Runnable()
         {
-          workspace.postCommand( command );
-          getMapPanel().getSelectionManager().clear();
-        }
-        catch( final Exception e1 )
-        {
-          e1.printStackTrace();
-        }
-        finally
-        {
-          reinit();
-        }
+          @SuppressWarnings("synthetic-access")
+          public void run( )
+          {
+            final Shell shell = display.getActiveShell();
+            final WizardDialog dialog = new WizardDialog( shell, wizard );
+            if( dialog.open() == Window.CANCEL )
+              return;
+            m_transition_type = wizard.getSelectedType();
+            final CreateTransitionElementCommand command = new CreateTransitionElementCommand( m_discretisationModel, m_line1D, m_line2D, m_transition_type );
+            try
+            {
+              workspace.postCommand( command );
+              getMapPanel().getSelectionManager().clear();
+            }
+            catch( final Exception e1 )
+            {
+              e1.printStackTrace();
+            }
+            finally
+            {
+              reinit();
+            }
+          }
+        } );
+
       }
     }
     super.keyPressed( e );

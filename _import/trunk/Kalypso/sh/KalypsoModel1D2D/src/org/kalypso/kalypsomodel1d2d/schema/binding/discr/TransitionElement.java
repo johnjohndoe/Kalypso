@@ -58,6 +58,8 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
 {
   private FeatureWrapperCollection<IFELine> m_continuityLines;
 
+  private ITransitionElement.TRANSITION_TYPE m_transition_type;
+
   public TransitionElement( Feature featureToBind )
   {
     this( featureToBind, ITransitionElement.QNAME );
@@ -72,6 +74,18 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
       m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, ITransitionElement.QNAME, ITransitionElement.PROP_CONTI_LINES, IFELine.class );
     else
       m_continuityLines = new FeatureWrapperCollection<IFELine>( featureToBind, IFELine.class, ITransitionElement.PROP_CONTI_LINES );
+    final Object property = getFeature().getProperty( ITransitionElement.PROP_TRANSITION_TYPE );
+    if( property == null )
+      m_transition_type = TRANSITION_TYPE.TYPE1D2D;
+    else
+    {
+      if( TRANSITION_TYPE.TYPE2D1D.getValue().equals( property ) )
+        m_transition_type = TRANSITION_TYPE.TYPE2D1D;
+      else
+        // type1D2D is default value... 
+        m_transition_type = TRANSITION_TYPE.TYPE1D2D;
+    }
+
   }
 
   /**
@@ -166,6 +180,17 @@ public class TransitionElement extends AbstractFeatureBinder implements ITransit
       return allLinesFound;
     }
     return false;
+  }
+
+  public ITransitionElement.TRANSITION_TYPE getTransitionType( )
+  {
+    return m_transition_type;
+  }
+
+  public void setTransitionType( final ITransitionElement.TRANSITION_TYPE transition_type )
+  {
+    m_transition_type = transition_type;
+    getFeature().setProperty( ITransitionElement.PROP_TRANSITION_TYPE, m_transition_type.getValue() );
   }
 
 }

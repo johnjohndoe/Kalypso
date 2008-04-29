@@ -38,43 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
+package org.kalypso.kalypsomodel1d2d.ui.map.junction1d2d;
 
-import javax.xml.namespace.QName;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.Wizard;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ITransitionElement;
 
-import org.kalypso.kalypsomodel1d2d.schema.UrlCatalog1D2D;
-
-public interface ITransitionElement extends IAbstractJunction
+/**
+ * @author antanas
+ * 
+ */
+public class TransitionElementTypeSelectionWizard extends Wizard implements IWizard
 {
-  public static final QName QNAME = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "TransitionElement" ); //$NON-NLS-1$
+  private TransitionElementTypeSelectionWizardPage m_page;
 
-  public static final QName PROP_CONTI_LINES = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "continuityLine" ); //$NON-NLS-1$
-
-  public static final QName PROP_TRANSITION_TYPE = new QName( UrlCatalog1D2D.MODEL_1D2D_NS, "transitionType" ); //$NON-NLS-1$
-
-  public static enum TRANSITION_TYPE
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
+  @Override
+  public void addPages( )
   {
-    TYPE1D2D
-    {
-      @Override
-      final String getValue( )
-      {
-        return "1D2D";
-      }
-    },
-    TYPE2D1D
-    {
-      @Override
-      final String getValue( )
-      {
-        return "2D1D";
-      }
-    };
-
-    abstract String getValue( );
+    m_page = new TransitionElementTypeSelectionWizardPage( "page" );
+    addPage( m_page );
   }
 
-  public void setTransitionType( final TRANSITION_TYPE transitionType );
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
+  @Override
+  public boolean performFinish( )
+  {
+    return true;
+  }
 
-  public TRANSITION_TYPE getTransitionType( );
+  public ITransitionElement.TRANSITION_TYPE getSelectedType( )
+  {
+    return m_page.getSelectedType();
+  }
+
 }
