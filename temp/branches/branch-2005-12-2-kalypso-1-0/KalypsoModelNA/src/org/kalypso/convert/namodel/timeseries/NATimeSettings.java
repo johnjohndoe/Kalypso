@@ -43,7 +43,6 @@ import java.util.TimeZone;
  */
 public class NATimeSettings
 {
-
   private static NATimeSettings m_instance = null;
 
   private final SimpleTimeZone m_timeZone;
@@ -52,6 +51,7 @@ public class NATimeSettings
 
   private NATimeSettings()
   {
+    // TODO: comment! Why this very strange time zone?? UTC+2 ? Why Ombrometer?
     m_timeZone = new SimpleTimeZone( 1000 * 60 * 60 * 2, "OmbrometerTimeZone" );
     m_calendar = Calendar.getInstance( m_timeZone );
   }

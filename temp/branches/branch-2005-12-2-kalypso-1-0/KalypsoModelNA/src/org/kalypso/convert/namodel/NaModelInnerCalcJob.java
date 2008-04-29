@@ -53,6 +53,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,14 +89,18 @@ import org.kalypso.convert.namodel.timeseries.DummyTimeSeriesWriter;
 import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -309,88 +314,60 @@ public class NaModelInnerCalcJob implements ICalcJob
   private void loadTesultTSPredictionIntervals( final GMLWorkspace naControlWorkspace, final Logger logger,
       final File resultDir, final NAConfiguration conf ) throws Exception
   {
+    // Load the calculated prediction
     final Feature rootFeature = naControlWorkspace.getRootFeature();
-    //    final TimeseriesLink pegelLink = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
-    final TimeseriesLink resultLink = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
-    double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
-    try
-    {
-      accuracyPrediction = ( (Double)rootFeature.getProperty( "accuracyPrediction" ) ).doubleValue();
-    }
-    catch( Exception e )
-    {
-      logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction
-          + " [%/60h] als Vorhersagegenauigkeit angenommen." );
-    }
+    final IObservation resultObservation = loadPredictedResult( resultDir, rootFeature );
+    final IAxis[] axisList = resultObservation.getAxisList();
+    final String axisType = determineTranpolinAxis( resultObservation );
 
-    final Date startPrediction = conf.getSimulationForecastStart();
-    final Date endPrediction = conf.getSimulationEnd();
+    final File fileMitte = getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" );
+    final File fileUnten = getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" );
+    final File fileOben = getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" );
 
-    final UrlResolver urlResolver = new UrlResolver();
-
-    // find values at startPrediction
-    final String axisType = TimeserieConstants.TYPE_RUNOFF;
-
-    // from predicted timeseries
-    final URL resultURL = urlResolver.resolveURL( resultDir.toURL(), resultLink.getHref() );
-    final IObservation resultObservation = ZmlFactory.parseXML( resultURL, "vorhersage" );
+    // Initalize some commen variables
     final ITuppleModel resultValues = resultObservation.getValues( null );
-    final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( resultObservation.getAxisList(), Date.class );
+    final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
+    final IAxis resultValueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
 
-    final IAxis resultValueAxis;
-    try
-    {
-      resultValueAxis = ObservationUtilities.findAxisByType( resultObservation.getAxisList(), axisType );
-    }
-    catch( Exception e )
-    {
-      logger.info( "Umhüllende kann nicht berechnet werden: Ursache: das Ergenis (" + resultObservation.getName()
-          + ") liegt nicht vor." );
-      throw e;
-    }
+    final Date startForecast = conf.getSimulationForecastStart();
+    final Date endForecast = conf.getSimulationEnd();
 
-    final double calcStartValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
-        startPrediction );
-    final double calcEndValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis,
-        endPrediction );
+    final IAxisRange rangeFor = resultValues.getRangeFor( resultDateAxis );
+    final Date endPrediction = (Date)rangeFor.getUpper();
+
+    final NATimeSettings timeSettings = NATimeSettings.getInstance();
+    final Calendar calBegin = timeSettings.getCalendar( startForecast );
+    // REMARK: using endPrediction instead of endForecast, as they are not equals (but they should...)
+    final Calendar calEnd = timeSettings.getCalendar( endPrediction );
+
+    final double calcStartValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis,
+        resultValueAxis, startForecast );
+    final double calcEndValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis,
+        resultValueAxis, endForecast );
+
+    //
+    // First, we adapt the result: correction at start and/or end of the calculated timeserie
+    //
 
     double deltaMeasureCalculation;
     try
     {
       final NaNodeResultProvider nodeResultProvider = conf.getNodeResultProvider();
       final URL pegelURL = nodeResultProvider.getMeasuredURL( rootFeature );
-      // from measuered timeseries
 
+      // from measuered timeseries
       final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
       final ITuppleModel pegelValues = pegelObservation.getValues( null );
       final IAxis pegelDateAxis = ObservationUtilities.findAxisByClass( pegelObservation.getAxisList(), Date.class );
       final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
-      double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis,
-          startPrediction );
+      final double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis,
+          pegelValueAxis, startForecast );
       deltaMeasureCalculation = measureValue - calcStartValue;
     }
     catch( Exception e )
     {
       deltaMeasureCalculation = 0;
     }
-
-    final NATimeSettings timeSettings = NATimeSettings.getInstance();
-    final Calendar calBegin = timeSettings.getCalendar( startPrediction );
-    final Calendar calEnd = timeSettings.getCalendar( endPrediction );
-
-    final File[] result = new File[]
-    {
-        getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ),
-        getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" ),
-        getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" ) };
-    
-    //  accuracyPrediction // %/60h
-    final long millisOf60hours = 1000 * 60 * 60 * 60;
-    // endAccuracy: %/simulationRange
-    final double endAccuracy = accuracyPrediction
-        * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
-
-    final double endOffset = calcEndValue * ( endAccuracy / 100 );
 
     final double offsetStartPrediction;
     final double offsetEndPrediction;
@@ -403,35 +380,70 @@ public class NaModelInnerCalcJob implements ICalcJob
     else
       offsetEndPrediction = 0;
 
-    final double[] operandStart = new double[]
-    {
-        offsetStartPrediction,
-        offsetStartPrediction,
-        offsetStartPrediction };
-    final double[] operandEnd = new double[]
-    {
-        offsetEndPrediction,
-        offsetEndPrediction - endOffset,
-        offsetEndPrediction + endOffset };
-    final String[] sufix = new String[]
-    {
-        " - Spur Mitte",
-        " - spur Unten",
-        " - spur Oben" };
-    for( int i = 0; i < 3; i++ )
-    {
-      TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, calEnd, operandStart[i], operandEnd[i],
-          "+", axisType, KalypsoStati.BIT_DERIVATED, result[i], sufix[i] );
-    }
+    final Calendar tranpolinEnd = timeSettings.getCalendar( startForecast );
+    tranpolinEnd.add( Calendar.HOUR, 24 );
+
+    final IRequest request = new ObservationRequest(calBegin.getTime(), calEnd.getTime());
+    
+    TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction,
+        offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte", request );
+
+    // read the freshly created file into a new observation, we are going to umhüll it
+    IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURL(), "adaptedVorhersage" );
+
+    //
+    // Second, we build the umhüllenden for the adapted result
+    //
+    double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
+    final Double featureAccuracy = (Double)rootFeature.getProperty( "accuracyPrediction" );
+    if( featureAccuracy == null )
+      logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction
+          + " [%/60h] als Vorhersagegenauigkeit angenommen." );
+    else
+      accuracyPrediction = featureAccuracy.doubleValue();
+
+    //  accuracyPrediction // %/60h
+    final long millisOf60hours = 1000 * 60 * 60 * 60;
+    // endAccuracy: %/simulationRange
+    final double endAccuracy = accuracyPrediction
+        * ( ( (double)( endForecast.getTime() - startForecast.getTime() ) ) / ( (double)millisOf60hours ) );
+
+    final double endOffset = calcEndValue * ( endAccuracy / 100 );
+
+    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "-",
+        axisType, KalypsoStati.BIT_DERIVATED, fileUnten, " - spur Unten", request );
+    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "+",
+        axisType, KalypsoStati.BIT_DERIVATED, fileOben, " - spur Oben", request );
   }
 
   /**
-   * 
-   * @param resultDir
-   * @param feature
-   * @param tsLinkPropName
-   * @return file for result or null
+   * Return with which axis we are going to transform the umhüllenden. Q or W, depending on what is present)
    */
+  private String determineTranpolinAxis( final IObservation observation ) throws CalcJobServiceException
+  {
+    final IAxis[] axisList = observation.getAxisList();
+
+    if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_RUNOFF ) )
+      return TimeserieConstants.TYPE_RUNOFF;
+
+    if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_WATERLEVEL ) )
+      return TimeserieConstants.TYPE_WATERLEVEL;
+
+    throw new CalcJobServiceException(
+        "Ergebniszeitreihe enthält weder Abfluss noch Waserstand, Umhüllendenberechnung nicht möglich.", null );
+  }
+
+  private IObservation loadPredictedResult( final File resultDir, final Feature rootFeature )
+      throws MalformedURLException, SensorException
+  {
+    final TimeseriesLink resultLink = (TimeseriesLink)rootFeature.getProperty( "qberechnetZR" );
+
+    // from predicted timeseries
+    final UrlResolver urlResolver = new UrlResolver();
+    final URL resultURL = urlResolver.resolveURL( resultDir.toURL(), resultLink.getHref() );
+    return ZmlFactory.parseXML( resultURL, "vorhersage" );
+  }
+
   private File getResultFileFor( final File resultDir, final Feature feature, final String tsLinkPropName )
   {
     try
@@ -1287,12 +1299,11 @@ public class NaModelInnerCalcJob implements ICalcJob
         final File resultFile = new File( outputDir, resultPathRelative );
         resultFile.getParentFile().mkdirs();
 
-        // create observation object
-        //        final IObservation resultObservation = new SimpleObservation(
-        // pegelLink.getHref(), "ID", title, false, null, metadataList, axis,
-        // qTuppelModel );
-        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID",
-            getTitleForSuffix( suffix ) + " " + observationTitle, false, null, metadataList, axis, qTuppelModel );
+        final IObservation resultObservation = new SimpleObservation( resultPathRelative, "ID", observationTitle,
+            false, null, metadataList, axis, qTuppelModel );
+
+        // Write result type as string into the 'Description'-Metatag
+        resultObservation.getMetadataList().put( ObservationConstants.MD_DESCRIPTION, getTitleForSuffix( suffix ) );
 
         // update with Scenario metadata
 

@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 import org.kalypso.convert.namodel.manager.IDManager;
+import org.kalypso.convert.namodel.timeseries.NATimeSettings;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -169,11 +170,12 @@ public class NAControlConverter
 
   private static void writeFalstart( NAConfiguration conf, File startFile, StringBuffer b )
   {
-
     String system = "we";//"sys";
     String zustand = "nat";
     SimpleDateFormat format = new SimpleDateFormat( "yyyy MM dd HH" );
 
+    NATimeSettings.getInstance().updateDateFormat( format );
+    
     String startDate = format.format( conf.getSimulationStart() );
     String endDate = format.format( conf.getSimulationEnd() );
 
