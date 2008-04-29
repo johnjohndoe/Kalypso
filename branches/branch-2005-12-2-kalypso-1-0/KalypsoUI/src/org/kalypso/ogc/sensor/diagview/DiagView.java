@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -192,10 +194,11 @@ public class DiagView extends ObsView
 
       for( int i = 0; i < valueAxis.length; i++ )
       {
-        if( keyAxis == valueAxis[i] )
+        final IAxis axis = valueAxis[i];
+        if( keyAxis == axis )
           continue;
 
-        final String valueAxisType = valueAxis[i].getType();
+        final String valueAxisType = axis.getType();
         if( !ignoreTypeList.contains( valueAxisType ) )
         {
           final AxisMapping[] mappings = new AxisMapping[2];
@@ -213,37 +216,48 @@ public class DiagView extends ObsView
           DiagramAxis daValue = getDiagramAxis( valueAxisType );
           if( daValue == null )
           {
-            daValue = DiagViewUtils.createAxisFor( valueAxis[i] );
+            daValue = DiagViewUtils.createAxisFor( axis );
             addAxis( daValue );
           }
-          mappings[1] = new AxisMapping( valueAxis[i], daValue );
+          mappings[1] = new AxisMapping( axis, daValue );
 
           // if color not defined, find suitable one
-          final Color color;
-          if( data.color != null )
-            color = data.color;
-          else
-          {
-            // look in existing items to see if one has same type
-            int found = 0;
-            final ObsViewItem[] items = getItems();
-            for( int j = 0; j < items.length; j++ )
-            {
-              final AxisMapping[] mps = ( (DiagViewCurve)items[j] ).getMappings();
-              if( mps[1].getObservationAxis().getType().equals( valueAxis[i].getType() ) )
-                found++;
-            }
+          final Color color = data.color == null ? getColor( valueAxisType ) : data.color;
+          final Stroke stroke = data.stroke == null ? new BasicStroke( 3f ) : data.stroke;
 
-            color = ColorUtilities.derivateColor( TimeserieUtils.getColorFor( valueAxis[i].getType() ), found );
-          }
+          final String name = ObsViewUtils.replaceTokens( tokenizedName, obs, axis );
 
-          final String name = ObsViewUtils.replaceTokens( tokenizedName, obs, valueAxis[i] );
-
-          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, data.stroke, mappings );
+          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, stroke, mappings );
 
           addItem( curve );
         }
       }
     }
+  }
+
+  private Color getColor( final String valueAxisType )
+  {
+    final int found = numberOfItemsWithType( valueAxisType );
+
+    final Color[] axisColors = TimeserieUtils.getColorsFor( valueAxisType );
+
+    if( found < axisColors.length )
+      return axisColors[found];
+    
+    return ColorUtilities.random();
+//    return ColorUtilities.addColor( axisColor, 0.0f, 0.4f, 0.0f, found );
+  }
+
+  private int numberOfItemsWithType( final String valueAxisType )
+  {
+    int found = 0;
+    final ObsViewItem[] items = getItems();
+    for( int j = 0; j < items.length; j++ )
+    {
+      final AxisMapping[] mps = ( (DiagViewCurve)items[j] ).getMappings();
+      if( mps[1].getObservationAxis().getType().equals( valueAxisType ) )
+        found++;
+    }
+    return found;
   }
 }

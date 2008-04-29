@@ -49,10 +49,13 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,7 +64,10 @@ import javax.swing.ImageIcon;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickUnit;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.TickUnitSource;
+import org.jfree.chart.axis.TickUnits;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.Marker;
@@ -81,6 +87,7 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -185,12 +192,30 @@ public class ObservationPlot extends XYPlot
     if( diagAxis == null )
       throw new IllegalArgumentException( "DiagramAxis is null" );
 
-    final ValueAxis vAxis;
+    ValueAxis vAxis;
 
     try
     {
-      vAxis = (ValueAxis)OF.getObjectInstance( diagAxis.getDataType(), ValueAxis.class, new Object[]
-      { diagAxis.toFullString() } );
+      final String dataType = diagAxis.getDataType();
+      final TimeZone timezone = KalypsoCorePlugin.getDefault().getTimeZone();
+
+      if( "date".equals( dataType ) )
+      {
+        // HACK: instantiation is not possible via factroy, as the search for the constructor is buggy there...
+        vAxis = new DateAxis( diagAxis.toFullString(), timezone );
+        final DateAxis da = (DateAxis)vAxis;
+
+        //      REMARK: the next line is necessary, as the constructor with timezone does
+        // not initalize the timeline (freechart bug!)
+        da.setTimeline( new DefaultTimeline() );
+        // Create standard source with correct timezone
+        TickUnitSource source = createStandardDateTickUnits( timezone );
+        da.setStandardTickUnits( source );
+        //        da.setDateFormatOverride( TimeserieUtils.getDateFormat() );
+      }
+      else
+        vAxis = (ValueAxis)OF.getObjectInstance( dataType, ValueAxis.class, new Object[]
+        { diagAxis.toFullString() } );
 
       // HACK: damit immer zu mindest [0,1] als range gesetzt wird
       // z.Zt. nur für Niederschlag.
@@ -205,12 +230,6 @@ public class ObservationPlot extends XYPlot
           na2.setMin( new Double( 0 ) );
           na2.setMax( new Double( 1 ) );
         }
-      }
-
-      if( vAxis instanceof DateAxis )
-      {
-        DateAxis da = (DateAxis)vAxis;
-        da.setDateFormatOverride( TimeserieUtils.getDateFormat() );
       }
     }
     catch( final FactoryException e )
@@ -717,6 +736,106 @@ public class ObservationPlot extends XYPlot
   }
 
   /**
+   * Special tick units for kalypso
+   */
+  public static TickUnitSource createStandardDateTickUnits( TimeZone zone )
+  {
+
+    if( zone == null )
+    {
+      throw new IllegalArgumentException( "Null 'zone' argument." );
+    }
+    TickUnits units = new TickUnits();
+
+    // date formatters
+    //      DateFormat f1 = new SimpleDateFormat("HH:mm:ss.SSS");
+    //      DateFormat f2 = new SimpleDateFormat("HH:mm:ss");
+    //      DateFormat f3 = new SimpleDateFormat("HH:mm");
+    //      DateFormat f4 = new SimpleDateFormat("d-MMM, HH:mm");
+    //      DateFormat f5 = new SimpleDateFormat("d-MMM");
+    //      DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
+    //      DateFormat f7 = new SimpleDateFormat("yyyy");
+
+    DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" );
+    DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" );
+    DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" );
+    DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" );
+    DateFormat f5 = new SimpleDateFormat( "dd.MM" );
+    DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" );
+    DateFormat f7 = new SimpleDateFormat( "yyyy" );
+
+    f1.setTimeZone( zone );
+    f2.setTimeZone( zone );
+    f3.setTimeZone( zone );
+    f4.setTimeZone( zone );
+    f5.setTimeZone( zone );
+    f6.setTimeZone( zone );
+    f7.setTimeZone( zone );
+
+    // milliseconds
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 1, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 5, DateTickUnit.MILLISECOND, 1, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 10, DateTickUnit.MILLISECOND, 1, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 25, DateTickUnit.MILLISECOND, 5, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 50, DateTickUnit.MILLISECOND, 10, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 100, DateTickUnit.MILLISECOND, 10, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 250, DateTickUnit.MILLISECOND, 10, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 500, DateTickUnit.MILLISECOND, 50, f1 ) );
+
+    // seconds
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 1, DateTickUnit.MILLISECOND, 50, f2 ) );
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 5, DateTickUnit.SECOND, 1, f2 ) );
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 10, DateTickUnit.SECOND, 1, f2 ) );
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 30, DateTickUnit.SECOND, 5, f2 ) );
+
+    // minutes
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 1, DateTickUnit.SECOND, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 2, DateTickUnit.SECOND, 10, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 5, DateTickUnit.MINUTE, 1, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 10, DateTickUnit.MINUTE, 1, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 15, DateTickUnit.MINUTE, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 20, DateTickUnit.MINUTE, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 30, DateTickUnit.MINUTE, 5, f3 ) );
+
+    // hours
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 1, DateTickUnit.MINUTE, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 2, DateTickUnit.MINUTE, 10, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 4, DateTickUnit.MINUTE, 30, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 6, DateTickUnit.HOUR, 1, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 12, DateTickUnit.HOUR, 1, f4 ) );
+
+    // days
+    units.add( new DateTickUnit( DateTickUnit.DAY, 1, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 2, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 3, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 4, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 5, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 6, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 7, DateTickUnit.DAY, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 10, DateTickUnit.DAY, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 15, DateTickUnit.DAY, 1, f5 ) );
+
+    // months
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 1, DateTickUnit.DAY, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 2, DateTickUnit.DAY, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 3, DateTickUnit.MONTH, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 4, DateTickUnit.MONTH, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 6, DateTickUnit.MONTH, 1, f6 ) );
+
+    // years
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 1, DateTickUnit.MONTH, 1, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 2, DateTickUnit.MONTH, 3, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 5, DateTickUnit.YEAR, 1, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 10, DateTickUnit.YEAR, 1, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 25, DateTickUnit.YEAR, 5, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 50, DateTickUnit.YEAR, 10, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 100, DateTickUnit.YEAR, 20, f7 ) );
+
+    return units;
+
+  }
+
+  /**
    * mini helper class for storing a value and a color
    * 
    * @author schlienger
@@ -738,7 +857,7 @@ public class ObservationPlot extends XYPlot
       annotation.setAngle( Math.toRadians( 340 ) );
       annotation.setArrowLength( 10.0 );
       annotation.setLabelOffset( 30 );
-//      annotation.setArrowPaint( new Color( 0, 0, 0, 0 ) ); // invisible
+      //      annotation.setArrowPaint( new Color( 0, 0, 0, 0 ) ); // invisible
       annotation.setArrowPaint( al.color );
       annotation.setPaint( al.color );
     }
