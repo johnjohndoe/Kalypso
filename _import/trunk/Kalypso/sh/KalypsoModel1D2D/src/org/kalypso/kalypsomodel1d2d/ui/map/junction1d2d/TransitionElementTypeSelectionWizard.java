@@ -52,6 +52,11 @@ public class TransitionElementTypeSelectionWizard extends Wizard implements IWiz
 {
   private TransitionElementTypeSelectionWizardPage m_page;
 
+  public TransitionElementTypeSelectionWizard( )
+  {
+    setWindowTitle( "Kopplung definieren" );
+  }
+  
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */

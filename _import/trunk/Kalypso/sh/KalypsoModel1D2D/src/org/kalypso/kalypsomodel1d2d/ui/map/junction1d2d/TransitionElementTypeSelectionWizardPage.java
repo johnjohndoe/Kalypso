@@ -65,8 +65,8 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
   protected TransitionElementTypeSelectionWizardPage( final String pageName )
   {
     super( pageName );
-    setTitle( "Transition element type" );
-    setDescription( "Please select type of the transition element:" );
+    setTitle( "Kopplung Typ" );
+    setDescription( "Geben Sie auf dieser Seite die Art der Kopplung ein." );
     m_radioBtnGroup = new Button[2];
   }
 
@@ -87,7 +87,7 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
     final Group radioGroup = new Group( container, SWT.NONE );
     radioGroup.setLayoutData( radioGroupGridData );
     radioGroup.setLayout( (new GridLayout( 1, false )) );
-    radioGroup.setText( " Transition element types " );
+    radioGroup.setText( " Kopplung " );
     for( int i = 0; i < 2; i++ )
     {
       final GridData radioButtonGridData = new GridData( SWT.FILL, SWT.BEGINNING, true, false );
@@ -98,7 +98,7 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
       radio.setLayoutData( radioButtonGridData );
       m_radioBtnGroup[i] = radio;
     }
-    m_radioBtnGroup[0].setText( "1D to 2D transition" );
+    m_radioBtnGroup[0].setText( "1D nach 2D Übergang" );
     m_radioBtnGroup[0].addSelectionListener( new SelectionListener()
     {
       public void widgetDefaultSelected( SelectionEvent e )
@@ -111,7 +111,7 @@ public class TransitionElementTypeSelectionWizardPage extends WizardPage
         m_selectedType = TRANSITION_TYPE.TYPE1D2D;
       }
     } );
-    m_radioBtnGroup[1].setText( "2D to 1D transition" );
+    m_radioBtnGroup[1].setText( "2D nach 1D Übergang" );
     m_radioBtnGroup[1].addSelectionListener( new SelectionListener()
     {
       public void widgetDefaultSelected( SelectionEvent e )
