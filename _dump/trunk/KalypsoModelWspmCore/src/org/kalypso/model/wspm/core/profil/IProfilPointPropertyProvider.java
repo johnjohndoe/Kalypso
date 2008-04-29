@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil;
 
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -75,4 +76,10 @@ public interface IProfilPointPropertyProvider
    * Check, if a given {@link TupleResult} is valid according to this profile type.
    */
   public void checkComponents( TupleResult result ) throws IllegalArgumentException;
+
+  /**
+   * markers maybe handled different in special cases (p.e. UI)
+   */
+  public boolean isMarker( final String markerID );
+  
 }

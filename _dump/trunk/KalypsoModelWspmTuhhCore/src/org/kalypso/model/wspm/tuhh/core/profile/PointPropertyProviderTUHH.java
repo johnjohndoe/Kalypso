@@ -47,9 +47,11 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.loader.PooledXLinkFeatureProvider;
 import org.kalypso.ogc.gml.om.FeatureComponent;
@@ -60,7 +62,17 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
 {
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#isMarker(org.kalypso.observation.result.IComponent)
+   */
+  public boolean isMarker( String markerID )
+  {
+    
+    return m_markers.contains( markerID );
+  }
+
   private final Set<String> m_properties = new LinkedHashSet<String>();
+  private final Set<String> m_markers = new LinkedHashSet<String>();
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil()
@@ -69,7 +81,7 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
   {
     return createProfil( new TupleResult() );
   }
-
+  
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil(org.kalypso.observation.result.TupleResult)
    */
@@ -105,11 +117,17 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
     m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
 
-    // TODO Markers
-    m_properties.add( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    m_properties.add( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-    m_properties.add( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    m_properties.add( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    //Markers
+    /**
+     * see #isMarker(IComponent)
+     */
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_WEHR );
+    
+    // Markers are properties also
+    m_properties.addAll( m_markers );
   }
 
   /**
@@ -134,99 +152,17 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
 
     final FeatureComponent featureComponent = new FeatureComponent( componentFeature, urn );
 
-     return featureComponent;
-
-    // FIXME phenomen
-// if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, 0.0,
-// new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, "Breite", "Breite" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, 0.0, new
-// DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, "Bewuchs Ax", "Bewuchs Ax", "", "",
-// IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, "Bewuchs Ax",
-// "Bewuchs Ax" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, "Bewuchs Ay", "Bewuchs Ay", "", "",
-// IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, "Bewuchs Ay",
-// "Bewuchs Ay" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, "Bewuchs dP", "Bewuchs dP", "", "",
-// IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, "Bewuchs Dp",
-// "Bewuchs Dp" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, "Rechtswert", "Rechtswert", "", "",
-// IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT,
-// "Rechtswert", "Rechtswert" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert", "Hochwert", "", "",
-// IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, "Hochwert",
-// "Hochwert" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, "Rauheit-ks", "Rauheit-ks", "", "",
-// IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, "Rauheit-ks",
-// "Rauheit-ks" ) );
-//
-// if( property.equals( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
-// return new Component( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, "Rauheit-kst", "Rauheit-kst", "", "",
-// IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, "Rauheit-kst",
-// "Rauheit-kst" ) );
-//
-// if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) )
-// return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke", "",
-// "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon(
-// IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, "Oberkante Brücke", "Oberkante Brücke" ) );
-//
-// if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) )
-// return new Component( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke",
-// "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon(
-// IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, "Unterkante Brücke", "Unterkante Brücke" ) );
-//
-// if( property.equals( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) )
-// return new Component( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR, "Oberkante Wehr", "Oberkante Wehr", "", "",
-// IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR,
-// "Oberkante Wehr", "Oberkante Wehr" ) );
-//
-// if( property.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-// return new Component( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennflaeche", "Trennflaeche", "", "",
-// IWspmConstants.Q_STRING, "none", new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, "Trennfläche",
-// "Trennfläche" ) );
-//
-// if( property.equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-// return new Component( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, "Bordvoll", "Bordvoll", "", "",
-// IWspmConstants.Q_BOOLEAN, Boolean.FALSE, new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_BORDVOLL,
-// "Bordvoll", "Bordvoll" ) );
-//
-// if( property.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-// return new Component( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Durchströmter Bereich",
-// "", "", IWspmConstants.Q_BOOLEAN, Boolean.FALSE, new DictionaryPhenomenon(
-// IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, "Durchströmter Bereich", "Duchströmter Bereich" ) );
-//
-// if( property.equals( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
-// return new Component( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner", "Wehrfeldtrenner", "", "",
-// IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.MARKER_TYP_WEHR, "Wehrfeldtrenner",
-// "Wehrfeldtrenner" ) );
-
-// throw new IllegalStateException( "property not defined" );
+    return featureComponent;
   }
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
    */
-  public  boolean providesPointProperty( final String profilPointProperty )
+  public boolean providesPointProperty( final String profilPointProperty )
   {
     return m_properties.contains( profilPointProperty );
   }
 
-  
   public IComponent getPointProperty( final String propertyId )
   {
     return createPointProperty( propertyId );

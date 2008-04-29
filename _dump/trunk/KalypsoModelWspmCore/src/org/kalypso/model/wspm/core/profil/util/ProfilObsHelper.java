@@ -69,6 +69,9 @@ public class ProfilObsHelper
 {
   private static final QName QNAME_PROFIL_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
 
+  /**
+   * @deprecated {@link IProfil} use {@link IRecord[]} instead.
+   */
   public static LinkedList<IRecord> toProfilPoints( final TupleResult result )
   {
     final LinkedList<IRecord> myPoints = new LinkedList<IRecord>();
@@ -83,6 +86,7 @@ public class ProfilObsHelper
     return myPoints;
   }
 
+  // TODO: move this to FeatureHelper
   public static IObservation<TupleResult>[] getProfileObjects( final Feature profileFeature )
   {
 
@@ -101,31 +105,10 @@ public class ProfilObsHelper
 
     return myResults.toArray( new IObservation[] {} );
 
-// final IPhenomenon phenomenon = buildingObs == null ? null : buildingObs.getPhenomenon();
-// if( phenomenon == null )
-// return new IProfileObject[] {};
-//
-// final IProfileObject building = provider.createProfileObject( buildingObs.getName() );
-//
-// final TupleResult result = buildingObs.getResult();
-// if( building == null || result == null )
-// return null;
-//
-// if( result.isEmpty() )
-// return new IProfileObject[] { building };
-//
-// /* transfrom building properties */
-// final IRecord record = result.get( 0 );
-// for( final IComponent component : result.getComponents() )
-// {
-// final Object value = record.getValue( component );
-// building.setValue( component, value );
-// }
-//
-// return new IProfileObject[] { building };
-
   }
-
+  /**
+   * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
+   */
   public static IComponent getPropertyFromId( final IRecord point, final String id )
   {
     if( id == null )
@@ -142,7 +125,9 @@ public class ProfilObsHelper
 
     return null;
   }
-
+  /**
+   * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
+   */
   public static IComponent getPropertyFromId( final IProfil profil, final String id )
   {
     if( id == null )
@@ -158,7 +143,9 @@ public class ProfilObsHelper
 
     return null;
   }
-
+  /**
+   * @deprecated Use {@link IProfil#getPointProperties()} instead.
+   */
   public static IComponent[] getPropertyFromId( final IProfil profil, final String[] ids )
   {
     final List<IComponent> list = new ArrayList<IComponent>();
@@ -170,7 +157,7 @@ public class ProfilObsHelper
     return list.toArray( new IComponent[] {} );
   }
   /**
-   * @deprecated Use {@link IComponent#getPrecision()} instead.
+   * @deprecated @Use {@link IComponent#getPrecision()} instead.
    */
   public static double getPrecision( final IComponent property )
   {
@@ -178,7 +165,9 @@ public class ProfilObsHelper
   }
 
 
-
+  /**
+   * @deprecated Use {@link IProfileObject#getObjectProperty(String)} instead.
+   */
   public static IComponent getPropertyFromId( final IProfileObject building, final String id )
   {
     if( id == null )
@@ -201,7 +190,9 @@ public class ProfilObsHelper
 
     return null;
   }
-
+  /**
+   * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
+   */
   public static IComponent getPropertyFromId( final IProfilPointPropertyProvider[] provider, final String property )
   {
     for( final IProfilPointPropertyProvider ppp : provider )
@@ -212,7 +203,9 @@ public class ProfilObsHelper
 
     return null;
   }
-
+  /**
+   * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
+   */
   public static IComponent getComponentById( final IComponent[] components, final String id )
   {
     for( final IComponent component : components )

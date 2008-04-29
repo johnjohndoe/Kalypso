@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -82,10 +83,29 @@ public class ProfilUtil
 
     for( final IRecord point : points )
     {
-      values[i] = point.getValue( iProp );
+      final Object value = point.getValue( iProp );
+      if( value == null )
+        Debug.print( point, "Null value" + iProp + "   " + pointProperty.getName() );
+      values[i] = value;
       i++;
     }
     return values;
+  }
+
+  public static Double getDoubleValueFor( final String componentID, final IRecord point )
+  {
+    final TupleResult owner = point == null ? null : point.getOwner();
+    if( owner != null )
+    {
+      final int iComponent = owner.indexOfComponent( componentID );
+      if( iComponent > -1 )
+      {
+        final Object oValue = point.getValue( iComponent );
+        if( oValue instanceof Double )
+          return (Double) oValue;
+      }
+    }
+    return Double.NaN;
   }
 
   /**
@@ -117,11 +137,13 @@ public class ProfilUtil
   {
     for( final IComponent property : properties )
     {
-      final Double precision = ProfilObsHelper.getPrecision( property );
+
       if( !property.getValueTypeName().equals( IWspmConstants.Q_DOUBLE ) )
         continue;
-      final Object x1 = point1.getValue( property );
-      final Object x2 = point2.getValue( property );
+      final Double precision = property.getPrecision();
+      final int index = point1.getOwner().indexOf( property );
+      final Object x1 = point1.getValue( index );
+      final Object x2 = point2.getValue( index );
       if( x1 == null || x2 == null )
         continue;
       if( Math.abs( (Double) x1 - (Double) x2 ) > precision )
@@ -143,18 +165,18 @@ public class ProfilUtil
    */
   public static final void flipProfile( final IProfil profile )
   {
-    final TupleResult result = profile.getResult();
     final HashMap<String, IComponent> properties = getComponentsFromProfile( profile );
-    final IComponent cmpBreite = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    if( cmpBreite == null )
-      throw new IllegalStateException( Messages.ProfilUtil_0 );
+// final IComponent cmpBreite = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+// if( cmpBreite == null )
+// throw new IllegalStateException( Messages.ProfilUtil_0 );
     final IRecord[] points = profile.getPoints();
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    if( iBreite < 0 )
+      throw new IllegalStateException( Messages.ProfilUtil_0 );
     for( final IRecord point : points )
     {
-
-      final Double breite = (Double) point.getValue( cmpBreite );
-      point.setValue( cmpBreite, -breite );
-
+      final Double breite = (Double) point.getValue( iBreite );
+      point.setValue( iBreite, -breite );
     }
 
     ArrayUtils.reverse( points );
@@ -170,37 +192,37 @@ public class ProfilUtil
 
       if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) )
       {
-        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-        final Double value = (Double) point.getValue( cmp );
-        previousPoint.setValue( cmp, value );
+        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+        final Double value = (Double) point.getValue( i );
+        previousPoint.setValue( i, value );
       }
 
       if( properties.containsKey( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) )
       {
-        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
-        final Double value = (Double) point.getValue( cmp );
-        previousPoint.setValue( cmp, value );
+        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+        final Double value = (Double) point.getValue( i );
+        previousPoint.setValue( i, value );
       }
 
       if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) )
       {
-        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
-        final Double value = (Double) point.getValue( cmp );
-        previousPoint.setValue( cmp, value );
+        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+        final Double value = (Double) point.getValue( i );
+        previousPoint.setValue( i, value );
       }
 
       if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) )
       {
-        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
-        final Double value = (Double) point.getValue( cmp );
-        previousPoint.setValue( cmp, value );
+        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+        final Double value = (Double) point.getValue( i );
+        previousPoint.setValue( i, value );
       }
 
       if( properties.containsKey( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) )
       {
-        final IComponent cmp = properties.get( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
-        final Double value = (Double) point.getValue( cmp );
-        previousPoint.setValue( cmp, value );
+        final int i = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+        final Double value = (Double) point.getValue( i );
+        previousPoint.setValue( i, value );
       }
       previousPoint = point;
     }
@@ -375,28 +397,42 @@ public class ProfilUtil
   {
     if( property == null )
       return null;
-
+    final int index = profil.indexOfProperty( property );
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;
     Double maxValue = Double.MIN_VALUE;
     for( final IRecord point : points )
     {
-      final Double value = (Double) point.getValue( property );
-      if( value == null )
-        continue;
-      maxValue = Math.max( maxValue, value );
+      final Object o = point.getValue( index );
+      if( o instanceof Double )
+        maxValue = Math.max( maxValue, (Double) o );
     }
     return maxValue;
   }
 
+  public static IComponent getComponentForID( IComponent[] components, final String propertyID )
+  {
+    if( components == null || components.length < 1 )
+      return null;
+    for( final IComponent component : components )
+    {
+      if( component.getId().equals( propertyID ) )
+        return component;
+    }
+    return null;
+  }
+
   public static Point2D getPoint2D( final IRecord p, final IComponent pointProperty )
   {
-
-    final Object x = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final Object y = p.getValue( pointProperty );
-
-    return new Point2D.Double( x == null ? 0.0 : (Double) x, y == null ? 0.0 : (Double) y );
+    final int index = p.getOwner().indexOf( pointProperty );
+    final IComponent breite = ProfilUtil.getComponentForID( p.getOwner().getComponents(), IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iBreite = p.getOwner().indexOf( breite );
+    final Object x = p.getValue( iBreite );
+    final Object y = p.getValue( index );
+    if( x == null || y == null || !(x instanceof Double) || !(y instanceof Double) )
+      throw new IllegalArgumentException( pointProperty.getName() + " is not a Number" );
+    return new Point2D.Double( (Double) x, (Double) y );
 
   }
 
@@ -471,8 +507,8 @@ public class ProfilUtil
     final IRecord minPoint = getMinPoint( profil, property );
     if( minPoint == null )
       return null;
-
-    return (Double) minPoint.getValue( property );
+    final Object value = minPoint.getValue( profil.indexOfProperty( property ) );
+    return value instanceof Double ? (Double) value : null;
   }
 
   /**
@@ -486,12 +522,16 @@ public class ProfilUtil
 
     Double minValue = Double.MAX_VALUE;
     IRecord minPoint = null;
+    final int index = profil.indexOfProperty( property );
+    if( index == -1 )
+      return null;
+    
     for( final IRecord point : points )
     {
-      final Double value = (Double) point.getValue( property );
-      if( value != null && value < minValue )
+      final Object value = point.getValue( index );
+      if( (value instanceof Double) && (Double) value < minValue )
       {
-        minValue = value;
+        minValue = (Double) value;
         minPoint = point;
       }
     }

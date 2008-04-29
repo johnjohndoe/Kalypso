@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -78,9 +79,15 @@ public class BewuchsRule extends AbstractValidatorRule
     final int iOKB = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     final int iAX = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
 
+    /**
+     * ohne Bewuchs oder Brücke bzw Wehr(Bewuchs wird in der Bauwerksregel geprüft) vorhanden ?
+     */
     if( iOKW >= 0 || iOKB >= 0 || iAX < 0 )
       return;
 
+    /**
+     * Bewuchs im Flußschlauch ?
+     */
     final IComponent cTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     final IProfilPointMarker[] devider = profil.getPointMarkerFor( cTrennF );
     if( devider.length < 2 )
@@ -156,17 +163,16 @@ public class BewuchsRule extends AbstractValidatorRule
     boolean hasValues = false;
     if( subList.length < 1 )
       return false;
-    final int iAX = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
-    final int iAY = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
-    final int iDP = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
     for( final IRecord point : subList )
     {
-      final Double ax = (Double) point.getValue( iAX );
-      final Double ay = (Double) point.getValue( iAY );
-      final Double dp = (Double) point.getValue( iDP );
-
-      if( ax == null || ay == null || dp == null )
+      final Double ax = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_BEWUCHS_AX , point );
+      final Double ay = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_BEWUCHS_AY , point );
+      final Double dp = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_BEWUCHS_DP , point );
+      if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
+      {
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiges Datenformat", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );
         continue;
+      }
       else
       {
         if( ax + ay + dp != 0.0 )

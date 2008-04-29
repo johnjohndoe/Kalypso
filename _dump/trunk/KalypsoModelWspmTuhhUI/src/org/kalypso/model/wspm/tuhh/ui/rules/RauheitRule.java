@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -70,7 +71,7 @@ public class RauheitRule extends AbstractValidatorRule
     if( pointProp == null )
       return;
 
-    final int index = profil.indexOfProperty( pointProp );
+    // final int index = profil.indexOfProperty( pointProp );
     final IProfilPointMarker[] durchS = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
 
     if( durchS.length < 2 )
@@ -85,22 +86,16 @@ public class RauheitRule extends AbstractValidatorRule
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
     for( final IRecord point : points )
     {
-      try
+      final Double value = ProfilUtil.getDoubleValueFor( pointProp.getId(), point );
+      if( value.isNaN() )
       {
-        final Object oValue = point.getValue( index );
-        if( oValue == null )
-          return;
-        final double rh = (Double) oValue;
-        if( rh <= 0.0 )
-        {
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Rauheitswert [" + rh + "]", "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), pointProp.getId(), pluginId);
-          break;
-        }
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Datentyp für "+ pointProp.getName(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId );
+        break;
       }
-      catch( final CoreException e )
+      else if( value <= 0.0 )
       {
-        e.printStackTrace();
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Rauheitswert [" + value + "]", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId );
+        break;
       }
     }
   }

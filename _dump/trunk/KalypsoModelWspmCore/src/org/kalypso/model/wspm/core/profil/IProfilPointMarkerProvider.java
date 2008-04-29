@@ -51,6 +51,7 @@ import org.kalypso.observation.result.IRecord;
 public interface IProfilPointMarkerProvider
 {
   /**
+   * @deprecated Use {@link IProfilPointPropertyProvider#getPointProperties()},{@link IProfilPointPropertyProvider#isMarker(String)}instead.
    * @return all markers
    */
   public String[] getMarkerTypes( );
@@ -63,6 +64,7 @@ public interface IProfilPointMarkerProvider
   public boolean providesPointMarker( final IComponent marker );
 
   /**
+   * @deprecated Use {@link IProfilPointPropertyProvider#isMarker(String)} instead.
    * component is type of marker?
    */
   public boolean isMarker( final IComponent component );
@@ -78,11 +80,13 @@ public interface IProfilPointMarkerProvider
   public RGB getColorFor( final String marker );
 
   /**
-   * @deprecated Use {@link IProfilPointMarkerProvider#createProfilPointMarker(IComponent, IRecord)} instead.
+   * @deprecated Use {@link IProfil#createPointMarker(IComponent, IRecord)} instead.
    */
   @Deprecated
   public IProfilPointMarker createProfilPointMarker( String markerTypTrennflaeche, IRecord p1 );
-
+  /**
+   * @deprecated Use {@link IProfil#createPointMarker(IComponent, IRecord)} instead.
+   */
   public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point );
 
 }

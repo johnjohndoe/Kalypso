@@ -58,7 +58,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
@@ -346,7 +345,7 @@ public abstract class AbstractProfil implements IProfil
   public IProfilPointMarker[] getPointMarkerFor( String pointMarkerID )
   {
     final IComponent cmp = hasPointProperty( pointMarkerID );
-    if (cmp == null)
+    if( cmp == null )
       return new PointMarker[] {};
     return getPointMarkerFor( cmp );
   }
@@ -356,16 +355,13 @@ public abstract class AbstractProfil implements IProfil
    */
   public IComponent[] getPointMarkerTypes( )
   {
-    final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getType() );
-
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     final List<IComponent> marker = new ArrayList<IComponent>();
     final IComponent[] properties = getPointProperties();
 
-    final String[] markerTypes = provider.getMarkerTypes();
     for( final IComponent component : properties )
-      if( ArrayUtils.contains( markerTypes, component.getId() ) && !marker.contains( component ) )
+      if( provider.isMarker( component.getId() ) )
         marker.add( component );
-
     return marker.toArray( new IComponent[] {} );
   }
 
@@ -520,17 +516,10 @@ public abstract class AbstractProfil implements IProfil
    */
   public boolean removePointProperty( final IComponent pointProperty )
   {
-    try
-    {
-      final int index = getResult().indexOfComponent( pointProperty );
-
-      return getResult().removeComponent( index );
-    }
-    catch( ArrayIndexOutOfBoundsException e )
-    {
-      e.printStackTrace();
+    final int index = getResult().indexOfComponent( pointProperty );
+    if( index < 0 )
       return false;
-    }
+    return getResult().removeComponent( index );
   }
 
   /**
@@ -654,5 +643,5 @@ public abstract class AbstractProfil implements IProfil
   {
     m_station = station;
   }
-  
+
 }

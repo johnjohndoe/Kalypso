@@ -185,7 +185,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
           backgroundImage = m_imgRegistry.get( IMAGE_INFO );
       }
     }
-    final String[] deviderTypes = getDeviderTypes( record );
+    final String[] deviderTypes = getMarkerTypes( record );
     if( deviderTypes == null || deviderTypes.length == 0 )
       return backgroundImage;
 
@@ -202,20 +202,11 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
       final GC gc = new GC( img );
       try
       {
-        mp.drawMarker ( deviderTypes, gc );
+        mp.drawMarker( deviderTypes, gc );
         if( severity != -1 )
           gc.drawImage( backgroundImage, 0, 0 );
         if( img != null )
           m_imgRegistry.put( key, img );
-//        
-// gc.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
-// gc.fillRectangle( 0, 0, 16, 16 );
-//
-// gc.setForeground( display.getSystemColor( SWT.COLOR_BLUE ) );
-// gc.drawLine( 0, 0, 16, 16 );
-
-// final ImageDescriptor img = mp.getImageFor( deviderTypes, backgroundImage );
-
       }
       finally
       {
@@ -260,6 +251,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   }
 
   /**
+   * @deprecated Use {@link #getMarkerTypes(IRecord)} instead.
    * @return the first DeviderTyp for this point
    */
 
@@ -276,7 +268,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    * @return the all DeviderTypeIds for this point, maybe null
    */
 
-  public final String[] getDeviderTypes( final IRecord point )
+  public final String[] getMarkerTypes( final IRecord point )
   {
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( markers == null || markers.length == 0 )

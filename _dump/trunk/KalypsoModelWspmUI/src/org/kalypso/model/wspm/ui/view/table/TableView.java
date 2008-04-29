@@ -120,6 +120,29 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected ProfileProblemView m_problemView = null;
 
+  protected final UIJob m_markerRefreshJob = new UIJob( Messages.TableView_0 )
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      m_view.refresh();
+      m_problemView.updateSections( m_profile );
+      return Status.OK_STATUS;
+    }
+  };
+
+  protected final UIJob m_setActivePointJob = new UIJob( Messages.TableView_0 )
+  {
+    @Override
+    public IStatus runInUIThread( IProgressMonitor monitor )
+    {
+      final IRecord activePoint = m_profile.getActivePoint();
+      m_view.setSelection( new StructuredSelection( activePoint ) );
+      m_view.reveal( activePoint );
+      return Status.OK_STATUS;
+    }
+  };
+
   // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
   private final IProfilListener m_profileListener = new IProfilListener()
@@ -128,17 +151,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     {
       if( hint.isActivePointChanged() )
       {
-        new UIJob( Messages.TableView_0 )
-        {
-          @Override
-          public IStatus runInUIThread( IProgressMonitor monitor )
-          {
-            final IRecord activePoint = m_profile.getActivePoint();
-            m_view.setSelection( new StructuredSelection( activePoint ) );
-            m_view.reveal( activePoint );
-            return Status.OK_STATUS;
-          }
-        }.schedule();
+        m_setActivePointJob.cancel();
+        m_setActivePointJob.schedule( 100 );
       }
     }
 
@@ -147,16 +161,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
      */
     public void onProblemMarkerChanged( IProfil source )
     {
-      //final IProfil profil = source;
-      Display.getDefault().asyncExec( new Runnable()
-      {
-        public void run( )
-        {
-          m_view.refresh();
-          m_problemView.updateSections( m_profile );
-        }
-      } );
-
+      m_markerRefreshJob.cancel();
+      m_markerRefreshJob.schedule( 500 );
     }
   };
 

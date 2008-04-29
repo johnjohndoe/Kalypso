@@ -90,6 +90,8 @@ public interface IProfil extends IObservation<TupleResult>
    */
   public IRecord createProfilPoint( );
 
+  public IProfilPointMarker createPointMarker( final IComponent marker, IRecord point );
+
   /**
    * @return the active Point.
    */
@@ -111,7 +113,7 @@ public interface IProfil extends IObservation<TupleResult>
    * Gets all PointMarker of the given type in this profile.
    */
   public IProfilPointMarker[] getPointMarkerFor( IComponent pointMarker );
-  
+
   /**
    * Gets all PointMarker of the given type in this profile.
    */

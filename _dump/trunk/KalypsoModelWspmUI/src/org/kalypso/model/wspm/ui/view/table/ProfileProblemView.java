@@ -90,7 +90,7 @@ public class ProfileProblemView
 
     final String[] resolutions = StringUtils.split( resArray, '\u0000' );
     final List<IProfilMarkerResolution> markerRes = new ArrayList<IProfilMarkerResolution>( resolutions == null ? 0 : resolutions.length );
-    for( int i = 0; i < resolutions.length; i++ )
+    for( int i = 0; i < markerRes.size(); i++ )
     {
       final IProfilMarkerResolution markerResolution = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
       if( markerResolution != null )

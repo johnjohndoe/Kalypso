@@ -74,6 +74,8 @@ public class ProfilOperationJob extends Job
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
+    System.out.println( "profil job!" );
+    
     return m_runnable.execute( monitor );
   }
 

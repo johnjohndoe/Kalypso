@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.RauheitenPanel;
@@ -65,6 +64,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import de.belger.swtchart.EditInfo;
@@ -93,10 +93,13 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   {
     final IRecord[] points = m_profile.getPoints();
     Rectangle2D bounds = null;
+    final int iBreite = m_profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iRauheit = m_profile.indexOfProperty( m_rauheit );
+
     for( final IRecord p : points )
     {
-      final Object x = p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final Object rauheit = p.getValue( ProfilObsHelper.getPropertyFromId( p, m_rauheit ) );
+      final Object x = p.getValue( iBreite );
+      final Object rauheit = p.getValue( iRauheit );
       if( x == null || rauheit == null )
         continue;
       final Rectangle2D area = new Rectangle2D.Double( (Double) x, (Double) rauheit, 0, 0 );
@@ -121,28 +124,39 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   public void paint( final GCWrapper gc )
   {
     final Color background = gc.getBackground();
-    final IProfil profil = getProfil();
-    if( profil == null )
-      return;
-    final IRecord[] points = profil.getPoints();
-    IRecord lastP = null;
-    for( final IRecord point : points )
+    try
     {
-      if( lastP != null )
+      final IProfil profil = getProfil();
+      if( profil == null )
+        return;
+      final IRecord[] points = profil.getPoints();
+      IRecord lastP = null;
+      final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      final int iRauheit = profil.indexOfProperty( m_rauheit );
+      if( iRauheit == -1 )
+        return;
+
+      for( final IRecord point : points )
       {
-        final Object x1 = lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, IWspmConstants.POINT_PROPERTY_BREITE ) );
-        final Object x2 = point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) );
-        final Object y2 = lastP.getValue( ProfilObsHelper.getPropertyFromId( lastP, m_rauheit ) );
-        if( x1 != null && x2 != null && y2 != null )
+        if( lastP != null )
         {
-          final Rectangle box = logical2screen( new Rectangle2D.Double( (Double) x1, 0.0, (Double) x2 - (Double) x1, (Double) y2 ) );
-          box.width += 1;
-          fillRectangle( gc, box );
+          final Object x1 = lastP.getValue( iBreite );
+          final Object x2 = point.getValue( iBreite );
+          final Object y2 = lastP.getValue( iRauheit );
+          if( x1 != null && x2 != null && y2 != null )
+          {
+            final Rectangle box = logical2screen( new Rectangle2D.Double( (Double) x1, 0.0, (Double) x2 - (Double) x1, (Double) y2 ) );
+            box.width += 1;
+            fillRectangle( gc, box );
+          }
         }
+        lastP = point;
       }
-      lastP = point;
     }
-    gc.setBackground( background );
+    finally
+    {
+      gc.setBackground( background );
+    }
   }
 
   /**
@@ -170,9 +184,10 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
     if( hint.isPointValuesChanged() )
     {
       final AxisRange valueRange = getValueRange();
-      final double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), m_rauheit ) );
-      final double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), ProfilObsHelper.getPropertyFromId( getProfil(), m_rauheit ) );
-      if( Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom() )
+      final IComponent rauheit = getProfil().hasPointProperty( m_rauheit );
+      final Double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), rauheit );
+      final Double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), rauheit );
+      if( (maxProfilValue != null && minProfilValue != null) && (Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom()) )
         valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
     }
     if( hint.isMarkerMoved() && getViewData().isVisible( m_rauheit ) )
@@ -198,7 +213,8 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   {
 
     final IProfil profil = getProfil();
-    final Point2D[] points = ProfilUtil.getPoints2D( profil, ProfilObsHelper.getPropertyFromId( profil, m_rauheit ) );
+    final IComponent rauheit = profil.hasPointProperty( m_rauheit );
+    final Point2D[] points = ProfilUtil.getPoints2D( profil, rauheit );
     if( points == null || points.length < 2 )
       return null;
     Rectangle hover = null;
@@ -212,7 +228,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
       if( hover.contains( point ) )
       {
         final String text = m_rauheit == IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ? "kst" : "ks";
-        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, ProfilObsHelper.getPropertyFromId( profil, m_rauheit ) ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
+        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, rauheit ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
       }
     }
     return null;
@@ -223,7 +239,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    */
   public void removeYourself( )
   {
-    final IProfilChange change = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, m_rauheit ) );
+    final IProfilChange change = new PointPropertyRemove( m_profile, m_profile.hasPointProperty( m_rauheit ) );
     final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_profile, change, true );
     new ProfilOperationJob( operation ).schedule();
   }

@@ -43,8 +43,10 @@ package org.kalypso.model.wspm.tuhh.core.profile;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -121,7 +123,21 @@ public class TuhhProfil extends AbstractProfil
       return new BuildingTrapez( this, observation );
     return null;
   }
-
+  public IProfilPointMarker createPointMarker( IComponent cmp, IRecord point )
+  {
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    /* first check, if provider provides markerType */
+    if( !provider.isMarker( cmp.getId() ) )
+      throw new IllegalStateException( "ProfilPointProvider doesn'tprovides - " + cmp.getName() + " as Marker" );
+    /* point has component already defined? */
+    if( !getResult().hasComponent( cmp ) )
+    {
+      /* else create a new profile component */
+      getResult().addComponent( cmp );
+    }
+    /* create a new profile point marker */
+    return new ProfilDevider( cmp, point );
+  }
   /**
    * @return false if the point is captured by a marker and will NOT remove the point from pointList
    */

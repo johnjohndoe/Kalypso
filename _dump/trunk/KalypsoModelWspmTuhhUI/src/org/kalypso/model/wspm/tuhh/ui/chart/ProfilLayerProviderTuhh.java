@@ -52,7 +52,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -68,6 +67,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.table.GenericComponentUiHandlerProvider;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 import de.belger.swtchart.layer.IChartLayer;
@@ -118,11 +118,11 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       addableLayer.add( IWspmTuhhConstants.LAYER_EI );
       addableLayer.add( IWspmTuhhConstants.LAYER_MAUL );
     }
-    if( !profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
+    if( profile.hasPointProperty(IWspmConstants.POINT_PROPERTY_BEWUCHS_AX )!=null  && !existingLayers.contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_BEWUCHS );
-    if( profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE ) ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
+    if(  profile.hasPointProperty(IWspmConstants.POINT_PROPERTY_HOEHE )!=null  && !existingLayers.contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_GELAENDE );
-    if( !profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) && !existingLayers.contains( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
+    if( profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_HOCHWERT ) !=null && !existingLayers.contains( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     if( existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW ) || !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
@@ -176,10 +176,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KS ) )
     {
       final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfil(), true );
-      if( profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ) )
+      final IComponent rauheit = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+      if( rauheit != null )
       {
-        operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ) ) );
+        final Object[] valuesFor = ProfilUtil.getValuesFor( profil, rauheit );
         operation.addChange( new PointPropertyRemove( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ) );
+        operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ), valuesFor ) );
       }
       else
         operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) );
@@ -190,10 +192,12 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
     {
       final ProfilOperation operation = new ProfilOperation( "Rauheiten einfügen", view.getProfil(), true );
-      if( profil.hasPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) )
+      final IComponent rauheit = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+      if( rauheit != null )
       {
-        operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) ) );
+        final Object[] oldValues = ProfilUtil.getValuesFor( profil, rauheit );
         operation.addChange( new PointPropertyRemove( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) );
+        operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ), oldValues ) );
       }
       else
         operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ) );
@@ -273,10 +277,10 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   {
     final ArrayList<String> layerToAdd = new ArrayList<String>();
     final IProfil profile = view.getProfil();
-    if( profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE ) ) )
+    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) !=null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_GELAENDE );
 
-    if( profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) ) )
+    if( profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_BEWUCHS_AX )!=null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_BEWUCHS );
 
     // TODO IProfileObjects now returned as list from IProfile, but we can only handle one IProfileObject (WSPM can't
@@ -306,14 +310,14 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     /* We always have a trenner layer, even if no trenner is defined. */
     layerToAdd.add( IWspmTuhhConstants.LAYER_DEVIDER );
 
-    if( profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) )
+    if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT )!=null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     if( view.getResults().length > 0 )
       layerToAdd.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
 
-    if( profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) ) )
+    if( profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ) !=null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
-    if( profile.hasPointProperty( ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) )
+    if( profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_RAUHEIT_KS )!=null )
       layerToAdd.add( IWspmTuhhConstants.LAYER_RAUHEIT_KS );
 
     return layerToAdd.toArray( new String[0] );

@@ -135,7 +135,7 @@ public class ValidationProfilListener implements IProfilListener
   protected void revalidate( )
   {
     m_validateJob.cancel(); // Just in case, to avoid too much validations
-    m_validateJob.schedule();
+    m_validateJob.schedule( 100 );
   }
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
