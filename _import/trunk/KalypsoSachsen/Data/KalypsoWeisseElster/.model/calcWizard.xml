@@ -98,7 +98,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_1.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -126,7 +126,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_2.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -154,7 +154,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_3.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -183,7 +183,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_4.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -211,7 +211,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_5.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -238,7 +238,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_6.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -264,7 +264,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_7.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -290,7 +290,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_8.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -313,7 +313,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_9.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -336,7 +336,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_10.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -359,7 +359,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_11.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -382,7 +382,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_12.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -408,7 +408,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_13.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -434,7 +434,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_14.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -460,7 +460,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_15.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -483,7 +483,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_16.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
@@ -510,7 +510,7 @@ die seiten unterscheidet folgendes:
 		<arg name="mapWidgetID" value=""/>
 		<arg name="featureTemplate" value=".templates/calcCase/control.gft#linktype=gml#href=./.nacontrol_17.gml"/> 
 		<arg name="mainSash" value="30"/>
-		<arg name="rightSash" value="40"/>
+		<arg name="rightSash" value="30"/>
 		<arg name="clearResultFolder" value="false"/>
 		<arg name="selectFirstFeatureByDefault" value="false"/>
 
