@@ -42,11 +42,10 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
@@ -65,42 +64,26 @@ public class RuecksprungRule extends AbstractValidatorRule
 
     final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
 
-    try
-    {
-      final IRecord[] points = profil.getPoints();
-      final IComponent cB = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-      final IComponent cH = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-      if( cB == null || cH == null )
-        return;
-      final int iB = profil.indexOfProperty( cB );
-      final int iH = profil.indexOfProperty( cH );
-      IRecord prevPoint = null;
-      for( final IRecord point : points )
-      {
-        if( prevPoint != null )
-        {
-          final Object x1 = prevPoint.getValue( iB );
-          final Object x2 = point.getValue( iB );
-          final Object y1 = prevPoint.getValue( iH );
-          final Object y2 = point.getValue( iH );
-          if( x1 == null || x2 == null || y1 == null || y2 == null )
-            continue;
+    final IRecord[] points = profil.getPoints();
+    final IComponent cB = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent cH = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    if( cB == null || cH == null || points.length < 1 )
+      return;
+    final double deltaX = cB.getPrecision();
+    final double deltaY = cH.getPrecision();
 
-          final double deltaX = cB.getPrecision();
-          final double deltaY = cH.getPrecision();
-          if( (Double) x1 - (Double) x2 > deltaX )
-            collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId);
-          else if( Math.abs( (Double) x2 - (Double) x1 ) < deltaX && Math.abs( (Double) y2 - (Double) y1 ) > deltaY )
-            collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE, (Double) x2 ), "km "+Double.toString( profil.getStation()), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
-        }
-
-        prevPoint = point;
-      }
-    }
-    catch( final CoreException e )
+    for( int i = 1; i < points.length; i++ )
     {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
+      final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i - 1] );
+      final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] );
+      final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i - 1] );
+      final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+      if( x1.isNaN() || x2.isNaN() || y1.isNaN() || y2.isNaN() )
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Ungültiger Datentyp für = " + cB.getName(), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+      else if(  x1 - x2  > deltaX )
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Gauss-Rücksprung bei Breite = " + String.format( FMT_BREITE,  x2 ), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+      else if( Math.abs( x2 - x1 ) < deltaX && Math.abs( (Double) y2 - (Double) y1 ) > deltaY )
+        collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Senkrechte Wand bei Breite = " + String.format( FMT_BREITE,  x2 ), "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
     }
   }
 }

@@ -43,13 +43,12 @@ package org.kalypso.model.wspm.tuhh.ui.rules;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -109,31 +108,24 @@ public class TrennerRule extends AbstractValidatorRule
   {
     if( db.length < 2 || toValidate == null || toValidate.length < 2 )
       return;
-    final int iB = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    try
-    {
-      final IRecord leftP = db[0].getPoint();
-      final double left = (Double) leftP.getValue( iB );
-      final IRecord rightP = db[db.length - 1].getPoint();
-      final double right = (Double) rightP.getValue( iB );
-      final double xleft = (Double) toValidate[0].getPoint().getValue( iB );
-      final double xright = (Double) toValidate[toValidate.length - 1].getPoint().getValue( iB );
-      final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
-      final String type = toValidate[0].getId().getId();
-      if( xleft < left || xleft > right )
-      {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( toValidate[0].getPoint() ), null, pluginId, new MoveDeviderResolution( 0, type, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) );
-      }
-      if( xright < left || xright > right )
-      {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) );
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmTuhhUIPlugin.getDefault().getBundle().getSymbolicName(), 0, "Profilfehler", e ) );
-    }
 
+    final IRecord leftP = db[0].getPoint();
+    final Double left = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, leftP );
+    final IRecord rightP = db[db.length - 1].getPoint();
+    final Double right = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, rightP );
+    final Double xleft = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, toValidate[0].getPoint() );
+    final Double xright = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, toValidate[toValidate.length - 1].getPoint() );
+    if (xright.isNaN()||xleft.isNaN()||left.isNaN()||right.isNaN())
+      return;
+    final String pluginId = PluginUtilities.id( KalypsoModelWspmTuhhUIPlugin.getDefault() );
+    final String type = toValidate[0].getId().getId();
+    if( xleft < left || xleft > right )
+    {
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( toValidate[0].getPoint() ), null, pluginId, new MoveDeviderResolution( 0, type, ArrayUtils.indexOf( profil.getPoints(), leftP ) ) );
+    }
+    if( xright < left || xright > right )
+    {
+      collector.createProfilMarker( IMarker.SEVERITY_ERROR, toValidate[0].getId().getName() + ": außerhalb des durchströmten Bereichs", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( toValidate[toValidate.length - 1].getPoint() ), null, pluginId, new MoveDeviderResolution( toValidate.length - 1, type, ArrayUtils.indexOf( profil.getPoints(), rightP ) ) );
+    }
   }
 }

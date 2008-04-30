@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.core.profil.util;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -138,15 +137,19 @@ public class ProfilUtil
     for( final IComponent property : properties )
     {
 
-      if( !property.getValueTypeName().equals( IWspmConstants.Q_DOUBLE ) )
-        continue;
-      final Double precision = property.getPrecision();
-      final int index = point1.getOwner().indexOf( property );
-      final Object x1 = point1.getValue( index );
-      final Object x2 = point2.getValue( index );
-      if( x1 == null || x2 == null )
-        continue;
-      if( Math.abs( (Double) x1 - (Double) x2 ) > precision )
+      final Double x1 = getDoubleValueFor( property.getId(), point1 );
+      final Double x2 = getDoubleValueFor( property.getId(), point2 );
+
+      if( x1.isNaN() || x2.isNaN() )
+      {
+
+        final int index = point1.getOwner().indexOf( property );
+        final Object o1 = point1.getValue( index );
+        final Object o2 = point2.getValue( index );
+        if( o1 == null || o2 == null || o1.equals( o2 ) )
+          continue;
+      }
+      if( Math.abs( x1 - x2 ) > property.getPrecision() )
         return false;
     }
     return true;
@@ -244,20 +247,23 @@ public class ProfilUtil
     final IComponent[] properties = profile.getPointProperties();
 
     for( final IComponent property : properties )
+    {
+      final int index = profile.indexOfProperty( property );
       if( IWspmConstants.POINT_PROPERTY_BREITE.equals( property.getId() ) )
       {
-        final Double b1 = (Double) startPoint.getValue( property );
-        final Double l = (Double) endPoint.getValue( property ) - b1;
-        point.setValue( property, b1 + l / 2.0 );
+        final Double b1 = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, startPoint );
+        final Double l = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endPoint ) - b1;
+        point.setValue( index, b1 + l / 2.0 );
       }
       else if( IWspmConstants.POINT_PROPERTY_HOEHE.equals( property.getId() ) )
       {
-        final Double h1 = (Double) startPoint.getValue( property );
-        final Double z = (Double) endPoint.getValue( property ) - h1;
-        point.setValue( property, h1 + z / 2.0 );
+        final Double h1 = (Double) startPoint.getValue( index );
+        final Double z = (Double) endPoint.getValue( index ) - h1;
+        point.setValue( index, h1 + z / 2.0 );
       }
-      else if( !ArrayUtils.contains( profile.getPointMarkerTypes(), property ) )
-        point.setValue( property, startPoint.getValue( property ) );
+      else if( profile.isPointMarker( property.getId() ) )
+        point.setValue( index, startPoint.getValue( index ) );
+    }
     return point;
   }
 
@@ -268,11 +274,10 @@ public class ProfilUtil
   public static final IRecord findPoint( final IProfil profil, final int index, final double breite, final double delta )
   {
     final IRecord[] points = profil.getPoints();
-    final IRecord point = index >= points.length ? null : points[index];
+    final IRecord point = (index >= points.length || index < 0) ? null : points[index];
 
-    if( point != null )
-      if( (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) == breite )
-        return point;
+    if( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) == breite )
+      return point;
 
     return findPoint( profil, breite, delta );
 
@@ -285,8 +290,8 @@ public class ProfilUtil
 
     for( int i = 0; i < points.length - 1; i++ )
     {
-      final double segmentStartWidth = (Double) points[i].getValue( ProfilObsHelper.getPropertyFromId( points[i], IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double segmentEndWidth = (Double) points[i + 1].getValue( ProfilObsHelper.getPropertyFromId( points[i], IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double segmentStartWidth = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] );
+      final double segmentEndWidth = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i + 1] );
       if( segmentStartWidth <= breite & segmentEndWidth >= breite )
       {
         segment[0] = points[i];
@@ -316,27 +321,21 @@ public class ProfilUtil
   {
 
     final IRecord[] points = profile.getPoints();
-    final IComponent cBreite = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    if( property == null || cBreite == null )
-      return new IRecord[] {};
     final ArrayList<IRecord> found = new ArrayList<IRecord>();
     for( final IRecord p : points )
     {
-
-      final Point2D p2D = new Point2D.Double( (Double) p.getValue( cBreite ), (Double) p.getValue( property ) );
+      final Point2D p2D = new Point2D.Double( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p ), getDoubleValueFor( property.getId(), p ) );
       if( p2D.distance( point ) <= radius )
         found.add( p );
     }
-
     return found.toArray( new IRecord[] {} );
   }
 
   public static IRecord findPoint( final IProfil profil, final double breite, final double delta )
   {
     final IRecord pkt = findNearestPoint( profil, breite );
-
-    final double xpos = (Double) pkt.getValue( ProfilObsHelper.getPropertyFromId( pkt, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final double xpos = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, pkt );
     return Math.abs( xpos - breite ) <= delta ? pkt : null;
   }
 
@@ -362,7 +361,7 @@ public class ProfilUtil
     IRecord thePointBefore = null;
     for( final IRecord point : points )
     {
-      if( (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) > breite )
+      if( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) > breite )
         return thePointBefore;
       thePointBefore = point;
     }
@@ -375,7 +374,7 @@ public class ProfilUtil
     if( points.length == 0 )
       return null;
     for( final IRecord point : points )
-      if( (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) ) > breite )
+      if( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) > breite )
         return point;
     return null;
   }
@@ -447,9 +446,8 @@ public class ProfilUtil
       return null;
     IRecord bestPoint = points[0];
     for( final IRecord point : points )
-      if( Math.abs( (Double) bestPoint.getValue( ProfilObsHelper.getPropertyFromId( bestPoint, IWspmConstants.POINT_PROPERTY_BREITE ) ) - breite ) > Math.abs( (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) )
-          - breite )
-          || Math.abs( (Double) bestPoint.getValue( property ) - value ) > Math.abs( (Double) point.getValue( property ) - value ) )
+      if( Math.abs( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, bestPoint ) - breite ) > Math.abs( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) - breite )
+          || Math.abs( getDoubleValueFor( property.getId(), bestPoint ) - value ) > Math.abs( getDoubleValueFor( property.getId(), point ) - value ) )
         bestPoint = point;
     return bestPoint;
   }
@@ -467,9 +465,9 @@ public class ProfilUtil
       boolean isEqual = true;
       for( int i = 0; i < maxIndex; i++ )
       {
-        final Double delta = ProfilObsHelper.getPrecision( properties[i] );
+        final Double delta = properties[i].getPrecision();
 
-        if( Math.abs( (Double) point.getValue( properties[i] ) - values[i] ) > delta )
+        if( Math.abs( getDoubleValueFor( properties[i].getId(), point ) - values[i] ) > delta )
         {
           isEqual = false;
           break;
@@ -491,12 +489,11 @@ public class ProfilUtil
     int i = 0;
     for( final IRecord p : points )
     {
-      final IComponent cBreite = ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE );
-      final Object x = p.getValue( cBreite );
-      final Object y = p.getValue( pointProperty );
-      if( y == null || x == null )
+      final Double x = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );
+      final Double y = getDoubleValueFor( pointProperty.getId(), p );
+      if( y.isNaN() || x.isNaN() )
         return new Point2D[] {};
-      points2D[i++] = new Point2D.Double( (Double) x, (Double) y );
+      points2D[i++] = new Point2D.Double( x, y );
 
     }
     return points2D;
@@ -525,7 +522,7 @@ public class ProfilUtil
     final int index = profil.indexOfProperty( property );
     if( index == -1 )
       return null;
-    
+
     for( final IRecord point : points )
     {
       final Object value = point.getValue( index );
@@ -545,12 +542,18 @@ public class ProfilUtil
    */
   public static final IRecord addPoint( final IProfil profil, final double breite, final double hoehe )
   {
-    final IRecord point = profil.createProfilPoint();
 
-    point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ), hoehe );
-    point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), breite );
-    profil.addPoint( point );
-    return point;
+    final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    if( iBreite >= 0 && iHoehe >= 0 )
+    {
+      final IRecord point = profil.createProfilPoint();
+      point.setValue( iHoehe, hoehe );
+      point.setValue( iBreite, breite );
+      if( profil.addPoint( point ) )
+        return point;
+    }
+    return null;
   }
 
   public static final void insertPoint( final IProfil profil, final IRecord point, final IRecord thePointBefore )
@@ -570,21 +573,17 @@ public class ProfilUtil
     double area = 0;
     double width = 0;
     final double maxZ = calcMaxZ( profil );
-
-    for( int i = 0; i < profil.getPoints().length - 1; i++ )
+    final IRecord[] points = profil.getPoints();
+    for( int i = 0; i < points.length - 1; i++ )
     {
-      final IRecord p = profil.getPoints()[i];
-      final IRecord pPlus = profil.getPoints()[i + 1];
-
-      final double currentWidth = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
-
+      final double currentWidth = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] );
       // just take the profile points between (inclusive) the two given widths.
       if( currentWidth >= startWidth & currentWidth <= endWidth )
       {
-        final double z1 = maxZ - (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-        final double z2 = maxZ - (Double) pPlus.getValue( ProfilObsHelper.getPropertyFromId( pPlus, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-        final double width1 = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
-        final double width2 = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
+        final double z1 = maxZ - getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+        final double z2 = maxZ - getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i + 1] );
+        final double width1 = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] );
+        final double width2 = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i + 1] );
         width = width2 - width1;
         area = area + (z1 + z2) / 2 * width;
       }
@@ -603,16 +602,13 @@ public class ProfilUtil
     double area = 0;
     double width = 0;
     final double maxZ = calcMaxZ( profil );
-
-    for( int i = 0; i < profil.getPoints().length - 1; i++ )
+    final IRecord[] points = profil.getPoints();
+    for( int i = 0; i < points.length - 1; i++ )
     {
-      final IRecord p = profil.getPoints()[i];
-      final IRecord pPlus = profil.getPoints()[i + 1];
-
-      final double z1 = maxZ - (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final double z2 = maxZ - (Double) pPlus.getValue( ProfilObsHelper.getPropertyFromId( pPlus, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final double width1 = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double width2 = (Double) pPlus.getValue( ProfilObsHelper.getPropertyFromId( pPlus, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final double z1 = maxZ - getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+      final double z2 = maxZ - getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i + 1] );
+      final double width1 = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i] );
+      final double width2 = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, points[i + 1] );
       width = width2 - width1;
       area = area + (z1 + z2) / 2 * width;
     }
@@ -625,13 +621,13 @@ public class ProfilUtil
    */
   private static double calcMaxZ( final IProfil profile )
   {
-    double maxZ = -9999;
-
-    for( int i = 0; i < profile.getPoints().length; i++ )
+    final IRecord[] points = profile.getPoints();
+    if( points.length < 1 )
+      return Double.MIN_VALUE;
+    Double maxZ = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[0] );
+    for( int i = 1; i < points.length; i++ )
     {
-      final double currentZ = (Double) profile.getPoints()[i].getValue( ProfilObsHelper.getPropertyFromId( profile.getPoints()[i], IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      if( maxZ < currentZ )
-        maxZ = currentZ;
+      maxZ = Math.max( maxZ, getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] ) );
     }
     return maxZ;
   }
@@ -697,38 +693,35 @@ public class ProfilUtil
    * @param profile
    *            input profile
    */
-  public static LinkedList<IRecord> getGeoreferencedPoints( final IProfil profile )
+  public static IRecord[] getGeoreferencedPoints( final IProfil profile )
   {
     /* List for storing points of the profile, which have a geo reference. */
-    final LinkedList<IRecord> geoReferencedPoints = new LinkedList<IRecord>();
 
     final IRecord[] points = profile.getPoints();
+    final ArrayList<IRecord> geoReferencedPoints = new ArrayList<IRecord>( points.length );
     for( final IRecord point : points )
     {
-      final double rechtsWert = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-      final double hochWert = (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-
-      if( rechtsWert > 0.0 || hochWert > 0.0 )
+      final Double rechtsWert = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, point );
+      final Double hochWert = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, point );
+      if( !rechtsWert.isNaN() && !hochWert.isNaN() )
         geoReferencedPoints.add( point );
     }
-    return geoReferencedPoints;
+    return geoReferencedPoints.toArray( new IRecord[] {} );
   }
 
   public static GM_Curve getLine( final IProfil profile, final String crs ) throws GM_Exception
   {
-    final LinkedList<IRecord> georeferencedPoints = getGeoreferencedPoints( profile );
-    final GM_Position[] pos = new GM_Position[georeferencedPoints.size()];
+    final IRecord[] georeferencedPoints = getGeoreferencedPoints( profile );
+    final GM_Position[] pos = new GM_Position[georeferencedPoints.length];
 
-    for( int i = 0; i < georeferencedPoints.size(); i++ )
+    for( int i = 0; i < georeferencedPoints.length; i++ )
     {
-      final double x = (Double) georeferencedPoints.get( i ).getValue( ProfilObsHelper.getPropertyFromId( georeferencedPoints.get( i ), IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-      final double y = (Double) georeferencedPoints.get( i ).getValue( ProfilObsHelper.getPropertyFromId( georeferencedPoints.get( i ), IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-      final double z = (Double) georeferencedPoints.get( i ).getValue( ProfilObsHelper.getPropertyFromId( georeferencedPoints.get( i ), IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final Double x = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, georeferencedPoints[i] );
+      final Double y = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, georeferencedPoints[i] );
+      final Double z = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, georeferencedPoints[i] );
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
-
     final GM_Curve curve = GeometryFactory.createGM_Curve( pos, crs );
-
     return curve;
 
   }
@@ -743,10 +736,10 @@ public class ProfilUtil
     final IProfil digitizedProfile = ProfilFactory.createProfil( type );
 
     /* The needed components. */
-    IComponent cRechtswert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    IComponent cHochwert = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    IComponent cBreite = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_BREITE );
-    IComponent cHoehe = ProfilObsHelper.getPropertyFromId( digitizedProfile, IWspmConstants.POINT_PROPERTY_HOEHE );
+    int iRechtswert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    int iHochwert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    int iBreite = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    int iHoehe = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     if( jtsCurve == null )
       return null;
@@ -773,15 +766,13 @@ public class ProfilUtil
       /* Create a new profile point. */
       IRecord profilePoint = digitizedProfile.createProfilPoint();
 
-      final TupleResult owner = profilePoint.getOwner();
-
       /* Add geo values. */
-      profilePoint.setValue( owner.indexOfComponent( cRechtswert ), rechtswert );
-      profilePoint.setValue( owner.indexOfComponent( cHochwert ), hochwert );
+      profilePoint.setValue( iRechtswert, rechtswert );
+      profilePoint.setValue( iHochwert, hochwert );
 
       /* Add length section values. */
-      profilePoint.setValue( owner.indexOfComponent( cBreite ), breite );
-      profilePoint.setValue( owner.indexOfComponent( cHoehe ), hoehe );
+      profilePoint.setValue( iBreite, breite );
+      profilePoint.setValue( iHoehe, hoehe );
 
       /* Add the new point to the profile. */
       digitizedProfile.addPoint( profilePoint );

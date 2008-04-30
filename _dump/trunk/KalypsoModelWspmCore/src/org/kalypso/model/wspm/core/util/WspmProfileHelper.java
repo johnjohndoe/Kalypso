@@ -204,31 +204,31 @@ public class WspmProfileHelper
    */
   public static GM_Point getGeoPosition( final double width, final IProfil profile ) throws Exception
   {
-    final LinkedList<IRecord> geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
+    final IRecord[] geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
 
     final String srsName = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
 
     /* If no or only one geo referenced points are found, return. */
-    if( geoReferencedPoints.size() <= 1 )
+    if( geoReferencedPoints.length <= 1 )
       return null;
 
     // END OF FINDING GEOREFERENCED POINTS
 
     /* No we have a list with fully geo referenced points of a profile. */
-    for( int i = 0; i < geoReferencedPoints.size() - 1; i++ )
+    for( int i = 0; i < geoReferencedPoints.length - 1; i++ )
     {
       /* We need a line string of the to neighbour points. */
-      final IRecord tempPointOne = geoReferencedPoints.get( i );
-      final double widthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double heigthValueOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final double rechtsWertOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-      final double hochWertOne = (Double) tempPointOne.getValue( ProfilObsHelper.getPropertyFromId( tempPointOne, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+      final IRecord tempPointOne = geoReferencedPoints[i];
+      final Double widthValueOne = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, tempPointOne );
+      final Double heigthValueOne = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, tempPointOne );
+      final Double rechtsWertOne = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, tempPointOne );
+      final Double hochWertOne = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, tempPointOne );
 
-      final IRecord tempPointTwo = geoReferencedPoints.get( i + 1 );
-      final double widthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double heigthValueTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final double rechtsWertTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-      final double hochWertTwo = (Double) tempPointTwo.getValue( ProfilObsHelper.getPropertyFromId( tempPointTwo, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+      final IRecord tempPointTwo = geoReferencedPoints[i + 1];
+      final Double widthValueTwo = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, tempPointTwo );
+      final Double heigthValueTwo = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, tempPointTwo );
+      final Double rechtsWertTwo = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, tempPointTwo );
+      final Double hochWertTwo = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, tempPointTwo );
 
       /* find the right segment with the neighboring points */
       if( widthValueOne < width & widthValueTwo > width )
@@ -317,11 +317,10 @@ public class WspmProfileHelper
     final double lastX = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
     final double lastY = (Double) lastPoint.getValue( ProfilObsHelper.getPropertyFromId( lastPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) );
 
-    final Double[] breiteValues = (Double[])ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final Double[] breiteValues = (Double[]) ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_BREITE ) );
 
-    
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, (Double[])ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) ), 0.0001 );
+    final PolyLine profilLine = new PolyLine( breiteValues, (Double[]) ProfilUtil.getValuesFor( profil, ProfilObsHelper.getPropertyFromId( firstPoint, IWspmConstants.POINT_PROPERTY_HOEHE ) ), 0.0001 );
 
     /* Same for RW and HW, but filter 0-values */
     final PolyLine rwLine = createPolyline( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_BREITE ), ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );

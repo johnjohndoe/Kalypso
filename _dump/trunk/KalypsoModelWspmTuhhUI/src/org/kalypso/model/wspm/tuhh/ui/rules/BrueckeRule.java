@@ -83,19 +83,16 @@ public class BrueckeRule extends AbstractValidatorRule
 
       for( final IComponent property : building.getObjectProperties() )
       {
-        if( ((Double) building.getValue( property )).isNaN() )
+        final Object oValue = building.getValue( property );
+        if( oValue == null || (oValue instanceof Double && ((Double) oValue).isNaN()) )
         {
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Parameter <" + property.getName() + "> fehlt", "km " + Double.toString( profil.getStation() ), 0, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, pluginId );
           break;
         }
       }
       final IRecord[] points = profil.getPoints();
-
-      final double delta = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ).getPrecision();
-      final int iHoehe = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
-      final int iOK = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-      final int iUK = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-      final int iAX = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+      final IComponent cBreite = profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+      final double delta = cBreite == null ? 0.0001 : cBreite.getPrecision();
 
       // Brückengeometrie
       // ermitteln der linken Grenzen
@@ -103,10 +100,10 @@ public class BrueckeRule extends AbstractValidatorRule
       int innerLeft = -1;
       for( int i = 0; i < points.length; i++ )
       {
-        final Double h = (Double) points[i].getValue( iHoehe );
-        final Double okB = (Double) points[i].getValue( iOK );
-        final Double ukB = (Double) points[i].getValue( iUK );
-        if( okB == null || ukB == null || okB.isNaN() || ukB.isNaN() )
+        final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+        final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] );
+        final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
+        if( okB.isNaN() || ukB.isNaN() )
           continue;
         if( (outerLeft == -1) && (Math.abs( h - okB ) > delta) )
           outerLeft = i == 0 ? 0 : i - 1;
@@ -131,9 +128,11 @@ public class BrueckeRule extends AbstractValidatorRule
       int innerRight = points.length - 1;
       for( int i = points.length - 1; i > innerLeft; i-- )
       {
-        final Double h = (Double) points[i].getValue( iHoehe );
-        final Double okB = (Double) points[i].getValue( iOK );
-        final Double ukB = (Double) points[i].getValue( iUK );
+        final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+        final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] );
+        final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
+        if( okB.isNaN() || ukB.isNaN() )
+          continue;
         if( (outerRight == points.length - 1) && (Math.abs( h - okB ) > delta) )
           outerRight = i == points.length - 1 ? points.length - 1 : i + 1;
         if( (outerRight < points.length - 1) && (Math.abs( h - ukB ) > delta) )
@@ -174,26 +173,26 @@ public class BrueckeRule extends AbstractValidatorRule
       int minmax = 0;
       for( int i = outerLeft; i < outerRight; i++ )
       {
-        final Double h = (Double) points[i].getValue( iHoehe );
-        final Double uk = (Double) points[i].getValue( iUK );
-        final Double ok = (Double) points[i].getValue( iOK );
+        final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+        final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] );
+        final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
         if( (minmax == 0) && (i > innerLeft) && (i < innerRight) )
         {
-          minOK = Math.min( minOK, ok );
-          maxUK = Math.max( maxUK, uk );
+          minOK = Math.min( minOK, okB );
+          maxUK = Math.max( maxUK, ukB );
           if( maxUK > minOK )
             minmax = i;
         }
         // Schnittkanten
-        if( uk - ok > delta )
+        if( ukB - okB > delta )
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten schneiden sich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
-        if( h - ok > delta || h - uk > delta )
+        if( h - okB > delta || h - ukB > delta )
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Brückenkanten unter Geländehöhe", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
 
         // Bewuchs unter der Brücke
-        if( iAX < 0 )
+        if( profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) == null )
           continue;
-        final Double bewuchs = (Double) points[i].getValue( iAX );
+        final Double bewuchs = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, points[i] );
         if( bewuchs != 0.0 )
           collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution() );
       }

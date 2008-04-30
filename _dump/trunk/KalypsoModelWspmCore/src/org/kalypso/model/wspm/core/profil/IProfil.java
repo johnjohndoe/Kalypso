@@ -78,6 +78,8 @@ public interface IProfil extends IObservation<TupleResult>
 
   public void addProfilListener( final IProfilListener pl );
 
+  public boolean isPointMarker( final String propertyID );
+
   public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 
   public void removeProfilListener( final IProfilListener pl );

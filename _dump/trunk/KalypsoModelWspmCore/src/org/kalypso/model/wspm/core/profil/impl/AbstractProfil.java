@@ -365,6 +365,12 @@ public abstract class AbstractProfil implements IProfil
     return marker.toArray( new IComponent[] {} );
   }
 
+  public boolean isPointMarker( final String propertyID )
+  {
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    return provider == null ? false : provider.isMarker( propertyID );
+  }
+
   public IComponent[] getPointProperties( )
   {
     final TupleResult result = getResult();
