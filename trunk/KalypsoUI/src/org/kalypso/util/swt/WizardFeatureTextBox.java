@@ -60,6 +60,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.gmlschema.annotation.AnnotationUtilities;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -90,6 +92,12 @@ public class WizardFeatureTextBox
   public void addModifyListener( final Runnable runnable )
   {
     m_listener.add( runnable );
+  }
+
+  public String getLabel( )
+  {
+    final IAnnotation annotation = AnnotationUtilities.getAnnotation( m_feature.getFeatureType().getProperty( m_qn ) );
+    return annotation.getLabel();
   }
 
   public void draw( final Composite parent, final FormToolkit toolkit, final GridData layout, final int style )
