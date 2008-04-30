@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,6 +63,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
+import org.kalypso.template.obsdiagview.TypeCurve.StrokeType;
 import org.kalypso.util.pool.IPoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.PoolableObjectWaiter;
@@ -78,7 +81,9 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       final boolean synchron )
   {
     super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[]
-    { view, xmlObs }, synchron );
+    {
+        view,
+        xmlObs }, synchron );
   }
 
   /**
@@ -161,12 +166,32 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
 
         final String curveName = ObsViewUtils.replaceTokens( tcurve.getName(), obs, null );
 
+        final Stroke stroke;
+        final StrokeType xmlStroke = tcurve.getStroke();
+        if( xmlStroke == null )
+          stroke = null;
+        else
+        {
+          final List dashList = xmlStroke.getDash();
+          if( dashList == null || dashList.size() == 0 )
+            stroke = new BasicStroke( xmlStroke.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f );
+          else
+          {
+            final float[] dashArray = new float[dashList.size()];
+            for( int i = 0; i < dashList.size(); i++ )
+              dashArray[i] = ( (Float)dashList.get( i ) ).floatValue();
+
+            stroke = new BasicStroke( xmlStroke.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f,
+                dashArray, 0.0f );
+          }
+        }
+
         // each curve gets its own provider since the curve disposes its provider, when it get disposed
         final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
             : new PooledObsProvider( key, null );
 
-        final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, (AxisMapping[])mappings
-            .toArray( new AxisMapping[0] ) );
+        final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, stroke,
+            (AxisMapping[])mappings.toArray( new AxisMapping[0] ) );
         curve.setShown( tcurve.isShown() );
 
         view.addItem( curve );
