@@ -5,7 +5,7 @@
    name="KalypsoProduct Plug-in"
    version="1.0.0"
    provider-name="kalypso.org"
-   class="org.kalypso.product.KalypsoProductPlugin">
+   >
 
    <runtime>
       <library name="KalypsoProduct.jar">
