@@ -1,0 +1,45 @@
+Modell Berechnung wird gestartet
+
+Dateien für Rechenkern werden erzeugt
+Lese Steuerparameter: jar:file:/D:/Programme/kalypso/Tomcat5.0/temp/CalcJobInputData52888.jar!/.prognose/BelgerTest-2008-03-04_15h43/.calculation
+Erzeuge _vhs Datei: HW080304_vhs.dbf
+Erzeuge _flp Datei: D:\Programme\kalypso\Tomcat5.0\temp\CalcJob-4-1204642231555\native\HW080304_flp
+Erzeuge _nap Datei: D:\Programme\kalypso\Tomcat5.0\temp\CalcJob-4-1204642231555\native\HW080304_nap
+Erzeuge Zeitreihen-Datei: D:\Programme\kalypso\Tomcat5.0\temp\CalcJob-4-1204642231555\native\HW080304
+Rechenkern wird aufgerufen
+Rechenkern wird vorbereitet
+D:\Programme\kalypso\Tomcat5.0\temp\CalcJob-4-1204642231555\native\spree.exe 2008,03,04,13,00,00 HW080304.dbf
+Ausgaben des Rechenkerns
+========================
+=   Standard-Ausgabe   =
+========================
+Initialisiere xHwKernel.dll
+Setze Zeitpunkt: 4.3.2008  13:0:0
+Oeffne Datei:HW080304.dbf
+Berechnung wird gestartet
+Schrigiswalde
+Bautzen WB
+TS Bautzen
+Gröditz
+Kleine Spree
+Lieske
+Jänkendorf
+TS Quitzdorf
+Holtendorf
+Särichen
+Boxberg
+Bärwalde
+Lohsa II
+Sprey
+Burgneudorf
+Spreewitz
+Restlochkette
+Spremberg
+Berechnung abgeschlossen, Ergebnisse werden geschrieben
+Berechnung erfolgreich beendet
+
+========================
+
+Rechnung erfolgreich beendet.
+Ergebnisse werden zurückgelesen
+Berechnung beendet

@@ -1,0 +1,56 @@
+Buildfile: C:\ProLfUG\Kalypso\data\Spree\.model\launch\build.xml
+Szenario der Rechenvariante ist: 
+Zeitreihen aktualisieren: C:\ProLfUG\Kalypso\data\Spree\.prognose\BelgerTest-2008-03-04_15h43
+Copying 6 files to C:\ProLfUG\Kalypso\data\Spree\.prognose\BelgerTest-2008-03-04_15h43\Zeitreihen
+WARNING[101]: Zeitreihe unbekannt, Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe unbekannt, Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe unbekannt, Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe unbekannt, Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe unbekannt, Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe unbekannt, Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe unbekannt, Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe 582090 (Spremberg), Wasserstand 582090,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe 583271 (Sproitz), Wasserstand 583271,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe 583271 (Sproitz), Abfluss,  Fehler beim Ableiten der Werte
+WARNING[101]: Zeitreihe 582032 (Bautzen UP 1), Wasserstand 582032,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe 582032 (Bautzen UP 1), Abfluss,  Fehler beim Ableiten der Werte
+WARNING[101]: Zeitreihe QV_RLKETTE, Abfluss,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe QV_LOHSA, Abfluss,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe QV_BWALDE, Abfluss,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe QV_SPWIESE, Abfluss,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe QP_BURGNEU, Abfluss,  Werte müssen geprüft werden
+aktualisiere DWD-Raster im Rechenfall
+copied from url : http://lfug-kv-01:8080/webdav/dwd/lm_normal.txt
+copied to file  : C:\ProLfUG\Kalypso\data\Spree\.prognose\BelgerTest-2008-03-04_15h43\dwd\lm_aktuell.txt
+Szenario der Rechenvariante ist: 
+Szenario der Rechenvariante ist: 
+aktualisiere Gebietsniederschläge (Vorhersage aus DWD-Raster platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43//dwd/lm_aktuell.txt )
+INFO[102]: Berechnung Gebietsniederschlagsmodell
+FINE:  inputRaster: platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43//dwd/lm_aktuell.txt
+FINE:  raster to zml mapping: platform:/resource//Spree//.model/dwd/dwdZmlConf.xml
+FINE:  context for targets (zml-files): C:\ProLfUG\Kalypso\data\Spree\.prognose\BelgerTest-2008-03-04_15h43
+FINE:  unmarshall dwd2zml configuration ...
+FINE:  type of ZML to generateN
+FINE:  read inputraster...
+WARNING[100]: DWD Daten veraltet, bitte prüfen Sie den Dateneingang.
+INFO[101]: DWD-Lokalmodell vom 04.03.2008 00:00
+FINE: benutze Filter: <request xmlns="request.zml.kalypso.org"><axes>date,N</axes><statusAxes>N</statusAxes></request><filter><intervallFilter amount="3" calendarField="HOUR_OF_DAY" mode="sum" xmlns="filters.zml.kalypso.org"/></filter>
+FINE: Zeitraum 
+FINE:  von Sun Mar 02 13:00:00 CET 2008 (Messung
+FINE:  von Tue Mar 04 13:00:00 CET 2008 (Vorhersage)
+FINE:  bis Thu Mar 06 13:00:00 CET 2008
+FINE:  generate zml...
+INFO: Lade Modell platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43//calcCase.gml
+INFO: Ziel-ZML platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43/Zeitreihen/PA_SCHIRG.zml
+INFO: Ziel-ZML platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43/Zeitreihen/PA_BAUTZWB.zml
+INFO: Ziel-ZML platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43/Zeitreihen/PA_GROEDI.zml
+INFO: Ziel-ZML platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43/Zeitreihen/PA_JAENKD.zml
+INFO: Ziel-ZML platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43/Zeitreihen/PA_HOLTD.zml
+INFO: Ziel-ZML platform:/resource//Spree/.prognose/BelgerTest-2008-03-04_15h43/Zeitreihen/PA_SAERI.zml
+WARNING[101]: Zeitreihe , Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe , Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe , Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe , Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe , Niederschlag,  Werte müssen geprüft werden
+WARNING[101]: Zeitreihe , Niederschlag,  Werte müssen geprüft werden
+BUILD SUCCESSFUL
