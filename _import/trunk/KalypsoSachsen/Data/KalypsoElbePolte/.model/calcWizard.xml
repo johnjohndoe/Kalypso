@@ -183,7 +183,7 @@
 		<arg name="resultProperty" value="ganglinie_modellwerte"/>
 		<!-- Exporter fangen hier an... -->
 		<arg name="exporter1">
-			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="id" value="featureWithTemplateExporterTree"/>
 			<arg name="name" value="Vorhersagepegel"/>
 			<arg name="nameproperty" value="Name"/>
 			<arg name="width" value="1024"/>
@@ -197,12 +197,15 @@
 				<arg name="href6" value="ganglinie_modellwerte_oben"/>
 			</arg>
 			<arg name="templateDiagQ">
-				<arg name="label" value="Abflussgrafik"/>
+				<arg name="label" value="Diagramm - Abfluss"/>
 				<arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
 			</arg>
 			<arg name="templateDiagW">
-				<arg name="label" value="Wasserstandsgrafik"/>
+				<arg name="label" value="Diagramm - Wasserstand"/>
 				<arg name="href" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+				<arg name="excludes">
+					<arg name="#featureId" value="Usti"/>
+				</arg>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Tabelle"/>

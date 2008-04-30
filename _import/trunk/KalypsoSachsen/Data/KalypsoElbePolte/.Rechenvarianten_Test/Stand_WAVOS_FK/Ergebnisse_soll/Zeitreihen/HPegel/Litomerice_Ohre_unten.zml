@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation editable="false" xmlns="zml.kalypso.org">
+    <name>Q- Spur Unten</name>
+    <metadataList>
+        <metadata name="Name" value="Q"/>
+        <metadata name="Vorhersage" value="04.03.2008 13:00:00;07.03.2008 13:00:00"/>
+        <metadata name="Zeitzone" value="Europe/Berlin"/>
+        <metadata name="comment" value="Modell.005"/>
+        <metadata name="Zeitzone" value="Europe/Berlin"/>
+    </metadataList>
+    <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" name="Datum" type="date" unit="">
+        <valueArray separator=";">2008-03-04T13:00:00;2008-03-04T16:00:00;2008-03-04T19:00:00;2008-03-04T22:00:00;2008-03-05T01:00:00;2008-03-05T04:00:00;2008-03-05T07:00:00;2008-03-05T10:00:00;2008-03-05T13:00:00;2008-03-05T16:00:00;2008-03-05T19:00:00;2008-03-05T22:00:00;2008-03-06T01:00:00;2008-03-06T04:00:00;2008-03-06T07:00:00;2008-03-06T10:00:00;2008-03-06T13:00:00;2008-03-06T16:00:00;2008-03-06T19:00:00;2008-03-06T22:00:00;2008-03-07T01:00:00;2008-03-07T04:00:00;2008-03-07T07:00:00;2008-03-07T10:00:00;2008-03-07T13:00:00</valueArray>
+    </axis>
+    <axis datatype="TYPE=double" key="false" name="Abfluss" type="Q" unit="m³/s">
+        <valueArray separator=";">98.44;96.90549999999999;95.391;93.89649999999999;92.412;90.9375;89.453;87.9785;86.50399999999999;85.0295;83.55499999999999;82.0805;80.606;79.1315;77.657;76.1825;74.708;73.23349999999999;71.759;70.28450000000001;68.81;67.3355;65.86099999999999;64.3865;62.912</valueArray>
+    </axis>
+</observation>
+
