@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
+import java.awt.BasicStroke;
+import java.awt.Stroke;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -72,6 +74,7 @@ import org.kalypso.template.obsdiagview.TypeAxisMapping;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.template.obsdiagview.ObsdiagviewType.LegendType;
+import org.kalypso.template.obsdiagview.TypeCurve.StrokeType;
 import org.xml.sax.InputSource;
 
 /**
@@ -207,7 +210,7 @@ public class DiagViewUtils
 
       xmlAxes.add( xmlAxis );
     }
-    
+
     xmlTemplate.setFeatures( StringUtils.join( view.getEnabledFeatures(), ';' ) );
 
     int ixCurve = 1;
@@ -237,6 +240,21 @@ public class DiagViewUtils
         xmlCurve.setName( curve.getName() );
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
         xmlCurve.setShown( curve.isShown() );
+        Stroke stroke = curve.getStroke();
+        if( stroke instanceof BasicStroke )
+        {
+          final BasicStroke bs = (BasicStroke)stroke;
+          final StrokeType strokeType = ODT_OF.createTypeCurveStrokeType();
+          xmlCurve.setStroke( strokeType );
+          strokeType.setWidth( bs.getLineWidth() );
+          final float[] dashArray = bs.getDashArray();
+          if( dashArray != null )
+          {
+            final List dashList = strokeType.getDash();
+            for( int i = 0; i < dashArray.length; i++ )
+              dashList.add( new Float( dashArray[i] ) );
+          }
+        }
 
         final List xmlMappings = xmlCurve.getMapping();
 
@@ -285,7 +303,7 @@ public class DiagViewUtils
 
     if( axisType.equals( TimeserieConstants.TYPE_HOURS ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
-    
+
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
@@ -299,12 +317,13 @@ public class DiagViewUtils
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
     if( axisType.equals( TimeserieConstants.TYPE_NORM ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false);
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils.getTopMargin( axisType ) );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils
+          .getTopMargin( axisType ) );
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
@@ -333,13 +352,13 @@ public class DiagViewUtils
     view.setTitle( xml.getTitle() );
     view.setLegendName( xml.getLegend() == null ? "" : xml.getLegend().getTitle() );
     view.setShowLegend( xml.getLegend() == null ? false : xml.getLegend().isVisible() );
-    
+
     // features-list is optional
     if( xml.getFeatures() != null )
     {
       // features list specified, so clear before enabling the ones sepcified
       view.clearFeatures();
-      
+
       final String[] featureNames = xml.getFeatures().split( ";" );
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
@@ -379,11 +398,12 @@ public class DiagViewUtils
 
     return StatusUtilities.createStatus( stati, "Diagrammvorlage konnte nicht vollständig aktualisiert werden" );
   }
-  
+
   /**
    * Return the first axis of the mappings list which is not a key axis.
    * 
-   * @param mappings array of obs-diag axes mappings
+   * @param mappings
+   *          array of obs-diag axes mappings
    * @return obs axis (not a key axis) or null if not found
    */
   public static IAxis getValueAxis( final AxisMapping[] mappings )
@@ -393,7 +413,7 @@ public class DiagViewUtils
       if( !mappings[i].getObservationAxis().isKey() )
         return mappings[i].getObservationAxis();
     }
-    
+
     return null;
   }
 }

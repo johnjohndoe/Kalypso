@@ -40,10 +40,16 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor.actions;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Stroke;
+
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
+import org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand;
 import org.kalypso.ogc.sensor.diagview.DiagView;
+import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
@@ -55,15 +61,12 @@ import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
  */
 public class EditDiagCurveAction extends FullAction
 {
-  private static final String TITLE = "Unsichtbare Achsen setzen";
-
-  private final static String MSG = "Wählen Sie die Achsentypen die nicht dargestellt werden";
-
   private ObservationEditorOutlinePage m_page;
 
   public EditDiagCurveAction( final ObservationEditorOutlinePage page )
   {
-    super( TITLE, ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES, "Erlaubt die Eigenschaften des Themas zu bearbeiten" );
+    super( "Eigenschaften", ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES,
+        "Erlaubt die Eigenschaften des Themas zu bearbeiten" );
 
     m_page = page;
   }
@@ -74,37 +77,95 @@ public class EditDiagCurveAction extends FullAction
 
     final DiagView obsView = (DiagView)m_page.getView();
     final ObsViewItem[] items = m_page.getSelectedItems();
+    final LineProperties[] currentProperties = new LineProperties[items.length];
+    for( int i = 0; i < items.length; i++ )
+      currentProperties[i] = itemToProperties( (DiagViewCurve)items[i] );
 
-    final LineProperties lineProperties = determineLineProperties( items );
+    final LineProperties lineProperties = LineProperties.mergeProperties( currentProperties );
 
-    final EditDiagCurveDialog dialog = new EditDiagCurveDialog( shell, lineProperties );
-    if( dialog.open() == Window.OK )
+    final EditDiagCurveDialog dialog = new EditDiagCurveDialog( shell, lineProperties )
     {
-      final LineProperties result = dialog.getLineProperties();
+      /**
+       * @see org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog#propertiesChanged()
+       */
+      protected void propertiesChanged()
+      {
+        final LineProperties resultProperties = getLineProperties();
+        for( int i = 0; i < items.length; i++ )
+          applyLineProperties( obsView, (DiagViewCurve)items[i], resultProperties, items.length == 1 );
+      }
+    };
+
+    if( dialog.open() == Window.CANCEL )
+    {
       for( int i = 0; i < items.length; i++ )
-      applyLineProperties( items[i], result );
-      
-      // TODO: update diagramm?
+        applyLineProperties( obsView, (DiagViewCurve)items[i], currentProperties[i], true );
     }
   }
 
-  private void applyLineProperties( ObsViewItem item, final LineProperties result )
+  private LineProperties itemToProperties( final DiagViewCurve curve )
   {
-    
+    final String name = curve.getName();
+    final Color color = curve.getColor();
+    final Stroke stroke = curve.getStroke();
+    final Integer size;
+    final DashType dash;
 
-  //    item.setName(TITLE);
-    
-    // TODO Auto-generated method stub
-    
+    if( stroke instanceof BasicStroke )
+    {
+      final BasicStroke basicStroke = (BasicStroke)stroke;
+      size = new Integer( (int)basicStroke.getLineWidth() );
+
+      final float[] curveDash = basicStroke.getDashArray();
+      final DashType userDash = new DashType( "User defined", "Benutzerdefiniert", curveDash == null ? new float[] {}
+          : curveDash );
+      if( DashType.isKnownDash( userDash ) )
+        dash = DashType.findKnownDash( userDash );
+      else
+        dash = userDash;
+    }
+    else
+    {
+      size = LineProperties.SIZE_UNDEF;
+      dash = DashType.NONE;
+    }
+
+    return new LineProperties( name, color, size, dash );
   }
 
   /**
-   * @param items
-   * @return
+   * Applies the changed properties to all selected items. <br>
+   * Only applies changed values (i.e. non- <code>null</code>) We do not always apply the name, as the name is used
+   * as id by the diagramm... this causes bugs, if two curves have the same name.
    */
-  private LineProperties determineLineProperties( ObsViewItem[] items )
+  protected void applyLineProperties( final DiagView view, final DiagViewCurve item, final LineProperties properties,
+      final boolean applyName )
   {
-    // TODO Auto-generated method stub
-    return null;
+    final String nameToSet;
+    final Color colorToSet;
+    final Stroke strokeToSet;
+
+    final String name = properties.getName();
+    if( applyName && name != EditDiagCurveDialog.NAME_UNDEF )
+      nameToSet = name;
+    else
+      nameToSet = item.getName();
+
+    final Color color = properties.getColor();
+    if( color == LineProperties.COLOR_UNDEF )
+      colorToSet = item.getColor();
+    else
+      colorToSet = color;
+
+    final Stroke stroke = properties.getStroke();
+    if( stroke == LineProperties.STROKE_UNDEF )
+      strokeToSet = item.getStroke();
+    else
+      strokeToSet = stroke;
+
+    final ChangeThemePropertiesCommand command = new ChangeThemePropertiesCommand( view, item, nameToSet, colorToSet,
+        strokeToSet );
+    m_page.getEditor().postCommand( command, null );
   }
+
 }

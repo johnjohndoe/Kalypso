@@ -52,39 +52,57 @@ import java.awt.Stroke;
  */
 public final class LineProperties
 {
-  /** default: color black, size 1, dash null. */
-  private static LineProperties m_default = new LineProperties( Color.BLACK );
+  /** A color defining the undefined state. */
+  public static final Color COLOR_UNDEF = new Color( 0, 0, 0 );
+
+  /** A size defining the undefined state. */
+  public static final Integer SIZE_UNDEF = new Integer( -999 );
+
+  /** A dash defining the undefined state. */
+  public static final DashType DASH_UNDEF = new DashType( "", "", null );
+
+  /** A stroke defining the undefined state. */
+  public static final Stroke STROKE_UNDEF = new BasicStroke();
 
   /** separator used between members in string representation */
-  public static final String MEMBER_SEPARATOR = " ";
+  private static final String MEMBER_SEPARATOR = " ";
 
   /** string used to separate the dash elements */
-  public static final String DASH_SEPARATOR = ",";
+  private static final String DASH_SEPARATOR = ",";
+
+  /** Some name of this line */
+  private final String m_name;
 
   /** the color of the line */
   private final Color m_color;
 
   /** the size of the line */
-  private final float m_size;
+  private final Integer m_size;
 
   /** The dash of the line. */
-  private float[] m_dash = null;
+  private DashType m_dash = null;
 
-  public LineProperties( Color c )
+  public LineProperties( final String name, final Color c )
   {
-    this( c, 1, null );
+    this( name, c, new Integer( 1 ), null );
   }
 
-  public LineProperties( Color c, float size )
+  public LineProperties( final String name, final Color c, final Integer size )
   {
-    this( c, size, null );
+    this( name, c, size, null );
   }
 
-  public LineProperties( Color c, float size, float[] dash )
+  public LineProperties( final String name, final Color c, final Integer size, final DashType dash )
   {
+    m_name = name;
     m_color = c;
     m_size = size;
     m_dash = dash;
+  }
+
+  public String getName()
+  {
+    return m_name;
   }
 
   public Color getColor()
@@ -92,27 +110,87 @@ public final class LineProperties
     return m_color;
   }
 
-  public float getSize()
+  public Integer getSize()
   {
     return m_size;
   }
 
-  public float[] getDash()
+  public DashType getDash()
   {
     return m_dash;
   }
 
   public Stroke getStroke()
   {
-    return new BasicStroke( m_size, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, m_dash, 0.0f );
+    if( m_size == LineProperties.SIZE_UNDEF && m_dash == LineProperties.DASH_UNDEF )
+      return STROKE_UNDEF;
+
+    final int size = m_size == LineProperties.SIZE_UNDEF ? 1 : m_size.intValue();
+    if( m_dash == LineProperties.DASH_UNDEF || m_dash == DashType.NONE )
+      return new BasicStroke( size, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL );
+
+    return new BasicStroke( size, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, m_dash.getDashs(), 10.0f );
   }
 
-
   /**
-   * Factory method that returns the default LineProperties object.
+   * Merge different line properties into one. Sets undefined constants for properties that differ.
    */
-  public static LineProperties getDefault()
+  public static LineProperties mergeProperties( final LineProperties[] items )
   {
-    return m_default;
+    String name = null;
+    Color color = null;
+    Integer size = null;
+    DashType dash = null;
+
+    // Check 0-length, else we get a NPE later
+    if( items.length == 0 )
+      return null;
+
+    for( int i = 0; i < items.length; i++ )
+    {
+      final LineProperties properties = items[i];
+
+      final String curveName = properties.getName();
+      final Color curveColor = properties.getColor();
+      final Integer curveSize = properties.getSize();
+      final DashType curveDash = properties.getDash();
+
+      if( name == null )
+        name = curveName;
+      else if( name != EditDiagCurveDialog.NAME_UNDEF )
+      {
+        if( !name.equals( curveName ) )
+          name = EditDiagCurveDialog.NAME_UNDEF;
+      }
+
+      if( color == null )
+        color = curveColor;
+      else if( color != LineProperties.COLOR_UNDEF )
+      {
+        if( !color.equals( curveColor ) )
+          color = LineProperties.COLOR_UNDEF;
+      }
+
+      if( size == null )
+        size = curveSize;
+      else if( size != LineProperties.SIZE_UNDEF )
+      {
+        if( !size.equals( curveSize ) )
+          size = LineProperties.SIZE_UNDEF;
+      }
+
+      if( dash == null )
+        dash = curveDash;
+      else if( dash != LineProperties.DASH_UNDEF )
+      {
+        if( !dash.equals( curveDash ) )
+          dash = LineProperties.DASH_UNDEF;
+      }
+    }
+
+    if( dash == null )
+      dash = DashType.NONE;
+
+    return new LineProperties( name, color, size, dash );
   }
 }

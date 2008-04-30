@@ -48,6 +48,16 @@
 	<xs:complexType name="typeCurve">
 		<xs:sequence>
 			<xs:element name="mapping" type="myns:typeAxisMapping" minOccurs="2" maxOccurs="2"/>
+			<xs:element name="stroke" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:attribute name="width" type="xs:float" use="required"/>
+					<xs:attribute name="dash">
+						<xs:simpleType>
+							<xs:list itemType="xs:float"/>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:string" use="required"/>
 		<xs:attribute name="name" type="xs:string" use="required"/>
