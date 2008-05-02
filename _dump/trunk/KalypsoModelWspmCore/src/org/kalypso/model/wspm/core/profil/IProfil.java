@@ -64,7 +64,7 @@ public interface IProfil extends IObservation<TupleResult>
    * @param pointProperty
    */
   public void addPointProperty( final IComponent pointProperty );
-
+  public IComponent getPointPropertyFor( final String propertyID );
   public void addPointProperty( final IComponent pointProperty, final IComponent initialValues );
 
   /**
@@ -92,7 +92,7 @@ public interface IProfil extends IObservation<TupleResult>
    */
   public IRecord createProfilPoint( );
 
-  public IProfilPointMarker createPointMarker( final IComponent marker, IRecord point );
+  public IProfilPointMarker createPointMarker( final String markerID, IRecord point );
 
   /**
    * @return the active Point.

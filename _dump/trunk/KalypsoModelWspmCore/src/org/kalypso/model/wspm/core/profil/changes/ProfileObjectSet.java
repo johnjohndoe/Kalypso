@@ -71,7 +71,6 @@ public class ProfileObjectSet implements IProfilChange
     final IProfileObject[] oldObject = m_profil.getProfileObjects();
     m_profil.addProfileObjects( m_object );
 
-    // TODO list implementation of IProfileObject
     return new ProfileObjectSet( m_profil, oldObject );
   }
 

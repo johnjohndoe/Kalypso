@@ -43,16 +43,11 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 import java.util.ArrayList;
 
 import org.kalypso.commons.metadata.MetadataObject;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
-import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -67,9 +62,12 @@ public class BuildingWehr extends AbstractObservationBuilding
   public BuildingWehr( final IProfil profil )
   {
     final TupleResult result = new TupleResult();
-    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart", "", "", IWspmTuhhConstants.Q_STRING, IWspmTuhhConstants.WEHR_TYP_BEIWERT, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART, "Wehrart", "Wehrart" ) ) );
-    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert", "", "", IWspmConstants.Q_DOUBLE, 0.0, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Formbeiwert", "Formbeiwert" ) ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_WEHRART ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
     final IRecord emptyRecord = result.createRecord();
+    
+    emptyRecord.setValue( 0, IWspmTuhhConstants.WEHR_TYP_SCHARFKANTIG );
+    emptyRecord.setValue( 1, 0.0 );
     result.add( emptyRecord );
 
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
@@ -77,25 +75,23 @@ public class BuildingWehr extends AbstractObservationBuilding
     m_profil = profil;
     m_observation = observation;
 
-    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    addPointProperties( profil );
   }
 
   public BuildingWehr( final IProfil profil, final IObservation<TupleResult> observation )
   {
     m_profil = profil;
     m_observation = observation;
-
-    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    addPointProperties( profil );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
-   */
-  @Override
-  protected IComponent getPointProperty( final String id )
+  private void addPointProperties( final IProfil profil )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    return provider.getPointProperty( id );
+    final IComponent hoehe = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+
+    if( !profil.hasPointProperty( ok ) )
+      profil.addPointProperty( ok, hoehe );
   }
 
   /**

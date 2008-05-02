@@ -213,8 +213,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   {
 
     final IProfil profil = getProfil();
-    final IComponent rauheit = profil.hasPointProperty( m_rauheit );
-    final Point2D[] points = ProfilUtil.getPoints2D( profil, rauheit );
+    final Point2D[] points = ProfilUtil.getPoints2D( profil, m_rauheit );
     if( points == null || points.length < 2 )
       return null;
     Rectangle hover = null;
@@ -228,7 +227,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
       if( hover.contains( point ) )
       {
         final String text = m_rauheit == IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ? "kst" : "ks";
-        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, rauheit ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
+        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, m_rauheit ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
       }
     }
     return null;
@@ -237,6 +236,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   /**
    * @see IProfilChartLayer#removeYourself()
    */
+  @Override
   public void removeYourself( )
   {
     final IProfilChange change = new PointPropertyRemove( m_profile, m_profile.hasPointProperty( m_rauheit ) );

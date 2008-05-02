@@ -54,6 +54,7 @@ public interface IProfilPointMarkerProvider
    * @deprecated Use {@link IProfilPointPropertyProvider#getPointProperties()},{@link IProfilPointPropertyProvider#isMarker(String)}instead.
    * @return all markers
    */
+  @Deprecated
   public String[] getMarkerTypes( );
 
   /**
@@ -67,6 +68,7 @@ public interface IProfilPointMarkerProvider
    * @deprecated Use {@link IProfilPointPropertyProvider#isMarker(String)} instead.
    * component is type of marker?
    */
+  @Deprecated
   public boolean isMarker( final IComponent component );
 
   /**
@@ -87,6 +89,7 @@ public interface IProfilPointMarkerProvider
   /**
    * @deprecated Use {@link IProfil#createPointMarker(IComponent, IRecord)} instead.
    */
+  @Deprecated
   public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point );
 
 }

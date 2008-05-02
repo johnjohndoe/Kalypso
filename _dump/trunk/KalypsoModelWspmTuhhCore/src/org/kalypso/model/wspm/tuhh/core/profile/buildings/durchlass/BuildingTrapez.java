@@ -43,18 +43,12 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass;
 import java.util.ArrayList;
 
 import org.kalypso.commons.metadata.MetadataObject;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
-import org.kalypso.observation.result.Component;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * @author kimwerner
@@ -66,13 +60,13 @@ public final class BuildingTrapez extends AbstractObservationBuilding
   public BuildingTrapez( final IProfil profil )
   {
     final TupleResult result = new TupleResult();
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) );
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
-    result.addComponent( createComponent( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
 
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
 
@@ -84,36 +78,36 @@ public final class BuildingTrapez extends AbstractObservationBuilding
     init( profil, observation );
   }
 
-  private IComponent createComponent( final String type )
-  {
-    /* building observation properties */
-    if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X" ) );
-    else if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y" ) );
-    if( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
-    else if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite" ) );
-    if( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle" ) );
-    else if( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit" ) );
-    else if( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG.equals( type ) )
-      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, "Steigung", "Steigung", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, "Steigung", "Steigung" ) );
+//  private IComponent createComponent( final String type )
+//  {
+//    /* building observation properties */
+//    if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, "Bezugspunkt X", "Bezugspunkt X" ) );
+//    else if( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, "Bezugspunkt Y", "Bezugspunkt Y" ) );
+//    if( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, "Höhe", "Höhe", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, "Höhe", "Höhe" ) );
+//    else if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite" ) );
+//    if( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_SOHLGEFAELLE, "Sohlgefälle", "Sohlgefälle" ) );
+//    else if( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit" ) );
+//    else if( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG.equals( type ) )
+//      return new Component( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, "Steigung", "Steigung", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, "Steigung", "Steigung" ) );
+//
+//    throw new NotImplementedException();
+//
+//  }
 
-    throw new NotImplementedException();
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
-   */
-  @Override
-  protected IComponent getPointProperty( final String id )
-  {
-    return createComponent( id );
-  }
+//  /**
+//   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
+//   */
+//  @Override
+//  protected IComponent getPointProperty( final String id )
+//  {
+//    return createComponent( id );
+//  }
 
   /**
    * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getProfileProperties()

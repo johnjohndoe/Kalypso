@@ -52,16 +52,14 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 import de.belger.swtchart.axis.AxisRange;
 import de.belger.swtchart.util.LogicalRange;
@@ -73,7 +71,7 @@ public class GelaendeLayer extends AbstractPolyLineLayer
 {
   public GelaendeLayer( final ProfilChartView pcv )
   {
-    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] { IWspmConstants.POINT_PROPERTY_HOEHE } ), true, true, true );
+    super( IWspmTuhhConstants.LAYER_GELAENDE, "Gelände", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmConstants.POINT_PROPERTY_HOEHE }, true, true, true );
     setColors( setColor( pcv.getColorRegistry() ) );
   }
 
@@ -117,28 +115,18 @@ public class GelaendeLayer extends AbstractPolyLineLayer
     for( final IProfilChange change : changes )
       if( change instanceof PointPropertyEdit || change instanceof PointAdd )
         for( final IRecord point : (IRecord[]) change.getObjects() )
-          try
-          {
-            final TupleResult owner = point.getOwner();
-
-            final IComponent cBreite = ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE );
-            int iBreite = owner.indexOfComponent( cBreite );
-            final double breite = (Double) point.getValue( iBreite );
-
-            final IComponent cHoehe = ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE );
-            int iHoehe = owner.indexOfComponent( cHoehe );
-            final double hoehe = (Double) point.getValue( iHoehe );
-
-            if( breite > right || breite < left || hoehe > top || hoehe < bottom )
-            {
-              valueRange.setLogicalRange( new LogicalRange( Math.min( hoehe, bottom ), Math.max( hoehe, top ) ) );
-              domainRange.setLogicalRange( new LogicalRange( Math.min( breite, left ), Math.max( breite, right ) ) );
-            }
-          }
-          catch( final Exception e )
-          {
+        {
+          final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+          final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
+          if( hoehe.isNaN() || breite.isNaN() )
             return;
+
+          if( breite > right || breite < left || hoehe > top || hoehe < bottom )
+          {
+            valueRange.setLogicalRange( new LogicalRange( Math.min( hoehe, bottom ), Math.max( hoehe, top ) ) );
+            domainRange.setLogicalRange( new LogicalRange( Math.min( breite, left ), Math.max( breite, right ) ) );
           }
+        }
   }
 
   @Override

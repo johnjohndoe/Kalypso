@@ -378,6 +378,19 @@ public abstract class AbstractProfil implements IProfil
   }
 
   /**
+   * @return a pointProperty from PointPropertyProvider, see
+   *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
+   *         <p>
+   *         you must check {@link #hasPointProperty(IComponent)}, if false you must call
+   *         {@link #addPointProperty(IComponent)}
+   */
+  public IComponent getPointPropertyFor( final String propertyID )
+  {
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    return provider == null ? null : provider.getPointProperty( propertyID );
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getRecordPoints()
    */
   public IRecord[] getPoints( )
@@ -450,14 +463,7 @@ public abstract class AbstractProfil implements IProfil
    */
   public boolean hasPointProperty( final IComponent property )
   {
-    if( property == null )
-      return false;
-
-    final IComponent[] components = getResult().getComponents();
-    if( ArrayUtils.contains( components, property ) )
-      return true;
-
-    return false;
+    return property == null ? false : getResult().hasComponent( property );
   }
 
   /**

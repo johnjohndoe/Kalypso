@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -104,6 +105,15 @@ public class ProfilUtil
           return (Double) oValue;
       }
     }
+    return Double.NaN;
+  }
+
+  public static Double getDoubleValueFor( final String componentID, final IProfileObject building )
+  {
+    final IComponent property = building.getObjectProperty( componentID );
+    final Object value = building.getValue( property );
+    if( value != null && value instanceof Double )
+      return (Double) value;
     return Double.NaN;
   }
 
@@ -317,7 +327,7 @@ public class ProfilUtil
     return pkt;
   }
 
-  public static IRecord[] findPoints( final IProfil profile, final IComponent property, final Point2D point, final Double radius )
+  public static IRecord[] findPoints( final IProfil profile, final String propertyID, final Point2D point, final Double radius )
   {
 
     final IRecord[] points = profile.getPoints();
@@ -325,7 +335,7 @@ public class ProfilUtil
     final ArrayList<IRecord> found = new ArrayList<IRecord>();
     for( final IRecord p : points )
     {
-      final Point2D p2D = new Point2D.Double( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p ), getDoubleValueFor( property.getId(), p ) );
+      final Point2D p2D = new Point2D.Double( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p ), getDoubleValueFor( propertyID, p ) );
       if( p2D.distance( point ) <= radius )
         found.add( p );
     }
@@ -479,9 +489,18 @@ public class ProfilUtil
     return points.toArray( new IRecord[0] );
   }
 
+  /**
+   * @deprecated use {@code  #getPoints2D(IProfil,String)} instead
+   */
+  @Deprecated
   public static Point2D[] getPoints2D( final IProfil profil, final IComponent pointProperty )
   {
-    if( pointProperty == null )
+    return getPoints2D( profil, pointProperty.getId() );
+  }
+
+  public static Point2D[] getPoints2D( final IProfil profil, final String propertyID )
+  {
+    if( profil.hasPointProperty( propertyID ) == null )
       return new Point2D[] {};
 
     final IRecord[] points = profil.getPoints();
@@ -490,7 +509,7 @@ public class ProfilUtil
     for( final IRecord p : points )
     {
       final Double x = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );
-      final Double y = getDoubleValueFor( pointProperty.getId(), p );
+      final Double y = getDoubleValueFor( propertyID, p );
       if( y.isNaN() || x.isNaN() )
         return new Point2D[] {};
       points2D[i++] = new Point2D.Double( x, y );

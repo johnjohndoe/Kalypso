@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil;
 
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**

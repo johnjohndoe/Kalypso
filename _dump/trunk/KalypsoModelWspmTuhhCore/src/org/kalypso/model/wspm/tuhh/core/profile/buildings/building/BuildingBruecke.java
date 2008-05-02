@@ -43,16 +43,11 @@ package org.kalypso.model.wspm.tuhh.core.profile.buildings.building;
 import java.util.ArrayList;
 
 import org.kalypso.commons.metadata.MetadataObject;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
-import org.kalypso.observation.phenomenon.DictionaryPhenomenon;
-import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -69,17 +64,16 @@ final public class BuildingBruecke extends AbstractObservationBuilding
     m_profil = profil;
 
     final TupleResult result = new TupleResult();
-    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, "Breite", "Breite" ) ) );
-    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, "Unterwasser", "Unterwasser", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER, "Unterwasser", "Unterwasser" ) ) );
-    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Pfeilerformbeiwert", "Pfeilerformbeiwert", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, "Pfeilerformbeiwert", "Pfeilerformbeiwert" ) ) );
-    result.addComponent( new Component( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit", "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT, "Rauheit", "Rauheit" ) ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_UNTERWASSER ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+    result.addComponent( createObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT ) );
     final IRecord emptyRecord = result.createRecord();
     result.add( emptyRecord );
     final Observation<TupleResult> observation = new Observation<TupleResult>( ID, ID, result, new ArrayList<MetadataObject>() );
 
     m_observation = observation;
-    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
+    addPointProperties( profil );
 
   }
 
@@ -87,14 +81,17 @@ final public class BuildingBruecke extends AbstractObservationBuilding
   {
     m_profil = profil;
     m_observation = observation;
-    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-    profil.addPointProperty( getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ), getPointProperty( IWspmTuhhConstants.POINT_PROPERTY_HOEHE ) );
-  }
+    addPointProperties( profil );  }
 
-  @Override
-  protected String[] getProfileProperties( )
+  private void addPointProperties( final IProfil profil )
   {
-    return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
+    final IComponent hoehe = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
+    final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    if( !profil.hasPointProperty( uk ) )
+      profil.addPointProperty( uk, hoehe );
+    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    if( !profil.hasPointProperty( ok ) )
+      profil.addPointProperty( ok, hoehe );
   }
 
   /**
@@ -105,14 +102,10 @@ final public class BuildingBruecke extends AbstractObservationBuilding
     return ID;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.buildings.AbstractObservationBuilding#getPointProperty(java.lang.String)
-   */
   @Override
-  protected IComponent getPointProperty( final String id )
+  protected String[] getProfileProperties( )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.PROFIL_TYPE_PASCHE );
-    return provider.getPointProperty( id );
+    return new String[] { IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE };
   }
 
 }

@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.tuhh.core;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
 
 /**

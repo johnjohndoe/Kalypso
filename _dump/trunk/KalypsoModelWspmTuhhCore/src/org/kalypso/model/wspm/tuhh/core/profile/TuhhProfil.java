@@ -86,6 +86,7 @@ public class TuhhProfil extends AbstractProfil
     setProperty( PROFILE_OBJECTS, null );
     if( profileObjects.length > 0 )
       return super.addProfileObjects( profileObjects );
+    
     return profileObjects;
   }
 
@@ -121,20 +122,24 @@ public class TuhhProfil extends AbstractProfil
       return new BuildingTrapez( this, observation );
     return null;
   }
-  public IProfilPointMarker createPointMarker( IComponent cmp, IRecord point )
+  public IProfilPointMarker createPointMarker( String markerID, IRecord point )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    if( provider==null )
+      throw new IllegalStateException( "no ProfilPointProvider founf for: "+ getType() );
+
+    final IComponent marker = getPointPropertyFor( markerID );
     /* first check, if provider provides markerType */
-    if( !provider.isMarker( cmp.getId() ) )
-      throw new IllegalStateException( "ProfilPointProvider doesn'tprovides - " + cmp.getName() + " as Marker" );
+    if( !provider.isMarker( markerID ) )
+      throw new IllegalStateException( "ProfilPointProvider doesn'tprovides - " + marker.getName() + " as Marker" );
     /* point has component already defined? */
-    if( !getResult().hasComponent( cmp ) )
+    if( !hasPointProperty( marker) )
     {
       /* else create a new profile component */
-      getResult().addComponent( cmp );
+      addPointProperty(  marker );
     }
     /* create a new profile point marker */
-    return new ProfilDevider( cmp, point );
+    return new ProfilDevider( marker, point );
   }
   /**
    * @return false if the point is captured by a marker and will NOT remove the point from pointList

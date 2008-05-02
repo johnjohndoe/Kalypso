@@ -61,6 +61,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -94,7 +95,7 @@ public class BuildingPanel extends AbstractProfilView
 
   private String getLabel( final IComponent property )
   {
-    return property.getName()+ " ["+property.getUnit()+"]";
+    return property.getName() + " [" + property.getUnit() + "]";
   }
 
   /**
@@ -117,7 +118,7 @@ public class BuildingPanel extends AbstractProfilView
 
     for( final IComponent buildingProperty : m_building.getObjectProperties() )
     {
-      final String tooltip = buildingProperty.getDescription(); 
+      final String tooltip = buildingProperty.getDescription();
 
       final Label label = new Label( panel, SWT.NONE );
       label.setLayoutData( new GridData( GridData.BEGINNING, GridData.BEGINNING, true, false ) );
@@ -148,7 +149,7 @@ public class BuildingPanel extends AbstractProfilView
           final double value = NumberUtils.parseQuietDouble( bldText.getText() );
           final IProfil profil = getProfil();
 
-           final IProfileObject[] buildings = profil.getProfileObjects();
+          final IProfileObject[] buildings = profil.getProfileObjects();
           IProfileObject building = null;
 
           if( buildings.length > 0 )
@@ -161,7 +162,7 @@ public class BuildingPanel extends AbstractProfilView
           }
           try
           {
-            final double currentValue = (Double) building.getValue( buildingProperty );
+            final Double currentValue = ProfilUtil.getDoubleValueFor( buildingProperty.getId(), building );
             if( value == currentValue )
               return;
             final ProfileObjectEdit edit = new ProfileObjectEdit( building, buildingProperty, value );

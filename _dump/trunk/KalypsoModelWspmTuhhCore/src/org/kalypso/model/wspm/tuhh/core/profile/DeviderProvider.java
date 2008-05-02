@@ -44,7 +44,6 @@ import java.util.HashMap;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
@@ -75,8 +74,12 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   }
 
   /**
+   * @deprecated
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IRecord)
    */
+ 
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point )
   {
     /* first check, if provider provides markerType */
@@ -97,6 +100,8 @@ public class DeviderProvider implements IProfilPointMarkerProvider
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(java.lang.String,
    *      org.kalypso.observation.result.IRecord)
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public IProfilPointMarker createProfilPointMarker( final String markerType, final IRecord point )
   {
     /* first check, if provider provides markerType */
@@ -147,42 +152,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     // return ImageDescriptor.createFromImageData( imageData );
   }
 
-  private void fillColor( ImageData imageData, final int x, final RGB color )
-  {
-    // final byte[] values = new byte[3];
-
-// final RGB[] rgbs = imageData.getRGBs();
-// if( rgbs == null )
-// {
-// // TODO: shift from Mask
-// }
-// else
-// {
-// byte pos = 0;
-// for( final RGB rgb : rgbs )
-// {
-// if( rgb.equals( color ) )
-// break;
-// pos++;
-// }
-    // Arrays.fill( values, pos );
-    for( int i = 0; i < 16; i++ )
-
-    {
-
-      for( int j = 0; j < 3; j++ )
-      {
-        if( imageData.getPixel( x + j, i ) == -256 )
-        {
-
-          imageData.setPixel( x + j, i, 0 );
-        }
-      }
-
-    }
-    // imageData.setPixels( x, i, 3, values, 0 );
-    // }
-  }
+ 
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getColorFor(java.lang.String)
@@ -195,6 +165,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getMarkers()
    */
+  @SuppressWarnings("deprecation")
   public String[] getMarkerTypes( )
   {
     return m_markerTypes.keySet().toArray( new String[] {} );
@@ -203,6 +174,8 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#isMarker(org.kalypso.observation.result.IComponent)
    */
+  @Deprecated
+  @SuppressWarnings("deprecation")
   public boolean isMarker( final IComponent component )
   {
     return m_markerTypes.containsKey( component.getId() );
@@ -211,6 +184,8 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#providesPointMarker(org.kalypso.observation.result.IComponent)
    */
+  @Deprecated
+  @SuppressWarnings("deprecation")
   public boolean providesPointMarker( final IComponent marker )
   {
     try

@@ -41,19 +41,19 @@
 package org.kalypso.model.wspm.tuhh.core.profile.buildings;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.loader.PooledXLinkFeatureProvider;
+import org.kalypso.ogc.gml.om.FeatureComponent;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Kim Werner, Dirk Kuch
@@ -85,21 +85,23 @@ public abstract class AbstractObservationBuilding implements IProfileObject
     m_profil = profil;
     m_observation = observation;
 
-    final String[] buildingProfileProperties = getProfileProperties();
-    final Map<String, IComponent> props = ProfilUtil.getComponentsFromProfile( profil );
+// final String[] buildingProfileProperties = getProfileProperties();
+// final Map<String, IComponent> props = ProfilUtil.getComponentsFromProfile( profil );
 
-    for( final String id : buildingProfileProperties )
+    for( final String id : getProfileProperties() )
     {
-      if( !props.containsKey( id ) )
-      {
-        profil.addPointProperty( getPointProperty( id ) );
-      }
+// if( !props.containsKey( id ) )
+// {
+      final IComponent property = profil.getPointPropertyFor( id );
+      if( !profil.hasPointProperty( property ) )
+        profil.addPointProperty( property );
+// }
     }
   }
 
   protected abstract String[] getProfileProperties( );
 
-  protected abstract IComponent getPointProperty( String id );
+  // protected abstract IComponent getPointProperty( String id );
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValue(org.kalypso.observation.result.IComponent)
@@ -107,12 +109,15 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   public Object getValue( final IComponent component )
   {
     final TupleResult result = m_observation.getResult();
+    final int index = result.indexOfComponent( component );
+    if( index < 0 )
+      throw new IllegalArgumentException( component.getName() );
     if( result.size() > 1 )
       throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
     else if( result.size() == 0 )
       result.add( result.createRecord() );
 
-    return result.get( 0 ).getValue( component );
+    return result.get( 0 ).getValue( index );
   }
 
   /**
@@ -121,42 +126,15 @@ public abstract class AbstractObservationBuilding implements IProfileObject
    */
   public void setValue( final IComponent component, final Object value )
   {
+    final TupleResult result = m_observation.getResult();
+    if( result.size() > 1 )
+      throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
+    final int index = result.indexOf( component );
+    if( index < 0 )
+      throw new IllegalArgumentException( component.getName() );
 
-    final String[] profileProperties = getProfileProperties();
-    for( final String string : profileProperties )
-    {
-
-    }
-
-    try
-    {
-      final TupleResult result = m_observation.getResult();
-
-      IRecord record = null;
-
-      if( result.size() > 1 )
-        throw new IllegalStateException( "wspm building always consists of one IRecord-Set row" );
-      else if( result.size() == 0 )
-      {
-//        final Set<IComponent> set = new HashSet<IComponent>();
-//        for( final IComponent c : result.getComponents() )
-//        {
-//          set.add( c );
-//        }
-
-        record = result.createRecord();
-      }
-
-      else
-        record = result.get( 0 );
-
-      record.setValue( component, value );
-    }
-    catch( final Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    IRecord record = result.size() == 0 ? result.createRecord() : result.get( 0 );
+    record.setValue( index, value );
   }
 
   /**
@@ -180,18 +158,32 @@ public abstract class AbstractObservationBuilding implements IProfileObject
    */
   public IComponent[] getPointProperties( )
   {
-    final IComponent[] profileComponents = m_profil.getResult().getComponents();
-    final String[] buildingProfileProperties = getProfileProperties();
-
     final List<IComponent> myProperties = new ArrayList<IComponent>();
-
-    for( final IComponent comp : profileComponents )
+    for( final String id : getProfileProperties() )
     {
-      if( ArrayUtils.contains( buildingProfileProperties, comp.getId() ) )
-        myProperties.add( comp );
+      final IComponent component = m_profil.hasPointProperty( id );
+      if( component != null )
+        myProperties.add( component );
     }
-
     return myProperties.toArray( new IComponent[] {} );
 
   }
+
+  protected IComponent createObjectProperty( final String id )
+  {
+    final String[] split = id.split( "#" );
+    final String urn = split[0];
+
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    final PooledXLinkFeatureProvider featureProvider = new PooledXLinkFeatureProvider( null, uri );
+
+    final Feature componentFeature = featureProvider.getFeature( split[1] );
+
+    final FeatureComponent featureComponent = new FeatureComponent( componentFeature, urn );
+
+    return featureComponent;
+  }
+
 }

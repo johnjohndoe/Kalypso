@@ -53,9 +53,9 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
@@ -77,9 +77,9 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   {
     private final int m_index;
 
-    private final IComponent m_property;
+    private final String m_property;
 
-    public EditData( final int index, final IComponent property )
+    public EditData( final int index, final String property )
     {
       m_index = index;
       m_property = property;
@@ -90,7 +90,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
       return m_index;
     }
 
-    public IComponent getProperty( )
+    public String getProperty( )
     {
       return m_property;
     }
@@ -106,7 +106,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   private final Color m_selectedcolor;
 
-  private final IComponent[] m_lineProperties;
+  private final String[] m_lineProperties;
 
   private final boolean m_drawStationLines;
 
@@ -114,7 +114,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
   private final boolean m_mayEditVert;
 
-  public AbstractPolyLineLayer( final String layerId, final String label, final ProfilChartView pcv, final AxisRange domainRange, final AxisRange valueRange, final IComponent[] lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
+  public AbstractPolyLineLayer( final String layerId, final String label, final ProfilChartView pcv, final AxisRange domainRange, final AxisRange valueRange, final String[] lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
   {
     super( layerId, pcv, domainRange, valueRange, label );
     m_selectedcolor = pcv.getColorRegistry().get( IProfilColorSet.COLOUR_GELAENDE_MARKED );
@@ -180,15 +180,18 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
     final Point2D logPoint = screen2logical( moveTo );
 
-    final ProfilOperation profilOperation = new ProfilOperation( Messages.AbstractPolyLineLayer_1, getProfil(), true );
+    final IProfil profil = getProfil();
 
-    final IComponent property = editData.getProperty();
+    final ProfilOperation profilOperation = new ProfilOperation( Messages.AbstractPolyLineLayer_1, profil, true );
+
+    final String propertyID = editData.getProperty();
+    final IComponent property = profil.hasPointProperty( propertyID );
     if( getViewData().isEditvert() )
       profilOperation.addChange( new PointPropertyEdit( point, property, logPoint.getY() ) );
     if( m_mayEditVert && getViewData().isEdithorz() )
-      profilOperation.addChange( new PointPropertyEdit( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), logPoint.getX() ) );
+      profilOperation.addChange( new PointPropertyEdit( point, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ), logPoint.getX() ) );
 
-    profilOperation.addChange( new ActiveObjectEdit( getProfil(), point, property ) );
+    profilOperation.addChange( new ActiveObjectEdit( profil, point, property ) );
 
     new ProfilOperationJob( profilOperation ).schedule();
 
@@ -200,7 +203,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   public Rectangle2D getBounds( )
   {
     Rectangle2D bounds = null;
-    for( final IComponent next : m_lineProperties )
+    for( final String next : m_lineProperties )
     {
       final Point2D[] points = ProfilUtil.getPoints2D( getProfil(), next );
 
@@ -217,9 +220,13 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   @Override
   public EditInfo getHoverInfo( final Point mousePos )
   {
-    for( final IComponent property : m_lineProperties )
+    for( final String propertyID : m_lineProperties )
     {
-      final Point2D[] points = ProfilUtil.getPoints2D( getProfil(), property );
+      final Point2D[] points = ProfilUtil.getPoints2D( getProfil(), propertyID );
+
+      final IProfil profil = getProfil();
+
+      final IComponent property = profil.hasPointProperty( propertyID );
 
       for( final Point2D element : points )
       {
@@ -227,16 +234,11 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         final Rectangle hover = RectangleUtils.buffer( p );
         if( hover.contains( mousePos ) )
         {
-          // TODO:KIM read delta from property
-          final double delta = 0.0001;
-          final double x = element.getX();
-          final double y = element.getY();
-
-          final IRecord[] found = ProfilUtil.findPoints( getProfil(), property, element, delta );
-
+          final double delta = property.getPrecision();
+          final IRecord[] found = ProfilUtil.findPoints( getProfil(), propertyID, element, delta );
           final int index = ArrayUtils.indexOf( getProfil().getPoints(), found[0] );
 
-          return isPointVisible( found[0] ) ? new EditInfo( this, hover, new EditData( index, property ), String.format( TOOLTIP_FORMAT, new Object[] { Messages.AbstractPolyLineLayer_2,
+          return isPointVisible( found[0] ) ? new EditInfo( this, hover, new EditData( index, propertyID ), String.format( TOOLTIP_FORMAT, new Object[] { Messages.AbstractPolyLineLayer_2,
               element.getX(), property.getName(), element.getY() } ) ) : null;
         }
       }
@@ -261,7 +263,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     try
     {
       final IRecord[] ppoints = getPoints();
-
+      final IProfil profil = getProfil();
       if( ppoints == null )
         return;
 
@@ -273,7 +275,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
         int i = 0;
         for( int line = m_lineProperties.length - 1; line > -1; line-- )
         {
-          final IComponent pprop = m_lineProperties[line];
+          final IComponent pprop = profil.hasPointProperty( m_lineProperties[line] );
           final Color pcol = m_colors[line];
           final Point pt = logical2screen( ProfilUtil.getPoint2D( pp, pprop ) );
 
@@ -370,7 +372,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
    * 
    * @return The line properties.
    */
-  protected IComponent[] getLineProperties( )
+  protected String[] getLineProperties( )
   {
     return m_lineProperties;
   }

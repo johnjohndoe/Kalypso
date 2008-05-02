@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
@@ -103,25 +103,26 @@ public class KreisBuildingLayer extends AbstractBuildingLayer
   @Override
   public void paint( final GCWrapper gc )
   {
-    final Color background = gc.getBackground();
-    gc.setBackground( getColor() );
 
     final Rectangle2D oval = createOval();
-
+    if( oval == null )
+      return;
+    final Color background = gc.getBackground();
+    gc.setBackground( getColor() );
     final Rectangle ovalScreen = logical2screen( oval );
     gc.fillOval( ovalScreen.x, ovalScreen.y, ovalScreen.width, ovalScreen.height );
-    // gc.drawOval( ovalScreen.x, ovalScreen.y, ovalScreen.width,
-    // ovalScreen.height );
-
     gc.setBackground( background );
   }
 
   private Rectangle2D createOval( )
   {
     final IProfileObject building = getBuilding();
-    final double bezX = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
-    final double bezY = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
-    final double durchmesser = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
+    final Double bezX = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, building );
+    final Double bezY = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, building );
+    final Double durchmesser = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, building );
+    if( bezX.isNaN() || bezY.isNaN() || durchmesser.isNaN() )
+      return null;
+
     final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY );
     final double w = durchmesser;
     final double h = durchmesser;

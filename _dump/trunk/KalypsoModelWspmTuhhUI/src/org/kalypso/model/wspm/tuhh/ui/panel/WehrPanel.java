@@ -66,23 +66,19 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
@@ -119,7 +115,7 @@ public class WehrPanel extends AbstractProfilView
 
   private class DeviderLine extends Composite
   {
-    private final int position;
+    protected final int position;
 
     protected Text m_beiwert;
 
@@ -160,7 +156,7 @@ public class WehrPanel extends AbstractProfilView
         @Override
         public void focusGained( final FocusEvent e )
         {
-          if((m_beiwert!= null)&& !m_beiwert.isDisposed() )
+          if( (m_beiwert != null) && !m_beiwert.isDisposed() )
             m_beiwert.selectAll();
         }
 
@@ -170,7 +166,7 @@ public class WehrPanel extends AbstractProfilView
         @Override
         public void focusLost( final FocusEvent e )
         {
-          if((m_beiwert== null)||  m_beiwert.isDisposed() )
+          if( (m_beiwert == null) || m_beiwert.isDisposed() )
             return;
           final double value = NumberUtils.parseQuietDouble( m_point.getText() );
           if( !Double.isNaN( value ) )
@@ -219,17 +215,17 @@ public class WehrPanel extends AbstractProfilView
           {
 
             final IProfilPointMarker marker = getMarker();
-            final IRecord point = getProfil().getPoint( getProfil().indexOfPoint( marker.getPoint() ) + 1 );
+            final IProfil profil = getProfil();
+            final IRecord point = profil.getPoint( getProfil().indexOfPoint( marker.getPoint() ) + 1 );
 
-            final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", getProfil(), true );
-            final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
-            final IProfilPointMarker trenner = provider.createProfilPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
+            final ProfilOperation operation = new ProfilOperation( "Wehrfeld erzeugen", profil, true );
+            final IProfilPointMarker trenner = profil.createPointMarker( IWspmTuhhConstants.MARKER_TYP_WEHR, point );
 
             if( trenner != null )
             {
               final Object objVal = marker.getValue();
               final IProfileObject[] buildings = getProfil().getProfileObjects();
-              final Object dblVal = (objVal instanceof Double) ? objVal : buildings[0].getValue( ProfilObsHelper.getPropertyFromId( buildings[0], IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) );
+              final Object dblVal = (objVal instanceof Double) ? objVal : ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT, buildings[0] );
               operation.addChange( new PointMarkerEdit( trenner, dblVal ) );
               operation.addChange( new ActiveObjectEdit( getProfil(), point, null ) );
               new ProfilOperationJob( operation ).schedule();
@@ -245,7 +241,7 @@ public class WehrPanel extends AbstractProfilView
           @Override
           public void focusGained( final FocusEvent e )
           {
-            if((m_beiwert== null)||  m_beiwert.isDisposed() )
+            if( (m_beiwert == null) || m_beiwert.isDisposed() )
               return;
             m_beiwert.selectAll();
           }
@@ -256,7 +252,7 @@ public class WehrPanel extends AbstractProfilView
           @Override
           public void focusLost( final FocusEvent e )
           {
-            if((m_beiwert== null)||  m_beiwert.isDisposed() )
+            if( (m_beiwert == null) || m_beiwert.isDisposed() )
               return;
             final double value = NumberUtils.parseQuietDouble( m_beiwert.getText() );
             if( !Double.isNaN( value ) )
@@ -268,7 +264,7 @@ public class WehrPanel extends AbstractProfilView
                 if( profileObjects.length > 0 )
                   building = profileObjects[0];
 
-                final IProfilChange change = new ProfileObjectEdit( building, ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), value );
+                final IProfilChange change = new ProfileObjectEdit( building, building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ), value );
                 final ProfilOperation operation = new ProfilOperation( "Wehrfeldparameter ändern", getProfil(), change, true );
                 new ProfilOperationJob( operation ).schedule();
               }
@@ -311,7 +307,9 @@ public class WehrPanel extends AbstractProfilView
         IProfileObject building = null;
         if( profileObjects.length > 0 )
           building = profileObjects[0];
-        m_beiwert.setText( building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT ) ).toString() );
+        final IComponent beiwert = building.getObjectProperty( IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
+        final Object objValue = building.getValue( beiwert );
+        m_beiwert.setText( objValue == null ? "" : objValue.toString() );
 
         m_point.setText( Double.toString( (Double) getMarker().getPoint().getValue( iBreite ) ) );
 
@@ -331,7 +329,7 @@ public class WehrPanel extends AbstractProfilView
     }
   }
 
-  private ComboViewer m_Wehrart;
+  protected ComboViewer m_Wehrart;
 
   protected Button m_WehrfeldVisible;
 
@@ -341,7 +339,7 @@ public class WehrPanel extends AbstractProfilView
 
   protected final Image m_deleteImg;
 
-  private final Image m_addImg;
+  protected final Image m_addImg;
 
   protected Label m_parameterLabel;
 
@@ -434,11 +432,10 @@ public class WehrPanel extends AbstractProfilView
     plGridData.horizontalSpan = 2;
     m_parameterLabel.setLayoutData( plGridData );
     m_parameterLabel.setAlignment( SWT.RIGHT );
-    final Label parameterSpacer = new Label( panel, SWT.SEPARATOR | SWT.HORIZONTAL );
+
     final GridData psGridData = new GridData( GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL );
     psGridData.horizontalSpan = 2;
-    parameterSpacer.setLayoutData( psGridData );
-    parameterSpacer.setAlignment( SWT.CENTER );
+
     m_wehrStart = new DeviderLine( panel, -1 );
     // Wehrparameter Group
     m_deviderGroup = new Composite( panel, SWT.NONE );
@@ -501,7 +498,7 @@ public class WehrPanel extends AbstractProfilView
     m_wehrStart.refresh();
     m_wehrEnd.refresh();
     final IComponent cmpWehrTrenner = getProfil().hasPointProperty( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    final GridData gridData = (GridData) m_deviderGroup.getLayoutData();
+
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( cmpWehrTrenner );
 
     while( m_deviderLines.size() < deviders.length )
@@ -518,8 +515,6 @@ public class WehrPanel extends AbstractProfilView
       devl.refresh();
     }
 
-    // m_deviderGroup.getParent().layout();
-    // gridData.exclude = deviders.length <1;
     m_deviderGroup.getParent().layout();
 
   }

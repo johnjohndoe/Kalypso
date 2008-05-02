@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
@@ -51,11 +50,11 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -64,6 +63,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -80,8 +80,8 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   public BrueckeBuildingLayer( final ProfilChartView pcv )
 
   {
-    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), ProfilObsHelper.getPropertyFromId( pcv.getProfil(), new String[] {
-        IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE } ), false, false, false );
+    super( IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), new String[] { IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE,
+        IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE }, false, false, false );
     setColors( setColor( pcv.getColorRegistry() ) );
 
   }
@@ -124,25 +124,24 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
 
   }
 
-  protected Double convertPoint( final IRecord p, final int lineNr )
+  protected Point2D.Double convertPoint( final IRecord p, final int lineNr )
   {
     {
-      final double x = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
+      final Double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );
       double y = 0.0;
       switch( lineNr )
       {
         case 0:
         {
-          y = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) );
+          y = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ,p );
           break;
         }
         case 1:
         {
-          y = (java.lang.Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) );
+          y = ProfilUtil.getDoubleValueFor(IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ,p);
           break;
         }
       }
-
       return new Point2D.Double( x, y );
     }
   }
@@ -155,13 +154,20 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
 
   public void removeYourself( )
   {
-      final IProfil profile = getProfil();
-    final IProfileObject building = profile.getProfileObjects()[0];
-    final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new ProfileObjectSet( profile, new IProfileObject[] {} );
-    changes[1] = new PointPropertyRemove( profile, building.getPointProperties()[0]);
-    changes[2] = new PointPropertyRemove( profile,  building.getPointProperties()[1] );
-    final ProfilOperation operation = new ProfilOperation( " entfernen", profile, changes, true );
+    final IProfil profile = getProfil();
+    final IProfileObject[] buildings = profile.getProfileObjects();
+    final ProfilOperation operation = new ProfilOperation( "Objekte entfernen", profile, true );
+
+    /**
+     * remove all buildings
+     */
+    operation.addChange( new ProfileObjectSet( profile, new IProfileObject[] {} ) );
+
+    final IProfileObject building = buildings.length > 0 ? buildings[0] : null;
+    IComponent[] properties = building == null ? new IComponent[] {} : building.getPointProperties();
+    for( final IComponent property : properties )
+      operation.addChange( new PointPropertyRemove( profile, property ) );
+
     new ProfilOperationJob( operation ).schedule();
   }
 }

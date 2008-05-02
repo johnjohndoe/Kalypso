@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
@@ -104,10 +104,14 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
   @Override
   public void paint( final GCWrapper gc )
   {
+
+    final double[] trapezArray = createTrapez();
+
+    if( trapezArray == null )
+      return;
     final Color background = gc.getBackground();
     gc.setBackground( getColor() );
 
-    final double[] trapezArray = createTrapez();
     final Rectangle2D trapezRect = new Rectangle2D.Double( trapezArray[0], trapezArray[1], trapezArray[2] - trapezArray[0], trapezArray[5] - trapezArray[1] );
     final Rectangle trapezScreen = logical2screen( trapezRect );
     final Point2D topLeft = new Point2D.Double( trapezArray[6], trapezArray[7] );
@@ -135,11 +139,15 @@ public class TrapezBuildingLayer extends AbstractBuildingLayer
   private double[] createTrapez( )
   {
     final IProfileObject building = getBuilding();
-    final double bezX = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X ) );
-    final double bezY = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y ) );
-    final double lang = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE ) );
-    final double hoch = (Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE ) );
-    final double dx = hoch * ((Double) building.getValue( ProfilObsHelper.getPropertyFromId( building, IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG ) ));
+    final Double bezX = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, building );
+    final Double bezY = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, building );
+    final Double lang = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, building );
+    final Double hoch = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, building );
+    final Double delta = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_STEIGUNG, building );
+    if( bezX.isNaN() || bezY.isNaN() || lang.isNaN() || hoch.isNaN() || delta.isNaN() )
+      return null;
+
+    final Double dx = hoch * delta;
 
     final double[] trapezArray = new double[8];
     trapezArray[0] = bezX - (lang / 2);

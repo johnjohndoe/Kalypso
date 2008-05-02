@@ -52,10 +52,19 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
 /**
- * @author Gernot Belger
+ * @author kimwerner
  */
 public abstract class AbstractRauheitLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
+   */
+  public void removeYourself( )
+  {
+    // override this method
+    
+  }
+
   private final Color m_color;
 
   protected IProfil m_profile;
