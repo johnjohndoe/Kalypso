@@ -137,12 +137,23 @@ public class AscGridExporter
 
     progress.setWorkRemaining( sizeY );
 
+    // adjust written origin according to xllcorner
+    final Double size = cellsize / 2.0;
+
+    double minX = envelope.getMinX();
+    double minY = envelope.getMinY();
+
+    double xllcorner = minX - size;
+    double yllcorner = minY + size;
+
+    // TODO: add parameter to let user decide, if xllcorner or xllcenter
+
     /* Header */
     // CellSize: .asc only support quadratic, cartesian cells, so we just take xOffset.x
     destination.format( Locale.US, "ncols         %d%n", sizeX );
     destination.format( "nrows         %d%n", sizeY );
-    destination.format( "xllcorner     %.3f%n", envelope.getMinX() ); // xllcorner
-    destination.format( "yllcorner     %.3f%n", envelope.getMinY() ); // yllcorner
+    destination.format( "xllcorner     %.3f%n", xllcorner ); // xllcorner
+    destination.format( "yllcorner     %.3f%n", yllcorner ); // yllcorner
     destination.format( "cellsize      " + m_valueFormat + "%n", cellsize );
     destination.format( "NODATA_value  " + m_valueFormat + "%n", m_noDataValue );
 

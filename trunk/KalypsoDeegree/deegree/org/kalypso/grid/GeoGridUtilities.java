@@ -682,4 +682,15 @@ public class GeoGridUtilities
     grid.getWalkingStrategy().walk( grid, walker, walkingArea, monitor );
     ProgressUtilities.worked( monitor, 1 );
   }
+
+  public static double calcCellArea( final Coordinate offsetX, final Coordinate offsetY )
+  {
+    final Coordinate a = new Coordinate( 0, 0 );
+    final Coordinate d = new Coordinate( offsetX.x + offsetY.x, offsetX.y + offsetY.y );
+
+    final double ac = offsetX.distance( offsetY );
+    final double bd = a.distance( d );
+
+    return 0.5 * ac * bd;
+  }
 }

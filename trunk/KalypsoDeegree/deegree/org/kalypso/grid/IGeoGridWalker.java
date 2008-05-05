@@ -12,7 +12,7 @@ public interface IGeoGridWalker
   /**
    * Wird vor der Iteration durch die Punkte aufgerufen
    */
-  void start( final IGeoGrid r ) throws GeoGridException;
+  void start( final IGeoGrid grid ) throws GeoGridException;
 
   /**
    * Wird für jeden Punkt des Rasters aufgerufen
