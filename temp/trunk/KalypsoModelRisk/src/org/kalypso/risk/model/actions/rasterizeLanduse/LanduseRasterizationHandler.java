@@ -53,18 +53,18 @@ public class LanduseRasterizationHandler extends AbstractHandler
 
       if( waterDepthCoverageCollection.size() == 0 )
       {
-        ErrorDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.0"), Messages.getString("LanduseRasterizationHandler.1"), Status.CANCEL_STATUS ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.0" ), Messages.getString( "LanduseRasterizationHandler.1" ), Status.CANCEL_STATUS ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
       final IAnnualCoverageCollection maxCoveragesCollection = RiskModelHelper.getMaxReturnPeriodCollection( waterDepthCoverageCollection );
       final Integer maxReturnPeriod = maxCoveragesCollection.getReturnPeriod();
 
       if( maxReturnPeriod == Integer.MIN_VALUE )
-        return StatusUtilities.createErrorStatus( Messages.getString("LanduseRasterizationHandler.2") ); //$NON-NLS-1$
+        return StatusUtilities.createErrorStatus( Messages.getString( "LanduseRasterizationHandler.2" ) ); //$NON-NLS-1$
 
       /* info dialog, that the rasterisation is don by using the extend of the grid with the max return period */
-      final String dialogTitle = Messages.getString("LanduseRasterizationHandler.3"); //$NON-NLS-1$
-      final String dialogMessage = Messages.getString("LanduseRasterizationHandler.4") + maxReturnPeriod + Messages.getString("LanduseRasterizationHandler.5"); //$NON-NLS-1$ //$NON-NLS-2$
+      final String dialogTitle = Messages.getString( "LanduseRasterizationHandler.3" ); //$NON-NLS-1$
+      final String dialogMessage = Messages.getString( "LanduseRasterizationHandler.4" ) + maxReturnPeriod + Messages.getString( "LanduseRasterizationHandler.5" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final Dialog dialog = new MessageDialog( shell, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, new String[] { "Ja", "Nein" }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -73,8 +73,8 @@ public class LanduseRasterizationHandler extends AbstractHandler
 
       final ICoreRunnableWithProgress runnableWithProgress = new RiskLanduseRasterizationRunnable( rasterModel, vectorDataModel, scenarioFolder );
 
-      IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
-      ErrorDialog.openError( shell, Messages.getString("LanduseRasterizationHandler.6"), Messages.getString("LanduseRasterizationHandler.7"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+      IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
+      ErrorDialog.openError( shell, Messages.getString( "LanduseRasterizationHandler.6" ), Messages.getString( "LanduseRasterizationHandler.7" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

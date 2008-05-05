@@ -78,7 +78,7 @@ public class SpecificDamageCalculationHandler extends AbstractHandler
 
         final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterizationControlModel, rasterDataModel, vectorDataModel, scenarioFolder );
 
-        final IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
+        final IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
         ErrorDialog.openError( shell, org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.2" ), org.kalypso.risk.Messages.getString( "SpecificDamageCalculationHandler.3" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
         if( !execute.isOK() )

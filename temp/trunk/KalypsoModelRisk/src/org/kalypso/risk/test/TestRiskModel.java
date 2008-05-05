@@ -110,7 +110,7 @@ public class TestRiskModel extends TestCase
 
   private static final QName PROP_ASSET_VALUES_CLASSES_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "assetValueClassesCollection" ); //$NON-NLS-1$
 
-  @SuppressWarnings( { "unchecked", "restriction" }) //$NON-NLS-1$ //$NON-NLS-2$
+  @SuppressWarnings( { "unchecked", "restriction" })//$NON-NLS-1$ //$NON-NLS-2$
   public void testRiskModel( ) throws MalformedURLException, Exception
   {
     // unzip test project into workspace
@@ -169,15 +169,17 @@ public class TestRiskModel extends TestCase
     final List<Feature> predefinedDamageFunctionsCollection = (FeatureList) predefinedDataWorkspace.getRootFeature().getProperty( PROP_DAMAGE_FUNCTION_COLLECTION );
     final List<Feature> predefinedAssetValueClassesCollection = (FeatureList) predefinedDataWorkspace.getRootFeature().getProperty( PROP_ASSET_VALUES_CLASSES_COLLECTION );
 
-    final String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template //$NON-NLS-1$
-    final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template //$NON-NLS-1$
+    final String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template
+    // //$NON-NLS-1$
+    final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template
+    // //$NON-NLS-1$
 
     final boolean wrongLandUseselectedStatus = false; // status of landuse selection
 
     /* IMPORT PREDEFINED DATA */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Konvertiere Landnutzung in GML...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final ICoreRunnableWithProgress importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, landUseProperty, assetValuesCollectionName, damageFunctionsCollectionName, predefinedAssetValueClassesCollection, predefinedDamageFunctionsCollection, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
+    final ICoreRunnableWithProgress importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, landUseProperty, assetValuesCollectionName, damageFunctionsCollectionName, predefinedAssetValueClassesCollection, predefinedDamageFunctionsCollection, predefinedLanduseColorsCollection );
     RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, importLanduseRunnable );
 
     /* IMPORT WATERDEPTH */
@@ -224,17 +226,17 @@ public class TestRiskModel extends TestCase
 
     final IFolder outputFolder = folder;
     final ICoreRunnableWithProgress landuseRasterRunnable = new RiskLanduseRasterizationRunnable( rasterDataModel, vectorDataModel, outputFolder );
-    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, landuseRasterRunnable );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, landuseRasterRunnable );
 
     /* CREATE SPECIFIC DAMAGE */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge spezifischen Schaden je Fliesstiefe...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final ICoreRunnableWithProgress runnableWithProgress = new RiskCalcSpecificDamageRunnable( rasterControlDataModel, rasterDataModel, vectorDataModel, folder );
-    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, runnableWithProgress );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, runnableWithProgress );
 
     /* CREATE RSIK ZONES */
     KalypsoRiskDebug.OPERATION.printf( "%s", "Erzeuge Risikozonen...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     final ICoreRunnableWithProgress calcRiskZonesRunnable = new RiskCalcRiskZonesRunnable( rasterDataModel, vectorDataModel, rasterControlDataModel, folder );
-    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, calcRiskZonesRunnable );
+    RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, calcRiskZonesRunnable );
 
     // TODO: generate ascii grid
 

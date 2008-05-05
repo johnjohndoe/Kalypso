@@ -38,7 +38,7 @@ public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWith
 
   public IStatus execute( IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("RiskLanduseRasterizationRunnable.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "RiskLanduseRasterizationRunnable.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     final IFeatureWrapperCollection<IAnnualCoverageCollection> waterDepthCoverageCollection = m_rasterModel.getWaterlevelCoverageCollection();
 
@@ -49,7 +49,7 @@ public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWith
     final Integer maxReturnPeriod = maxCoveragesCollection.getReturnPeriod();
 
     if( maxReturnPeriod == Integer.MIN_VALUE )
-      return StatusUtilities.createErrorStatus( Messages.getString("RiskLanduseRasterizationRunnable.1") ); //$NON-NLS-1$
+      return StatusUtilities.createErrorStatus( Messages.getString( "RiskLanduseRasterizationRunnable.1" ) ); //$NON-NLS-1$
 
     final ICoverageCollection inputCoverages = maxCoveragesCollection;
     final ICoverageCollection outputCoverages = m_rasterModel.getLanduseCoverage();
@@ -62,7 +62,7 @@ public final class RiskLanduseRasterizationRunnable implements ICoreRunnableWith
     m_rasterModel.getRiskZonesCoverage().clear();
 
     // TODO: delete old landuse coverage (also the files!)
-    IStatus rasterStatus = RiskModelHelper.doRasterLanduse( m_scenarioFolder, inputCoverages, outputCoverages, polygonCollection );
+    IStatus rasterStatus = RiskModelHelper.doRasterLanduse( m_scenarioFolder, inputCoverages, outputCoverages, polygonCollection, monitor );
     if( !rasterStatus.isOK() )
       return rasterStatus;
 

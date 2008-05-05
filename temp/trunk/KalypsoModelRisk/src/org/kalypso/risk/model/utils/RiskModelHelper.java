@@ -23,9 +23,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
-import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
@@ -343,15 +343,17 @@ public class RiskModelHelper
    *            landuse polygons that give the landuse class ordinal number
    * @throws Exception
    */
-  public static IStatus doRasterLanduse( final IFolder scenarioFolder, final ICoverageCollection inputCoverages, final ICoverageCollection outputCoverages, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection )
+  public static IStatus doRasterLanduse( final IFolder scenarioFolder, final ICoverageCollection inputCoverages, final ICoverageCollection outputCoverages, final IFeatureWrapperCollection<ILandusePolygon> polygonCollection, final IProgressMonitor monitor )
   {
     try
     {
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
+        final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere in Raster [" + i + "/" + inputCoverages.size() + "]...", 100 );
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
+        final int sizeY = inputGrid.getSizeY();
 
         /* This grid should have the cs of the input grid. */
         final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
@@ -364,6 +366,8 @@ public class RiskModelHelper
           @Override
           public double getValue( int x, int y ) throws GeoGridException
           {
+            progress.setWorkRemaining( sizeY + 2 );
+
             try
             {
               final Double value = super.getValue( x, y );
@@ -443,13 +447,6 @@ public class RiskModelHelper
       }
     }
     return maxCoveragesCollection;
-  }
-
-  public static IStatus importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException, CoreException, GeoGridException
-  {
-    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2, sourceCRS );
-    ascii2Binary.doConvert( monitor );
-    return Status.OK_STATUS;
   }
 
   /**
@@ -541,7 +538,7 @@ public class RiskModelHelper
       final String layerName = "HQ " + asciiRasterInfo.getReturnPeriod(); //$NON-NLS-1$
       final IKalypsoTheme[] childThemes = parentKalypsoTheme.getAllThemes();
       for( int j = 0; j < childThemes.length; j++ )
-        if( childThemes[j].getName().equals( layerName ) )
+        if( childThemes[j].getName().getKey().equals( layerName ) )
           themesToRemove.add( childThemes[j] );
     }
     for( final IKalypsoTheme themeToRemove : themesToRemove )

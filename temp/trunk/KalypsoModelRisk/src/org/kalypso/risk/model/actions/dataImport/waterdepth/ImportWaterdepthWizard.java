@@ -134,12 +134,13 @@ public class ImportWaterdepthWizard extends Wizard implements INewWizard
 
       final ICoreRunnableWithProgress importWaterdepthRunnable = new RiskImportWaterdepthRunnable( rasterDataModel, rasterInfos, scenarioFolder );
 
-      final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importWaterdepthRunnable );
-      ErrorDialog.openError( getShell(), Messages.getString("ImportWaterdepthWizard.9"), Messages.getString("ImportWaterdepthWizard.10"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, importWaterdepthRunnable );
+      ErrorDialog.openError( getShell(), Messages.getString( "ImportWaterdepthWizard.9" ), Messages.getString( "ImportWaterdepthWizard.10" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {
         KalypsoRiskPlugin.getDefault().getLog().log( execute );
+        // TODO: clean partly imported stuff
       }
 
       scenarioDataProvider.postCommand( IRasterDataModel.class, new EmptyCommand( "Get dirty!", false ) ); //$NON-NLS-1$

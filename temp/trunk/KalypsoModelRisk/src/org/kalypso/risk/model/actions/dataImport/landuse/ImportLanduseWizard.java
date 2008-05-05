@@ -131,7 +131,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     m_scenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     m_initialSelection = selection;
@@ -153,7 +153,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     }
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public void addPages( )
   {
@@ -190,7 +190,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   /**
    * This method is called by the wizard framework when the user presses the Finish button.
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   @Override
   public boolean performFinish( )
   {
@@ -230,11 +230,11 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
           break;
 
         case DB_IMPORT:
-          importLanduseRunnable = new RiskImportDBLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, scenarioFolder, landuseProperty, externalProjectName, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
+          importLanduseRunnable = new RiskImportDBLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, scenarioFolder, landuseProperty, externalProjectName, m_predefinedLanduseColorsCollection );
           break;
 
         case DB_USE_PREDEFINED:
-          importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, landuseProperty, assetValuesCollectionName, damageFunctionsCollectionName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection, m_wrongLanduseSelectedStatus );
+          importLanduseRunnable = new RiskImportPredefinedLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, landuseProperty, assetValuesCollectionName, damageFunctionsCollectionName, m_predefinedAssetValueClassesCollection, m_predefinedDamageFunctionsCollection, m_predefinedLanduseColorsCollection );
 
           break;
 
@@ -245,8 +245,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       if( importLanduseRunnable == null )
         return false;
 
-      final IStatus execute = RunnableContextHelper.execute( getContainer(), true, false, importLanduseRunnable );
-      ErrorDialog.openError( getShell(), Messages.getString("ImportLanduseWizard.4"), Messages.getString("ImportLanduseWizard.5"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus execute = RunnableContextHelper.execute( getContainer(), true, true, importLanduseRunnable );
+      ErrorDialog.openError( getShell(), Messages.getString( "ImportLanduseWizard.4" ), Messages.getString( "ImportLanduseWizard.5" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

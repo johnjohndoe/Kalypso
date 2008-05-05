@@ -41,13 +41,10 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final String m_landuseProperty;
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private final List m_shapeFeatureList;
 
   private final String m_externalProjectName;
-
-  @SuppressWarnings("unused") //$NON-NLS-1$
-  private boolean m_wrongLanduseSelectedStatus;
 
   private final IRasterizationControlModel m_controlModel;
 
@@ -57,8 +54,8 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
 
   private final IFolder m_scenarioFolder;
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection, final boolean wrongLanduseSelectedStatus )
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  public RiskImportDBLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final IFolder scenarioFolder, final String landuseProperty, final String externalProjectName, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -67,10 +64,9 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
     m_shapeFeatureList = shapeFeatureList;
     m_externalProjectName = externalProjectName;
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
-    m_wrongLanduseSelectedStatus = wrongLanduseSelectedStatus;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -83,19 +79,17 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
-      m_wrongLanduseSelectedStatus = false;
       if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
       {
         IStatus status = null;
         status = RiskLanduseHelper.isRightParameterUsed( m_landuseProperty );
         synchronized( this )
         {
-          // while( status == null )
-          // m_importLanduseWizard.wait( 100 );
+          while( status == null )
+            Thread.sleep( 100 );
         }
         if( Status.CANCEL_STATUS.equals( status ) )
         {
-          m_wrongLanduseSelectedStatus = true;
           landuseTypeSet.clear();
           return status;
         }
@@ -133,7 +127,7 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("RiskImportDBLanduseRunnable.4") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "RiskImportDBLanduseRunnable.4" ) ); //$NON-NLS-1$
     }
   }
 

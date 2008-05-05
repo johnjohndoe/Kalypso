@@ -59,8 +59,8 @@ public class RiskZonesCalculationHandler extends AbstractHandler
 
       final ICoreRunnableWithProgress riskCalcRiskZonesRunnable = new RiskCalcRiskZonesRunnable( rasterModel, vectorModel, controlModel, scenarioFolder );
 
-      final IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, false, riskCalcRiskZonesRunnable );
-      ErrorDialog.openError( shell, Messages.getString("RiskZonesCalculationHandler.5"), Messages.getString("RiskZonesCalculationHandler.6"), execute ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus execute = RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, riskCalcRiskZonesRunnable );
+      ErrorDialog.openError( shell, Messages.getString( "RiskZonesCalculationHandler.5" ), Messages.getString( "RiskZonesCalculationHandler.6" ), execute ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( !execute.isOK() )
       {

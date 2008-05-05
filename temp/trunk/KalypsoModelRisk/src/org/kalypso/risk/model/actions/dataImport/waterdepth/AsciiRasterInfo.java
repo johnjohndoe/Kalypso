@@ -3,8 +3,7 @@ package org.kalypso.risk.model.actions.dataImport.waterdepth;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
-import org.kalypso.grid.AscciiGridReader;
-import org.kalypso.grid.ConvertAscii2Coverage;
+import org.kalypso.grid.AsciiGridReader;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -55,8 +54,8 @@ public class AsciiRasterInfo
     if( m_coordinateSystem == null )
       m_coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
-    final AscciiGridReader reader = new AscciiGridReader( m_rasterFile );
-    m_gridDomain = ConvertAscii2Coverage.importGridArc( reader, m_coordinateSystem );
+    final AsciiGridReader reader = new AsciiGridReader( m_rasterFile );
+    m_gridDomain = reader.getGridDomain( m_coordinateSystem );
     m_rasterSizeX = m_gridDomain.getNumColumns();
     m_rasterSizeY = m_gridDomain.getNumRows();
     final GM_Point origin = m_gridDomain.getOrigin( m_coordinateSystem );

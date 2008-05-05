@@ -17,11 +17,11 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.dataImport.waterdepth.AsciiRasterInfo;
 import org.kalypso.risk.model.schema.binding.IAnnualCoverageCollection;
 import org.kalypso.risk.model.schema.binding.IRasterDataModel;
-import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -64,7 +64,8 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final IFile dstRasterIFile = m_scenarioFolder.getFile( dstFileName );
         final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
 
-        RiskModelHelper.importAsBinaryRaster( asciiRasterInfo.getSourceFile(), dstRasterFile, asciiRasterInfo.getCoordinateSystem(), monitor );
+        final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( asciiRasterInfo.getSourceFile().toURL(), dstRasterFile, 2, asciiRasterInfo.getCoordinateSystem() );
+        ascii2Binary.doConvert( monitor );
 
         // copy( asciiRasterInfo.getSourceFile(), dstRasterFile, monitor );
         final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
@@ -90,7 +91,7 @@ public final class RiskImportWaterdepthRunnable implements ICoreRunnableWithProg
         final RectifiedGridCoverage coverage = new RectifiedGridCoverage( coverageFeature );
         annualCoverageCollection.add( coverage );
         coverage.setRangeSet( rangeSet );
-        coverage.setGridDomain( asciiRasterInfo.getGridDomain() );
+        coverage.setGridDomain( ascii2Binary.getGridDomain() );
         coverage.setName( binFileName );
         coverage.setDescription( org.kalypso.risk.Messages.getString( "RiskImportWaterdepthRunnable.1" ) + asciiRasterInfo.getSourceFile().getName() ); //$NON-NLS-1$
       }

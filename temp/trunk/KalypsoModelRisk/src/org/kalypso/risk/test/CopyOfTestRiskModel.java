@@ -113,17 +113,17 @@ public class CopyOfTestRiskModel extends TestCase
     final IRasterizationControlModel rasterControlDataModel = (IRasterizationControlModel) riskControlWorkspace.getRootFeature().getAdapter( IRasterizationControlModel.class );
 
     final String landUseProperty = "LANDUSE"; // name of the shape file field that represents the landuse classes
-                                              // //$NON-NLS-1$
+    // //$NON-NLS-1$
     final String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template
-                                                                                              // //$NON-NLS-1$
+    // //$NON-NLS-1$
     final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template
-                                                                                            // //$NON-NLS-1$
+    // //$NON-NLS-1$
 
     final String crs = "EPSG:31467"; // the coordinate system of the shape file //$NON-NLS-1$
     final String sourceShapeFilePath = null; // path to the landuse shapefile
 
     final String externalProjectName = ""; // name of the external project from which the database will be taken
-                                            // //$NON-NLS-1$
+    // //$NON-NLS-1$
     // (selectDatabaseOption = 1)
 
     /* pre-definitions from template */
@@ -142,7 +142,7 @@ public class CopyOfTestRiskModel extends TestCase
     final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     /* IMPORT DATA */
-    final RiskImportDBLanduseRunnable importLanduseRunnable = new RiskImportDBLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, folder, landUseProperty, externalProjectName, predefinedLanduseColorsCollection, wrongLandUseselectedStatus );
+    final RiskImportDBLanduseRunnable importLanduseRunnable = new RiskImportDBLanduseRunnable( rasterControlDataModel, vectorDataModel, shapeFeatureList, folder, landUseProperty, externalProjectName, predefinedLanduseColorsCollection );
 
     RunnableContextHelper.execute( new ProgressMonitorDialog( Workbench.getInstance().getActiveWorkbenchWindow().getShell() ), true, false, importLanduseRunnable );
 

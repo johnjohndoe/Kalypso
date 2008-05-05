@@ -47,9 +47,6 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   private final String m_damageFunctionsCollectionName;
 
-  @SuppressWarnings("unused") //$NON-NLS-1$
-  private boolean m_wrongLanduseSelectedStatus;
-
   private final IRasterizationControlModel m_controlModel;
 
   private final IVectorDataModel m_vectorModel;
@@ -60,11 +57,11 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
   private final List<Feature> m_predefinedLanduseColorsCollection;
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private final List m_shapeFeatureList;
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection, final boolean wrongLanduseSelectedStatus )
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  public RiskImportPredefinedLanduseRunnable( final IRasterizationControlModel controlModel, final IVectorDataModel vectorDataModel, final List shapeFeatureList, final String landuseProperty, final String assetValuesCollectionName, final String damageFunctionsCollectionName, final List<Feature> predefinedAssetValueClassesCollection, final List<Feature> predefinedDamageFunctionsCollection, final List<Feature> predefinedLanduseColorsCollection )
   {
     m_controlModel = controlModel;
     m_vectorModel = vectorDataModel;
@@ -75,10 +72,9 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     m_predefinedAssetValueClassesCollection = predefinedAssetValueClassesCollection;
     m_predefinedDamageFunctionsCollection = predefinedDamageFunctionsCollection;
     m_predefinedLanduseColorsCollection = predefinedLanduseColorsCollection;
-    m_wrongLanduseSelectedStatus = wrongLanduseSelectedStatus;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public IStatus execute( final IProgressMonitor monitor )
   {
     monitor.beginTask( Messages.getString( "ImportLanduseWizard.1" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
@@ -91,7 +87,6 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
-      m_wrongLanduseSelectedStatus = false;
       if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
       {
         IStatus status = null;
@@ -103,7 +98,6 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
         }
         if( Status.CANCEL_STATUS.equals( status ) )
         {
-          m_wrongLanduseSelectedStatus = true;
           landuseTypeSet.clear();
           return status;
         }
@@ -141,7 +135,7 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
     catch( final Exception e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("RiskImportPredefinedLanduseRunnable.4") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "RiskImportPredefinedLanduseRunnable.4" ) ); //$NON-NLS-1$
     }
   }
 
