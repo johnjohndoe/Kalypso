@@ -364,21 +364,13 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 
   public GM_Envelope getMerged( final GM_Position pos )
   {
-    double minx = m_min.getX();
-    double miny = m_min.getY();
-    double maxx = m_max.getX();
-    double maxy = m_max.getY();
-    if( pos != null )
-    {
-      if( pos.getX() < minx )
-        minx = pos.getX();
-      if( pos.getY() < miny )
-        miny = pos.getY();
-      if( pos.getX() > maxx )
-        maxx = pos.getX();
-      if( pos.getY() > maxy )
-        maxy = pos.getY();
-    }
+    if( pos == null )
+      return this;
+    
+    final double minx = Math.min( m_min.getX(), pos.getX() );
+    final double miny = Math.min( m_min.getY(), pos.getY() );
+    final double maxx = Math.max( m_max.getX(), pos.getX() );
+    final double maxy = Math.max( m_max.getY(), pos.getY() );
 
     // TODO Check coordinate systems, if equal.
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
@@ -390,21 +382,13 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
    */
   public GM_Envelope getMerged( final GM_Envelope envelope )
   {
-    double minx = m_min.getX();
-    double miny = m_min.getY();
-    double maxx = m_max.getX();
-    double maxy = m_max.getY();
-    if( envelope != null )
-    {
-      if( envelope.getMin().getX() < minx )
-        minx = envelope.getMin().getX();
-      if( envelope.getMin().getY() < miny )
-        miny = envelope.getMin().getY();
-      if( envelope.getMax().getX() > maxx )
-        maxx = envelope.getMax().getX();
-      if( envelope.getMax().getY() > maxy )
-        maxy = envelope.getMax().getY();
-    }
+    if( envelope == null )
+      return this;
+    
+    final double minx = Math.min( m_min.getX(), envelope.getMin().getX() );
+    final double miny = Math.min( m_min.getY(), envelope.getMin().getY() );
+    final double maxx = Math.max( m_max.getX(), envelope.getMax().getX() );
+    final double maxy = Math.max( m_max.getY(), envelope.getMax().getY() );
 
     // TODO Check coordinate systems, if equal.
     return GeometryFactory.createGM_Envelope( minx, miny, maxx, maxy, m_coordinateSystem );
@@ -454,6 +438,9 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
 
 /*
  * Changes to this class. What the people haven been up to: $Log$
+ * Changes to this class. What the people haven been up to: Revision 1.20  2008/05/05 12:57:33  thuel
+ * Changes to this class. What the people haven been up to: envelope calculation made more mathematical
+ * Changes to this class. What the people haven been up to:
  * Changes to this class. What the people haven been up to: Revision 1.19  2008/03/27 17:18:20  albert
  * Changes to this class. What the people haven been up to: - transformation of raster
  * Changes to this class. What the people haven been up to: Changes to this class. What
