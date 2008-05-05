@@ -46,6 +46,7 @@ import java.util.GregorianCalendar;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -56,6 +57,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryLabelProvider;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.RepositoryTreeContentProvider;
@@ -82,6 +84,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.view.wq.diagram.WQRelationDiagramViewer;
 import org.kalypso.ogc.sensor.view.wq.table.WQRelationTableViewer;
 import org.kalypso.ogc.sensor.zml.repository.ZmlObservationItem;
+import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.container.IRepositoryContainer;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.xml.sax.InputSource;
 
 /**
@@ -133,6 +138,16 @@ public class TimeSeriesComposite extends Composite
 
     renderTimeSeriesDiagrams( m_reposTree, cClient );
 
+    final IBoundaryNodeLastfallCondition condition = m_page.getCondition();
+    final TimeseriesLinkType timeseriesLink = condition.getTimeseriesLink();
+
+    if( timeseriesLink != null )
+    {
+      final IRepositoryContainer containter = m_page.getModel().getRepositoryContainer();
+      final IRepositoryItem item = containter.findItem( timeseriesLink.getHref() );
+      m_reposTree.setSelection( new StructuredSelection( item ) );
+    }
+
     checkPageCompleted();
   }
 
@@ -143,7 +158,8 @@ public class TimeSeriesComposite extends Composite
     viewer.setContentProvider( new RepositoryTreeContentProvider( m_page.getSettings() ) );
     viewer.setLabelProvider( new RepositoryLabelProvider() );
 
-    viewer.setInput( m_page.getModel().getRepositoryContainer() );
+    final IRepositoryContainer container = m_page.getModel().getRepositoryContainer();
+    viewer.setInput( container );
     viewer.addFilter( new RepositoryViewerFilter() );
 
     viewer.expandAll();

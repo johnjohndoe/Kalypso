@@ -206,6 +206,11 @@ public class PageEditBoundaryConditionTimeSeries extends WizardPage
     return m_condition.getLastfall();
   }
 
+  public IBoundaryNodeLastfallCondition getCondition( )
+  {
+    return m_condition;
+  }
+
   public BOUNDARY_CONDITION_TYPE getTypeOfTimeSeries( )
   {
     return m_type;
