@@ -158,7 +158,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
       {
         final GM_Curve curve = (GM_Curve) m_lineBuilder.finish();
         // finishLine( curve );
-        ICommand command = finishLine2( curve );
+        final ICommand command = finishLine2( curve );
         if( command != null )
         {
           m_theme.getWorkspace().postCommand( command );
@@ -243,7 +243,6 @@ public class CreateFEElement1DWidget extends AbstractWidget
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
 
-    // TODO: get the nodes from the curve
     /* create 1d elements */
     final String crs = curve.getCoordinateSystem();
 
@@ -266,6 +265,10 @@ public class CreateFEElement1DWidget extends AbstractWidget
 
         nodes.add( startPoint );
         nodes.add( endPoint );
+
+        // FIXME: cannot work! nodes get put into the wrong list here... !
+        // Better: only give discModel; the helper should know where to put what
+
         ElementGeometryHelper.createAdd1dElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, nodes );
       }
     }
