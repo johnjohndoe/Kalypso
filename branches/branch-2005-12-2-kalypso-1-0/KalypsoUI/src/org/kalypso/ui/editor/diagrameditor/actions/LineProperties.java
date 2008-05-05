@@ -64,12 +64,6 @@ public final class LineProperties
   /** A stroke defining the undefined state. */
   public static final Stroke STROKE_UNDEF = new BasicStroke();
 
-  /** separator used between members in string representation */
-  private static final String MEMBER_SEPARATOR = " ";
-
-  /** string used to separate the dash elements */
-  private static final String DASH_SEPARATOR = ",";
-
   /** Some name of this line */
   private final String m_name;
 

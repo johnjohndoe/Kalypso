@@ -76,11 +76,21 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
   }
 
   /**
+   * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+   */
+  protected void configureShell( Shell newShell )
+  {
+    super.configureShell( newShell );
+    
+    newShell.setText( "Diagramm Eigenschaften" );
+  }
+  
+  /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   protected Control createDialogArea( Composite parent )
   {
-    setTitle( "Diagramm Eigenschaften" );
+    setTitle( "Eigenschaften editieren" );
 
     final Composite cmp = new Composite( parent, SWT.FILL );
     cmp.setLayout( new GridLayout( 2, false ) );
@@ -100,7 +110,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     } );
 
     final Label lblShowLegend = new Label( cmp, SWT.LEFT );
-    lblShowLegend.setText( "Ledende anzeigen?" );
+    lblShowLegend.setText( "Ledende anzeigen" );
     final Button btnShowLegend = new Button( cmp, SWT.CHECK );
     btnShowLegend.setSelection( m_showLegend );
     btnShowLegend.addSelectionListener( new SelectionListener()
