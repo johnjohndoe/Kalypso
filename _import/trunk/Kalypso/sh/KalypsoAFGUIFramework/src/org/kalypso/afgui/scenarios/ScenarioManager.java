@@ -1,5 +1,7 @@
 package org.kalypso.afgui.scenarios;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -57,8 +59,16 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
   public Scenario createCase( final String name )
   {
     final Scenario newScenario = new org.kalypso.afgui.scenarios.ObjectFactory().createScenario();
-    final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${casePath}" ), name ); //$NON-NLS-1$ //$NON-NLS-2$
-    newScenario.setURI( uri );
+    try
+    {
+      final String projectName = URLEncoder.encode( m_project.getName(), "UTF-8" );
+      final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), projectName ).replaceFirst( Pattern.quote( "${casePath}" ), name ); //$NON-NLS-1$ //$NON-NLS-2$
+      newScenario.setURI( uri );
+    }
+    catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+    }
     newScenario.setName( name );
     internalAddCase( newScenario );
 
@@ -75,7 +85,14 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
   {
     final org.kalypso.afgui.scenarios.ObjectFactory of = new org.kalypso.afgui.scenarios.ObjectFactory();
     final Scenario newScenario = of.createScenario();
-    newScenario.setURI( parentScenario.getURI() + "/" + name ); //$NON-NLS-1$
+    try
+    {
+      newScenario.setURI( parentScenario.getURI() + "/" + URLEncoder.encode( name, "UTF-8" ) );
+    }
+    catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+    }
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario );
 

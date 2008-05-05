@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
@@ -64,10 +66,16 @@ public class ScenarioHelper
     try
     {
       final URI uri = new URI( name );
-      return uri.getAuthority();
+      return URLDecoder.decode( uri.getAuthority(), "UTF-8" );
     }
     catch( final URISyntaxException e )
     {
+      e.printStackTrace();
+      return null;
+    }
+    catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
       return null;
     }
   }
@@ -78,10 +86,17 @@ public class ScenarioHelper
     try
     {
       final URI uri = new URI( name );
-      return ResourcesPlugin.getWorkspace().getRoot().getProject( uri.getAuthority() );
+      final String authority = URLDecoder.decode( uri.getAuthority(), "UTF-8" );
+      return ResourcesPlugin.getWorkspace().getRoot().getProject( authority );
     }
     catch( final URISyntaxException e )
     {
+      e.printStackTrace();
+      return null;
+    }
+    catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
       return null;
     }
   }
@@ -92,10 +107,17 @@ public class ScenarioHelper
     try
     {
       final URI uri = new URI( name );
-      return getProject( scenario ).getFolder( uri.getPath() );
+      final String path = URLDecoder.decode( uri.getPath(), "UTF-8" );
+      return getProject( scenario ).getFolder( path );
     }
     catch( final URISyntaxException e )
     {
+      e.printStackTrace();
+      return null;
+    }
+    catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
       return null;
     }
   }

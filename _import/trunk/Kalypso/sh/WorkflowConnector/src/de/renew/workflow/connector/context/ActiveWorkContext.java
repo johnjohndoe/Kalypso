@@ -1,7 +1,9 @@
 package de.renew.workflow.connector.context;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -239,7 +241,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       else
       {
         final URI uri = new URI( caze.getURI() );
-        final String projectName = uri.getAuthority();
+        final String projectName = URLDecoder.decode( uri.getAuthority(), "UTF-8" );
         final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
         if( project.exists() )
         {
@@ -254,6 +256,10 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
       }
     }
     catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+    }
+    catch( UnsupportedEncodingException e )
     {
       e.printStackTrace();
     }

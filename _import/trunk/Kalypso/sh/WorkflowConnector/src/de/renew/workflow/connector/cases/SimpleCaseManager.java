@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -84,8 +86,16 @@ public class SimpleCaseManager extends AbstractCaseManager<Case> implements ICas
   public Case createCase( final String name )
   {
     final Case newCase = new de.renew.workflow.cases.ObjectFactory().createCase();
-    final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), m_project.getName() ).replaceFirst( Pattern.quote( "${casePath}" ), name );
-    newCase.setURI( uri );
+    try
+    {
+      final String projectName = URLEncoder.encode( m_project.getName(), "UTF-8" );
+      final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), projectName ).replaceFirst( Pattern.quote( "${casePath}" ), name );
+      newCase.setURI( uri );
+    }
+    catch( UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+    }
     newCase.setName( name );
     internalAddCase( newCase );
     persist( null );

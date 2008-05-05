@@ -1,7 +1,9 @@
 package org.kalypso.afgui.views;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
@@ -72,18 +74,21 @@ public class WorkflowView extends ViewPart
       {
         if( scenario != null && newProject != null )
         {
-          String scenarioPathName;
+          String scenarioPathName = "<Fehler>";
           try
           {
             final URI uri = new URI( scenario.getURI() );
-            scenarioPathName = uri.getPath();
+            scenarioPathName = URLDecoder.decode( uri.getPath(), "UTF-8" );
           }
           catch( final URISyntaxException e )
           {
-            scenarioPathName = "<Fehler>";
             e.printStackTrace();
           }
-          
+          catch( UnsupportedEncodingException e )
+          {
+            e.printStackTrace();
+          }
+
           final String projectName = newProject.getProject().getName();
           setContentDescription( "Aktives Szenario: " + projectName + scenarioPathName );
           try

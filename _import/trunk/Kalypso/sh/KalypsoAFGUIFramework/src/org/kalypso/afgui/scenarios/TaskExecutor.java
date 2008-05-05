@@ -86,7 +86,7 @@ public class TaskExecutor implements ITaskExecutor
 
   private final IContextHandlerFactory m_contextHandlerFactory;
 
-  private ArrayList<ITaskExecutionListener> m_taskChangeListeners;
+  private final ArrayList<ITaskExecutionListener> m_taskChangeListeners;
 
   public TaskExecutor( final IContextHandlerFactory contextHandlerFactory, final ITaskExecutionAuthority authority, final ICommandService commandService, final IHandlerService handlerService )
   {
@@ -153,6 +153,8 @@ public class TaskExecutor implements ITaskExecutor
     // collect the views that were just opened
     final Collection<String> partsToKeep = collectOpenedViews( context );
     partsToKeep.add( WorkflowView.ID );
+    partsToKeep.add( "org.eclipse.swt.sleak.views.SleakView" );
+
     partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
 
     // forks a new job for cleaning perspective
