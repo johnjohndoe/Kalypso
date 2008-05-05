@@ -48,9 +48,9 @@
         Karten-Ansicht können vorab definierte Kartenvorlagen - einschließlich
         der in der Vorlage referenzierten Geo-Informationen - im Lageplan
         visualisiert werden. Die Karten-Ansicht eignet sich für die
-        Darstellung von geografischen Modelldaten (<abbrev>z. B.</abbrev> Einzugsgebietsgrenzen)
-        sowie relevanten Hintergrundkarten (<abbrev>z. B.</abbrev> topografische
-        Grundkarten).</para>
+        Darstellung von geografischen Modelldaten (<abbrev>z. B.</abbrev>
+        Einzugsgebietsgrenzen) sowie relevanten Hintergrundkarten (<abbrev>z.
+        B.</abbrev> topografische Grundkarten).</para>
       </listitem>
 
       <listitem>
@@ -75,11 +75,11 @@
 
       <listitem>
         <para><emphasis role="bold">Diagramm-Ansicht</emphasis>: Anhand der
-        Diagramm-Ansicht werden Zeitreihen (<abbrev>z. B.</abbrev> Wasserstandsganglinien oder
-        Niederschlagsmessreihen) als Ganglinie oder Blockdiagramm dargestellt.
-        In der Diagramm-Ansicht können mehrere Zeitreihen zugleich angezeigt
-        werden. Zur Bearbeitung von Zeitreihen wird das Grafikprogramm
-        benutzt.</para>
+        Diagramm-Ansicht werden Zeitreihen (<abbrev>z. B.</abbrev>
+        Wasserstandsganglinien oder Niederschlagsmessreihen) als Ganglinie
+        oder Blockdiagramm dargestellt. In der Diagramm-Ansicht können mehrere
+        Zeitreihen zugleich angezeigt werden. Zur Bearbeitung von Zeitreihen
+        wird das Grafikprogramm benutzt.</para>
       </listitem>
 
       <listitem>
@@ -98,9 +98,9 @@
     <xref linkend="grundfunktionen" />).</para>
 
     <para>I.d.R. gehört zu jeder der oben genannten Ansichten ein spezifisches
-    Untermenü bzw. Werkzeuge in Form von Toolbars. <abbrev>Z. B.</abbrev> umfasst die
-    Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen oder zum
-    Zoomen innerhalb der Ansicht (siehe <xref
+    Untermenü bzw. Werkzeuge in Form von Toolbars. <abbrev>Z. B.</abbrev>
+    umfasst die Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen
+    oder zum Zoomen innerhalb der Ansicht (siehe <xref
     linkend="ansichtssteuerung" />).</para>
 
     <section id="gui-oeffnen_ansichten">
@@ -121,10 +121,10 @@
       GIS-Tabelle (*.gtt), eine Zeitreihentabelle (*.ott) oder ein Diagramm
       (*.odt) - im Navigator ausgewählt wird. Wenn dabei die rechte Maustaste
       gedrückt wird, kann über <guimenuitem>Öffnen mit</guimenuitem> ein für
-      den Vorlagentyp speziell konfigurierter Editor gewählt werden. <abbrev>Z. B.</abbrev> ist
-      dies im Falle der Karten-Ansicht der KALYPSO Karten-Editor (siehe <xref
-      linkend="gis_view_editor" />) und bei Tabellen der KALYPSO
-      Tabellen-Editor.</para>
+      den Vorlagentyp speziell konfigurierter Editor gewählt werden.
+      <abbrev>Z. B.</abbrev> ist dies im Falle der Karten-Ansicht der KALYPSO
+      Karten-Editor (siehe <xref linkend="gis_view_editor" />) und bei
+      Tabellen der KALYPSO Tabellen-Editor.</para>
 
       <figure id="gis_view_editor">
         <title>Öffnen einer Karte anhand des Karten-Editors</title>
@@ -146,10 +146,10 @@
 
       <para>Bei Doppelklick mit der linken Maustaste auf die zu öffnende Datei
       wird derjenige Editor zum Öffnen benutzt, mit dem die Datei zuletzt
-      aufgerufen wurde. Bei bestimmten Dateitypen (<abbrev>z. B.</abbrev> Zeitreihen (*.zml))
-      wird bei Doppelklick auf die Datei ein Vorlagenauswahl-Fenster geöffnet.
-      Hier besteht die Möglichkeit, die Datei unterschiedlich zu visualisieren
-      (Tabelle, Diagramm).</para>
+      aufgerufen wurde. Bei bestimmten Dateitypen (<abbrev>z. B.</abbrev>
+      Zeitreihen (*.zml)) wird bei Doppelklick auf die Datei ein
+      Vorlagenauswahl-Fenster geöffnet. Hier besteht die Möglichkeit, die
+      Datei unterschiedlich zu visualisieren (Tabelle, Diagramm).</para>
 
       <note>
         <para>Eine Vorlagendatei kann nur einmal geöffnet werden und folglich
@@ -168,13 +168,13 @@
       </indexterm>
 
       <para>Zur Bearbeitung von Modelldaten oder Zeitreihen ist das Arbeiten
-      mit mehreren Ansichten sinnvoll, sodass <abbrev>z. B.</abbrev> die geografischen
-      Informationen und Modelldaten in der Karten-Ansicht simultan mit der
-      Tabellen-Ansicht angezeigt werden können. Dabei sind die Ansichten
-      gekoppelt, d.h., der in der Tabelle selektierte Bezugspunkt bzw. das
-      Gebiet wird gleichzeitig in der Karte markiert und umgekehrt. Somit
-      lässt sich in der Modellbearbeitung permanent ein Lagebezug
-      herstellen.</para>
+      mit mehreren Ansichten sinnvoll, sodass <abbrev>z. B.</abbrev> die
+      geografischen Informationen und Modelldaten in der Karten-Ansicht
+      simultan mit der Tabellen-Ansicht angezeigt werden können. Dabei sind
+      die Ansichten gekoppelt, d.h., der in der Tabelle selektierte
+      Bezugspunkt bzw. das Gebiet wird gleichzeitig in der Karte markiert und
+      umgekehrt. Somit lässt sich in der Modellbearbeitung permanent ein
+      Lagebezug herstellen.</para>
 
       <figure id="gis_view_multi">
         <title>Parallele Ansicht von Karte und Tabelle</title>
@@ -215,9 +215,9 @@
       Hervorhebung des Ansichtsnamens (und des -rahmens) in der oberen
       Ansichtsleiste markiert.</para>
 
-      <para>Die geöffneten Ansichten können geschlossen werden, indem <abbrev>z. B.</abbrev> mit
-      der Maus auf das Kreuz neben dem Ansichtsnamen in der oberen
-      Ansichtsleiste geklickt wird.</para>
+      <para>Die geöffneten Ansichten können geschlossen werden, indem
+      <abbrev>z. B.</abbrev> mit der Maus auf das Kreuz neben dem
+      Ansichtsnamen in der oberen Ansichtsleiste geklickt wird.</para>
 
       <para id="menu_fenster">Generell können die Ansichtsfenster auch über
       das Menü <guimenu>Fenster</guimenu> im Hauptmenü von KALYPSO gesteuert
@@ -512,14 +512,15 @@
         entsprechende Assistent durch Doppelklick im Auswahlfenster zu starten
         (siehe <xref linkend="pic_datenquelle_waehlen" />). Die Angaben, die
         im dann folgenden Dialog zu machen sind, hängen von der Art der
-        gewählten Datenquelle ab. So muss <abbrev>z. B.</abbrev> für das Einbinden einer
-        Shape-Datei eine entsprechende Datei im aktuellen Arbeitsverzeichnis
-        ausgewählt und das Koordinatensystem, in dem die Daten abgelegt sind,
-        angegeben werden. Zur Symbolisierung kann der Benutzer einen bereits
-        definierten Style auswählen oder einen Standard-Style generieren
-        lassen. Ähnliche angaben sind für alle dateibasierten Datenquellen zu
-        machen. Bei den webbasierten Datenquellen (Web Service) sind vor der
-        Datenauswahl gültige Verbindungsdaten anzugeben.</para>
+        gewählten Datenquelle ab. So muss <abbrev>z. B.</abbrev> für das
+        Einbinden einer Shape-Datei eine entsprechende Datei im aktuellen
+        Arbeitsverzeichnis ausgewählt und das Koordinatensystem, in dem die
+        Daten abgelegt sind, angegeben werden. Zur Symbolisierung kann der
+        Benutzer einen bereits definierten Style auswählen oder einen
+        Standard-Style generieren lassen. Ähnliche angaben sind für alle
+        dateibasierten Datenquellen zu machen. Bei den webbasierten
+        Datenquellen (Web Service) sind vor der Datenauswahl gültige
+        Verbindungsdaten anzugeben.</para>
 
         <figure id="pic_datenquelle_waehlen">
           <title>Auswahl der Datenquelle</title>
@@ -754,15 +755,16 @@
       Gliederung-Ansicht mehrere Zeitreihen dargestellt werden. Dies ist auch
       möglich, wenn es sich um Zeitreihen mit unterschiedlichen Einheiten
       handelt (Niederschlag, Abfluss, Wasserstand). Zusätzlich ist es in der
-      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (<abbrev>z. B.</abbrev>
-      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
-      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
-      des Häkchens).</para>
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe
+      (<abbrev>z. B.</abbrev> Wasserstands- und Abflusswerte eines Pegels)
+      individuell darstellen zu lassen oder in der Ansicht auszuschalten
+      (Aktivieren bzw. Deaktivieren des Häkchens).</para>
 
       <para>Es besteht die Möglichkeit, bestimmte Achsentypen für alle
-      dargestellten Zeitreihen zu deaktivieren. <abbrev>Z. B.</abbrev> kann für alle
-      dargestellten Zeitreihen die Darstellung des Abflusses unterdrückt
-      werden. Hierzu klicken Sie auf die Schaltfläche <inlinemediaobject>
+      dargestellten Zeitreihen zu deaktivieren. <abbrev>Z. B.</abbrev> kann
+      für alle dargestellten Zeitreihen die Darstellung des Abflusses
+      unterdrückt werden. Hierzu klicken Sie auf die Schaltfläche
+      <inlinemediaobject>
           <imageobject>
             <imagedata fileref="img/gui/Button_filter.png" />
           </imageobject>
@@ -858,8 +860,9 @@
 
             <para>Die markierten Tabellenwerte werden in die Zwischenablage
             kopiert und können an anderer Stelle wieder eingefügt werden. Dies
-            betrifft auch den Austausch mit anderen Programmen (<abbrev>z. B.</abbrev> Microsoft
-            Excel). Die Auswahl ist spaltenübergreifend möglich.</para>
+            betrifft auch den Austausch mit anderen Programmen (<abbrev>z.
+            B.</abbrev> Microsoft Excel). Die Auswahl ist spaltenübergreifend
+            möglich.</para>
           </listitem>
 
           <listitem>
@@ -1123,13 +1126,13 @@
 
       <para>Wenn bereits eine Zeitreihe in der Diagramm-Ansicht dargestellt
       ist, dann können über Drag and Drop (linke Maustaste) aus dem Navigator
-      in die Gliederung-Ansicht mehrere Zeitreihen dargestellt werden.
+      in die Gliederung-Ansicht mehrere Zeitreihen hinzugefügt werden.
       Voraussetzung ist allerdings, dass die Zeitreihen die gleiche Einheit
       auf der Ordinaten-Achse vorweisen. Zusätzlich ist es in der
-      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe (<abbrev>z. B.</abbrev>
-      Wasserstands- und Abflusswerte eines Pegels) individuell darstellen zu
-      lassen oder in der Ansicht auszuschalten (Aktivieren bzw. Deaktivieren
-      des Häkchens).</para>
+      Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe
+      (<abbrev>z. B.</abbrev> Wasserstands- und Abflusswerte eines Pegels)
+      individuell darstellen zu lassen oder in der Ansicht auszuschalten
+      (Aktivieren bzw. Deaktivieren des Häkchens).</para>
 
       <para>Zum Entfernen einer Zeitreihe aus der Diagramm-Ansicht dient das
       rote Kreuz oben rechts in der Gliederung-Ansicht.</para>
@@ -1162,6 +1165,130 @@
         W als auch Q dargestellt. Um nur die W Ganglinie zu sehen, kann Q in
         der Gliederungsansicht deaktiviert werden.</para>
       </formalpara>
+
+      <section>
+        <title>Konfiguration</title>
+
+        <para>Zur Konfiguration einer Diagrammansicht stehen eine Reihe von
+        Werkzeugen zur Verfügung, über welche die Darstellung des Diagramms
+        verändert werden kann.</para>
+
+        <formalpara>
+          <title>Diagrammeigenschaften</title>
+
+          <para>Die allgemeinen Eigenschaften eines Diagramms lassen sich über
+          den Menüpunkt <menuchoice>
+              <guiicon>Diagramm</guiicon>
+
+              <guilabel>Diagramm Eigenschaften</guilabel>
+            </menuchoice> editieren. Im Dialog lassen sich die folgenden
+          Eigenschaften des Diagramm anpassen:<itemizedlist>
+              <listitem>
+                <para>Diagramm-Titel: der Titel des Diagramms</para>
+              </listitem>
+
+              <listitem>
+                <para>Sichtbarkeit der Legende: ob die Legende dargestellt
+                werden soll</para>
+              </listitem>
+
+              <listitem>
+                <para>Legenden-Titel: Bezeichnung der Legende im
+                Diagramm</para>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
+
+        <formalpara>
+          <title>Kurven hinzufügen</title>
+
+          <para>Neue Kurven lassen sich in die Diagrammansicht über Drag und
+          Drop von .zml Dateien aus dem Navigator hinzufügen. Es werden dabei
+          alle in der Datei vorliegenden Datenspuren automatisch alsKurven im
+          Diagramm angelegt. Enthält die eingefügt Zeitreihe zum Beispiel
+          sowohl eine W als auch eine Q Datenreihe, werden zwei Kurven zum
+          Diagramm hinzugefügt. </para>
+        </formalpara>
+
+        <formalpara>
+          <title>Kurven löschen</title>
+
+          <para>Im Diagramm befindliche Kurven lassen sich über das
+          Löschwerkzeug <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/gui/diagram_remove.png" />
+              </imageobject>
+            </inlinemediaobject> in der Gliederungsansicht des Diagramms
+          entfernen. Es wird dabei lediglich die dargestellte Kurve aus dem
+          Diuagramm entfernt. Die eigentlichen Zeitreihendaten, d.h. die
+          referenzierte .zml Datei, bleibt im System erhalten. </para>
+        </formalpara>
+
+        <formalpara>
+          <title>Kurveneigenschaften</title>
+
+          <para>Die Darstellung einer Kurve lässt sich über den Dialog
+          <guilabel>Kurveneigenschaften</guilabel> (siehe <xref
+          linkend="figure_diagram_curveproperties" />), welcher sich über den
+          entsprechenden Knopf <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/gui/diagram_properties.png" />
+              </imageobject>
+            </inlinemediaobject> in der Gliederungsansicht aufrufen lässt,
+          verändern.<figure id="figure_diagram_curveproperties">
+              <title>Dialog Kurveneigenschaften</title>
+
+              <mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/gui/diagram_propertiesDialog.png"
+                             scale="50" />
+                </imageobject>
+              </mediaobject>
+            </figure></para>
+        </formalpara>
+
+        <para>Die folgenden Eigenschaften können im Dialog verändert
+        werden:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Name: Die Bezeichnung der Kurve in der
+            Gliederungsansicht</para>
+          </listitem>
+
+          <listitem>
+            <para>Farbe/Transparenz: Farbe und Transparenz (alpha-Wert) der
+            Kurve im Diagramm</para>
+          </listitem>
+
+          <listitem>
+            <para>Strichart: Darstellungsart der Linie; es stehen
+            verschiedenen Strichelungsarten zur Auswahl</para>
+          </listitem>
+
+          <listitem>
+            <para>Strichstärke: die Strichstäkre der Kurve im Diagramm</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Werden gleichzeitig mehrere Kurven in der Gliederungsansicht
+        selektiert, werden die Eigenschaften für diese Kurven gemeinsam
+        verändert. </para>
+
+        <formalpara>
+          <title>Filterung</title>
+
+          <para>Das Werkzeug <guilabel>Filter <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/gui/diagram_filter.png" />
+              </imageobject>
+            </inlinemediaobject> </guilabel> in der Gliederungsansicht des
+          Diagramms erlaubt das schnelle Ausblenden von Kurven gleichen
+          Achsentyps. Die Kurven werden in der Gliederungsansicht lediglich
+          deaktiviert und können jederzeit wieder sichtbar gemacht
+          werden.</para>
+        </formalpara>
+      </section>
     </section>
   </section>
 
