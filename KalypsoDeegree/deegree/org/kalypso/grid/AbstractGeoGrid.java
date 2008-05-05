@@ -48,7 +48,7 @@ import com.vividsolutions.jts.geom.Envelope;
 /**
  * Abstract (default) implementation of a {@link IGeoGrid}.
  * <p>
- * Essesntially holds the geocoordinates (origin, offset, bbox) and provides a primititve (i.e. non-optimized)
+ * Essentially holds the geo-coordinates (origin, offset, bbox) and provides a primitive (i.e. non-optimized)
  * implementation of the walk-method.
  * </p>
  * 

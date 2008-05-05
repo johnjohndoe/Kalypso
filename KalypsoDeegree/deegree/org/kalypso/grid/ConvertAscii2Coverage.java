@@ -66,8 +66,10 @@ public abstract class ConvertAscii2Coverage
    * @param cs
    *            the coordinate system for the geometric data of the ascii-grid
    * @return RectifiedGridCoverage
+   * @deprecated use the {@link AsciiGridReader} instead to get the domain.
    */
-  public static RectifiedGridDomain importGridArc( final AscciiGridReader reader, final String cs ) throws Exception
+  @Deprecated
+  public static RectifiedGridDomain importGridArc( final AsciiGridReader reader, final String cs ) throws Exception
   {
     final int nCols = new Integer( reader.getCols() ).intValue();
     final int nRows = new Integer( reader.getRows() ).intValue();

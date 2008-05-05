@@ -79,8 +79,8 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
     try
     {
-      final AscciiGridReader reader = new AscciiGridReader( new File( m_urlImage.getFile() ) );
-      m_domain = ConvertAscii2Coverage.importGridArc( reader, m_cs );
+      final AsciiGridReader reader = new AsciiGridReader( new File( m_urlImage.getFile() ) );
+      m_domain = reader.getGridDomain( m_cs );
       m_noDataValue = reader.getNoDataValue();
     }
     catch( final Exception e )
