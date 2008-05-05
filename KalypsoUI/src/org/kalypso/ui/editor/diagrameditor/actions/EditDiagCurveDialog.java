@@ -60,6 +60,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -81,8 +82,10 @@ import org.eclipse.swt.widgets.Text;
  */
 public class EditDiagCurveDialog extends TitleAreaDialog
 {
-  /** Indicates the iundefined state for the name property. */
+  /** Indicates the undefined state for the name property. */
   public static final String NAME_UNDEF = EditDiagCurveDialog.class.getName();
+
+  private final static String MSG_UNDEF = "Undefiniert";
 
   private String m_name;
 
@@ -115,17 +118,22 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     newShell.setText( "Kurveneigenschaften" );
   }
 
+  protected Point getInitialSize()
+  {
+    return getShell().computeSize( SWT.DEFAULT, SWT.DEFAULT, true );
+  }
+
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   protected Control createDialogArea( final Composite parent )
   {
     setTitle( "Eigenschaften editieren" );
-    setMessage( "Ändern Sie die Eigenschaften einer oder mehrerer Kurven" );
+    setMessage( "Ändern Sie die Eigenschaften einer oder mehrerer Kurven\nAlle Änderungen werden sofort wirksam." );
 
     final Group composite = new Group( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 3, false ) );
-    composite.setText( "Eigenschaften" );
+    //    composite.setText( "Eigenschaften" );
     // Also set layoutData as it is not set by parent. Maybe fixed in 3.3?
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -134,59 +142,35 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     nameLabel.setText( "Name" );
 
     final Text nameText = new Text( composite, SWT.BORDER );
-    final GridData nameData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    final int CONTROL_WIDTH = 150;
-    nameData.widthHint = CONTROL_WIDTH;
+    final GridData nameData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     nameData.horizontalSpan = 2;
     nameText.setLayoutData( nameData );
 
     // Color
     final Label colorLabel = new Label( composite, SWT.NONE );
-    colorLabel.setText( "Farbe" );
+    colorLabel.setText( "Farbe/Transparenz" );
 
     final Button colorButton = new Button( composite, SWT.PUSH );
-    final GridData colorData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    colorData.horizontalSpan = 1;
-    colorData.widthHint = CONTROL_WIDTH;
+    final GridData colorData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     colorButton.setLayoutData( colorData );
-    colorButton.setText( "Farbe..." );
 
     // TODO: replace by spinner in 3.3
     final Scale alphaSlider = new Scale( composite, SWT.HORIZONTAL );
-    final GridData alphaData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    alphaData.widthHint = CONTROL_WIDTH;
-    alphaData.horizontalSpan = 1;
+    final GridData alphaData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    alphaData.widthHint = 150;
     alphaSlider.setLayoutData( alphaData );
     alphaSlider.setIncrement( 1 );
     alphaSlider.setMinimum( 0 );
     alphaSlider.setMaximum( 255 );
     alphaSlider.setPageIncrement( 20 );
 
-    // Size
+    // Stroke
     final Label sizeLabel = new Label( composite, SWT.NONE );
-    sizeLabel.setText( "Strichstärke" );
-
-    // TODO: replace by spinner in 3.3
-    final Scale sizeSlider = new Scale( composite, SWT.HORIZONTAL );
-    final GridData sizeData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    sizeData.widthHint = CONTROL_WIDTH;
-    sizeData.horizontalSpan = 1;
-    sizeSlider.setLayoutData( sizeData );
-    sizeSlider.setIncrement( 1 );
-    sizeSlider.setMinimum( 1 );
-    sizeSlider.setMaximum( 20 );
-    sizeSlider.setPageIncrement( 5 );
-    final Label sizeValueLabel = new Label( composite, SWT.NONE );
-    sizeValueLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-
-    // Type
-    final Label typeLabel = new Label( composite, SWT.NONE );
-    typeLabel.setText( "Strichart" );
+    sizeLabel.setText( "Strichart / -stärke" );
 
     final ComboViewer dashCombo = new ComboViewer( composite, SWT.DROP_DOWN | SWT.READ_ONLY );
     dashCombo.getControl().setFont( composite.getDisplay().getSystemFont() );
-    final GridData dashData = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
-    dashData.widthHint = CONTROL_WIDTH;
+    final GridData dashData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     dashCombo.getCombo().setLayoutData( dashData );
     dashCombo.setLabelProvider( new LabelProvider()
     {
@@ -201,13 +185,23 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     dashCombo.setContentProvider( new ArrayContentProvider() );
     dashCombo.setInput( DashType.KNOWN_DASHS );
 
+    // TODO: replace by spinner in 3.3
+    final Scale sizeSlider = new Scale( composite, SWT.HORIZONTAL );
+    final GridData sizeData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    sizeData.widthHint = 150;
+    sizeSlider.setLayoutData( sizeData );
+    sizeSlider.setIncrement( 1 );
+    sizeSlider.setMinimum( 1 );
+    sizeSlider.setMaximum( 10 );
+    sizeSlider.setPageIncrement( 5 );
+
     // hook-listeners
     nameText.addModifyListener( new ModifyListener()
     {
       public void modifyText( ModifyEvent e )
       {
         handleNameTextModified( nameText );
-        updateControl( nameText, colorButton, sizeSlider, sizeValueLabel, dashCombo );
+        updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
       }
     } );
 
@@ -219,7 +213,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       public void widgetSelected( SelectionEvent e )
       {
         handleColorButtonSelected();
-        updateControl( nameText, colorButton, sizeSlider, sizeValueLabel, dashCombo );
+        updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
       }
     } );
 
@@ -240,7 +234,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       public void widgetSelected( SelectionEvent e )
       {
         handleAlphaSliderSelected( alphaSlider );
-        updateControl( nameText, colorButton, sizeSlider, sizeValueLabel, dashCombo );
+        updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
       }
     } );
 
@@ -252,7 +246,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       public void widgetSelected( SelectionEvent e )
       {
         handleSizeSliderSelected( sizeSlider );
-        updateControl( nameText, colorButton, sizeSlider, sizeValueLabel, dashCombo );
+        updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
 
       }
     } );
@@ -262,7 +256,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       public void selectionChanged( SelectionChangedEvent event )
       {
         handleTypeSelectionChanged( (IStructuredSelection)event.getSelection() );
-        updateControl( nameText, colorButton, sizeSlider, sizeValueLabel, dashCombo );
+        updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
       }
     } );
 
@@ -282,7 +276,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     dashCombo.setSelection( new StructuredSelection( m_dash ) );
 
-    updateControl( nameText, colorButton, sizeSlider, sizeValueLabel, dashCombo );
+    updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
 
     return super.createDialogArea( parent );
   }
@@ -317,7 +311,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   }
 
   protected void updateControl( final Text nameText, final Button colorButton, final Scale sizeSlider,
-      final Label sizeValueLabel, final ComboViewer dashCombo )
+      final ComboViewer dashCombo, final Scale alphaSlider )
   {
     final Display display = getShell().getDisplay();
 
@@ -330,37 +324,44 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       colorButton.getImage().dispose();
     if( m_color == LineProperties.COLOR_UNDEF )
     {
+      alphaSlider.setToolTipText( MSG_UNDEF );
       colorButton.setImage( null );
-      colorButton.setText( "Undefiniert" );
+      colorButton.setText( MSG_UNDEF );
       colorButton.setForeground( display.getSystemColor( SWT.COLOR_GRAY ) );
     }
     else
     {
-      final Image colorImage = new Image( display, 32, 16 );
-      GC gc = new GC( colorImage );
-      org.eclipse.swt.graphics.Color buttonColor = new org.eclipse.swt.graphics.Color( display, m_color.getRed(),
-          m_color.getGreen(), m_color.getBlue() );
-      gc.setBackground( buttonColor );
-      gc.fillRectangle( 0, 0, 32, 16 );
-      buttonColor.dispose();
-      gc.dispose();
-
+      alphaSlider.setToolTipText( "" + m_alpha );
       colorButton.setText( "" );
-      colorButton.setImage( colorImage );
-
       colorButton.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
+
+      final int widht = 32; 
+      final int height = 16;
+      if( widht > 0 && height > 0 )
+      {
+        final Image colorImage = new Image( display, widht, height );
+        GC gc = new GC( colorImage );
+        org.eclipse.swt.graphics.Color buttonColor = new org.eclipse.swt.graphics.Color( display, m_color.getRed(),
+            m_color.getGreen(), m_color.getBlue() );
+        gc.setBackground( buttonColor );
+        gc.fillRectangle( 0, 0, 32, 16 );
+        buttonColor.dispose();
+        gc.dispose();
+
+        colorButton.setImage( colorImage );
+      }
     }
 
     if( m_size == LineProperties.SIZE_UNDEF )
     {
       sizeSlider.setForeground( display.getSystemColor( SWT.COLOR_GRAY ) );
-      sizeValueLabel.setText( "Undefiniert" );
+      sizeSlider.setToolTipText( MSG_UNDEF );
     }
     else
     {
       sizeSlider.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
       sizeSlider.setSelection( m_size.intValue() );
-      sizeValueLabel.setText( "" + m_size );
+      sizeSlider.setToolTipText( "" + m_size );
     }
 
     if( m_dash == LineProperties.DASH_UNDEF )

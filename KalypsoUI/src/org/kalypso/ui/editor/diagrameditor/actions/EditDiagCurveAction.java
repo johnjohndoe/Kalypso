@@ -44,6 +44,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
@@ -77,6 +78,13 @@ public class EditDiagCurveAction extends FullAction
 
     final DiagView obsView = (DiagView)m_page.getView();
     final ObsViewItem[] items = m_page.getSelectedItems();
+    
+    if( items.length == 0 )
+    {
+      MessageDialog.openWarning(shell, "Kurveneigenschaften", "Bitte wählen Sie eine oder mehrere Kurven in der Gliederungsansicht.");
+      return;
+    }
+    
     final LineProperties[] currentProperties = new LineProperties[items.length];
     for( int i = 0; i < items.length; i++ )
       currentProperties[i] = itemToProperties( (DiagViewCurve)items[i] );
