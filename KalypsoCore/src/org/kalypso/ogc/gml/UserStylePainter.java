@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -123,10 +124,7 @@ public class UserStylePainter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Rule", 100 );
 
-    List<?> visibleFeatures = features.query( bbox, null );
-//    if (features.getParentFeatureTypeProperty().getQName().equals( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER )) {
-//      visibleFeatures = features;
-//    }
+    final List<?> visibleFeatures = features.query( bbox, null );
     
     ProgressUtilities.worked( progress, 15 );
 

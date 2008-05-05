@@ -78,7 +78,9 @@ import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
@@ -187,7 +189,21 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
       {
         displayElement.paint( graphics, projection, paintMonitor );
-      }
+
+        // DEBUG output to show feature envelope
+        // final GM_Envelope envelope = displayElement.getFeature().getEnvelope();
+        // if( envelope != null )
+        // {
+        // GM_Position destPointMin = projection.getDestPoint( envelope.getMin() );
+        // GM_Position destPointMax = projection.getDestPoint( envelope.getMax() );
+        //
+        // GM_Envelope_Impl env = new GM_Envelope_Impl( destPointMin, destPointMax, null );
+        //
+        // graphics.drawRect( (int) env.getMin().getX(), (int) env.getMin().getY(), (int) env.getWidth(), (int)
+        // env.getHeight()
+        // );
+        // }
+       }
     };
 
     paint( scale, bbox, selected, monitor, paintDelegate );
