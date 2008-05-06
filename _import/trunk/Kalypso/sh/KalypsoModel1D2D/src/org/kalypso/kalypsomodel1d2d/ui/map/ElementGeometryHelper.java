@@ -47,10 +47,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.ops.ModelOps;
+import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
@@ -106,8 +109,22 @@ public class ElementGeometryHelper
    *            the {@link GM_Point} list
    */
   @SuppressWarnings("unchecked")
-  public static void createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IRelationType parentEdgeProperty, final IRelationType parentElementProperty, final IPropertyType nodeContainerPT, final IPropertyType edgeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+  public static void createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
   {
+    final IGMLSchema schema = workspace.getGMLSchema();
+
+    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
+
+    final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
+    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
+
+    final IFeatureType parentType = parentFeature.getFeatureType();
+
+    final IRelationType parentNodeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
+    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
+
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     /* Build new nodes */
@@ -137,19 +154,26 @@ public class ElementGeometryHelper
    *            the {@link CompositeCommand} to be filled
    * @param workspace
    * @param parentFeature
-   * @param parentNodeProperty
-   * @param parentEdgeProperty
-   * @param parentElementProperty
    * @param nodeContainerPT
-   * @param edgeContainerPT
    * @param discModel
    *            the discretisation model
    * @param points
    *            the {@link GM_Point} list
    */
   @SuppressWarnings("unchecked")
-  public static void createAdd1dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType parentNodeProperty, final IRelationType parentEdgeProperty, final IRelationType parentElementProperty, final IPropertyType nodeContainerPT, final IPropertyType edgeContainerPT, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
+  public static void createAdd1dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
   {
+    final IGMLSchema schema = workspace.getGMLSchema();
+
+    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
+    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
+
+    final IFeatureType parentType = parentFeature.getFeatureType();
+
+    final IRelationType parentNodeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_NODES );
+    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
+    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
+
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
     /* Build new nodes */

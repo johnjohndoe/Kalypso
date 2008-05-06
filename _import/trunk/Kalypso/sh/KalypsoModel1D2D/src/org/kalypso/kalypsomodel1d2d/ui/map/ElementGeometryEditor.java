@@ -51,19 +51,12 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
@@ -76,10 +69,10 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -143,17 +136,6 @@ public class ElementGeometryEditor
     final CommandableWorkspace workspace = m_nodeTheme.getWorkspace();
     final FeatureList featureList = m_nodeTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
-    final IFeatureType parentType = parentFeature.getFeatureType();
-    final IRelationType parentNodeProperty = featureList.getParentFeatureTypeProperty();
-    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
-    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-    final IGMLSchema schema = workspace.getGMLSchema();
-
-    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-
-    final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
-    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
@@ -183,25 +165,13 @@ public class ElementGeometryEditor
 
         for( int i = 0; i < positions.length - 1; i++ )
         {
-          final GM_Point point = GeometryFactory.createGM_Point( positions[i], KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+          final GM_Point point = GeometryFactory.createGM_Point( positions[i], KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
           points.add( point );
         }
       }
-      // if( element instanceof Element1D )
-      // {
-      // final GM_Curve curve = getEditedGeometryAsCurve( element );
-      // final GM_Position[] positions = curve.getAsLineString().getPositions();
-      // for( int i = 0; i < positions.length; i++ )
-      // {
-      // // TODO: handle flowRelations!
-      // final GM_Point point = GeometryFactory.createGM_Point( positions[i],
-      // KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
-      // points.add( point );
-      // }
-      // }
 
       // create the new elements
-      ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, points );
+      ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, points );
 
       m_nodeTheme.getWorkspace().postCommand( command );
     }
@@ -331,7 +301,7 @@ public class ElementGeometryEditor
       // C.1) one of the new edges crosses other edges
       // C.2) one of the new edges links two non-adjacent points
       /* D) element geometry checks */
-      final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final GM_Ring[] rings = getNewGeometries();
       for( GM_Ring ring : rings )
       {
@@ -392,15 +362,6 @@ public class ElementGeometryEditor
     return ringList.toArray( new GM_Ring[ringList.size()] );
   }
 
-  @SuppressWarnings("unchecked")
-  private GM_Curve getEditedGeometryAsCurve( final IFE1D2DElement element ) throws GM_Exception
-  {
-    final GM_Position[] poses = getEditedNodesPositions( element );
-
-    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-    return GeometryFactory.createGM_Curve( poses, crs );
-  }
-
   /**
    * returns a given {@link IFE1D2DElement} as a {@link GM_Ring}
    */
@@ -409,7 +370,7 @@ public class ElementGeometryEditor
   {
     final GM_Position[] poses = getEditedNodesPositions( element );
 
-    final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     return GeometryFactory.createGM_Ring( poses, crs );
   }
 
