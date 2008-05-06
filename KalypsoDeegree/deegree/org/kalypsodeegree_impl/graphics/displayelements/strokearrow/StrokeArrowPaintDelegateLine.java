@@ -157,10 +157,20 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
 
     while( b.equals( a ) || distance < MIN_DISTANCE_OF_POINTS )
     {
-      b = GeometryFactory.createGM_Point( positions[positions.length - count], curve.getCoordinateSystem() );
-      count++;
+      if( count > positions.length )
 
-      distance = b.distance( a );
+      {
+        if( a.equals( b ) )
+          return new GM_Point[] {};
+        return new GM_Point[] { a, b };
+      }
+      else
+      {
+        b = GeometryFactory.createGM_Point( positions[positions.length - count], curve.getCoordinateSystem() );
+        count++;
+
+        distance = b.distance( a );
+      }
     }
 
     return new GM_Point[] { a, b };
