@@ -81,7 +81,6 @@ import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -264,23 +263,11 @@ public class LabelFactory
       {
         List<Label> list = null;
         if( intersection instanceof GM_Curve )
-        {
           list = createLabels( (GM_Curve) intersection, element, g, projection );
-        }
         else if( intersection instanceof GM_MultiCurve )
-        {
           list = createLabels( (GM_MultiCurve) intersection, element, g, projection );
-        }
-        else
-        {
-          throw new Exception( "Intersection produced unexpected geometry type: '" + intersection.getClass().getName() + "'!" );
-        }
-        labels = new Label[list.size()];
-        for( int i = 0; i < labels.length; i++ )
-        {
-          final Label label = list.get( i );
-          labels[i] = label;
-        }
+        if( list != null )
+          labels = list.toArray( new Label[list.size()] );
       }
     }
     else
