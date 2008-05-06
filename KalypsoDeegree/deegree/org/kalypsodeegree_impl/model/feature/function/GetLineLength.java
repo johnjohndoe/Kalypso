@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.function;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -47,9 +48,12 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author thuel2
@@ -58,13 +62,20 @@ public class GetLineLength extends FeaturePropertyFunction
 {
   private QName m_lineName;
 
+  private String[] m_fractionDigitsXPathSegs;
+
   /**
+   * @param fractionDigitsProperty
+   *            determines the count of decimal places (optional) <br>
+   *            accepts GMLXPathes <br>
+   *            and constant values (double) for this property
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
   public void init( Map<String, String> properties )
   {
     final String lineProp = properties.get( "lineProperty" );
+    final String fracDigitsProp = properties.get( "fractionDigitsProperty" );
 
     try
     {
@@ -75,6 +86,10 @@ public class GetLineLength extends FeaturePropertyFunction
       e.printStackTrace();
     }
 
+    if( fracDigitsProp == null )
+      m_fractionDigitsXPathSegs = null;
+    else
+      m_fractionDigitsXPathSegs = fracDigitsProp.split( "/" );
   }
 
   /**
@@ -98,7 +113,57 @@ public class GetLineLength extends FeaturePropertyFunction
 
     final GM_Curve line = (GM_Curve) objGeometry;
 
-    return line.getLength();
+    final double lineLength = line.getLength();
+
+    if( m_fractionDigitsXPathSegs == null )
+      return lineLength;
+    else
+    {
+
+      int fractionDigitsCount;
+      // read as property (xPath)
+      try
+      {
+        GMLXPath path = new GMLXPath( feature );
+        for( final String element : m_fractionDigitsXPathSegs )
+        {
+          if( element != null )
+            path = new GMLXPath( path, QName.valueOf( element ) );
+        }
+        final GMLWorkspace workspace = feature.getWorkspace();
+        final Object obj = GMLXPathUtilities.query( path, workspace );
+
+        if( !(obj instanceof Number) )
+        {
+          try
+          {
+            // read as constant
+            fractionDigitsCount = Integer.parseInt( m_fractionDigitsXPathSegs[0] );
+          }
+          catch( final NumberFormatException e )
+          {
+            fractionDigitsCount = 0;
+          }
+        }
+        else
+        {
+          final Number fractionDigitNumber = (Number) obj;
+          if( fractionDigitNumber == null )
+            return null;
+          fractionDigitsCount = fractionDigitNumber.intValue();
+        }
+      }
+      catch( final GMLXPathException e )
+      {
+        e.printStackTrace();
+        return null;
+      }
+
+      BigDecimal bd = new BigDecimal( lineLength );
+      bd = bd.setScale( fractionDigitsCount, BigDecimal.ROUND_UP );
+
+      return bd.doubleValue();
+    }
 
   }
 

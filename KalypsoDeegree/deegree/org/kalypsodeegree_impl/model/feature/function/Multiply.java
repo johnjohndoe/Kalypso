@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.function;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -54,6 +55,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * multiplies (double) all values whose propertyNames are handed over <br>
+ * except for values of the property fractionDigitsProperty. This property determines the count of decimal places. <br>
  * accepts GMLXPathes <br>
  * and constant values (double)
  * 
@@ -63,6 +65,7 @@ public class Multiply extends FeaturePropertyFunction
 {
 
   private Map<String, String> m_properties;
+  private String[] m_fractionDigitsXPathSegs;
 
   /**
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
@@ -71,6 +74,13 @@ public class Multiply extends FeaturePropertyFunction
   public void init( Map<String, String> properties )
   {
     m_properties = properties;
+    final String fracDigitsProp = properties.get( "fractionDigitsProperty" );
+    m_properties.remove( "fractionDigitsProperty" );
+    
+    if( fracDigitsProp == null )
+      m_fractionDigitsXPathSegs = null;
+    else
+      m_fractionDigitsXPathSegs = fracDigitsProp.split( "/" );
   }
 
   /**
@@ -120,7 +130,57 @@ public class Multiply extends FeaturePropertyFunction
         }
       }
     }
-    return multResult;
+  
+    
+
+    if( m_fractionDigitsXPathSegs == null )
+      return multResult;
+    else
+    {
+
+      int fractionDigitsCount;
+      // read as property (xPath)
+      try
+      {
+        GMLXPath path = new GMLXPath( feature );
+        for( final String element : m_fractionDigitsXPathSegs )
+        {
+          if( element != null )
+            path = new GMLXPath( path, QName.valueOf( element ) );
+        }
+        final Object obj = GMLXPathUtilities.query( path, workspace );
+
+        if( !(obj instanceof Number) )
+        {
+          try
+          {
+            // read as constant
+            fractionDigitsCount = Integer.parseInt( m_fractionDigitsXPathSegs[0] );
+          }
+          catch( final NumberFormatException e )
+          {
+            fractionDigitsCount = 0;
+          }
+        }
+        else
+        {
+          final Number fractionDigitNumber = (Number) obj;
+          if( fractionDigitNumber == null )
+            return null;
+          fractionDigitsCount = fractionDigitNumber.intValue();
+        }
+      }
+      catch( final GMLXPathException e )
+      {
+        e.printStackTrace();
+        return null;
+      }
+
+      BigDecimal bd = new BigDecimal(multResult);
+      bd = bd.setScale(fractionDigitsCount,BigDecimal.ROUND_UP);
+
+      return bd.doubleValue();
+    }
   }
 
   /**
