@@ -11,15 +11,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
-import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
@@ -228,17 +222,6 @@ public class CreateFEElement1DWidget extends AbstractWidget
     final CommandableWorkspace workspace = m_theme.getWorkspace();
     final FeatureList featureList = m_theme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
-    final IFeatureType parentType = parentFeature.getFeatureType();
-    final IRelationType parentNodeProperty = featureList.getParentFeatureTypeProperty();
-    final IRelationType parentEdgeProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_EDGES );
-    final IRelationType parentElementProperty = (IRelationType) parentType.getProperty( IFEDiscretisationModel1d2d.WB1D2D_PROP_ELEMENTS );
-    final IGMLSchema schema = workspace.getGMLSchema();
-
-    final IFeatureType nodeFeatureType = schema.getFeatureType( Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    final IPropertyType nodeContainerPT = nodeFeatureType.getProperty( IFE1D2DNode.WB1D2D_PROP_NODE_CONTAINERS );
-
-    final IFeatureType edgeFeatureType = schema.getFeatureType( IFE1D2DEdge.QNAME );
-    final IPropertyType edgeContainerPT = edgeFeatureType.getProperty( IFE1D2DEdge.WB1D2D_PROP_EDGE_CONTAINERS );
 
     /* Initialize elements needed for edges and elements */
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
@@ -266,10 +249,7 @@ public class CreateFEElement1DWidget extends AbstractWidget
         nodes.add( startPoint );
         nodes.add( endPoint );
 
-        // FIXME: cannot work! nodes get put into the wrong list here... !
-        // Better: only give discModel; the helper should know where to put what
-
-        ElementGeometryHelper.createAdd1dElement( command, workspace, parentFeature, parentNodeProperty, parentEdgeProperty, parentElementProperty, nodeContainerPT, edgeContainerPT, discModel, nodes );
+        ElementGeometryHelper.createAdd1dElement( command, workspace, parentFeature, discModel, nodes );
       }
     }
 
