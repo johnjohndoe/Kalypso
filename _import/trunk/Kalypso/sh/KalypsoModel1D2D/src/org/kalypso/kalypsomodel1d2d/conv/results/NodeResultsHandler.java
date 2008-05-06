@@ -65,7 +65,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
@@ -93,6 +92,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -157,7 +157,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     m_lsHandler = lsHandler;
     m_resultList = (FeatureList) m_resultWorkspace.getRootFeature().getProperty( INodeResultCollection.QNAME_PROP_NODERESULT_MEMBER );
 
-    m_crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
   /**
@@ -185,6 +185,8 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
    */
   private void extrapolateWaterLevel( int count )
   {
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: extrapolate water level ...\n" );
+
     if( count > WSP_EXTRAPOLATION_RANGE )
       return;
     int assigned = 0;
@@ -196,8 +198,10 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     if( assigned > 0 )
     {
       count = count + 1;
-      System.out.println( "Anzahl zugewiesener Wasserspiegel: " + assigned );
-      System.out.println( "Anzahl Aufrufe extrapolateWaterLevel: " + count );
+
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: number of assigned water level:  " + assigned + "\n" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: number of extrapolation calls:   " + count + "\n" );
+
       extrapolateWaterLevel( count );
     }
   }
@@ -282,7 +286,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "element does not exist in the arc list, check model!" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: element does not exist in the arc list, check model!" );
     }
   }
 
@@ -332,12 +336,12 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         {
           final IStatus status = handle1dElement( nodeDown, nodeUp, calcUnit );
           if( status != Status.OK_STATUS )
-            KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "error while handling 1d element:" + status.getMessage() );
+            KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: error while handling 1d element:" + status.getMessage() );
 
         }
         catch( final Exception e )
         {
-          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "exception while handling 1d element." );
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: exception while handling 1d element." );
           e.printStackTrace();
           return;
         }
@@ -354,7 +358,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
         catch( final Exception e )
         {
-          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "exception while handling 1d element." );
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: exception while handling 1d element." );
           e.printStackTrace();
           return;
         }
@@ -465,7 +469,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "element does not exist in the arc list, check model!" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: element does not exist in the arc list, check model!" );
     }
   }
 
@@ -665,15 +669,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       strmPolyInput.close();
 
       // create command
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "create command" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: create command" );
       final StringBuffer cmd = ConstraintDelaunayHelper.createTriangleCommand( polyfile );
 
       // start Triangle
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "start Triangle" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: start Triangle" );
       ConstraintDelaunayHelper.execTriangle( pwSimuLog, tempDir, cmd );
 
       // get the triangulation
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "get the triangulation" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: get the triangulation" );
       final File nodeFile = new File( tempDir, "input.1.node" );
       final File eleFile = new File( tempDir, "input.1.ele" );
 
@@ -682,17 +686,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         pwSimuLog.append( "Fehler beim Ausführen von triangle.exe" );
         pwSimuLog.append( "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
         pwSimuLog.append( "Fehler: triangle.exe konnte nicht ausgeführt werden." );
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "error while executing triangle.exe" );
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: error while executing triangle.exe" );
         return;
       }
 
       nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle nodes" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: parse triangle nodes" );
       final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle elements" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: parse triangle elements" );
       final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
       for( final GM_Surface<GM_SurfacePatch> element : elements )
@@ -740,15 +744,15 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       strmPolyInput.close();
 
       // create command
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "create command" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: create command" );
       final StringBuffer cmd = ConstraintDelaunayHelper.createTriangleCommand( polyfile );
 
       // start Triangle
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "start Triangle" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: start Triangle" );
       ConstraintDelaunayHelper.execTriangle( pwSimuLog, tempDir, cmd );
 
       // get the triangulation
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "get the triangulation" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: get the triangulation" );
       final File nodeFile = new File( tempDir, "input.1.node" );
       final File eleFile = new File( tempDir, "input.1.ele" );
 
@@ -757,17 +761,17 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         pwSimuLog.append( "Fehler beim Ausführen von triangle.exe" );
         pwSimuLog.append( "Stellen Sie sicher, dass triangle.exe über die Windows PATH-Variable auffindbar ist." );
         pwSimuLog.append( "Fehler: triangle.exe konnte nicht ausgeführt werden." );
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "error while executing triangle.exe" );
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: error while executing triangle.exe" );
         return;
       }
 
       nodeReader = new BufferedReader( new InputStreamReader( new FileInputStream( nodeFile ) ) );
       eleReader = new BufferedReader( new InputStreamReader( new FileInputStream( eleFile ) ) );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle nodes" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: parse triangle nodes" );
       final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
 
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "parse triangle elements" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: parse triangle elements" );
       final List<GM_Surface> elements = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
       for( final GM_Surface<GM_SurfacePatch> element : elements )
@@ -820,7 +824,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
       // TODO: what happens, if the boundaryCurve intersects the 1d-profile ?
       if( nodeCurve1d.intersects( boundaryCurve ) )
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "JunctionElement: boundary line intersects 1d-profile." );
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: JunctionElement: boundary line intersects 1d-profile." );
       else
       {
         if( buffer.intersects( nodeCurve1d ) == true )
@@ -847,7 +851,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
         else
         {
-          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "JunctionElement: no profile points found." );
+          KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: JunctionElement: no profile points found." );
         }
       }
 
@@ -900,7 +904,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
         }
       }
       if( intersectFound == false )
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "no profile points found." );
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s ", "1D2D-RESULT: no profile points found." );
 
       final INodeResult node = new SimpleNodeResult();
       node.setLocation( x, y, z, crs );
@@ -1357,7 +1361,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       }
       else
       {
-        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Fehler in splitIntoThreeTriangles: Dreieck wurde nicht gesplittet" );
+        KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: Fehler in splitIntoThreeTriangles: Dreieck wurde nicht gesplittet" );
       }
     }
   }
@@ -1535,7 +1539,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     }
     else
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Fehler in splitIntoTwoTriangles: Dreieck wurd nicht gesplittet" );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "1D2D-RESULT: Fehler in splitIntoTwoTriangles: Dreieck wurd nicht gesplittet" );
     }
   }
 
@@ -1702,7 +1706,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "Result for non-existing node: ", id );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "1D2D-RESULT: Result for non-existing node: ", id );
       return;
     }
 
@@ -1809,7 +1813,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "Result for non-existing node: ", id );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "1D2D-RESULT: Result for non-existing node: ", id );
       return;
     }
     result.setDry( dry );

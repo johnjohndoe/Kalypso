@@ -192,6 +192,9 @@ public class ResultMeta1d2dHelper
    */
   public static IDocumentResultMeta addDocument( final IResultMeta resultMeta, final String name, final String description, final DOCUMENTTYPE type, final IPath path, final IStatus status, final BigDecimal minValue, final BigDecimal maxValue )
   {
+    if( resultMeta == null )
+      return null;
+
     final IDocumentResultMeta document = resultMeta.getChildren().addNew( IDocumentResultMeta.QNAME, IDocumentResultMeta.class );
     document.setName( name );
     document.setDescription( description );

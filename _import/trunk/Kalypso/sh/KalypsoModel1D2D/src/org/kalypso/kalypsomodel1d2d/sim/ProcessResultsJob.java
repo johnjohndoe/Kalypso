@@ -62,7 +62,7 @@ import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv;
 import org.kalypso.kalypsomodel1d2d.conv.results.MultiTriangleEater;
 import org.kalypso.kalypsomodel1d2d.conv.results.NodeResultsHandler;
@@ -88,6 +88,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -122,12 +123,26 @@ public class ProcessResultsJob extends Job
   private final Date m_stepDate;
 
   /**
+   * @param inputFile
+   *            the result 2d file
+   * @param outputDir
+   *            the directory in which the results get stored
+   * @param flowModel
+   *            the {@link IFlowRelationshipModel}
+   * @param controlModel
+   *            the {@link org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D}
+   * @param discModel
+   * @param parameter
+   *            the parameter that will be processed
+   * @param unitResultMeta
    * @param stepDate
    *            The date which is determined by the result file name (i.e. step-number) and the control timeseries.
    */
   public ProcessResultsJob( final File inputFile, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
     super( "1D2D-Ergebnisse auswerten: " + inputFile.getName() );
+
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "entering ProcessResultsJob\n" );
 
     m_inputFile = inputFile;
     m_outputDir = outputDir;
@@ -136,7 +151,11 @@ public class ProcessResultsJob extends Job
     m_discModel = discModel;
     m_parameters = parameter;
     m_stepDate = stepDate;
-    m_stepResultMeta = unitResultMeta.addStepResult();
+
+    if( unitResultMeta != null )
+      m_stepResultMeta = unitResultMeta.addStepResult();
+    else
+      m_stepResultMeta = null;
 
     if( m_parameters == null )
     {
@@ -154,6 +173,8 @@ public class ProcessResultsJob extends Job
   @Override
   public IStatus run( final IProgressMonitor monitor )
   {
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "running ProcessResultsJob\n" );
+
     final String timeStepName;
     if( m_stepDate == ResultManager.STEADY_DATE )
       timeStepName = "stationärer Rechenlauf";
@@ -188,6 +209,8 @@ public class ProcessResultsJob extends Job
 
   public File read2DIntoGmlResults( ) throws Exception
   {
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "read results into GML...\n" );
+
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
     final File gmlResultFile = new File( m_outputDir, "results.gml" );
@@ -207,7 +230,7 @@ public class ProcessResultsJob extends Job
       /* .2d Datei lesen und GML füllen */
       final RMA10S2GmlConv conv = new RMA10S2GmlConv();
 
-      final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final MultiTriangleEater multiEater = new MultiTriangleEater();
 
       for( final ResultType.TYPE parameter : m_parameters )
@@ -299,7 +322,9 @@ public class ProcessResultsJob extends Job
       logger.printCurrentInterim( "Fertig mit Einlesen in : " );
 
       // finish MultiEater and engage serializer
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "finishing result eater..." );
       multiEater.finished();
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", " done.\n" );
 
       /* Node-GML in Datei schreiben */
       GmlSerializer.serializeWorkspace( gmlResultFile, resultWorkspace, "CP1252" );

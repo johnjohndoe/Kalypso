@@ -38,15 +38,22 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.kalypsomodel1d2d.conv.results;
+package org.kalypso.kalypsomodel1d2d.conv.results.test;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.sim.ProcessResultsJob;
 import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
 
@@ -54,15 +61,30 @@ import org.kalypso.kalypsomodel1d2d.sim.ResultManager;
  * @author Thomas Jung
  * 
  */
-public class NodeResultsHandlerTest extends TestCase
+public class NodeResultsHandler2DTest extends TestCase
 {
   public void testLoadResults( ) throws Exception
   {
-    // TODO: get 2d-file from resources
-    final File result2dFile = new File( "D:/Projekte/kalypso_dev/visu/A0009.2d" );
-    final File outputDir = FileUtilities.createNewTempDir( "bloed" );
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Start Result Processing Test (2D only)\n" );
 
-    final ProcessResultsJob job = new ProcessResultsJob( result2dFile, outputDir, null, null, null, new ArrayList<ResultType.TYPE>(), ResultManager.STEADY_DATE, null );
+    // unzip test project into workspace
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IProject project = workspace.getRoot().getProject( "NodeResultTest" );
+    project.create( new NullProgressMonitor() );
+
+    final URL zipLocation = getClass().getResource( "resources/erg.zip" );
+    ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
+
+    // run model
+    final IFolder folder = project.getFolder( "2d" );
+    final IFile ergFile = folder.getFile( "erg.2d" );
+
+    // get 2d-file from resources
+    final File result2dFile = ergFile.getLocation().toFile();
+    final File outputDir = FileUtilities.createNewTempDir( "output" );
+
+    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
+    final ProcessResultsJob job = new ProcessResultsJob( result2dFile, outputDir, null, null, null, null, ResultManager.STEADY_DATE, null );
     job.run( new NullProgressMonitor() );
   }
 }
