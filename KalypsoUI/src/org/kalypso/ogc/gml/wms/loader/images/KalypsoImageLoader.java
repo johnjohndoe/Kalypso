@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -115,18 +116,18 @@ public class KalypsoImageLoader extends Job
   protected IStatus run( final IProgressMonitor monitor )
   {
     /* Start the task. */
-    monitor.beginTask( "Loading image ...", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.0"), 1000 ); //$NON-NLS-1$
 
     try
     {
       /* If the provider is missing, tell the user. */
       if( m_provider == null )
-        return StatusUtilities.createErrorStatus( "There is no image provider given ..." );
+        return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.1") ); //$NON-NLS-1$
 
       /* Load the image. This could take a while. */
       m_buffer = m_provider.getImage( m_width, m_height, m_bbox );
 
-      return StatusUtilities.createOkStatus( "The theme was successfully loaded." );
+      return StatusUtilities.createOkStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2") ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

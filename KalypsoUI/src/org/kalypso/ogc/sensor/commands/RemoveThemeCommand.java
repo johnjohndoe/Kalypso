@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.commands;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
@@ -98,6 +99,6 @@ public class RemoveThemeCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Entfernt einen Thema";
+    return Messages.getString("org.kalypso.ogc.sensor.commands.RemoveThemeCommand.0"); //$NON-NLS-1$
   }
 }

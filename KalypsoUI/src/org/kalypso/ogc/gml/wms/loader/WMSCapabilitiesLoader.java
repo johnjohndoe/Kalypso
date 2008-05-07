@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.util.net.URLGetter;
 
@@ -96,23 +97,23 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
     if( m_baseURL == null )
       return null;
 
-    monitor.beginTask( "Loading capabilities: ", 100 );
+    monitor.beginTask( Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.0"), 100 ); //$NON-NLS-1$
 
     try
     {
-      monitor.subTask( "Creating the request ..." );
+      monitor.subTask( Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.1") ); //$NON-NLS-1$
 
       /* Create the capabilities URL. */
       URL capabilitiesURL = KalypsoWMSUtilities.createCapabilitiesRequest( m_baseURL );
 
       monitor.worked( 25 );
-      monitor.subTask( "Creating the object for getting the cababilities ..." );
+      monitor.subTask( Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.2") ); //$NON-NLS-1$
 
       /* Create a getter for retrieving the URL. */
       URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout, 0 );
 
       monitor.worked( 25 );
-      monitor.subTask( "Loading the capabilities ..." );
+      monitor.subTask( Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.3") ); //$NON-NLS-1$
 
       /* Execute. */
       IStatus status = getter.execute( new SubProgressMonitor( monitor, 50 ) );
@@ -123,7 +124,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
     }
     catch( Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", "Fehler beim Zugriff auf " + m_baseURL.toExternalForm(), ex ) );
+      throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", Messages.getString("rg.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.5") + m_baseURL.toExternalForm(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {

@@ -127,6 +127,6 @@ public class RenderingRule
   @Override
   public String toString( )
   {
-    return m_mask + " - " + m_tt == null ? "" : m_tt;
+    return m_mask + " - " + m_tt == null ? "" : m_tt; //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

@@ -148,6 +148,6 @@ public class Rules implements ITableViewRules
   @Override
   public String toString( )
   {
-    return "Rules (Amount= " + m_rules.size() + ")";
+    return "Rules (Amount= " + m_rules.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

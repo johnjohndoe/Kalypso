@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.viewers.FCVArrayDelegate;
 import org.kalypso.contribs.eclipse.jface.viewers.FCVSimpleDateDelegate;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportDataModel.CSV_COLUMN_SEPERATORS;
 import org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportDataModel.DECIMAL_NUMBER_SEPERATORS;
 import org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportDataModel.TSM_KEY;
@@ -81,11 +82,11 @@ public class PageCSVImportCSVSetup extends WizardPage
 
   public PageCSVImportCSVSetup( final CsvSheetImportDataModel model )
   {
-    super( "pageCsvImportCsvSetup" );
+    super( "pageCsvImportCsvSetup" ); //$NON-NLS-1$
     m_model = model;
 
-    setTitle( "CSV File Setup" );
-    setDescription( "Please specifiy locations of csv files and common settings of these csv files (like seperators, aso)." );
+    setTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.2") ); //$NON-NLS-1$
   }
 
   protected void checkPage( )
@@ -94,7 +95,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     if( kind == null )
     {
       setMessage( null );
-      setErrorMessage( "Kind of import entry missing." );
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.3") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -104,7 +105,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     if( fTsm == null )
     {
       setMessage( null );
-      setErrorMessage( "Time Series CSV file is missing." );
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.4") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -113,7 +114,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     if( !fTsm.exists() )
     {
       setMessage( null );
-      setErrorMessage( "Time Series CSV file does not exists." );
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.5") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -123,7 +124,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     if( cSep == null )
     {
       setMessage( null );
-      setErrorMessage( "Column seperator entry is missing." );
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.6") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -133,7 +134,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     if( dSep == null )
     {
       setMessage( null );
-      setErrorMessage( "Decimal seperator entry is missing." );
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.7") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -143,7 +144,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     if( dateFormat == null )
     {
       setMessage( null );
-      setErrorMessage( "Date format entry is missing." );
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.8") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -153,7 +154,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     if( timeZoneId == null )
     {
       setMessage( null );
-      setErrorMessage( "Time zone entry is missing." );
+      setErrorMessage( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.9") ); //$NON-NLS-1$
       setPageComplete( false );
 
       return;
@@ -179,7 +180,7 @@ public class PageCSVImportCSVSetup extends WizardPage
 
     /* WQ Kind */
     final Label lWQKind = new Label( container, SWT.NONE );
-    lWQKind.setText( "Import W [cm] or Q [m³/s]?" );
+    lWQKind.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.10") ); //$NON-NLS-1$
 
     final WQ_KIND[] wqInput = new WQ_KIND[] { WQ_KIND.eW, WQ_KIND.eQ };
     final FacadeComboViewer wWq = new FacadeComboViewer( new FCVArrayDelegate( wqInput ) );
@@ -199,17 +200,17 @@ public class PageCSVImportCSVSetup extends WizardPage
     final Group grFiles = new Group( container, SWT.NONE );
     grFiles.setLayout( new GridLayout( 3, false ) );
     grFiles.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-    grFiles.setText( "CSV data files" );
+    grFiles.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.11") ); //$NON-NLS-1$
 
     /* File Time Series */
     final Label lFileTimeSeries = new Label( grFiles, SWT.NONE );
-    lFileTimeSeries.setText( "Time Series CSV file" );
+    lFileTimeSeries.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.12") ); //$NON-NLS-1$
 
     final Text tFileTimeSeries = new Text( grFiles, SWT.READ_ONLY | SWT.BORDER );
     tFileTimeSeries.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final Button bFileTimeSeries = new Button( grFiles, SWT.NONE );
-    bFileTimeSeries.setText( "..." );
+    bFileTimeSeries.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.13") ); //$NON-NLS-1$
 
     bFileTimeSeries.addSelectionListener( new SelectionAdapter()
     {
@@ -220,8 +221,8 @@ public class PageCSVImportCSVSetup extends WizardPage
       public void widgetSelected( final SelectionEvent e )
       {
         final FileDialog fileDialog = new FileDialog( bFileTimeSeries.getShell() );
-        fileDialog.setFilterNames( new String[] { "CSV-Sheet" } );
-        fileDialog.setFilterExtensions( new String[] { "*.csv" } );
+        fileDialog.setFilterNames( new String[] { "CSV-Sheet" } ); //$NON-NLS-1$
+        fileDialog.setFilterExtensions( new String[] { "*.csv" } ); //$NON-NLS-1$
 
         tFileTimeSeries.setText( fileDialog.open() );
 
@@ -234,17 +235,17 @@ public class PageCSVImportCSVSetup extends WizardPage
 
     /* File w/q */
     final Label lFileWqConnection = new Label( grFiles, SWT.NONE );
-    lFileWqConnection.setText( "W/Q relationship" );
+    lFileWqConnection.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.16") ); //$NON-NLS-1$
 
     final Text tFileWqConnection = new Text( grFiles, SWT.READ_ONLY | SWT.BORDER );
     tFileWqConnection.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final Button bFileWqConnection = new Button( grFiles, SWT.NONE );
-    bFileWqConnection.setText( "..." );
+    bFileWqConnection.setText( "..." ); //$NON-NLS-1$
 
     /* first row is w / q */
     final Label lWQFirstColumn = new Label( grFiles, SWT.NONE );
-    lWQFirstColumn.setText( "First relationship sheet column is?" );
+    lWQFirstColumn.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.18") ); //$NON-NLS-1$
 
     final WQ_KIND[] wqFirstColumnInput = new WQ_KIND[] { WQ_KIND.eW, WQ_KIND.eQ };
     final FacadeComboViewer wFC = new FacadeComboViewer( new FCVArrayDelegate( wqFirstColumnInput ) );
@@ -272,8 +273,8 @@ public class PageCSVImportCSVSetup extends WizardPage
       public void widgetSelected( final SelectionEvent e )
       {
         final FileDialog fileDialog = new FileDialog( bFileTimeSeries.getShell() );
-        fileDialog.setFilterNames( new String[] { "CSV-Sheet" } );
-        fileDialog.setFilterExtensions( new String[] { "*.csv" } );
+        fileDialog.setFilterNames( new String[] { "CSV-Sheet" } ); //$NON-NLS-1$
+        fileDialog.setFilterExtensions( new String[] { "*.csv" } ); //$NON-NLS-1$
 
         tFileWqConnection.setText( fileDialog.open() );
 
@@ -289,11 +290,11 @@ public class PageCSVImportCSVSetup extends WizardPage
     final Group grSeperators = new Group( container, SWT.NONE );
     grSeperators.setLayout( new GridLayout( 2, false ) );
     grSeperators.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 0 ) );
-    grSeperators.setText( "CSV seperators and data formats" );
+    grSeperators.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.21") ); //$NON-NLS-1$
 
     /* cvs column seperator */
     final Label lColumnSeperator = new Label( grSeperators, SWT.NONE );
-    lColumnSeperator.setText( "CSV column seperator" );
+    lColumnSeperator.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.22") ); //$NON-NLS-1$
 
     final CSV_COLUMN_SEPERATORS[] columnSeperators = new CSV_COLUMN_SEPERATORS[] { CSV_COLUMN_SEPERATORS.eSemicolon, CSV_COLUMN_SEPERATORS.eTab, CSV_COLUMN_SEPERATORS.eSpace };
     final FacadeComboViewer wColumnSeperators = new FacadeComboViewer( new FCVArrayDelegate( columnSeperators ) );
@@ -312,7 +313,7 @@ public class PageCSVImportCSVSetup extends WizardPage
 
     /* decimal seperator */
     final Label lDecimalSeperator = new Label( grSeperators, SWT.NONE );
-    lDecimalSeperator.setText( "Decimal Number seperator" );
+    lDecimalSeperator.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.23") ); //$NON-NLS-1$
 
     final DECIMAL_NUMBER_SEPERATORS[] decimalSeperators = new DECIMAL_NUMBER_SEPERATORS[] { DECIMAL_NUMBER_SEPERATORS.ePoint, DECIMAL_NUMBER_SEPERATORS.eComma };
     final FacadeComboViewer wDecimalSeperators = new FacadeComboViewer( new FCVArrayDelegate( decimalSeperators ) );
@@ -331,14 +332,14 @@ public class PageCSVImportCSVSetup extends WizardPage
 
     /* date format */
     final Label lDateFormat = new Label( grSeperators, SWT.NONE );
-    lDateFormat.setText( "Date format" );
+    lDateFormat.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.24") ); //$NON-NLS-1$
 
     final List<SimpleDateFormat> dates = new ArrayList<SimpleDateFormat>();
-    dates.add( new SimpleDateFormat( "dd.MM.yyyy HH:mm" ) );
-    dates.add( new SimpleDateFormat( "dd.MM.yy HH:mm" ) );
+    dates.add( new SimpleDateFormat( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.25") ) ); //$NON-NLS-1$
+    dates.add( new SimpleDateFormat( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.26") ) ); //$NON-NLS-1$
 
-    dates.add( new SimpleDateFormat( "yyyy-MM-dd HH:mm" ) );
-    dates.add( new SimpleDateFormat( "yy-MM-dd HH:mm" ) );
+    dates.add( new SimpleDateFormat( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.27") ) ); //$NON-NLS-1$
+    dates.add( new SimpleDateFormat( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.28") ) ); //$NON-NLS-1$
 
     final FacadeComboViewer wDateFormats = new FacadeComboViewer( new FCVSimpleDateDelegate( dates.toArray( new SimpleDateFormat[] {} ) ) );
     wDateFormats.draw( grSeperators, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
@@ -356,12 +357,12 @@ public class PageCSVImportCSVSetup extends WizardPage
 
     /* time zones */
     final Label lTimeZones = new Label( grSeperators, SWT.NONE );
-    lTimeZones.setText( "Time Zone" );
+    lTimeZones.setText( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.29") ); //$NON-NLS-1$
 
     final Set<String> timeZones = new TreeSet<String>();
     final String[] tz = TimeZone.getAvailableIDs();
     for( final String z : tz )
-      if( z.contains( "Europe/" ) )
+      if( z.contains( "Europe/" ) ) //$NON-NLS-1$
         timeZones.add( z );
 
     final FacadeComboViewer wTimeZones = new FacadeComboViewer( new FCVArrayDelegate( timeZones.toArray( new String[] {} ) ) );

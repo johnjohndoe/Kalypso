@@ -129,7 +129,7 @@ public class LegendElement
   public String getText( )
   {
     if( m_labelProvider == null )
-      return "Item " + String.valueOf( m_level );
+      return "Item " + String.valueOf( m_level ); //$NON-NLS-1$
 
     return m_labelProvider.getText( m_object );
   }

@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.util.List;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -72,7 +73,7 @@ public class TableView extends ObsView
   @Override
   public String toString( )
   {
-    return "Tabelle";
+    return Messages.getString("org.kalypso.ogc.sensor.tableview.TableView.0"); //$NON-NLS-1$
   }
 
   public ITableViewRules getRules( )

@@ -59,15 +59,15 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
  */
 public class ObsViewUtils
 {
-  public static final String TOKEN_AXISUNIT = "%axisunit%";
+  public static final String TOKEN_AXISUNIT = "%axisunit%"; //$NON-NLS-1$
 
-  public static final String TOKEN_AXISTYPE = "%axistype%";
+  public static final String TOKEN_AXISTYPE = "%axistype%"; //$NON-NLS-1$
 
-  public static final String TOKEN_AXISNAME = "%axisname%";
+  public static final String TOKEN_AXISNAME = "%axisname%"; //$NON-NLS-1$
 
-  public static final String TOKEN_OBSNAME = "%obsname%";
+  public static final String TOKEN_OBSNAME = "%obsname%"; //$NON-NLS-1$
 
-  public static final String DEFAULT_ITEM_NAME = "%axistype% - %obsname%";
+  public static final String DEFAULT_ITEM_NAME = "%axistype% - %obsname%"; //$NON-NLS-1$
 
   private ObsViewUtils( )
   {
@@ -109,17 +109,17 @@ public class ObsViewUtils
       int index = 0;
       while( index < result.length() - 1 )
       {
-        final int start = result.indexOf( "%metadata-", index );
+        final int start = result.indexOf( "%metadata-", index ); //$NON-NLS-1$
         if( start == -1 )
           break;
 
         final int stop = result.indexOf( '%', start + 1 );
         if( stop != -1 )
         {
-          final String metaname = result.substring( start + "%metadata-".length(), stop );
+          final String metaname = result.substring( start + "%metadata-".length(), stop ); //$NON-NLS-1$
           final StringBuffer sb = new StringBuffer( result );
 
-          final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" );
+          final String metaval = obs.getMetadataList().getProperty( metaname, "<Metavalue '" + metaname + "' not found>" ); //$NON-NLS-1$ //$NON-NLS-2$
           sb.replace( start, stop + 1, metaval );
 
           result = sb.toString();
@@ -163,10 +163,10 @@ public class ObsViewUtils
   public static String replaceTokens( final String formatString, final String tokens )
   {
     final Properties properties = new Properties();
-    final String[] strings = tokens.split( ";" );
+    final String[] strings = tokens.split( ";" ); //$NON-NLS-1$
     for( int i = 0; i < strings.length; i++ )
     {
-      final String[] splits = strings[i].split( "-" );
+      final String[] splits = strings[i].split( "-" ); //$NON-NLS-1$
       properties.setProperty( splits[0], splits[1] );
     }
 

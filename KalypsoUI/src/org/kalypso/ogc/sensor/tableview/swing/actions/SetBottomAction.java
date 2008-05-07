@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.tableview.swing.actions;
 
 import java.awt.event.ActionEvent;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 
 /**
@@ -13,7 +14,7 @@ public class SetBottomAction extends AbstractObservationTableAction
 {
   public SetBottomAction( ObservationTable table )
   {
-    super( table, "Werte unterhalb setzen", "Führt den selektierten Wert für alle nachfolgenden fort" );
+    super( table, Messages.getString("org.kalypso.ogc.sensor.tableview.swing.actions.SetBottomAction.0"), Messages.getString("org.kalypso.ogc.sensor.tableview.swing.actions.SetBottomAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

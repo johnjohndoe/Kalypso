@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.java.util.ValueIterator;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -132,7 +133,7 @@ public class ObservationViewerDialog extends Dialog
     m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, m_withChart, m_withMetaDataTable, createButtonControls() );
     updateViewer();
     // TODO label
-    getShell().setText( "Zeitreihenlink-Editor" );
+    getShell().setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.0") ); //$NON-NLS-1$
     return composite;
   }
 
@@ -179,7 +180,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( removeListener, "loeschen", "Zeitreihe loeschen", SWT.PUSH ) );
+      result.add( new ButtonControl( removeListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.1"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.2"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_NEW) == BUTTON_NEW )
     {
@@ -215,7 +216,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( newListener, "neu", "Neue Zeitreihe anlegen", SWT.PUSH ) );
+      result.add( new ButtonControl( newListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.3"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.4"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_NEW_IDEAL_LANDUSE) == BUTTON_NEW_IDEAL_LANDUSE )
     {
@@ -224,7 +225,7 @@ public class ObservationViewerDialog extends Dialog
         public void widgetSelected( SelectionEvent e )
         {
 
-          final String name = "Idealisierter Jahres Vegetationszyklus";
+          final String name = Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.5"); //$NON-NLS-1$
           final Calendar startDate = Calendar.getInstance();
           startDate.set( 2000, 11, 15 );
           final Calendar idealMonth = Calendar.getInstance();
@@ -250,7 +251,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( newListener, "neu", "Neue Vegetationsperiode anlegen", SWT.PUSH ) );
+      result.add( new ButtonControl( newListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.6"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.7"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_EXEL_IMPORT) == BUTTON_EXEL_IMPORT )
     {
@@ -272,7 +273,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelImportListener, "Import aus Zwischenspeicher", "Aus Zwischenspeicher importieren", SWT.PUSH ) );
+      result.add( new ButtonControl( exelImportListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.8"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.9"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     if( (m_buttonControls & BUTTON_EXEL_EXPORT) == BUTTON_EXEL_EXPORT )
     {
@@ -302,7 +303,7 @@ public class ObservationViewerDialog extends Dialog
           // TODO Auto-generated method stub
         }
       };
-      result.add( new ButtonControl( exelExportListener, "Export in Zwischenspeicher", "In Zwischenspeicher exportieren", SWT.PUSH ) );
+      result.add( new ButtonControl( exelExportListener, Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.10"), Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewerDialog.11"), SWT.PUSH ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return result.toArray( new ButtonControl[result.size()] );
   }

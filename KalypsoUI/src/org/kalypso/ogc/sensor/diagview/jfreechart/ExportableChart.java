@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.jfree.chart.encoders.EncoderUtil;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 
@@ -61,7 +62,7 @@ import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
  */
 public class ExportableChart implements IExportableObject
 {
-  public final static String DEFAULT_FORMAT = "png";
+  public final static String DEFAULT_FORMAT = "png"; //$NON-NLS-1$
   public final static int DEFAULT_WIDTH = 400;
   public final static int DEFAULT_HEIGHT = 300;
 
@@ -93,11 +94,11 @@ public class ExportableChart implements IExportableObject
   {
     final TextTitle title = m_chart.getTitle();
 
-    String name = "Diagramm";
+    String name = Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.1"); //$NON-NLS-1$
     if( title != null && title.getText().length() > 0 )
       name = title.getText();
 
-    return name + "." + m_format;
+    return name + "." + m_format; //$NON-NLS-1$
   }
 
   /**
@@ -107,7 +108,7 @@ public class ExportableChart implements IExportableObject
   public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor,
       final Configuration metadataExtensions )
   {
-    monitor.beginTask( "Diagramm-Export", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.3"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     try
     {
@@ -119,7 +120,7 @@ public class ExportableChart implements IExportableObject
     }
     catch( final IOException e )
     {
-      return StatusUtilities.statusFromThrowable( e, "Diagramm konnte nicht als Bild exportiert werden" );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.4") ); //$NON-NLS-1$
     }
     finally
     {

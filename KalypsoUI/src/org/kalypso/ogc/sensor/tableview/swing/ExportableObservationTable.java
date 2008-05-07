@@ -49,6 +49,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -76,7 +77,7 @@ public class ExportableObservationTable implements IExportableObject
    */
   public String getPreferredDocumentName()
   {
-    return "Tabelle.csv";
+    return "Tabelle.csv"; //$NON-NLS-1$
   }
 
   /**
@@ -86,7 +87,7 @@ public class ExportableObservationTable implements IExportableObject
   public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
       final Configuration metadataExtensions )
   {
-    monitor.beginTask( "Export", 2 );
+    monitor.beginTask( Messages.getString("ExportableObservationTable.1"), 2 ); //$NON-NLS-1$
 
     final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( output ) );
     try
@@ -95,12 +96,12 @@ public class ExportableObservationTable implements IExportableObject
       MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_table.getTemplate().getItems() );
 
       // scenario name header
-      if( !m_table.getCurrentScenarioName().equals( "" ) )
+      if( !m_table.getCurrentScenarioName().equals( "" ) ) //$NON-NLS-1$
       {
         writer.write( m_table.getCurrentScenarioName() );
         int columnCount = m_table.getColumnCount() - 1;
         for( int i = 0; i < columnCount; i++ )
-          writer.write( ";" );
+          writer.write( ";" ); //$NON-NLS-1$
         writer.newLine();
       }
 
@@ -108,7 +109,7 @@ public class ExportableObservationTable implements IExportableObject
 
       // normal table dump
       final ObservationTableModel model = m_table.getObservationTableModel();
-      model.dump( ";", writer );
+      model.dump( ";", writer ); //$NON-NLS-1$
 
       monitor.worked( 1 );
 
@@ -118,7 +119,7 @@ public class ExportableObservationTable implements IExportableObject
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Export", e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("ExportableObservationTable.5"), e ); //$NON-NLS-1$
     }
     finally
     {

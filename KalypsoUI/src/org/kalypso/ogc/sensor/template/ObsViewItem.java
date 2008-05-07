@@ -62,7 +62,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IObservationL
 
   private boolean m_shown = true;
 
-  private String m_name = "";
+  private String m_name = ""; //$NON-NLS-1$
 
   public ObsViewItem( final ObsView view, final IObsProvider obsProvider, final String name )
   {

@@ -50,6 +50,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -66,7 +67,7 @@ public class DateRangeInputWizardPage extends WizardPage
 
   public DateRangeInputWizardPage()
   {
-    super( "DateRangeInputWizardPage" );
+    super( "DateRangeInputWizardPage" ); //$NON-NLS-1$
 
     m_settings = KalypsoGisPlugin.getDefault().getDialogSettings();
   }
@@ -87,8 +88,8 @@ public class DateRangeInputWizardPage extends WizardPage
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
 
-    setTitle( "Zeitraum-Eingabe" );
-    setDescription( "Geben Sie bitte die Zeitraum-Information ein für welche die Zeitreihe exportiert werden soll." );
+    setTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.2") ); //$NON-NLS-1$
   }
 
   public DateRange getDateRange()
@@ -121,7 +122,7 @@ public class DateRangeInputWizardPage extends WizardPage
     }
 
     // else inform user about invalid input
-    MessageDialog.openInformation( getShell(), "Fehlerhafte Eingabe", "Prüfen Sie bitte Ihre Eingabe. " + err );
+    MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.3"), Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.4") + err ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ogc.gml.wms.provider.legends.IKalypsoLegendProvider;
@@ -160,7 +161,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     initializeRemoteWMS();
 
     /* Load the legend. */
-    org.eclipse.swt.graphics.Image result = loadLegendGraphic( "" );
+    org.eclipse.swt.graphics.Image result = loadLegendGraphic( "" ); //$NON-NLS-1$
 
     return result;
   }
@@ -174,7 +175,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     if( m_wms == null )
     {
       if( m_service == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( "No service url given ..." ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.1") ) ); //$NON-NLS-1$
 
       /* Create the service URL. */
       URL serviceURL = parseServiceUrl( m_service );
@@ -186,7 +187,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       WMSCapabilities wmsCaps = DeegreeWMSUtilities.loadCapabilities( m_loader, new NullProgressMonitor() );
 
       /* Ask for the srs. */
-      m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers.split( "," ) );
+      m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers.split( "," ) ); //$NON-NLS-1$
 
       /* Initialize the WMS. */
       m_wms = getRemoteService( wmsCaps );
@@ -217,7 +218,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
     catch( MalformedURLException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, String.format( "Service URL fehlerhaft: %s (%s)", service, e.getLocalizedMessage() ) ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, String.format( Messages.getString("org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.3"), service, e.getLocalizedMessage() ) ) ); //$NON-NLS-1$
     }
   }
 
@@ -280,14 +281,14 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       if( m_wms == null || m_layers == null )
         return null;
 
-      GM_Envelope maxEnvRemoteSRS = DeegreeWMSUtilities.getMaxExtent( m_layers.split( "," ), (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS );
+      GM_Envelope maxEnvRemoteSRS = DeegreeWMSUtilities.getMaxExtent( m_layers.split( "," ), (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS ); //$NON-NLS-1$
       GeoTransformer gt = new GeoTransformer( m_localSRS );
 
       return gt.transformEnvelope( maxEnvRemoteSRS, m_negotiatedSRS );
     }
     catch( Exception ex )
     {
-      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex, "Failed to determine extent." ) );
+      KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex, Messages.getString("org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.5") ) ); //$NON-NLS-1$
     }
 
     return null;

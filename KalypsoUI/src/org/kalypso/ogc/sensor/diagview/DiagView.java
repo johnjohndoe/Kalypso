@@ -72,12 +72,12 @@ public class DiagView extends ObsView
 
   public DiagView( )
   {
-    this( "", "", false );
+    this( "", "", false ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public DiagView( final boolean showLegend )
   {
-    this( "", "", showLegend );
+    this( "", "", showLegend ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public DiagView( final String title, final String legendName, final boolean showLegend )

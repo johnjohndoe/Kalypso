@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -87,7 +88,7 @@ public class GisTemplateLoadedThread extends Thread
       }
       if( maxWait-- < 0 ) // do not wait for ever
       {
-        System.out.println( "Waited to long for map to load. Invoking runnable now." );
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.util.GisTemplateLoadedThread.0") ); //$NON-NLS-1$
         break;
       }
     }

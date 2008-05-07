@@ -59,7 +59,7 @@ public class ObservationTablePanel extends JPanel
   private final ObservationTable m_table;
 
   /** is created if an observation has a scenario property */
-  private final JLabel m_label = new JLabel("", SwingConstants.CENTER );
+  private final JLabel m_label = new JLabel("", SwingConstants.CENTER ); //$NON-NLS-1$
 
   public ObservationTablePanel( final ObservationTable table )
   {
@@ -77,7 +77,7 @@ public class ObservationTablePanel extends JPanel
 
   public void clearLabel()
   {
-    m_label.setText( "" );
+    m_label.setText( "" ); //$NON-NLS-1$
     m_label.setVisible( false );
   }
 
@@ -98,7 +98,7 @@ public class ObservationTablePanel extends JPanel
     if( bShowText )
       m_label.setText( txt );
     else
-      m_label.setText( "" );
+      m_label.setText( "" ); //$NON-NLS-1$
     m_label.setIcon( icon );
     setBackground( color );
     

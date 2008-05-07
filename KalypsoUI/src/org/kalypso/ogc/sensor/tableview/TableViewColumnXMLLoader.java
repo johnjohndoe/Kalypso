@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -97,7 +98,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
 
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
     if( keyAxes.length == 0 )
-      throw new IllegalStateException( "Die Zeitreihe verfügt über keiner Schlüssel-Achse" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumnXMLLoader.0") ); //$NON-NLS-1$
 
     final IAxis keyAxis = keyAxes[0];
 
@@ -132,7 +133,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
       catch( final NoSuchElementException e )
       {
         Logger.getLogger( getClass().getName() ).warning(
-            "Kann TableViewColumn nicht laden, Ursache: " + e.getLocalizedMessage() );
+            Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumnXMLLoader.1") + e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
   }

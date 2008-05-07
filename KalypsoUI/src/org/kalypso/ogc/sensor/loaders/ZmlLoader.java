@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
@@ -77,7 +78,7 @@ public class ZmlLoader extends AbstractLoader
     {
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      monitor.beginTask( "Zml laden aus: " + url, IProgressMonitor.UNKNOWN );
+      monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.0") + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
       final IObservation obs = ZmlFactory.parseXML( url, url.getFile() );
 
@@ -112,11 +113,11 @@ public class ZmlLoader extends AbstractLoader
         return;
       final URL url = m_urlResolver.resolveURL( context, source );
 
-      monitor.beginTask( "ZML speichern in: " + url, IProgressMonitor.UNKNOWN );
+      monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.1") + url, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
       final IFile file = ResourceUtilities.findFileFromURL( url );
       if( file == null )
-        throw new IllegalArgumentException( "Datei konnte nicht gefunden werden: " + url );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.loaders.ZmlLoader.2") + url ); //$NON-NLS-1$
 
       final Observation xmlObs = ZmlFactory.createXML( (IObservation) data, null );
 
@@ -149,6 +150,6 @@ public class ZmlLoader extends AbstractLoader
    */
   public String getDescription( )
   {
-    return "ZML";
+    return "ZML"; //$NON-NLS-1$
   }
 }

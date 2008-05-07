@@ -52,6 +52,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -101,13 +102,13 @@ public class MapUtils
 
   public static void removeFeature( CommandableWorkspace workspace, final MapPanel panel, Feature[] selectedFeatures ) throws Exception
   {
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Objekte löschen", "Selektierte Objekte werden gelöscht. Sind Sie sicher?" ) )
+    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.0"), Messages.getString("org.kalypso.ogc.gml.util.MapUtils.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = panel.getSelectionManager();
 
-    final CompositeCommand compositeCommand = new CompositeCommand( "Objekte löschen" );
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.2") ); //$NON-NLS-1$
     for( final Feature featureToRemove : selectedFeatures )
     {
       selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
@@ -119,7 +120,7 @@ public class MapUtils
     workspace.postCommand( compositeCommand );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static void paintGrabbedFeature( final Graphics g, final MapPanel panel, final Feature feature, QName geomQName )
   {
     final Graphics2D g2 = (Graphics2D) g;

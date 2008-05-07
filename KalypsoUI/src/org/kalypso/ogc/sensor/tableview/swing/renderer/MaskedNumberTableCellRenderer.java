@@ -110,7 +110,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     for( int i = 0; i < r.length; i++ )
     {
       // TOOLTIP
-      ttext += "; " + r[i].getTooltipText();
+      ttext += "; " + r[i].getTooltipText(); //$NON-NLS-1$
 
       // FONT
       final Font f = r[i].getFont();

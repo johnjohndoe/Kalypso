@@ -75,6 +75,6 @@ public class AxisMapping
   @Override
   public String toString( )
   {
-    return m_oAxis + " - " + m_dAxis;
+    return m_oAxis + " - " + m_dAxis; //$NON-NLS-1$
   }
 }
