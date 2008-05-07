@@ -379,7 +379,7 @@ public class ProfilchartEditor extends EditorPart implements IProfilViewProvider
       loadFile( file, profiletype );
 
       if( name != null )
-        setPartName( Messages.ProfilchartEditor_18 + " " + name ); // //$NON-NLS-N$
+        setPartName( Messages.ProfilchartEditor_18 + " " + name ); //$NON-NLS-1$
     }
   }
 
