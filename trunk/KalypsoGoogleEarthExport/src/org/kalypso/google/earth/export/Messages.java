@@ -22,6 +22,8 @@ public class Messages extends NLS
 
   public static String PageGoogleExport_9;
 
+  public static String PlacemarkUtil_0;
+
   public static String StyleTypeFactory_0;
 
   public static String WizardGoogleExport_0;
