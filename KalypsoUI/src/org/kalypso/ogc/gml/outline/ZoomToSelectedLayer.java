@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -44,6 +44,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Event;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -73,23 +74,23 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
       final GM_Envelope zoomBox = MapModellHelper.calculateExtent( selectedThemes, null );
       if( zoomBox == null )
       {
-        MessageDialog.openWarning( event.display.getActiveShell(), action.getText(), Messages.ZoomToSelectedLayer_0 );
+        MessageDialog.openWarning( event.display.getActiveShell(), action.getText(), Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.0" ) );
         return;
       }
 
       final GM_Envelope wishBBox = GeometryUtilities.scaleEnvelope( zoomBox, 1.05 );
 
-      IMapModellView view = getView();
-      ChangeExtentCommand changeExtentCommand = new ChangeExtentCommand( panel, wishBBox );
+      final IMapModellView view = getView();
+      final ChangeExtentCommand changeExtentCommand = new ChangeExtentCommand( panel, wishBBox );
 
       if( view instanceof GisMapOutlineView )
       {
-        GisMapOutlineView gisView = (GisMapOutlineView) view;
+        final GisMapOutlineView gisView = (GisMapOutlineView) view;
         gisView.postCommand( changeExtentCommand, null );
       }
       else if( view instanceof GisMapOutlinePage )
       {
-        GisMapOutlinePage page = (GisMapOutlinePage) view;
+        final GisMapOutlinePage page = (GisMapOutlinePage) view;
         page.postCommand( changeExtentCommand, null );
       }
       else
