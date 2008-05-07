@@ -45,6 +45,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.IStorageEditorInput;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.i18n.Messages;
 
 /**
  * PseudoTemplateEditorInput
@@ -100,7 +101,7 @@ public class PseudoTemplateEditorInput implements IStorageEditorInput
    */
   public String getName( )
   {
-    return "Vorlage für " + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension;
+    return Messages.getString("org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput.0") + FileUtilities.nameWithoutExtension( m_storage.getName() ) + m_fileExtension; //$NON-NLS-1$
   }
 
   /**

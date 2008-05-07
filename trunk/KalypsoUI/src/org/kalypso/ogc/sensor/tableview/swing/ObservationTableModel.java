@@ -55,6 +55,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -154,7 +155,7 @@ public class ObservationTableModel extends AbstractTableModel
         // since the position is not relevant here
         if( m_sharedAxis.getDataClass() != keyAxis.getDataClass() || !m_sharedAxis.getUnit().equals( keyAxis.getUnit() ) || !m_sharedAxis.getType().equals( keyAxis.getType() ) )
         {
-          throw new SensorException( m_sharedAxis + " ist nicht mit " + keyAxis + " kompatibel." );
+          throw new SensorException( m_sharedAxis + Messages.getString("org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.0") + keyAxis + Messages.getString("org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.1") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -246,7 +247,7 @@ public class ObservationTableModel extends AbstractTableModel
     synchronized( m_columns )
     {
       if( m_columns.size() == 0 )
-        return "Keine Daten vorhanden";
+        return Messages.getString("org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.2"); //$NON-NLS-1$
 
       if( columnIndex == 0 )
         return m_sharedAxis.getName();
@@ -376,7 +377,7 @@ public class ObservationTableModel extends AbstractTableModel
           col.setDirty( true, this );
         }
         else
-          m_logger.info( "Cannot setValue because key not found" );
+          m_logger.info( Messages.getString("org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel.3") ); //$NON-NLS-1$
       }
       catch( final SensorException e )
       {
@@ -595,7 +596,7 @@ public class ObservationTableModel extends AbstractTableModel
         if( nf[col] != null && value != null )
           writer.write( nf[col].format( value ) );
         else
-          writer.write( "" );
+          writer.write( "" ); //$NON-NLS-1$
       }
 
       writer.newLine();

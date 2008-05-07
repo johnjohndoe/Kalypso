@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.transformation.GeoTransformer;
@@ -116,7 +117,7 @@ public class DeegreeWMSUtilities
       /* Create the capabilities. */
       WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
       if( capabilities == null )
-        throw new Exception( "The capabilities are not allowed to be null ..." );
+        throw new Exception( Messages.getString("org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0") ); //$NON-NLS-1$
 
       return capabilities;
     }
@@ -146,21 +147,21 @@ public class DeegreeWMSUtilities
   public static HashMap<String, String> createGetFeatureinfoRequest( WMSCapabilities capabilities, String layers, Point pointOfInterest, String format ) throws CoreException
   {
     // TODO: does not work at the moment
-    HashMap<String, String> parameterMap = prepareRequestParameters( capabilities, "GetFeatureInfo" );
-    parameterMap.put( "QUERY_LAYERS", layers );
+    HashMap<String, String> parameterMap = prepareRequestParameters( capabilities, "GetFeatureInfo" ); //$NON-NLS-1$
+    parameterMap.put( "QUERY_LAYERS", layers ); //$NON-NLS-1$
 
     if( format != null && format.length() > 0 )
-      parameterMap.put( "INFO_FORMAT", format );
+      parameterMap.put( "INFO_FORMAT", format ); //$NON-NLS-1$
 
-    parameterMap.put( "X", Integer.toString( pointOfInterest.x ) );
-    parameterMap.put( "Y", Integer.toString( pointOfInterest.y ) );
+    parameterMap.put( "X", Integer.toString( pointOfInterest.x ) ); //$NON-NLS-1$
+    parameterMap.put( "Y", Integer.toString( pointOfInterest.y ) ); //$NON-NLS-1$
 
-    parameterMap.put( "LAYERS", "dummy" );
-    parameterMap.put( "FORMAT", "image/gif" );
-    parameterMap.put( "WIDTH", "100" );
-    parameterMap.put( "HEIGHT", "100" );
-    parameterMap.put( "SRS", "100" );
-    parameterMap.put( "BBOX", "100" );
+    parameterMap.put( "LAYERS", "dummy" ); //$NON-NLS-1$ //$NON-NLS-2$
+    parameterMap.put( "FORMAT", "image/gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+    parameterMap.put( "WIDTH", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
+    parameterMap.put( "HEIGHT", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
+    parameterMap.put( "SRS", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
+    parameterMap.put( "BBOX", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return parameterMap;
   }
@@ -192,35 +193,35 @@ public class DeegreeWMSUtilities
   {
     try
     {
-      HashMap<String, String> wmsParameter = prepareRequestParameters( capabilities, "GetMap" );
+      HashMap<String, String> wmsParameter = prepareRequestParameters( capabilities, "GetMap" ); //$NON-NLS-1$
 
-      wmsParameter.put( "LAYERS", layers );
+      wmsParameter.put( "LAYERS", layers ); //$NON-NLS-1$
       if( styles != null )
-        wmsParameter.put( "STYLES", styles );
+        wmsParameter.put( "STYLES", styles ); //$NON-NLS-1$
 
       // some WMS-themes use style name="" and when deegree makes "STYLES=default" out of this, this does not work
       // I think style name="" is also not valid (can we be flexible ?)
       // ask me ( v.doemming@tuhh.de )
-      wmsParameter.put( "FORMAT", "image/png" );
-      wmsParameter.put( "TRANSPARENT", "TRUE" );
-      wmsParameter.put( "WIDTH", "" + width );
-      wmsParameter.put( "HEIGHT", "" + height );
-      wmsParameter.put( "SRS", negotiatedSRS );
+      wmsParameter.put( "FORMAT", "image/png" ); //$NON-NLS-1$ //$NON-NLS-2$
+      wmsParameter.put( "TRANSPARENT", "TRUE" ); //$NON-NLS-1$ //$NON-NLS-2$
+      wmsParameter.put( "WIDTH", "" + width ); //$NON-NLS-1$ //$NON-NLS-2$
+      wmsParameter.put( "HEIGHT", "" + height ); //$NON-NLS-1$ //$NON-NLS-2$
+      wmsParameter.put( "SRS", negotiatedSRS ); //$NON-NLS-1$
 
       GeoTransformer gt = new GeoTransformer( negotiatedSRS );
       GM_Envelope targetEnvRemoteSRS = gt.transformEnvelope( requestedEnvLocalSRS, localSRS );
 
       if( targetEnvRemoteSRS.getMax().getX() - targetEnvRemoteSRS.getMin().getX() <= 0 )
-        throw new Exception( "invalid bbox" );
+        throw new Exception( "invalid bbox" ); //$NON-NLS-1$
 
       if( targetEnvRemoteSRS.getMax().getY() - targetEnvRemoteSRS.getMin().getY() <= 0 )
-        throw new Exception( "invalid bbox" );
+        throw new Exception( "invalid bbox" ); //$NON-NLS-1$
 
       String targetEnvRemoteSRSstring = DeegreeWMSUtilities.env2bboxString( targetEnvRemoteSRS );
-      wmsParameter.put( "BBOX", targetEnvRemoteSRSstring );
+      wmsParameter.put( "BBOX", targetEnvRemoteSRSstring ); //$NON-NLS-1$
 
       /* Add the ID parameter to them. */
-      wmsParameter.put( "ID", "KalypsoWMSRequest" + themeName + new Date().getTime() );
+      wmsParameter.put( "ID", "KalypsoWMSRequest" + themeName + new Date().getTime() ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Create the GetMap request. */
       GetMap request = GetMap.create( wmsParameter );
@@ -230,7 +231,7 @@ public class DeegreeWMSUtilities
     catch( Exception ex )
     {
       /* Create the error status. */
-      IStatus status = StatusUtilities.statusFromThrowable( ex, "Could not create map request: " );
+      IStatus status = StatusUtilities.statusFromThrowable( ex, Messages.getString("org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.35") ); //$NON-NLS-1$
 
       throw new CoreException( status );
     }
@@ -268,10 +269,10 @@ public class DeegreeWMSUtilities
             {
               /* The base URL may already contain a query part, we do not want to delete it Quotation from WMS-Spec: */
               /* "An OGC Web Service shall be prepared to encounter parameters that are not part of this specification." */
-              String[] requestParts = query.split( "&" );
+              String[] requestParts = query.split( "&" ); //$NON-NLS-1$
               for( String requestPart : requestParts )
               {
-                String[] queryParts = requestPart.split( "=" );
+                String[] queryParts = requestPart.split( "=" ); //$NON-NLS-1$
                 if( queryParts.length != 2 )
                   continue;
 
@@ -289,10 +290,10 @@ public class DeegreeWMSUtilities
       }
     }
 
-    wmsParameter.put( "SERVICE", "WMS" );
-    wmsParameter.put( "VERSION", capabilities.getVersion() );
-    wmsParameter.put( "REQUEST", operationName );
-    wmsParameter.put( "EXCEPTIONS", "application/vnd.ogc.se_xml" );
+    wmsParameter.put( "SERVICE", "WMS" ); //$NON-NLS-1$ //$NON-NLS-2$
+    wmsParameter.put( "VERSION", capabilities.getVersion() ); //$NON-NLS-1$
+    wmsParameter.put( "REQUEST", operationName ); //$NON-NLS-1$
+    wmsParameter.put( "EXCEPTIONS", "application/vnd.ogc.se_xml" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return wmsParameter;
   }
@@ -312,7 +313,7 @@ public class DeegreeWMSUtilities
   {
     Operation operation = capabilities.getOperationMetadata().getOperation( new QualifiedName( name ) );
     if( operation == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Operation nicht unterstützt: " + name ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.44") + name ) ); //$NON-NLS-1$
 
     return operation;
   }
@@ -464,7 +465,7 @@ public class DeegreeWMSUtilities
 
     /* Convert top layer env to request srs. */
     GM_Envelope envLatLon = GeometryFactory.createGM_Envelope( topLayer.getLatLonBoundingBox().getMin().getX(), topLayer.getLatLonBoundingBox().getMin().getY(), topLayer.getLatLonBoundingBox().getMax().getX(), topLayer.getLatLonBoundingBox().getMax().getY(), topLayer.getLatLonBoundingBox().getCoordinateSystem().getIdentifier() );
-    String latlonSRS = "EPSG:4326";
+    String latlonSRS = "EPSG:4326"; //$NON-NLS-1$
 
     return geoTransformer.transformEnvelope( envLatLon, latlonSRS );
   }
@@ -526,6 +527,6 @@ public class DeegreeWMSUtilities
    */
   public static String env2bboxString( GM_Envelope env )
   {
-    return env.getMin().getX() + "," + env.getMin().getY() + "," + env.getMax().getX() + "," + env.getMax().getY();
+    return env.getMin().getX() + "," + env.getMin().getY() + "," + env.getMax().getX() + "," + env.getMax().getY(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

@@ -48,6 +48,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilitiesDocument;
+import org.kalypso.i18n.Messages;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -85,7 +86,7 @@ public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
     InputSource source = new InputSource( pbr );
     if( systemId == null )
     {
-      throw new NullPointerException( "'systemId' must not be null!" );
+      throw new NullPointerException( Messages.getString("org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument.0") ); //$NON-NLS-1$
     }
     setSystemId( systemId );
     DocumentBuilder builder = getDocumentBuilder();

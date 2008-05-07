@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -78,18 +79,18 @@ final class RememberForSync
   @Override
   public String toString()
   {
-    return "Grafik-Kalypso MemSync: " + m_datFile.getName() + "-" + m_zmlFile.getName() + " Axis:" + m_numberAxis;
+    return Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.0") + m_datFile.getName() + "-" + m_zmlFile.getName() + Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.2") + m_numberAxis; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public void synchronizeZml() throws Exception
   {
     if( isInSync() )
     {
-      Logger.getLogger( getClass().getName() ).info( "In Sync, " + toString() );
+      Logger.getLogger( getClass().getName() ).info( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.3") + toString() ); //$NON-NLS-1$
       return;
     }
 
-    Logger.getLogger( getClass().getName() ).info( "Update, " + toString() );
+    Logger.getLogger( getClass().getName() ).info( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.RememberForSync.4") + toString() ); //$NON-NLS-1$
 
     Reader datReader = null;
     Reader zmlReader = null;
@@ -97,8 +98,8 @@ final class RememberForSync
     {
       datReader = new BufferedReader( new InputStreamReader( m_datFile.getContents(), m_datFile.getCharset() ) );
 
-      final CSV csv = new CSV( "\t", 1, true );
-      csv.setCommentedLineBeginString( "//" );
+      final CSV csv = new CSV( "\t", 1, true ); //$NON-NLS-1$
+      csv.setCommentedLineBeginString( "//" ); //$NON-NLS-1$
 
       csv.fetch( datReader );
       IOUtils.closeQuietly( datReader );
@@ -133,7 +134,7 @@ final class RememberForSync
       for( int l = 0; l < csv.getLines(); l++ )
       {
         Date date = GrafikLauncher.GRAFIK_DF.parse( csv.getItem( l, 0 ) );
-        double d = Double.parseDouble( csv.getItem( l, 1 ).replaceAll( ",", "." ) ); // replace all ',' with '.' so that
+        double d = Double.parseDouble( csv.getItem( l, 1 ).replaceAll( ",", "." ) ); // replace all ',' with '.' so that //$NON-NLS-1$ //$NON-NLS-2$
         // Double-parsing always works
 
         /*

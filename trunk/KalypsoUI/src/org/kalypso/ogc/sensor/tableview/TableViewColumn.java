@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.util.Set;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.template.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
@@ -89,7 +90,7 @@ public class TableViewColumn extends ObsViewItem
     super( view, provider, name );
 
     if( format == null )
-      throw new IllegalArgumentException( "Format-Spezifikation der Spalte " + name + " darf nicht null sein" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumn.0") + name + Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewColumn.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_isEditable = isEditable;
     m_width = width;

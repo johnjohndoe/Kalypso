@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
+import org.kalypso.i18n.Messages;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -65,8 +66,8 @@ public class KalypsoWMSEntityResolver implements EntityResolver
   public KalypsoWMSEntityResolver( )
   {
     m_entities = new HashMap<String, String>();
-    m_entities.put( "http://schemas.opengis.net/wms/1.1.0/capabilities_1_1_0.dtd", "resources/capabilities_1_1_0.dtd" );
-    m_entities.put( "http://schemas.opengis.net/wms/1.1.1/WMS_MS_Capabilities.dtd", "resources/WMS_MS_Capabilities.dtd" );
+    m_entities.put( "http://schemas.opengis.net/wms/1.1.0/capabilities_1_1_0.dtd", "resources/capabilities_1_1_0.dtd" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_entities.put( "http://schemas.opengis.net/wms/1.1.1/WMS_MS_Capabilities.dtd", "resources/WMS_MS_Capabilities.dtd" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -77,7 +78,7 @@ public class KalypsoWMSEntityResolver implements EntityResolver
     String path = m_entities.get( systemId );
     if( path != null )
     {
-      System.out.println( "Requesting: " + systemId );
+      System.out.println( Messages.getString("org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSEntityResolver.4") + systemId ); //$NON-NLS-1$
       URL resource = getClass().getResource( path );
 
       if( resource != null )

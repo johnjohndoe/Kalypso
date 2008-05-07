@@ -83,6 +83,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DoubleComparator;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -113,13 +114,13 @@ import org.xml.sax.InputSource;
  */
 public class GrafikLauncher
 {
-  public final static String GRAFIK_ENCODING = "Cp1252";
+  public final static String GRAFIK_ENCODING = "Cp1252"; //$NON-NLS-1$
 
   /** file extension of the grafik template files */
-  public final static String TPL_FILE_EXTENSION = "tpl";
+  public final static String TPL_FILE_EXTENSION = "tpl"; //$NON-NLS-1$
 
   /** date format understood by the grafik tool */
-  protected final static DateFormat GRAFIK_DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
+  protected final static DateFormat GRAFIK_DF = new SimpleDateFormat( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.2") ); //$NON-NLS-1$
 
   private final static NumberFormat GRAFIK_NF_W = NumberFormat.getIntegerInstance();
 
@@ -161,7 +162,7 @@ public class GrafikLauncher
    */
   public static IStatus startGrafikZML( final IFile zmlFile, final IFolder dest, final IProgressMonitor monitor ) throws SensorException
   {
-    final DiagView diag = new DiagView( zmlFile.getName(), "Legende", true );
+    final DiagView diag = new DiagView( zmlFile.getName(), Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.3"), true ); //$NON-NLS-1$
 
     try
     {
@@ -201,7 +202,7 @@ public class GrafikLauncher
       if( !dest.exists() )
         dest.create( true, true, monitor );
 
-      final IFile tplFile = dest.getFile( FileUtilities.nameWithoutExtension( fileName ) + ".tpl" );
+      final IFile tplFile = dest.getFile( FileUtilities.nameWithoutExtension( fileName ) + ".tpl" ); //$NON-NLS-1$
 
       strWriter = new StringWriter();
       final IStatus status = odt2tpl( odt, dest, strWriter, monitor, sync );
@@ -217,7 +218,7 @@ public class GrafikLauncher
 
       // use the windows encoding for the vorlage because of the grafik tool
       // which uses it when reading...
-      final SetContentHelper sch = new SetContentHelper( "Datei Konvertierung - Grafik öffnen" )
+      final SetContentHelper sch = new SetContentHelper( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.5") ) //$NON-NLS-1$
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
@@ -268,9 +269,9 @@ public class GrafikLauncher
     {
       final File grafikExe = getGrafikProgramPath();
 
-      final Process proc = Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"', null, grafikExe.getParentFile() );
+      final Process proc = Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"', null, grafikExe.getParentFile() ); //$NON-NLS-1$
 
-      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Grafik kann nicht gestartet werden" );
+      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.7") ); //$NON-NLS-1$
 
       final ProcessWraper wraper = new ProcessWraper( proc, null )
       {
@@ -300,7 +301,7 @@ public class GrafikLauncher
             {
               e.printStackTrace();
 
-              ms.addMessage( "Synchronisation von " + rfs.getDatFile().getName() + " in " + rfs.getZmlFile().getName(), e );
+              ms.addMessage( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.8") + rfs.getDatFile().getName() + Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.9") + rfs.getZmlFile().getName(), e ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
         }
@@ -324,15 +325,15 @@ public class GrafikLauncher
   public static File getGrafikProgramPath( ) throws IOException
   {
     // create the grafik exe
-    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true );
+    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     grafikExe.deleteOnExit();
 
     // also create the help file if not already existing
-    final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe.getName() ) + ".hlp" );
+    final File grafikHelp = new File( grafikExe.getParentFile(), FileUtilities.nameWithoutExtension( grafikExe.getName() ) + ".hlp" ); //$NON-NLS-1$
     grafikHelp.deleteOnExit();
     if( !grafikHelp.exists() )
     {
-      final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true );
+      final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       // the help must have the same name as the exe (except file-extension)
       FileUtils.copyFile( tmp, grafikHelp );
@@ -375,7 +376,7 @@ public class GrafikLauncher
 
     final Logger logger = Logger.getLogger( GrafikLauncher.class.getName() );
 
-    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Konnte nicht alle spezifizierte Zeitreihe öffnen." );
+    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.17") ); //$NON-NLS-1$
 
     int cc = 1;
     final TypeObservation[] tobs = odt.getObservation().toArray( new TypeObservation[0] );
@@ -392,7 +393,7 @@ public class GrafikLauncher
       // maybe make a better test later?
       if( zmlFile == null )
       {
-        final String msg = "Konvertierung nicht möglich, Zml-Datei ist möglicherweise keine lokale Datei: " + url.toExternalForm();
+        final String msg = Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.18") + url.toExternalForm(); //$NON-NLS-1$
         logger.warning( msg );
         multiStatus.addMessage( msg );
         continue;
@@ -411,7 +412,7 @@ public class GrafikLauncher
       }
       catch( final Exception e )
       {
-        final String msg = "Zeitreihe konnte nicht eingelesen werden. Datei: " + zmlFile.getName() + " Grund: " + e.getLocalizedMessage();
+        final String msg = Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.19") + zmlFile.getName() + Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.20") + e.getLocalizedMessage(); //$NON-NLS-1$ //$NON-NLS-2$
         logger.warning( msg );
         multiStatus.addMessage( msg, e );
         continue;
@@ -434,7 +435,7 @@ public class GrafikLauncher
         final TypeCurve tc = (TypeCurve) itc.next();
 
         // create a corresponding dat-File for the current observation file
-        final IFile datFile = dest.getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" );
+        final IFile datFile = dest.getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 
@@ -472,7 +473,7 @@ public class GrafikLauncher
           }
         }
         else
-          Logger.getLogger( GrafikLauncher.class.getName() ).warning( "Keine Achse für " + tc.getName() + " gefunden." );
+          Logger.getLogger( GrafikLauncher.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.23") + tc.getName() + Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.24") ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       try
@@ -517,7 +518,7 @@ public class GrafikLauncher
       if( fr != null )
       {
         final String strDate = GRAFIK_DF.format( fr.getFrom() );
-        xLines.add( new XLine( "Vorhersage Start: " + strDate, strDate ) );
+        xLines.add( new XLine( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.25") + strDate, strDate ) ); //$NON-NLS-1$
       }
 
       // does is have Alarmstufen? only check if we are displaying at least a
@@ -531,7 +532,7 @@ public class GrafikLauncher
         for( final String element2 : mds )
         {
           final Double value = new Double( mdl.getProperty( element2 ) );
-          yLines.put( value, new ValueAndColor( element2 + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) );
+          yLines.put( value, new ValueAndColor( element2 + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       catch( final NoSuchElementException e )
@@ -543,19 +544,19 @@ public class GrafikLauncher
     }
 
     writer.write( gKurven.toVorlagentext() );
-    writer.write( "\n" );
-    writer.write( "HTitel:\t" + odt.getTitle() + "\n" );
-    writer.write( "xTitel:\t" + gAchsen.getBottomLabel() + "\n" );
-    writer.write( "yTitel1:\t" + gAchsen.getLeftLabel() + "\n" );
-    writer.write( "yTitel2:\t" + gAchsen.getRightLabel() + "\n" );
+    writer.write( "\n" ); //$NON-NLS-1$
+    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.29") + odt.getTitle() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.31") + gAchsen.getBottomLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.33") + gAchsen.getLeftLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.35") + gAchsen.getRightLabel() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // Scenario stuff as free text items
     if( scenarioName != null )
     {
       final double xPos = (xUpper.getTime() - xLower.getTime()) / 60000 / 2;
       final double yPos = (yUpper.doubleValue() - yLower.doubleValue()) / 2;
-      writer.write( "Text1: " + xPos + " " + yPos + " 0 " + scenarioName + "\n" );
-      writer.write( "TextFont6: -29 0 255 400 0 3 2 1 34 0 Arial\n" ); // the font is global for all the free text
+      writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.37") + xPos + " " + yPos + " 0 " + scenarioName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      writer.write( "TextFont6: -29 0 255 400 0 3 2 1 34 0 Arial\n" ); // the font is global for all the free text //$NON-NLS-1$
       // items
     }
 
@@ -563,7 +564,7 @@ public class GrafikLauncher
     for( final Object element : xLines )
     {
       final String strDate = element.toString();
-      writer.write( "Senkrechte: " + strDate + '\n' );
+      writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.42") + strDate + '\n' ); //$NON-NLS-1$
     }
     xLines.clear();
 
@@ -571,7 +572,7 @@ public class GrafikLauncher
     for( final Object element : yLines.keySet() )
     {
       final ValueAndColor vac = yLines.get( element );
-      writer.write( "yKonst: " + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' );
+      writer.write( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.43") + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     yLines.clear();
 
@@ -583,7 +584,7 @@ public class GrafikLauncher
    */
   private static IStatus zml2dat( final ITuppleModel values, final IFile datFile, final IAxis dateAxis, final IAxis axis, final IProgressMonitor monitor ) throws CoreException
   {
-    final SetContentHelper sch = new SetContentHelper( ".zml --> .dat Konvertierung" )
+    final SetContentHelper sch = new SetContentHelper( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.45") ) //$NON-NLS-1$
     {
       @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable

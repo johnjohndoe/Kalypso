@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 
@@ -103,46 +104,46 @@ public class AxisRangeDialog extends ResizableDialog
   @Override
   protected Control createDialogArea( Composite parent )
   {
-    getShell().setText( "neue Zeitreihe" );
+    getShell().setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.0") ); //$NON-NLS-1$
     Group group = new Group( parent, SWT.NONE );
     group.setLayout( new GridLayout( 2, true ) );
     // Name
     Label label6 = new Label( group, SWT.NONE );
-    label6.setText( "Name" );
+    label6.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.1") ); //$NON-NLS-1$
     m_nameText = new Text( group, 2050 );
-    m_nameText.setText( "" );
+    m_nameText.setText( "" ); //$NON-NLS-1$
     GridData m_nameData = new GridData( GridData.END );
     m_nameData.widthHint = 150;
     m_nameText.setLayoutData( m_nameData );
     // MIN
     Label label = new Label( group, SWT.NONE );
-    label.setText( "Minimum" );
+    label.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.3") ); //$NON-NLS-1$
     m_minText = new Text( group, 2050 );
-    m_minText.setText( "0" );
+    m_minText.setText( "0" ); //$NON-NLS-1$
     GridData m_minData = new GridData( GridData.END );
     m_minData.widthHint = 150;
     m_minText.setLayoutData( m_minData );
     // Intervall
     Label label2 = new Label( group, SWT.NONE );
-    label2.setText( "Intervall" );
+    label2.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.5") ); //$NON-NLS-1$
     m_intText = new Text( group, 2050 );
-    m_intText.setText( "1" );
+    m_intText.setText( "1" ); //$NON-NLS-1$
     GridData m_intData = new GridData( GridData.END );
     m_intData.widthHint = 150;
     m_intText.setLayoutData( m_intData );
     // ANZAHL
     Label label3 = new Label( group, SWT.NONE );
-    label3.setText( "Anzahl Wertepaare" );
+    label3.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.7") ); //$NON-NLS-1$
     m_countText = new Text( group, 2050 );
-    m_countText.setText( "10" );
+    m_countText.setText( "10" ); //$NON-NLS-1$
     GridData m_countData = new GridData( GridData.END );
     m_countData.widthHint = 150;
     m_countText.setLayoutData( m_countData );
     //Default Wert
     Label label5 = new Label( group, SWT.NONE );
-    label5.setText( "Default Wert" );
+    label5.setText( Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.9") ); //$NON-NLS-1$
     m_defaultText = new Text( group, 2050 );
-    m_defaultText.setText( "10" );
+    m_defaultText.setText( "10" ); //$NON-NLS-1$
     GridData m_defaultData = new GridData( GridData.END );
     m_defaultData.widthHint = 150;
     m_defaultText.setLayoutData( m_defaultData );
@@ -154,7 +155,7 @@ public class AxisRangeDialog extends ResizableDialog
     m_nameText.addFocusListener( m_focusListener );
 
     Label label4 = new Label( group, SWT.NONE );
-    label4.setText( "" );
+    label4.setText( "" ); //$NON-NLS-1$
     m_validText = new Text( group, SWT.READ_ONLY );
     GridData m_validData = new GridData( GridData.END );
     m_validData.widthHint = 150;
@@ -194,21 +195,21 @@ public class AxisRangeDialog extends ResizableDialog
 
   public void validate()
   {
-    String message = "";
+    String message = ""; //$NON-NLS-1$
     try
     {
-      message = "Name ist nicht korrekt!";
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.13"); //$NON-NLS-1$
       m_name = m_nameText.getText();
-      message = "Min ist nicht korrekt!";
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.14"); //$NON-NLS-1$
       m_min = SpecialPropertyMapper.cast( m_minText.getText(), TimeserieUtils.getDataClass( m_axisType ), false, true );
-      message = "Intervall ist nicht korrekt!";
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.15"); //$NON-NLS-1$
       m_int = SpecialPropertyMapper.cast( m_intText.getText(), TimeserieUtils.getDataClass( m_axisType ), false, true );
-      message = "Anzahl ist nicht korrekt!";
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.16"); //$NON-NLS-1$
       m_count = ( (Integer)SpecialPropertyMapper.cast( m_countText.getText(), Integer.class, false, true ) ).intValue();
-      message = "Default Wert ist nicht korrekt!";
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.17"); //$NON-NLS-1$
       m_default = SpecialPropertyMapper.cast( m_defaultText.getText(), TimeserieUtils.getDataClass( m_axisType ),
           false, true );
-      message = "Eingabe ist OK.";
+      message = Messages.getString("org.kalypso.ogc.sensor.view.AxisRangeDialog.18"); //$NON-NLS-1$
       m_valid = true;
     }
     catch( Exception e )

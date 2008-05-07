@@ -51,6 +51,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.SwingInvokeHelper;
+import org.kalypso.i18n.Messages;
 
 /**
  * Swing Utilities when used within the Eclipse Framework
@@ -86,9 +87,9 @@ public class SwingEclipseUtilities
       final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
       final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
       if( shell != null )
-        MessageDialog.openError( shell, "Fehler", t.toString() );
+        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.0"), t.toString() ); //$NON-NLS-1$
       else
-        JOptionPane.showMessageDialog( null, t.toString(), "Fehler", JOptionPane.ERROR_MESSAGE );
+        JOptionPane.showMessageDialog( null, t.toString(), Messages.getString("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.1"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$
     }
   }
 }

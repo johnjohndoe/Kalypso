@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -89,7 +90,7 @@ public class ViewWQRelationHandler extends AbstractHandler
       final WQTableSet set = WQTableFactory.parse( new InputSource( reader ) );
       reader.close();
 
-      final WQRelationDialog dlg = new WQRelationDialog( shell, "WQ-Beziehung für " + obs.getName(), set );
+      final WQRelationDialog dlg = new WQRelationDialog( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler.0") + obs.getName(), set ); //$NON-NLS-1$
       dlg.open();
     }
     catch( final WQException e )

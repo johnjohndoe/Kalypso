@@ -103,7 +103,7 @@ public class ForecastLabelMarker implements ILabelMarker
   public void reset( JLabel label )
   {
     label.setBackground( null );
-    label.setToolTipText( "" );
+    label.setToolTipText( "" ); //$NON-NLS-1$
     label.setIcon( null );
   }
 

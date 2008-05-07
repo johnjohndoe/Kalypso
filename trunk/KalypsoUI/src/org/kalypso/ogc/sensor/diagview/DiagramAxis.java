@@ -50,17 +50,17 @@ import org.kalypso.template.obsdiagview.TypeAxis;
  */
 public class DiagramAxis
 {
-  public final static String DIRECTION_HORIZONTAL = "horizontal";
+  public final static String DIRECTION_HORIZONTAL = "horizontal"; //$NON-NLS-1$
 
-  public final static String DIRECTION_VERTICAL = "vertical";
+  public final static String DIRECTION_VERTICAL = "vertical"; //$NON-NLS-1$
 
-  public final static String POSITION_LEFT = "left";
+  public final static String POSITION_LEFT = "left"; //$NON-NLS-1$
 
-  public final static String POSITION_RIGHT = "right";
+  public final static String POSITION_RIGHT = "right"; //$NON-NLS-1$
 
-  public final static String POSITION_BOTTOM = "bottom";
+  public final static String POSITION_BOTTOM = "bottom"; //$NON-NLS-1$
 
-  public final static String POSITION_TOP = "top";
+  public final static String POSITION_TOP = "top"; //$NON-NLS-1$
 
   private final String m_id;
 
@@ -187,7 +187,7 @@ public class DiagramAxis
   public String toFullString()
   {
     if( m_unit.length() > 0 )
-      return m_label + " [" + m_unit + "]";
+      return m_label + " [" + m_unit + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 
     return m_label;
   }

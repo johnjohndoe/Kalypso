@@ -62,6 +62,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -85,7 +86,7 @@ import org.xml.sax.InputSource;
  */
 public class DiagViewUtils
 {
-  public final static String ODT_FILE_EXTENSION = "odt";
+  public final static String ODT_FILE_EXTENSION = "odt"; //$NON-NLS-1$
 
   private final static ObjectFactory ODT_OF = new ObjectFactory();
 
@@ -232,7 +233,7 @@ public class DiagViewUtils
         continue;
 
       final TypeObservation xmlTheme = ODT_OF.createTypeObservation();
-      xmlTheme.setLinktype( "zml" );
+      xmlTheme.setLinktype( "zml" ); //$NON-NLS-1$
       xmlTheme.setHref( obs.getHref() );
 
       final List<TypeCurve> xmlCurves = xmlTheme.getCurve();
@@ -243,7 +244,7 @@ public class DiagViewUtils
         final DiagViewCurve curve = (DiagViewCurve) itCurves.next();
 
         final TypeCurve xmlCurve = ODT_OF.createTypeCurve();
-        xmlCurve.setId( "C" + ixCurve++ );
+        xmlCurve.setId( "C" + ixCurve++ ); //$NON-NLS-1$
         xmlCurve.setName( curve.getName() );
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
         xmlCurve.setShown( curve.isShown() );
@@ -290,39 +291,39 @@ public class DiagViewUtils
     String position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_LEFT;
 
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
-      return new DiagramAxis( axisType, "date", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "date", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_HOURS ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_NORMNULL ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_NORM ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, new Double( 0.8 ) );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, new Double( 0.8 ) ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_EVAPORATION ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
     // default axis
-    return new DiagramAxis( axisType, "double", label, unit, direction, DiagramAxis.POSITION_LEFT, false );
+    return new DiagramAxis( axisType, "double", label, unit, direction, DiagramAxis.POSITION_LEFT, false ); //$NON-NLS-1$
   }
 
   /**
@@ -339,7 +340,7 @@ public class DiagViewUtils
     view.removeAllItems();
 
     view.setTitle( xml.getTitle() );
-    view.setLegendName( xml.getLegend() == null ? "" : xml.getLegend().getTitle() );
+    view.setLegendName( xml.getLegend() == null ? "" : xml.getLegend().getTitle() ); //$NON-NLS-1$
     view.setShowLegend( xml.getLegend() == null ? false : xml.getLegend().isVisible() );
 
     // features-list is optional
@@ -348,7 +349,7 @@ public class DiagViewUtils
       // features list specified, so clear before enabling the ones sepcified
       view.clearFeatures();
 
-      final String[] featureNames = xml.getFeatures().split( ";" );
+      final String[] featureNames = xml.getFeatures().split( ";" ); //$NON-NLS-1$
       for( int i = 0; i < featureNames.length; i++ )
         view.setFeatureEnabled( featureNames[i], true );
     }
@@ -384,7 +385,7 @@ public class DiagViewUtils
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
       {
-        Logger.getLogger( DiagViewUtils.class.getName() ).warning( "Href ignored: " + href );
+        Logger.getLogger( DiagViewUtils.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.diagview.DiagViewUtils.16") + href ); //$NON-NLS-1$
         continue;
       }
 
@@ -392,7 +393,7 @@ public class DiagViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, "Diagrammvorlage konnte nicht vollständig aktualisiert werden" );
+    return StatusUtilities.createStatus( stati, Messages.getString("org.kalypso.ogc.sensor.diagview.DiagViewUtils.17") ); //$NON-NLS-1$
   }
 
   /**

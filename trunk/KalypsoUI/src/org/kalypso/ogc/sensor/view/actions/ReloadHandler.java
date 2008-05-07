@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
@@ -82,7 +83,7 @@ public class ReloadHandler extends AbstractHandler
     {
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( "Ansicht aktualisieren", 1 );
+        monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.actions.ReloadHandler.0"), 1 ); //$NON-NLS-1$
 
         // Important: clear the cache
         ObservationCache.clearCache();
@@ -112,7 +113,7 @@ public class ReloadHandler extends AbstractHandler
     {
       e.printStackTrace();
 
-      MessageDialog.openWarning( shell, "Ansicht aktualisieren", e.getLocalizedMessage() );
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ReloadHandler.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
     catch( final InterruptedException ignored )
     {

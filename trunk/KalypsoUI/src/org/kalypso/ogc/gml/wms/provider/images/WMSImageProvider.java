@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -73,7 +74,7 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
   /**
    * This constant stores the type name.
    */
-  public final static String TYPE_NAME = "wms";
+  public final static String TYPE_NAME = "wms"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -149,10 +150,10 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
         OGCWebServiceRequest mapRequest = mapResponse.getRequest();
         OGCWebServiceException exception = mapResponse.getException();
 
-        MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, "Zugriffsfehler", null );
-        status.add( StatusUtilities.createErrorStatus( "Request: '" + mapRequest + "'" ) );
-        status.add( StatusUtilities.createErrorStatus( "Exception-Dokument: " ) );
-        status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, exception.toString(), "\n", null ) );
+        MultiStatus status = new MultiStatus( KalypsoCorePlugin.getID(), 0, Messages.getString("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.1"), null ); //$NON-NLS-1$
+        status.add( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.2") + mapRequest + "'" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        status.add( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.4") ) ); //$NON-NLS-1$
+        status.add( StatusUtilities.createMultiStatusFromMessage( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, exception.toString(), "\n", null ) ); //$NON-NLS-1$
 
         throw new CoreException( status );
       }
@@ -240,6 +241,6 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
    */
   public String getLabel( )
   {
-    return "WMS Thema: " + getService();
+    return Messages.getString("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.6") + getService(); //$NON-NLS-1$
   }
 }

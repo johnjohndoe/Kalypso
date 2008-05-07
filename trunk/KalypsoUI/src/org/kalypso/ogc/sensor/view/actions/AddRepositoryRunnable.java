@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.actions.AddRepositoryHandler.ChooseRepositoryLabelProvider;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoriesExtensions;
@@ -82,7 +83,7 @@ public class AddRepositoryRunnable implements Runnable
     final ListDialog dlg = new ListDialog( m_shell );
     dlg.setLabelProvider( new ChooseRepositoryLabelProvider() );
     dlg.setContentProvider( new ArrayContentProvider() );
-    dlg.setTitle( "Repository Typ auswählen" );
+    dlg.setTitle( Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.0") ); //$NON-NLS-1$
 
     try
     {
@@ -101,7 +102,7 @@ public class AddRepositoryRunnable implements Runnable
         {
           public void run( final IProgressMonitor monitor ) throws InvocationTargetException
           {
-            monitor.beginTask( "Repository hinzufügen", 2 );
+            monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.1"), 2 ); //$NON-NLS-1$
 
             final IRepository rep;
             try
@@ -130,12 +131,12 @@ public class AddRepositoryRunnable implements Runnable
     {
       e.getCause().printStackTrace();
 
-      MessageDialog.openError( m_shell, "Repository hinzufügen", e.getTargetException().getLocalizedMessage() );
+      MessageDialog.openError( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.2"), e.getTargetException().getLocalizedMessage() ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      MessageDialog.openError( m_shell, "Repository hinzufügen", e.getLocalizedMessage() );
+      MessageDialog.openError( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.3"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 

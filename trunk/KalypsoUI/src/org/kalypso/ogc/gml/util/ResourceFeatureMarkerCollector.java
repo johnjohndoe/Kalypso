@@ -45,6 +45,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.validation.IFeatureMarkerCollector;
 
@@ -74,7 +75,7 @@ public class ResourceFeatureMarkerCollector implements IFeatureMarkerCollector
    */
   public void createMarker( final Feature feature, final IPropertyType property, final boolean isSevere, final String message, final String location, final String resolutionPluginId, final Object[] resolutionMarkers ) throws CoreException
   {
-    final String debugMsg = String.format( "Creating resource marker: featureID=%s, property=%s, isSever=%b, message=%s, location=%s", feature.getId(), property == null ? "null"
+    final String debugMsg = String.format( Messages.getString("org.kalypso.ogc.gml.util.ResourceFeatureMarkerCollector.0"), feature.getId(), property == null ? "null" //$NON-NLS-1$ //$NON-NLS-2$
         : property.getQName().toString(), isSevere, message, location );
     System.out.println( debugMsg );
 

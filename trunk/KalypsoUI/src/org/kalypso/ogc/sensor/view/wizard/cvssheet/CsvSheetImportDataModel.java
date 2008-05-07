@@ -84,11 +84,11 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eSpace:
-          return "\" \" (Space)";
+          return "\" \" (Space)"; //$NON-NLS-1$
         case eTab:
-          return "TAB";
+          return "TAB"; //$NON-NLS-1$
         case eSemicolon:
-          return ";";
+          return ";"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }
@@ -107,9 +107,9 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eComma:
-          return "\\.";
+          return "\\."; //$NON-NLS-1$
         case ePoint:
-          return "\\,";
+          return "\\,"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }
@@ -122,9 +122,9 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eComma:
-          return ".";
+          return "."; //$NON-NLS-1$
         case ePoint:
-          return ",";
+          return ","; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }
@@ -141,9 +141,9 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eComma:
-          return "\".\" (Point)";
+          return "\".\" (Point)"; //$NON-NLS-1$
         case ePoint:
-          return "\",\" (Comma)";
+          return "\",\" (Comma)"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }
@@ -186,9 +186,9 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eW:
-          return "W [cm]";
+          return "W [cm]"; //$NON-NLS-1$
         case eQ:
-          return "Q [m³/s]";
+          return "Q [m³/s]"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }
@@ -201,9 +201,9 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eW:
-          return "W";
+          return "W"; //$NON-NLS-1$
         case eQ:
-          return "Q";
+          return "Q"; //$NON-NLS-1$
         default:
           throw new NotImplementedException();
       }

@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author belger
@@ -92,15 +93,15 @@ public class ExportTableOptionsPage extends WizardPage
     final GridLayout layout = new GridLayout();
     optionsGroup.setLayout( layout );
     optionsGroup.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    optionsGroup.setText( "Export Optionen" );
+    optionsGroup.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.0") ); //$NON-NLS-1$
     optionsGroup.setFont( parent.getFont() );
 
     m_radioAll = new Button( optionsGroup, SWT.RADIO );
-    m_radioAll.setText( "&alles exportieren" );
+    m_radioAll.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.1") ); //$NON-NLS-1$
     m_radioAll.setSelection( true );
 
     m_radioSelection = new Button( optionsGroup, SWT.RADIO );
-    m_radioSelection.setText( "nur &selektierte Zeilen exportieren" );
+    m_radioSelection.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.2") ); //$NON-NLS-1$
   }
 
   public boolean getOnlySelected()

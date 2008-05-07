@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleAxis;
@@ -103,7 +104,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     /* axis date */
     final IAxis defaultDate = TimeserieUtils.createDefaulAxis( TimeserieConstants.TYPE_DATE, true );
     final SimpleAxis simpleDateAxis = new SimpleAxis( defaultDate );
-    simpleDateAxis.setName( "date" );
+    simpleDateAxis.setName( "date" ); //$NON-NLS-1$
 
     /* axis values */
     final IAxis axisX;
@@ -124,7 +125,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       final String rDate = nextLine[0];
       final String rValue = nextLine[1];
 
-      simpleModel.addTupple( new Object[] { dateFormat.parse( rDate ), new Double( rValue.replaceAll( dSep.getRegEx(), "." ) ) } );
+      simpleModel.addTupple( new Object[] { dateFormat.parse( rDate ), new Double( rValue.replaceAll( dSep.getRegEx(), "." ) ) } ); //$NON-NLS-1$
     }
 
     final SimpleObservation simple = new SimpleObservation( new IAxis[] { simpleDateAxis, simpleDataAxis } );
@@ -144,23 +145,23 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     }
     catch( final FileNotFoundException e )
     {
-      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() );
+      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
-      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() );
+      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() ); //$NON-NLS-1$
     }
     catch( final ParseException e )
     {
-      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() );
+      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() ); //$NON-NLS-1$
     }
     catch( final WQException e )
     {
-      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() );
+      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
-      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() );
+      return new Status( IStatus.ERROR, "CsvSheetImportWorker", e.getMessage() ); //$NON-NLS-1$
     }
   }
 
@@ -174,8 +175,8 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     String[] nextLine;
     while( (nextLine = readerWQ.readNext()) != null )
     {
-      final Double dOne = new Double( nextLine[0].replaceAll( dSep.getRegEx(), "." ) );
-      final Double dTwo = new Double( nextLine[1].replaceAll( dSep.getRegEx(), "." ) );
+      final Double dOne = new Double( nextLine[0].replaceAll( dSep.getRegEx(), "." ) ); //$NON-NLS-1$
+      final Double dTwo = new Double( nextLine[1].replaceAll( dSep.getRegEx(), "." ) ); //$NON-NLS-1$
 
       colOne.add( dOne );
       colTwo.add( dTwo );
@@ -189,13 +190,13 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     {
       final WQTable table = new WQTable( new Date(), colOne.toArray( new Double[] {} ), colTwo.toArray( new Double[] {} ) );
 
-      return new WQTableSet( new WQTable[] { table }, "W", "Q" );
+      return new WQTableSet( new WQTable[] { table }, "W", "Q" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else if( WQ_KIND.eQ.equals( fistColum ) )
     {
       final WQTable table = new WQTable( new Date(), colTwo.toArray( new Double[] {} ), colOne.toArray( new Double[] {} ) );
 
-      return new WQTableSet( new WQTable[] { table }, "W", "Q" );
+      return new WQTableSet( new WQTable[] { table }, "W", "Q" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     throw new NotImplementedException();
@@ -232,7 +233,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       final String xmlString = WQTableFactory.createXMLString( wqSet );
 
       if( xmlString != null )
-        mdl.setProperty( "WQ-Tabelle", xmlString );
+        mdl.setProperty( "WQ-Tabelle", xmlString ); //$NON-NLS-1$
     }
 
     /*******************************************************************************************************************
@@ -242,31 +243,31 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     final String name = (String) m_model.getValue( TSM_KEY.eCsvName );
     if( name != null )
     {
-      mdl.setProperty( "name", name );
+      mdl.setProperty( "name", name ); //$NON-NLS-1$
       simple.setName( name );
     }
 
     /* description */
     final String description = (String) m_model.getValue( TSM_KEY.eCsvDescription );
     if( description != null )
-      mdl.setProperty( "description", description );
+      mdl.setProperty( "description", description ); //$NON-NLS-1$
 
     /* river */
     final String river = (String) m_model.getValue( TSM_KEY.eCsvRiver );
     if( river != null )
-      mdl.setProperty( "river", river );
+      mdl.setProperty( "river", river ); //$NON-NLS-1$
 
     /* position */
     final String position = (String) m_model.getValue( TSM_KEY.eCsvPosition );
     if( position != null )
-      mdl.setProperty( "position", position );
+      mdl.setProperty( "position", position ); //$NON-NLS-1$
 
     /* create file at destination dir */
     final File destination = (File) m_model.getValue( TSM_KEY.eDestinationDir );
-    final File senke = new File( destination, name + ".zml" );
+    final File senke = new File( destination, name + ".zml" ); //$NON-NLS-1$
     ZmlFactory.writeToFile( simple, senke );
 
-    new UIJob( "updating observation tree" )
+    new UIJob( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportWorker.19") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

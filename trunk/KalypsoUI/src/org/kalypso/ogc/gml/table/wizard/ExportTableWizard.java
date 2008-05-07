@@ -56,6 +56,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -65,7 +66,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ExportTableWizard extends Wizard
 {
-  private final ExportTableOptionsPage m_optionPage = new ExportTableOptionsPage( "tableExport", "Tabelle exportieren",
+  private final ExportTableOptionsPage m_optionPage = new ExportTableOptionsPage( "tableExport", Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableWizard.1"), //$NON-NLS-1$ //$NON-NLS-2$
       ImageProvider.IMAGE_ICON_GTT );
 
   private final SaveFileWizardPage m_filePage;
@@ -75,10 +76,10 @@ public class ExportTableWizard extends Wizard
   public ExportTableWizard( final LayerTableViewer layerTable )
   {
     final Map<Object, String> formats = new HashMap<Object, String>();
-    formats.put( "Comma Separated Values (CSV)", "csv" );
+    formats.put( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableWizard.2"), "csv" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_filePage = new SaveFileWizardPage( "tableExport", "Tabelle exportieren", ImageProvider.IMAGE_ICON_GTT,
-        "Export Ziel", formats );
+    m_filePage = new SaveFileWizardPage( "tableExport", Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableWizard.5"), ImageProvider.IMAGE_ICON_GTT, //$NON-NLS-1$ //$NON-NLS-2$
+        Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableWizard.6"), formats ); //$NON-NLS-1$
 
     final IDialogSettings workbenchSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( "ExportTableWizard" );//$NON-NLS-1$
@@ -86,7 +87,7 @@ public class ExportTableWizard extends Wizard
       section = workbenchSettings.addNewSection( "ExportTableWizard" );//$NON-NLS-1$
     setDialogSettings( section );
 
-    setWindowTitle( "Export" );
+    setWindowTitle( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableWizard.7") ); //$NON-NLS-1$
 
     m_layerTable = layerTable;
   }
@@ -127,7 +128,7 @@ public class ExportTableWizard extends Wizard
         }
         catch( final IOException e )
         {
-          throw new InvocationTargetException( e, "Fehler beim Export\n" + e.getLocalizedMessage() );
+          throw new InvocationTargetException( e, Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableWizard.8") + e.getLocalizedMessage() ); //$NON-NLS-1$
         }
       }
     };

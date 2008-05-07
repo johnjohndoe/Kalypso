@@ -83,6 +83,7 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -112,7 +113,7 @@ public class ObservationPlot extends XYPlot
     final Properties props = new Properties();
     try
     {
-      props.load( ChartFactory.class.getResourceAsStream( "resource/type2valueAxis.properties" ) );
+      props.load( ChartFactory.class.getResourceAsStream( "resource/type2valueAxis.properties" ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
@@ -167,7 +168,7 @@ public class ObservationPlot extends XYPlot
     for( final ObsViewItem element : curves )
       addCurve( (DiagViewCurve) element );
 
-    setNoDataMessage( "Keine Daten vorhanden" );
+    setNoDataMessage( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1") ); //$NON-NLS-1$
 
     setTimezone( view.getTimezone() );
   }
@@ -341,7 +342,7 @@ public class ObservationPlot extends XYPlot
     }
 
     if( xAxis == null || yAxis == null || xDiagAxis == null || yDiagAxis == null )
-      throw new IllegalArgumentException( "Kann Kurve " + curve + " im Diagramm nicht hinzufügen. Die Achsen sind nicht gültig." );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.2") + curve + Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.3") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final XYCurveSerie serie = new XYCurveSerie( curve, xAxis, yAxis, xDiagAxis, yDiagAxis );
 
@@ -426,7 +427,7 @@ public class ObservationPlot extends XYPlot
             }
             catch( final MalformedURLException e )
             {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING, "Hintergrundbild konnte nicht geladen werden", e );
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.4"), e ); //$NON-NLS-1$
             }
           }
         }
@@ -714,7 +715,7 @@ public class ObservationPlot extends XYPlot
     public AlarmLevelPlotElement( final AlarmLevel al, final double xCoord, final DiagramAxis diagAxis )
     {
       this.alarm = al;
-      this.label = al.label + " (" + al.value + ")";
+      this.label = al.label + " (" + al.value + ")"; //$NON-NLS-1$ //$NON-NLS-2$
       this.axis = diagAxis;
       this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
       this.annotation.setPaint( al.color );
@@ -723,7 +724,7 @@ public class ObservationPlot extends XYPlot
     @Override
     public String toString( )
     {
-      return getClass().getName() + ": " + this.label + " " + this.alarm + " " + this.axis.getLabel();
+      return getClass().getName() + ": " + this.label + " " + this.alarm + " " + this.axis.getLabel(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
   }
 

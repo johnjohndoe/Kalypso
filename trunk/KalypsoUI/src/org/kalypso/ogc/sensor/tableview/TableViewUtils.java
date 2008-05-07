@@ -65,6 +65,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
@@ -87,7 +88,7 @@ import org.xml.sax.InputSource;
  */
 public final class TableViewUtils
 {
-  public final static String OTT_FILE_EXTENSION = "ott";
+  public final static String OTT_FILE_EXTENSION = "ott"; //$NON-NLS-1$
 
   private final static ObjectFactory OTT_OF = new ObjectFactory();
 
@@ -238,7 +239,7 @@ public final class TableViewUtils
 
       final TypeObservation xmlObs = OTT_OF.createTypeObservation();
       xmlObs.setHref( obs.getHref() );
-      xmlObs.setLinktype( "zml" );
+      xmlObs.setLinktype( "zml" ); //$NON-NLS-1$
 
       xmlObsList.add( xmlObs );
 
@@ -254,7 +255,7 @@ public final class TableViewUtils
         final TypeColumn xmlCol = OTT_OF.createTypeColumn();
         xmlCol.setAxis( col.getAxis().getName() );
         xmlCol.setEditable( col.isEditable() );
-        xmlCol.setId( "c" + String.valueOf( colCount ) );
+        xmlCol.setId( "c" + String.valueOf( colCount ) ); //$NON-NLS-1$
         xmlCol.setName( col.getName() );
         xmlCol.setWidth( col.getWidth() );
         xmlCol.setFormat( col.getFormat() );
@@ -273,7 +274,7 @@ public final class TableViewUtils
     // features-list is optional
     if( xml.getFeatures() != null )
     {
-      final String[] featureNames = xml.getFeatures().split( ";" );
+      final String[] featureNames = xml.getFeatures().split( ";" ); //$NON-NLS-1$
       for( final String element : featureNames )
         view.setFeatureEnabled( element, true );
     }
@@ -309,7 +310,7 @@ public final class TableViewUtils
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
       {
-        Logger.getLogger( TableViewUtils.class.getName() ).warning( "Href ignored: " + href );
+        Logger.getLogger( TableViewUtils.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.4") + href ); //$NON-NLS-1$
         continue;
       }
 
@@ -317,7 +318,7 @@ public final class TableViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, "Tabellenvorlage konnte nicht vollständig aktualisiert werden" );
+    return StatusUtilities.createStatus( stati, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.5") ); //$NON-NLS-1$
   }
 
   /**
@@ -347,11 +348,11 @@ public final class TableViewUtils
    */
   public static IStatus saveDirtyObservations( final List tableViewColumns, final IProgressMonitor monitor )
   {
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.6") ); //$NON-NLS-1$
 
     final Map map = buildObservationColumnsMap( tableViewColumns );
 
-    monitor.beginTask( "Zeitreihen speichern", map.size() );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.7"), map.size() ); //$NON-NLS-1$
 
     for( final Iterator it = map.entrySet().iterator(); it.hasNext(); )
     {
@@ -376,7 +377,7 @@ public final class TableViewUtils
           catch( final LoaderException e )
           {
             e.printStackTrace();
-            status.addMessage( "Fehler beim speichern von " + obs, e );
+            status.addMessage( Messages.getString("org.kalypso.ogc.sensor.tableview.TableViewUtils.8") + obs, e ); //$NON-NLS-1$
           }
         }
 

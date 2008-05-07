@@ -127,7 +127,7 @@ public class DoubleCellEditor extends DefaultCellEditor
   {
     String s = (String)super.getCellEditorValue();
 
-    if( s == null || "".equals( s ) )
+    if( s == null || "".equals( s ) ) //$NON-NLS-1$
     {
       m_value = m_replacementWhenNull != null ? m_replacementWhenNull : null;
       super.stopCellEditing();

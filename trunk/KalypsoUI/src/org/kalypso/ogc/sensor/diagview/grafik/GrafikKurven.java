@@ -120,7 +120,7 @@ public class GrafikKurven
     final StringBuffer sb = new StringBuffer();
 
     sb
-        .append( "/* <Nr>- <Dateiname> <sichtbar:J,N> <Diagr.typ:L,B,P,M,T> <y-Achse:1,2> <Kurventitel> [<Blocknummer>]\n" );
+        .append( "/* <Nr>- <Dateiname> <sichtbar:J,N> <Diagr.typ:L,B,P,M,T> <y-Achse:1,2> <Kurventitel> [<Blocknummer>]\n" ); //$NON-NLS-1$
     for( final Iterator it = m_kurven.iterator(); it.hasNext(); )
     {
       final GrafikKurve gk = (GrafikKurve)it.next();
@@ -130,7 +130,7 @@ public class GrafikKurven
 
     sb.append( '\n' );
 
-    sb.append( "/* KNr:  Farbe\tLTyp\tLBreite\tPTyp\n" );
+    sb.append( "/* KNr:  Farbe\tLTyp\tLBreite\tPTyp\n" ); //$NON-NLS-1$
     for( final Iterator it = m_kurven.iterator(); it.hasNext(); )
     {
       final GrafikKurve gk = (GrafikKurve)it.next();
@@ -186,9 +186,9 @@ public class GrafikKurven
   private static String toGrafikType( final String axisType )
   {
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return "N";
+      return "N"; //$NON-NLS-1$
 
-    return "L";
+    return "L"; //$NON-NLS-1$
   }
 
   /**
@@ -200,7 +200,7 @@ public class GrafikKurven
   {
     private int m_axisNr = 0;
 
-    private String m_type = "X";
+    private String m_type = "X"; //$NON-NLS-1$
 
     private final String m_name;
 
@@ -218,7 +218,7 @@ public class GrafikKurven
     {
       m_filename = filename;
       m_name = name;
-      m_shown = shown ? "J" : "N";
+      m_shown = shown ? "J" : "N"; //$NON-NLS-1$ //$NON-NLS-2$
       m_color = color;
     }
 
@@ -264,7 +264,7 @@ public class GrafikKurven
     public String getColorSpec()
     {
       final StringBuffer sb = new StringBuffer();
-      sb.append( "K" ).append( m_nr ).append( ":\t" ).append( m_color ).append( "\t0\t1\t" ).append( m_axisNr );
+      sb.append( "K" ).append( m_nr ).append( ":\t" ).append( m_color ).append( "\t0\t1\t" ).append( m_axisNr ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       return sb.toString();
     }
 
@@ -274,9 +274,9 @@ public class GrafikKurven
     public String getCurveSpec()
     {
       final StringBuffer sb = new StringBuffer();
-      sb.append( m_nr ).append( "- " ).append( m_filename ).append( " " ).append( m_shown ).append( " " ).append(
-          m_type ).append( " " ).append( m_axisNr ).append( " " ).append( m_name ).append( " [" ).append( m_unit )
-          .append( "]" );
+      sb.append( m_nr ).append( "- " ).append( m_filename ).append( " " ).append( m_shown ).append( " " ).append( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          m_type ).append( " " ).append( m_axisNr ).append( " " ).append( m_name ).append( " [" ).append( m_unit ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          .append( "]" ); //$NON-NLS-1$
       return sb.toString();
     }
   }

@@ -56,22 +56,22 @@ public interface IKalypsoImageProvider
   /**
    * This constant stores the key for the layers.
    */
-  public final static String KEY_LAYERS = "LAYERS";
+  public final static String KEY_LAYERS = "LAYERS"; //$NON-NLS-1$
 
   /**
    * This constant stores the key for the URL.
    */
-  public final static String KEY_URL = "URL";
+  public final static String KEY_URL = "URL"; //$NON-NLS-1$
 
   /**
    * This constant stores the key for the styles.
    */
-  public final static String KEY_STYLES = "STYLES";
+  public final static String KEY_STYLES = "STYLES"; //$NON-NLS-1$
 
   /**
    * This constant stores the key for the image provider.
    */
-  public final static String KEY_PROVIDER = "PROVIDER";
+  public final static String KEY_PROVIDER = "PROVIDER"; //$NON-NLS-1$
 
   /**
    * Initializes this image provider. This function must be called.

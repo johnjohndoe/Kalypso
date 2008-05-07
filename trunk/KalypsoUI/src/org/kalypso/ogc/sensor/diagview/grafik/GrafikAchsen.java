@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.template.obsdiagview.TypeAxis;
 
@@ -57,11 +58,11 @@ public class GrafikAchsen
   /** maps diag-axis-id to grafik-axis (only for vertical axes) */
   private final Map<String, GrafikAchse> m_name2grafikAxis = new HashMap<String, GrafikAchse>();
 
-  private String m_leftLabel = "";
+  private String m_leftLabel = ""; //$NON-NLS-1$
 
-  private String m_rightLabel = "";
+  private String m_rightLabel = ""; //$NON-NLS-1$
 
-  private String m_bottomLabel = "";
+  private String m_bottomLabel = ""; //$NON-NLS-1$
 
   private int m_achseNr = 0;
 
@@ -81,7 +82,7 @@ public class GrafikAchsen
       {
         GrafikAchse gAchse = null;
 
-        final String name = ta.getLabel() + " [" + ta.getUnit() + "]";
+        final String name = ta.getLabel() + " [" + ta.getUnit() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 
         if( !ta.isInverted() ) // Niederschlagsachse ist immer invertiert, und wie nehmen hier nicht
         {
@@ -96,7 +97,7 @@ public class GrafikAchsen
         if( gAchse != null )
           m_name2grafikAxis.put( ta.getId(), gAchse );
         else
-          Logger.getLogger( getClass().getName() ).warning( "Grafik-Achse konnte nicht erzeugt werden: " + name + " Es sind schon " + m_achseNr + " Achse(n) vorhanden." );
+          Logger.getLogger( getClass().getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.5") + name + Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.6") + m_achseNr + Messages.getString("org.kalypso.ogc.sensor.diagview.grafik.GrafikAchsen.7") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       else if( ta.getDirection().toString().equalsIgnoreCase( DiagramAxis.DIRECTION_HORIZONTAL ) )
         m_bottomLabel = ta.getLabel();

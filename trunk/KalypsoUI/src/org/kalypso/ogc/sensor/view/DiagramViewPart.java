@@ -75,7 +75,7 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  */
 public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
-  public static final String ID = "org.kalypso.ogc.sensor.view.DiagramViewPart";
+  public static final String ID = "org.kalypso.ogc.sensor.view.DiagramViewPart"; //$NON-NLS-1$
 
   protected final DiagView m_diagView = new DiagView( true );
 
@@ -104,7 +104,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
       return;
     }
 
-    m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) );
+    m_subTitle = new TextTitle( "", new Font( "Default", Font.PLAIN, 12 ) ); //$NON-NLS-1$ //$NON-NLS-2$
     m_chart.addSubtitle( m_subTitle );
 
     // SWT-AWT Brücke für die Darstellung von JFreeChart
@@ -164,7 +164,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
       m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ), ObsViewUtils.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null ) );
 
       // sub title of diagram contains date-range info
-      m_subTitle.setText( "" );
+      m_subTitle.setText( "" ); //$NON-NLS-1$
       if( dra != null )
         m_subTitle.setText( dra.toString() );
 

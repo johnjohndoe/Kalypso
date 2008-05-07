@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.FileSelectWizardPage;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -104,7 +105,7 @@ public class ExportAsFileWizard extends Wizard
     super.addPages();
 
     final IProject[] projects = ProjectUtilities.getSelectedProjects();
-    String fileName = "";
+    String fileName = ""; //$NON-NLS-1$
 
     if( projects.length > 0 )
     {
@@ -112,11 +113,11 @@ public class ExportAsFileWizard extends Wizard
       fileName = ResourceUtilities.makeFileFromPath( m_project.getFullPath() ).getAbsolutePath();
     }
     else
-      fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "datei.zml";
+      fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "datei.zml"; //$NON-NLS-1$
 
     m_page1 = new DateRangeInputWizardPage();
-    m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[]
-    { "*.zml", "*.xml" } );
+    m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[] //$NON-NLS-1$
+    { "*.zml", "*.xml" } ); //$NON-NLS-1$ //$NON-NLS-2$
 
     addPage( m_page1 );
     addPage( m_page2 );
@@ -130,7 +131,7 @@ public class ExportAsFileWizard extends Wizard
   {
     //super.createPageControls( pageContainer );
 
-    setWindowTitle( "Als Datei exportieren" );
+    setWindowTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.5") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 
@@ -156,7 +157,7 @@ public class ExportAsFileWizard extends Wizard
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), "Datei kann nicht erzeugt werden", e.getLocalizedMessage() );
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.6"), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return false;
     }
@@ -167,7 +168,7 @@ public class ExportAsFileWizard extends Wizard
 
     if( m_project != null )
     {
-      final Job refreshJob = new Job( "Projekt " + m_project.getName() + " aktualisieren" )
+      final Job refreshJob = new Job( Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.7") + m_project.getName() + Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.8") ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         @Override
         protected IStatus run( IProgressMonitor monitor )

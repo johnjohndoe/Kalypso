@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -126,7 +127,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         catch( final NoSuchElementException e )
         {
           Logger.getLogger( getClass().getName() ).warning(
-              "Kann DiagViewCurve nicht laden, Ursache: " + e.getLocalizedMessage() );
+              Messages.getString("org.kalypso.ogc.sensor.diagview.DiagViewCurveXMLLoader.0") + e.getLocalizedMessage() ); //$NON-NLS-1$
 
           useThisCurve = false;
           break;

@@ -63,6 +63,7 @@ import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
@@ -101,7 +102,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
 
   protected ObservationTablePanel m_panel = null;
 
-  protected String m_currentScenarioName = "";
+  protected String m_currentScenarioName = ""; //$NON-NLS-1$
 
   /**
    * if the amount of columns is equal or bigger than this threshold, then the autoResizeMode property is set to
@@ -268,7 +269,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           if( model.getColumnCount() == 0 )
           {
             m_panel.clearLabel();
-            m_currentScenarioName = "";
+            m_currentScenarioName = ""; //$NON-NLS-1$
           }
         }
 
@@ -281,7 +282,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
           if( m_panel != null )
           {
             m_panel.clearLabel();
-            m_currentScenarioName = "";
+            m_currentScenarioName = ""; //$NON-NLS-1$
           }
         }
 
@@ -356,7 +357,7 @@ public class ObservationTable extends JTable implements IObsViewEventListener
             }
             catch( final MalformedURLException e )
             {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING, "Bild konnte nicht geladen werden", e );
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.tableview.swing.ObservationTable.3"), e ); //$NON-NLS-1$
             }
           }
 

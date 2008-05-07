@@ -2,6 +2,7 @@ package org.kalypso.ogc.sensor.tableview.swing.actions;
 
 import java.awt.event.ActionEvent;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 
 /**
@@ -13,7 +14,7 @@ public class SetAllAction extends AbstractObservationTableAction
 {
   public SetAllAction( ObservationTable table )
   {
-    super( table, "Alle Werte setzen", "Setzt alle Werte der Spalte auf den selektierten Wert" );
+    super( table, Messages.getString("org.kalypso.ogc.sensor.tableview.swing.actions.SetAllAction.0"), Messages.getString("org.kalypso.ogc.sensor.tableview.swing.actions.SetAllAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

@@ -3,6 +3,7 @@ package org.kalypso.ogc.sensor.tableview.swing.actions;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 
 /**
@@ -14,7 +15,7 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
 {
   public InterpolateSelectedAction( ObservationTable table )
   {
-    super( table, "Werte interpolieren", "Interpoliert die Werte der Spalte zwischen dem ersten und dem letzten selektierten Wert" );
+    super( table, Messages.getString("org.kalypso.ogc.sensor.tableview.swing.actions.InterpolateSelectedAction.0"), Messages.getString("org.kalypso.ogc.sensor.tableview.swing.actions.InterpolateSelectedAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

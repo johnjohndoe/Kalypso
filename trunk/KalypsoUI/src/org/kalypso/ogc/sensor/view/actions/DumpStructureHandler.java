@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
@@ -80,7 +81,7 @@ public class DumpStructureHandler extends AbstractHandler
     {
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
       {
-        monitor.beginTask( "Struktur exportieren", 1000 );
+        monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.0"), 1000 ); //$NON-NLS-1$
 
         try
         {
@@ -116,7 +117,7 @@ public class DumpStructureHandler extends AbstractHandler
     {
       e.printStackTrace();
 
-      MessageDialog.openWarning( shell, "Struktur exportieren", e.getLocalizedMessage() );
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
     catch( final InterruptedException ignored )
     {

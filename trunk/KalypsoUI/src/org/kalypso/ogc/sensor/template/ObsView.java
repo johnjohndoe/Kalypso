@@ -268,7 +268,7 @@ public abstract class ObsView implements IObsViewEventProvider
    */
   public IStatus loadObservation( final URL context, final String href, final boolean ignoreExceptions, final String tokenizedName, final ItemData data, final boolean synchron )
   {
-    final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions );
+    final PoolableObjectType k = new PoolableObjectType( "zml", href, context, ignoreExceptions ); //$NON-NLS-1$
 
     final PoolableObjectWaiter waiter = new PoolableObjectWaiter( k, new Object[] { this, data, tokenizedName }, synchron )
     {

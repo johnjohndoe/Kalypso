@@ -72,7 +72,7 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  */
 public class TableViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
-  public static final String ID = "org.kalypso.ogc.sensor.view.TableViewPart";
+  public static final String ID = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
 
   protected final TableView m_tableView = new TableView();
 

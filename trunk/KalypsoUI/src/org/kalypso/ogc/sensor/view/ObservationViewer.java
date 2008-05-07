@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -199,7 +200,7 @@ public class ObservationViewer extends Composite
 
     // 1. HREF
     m_lblObs = new Label( header, SWT.LEFT );
-    m_lblObs.setText( "Zeitreihe:" );
+    m_lblObs.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.0") ); //$NON-NLS-1$
     m_lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
     m_txtHref = new Text( header, SWT.MULTI | SWT.WRAP );
@@ -220,7 +221,7 @@ public class ObservationViewer extends Composite
     } );
 
     m_btnSelectObsLocal = new Button( header, SWT.NONE );
-    m_btnSelectObsLocal.setText( "lokal..." );
+    m_btnSelectObsLocal.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.1") ); //$NON-NLS-1$
     m_btnSelectObsLocal.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectObsLocal.addSelectionListener( new SelectionListener()
     {
@@ -231,7 +232,7 @@ public class ObservationViewer extends Composite
         {
           final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
           final IContainer baseDir = contextIFile.getParent();
-          final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir, IResource.FILE, "*zml" );
+          final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir, IResource.FILE, "*zml" ); //$NON-NLS-1$
           dialog.setBlockOnOpen( true );
 
           if( dialog.open() == Window.OK )
@@ -247,7 +248,7 @@ public class ObservationViewer extends Composite
 
                 String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
                 if( href == null )
-                  m_txtHref.setText( "" );
+                  m_txtHref.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.3") ); //$NON-NLS-1$
                 else
                   m_txtHref.setText( href.substring( 1 ) );
                 // refresh...
@@ -268,7 +269,7 @@ public class ObservationViewer extends Composite
       }
     } );
     m_btnSelectObsProject = new Button( header, SWT.NONE );
-    m_btnSelectObsProject.setText( "Projekt..." );
+    m_btnSelectObsProject.setText( "Projekt..." ); //$NON-NLS-1$
     m_btnSelectObsProject.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     m_btnSelectObsProject.addSelectionListener( new SelectionListener()
     {
@@ -277,8 +278,8 @@ public class ObservationViewer extends Composite
         try
         {
           IProject project = ResourceUtilities.findProjectFromURL( m_context );
-          IContainer baseDir = (project.getFolder( ".model" )).getParent();
-          final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir, IResource.FILE, "*zml" );
+          IContainer baseDir = (project.getFolder( ".model" )).getParent(); //$NON-NLS-1$
+          final ResourceListSelectionDialog dialog = new ResourceListSelectionDialog( getShell(), baseDir, IResource.FILE, "*zml" ); //$NON-NLS-1$
           dialog.setBlockOnOpen( true );
           if( dialog.open() == Window.OK )
           {
@@ -293,7 +294,7 @@ public class ObservationViewer extends Composite
 
                 String href = FileUtilities.getRelativePathTo( url1.toExternalForm(), url2.toExternalForm() );
                 if( href == null )
-                  m_txtHref.setText( "" );
+                  m_txtHref.setText( "" ); //$NON-NLS-1$
                 else
                   m_txtHref.setText( href );
                 // refresh...
@@ -315,7 +316,7 @@ public class ObservationViewer extends Composite
     } );
     // 2. Anzeige
     showRadioButton = new Button( header, SWT.CHECK );
-    showRadioButton.setText( "Zeitreihe anzeigen" );
+    showRadioButton.setText( Messages.getString("org.kalypso.ogc.sensor.view.ObservationViewer.8") ); //$NON-NLS-1$
     showRadioButton.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
     showRadioButton.setSelection( false );
     showRadioButton.addSelectionListener( new SelectionListener()

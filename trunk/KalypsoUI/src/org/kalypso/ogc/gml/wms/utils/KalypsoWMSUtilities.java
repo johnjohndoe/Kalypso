@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -102,17 +103,17 @@ public class KalypsoWMSUtilities
     if( er == null )
       return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
 
-    final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" );
+    final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" ); //$NON-NLS-1$
     for( final IConfigurationElement element : configurationElementsFor )
     {
       /* Get some attributes. */
-      final String id = element.getAttribute( "id" );
+      final String id = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id.equals( providerID ) )
       {
         try
         {
           /* This is the wanted provider. */
-          final IKalypsoImageProvider provider = (IKalypsoImageProvider) element.createExecutableExtension( "class" );
+          final IKalypsoImageProvider provider = (IKalypsoImageProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
           provider.init( themeName, layers, styles, service, localSRS );
           return provider;
         }
@@ -125,7 +126,7 @@ public class KalypsoWMSUtilities
         catch( final Throwable t )
         {
           // protect against bad extensions
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim initalisieren des KalypsoImageProvider: " + id, t );
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities.3") + id, t ); //$NON-NLS-1$
           KalypsoGisPlugin.getDefault().getLog().log( status );
 
           return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
@@ -169,8 +170,8 @@ public class KalypsoWMSUtilities
   public static URL createCapabilitiesRequest( final URL baseURL ) throws MalformedURLException
   {
     final String query = baseURL.getQuery();
-    final String getCapabilitiesQuery = "SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities";
-    final String queryToken = (query == null || query.length() == 0) ? "?" : "&";
+    final String getCapabilitiesQuery = "SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities"; //$NON-NLS-1$
+    final String queryToken = (query == null || query.length() == 0) ? "?" : "&"; //$NON-NLS-1$ //$NON-NLS-2$
     final String urlGetCapabilitiesString = baseURL.toString() + queryToken + getCapabilitiesQuery;
 
     return new URL( urlGetCapabilitiesString );

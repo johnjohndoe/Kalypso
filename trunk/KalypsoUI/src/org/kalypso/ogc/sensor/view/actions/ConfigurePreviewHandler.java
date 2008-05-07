@@ -52,6 +52,7 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.jface.dialog.DateRangeInputDialog;
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepository;
@@ -79,7 +80,7 @@ public class ConfigurePreviewHandler extends AbstractHandler
     if( rep == null )
       return Status.OK_STATUS;
 
-    final DateRangeInputDialog dlg = new DateRangeInputDialog( shell, "Zeitraum-Eingabe", "Bitte geben Sie einen Zeitraum ein.", DateRangeInputControlStuct.create( rep.getProperties(), DateFormat.getDateTimeInstance() ) );
+    final DateRangeInputDialog dlg = new DateRangeInputDialog( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.0"), Messages.getString("org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.1"), DateRangeInputControlStuct.create( rep.getProperties(), DateFormat.getDateTimeInstance() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( dlg.open() == Window.OK )
     {

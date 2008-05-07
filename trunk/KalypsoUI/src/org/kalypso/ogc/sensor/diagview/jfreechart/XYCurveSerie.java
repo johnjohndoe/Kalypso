@@ -45,6 +45,7 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.jfree.data.general.Series;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -103,7 +104,7 @@ class XYCurveSerie extends Series
 
     final IObservation obs = m_curve.getObservation();
     if( obs == null )
-      logger.warning( "!!! No Observation for curve: " + m_curve.getName() );
+      logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.0") + m_curve.getName() ); //$NON-NLS-1$
     else
     {
       m_values = obs.getValues( m_curve.getArguments() );
@@ -120,7 +121,7 @@ class XYCurveSerie extends Series
         }
       }
       else
-        logger.warning( "!!! Values null for Observation: " + obs );
+        logger.warning( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.1") + obs ); //$NON-NLS-1$
     }
   }
 

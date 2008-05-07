@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.view.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
 
@@ -72,7 +73,7 @@ public class RemoveRepositoryRunnable implements Runnable
     if( m_repository == null )
       return;
 
-    if( !MessageDialog.openConfirm( m_shell, "Repository entfernen", "Repository '" + m_repository.toString() + "' wirklich entfernen?" ) )
+    if( !MessageDialog.openConfirm( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.0"), Messages.getString("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.1") + m_repository.toString() + Messages.getString("org.kalypso.ogc.sensor.view.RemoveRepositoryRunnable.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       return;
 
     m_container.removeRepository( m_repository );
