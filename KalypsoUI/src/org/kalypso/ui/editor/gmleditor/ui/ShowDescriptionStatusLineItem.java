@@ -122,7 +122,7 @@ public class ShowDescriptionStatusLineItem extends StatusLineContributionItem
 
   protected void handleSelectionChanged( final ISelection selection )
   {
-    setText( "" );
+    setText( "" ); //$NON-NLS-1$
 
     if( selection instanceof IFeatureSelection )
     {

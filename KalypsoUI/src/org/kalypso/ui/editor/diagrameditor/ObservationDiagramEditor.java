@@ -58,6 +58,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
@@ -126,7 +127,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
 
     // print action
     final IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-    helpSystem.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" );
+    helpSystem.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" ); //$NON-NLS-1$
   }
 
   /**
@@ -193,7 +194,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT,
         ExportableChart.DEFAULT_FORMAT ),
         conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, ExportableChart.DEFAULT_WIDTH ), conf.getInt(
-            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), "Diagramm" ) };
+            ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), Messages.getString("org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.1") ) }; //$NON-NLS-1$
   }
 
   /**
@@ -202,8 +203,8 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(),
-        "icons/util/img_props.gif" );
-    final IWizardPage page = new ImageExportPage( configuration, "diagprops", "Bildexport Optionen", imgDesc, 0 );
+        "icons/util/img_props.gif" ); //$NON-NLS-1$
+    final IWizardPage page = new ImageExportPage( configuration, "diagprops", Messages.getString("org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.4"), imgDesc, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[]
     { page };

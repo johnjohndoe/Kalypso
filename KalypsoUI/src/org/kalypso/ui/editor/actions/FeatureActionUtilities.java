@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -85,7 +86,7 @@ public class FeatureActionUtilities
 
     protected ListFullAction( final int occurs )
     {
-      super( "Maximale Grösse erreicht" );
+      super( Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.0") ); //$NON-NLS-1$
 
       final ImageKey[] overlays = new ImageKey[] { null, DESCRIPTORS.FORBIDDEN_OVR, null, null, null };
       final ImageDescriptor forbiddenImgDesc = KalypsoGisPlugin.getImageProvider().getDecoratedImageDescriptor( DESCRIPTORS.FEATURE, overlays );
@@ -101,8 +102,8 @@ public class FeatureActionUtilities
     public void runWithEvent( final Event event )
     {
       final Shell shell = event.widget.getDisplay().getActiveShell();
-      MessageDialog.openInformation( shell, "Maximale Grösse ereicht", "Die maximale Grösse (" + m_occurs
-          + ") dieser Liste ist ereicht.\nSie können zu dieser Eigenschaft keine weiteren Elemente hinzufügen ohne vorher Elemente zu löschen." );
+      MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.1"), Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.2") + m_occurs //$NON-NLS-1$ //$NON-NLS-2$
+          + Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.3") ); //$NON-NLS-1$
     }
   }
 
@@ -115,7 +116,7 @@ public class FeatureActionUtilities
   {
     protected NewFeatureFromExternalSchemaAction( )
     {
-      super( "Feature aus zusätzlichem Schema..." );
+      super( Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.4") ); //$NON-NLS-1$
     }
 
     /**
@@ -125,7 +126,7 @@ public class FeatureActionUtilities
     public void runWithEvent( final Event event )
     {
       final Shell shell = event.widget.getDisplay().getActiveShell();
-      MessageDialog.openInformation( shell, "Neues Feature aus zusätzlichem Schema", "Diese Operation ist noch nicht implementiert.\nDer Anwender sollte hier zuerst ein GML-Schema auswählen und danach einen passenden Feature-Typ." );
+      MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.5"), Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.6") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -141,7 +142,7 @@ public class FeatureActionUtilities
    */
   public static IMenuManager createFeatureNewMenu( final IStructuredSelection selection, final IFeatureSelectionManager selectionManager )
   {
-    final IMenuManager newMenuManager = new MenuManager( "&Neu" );
+    final IMenuManager newMenuManager = new MenuManager( Messages.getString("org.kalypso.ui.editor.actions.FeatureActionUtilities.7") ); //$NON-NLS-1$
 
     if( selection.size() != 1 )
       return newMenuManager;
@@ -220,7 +221,7 @@ public class FeatureActionUtilities
       newMenuManager.add( new NewFeatureAction( actionLabel, featureNewImg, workspace, parentFeature, fatp, ft, selectionManager ) );
     }
 
-    newMenuManager.add( new Separator( "additions" ) );
+    newMenuManager.add( new Separator( "additions" ) ); //$NON-NLS-1$
     newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
 
     return newMenuManager;

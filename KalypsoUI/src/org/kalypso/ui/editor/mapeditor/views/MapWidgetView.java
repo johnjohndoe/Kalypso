@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
@@ -72,9 +73,9 @@ import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
  */
 public class MapWidgetView extends ViewPart
 {
-  public static final String ID = "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView";
+  public static final String ID = "org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"; //$NON-NLS-1$
 
-  private final static String DATA_PANEL = "panel";
+  private final static String DATA_PANEL = "panel"; //$NON-NLS-1$
 
   private final static class WidgetInfo
   {
@@ -182,7 +183,7 @@ public class MapWidgetView extends ViewPart
     m_stackLayout = new StackLayout();
     m_group.setLayout( m_stackLayout );
 
-    m_noWidgetText = m_toolkit.createText( m_group, "Kein Werkzeug ausgewählt", SWT.READ_ONLY | SWT.WRAP | SWT.CENTER );
+    m_noWidgetText = m_toolkit.createText( m_group, Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.2"), SWT.READ_ONLY | SWT.WRAP | SWT.CENTER ); //$NON-NLS-1$
 
     m_stackLayout.topControl = m_noWidgetText;
 
@@ -242,7 +243,7 @@ public class MapWidgetView extends ViewPart
       {
         // no widget at all active, just show a message
         controlToShow = m_noWidgetText;
-        m_group.setText( " - Kein Werkzeug ausgewält - " );
+        m_group.setText( Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.3") ); //$NON-NLS-1$
         m_group.setToolTipText( null );
       }
       else
@@ -310,7 +311,7 @@ public class MapWidgetView extends ViewPart
       final IWidgetWithOptions widget = info == null ? null : info.getWidget();
       if( newWidget == null || !newWidget.equals( widget ) )
       {
-        setContentDescription( "Deaktiviert, klicken Sie in diese Ansicht, um das Werkzeug zu reaktivieren." );
+        setContentDescription( Messages.getString("org.kalypso.ui.editor.mapeditor.views.MapWidgetView.4") ); //$NON-NLS-1$
       }
     }
   }
@@ -336,7 +337,7 @@ public class MapWidgetView extends ViewPart
         if( widget != null && widget != panel.getWidgetManager().getActualWidget() )
         {
           panel.getWidgetManager().setActualWidget( widget );
-          setContentDescription( "" );
+          setContentDescription( "" ); //$NON-NLS-1$
         }
       }
     }

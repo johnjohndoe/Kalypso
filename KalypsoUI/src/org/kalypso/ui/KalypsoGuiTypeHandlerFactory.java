@@ -44,6 +44,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.gui.GuiTypeHandlerUtilities;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.ResourceFileGuiTypeHandler;
@@ -65,10 +66,10 @@ public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTyp
   {
     try
     {
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class );
-      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class );
-      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class );
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class ); //$NON-NLS-1$
 
       GuiTypeHandlerUtilities.registerXSDSimpleTypeHandler( guiRegistry );
       guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
@@ -88,7 +89,7 @@ public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTyp
       // this method is also used in headless mode
       if( PlatformUI.isWorkbenchRunning() )
       {
-        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
+        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.KalypsoGuiTypeHandlerFactory.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
   }

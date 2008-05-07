@@ -138,14 +138,14 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       if( isList && (operation == DND.DROP_COPY || operation == DND.DROP_MOVE) )
       {
         final List featureList = (List) targetFeature.getProperty( targetAssocFtp );
-        System.out.println( "Diff = " + new Integer( maxOccurs - (featureList.size() + selectedFeatures.length) ) );
+        System.out.println( "Diff = " + new Integer( maxOccurs - (featureList.size() + selectedFeatures.length) ) ); //$NON-NLS-1$
         if( maxOccurs >= featureList.size() + selectedFeatures.length || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
           return true;
         return false;
       }
       if( !isList && targetFeature.getProperty( targetAssocFtp ) == null )// && operation == DND.DROP_LINK )
         return true;
-      System.out.println( "isList = " + isList );
+      System.out.println( "isList = " + isList ); //$NON-NLS-1$
     }
     if( target instanceof Feature )
     {
@@ -176,11 +176,11 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
 
     if( matchingFt != null )
     {
-      System.out.println( "matchingFT = " + matchingFt.getQName().getLocalPart() );
+      System.out.println( "matchingFT = " + matchingFt.getQName().getLocalPart() ); //$NON-NLS-1$
       if( selectedFeatures.length > 1 )
       {
         IFeatureType property = targetFeature.getFeatureType();
-        System.out.println( "\tmatchingFt != null  and selectedFeaturs.length > 1 -> targetFeature(FT name) " + property.getQName().getLocalPart() );
+        System.out.println( "\tmatchingFt != null  and selectedFeaturs.length > 1 -> targetFeature(FT name) " + property.getQName().getLocalPart() ); //$NON-NLS-1$
         // TODO Christoph was passiert hier
         // int maxOccurs = property.getMaxOccurs( matchingFt.getName() );
         // // TODO add the already existing number of feature and compare to maxOccurs

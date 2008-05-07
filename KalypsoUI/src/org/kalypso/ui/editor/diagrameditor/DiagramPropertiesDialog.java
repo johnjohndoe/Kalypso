@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author schlienger
@@ -89,14 +90,14 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( Composite parent )
   {
-    setTitle( "Zeitreihen-Diagramm-Eigenschaften" );
+    setTitle( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.0") ); //$NON-NLS-1$
 
     final Composite cmp = new Composite( parent, SWT.FILL );
     cmp.setLayout( new GridLayout( 2, false ) );
     cmp.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label lblTitle = new Label( cmp, SWT.LEFT );
-    lblTitle.setText( "Diagramm-Titel" );
+    lblTitle.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.1") ); //$NON-NLS-1$
     final Text txtTitle = new Text( cmp, SWT.BORDER );
     txtTitle.setText( m_diagTitle );
     txtTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -109,7 +110,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     } );
 
     final Label lblShowLegend = new Label( cmp, SWT.LEFT );
-    lblShowLegend.setText( "Ledende anzeigen?" );
+    lblShowLegend.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.2") ); //$NON-NLS-1$
     final Button btnShowLegend = new Button( cmp, SWT.CHECK );
     btnShowLegend.setSelection( m_showLegend );
     btnShowLegend.addSelectionListener( new SelectionListener()
@@ -126,7 +127,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     } );
 
     final Label lblLegTitle = new Label( cmp, SWT.LEFT );
-    lblLegTitle.setText( "Legende-Titel" );
+    lblLegTitle.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.3") ); //$NON-NLS-1$
     final Text txtLegTitle = new Text( cmp, SWT.BORDER );
     txtLegTitle.setText( m_legendTitle );
     txtLegTitle.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -139,7 +140,7 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
     } );
 
     final Label lblTz = new Label( cmp, SWT.LEFT );
-    lblTz.setText( "Zeitzone" );
+    lblTz.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.DiagramPropertiesDialog.4") ); //$NON-NLS-1$
     final Combo cmbTz = new Combo( cmp, SWT.DROP_DOWN );
     cmbTz.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     

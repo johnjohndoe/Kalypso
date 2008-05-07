@@ -52,12 +52,12 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public class GisMapEditor extends AbstractMapPart implements IEditorPart
 {
-  public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor";
+  public static final String ID = "org.kalypso.ui.editor.mapeditor.GisMapEditor"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {

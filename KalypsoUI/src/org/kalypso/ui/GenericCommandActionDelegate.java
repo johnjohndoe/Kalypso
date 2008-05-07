@@ -79,6 +79,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 
 /**
  * TODO this class is duplicate with de.renew.workflow.connector.context.handlers.GenericCommandActionDelegate Move it
@@ -132,7 +133,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     }
   }
 
-  private static final Object PARAM_COMMAND_ID = "commandId";
+  private static final Object PARAM_COMMAND_ID = "commandId"; //$NON-NLS-1$
 
   ParameterizedCommand m_parameterizedCommand = null;
 
@@ -176,7 +177,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
-  @SuppressWarnings( { "unchecked", "unused" })
+  @SuppressWarnings( { "unchecked", "unused" }) //$NON-NLS-1$ //$NON-NLS-2$
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
     if( data instanceof String )
@@ -291,7 +292,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoGisPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), "Operation konnte nicht ausgeführt werden.", status );
+        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), Messages.getString("org.kalypso.ui.GenericCommandActionDelegate.3"), status ); //$NON-NLS-1$
       }
     }
   }
@@ -310,7 +311,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     try
     {
       if( !command.isDefined() )
-        command.define( m_commandId, m_commandId, commandService.getCategory( "org.kalypso.ui.commands.default" ) );
+        command.define( m_commandId, m_commandId, commandService.getCategory( "org.kalypso.ui.commands.default" ) ); //$NON-NLS-1$
 
       final List<Parameterization> parameters = new ArrayList<Parameterization>();
       for( final String parmName : m_parameterMap.keySet() )
@@ -350,7 +351,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     final String actionId = m_action.getId();
     final IActionBars actionBars = m_actionBars;
 
-    final UIJob job = new UpdateActionbarsJob( "Update Action-Bars", actionBars, actionId, enabledState );
+    final UIJob job = new UpdateActionbarsJob( Messages.getString("org.kalypso.ui.GenericCommandActionDelegate.5"), actionBars, actionId, enabledState ); //$NON-NLS-1$
     job.setPriority( UIJob.INTERACTIVE );
 // job.schedule();
     job.schedule( 200 );

@@ -45,6 +45,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -82,7 +83,7 @@ public class AbstractWidgetWithOptionActionDelegate extends AbstractGisMapEditor
     catch( final PartInitException e )
     {
       KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
-      ErrorDialog.openError( event.display.getActiveShell(), action.getText(), "Fehler beim Anzeigen der Werkzeugansicht", e.getStatus() );
+      ErrorDialog.openError( event.display.getActiveShell(), action.getText(), Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.AbstractWidgetWithOptionActionDelegate.0"), e.getStatus() ); //$NON-NLS-1$
     }
   }
 

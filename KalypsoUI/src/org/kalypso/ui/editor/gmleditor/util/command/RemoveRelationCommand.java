@@ -42,6 +42,7 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -125,6 +126,6 @@ public class RemoveRelationCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Relation aufheben";
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand.0"); //$NON-NLS-1$
   }
 }

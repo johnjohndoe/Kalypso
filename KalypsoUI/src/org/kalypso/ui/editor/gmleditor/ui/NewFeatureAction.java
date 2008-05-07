@@ -40,6 +40,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
@@ -93,7 +94,7 @@ public class NewFeatureAction extends Action
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), "Fehler beim Hinzufügen", status );
+      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString("org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction.0"), status ); //$NON-NLS-1$
     }
 
   }

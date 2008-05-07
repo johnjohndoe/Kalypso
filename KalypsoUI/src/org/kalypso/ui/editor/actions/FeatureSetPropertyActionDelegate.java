@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ModifyFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -80,12 +81,12 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
       {
         e.printStackTrace();
 
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
 
         // we are in the ui-thread so we get a shell here
         final Shell shell = Display.getCurrent().getActiveShell();
         if( shell != null )
-          ErrorDialog.openError( shell, action.getText(), "Fehler beim Übertragen der Eigenschaften", status );
+          ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate.1"), status ); //$NON-NLS-1$
       }
     }
   }
@@ -125,7 +126,7 @@ public class FeatureSetPropertyActionDelegate implements IActionDelegate
     final String text = action.getText();
     if( text != null )
     {
-      final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + focusedFeature.getProperty( focusedProperty ) + ")";
+      final String newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + focusedFeature.getProperty( focusedProperty ) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       action.setText( newText );
     }
   }

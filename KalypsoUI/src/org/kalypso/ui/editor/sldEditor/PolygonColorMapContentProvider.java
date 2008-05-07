@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
 
 /**
@@ -96,23 +97,23 @@ public class PolygonColorMapContentProvider implements IStructuredContentProvide
         tableColumn.dispose();
 
       final TableColumn lableColumn = new TableColumn( table, SWT.NONE );
-      lableColumn.setText( "Bezeichnung" );
+      lableColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.0") ); //$NON-NLS-1$
       lableColumn.setWidth( 100 );
 
       final TableColumn fromColumn = new TableColumn( table, SWT.NONE );
-      fromColumn.setText( "Von" );
+      fromColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.1") ); //$NON-NLS-1$
       fromColumn.setWidth( 50 );
 
       final TableColumn toColumn = new TableColumn( table, SWT.NONE );
-      toColumn.setText( "Bis" );
+      toColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.2") ); //$NON-NLS-1$
       toColumn.setWidth( 50 );
 
       final TableColumn strokeColumn = new TableColumn( table, SWT.NONE );
-      strokeColumn.setText( "Linie" );
+      strokeColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.3") ); //$NON-NLS-1$
       strokeColumn.setWidth( 50 );
 
       final TableColumn fillColumn = new TableColumn( table, SWT.NONE );
-      fillColumn.setText( "Füllung" );
+      fillColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.4") ); //$NON-NLS-1$
       fillColumn.setWidth( 50 );
 
       final PROPS[] propValues = PROPS.values();

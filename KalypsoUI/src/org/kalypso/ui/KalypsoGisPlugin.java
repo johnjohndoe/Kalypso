@@ -66,6 +66,7 @@ import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.DefaultLoaderFactory;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.dict.DictionaryCatalog;
@@ -85,16 +86,16 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
-  private static final String SCHEMA_CATALOG = "SCHEMA_CATALOG_URL";
+  private static final String SCHEMA_CATALOG = "SCHEMA_CATALOG_URL"; //$NON-NLS-1$
 
-  private static final String MODELL_REPOSITORY = "MODELL_REPOSITORY";
+  private static final String MODELL_REPOSITORY = "MODELL_REPOSITORY"; //$NON-NLS-1$
 
   private static final Logger LOGGER = Logger.getLogger( KalypsoGisPlugin.class.getName() );
 
-  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources";
+  private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources"; //$NON-NLS-1$
 
   /** location of the pool properties file */
-  private static final String POOL_PROPERTIES = "resources/pools.properties";
+  private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-1$
 
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
@@ -152,16 +153,16 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     mainConf.putAll( System.getProperties() );
 
     // overwrite the user settings if list was provided as program argument or system property
-    final String confUrls = System.getProperty( "kalypso.client-ini-locations", "" );
+    final String confUrls = System.getProperty( "kalypso.client-ini-locations", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( confUrls.length() == 0 )
     {
-      final IStatus warningStatus = StatusUtilities.createWarningStatus( "Keine Serverkonfiguration vorhanden. Funktionalität eingeschränkt." );
+      final IStatus warningStatus = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.KalypsoGisPlugin.6") ); //$NON-NLS-1$
       getLog().log( warningStatus );
     }
 
     // try to load conf file
-    final String[] locs = confUrls.split( "," );
+    final String[] locs = confUrls.split( "," ); //$NON-NLS-1$
 
     // for each of the locations, fetch configuration and merge them with main
     // conf
@@ -195,7 +196,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
           // conf-file), we need to resolve them here because it's the only
           // place where we know the URL of the conf-file.
           final String value;
-          if( (key != null) && key.endsWith( "URL" ) )
+          if( (key != null) && key.endsWith( "URL" ) ) //$NON-NLS-1$
           {
             value = new URL( url, conf.getProperty( key ) ).toString();
           }
@@ -222,15 +223,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         // do nothing, try with next location
         // e.printStackTrace();
 
-        String msg = "Konnte Konfigurationsdatei nicht laden: " + location + "\n";
+        String msg = Messages.getString("org.kalypso.ui.KalypsoGisPlugin.9") + location + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 
         if( i == locs.length - 1 )
         {
-          msg += "Serverkonfiguration konnte nicht gefunden werden! Stelle Sie sicher dass mindestens ein Server zur Verfügung steht.\nAlterntiv, prüfen Sie die Liste der Server in den Applikationseinstellungen (Kalypso Seite).";
+          msg += Messages.getString("org.kalypso.ui.KalypsoGisPlugin.11"); //$NON-NLS-1$
         }
         else
         {
-          msg += "Es wird versucht, eine alternative Konfigurationsdatei zu laden.\nNächster Versuch:" + locs[i + 1];
+          msg += Messages.getString("org.kalypso.ui.KalypsoGisPlugin.12") + locs[i + 1]; //$NON-NLS-1$
         }
 
         KalypsoGisPlugin.LOGGER.warning( msg );
@@ -265,7 +266,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   private void configureLogger( )
   {
     // TODO:REMOVE THIS: we should always use the eclipse logging mechanisms
-    final Logger logger = Logger.getLogger( "org.kalypso" );
+    final Logger logger = Logger.getLogger( "org.kalypso" ); //$NON-NLS-1$
     logger.setLevel( Level.INFO );
 
     final Handler[] handlers = logger.getHandlers();
@@ -285,12 +286,12 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     InputStream ins = null;
     try
     {
-      ins = getClass().getResourceAsStream( "resources/deletetempdir.properties" );
+      ins = getClass().getResourceAsStream( "resources/deletetempdir.properties" ); //$NON-NLS-1$
       props.load( ins );
       ins.close();
 
-      final String pDirs = props.getProperty( "DELETE_STARTUP", "" );
-      final String[] dirNames = pDirs.split( "," );
+      final String pDirs = props.getProperty( "DELETE_STARTUP", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String[] dirNames = pDirs.split( "," ); //$NON-NLS-1$
       for( final String element : dirNames )
       {
         TempFileUtilities.deleteTempDir( this, element );
@@ -398,7 +399,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       catalogLocation = m_mainConf.getProperty( KalypsoGisPlugin.SCHEMA_CATALOG );
       if( catalogLocation != null )
       {
-        KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + " in Kalypso.ini gefunden." );
+        KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString("org.kalypso.ui.KalypsoGisPlugin.18") ); //$NON-NLS-1$
         url = new URL( catalogLocation );
         is = new BufferedInputStream( url.openStream() );
 
@@ -411,7 +412,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final IOException e )
     {
       // exceptions ignorieren: nicht schlimm, Eintrag ist optional
-      KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + " in kalypso-client.ini nicht vorhanden. Schemas werden vom Rechendienst abgeholt." );
+      KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString("org.kalypso.ui.KalypsoGisPlugin.19") ); //$NON-NLS-1$
     }
     finally
     {
@@ -469,7 +470,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // m_plugin should be set in the constructor
     if( KalypsoGisPlugin.THE_PLUGIN == null )
     {
-      throw new NullPointerException( "Plugin Kalypso noch nicht instanziert!" );
+      throw new NullPointerException( Messages.getString("org.kalypso.ui.KalypsoGisPlugin.20") ); //$NON-NLS-1$
     }
 
     return KalypsoGisPlugin.THE_PLUGIN;
@@ -516,7 +517,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final Exception e )
     {
       KalypsoGisPlugin.LOGGER.warning( e.getLocalizedMessage() );
-      KalypsoGisPlugin.LOGGER.warning( "The provided TimeZone from the KALYPSO preferences is not known, using default one." );
+      KalypsoGisPlugin.LOGGER.warning( Messages.getString("org.kalypso.ui.KalypsoGisPlugin.21") ); //$NON-NLS-1$
 
       return TimeZone.getDefault();
     }
@@ -568,7 +569,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     if( location == null )
       return null;
 
-    final String[] locations = location.split( "," );
+    final String[] locations = location.split( "," ); //$NON-NLS-1$
     if( locations.length == 0 )
       return null;
 

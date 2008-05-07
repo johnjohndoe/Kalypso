@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.abstractobseditor.commands;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 public class SetShownCommand implements ICommand
@@ -91,6 +92,6 @@ public class SetShownCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Anzeige-Status von " + m_item.getName() + " ändern";
+    return Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.0") + m_item.getName() + Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.1"); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

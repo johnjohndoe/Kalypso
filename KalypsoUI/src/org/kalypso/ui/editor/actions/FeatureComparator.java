@@ -91,7 +91,7 @@ public class FeatureComparator implements Comparator<Object>
   /**
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public int compare( final Object o1, final Object o2 )
   {
     final Feature f1 = FeatureHelper.getFeature( m_workspace, o1 );

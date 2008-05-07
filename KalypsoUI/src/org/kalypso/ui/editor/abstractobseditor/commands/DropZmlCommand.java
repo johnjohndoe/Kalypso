@@ -48,6 +48,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
@@ -118,6 +119,6 @@ public class DropZmlCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "ZML-Datei(en) hinzufügen";
+    return Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand.0"); //$NON-NLS-1$
   }
 }

@@ -45,6 +45,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -90,12 +91,12 @@ public class FeatureAddActionDelegate implements IEditorActionDelegate, IViewAct
       {
         e.printStackTrace();
 
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
 
         // we are in the ui-thread so we get a shell here
         final Shell shell = Display.getCurrent().getActiveShell();
         if( shell != null )
-          ErrorDialog.openError( shell, action.getText(), "Fehler beim Hinzufügen des Features", status );
+          ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureAddActionDelegate.1"), status ); //$NON-NLS-1$
       }
     }
   }

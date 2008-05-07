@@ -20,6 +20,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -35,7 +36,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
 
   private ISelection m_selection;
 
-  private static final String SETTINGS_LAST_DIR = "lastDir";
+  private static final String SETTINGS_LAST_DIR = "lastDir"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -60,7 +61,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
    */
   public void run( IAction action )
   {
-    throw new UnsupportedOperationException( "Use runWithEvent" );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.actions.ExportLegendAction.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -99,24 +100,24 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
   {
     /* Need a shell. */
     final Shell shell = event.display.getActiveShell();
-    String title = "Legenden-Export";
+    String title = Messages.getString("org.kalypso.ui.actions.ExportLegendAction.2"); //$NON-NLS-1$
 
     /* Get the selected elements. */
     IStructuredSelection sel = (IStructuredSelection) m_selection;
     if( sel.isEmpty() )
     {
-      MessageDialog.openWarning( shell, title, "Kein Thema gewählt." );
+      MessageDialog.openWarning( shell, title, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.3") ); //$NON-NLS-1$
       return;
     }
 
     /* Ask user for file */
-    IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gmlExport" );
+    IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gmlExport" ); //$NON-NLS-1$
     String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
-    fileDialog.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.gif" } );
-    fileDialog.setFilterNames( new String[] { "PNG-Datei (*.png)", "JPG-Datei (*.jpg)", "GIF-Datei (*.gif)" } );
+    fileDialog.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.gif" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ui.actions.ExportLegendAction.8"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.9"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.10") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileDialog.setText( title );
-    fileDialog.setFileName( "Legend" );
+    fileDialog.setFileName( Messages.getString("org.kalypso.ui.actions.ExportLegendAction.11") ); //$NON-NLS-1$
     if( lastDirPath != null )
       fileDialog.setFilterPath( lastDirPath );
 
@@ -129,7 +130,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
     final File legendFile = new File( result );
     if( legendFile.exists() )
     {
-      boolean okPressed = MessageDialog.openConfirm( shell, "Bestätigung", "Die Datei " + legendFile.getName() + " existiert bereits. Möchten Sie die Datei überschreiben?" );
+      boolean okPressed = MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.12"), Messages.getString("org.kalypso.ui.actions.ExportLegendAction.13") + legendFile.getName() + Messages.getString("org.kalypso.ui.actions.ExportLegendAction.14") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( !okPressed )
         return;
     }
@@ -163,11 +164,11 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
         String suffix = FileUtilities.getSuffix( legendFile );
 
         int format = SWT.IMAGE_PNG;
-        if( "PNG".equals( suffix ) )
+        if( "PNG".equals( suffix ) ) //$NON-NLS-1$
           format = SWT.IMAGE_PNG;
-        else if( "JPG".equals( suffix ) )
+        else if( "JPG".equals( suffix ) ) //$NON-NLS-1$
           format = SWT.IMAGE_JPEG;
-        else if( "GIF".equals( suffix ) )
+        else if( "GIF".equals( suffix ) ) //$NON-NLS-1$
           format = SWT.IMAGE_GIF;
 
         /* Export the legends. */
@@ -178,7 +179,7 @@ public class ExportLegendAction implements IObjectActionDelegate, IActionDelegat
           KalypsoGisPlugin.getDefault().getLog().log( status );
 
           /* Open a error dialog. */
-          MessageDialog errorDialog = new MessageDialog( shell, "Fehler", null, status.getMessage(), MessageDialog.ERROR, new String[] { "Ok" }, 0 );
+          MessageDialog errorDialog = new MessageDialog( shell, Messages.getString("org.kalypso.ui.actions.ExportLegendAction.18"), null, status.getMessage(), MessageDialog.ERROR, new String[] { Messages.getString("org.kalypso.ui.actions.ExportLegendAction.19") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
           errorDialog.open();
         }
       }

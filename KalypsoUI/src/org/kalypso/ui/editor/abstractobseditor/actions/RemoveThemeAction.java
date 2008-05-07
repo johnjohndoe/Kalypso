@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.abstractobseditor.actions;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.commands.RemoveThemeCommand;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.ImageProvider;
@@ -59,7 +60,7 @@ public class RemoveThemeAction extends FullAction
 
   public RemoveThemeAction( final ObservationEditorOutlinePage page )
   {
-    super( "Thema entfernen", ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, "Entfernt aktives Thema" );
+    super( Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.0"), ImageProvider.IMAGE_MAPVIEW_OUTLINE_REMOVE, Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_page = page;
   }
@@ -74,9 +75,9 @@ public class RemoveThemeAction extends FullAction
 
     if( items.length > 0 )
     {
-      final String str = ArrayUtils.toString( items, ", " );
-      final String msg = "Wollen Sie wirklich die Zeitreihe" + ( items.length > 1 ? "n " : " " ) + str + " entfernen?";
-      if( MessageDialog.openConfirm( m_page.getSite().getShell(), "Zeitreihe entfernen", msg ) )
+      final String str = ArrayUtils.toString( items, ", " ); //$NON-NLS-1$
+      final String msg = Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.3") + ( items.length > 1 ? "n " : " " ) + str + Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.6"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      if( MessageDialog.openConfirm( m_page.getSite().getShell(), Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction.7"), msg ) ) //$NON-NLS-1$
       {
         for( int i = 0; i < items.length; i++ )
         {

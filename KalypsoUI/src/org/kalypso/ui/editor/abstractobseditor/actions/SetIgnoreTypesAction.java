@@ -48,6 +48,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ui.ImageProvider;
@@ -60,15 +61,15 @@ import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
  */
 public class SetIgnoreTypesAction extends FullAction
 {
-  private static final String TITLE = "Unsichtbare Achsen setzen";
+  private static final String TITLE = Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.0"); //$NON-NLS-1$
 
-  private final static String MSG = "Wählen Sie die Achsentypen die nicht dargestellt werden";
+  private final static String MSG = Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.1"); //$NON-NLS-1$
 
   private final ObservationEditorOutlinePage m_page;
 
   public SetIgnoreTypesAction( final ObservationEditorOutlinePage page )
   {
-    super( TITLE, ImageProvider.IMAGE_UTIL_FILTER, "Erlaubt die Deaktivierung von ausgewählten Achsentypen (z.B. Wasserstand)" );
+    super( TITLE, ImageProvider.IMAGE_UTIL_FILTER, Messages.getString("org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction.2") ); //$NON-NLS-1$
 
     m_page = page;
   }

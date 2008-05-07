@@ -51,6 +51,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.part.EditorActionBarContributor;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 
 /**
@@ -68,14 +69,14 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
     @Override
     protected IMenuManager createSubMenuManager( final IMenuManager menuManager )
     {
-      final IMenuManager manager = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.treeeditor.menu" );
+      final IMenuManager manager = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.treeeditor.menu" ); //$NON-NLS-1$
       if( manager == null )
         return null;
 
-      manager.remove( "selectionMenuManager" );
+      manager.remove( "selectionMenuManager" ); //$NON-NLS-1$
 
-      final IMenuManager newSmm = new MenuManager( "&Selektion", "selectionMenuManager" );
-      manager.appendToGroup( "selection", newSmm );
+      final IMenuManager newSmm = new MenuManager( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor.2"), "selectionMenuManager" ); //$NON-NLS-1$ //$NON-NLS-2$
+      manager.appendToGroup( "selection", newSmm ); //$NON-NLS-1$
       return newSmm;
     }
   };
@@ -128,7 +129,7 @@ public class GmlEditorActionBarContributor extends EditorActionBarContributor
   @Override
   public void contributeToStatusLine( final IStatusLineManager statusLineManager )
   {
-    m_statusLineItem = new ShowDescriptionStatusLineItem( "descriptionItem", 70 );
+    m_statusLineItem = new ShowDescriptionStatusLineItem( "descriptionItem", 70 ); //$NON-NLS-1$
     statusLineManager.add( m_statusLineItem );
   }
 

@@ -62,7 +62,7 @@ import org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction;
  */
 public class GisTableEditorActionBarContributor extends EditorActionBarContributor
 {
-  private static final String M_SPALTEN = "spaltenSubMenu";
+  private static final String M_SPALTEN = "spaltenSubMenu"; //$NON-NLS-1$
 
   private ExportAction[] m_exportActions = null;
 
@@ -129,7 +129,7 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
     m_retargetManager.setActiveEditor( targetEditor );
 
     if( m_exportActions == null )
-      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle", "edit", IExportTargetModes.MODE_EXPERT );
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editors.tableeditor.menu/tabelle", "edit", IExportTargetModes.MODE_EXPERT ); //$NON-NLS-1$ //$NON-NLS-2$
 
     for( int i = 0; i < m_exportActions.length; i++ )
       m_exportActions[i].setActivePart( targetEditor );
@@ -139,7 +139,7 @@ public class GisTableEditorActionBarContributor extends EditorActionBarContribut
     if( targetEditor != null )
     {
       final IMenuManager menuManager = getActionBars().getMenuManager();
-      final IMenuManager tableMenu = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.tableeditor.menu" );
+      final IMenuManager tableMenu = menuManager.findMenuUsingPath( "org.kalypso.ui.editors.tableeditor.menu" ); //$NON-NLS-1$
       if( tableMenu != null )
       {
         final IContributionItem oldItem = tableMenu.remove( M_SPALTEN );

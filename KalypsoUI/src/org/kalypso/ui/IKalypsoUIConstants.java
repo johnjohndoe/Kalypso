@@ -54,7 +54,7 @@ public interface IKalypsoUIConstants
   public final static String ID_OBSTABLE_VIEW = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
 
   /** Repository View identifier (value <code>org.kalypso.ui.repository.view.RepositoryExplorerPart</code>) */
-  public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart";
+  public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart"; //$NON-NLS-1$
 
   public static final String MODELER_PERSPECTIVE = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
 
@@ -66,5 +66,5 @@ public interface IKalypsoUIConstants
    * if true, the pool asks to save released objects if they are dirty.
    * </p>
    */
-  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save";
+  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
 }

@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
@@ -88,7 +89,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       {
         final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( m_wqString ) ) );
 
-        final WQRelationDialog dlg = new WQRelationDialog( m_part.getSite().getShell(), "WQ-Beziehung", set );
+        final WQRelationDialog dlg = new WQRelationDialog( m_part.getSite().getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.0"), set ); //$NON-NLS-1$
         dlg.open();
       }
       catch( final Exception e )
@@ -112,13 +113,13 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       if( object instanceof IFile )
       {
         final IFile file = (IFile)object;
-        if( ! file.getFileExtension().equalsIgnoreCase( "zml" ) )
+        if( ! file.getFileExtension().equalsIgnoreCase( "zml" ) ) //$NON-NLS-1$
           action.setEnabled(false);
         
         try
         {
           final URL url = ResourceUtilities.createURL( file );
-          final IObservation obs = ZmlFactory.parseXML( url, "" );
+          final IObservation obs = ZmlFactory.parseXML( url, "" ); //$NON-NLS-1$
           m_wqString = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
           
           action.setEnabled( m_wqString != null );

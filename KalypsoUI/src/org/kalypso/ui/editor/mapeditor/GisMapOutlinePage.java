@@ -68,6 +68,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -128,7 +129,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     if( parent.isDisposed() )
     {
-      System.out.println( "parent is disposed" );
+      System.out.println( Messages.getString("org.kalypso.ui.editor.mapeditor.GisMapOutlinePage.0") ); //$NON-NLS-1$
     }
     m_modellView.createControl( parent );
 
@@ -176,7 +177,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
 
     actionBars.updateActionBars();
 
-    final MenuManager menuMgr = new MenuManager( "#ThemeContextMenu" );
+    final MenuManager menuMgr = new MenuManager( "#ThemeContextMenu" ); //$NON-NLS-1$
     menuMgr.setRemoveAllWhenShown( true );
     menuMgr.addMenuListener( new IMenuListener()
     {
@@ -214,7 +215,7 @@ public class GisMapOutlinePage implements IContentOutlinePage, IDoubleClickListe
   {
     // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+    final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
 
     if( part != null )
       part.setSelectionChangedProvider( this );

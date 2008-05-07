@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.eclipse.jface.action.Action;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand;
@@ -52,7 +53,7 @@ public final class CopyFeatureAction extends Action
 
   private Feature m_originalFeature;
 
-  public static final String NAME = "Als Link kopieren";
+  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction.0"); //$NON-NLS-1$
 
   private Clipboard m_clipboard;
 

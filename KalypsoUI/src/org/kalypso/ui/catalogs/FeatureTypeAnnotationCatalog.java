@@ -79,14 +79,14 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
       final QName qname = qe.getQName();
 
       /* Try to get cached image descriptor */
-      final String cacheKey = qname == null ? "null" : qname.toString();
+      final String cacheKey = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
 
       if( m_annotationCache.containsKey( cacheKey ) )
         return m_annotationCache.get( cacheKey );
 
-      if( cacheKey.equals( "{http://www.opengis.net/gml}name" ) )
+      if( cacheKey.equals( "{http://www.opengis.net/gml}name" ) ) //$NON-NLS-1$
       {
-        System.out.println( "Hallo Thomas, Du" );
+        System.out.println( "Hallo Thomas, Du" ); //$NON-NLS-1$
       }
 
       // REMARK: catalog is registered for feature type, not for qname
@@ -96,7 +96,7 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
       if( generator == null )
         return null;
 
-      final String baseURN = generator.generateURNFor( qname ) + ":annotation:";
+      final String baseURN = generator.generateURNFor( qname ) + ":annotation:"; //$NON-NLS-1$
       if( baseURN == null )
         return null;
 
@@ -104,7 +104,7 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
 
       try
       {
-        final List<String> enryURNS = baseCatalog.getEntryURNS( baseURN + "*:" + lang );
+        final List<String> enryURNS = baseCatalog.getEntryURNS( baseURN + "*:" + lang ); //$NON-NLS-1$
         if( enryURNS.size() == 0 )
         {
           /* Always add cache value, so this lookup takes only place once (not finding anything is very expensive) */
@@ -143,7 +143,7 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
 
   private String resolveName( final ICatalog catalog, final String baseURN, final String annoType, final String lang )
   {
-    final String publicID = baseURN + annoType + ":" + lang;
+    final String publicID = baseURN + annoType + ":" + lang; //$NON-NLS-1$
     final String resolve = catalog.resolve( null, publicID, false );
     return resolve;
   }

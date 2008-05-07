@@ -61,15 +61,15 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
 {
-  private static final String BASETYPE = "uiproperties";
+  private static final String BASETYPE = "uiproperties"; //$NON-NLS-1$
 
   private static Map<String, Properties> m_propertiesCache = new HashMap<String, Properties>();
   
   public static Properties getProperties( final URL context, final QName qname )
   {
     /* Try to get cached image descriptor */
-    final String contextStr = context == null ? "null" : context.toExternalForm();
-    final String qnameStr = qname == null ? "null" : qname.toString();
+    final String contextStr = context == null ? "null" : context.toExternalForm(); //$NON-NLS-1$
+    final String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
     final String cacheKey = contextStr + '#' + qnameStr;
 
     if( m_propertiesCache.containsKey( cacheKey ) )

@@ -53,6 +53,7 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IFileEditorInput;
 import org.kalypso.commons.resources.SetContentHelper;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
@@ -184,7 +185,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    */
   public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), "Tabelle" );
+    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString("org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0") ); //$NON-NLS-1$
     return new IExportableObject[]
     { exportable };
   }

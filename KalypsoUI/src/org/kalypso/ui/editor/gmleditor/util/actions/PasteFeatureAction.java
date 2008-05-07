@@ -42,6 +42,7 @@ package org.kalypso.ui.editor.gmleditor.util.actions;
 
 import org.eclipse.jface.action.Action;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypsodeegree.model.feature.Feature;
@@ -57,7 +58,7 @@ public final class PasteFeatureAction extends Action
 
   private Clipboard m_clipboard = null;
 
-  public static final String NAME = "Einfügen";
+  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction.0"); //$NON-NLS-1$
 
   public PasteFeatureAction(final  CommandableWorkspace workspace, final Feature parentFeature, IRelationType propertyName,
       Clipboard clipboard )

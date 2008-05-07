@@ -53,7 +53,7 @@ public class GisMapOutlinePageExtension
   {
     final ArrayList<PluginMapOutlineAction> actions = new ArrayList<PluginMapOutlineAction>();
     final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-    final IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui", "mapviewaction" );
+    final IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( "org.kalypso.ui", "mapviewaction" ); //$NON-NLS-1$ //$NON-NLS-2$
     // check if extention point is registered on start up
     if( extensionPoint == null )
       return new ArrayList<PluginMapOutlineAction>();
@@ -66,25 +66,25 @@ public class GisMapOutlinePageExtension
       final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
       for( final IConfigurationElement configurationElement : configurationElements )
       {
-        final String title = configurationElement.getAttribute( "title" );
+        final String title = configurationElement.getAttribute( "title" ); //$NON-NLS-1$
         // TODO: i18n the title!?
 
-        final String resource = configurationElement.getAttribute( "icon" );
+        final String resource = configurationElement.getAttribute( "icon" ); //$NON-NLS-1$
         // gets the parent of this element (the plugin which implements this extension)
         final IExtension parent = (IExtension) configurationElement.getParent();
         // gets the plugin id of the parent plugin
         final String pluginID = parent.getNamespace();
         final ImageDescriptor icon = ImageProvider.id( pluginID, resource );
-        final String enabled = configurationElement.getAttribute( "enabled" );
+        final String enabled = configurationElement.getAttribute( "enabled" ); //$NON-NLS-1$
         boolean visible = false;
-        if( enabled != null && enabled.equals( "true" ) )
+        if( enabled != null && enabled.equals( "true" ) ) //$NON-NLS-1$
           visible = true;
-        final String tooltip = configurationElement.getAttribute( "tooltip" );
+        final String tooltip = configurationElement.getAttribute( "tooltip" ); //$NON-NLS-1$
         // create action delegate
         PluginMapOutlineAction actionDelegate;
         try
         {
-          final PluginMapOutlineActionDelegate action = (PluginMapOutlineActionDelegate) configurationElement.createExecutableExtension( "class" );
+          final PluginMapOutlineActionDelegate action = (PluginMapOutlineActionDelegate) configurationElement.createExecutableExtension( "class" ); //$NON-NLS-1$
           actionDelegate = new PluginMapOutlineAction( title, icon, tooltip, gisMapOutlineViewer, action );
           actionDelegate.setEnabled( visible );
           actions.add( actionDelegate );

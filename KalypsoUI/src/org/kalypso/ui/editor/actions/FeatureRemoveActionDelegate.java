@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate2;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -77,7 +78,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
       final int featureCount = FeatureSelectionHelper.getFeatureCount( m_selection );
 
       final String text = action.getText();
-      final String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + featureCount + ")";
+      final String newText = text.replaceAll( " \\([0-9]+\\)", "" ) + " (" + featureCount + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       action.setText( newText );
 
       if( featureCount > 0 )
@@ -130,9 +131,9 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
       {
         e.printStackTrace();
 
-        IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
+        IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
 
-        ErrorDialog.openError( shell, action.getText(), "Fehler beim Löschen der Features", status );
+        ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.5"), status ); //$NON-NLS-1$
       }
       finally
       {

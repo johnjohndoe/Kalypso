@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.obstableeditor.actions;
 import java.util.TimeZone;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.tableview.TableView;
 
 /**
@@ -100,6 +101,6 @@ public class ChangeTablePropsCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Tabelleneigenschaft ändern";
+    return Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.ChangeTablePropsCommand.0"); //$NON-NLS-1$
   }
 }

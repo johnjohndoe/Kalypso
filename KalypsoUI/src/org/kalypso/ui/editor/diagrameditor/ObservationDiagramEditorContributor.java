@@ -69,7 +69,7 @@ public class ObservationDiagramEditorContributor extends EditorActionBarContribu
     // export actions
     if( m_exportActions == null )
       m_exportActions = ExportActionContributor.contributeActions( targetEditor,
-          "org.kalypso.ui.editor.obsdiageditor.menu/exports", "diagramm", IExportTargetModes.MODE_EXPERT );
+          "org.kalypso.ui.editor.obsdiageditor.menu/exports", "diagramm", IExportTargetModes.MODE_EXPERT ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_exportActions != null )
     {

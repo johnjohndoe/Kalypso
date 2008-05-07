@@ -60,7 +60,7 @@ public class WQCurveFactory
   {
     final WQPairTuppleModel model = new WQPairTuppleModel( table.getPairs() );
 
-    final SimpleObservation obs = new SimpleObservation( "", "", table.toString(), false, null, new MetadataList(),
+    final SimpleObservation obs = new SimpleObservation( "", "", table.toString(), false, null, new MetadataList(), //$NON-NLS-1$ //$NON-NLS-2$
         model.getAxisList(), model );
 
     return obs;

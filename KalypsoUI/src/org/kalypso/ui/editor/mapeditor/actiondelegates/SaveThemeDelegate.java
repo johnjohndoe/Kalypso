@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
@@ -78,7 +79,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
       return;
 
     final Shell shell = part.getSite().getShell();
-    if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
+    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.0"), Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     final MapPanel mapPanel = part.getMapPanel();
@@ -116,7 +117,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate implement
             e.printStackTrace();
 
             final CoreException ce = (CoreException) e.getTargetException();
-            ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
+            ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.2"), Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.SaveThemeDelegate.3"), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
           }
           catch( final InterruptedException e )
           {

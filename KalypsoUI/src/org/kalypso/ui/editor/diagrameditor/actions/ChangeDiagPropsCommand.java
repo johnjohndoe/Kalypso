@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.diagrameditor.actions;
 import java.util.TimeZone;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 
 /**
@@ -126,6 +127,6 @@ public class ChangeDiagPropsCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Diagramm-Eigenschaften ändern";
+    return Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.ChangeDiagPropsCommand.0"); //$NON-NLS-1$
   }
 }

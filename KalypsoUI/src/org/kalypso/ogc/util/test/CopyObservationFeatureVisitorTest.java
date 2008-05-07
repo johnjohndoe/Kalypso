@@ -50,22 +50,22 @@ public class CopyObservationFeatureVisitorTest extends TestCase
   {
     try
     {
-      final String ref = "?"// 
-          + "<filter>" // 
-          + "  <nOperationFilter operator=\"+\" xmlns=\"filters.zml.kalypso.org\"> " //
-          + "    <operationFilter operand=\"0.19914285714285712\" operator=\"*\"> " //
-          + "      <zmlFilter> <zml ns1:href=\"Ombrometer_plauen.zml\" xmlns:ns1=\"http://www.w3.org/1999/xlink\"/> </zmlFilter>" //
-          + "    </operationFilter>" // 
-          + "    <operationFilter operand=\"0.24771428571428575\" operator=\"*\">" //
-          + "      <zmlFilter> <zml ns2:href=\"Ombrometer_schleiz.zml\" xmlns:ns2=\"http://www.w3.org/1999/xlink\"/> </zmlFilter> " //
-          + "    </operationFilter> " // 
-          + "    <operationFilter operand=\"0.5533333333333332\" operator=\"*\"> " // 
-          + "      <zmlFilter> <zml ns3:href=\"Ombrometer_gera.zml\" xmlns:ns3=\"http://www.w3.org/1999/xlink\"/> </zmlFilter>" //
-          + "    </operationFilter>" // 
-          + "  </nOperationFilter>" // 
-          + "</filter>" //
-          + "<from>1995-08-30T17:00:00</from>" //
-          + "<to>1995-09-07T17:00:00</to>";
+      final String ref = "?"//  //$NON-NLS-1$
+          + "<filter>" //  //$NON-NLS-1$
+          + "  <nOperationFilter operator=\"+\" xmlns=\"filters.zml.kalypso.org\"> " // //$NON-NLS-1$
+          + "    <operationFilter operand=\"0.19914285714285712\" operator=\"*\"> " // //$NON-NLS-1$
+          + "      <zmlFilter> <zml ns1:href=\"Ombrometer_plauen.zml\" xmlns:ns1=\"http://www.w3.org/1999/xlink\"/> </zmlFilter>" // //$NON-NLS-1$
+          + "    </operationFilter>" //  //$NON-NLS-1$
+          + "    <operationFilter operand=\"0.24771428571428575\" operator=\"*\">" // //$NON-NLS-1$
+          + "      <zmlFilter> <zml ns2:href=\"Ombrometer_schleiz.zml\" xmlns:ns2=\"http://www.w3.org/1999/xlink\"/> </zmlFilter> " // //$NON-NLS-1$
+          + "    </operationFilter> " //  //$NON-NLS-1$
+          + "    <operationFilter operand=\"0.5533333333333332\" operator=\"*\"> " //  //$NON-NLS-1$
+          + "      <zmlFilter> <zml ns3:href=\"Ombrometer_gera.zml\" xmlns:ns3=\"http://www.w3.org/1999/xlink\"/> </zmlFilter>" // //$NON-NLS-1$
+          + "    </operationFilter>" //  //$NON-NLS-1$
+          + "  </nOperationFilter>" //  //$NON-NLS-1$
+          + "</filter>" // //$NON-NLS-1$
+          + "<from>1995-08-30T17:00:00</from>" // //$NON-NLS-1$
+          + "<to>1995-09-07T17:00:00</to>"; //$NON-NLS-1$
       // @marc: hier meine Überlegungen:
       // Problem: wie sollte ein filter aussehen, der in einer href (URL)
       // codiert ist ?
@@ -101,7 +101,7 @@ public class CopyObservationFeatureVisitorTest extends TestCase
       // Context im Filter und ZmlFactory Zeug eingeführt.
       // Damit das funktionniert muss der Zml-Link so aussehen:
       // file://foo/bar/script.foo?<filter>blablabla</filter>...#useascontext
-      final String strUrl = getClass().getResource( "contextFake.txt" ).toExternalForm() + ref + "#useascontext";
+      final String strUrl = getClass().getResource( "contextFake.txt" ).toExternalForm() + ref + "#useascontext"; //$NON-NLS-1$ //$NON-NLS-2$
       final URL url = new URL( strUrl );
 
       // REMARK: we test here it the reference part has been parsed. This will not happen
@@ -113,7 +113,7 @@ public class CopyObservationFeatureVisitorTest extends TestCase
       // REMARK: in the view of this, it doesn't seem to be so good an idea to work with the
       // #useascontext flag. Maybe it would be better instead of marking the url directly to start
       // evaluating the filter expression (before opening the url) and always using the url as context.
-      final IObservation observation = ZmlFactory.parseXML( url, "id" );
+      final IObservation observation = ZmlFactory.parseXML( url, "id" ); //$NON-NLS-1$
       assertNotNull( observation );
     }
     catch( Exception e )

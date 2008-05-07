@@ -53,6 +53,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
@@ -84,17 +85,17 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
       if( input instanceof IFileEditorInput )
       {
         final IContainer parent = ( (IFileEditorInput)input ).getFile().getParent();
-        dest = parent.getFolder( new Path( "Grafik" ) );
+        dest = parent.getFolder( new Path( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0") ) ); //$NON-NLS-1$
       }
       else
       {
         final IProject[] projects = ProjectUtilities.getSelectedProjects();
         if( projects.length > 0 )
-          dest = projects[0].getFolder( "Grafik" );
+          dest = projects[0].getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.1") ); //$NON-NLS-1$
         else
         {
           final ResourceSelectionDialog dlg = new ResourceSelectionDialog( getShell(), ResourcesPlugin.getWorkspace()
-              .getRoot(), "Selektieren Sie bitte einen Verzeichnis wo das temporäre Grafik-Verzeichnis erzeugt wird" );
+              .getRoot(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.2") ); //$NON-NLS-1$
 
           if( dlg.open() != Window.OK )
             return;
@@ -104,12 +105,12 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
             return;
 
           if( results[0] instanceof IFolder )
-            dest = ( (IFolder)results[0] ).getFolder( "Grafik" );
+            dest = ( (IFolder)results[0] ).getFolder( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.3") ); //$NON-NLS-1$
           else
           {
-            MessageDialog.openInformation( getShell(), "Grafik öffnen",
-                "Das temporäre Grafik-Verzeichnis kann nicht erzeugt werden weil "
-                    + "Sie keinen Basisverzeichnis angegeben haben. Bitte prüfen Sie Ihre " + "Eingabe." );
+            MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4"), //$NON-NLS-1$
+                Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.5") //$NON-NLS-1$
+                    + Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.6") + Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.7") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
         }
@@ -121,7 +122,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
     {
       e.printStackTrace();
       
-      MessageDialog.openError( getShell(), "Grafik öffnen", "Eine Fehler ist aufgetreten: " + e.getLocalizedMessage() );
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.8"), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.9") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 }

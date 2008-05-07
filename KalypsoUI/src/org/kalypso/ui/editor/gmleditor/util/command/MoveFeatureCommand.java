@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -122,10 +123,10 @@ public class MoveFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Reihenfolge verändern";
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand.0"); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private void move( final int step )
   {
     final List<Object> list = (List<Object>) m_parentFeature.getProperty( m_pt );
