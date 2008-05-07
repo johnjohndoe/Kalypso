@@ -223,7 +223,7 @@ public class FloodModelHelper
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
       // REMARK: not nice, but not otherwise possible: use name to find the theme.
-      if( kalypsoTheme instanceof AbstractCascadingLayerTheme && kalypsoTheme.getName().equals( "Wasserspiegellagen" ) )
+      if( kalypsoTheme instanceof AbstractCascadingLayerTheme && kalypsoTheme.getName().getKey().equals( "Wasserspiegellagen" ) )
         return (AbstractCascadingLayerTheme) kalypsoTheme;
     }
 
