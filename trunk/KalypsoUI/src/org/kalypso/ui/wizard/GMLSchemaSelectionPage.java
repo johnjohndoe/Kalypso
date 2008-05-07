@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author Gernot
@@ -68,10 +69,10 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
 
   public GMLSchemaSelectionPage( )
   {
-    super( "gmlschemaSelectionPage", "Auswahl des Basis-Schema", null );
+    super( "gmlschemaSelectionPage", Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     
     setPageComplete( false );
-    setMessage( "Wählen Sie das Basis-Schema aus der Liste der bekannten Schemata aus." );
+    setMessage( Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.2") ); //$NON-NLS-1$
   }
 
   /**

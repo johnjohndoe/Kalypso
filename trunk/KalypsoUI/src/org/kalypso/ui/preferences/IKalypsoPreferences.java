@@ -47,5 +47,5 @@ package org.kalypso.ui.preferences;
  */
 public interface IKalypsoPreferences
 {
-  public static final String DISPLAY_TIMEZONE = "kalypso.global.display_timezone";
+  public static final String DISPLAY_TIMEZONE = "kalypso.global.display_timezone"; //$NON-NLS-1$
 }

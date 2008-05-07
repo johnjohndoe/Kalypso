@@ -68,6 +68,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
 /**
@@ -89,7 +90,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
   {
     setNeedsProgressMonitor( true );
 
-    setWindowTitle( "GML Datei erzeugen" );
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -107,19 +108,19 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     {
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( "Creating " + fileName, 3 );
+        monitor.beginTask( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.1") + fileName, 3 ); //$NON-NLS-1$
 
         final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final IResource resource = root.findMember( containerName );
         if( !resource.exists() || !(resource instanceof IContainer) )
-          return StatusUtilities.createErrorStatus( "Container \"" + containerName + "\" does not exist." );
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.2") + containerName + Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.3") ); //$NON-NLS-1$ //$NON-NLS-2$
 
         final IContainer container = (IContainer) resource;
         final IFile file = container.getFile( new Path( fileName ) );
 
         GmlSerializer.createGmlFile( featureType, file, new SubProgressMonitor( monitor, 2 ), null );
 
-        monitor.subTask( " - opening file for editing..." );
+        monitor.subTask( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.4") ); //$NON-NLS-1$
         getShell().getDisplay().asyncExec( new Runnable()
         {
           public void run( )
@@ -130,7 +131,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
             }
             catch( final PartInitException e )
             {
-              ErrorDialog.openError( getShell(), "Neue GML Datei", "Editor konnte nicht geöffnet werden.", e.getStatus() );
+              ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.5"), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.6"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
         } );
@@ -141,7 +142,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, op );
-    ErrorDialog.openError( getShell(), "Neue GML Datei", "Fehler beim Erzeugen der Datei", status );
+    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.7"), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.8"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     return status.isOK();
   }
 
@@ -153,10 +154,10 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
   {
     m_schemaSelectionPage = new GMLSchemaSelectionPage();
     m_featureTypeSelectionPage = new FeatureTypeSelectionPage();
-    m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection );
-    m_fileCreationPage.setTitle( "Auswahl der Datei" );
-    m_fileCreationPage.setDescription( "Wählen Sie Speichertort und Name der neuen Datei aus." );
-    m_fileCreationPage.setFileName( "neu.gml" );
+    m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection ); //$NON-NLS-1$
+    m_fileCreationPage.setTitle( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.10") ); //$NON-NLS-1$
+    m_fileCreationPage.setDescription( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.11") ); //$NON-NLS-1$
+    m_fileCreationPage.setFileName( "neu.gml" ); //$NON-NLS-1$
 
     addPage( m_schemaSelectionPage );
     addPage( m_featureTypeSelectionPage );

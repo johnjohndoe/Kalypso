@@ -45,6 +45,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable;
@@ -86,7 +87,7 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerLayout
 
     // ***** ComboBox Mode Panel
 
-    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, "Mode:", 0 );
+    final ModeSelectionComboPanel modeComboPanel = new ModeSelectionComboPanel( colorMapGroup, Messages.getString("org.kalypso.ui.editor.styleeditor.symbolizerLayouts.RasterSymbolizerLayout.0"), 0 ); //$NON-NLS-1$
     modeComboPanel.addPanelListener( new PanelListener()
     {
       public void valueChanged( final PanelEvent event )

@@ -78,7 +78,7 @@ public class RuleFilterCollection
     // the name of a rule serves as key for the hashMap
     String key = rule.getName();
     // it it is a pattern, add to ruleCollection
-    if( key != null && key.startsWith( "-name-" ) )
+    if( key != null && key.startsWith( "-name-" ) ) //$NON-NLS-1$
     {
       // 1. check whether there is already a rule collection with this rule
       if( patterns.containsKey( key ) )
@@ -106,7 +106,7 @@ public class RuleFilterCollection
     // the title of a rule serves as key for the hashMap
     String key = rule.getName();
     // it it is a pattern, add to ruleCollection
-    if( key != null && key.startsWith( "-name-" ) )
+    if( key != null && key.startsWith( "-name-" ) ) //$NON-NLS-1$
     {
       // 1. check whether there is already a rule collection with this rule
       if( patterns.containsKey( key ) )

@@ -55,14 +55,14 @@ public class ComparisonFilterComboPanel extends FilterComboPanel
   {
     super( parent );
     items = new String[8];
-    items[0] = "BETWEEN";
-    items[1] = "LIKE";
-    items[2] = "NULL";
-    items[3] = "EQUAL_TO";
-    items[4] = "LESS_THAN";
-    items[5] = "GREATER_THAN";
-    items[6] = "LESS_THAN_OR_EQUAL_TO";
-    items[7] = "GREATER_THAN_OR_EQUAL_TO";
+    items[0] = "BETWEEN"; //$NON-NLS-1$
+    items[1] = "LIKE"; //$NON-NLS-1$
+    items[2] = "NULL"; //$NON-NLS-1$
+    items[3] = "EQUAL_TO"; //$NON-NLS-1$
+    items[4] = "LESS_THAN"; //$NON-NLS-1$
+    items[5] = "GREATER_THAN"; //$NON-NLS-1$
+    items[6] = "LESS_THAN_OR_EQUAL_TO"; //$NON-NLS-1$
+    items[7] = "GREATER_THAN_OR_EQUAL_TO"; //$NON-NLS-1$
     // not implemented yet
     // items[8] = "NOT_EQUAL_TO";
     init();

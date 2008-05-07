@@ -163,7 +163,7 @@ public class TextInputPanel
   // sets the inputField to a default state
   public void reset()
   {
-    text.setText( "" );
+    text.setText( "" ); //$NON-NLS-1$
   }
 
   protected void fire()

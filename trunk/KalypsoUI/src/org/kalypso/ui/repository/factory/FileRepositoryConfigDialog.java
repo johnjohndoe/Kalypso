@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.i18n.Messages;
 
 /**
  * Config Dialog for FileRepositoryFactory.
@@ -62,14 +63,14 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class FileRepositoryConfigDialog extends TitleAreaDialog
 {
-  private final static String msg = "Bitte wählen Sie zuerst ein Basisverzeichnis aus.\n"
-      + "Geben Sie anschliessend einen Kennzeichen und eine oder mehrere Dateiendungen (Komma getrennt) ein.";
+  private final static String msg = Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.0") //$NON-NLS-1$
+      + Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.1"); //$NON-NLS-1$
 
-  protected final static String BASEDIR = "FileRepositoryConfigDialog.basedir";
+  protected final static String BASEDIR = "FileRepositoryConfigDialog.basedir"; //$NON-NLS-1$
 
-  protected final static String IDENTIFIER = "FileRepositoryConfigDialog.identifier";
+  protected final static String IDENTIFIER = "FileRepositoryConfigDialog.identifier"; //$NON-NLS-1$
 
-  protected final static String FILTER = "FileRepositoryConfigDialog.filter";
+  protected final static String FILTER = "FileRepositoryConfigDialog.filter"; //$NON-NLS-1$
 
   private final AbstractUIPlugin m_plugin;
 
@@ -130,16 +131,16 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    setTitle( "ZML-Repository Konfiguration" );
+    setTitle( Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.5") ); //$NON-NLS-1$
     setMessage( msg );
 
     final Composite c = (Composite)super.createDialogArea( parent );
 
     final Composite sub = new Composite( c, SWT.FILL );
 
-    m_fLocation = new DirectoryFieldEditor( BASEDIR, "Basis-Verzeichnis:", sub );
-    m_fIdentifier = new StringFieldEditor( IDENTIFIER, "Kennzeichen:", sub );
-    m_fFilters = new StringFieldEditor( FILTER, "Dateiendung:", sub );
+    m_fLocation = new DirectoryFieldEditor( BASEDIR, Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.6"), sub ); //$NON-NLS-1$
+    m_fIdentifier = new StringFieldEditor( IDENTIFIER, Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.7"), sub ); //$NON-NLS-1$
+    m_fFilters = new StringFieldEditor( FILTER, Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.8"), sub ); //$NON-NLS-1$
 
     m_fLocation.setPreferenceStore( m_store );
     m_fLocation.loadDefault();
@@ -170,20 +171,20 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   {
     if( !m_fLocation.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Basis-Verzeichnis",
-          "Bitte geben Sie einen gültigen Verzeichnis ein" );
+      MessageDialog.openInformation( getParentShell(), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.9"), //$NON-NLS-1$
+          Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.10") ); //$NON-NLS-1$
       return;
     }
 
     if( !m_fIdentifier.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Kennzeichen", "Bitte geben Sie einen gültigen Kennzeichen ein" );
+      MessageDialog.openInformation( getParentShell(), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.11"), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.12") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
     if( !m_fFilters.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), "Dateiendung", m_fFilters.getErrorMessage() );
+      MessageDialog.openInformation( getParentShell(), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.13"), m_fFilters.getErrorMessage() ); //$NON-NLS-1$
       return;
     }
 

@@ -139,7 +139,7 @@ public class LegendLabel implements DisposeListener, IKalypsoUserStyleListener
         fts.setRules( m_rules );
         final FeatureTypeStyle_Impl[] ftStyles = { fts };
         final UserStyle ruleStyle = new UserStyle_Impl( null, null, null, true, ftStyles );
-        le = factory.createLegendElement( ruleStyle, 40, 20, "" );
+        le = factory.createLegendElement( ruleStyle, 40, 20, "" ); //$NON-NLS-1$
         // This is necessary, as I don't want title of the filter to appear in
         // the label but only
         // an image of the filter itself
@@ -152,7 +152,7 @@ public class LegendLabel implements DisposeListener, IKalypsoUserStyleListener
       }
       else
       {
-        le = factory.createLegendElement( m_userStyle, 40, 20, "" );
+        le = factory.createLegendElement( m_userStyle, 40, 20, "" ); //$NON-NLS-1$
       }
 
       if( le == null )

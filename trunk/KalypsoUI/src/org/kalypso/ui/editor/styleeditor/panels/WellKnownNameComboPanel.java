@@ -56,12 +56,12 @@ public class WellKnownNameComboPanel extends ComboPanel
   {
     super( parent, label );
     items = new String[6];
-    items[0] = "square";
-    items[1] = "circle";
-    items[2] = "triangle";
-    items[3] = "star";
-    items[4] = "cross";
-    items[5] = "x";
+    items[0] = "square"; //$NON-NLS-1$
+    items[1] = "circle"; //$NON-NLS-1$
+    items[2] = "triangle"; //$NON-NLS-1$
+    items[3] = "star"; //$NON-NLS-1$
+    items[4] = "cross"; //$NON-NLS-1$
+    items[5] = "x"; //$NON-NLS-1$
     init();
     int i = 0;
     for( ; i < items.length; i++ )
@@ -84,19 +84,19 @@ public class WellKnownNameComboPanel extends ComboPanel
     switch( index )
     {
       case 0:
-        return "square";
+        return "square"; //$NON-NLS-1$
       case 1:
-        return "circle";
+        return "circle"; //$NON-NLS-1$
       case 2:
-        return "triangle";
+        return "triangle"; //$NON-NLS-1$
       case 3:
-        return "star";
+        return "star"; //$NON-NLS-1$
       case 4:
-        return "cross";
+        return "cross"; //$NON-NLS-1$
       case 5:
-        return "x";
+        return "x"; //$NON-NLS-1$
       default:
-        return "square";
+        return "square"; //$NON-NLS-1$
     }
   }
 

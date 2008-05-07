@@ -137,10 +137,10 @@ public class SLDEditorGuiBuilder
 
     titleLabel = new Label( mainComposite, SWT.NULL );
     titleLabel.setText( MessageBundle.STYLE_EDITOR_EDITOR_TITLE );
-    titleLabel.setFont( new Font( null, "Arial", 12, SWT.BOLD ) );
+    titleLabel.setFont( new Font( null, "Arial", 12, SWT.BOLD ) ); //$NON-NLS-1$
     nameLabel = new Label( mainComposite, 0 );
     nameLabel.setText( MessageBundle.STYLE_EDITOR_STYLE + userStyle.getName() );
-    nameLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) );
+    nameLabel.setFont( new Font( null, "Arial", 8, SWT.BOLD ) ); //$NON-NLS-1$
 
     final Rule[] rules = getRules( userStyle );
     rulePatternCollection = RuleFilterCollection.getInstance();
@@ -290,14 +290,14 @@ public class SLDEditorGuiBuilder
 
               if( geometryObjects.size() > 0 )
               {
-                final Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( new PropertyName( (String) geometryObjects.get( 0 ) ), "Point", getFeatureType() );
-                final String patternName = "-name-" + new Date().getTime();
-                lowerBoundary = new BoundaryExpression( "0" );
-                upperBoundary = new BoundaryExpression( "1" );
+                final Symbolizer symbo = AddSymbolizerPanel.getSymbolizer( new PropertyName( (String) geometryObjects.get( 0 ) ), "Point", getFeatureType() ); //$NON-NLS-1$
+                final String patternName = "-name-" + new Date().getTime(); //$NON-NLS-1$
+                lowerBoundary = new BoundaryExpression( "0" ); //$NON-NLS-1$
+                upperBoundary = new BoundaryExpression( "1" ); //$NON-NLS-1$
                 operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
 
-                ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
-                userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) );
+                ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+                userStyle.getFeatureTypeStyles()[0].addRule( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, symbo.getMinScaleDenominator(), symbo.getMaxScaleDenominator() ) ); //$NON-NLS-1$ //$NON-NLS-2$
               }
               setFocusedRuleItem( getRulePatternCollection().size() );
               userStyle.fireStyleChanged();

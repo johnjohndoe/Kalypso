@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
@@ -67,13 +68,13 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  */
 public class MapView extends AbstractMapPart implements IViewPart
 {
-  public static final String ID = "org.kalypso.ui.views.mapView";
+  public static final String ID = "org.kalypso.ui.views.mapView"; //$NON-NLS-1$
 
-  private static final String SAVE_MAP_ON_CLOSE = "saveMapOnClose";
+  private static final String SAVE_MAP_ON_CLOSE = "saveMapOnClose"; //$NON-NLS-1$
 
-  private static final String RELOAD_MAP_ON_OPEN = "reloadMapOnOpen";
+  private static final String RELOAD_MAP_ON_OPEN = "reloadMapOnOpen"; //$NON-NLS-1$
 
-  private static final String MEMENTO_FILE = "mapFile";
+  private static final String MEMENTO_FILE = "mapFile"; //$NON-NLS-1$
 
   private IFile m_memento_file;
 
@@ -87,7 +88,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
     // Stefan: Now we can restore the file if the map is configured to do so
     final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
-    if( (m_memento_file != null) && "true".equals( reloadOnOpen ) )
+    if( (m_memento_file != null) && "true".equals( reloadOnOpen ) ) //$NON-NLS-1$
     {
       setFile( m_memento_file );
       startLoadJob( m_memento_file );
@@ -135,7 +136,7 @@ public class MapView extends AbstractMapPart implements IViewPart
 
     // TODO: is this really the right place to save the map??
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );
-    if( "true".equals( saveOnCloseString ) )
+    if( "true".equals( saveOnCloseString ) ) //$NON-NLS-1$
     {
       final IFile file = getFile();
       try
@@ -164,7 +165,7 @@ public class MapView extends AbstractMapPart implements IViewPart
       }
       catch( final CoreException e )
       {
-        ErrorDialog.openError( getSite().getShell(), "Fehler", "Karte konnte nicht gespeichert werden.", e.getStatus() );
+        ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.views.map.MapView.6"), Messages.getString("org.kalypso.ui.views.map.MapView.7"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     super.startLoadJob( storage );
   }

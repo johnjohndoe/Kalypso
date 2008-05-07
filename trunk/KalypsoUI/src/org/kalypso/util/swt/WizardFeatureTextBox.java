@@ -62,6 +62,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -75,7 +76,7 @@ public class WizardFeatureTextBox
 
   private final QName m_qn;
 
-  protected String m_text = "";
+  protected String m_text = ""; //$NON-NLS-1$
 
   private final Set<Runnable> m_listener = new HashSet<Runnable>();
 
@@ -108,7 +109,7 @@ public class WizardFeatureTextBox
     }
     else
     {
-      m_textBox = toolkit.createText( parent, "", style );
+      m_textBox = toolkit.createText( parent, "", style ); //$NON-NLS-1$
     }
 
     m_textBox.setLayoutData( layout );
@@ -140,7 +141,7 @@ public class WizardFeatureTextBox
         {
           final Double value = (Double) m_property;
 
-          final String text = String.format( "%.4f", value );
+          final String text = String.format( "%.4f", value ); //$NON-NLS-1$
           m_textBox.setText( text );
           m_text = text;
         }
@@ -148,7 +149,7 @@ public class WizardFeatureTextBox
         {
           final BigDecimal value = (BigDecimal) m_property;
 
-          final String text = String.format( "%.4f", value );
+          final String text = String.format( "%.4f", value ); //$NON-NLS-1$
           m_textBox.setText( text );
           m_text = text;
         }
@@ -191,7 +192,7 @@ public class WizardFeatureTextBox
   {
     m_text = text;
 
-    new UIJob( "updating text field..." )
+    new UIJob( Messages.getString("org.kalypso.util.swt.WizardFeatureTextBox.4") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

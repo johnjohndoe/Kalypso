@@ -55,9 +55,9 @@ public class GisTemplateLauncher implements IEditorLauncher
    */
   public void open( final IPath filePath )
   {
-    final IOFileFilter gttFilter = FileFilterUtils.suffixFileFilter( ".gmt" );
-    final IOFileFilter gmtFilter = FileFilterUtils.suffixFileFilter( ".gtt" );
-    final IOFileFilter gftFilter = FileFilterUtils.suffixFileFilter( ".gft" );
+    final IOFileFilter gttFilter = FileFilterUtils.suffixFileFilter( ".gmt" ); //$NON-NLS-1$
+    final IOFileFilter gmtFilter = FileFilterUtils.suffixFileFilter( ".gtt" ); //$NON-NLS-1$
+    final IOFileFilter gftFilter = FileFilterUtils.suffixFileFilter( ".gft" ); //$NON-NLS-1$
     final IOFileFilter filter1 = FileFilterUtils.orFileFilter( gmtFilter, gttFilter );
     final IOFileFilter filter = FileFilterUtils.orFileFilter( filter1, gftFilter );
 

@@ -56,6 +56,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertyConstants;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -101,21 +102,21 @@ public class NamePropertySection extends AbstractPropertySection
 
     m_text.addModifyListener( m_nameListener );
 
-    final CLabel labelLabel = getWidgetFactory().createCLabel( composite, "Name:" );
+    final CLabel labelLabel = getWidgetFactory().createCLabel( composite, Messages.getString("org.kalypso.ui.views.properties.NamePropertySection.0") ); //$NON-NLS-1$
     final FormData labelData = new FormData();
     labelData.left = new FormAttachment( 0, 0 );
     labelData.right = new FormAttachment( m_text, -ITabbedPropertyConstants.HSPACE );
     labelData.top = new FormAttachment( m_text, 0, SWT.CENTER );
     labelLabel.setLayoutData( labelData );
 
-    m_typeValueLabel = getWidgetFactory().createCLabel( composite, "" );
+    m_typeValueLabel = getWidgetFactory().createCLabel( composite, "" ); //$NON-NLS-1$
     final FormData typeValueData = new FormData();
     typeValueData.left = new FormAttachment( 0, STANDARD_LABEL_WIDTH );
     typeValueData.right = new FormAttachment( 100, 0 );
     typeValueData.top = new FormAttachment( m_text, ITabbedPropertyConstants.VSPACE );
     m_typeValueLabel.setLayoutData( typeValueData );
 
-    final CLabel typeLabel = getWidgetFactory().createCLabel( composite, "Typ:" );
+    final CLabel typeLabel = getWidgetFactory().createCLabel( composite, Messages.getString("org.kalypso.ui.views.properties.NamePropertySection.2") ); //$NON-NLS-1$
     final FormData typeLabelData = new FormData();
     typeLabelData.left = new FormAttachment( 0, 0 );
     typeLabelData.right = new FormAttachment( m_typeValueLabel, -ITabbedPropertyConstants.HSPACE );

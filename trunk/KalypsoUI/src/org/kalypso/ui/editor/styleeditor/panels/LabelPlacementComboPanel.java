@@ -57,10 +57,10 @@ public class LabelPlacementComboPanel extends ComboPanel
   {
     super( parent, label );
     items = new String[4];
-    items[0] = "above";
-    items[1] = "below";
-    items[2] = "center";
-    items[3] = "auto";
+    items[0] = "above"; //$NON-NLS-1$
+    items[1] = "below"; //$NON-NLS-1$
+    items[2] = "center"; //$NON-NLS-1$
+    items[3] = "auto"; //$NON-NLS-1$
     init();
     setSelection( value );
   }

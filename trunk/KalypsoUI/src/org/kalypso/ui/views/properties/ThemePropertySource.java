@@ -45,6 +45,7 @@ import org.eclipse.ui.views.properties.IPropertySource2;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -54,9 +55,9 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public class ThemePropertySource implements IPropertySource2
 {
-  public static final String DESC_NAME = "property.descriptor.theme.basic.name";
+  public static final String DESC_NAME = "property.descriptor.theme.basic.name"; //$NON-NLS-1$
 
-  public static final String DESC_TYPE = "property.descriptor.theme.basic.type";
+  public static final String DESC_TYPE = "property.descriptor.theme.basic.type"; //$NON-NLS-1$
 
   private final IKalypsoTheme m_theme;
 
@@ -70,10 +71,10 @@ public class ThemePropertySource implements IPropertySource2
 
   private static IPropertyDescriptor[] initDescriptors( )
   {
-    final TextPropertyDescriptor nameDesc = new TextPropertyDescriptor( DESC_NAME, "Name" );
-    nameDesc.setCategory( "Allgemein" );
-    final PropertyDescriptor typeDesc = new PropertyDescriptor( DESC_TYPE, "Typ" );
-    typeDesc.setCategory( "Allgemein" );
+    final TextPropertyDescriptor nameDesc = new TextPropertyDescriptor( DESC_NAME, Messages.getString("org.kalypso.ui.views.properties.ThemePropertySource.2") ); //$NON-NLS-1$
+    nameDesc.setCategory( Messages.getString("org.kalypso.ui.views.properties.ThemePropertySource.3") ); //$NON-NLS-1$
+    final PropertyDescriptor typeDesc = new PropertyDescriptor( DESC_TYPE, Messages.getString("org.kalypso.ui.views.properties.ThemePropertySource.4") ); //$NON-NLS-1$
+    typeDesc.setCategory( Messages.getString("org.kalypso.ui.views.properties.ThemePropertySource.5") ); //$NON-NLS-1$
 
     return new IPropertyDescriptor[] { nameDesc, typeDesc };
   }
@@ -121,7 +122,7 @@ public class ThemePropertySource implements IPropertySource2
     if( DESC_TYPE.equals( id ) )
       return m_theme.getType();
 
-    throw new UnsupportedOperationException( "Unknown property id: " + id );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.views.properties.ThemePropertySource.6") + id ); //$NON-NLS-1$
   }
 
   /**
@@ -129,7 +130,7 @@ public class ThemePropertySource implements IPropertySource2
    */
   public void resetPropertyValue( final Object id )
   {
-    throw new UnsupportedOperationException( "Property not resettable. Id: " + id );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.views.properties.ThemePropertySource.7") + id ); //$NON-NLS-1$
   }
 
   /**
@@ -143,7 +144,7 @@ public class ThemePropertySource implements IPropertySource2
       return;
     }
 
-    throw new UnsupportedOperationException( "Unable to set property: " + id );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.views.properties.ThemePropertySource.8") + id ); //$NON-NLS-1$
   }
 
 }

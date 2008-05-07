@@ -124,9 +124,9 @@ public class SliderPanel
   {
     this.selection = m_selection;
     if( format == DECIMAL )
-      text.setText( "" + ( selection + ( min / 100.00 ) ) );
+      text.setText( "" + ( selection + ( min / 100.00 ) ) ); //$NON-NLS-1$
     else
-      text.setText( "" + (int)( selection + ( min / 100.00 ) ) );
+      text.setText( "" + (int)( selection + ( min / 100.00 ) ) ); //$NON-NLS-1$
     slider.setSelection( (int)( selection * 100 ) );
   }
 

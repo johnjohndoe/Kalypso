@@ -90,19 +90,19 @@ public class FilterPatternSymbolizerTabItemBuilder
     }
     else if( symbolizer instanceof PolygonSymbolizer )
     {
-      tabItem.setText( "Polygon" );
+      tabItem.setText( "Polygon" ); //$NON-NLS-1$
       symbolizerLayout = new FilterPatternPolygonSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
           symbolizerIndex );
     }
     else if( symbolizer instanceof PointSymbolizer )
     {
-      tabItem.setText( "Point" );
+      tabItem.setText( "Point" ); //$NON-NLS-1$
       symbolizerLayout = new FilterPatternPointSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
           symbolizerIndex );
     }
     else if( symbolizer instanceof LineSymbolizer )
     {
-      tabItem.setText( "Line" );
+      tabItem.setText( "Line" ); //$NON-NLS-1$
       symbolizerLayout = new FilterPatternLineSymbolizerLayout( composite, symbolizer, userStyle, ruleCollection,
           symbolizerIndex );
     }

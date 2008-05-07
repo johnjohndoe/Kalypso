@@ -94,27 +94,27 @@ public class SymbolizerTabItemBuilder
     }
     else if( symbolizer instanceof PolygonSymbolizer )
     {
-      tabItem.setText( "Polygon" );
+      tabItem.setText( "Polygon" ); //$NON-NLS-1$
       symbolizerLayout = new PolygonSymbolizerLayout( composite, symbolizer, userStyle );
     }
     else if( symbolizer instanceof PointSymbolizer )
     {
-      tabItem.setText( "Point" );
+      tabItem.setText( "Point" ); //$NON-NLS-1$
       symbolizerLayout = new PointSymbolizerLayout( composite, symbolizer, userStyle );
     }
     else if( symbolizer instanceof LineSymbolizer )
     {
-      tabItem.setText( "Line" );
+      tabItem.setText( "Line" ); //$NON-NLS-1$
       symbolizerLayout = new LineSymbolizerLayout( composite, symbolizer, userStyle );
     }
     else if( symbolizer instanceof RasterSymbolizer )
     {
-      tabItem.setText( "Raster" );
+      tabItem.setText( "Raster" ); //$NON-NLS-1$
       symbolizerLayout = new RasterSymbolizerLayout( composite, symbolizer, userStyle );
     }
     else if( symbolizer instanceof TextSymbolizer )
     {
-      tabItem.setText( "Text" );
+      tabItem.setText( "Text" ); //$NON-NLS-1$
       symbolizerLayout = new TextSymbolizerLayout( composite, symbolizer, userStyle, featureType );
     }
 

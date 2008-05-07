@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author belger
@@ -64,7 +65,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
    */
   public UndoRedoAction( final ICommandManager commandManager, final ISchedulingRule rule, final boolean bUndo )
   {
-    super( bUndo ? "Undo" : "Redo", null, bUndo ? "letzte Action Rückgängig machen" : "letztes Undo wiederherstellen" );
+    super( bUndo ? "Undo" : "Redo", null, bUndo ? Messages.getString("org.kalypso.util.command.UndoRedoAction.2") : Messages.getString("org.kalypso.util.command.UndoRedoAction.3") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     m_commandManager = commandManager;
     m_rule = rule;
@@ -103,11 +104,11 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   private void refresh( final ICommandManager cm )
   {
     boolean enabled = false;
-    String text = "";
+    String text = ""; //$NON-NLS-1$
     if( cm != null )
     {
       enabled = m_isUndo ? cm.canUndo() : cm.canRedo();
-      text = m_isUndo ? ("Undo: " + cm.getUndoDescription()) : ("Redo: " + cm.getRedoDescription());
+      text = m_isUndo ? ("Undo: " + cm.getUndoDescription()) : ("Redo: " + cm.getRedoDescription()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     setEnabled( enabled );

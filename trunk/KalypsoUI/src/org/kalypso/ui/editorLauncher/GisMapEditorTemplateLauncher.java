@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.core.jaxb.TemplateUtilitites;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
@@ -79,7 +80,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
    */
   public String getFilename( )
   {
-    return "<Standard Kartenansicht>.gmt";
+    return "<Standard Kartenansicht>.gmt"; //$NON-NLS-1$
   }
 
   /**
@@ -89,7 +90,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
-    return editorRegistry.findEditor( "org.kalypso.ui.editor.mapeditor.GisMapEditor" );
+    return editorRegistry.findEditor( "org.kalypso.ui.editor.mapeditor.GisMapEditor" ); //$NON-NLS-1$
   }
 
   /**
@@ -102,14 +103,14 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
 
     try
     {
-      if( "gml".equalsIgnoreCase( file.getProjectRelativePath().getFileExtension() ) )
-        throw new CoreException( StatusUtilities.createWarningStatus( "GML Dateien können nicht über die Standardkartenvorlage angezeigt werden.\nVersuchen Sie, eine leere Karte zu erzeugen und die Datei über 'Thema hinzufügen' zu laden." ) );
+      if( "gml".equalsIgnoreCase( file.getProjectRelativePath().getFileExtension() ) ) //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.editorLauncher.GisMapEditorTemplateLauncher.3") ) ); //$NON-NLS-1$
 
       final StyledLayerType layer = new ObjectFactory().createStyledLayerType();
       LayerTypeUtilities.initLayerType( layer, file );
       layer.setVisible( true );
       layer.setName( file.getName() );
-      layer.setFeaturePath( "featureMember" );
+      layer.setFeaturePath( "featureMember" ); //$NON-NLS-1$
 
       final Layers layers = gisMapFactory.createGismapviewLayers();
       final JAXBElement<StyledLayerType> layerType = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layer );
@@ -137,7 +138,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file.getFullPath() ) );
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gmt", string, file.getFullPath() ) ); //$NON-NLS-1$
 
       return input;
     }

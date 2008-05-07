@@ -248,17 +248,17 @@ public class AddSymbolizerPanel
   {
     final IPropertyType ftp = StyleEditorHelper.getFeatureTypeProperty( featureType, geometryPropertyName );
 
-    if( symbolizerString.equals( "Point" ) )
+    if( symbolizerString.equals( "Point" ) ) //$NON-NLS-1$
     {
-      final Mark mark = StyleFactory.createMark( "square" );
+      final Mark mark = StyleFactory.createMark( "square" ); //$NON-NLS-1$
       final Graphic graphic = StyleFactory.createGraphic( null, mark, 1.0, 2.0, 0.0 );
       return StyleFactory.createPointSymbolizer( graphic, geometryPropertyName );
     }
-    else if( symbolizerString.equals( "Line" ) )
+    else if( symbolizerString.equals( "Line" ) ) //$NON-NLS-1$
     {
       return StyleFactory.createLineSymbolizer( StyleFactory.createStroke(), geometryPropertyName );
     }
-    else if( symbolizerString.equals( "Text" ) )
+    else if( symbolizerString.equals( "Text" ) ) //$NON-NLS-1$
     {
 
       final TextSymbolizer textSymbolizer = StyleFactory.createTextSymbolizer( geometryPropertyName, null, null );
@@ -269,13 +269,13 @@ public class AddSymbolizerPanel
       // check which geometry-type
       // if line than label_placement - line_placement
       if( TextSymbolizerLayout.getFeatureTypeGeometryType( ftp ) == TextSymbolizerLayout.GM_LINESTRING )
-        StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "above" ) );
+        StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "above" ) ); //$NON-NLS-1$
       // else label_placement - point_placement
       else
         StyleFactory.createLabelPlacement( StyleFactory.createPointPlacement() );
       return textSymbolizer;
     }
-    else if( symbolizerString.equals( "Polygon" ) )
+    else if( symbolizerString.equals( "Polygon" ) ) //$NON-NLS-1$
       return StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill(), geometryPropertyName );
     return null;
   }
@@ -321,13 +321,13 @@ public class AddSymbolizerPanel
       if( m_isSimpleRule )
       {
         items = new String[2];
-        items[0] = "Point";
-        items[1] = "Text";
+        items[0] = "Point"; //$NON-NLS-1$
+        items[1] = "Text"; //$NON-NLS-1$
       }
       else
       {
         items = new String[1];
-        items[0] = "Point";
+        items[0] = "Point"; //$NON-NLS-1$
       }
     }
     else if( featureTypeGeometryType == TextSymbolizerLayout.GM_LINESTRING || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTILINESTRING )
@@ -335,15 +335,15 @@ public class AddSymbolizerPanel
       if( m_isSimpleRule )
       {
         items = new String[3];
-        items[0] = "Line";
-        items[1] = "Text";
-        items[2] = "Point";
+        items[0] = "Line"; //$NON-NLS-1$
+        items[1] = "Text"; //$NON-NLS-1$
+        items[2] = "Point"; //$NON-NLS-1$
       }
       else
       {
         items = new String[2];
-        items[0] = "Line";
-        items[1] = "Point";
+        items[0] = "Line"; //$NON-NLS-1$
+        items[1] = "Point"; //$NON-NLS-1$
       }
     }
     else if( featureTypeGeometryType == TextSymbolizerLayout.GM_POLYGON || featureTypeGeometryType == TextSymbolizerLayout.GM_MULTIPOLYGON )
@@ -351,15 +351,15 @@ public class AddSymbolizerPanel
       if( m_isSimpleRule )
       {
         items = new String[3];
-        items[0] = "Polygon";
-        items[1] = "Text";
-        items[2] = "Point";
+        items[0] = "Polygon"; //$NON-NLS-1$
+        items[1] = "Text"; //$NON-NLS-1$
+        items[2] = "Point"; //$NON-NLS-1$
       }
       else
       {
         items = new String[2];
-        items[0] = "Polygon";
-        items[1] = "Point";
+        items[0] = "Polygon"; //$NON-NLS-1$
+        items[1] = "Point"; //$NON-NLS-1$
       }
     }
     else if( featureTypeGeometryType == TextSymbolizerLayout.GM_OBJECT )
@@ -367,17 +367,17 @@ public class AddSymbolizerPanel
       if( m_isSimpleRule )
       {
         items = new String[4];
-        items[0] = "Text";
-        items[1] = "Point";
-        items[2] = "Line";
-        items[3] = "Polygon";
+        items[0] = "Text"; //$NON-NLS-1$
+        items[1] = "Point"; //$NON-NLS-1$
+        items[2] = "Line"; //$NON-NLS-1$
+        items[3] = "Polygon"; //$NON-NLS-1$
       }
       else
       {
         items = new String[3];
-        items[0] = "Point";
-        items[1] = "Line";
-        items[2] = "Polygon";
+        items[0] = "Point"; //$NON-NLS-1$
+        items[1] = "Line"; //$NON-NLS-1$
+        items[2] = "Polygon"; //$NON-NLS-1$
       }
     }
     return items;

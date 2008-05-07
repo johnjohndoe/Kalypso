@@ -73,7 +73,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
    */
   public String getFilename()
   {
-    return "<Standard Feature Editor>.gft";
+    return "<Standard Feature Editor>.gft"; //$NON-NLS-1$
   }
 
   /**
@@ -114,7 +114,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       final String templateXml = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gft", templateXml, file
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbenannt>.gft", templateXml, file //$NON-NLS-1$
           .getFullPath() ) );
 
       return input;

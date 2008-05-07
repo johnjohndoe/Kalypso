@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public class URLGetter implements ICoreRunnableWithProgress
@@ -63,7 +64,7 @@ public class URLGetter implements ICoreRunnableWithProgress
   {
     try
     {
-      final HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol() + "://" + url.getHost() ), retries );
+      final HttpClient client = ProxyUtilities.getConfiguredHttpClient( timeOut, new URL( url.getProtocol() + "://" + url.getHost() ), retries ); //$NON-NLS-1$
       return new URLGetter( client, url );
     }
     catch( final MalformedURLException e )
@@ -137,7 +138,7 @@ public class URLGetter implements ICoreRunnableWithProgress
         {
           final IStatus status;
 
-          String responseBodyAsString = "Response Body not available.";
+          String responseBodyAsString = Messages.getString("org.kalypso.util.net.URLGetter.1"); //$NON-NLS-1$
           try
           {
             responseBodyAsString = method.getResponseBodyAsString();
@@ -148,14 +149,14 @@ public class URLGetter implements ICoreRunnableWithProgress
             KalypsoGisPlugin.getDefault().getLog().log( status2 );
           }
 
-          status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Zugriff auf: " + urlAsString + "\n" + responseBodyAsString, e );
+          status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.util.net.URLGetter.2") + urlAsString + "\n" + responseBodyAsString, e ); //$NON-NLS-1$ //$NON-NLS-2$
           setStatus( status );
         }
       }
     };
 
     monitor.beginTask( urlAsString, IProgressMonitor.UNKNOWN );
-    monitor.subTask( "Initialisiere Verbindung ..." );
+    monitor.subTask( Messages.getString("org.kalypso.util.net.URLGetter.4") ); //$NON-NLS-1$
     thread.start();
     while( thread.isAlive() )
     {
@@ -172,7 +173,7 @@ public class URLGetter implements ICoreRunnableWithProgress
       final String statusText;
       final StatusLine statusLine = method.getStatusLine();
       if( statusLine == null )
-        statusText = "Verbindung wird aufgebaut ...";
+        statusText = Messages.getString("org.kalypso.util.net.URLGetter.5"); //$NON-NLS-1$
       else
         statusText = method.getStatusText();
 

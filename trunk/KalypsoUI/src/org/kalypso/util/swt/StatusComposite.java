@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -67,7 +68,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class StatusComposite extends Composite
 {
   /**
@@ -101,7 +102,7 @@ public class StatusComposite extends Composite
     if( (style & DETAILS) != 0 )
     {
       m_detailsButton = new Button( this, SWT.PUSH );
-      m_detailsButton.setText( "&Details" );
+      m_detailsButton.setText( Messages.getString("org.kalypso.util.swt.StatusComposite.1") ); //$NON-NLS-1$
       m_detailsButton.addSelectionListener( new SelectionAdapter()
       {
         /**
@@ -123,7 +124,7 @@ public class StatusComposite extends Composite
     if( m_status == null )
       return;
 
-    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, "Details" );
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, Messages.getString("org.kalypso.util.swt.StatusComposite.2") ); //$NON-NLS-1$
     statusTableDialog.open();
   }
 
@@ -133,7 +134,7 @@ public class StatusComposite extends Composite
   @Override
   public void setLayout( final Layout layout )
   {
-    throw new UnsupportedOperationException( "The layout of this composite is fixed." );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.util.swt.StatusComposite.3") ); //$NON-NLS-1$
   }
 
   public void setStatus( final IStatus status )
@@ -146,7 +147,7 @@ public class StatusComposite extends Composite
     if( status == null )
     {
       m_statusImgLabel.setImage( null );
-      m_statusMessageLabel.setText( "" );
+      m_statusMessageLabel.setText( "" ); //$NON-NLS-1$
       if( m_detailsButton != null )
         m_detailsButton.setEnabled( false );
     }
@@ -174,7 +175,7 @@ public class StatusComposite extends Composite
     return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );
   }
 
-  @SuppressWarnings("restriction")
+  @SuppressWarnings("restriction") //$NON-NLS-1$
   public static Image getStatusImage( final IStatus status )
   {
     switch( status.getSeverity() )

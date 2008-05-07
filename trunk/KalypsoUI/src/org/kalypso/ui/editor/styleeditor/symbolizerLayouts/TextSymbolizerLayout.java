@@ -264,7 +264,7 @@ public class TextSymbolizerLayout extends AbstractSymbolizerLayout
     if( getFeatureTypeGeometryType( ftp ) == GM_LINESTRING )
     {
       if( labelPlacement == null )
-        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "auto" ) );
+        labelPlacement = StyleFactory.createLabelPlacement( StyleFactory.createLinePlacement( "auto" ) ); //$NON-NLS-1$
       final int linePlacementIndex = labelPlacement.getLinePlacement().getPlacementType( null );
       final LabelPlacementComboPanel labelPlacementComboBoxPanel = new LabelPlacementComboPanel( fontGroup, MessageBundle.STYLE_EDITOR_PLACEMENT, linePlacementIndex );
       labelPlacementComboBoxPanel.addPanelListener( new PanelListener()

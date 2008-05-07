@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -87,7 +88,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
     }
 
     final Label label = new Label( composite, SWT.NONE );
-    label.setText( "Name:" );
+    label.setText( Messages.getString("org.kalypso.ui.views.properties.ThemePropertyPage.0") ); //$NON-NLS-1$
 
     final Text text = new Text( composite, SWT.NONE );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

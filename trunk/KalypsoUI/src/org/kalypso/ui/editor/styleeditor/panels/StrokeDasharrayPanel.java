@@ -123,7 +123,7 @@ public class StrokeDasharrayPanel
     offsetInputData.left = new FormAttachment( 760, 1000, 0 );
     offsetInputData.top = new FormAttachment( 100, 1000, 0 );
     spaceInput.setLayoutData( offsetInputData );
-    spaceInput.setText( "" + spaceValue );
+    spaceInput.setText( "" + spaceValue ); //$NON-NLS-1$
 
     Label spaceLabel = new Label( composite, SWT.NULL );
     FormData spaceLabelData = new FormData();
@@ -132,7 +132,7 @@ public class StrokeDasharrayPanel
     spaceLabelData.left = new FormAttachment( 740, 1000, 0 );
     spaceLabelData.top = new FormAttachment( 100, 1000, 0 );
     spaceLabel.setLayoutData( spaceLabelData );
-    spaceLabel.setText( "/" );
+    spaceLabel.setText( "/" ); //$NON-NLS-1$
 
     lineInput = new Text( composite, SWT.BORDER );
     FormData lineInputData = new FormData();
@@ -141,7 +141,7 @@ public class StrokeDasharrayPanel
     lineInputData.left = new FormAttachment( 590, 1000, 0 );
     lineInputData.top = new FormAttachment( 100, 1000, 0 );
     lineInput.setLayoutData( lineInputData );
-    lineInput.setText( "" + lineValue );
+    lineInput.setText( "" + lineValue ); //$NON-NLS-1$
 
     final Label lineLabel = new Label( composite, SWT.NULL );
     FormData lineLabelData = new FormData();
@@ -175,7 +175,7 @@ public class StrokeDasharrayPanel
           if( getLineValue() <= 0.0 )
           {
             setLineValue( 1f );
-            lineLabel.setText( "" + getLineValue() );
+            lineLabel.setText( "" + getLineValue() ); //$NON-NLS-1$
           }
           setSpaceValue( spaceFloat.floatValue() );
           fire();
@@ -185,8 +185,8 @@ public class StrokeDasharrayPanel
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
               MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
-          getLineInput().setText( "" + getLineValue() );
-          getSpaceInput().setText( "" + getSpaceValue() );
+          getLineInput().setText( "" + getLineValue() ); //$NON-NLS-1$
+          getSpaceInput().setText( "" + getSpaceValue() ); //$NON-NLS-1$
         }
       }
 

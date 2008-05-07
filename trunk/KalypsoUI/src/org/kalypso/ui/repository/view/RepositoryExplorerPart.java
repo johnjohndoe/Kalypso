@@ -91,14 +91,14 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
   private static final String TAG_REPOSITORIES = "repositories"; //$NON-NLS-1$
 
-  public static final String ID = "org.kalypso.ui.repository.view.RepositoryExplorerPart";
+  public static final String ID = "org.kalypso.ui.repository.view.RepositoryExplorerPart"; //$NON-NLS-1$
 
   private ObservationChooser m_chooser;
 
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {

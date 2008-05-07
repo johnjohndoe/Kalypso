@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public class ThemePropertyAdapterFactory implements IAdapterFactory
 {
-  private static final String ORG_KALYPSO_UI_THEME_PROPERTY_CONTRIBUTOR = "org.kalypso.ui.ThemePropertyContributor";
+  private static final String ORG_KALYPSO_UI_THEME_PROPERTY_CONTRIBUTOR = "org.kalypso.ui.ThemePropertyContributor"; //$NON-NLS-1$
 
   private static final ITabbedPropertySheetPageContributor THE_THEME_CONTRIBUTOR = new ITabbedPropertySheetPageContributor()
   {
@@ -64,7 +64,7 @@ public class ThemePropertyAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == ITabbedPropertySheetPageContributor.class )
@@ -82,7 +82,7 @@ public class ThemePropertyAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Class[] getAdapterList( )
   {
     return new Class[] { ITabbedPropertySheetPageContributor.class };

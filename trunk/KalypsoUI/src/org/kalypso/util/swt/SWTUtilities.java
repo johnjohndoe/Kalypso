@@ -54,54 +54,54 @@ public class SWTUtilities
   private static final Map<String, Integer> GRID_DATA_MAP = new HashMap<String, Integer>();
   static
   {
-    GRID_DATA_MAP.put( "GridData.BEGINNING", new Integer( GridData.BEGINNING ) );
-    GRID_DATA_MAP.put( "GridData.CENTER", new Integer( GridData.CENTER ) );
-    GRID_DATA_MAP.put( "GridData.END", new Integer( GridData.END ) );
-    GRID_DATA_MAP.put( "GridData.FILL", new Integer( GridData.FILL ) );
-    GRID_DATA_MAP.put( "GridData.FILL_BOTH", new Integer( GridData.FILL_BOTH ) );
-    GRID_DATA_MAP.put( "GridData.FILL_HORIZONTAL", new Integer( GridData.FILL_HORIZONTAL ) );
-    GRID_DATA_MAP.put( "GridData.FILL_VERTICAL", new Integer( GridData.FILL_VERTICAL ) );
-    GRID_DATA_MAP.put( "GridData.GRAB_HORIZONTAL", new Integer( GridData.GRAB_HORIZONTAL ) );
-    GRID_DATA_MAP.put( "GridData.GRAB_VERTICAL", new Integer( GridData.GRAB_VERTICAL ) );
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_BEGINNING", new Integer( GridData.HORIZONTAL_ALIGN_BEGINNING ) );
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_CENTER", new Integer( GridData.HORIZONTAL_ALIGN_CENTER ) );
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_END", new Integer( GridData.HORIZONTAL_ALIGN_END ) );
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_FILL", new Integer( GridData.HORIZONTAL_ALIGN_FILL ) );
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_BEGINNING", new Integer( GridData.VERTICAL_ALIGN_BEGINNING ) );
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_CENTER", new Integer( GridData.VERTICAL_ALIGN_CENTER ) );
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_END", new Integer( GridData.VERTICAL_ALIGN_END ) );
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_FILL", new Integer( GridData.VERTICAL_ALIGN_FILL ) );
+    GRID_DATA_MAP.put( "GridData.BEGINNING", new Integer( GridData.BEGINNING ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.CENTER", new Integer( GridData.CENTER ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.END", new Integer( GridData.END ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL", new Integer( GridData.FILL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL_BOTH", new Integer( GridData.FILL_BOTH ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL_HORIZONTAL", new Integer( GridData.FILL_HORIZONTAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL_VERTICAL", new Integer( GridData.FILL_VERTICAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.GRAB_HORIZONTAL", new Integer( GridData.GRAB_HORIZONTAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.GRAB_VERTICAL", new Integer( GridData.GRAB_VERTICAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_BEGINNING", new Integer( GridData.HORIZONTAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_CENTER", new Integer( GridData.HORIZONTAL_ALIGN_CENTER ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_END", new Integer( GridData.HORIZONTAL_ALIGN_END ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_FILL", new Integer( GridData.HORIZONTAL_ALIGN_FILL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_BEGINNING", new Integer( GridData.VERTICAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_CENTER", new Integer( GridData.VERTICAL_ALIGN_CENTER ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_END", new Integer( GridData.VERTICAL_ALIGN_END ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_FILL", new Integer( GridData.VERTICAL_ALIGN_FILL ) ); //$NON-NLS-1$
   }
 
   private static final Map<String, Integer> SWT_MAP = new HashMap<String, Integer>();
   static
   {
-    SWT_MAP.put( "SWT.BEGINNING", SWT.BEGINNING );
-    SWT_MAP.put( "SWT.BOLD", SWT.BOLD );
-    SWT_MAP.put( "SWT.BORDER", SWT.BORDER );
-    SWT_MAP.put( "SWT.CENTER", SWT.CENTER );
-    SWT_MAP.put( "SWT.CHECK", SWT.CHECK );
-    SWT_MAP.put( "SWT.END", SWT.END );
-    SWT_MAP.put( "SWT.FILL", SWT.FILL );
-    SWT_MAP.put( "SWT.HORIZONTAL", SWT.HORIZONTAL );
-    SWT_MAP.put( "SWT.LEAD", SWT.LEAD );
-    SWT_MAP.put( "SWT.LEFT", SWT.LEFT );
-    SWT_MAP.put( "SWT.MULTI", SWT.MULTI );
-    SWT_MAP.put( "SWT.NONE", SWT.NONE );
-    SWT_MAP.put( "SWT.PUSH", SWT.PUSH );
-    SWT_MAP.put( "SWT.RADIO", SWT.RADIO );
-    SWT_MAP.put( "SWT.RIGHT", SWT.RIGHT );
-    SWT_MAP.put( "SWT.TRAIL", SWT.TRAIL );
-    SWT_MAP.put( "SWT.VERTICAL", SWT.VERTICAL );
-    SWT_MAP.put( "SWT.DROP_DOWN", SWT.DROP_DOWN );
-    SWT_MAP.put( "SWT.READ_ONLY", SWT.READ_ONLY );
-    SWT_MAP.put( "SWT.FULL_SELECTION", SWT.FULL_SELECTION );
-    SWT_MAP.put( "SWT.WRAP", SWT.WRAP );
-    SWT_MAP.put( "SWT.V_SCROLL", SWT.V_SCROLL );
-    SWT_MAP.put( "SWT.H_SCROLL", SWT.H_SCROLL );
-    SWT_MAP.put( "SWT.FILL", SWT.FILL );
-    SWT_MAP.put( "SWT.TOP", SWT.TOP );
-    SWT_MAP.put( "SWT.BOTTOM", SWT.BOTTOM );
+    SWT_MAP.put( "SWT.BEGINNING", SWT.BEGINNING ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.BOLD", SWT.BOLD ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.BORDER", SWT.BORDER ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.CENTER", SWT.CENTER ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.CHECK", SWT.CHECK ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.END", SWT.END ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.FILL", SWT.FILL ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.HORIZONTAL", SWT.HORIZONTAL ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.LEAD", SWT.LEAD ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.LEFT", SWT.LEFT ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.MULTI", SWT.MULTI ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.NONE", SWT.NONE ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.PUSH", SWT.PUSH ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.RADIO", SWT.RADIO ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.RIGHT", SWT.RIGHT ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.TRAIL", SWT.TRAIL ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.VERTICAL", SWT.VERTICAL ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.DROP_DOWN", SWT.DROP_DOWN ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.READ_ONLY", SWT.READ_ONLY ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.FULL_SELECTION", SWT.FULL_SELECTION ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.WRAP", SWT.WRAP ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.V_SCROLL", SWT.V_SCROLL ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.H_SCROLL", SWT.H_SCROLL ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.FILL", SWT.FILL ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.TOP", SWT.TOP ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.BOTTOM", SWT.BOTTOM ); //$NON-NLS-1$
     // Add other keys to complete the map
   }
 
@@ -123,10 +123,10 @@ public class SWTUtilities
         return SWT.NONE;
 
       int result = SWT.NONE;
-      if( style.matches( "[0-9]+" ) )
+      if( style.matches( "[0-9]+" ) ) //$NON-NLS-1$
         return Integer.parseInt( style );
 
-      final String[] keys = style.split( "\\|" );
+      final String[] keys = style.split( "\\|" ); //$NON-NLS-1$
       for( final String element : keys )
       {
         final String key = element.trim();
@@ -134,7 +134,7 @@ public class SWTUtilities
         if( value != null )
           result |= value.intValue();
         else
-          System.out.println( "// TODO: implement " + key );
+          System.out.println( "// TODO: implement " + key ); //$NON-NLS-1$
       }
       return result;
     }

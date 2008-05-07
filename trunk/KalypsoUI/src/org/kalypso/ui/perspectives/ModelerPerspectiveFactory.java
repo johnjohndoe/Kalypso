@@ -49,10 +49,10 @@ import org.eclipse.ui.IPerspectiveFactory;
  * 
  * @author schlienger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ModelerPerspectiveFactory implements IPerspectiveFactory
 {
-  public static final String ID = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory";
+  public static final String ID = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
   
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)

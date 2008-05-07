@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -58,7 +59,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       catch( final Exception e )
       {
         //e.printStackTrace();
-        m_result = StatusUtilities.statusFromThrowable( e, "Fehler beim Laden von: " + key );
+        m_result = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.util.pool.PoolableObjectWaiter.0") + key ); //$NON-NLS-1$
       }
     }
     else
@@ -72,7 +73,7 @@ public abstract class PoolableObjectWaiter implements IPoolListener
       if( newValue != null && status.isOK() )
         objectLoaded( key, newValue );
       else
-        Logger.getLogger( getClass().getName() ).warning( "Could not load " + key );
+        Logger.getLogger( getClass().getName() ).warning( Messages.getString("org.kalypso.util.pool.PoolableObjectWaiter.1") + key ); //$NON-NLS-1$
     }
     // what happens if objectLoaded throws an exception?
     // set status?

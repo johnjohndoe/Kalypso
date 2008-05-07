@@ -61,6 +61,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.loader.LoaderException;
@@ -72,7 +73,7 @@ import org.kalypso.ui.IKalypsoUIConstants;
  */
 public class ResourcePool
 {
-  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) );
+  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) ); //$NON-NLS-1$
 
   private final static Logger LOGGER = Logger.getLogger( ResourcePool.class.getName() );
 
@@ -124,8 +125,8 @@ public class ResourcePool
         {
           e.printStackTrace();
           e.getMessage();
-          final RuntimeException iae = new IllegalArgumentException( "No Loader for type: " + key.getType() );
-          ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae );
+          final RuntimeException iae = new IllegalArgumentException( Messages.getString("org.kalypso.util.pool.ResourcePool.1") + key.getType() ); //$NON-NLS-1$
+          ResourcePool.LOGGER.throwing( getClass().getName(), "addPoolListener", iae ); //$NON-NLS-1$
           throw iae;
         }
 
@@ -150,7 +151,7 @@ public class ResourcePool
         if( info.removeListener( l ) && info.isEmpty() )
         {
           if( ResourcePool.DO_LOG )
-            ResourcePool.LOGGER.info( "Releasing key (no more listeners): " + key );
+            ResourcePool.LOGGER.info( Messages.getString("org.kalypso.util.pool.ResourcePool.3") + key ); //$NON-NLS-1$
 
           iter.remove();
 
@@ -163,21 +164,21 @@ public class ResourcePool
 
     for( final KeyInfo info : infosToDispose )
     {
-      final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" );
+      final String askForSaveProperty = System.getProperty( IKalypsoUIConstants.CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" ); //$NON-NLS-1$
       final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
 
       if( !info.isDirty() )
         info.dispose();
       else if( askForSave )
       {
-        final UIJob job = new SaveAndDisposeInfoJob( "Ask for save", info );
+        final UIJob job = new SaveAndDisposeInfoJob( Messages.getString("org.kalypso.util.pool.ResourcePool.5"), info ); //$NON-NLS-1$
         job.setUser( true );
         job.setRule( mutex );
         job.schedule();
       }
       else
       {
-        System.out.println( "Should save pool object: " + info.getObject() );
+        System.out.println( Messages.getString("org.kalypso.util.pool.ResourcePool.6") + info.getObject() ); //$NON-NLS-1$
         info.dispose();
       }
     }
@@ -265,7 +266,7 @@ public class ResourcePool
       {
         e.printStackTrace();
 
-        throw new CoreException( StatusUtilities.statusFromThrowable( e, "Ladevorgang unterbrochen" ) );
+        throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.util.pool.ResourcePool.7") ) ); //$NON-NLS-1$
       }
 
     // falls object nicht bereits da,
@@ -283,7 +284,7 @@ public class ResourcePool
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.util.pool.ResourcePool.8") ) ); //$NON-NLS-1$
     }
     finally
     {

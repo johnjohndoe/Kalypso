@@ -57,9 +57,9 @@ public class StrokeLinejoinComboPanel extends ComboPanel
   {
     super( parent, label );
     items = new String[3];
-    items[0] = "mitre";
-    items[1] = "round";
-    items[2] = "bevel";
+    items[0] = "mitre"; //$NON-NLS-1$
+    items[1] = "round"; //$NON-NLS-1$
+    items[2] = "bevel"; //$NON-NLS-1$
     init();
     setSelection( value );
   }

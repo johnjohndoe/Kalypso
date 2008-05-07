@@ -115,31 +115,31 @@ public class FilterDialogTreeNode
     {
       case LOGICAL_NODE_TYPE:
       {
-        if( string.equals( "AND" ) )
+        if( string.equals( "AND" ) ) //$NON-NLS-1$
           subtype = LOCICAL_AND;
-        else if( string.equals( "OR" ) )
+        else if( string.equals( "OR" ) ) //$NON-NLS-1$
           subtype = LOCICAL_OR;
-        else if( string.equals( "NOT" ) )
+        else if( string.equals( "NOT" ) ) //$NON-NLS-1$
           subtype = LOCICAL_NOT;
         break;
       }
       case COMPARISON_NODE_TYPE:
       {
-        if( string.equals( "LIKE" ) )
+        if( string.equals( "LIKE" ) ) //$NON-NLS-1$
           subtype = COMPARISON_LIKE;
-        else if( string.equals( "NULL" ) )
+        else if( string.equals( "NULL" ) ) //$NON-NLS-1$
           subtype = COMPARISON_NULL;
-        else if( string.equals( "BETWEEN" ) )
+        else if( string.equals( "BETWEEN" ) ) //$NON-NLS-1$
           subtype = COMPARISON_BETWEEN;
-        else if( string.equals( "EQUAL_TO" ) )
+        else if( string.equals( "EQUAL_TO" ) ) //$NON-NLS-1$
           subtype = COMPARISON_EQUALTO;
-        else if( string.equals( "LESS_THAN" ) )
+        else if( string.equals( "LESS_THAN" ) ) //$NON-NLS-1$
           subtype = COMPARISON_LESSTHAN;
-        else if( string.equals( "GREATER_THAN" ) )
+        else if( string.equals( "GREATER_THAN" ) ) //$NON-NLS-1$
           subtype = COMPARISON_GREATERTHAN;
-        else if( string.equals( "LESS_THAN_OR_EQUAL_TO" ) )
+        else if( string.equals( "LESS_THAN_OR_EQUAL_TO" ) ) //$NON-NLS-1$
           subtype = COMPARISON_LESSTHANOREQUALTO;
-        else if( string.equals( "GREATER_THAN_OR_EQUAL_TO" ) )
+        else if( string.equals( "GREATER_THAN_OR_EQUAL_TO" ) ) //$NON-NLS-1$
           subtype = COMPARISON_GREATERTHANOREQUALTO;
       }
       default:

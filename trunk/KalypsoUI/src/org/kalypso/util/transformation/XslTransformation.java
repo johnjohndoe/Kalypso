@@ -59,6 +59,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.java.lang.CatchThread;
+import org.kalypso.i18n.Messages;
 import org.w3c.dom.Document;
 
 /**
@@ -76,11 +77,11 @@ public class XslTransformation extends AbstractTransformation
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
-    monitor.beginTask( "XSL Transformation", 3000 );
+    monitor.beginTask( Messages.getString("org.kalypso.util.transformation.XslTransformation.0"), 3000 ); //$NON-NLS-1$
 
-    final String input = properties.getProperty( "input" );
-    final String xsl = properties.getProperty( "xsl" );
-    final String output = properties.getProperty( "output" );
+    final String input = properties.getProperty( "input" ); //$NON-NLS-1$
+    final String xsl = properties.getProperty( "xsl" ); //$NON-NLS-1$
+    final String output = properties.getProperty( "output" ); //$NON-NLS-1$
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 

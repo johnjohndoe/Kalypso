@@ -172,7 +172,7 @@ public class RulePatternTabItem
           }
           getUserStyle().fireStyleChanged();
         }
-        tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + name );
+        tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + name ); //$NON-NLS-1$
         setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
       }
     } );
@@ -383,11 +383,11 @@ public class RulePatternTabItem
           {
             for( int i = 0; i < patternRuleNumber; i++ )
             {
-              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) );
+              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) ); //$NON-NLS-1$
               if( (minValue + ((i + 1) * step)) > maxValue )
-                upperBoundary = new BoundaryExpression( "" + maxValue );
+                upperBoundary = new BoundaryExpression( "" + maxValue ); //$NON-NLS-1$
               else
-                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) );
+                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) ); //$NON-NLS-1$
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
               ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
               ruleList.add( ruleCollection.get( i ) );
@@ -397,24 +397,24 @@ public class RulePatternTabItem
           {
             for( int i = 0; i < currentSize; i++ )
             {
-              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) );
+              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) ); //$NON-NLS-1$
               if( (minValue + ((i + 1) * step)) > maxValue )
-                upperBoundary = new BoundaryExpression( "" + maxValue );
+                upperBoundary = new BoundaryExpression( "" + maxValue ); //$NON-NLS-1$
               else
-                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) );
+                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) ); //$NON-NLS-1$
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
               ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
               ruleList.add( ruleCollection.get( i ) );
             }
             for( int i = currentSize; i < patternRuleNumber; i++ )
             {
-              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) );
+              lowerBoundary = new BoundaryExpression( "" + (minValue + (i * step)) ); //$NON-NLS-1$
               if( (minValue + ((i + 1) * step)) > maxValue )
-                upperBoundary = new BoundaryExpression( "" + maxValue );
+                upperBoundary = new BoundaryExpression( "" + maxValue ); //$NON-NLS-1$
               else
-                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) );
+                upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) ); //$NON-NLS-1$
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
-              ruleList.add( StyleFactory.createRule( cloneSymbolizer( symbolizer ), tmpRule.getName(), "-name-" + i, "abstract", null, new ComplexFilter( operation ), false, tmpRule.getMinScaleDenominator(), tmpRule.getMaxScaleDenominator() ) );
+              ruleList.add( StyleFactory.createRule( cloneSymbolizer( symbolizer ), tmpRule.getName(), "-name-" + i, "abstract", null, new ComplexFilter( operation ), false, tmpRule.getMinScaleDenominator(), tmpRule.getMaxScaleDenominator() ) ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
 
@@ -564,19 +564,19 @@ public class RulePatternTabItem
       final PropertyName geomPropertyName = symbolizers[i].getGeometry().getPropertyName();
       if( symbolizers[i] instanceof PointSymbolizer )
       {
-        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Point", getFeatureType() );
+        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Point", getFeatureType() ); //$NON-NLS-1$
       }
       else if( symbolizers[i] instanceof LineSymbolizer )
       {
-        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Line", getFeatureType() );
+        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Line", getFeatureType() ); //$NON-NLS-1$
       }
       else if( symbolizers[i] instanceof TextSymbolizer )
       {
-        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Text", getFeatureType() );
+        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Text", getFeatureType() ); //$NON-NLS-1$
       }
       else if( symbolizers[i] instanceof PolygonSymbolizer )
       {
-        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Polygon", getFeatureType() );
+        returnArray[i] = AddSymbolizerPanel.getSymbolizer( geomPropertyName, "Polygon", getFeatureType() ); //$NON-NLS-1$
       }
       else
         return null;

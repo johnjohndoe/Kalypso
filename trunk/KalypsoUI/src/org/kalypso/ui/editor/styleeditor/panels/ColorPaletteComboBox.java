@@ -55,10 +55,10 @@ public class ColorPaletteComboBox extends FilterComboPanel
   {
     super( parent );
     items = new String[4];
-    items[0] = "RedGreen";
-    items[1] = "BlueGreen";
-    items[2] = "RedBlue";
-    items[3] = "Custom";
+    items[0] = "RedGreen"; //$NON-NLS-1$
+    items[1] = "BlueGreen"; //$NON-NLS-1$
+    items[2] = "RedBlue"; //$NON-NLS-1$
+    items[3] = "Custom"; //$NON-NLS-1$
     init();
   }
 

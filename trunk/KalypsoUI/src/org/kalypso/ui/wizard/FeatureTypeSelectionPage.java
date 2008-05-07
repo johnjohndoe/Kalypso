@@ -65,6 +65,7 @@ import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 
 /**
@@ -84,10 +85,10 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
 
   public FeatureTypeSelectionPage( )
   {
-    super( "FeatureTypeSelectionPage", "Auswahl des Basis-Elements", null );
+    super( "FeatureTypeSelectionPage", Messages.getString("org.kalypso.ui.wizard.FeatureTypeSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     setPageComplete( false );
-    setMessage( "Wählen Sie das Basis-Element der neuen GML Datei aus." );
+    setMessage( Messages.getString("org.kalypso.ui.wizard.FeatureTypeSelectionPage.2") ); //$NON-NLS-1$
   }
 
   /**

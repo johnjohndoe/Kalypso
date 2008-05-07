@@ -76,7 +76,7 @@ public class TextLabelComboPanel extends ComboPanel
     for( int j = 0; j < items.length; j++ )
       items[j] = labelStringItems.get( j );
     init();
-    comboBox.setText( "..." );
+    comboBox.setText( "..." ); //$NON-NLS-1$
     if( value != null )
     {
       for( int m = 0; m < items.length; m++ )
@@ -96,7 +96,7 @@ public class TextLabelComboPanel extends ComboPanel
   // sets the comboBox to a default state
   public void reset()
   {
-    comboBox.setText( "..." );
+    comboBox.setText( "..." ); //$NON-NLS-1$
   }
 
   /**

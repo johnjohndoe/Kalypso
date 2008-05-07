@@ -57,9 +57,9 @@ public class StrokeLinecapComboPanel extends ComboPanel
   {
     super( parent, label );
     items = new String[3];
-    items[0] = "round";
-    items[1] = "square";
-    items[2] = "butt";
+    items[0] = "round"; //$NON-NLS-1$
+    items[1] = "square"; //$NON-NLS-1$
+    items[2] = "butt"; //$NON-NLS-1$
     init();
     setSelection( value );
   }

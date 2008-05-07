@@ -49,8 +49,8 @@ public class ModeSelectionComboPanel extends ComboPanel
   {
     super( parent, label );
     items = new String[2];
-    items[0] = "interval -- color";
-    items[1] = "value -- color";
+    items[0] = "interval -- color"; //$NON-NLS-1$
+    items[1] = "value -- color"; //$NON-NLS-1$
     style = SWT.READ_ONLY;
     comboBox_width = 100;
     init();
