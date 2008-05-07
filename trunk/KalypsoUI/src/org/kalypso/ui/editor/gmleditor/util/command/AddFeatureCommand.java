@@ -47,6 +47,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -214,7 +215,7 @@ public class AddFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Feature hinzufügen";
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand.0"); //$NON-NLS-1$
   }
 
   public Feature getNewFeature( )

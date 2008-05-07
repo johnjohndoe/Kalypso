@@ -83,7 +83,7 @@ public class GMLContentProvider implements ITreeContentProvider
    * <p>
    * If null, the root-feature is the root element of the tree.
    */
-  private GMLXPath m_rootPath = new GMLXPath( "", null );
+  private GMLXPath m_rootPath = new GMLXPath( "", null ); //$NON-NLS-1$
 
   private final boolean m_showAssociations;
 
@@ -388,7 +388,7 @@ public class GMLContentProvider implements ITreeContentProvider
     final Object[] expandedElements = m_viewer.getExpandedElements();
 
     // prepare for exception
-    m_rootPath = new GMLXPath( "", null );
+    m_rootPath = new GMLXPath( "", null ); //$NON-NLS-1$
 
     try
     {
@@ -438,7 +438,7 @@ public class GMLContentProvider implements ITreeContentProvider
       KalypsoGisPlugin.getDefault().getLog().log( status );
     }
 
-    m_rootPath = new GMLXPath( "", null );
+    m_rootPath = new GMLXPath( "", null ); //$NON-NLS-1$
 
     m_viewer.setExpandedElements( expandedElements );
     m_viewer.refresh();

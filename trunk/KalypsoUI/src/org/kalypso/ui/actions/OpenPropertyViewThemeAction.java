@@ -50,6 +50,7 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionDelegate;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -100,7 +101,7 @@ public class OpenPropertyViewThemeAction extends ActionDelegate implements IObje
       catch( final PartInitException e )
       {
         KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
-        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), "Fehler beim Öffnen der Eigenschaftenansicht", e.getStatus() );
+        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), Messages.getString("org.kalypso.ui.actions.OpenPropertyViewThemeAction.0"), e.getStatus() ); //$NON-NLS-1$
       }
     }
   }

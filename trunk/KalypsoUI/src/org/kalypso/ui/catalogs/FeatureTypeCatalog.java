@@ -65,7 +65,7 @@ public class FeatureTypeCatalog
 
     final String uri = getLocation( urn );
     // if we got no uri or an urn do nothing, we need a real url 
-    if( uri == null || uri.startsWith( "urn" ))
+    if( uri == null || uri.startsWith( "urn" )) //$NON-NLS-1$
       return null;
 
     try
@@ -105,7 +105,7 @@ public class FeatureTypeCatalog
     if( baseURN == null )
       return null;
 
-    return baseURN + ":" + catalogTypeBasename + ":default";
+    return baseURN + ":" + catalogTypeBasename + ":default"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }

@@ -68,7 +68,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class FeatureSelectionActionGroup extends ActionGroup
 {
   private final ISelectionProvider m_provider = new ISelectionProvider()
@@ -238,7 +238,7 @@ public class FeatureSelectionActionGroup extends ActionGroup
    * Intended to be overwritten by clients.
    * </p>
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   protected IMenuManager createSubMenuManager( final IMenuManager menuManager )
   {
     return null;

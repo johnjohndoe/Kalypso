@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.view.wq.diagram;
 
 import java.util.Arrays;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
@@ -104,7 +105,7 @@ public class WQPairTuppleModel extends AbstractTuppleModel
    */
   public void setElement( int index, Object element, IAxis axis ) throws SensorException
   {
-    throw new SensorException( "setElement is currently not supported" );
+    throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.view.wq.diagram.WQPairTuppleModel.0") ); //$NON-NLS-1$
   }
 
   /**

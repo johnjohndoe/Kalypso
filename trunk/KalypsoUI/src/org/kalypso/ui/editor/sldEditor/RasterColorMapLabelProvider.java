@@ -100,13 +100,13 @@ public class RasterColorMapLabelProvider extends LabelProvider implements ITable
 
       case quantity:
         // TODO: fixed scale is not so nice... maybe calculate scale automatically from existing values
-        return String.format( "%.2f", entry.getQuantity() );
+        return String.format( "%.2f", entry.getQuantity() ); //$NON-NLS-1$
 
       case label:
         return entry.getLabel();
 
       case color:
-        return "";
+        return ""; //$NON-NLS-1$
 
       default:
         throw new IllegalArgumentException();

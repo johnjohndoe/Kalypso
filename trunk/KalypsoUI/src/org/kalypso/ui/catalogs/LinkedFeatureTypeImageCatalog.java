@@ -66,7 +66,7 @@ public class LinkedFeatureTypeImageCatalog
   /**
    * The base type.
    */
-  private static String BASETYPE = "swtimage";
+  private static String BASETYPE = "swtimage"; //$NON-NLS-1$
 
   /**
    * The image descriptor cache.
@@ -81,8 +81,8 @@ public class LinkedFeatureTypeImageCatalog
   public static ImageDescriptor getImage( URL context, QName qname )
   {
     /* Try to get cached image descriptor. */
-    String contextStr = context == null ? "null" : context.toExternalForm();
-    String qnameStr = qname == null ? "null" : qname.toString();
+    String contextStr = context == null ? "null" : context.toExternalForm(); //$NON-NLS-1$
+    String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
     String cacheKey = contextStr + '#' + qnameStr;
 
     /* Does a cached one exist? */
@@ -121,7 +121,7 @@ public class LinkedFeatureTypeImageCatalog
     String uri = FeatureTypeImageCatalog.getLocation( urn );
 
     /* If we got no uri or an urn, do nothing, we need a real url. */
-    if( uri == null || uri.startsWith( "urn" ) )
+    if( uri == null || uri.startsWith( "urn" ) ) //$NON-NLS-1$
       return null;
 
     try
@@ -161,6 +161,6 @@ public class LinkedFeatureTypeImageCatalog
     if( baseURN == null )
       return null;
 
-    return baseURN + ":" + catalogTypeBasename + ":linked";
+    return baseURN + ":" + catalogTypeBasename + ":linked"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

@@ -36,6 +36,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
@@ -46,7 +47,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
  */
 public class Laengschnittuebersicht extends AbstractEditorPart implements IEditorPart, ICommandTarget
 {
-  public static final String ID = "org.kalypso.ui.editor.GmlEditor";
+  public static final String ID = "org.kalypso.ui.editor.GmlEditor"; //$NON-NLS-1$
 
   private GmlTreeView m_viewer = null;
 
@@ -105,7 +106,7 @@ public class Laengschnittuebersicht extends AbstractEditorPart implements IEdito
   @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
-    monitor.beginTask( "Vorlage wird geladen", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.gmleditor.ui.Laengschnittuebersicht.1"), 1000 ); //$NON-NLS-1$
     try
     {
       final IStorage storage = input.getStorage();
@@ -140,19 +141,19 @@ public class Laengschnittuebersicht extends AbstractEditorPart implements IEdito
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Parsen der Context-URL" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.Laengschnittuebersicht.2") ) ); //$NON-NLS-1$
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen von XML" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.Laengschnittuebersicht.3") ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Vorlagendatei." ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.gmleditor.ui.Laengschnittuebersicht.4") ) ); //$NON-NLS-1$
     }
     finally
     {

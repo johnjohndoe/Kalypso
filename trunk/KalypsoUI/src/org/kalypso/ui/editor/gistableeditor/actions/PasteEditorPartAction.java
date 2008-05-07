@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.contribs.eclipse.ui.AbstractEditorPartAction;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author Gernot
@@ -60,6 +61,6 @@ public class PasteEditorPartAction extends AbstractEditorPartAction
     // - types of insertes cell must be considered
 
     // - we may have a choice (ask user?): overwrite cells or insert new features?
-    MessageDialog.openInformation( event.display.getActiveShell(), "Einfügen", "Diese Funktion ist noch nicht implementiert." );
+    MessageDialog.openInformation( event.display.getActiveShell(), Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction_0"), Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction_1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

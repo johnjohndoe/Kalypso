@@ -39,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.i18n.Messages;
 
 /**
  * 
@@ -60,13 +61,13 @@ public class EditFeature implements IActionDelegate
      final IWorkbenchPage page = window.getActivePage();
      try
      {
-       page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_ACTIVATE );
+       page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_ACTIVATE ); //$NON-NLS-1$
      }
      catch( final PartInitException e )
      {
        e.printStackTrace();
        final Shell shell = window.getShell();
-       ErrorDialog.openError( shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
+       ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.1"), Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
      }
    }
 

@@ -46,6 +46,7 @@ import java.util.List;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -154,6 +155,6 @@ public class AddHeavyRelationshipCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Relation erzeugen";
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.AddHeavyRelationshipCommand.0"); //$NON-NLS-1$
   }
 }

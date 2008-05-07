@@ -54,6 +54,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
@@ -77,7 +78,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
   {
     boolean atLeastOneDirty = false;
 
-    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, "Zeitreihen speichern" );
+    final MultiStatus status = new MultiStatus( IStatus.OK, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.0") ); //$NON-NLS-1$
 
     final TableView tableView = (TableView) ((ObservationTableEditor) getEditor()).getView();
 
@@ -98,16 +99,16 @@ public class SaveDataAction extends AbstractEditorActionDelegate
         {
           atLeastOneDirty = true;
 
-          final String msg = "Sie haben Änderungen in " + obs.getName() + " vorgenommen. Wollen \n" + "Sie die Änderungen übernehmen?";
+          final String msg = Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.1") + obs.getName() + Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.2") + Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.3"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-          final boolean bConfirm = MessageDialog.openQuestion( getShell(), "Änderungen speichern", msg );
+          final boolean bConfirm = MessageDialog.openQuestion( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.4"), msg ); //$NON-NLS-1$
 
           if( !bConfirm )
             break;
 
           final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
 
-          final Job job = new Job( "ZML-Speichern: " + obs.getName() )
+          final Job job = new Job( Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.5") + obs.getName() ) //$NON-NLS-1$
           {
             @Override
             public IStatus run( final IProgressMonitor monitor )
@@ -119,7 +120,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
               catch( final Exception e )
               {
                 e.printStackTrace();
-                status.addMessage( "Fehler beim Speichern von " + obs, e );
+                status.addMessage( Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.6") + obs, e ); //$NON-NLS-1$
               }
 
               return Status.OK_STATUS;
@@ -137,9 +138,9 @@ public class SaveDataAction extends AbstractEditorActionDelegate
     }
 
     if( !atLeastOneDirty )
-      MessageDialog.openInformation( getShell(), "Keine Änderung", "Keine geänderte Zeitreihe" );
+      MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.7"), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.8") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( !status.isOK() )
-      ErrorDialog.openError( getShell(), "Zeitreihen speichern", "Fehler sind aufgetreten. Siehe Details.", status );
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.9"), Messages.getString("org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.10"), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

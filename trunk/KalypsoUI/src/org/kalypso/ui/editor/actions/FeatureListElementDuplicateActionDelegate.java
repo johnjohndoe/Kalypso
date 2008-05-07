@@ -51,6 +51,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -110,13 +111,13 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
         }
         catch( final Exception e )
         {
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e );
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
           KalypsoGisPlugin.getDefault().getLog().log( status );
 
           // we are in the ui-thread so we get a shell here
           final Shell shell = m_targetPart.getSite().getShell();
           if( shell != null )
-            ErrorDialog.openError( shell, action.getText(), "Fehler beim Duplizieren des Objektes", status );
+            ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate.1"), status ); //$NON-NLS-1$
         }
       }
     }

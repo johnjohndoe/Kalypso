@@ -56,6 +56,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -87,7 +88,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final PrintWriter m_logWriter;
 
-  private static final String SUMM_INFO = "*** ";
+  private static final String SUMM_INFO = "*** "; //$NON-NLS-1$
 
   private final Date m_forecastFrom;
 
@@ -179,13 +180,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       if( targetlink == null )
       {
-        m_logWriter.println( SUMM_INFO + "Keine Ziel-Verknüpfung gefunden für Feature mit ID: " + f.getId() );
+        m_logWriter.println( SUMM_INFO + Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.1") + f.getId() ); //$NON-NLS-1$
         return true;
       }
 
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
-        m_logWriter.println( SUMM_INFO + "Keine Quell-Verknüpfung(en) gefunden für Feature mit ID: " + f.getId() );
+        m_logWriter.println( SUMM_INFO + Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.2") + f.getId() ); //$NON-NLS-1$
         return true;
       }
 
@@ -237,7 +238,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logWriter.println( "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() );
+      m_logWriter.println( Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.3") + f.getId() ); //$NON-NLS-1$
       m_logWriter.println( e.getLocalizedMessage() );
     }
 
@@ -251,11 +252,11 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   {
     if( m_targetobservationDir != null )
     {
-      String name = (String)f.getProperty( "name" );
+      String name = (String)f.getProperty( "name" ); //$NON-NLS-1$
       if( name == null || name.length() < 1 )
         name = f.getId();
       if( name == null || name.length() < 1 )
-        name = "generated";
+        name = "generated"; //$NON-NLS-1$
       final File file = getValidFile( name, 0 );
       final TimeseriesLinkType link;
       link = OF.createTimeseriesLinkType();
@@ -277,9 +278,9 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   {
     String newName = name;
     if( index > 0 )
-      newName = newName + "_" + Integer.toString( index );
-    final String newName2 = FileUtilities.validateName( newName, "_" );
-    final File file = new File( m_targetobservationDir, newName2 + ".zml" );
+      newName = newName + "_" + Integer.toString( index ); //$NON-NLS-1$
+    final String newName2 = FileUtilities.validateName( newName, "_" ); //$NON-NLS-1$
+    final File file = new File( m_targetobservationDir, newName2 + ".zml" ); //$NON-NLS-1$
     if( file.exists() )
     {
       index++;
@@ -305,7 +306,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
         // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
         if( m_targetobservation.equals( source.getProperty() ) )
           m_logWriter
-              .println( "Hinweis: Zielzeitreihe konnte nicht gleichzeitig als Quelle verwendet werden und wird ignoriert. (kein Fehler)" );
+              .println( Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.9") ); //$NON-NLS-1$
         else
           throw new SensorException( e );
       }
@@ -350,7 +351,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     catch( final SensorException e )
     {
       // tricky: wrap the exception with timeserie-link as text to have a better error message
-      throw new SensorException( "Konnte Zeitreihe nicht laden: " + sourceref, e );
+      throw new SensorException( Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.10") + sourceref, e ); //$NON-NLS-1$
     }
   }
 

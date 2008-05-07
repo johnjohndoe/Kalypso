@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -77,7 +78,7 @@ public class AddLinkAction extends Action
 
   public AddLinkAction( final IFeatureType type, final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final int i, final Shell shell )
   {
-    super( type.getQName().getLocalPart() + " Link" );
+    super( type.getQName().getLocalPart() + " Link" ); //$NON-NLS-1$
     m_propertyName = propertyName;
     pos = i;
     m_workspace = workspace;
@@ -122,8 +123,8 @@ public class AddLinkAction extends Action
     catch( final Exception e )
     {
       final String msg = e.getMessage();
-      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GmlEditor", 0, msg == null ? "" : msg, null );
-      ErrorDialog.openError( m_shell, "ERROR", e.getMessage(), status );
+      final IStatus status = new Status( IStatus.ERROR, "org.kalypso.ui.editor.GmlEditor", 0, msg == null ? "" : msg, null ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( m_shell, Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction.3"), e.getMessage(), status ); //$NON-NLS-1$
       e.printStackTrace();
     }
   }
@@ -148,7 +149,7 @@ public class AddLinkAction extends Action
     {
       final Composite area = new Composite( parent, SWT.NULL );
 
-      area.getShell().setText( "Select a Feature" );
+      area.getShell().setText( Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.AddLinkAction.4") ); //$NON-NLS-1$
 
       final GridLayout gridLayout = new GridLayout();
       gridLayout.marginWidth = 15;

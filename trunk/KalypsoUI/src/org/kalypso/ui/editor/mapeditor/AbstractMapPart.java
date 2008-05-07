@@ -85,6 +85,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
@@ -113,12 +114,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
 // (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
 // functionality (save when dirty, command target).
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public abstract class AbstractMapPart extends AbstractEditorPart implements IExportableObjectFactory, IMapPanelProvider
 {
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-  public final StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 );
+  public final StatusLineContributionItem m_statusBar = new StatusLineContributionItem( "MapViewStatusBar", 100 ); //$NON-NLS-1$
 
   private final MapModellContextSwitcher m_mapModellContextSwitcher = new MapModellContextSwitcher();
 
@@ -140,7 +141,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   protected boolean m_saving;
 
-  public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category";
+  public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category"; //$NON-NLS-1$
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
@@ -165,7 +166,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private final IPartListener2 m_partListener = new PartAdapter2()
   {
-    private static final String MAP_CONTEXT = "org.kalypso.ogc.gml.map.context";
+    private static final String MAP_CONTEXT = "org.kalypso.ogc.gml.map.context"; //$NON-NLS-1$
 
     private IContextActivation m_activateContext;
 
@@ -236,7 +237,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private void initMapPanel( final IWorkbenchPartSite site )
   {
-    m_statusBar.setText( "< Welcome to the Map >" );
+    m_statusBar.setText( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.4") ); //$NON-NLS-1$
 
     // both IViewSite und IEditorSite give access to actionBars
     final IActionBars actionBars = getActionBars( site );
@@ -408,7 +409,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public void startLoadJob( final IStorage storage )
   {
-    final Job job = new Job( "Karte laden: " + storage.getName() )
+    final Job job = new Job( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.5") + storage.getName() ) //$NON-NLS-1$
     {
       @Override
       public IStatus run( final IProgressMonitor monitor )
@@ -439,7 +440,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_saving )
       return;
 
-    monitor.beginTask( "Kartenvorlage laden", 2 );
+    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.6"), 2 ); //$NON-NLS-1$
 
     String partName = null;
     try
@@ -488,7 +489,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.done();
 
-      final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : "<input not a file>";
+      final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.7"); //$NON-NLS-1$
       if( partName == null )
         partName = fileName;
       setCustomName( partName );
@@ -519,7 +520,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_saving = true;
     try
     {
-      monitor.beginTask( "Kartenvorlage speichern", 2000 );
+      monitor.beginTask( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.8"), 2000 ); //$NON-NLS-1$
       final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
       final String srsName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
       m_mapModell.createGismapTemplate( boundingBox, srsName, monitor, file );
@@ -532,7 +533,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     catch( final Throwable e )
     {
       m_saving = false;
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.9") ) ); //$NON-NLS-1$
     }
     m_saving = false;
 
@@ -552,11 +553,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       workbench.getDisplay().asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {
           if( m_mapModell == null )
-            setPartName( "<Keine Karte geladen>" );
+            setPartName( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.11") ); //$NON-NLS-1$
           else
             setPartName( m_mapModell.getLabel( m_mapModell ) );
         }
@@ -588,7 +589,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       workbench.getDisplay().asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {
           setPartName( m_partName );
@@ -637,7 +638,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
-    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) };
+    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) }; //$NON-NLS-1$
   }
 
   /**
@@ -646,12 +647,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" ); //$NON-NLS-1$
     final Rectangle bounds = getMapPanel().getBounds();
     final double width = bounds.width;
     final double height = bounds.height;
     final double actualWidthToHeigthRatio = width / height;
-    final IWizardPage page = new ImageExportPage( configuration, "mapprops", "Export Optionen", imgDesc, actualWidthToHeigthRatio );
+    final IWizardPage page = new ImageExportPage( configuration, "mapprops", Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.16"), imgDesc, actualWidthToHeigthRatio ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[] { page };
   }

@@ -79,6 +79,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
@@ -148,7 +149,7 @@ public class StrokeEditorComposite extends Composite
     previewGridData.horizontalSpan = 2;
     previewGridData.heightHint = 30;
     previewGroup.setLayoutData( previewGridData );
-    previewGroup.setText( "Vorschau" );
+    previewGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.0") ); //$NON-NLS-1$
 
     /* preview */
     m_previewComp = new Composite( previewGroup, SWT.NONE );
@@ -167,7 +168,7 @@ public class StrokeEditorComposite extends Composite
 
     m_previewComp.addControlListener( new ControlAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void controlResized( ControlEvent e )
       {
@@ -182,7 +183,7 @@ public class StrokeEditorComposite extends Composite
     /* line type combo */
     // combo text
     final Label comboTextLabel = new Label( this, SWT.NONE );
-    comboTextLabel.setText( "Strichart" );
+    comboTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2") ); //$NON-NLS-1$
 
     final ComboViewer lineTypeCombo = new ComboViewer( this, SWT.READ_ONLY );
     GridData comboGridData = new GridData( SWT.END, SWT.CENTER, false, false );
@@ -191,10 +192,10 @@ public class StrokeEditorComposite extends Composite
     lineTypeCombo.setContentProvider( new ArrayContentProvider() );
 
     String[] types = new String[4];
-    types[0] = "durchgezogen";
-    types[1] = "gepunktet";
-    types[2] = "gestrichelt";
-    types[3] = "Strich-Punkt";
+    types[0] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.3"); //$NON-NLS-1$
+    types[1] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.4"); //$NON-NLS-1$
+    types[2] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.5"); //$NON-NLS-1$
+    types[3] = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.6"); //$NON-NLS-1$
     lineTypeCombo.setInput( types );
     lineTypeCombo.setSelection( new StructuredSelection( lineTypeCombo.getElementAt( 0 ) ) );
 
@@ -213,7 +214,7 @@ public class StrokeEditorComposite extends Composite
     // selection listener
     lineTypeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
@@ -221,28 +222,28 @@ public class StrokeEditorComposite extends Composite
 
         String string = (String) element;
 
-        if( string == "durchgezogen" )
+        if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.8") ) //$NON-NLS-1$
         {
           float[] dashArray = new float[2];
           dashArray[0] = 1;
           dashArray[1] = 0;
           m_stroke.setDashArray( dashArray );
         }
-        else if( string == "gestrichelt" )
+        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.9") ) //$NON-NLS-1$
         {
           float[] dashArray = new float[2];
           dashArray[0] = 10f;
           dashArray[1] = 5f;
           m_stroke.setDashArray( dashArray );
         }
-        else if( string == "gepunktet" )
+        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.10") ) //$NON-NLS-1$
         {
           float[] dashArray = new float[2];
           dashArray[0] = 2f;
           dashArray[1] = 1.9f;
           m_stroke.setDashArray( dashArray );
         }
-        else if( string == "Strich-Punkt" )
+        else if( string == Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.11") ) //$NON-NLS-1$
         {
           float[] dashArray = new float[4];
           dashArray[0] = 10f;
@@ -261,7 +262,7 @@ public class StrokeEditorComposite extends Composite
     /* color width */
     // spinner text
     final Label widthTextLabel = new Label( this, SWT.NONE );
-    widthTextLabel.setText( "Linienstärke" );
+    widthTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.12") ); //$NON-NLS-1$
 
     final Spinner widthSpinner = new Spinner( this, SWT.NONE );
     widthSpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
@@ -272,7 +273,7 @@ public class StrokeEditorComposite extends Composite
 
     widthSpinner.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -287,7 +288,7 @@ public class StrokeEditorComposite extends Composite
     /* color opacity */
     // spinner text
     final Label opacityTextLabel = new Label( this, SWT.NONE );
-    opacityTextLabel.setText( "Deckkraft [%]" );
+    opacityTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.14") ); //$NON-NLS-1$
 
     final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
     opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
@@ -298,7 +299,7 @@ public class StrokeEditorComposite extends Composite
 
     opacitySpinner.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void widgetSelected( SelectionEvent e )
       {
@@ -313,10 +314,10 @@ public class StrokeEditorComposite extends Composite
   {
     /* Color */
     final Label colorTextLabel = new Label( this, SWT.NONE );
-    colorTextLabel.setText( "Linienfarbe" );
+    colorTextLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.16") ); //$NON-NLS-1$
 
     m_colorLabel = new Label( this, SWT.BORDER );
-    m_colorLabel.setText( "     " );
+    m_colorLabel.setText( "     " ); //$NON-NLS-1$
     GridData gridData = new GridData( SWT.END, SWT.CENTER, true, false );
     gridData.widthHint = 16;
     gridData.heightHint = 16;
@@ -329,7 +330,7 @@ public class StrokeEditorComposite extends Composite
     /* mouse listeners */
     m_colorLabel.addMouseListener( new MouseAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void mouseDown( MouseEvent e )
       {
@@ -368,7 +369,7 @@ public class StrokeEditorComposite extends Composite
     } );
   }
 
-  @SuppressWarnings("static-access")
+  @SuppressWarnings("static-access") //$NON-NLS-1$
   private void updatePreview( )
   {
     Point point = m_previewComp.getSize();
@@ -388,11 +389,11 @@ public class StrokeEditorComposite extends Composite
     g2D.fillRect( 0, 0, width.intValue(), height.intValue() );
 
     g2D.setColor( java.awt.Color.BLACK );
-    Font font = new Font( "SansSerif", Font.BOLD, height.intValue() );
+    Font font = new Font( "SansSerif", Font.BOLD, height.intValue() ); //$NON-NLS-1$
     g2D.setFont( font );
 
     /* demo text */
-    final String title = "demo";
+    final String title = Messages.getString("org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.21"); //$NON-NLS-1$
     g2D.drawString( title, width.divide( new BigDecimal( 2 ), 0, BigDecimal.ROUND_CEILING ).intValue() - 30, height.divide( new BigDecimal( 1.2 ), 0, BigDecimal.ROUND_CEILING ).intValue() );
 
     StrokePainter painter;

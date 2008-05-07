@@ -40,12 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget;
 
 public class CoordinateInfoWidgetDelegate extends AbstractWidgetWithOptionActionDelegate
 {
   public CoordinateInfoWidgetDelegate( )
   {
-    super( new CoordinateInfoWidget( "Koordinaten Info", "Koordinaten Informationen" ) );
+    super( new CoordinateInfoWidget( Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.0"), Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

@@ -49,7 +49,7 @@ import javax.swing.table.TableModel;
  */
 public class WQTableModel extends AbstractTableModel implements TableModel
 {
-  private final static String[] COLUMN_NAMES = { "W", "Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9" };
+  private final static String[] COLUMN_NAMES = { "W", "Q0", "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8", "Q9" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
 
   private final Double m_startW;
 

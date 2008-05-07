@@ -70,6 +70,7 @@ import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -87,7 +88,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class MapPartHelper
 {
   private MapPartHelper( )
@@ -159,7 +160,7 @@ public class MapPartHelper
     final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
-      manager.add( new GroupMarker( "themeActions" ) );
+      manager.add( new GroupMarker( "themeActions" ) ); //$NON-NLS-1$
 
       /* Add a 'new' menu corresponding to the theme's feature type. */
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
@@ -188,7 +189,7 @@ public class MapPartHelper
         {
         }
       };
-      final IMenuManager themeManager = new MenuManager( "&Thema", "themeActions" );
+      final IMenuManager themeManager = new MenuManager( Messages.getString("org.kalypso.ui.editor.mapeditor.MapPartHelper.2"), "themeActions" ); //$NON-NLS-1$ //$NON-NLS-2$
       ObjectActionContributorManager.getManager().contributeObjectActions( part, themeManager, selectionProvider );
       manager.add( themeManager );
     }

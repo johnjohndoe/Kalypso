@@ -65,6 +65,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
@@ -114,13 +115,13 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       final IWorkbenchPage page = window.getActivePage();
       try
       {
-        page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+        page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
       }
       catch( final PartInitException e )
       {
         e.printStackTrace();
         final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
+        ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.1"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       // getLayerTable().setFocusedFeature( feature, ftp );
@@ -177,7 +178,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     {
       e.printStackTrace();
 
-      return StatusUtilities.statusFromThrowable( e, "Fehler beim Speichern" );
+      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.3") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -298,7 +299,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     final Object featureFromPath = m_workspace == null ? null : m_workspace.getFeatureFromPath( m_featurePath );
     final Feature feature = featureFromPath instanceof Feature ? (Feature) featureFromPath : null;
 
-    final String errorMessage = "Kein Feature für Featurepath: " + m_featurePath;
+    final String errorMessage = Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.4") + m_featurePath; //$NON-NLS-1$
 
     try
     {
@@ -317,7 +318,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
       if( m_workspace == null )
       {
         m_label = new Label( m_panel, SWT.CENTER );
-        m_label.setText( "laden..." );
+        m_label.setText( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer.5") ); //$NON-NLS-1$
         m_label.setLayoutData( new GridData( GridData.FILL_BOTH ) );
         return;
       }

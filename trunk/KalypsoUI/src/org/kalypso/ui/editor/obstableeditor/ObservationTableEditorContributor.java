@@ -63,8 +63,8 @@ public class ObservationTableEditorContributor extends EditorActionBarContributo
     super.setActiveEditor( targetEditor );
 
     if( m_exportActions == null )
-      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editor.obstableditor.menu/exports",
-          "tabelle", IExportTargetModes.MODE_EXPERT );
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editor.obstableditor.menu/exports", //$NON-NLS-1$
+          "tabelle", IExportTargetModes.MODE_EXPERT ); //$NON-NLS-1$
     
     for( int i = 0; i < m_exportActions.length; i++ )
       m_exportActions[i].setActivePart( targetEditor );

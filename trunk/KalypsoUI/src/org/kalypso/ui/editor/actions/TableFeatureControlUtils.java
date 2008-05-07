@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -106,11 +107,11 @@ public class TableFeatureControlUtils
       {
         String msg;
         if( allFeatures.length == 1 )
-          msg = "Das zu löschende Feature wird von den folgenden Features benutzt (gelinkt).\nSoll trotzdem gelöscht werden?";
+          msg = Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.0"); //$NON-NLS-1$
         else
-          msg = "Die zu löschenden Features werden von den folgenden Features benutzt (gelinkt).\n Soll trotzdem gelöscht werden?";
+          msg = Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.1"); //$NON-NLS-1$
 
-        MessageDialog dialog = new MessageDialog( shell, "Features löschen", null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 )
+        MessageDialog dialog = new MessageDialog( shell, Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.2"), null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ) //$NON-NLS-1$
         {
           /**
            * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
@@ -129,7 +130,7 @@ public class TableFeatureControlUtils
               public String getText( Object element )
               {
                 if( element instanceof Feature )
-                  return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_NAME ) + ": <" + FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL ) + ">";
+                  return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_NAME ) + ": <" + FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL ) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 
                 return super.getText( element );
               }

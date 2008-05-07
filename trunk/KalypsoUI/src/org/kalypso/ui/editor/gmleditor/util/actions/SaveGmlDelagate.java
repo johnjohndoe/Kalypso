@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
@@ -75,7 +76,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
       return;
 
     final Shell shell = part.getSite().getShell();
-    if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des Baums gespeichert werden?" ) )
+    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate.0"), Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     final GmlTreeView treeViewer = editor.getTreeView();
@@ -102,7 +103,7 @@ public class SaveGmlDelagate extends AbstractGisEditorActionDelegate
         e.printStackTrace();
 
         final CoreException ce = (CoreException) e.getTargetException();
-        ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
+        ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate.2"), Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate.3"), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final InterruptedException e )
       {

@@ -79,6 +79,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -128,13 +129,13 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
       final IWorkbenchPage page = window.getActivePage();
       try
       {
-        page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE );
+        page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_VISIBLE ); //$NON-NLS-1$
       }
       catch( final PartInitException e )
       {
         e.printStackTrace();
         final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, "Feature bearbeiten", "Fehler beim Öffnen der Feature-View", e.getStatus() );
+        ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.gistableeditor.GisTableEditor.1"), Messages.getString("org.kalypso.ui.editor.gistableeditor.GisTableEditor.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   };
@@ -230,12 +231,12 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   protected final void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
   {
     if( !(input instanceof IFileEditorInput) )
-      throw new IllegalArgumentException( "Kann nur Dateien laden" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ui.editor.gistableeditor.GisTableEditor.3") ); //$NON-NLS-1$
 
     if( m_layerTable == null )
       return;
 
-    monitor.beginTask( "Vorlage laden", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.gistableeditor.GisTableEditor.4"), 1000 ); //$NON-NLS-1$
 
     final Gistableview tableTemplate = GisTemplateHelper.loadGisTableview( ((IFileEditorInput) input).getFile() );
 
@@ -334,7 +335,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
-    final IWizardPage page = new ExportTableOptionsPage( "optionPage", "Export Otionen", ImageProvider.IMAGE_UTIL_BERICHT_WIZ );
+    final IWizardPage page = new ExportTableOptionsPage( "optionPage", Messages.getString("org.kalypso.ui.editor.gistableeditor.GisTableEditor.6"), ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[] { page };
   }

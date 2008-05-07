@@ -50,6 +50,7 @@ import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -82,7 +83,7 @@ public class ExportableMap implements IExportableObject
   public String getPreferredDocumentName( )
   {
     // TODO besserer Name?
-    return "Karte." + m_format;
+    return Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.0") + m_format; //$NON-NLS-1$
   }
 
   /**
@@ -93,19 +94,19 @@ public class ExportableMap implements IExportableObject
   {
     try
     {
-      monitor.beginTask( "Bildexport", 1000 );
+      monitor.beginTask( Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.1"), 1000 ); //$NON-NLS-1$
 
       final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height );
 
       final boolean result = ImageIO.write( image, m_format, output );
       if( !result )
-        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, "Ungültiges Format: " + m_format, null );
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.2") + m_format, null ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Export", e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.3"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -130,6 +131,6 @@ public class ExportableMap implements IExportableObject
   public String getCategory( )
   {
     // TODO bessere category
-    return "unbekannt";
+    return Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.4"); //$NON-NLS-1$
   }
 }

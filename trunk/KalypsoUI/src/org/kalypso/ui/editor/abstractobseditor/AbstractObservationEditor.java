@@ -51,6 +51,7 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -138,7 +139,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
   {
-    monitor.beginTask( "Vorlage laden", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     final ObsView view = getView();
 
@@ -173,7 +174,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
           status = TableViewUtils.applyXMLTemplate( (TableView) getView(), baseTemplate, new URL( strUrl ), sync, null );
         }
         else
-          throw new IllegalArgumentException( "Kann Vorlage nicht öffnen, Typ wird nicht unterstützt." );
+          throw new IllegalArgumentException( Messages.getString("org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor.1") ); //$NON-NLS-1$
       }
     }
     catch( final Exception e )
@@ -195,7 +196,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
       {
         public void run( )
         {
-          ErrorDialog.openError( getSite().getShell(), "Vorlage öffnen", "Siehe Details", finalStatus );
+          ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor.2"), Messages.getString("org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor.3"), finalStatus ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       } );
     }

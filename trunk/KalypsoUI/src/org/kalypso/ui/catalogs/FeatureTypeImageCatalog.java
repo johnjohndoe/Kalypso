@@ -53,15 +53,15 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class FeatureTypeImageCatalog extends FeatureTypeCatalog
 {
-  private static final String BASETYPE = "swtimage";
+  private static final String BASETYPE = "swtimage"; //$NON-NLS-1$
 
   private static Map<String, ImageDescriptor> m_imageDescriptorCache = new HashMap<String, ImageDescriptor>();
 
   public static ImageDescriptor getImage( final URL context, final QName qname )
   {
     /* Try to get cached image descriptor */
-    final String contextStr = context == null ? "null" : context.toExternalForm();
-    final String qnameStr = qname == null ? "null" : qname.toString();
+    final String contextStr = context == null ? "null" : context.toExternalForm(); //$NON-NLS-1$
+    final String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
     final String cacheKey = contextStr + '#' + qnameStr;
 
     if( m_imageDescriptorCache.containsKey( cacheKey ) )

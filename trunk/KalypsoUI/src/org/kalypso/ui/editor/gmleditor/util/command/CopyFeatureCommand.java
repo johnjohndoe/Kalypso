@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor.gmleditor.util.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.gmleditor.util.Clipboard;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -96,7 +97,7 @@ public class CopyFeatureCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Feature kopieren";
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand.0"); //$NON-NLS-1$
   }
 
   private void copyFeature() throws Exception

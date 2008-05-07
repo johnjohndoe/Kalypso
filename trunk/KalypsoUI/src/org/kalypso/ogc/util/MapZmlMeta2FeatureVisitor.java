@@ -51,6 +51,7 @@ import java.util.logging.Logger;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
@@ -148,7 +149,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     // load observation
     if( f.getFeatureType().getProperty( m_zmlLink ) == null )
     {
-      m_logger.warning( "Feature has no property with name: " + m_zmlLink );
+      m_logger.warning( Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.0") + m_zmlLink ); //$NON-NLS-1$
       return true;
     }
 
@@ -158,7 +159,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
 
     if( !(property instanceof TimeseriesLinkType) )
     {
-      m_logger.warning( "FeatureProperty is no of type: " + TimeseriesLinkType.class.getName() );
+      m_logger.warning( Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.1") + TimeseriesLinkType.class.getName() ); //$NON-NLS-1$
       return true;
     }
 
@@ -178,12 +179,12 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logger.log( Level.SEVERE, "Link to zml not valid: " + href, e );
+      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.2") + href, e ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      m_logger.log( Level.SEVERE, "Could not load observation: " + href, e );
+      m_logger.log( Level.SEVERE, Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.3") + href, e ); //$NON-NLS-1$
     }
 
     return true;
@@ -194,7 +195,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
     final IPropertyType ftp = f.getFeatureType().getProperty( mapping.getTargetProperty() );
     if( ftp == null )
     {
-      m_logger.warning( "Feature has no property with name: " + m_zmlLink );
+      m_logger.warning( Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.4") + m_zmlLink ); //$NON-NLS-1$
       return;
     }
 
@@ -207,7 +208,7 @@ public class MapZmlMeta2FeatureVisitor implements FeatureVisitor
       values[i] = metadataList.getProperty( names[i].getName() );
       if( values[i] == null )
       {
-        m_logger.log( Level.WARNING, "No value in feature (fid=" + f.getId() + ") for metadata-entry: " + names[i] );
+        m_logger.log( Level.WARNING, Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.5") + f.getId() + Messages.getString("org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor.6") + names[i] ); //$NON-NLS-1$ //$NON-NLS-2$
         return;
       }
     }

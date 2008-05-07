@@ -78,9 +78,9 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
 
   public WQRelationDiagramViewer( final Composite parent )
   {
-    m_diagramAxisW = new DiagramAxis( "w", "double", "W", "cm", DiagramAxis.DIRECTION_VERTICAL,
+    m_diagramAxisW = new DiagramAxis( "w", "double", "W", "cm", DiagramAxis.DIRECTION_VERTICAL, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         DiagramAxis.POSITION_LEFT, false );
-    m_diagramAxisQ = new DiagramAxis( "q", "double", "Q", "m³/s", DiagramAxis.DIRECTION_HORIZONTAL,
+    m_diagramAxisQ = new DiagramAxis( "q", "double", "Q", "m³/s", DiagramAxis.DIRECTION_HORIZONTAL, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         DiagramAxis.POSITION_BOTTOM, false );
 
     m_diagView.addAxis( m_diagramAxisW );

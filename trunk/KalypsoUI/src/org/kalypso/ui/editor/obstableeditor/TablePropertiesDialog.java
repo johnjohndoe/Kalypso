@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author schlienger
@@ -76,14 +77,14 @@ public class TablePropertiesDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( Composite parent )
   {
-    setTitle( "Zeitreihentabellen-Eigenschaften" );
+    setTitle( Messages.getString("org.kalypso.ui.editor.obstableeditor.TablePropertiesDialog.0") ); //$NON-NLS-1$
 
     final Composite cmp = new Composite( parent, SWT.FILL );
     cmp.setLayout( new GridLayout( 2, false ) );
     cmp.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label lblTz = new Label( cmp, SWT.LEFT );
-    lblTz.setText( "Zeitzone" );
+    lblTz.setText( Messages.getString("org.kalypso.ui.editor.obstableeditor.TablePropertiesDialog.1") ); //$NON-NLS-1$
     final Combo cmbTz = new Combo( cmp, SWT.DROP_DOWN );
     cmbTz.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 

@@ -61,7 +61,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
  */
 public class FeatureTemplateView extends ViewPart
 {
-  public static final String ID = "org.kalypso.ui.views.featuretemplateview";
+  public static final String ID = "org.kalypso.ui.views.featuretemplateview"; //$NON-NLS-1$
 
 // private static final String MEMENTO_FILE = "file";
 
@@ -154,7 +154,7 @@ public class FeatureTemplateView extends ViewPart
     {
       workbench.getDisplay().asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {
           setPartName( m_partName );

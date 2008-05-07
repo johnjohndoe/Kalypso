@@ -40,12 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget;
 
 public class EditRelationsWidgetDelegate extends AbstractWidgetWithOptionActionDelegate
 {
   public EditRelationsWidgetDelegate( )
   {
-    super( new EditRelationWidget( "Relation editeren ", "Editieren von Relationen" ) );
+    super( new EditRelationWidget( Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.0"), Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

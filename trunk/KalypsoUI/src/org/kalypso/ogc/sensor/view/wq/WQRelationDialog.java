@@ -49,6 +49,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.view.wq.diagram.WQRelationDiagramViewer;
@@ -91,7 +92,7 @@ public class WQRelationDialog extends ResizableDialog
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), "WQ-Beziehung, Dialog öffnen", e.getLocalizedMessage() );
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
 
     getShell().setText( m_title );

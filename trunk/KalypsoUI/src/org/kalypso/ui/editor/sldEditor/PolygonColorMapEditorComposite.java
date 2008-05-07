@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -77,15 +78,15 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 public abstract class PolygonColorMapEditorComposite extends Composite
 {
-  private static final Color DEFAULT_COLOR_MIN = new Color( Integer.parseInt( "ff0000", 16 ) );
+  private static final Color DEFAULT_COLOR_MIN = new Color( Integer.parseInt( "ff0000", 16 ) ); //$NON-NLS-1$
 
-  private static final Color DEFAULT_COLOR_MAX = new Color( Integer.parseInt( "0000ff", 16 ) );
+  private static final Color DEFAULT_COLOR_MAX = new Color( Integer.parseInt( "0000ff", 16 ) ); //$NON-NLS-1$
 
   private PolygonColorMapEntry m_toEntry;
 
   private PolygonColorMapEntry m_fromEntry;
 
-  private final Pattern m_patternDouble = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" );
+  private final Pattern m_patternDouble = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" ); //$NON-NLS-1$
 
   private boolean m_strokeChecked;
 
@@ -136,7 +137,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     final Stroke defaultStrokeFrom = StyleFactory.createStroke( color );
 
     // parameters
-    final String label = String.format( "%s - %s", fromValue.toString(), toValue.toString() );
+    final String label = String.format( "%s - %s", fromValue.toString(), toValue.toString() ); //$NON-NLS-1$
 
     final ParameterValueType defaultLabel = StyleFactory.createParameterValueType( label );
     final ParameterValueType defaultFrom = StyleFactory.createParameterValueType( fromValue.doubleValue() );
@@ -154,12 +155,12 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     Group fromColorMapGroup = new Group( this, SWT.NONE );
     fromColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    fromColorMapGroup.setText( "Startfarbe" );
+    fromColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.4") ); //$NON-NLS-1$
 
     Group toColorMapGroup = new Group( this, SWT.NONE );
     toColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    toColorMapGroup.setText( "Endfarbe" );
+    toColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.5") ); //$NON-NLS-1$
 
     final PolygonColorMapEntryEditorComposite fromEntryComposite = new PolygonColorMapEntryEditorComposite( fromColorMapGroup, SWT.NONE, m_fromEntry );
     fromEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -191,7 +192,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     gridDataProperty.horizontalSpan = 2;
     propertyGroup.setLayoutData( gridDataProperty );
     propertyGroup.setLayout( new GridLayout( 2, true ) );
-    propertyGroup.setText( "Wertebereich" );
+    propertyGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.6") ); //$NON-NLS-1$
 
     final Composite globalComposite = new Composite( propertyGroup, SWT.NONE );
     GridData gridDataGlobalComp = new GridData( SWT.FILL, SWT.FILL, true, false );
@@ -207,7 +208,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     final GridData gridDataGlobalMax = new GridData( SWT.BEGINNING, SWT.UP, false, false );
     gridDataGlobalMax.heightHint = 15;
     globalMaxLabel.setLayoutData( gridDataGlobalMax );
-    globalMaxLabel.setText( "maximaler Wert: " );
+    globalMaxLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.7") ); //$NON-NLS-1$
 
     final Label globalMaxValueLabel = new Label( globalComposite, SWT.NONE );
     GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.UP, false, false );
@@ -220,7 +221,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
     globalMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, false, false ) );
-    globalMinLabel.setText( "minimaler Wert: " );
+    globalMinLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.8") ); //$NON-NLS-1$
 
     final Label globalMinValueLabel = new Label( globalComposite, SWT.NONE );
     GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.UP, false, false );
@@ -232,7 +233,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     final Label checkStroke = new Label( globalComposite, SWT.NONE );
     checkStroke.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, false, false ) );
-    checkStroke.setText( "Linien darstellen: " );
+    checkStroke.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.9") ); //$NON-NLS-1$
 
     final Button checkStrokeFrom = new Button( globalComposite, SWT.CHECK );
     checkStrokeFrom.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
@@ -250,7 +251,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     checkStrokeFrom.addSelectionListener( new SelectionAdapter()
     {
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -262,7 +263,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     /* max value to display */
     final Label displayMaxLabel = new Label( displayComposite, SWT.NONE );
     displayMaxLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
-    displayMaxLabel.setText( "maximaler angezeigter Wert: " );
+    displayMaxLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.11") ); //$NON-NLS-1$
 
     final Text maxValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     GridData gridDataMaxText = new GridData( SWT.END, SWT.UP, true, false );
@@ -276,7 +277,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     /* min value to display */
     final Label displayMinLabel = new Label( displayComposite, SWT.NONE );
     displayMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
-    displayMinLabel.setText( "minimaler angezeigter Wert: " );
+    displayMinLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.12") ); //$NON-NLS-1$
 
     final Text minValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     GridData gridDataMinText = new GridData( SWT.END, SWT.UP, true, false );
@@ -289,7 +290,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -305,7 +306,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addFocusListener( new FocusListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
@@ -313,7 +314,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_minValue = value;
       }
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
@@ -327,7 +328,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addModifyListener( new ModifyListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = minValueText.getText();
@@ -341,14 +342,14 @@ public abstract class PolygonColorMapEditorComposite extends Composite
         else
         {
           minValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-          tempText.replaceAll( ",", "." );
+          tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );
 
     maxValueText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -364,7 +365,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addFocusListener( new FocusListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
@@ -372,7 +373,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_maxValue = value;
       }
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
@@ -386,7 +387,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addModifyListener( new ModifyListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = maxValueText.getText();
@@ -400,7 +401,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
         else
         {
           maxValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-          tempText.replaceAll( ",", "." );
+          tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );
@@ -408,7 +409,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     // step width spinner
     final Label labelWithSpinner = new Label( displayComposite, SWT.NONE );
     labelWithSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.UP, true, false ) );
-    labelWithSpinner.setText( "Klassenbreite" );
+    labelWithSpinner.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapEditorComposite.25") ); //$NON-NLS-1$
 
     final Text stepWidthText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     GridData gridDataStepWidthText = new GridData( SWT.END, SWT.UP, true, false );
@@ -421,7 +422,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -437,7 +438,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addFocusListener( new FocusListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
@@ -445,7 +446,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
           m_stepWidth = value;
       }
 
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
@@ -459,7 +460,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addModifyListener( new ModifyListener()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = stepWidthText.getText();
@@ -473,7 +474,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
         else
         {
           stepWidthText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-          tempText.replaceAll( ",", "." );
+          tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );
@@ -550,7 +551,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
         final Stroke stroke = StyleFactory.createStroke( lineColor, lineWidth.doubleValue(), lineOpacity.doubleValue() );
         stroke.setLineCap( java.awt.BasicStroke.CAP_ROUND );
         stroke.setLineJoin( java.awt.BasicStroke.JOIN_ROUND );
-        final String labelStr = String.format( "%.2f - %.2f", fromValue, toValue );
+        final String labelStr = String.format( "%.2f - %.2f", fromValue, toValue ); //$NON-NLS-1$
 
         final ParameterValueType label = StyleFactory.createParameterValueType( labelStr );
         final ParameterValueType from = StyleFactory.createParameterValueType( fromValue.doubleValue() );

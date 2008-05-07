@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
@@ -66,7 +67,7 @@ public class KalypsoUIExtensions
   }
 
   /* extension-point 'featureViewExtensionControl' */
-  private final static String FEATUREVIEW_CONTROL_EXTENSION_POINT = "org.kalypso.ui.featureViewExtensionControl";
+  private final static String FEATUREVIEW_CONTROL_EXTENSION_POINT = "org.kalypso.ui.featureViewExtensionControl"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> THE_FEATUREVIEW_CONTROL_MAP = null;
 
@@ -78,9 +79,9 @@ public class KalypsoUIExtensions
 
     final IConfigurationElement factoryElement = map.get( id );
     if( factoryElement == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( "No feature-control-factory found with id: " + id ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.KalypsoUIExtensions.1") + id ) ); //$NON-NLS-1$
 
-    return (IFeatureviewControlFactory) factoryElement.createExecutableExtension( "class" );
+    return (IFeatureviewControlFactory) factoryElement.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   private static synchronized Map<String, IConfigurationElement> getFeatureviewControlMap( )
@@ -94,7 +95,7 @@ public class KalypsoUIExtensions
 
       for( final IConfigurationElement element : configurationElements )
       {
-        final String id = element.getAttribute( "id" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         THE_FEATUREVIEW_CONTROL_MAP.put( id, element );
       }
 
@@ -105,20 +106,20 @@ public class KalypsoUIExtensions
 
   public static IComponentUiHandlerProvider createComponentUiHandlerProvider( final String componentUiHandlerProviderId )
   {
-    final String idToFind = componentUiHandlerProviderId == null ? "org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider" : componentUiHandlerProviderId;
+    final String idToFind = componentUiHandlerProviderId == null ? "org.kalypso.ogc.gml.om.table.handlers.DefaultComponentUiHandlerProvider" : componentUiHandlerProviderId; //$NON-NLS-1$
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.ui.componentUiHandlerProvider" );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.ui.componentUiHandlerProvider" ); //$NON-NLS-1$
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
     for( final IConfigurationElement element : configurationElements )
     {
-      final String id = element.getAttribute( "id" );
+      final String id = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id.equals( idToFind ) )
       {
         try
         {
-          return (IComponentUiHandlerProvider) element.createExecutableExtension( "class" );
+          return (IComponentUiHandlerProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
         }
         catch( final CoreException e )
         {
@@ -131,7 +132,7 @@ public class KalypsoUIExtensions
       }
     }
 
-    final IStatus status = StatusUtilities.createErrorStatus( "No componenUiHandlerProvider found with id: " + componentUiHandlerProviderId );
+    final IStatus status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.KalypsoUIExtensions.8") + componentUiHandlerProviderId ); //$NON-NLS-1$
     KalypsoGisPlugin.getDefault().getLog().log( status );
 
     return null;

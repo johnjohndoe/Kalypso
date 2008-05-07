@@ -176,7 +176,7 @@ public class GMLLabelProvider extends LabelProvider
   public String getText( Object element )
   {
     if( element instanceof GMLWorkspace )
-      return "GML";
+      return "GML"; //$NON-NLS-1$
 
     if( element instanceof Feature )
       return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL );
@@ -189,26 +189,26 @@ public class GMLLabelProvider extends LabelProvider
       IAnnotation annotation = AnnotationUtilities.getAnnotation( ((FeatureAssociationTypeElement) element).getAssociationTypeProperty() );
       if( annotation != null )
         return annotation.getLabel();
-      return "<-> ";
+      return "<-> "; //$NON-NLS-1$
     }
 
     if( element instanceof LinkedFeatureElement2 )
     {
       Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
-      return "-> " + getText( decoratedFeature );
+      return "-> " + getText( decoratedFeature ); //$NON-NLS-1$
     }
 
     if( element instanceof IValuePropertyType )
     {
       IValuePropertyType vpt = (IValuePropertyType) element;
-      return vpt.getValueClass().getName().replaceAll( ".+\\.", "" );
+      return vpt.getValueClass().getName().replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     if( element instanceof GM_Object )
-      return element.getClass().getName().replaceAll( ".+\\.", "" );
+      return element.getClass().getName().replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( element == null )
-      return "null";
+      return "null"; //$NON-NLS-1$
 
     return element.toString();
   }

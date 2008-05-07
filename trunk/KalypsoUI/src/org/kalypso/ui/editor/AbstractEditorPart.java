@@ -74,6 +74,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -161,8 +162,8 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     if( !(getEditorInput() instanceof FileEditorInput) )
     {
       // given user a chance to use save-as
-      MessageDialog.openInformation( getSite().getShell(), "Speichern", "Der Inhalt kann nicht direkt gespeichert werden weil noch\n" + "keine grundliegende Vorlagedatei vorhanden ist. Es handelt\n"
-          + "sich möglicherweise um eine 'virtuelle' Vorlage\n" + "Bitte benutzen Sie das 'Speichern als' Kommando." );
+      MessageDialog.openInformation( getSite().getShell(), Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.0"), Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.1") + Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.2") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          + Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.3") + Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.4") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return;
     }
@@ -182,7 +183,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
       {
         e.printStackTrace();
 
-        ErrorDialog.openError( getSite().getShell(), "Fehler", "Fehler beim Speichern der Ansicht", e.getStatus() );
+        ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.5"), Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.6"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       finally
       {
@@ -284,7 +285,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
     try
     {
-      monitor.beginTask( "Save file", 1000 );
+      monitor.beginTask( Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.7"), 1000 ); //$NON-NLS-1$
       doSaveInternal( new SubProgressMonitor( monitor, 1000 ), newInput );
       m_commandTarget.resetDirty();
 
@@ -294,7 +295,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
     {
       ce.printStackTrace();
 
-      ErrorDialog.openError( shell, "Fehler", "Fehlern beim Speichern der Ansicht", ce.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.8"), Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.9"), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
@@ -325,7 +326,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   protected final void setInput( final IEditorInput input )
   {
     if( !(input instanceof IStorageEditorInput) )
-      throw new IllegalArgumentException( "input must be instanceof IStorageEditorInput" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.10") ); //$NON-NLS-1$
 
     editorInput = input;
     load();
@@ -344,7 +345,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
 
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoGisPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getSite().getShell(), getPartName(), "Fehler beim Laden", status );
+      ErrorDialog.openError( getSite().getShell(), getPartName(), Messages.getString("org.kalypso.ui.editor.AbstractEditorPart.11"), status ); //$NON-NLS-1$
     }
 
     m_commandTarget.resetDirty();
@@ -440,7 +441,7 @@ public abstract class AbstractEditorPart extends WorkbenchPart implements IResou
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {

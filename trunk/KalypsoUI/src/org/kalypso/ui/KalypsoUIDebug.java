@@ -52,6 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  */
 public class KalypsoUIDebug
 {
-  public static Debug FEATUREVIEW_OPERATIONS = new Debug( KalypsoGisPlugin.getDefault(), "/debug/featurecomposite/operations" );
+  public static Debug FEATUREVIEW_OPERATIONS = new Debug( KalypsoGisPlugin.getDefault(), "/debug/featurecomposite/operations" ); //$NON-NLS-1$
 
 }

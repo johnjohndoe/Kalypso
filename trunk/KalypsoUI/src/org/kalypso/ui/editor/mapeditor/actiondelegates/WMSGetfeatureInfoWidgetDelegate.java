@@ -42,6 +42,7 @@ package org.kalypso.ui.editor.mapeditor.actiondelegates;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
@@ -52,7 +53,7 @@ public class WMSGetfeatureInfoWidgetDelegate extends AbstractWidgetWithOptionAct
 {
   public WMSGetfeatureInfoWidgetDelegate( )
   {
-    super( new WMSGetFeatureInfoWidget( "WMS-Abfrage", "Informationen vom WMS abholen" ) );
+    super( new WMSGetFeatureInfoWidget( Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.0"), Messages.getString("org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

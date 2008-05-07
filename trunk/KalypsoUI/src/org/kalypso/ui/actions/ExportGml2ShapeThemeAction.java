@@ -21,6 +21,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.serialize.Gml2ShapeConverter;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -38,7 +39,7 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
 
   private ISelection m_selection;
 
-  private static final String SETTINGS_LAST_DIR = "lastDir";
+  private static final String SETTINGS_LAST_DIR = "lastDir"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
@@ -56,7 +57,7 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
    */
   public void run( final IAction action )
   {
-    throw new UnsupportedOperationException( "Use runWithEvent" );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -102,7 +103,7 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
     if( featureList == null )
     {
-      MessageDialog.openWarning( shell, action.getText(), "Kein Thema gewählt oder Thema enthält keine Daten." );
+      MessageDialog.openWarning( shell, action.getText(), Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.2") ); //$NON-NLS-1$
       return;
     }
 
@@ -112,11 +113,11 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
     // TODO: only use file extension which make sense (dbf OR shp)
 
     /* ask user for file */
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gml2shapeExport" );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gml2shapeExport" ); //$NON-NLS-1$
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
-    fileDialog.setFilterExtensions( new String[] { "*.*", "*.shp", "*.dbf" } );
-    fileDialog.setFilterNames( new String[] { "Alle Dateien (*.*)", "ESRI Shape (*.shp)", "DBase (*.dbf)" } );
+    fileDialog.setFilterExtensions( new String[] { "*.*", "*.shp", "*.dbf" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.7"), Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.8"), Messages.getString("org.kalypso.ui.actions.ExportGml2ShapeThemeAction.9") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileDialog.setText( action.getText() );
     if( lastDirPath != null )
     {
@@ -132,14 +133,14 @@ public class ExportGml2ShapeThemeAction implements IObjectActionDelegate, IActio
     dialogSettings.put( SETTINGS_LAST_DIR, new File( result ).getParent() );
 
     final String shapeFileBase;
-    if( result.toLowerCase().endsWith( ".shp" ) || result.toLowerCase().endsWith( ".dbf" ) )
+    if( result.toLowerCase().endsWith( ".shp" ) || result.toLowerCase().endsWith( ".dbf" ) ) //$NON-NLS-1$ //$NON-NLS-2$
       shapeFileBase = FileUtilities.nameWithoutExtension( result );
     else
       shapeFileBase = result;
 
-    final Job job = new Job( action.getText() + " - " + result )
+    final Job job = new Job( action.getText() + " - " + result ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
