@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.util;
 
@@ -420,7 +420,7 @@ public class ProfilUtil
     return maxValue;
   }
 
-  public static IComponent getComponentForID( IComponent[] components, final String propertyID )
+  public static IComponent getComponentForID( final IComponent[] components, final String propertyID )
   {
     if( components == null || components.length < 1 )
       return null;
@@ -755,10 +755,10 @@ public class ProfilUtil
     final IProfil digitizedProfile = ProfilFactory.createProfil( type );
 
     /* The needed components. */
-    int iRechtswert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    int iHochwert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    int iBreite = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    int iHoehe = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int iRechtswert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final int iHochwert = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final int iBreite = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iHoehe = digitizedProfile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     if( jtsCurve == null )
       return null;
@@ -769,8 +769,8 @@ public class ProfilUtil
     {
       final Coordinate coordinate = jtsCurve.getCoordinateN( i );
 
-      double rechtswert = coordinate.x;
-      double hochwert = coordinate.y;
+      final double rechtswert = coordinate.x;
+      final double hochwert = coordinate.y;
 
       /* calculate breite */
       double distance = 0;
@@ -780,10 +780,10 @@ public class ProfilUtil
       breite = breite + distance;
 
       /* elevation is set to 0.0 */
-      double hoehe = 0.0;
+      final double hoehe = 0.0;
 
       /* Create a new profile point. */
-      IRecord profilePoint = digitizedProfile.createProfilPoint();
+      final IRecord profilePoint = digitizedProfile.createProfilPoint();
 
       /* Add geo values. */
       profilePoint.setValue( iRechtswert, rechtswert );
@@ -798,5 +798,18 @@ public class ProfilUtil
     }
 
     return digitizedProfile;
+  }
+
+  public static Double[] getDoubleValuesFor( final IProfil profil, final IComponent pointProperty )
+  {
+    final List<Double> myValues = new ArrayList<Double>();
+
+    final Object[] values = getValuesFor( profil, pointProperty );
+    for( final Object object : values )
+    {
+      myValues.add( Double.valueOf( object.toString() ) );
+    }
+
+    return myValues.toArray( new Double[] {} );
   }
 }
