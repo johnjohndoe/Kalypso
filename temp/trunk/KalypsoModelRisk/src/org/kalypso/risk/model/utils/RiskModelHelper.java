@@ -350,7 +350,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, "Konvertiere in Raster [" + i + "/" + inputCoverages.size() + "]...", 100 );
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("RiskModelHelper.14") + i + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();

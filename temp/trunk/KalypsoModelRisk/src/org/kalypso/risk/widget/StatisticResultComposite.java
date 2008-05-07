@@ -98,11 +98,11 @@ public class StatisticResultComposite extends Composite
         {
           QName valueTypeName = component.getValueTypeName();
           if( valueTypeName.equals( IWspmConstants.Q_STRING ) )
-            myMap.put( count, new ComponentUiStringHandler( count, false, true, false, component.getName(), SWT.NONE, 200, 30, "%s", "", "" ) );
+            myMap.put( count, new ComponentUiStringHandler( count, false, true, false, component.getName(), SWT.NONE, 200, 30, "%s", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           else if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
-            myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) );
+            myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           else if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
-            myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) );
+            myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
           count++;
         }

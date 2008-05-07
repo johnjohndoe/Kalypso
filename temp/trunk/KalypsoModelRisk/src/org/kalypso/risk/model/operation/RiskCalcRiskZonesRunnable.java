@@ -187,7 +187,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
   private static void addComponentsToObs( final Feature fObs, final TupleResult result, final IRiskLanduseStatistic[] riskLanduseStatistics )
   {
     /* add the landuse class name component */
-    final Component componentLanduse = new Component( DICT_LANDUSE, "Landuse", "Landuse", "", "", IWspmConstants.Q_STRING, "null", new Phenomenon( DICT_LANDUSE, "Landuse", "Landuse" ) );
+    final Component componentLanduse = new Component( DICT_LANDUSE, Messages.getString("RiskCalcRiskZonesRunnable.3"), Messages.getString("RiskCalcRiskZonesRunnable.2"), "", "", IWspmConstants.Q_STRING, "null", new Phenomenon( DICT_LANDUSE, Messages.getString("RiskCalcRiskZonesRunnable.8"), Messages.getString("RiskCalcRiskZonesRunnable.9") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     result.addComponent( componentLanduse );
 
     final int numOfDataColumns = riskLanduseStatistics.length;
@@ -197,7 +197,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     {
       final String eventName = riskLanduseStatistics[i].getName();
 
-      final String headerName = "Total Damage " + eventName + " [€]";
+      final String headerName = Messages.getString("RiskCalcRiskZonesRunnable.10") + eventName + " [€]"; //$NON-NLS-1$ //$NON-NLS-2$
 
       final IComponent valueComponent = new Component( DICT_EVENT, headerName, headerName, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( DICT_EVENT, headerName, headerName ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       result.addComponent( valueComponent );
@@ -298,7 +298,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
   {
     for( int i = 0; i < events.length; i++ )
     {
-      if( ("" + events[i].getName()).equals( "" + statistic.getName() ) )
+      if( ("" + events[i].getName()).equals( "" + statistic.getName() ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return i;
     }
 

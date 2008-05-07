@@ -169,9 +169,9 @@ public class TestRiskModel extends TestCase
     final List<Feature> predefinedDamageFunctionsCollection = (FeatureList) predefinedDataWorkspace.getRootFeature().getProperty( PROP_DAMAGE_FUNCTION_COLLECTION );
     final List<Feature> predefinedAssetValueClassesCollection = (FeatureList) predefinedDataWorkspace.getRootFeature().getProperty( PROP_ASSET_VALUES_CLASSES_COLLECTION );
 
-    final String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template
+    final String damageFunctionsCollectionName = "IKSE, Regionalisierung Schleswig-Holstein"; // name of the template //$NON-NLS-1$
     // //$NON-NLS-1$
-    final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template
+    final String assetValuesCollectionName = "Regionalisierungsmethode Schleswig-Holstein"; // name of the template //$NON-NLS-1$
     // //$NON-NLS-1$
 
     final boolean wrongLandUseselectedStatus = false; // status of landuse selection
