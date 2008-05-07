@@ -382,4 +382,11 @@ public class ElementGeometryBuilder
 
   }
 
+  public void removeLast( )
+  {
+    if( m_nodes != null && m_nodes.size() > 0 )
+      m_nodes.remove( m_nodes.size() - 1 );
+
+  }
+
 }

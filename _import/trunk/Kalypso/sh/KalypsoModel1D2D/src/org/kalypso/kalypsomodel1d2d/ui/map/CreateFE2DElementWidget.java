@@ -155,6 +155,11 @@ public class CreateFE2DElementWidget extends AbstractWidget
       reinit();
       mapRepaint();
     }
+    else if( KeyEvent.VK_BACK_SPACE == e.getKeyChar() || KeyEvent.VK_DELETE == e.getKeyChar() )
+    {
+      m_builder.removeLast();
+      mapRepaint();
+    }
   }
 
   /**
