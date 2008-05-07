@@ -563,4 +563,27 @@ Kalypso 2.1.1.1r      10. März 2008
      Betroffene SUBR: eb2ks   							
 							                Monika Donner, 10.03.2008 
 
+
+
+Kalypso 2.1.2.1      07. Mai 2008
+-------------------------------------    
+Verbesserung der Brückenberechnung fuer Probleme bei reinem Druckabfluss
+
+1)   Vermeidung geschätzter Energiehöhen (hea und heb) in Profil 1, die kleiner sind als die Energiehöhe
+     im Unterwasser-Profil 3: Dies führte bislang zum Abbruch der Berechnung insbesondere unter reinem 
+     Druckabfluss in der Brücke. Zugehörige Fehlerausgabe: 
+         Differenz h0 zwischen Energiehoehe in Profil 1 (OW-Bruecke)
+           und WSP in Profil 3 (UW-Brücke) ist NEGATIV
+           --> Programmabbruch in ABFLUSS bei Brueckenberechnung
+
+
+Folgen der Aenderung:
+     Zwischen Version 2.1.1.1r und 2.1.2.1 treten weder in der Energiehöhe im Oberwasser 
+     noch im Wasserstand Abweichungen auf. Getestet wurde 3 einzelne Brücken und an der Kollau mit 
+     20 Brücken ueber verschiedene Abflussintervalle. Abfluesse die zum Abbruch der Berechnung
+     führten koennen mit der neuen Version 2.1.2.1 berechnet werden.
+
+							                Monika Donner, 07.05.2008 
+
+
  

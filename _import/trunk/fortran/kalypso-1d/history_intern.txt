@@ -1497,3 +1497,63 @@ Kalypso 2.1.1.1r      10. März 2008
 
 							                Monika Donner, 10.03.2008 
 
+
+Kalypso 2.1.2.1      07. Mai 2008
+-------------------------------------    
+Verbesserung der Brückenberechnung fuer Probleme bei reinem Druckabfluss
+
+1)   Vermeidung geschätzter Energiehöhen (hea und heb) in Profil 1, die kleiner sind als die Energiehöhe
+     im Unterwasser-Profil 3: Dies führte bislang zum Abbruch der Berechnung insbesondere unter reinem 
+     Druckabfluss in der Brücke. Zugehörige Fehlerausgabe: 
+         Differenz h0 zwischen Energiehoehe in Profil 1 (OW-Bruecke)
+           und WSP in Profil 3 (UW-Brücke) ist NEGATIV
+           --> Programmabbruch in ABFLUSS bei Brueckenberechnung
+
+2)   Verbesserung der Anpassung der Energiehöhen hea und heb in Profil 1 für die nächste Iteration
+     durch Annäherung beider Werte und Neuberechnung des Abflusses (qgesa für hea und qgesb für heb)
+     bzw. Wasserstandes für beide Energiehöhen. Dabei wird die nähere geschätzte Energiehöhen am 
+     gewünschten Abfluss (Q) beibehalten und die entferntere in Richtung gewünschten Abfluss Q verschoben.
+
+3)   Kontrolle der kleineren geschätzter Energiehöhen heb, ob sie mindestens der Unterwasser 
+     Energiehöhe im Profil 3 (he3) entspricht oder größer ist.
+
+4)   Vermeiden einer Endlosschleife im Bereich der Energiehöheniteration und den Fall, dass die Abflüsse
+     qgesa und qgesb der geschätzten Energiehöhen den Abfluss Q umgeben. Keine direkte Rückkehr 
+     mehr in diesen Fall "Nullstelle" sonst vollständiges Prüfen der neuen Energiehöhen und 
+     ihrer zugehörigen Abflüsse.
+
+
+Details & Erläuterungen zur Brückenberechnung: 
+     siehe --> CVS: ....\kalypso-1d\doc\handbuch\Bruecken-Berechnung.doc
+
+
+Folgen der Aenderung:
+     Zwischen Version 2.1.1.1r und 2.1.2.1 treten weder in der Energiehöhe im Oberwasser 
+     noch im Wasserstand Abweichungen auf. Getestet wurde 3 einzelne Brücken und an der Kollau mit 
+     20 Brücken ueber verschiedene Abflussintervalle. Abfluesse die zum Abbruch der Berechnung
+     führten koennen mit der neuen Version 2.1.2.1 berechnet werden.
+
+
+Noch bestehende Schwächen:
+     - Inkonsistenz in den Verlustbeiwerten zwischen Impuls- und Energiebilanz an der Brücke
+     - Impulsbilanz fängt nicht Energierückgang im Oberwasser ab
+     - Pauschale Sohlerhöhung im Profil b zwischen Brücke und Oberwasserprofil um 5cm 
+       etwas willkürlich.
+
+							                Monika Donner, 07.05.2008 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
