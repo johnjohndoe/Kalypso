@@ -49,6 +49,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.i18n.Messages;
 
 /**
  * Copies the contents of a (tuple-result) table into the clipboard.
@@ -65,7 +66,7 @@ public class CopyToClipboardHandler extends AbstractHandler
   {
     final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
     if( tupleResultViewer == null )
-      throw new ExecutionException( "No tuple result viewer available" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler.0") ); //$NON-NLS-1$
 
     /* clip board copy function */
     final Table table = tupleResultViewer.getTable();
@@ -91,9 +92,9 @@ public class CopyToClipboardHandler extends AbstractHandler
           sbf.append( text );
 
           if( j < columnCount - 1 )
-            sbf.append( "\t" );
+            sbf.append( "\t" ); //$NON-NLS-1$
         }
-        sbf.append( "\n" );
+        sbf.append( "\n" ); //$NON-NLS-1$
       }
     }
 

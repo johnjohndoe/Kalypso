@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.table.celleditors;
 
 import org.eclipse.jface.viewers.ICellEditorValidator;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author belger
@@ -68,7 +69,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return "Dezimalzahl erwartet (z.B. 10.4)";
+        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.0"); //$NON-NLS-1$
       }
     }
 
@@ -90,7 +91,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return "Dezimalzahl erwartet (z.B. 10.4)";
+        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.1"); //$NON-NLS-1$
       }
     }
 
@@ -112,7 +113,7 @@ public class DefaultCellValidators
       }
       catch( final NumberFormatException nfe )
       {
-        return "Ganzzahl erwartet (z.B. 10)";
+        return Messages.getString("org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators.2"); //$NON-NLS-1$
       }
     }
 

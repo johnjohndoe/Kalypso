@@ -137,16 +137,16 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 1 );
     composite.setLayout( factory.createGridLayout( layout ) );
-    composite.setStyle( "SWT.NONE" );
+    composite.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     // Text
     final Text text = factory.createText();
-    text.setStyle( "SWT.BORDER" );
+    text.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
     text.setEditable( true );
     text.setProperty( qname );
 
     final GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.FILL" );
+    textData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     textData.setGrabExcessHorizontalSpace( true );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
@@ -154,12 +154,12 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
     // Knopf
     final Button button = factory.createButton();
     final GridDataType buttonData = factory.createGridDataType();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( qname );
 
     button.setVisible( m_show_button );
 
-    buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
+    buttonData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     button.setLayoutData( factory.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();
@@ -177,7 +177,7 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
   {
     final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar) element;
     if( xmlCal == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return m_df.format( xmlCal.toGregorianCalendar().getTime() );
   }

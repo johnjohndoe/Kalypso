@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
@@ -79,7 +80,7 @@ public class MoveUpHandler extends AbstractHandler implements IHandler
 
     final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
     if( mapPanel == null )
-      throw new ExecutionException( "Active part has no MapPanel." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.actions.MoveUpHandler.0") ); //$NON-NLS-1$
 
     final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 

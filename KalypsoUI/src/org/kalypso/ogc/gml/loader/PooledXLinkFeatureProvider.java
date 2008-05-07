@@ -128,15 +128,15 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         final String source;
 
         // HACK: in order to allow links into shape files, we just test if it may be a shape file
-        if( uri.toLowerCase().endsWith( ".shp" ) )
+        if( uri.toLowerCase().endsWith( ".shp" ) ) //$NON-NLS-1$
         {
-          type = "shape";
+          type = "shape"; //$NON-NLS-1$
           // TODO: get the crs from somewhere...
-          source = FileUtilities.nameWithoutExtension( uri ) + "#" + KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+          source = FileUtilities.nameWithoutExtension( uri ) + "#" + KalypsoDeegreePlugin.getDefault().getCoordinateSystem(); //$NON-NLS-1$
         }
         else
         {
-          type = "gml";
+          type = "gml"; //$NON-NLS-1$
           source = uri;
         }
 

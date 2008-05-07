@@ -123,8 +123,8 @@ public class PointDialog extends Dialog
       m_label[i] = new Label( group, SWT.NONE );
       m_label[i].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      m_label[i].setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) + String.valueOf( i ) );
-      m_label[i].setToolTipText( "" );
+      m_label[i].setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) + String.valueOf( i ) ); //$NON-NLS-1$
+      m_label[i].setToolTipText( "" ); //$NON-NLS-1$
 
       m_label[i].setAlignment( SWT.LEFT );
 

@@ -48,6 +48,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -115,6 +116,6 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler
       return String.format( displayFormat, instance, instance, instance );
     }
 
-    return "<No Date>";
+    return Messages.getString("org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.0"); //$NON-NLS-1$
   }
 }

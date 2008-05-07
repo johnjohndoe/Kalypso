@@ -63,6 +63,7 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
@@ -100,7 +101,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
 
-    setName( new I10nString( "name not defined", null ) );
+    setName( new I10nString( Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.0"), null ) ); //$NON-NLS-1$
   }
 
   /**
@@ -194,7 +195,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   private IKalypsoTheme loadTheme( final StyledLayerType layerType, final URL context ) throws Exception
   {
-    final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" };
+    final String[] arrImgTypes = new String[] { "tif", "jpg", "png", "gif", "gmlpic" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     final JAXBElement<String> lg = layerType.getLegendicon();
     String legendIcon = null;
@@ -239,16 +240,16 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     if( ArrayUtils.contains( arrImgTypes, linktype.toLowerCase() ) )
       return KalypsoPictureTheme.getPictureTheme( layerName, layerType, context, this, legendIcon, showChildren );
 
-    if( "gmt".equals( linktype ) )
+    if( "gmt".equals( linktype ) ) //$NON-NLS-1$
       return new CascadingKalypsoTheme( layerName, layerType, context, m_selectionManager, this, legendIcon, showChildren );
 
-    if( "legend".equals( linktype ) )
+    if( "legend".equals( linktype ) ) //$NON-NLS-1$
       return new KalypsoLegendTheme( layerName, this, legendIcon, context, showChildren );
 
-    if( "scrab".equals( linktype ) )
+    if( "scrab".equals( linktype ) ) //$NON-NLS-1$
       return new ScrabLayerFeatureTheme( layerName, m_selectionManager, this, legendIcon, context, showChildren );
 
-    if( "scale".equals( linktype ) )
+    if( "scale".equals( linktype ) ) //$NON-NLS-1$
       return new KalypsoScaleTheme( layerName, layerType, linktype, this, legendIcon, context, showChildren );
 
     // TODO: returns handling of gml files - part of else?!? do not assume it, proof it!
@@ -264,7 +265,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     try
     {
       final IKalypsoTheme[] themes = m_modell.getAllThemes();
-      monitor.beginTask( "Kartenvorlage speichern", themes.length * 1000 + 1000 );
+      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.10"), themes.length * 1000 + 1000 ); //$NON-NLS-1$
 
       final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
 
@@ -334,7 +335,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
     catch( final Throwable e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "XML-Vorlagendatei konnte nicht erstellt werden." ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.11") ) ); //$NON-NLS-1$
     }
     finally
     {

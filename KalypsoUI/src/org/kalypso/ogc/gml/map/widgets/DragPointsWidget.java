@@ -52,6 +52,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.Handle;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -178,7 +179,7 @@ public class DragPointsWidget extends AbstractWidget
       return;
     }
 
-    getMapPanel().setMessage( "Erstelle Geometrie ..." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.0") ); //$NON-NLS-1$
 
     /* Create the new geometry. */
     GeoTransform projection = getMapPanel().getProjection();
@@ -205,7 +206,7 @@ public class DragPointsWidget extends AbstractWidget
     m_currentPoint = null;
     m_startPoint = null;
 
-    getMapPanel().setMessage( "Klicken Sie erneut auf einen Punkt und halten Sie den Mausknopf, um ihn zu verschieben." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -229,7 +230,7 @@ public class DragPointsWidget extends AbstractWidget
         if( handle.isSelectable( p, getMapPanel().getProjection() ) )
         {
           handle.setActive( true );
-          getMapPanel().setMessage( "Lassen Sie den Mausknopf los, um den Punkt hier abzusetzen." );
+          getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.2") ); //$NON-NLS-1$
         }
         else
           handle.setActive( false );
@@ -283,7 +284,7 @@ public class DragPointsWidget extends AbstractWidget
    */
   public void reset( )
   {
-    getMapPanel().setMessage( "" );
+    getMapPanel().setMessage( "" ); //$NON-NLS-1$
 
     /* Set the handles to null. */
     m_handles = null;
@@ -325,7 +326,7 @@ public class DragPointsWidget extends AbstractWidget
     /* Collect all handles from the handle provider. */
     m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
 
-    getMapPanel().setMessage( "Klicken Sie in einen Rahmen und halten Sie den Mausknopf gedrückt, um einen Punkt zu verschieben." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragPointsWidget.4") ); //$NON-NLS-1$
     return;
   }
 

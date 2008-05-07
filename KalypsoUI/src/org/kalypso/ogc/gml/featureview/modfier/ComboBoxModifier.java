@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
@@ -67,7 +68,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class ComboBoxModifier implements IFeatureModifier
 {
-  private static final String NO_LINK_STRING = "<kein Link>";
+  private static final String NO_LINK_STRING = Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0"); //$NON-NLS-1$
 
   private final List<Object> m_entries = new ArrayList<Object>();
 

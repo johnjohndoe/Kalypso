@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -72,9 +73,9 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
  */
 public class TupleResultContentProvider implements IStructuredContentProvider, ITupleResultChangedListener
 {
-  private static final String DUMMY = "dummy";
+  private static final String DUMMY = "dummy"; //$NON-NLS-1$
 
-  final UIJob m_updateColumnsJob = new UIJob( "Updating table... " )
+  final UIJob m_updateColumnsJob = new UIJob( Messages.getString("org.kalypso.ogc.gml.om.table.TupleResultContentProvider.1") ) //$NON-NLS-1$
   {
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -160,7 +161,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       final Integer componentIndex = entry.getKey();
       final IComponentUiHandler handler = entry.getValue();
 
-      final String property = "" + componentIndex;
+      final String property = "" + componentIndex; //$NON-NLS-1$
 
       addColumn( property, handler );
 
@@ -227,7 +228,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       records[i] = record;
 
       final int compIndex = change.getComponent();
-      properties.add( "" + compIndex );
+      properties.add( "" + compIndex ); //$NON-NLS-1$
     }
 
     final String[] props = properties.toArray( new String[properties.size()] );

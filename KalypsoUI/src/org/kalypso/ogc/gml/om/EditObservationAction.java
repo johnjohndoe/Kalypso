@@ -14,7 +14,7 @@ public class EditObservationAction implements IActionDelegate
 {
   private IFeatureSelection m_selection = null;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void run( final IAction action )
   {
     if( m_selection != null )

@@ -86,8 +86,8 @@ public class FeatureViewerComparator extends ViewerComparator implements IViewer
     m_params = params;
 
     /* Read the parameter. */
-    String namespaceURI = m_params.get( "namespaceURI" );
-    String localPart = m_params.get( "localPart" );
+    String namespaceURI = m_params.get( "namespaceURI" ); //$NON-NLS-1$
+    String localPart = m_params.get( "localPart" ); //$NON-NLS-1$
 
     /* If both required parameter are given, create the comparator. */
     if( namespaceURI != null && localPart != null )

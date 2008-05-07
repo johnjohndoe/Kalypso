@@ -53,6 +53,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.Handle;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -180,7 +181,7 @@ public class DragFeatureWidget extends AbstractWidget
       return;
     }
 
-    getMapPanel().setMessage( "Erstelle Geometry ..." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.0") ); //$NON-NLS-1$
 
     /* Create the new geometry. */
     GeoTransform projection = getMapPanel().getProjection();
@@ -207,7 +208,7 @@ public class DragFeatureWidget extends AbstractWidget
     m_currentPoint = null;
     m_startPoint = null;
 
-    getMapPanel().setMessage( "Klicken Sie erneut in das Feature und halten Sie den Mausknopf, um es zu verschieben." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -238,7 +239,7 @@ public class DragFeatureWidget extends AbstractWidget
         for( IHandle handle : m_handles )
           handle.setActive( true );
 
-        getMapPanel().setMessage( "Lassen Sie den Mausknopf los, um das Feature hier abzusetzen." );
+        getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.2") ); //$NON-NLS-1$
       }
     }
 
@@ -317,7 +318,7 @@ public class DragFeatureWidget extends AbstractWidget
    */
   public void reset( )
   {
-    getMapPanel().setMessage( "" );
+    getMapPanel().setMessage( "" ); //$NON-NLS-1$
 
     /* Set the handles to null. */
     m_handles = null;
@@ -359,7 +360,7 @@ public class DragFeatureWidget extends AbstractWidget
     /* Collect all handles from the handle provider. */
     m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
 
-    getMapPanel().setMessage( "Klicken Sie in den Rahmen und halten Sie den Mausknopf gedrückt, um das Feature zu verschieben." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.4") ); //$NON-NLS-1$
 
     return;
   }

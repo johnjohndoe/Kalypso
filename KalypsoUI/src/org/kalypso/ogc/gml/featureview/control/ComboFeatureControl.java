@@ -324,8 +324,8 @@ public class ComboFeatureControl extends AbstractFeatureControl
           foundFeatures.add( feature );
         else
         {
-          final String href = uri + "#" + feature.getId();
-          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, rt, targetFeatureType, href, "", "", "", "", "" );
+          final String href = uri + "#" + feature.getId(); //$NON-NLS-1$
+          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, rt, targetFeatureType, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
           foundFeatures.add( linkedFeature );
         }
       }

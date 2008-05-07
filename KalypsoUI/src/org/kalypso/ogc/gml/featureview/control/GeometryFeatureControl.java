@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -98,9 +99,9 @@ public class GeometryFeatureControl extends AbstractFeatureControl
       final IPropertyType ftp = getFeatureTypeProperty();
 
       if( feature.getProperty( ftp ) != null )
-        m_label.setText( "Um die Geometrie zu ersetzen, \nklicken Sie auf 'Zeichnen'." );
+        m_label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.GeometryFeatureControl.0") ); //$NON-NLS-1$
       else
-        m_label.setText( "Klicken Sie auf 'Zeichnen', \num die Massnahme zu zeichnen." );
+        m_label.setText( Messages.getString("org.kalypso.ogc.gml.featureview.control.GeometryFeatureControl.1") ); //$NON-NLS-1$
     }
   }
 

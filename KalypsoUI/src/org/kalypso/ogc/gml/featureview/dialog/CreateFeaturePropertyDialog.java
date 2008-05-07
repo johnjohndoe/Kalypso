@@ -140,18 +140,18 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
   {
     final String label = AnnotationUtilities.getAnnotation( m_relationType.getTargetFeatureType() ).getValue( IAnnotation.ANNO_NAME );
 
-    final StringBuffer msg = new StringBuffer( "'" );
+    final StringBuffer msg = new StringBuffer( "'" ); //$NON-NLS-1$
     msg.append( label );
-    msg.append( "\' " );
+    msg.append( "\' " ); //$NON-NLS-1$
 
     if( m_relationType.isInlineAble() )
-      msg.append( "erzeugen" );
+      msg.append( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.2") ); //$NON-NLS-1$
 
     if( m_relationType.isInlineAble() && m_relationType.isLinkAble() )
-      msg.append( " oder " );
+      msg.append( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.3") ); //$NON-NLS-1$
 
     if( m_relationType.isLinkAble() )
-      msg.append( "auswählen" );
+      msg.append( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.4") ); //$NON-NLS-1$
 
     return msg.toString();
   }

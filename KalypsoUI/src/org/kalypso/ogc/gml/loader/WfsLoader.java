@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -36,15 +37,15 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class WfsLoader extends AbstractLoader
 {
-  public final static String KEY_URL = "URL";
+  public final static String KEY_URL = "URL"; //$NON-NLS-1$
 
-  public final static String KEY_FILTER = "FILTER";
+  public final static String KEY_FILTER = "FILTER"; //$NON-NLS-1$
 
-  public final static String KEY_FEATURETYPE = "FEATURE";
+  public final static String KEY_FEATURETYPE = "FEATURE"; //$NON-NLS-1$
 
-  public final static String KEY_MAXFEATURE = "MAXFEATURE";
+  public final static String KEY_MAXFEATURE = "MAXFEATURE"; //$NON-NLS-1$
 
-  public static final String KEY_FEATURETYPENAMESPACE = "FEATURETYPE_NAMESPACE";
+  public static final String KEY_FEATURETYPENAMESPACE = "FEATURETYPE_NAMESPACE"; //$NON-NLS-1$
 
   public static final int MAXFEATURE_UNBOUNDED = -1;
 
@@ -66,7 +67,7 @@ public class WfsLoader extends AbstractLoader
     PrintStream ps = null;
     try
     {
-      monitor.beginTask( "WFS laden", 1000 );
+      monitor.beginTask( "WFS laden", 1000 ); //$NON-NLS-1$
       final Properties sourceProps = PropertiesHelper.parseFromString( source, KV_PAIR_SEPARATOR );
       final String baseURLAsString = sourceProps.getProperty( KEY_URL );
       final String featureType = sourceProps.getProperty( KEY_FEATURETYPE );
@@ -91,7 +92,7 @@ public class WfsLoader extends AbstractLoader
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new LoaderException( "Konnte GML von WFS nicht laden", e );
+      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.6"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -103,7 +104,7 @@ public class WfsLoader extends AbstractLoader
 
   public String getDescription( )
   {
-    return "WFS Layer";
+    return "WFS Layer"; //$NON-NLS-1$
   }
 
   /**
@@ -117,8 +118,8 @@ public class WfsLoader extends AbstractLoader
     if( data instanceof CommandableWorkspace )
     {
       Display display = new Display();
-      MessageDialog md = new MessageDialog( new Shell( display ), "Speichern der Daten vom WFS", (ImageProvider.IMAGE_STYLEEDITOR_SAVE                                      ).createImage(), "Sollen die Daten Lokal gespeichrt werden?", MessageDialog.QUESTION, new String[] {
-          "Ja", "Nein" }, 0 );
+      MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.8"), (ImageProvider.IMAGE_STYLEEDITOR_SAVE                                      ).createImage(), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.9"), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+          Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.10"), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.11") }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
       int result = md.open();
       try
       {
@@ -136,7 +137,7 @@ public class WfsLoader extends AbstractLoader
         else if( result == 1 )
         {
 
-          MessageDialog.openError( new Shell( display ), "Operation not supported", "Saving a feature at a remote location is not supported" );
+          MessageDialog.openError( new Shell( display ), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.12"), Messages.getString("org.kalypso.ogc.gml.loader.WfsLoader.13") ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
       }

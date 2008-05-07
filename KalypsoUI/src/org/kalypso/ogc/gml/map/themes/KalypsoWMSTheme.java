@@ -58,6 +58,7 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -125,7 +126,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     public void aboutToRun( IJobChangeEvent event )
     {
       /* Set a status for the user. */
-      setStatus( StatusUtilities.createInfoStatus( "Lade ..." ) );
+      setStatus( StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.0") ) ); //$NON-NLS-1$
     }
 
     /**
@@ -144,7 +145,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       if( !result.matches( IStatus.WARNING | IStatus.ERROR | IStatus.CANCEL ) )
       {
         /* Debug-Information. */
-        Debug.WMS.printf( "WMS (" + getName() + "): Setting new image with extent -> " + m_extent + " ... \n" );
+        Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.1") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.2") + m_extent + " ... \n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         /* Set the newly loaded image. */
         setImage( m_loader.getBuffer() );
@@ -268,7 +269,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( isVisible() == false )
     {
       /* Debug-Information. */
-      Debug.WMS.printf( "WMS (" + getName() + "): Theme is not visible ... \n" );
+      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.4") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.5") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Set to finished, else this theme never 'isLoaded'. */
       m_isFinished = true;
@@ -276,20 +277,20 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     }
 
     /* Debug-Information. */
-    Debug.WMS.printf( "WMS (" + getName() + "): Got new extent ... \n" );
+    Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.6") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.7") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* If it is the same extent than the last time, do not load again. */
     if( m_extent != null && m_extent.equals( extent ) )
       return;
 
     /* Debug-Information. */
-    Debug.WMS.printf( "WMS (" + getName() + "): Different extent means, reload ... \n" );
+    Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.8") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.9") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* If there was a loader working, cancel it. */
     if( m_loader != null )
     {
       /* Debug-Information. */
-      Debug.WMS.printf( "WMS (" + getName() + "): Cancel old loader ... \n" );
+      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.10") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.11") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       m_loader.removeJobChangeListener( m_adapter );
       m_loader.dispose();
@@ -300,7 +301,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( m_buffer != null )
     {
       /* Debug-Information. */
-      Debug.WMS.printf( "WMS (" + getName() + "): Clear the buffer ... \n" );
+      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.12") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.13") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       m_buffer.flush();
       m_buffer = null;
@@ -310,7 +311,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( width > 0 && height > 0 && extent != null && extent.getWidth() > 0 && extent.getHeight() > 0 )
     {
       /* Debug-Information. */
-      Debug.WMS.printf( "WMS (" + getName() + "): Creating a new loader ... \n" );
+      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.14") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.15") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Create a new loader. */
       m_loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
@@ -325,7 +326,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       m_loader.schedule( 250 );
 
       /* Debug-Information. */
-      Debug.WMS.printf( "WMS (" + getName() + "): Extent -> " + extent + " ... \n" );
+      Debug.WMS.printf( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.16") + getName() + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.17") + extent + Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.18") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       /* Memorize the extent, so it can be compared the next time, this method is called. */
       m_extent = extent;
@@ -369,7 +370,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    */
   public String getTooltip( final Object element )
   {
-    Assert.isTrue( element == this, "'Element' must be this" );
+    Assert.isTrue( element == this, Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.19") ); //$NON-NLS-1$
 
     if( getStatus().isOK() )
       return m_provider.getLabel();
@@ -422,7 +423,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param getFeatureInfoResultProcessor
    * @throws Exception
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format, final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
   {
 // KalypsoRemoteWMService remoteWMS = m_remoteWMS;
@@ -480,7 +481,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 // }
 
     // This thing is disabled !!!
-    getFeatureInfoResultProcessor.write( "FIX ME" );
+    getFeatureInfoResultProcessor.write( Messages.getString("org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme.21") ); //$NON-NLS-1$
   }
 
   public String getSource( )

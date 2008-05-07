@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
@@ -191,17 +192,17 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
     data3.horizontalSpan = 2;
     parameterGroup.setLayoutData( data3 );
     parameterGroup.setLayout( new GridLayout( 2, true ) );
-    parameterGroup.setText( "Spezial Zeichen" );
+    parameterGroup.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsLikeOperationComposite.0") ); //$NON-NLS-1$
     m_wildCardLabel = new Label( parameterGroup, SWT.NONE );
-    m_wildCardLabel.setText( "Wildcard:" );
+    m_wildCardLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsLikeOperationComposite.1") ); //$NON-NLS-1$
     m_wildCard = new Text( parameterGroup, SWT.NONE | SWT.READ_ONLY );
     m_wildCard.setText( String.valueOf( m_operation.getWildCard() ) );
     m_singleCharLabel = new Label( parameterGroup, SWT.NONE );
-    m_singleCharLabel.setText( "Einzelnes Zeichen:" );
+    m_singleCharLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsLikeOperationComposite.2") ); //$NON-NLS-1$
     m_singleChar = new Text( parameterGroup, SWT.NONE | SWT.READ_ONLY );
     m_singleChar.setText( String.valueOf( m_operation.getSingleChar() ) );
     m_escpapeCharLabel = new Label( parameterGroup, SWT.NONE );
-    m_escpapeCharLabel.setText( "Escape Zeichen:" );
+    m_escpapeCharLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsLikeOperationComposite.3") ); //$NON-NLS-1$
     m_escpapeChar = new Text( parameterGroup, SWT.NONE | SWT.READ_ONLY );
     m_escpapeChar.setText( String.valueOf( m_operation.getEscapeChar() ) );
   }

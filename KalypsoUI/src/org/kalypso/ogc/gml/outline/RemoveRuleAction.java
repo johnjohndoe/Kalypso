@@ -79,7 +79,7 @@ public class RemoveRuleAction implements IActionDelegate
         StyleEditorViewPart part;
         try
         {
-          part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+          part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
           if( part != null )
           {
             part.setSelectionChangedProvider( viewer );

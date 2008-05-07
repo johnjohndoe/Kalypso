@@ -207,18 +207,18 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
           if( m_showWarning )
             m_label.setToolTipText( m_warningText );
           else
-            m_label.setToolTipText( "" );
+            m_label.setToolTipText( "" ); //$NON-NLS-1$
 
         }
         else
         {
           m_label.setImage( image_error );
 
-          String message = "";
+          String message = ""; //$NON-NLS-1$
           for( int i = 0; i < status.size(); i++ )
           {
             if( !status.get( i ).isOK() )
-              message = message + status.get( i ).getMessage() + "\r\n";
+              message = message + status.get( i ).getMessage() + "\r\n"; //$NON-NLS-1$
           }
 
           m_label.setToolTipText( message );

@@ -103,7 +103,7 @@ public class GmlSchemaEditorInput implements IEditorInput
    */
   public String getToolTipText( )
   {
-    return m_namespace + " - " + m_location;
+    return m_namespace + " - " + m_location; //$NON-NLS-1$
   }
 
   /**

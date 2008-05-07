@@ -55,7 +55,7 @@ public class SelectWidget extends AbstractSelectWidget
 
   public SelectWidget( )
   {
-    super( "select widget", "" );
+    super( "select widget", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 

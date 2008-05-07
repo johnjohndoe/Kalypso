@@ -84,7 +84,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
  */
 public class GisMapOutlineView extends ViewPart implements IMapModellView
 {
-  public static final String ID = "org.kalypso.ui.views.outline";
+  public static final String ID = "org.kalypso.ui.views.outline"; //$NON-NLS-1$
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
@@ -204,7 +204,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
     String newName = Messages.GisMapOutlineView_1;
     if( m_mapPart != null )
     {
-      newName += " (" + mapPart.getPartName() + ")";
+      newName += " (" + mapPart.getPartName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
       final JobExclusiveCommandTarget commandTarget = m_mapPart.getCommandTarget();
       if( commandTarget != m_commandTarget )
       {

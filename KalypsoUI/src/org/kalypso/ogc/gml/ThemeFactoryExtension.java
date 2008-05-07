@@ -55,9 +55,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ThemeFactoryExtension
 {
-  private static final String KALYPSO_THEME_FACTORY_EXTENSION_POINT = "org.kalypso.ui.kalypsoThemeFactory";
+  private static final String KALYPSO_THEME_FACTORY_EXTENSION_POINT = "org.kalypso.ui.kalypsoThemeFactory"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_FACTORY = "factory";
+  private static final String ATTRIBUTE_FACTORY = "factory"; //$NON-NLS-1$
 
   private static Map<String, IKalypsoThemeFactory> FACTORY_MAP;
 

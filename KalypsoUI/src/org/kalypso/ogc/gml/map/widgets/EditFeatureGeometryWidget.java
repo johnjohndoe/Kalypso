@@ -31,6 +31,7 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -81,7 +82,7 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
 
   public EditFeatureGeometryWidget( )
   {
-    this( "Replace Geometry", "Replace The First Geometry Of The Selected Feature", null, null, null );
+    this( Messages.getString("org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.EditFeatureGeometryWidget.1"), null, null, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

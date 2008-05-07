@@ -137,9 +137,9 @@ import org.w3c.dom.NodeList;
  */
 public class FeatureComposite extends AbstractFeatureControl implements IFeatureChangeListener, ModifyListener
 {
-  private static final String DATA_LAYOUTDATA = "layoutData";
+  private static final String DATA_LAYOUTDATA = "layoutData"; //$NON-NLS-1$
 
-  private static final String DATA_CONTROL_TYPE = "controlType";
+  private static final String DATA_CONTROL_TYPE = "controlType"; //$NON-NLS-1$
 
   private static final LayoutDataType NULL_LAYOUT_DATA_TYPE = new LayoutDataType();
 
@@ -319,7 +319,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   private String getAnnotation( final IAnnotation annotation, final String explicitValue, final String annoElement )
   {
     if( annotation == null )
-      return explicitValue == null ? "" : explicitValue;
+      return explicitValue == null ? "" : explicitValue; //$NON-NLS-1$
 
     if( explicitValue != null && explicitValue.length() > 0 )
       return explicitValue;
@@ -386,7 +386,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         return Boolean.parseBoolean( (String) operationElement );
       else if( operationElement instanceof Element )
       {
-        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( "Found operation: %s%nfor feature: %s%n", operationElement, feature );
+        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.3"), operationElement, feature ); //$NON-NLS-1$
 
         final Element element = (Element) operationElement;
         final NodeList childNodes = element.getChildNodes();
@@ -399,7 +399,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             final Boolean value = operation.evaluate( feature );
             final boolean result = value == null ? false : value.booleanValue();
 
-            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( "Operation result: %s%n%n", result );
+            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.4"), result ); //$NON-NLS-1$
 
             return result;
           }
@@ -482,7 +482,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
       if( ftp == null )
         // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
-        System.out.println( "ValidatorLabelType without property" );
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.5") ); //$NON-NLS-1$
       else
       {
         final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
@@ -594,18 +594,18 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         /* The id of the sorter. */
         String id = sorter.getId();
         if( id == null || id.length() == 0 )
-          id = "org.kalypso.ui.featureview.comparators.defaultComparator";
+          id = "org.kalypso.ui.featureview.comparators.defaultComparator"; //$NON-NLS-1$
 
         /* Get the sorter of the id. */
         final IExtensionRegistry registry = Platform.getExtensionRegistry();
-        final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewComparator" );
+        final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.featureviewComparator" ); //$NON-NLS-1$
         for( final IConfigurationElement element : elements )
         {
-          final String elementId = element.getAttribute( "id" );
+          final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
           if( id.equals( elementId ) )
             try
             {
-              comparator = (ViewerComparator) element.createExecutableExtension( "class" );
+              comparator = (ViewerComparator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
             }
             catch( final CoreException e )
             {
@@ -893,7 +893,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * the feature-template. Before, the propertyName was given as xs:string (only the local part), now it is a xs:QName.
    * So old entries are interpreted against the namespace of the featuretemplate.
    */
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") //$NON-NLS-1$
   private IPropertyType getPropertyTypeForQName( final IFeatureType featureType, final QName property )
   {
     if( property == null )

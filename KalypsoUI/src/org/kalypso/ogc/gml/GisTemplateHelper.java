@@ -81,6 +81,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilitites;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
@@ -151,7 +152,7 @@ public class GisTemplateHelper
 
   public final static Featuretemplate loadGisFeatureTemplate( final URL url, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Ansicht laden", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.0"), 1000 ); //$NON-NLS-1$
 
     InputStream inputStream = null;
     try
@@ -166,11 +167,11 @@ public class GisTemplateHelper
     }
     catch( final JAXBException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Vorlage", e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.1"), e ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim Lesen der Vorlage", e ) );
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.2"), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -181,7 +182,7 @@ public class GisTemplateHelper
 
   public final Featuretemplate loadGisFeatureTemplate( final InputStream inputStream, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Ansicht laden", 1000 );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.3"), 1000 ); //$NON-NLS-1$
     try
     {
       final InputSource is = new InputSource( inputStream );
@@ -189,7 +190,7 @@ public class GisTemplateHelper
     }
     catch( final JAXBException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Fehler beim Lesen der Vorlage" ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.4") ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -391,19 +392,19 @@ public class GisTemplateHelper
 
       final String parentName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
       final String parentLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-      final String layerName = parentName + " - " + parentLabel;
+      final String layerName = parentName + " - " + parentLabel; //$NON-NLS-1$
 
       final FeaturePath featurePathToParent = new FeaturePath( feature );
 
       final Object property = feature.getProperty( rt );
-      String typeName = "";
+      String typeName = ""; //$NON-NLS-1$
       if( strictType && (property instanceof List) )
       {
         final List< ? > list = (List< ? >) property;
         if( !list.isEmpty() )
         {
           final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), list.get( 0 ) );
-          typeName = "[" + firstChild.getFeatureType().getQName().getLocalPart() + "]";
+          typeName = "[" + firstChild.getFeatureType().getQName().getLocalPart() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
 
@@ -414,10 +415,10 @@ public class GisTemplateHelper
       final StyledLayerType layerType = TemplateUtilitites.OF_TYPES.createStyledLayerType();
       layerType.setHref( context.toExternalForm() );
       layerType.setFeaturePath( featurePath.toString() );
-      layerType.setLinktype( "gml" );
+      layerType.setLinktype( "gml" ); //$NON-NLS-1$
       layerType.setName( layerName );
       layerType.setVisible( true );
-      layerType.setId( "ID_" + count++ );
+      layerType.setId( "ID_" + count++ ); //$NON-NLS-1$
 
       final JAXBElement<StyledLayerType> layerElement = TemplateUtilitites.OF_GISMAPVIEW.createLayer( layerType );
 
@@ -483,7 +484,7 @@ public class GisTemplateHelper
         layer.setName( themeNameKey );
         layer.setFeaturePath( "" ); //$NON-NLS-1$
         layer.setVisible( theme.isVisible() );
-        layer.setId( "ID_" + count );
+        layer.setId( "ID_" + count ); //$NON-NLS-1$
         layer.setHref( ((KalypsoWMSTheme) theme).getSource() );
         layer.setLinktype( WMSImageProvider.TYPE_NAME );
         layer.setActuate( "onRequest" ); //$NON-NLS-1$
@@ -544,10 +545,10 @@ public class GisTemplateHelper
         layer.setName( themeNameKey );
         layer.setFeaturePath( "" ); //$NON-NLS-1$
         layer.setVisible( theme.isVisible() );
-        layer.setId( "ID_" + count );
-        layer.setHref( "" );
+        layer.setId( "ID_" + count ); //$NON-NLS-1$
+        layer.setHref( "" ); //$NON-NLS-1$
 
-        layer.setLinktype( "legend" );
+        layer.setLinktype( "legend" ); //$NON-NLS-1$
 
         final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
         final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
@@ -569,10 +570,10 @@ public class GisTemplateHelper
         layer.setName( themeNameKey );
         layer.setFeaturePath( "" ); //$NON-NLS-1$
         layer.setVisible( theme.isVisible() );
-        layer.setId( "ID_" + count );
-        layer.setHref( "" );
+        layer.setId( "ID_" + count ); //$NON-NLS-1$
+        layer.setHref( "" ); //$NON-NLS-1$
 
-        layer.setLinktype( "scrab" );
+        layer.setLinktype( "scrab" ); //$NON-NLS-1$
 
         final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
         final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
@@ -593,8 +594,8 @@ public class GisTemplateHelper
       {
         layer.setName( themeNameKey );
         layer.setVisible( theme.isVisible() );
-        layer.setId( "ID_" + count );
-        layer.setLinktype( "scale" );
+        layer.setId( "ID_" + count ); //$NON-NLS-1$
+        layer.setLinktype( "scale" ); //$NON-NLS-1$
 
         final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
         final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);

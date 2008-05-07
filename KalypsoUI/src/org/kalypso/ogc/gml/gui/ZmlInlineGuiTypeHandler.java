@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
@@ -78,7 +79,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     final Button button = factory.createButton();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( property.getQName() );
 
     return factory.createButton( button );
@@ -117,7 +118,7 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     // if( o == null )
     // return prefix + "-";
     // return prefix + ( (IObservation)o ).getName();
-    return "<Editieren...>";
+    return Messages.getString("org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler.1"); //$NON-NLS-1$
   }
 
   /**

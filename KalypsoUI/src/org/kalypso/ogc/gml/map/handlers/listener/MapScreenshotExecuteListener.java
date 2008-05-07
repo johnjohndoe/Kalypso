@@ -15,6 +15,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.handlers.MapScreenShotHandler;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
@@ -39,7 +40,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
    */
   public void notHandled( String commandId, NotHandledException exception )
   {
-    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false )
+    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
   }
 
@@ -49,14 +50,14 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
    */
   public void postExecuteFailure( String commandId, ExecutionException exception )
   {
-    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false )
+    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
 
     /* Log the error message. */
     KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( exception ) );
 
     /* Show an error dialog. */
-    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Fehler", "Konnte die das Bild nicht exportieren.", StatusUtilities.statusFromThrowable( exception ) );
+    ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.2"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.3"), StatusUtilities.statusFromThrowable( exception ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -64,7 +65,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
    */
   public void postExecuteSuccess( String commandId, Object returnValue )
   {
-    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false )
+    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
 
     if( !(returnValue instanceof File) )
@@ -74,7 +75,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     File file = (File) returnValue;
 
     /* Show the user a success dialog. */
-    MessageDialog.openInformation( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Nachricht", "Der Export-Vorgang war erfolgreich: " + file.toString() );
+    MessageDialog.openInformation( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.5"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.6") + file.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -83,7 +84,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
    */
   public void preExecute( String commandId, ExecutionEvent event )
   {
-    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false )
+    if( "org.kalypso.ogc.gml.map.Screenshot".equals( commandId ) == false ) //$NON-NLS-1$
       return;
 
     IPreferenceStore preferences = KalypsoScreenshotPreferencePage.getPreferences();
@@ -91,22 +92,22 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     String dir = preferences.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
 
     File file = null;
-    if( dir != null && !dir.equals( "" ) )
+    if( dir != null && !dir.equals( "" ) ) //$NON-NLS-1$
       file = new File( dir );
 
     /* Create the file dialog. */
     FileDialog dialog = new FileDialog( PlatformUI.getWorkbench().getDisplay().getActiveShell(), SWT.NONE );
 
     /* Set some dialog information. */
-    dialog.setText( "Kartenausschnitt exportieren" );
+    dialog.setText( Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.9") ); //$NON-NLS-1$
 
     /* Set the initialize path, if available. */
     if( file != null )
       dialog.setFilterPath( file.getAbsolutePath() );
 
     /* Initialize with some settings. */
-    dialog.setFilterExtensions( new String[] { "*." + extension } );
-    dialog.setFilterNames( new String[] { extension.toUpperCase() + " - Images" } );
+    dialog.setFilterExtensions( new String[] { "*." + extension } ); //$NON-NLS-1$
+    dialog.setFilterNames( new String[] { extension.toUpperCase() + " - Images" } ); //$NON-NLS-1$
 
     /* Show the dialog. */
     String result = dialog.open();
@@ -122,14 +123,14 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     File target = new File( result );
 
     /* Add extension. */
-    if( !target.getName().endsWith( "." + extension ) )
-      target = new File( target.getParentFile(), target.getName() + "." + extension );
+    if( !target.getName().endsWith( "." + extension ) ) //$NON-NLS-1$
+      target = new File( target.getParentFile(), target.getName() + "." + extension ); //$NON-NLS-1$
 
     /* If the target exists already, give a warning and do only execute, if the user has confirmed it. */
     if( target.exists() )
     {
       /* Ask the user. */
-      boolean confirmed = MessageDialog.openConfirm( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Nachfrage", "Die ausgewählte Datei existiert bereits, möchten Sie sie überschreiben?" );
+      boolean confirmed = MessageDialog.openConfirm( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.14"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.15") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* If he has not confirmed, do not execute the command. */
       if( !confirmed )
@@ -147,7 +148,7 @@ public final class MapScreenshotExecuteListener implements IExecutionListener
     catch( IOException e )
     {
       /* Show an error dialog. */
-      ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Fehler", "Konnte die Datei '" + target.getName() + "' nicht anlegen.", StatusUtilities.statusFromThrowable( e ) );
+      ErrorDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.16"), Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.17") + target.getName() + Messages.getString("org.kalypso.ogc.gml.map.handlers.listener.MapScreenshotExecuteListener.18"), StatusUtilities.statusFromThrowable( e ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       /* Stop executing ... */
       stopIt( event );

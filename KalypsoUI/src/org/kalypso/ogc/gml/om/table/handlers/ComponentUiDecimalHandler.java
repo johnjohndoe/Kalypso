@@ -76,7 +76,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
   {
     final Object value = record.getValue( getComponent() );
     if( value == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return getStringRepresentation( record );
   }
@@ -90,6 +90,6 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
     if( value == null || (value instanceof String && ((String) value).length() == 0) )
       record.setValue( getComponent(), null );
     else
-      record.setValue( getComponent(), new BigDecimal( value.toString().replace( ",", "." ) ) );
+      record.setValue( getComponent(), new BigDecimal( value.toString().replace( ",", "." ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

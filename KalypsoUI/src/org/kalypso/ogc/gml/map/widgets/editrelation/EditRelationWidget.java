@@ -74,6 +74,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.tree.TreeVisiterAbortException
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.JMSelector;
@@ -106,7 +107,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class EditRelationWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  final String[] m_modeItems = new String[] { "Relation erstellen", "Relationen entfernen" };
+  final String[] m_modeItems = new String[] { Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.1") }; //$NON-NLS-1$ //$NON-NLS-2$
 
   Feature m_srcFE = null;
 
@@ -148,7 +149,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
    */
   public EditRelationWidget( )
   {
-    super( "edit relations", "" );
+    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.2"), "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -214,7 +215,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
       }
     }
     if( fitList.isEmpty() && m_fitProblems.length() == 0 )
-      m_fitProblems.append( "Ziel nicht erlaubt" );
+      m_fitProblems.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.4") ); //$NON-NLS-1$
     return fitList;
   }
 
@@ -252,7 +253,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     m_fitProblems.setLength( 0 );
     m_targetFE = null;
     if( m_srcFE == feature )
-      m_fitProblems.append( "diese Funktion ist mit dem gleichen Element nicht möglich" );
+      m_fitProblems.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.5") ); //$NON-NLS-1$
     else
     {
       if( !getFitList( m_srcFE, feature ).isEmpty() )
@@ -396,7 +397,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
             }
           };
 
-          final ListSelectionDialog dialog = new ListSelectionDialog( m_topLevel.getShell(), fitList, cProvider, m_labelProvider, fitList.size() + " Relationen möglich, bitte EINE auswählen" );
+          final ListSelectionDialog dialog = new ListSelectionDialog( m_topLevel.getShell(), fitList, cProvider, m_labelProvider, fitList.size() + Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.6") ); //$NON-NLS-1$
           dialog.setInitialSelections( new Object[] { fitList.get( 0 ) } );
           dialog.setBlockOnOpen( true );
           boolean correct = false;
@@ -475,7 +476,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
           if( m_textProblem != null && !m_textProblem.isDisposed() )
           {
             if( problems.length() == 0 )
-              m_textProblem.setText( "" );
+              m_textProblem.setText( "" ); //$NON-NLS-1$
             else
               m_textProblem.setText( problems );
             m_topLevel.layout();
@@ -490,36 +491,36 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
   {
     final StringBuffer labelBuffer = new StringBuffer();
     final StringBuffer tipBuffer = new StringBuffer();
-    labelBuffer.append( "Relation" );
-    labelBuffer.append( "\n  von: " );
-    tipBuffer.append( "Relation" );
-    tipBuffer.append( "\n  von: " );
+    labelBuffer.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.8") ); //$NON-NLS-1$
+    labelBuffer.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.9") ); //$NON-NLS-1$
+    tipBuffer.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.10") ); //$NON-NLS-1$
+    tipBuffer.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.11") ); //$NON-NLS-1$
 
     if( m_srcFE == null )
     {
-      labelBuffer.append( "<select>" );
-      tipBuffer.append( "<select>" );
+      labelBuffer.append( "<select>" ); //$NON-NLS-1$
+      tipBuffer.append( "<select>" ); //$NON-NLS-1$
     }
     else
     {
       final IFeatureType ft = m_srcFE.getFeatureType();
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
-      labelBuffer.append( annotation.getTooltip() + "#" + m_srcFE.getProperty( new QName( NS.GML2, "name" ) ) );
-      tipBuffer.append( ft.getQName() + "#" + m_srcFE.getId() );
+      labelBuffer.append( annotation.getTooltip() + "#" + m_srcFE.getProperty( new QName( NS.GML2, "name" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      tipBuffer.append( ft.getQName() + "#" + m_srcFE.getId() ); //$NON-NLS-1$
     }
-    labelBuffer.append( "\n nach: " );
-    tipBuffer.append( "\n nach: " );
+    labelBuffer.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.17") ); //$NON-NLS-1$
+    tipBuffer.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.18") ); //$NON-NLS-1$
     if( m_targetFE == null )
     {
-      labelBuffer.append( "<select>" );
-      tipBuffer.append( "<select>" );
+      labelBuffer.append( "<select>" ); //$NON-NLS-1$
+      tipBuffer.append( "<select>" ); //$NON-NLS-1$
     }
     else
     {
       final IFeatureType ft = m_targetFE.getFeatureType();
       final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
-      labelBuffer.append( annotation.getTooltip() + "#" + m_targetFE.getProperty( new QName( NS.GML2, "name" ) ) );
-      tipBuffer.append( ft.getQName() + "#" + m_targetFE.getId() );
+      labelBuffer.append( annotation.getTooltip() + "#" + m_targetFE.getProperty( new QName( NS.GML2, "name" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      tipBuffer.append( ft.getQName() + "#" + m_targetFE.getId() ); //$NON-NLS-1$
     }
     if( m_textInfo != null && !m_textInfo.isDisposed() )
     {
@@ -621,8 +622,8 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
         updateInfoText();
       }
     } );
-    m_textInfo = toolkit.createText( m_topLevel, "Info", SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
-    m_textProblem = toolkit.createText( m_topLevel, "Problem", SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
+    m_textInfo = toolkit.createText( m_topLevel, Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.24"), SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP ); //$NON-NLS-1$
+    m_textProblem = toolkit.createText( m_topLevel, Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget.25"), SWT.READ_ONLY | SWT.MULTI | SWT.WRAP ); //$NON-NLS-1$
 
     viewer.setAutoExpandLevel( 2 );
     viewer.getTree().addMouseListener( new MouseAdapter()

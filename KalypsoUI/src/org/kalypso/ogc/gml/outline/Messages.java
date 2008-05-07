@@ -50,7 +50,19 @@ public class Messages extends NLS
 {
   private static final String BUNDLE_NAME = "org.kalypso.ogc.gml.outline.messages"; //$NON-NLS-1$
 
+  public static String GisMapOutlineLabelProvider_0;
+
   public static String GisMapOutlineView_1;
+
+  public static String SaveStyleAction_11;
+
+  public static String SaveStyleAction_12;
+
+  public static String SaveStyleAction2_11;
+
+  public static String SaveStyleAction2_12;
+
+  public static String ZoomToSelectedLayer_0;
   static
   {
     // initialize resource bundle

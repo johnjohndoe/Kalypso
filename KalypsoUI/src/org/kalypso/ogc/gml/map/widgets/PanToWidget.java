@@ -62,7 +62,7 @@ public class PanToWidget extends AbstractWidget
 
   public PanToWidget( )
   {
-    super( "pan to", "" );
+    super( "pan to", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

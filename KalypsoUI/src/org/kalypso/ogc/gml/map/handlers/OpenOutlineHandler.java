@@ -50,6 +50,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
 
 /**
@@ -75,15 +76,15 @@ public class OpenOutlineHandler extends AbstractHandler
     IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( "No active part." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.0") ); //$NON-NLS-1$
 
     IWorkbenchPartSite site = part.getSite();
     if( site == null )
-      throw new ExecutionException( "No active site." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.1") ); //$NON-NLS-1$
 
     IWorkbenchPage page = site.getPage();
     if( page == null )
-      throw new ExecutionException( "No active page." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.2") ); //$NON-NLS-1$
 
     try
     {
@@ -105,7 +106,7 @@ public class OpenOutlineHandler extends AbstractHandler
     }
     catch( Exception e )
     {
-      throw new ExecutionException( "Could not change the outline view ...", e );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.3"), e ); //$NON-NLS-1$
     }
   }
 }

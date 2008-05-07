@@ -152,7 +152,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     if( m_toolbar != null )
     {
-      m_toolbar.add( new CommandContributionItem( serviceLocator, commandId + "_item", commandId, new HashMap<Object, Object>(), null, null, null, null, null, null, style ) );
+      m_toolbar.add( new CommandContributionItem( serviceLocator, commandId + "_item", commandId, new HashMap<Object, Object>(), null, null, null, null, null, null, style ) ); //$NON-NLS-1$
       m_toolbar.update( true );
     }
 
@@ -493,12 +493,12 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     if( toolbar.isAddStandardItems() )
     {
-      tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH );
+      tfc.addToolbarItem( "org.kalypso.ui.tupleResult.copyToClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
 
       if( !tfc.m_recordsFixed )
       {
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.pasteFromClipboardCommand", SWT.PUSH );
-        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH );
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.pasteFromClipboardCommand", SWT.PUSH ); //$NON-NLS-1$
+        tfc.addToolbarItem( "org.kalypso.ui.tupleResult.deleteSelectedRowsCommand", SWT.PUSH ); //$NON-NLS-1$
       }
     }
 

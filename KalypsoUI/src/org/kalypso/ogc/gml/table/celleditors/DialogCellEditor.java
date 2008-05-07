@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author Belger
@@ -85,7 +86,7 @@ public abstract class DialogCellEditor extends CellEditor
   protected Control createControl( final Composite parent )
   {
     final Text text = new Text( parent, SWT.CENTER );
-    text.setText( "<Element wird gerade editiert>" );
+    text.setText( Messages.getString("org.kalypso.ogc.gml.table.celleditors.DialogCellEditor.0") ); //$NON-NLS-1$
     text.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_DARK_GRAY ) );
     return text;
   }
@@ -112,7 +113,7 @@ public abstract class DialogCellEditor extends CellEditor
       setValueValid( true );
       display.asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {
           fireApplyEditorValue();
@@ -123,7 +124,7 @@ public abstract class DialogCellEditor extends CellEditor
     {
       display.asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access")
+        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
         public void run( )
         {
           fireCancelEditor();

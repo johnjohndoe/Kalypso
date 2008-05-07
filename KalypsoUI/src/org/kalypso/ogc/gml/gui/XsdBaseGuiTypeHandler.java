@@ -105,10 +105,10 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     if( Boolean.class == valueClass )
     {
       final Checkbox checkbox = factory.createCheckbox();
-      checkbox.setStyle( "SWT.NONE" );
+      checkbox.setStyle( "SWT.NONE" ); //$NON-NLS-1$
       checkbox.setEditable( true );
       checkbox.setProperty( qname );
-      checkbox.setText( " " ); // set invisible string to suppress automatic text from property
+      checkbox.setText( " " ); // set invisible string to suppress automatic text from property //$NON-NLS-1$
 
       return factory.createCheckbox( checkbox );
     }
@@ -118,7 +118,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     if( comboEntries.size() > 0 )
     {
       final Combo combo = factory.createCombo();
-      combo.setStyle( "SWT.DROP_DOWN | SWT.READ_ONLY" );
+      combo.setStyle( "SWT.DROP_DOWN | SWT.READ_ONLY" ); //$NON-NLS-1$
       combo.setProperty( qname );
 
       // do not create entries. The feature composite will create default entries for an empty combo
@@ -128,7 +128,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
 
     // everything else will be edited in a text field
     final Text editor = factory.createText();
-    editor.setStyle( "SWT.BORDER" );
+    editor.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
     editor.setEditable( true );
     editor.setProperty( qname );
 

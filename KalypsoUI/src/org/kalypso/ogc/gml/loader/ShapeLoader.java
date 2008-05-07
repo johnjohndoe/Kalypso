@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -75,7 +76,7 @@ public class ShapeLoader extends AbstractLoader
    */
   public String getDescription( )
   {
-    return "ESRI Shape";
+    return "ESRI Shape"; //$NON-NLS-1$
   }
 
   /**
@@ -112,9 +113,9 @@ public class ShapeLoader extends AbstractLoader
 
       final URL sourceURL = UrlResolverSingleton.resolveUrl( context, shpSource );
 
-      final URL shpURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shp" );
-      final URL dbfURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".dbf" );
-      final URL shxURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shx" );
+      final URL shpURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shp" ); //$NON-NLS-1$
+      final URL dbfURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".dbf" ); //$NON-NLS-1$
+      final URL shxURL = UrlResolverSingleton.resolveUrl( context, shpSource + ".shx" ); //$NON-NLS-1$
 
       // leider können Shapes nicht aus URL geladen werden -> protocoll checken
       final File sourceFile;
@@ -127,19 +128,19 @@ public class ShapeLoader extends AbstractLoader
         dbfResource = ResourceUtilities.findFileFromURL( dbfURL );
         shxResource = ResourceUtilities.findFileFromURL( shxURL );
       }
-      else if( sourceURL.getProtocol().startsWith( "file" ) )
+      else if( sourceURL.getProtocol().startsWith( "file" ) ) //$NON-NLS-1$
       {
         sourceFile = new File( sourceURL.getPath() );
       }
       else
       {
         /* If everything else fails, we copy the resources to local files */
-        sourceFile = File.createTempFile( "shapeLocalizedFiled", "" );
+        sourceFile = File.createTempFile( "shapeLocalizedFiled", "" ); //$NON-NLS-1$ //$NON-NLS-2$
         final String sourceFilePath = sourceFile.getAbsolutePath();
 
-        final File shpFile = new File( sourceFilePath + ".shp" );
-        final File dbfFile = new File( sourceFilePath + ".dbf" );
-        final File shxFile = new File( sourceFilePath + ".shx" );
+        final File shpFile = new File( sourceFilePath + ".shp" ); //$NON-NLS-1$
+        final File dbfFile = new File( sourceFilePath + ".dbf" ); //$NON-NLS-1$
+        final File shxFile = new File( sourceFilePath + ".shx" ); //$NON-NLS-1$
 
         filesToDelete.add( sourceFile );
         filesToDelete.add( shpFile );
@@ -152,7 +153,7 @@ public class ShapeLoader extends AbstractLoader
       }
 
       if( sourceFile == null )
-        throw new LoaderException( "Could not load shape at source: " + shpSource );
+        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.10") + shpSource ); //$NON-NLS-1$
 
       // Workspace laden
       final String sourceCrs = sourceSrs;
@@ -197,7 +198,7 @@ public class ShapeLoader extends AbstractLoader
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace) data;
-      final URL shpURL = m_urlResolver.resolveURL( context, source.split( "#" )[0] );
+      final URL shpURL = m_urlResolver.resolveURL( context, source.split( "#" )[0] ); //$NON-NLS-1$
 
       final IFile file = ResourceUtilities.findFileFromURL( shpURL );
       if( file != null )
@@ -205,17 +206,17 @@ public class ShapeLoader extends AbstractLoader
         ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath(), null );
       }
       else
-        throw new LoaderException( "Die URL kann nicht beschrieben werden: " + shpURL );
+        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.12") + shpURL ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );
+      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.13") + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
+      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.15") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
   }
 }

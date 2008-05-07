@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.commands.ICommandService;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.GenericCommandActionDelegate;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -99,7 +100,7 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
    * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException 
   {
@@ -115,8 +116,8 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
 
     if( m_widgetClass == null || m_context == null || m_pluginId == null )
     {
-      final String id = config.getAttribute( "id" );
-      final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, "The '" + id + "' action won't work without a context, a widget class and a plugin id.", null );
+      final String id = config.getAttribute( "id" ); //$NON-NLS-1$
+      final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.2") + id + Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.3"), null ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new CoreException( status );
     }
   }
@@ -129,7 +130,7 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
   @Override
   protected ParameterizedCommand createCommand( final ICommandService commandService )
   {
-    final String cmdName = SelectWidgetHandler.COMMAND_ID + "#" + m_context;
+    final String cmdName = SelectWidgetHandler.COMMAND_ID + "#" + m_context; //$NON-NLS-1$
     final Command command = commandService.getCommand( cmdName );
     try
     {

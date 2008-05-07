@@ -74,7 +74,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
   {
     final Object value = record.getValue( getComponent() );
     if( value == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return getStringRepresentation( record );
   }
@@ -88,6 +88,6 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     if( value == null || value.toString().trim().length() == 0 )
       record.setValue( getComponent(), null );
     else
-      record.setValue( getComponent(), new Double( value.toString().replace( ",", "." ) ) );
+      record.setValue( getComponent(), new Double( value.toString().replace( ",", "." ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

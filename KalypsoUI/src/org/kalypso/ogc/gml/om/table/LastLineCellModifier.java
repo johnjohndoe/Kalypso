@@ -74,7 +74,7 @@ public abstract class LastLineCellModifier implements ICellModifier
   public Object getValue( final Object element, final String property )
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return m_modifier.getValue( element, property );
   }
@@ -89,7 +89,7 @@ public abstract class LastLineCellModifier implements ICellModifier
 
     if( data == LastLineContentProvider.DUMMY_ELEMENT )
     {
-      if( value != null && ("" + value).length() > 0 )
+      if( value != null && ("" + value).length() > 0 ) //$NON-NLS-1$
       {
         final Object newElement = createNewElement();
         if( newElement != null )

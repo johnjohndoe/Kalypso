@@ -73,7 +73,7 @@ public class ZoomToSelectedLayer extends MapModellViewActionDelegate
       final GM_Envelope zoomBox = MapModellHelper.calculateExtent( selectedThemes, null );
       if( zoomBox == null )
       {
-        MessageDialog.openWarning( event.display.getActiveShell(), action.getText(), "Die selektierten Themen haben keine Ausdehnung." );
+        MessageDialog.openWarning( event.display.getActiveShell(), action.getText(), Messages.ZoomToSelectedLayer_0 );
         return;
       }
 

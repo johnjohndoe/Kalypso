@@ -111,12 +111,12 @@ public class SaveStyleAction2 implements IActionDelegate
 
   public static void saveUserStyle( KalypsoUserStyle userStyle, Shell shell )
   {
-    String[] filterExtension = { "*.sld" };
+    String[] filterExtension = { "*.sld" }; //$NON-NLS-1$
     FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
-    String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>";
+    String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>"; //$NON-NLS-1$
     sldContents += userStyle.exportAsXML();
-    sldContents += "</NamedLayer></StyledLayerDescriptor>";
+    sldContents += "</NamedLayer></StyledLayerDescriptor>"; //$NON-NLS-1$
     StyledLayerDescriptor sld;
     try
     {
@@ -125,8 +125,8 @@ public class SaveStyleAction2 implements IActionDelegate
       if( filename != null )
       {
         final File file;
-        if( filename.indexOf( "." ) == -1 )
-          file = new File( filename + ".sld" );
+        if( filename.indexOf( "." ) == -1 ) //$NON-NLS-1$
+          file = new File( filename + ".sld" ); //$NON-NLS-1$
         else
           file = new File( filename );
         IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
@@ -155,8 +155,8 @@ public class SaveStyleAction2 implements IActionDelegate
             {
 
               final Transformer t = TransformerFactory.newInstance().newTransformer();
-              t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-              t.setOutputProperty( OutputKeys.INDENT, "yes" );
+              t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+              t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
               t.transform( source, new StreamResult( writer ) );
             }
           };
@@ -167,8 +167,8 @@ public class SaveStyleAction2 implements IActionDelegate
           // outside workspace
           Result result = new StreamResult( file );
           Transformer t = TransformerFactory.newInstance().newTransformer();
-          t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-          t.setOutputProperty( OutputKeys.INDENT, "yes" );
+          t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+          t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
           t.transform( source, result );
         }
       }
@@ -176,7 +176,7 @@ public class SaveStyleAction2 implements IActionDelegate
     catch( final CoreException ce )
     {
       ce.printStackTrace();
-      ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern des Styles", ce.getStatus() );
+      ErrorDialog.openError( shell, Messages.SaveStyleAction2_11, Messages.SaveStyleAction2_12, ce.getStatus() );
     }
     catch( Exception e )
     {

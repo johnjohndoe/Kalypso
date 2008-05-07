@@ -65,7 +65,7 @@ public class ZoomInByRectWidget extends AbstractWidget
    */
   public ZoomInByRectWidget( )
   {
-    super( "zoom in", "" );
+    super( "zoom in", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   }
 

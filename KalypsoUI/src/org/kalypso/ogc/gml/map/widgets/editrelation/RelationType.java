@@ -46,6 +46,7 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -81,11 +82,11 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
     boolean exists = workspace.isExistingRelation( f1, f2, m_link );
 
     if( !isAddMode )
-      return exists ? null : "diese Relation existiert nicht";
+      return exists ? null : Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.0"); //$NON-NLS-1$
     // add mode:
     else if( exists )
     {
-      return "Relation ist bereits gesetzt.";
+      return Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.1"); //$NON-NLS-1$
     }
     return getFitProblemsfromOccurency( f1, isAddMode );
   }
@@ -129,25 +130,25 @@ public class RelationType implements org.kalypso.ogc.gml.map.widgets.editrelatio
         case IPropertyType.UNBOUND_OCCURENCY:
           return null;
         case 1:
-          return property == null ? null : ftLabel + "." + linkLabel + " ist schon gesetzt";
+          return property == null ? null : ftLabel + "." + linkLabel + Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.3"); //$NON-NLS-1$ //$NON-NLS-2$
         default:
-          return ((List) property).size() + 1 < max ? null : ftLabel + "." + linkLabel + " besitzt schon maximale relationen (" + max + ")";
+          return ((List) property).size() + 1 < max ? null : ftLabel + "." + linkLabel + Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.5") + max + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
     }
     // else remove mode:
     switch( max )
     {
       case 1:
-        return property != null ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
+        return property != null ? null : ftLabel + "." + linkLabel + Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.8"); //$NON-NLS-1$ //$NON-NLS-2$
       default: // minOccurs should not be validated here.
-        return ((List) property).size() > 0 ? null : ftLabel + "." + linkLabel + " ist nicht gesetzt";
+        return ((List) property).size() > 0 ? null : ftLabel + "." + linkLabel + Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.RelationType.10"); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
   @Override
   public String toString( )
   {
-    return AnnotationUtilities.getAnnotation( m_srcFT ).getLabel() + " > " + AnnotationUtilities.getAnnotation( m_destFT ).getLabel();
+    return AnnotationUtilities.getAnnotation( m_srcFT ).getLabel() + " > " + AnnotationUtilities.getAnnotation( m_destFT ).getLabel(); //$NON-NLS-1$
   }
 
   public IFeatureType getDestFT( )

@@ -47,6 +47,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.handlers.parts.PanToFeaturePart;
 import org.kalypsodeegree.model.feature.Feature;
@@ -74,11 +75,11 @@ public class PanToSelectedFeature extends AbstractHandler
     IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( "No active part." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.actions.PanToSelectedFeature.0") ); //$NON-NLS-1$
 
     MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
     if( mapPanel == null )
-      throw new ExecutionException( "Active part has no MapPanel." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.actions.PanToSelectedFeature.1") ); //$NON-NLS-1$
 
     /* Get the first selected element. */
     Object element = mapPanel.getSelectionManager().getFirstElement();

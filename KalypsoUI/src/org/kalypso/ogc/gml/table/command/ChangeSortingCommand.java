@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.table.command;
 
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableSorter;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 
@@ -146,7 +147,7 @@ public class ChangeSortingCommand implements ICommand
    */
   public String getDescription()
   {
-    return ( m_newInverse ? "absteigend" : "aufsteigend" ) + " sortieren nach: " + m_newPropertyName;
+    return ( m_newInverse ? Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.0") : Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.1") ) + Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.2") + m_newPropertyName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
 }

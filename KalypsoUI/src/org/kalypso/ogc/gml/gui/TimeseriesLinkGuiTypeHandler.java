@@ -105,10 +105,10 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
   public String getText( final Object element )
   {
     if( element == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final String href = ((TimeseriesLinkType) element).getHref();
-    return href == null ? "" : href;
+    return href == null ? "" : href; //$NON-NLS-1$
   }
 
   /**
@@ -124,25 +124,25 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 0 );
     composite.setLayout( factory.createGridLayout( layout ) );
-    composite.setStyle( "SWT.NONE" );
+    composite.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     // Text
     final Text text = factory.createText();
-    text.setStyle( "SWT.NONE" );
+    text.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     text.setProperty( property.getQName() );
 
     final GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.BEGINNING" );
+    textData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
 
     // Knopf
     final Button button = factory.createButton();
     final GridDataType buttonData = factory.createGridDataType();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( property.getQName() );
 
-    buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
+    buttonData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     button.setLayoutData( factory.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();

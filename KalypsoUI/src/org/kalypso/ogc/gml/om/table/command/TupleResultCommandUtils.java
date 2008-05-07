@@ -45,6 +45,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -54,13 +55,13 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class TupleResultCommandUtils
 {
-  public final static String ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME = "tupleResultTableViewer";
+  public final static String ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME = "tupleResultTableViewer"; //$NON-NLS-1$
 
-  public static final String TUPLE_RESULT_COMMAND_CATEGORY = "org.kalypso.ui.tupleResult.category";
+  public static final String TUPLE_RESULT_COMMAND_CATEGORY = "org.kalypso.ui.tupleResult.category"; //$NON-NLS-1$
 
   private TupleResultCommandUtils( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class." );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ogc.gml.om.table.command.TupleResultCommandUtils.2") ); //$NON-NLS-1$
   }
 
   /**

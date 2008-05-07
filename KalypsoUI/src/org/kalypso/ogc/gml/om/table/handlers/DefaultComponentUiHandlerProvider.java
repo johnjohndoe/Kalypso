@@ -96,25 +96,25 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
       final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
-      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "", "", items );
+      return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "", "", items ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     final QName valueTypeName = component.getValueTypeName();
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "dateTime" ) ) )
-      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%1$tm %1$te,%1$tY", "", null );
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "dateTime" ) ) ) //$NON-NLS-1$
+      return new ComponentUiDateHandler( index, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%1$tm %1$te,%1$tY", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
-      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
+      return new ComponentUiDoubleHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) )
-      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null );
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) //$NON-NLS-1$
+      return new ComponentUiDecimalHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%f", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) )
-      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null );
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "integer" ) ) ) //$NON-NLS-1$
+      return new ComponentUiIntegerHandler( index, editable, resizeable, moveable, columnLabel, SWT.RIGHT, columnWidth, columnWidthPercent, "%d", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) )
-      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null );
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "string" ) ) ) //$NON-NLS-1$
+      return new ComponentUiStringHandler( index, editable, resizeable, moveable, columnLabel, SWT.LEFT, columnWidth, columnWidthPercent, "%s", "", null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

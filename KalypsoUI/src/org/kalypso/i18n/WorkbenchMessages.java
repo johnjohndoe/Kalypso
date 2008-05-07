@@ -38,37 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.om;
+package org.kalypso.i18n;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionDelegate;
-import org.kalypso.i18n.Messages;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * @author schlienger
+ * @author kuch
+ *
  */
-public class ShowObservationAction extends ActionDelegate
+public class WorkbenchMessages
 {
-  /**
-   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
-   *      org.eclipse.swt.widgets.Event)
-   */
-  @Override
-  public void runWithEvent( final IAction action, final Event event )
+  private static final String BUNDLE_NAME = "org.kalypso.i18n.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private WorkbenchMessages( )
   {
-    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+  }
+
+  public static String getString( String key )
+  {
     try
     {
-      activePage.showView( "org.kalypso.ogc.gml.om.table.ObservationTableView" ); //$NON-NLS-1$
+      return RESOURCE_BUNDLE.getString( key );
     }
-    catch( final PartInitException e )
+    catch( MissingResourceException e )
     {
-      ErrorDialog.openError( event.display.getActiveShell(), Messages.getString("org.kalypso.ogc.gml.om.ShowObservationAction.1"), Messages.getString("org.kalypso.ogc.gml.om.ShowObservationAction.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+      return '!' + key + '!';
     }
   }
 }

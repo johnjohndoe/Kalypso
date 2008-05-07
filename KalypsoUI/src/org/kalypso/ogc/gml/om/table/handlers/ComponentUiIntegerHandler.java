@@ -75,7 +75,7 @@ public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
   {
     final Object value = record.getValue( getComponent() );
     if( value == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return getStringRepresentation( record );
   }

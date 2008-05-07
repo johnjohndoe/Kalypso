@@ -70,6 +70,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -125,13 +126,13 @@ public class GmlLoader extends AbstractLoader
   @Override
   protected Object loadIntern( final String source, final URL context, final IProgressMonitor monitor ) throws LoaderException
   {
-    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
+    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) ); //$NON-NLS-1$
     final List<IStatus> resultList = new ArrayList<IStatus>();
 
     InputStream is = null;
     try
     {
-      monitor.beginTask( "GML laden", 1000 );
+      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.1"), 1000 ); //$NON-NLS-1$
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
@@ -149,11 +150,11 @@ public class GmlLoader extends AbstractLoader
       TimeLogger perfLogger = null;
       if( doTrace )
       {
-        perfLogger = new TimeLogger( "Start transforming gml workspace" );
+        perfLogger = new TimeLogger( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.2") ); //$NON-NLS-1$
       }
 
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      monitor.subTask( "in das Zielkoordinatensystem transformieren." );
+      monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.3") ); //$NON-NLS-1$
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
@@ -165,7 +166,7 @@ public class GmlLoader extends AbstractLoader
       if( perfLogger != null )
       {
         perfLogger.takeInterimTime();
-        perfLogger.printCurrentTotal( "Finished transforming gml workspace in: " );
+        perfLogger.printCurrentTotal( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.4") ); //$NON-NLS-1$
       }
 
       final Feature rootFeature = workspace.getRootFeature();
@@ -173,7 +174,7 @@ public class GmlLoader extends AbstractLoader
 
       for( final IModelAdaptor modelAdaptor : modelAdaptors )
       {
-        monitor.subTask( "GML adaptieren" );
+        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.5") ); //$NON-NLS-1$
         workspace = modelAdaptor.adapt( workspace );
         resultList.add( modelAdaptor.getResult() );
       }
@@ -182,19 +183,19 @@ public class GmlLoader extends AbstractLoader
       {
         // some adaptation occured, so directly save workspace
         // but create a backup (.bak) of old workspace
-        monitor.subTask( "Sicherheitskopie des alten GML erzeugen" );
+        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.6") ); //$NON-NLS-1$
 
         if( gmlFile != null )
         {
-          final IPath backupPath = gmlFile.getFullPath().addFileExtension( "bak" );
+          final IPath backupPath = gmlFile.getFullPath().addFileExtension( "bak" ); //$NON-NLS-1$
           backup( gmlFile, backupPath, monitor, 0, resultList );
         }
 
-        monitor.subTask( "Adaptiertes GML speichern" );
+        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.8") ); //$NON-NLS-1$
         save( source, context, monitor, workspace );
       }
 
-      setStatus( StatusUtilities.createStatus( resultList, String.format( "GML-Datei %s wurde geladen.", gmlURL.toExternalForm() ) ) );
+      setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.9"), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
 
       return workspace;
     }
@@ -208,7 +209,7 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
       setStatus( StatusUtilities.statusFromThrowable( e ) );
-      throw new LoaderException( "GML konnte nicht geladen werden: " + source + ". Grund: " + e.getLocalizedMessage(), e );
+      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.10") + source + Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.11") + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {
@@ -221,7 +222,7 @@ public class GmlLoader extends AbstractLoader
   private void backup( final IResource gmlFile, final IPath backupPath, final IProgressMonitor monitor, final int count, final List<IStatus> resultList )
   {
     final IWorkspaceRoot root = gmlFile.getWorkspace().getRoot();
-    final IPath currentTry = backupPath.addFileExtension( "" + count );
+    final IPath currentTry = backupPath.addFileExtension( "" + count ); //$NON-NLS-1$
     final IResource backupResource = root.findMember( currentTry );
     if( backupResource != null )
     {
@@ -231,7 +232,7 @@ public class GmlLoader extends AbstractLoader
     {
       try
       {
-        resultList.add( StatusUtilities.createInfoStatus( String.format( "Eine Sicherheitskopie von %s wurde unter %s gespeichert.", gmlFile.getName(), currentTry.toOSString() ) ) );
+        resultList.add( StatusUtilities.createInfoStatus( String.format( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.13"), gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
         gmlFile.copy( currentTry, false, monitor );
       }
       catch( final CoreException e )
@@ -246,7 +247,7 @@ public class GmlLoader extends AbstractLoader
    */
   public String getDescription( )
   {
-    return "GML Layer";
+    return Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.14"); //$NON-NLS-1$
   }
 
   /**
@@ -281,26 +282,26 @@ public class GmlLoader extends AbstractLoader
 
         thread.setFileContents( file, false, true, new NullProgressMonitor() );
       }
-      else if( file == null && gmlURL.getProtocol().equals( "file" ) )
+      else if( file == null && gmlURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
       {
         final OutputStreamWriter w = new FileWriter( new File( gmlURL.getFile() ) );
         GmlSerializer.serializeWorkspace( w, workspace );
       }
       else
       {
-        throw new LoaderException( "Die URL kann nicht beschrieben werden: " + gmlURL );
+        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.16") + gmlURL ); //$NON-NLS-1$
       }
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
 
-      throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );
+      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.17") + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
+      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.19") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
     finally
     {

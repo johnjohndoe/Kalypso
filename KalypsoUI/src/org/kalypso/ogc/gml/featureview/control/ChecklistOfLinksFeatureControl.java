@@ -85,10 +85,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
-  public static final String PARAM_SELECT_BUTTONS = "showSelectButtons";
+  public static final String PARAM_SELECT_BUTTONS = "showSelectButtons"; //$NON-NLS-1$
 
   private final Set<ModifyListener> m_modifyListeners = new HashSet<ModifyListener>();
 
@@ -190,7 +190,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
 
     // TODO: the stuff below does not work yet, as the modell is not changed....
 
-    final Button selectButton = createButton( buttonPanel, IDialogConstants.SELECT_ALL_ID, WorkbenchMessages.SelectionDialog_selectLabel, fontMetrics );
+    final Button selectButton = createButton( buttonPanel, IDialogConstants.SELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
     selectButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -200,7 +200,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
       }
     } );
 
-    final Button deselectButton = createButton( buttonPanel, IDialogConstants.DESELECT_ALL_ID, WorkbenchMessages.SelectionDialog_deselectLabel, fontMetrics );
+    final Button deselectButton = createButton( buttonPanel, IDialogConstants.DESELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
     deselectButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -286,7 +286,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl imple
     final FeatureList listOfLinks = (FeatureList) feature.getProperty( rt );
 
     final Object checkedElement = event.getElement();
-    final CompositeCommand compositeCommand = new CompositeCommand( "Linkliste verändern" );
+    final CompositeCommand compositeCommand = new CompositeCommand( org.kalypso.i18n.WorkbenchMessages.getString("org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.2") ); //$NON-NLS-1$
     if( event.getChecked() )
     {
       // TODO: implement case for external features

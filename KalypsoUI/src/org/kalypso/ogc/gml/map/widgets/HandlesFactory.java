@@ -84,7 +84,7 @@ public class HandlesFactory
     return collector;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private static void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Object geometry, final List<Handle> collector, final GM_Envelope envelope )
   {
     if( geometry instanceof GM_Point )
@@ -118,7 +118,7 @@ public class HandlesFactory
 
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private static void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface surface, final List<Handle> collector, final GM_Envelope envelope )
   {
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();

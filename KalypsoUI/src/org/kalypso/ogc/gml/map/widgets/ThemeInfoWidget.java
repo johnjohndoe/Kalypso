@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.outline.GisMapOutlineView;
@@ -74,9 +75,9 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
 
   public ThemeInfoWidget( )
   {
-    super( "Quick-Info", "Zeigt ortsbezogene Informationen zu den selektierten Themen an" );
+    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setNoThemesTooltip( "<selektieren Sie Themen in der Gliederung>" );
+    setNoThemesTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.2") ); //$NON-NLS-1$
   }
 
   public ThemeInfoWidget( final String name, final String toolTip )
@@ -99,14 +100,14 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
     final GisMapOutlineView outlineView = (GisMapOutlineView) page.findView( GisMapOutlineView.ID );
     if( outlineView == null )
     {
-      getMapPanel().setMessage( "Info-Widget : Keine Gliederungsansicht verfügbar" );
+      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.3") ); //$NON-NLS-1$
       return;
     }
 
     final MapPanel outlineMapPanel = outlineView.getMapPanel();
     if( outlineMapPanel != mapPanel )
     {
-      getMapPanel().setMessage( "Info-Widget : keine Gliederungsansicht für aktive Karte verfügbar" );
+      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4") ); //$NON-NLS-1$
       return;
     }
 

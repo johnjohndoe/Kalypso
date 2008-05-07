@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.util.HashMap;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -74,31 +75,31 @@ public class WidgetHelper
   public static IWidget createWidget( final String widgetID )
   {
     if( MapPanel.WIDGET_ZOOM_IN.equals( widgetID ) )
-      return (new ZoomInWidget( "zoom in", "" ));
+      return (new ZoomInWidget( "zoom in", "" )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( MapPanel.WIDGET_ZOOM_IN_RECT.equals( widgetID ) )
       return (new ZoomInByRectWidget( ));
     else if( MapPanel.WIDGET_PAN.equals( widgetID ) )
       return (new PanToWidget( ));
     else if( widgetID.startsWith( MapPanel.WIDGET_EDIT_FEATURE_GEOMETRY ) )
-      return (new EditFeatureGeometryWidget( "Replace Geometry", "Replace The First Geometry Of The Selected Feature", null, null, null ));
+      return (new EditFeatureGeometryWidget( Messages.getString("org.kalypso.ogc.gml.map.widgets.WidgetHelper.2"), Messages.getString("org.kalypso.ogc.gml.map.widgets.WidgetHelper.3"), null, null, null )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POINT ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPointClass() ));
+      return (new CreateGeometeryWidget2( Messages.getString("org.kalypso.ogc.gml.map.widgets.WidgetHelper.4"), "", GeometryUtilities.getPointClass() )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_LINESTRING ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() ));
+      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getLineStringClass() )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_POLYGON ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() ));
+      return (new CreateGeometeryWidget2( "create Geometry", "", GeometryUtilities.getPolygonClass() )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE_WITH_GEOMETRY ) )
-      return (new CreateGeometeryWidget2( "create Geometry", "", null ));
+      return (new CreateGeometeryWidget2( "create Geometry", "", null )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( widgetID.equals( MapPanel.WIDGET_EDIT_GEOMETRY ) )
-      return (new EditGeometryWidget( "edit Geometry", "" ));
+      return (new EditGeometryWidget( "edit Geometry", "" )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( MapPanel.WIDGET_SELECT.equals( widgetID ) )
-      return (new SelectWidget( "select", "" ));
+      return (new SelectWidget( "select", "" )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( MapPanel.WIDGET_UNSELECT.equals( widgetID ) )
-      return (new UnSelectWidget( "unselect", "" ));
+      return (new UnSelectWidget( "unselect", "" )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( MapPanel.WIDGET_TOGGLE_SELECT.equals( widgetID ) )
-      return (new ToggleSelectWidget( "toggle selection", "" ));
+      return (new ToggleSelectWidget( "toggle selection", "" )); //$NON-NLS-1$ //$NON-NLS-2$
     else if( MapPanel.WIDGET_SINGLE_SELECT.equals( widgetID ) )
-      return (new SingleElementSelectWidget( "single select", "" ));
+      return (new SingleElementSelectWidget( "single select", "" )); //$NON-NLS-1$ //$NON-NLS-2$
 
     // if( widgetID.startsWith( MapPanel.WIDGET_CREATE_FEATURE ) )
     // return ( new CreateGeometeryWidget2( "create Geometry", "", widgetID.replaceAll( ".+\\.", "" ) ) );

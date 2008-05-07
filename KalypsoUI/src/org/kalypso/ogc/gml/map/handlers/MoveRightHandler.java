@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
@@ -78,11 +79,11 @@ public class MoveRightHandler extends AbstractHandler implements IHandler
       part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
 
     if( part == null )
-      throw new ExecutionException( "No active part." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.actions.MoveRightHandler.0") ); //$NON-NLS-1$
 
     final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
     if( mapPanel == null )
-      throw new ExecutionException( "Active part has no MapPanel." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.actions.MoveRightHandler.1") ); //$NON-NLS-1$
 
     final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 

@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
@@ -79,7 +80,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
   private Point m_movePoint;
 
   /** Für die Ausgabe im Info-Panel */
-  private final String COORD_FORMAT = "%10.4f";
+  private final String COORD_FORMAT = "%10.4f"; //$NON-NLS-1$
 
   public CoordinateInfoWidget( final String name, final String toolTip )
   {
@@ -91,7 +92,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
    */
   public CoordinateInfoWidget( )
   {
-    super( "coordinate info", "" );
+    super( "coordinate info", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -226,27 +227,27 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     try
     {
       final PrintWriter pw = new PrintWriter( stringWriter );
-      pw.print( "Lokales Koordinaten-System:\n" + getMapPanel().getMapModell().getCoordinatesSystem() + "\n" );
-      pw.print( "p1:" );
+      pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.3") + getMapPanel().getMapModell().getCoordinatesSystem() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      pw.print( "p1:" ); //$NON-NLS-1$
       if( m_p1 == null )
-        pw.print( "\n  nicht gewählt" );
+        pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.6") ); //$NON-NLS-1$
       else
       {
-        pw.print( "\n  " );
+        pw.print( "\n  " ); //$NON-NLS-1$
 
         pw.printf( Locale.US, COORD_FORMAT, x1 );
-        pw.print( " / " );
+        pw.print( " / " ); //$NON-NLS-1$
         pw.printf( Locale.US, COORD_FORMAT, y1 );
       }
 
-      pw.print( "\np2:" );
+      pw.print( "\np2:" ); //$NON-NLS-1$
       if( m_p2 == null )
-        pw.print( "\n  nicht gewählt" );
+        pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.10") ); //$NON-NLS-1$
       else
       {
-        pw.print( "\n  " );
+        pw.print( "\n  " ); //$NON-NLS-1$
         pw.printf( Locale.US, COORD_FORMAT, x2 );
-        pw.print( " / " );
+        pw.print( " / " ); //$NON-NLS-1$
         pw.printf( Locale.US, COORD_FORMAT, y2 );
       }
 
@@ -256,15 +257,15 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
         final Double horizontal = new Double( Math.abs( m_p1.getX() - m_p2.getX() ) );
         final Double vertical = new Double( Math.abs( m_p1.getY() - m_p2.getY() ) );
 
-        pw.print( "\n\nDistanz:" );
-        pw.print( "\n  direkt: \t\t" );
+        pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.13") ); //$NON-NLS-1$
+        pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.14") ); //$NON-NLS-1$
 
         pw.printf( Locale.US, COORD_FORMAT, direkt );
 
-        pw.print( "\n  horizontal: \t" );
+        pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.15") ); //$NON-NLS-1$
         pw.printf( Locale.US, COORD_FORMAT, horizontal );
 
-        pw.print( "\n  vertikal: \t\t" );
+        pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.16") ); //$NON-NLS-1$
         pw.printf( Locale.US, COORD_FORMAT, vertical );
       }
     }
@@ -316,7 +317,7 @@ public class CoordinateInfoWidget extends AbstractWidget implements IWidgetWithO
     m_topLevel = toolkit.createComposite( parent, SWT.NONE );
     m_topLevel.setLayout( new GridLayout( 1, false ) );
 
-    m_textInfo = toolkit.createText( m_topLevel, "Info", SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
+    m_textInfo = toolkit.createText( m_topLevel, Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.CoordinateInfoWidget.17"), SWT.READ_ONLY | SWT.MULTI | SWT.WRAP ); //$NON-NLS-1$
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return m_topLevel;

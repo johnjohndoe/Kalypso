@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.table.command;
 
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 
 /**
@@ -103,7 +104,7 @@ public class SetColumnWidthCommand implements ICommand
    */
   public String getDescription()
   {
-    return "Spaltenbreite ändern";
+    return Messages.getString("org.kalypso.ogc.gml.table.celleditors.SetColumnWidthCommand.0"); //$NON-NLS-1$
   }
 
   private void setWidth( final int width, final boolean bSetControlWidth )

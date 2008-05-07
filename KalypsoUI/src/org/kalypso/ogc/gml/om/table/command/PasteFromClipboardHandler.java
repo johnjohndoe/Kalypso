@@ -57,6 +57,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -95,13 +96,13 @@ public class PasteFromClipboardHandler extends AbstractHandler
       // if Cipboard content is not text or that content is empty, just ignore it
       if( trstring == null || trstring.trim().length() == 0 )
       {
-        MessageDialog.openError( shell, "Error", "No suitable data on clipboard available." );
+        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.0"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.1") ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
     }
     catch( Exception e )
     {
-      MessageDialog.openError( shell, "Error", "No suitable data on clipboard available." );
+      MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.2"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.3") ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
     
@@ -110,7 +111,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
       final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
       if( tupleResultViewer == null )
       {
-        MessageDialog.openError( shell, "Error", "No tuple result data viewer available." );
+        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.4"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.5") ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
       final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
@@ -137,14 +138,14 @@ public class PasteFromClipboardHandler extends AbstractHandler
       final IComponent[] components = tupleResult.getComponents();
       final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
 
-      final StringTokenizer st1 = new StringTokenizer( trstring, "\n" );
+      final StringTokenizer st1 = new StringTokenizer( trstring, "\n" ); //$NON-NLS-1$
       int ordinalNumber = 0;
       while( st1.hasMoreTokens() )
       {
         final String nextToken = st1.nextToken();
         if( nextToken.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
           break;
-        final StringTokenizer st2 = new StringTokenizer( nextToken, "\t" );
+        final StringTokenizer st2 = new StringTokenizer( nextToken, "\t" ); //$NON-NLS-1$
         final IRecord record = tupleResult.createRecord();
         for( int i = 0; i < components.length; i++ )
         {
@@ -160,7 +161,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
           }
           if( descriptorIndex < 0 )
           {
-            if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) )
+            if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
             {
               record.setValue( i, handler.convertToJavaValue( new Integer( ++ordinalNumber ).toString() ) );
             }
@@ -175,16 +176,16 @@ public class PasteFromClipboardHandler extends AbstractHandler
               if( handler instanceof XsdBaseTypeHandlerString )
               {
                 final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-                record.setValue( i, myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ) );
+                record.setValue( i, myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ) ); //$NON-NLS-1$
               }
               else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
               {
                 final SimpleDateFormat dateFormat = new SimpleDateFormat( descriptors[descriptorIndex].getParseFormat() );
-                final GregorianCalendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "GMT+1" ) );
+                final GregorianCalendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "GMT+1" ) ); //$NON-NLS-1$
                 calendar.setTime( dateFormat.parse( token ) );
                 record.setValue( i, new XMLGregorianCalendarImpl( calendar ) );
               }
-              else if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) )
+              else if( components[i].getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
               {
                 record.setValue( i, handler.convertToJavaValue( token ) );
                 // record.setValue( i, new Integer(++ordinalNumber) );
@@ -205,7 +206,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     }
     catch( final Exception ex )
     {
-      MessageDialog.openError( shell, "Error", "Non-parsable data pasted from the clipboard." );
+      MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.12"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.13") ); //$NON-NLS-1$ //$NON-NLS-2$
       ex.printStackTrace();
     }
     return null;
