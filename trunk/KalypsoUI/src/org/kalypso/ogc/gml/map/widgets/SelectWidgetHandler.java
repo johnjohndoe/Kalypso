@@ -181,8 +181,11 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     if( window == null )
       return;
-    
+
     final IWorkbenchPart activePart = window.getPartService().getActivePart();
+    if( activePart == null )
+      return;
+
     final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
     if( mapPanel != null )
     {
