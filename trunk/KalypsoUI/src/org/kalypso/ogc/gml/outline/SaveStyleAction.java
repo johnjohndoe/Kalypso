@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -70,6 +70,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -202,7 +203,7 @@ public class SaveStyleAction extends AbstractOutlineAction
     catch( final CoreException ce )
     {
       ce.printStackTrace();
-      ErrorDialog.openError( shell, Messages.SaveStyleAction_11, Messages.SaveStyleAction_12, ce.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.outline.SaveStyleAction.11" ), Messages.getString( "org.kalypso.ogc.gml.outline.SaveStyleAction.12" ), ce.getStatus() );
     }
     catch( final Exception e )
     {

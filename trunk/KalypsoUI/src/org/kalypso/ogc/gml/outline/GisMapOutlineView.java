@@ -65,6 +65,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -201,7 +202,7 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
 
     m_mapPart = mapPart;
 
-    String newName = Messages.GisMapOutlineView_1;
+    String newName = Messages.getString( "org.kalypso.ogc.gml.outline.GisMapOutlineView.1" );
     if( m_mapPart != null )
     {
       newName += " (" + mapPart.getPartName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$

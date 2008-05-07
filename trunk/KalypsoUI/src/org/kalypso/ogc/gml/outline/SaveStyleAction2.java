@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -70,6 +70,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
@@ -91,28 +92,28 @@ public class SaveStyleAction2 implements IActionDelegate
    * @see org.eclipse.jface.action.Action#run()
    */
 
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( action instanceof PluginMapOutlineAction )
     {
-      IMapModellView viewer = ((PluginMapOutlineAction) action).getOutlineviewer();
-      Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+      final IMapModellView viewer = ((PluginMapOutlineAction) action).getOutlineviewer();
+      final Object o = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
       if( o instanceof ThemeStyleTreeObject )
       {
         final IKalypsoTheme theme = ((ThemeStyleTreeObject) o).getTheme();
         if( theme instanceof IKalypsoFeatureTheme )
         {
-          KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
+          final KalypsoUserStyle kalypsoStyle = ((ThemeStyleTreeObject) o).getStyle();
           saveUserStyle( kalypsoStyle, PlatformUI.getWorkbench().getDisplay().getActiveShell() );
         }
       }
     }
   }
 
-  public static void saveUserStyle( KalypsoUserStyle userStyle, Shell shell )
+  public static void saveUserStyle( final KalypsoUserStyle userStyle, final Shell shell )
   {
-    String[] filterExtension = { "*.sld" }; //$NON-NLS-1$
-    FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
+    final String[] filterExtension = { "*.sld" }; //$NON-NLS-1$
+    final FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
     String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>"; //$NON-NLS-1$
     sldContents += userStyle.exportAsXML();
@@ -121,7 +122,7 @@ public class SaveStyleAction2 implements IActionDelegate
     try
     {
 
-      String filename = saveDialog.open();
+      final String filename = saveDialog.open();
       if( filename != null )
       {
         final File file;
@@ -129,7 +130,7 @@ public class SaveStyleAction2 implements IActionDelegate
           file = new File( filename + ".sld" ); //$NON-NLS-1$
         else
           file = new File( filename );
-        IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
+        final IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
 
         final IUrlResolver2 resolver = new IUrlResolver2()
         {
@@ -165,8 +166,8 @@ public class SaveStyleAction2 implements IActionDelegate
         else if( file != null )
         {
           // outside workspace
-          Result result = new StreamResult( file );
-          Transformer t = TransformerFactory.newInstance().newTransformer();
+          final Result result = new StreamResult( file );
+          final Transformer t = TransformerFactory.newInstance().newTransformer();
           t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
           t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
           t.transform( source, result );
@@ -176,9 +177,9 @@ public class SaveStyleAction2 implements IActionDelegate
     catch( final CoreException ce )
     {
       ce.printStackTrace();
-      ErrorDialog.openError( shell, Messages.SaveStyleAction2_11, Messages.SaveStyleAction2_12, ce.getStatus() );
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.outline.SaveStyleAction2.11" ), Messages.getString( "org.kalypso.ogc.gml.outline.SaveStyleAction2.12" ), ce.getStatus() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO error handling
       e.printStackTrace();
@@ -189,7 +190,7 @@ public class SaveStyleAction2 implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
    *      org.eclipse.jface.viewers.ISelection)
    */
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     boolean bEnable = false;
     final IStructuredSelection s = (IStructuredSelection) selection;
