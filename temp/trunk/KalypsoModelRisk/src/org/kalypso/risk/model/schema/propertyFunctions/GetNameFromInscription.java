@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -65,7 +65,9 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class GetNameFromInscription extends FeaturePropertyFunction
 {
-  private String m_language = "en"; // language of application //$NON-NLS-1$
+  private String m_langShort = "en"; // language of application //$NON-NLS-1$
+
+  private String m_langLong = "en"; // language of application //$NON-NLS-1$
 
   private boolean m_shallOverwrite = false;
 
@@ -95,7 +97,7 @@ public class GetNameFromInscription extends FeaturePropertyFunction
     if( inscriptionProperty == null )
       return currentValue;
 
-    final List inscriptionList = (List) feature.getProperty( inscriptionProperty );
+    final List< ? > inscriptionList = (List< ? >) feature.getProperty( inscriptionProperty );
     if( inscriptionList == null )
       return currentValue;
 
@@ -132,8 +134,15 @@ public class GetNameFromInscription extends FeaturePropertyFunction
         }
       }
     }
-    if( currentValue == null || intNames.containsValue( currentValue ) && m_shallOverwrite )
-      return intNames.get( m_language );
+    if( currentValue == null || (intNames.containsValue( currentValue ) && m_shallOverwrite) )
+    {
+      if( intNames.containsKey( m_langLong ) )
+        return intNames.get( m_langLong );
+      else if (intNames.containsKey( m_langShort ))
+        return intNames.get( m_langShort );
+      else
+        return null;
+    }
 
     return currentValue;
   }
@@ -148,7 +157,10 @@ public class GetNameFromInscription extends FeaturePropertyFunction
     m_shallOverwrite = Boolean.valueOf( properties.get( "shallOverwrite" ) ); //$NON-NLS-1$
     // get language from application
     // m_language = System.getProperty( "osgi.nl.user", "en" );
-    m_language = System.getProperty( "org.osgi.framework.language", "en" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_langLong = System.getProperty( "org.osgi.framework.language", "en" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final String[] langArray = m_langLong.split( "_" );//$NON-NLS-1$ 
+    m_langShort = langArray[0];
   }
 
   /**
