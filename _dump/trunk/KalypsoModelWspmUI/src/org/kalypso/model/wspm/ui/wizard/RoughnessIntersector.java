@@ -121,7 +121,7 @@ public class RoughnessIntersector
 
       for( final IRecord point : points )
       {
-        monitor.subTask( label + " (" + count + "/" + length + ")" );
+        monitor.subTask( label + " (" + count + "/" + length + ")" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         if( !acceptPoint( profil, point ) )
           continue;

@@ -485,13 +485,13 @@ public class WspmProfileHelper
   private final static IComponent createPointProperty( final String property )
   {
     if( property.equals( IWspmConstants.POINT_PROPERTY_BREITE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, Messages.WspmProfileHelper_0, Messages.WspmProfileHelper_1, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, Messages.WspmProfileHelper_4, Messages.WspmProfileHelper_5 ) ); //$NON-NLS-3$ //$NON-NLS-4$
+      return new Component( IWspmConstants.POINT_PROPERTY_BREITE, Messages.WspmProfileHelper_0, Messages.WspmProfileHelper_1, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_BREITE, Messages.WspmProfileHelper_4, Messages.WspmProfileHelper_5 ) ); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-1$ //$NON-NLS-2$
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOEHE ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, Messages.WspmProfileHelper_6, Messages.WspmProfileHelper_7, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, Messages.WspmProfileHelper_10, Messages.WspmProfileHelper_11 ) ); //$NON-NLS-3$ //$NON-NLS-4$
+      return new Component( IWspmConstants.POINT_PROPERTY_HOEHE, Messages.WspmProfileHelper_6, Messages.WspmProfileHelper_7, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOEHE, Messages.WspmProfileHelper_10, Messages.WspmProfileHelper_11 ) ); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-1$ //$NON-NLS-2$
     else if( property.equals( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, Messages.WspmProfileHelper_12, Messages.WspmProfileHelper_13, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, Messages.WspmProfileHelper_16, Messages.WspmProfileHelper_17 ) ); //$NON-NLS-3$ //$NON-NLS-4$
+      return new Component( IWspmConstants.POINT_PROPERTY_RECHTSWERT, Messages.WspmProfileHelper_12, Messages.WspmProfileHelper_13, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_RECHTSWERT, Messages.WspmProfileHelper_16, Messages.WspmProfileHelper_17 ) ); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-1$ //$NON-NLS-2$
     else if( property.equals( IWspmConstants.POINT_PROPERTY_HOCHWERT ) )
-      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, Messages.WspmProfileHelper_18, Messages.WspmProfileHelper_19, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, Messages.WspmProfileHelper_22, Messages.WspmProfileHelper_23 ) ); //$NON-NLS-3$ //$NON-NLS-4$
+      return new Component( IWspmConstants.POINT_PROPERTY_HOCHWERT, Messages.WspmProfileHelper_18, Messages.WspmProfileHelper_19, "", "", IWspmConstants.Q_DOUBLE, Double.NaN, new DictionaryPhenomenon( IWspmConstants.POINT_PROPERTY_HOCHWERT, Messages.WspmProfileHelper_22, Messages.WspmProfileHelper_23 ) ); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-1$ //$NON-NLS-2$
 
     throw new IllegalStateException( Messages.WspmProfileHelper_24 );
   }

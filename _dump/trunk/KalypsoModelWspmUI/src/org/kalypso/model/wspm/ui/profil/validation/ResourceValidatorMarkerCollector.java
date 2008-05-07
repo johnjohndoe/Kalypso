@@ -135,7 +135,7 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   {
     if( "true".equals( Platform.getDebugOption( KalypsoModelWspmUIPlugin.ID + "/debug/validationMarkers" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
-      final String debugMsg = String.format( Messages.ResourceValidatorMarkerCollector_2, severity, message, location, pointPos );
+      final String debugMsg = String.format( "", severity, message, location, pointPos ); //$NON-NLS-1$
       System.out.println( debugMsg );
     }
 
@@ -147,7 +147,7 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     }
     String ResMarkerSerialized = StringUtils.join( ResMarkerStrings,'\u0000');
 
-    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, ResMarkerSerialized == "" ? null : ResMarkerSerialized,
+    final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, ResMarkerSerialized == "" ? null : ResMarkerSerialized, //$NON-NLS-1$
         m_profileFeatureID, m_station };
 
     marker.setAttributes( USED_ATTRIBUTES, values );

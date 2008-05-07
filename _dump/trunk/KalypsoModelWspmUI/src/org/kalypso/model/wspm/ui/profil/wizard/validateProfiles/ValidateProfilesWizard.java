@@ -112,7 +112,7 @@ public class ValidateProfilesWizard extends Wizard
     m_validatorRuleSet = KalypsoModelWspmCorePlugin.getValidatorSet( m_profiletype );
 
     m_reparatorRules = KalypsoModelWspmCoreExtensions.createReparatorRules();
-    setWindowTitle( "Profile validieren" );
+    setWindowTitle( Messages.ValidateProfilesWizard_0 );
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
     m_profileChooserPage = new ArrayChooserPage( m_profiles, new Object[0], m_selectedProfiles.toArray(), 1, "profilesChooserPage", Messages.PropertyEditWizard_3, null ); //$NON-NLS-1$
@@ -131,10 +131,10 @@ public class ValidateProfilesWizard extends Wizard
 
     final IValidatorRule[] rules = m_validatorRuleSet.getRules();
 
-    m_validatorChooserPage = new ArrayChooserPage( rules, new IValidatorRule[0], new IValidatorRule[0], 1, "validatorChooserPage", "Regeln auswählen", null ); //$NON-NLS-1$
+    m_validatorChooserPage = new ArrayChooserPage( rules, new IValidatorRule[0], new IValidatorRule[0], 1, "validatorChooserPage", Messages.ValidateProfilesWizard_1, null ); //$NON-NLS-1$
     m_validatorChooserPage.setLabelProvider( new LabelProvider() );
-    m_validatorChooserPage.setMessage( "Bitte wählen Sie aus, welche Regeln angewand werden sollen" );
-    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 0, "quickFixChoosePage", "QuickFix auswählen", null ); //$NON-NLS-1$
+    m_validatorChooserPage.setMessage( Messages.ValidateProfilesWizard_2 );
+    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 0, "quickFixChoosePage", Messages.ValidateProfilesWizard_3, null ); //$NON-NLS-1$
     m_quickFixChoosePage.setLabelProvider( new LabelProvider()
     {
 
@@ -147,7 +147,7 @@ public class ValidateProfilesWizard extends Wizard
         return ((IProfilMarkerResolution) element).getLabel();
       }
     } );
-    m_quickFixChoosePage.setMessage( "Bitte wählen Sie aus, welcher QuickFix ausgelöst werden sollen" );
+    m_quickFixChoosePage.setMessage( Messages.ValidateProfilesWizard_4 );
 
     addPage( m_validatorChooserPage );
     addPage( m_quickFixChoosePage );
@@ -184,7 +184,7 @@ public class ValidateProfilesWizard extends Wizard
     {
       public IStatus execute( final IProgressMonitor monitor )
       {
-        monitor.beginTask( "Profilvalidierung", size + size );
+        monitor.beginTask( Messages.ValidateProfilesWizard_5, size + size );
         for( int i = 0; i < size; i++ )
         {
           if( profilFeatures[i] instanceof Feature )
@@ -218,7 +218,7 @@ public class ValidateProfilesWizard extends Wizard
         {
           if( profiles[i] != null )
           {
-            final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource, GmlEditor.ID, "" + profiles[i].getStation(), featureIDs[i] );
+            final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource, GmlEditor.ID, "" + profiles[i].getStation(), featureIDs[i] ); //$NON-NLS-1$
             try
             {
               for( final Object rule : choosenRules )

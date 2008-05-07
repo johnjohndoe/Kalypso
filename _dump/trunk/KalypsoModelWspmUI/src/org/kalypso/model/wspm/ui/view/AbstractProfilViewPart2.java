@@ -85,7 +85,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   /** The part where the profile provider came from. */
   private IWorkbenchPart m_profilProviderPart = null;
 
-  private final UIJob m_updateProfilJob = new UIJob( "Profilansicht aktualisieren..." )
+  private final UIJob m_updateProfilJob = new UIJob( Messages.AbstractProfilViewPart2_4 )
   {
     @Override
     public IStatus runInUIThread( IProgressMonitor monitor )
@@ -296,7 +296,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     if( m_control == null || m_control.isDisposed() )
       return;
 
-    final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + " " + m_profile.getStation();
+    final String partName = m_profile == null ? Messages.AbstractProfilViewPart2_2 : Messages.AbstractProfilViewPart2_3 + " " + m_profile.getStation(); //$NON-NLS-1$
     final String tooltip = null;
 
     setPartNames( partName, tooltip );

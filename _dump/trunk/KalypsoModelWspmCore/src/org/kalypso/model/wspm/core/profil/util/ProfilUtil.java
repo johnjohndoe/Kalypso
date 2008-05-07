@@ -85,7 +85,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, "Null value" + iProp + "   " + pointProperty.getName() );
+        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$
       values[i] = value;
       i++;
     }
@@ -440,7 +440,7 @@ public class ProfilUtil
     final Object x = p.getValue( iBreite );
     final Object y = p.getValue( index );
     if( x == null || y == null || !(x instanceof Double) || !(y instanceof Double) )
-      throw new IllegalArgumentException( pointProperty.getName() + " is not a Number" );
+      throw new IllegalArgumentException( pointProperty.getName() + Messages.ProfilUtil_7 );
     return new Point2D.Double( (Double) x, (Double) y );
 
   }

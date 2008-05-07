@@ -184,7 +184,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
     /* boundary node */
     final Feature boundaryNode = m_condition.getBoundaryNode().getFeature();
-    new WizardFeatureLabel( "Boundary Node", iGroup );
+    new WizardFeatureLabel( Messages.PageEditBoundaryConditionGeneral_0, iGroup );
 
     final WizardFeatureTextBox bn = new WizardFeatureTextBox( boundaryNode, ISobekConstants.QN_HYDRAULIC_NAME );
     bn.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );

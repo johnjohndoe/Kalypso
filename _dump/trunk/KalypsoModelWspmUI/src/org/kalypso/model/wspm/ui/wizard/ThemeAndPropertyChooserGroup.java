@@ -86,9 +86,9 @@ public class ThemeAndPropertyChooserGroup
 
     public final IPropertyTypeFilter filter;
 
-    public PropertyDescriptor( @SuppressWarnings("hiding")
-    final String label, @SuppressWarnings("hiding")
-    final IPropertyTypeFilter filter, @SuppressWarnings("hiding")
+    public PropertyDescriptor( @SuppressWarnings("hiding") //$NON-NLS-1$
+    final String label, @SuppressWarnings("hiding") //$NON-NLS-1$
+    final IPropertyTypeFilter filter, @SuppressWarnings("hiding") //$NON-NLS-1$
     final boolean hideIfUnique )
     {
       this.label = label;

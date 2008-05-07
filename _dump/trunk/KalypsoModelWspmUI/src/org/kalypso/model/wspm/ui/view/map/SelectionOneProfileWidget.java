@@ -56,6 +56,6 @@ public class SelectionOneProfileWidget extends SelectionWidget
 {
   public SelectionOneProfileWidget( )
   {
-    super( Messages.SelectionOneProfileWidget_0, Messages.SelectionOneProfileWidget_1, new SelectFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( new QName( "org.kalypso.model.wspmprofile", "Profile" ) ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() ), null ); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-1$ //$NON-NLS-2$
+    super( Messages.SelectionOneProfileWidget_0, Messages.SelectionOneProfileWidget_1, new SelectFeaturesMapFunction( SelectFeaturesMapFunction.DEFAULT_RADIUS, new QNameFeaturesProvider( new QName( "org.kalypso.model.wspmprofile", "Profile" ) ), new SingleSelectionChanger( true ), KalypsoCorePlugin.getDefault().getSelectionManager() ), null ); //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

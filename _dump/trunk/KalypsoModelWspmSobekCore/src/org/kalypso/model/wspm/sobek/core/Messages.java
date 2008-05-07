@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
@@ -81,19 +81,13 @@ public class Messages extends NLS
 
   public static String LastfallTreeLabelProvider_3;
 
-  public static String LinkFeatureWrapper_0;
+  public static String PageEditBoundaryConditionGeneral_0;
 
   public static String PageEditBranch_1;
 
   public static String PageEditBranch_2;
 
   public static String PageEditBranch_4;
-
-  public static String PageEditBranch_5;
-
-  public static String PageEditBranch_6;
-
-  public static String PageEditBranch_7;
 
   public static String PiSobekModelUtils_0;
 
@@ -112,16 +106,6 @@ public class Messages extends NLS
   public static String PageEditBoundaryConditionGeneral_1;
 
   public static String PageEditBoundaryConditionGeneral_10;
-
-  public static String PageEditBoundaryConditionGeneral_11;
-
-  public static String PageEditBoundaryConditionGeneral_12;
-
-  public static String PageEditBoundaryConditionGeneral_13;
-
-  public static String PageEditBoundaryConditionGeneral_14;
-
-  public static String PageEditBoundaryConditionGeneral_15;
 
   public static String PageEditBoundaryConditionGeneral_2;
 
@@ -147,29 +131,13 @@ public class Messages extends NLS
 
   public static String PageEditBoundaryNode_4;
 
-  public static String PageEditBoundaryNode_5;
-
-  public static String PageEditBoundaryNode_6;
-
-  public static String PageEditBoundaryNode_7;
-
   public static String PageEditCrossSectionNode_1;
 
   public static String PageEditCrossSectionNode_2;
 
-  public static String PageEditCrossSectionNode_4;
-
-  public static String PageEditCrossSectionNode_5;
-
-  public static String PageEditCrossSectionNode_6;
-
-  public static String PageEditCrossSectionNode_7;
-
   public static String PageEditCrossSectionNode_8;
 
   public static String PageEditCrossSectionNode_9;
-
-  public static String PageEditTimeSeriesObservation_12;
 
   public static String PageEditTimeSeriesObservation_4;
 
@@ -180,8 +148,6 @@ public class Messages extends NLS
   public static String ZmlTimeSeriesProvider_2;
 
   public static String ZmlTimeSeriesProvider_3;
-
-  public static String ZmlTimeSeriesProvider_5;
 
   public static String PageEditBoundaryConditionTimeSeries_1;
 
@@ -194,10 +160,6 @@ public class Messages extends NLS
   public static String PageEditBoundaryConditionTimeSeries_14;
 
   public static String PageEditBoundaryConditionTimeSeries_15;
-
-  public static String PageEditBoundaryConditionTimeSeries_16;
-
-  public static String PageEditBoundaryConditionTimeSeries_17;
 
   public static String PageEditBoundaryConditionTimeSeries_18;
 
@@ -227,21 +189,7 @@ public class Messages extends NLS
 
   public static String PageEditLastfall_16;
 
-  public static String PageEditLastfall_17;
-
-  public static String PageEditLastfall_18;
-
-  public static String PageEditLastfall_19;
-
   public static String PageEditLastfall_2;
-
-  public static String PageEditLastfall_20;
-
-  public static String PageEditLastfall_21;
-
-  public static String PageEditLastfall_22;
-
-  public static String PageEditLastfall_23;
 
   public static String PageEditLastfall_4;
 
@@ -296,14 +244,6 @@ public class Messages extends NLS
   public static String IBoundaryNodeLastfallCondition_5;
 
   public static String NodeUtils_1;
-
-  public static String SelectCrossSectionDialog_0;
-
-  public static String SelectCrossSectionDialog_1;
-
-  public static String SelectCrossSectionDialog_2;
-
-  public static String SelectCrossSectionDialog_5;
 
   public static String SelectSnappedBranchDialog_0;
 
