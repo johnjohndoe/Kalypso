@@ -290,13 +290,13 @@ public class StyleTypeFactory
     if( styleType == null )
     {
       styleType = kmlFactory.createStyleType();
-      styleType.setId( "icon" + Integer.valueOf( href.hashCode() ).toString() );
+      styleType.setId( "icon" + Integer.valueOf( href.hashCode() ).toString() ); //$NON-NLS-1$
 
       final IconStyleType iconStyleType = kmlFactory.createIconStyleType();
-      iconStyleType.setId( "iconStyleType" + Integer.valueOf( styleType.hashCode() ).toString() );
+      iconStyleType.setId( "iconStyleType" + Integer.valueOf( styleType.hashCode() ).toString() ); //$NON-NLS-1$
 
       final IconStyleIconType icon = kmlFactory.createIconStyleIconType();
-      icon.setId( "iconStyleIconType" + Integer.valueOf( iconStyleType.hashCode() ).toString() );
+      icon.setId( "iconStyleIconType" + Integer.valueOf( iconStyleType.hashCode() ).toString() ); //$NON-NLS-1$
       icon.setHref( href );
 
       iconStyleType.setIcon( icon );

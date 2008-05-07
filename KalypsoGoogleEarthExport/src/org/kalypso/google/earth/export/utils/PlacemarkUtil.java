@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.google.earth.export.Messages;
 import org.kalypso.google.earth.export.interfaces.IGoogleEarthAdapter;
 import org.kalypso.google.earth.export.interfaces.IPlacemark;
 
@@ -34,7 +35,7 @@ public class PlacemarkUtil
 
     // add additional layer
     final FolderType folderType = googleEarthFactory.createFolderType();
-    folderType.setName( "Interesting Places" );
+    folderType.setName( Messages.PlacemarkUtil_0 );
 
     final List<JAXBElement< ? extends FeatureType>> myFeatures = folderType.getFeature();
 
@@ -48,7 +49,7 @@ public class PlacemarkUtil
 
         final PointType point = googleEarthFactory.createPointType();
         final List<String> coordinates = point.getCoordinates();
-        coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) + "," + placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) );
+        coordinates.add( placemark.getX( GoogleEarthUtils.GOOGLE_EARTH_CS ) + "," + placemark.getY( GoogleEarthUtils.GOOGLE_EARTH_CS ) ); //$NON-NLS-1$
         placemarkType.setGeometry( googleEarthFactory.createPoint( point ) );
 
         myFeatures.add( googleEarthFactory.createPlacemark( placemarkType ) );
