@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.i18n.Messages;
 
 /**
  * A delegate for {@link org.eclipse.jface.viewers.ITableLabelProvider}s which adds an (empty) which just ignored the
@@ -56,7 +57,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class LastLineLabelProvider implements ITableLabelProvider, IColorProvider
 {
-  public static final String DUMMY_ELEMENT_TEXT = "Zeile hinzufügen";
+  public static final String DUMMY_ELEMENT_TEXT = Messages.getString("org.kalypso.ogc.gml.om.table.LastLineLabelProvider.0"); //$NON-NLS-1$
   private final ITableLabelProvider m_provider;
   private Color m_backgroundColor;
 

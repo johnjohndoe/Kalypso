@@ -74,7 +74,7 @@ public class OpenStyleDialogAction extends MapModellViewActionDelegate
 
     try
     {
-      final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+      final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
       if( part != null )
         // ARG! The style view should find its own selection provider...!
         part.setSelectionChangedProvider( viewer );

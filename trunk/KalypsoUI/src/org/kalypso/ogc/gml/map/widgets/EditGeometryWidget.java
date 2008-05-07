@@ -95,7 +95,7 @@ public class EditGeometryWidget extends AbstractWidget
 
   public EditGeometryWidget( )
   {
-    super( "edit geometry", "" );
+    super( "edit geometry", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

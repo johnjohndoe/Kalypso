@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
@@ -65,7 +66,7 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
 
   final private TextFieldToPropertyTypeValidator m_validator;
 
-  final protected String EMPTY_VALUE = "-NULL-";
+  final protected String EMPTY_VALUE = "-NULL-"; //$NON-NLS-1$
 
   static final int STANDARD_WIDTH_FIELD = 150;
 
@@ -157,21 +158,21 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
           if( GeometryUtilities.isGeometry( i_ftp ) )
           {
             // TODO Christoph was macht das ?
-            final String geomString = clazz.getName().replaceAll( ".+\\.", "" );
+            final String geomString = clazz.getName().replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
             if( newText.equals( geomString ) )
             {
-              return "Falscher Geometerie-Typ gewählt!";
+              return Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.3"); //$NON-NLS-1$
             }
           }
           if( clazz == String.class )
           {
             if( newText == null || newText.length() == 0 )
-              return "Das Werte Feld darf nicht leer sein, bitte Text eingeben";
+              return Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.4"); //$NON-NLS-1$
           }
         }
         catch( final NumberFormatException e )
         {
-          return "Format Fehler! Es wird ein Wert vom Typ: " + clazz.getName().replaceAll( ".+\\.", "" ) + " erwartet";
+          return Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.5") + clazz.getName().replaceAll( ".+\\.", "" ) + Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.AbstractFilterComposite.8"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         }
         return null;
       }

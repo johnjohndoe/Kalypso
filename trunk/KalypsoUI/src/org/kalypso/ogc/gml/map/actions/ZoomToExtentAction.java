@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.map.actions;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.ImageProvider;
@@ -59,7 +60,7 @@ public class ZoomToExtentAction extends AbstractCommandAction
   public ZoomToExtentAction( final JobExclusiveCommandTarget commandTarget, final MapPanel mapPanel, final GM_Envelope envelope )
   {
     // TODO set correct image
-    super( commandTarget, mapPanel, null, KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_MAPVIEW_FULLEXTEND ), "Zoom to extend" );
+    super( commandTarget, mapPanel, null, KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_MAPVIEW_FULLEXTEND ), Messages.getString("org.kalypso.ogc.gml.map.actions.ZoomToExtentAction.0") ); //$NON-NLS-1$
     m_extent = envelope;
   }
 

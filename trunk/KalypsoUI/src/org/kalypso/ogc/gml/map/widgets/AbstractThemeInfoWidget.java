@@ -44,6 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Formatter;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -63,7 +64,7 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
 
-  private String m_noThemesTooltip = "<keine Themen für Info verfügbar>";
+  private String m_noThemesTooltip = Messages.getString("org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget.0"); //$NON-NLS-1$
 
   private IKalypsoTheme[] m_themes = null;
 
@@ -130,7 +131,7 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
     final StringBuffer sb = new StringBuffer();
     final Formatter formatter = new Formatter( sb );
 
-    final String headInfo = m_themes.length == 1 ? "" : "'%s': ";
+    final String headInfo = m_themes.length == 1 ? "" : "'%s': "; //$NON-NLS-1$ //$NON-NLS-2$
 
     for( final IKalypsoTheme theme : m_themes )
     {
@@ -138,11 +139,11 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
 
       final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
       if( themeInfo == null )
-        formatter.format( "keine Information" );
+        formatter.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget.3") ); //$NON-NLS-1$
       else
         themeInfo.appendQuickInfo( formatter, position );
 
-      formatter.format( "%n" );
+      formatter.format( "%n" ); //$NON-NLS-1$
     }
 
     formatter.close();

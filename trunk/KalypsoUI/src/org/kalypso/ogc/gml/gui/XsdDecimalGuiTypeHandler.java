@@ -88,7 +88,7 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
       if( fractionDigits == null )
         fmt = null;
       else
-        fmt = "%." + fractionDigits + "f";
+        fmt = "%." + fractionDigits + "f"; //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
       fmt = format;
@@ -105,7 +105,7 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
     if( element instanceof BigDecimal )
     {
       final BigDecimal decimal = (BigDecimal) element;
-      return String.format( "%.2f", decimal.doubleValue() ).replace( ",", "." );
+      return String.format( "%.2f", decimal.doubleValue() ).replace( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     return super.getText( element );

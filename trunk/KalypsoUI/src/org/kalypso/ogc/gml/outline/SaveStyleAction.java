@@ -138,15 +138,15 @@ public class SaveStyleAction extends AbstractOutlineAction
       }
     }
     final URL context = url;
-    final String[] filterExtension = { "*.sld" };
+    final String[] filterExtension = { "*.sld" }; //$NON-NLS-1$
     final FileDialog saveDialog = new FileDialog( shell, SWT.SAVE );
     saveDialog.setFilterExtensions( filterExtension );
 
     if( knownFilename != null )
       saveDialog.setFileName( knownFilename.getAbsolutePath() );
-    String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>";
+    String sldContents = "<StyledLayerDescriptor version=\"String\" xmlns=\"http://www.opengis.net/sld\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><NamedLayer><Name>deegree style definition</Name>"; //$NON-NLS-1$
     sldContents += userStyle.exportAsXML();
-    sldContents += "</NamedLayer></StyledLayerDescriptor>";
+    sldContents += "</NamedLayer></StyledLayerDescriptor>"; //$NON-NLS-1$
     StyledLayerDescriptor sld;
     try
     {
@@ -165,8 +165,8 @@ public class SaveStyleAction extends AbstractOutlineAction
         final Document doc = XMLTools.parse( new StringReader( ((StyledLayerDescriptor_Impl) sld).exportAsXML() ) );
         final Source source = new DOMSource( doc );
         File file = null;
-        if( filename.indexOf( "." ) == -1 )
-          file = new File( filename + ".sld" );
+        if( filename.indexOf( "." ) == -1 ) //$NON-NLS-1$
+          file = new File( filename + ".sld" ); //$NON-NLS-1$
         else
           file = new File( filename );
         final IFile iFile = ResourceUtilities.findFileFromURL( file.toURL() );
@@ -181,8 +181,8 @@ public class SaveStyleAction extends AbstractOutlineAction
             {
 
               final Transformer t = TransformerFactory.newInstance().newTransformer();
-              t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-              t.setOutputProperty( OutputKeys.INDENT, "yes" );
+              t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+              t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
               t.transform( source, new StreamResult( writer ) );
             }
           };
@@ -193,8 +193,8 @@ public class SaveStyleAction extends AbstractOutlineAction
           // outside workspace
           final Result result = new StreamResult( file );
           final Transformer t = TransformerFactory.newInstance().newTransformer();
-          t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-          t.setOutputProperty( OutputKeys.INDENT, "yes" );
+          t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+          t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
           t.transform( source, result );
         }
       }
@@ -202,7 +202,7 @@ public class SaveStyleAction extends AbstractOutlineAction
     catch( final CoreException ce )
     {
       ce.printStackTrace();
-      ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern des Styles", ce.getStatus() );
+      ErrorDialog.openError( shell, Messages.SaveStyleAction_11, Messages.SaveStyleAction_12, ce.getStatus() );
     }
     catch( final Exception e )
     {

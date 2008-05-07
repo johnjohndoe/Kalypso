@@ -158,7 +158,7 @@ public class MapfunctionHelper
     IPropertyType propertyType = null;
     for( final IPropertyType pt : properties )
     {
-      if( pt.getQName().getLocalPart().equals( "type" ) )
+      if( pt.getQName().getLocalPart().equals( "type" ) ) //$NON-NLS-1$
       {
         propertyType = pt;
         break;

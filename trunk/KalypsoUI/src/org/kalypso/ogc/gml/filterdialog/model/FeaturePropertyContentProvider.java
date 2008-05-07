@@ -52,10 +52,10 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeaturePropertyContentProvider implements IStructuredContentProvider
 {
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   private ComboViewer m_viewer;
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   private Feature m_feature;
 
   /**

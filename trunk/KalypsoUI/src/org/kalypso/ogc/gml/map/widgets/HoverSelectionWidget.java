@@ -44,6 +44,7 @@ import java.awt.Point;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 
@@ -83,7 +84,7 @@ public class HoverSelectionWidget extends AbstractWidget
   @Override
   public void finish( )
   {
-    getMapPanel().setMessage( "" );
+    getMapPanel().setMessage( "" ); //$NON-NLS-1$
 
     super.finish();
   }
@@ -96,6 +97,6 @@ public class HoverSelectionWidget extends AbstractWidget
   {
     super.setSelection( selection );
 
-    getMapPanel().setMessage( "Bewegen Sie die Maus über ein Feature, um es auszuwählen." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.HoverSelectionWidget.1") ); //$NON-NLS-1$
   }
 }

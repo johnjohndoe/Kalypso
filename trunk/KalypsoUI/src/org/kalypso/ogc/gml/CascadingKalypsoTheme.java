@@ -59,6 +59,7 @@ import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
@@ -89,7 +90,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, "Kein gültiger Kontext " + context + " oder Kartenreferenz " + viewRefUrl ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.0") + context + Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.1") + viewRefUrl ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -99,7 +100,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   public CascadingKalypsoTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerName, "Cascading", mapModel, legendIcon, context, shouldShowChildren );
+    super( layerName, Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.2"), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
 
     m_mapViewRefUrl = layerType.getHref();
 
@@ -125,7 +126,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       startLoadJob();
     }
     else
-      throw new CoreException( StatusUtilities.createErrorStatus( "Kann " + url.toExternalForm() + " nicht finden." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.3") + url.toExternalForm() + Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.4") ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
@@ -211,7 +212,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
   protected void startLoadJob( )
   {
     final IFile file = m_file;
-    final UIJob job = new UIJob( "Kaskadierendes Thema laden: " + m_file.getName() )
+    final UIJob job = new UIJob( Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.5") + m_file.getName() ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -234,7 +235,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
         }
         catch( final Throwable e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, "Konnte " + file.getName() + " nicht laden." );
+          final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.6") + file.getName() + Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.7") ); //$NON-NLS-1$ //$NON-NLS-2$
           setStatus( status );
           return status;
         }

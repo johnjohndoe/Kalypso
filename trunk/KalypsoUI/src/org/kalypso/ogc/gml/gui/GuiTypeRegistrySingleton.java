@@ -17,9 +17,9 @@ import org.kalypso.gmlschema.types.TypeRegistry_impl;
  */
 public class GuiTypeRegistrySingleton
 {
-  private static final String TYPE_HANDLERS_EXTENSION_POINT = "org.kalypso.ui.typeHandlers";
+  private static final String TYPE_HANDLERS_EXTENSION_POINT = "org.kalypso.ui.typeHandlers"; //$NON-NLS-1$
 
-  private static final String TYPE_HANDLER_FACTORY_CLASS = "factory";
+  private static final String TYPE_HANDLER_FACTORY_CLASS = "factory"; //$NON-NLS-1$
 
   private static ITypeRegistry<IGuiTypeHandler> m_typeRegistry = null;
 
@@ -28,7 +28,7 @@ public class GuiTypeRegistrySingleton
     // wird nicht instantiiert
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static ITypeRegistry<IGuiTypeHandler> getTypeRegistry( )
   {
     if( m_typeRegistry == null )

@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
@@ -151,7 +152,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
     data1.widthHint = STANDARD_WIDTH_FIELD;
     // possible oprations (they have been initialized when calling the factory)
     m_supportedOpsLable = new Label( this, SWT.NULL );
-    m_supportedOpsLable.setText( "Operation:" );
+    m_supportedOpsLable.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsCOMPOperationComposite.0") ); //$NON-NLS-1$
     m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     m_supportedOpsCombo.setLayoutData( data1 );
     String[] namesOps = null;
@@ -178,7 +179,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
 
     } );
     m_firstRowLabel = new Label( this, SWT.FILL );
-    m_firstRowLabel.setText( "Feld:" );
+    m_firstRowLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsCOMPOperationComposite.1") ); //$NON-NLS-1$
     final Combo firstRowCombo = new Combo( this, SWT.FILL | SWT.READ_ONLY );
     final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
@@ -204,7 +205,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
       }
     } );
     m_secondRowLabel = new Label( this, SWT.FILL );
-    m_secondRowLabel.setText( "Wert" );
+    m_secondRowLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsCOMPOperationComposite.2") ); //$NON-NLS-1$
     m_secondRowText = new Text( this, SWT.FILL | SWT.BORDER );
     m_secondRowText.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     m_secondRowText.addFocusListener( new FocusListener()

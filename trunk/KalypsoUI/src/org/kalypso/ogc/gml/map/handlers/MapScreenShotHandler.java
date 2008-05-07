@@ -80,11 +80,11 @@ import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
  */
 public class MapScreenShotHandler extends AbstractHandler
 {
-  public static final String CONST_SHOULD_EXECUTE_BOOLEAN = "shouldExecute"; // ICommand.executionListener can stop
+  public static final String CONST_SHOULD_EXECUTE_BOOLEAN = "shouldExecute"; // ICommand.executionListener can stop //$NON-NLS-1$
 
   // processing
 
-  public static final String CONST_TARGET_FILE = "targetFile"; // can be overwritten by an commandListener
+  public static final String CONST_TARGET_FILE = "targetFile"; // can be overwritten by an commandListener //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -119,7 +119,7 @@ public class MapScreenShotHandler extends AbstractHandler
       else if( targetFile.isFile() )
         img = targetFile;
       else
-        throw (new NotImplementedException( "targetFile must be an file or directory and have to exists" ));
+        throw (new NotImplementedException( "targetFile must be an file or directory and have to exists" )); //$NON-NLS-1$
 
       /* generate and store img */
       os = new BufferedOutputStream( new FileOutputStream( img ) );
@@ -155,7 +155,7 @@ public class MapScreenShotHandler extends AbstractHandler
     int count = 0;
     while( true )
     {
-      final File file = new File( targetDir, "kalypso_map_" + count + "." + format );
+      final File file = new File( targetDir, "kalypso_map_" + count + "." + format ); //$NON-NLS-1$ //$NON-NLS-2$
       if( !file.exists() )
         return file;
 

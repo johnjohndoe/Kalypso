@@ -48,6 +48,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -66,7 +67,7 @@ public class AddRowHandler extends AbstractHandler
     final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
     if( viewer == null )
-      throw new ExecutionException( "No tuple result viewer available" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.AddRowHandler.0") ); //$NON-NLS-1$
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
     final Object target = selection.getFirstElement();
@@ -78,7 +79,7 @@ public class AddRowHandler extends AbstractHandler
     {
       for( final IComponent component : tupleResult.getComponents() )
       {
-        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
+        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
           row.setValue( component, 0.0 );
       }
     }
@@ -86,9 +87,9 @@ public class AddRowHandler extends AbstractHandler
     {
       for( final IComponent component : tupleResult.getComponents() )
       {
-        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) && (target instanceof IRecord) )
+        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) && (target instanceof IRecord) ) //$NON-NLS-1$
         {
-          if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE".equals( component.getId() ) )
+          if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE".equals( component.getId() ) ) //$NON-NLS-1$
           {
             if( next != null )
             {
@@ -109,7 +110,7 @@ public class AddRowHandler extends AbstractHandler
                 row.setValue( component, component.getDefaultValue() );
             }
           }
-          else if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE".equals( component.getId() ) )
+          else if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE".equals( component.getId() ) ) //$NON-NLS-1$
           {
             if( next != null )
             {

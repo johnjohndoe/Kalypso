@@ -69,6 +69,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
@@ -126,7 +127,7 @@ class SpatialComposite extends AbstractFilterComposite
   {
     if( m_oldGeometryOp == null && m_newGeometryOp == null )
     {
-      m_errorMessageReciever.setErrorMessage( "Diese Operation ist nur mit einer in der Karte selektierten Geometrie möglich!" );
+      m_errorMessageReciever.setErrorMessage( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.0") ); //$NON-NLS-1$
       return;
     }
     final String opsName = m_operation.getOperatorName();
@@ -134,7 +135,7 @@ class SpatialComposite extends AbstractFilterComposite
     // possible oprations (they have been initialized when calling the factory)
     m_supportedOpsLable = new Label( this, SWT.NULL );
     // m_supportedOpsLable.setLayoutData( new GridData() );
-    m_supportedOpsLable.setText( "Operation:" );
+    m_supportedOpsLable.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.1") ); //$NON-NLS-1$
     m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
     // m_supportedOpsCombo.setLayout( new GridLayout() );
     final GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
@@ -163,7 +164,7 @@ class SpatialComposite extends AbstractFilterComposite
     } );
     // set Geometry
     m_spatialLabel = new Label( this, SWT.NULL );
-    m_spatialLabel.setText( "Geometrie:" );
+    m_spatialLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.2") ); //$NON-NLS-1$
 
     final Combo combo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     final GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -195,12 +196,12 @@ class SpatialComposite extends AbstractFilterComposite
     // get
     m_geomLable = new Label( this, SWT.NONE );
     // m_geomLable.setLayoutData( new GridData() );
-    m_geomLable.setText( "Operator:" );
+    m_geomLable.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.3") ); //$NON-NLS-1$
     m_geomOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     m_geomOpsCombo.setLayoutData( new GridData() );
     if( m_oldGeometryOp != null )
     {
-      final String id = "original_FID";
+      final String id = "original_FID"; //$NON-NLS-1$
       m_geomOpsCombo.setItems( new String[] { id } );
       m_hash.put( id, m_oldGeometryOp );
       m_geomOpsCombo.select( 0 );
@@ -209,7 +210,7 @@ class SpatialComposite extends AbstractFilterComposite
     {
       String id = m_newGeometryOp.getId();
       if( id == null )
-        id = "selektion_FID";
+        id = "selektion_FID"; //$NON-NLS-1$
       final GM_Object[] geometryProperties = m_newGeometryOp.getGeometryProperties();
       for( int i = 0; i < geometryProperties.length; i++ )
       {
@@ -320,7 +321,7 @@ class SpatialComposite extends AbstractFilterComposite
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( getShell(), "Fehler beim erstellen des Geometrie-Operators", e.getMessage(), status );
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.6"), e.getMessage(), status ); //$NON-NLS-1$
       return false;
     }
     return true;

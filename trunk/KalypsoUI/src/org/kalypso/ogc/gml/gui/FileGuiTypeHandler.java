@@ -104,26 +104,26 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 1 );
     composite.setLayout( factory.createGridLayout( layout ) );
-    composite.setStyle( "SWT.NONE" );
+    composite.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     // Text
     final Text text = factory.createText();
-    text.setStyle( "SWT.BORDER" );
+    text.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
     text.setEditable( true );
     text.setProperty( qname );
 
     final GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.FILL" );
+    textData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     textData.setGrabExcessHorizontalSpace( true );
     text.setLayoutData( factory.createGridData( textData ) );
 
     // Knopf
     final Button button = factory.createButton();
     final GridDataType buttonData = factory.createGridDataType();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( qname );
 
-    buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
+    buttonData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     button.setLayoutData( factory.createGridData( buttonData ) );
 
     final List<JAXBElement< ? extends ControlType>> control = composite.getControl();

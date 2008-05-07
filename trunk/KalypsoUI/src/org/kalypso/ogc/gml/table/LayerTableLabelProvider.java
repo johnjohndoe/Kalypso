@@ -95,16 +95,16 @@ public class LayerTableLabelProvider implements ITableLabelProvider, IColorProvi
   {
     // Extrawurscht, wenn Tabelle leer, da trotzdem mit index 0 aufgerufen wird
     if( m_viewer.getColumnCount() == 0 )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final Feature feature = (Feature) element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final String label = modifier.getLabel( feature );
-    return label == null ? "" : label;
+    return label == null ? "" : label; //$NON-NLS-1$
   }
 
   /**

@@ -46,6 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -58,14 +59,14 @@ public class MoveUpSelectedRowsHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
     if( tupleResult == null || viewer == null )
-      throw new ExecutionException( "No tuple result viewer available" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.MoveUpSelectedRowsHandler.1") ); //$NON-NLS-1$
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 

@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -502,7 +503,7 @@ public class SelectFeatureWidget extends AbstractWidget
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private List<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
   {
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
@@ -546,26 +547,26 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public String getToolTip( )
   {
-    StringBuffer sb = new StringBuffer().append( "Selektionsmodus: " );
+    StringBuffer sb = new StringBuffer().append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1") ); //$NON-NLS-1$
 
     if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
-      sb.append( "Polygon" );
+      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.2") ); //$NON-NLS-1$
     else if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
-      sb.append( "Rechteck" );
+      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.3") ); //$NON-NLS-1$
     else
-      sb.append( "Punkt" );
+      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4") ); //$NON-NLS-1$
 
     if( m_addMode == true )
-      sb.append( " <Hinzufügen>" );
+      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.5") ); //$NON-NLS-1$
     if( m_toggleMode == true )
-      sb.append( " <Umschalten>" );
+      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.6") ); //$NON-NLS-1$
     if( m_intersectMode == true )
-      sb.append( " <Verschneidung>" );
+      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.7") ); //$NON-NLS-1$
 
     return sb.toString();
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void setThemes( IKalypsoFeatureTheme[] themes )
   {
     m_themes = new IKalypsoFeatureTheme[themes.length];

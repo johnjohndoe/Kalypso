@@ -97,15 +97,15 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 
     /* Create the UI components */
     final GridDataType listData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
-    listData.setHorizontalAlignment( "GridData.FILL" );
-    listData.setVerticalAlignment( "GridData.FILL" );
+    listData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    listData.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     listData.setGrabExcessHorizontalSpace( true );
 
     final Extensioncontrol extensioncontrol = TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol();
     extensioncontrol.setEnabled( true );
     extensioncontrol.setExtensionId( ChecklistOfLinksFeatureviewControlFactory.class.getName() );
     extensioncontrol.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( listData ) );
-    extensioncontrol.setStyle( "SWT.NONE" );
+    extensioncontrol.setStyle( "SWT.NONE" ); //$NON-NLS-1$
     extensioncontrol.setVisible( true );
     extensioncontrol.setProperty( qname );
 
@@ -118,7 +118,7 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 
     final Group group = TemplateUtilitites.OF_FEATUREVIEW.createGroup();
     group.setLayout( TemplateUtilitites.OF_FEATUREVIEW.createGridLayout( groupLayout ) );
-    group.setStyle( "SWT.NONE" );
+    group.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     group.getControl().add( TemplateUtilitites.OF_FEATUREVIEW.createExtensioncontrol( extensioncontrol ) );
 

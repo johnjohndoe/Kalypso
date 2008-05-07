@@ -135,11 +135,11 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
       }
       catch( final IllegalArgumentException e )
       {
-        return "";
+        return ""; //$NON-NLS-1$
       }
     }
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
 }

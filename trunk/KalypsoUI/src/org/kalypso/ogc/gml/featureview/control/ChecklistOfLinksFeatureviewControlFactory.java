@@ -56,7 +56,7 @@ public class ChecklistOfLinksFeatureviewControlFactory implements IFeatureviewCo
    */
   public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    final String showSelectButtonsStr = arguments.getProperty( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS, "true" );
+    final String showSelectButtonsStr = arguments.getProperty( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS, "true" ); //$NON-NLS-1$
     final Boolean showSelectButtons = Boolean.parseBoolean( showSelectButtonsStr );
 
     return new ChecklistOfLinksFeatureControl( feature, pt, showSelectButtons );

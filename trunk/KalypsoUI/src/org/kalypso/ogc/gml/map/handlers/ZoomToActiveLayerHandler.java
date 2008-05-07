@@ -48,6 +48,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -70,15 +71,15 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( "No active part." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.0") ); //$NON-NLS-1$
 
     final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
     if( mapPanel == null )
-      throw new ExecutionException( "Active part has no MapPanel." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.1") ); //$NON-NLS-1$
 
     final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
     if( activeTheme == null )
-      throw new ExecutionException( "Kein Thema aktiv" );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.2") ); //$NON-NLS-1$
 
 // final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) activeTheme;
 // final FeatureList featureList = ft.getFeatureList();
@@ -91,7 +92,7 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
 
     final GM_Envelope zoomBox = activeTheme.getFullExtent();
     if( zoomBox == null )
-      throw new ExecutionException( "Aktives Thema hat keinen Extent." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.3") ); //$NON-NLS-1$
 
     GM_Envelope wishBBox = null;
 

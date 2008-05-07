@@ -80,7 +80,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     m_viewer.getCombo().addKeyListener( new KeyAdapter()
     {
       // hook key pressed - see PR 14201
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent e )
       {
@@ -114,7 +114,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
 
     m_viewer.getCombo().addFocusListener( new FocusAdapter()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings("synthetic-access") //$NON-NLS-1$
       @Override
       public void focusLost( final FocusEvent e )
       {
@@ -179,7 +179,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
   @Override
   protected void doSetValue( final Object value )
   {
-    if( (value != null) && !"".equals( value ) )
+    if( (value != null) && !"".equals( value ) ) //$NON-NLS-1$
     {
       final StructuredSelection selection = new StructuredSelection( value );
       m_viewer.setSelection( selection );

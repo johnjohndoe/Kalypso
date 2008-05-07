@@ -86,9 +86,9 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
           Boolean b = (Boolean) element;
 
           if( b == true )
-            return "true";
+            return "true"; //$NON-NLS-1$
           else if( b == false )
-            return "false";
+            return "false"; //$NON-NLS-1$
         }
 
         return element.toString();

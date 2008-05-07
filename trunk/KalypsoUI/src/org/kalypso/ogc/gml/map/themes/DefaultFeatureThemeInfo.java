@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
@@ -105,8 +106,8 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_delegate, "call init first" );
-    Assert.isNotNull( m_theme, "call init first" );
+    Assert.isNotNull( m_delegate, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.0") ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.1") ); //$NON-NLS-1$
 
     m_delegate.appendInfo( formatter, pos );
   }
@@ -117,8 +118,8 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_delegate, "call init first" );
-    Assert.isNotNull( m_theme, "call init first" );
+    Assert.isNotNull( m_delegate, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.2") ); //$NON-NLS-1$
+    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.3") ); //$NON-NLS-1$
 
     m_delegate.appendQuickInfo( formatter, pos );
   }

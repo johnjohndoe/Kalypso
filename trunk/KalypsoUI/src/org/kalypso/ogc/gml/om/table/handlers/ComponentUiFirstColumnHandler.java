@@ -83,7 +83,7 @@ public class ComponentUiFirstColumnHandler implements IComponentUiHandler
    */
   public String getColumnLabel( )
   {
-    return "-";
+    return "-"; //$NON-NLS-1$
   }
 
   /**
@@ -123,7 +123,7 @@ public class ComponentUiFirstColumnHandler implements IComponentUiHandler
    */
   public String getStringRepresentation( final IRecord value )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

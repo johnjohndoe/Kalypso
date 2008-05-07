@@ -52,6 +52,7 @@ import javax.swing.ImageIcon;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
@@ -82,7 +83,7 @@ public class SelectionWidget extends AbstractWidget
   /**
    * The tooltip, which should be displayed.
    */
-  private String m_tooltip = "";
+  private String m_tooltip = ""; //$NON-NLS-1$
 
   /**
    * The current point.
@@ -136,12 +137,12 @@ public class SelectionWidget extends AbstractWidget
     /* Init the cursor. */
     Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
     
-    URL resource = SelectionWidget.class.getResource( "/icons/cursor/select.gif" );
+    URL resource = SelectionWidget.class.getResource( "/icons/cursor/select.gif" ); //$NON-NLS-1$
     if( resource != null )
     {
       ImageIcon img = new ImageIcon( resource );
       Image pointer = img.getImage();
-      cursor = Toolkit.getDefaultToolkit().createCustomCursor( pointer, new Point( 16, 8 ), "Select" );
+      cursor = Toolkit.getDefaultToolkit().createCustomCursor( pointer, new Point( 16, 8 ), "Select" ); //$NON-NLS-1$
     }
 
     getMapPanel().setCursor( cursor );
@@ -156,7 +157,7 @@ public class SelectionWidget extends AbstractWidget
     if( m_selector != null )
     {
       m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
-      getMapPanel().setMessage( "Auswahl durchführen ..." );
+      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.3") ); //$NON-NLS-1$
     }
 
     // TODO: check if this repaint is really necessary
@@ -174,7 +175,7 @@ public class SelectionWidget extends AbstractWidget
   {
     /* Start painting the selection rectangle. */
     m_selector = new RectangleSelector( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
-    getMapPanel().setMessage( "Auswahl begonnen ..." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.4") ); //$NON-NLS-1$
   }
 
   /**
@@ -193,7 +194,7 @@ public class SelectionWidget extends AbstractWidget
         /* Select the feature in this rectangle. */
         m_clickFunction.execute( getMapPanel(), m_selector.getRectangle() );
 
-        getMapPanel().setMessage( "Klicken und ziehen Sie, um ein Feature auszuwählen." );
+        getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.5") ); //$NON-NLS-1$
       }
     }
     finally
@@ -232,7 +233,7 @@ public class SelectionWidget extends AbstractWidget
     if( m_selector != null )
       m_selector.paint( g );
 
-    if( (m_current_point != null) && (m_tooltipProvider != null) && (!m_tooltip.equals( "" )) )
+    if( (m_current_point != null) && (m_tooltipProvider != null) && (!m_tooltip.equals( "" )) ) //$NON-NLS-1$
       m_tooltipProvider.paintTooltip( g, m_current_point, m_tooltip );
   }
 
@@ -242,7 +243,7 @@ public class SelectionWidget extends AbstractWidget
   @Override
   public void finish( )
   {
-    getMapPanel().setMessage( "" );
+    getMapPanel().setMessage( "" ); //$NON-NLS-1$
     m_selector = null;
 
     /* Reset the cursor to default. */
@@ -260,7 +261,7 @@ public class SelectionWidget extends AbstractWidget
   {
     super.setSelection( selection );
 
-    getMapPanel().setMessage( "Klicken und ziehen Sie, um ein Feature auszuwählen." );
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.8") ); //$NON-NLS-1$
   }
 
   public void setSelection( final ISelection selection, final String message )

@@ -48,6 +48,7 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -88,11 +89,11 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   public String getText( Object element )
   {
     if( element == null )
-      return "null";
+      return "null"; //$NON-NLS-1$
     if( element instanceof GMLWorkspace )
     {
       final URL context = ((GMLWorkspace) element).getContext();
-      return context == null ? "<unbekannt>" : context.toExternalForm();
+      return context == null ? Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationOptionsLabelProvider.1") : context.toExternalForm(); //$NON-NLS-1$
     }
     if( element instanceof IFeatureType )
     {
@@ -109,9 +110,9 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
       final HeavyRelationType relation = (HeavyRelationType) element;
       final StringBuffer buffer = new StringBuffer();
       buffer.append( getText( relation.getSrcFT() ) );
-      buffer.append( " > " + getText( relation.getLink1() ) + " > " );
+      buffer.append( " > " + getText( relation.getLink1() ) + " > " ); //$NON-NLS-1$ //$NON-NLS-2$
       buffer.append( getText( relation.getBodyFT() ) );
-      buffer.append( " > " + getText( relation.getLink2() ) + " > " );
+      buffer.append( " > " + getText( relation.getLink2() ) + " > " ); //$NON-NLS-1$ //$NON-NLS-2$
       buffer.append( getText( relation.getDestFT() ) );
       return buffer.toString();
     }
@@ -120,7 +121,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
       final RelationType relation = (RelationType) element;
       final StringBuffer buffer = new StringBuffer();
       buffer.append( getText( relation.getSrcFT() ) );
-      buffer.append( " > " + getText( relation.getLink() ) + " > " );
+      buffer.append( " > " + getText( relation.getLink() ) + " > " ); //$NON-NLS-1$ //$NON-NLS-2$
       buffer.append( getText( relation.getDestFT() ) );
       return buffer.toString();
     }

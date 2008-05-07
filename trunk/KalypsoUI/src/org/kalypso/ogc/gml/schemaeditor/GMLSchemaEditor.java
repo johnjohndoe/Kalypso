@@ -35,6 +35,7 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.ui.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.ui.GMLSchemaSorter;
 import org.kalypso.gmlschema.ui.GMLSchemaTreeContentProvider;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public class GMLSchemaEditor extends EditorPart
@@ -108,7 +109,7 @@ public class GMLSchemaEditor extends EditorPart
 
   private void load( )
   {
-    new Job( "Schema laden" )
+    new Job( Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.0") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -129,7 +130,7 @@ public class GMLSchemaEditor extends EditorPart
         }
         catch( final Exception e )
         {
-          final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, "Fehler beim Laden der Ansicht" );
+          final IStatus statusFromThrowable = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.1") ); //$NON-NLS-1$
 
           KalypsoGisPlugin.getDefault().getLog().log( statusFromThrowable );
 
@@ -176,7 +177,7 @@ public class GMLSchemaEditor extends EditorPart
       }
       catch( final IOException e )
       {
-        throw new IllegalArgumentException( "Invalid IURIEditorInput input.", e );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.2"), e ); //$NON-NLS-1$
       }
     }
     else if( editorInput instanceof GmlSchemaEditorInput )
@@ -218,6 +219,6 @@ public class GMLSchemaEditor extends EditorPart
       }
     }
 
-    throw new IllegalArgumentException( "Invalid editor input. Must be either IStorageEditorInput or GmlSchemaEditorInput." );
+    throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.3") ); //$NON-NLS-1$
   }
 }

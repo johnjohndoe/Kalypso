@@ -81,7 +81,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, IMapModellListener
 {
   private final ITreeContentProvider m_contentProvider = new GisMapOutlineContentProvider();

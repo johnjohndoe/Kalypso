@@ -47,6 +47,7 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -67,11 +68,11 @@ public class FullExtentHandler extends AbstractHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( "No active part." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.FullExtentHandler.0") ); //$NON-NLS-1$
 
     final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
     if( mapPanel == null )
-      throw new ExecutionException( "Active part has no MapPanel." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.FullExtentHandler.1") ); //$NON-NLS-1$
 
     final IMapModell modell = mapPanel.getMapModell();
     final GM_Envelope fullExtent = modell.getFullExtentBoundingBox();

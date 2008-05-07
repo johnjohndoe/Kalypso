@@ -23,6 +23,7 @@ import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -36,17 +37,17 @@ import org.osgi.framework.Bundle;
  */
 public class SelectWidgetHandler extends AbstractHandler implements IHandler, IElementUpdater, IExecutableExtension
 {
-  public static final String COMMAND_ID = "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand";
+  public static final String COMMAND_ID = "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand"; //$NON-NLS-1$
 
-  public static final String PARAM_CONTEXT = COMMAND_ID + ".context";
+  public static final String PARAM_CONTEXT = COMMAND_ID + ".context"; //$NON-NLS-1$
 
-  public static final String PARAM_WIDGET_CLASS = COMMAND_ID + ".widget";
+  public static final String PARAM_WIDGET_CLASS = COMMAND_ID + ".widget"; //$NON-NLS-1$
 
-  public static final String PARAM_PLUGIN_ID = COMMAND_ID + ".plugin";
+  public static final String PARAM_PLUGIN_ID = COMMAND_ID + ".plugin"; //$NON-NLS-1$
 
-  public static final String PARAM_WIDGET_ICON = COMMAND_ID + ".icon";
+  public static final String PARAM_WIDGET_ICON = COMMAND_ID + ".icon"; //$NON-NLS-1$
 
-  private static final Object PARAM_WIDGET_TOOLTIP = COMMAND_ID + ".tooltip";
+  private static final Object PARAM_WIDGET_TOOLTIP = COMMAND_ID + ".tooltip"; //$NON-NLS-1$
 
   private String m_widgetClassFromExtension;
 
@@ -90,7 +91,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
     if( widget == null )
     {
-      final String msg = String.format( "Widget cannot be selected. PluginParameter: %s   WidgetParameter: %s", pluginParameter, widgetParameter );
+      final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6"), pluginParameter, widgetParameter ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createWarningStatus( msg );
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return status;
@@ -101,7 +102,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
     final MapPanel mapPanel = activePart == null ? null : (MapPanel) activePart.getAdapter( MapPanel.class );
     if( mapPanel == null )
-      return StatusUtilities.createWarningStatus( "No map panel available" );
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7") ); //$NON-NLS-1$
 
     /* Always make sure that the map was fully loaded */
     // REMARK: we first test directly, without ui-operation, in order to enhance performance if the map already is open.
@@ -109,11 +110,11 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     if( !MapModellHelper.isMapLoaded( model ) )
     {
       // TODO: this is too slow here!
-      if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "", "" ) )
+      if( !MapModellHelper.waitForAndErrorDialog( shell, mapPanel, "", "" ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return null;
     }
 
-    final UIJob job = new ActivateWidgetJob( display, "Widget auswählen", widget, mapPanel, activePart );
+    final UIJob job = new ActivateWidgetJob( display, Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10"), widget, mapPanel, activePart ); //$NON-NLS-1$
     // Probably not necessary
     final AbstractMapPart abstractMapPart = (AbstractMapPart) activePart;
     job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );

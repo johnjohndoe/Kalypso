@@ -83,7 +83,7 @@ public class ToolTipRenderer
     return maxRect;
   }
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") //$NON-NLS-1$
   public void paint( final Graphics g )
   {
     if( m_tooltip == null )
@@ -122,17 +122,17 @@ public class ToolTipRenderer
     {
       if( tooltip.length() > MAX_TEXT_LENGTH )
       {
-        String myString = "";
-        final String[] splitted = tooltip.split( " " );
+        String myString = ""; //$NON-NLS-1$
+        final String[] splitted = tooltip.split( " " ); //$NON-NLS-1$
 
         for( final String s : splitted )
         {
-          myString += s + " ";
+          myString += s + " "; //$NON-NLS-1$
 
           if( myString.length() > MAX_TEXT_LENGTH )
           {
             myTooltips.add( myString );
-            myString = "";
+            myString = ""; //$NON-NLS-1$
           }
         }
 

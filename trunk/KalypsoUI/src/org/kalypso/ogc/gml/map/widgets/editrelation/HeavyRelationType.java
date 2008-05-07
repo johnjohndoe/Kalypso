@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FindExistingHeavyRelationsFeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -84,10 +85,10 @@ public class HeavyRelationType implements org.kalypso.ogc.gml.map.widgets.editre
     visitor.visit( f1 );
     boolean exists = visitor.relationExistsTo( f2 );
     if( !isAddMode )
-      return exists ? null : "Relation existiert nicht";
+      return exists ? null : Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.0"); //$NON-NLS-1$
     // is addmode:
     if( exists )
-      return "Relation existiert bereits";
+      return Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.HeavyRelationType.1"); //$NON-NLS-1$
     return m_relationType1.getFitProblemsfromOccurency( f1, isAddMode );
   }
 

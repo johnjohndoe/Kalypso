@@ -57,6 +57,7 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -75,7 +76,7 @@ public class SldLoader extends AbstractLoader
    */
   public String getDescription( )
   {
-    return "OGC SLD";
+    return "OGC SLD"; //$NON-NLS-1$
   }
 
   /**
@@ -88,7 +89,7 @@ public class SldLoader extends AbstractLoader
     InputStream is = null;
     try
     {
-      monitor.beginTask( "Lade SLD", 1000 );
+      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.1"), 1000 ); //$NON-NLS-1$
 
       final URL url = m_urlResolver.resolveURL( context, source );
 
@@ -115,7 +116,7 @@ public class SldLoader extends AbstractLoader
     }
     catch( final Exception e )
     {
-      throw new LoaderException( "Failed to load SLD: " + source, e );
+      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.2") + source, e ); //$NON-NLS-1$
     }
     finally
     {
@@ -139,30 +140,30 @@ public class SldLoader extends AbstractLoader
         final String charset = sldFile.getCharset();
 
         final String sldXML = userStyle.exportAsXML();
-        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML;
+        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
 
         if( sldFile != null )
         {
           sldFile.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
           sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
         }
-        else if( sldFile == null && styleURL.getProtocol().equals( "file" ) )
+        else if( sldFile == null && styleURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
         {
           sldFile.create( new StringInputStream( sldXMLwithHeader, charset ), false, monitor );
         }
         else
-          throw new LoaderException( "Die URL kann nicht beschrieben werden: " + styleURL );
+          throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.6") + styleURL ); //$NON-NLS-1$
       }
       catch( final MalformedURLException e )
       {
         e.printStackTrace();
 
-        throw new LoaderException( "Der angegebene Pfad ist ungültig: " + source + "\n" + e.getLocalizedMessage(), e );
+        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.7") + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final Throwable e )
       {
         e.printStackTrace();
-        throw new LoaderException( "Fehler beim Speichern der URL\n" + e.getLocalizedMessage(), e );
+        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.SldLoader.9") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
       }
       finally
       {

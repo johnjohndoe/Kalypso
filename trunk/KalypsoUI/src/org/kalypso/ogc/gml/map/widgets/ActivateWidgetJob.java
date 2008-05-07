@@ -31,7 +31,7 @@ public final class ActivateWidgetJob extends UIJob
 
   private final IWorkbenchPart m_activePart;
 
-  public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category";
+  public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category"; //$NON-NLS-1$
 
   public ActivateWidgetJob( final Display jobDisplay, final String name, final IWidget widget, final MapPanel mapPanel, final IWorkbenchPart activePart )
   {

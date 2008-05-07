@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -81,7 +82,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
 
   private Point m_movePoint = null;
 
-  private final String COORD_FORMAT = "%10.4f";
+  private final String COORD_FORMAT = "%10.4f"; //$NON-NLS-1$
 
   public WMSGetFeatureInfoWidget( final String name, final String toolTip )
   {
@@ -93,7 +94,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
    */
   public WMSGetFeatureInfoWidget( )
   {
-    super( "wms get feature info", "" );
+    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.1"), "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -201,7 +202,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     if( activeTheme != null )
       themeName = activeTheme.getLabel();
     else
-      themeName = "<Bitte Layer aktivieren>";
+      themeName = Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.3"); //$NON-NLS-1$
     final Point pointOfInterest = m_pointOfInterest;
 
     final IGetFeatureInfoResultProcessor processor = new IGetFeatureInfoResultProcessor()
@@ -218,19 +219,19 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
         try
         {
           final PrintWriter pw = new PrintWriter( stringWriter );
-          pw.print( "GetFeatureInfo auf Thema : " + themeName + "\n" );
-          pw.print( "Position :" );
+          pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.4") + themeName + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+          pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.6") ); //$NON-NLS-1$
           if( pointOfInterest == null )
-            pw.print( "\n  nicht gewählt" );
+            pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.7") ); //$NON-NLS-1$
           else
           {
-            pw.print( "\n  " );
+            pw.print( "\n  " ); //$NON-NLS-1$
             pw.printf( Locale.US, COORD_FORMAT, x1 );
-            pw.print( " / " );
+            pw.print( " / " ); //$NON-NLS-1$
             pw.printf( Locale.US, COORD_FORMAT, y1 );
           }
-          pw.print( "\n Information vom WebMapServer:" );
-          pw.print( "\n " + message );
+          pw.print( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.10") ); //$NON-NLS-1$
+          pw.print( "\n " + message ); //$NON-NLS-1$
         }
         catch( Exception e )
         {
@@ -260,9 +261,9 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     };
 
     if( pointOfInterest == null )
-      processor.write( "keine Position ausgewählt" );
+      processor.write( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.12") ); //$NON-NLS-1$
     else if( !(activeTheme instanceof KalypsoWMSTheme) )
-      processor.write( "keine WMS-Thema ausgewählt" );
+      processor.write( Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.13") ); //$NON-NLS-1$
     else
     {
       final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) activeTheme;
@@ -319,7 +320,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     toolkit.adapt( m_formatCombo );
     m_formatCombo.setLayoutData( new GridData( GridData.GRAB_HORIZONTAL ) );
     // formats are not queryable (bug in deegree, Collection of formats does not support toArray() )
-    final String[] formats = new String[] { "application/vnd.ogc.gml"
+    final String[] formats = new String[] { "application/vnd.ogc.gml" //$NON-NLS-1$
     // ,
     // "text/plain",
     // "text/html"
@@ -327,7 +328,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
     m_formatCombo.setItems( formats );
     m_formatCombo.select( 0 );
 
-    m_textInfo = toolkit.createText( m_topLevel, "WMS-GetFeatureInfo", SWT.READ_ONLY | SWT.MULTI | SWT.WRAP );
+    m_textInfo = toolkit.createText( m_topLevel, Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.WMSGetFeatureInfoWidget.15"), SWT.READ_ONLY | SWT.MULTI | SWT.WRAP ); //$NON-NLS-1$
     m_textInfo.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     return m_topLevel;

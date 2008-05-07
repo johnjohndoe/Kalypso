@@ -56,6 +56,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -75,7 +76,7 @@ public class SaveThemeHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -108,7 +109,7 @@ public class SaveThemeHandler extends AbstractHandler
             // only save if map is dirty
             if( workspace != null && workspace.isDirty() )
             {
-              if( !MessageDialog.openConfirm( shell, "Themen speichern", "Sollen die Daten des aktiven Themas gespeichert werden?" ) )
+              if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.1"), Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
                 return null;
 
               final IKalypsoSaveableTheme theme = (IKalypsoSaveableTheme) activeTheme;
@@ -137,7 +138,7 @@ public class SaveThemeHandler extends AbstractHandler
                 e.printStackTrace();
 
                 final CoreException ce = (CoreException) e.getTargetException();
-                ErrorDialog.openError( shell, "Fehler", "Fehler beim Speichern", ce.getStatus() );
+                ErrorDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.3"), Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.4"), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
               }
               catch( final InterruptedException e )
               {

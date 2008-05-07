@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -73,7 +74,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
 
   public GisTemplateUserStyle( final PoolableObjectType poolableStyleKey, final String styleName )
   {
-    super( createDummyStyle( "loading..." ), styleName );
+    super( createDummyStyle( Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.0") ), styleName ); //$NON-NLS-1$
     m_styleKey = poolableStyleKey;
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.addPoolListener( this, m_styleKey );
@@ -110,7 +111,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
         m_userStyle = sld.findUserStyle( m_styleName );
         if( m_userStyle == null )
         {
-          final String msg = "No user style with name: " + m_styleName + ". Dummy style created instead.";
+          final String msg = Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.1") + m_styleName + Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.2"); //$NON-NLS-1$ //$NON-NLS-2$
           System.out.println( msg );
           m_userStyle = createDummyStyle( msg );
         }
@@ -131,7 +132,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
   {
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 )
     {
-      m_userStyle = createDummyStyle( "Pool object was invalidated..." );
+      m_userStyle = createDummyStyle( Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.3") ); //$NON-NLS-1$
 
       fireStyleChanged();
     }
@@ -143,7 +144,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     super.dispose();
     final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     pool.removePoolListener( this );
-    m_userStyle = createDummyStyle( "Disposed" );
+    m_userStyle = createDummyStyle( Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.4") ); //$NON-NLS-1$
   }
 
   /**
@@ -193,7 +194,7 @@ public class GisTemplateUserStyle extends KalypsoUserStyle implements IPoolListe
     if( isLoaded() )
       return label;
 
-    return label + " (wird geladen...)";
+    return label + Messages.getString("org.kalypso.ogc.gml.GisTemplateUserStyle.5"); //$NON-NLS-1$
   }
 
   public void save( final IProgressMonitor monitor ) throws CoreException

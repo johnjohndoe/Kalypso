@@ -36,6 +36,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -133,8 +134,8 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
 
       // TODO: consider the case, where multiple feature-types substitute the target feature type
       final IRelationType parentRelation = (IRelationType) getFeatureTypeProperty();
-      final String actionLabel = parentRelation == null ? "Feature" : FeatureActionUtilities.newFeatureActionLabel( parentRelation.getTargetFeatureType() );
-      final IAction addAction = new Action( actionLabel + " neu", ImageProvider.IMAGE_FEATURE_NEW )
+      final String actionLabel = parentRelation == null ? Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.0") : FeatureActionUtilities.newFeatureActionLabel( parentRelation.getTargetFeatureType() ); //$NON-NLS-1$
+      final IAction addAction = new Action( actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.1"), ImageProvider.IMAGE_FEATURE_NEW ) //$NON-NLS-1$
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -145,7 +146,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           if( checkMaxCount() == false )
           {
             Shell shell = event.display.getActiveShell();
-            MessageDialog.openInformation( shell, "Neues Feature", "Die maximale erlaubte Anzahl der Features ist bereits erreicht." );
+            MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.2"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.3") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
 
@@ -188,7 +189,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
       m_toolbarManager.add( addAction );
 
       /* IAction for removing a feature. */
-      final IAction removeAction = new Action( actionLabel + " löschen", ImageProvider.IMAGE_FEATURE_DELETE )
+      final IAction removeAction = new Action( actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.4"), ImageProvider.IMAGE_FEATURE_DELETE ) //$NON-NLS-1$
       {
         /**
          * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -199,7 +200,7 @@ public class TableFeatureContol extends AbstractFeatureControl implements Modell
           if( canDelete() == false )
           {
             Shell shell = event.display.getActiveShell();
-            MessageDialog.openInformation( shell, actionLabel + " löschen", "Es sind keine Objekte zum Löschen ausgewählt." );
+            MessageDialog.openInformation( shell, actionLabel + Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.5"), Messages.getString("org.kalypso.ogc.gml.featureview.control.TableFeatureContol.6") ); //$NON-NLS-1$ //$NON-NLS-2$
             return;
           }
 

@@ -105,7 +105,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
     final EasyFeatureWrapper[] wrappers = m_featuresProvider.getFeatures( mapPanel );
     final EasyFeatureWrapper[] wrappersToSelect = MapfunctionHelper.findFeatureToSelect( mapPanel, rectangle, wrappers, m_radius );
     if( wrappersToSelect == null || wrappersToSelect.length == 0 )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final Feature selectedFeature = wrappersToSelect[0].getFeature();
     return m_generator.generate( selectedFeature );

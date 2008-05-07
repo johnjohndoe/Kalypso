@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
@@ -107,7 +108,7 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
       if( component == null && !optional )
       {
         /* Non-optional columns must exists: throw error message */
-        final String msg = String.format( "Non-Optional component does not exist: %s. Remove from template or make optional.", componentId );
+        final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlHandlerProvider.0"), componentId ); //$NON-NLS-1$
         throw new IllegalArgumentException( msg );
       }
     }

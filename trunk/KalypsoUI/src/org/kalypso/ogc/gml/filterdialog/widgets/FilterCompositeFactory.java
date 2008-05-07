@@ -35,6 +35,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypsodeegree.filterencoding.Operation;
 import org.kalypsodeegree.model.feature.Feature;
@@ -68,38 +69,38 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       if( operation instanceof PropertyIsCOMPOperation )
       {
         if( operatorName == null )
-          operatorName = "Unbekannter Comperator";
-        ((Group) parent).setText( "Eigenschaften-" + operatorName );
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.0"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.1") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsCOMPOperationComposite( parent, SWT.NULL, (PropertyIsCOMPOperation) operation, getSupportedCOMPOps( supportedOperations ), errorMessageReciever, ft );
       }
       else if( operation instanceof PropertyIsLikeOperation )
       {
         if( operatorName == null )
-          operatorName = "Unbekannter IsLike Operator";
-        ((Group) parent).setText( "Eigenschaften-" + operatorName );
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.2"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.3") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsLikeOperationComposite( parent, SWT.NULL, (PropertyIsLikeOperation) operation, errorMessageReciever, ft );
 
       }
       else if( operation instanceof PropertyIsBetweenOperation )
       {
         if( operatorName == null )
-          operatorName = "Unbekannter IsBetween Operator";
-        ((Group) parent).setText( "Eigenschaften-" + operatorName );
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.4"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.5") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsBetweenComposite( parent, SWT.NULL, (PropertyIsBetweenOperation) operation, errorMessageReciever, ft );
 
       }
       else if( operation instanceof SpatialOperation )
       {
         if( operatorName == null )
-          operatorName = "Unbekannter Spatial Operator";
-        ((Group) parent).setText( "Eigenschaften-" + operatorName );
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.6"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.7") + operatorName ); //$NON-NLS-1$
         c = new SpatialComposite( parent, SWT.NULL, (SpatialOperation) operation, errorMessageReciever, ft, spatialOperator, getSupportedSpatialOps( supportedOperations ) );
       }
       else if( operation instanceof PropertyIsNullOperation )
       {
         if( operatorName == null )
-          operatorName = "Unbekannter IsNull Operator";
-        ((Group) parent).setText( "Eigenschaften-" + operatorName );
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.8"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.9") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsNullOperationComposite( parent, SWT.NULL, (PropertyIsNullOperation) operation, ft, errorMessageReciever );
       }
     }

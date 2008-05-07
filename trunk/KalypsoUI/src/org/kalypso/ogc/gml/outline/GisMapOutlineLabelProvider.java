@@ -100,13 +100,13 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
       ThemeStyleTreeObject style = (ThemeStyleTreeObject) children[0];
       String label = style.getLabel( style );
 
-      if( label.contains( "- generierter Standard-Stil -" ) )
+      if( label.contains( Messages.GisMapOutlineLabelProvider_0 ) )
         return input;
 
-      if( label.trim().equals( "" ) )
+      if( label.trim().equals( "" ) ) //$NON-NLS-1$
         return input;
 
-      return input + " (" + label + ")";
+      return input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return input;

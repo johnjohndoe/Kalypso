@@ -50,6 +50,7 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
@@ -83,7 +84,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
     /* Create the 'real' control */
     final GridDataType griddata = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
     griddata.setGrabExcessHorizontalSpace( true );
-    griddata.setHorizontalAlignment( "GridData.FILL" );
+    griddata.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
 
     final JAXBElement< ? extends ControlType> controlElement = createControlType( feature, ft, ftp, griddata );
     if( controlElement == null )
@@ -139,7 +140,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
       labelGridData.setGrabExcessHorizontalSpace( false );
       labelGridData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
-      labelGridData.setVerticalAlignment( "GridData.BEGINNING" );
+      labelGridData.setVerticalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
       label.setLayoutData( TemplateUtilitites.OF_FEATUREVIEW.createGridData( labelGridData ) );
 
       controlList.add( TemplateUtilitites.OF_FEATUREVIEW.createLabel( label ) );
@@ -154,7 +155,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       validatorLabel.setVisible( true );
 
       if( property == null )
-        System.out.println( "Invalid validator label for feature type property: " + ftp );
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker.2") + ftp ); //$NON-NLS-1$
       validatorLabel.setProperty( property );
 
       final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();

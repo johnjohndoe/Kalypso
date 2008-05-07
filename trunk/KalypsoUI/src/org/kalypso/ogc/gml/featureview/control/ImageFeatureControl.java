@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -65,7 +66,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
 {
   private Label m_label;
 
-  private static final QName QNAME_STRING = new QName( XMLConstants.W3C_XPATH_DATATYPE_NS_URI, "string" );
+  private static final QName QNAME_STRING = new QName( XMLConstants.W3C_XPATH_DATATYPE_NS_URI, "string" ); //$NON-NLS-1$
 
   public ImageFeatureControl( final IPropertyType ftp )
   {
@@ -135,7 +136,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
     else
     {
       final Object uriString = feature.getProperty( pt );
-      imgPath = uriString == null ? "" : (String) uriString;
+      imgPath = uriString == null ? "" : (String) uriString; //$NON-NLS-1$
     }
 
     String problemMessage = null;
@@ -143,9 +144,9 @@ public class ImageFeatureControl extends AbstractFeatureControl
     String tooltip = null;
 
     if( imgPath == null )
-      problemMessage = "No image path found at property: " + pt;
+      problemMessage = Messages.getString("org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.2") + pt; //$NON-NLS-1$
     else if( imgPath.length() == 0 )
-      problemMessage = "";
+      problemMessage = ""; //$NON-NLS-1$
     else
     {
       final GMLWorkspace workspace = feature.getWorkspace();
@@ -156,7 +157,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
         final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
         image = imgDesc.createImage( false );
         if( image == null )
-          problemMessage = "Unable to load image at: " + url.toExternalForm();
+          problemMessage = Messages.getString("org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.4") + url.toExternalForm(); //$NON-NLS-1$
         else
           tooltip = url.toExternalForm();
       }
@@ -164,7 +165,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
       {
         e.printStackTrace();
 
-        problemMessage = "Bad path: " + imgPath;
+        problemMessage = Messages.getString("org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.5") + imgPath; //$NON-NLS-1$
       }
     }
 

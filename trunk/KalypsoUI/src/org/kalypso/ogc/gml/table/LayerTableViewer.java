@@ -89,6 +89,7 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -138,25 +139,25 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 {
   protected Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
 
-  public static final String COLUMN_PROP_NAME = "columnName";
+  public static final String COLUMN_PROP_NAME = "columnName"; //$NON-NLS-1$
 
   /**
    * Label Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
    * the shown list.
    */
-  public static final String COLUMN_PROP_LABEL = "columnLabel";
+  public static final String COLUMN_PROP_LABEL = "columnLabel"; //$NON-NLS-1$
 
   /**
    * Tooltip Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
    * the shown list.
    */
-  public static final String COLUMN_PROP_TOOLTIP = "columnTooltip";
+  public static final String COLUMN_PROP_TOOLTIP = "columnTooltip"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_EDITABLE = "columnEditable";
+  public static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_WIDTH = "columnWidth";
+  public static final String COLUMN_PROP_WIDTH = "columnWidth"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_FORMAT = "columnFormat";
+  public static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
 
   private final IFeatureModifierFactory m_featureControlFactory;
 
@@ -332,7 +333,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
-  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused")
+  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused") //$NON-NLS-1$
   final boolean dummy )
   {
     m_isApplyTemplate = true;
@@ -350,7 +351,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
         final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( "<no name>" ), layer, context, m_selectionManager, pseudoModell, null, true );
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString("org.kalypso.ogc.gml.table.LayerTableViewer.7") ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
         setInput( theme );
       }
       final Sort sort = layer.getSort();
@@ -383,7 +384,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( "<no name>" ), layer, context, m_selectionManager, pseudoModell, null, true );
+      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString("org.kalypso.ogc.gml.table.LayerTableViewer.8") ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
       setInput( theme );
 
       final Sort sort = layer.getSort();
@@ -504,7 +505,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
     final String text;
     if( propertyName.equals( sortPropertyName ) )
-      text = textAndTooltip[0] + " " + (m_sorter.isInverse() ? "\u00ab" : "\u00bb");
+      text = textAndTooltip[0] + " " + (m_sorter.isInverse() ? "\u00ab" : "\u00bb"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else
       text = textAndTooltip[0];
 
@@ -766,10 +767,10 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
   public String getColumnAlignment( final int columnIndex )
   {
     if( columnIndex == -1 )
-      return "SWT.LEAD";
+      return "SWT.LEAD"; //$NON-NLS-1$
 
     final TableColumn column = getTable().getColumn( columnIndex );
-    return "" + column.getStyle();
+    return "" + column.getStyle(); //$NON-NLS-1$
   }
 
   public String getColumnFormat( final int columnIndex )
@@ -838,7 +839,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
     final Gistableview tableTemplate = m_gistableviewFactory.createGistableview();
     final Layer layer = m_gistableviewFactory.createGistableviewLayer();
 
-    ((GisTemplateFeatureTheme) getTheme()).fillLayerType( layer, "id", true );
+    ((GisTemplateFeatureTheme) getTheme()).fillLayerType( layer, "id", true ); //$NON-NLS-1$
 
     tableTemplate.setLayer( layer );
 
@@ -854,7 +855,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       columnType.setTooltip( (String) tc.getData( COLUMN_PROP_TOOLTIP ) );
       columnType.setEditable( ((Boolean) tc.getData( COLUMN_PROP_EDITABLE )).booleanValue() );
       columnType.setWidth( tc.getWidth() );
-      columnType.setAlignment( "" + tc.getStyle() );
+      columnType.setAlignment( "" + tc.getStyle() ); //$NON-NLS-1$
       columnType.setFormat( (String) tc.getData( COLUMN_PROP_FORMAT ) );
 
       columns.add( columnType );

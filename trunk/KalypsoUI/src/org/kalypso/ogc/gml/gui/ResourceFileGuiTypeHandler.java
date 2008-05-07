@@ -66,10 +66,10 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
   {
     final Button button = factory.createButton();
     final GridDataType griddata = factory.createGridDataType();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( property.getQName() );
 
-    griddata.setHorizontalAlignment( "GridData.BEGINNING" );
+    griddata.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     button.setLayoutData( factory.createGridData( griddata ) );
 
     return factory.createButton( button );
@@ -89,10 +89,10 @@ public class ResourceFileGuiTypeHandler extends LabelProvider implements IGuiTyp
   public String getText( final Object element )
   {
     if( element == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final String href = ((IFile) element).getFullPath().toString();
-    return href == null ? "" : href;
+    return href == null ? "" : href; //$NON-NLS-1$
   }
 
   public Class getValueClass( )

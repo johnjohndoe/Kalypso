@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.CSV;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 
@@ -79,7 +80,7 @@ public class ExportableLayerTable implements IExportableObject
   public String getPreferredDocumentName()
   {
     // TODO besserer Name zurückgeben
-    return "GisTabelle.csv";
+    return "GisTabelle.csv"; //$NON-NLS-1$
   }
 
   /**
@@ -123,6 +124,6 @@ public class ExportableLayerTable implements IExportableObject
   public String getCategory()
   {
     // TODO bessere Category zurückgeben
-    return "unbekannt";
+    return Messages.getString("org.kalypso.ogc.gml.table.command.ExportableLayerTable.1"); //$NON-NLS-1$
   }
 }

@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -73,7 +74,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
 {
-  private static final String SETTINGS_LAST_DIR = "lastDir";
+  private static final String SETTINGS_LAST_DIR = "lastDir"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -84,10 +85,10 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( "No active part." );
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.1") ); //$NON-NLS-1$
 
     final Shell shell = part.getSite().getShell();
-    final String title = "GML-Export";
+    final String title = Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.2"); //$NON-NLS-1$
 
     final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
@@ -95,16 +96,16 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
     if( featureList == null )
     {
-      MessageDialog.openWarning( shell, title, "Kein Thema gewählt oder Thema enthält keine Daten." );
+      MessageDialog.openWarning( shell, title, Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.3") ); //$NON-NLS-1$
       return Status.CANCEL_STATUS;
     }
 
     /* ask user for file */
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gmlExport" );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), "gmlExport" ); //$NON-NLS-1$
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
-    fileDialog.setFilterExtensions( new String[] { "*.gml" } );
-    fileDialog.setFilterNames( new String[] { "GML-Datei (*.gml)" } );
+    fileDialog.setFilterExtensions( new String[] { "*.gml" } ); //$NON-NLS-1$
+    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6") } ); //$NON-NLS-1$
     fileDialog.setText( title );
     if( lastDirPath != null )
     {
@@ -125,14 +126,14 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
     else
     {
       gmlFile = new File( result );
-      xsdFile = new File( FileUtilities.setSuffix( result, ".xsd" ) );
+      xsdFile = new File( FileUtilities.setSuffix( result, ".xsd" ) ); //$NON-NLS-1$
     }
 
     dialogSettings.put( SETTINGS_LAST_DIR, gmlFile.getParent() );
 
-    final Job job = new Job( title + " - " + result )
+    final Job job = new Job( title + " - " + result ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked")
+      @SuppressWarnings("unchecked") //$NON-NLS-1$
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
@@ -140,9 +141,9 @@ public class ExportGMLThemeHandler extends AbstractHandler implements IHandler
         {
           final GMLWorkspace workspace = theme.getWorkspace();
           final IGMLSchema schema = workspace.getGMLSchema();
-          final String encode = URLEncoder.encode( xsdFile.getName(), "UTF-8" );
-          workspace.setSchemaLocation( schema.getTargetNamespace() + " " + encode );
-          GmlSerializer.serializeWorkspace( gmlFile, workspace, "UTF-8" );
+          final String encode = URLEncoder.encode( xsdFile.getName(), "UTF-8" ); //$NON-NLS-1$
+          workspace.setSchemaLocation( schema.getTargetNamespace() + " " + encode ); //$NON-NLS-1$
+          GmlSerializer.serializeWorkspace( gmlFile, workspace, "UTF-8" ); //$NON-NLS-1$
           if( schema instanceof GMLSchema )
           {
             // can only save real GMLSchema, EmptyGMLSchema is not saved

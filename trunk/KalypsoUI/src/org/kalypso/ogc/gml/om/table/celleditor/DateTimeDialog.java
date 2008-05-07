@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 import org.vafada.swtcalendar.SWTCalendar;
 import org.vafada.swtcalendar.SWTCalendarEvent;
 import org.vafada.swtcalendar.SWTCalendarListener;
@@ -82,7 +83,7 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     super.configureShell( newShell );
 
-    newShell.setText( "Datumsauswahl" );
+    newShell.setText( Messages.getString("org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -93,7 +94,7 @@ public class DateTimeDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( "Choose date / time" );
+    setTitle( Messages.getString("org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.1") ); //$NON-NLS-1$
     setMessage( null );
 
     return contents;
@@ -121,7 +122,7 @@ public class DateTimeDialog extends TitleAreaDialog
 
     /* time of day */
     final Label lTime = new Label( composite, SWT.NONE );
-    lTime.setText( "Time of day" );
+    lTime.setText( Messages.getString("org.kalypso.ogc.gml.om.table.celleditor.DateTimeDialog.2") ); //$NON-NLS-1$
 
     final DateTime time = new DateTime( composite, SWT.TIME );
     time.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

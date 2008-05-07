@@ -117,7 +117,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   public static final int APPLY_FILTER = 101;
 
-  private static final String FILTER_KEY = "filter";
+  private static final String FILTER_KEY = "filter"; //$NON-NLS-1$
 
   protected final IFeatureType m_ft;
 
@@ -239,7 +239,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
     /* tree-group */
     final Group treeGroup = new Group( m_top, SWT.FILL );
-    treeGroup.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.filterfor" ) );// +
+    treeGroup.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.filterfor" ) );// + //$NON-NLS-1$
     // AnnotationUtilities.getAnnotation(
     // m_featureType
     // ).getLabel()

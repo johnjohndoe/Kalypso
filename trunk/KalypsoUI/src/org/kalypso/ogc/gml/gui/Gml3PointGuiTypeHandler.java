@@ -113,16 +113,16 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     layout.setMakeColumnsEqualWidth( false );
     layout.setMarginWidth( 1 );
     composite.setLayout( factory.createGridLayout( layout ) );
-    composite.setStyle( "SWT.NONE" );
+    composite.setStyle( "SWT.NONE" ); //$NON-NLS-1$
 
     // Text
     Text text = factory.createText();
-    text.setStyle( "SWT.BORDER" );
+    text.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
     text.setEditable( true );
     text.setProperty( qname );
 
     GridDataType textData = factory.createGridDataType();
-    textData.setHorizontalAlignment( "GridData.FILL" );
+    textData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
     textData.setGrabExcessHorizontalSpace( true );
     textData.setWidthHint( FeatureviewHelper.STANDARD_TEXT_FIELD_WIDTH_HINT );
     text.setLayoutData( factory.createGridData( textData ) );
@@ -130,10 +130,10 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     // Knopf
     Button button = factory.createButton();
     GridDataType buttonData = factory.createGridDataType();
-    button.setStyle( "SWT.PUSH" );
+    button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( qname );
 
-    buttonData.setHorizontalAlignment( "GridData.BEGINNING" );
+    buttonData.setHorizontalAlignment( "GridData.BEGINNING" ); //$NON-NLS-1$
     button.setLayoutData( factory.createGridData( buttonData ) );
 
     List<JAXBElement< ? extends ControlType>> control = composite.getControl();
@@ -193,7 +193,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   public String getText( Object element )
   {
     if( element == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     GM_Point point = (GM_Point) element;
     GM_Position pos = point.getPosition();
@@ -203,7 +203,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     String result = point.getCoordinateSystem();
 
     for( double element2 : dbl_values )
-      result = result + ";" + new Double( element2 ).toString();
+      result = result + ";" + new Double( element2 ).toString(); //$NON-NLS-1$
 
     return result;
   }
@@ -218,7 +218,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     String crs = null;
 
     /* Werte anhand von ; trennen. */
-    String[] str_values = text.split( ";" );
+    String[] str_values = text.split( ";" ); //$NON-NLS-1$
 
     double[] dbl_values = null;
 
