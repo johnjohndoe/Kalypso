@@ -75,7 +75,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
    */
   public String getFilename( )
   {
-    return "<Standard Baumansicht>.gmv";
+    return "<Standard Baumansicht>.gmv"; //$NON-NLS-1$
   }
 
   /**
@@ -85,7 +85,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
-    return editorRegistry.findEditor( "org.kalypso.ui.editor.GmlEditor" );
+    return editorRegistry.findEditor( "org.kalypso.ui.editor.GmlEditor" ); //$NON-NLS-1$
   }
 
   /**
@@ -115,7 +115,7 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmv", string, file.getFullPath() ) );
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmv", string, file.getFullPath() ) ); //$NON-NLS-1$
 
       return input;
     }

@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryListener;
@@ -90,7 +91,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( final RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.repository.view.RepositoryTreeContentProvider.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return new Object[0];
     }
@@ -113,7 +114,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( final RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.repository.view.RepositoryTreeContentProvider.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return null;
     }
@@ -133,7 +134,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     catch( final RepositoryException e )
     {
       e.printStackTrace();
-      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Operation konnte nicht durchgeführt werden", e.getLocalizedMessage() );
+      MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.repository.view.RepositoryTreeContentProvider.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return false;
     }

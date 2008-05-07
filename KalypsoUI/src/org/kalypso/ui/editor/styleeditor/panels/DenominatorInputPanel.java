@@ -110,7 +110,7 @@ public class DenominatorInputPanel
     textData.left = new FormAttachment( 295, 1000, 0 );
     textData.top = new FormAttachment( 10, 1000, 0 );
     text.setLayoutData( textData );
-    text.setText( "" + denominator );
+    text.setText( "" + denominator ); //$NON-NLS-1$
 
     Label okButton = new Label( composite, SWT.PUSH );
     okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
@@ -140,7 +140,7 @@ public class DenominatorInputPanel
         {
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
-          getText().setText( "" + getDenominator() );
+          getText().setText( "" + getDenominator() ); //$NON-NLS-1$
         }
       }
 
@@ -177,7 +177,7 @@ public class DenominatorInputPanel
           GisMapEditor gisMapEditor = (GisMapEditor) editor;
           setDenominator( gisMapEditor.getMapPanel().getCurrentScale() );
         }
-        getText().setText( "" + getDenominator() );
+        getText().setText( "" + getDenominator() ); //$NON-NLS-1$
         fire();
       }
 
@@ -211,14 +211,14 @@ public class DenominatorInputPanel
   // sets the inputField to a default state
   public void reset( )
   {
-    text.setText( "" );
+    text.setText( "" ); //$NON-NLS-1$
   }
 
   public void setDenominator( double denom )
   {
     this.denominator = denom;
     if( text != null && !text.isDisposed() )
-      text.setText( "" + denominator );
+      text.setText( "" + denominator ); //$NON-NLS-1$
   }
 
   protected void fire( )

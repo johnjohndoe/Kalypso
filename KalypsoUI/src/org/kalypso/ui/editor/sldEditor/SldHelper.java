@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author Thomas Jung
@@ -117,7 +118,7 @@ public class SldHelper
     else
     {
       text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." );
+      tempText = tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final BigDecimal db = new BigDecimal( tempText );
       text.setText( db.toString() );
@@ -148,7 +149,7 @@ public class SldHelper
     else
     {
       text.setBackground( comp.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." );
+      tempText = tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
 
       BigDecimal db = new BigDecimal( tempText );
       if( db.doubleValue() > 0 )
@@ -157,7 +158,7 @@ public class SldHelper
       }
       else
       {
-        db = new BigDecimal( "0.0" );
+        db = new BigDecimal( "0.0" ); //$NON-NLS-1$
         text.setText( db.toString() );
       }
 

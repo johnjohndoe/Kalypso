@@ -62,6 +62,7 @@ import org.kalypso.commons.runtime.LogStatusWrapper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
+import org.kalypso.i18n.Messages;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.model.xml.TransformationType;
 
@@ -101,7 +102,7 @@ public class TransformationHelper
     }
     catch( final ClassUtilityException e )
     {
-      throw new TransformationException( "Could not create Transformation: " + trans.getClassName(), e );
+      throw new TransformationException( Messages.getString("org.kalypso.util.transformation.TransformationHelper.0") + trans.getClassName(), e ); //$NON-NLS-1$
     }
   }
 
@@ -130,7 +131,7 @@ public class TransformationHelper
     }
 
     if( charset == null )
-      charset = "utf-8";
+      charset = "utf-8"; //$NON-NLS-1$
 
     final StringWriter msgWriter = new StringWriter();
     final BufferedWriter bufWriter = new BufferedWriter( msgWriter );
@@ -141,11 +142,11 @@ public class TransformationHelper
     {
       // create a temp file that will contain the logs (this file will be copied
       // to the real log file)
-      tmpFile = File.createTempFile( logFileName, ".log" );
+      tmpFile = File.createTempFile( logFileName, ".log" ); //$NON-NLS-1$
 
       logWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( tmpFile ), charset ) );
 
-      monitor.beginTask( "Transformationen durchführen", transList.size() + 1 );
+      monitor.beginTask( Messages.getString("org.kalypso.util.transformation.TransformationHelper.3"), transList.size() + 1 ); //$NON-NLS-1$
 
       for( final Iterator iter = transList.iterator(); iter.hasNext(); )
       {

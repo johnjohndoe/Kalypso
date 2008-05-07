@@ -69,6 +69,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 
 /**
  * Helper-Klasse für die Template-Auswahl
@@ -131,11 +132,11 @@ public class ViewEditorLauncherHelper
     final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, workbenchLabelProvider );
     dialog.setElements( allTemplates.toArray() );
     dialog.setBlockOnOpen( true );
-    dialog.setEmptyListMessage( "Es konnten keine Ansichten für diesen Dateityp ermittelt werden." );
-    dialog.setMessage( "Diese Datei ist keine Ansichtsvorlage.\nSie können eine vorhandene Ansicht auswählen\noder eine Standardansicht für die enthaltenen Daten generieren." );
+    dialog.setEmptyListMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.0") ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.1") ); //$NON-NLS-1$
     dialog.setMultipleSelection( true );
-    dialog.setTitle( "Ansichtsauswahl" );
-    dialog.setEmptySelectionMessage( "Wählen Sie mindestens eine Vorlage." );
+    dialog.setTitle( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.2") ); //$NON-NLS-1$
+    dialog.setEmptySelectionMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.3") ); //$NON-NLS-1$
     dialog.setStatusLineAboveButtons( true );
 
     // klappt nicht?
@@ -182,7 +183,7 @@ public class ViewEditorLauncherHelper
           e.printStackTrace();
 
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( shell, "Ansichtsauswahl", "Fehler beim Öffnen der Dateiansicht", status );
+          ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.4"), Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }

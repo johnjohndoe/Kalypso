@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -57,11 +58,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public final class CommandJob extends Job
 {
-  public final static TYPE POST = new TYPE( "POST" );
+  public final static TYPE POST = new TYPE( "POST" ); //$NON-NLS-1$
 
-  public final static TYPE UNDO = new TYPE( "UNDO" );
+  public final static TYPE UNDO = new TYPE( "UNDO" ); //$NON-NLS-1$
 
-  public final static TYPE REDO = new TYPE( "REDO" );
+  public final static TYPE REDO = new TYPE( "REDO" ); //$NON-NLS-1$
 
   private final ICommand myCommand;
 
@@ -75,7 +76,7 @@ public final class CommandJob extends Job
 
   public CommandJob( final ICommand command, final ICommandManager commandManager, final ISchedulingRule rule, final Runnable runnable, final TYPE type )
   {
-    super( "Kalypso: " + getCommandDescription( commandManager, command, type ) );
+    super( Messages.getString("org.kalypso.util.command.CommandJob.3") + getCommandDescription( commandManager, command, type ) ); //$NON-NLS-1$
 
     Assert.isNotNull( commandManager );
     Assert.isNotNull( command );
@@ -99,7 +100,7 @@ public final class CommandJob extends Job
   {
     final String description = getCommandDescription( myCommandManager, myCommand, m_type );
 
-    LOGGER.info( m_type.toString() + ": " + description );
+    LOGGER.info( m_type.toString() + ": " + description ); //$NON-NLS-1$
 
     try
     {
@@ -117,15 +118,15 @@ public final class CommandJob extends Job
     {
       e.printStackTrace();
 
-      LOGGER.warning( "Failed " + m_type + ": " + description );
+      LOGGER.warning( Messages.getString("org.kalypso.util.command.CommandJob.5") + m_type + ": " + description ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, "Fehler: " + m_type + ": " + description, e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getDefault().getBundle().getSymbolicName(), 0, Messages.getString("org.kalypso.util.command.CommandJob.7") + m_type + ": " + description, e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     if( description == null )
       System.out.print( false );
 
-    LOGGER.info( "Finished " + m_type + ": " + description );
+    LOGGER.info( Messages.getString("org.kalypso.util.command.CommandJob.9") + m_type + ": " + description ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return Status.OK_STATUS;
   }
@@ -139,7 +140,7 @@ public final class CommandJob extends Job
     else if( type == REDO )
       return cm.getRedoDescription();
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   private static final class TYPE

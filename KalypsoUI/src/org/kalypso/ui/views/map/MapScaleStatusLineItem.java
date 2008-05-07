@@ -70,6 +70,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -173,7 +174,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
     m_text = null;
     
-    m_updateScaleJob = new UpdateScaleJob("Updating scale box ...");
+    m_updateScaleJob = new UpdateScaleJob(Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.0")); //$NON-NLS-1$
   }
 
   /**
@@ -194,14 +195,14 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     /* Create the label. */
     Label label = new Label( m_composite, SWT.NONE );
     label.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, true ) );
-    label.setText( "Scale 1 : " );
+    label.setText( Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.1") ); //$NON-NLS-1$
 
     /* Create the text. */
     m_text = new Text( m_composite, SWT.BORDER );
     GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, true );
     gridData.widthHint = 75;
     m_text.setLayoutData( gridData );
-    m_text.setText( "" );
+    m_text.setText( "" ); //$NON-NLS-1$
 
     /* Add the selection listener. */
     m_text.addSelectionListener( new SelectionAdapter()
@@ -220,7 +221,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
           String text = source.getText();
 
           /* Parse the text. It must be a double. */
-          double scale = Double.parseDouble( text.replace( ",", "." ) );
+          double scale = Double.parseDouble( text.replace( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
           /* Set the map scale. */
           MapUtilities.setMapScale( m_panel, scale );
@@ -228,7 +229,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
         catch( NumberFormatException ex )
         {
           /* Tell the user. */
-          ErrorDialog.openError( source.getShell(), "Maßstab", "Ungültiger Maßstab angegeben. Achten Sie darauf, dass Sie eine gültige Zahl angegeben haben.", StatusUtilities.statusFromThrowable( ex ) );
+          ErrorDialog.openError( source.getShell(), Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.5"), Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.6"), StatusUtilities.statusFromThrowable( ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );

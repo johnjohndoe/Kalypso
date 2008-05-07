@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
@@ -59,17 +60,17 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  */
 public class MapPartAdapterFactory implements IAdapterFactory
 {
-  private static final String CONTENT_OUTLINE_PROPERTY_CONTRIBUTOR = "org.kalypso.ui.ContentOutlinePropertyContributor";
+  private static final String CONTENT_OUTLINE_PROPERTY_CONTRIBUTOR = "org.kalypso.ui.ContentOutlinePropertyContributor"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     try
     {
-      Assert.isLegal( adaptableObject instanceof AbstractMapPart, "This adapter factory is only suitable for AbstractMapPart's: " + adaptableObject );
+      Assert.isLegal( adaptableObject instanceof AbstractMapPart, Messages.getString("org.kalypso.ui.views.properties.MapPartAdapterFactory.2") + adaptableObject ); //$NON-NLS-1$
     }
     catch( final IllegalArgumentException e )
     {
@@ -97,7 +98,7 @@ public class MapPartAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Class[] getAdapterList( )
   {
     return new Class[] { IPropertySheetPage.class, MapPanel.class };

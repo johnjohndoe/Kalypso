@@ -59,6 +59,7 @@ import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
@@ -83,33 +84,33 @@ public class GrafikEditorLauncher implements IEditorLauncher
       {
         IStatus status = Status.OK_STATUS;
 
-        monitor.beginTask( "Grafik öffnen", IProgressMonitor.UNKNOWN );
+        monitor.beginTask( Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
         try
         {
           final IContainer parent = file.getParent();
 
-          final IFolder folder = parent.getFolder( new Path( "Grafik" ) );
+          final IFolder folder = parent.getFolder( new Path( Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.1") ) ); //$NON-NLS-1$
 
           if( path.getFileExtension().equalsIgnoreCase( DiagViewUtils.ODT_FILE_EXTENSION ) )
             status = GrafikLauncher.startGrafikODT( file, folder, monitor );
           else if( file.getFileExtension().equalsIgnoreCase( GrafikLauncher.TPL_FILE_EXTENSION ) )
             status = GrafikLauncher.startGrafikTPL( file, new Vector() );
-          else if( file.getFileExtension().equalsIgnoreCase( "zml" ) )
+          else if( file.getFileExtension().equalsIgnoreCase( "zml" ) ) //$NON-NLS-1$
             status = GrafikLauncher.startGrafikZML( file, folder, monitor );
           else
-            status = StatusUtilities.createErrorStatus( "Datei-typ nicht erkannt für Grafikprogramm" );
+            status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.3") ); //$NON-NLS-1$
         }
         catch( final SensorException e )
         {
-          status = StatusUtilities.statusFromThrowable( e, "Fehler beim Start von Grafik aufgetreten" );
+          status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.4") ); //$NON-NLS-1$
         }
         finally
         {
           monitor.done();
 
           if( !status.isOK() )
-            ErrorDialog.openError( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Grafik öffnen",
-                "Siehe Details", status );
+            ErrorDialog.openError( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.5"), //$NON-NLS-1$
+                Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.6"), status ); //$NON-NLS-1$
         }
       }
     };
@@ -121,7 +122,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
     catch( final Exception e )
     {
       MessageDialog.openError( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-          "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
+          Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.7"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 }

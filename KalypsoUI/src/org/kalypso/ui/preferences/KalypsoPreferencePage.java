@@ -48,6 +48,7 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
+import org.kalypso.i18n.Messages;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -67,7 +68,7 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   {
     super( GRID );
     setPreferenceStore( KalypsoDeegreePlugin.getDefault().getPreferenceStore() );
-    setDescription( "Hier können Sie die Kalypso-Einstellungen ändern" );
+    setDescription( Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -77,15 +78,15 @@ public class KalypsoPreferencePage extends FieldEditorPreferencePage implements 
   @Override
   public void createFieldEditors( )
   {
-    m_sfeCrs = new StringFieldEditor( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, "Globales &Koordinatensystem:", getFieldEditorParent() );
+    m_sfeCrs = new StringFieldEditor( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.1"), getFieldEditorParent() ); //$NON-NLS-1$
     addField( m_sfeCrs );
-    m_sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben
+    m_sfeCrs.getLabelControl( getFieldEditorParent() ).setToolTipText( "" ); // TODO tooltip angeben //$NON-NLS-1$
 
     // fetch list of timezone names and sort it
     final String[] ids = TimeZone.getAvailableIDs();
     Arrays.sort( ids );
 
-    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, "Zeitzone für die Darstellung:", "Gilt für Diagramme und Tabellen, aus der Liste selektieren oder z.B. 'GMT+1' für Winterzeit Deutschland, oder leer lassen", getFieldEditorParent(), false, ids );
+    final ComboStringFieldEditor timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoPreferences.DISPLAY_TIMEZONE, Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.3"), Messages.getString("org.kalypso.ui.preferences.KalypsoPreferencePage.4"), getFieldEditorParent(), false, ids ); //$NON-NLS-1$ //$NON-NLS-2$
     addField( timeZoneFieldEditor );
   }
 

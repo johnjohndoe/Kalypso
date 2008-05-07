@@ -125,7 +125,7 @@ public class StatusDialog extends MessageDialog
       final Group exceptionGroup = new Group( parent, SWT.NONE );
       exceptionGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       exceptionGroup.setLayout( new GridLayout() );
-      exceptionGroup.setText( "Exception" );
+      exceptionGroup.setText( "Exception" ); //$NON-NLS-1$
 
       final String excMsg = exception.getLocalizedMessage();
       if( excMsg != null )
@@ -161,7 +161,7 @@ public class StatusDialog extends MessageDialog
           final IStatus status = (IStatus) sel.getFirstElement();
           if( status != null )
           {
-            final StatusDialog dialog = new StatusDialog( getShell(), status, "Details" );
+            final StatusDialog dialog = new StatusDialog( getShell(), status, "Details" ); //$NON-NLS-1$
             dialog.open();
           }
         }

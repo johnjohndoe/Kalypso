@@ -68,7 +68,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class ListSelectionWizardPage extends WizardPage
 {
   private Object[] m_selection;

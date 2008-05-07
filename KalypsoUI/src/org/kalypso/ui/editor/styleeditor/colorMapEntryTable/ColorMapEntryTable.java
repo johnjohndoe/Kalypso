@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoUserStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -86,24 +87,24 @@ public class ColorMapEntryTable
   RasterSymbolizer m_rasterSymbolizer = null;
 
   // Set the table column property names
-  private final String LABEL_COLUMN = "label";
+  private final String LABEL_COLUMN = "label"; //$NON-NLS-1$
 
-  private final String QUANTITY_COLUMN = "quantity";
+  private final String QUANTITY_COLUMN = "quantity"; //$NON-NLS-1$
 
-  private final String COLOR_COLUMN = "color";
+  private final String COLOR_COLUMN = "color"; //$NON-NLS-1$
 
-  private final String OPACITY_COLUMN = "opacity";
+  private final String OPACITY_COLUMN = "opacity"; //$NON-NLS-1$
 
   // Set column names
   private final String[] columnNames = new String[] { LABEL_COLUMN, QUANTITY_COLUMN, COLOR_COLUMN, OPACITY_COLUMN };
 
-  private static final String fNON_NEGATIVE_INTEGER_FIELD = "(\\d){1,9}";
+  private static final String fNON_NEGATIVE_INTEGER_FIELD = "(\\d){1,9}"; //$NON-NLS-1$
 
-  private static final String fINTEGER_FIELD = "(-)?" + fNON_NEGATIVE_INTEGER_FIELD;
+  private static final String fINTEGER_FIELD = "(-)?" + fNON_NEGATIVE_INTEGER_FIELD; //$NON-NLS-1$
 
-  private static final String fNON_NEGATIVE_FLOATING_POINT_FIELD = "(\\d){1,10}\\.(\\d){1,10}";
+  private static final String fNON_NEGATIVE_FLOATING_POINT_FIELD = "(\\d){1,10}\\.(\\d){1,10}"; //$NON-NLS-1$
 
-  private static final String fFLOATING_POINT_FIELD = "(-)?" + fNON_NEGATIVE_FLOATING_POINT_FIELD;
+  private static final String fFLOATING_POINT_FIELD = "(-)?" + fNON_NEGATIVE_FLOATING_POINT_FIELD; //$NON-NLS-1$
 
   /**
    * for testing
@@ -115,7 +116,7 @@ public class ColorMapEntryTable
     ColorMapEntry colorMapEntry;
     for( int i = 0; i < count; i++ )
     {
-      colorMapEntry = new ColorMapEntry_Impl( Color.CYAN, i * 0.1, i, "Label " + i );
+      colorMapEntry = new ColorMapEntry_Impl( Color.CYAN, i * 0.1, i, "Label " + i ); //$NON-NLS-1$
       m_colorMapEntryList.addColorMapEntry( colorMapEntry );
     }
     this.addChildControls( parent );
@@ -332,7 +333,7 @@ public class ColorMapEntryTable
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( Color.WHITE, 1, 0, "" );
+        final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( Color.WHITE, 1, 0, "" ); //$NON-NLS-1$
         m_colorMapEntryList.addColorMapEntry( colorMapEntry );
       }
     } );
@@ -361,7 +362,7 @@ public class ColorMapEntryTable
 
     // Create and configure the "Refresh Map" button
     final Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
-    refresh.setText( "refresh" );
+    refresh.setText( "refresh" ); //$NON-NLS-1$
     gridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
     gridData.widthHint = 70;
     refresh.setLayoutData( gridData );
@@ -437,7 +438,7 @@ public class ColorMapEntryTable
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( table.getShell(), "Error", "Quantities must have unique values!" );
+      MessageDialog.openError( table.getShell(), "Error", Messages.getString("org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable.12") ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

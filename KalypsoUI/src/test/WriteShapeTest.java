@@ -31,15 +31,15 @@ public class WriteShapeTest extends TestCase
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
-    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) ); //$NON-NLS-1$
+    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
     final IMarshallingTypeHandler pointTypeHandler = typeRegistry.getTypeHandlerForTypeName( GeometryUtilities.QN_POINT_PROPERTY );
 
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
+    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aNumber" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aString" ), stringTypeHandler, 1, 1, false );
-    final IValuePropertyType pointType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aGeometry" ), pointTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aNumber" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aString" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType pointType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aGeometry" ), pointTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType[] properties = new IPropertyType[] { pointType, doubleType, stringType };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -54,14 +54,14 @@ public class WriteShapeTest extends TestCase
     for( int i = 0; i < 5; i++ )
     {
       final double aDouble = i * Math.PI;
-      final String aString = "Item Number: " + i;
+      final String aString = "Item Number: " + i; //$NON-NLS-1$
       final GM_Point aPoint = GeometryFactory.createGM_Point( i * 4.3, i * 2.1, crs );
 
       final Object[] data = new Object[] { aPoint, aDouble, aString };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, data );
+      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, data ); //$NON-NLS-1$
       workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    ShapeSerializer.serialize( workspace, "C:\\tmp\\shapetest", null );
+    ShapeSerializer.serialize( workspace, "C:\\tmp\\shapetest", null ); //$NON-NLS-1$
   }
 }

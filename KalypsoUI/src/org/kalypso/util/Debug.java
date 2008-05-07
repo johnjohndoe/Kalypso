@@ -56,5 +56,5 @@ public class Debug
   {
   }
 
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug WMS = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGisPlugin.getDefault(), "/debug/wms" );
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug WMS = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoGisPlugin.getDefault(), "/debug/wms" ); //$NON-NLS-1$
 }

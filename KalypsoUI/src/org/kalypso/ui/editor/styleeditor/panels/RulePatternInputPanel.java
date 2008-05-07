@@ -121,7 +121,7 @@ public class RulePatternInputPanel
     minText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData minTextData = new GridData( 25, 10 );
     minText.setLayoutData( minTextData );
-    minText.setText( "" + min );
+    minText.setText( "" + min ); //$NON-NLS-1$
 
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
@@ -136,7 +136,7 @@ public class RulePatternInputPanel
     maxText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData maxTextData = new GridData( 25, 10 );
     maxText.setLayoutData( maxTextData );
-    maxText.setText( "" + max );
+    maxText.setText( "" + max ); //$NON-NLS-1$
 
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
@@ -151,7 +151,7 @@ public class RulePatternInputPanel
     stepText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
     GridData stepTextData = new GridData( 25, 10 );
     stepText.setLayoutData( stepTextData );
-    stepText.setText( "" + step );
+    stepText.setText( "" + step ); //$NON-NLS-1$
 
     Label okButton = new Label( composite, SWT.PUSH );
     okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
@@ -208,9 +208,9 @@ public class RulePatternInputPanel
           StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
               MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
-          getMinText().setText( "" + getMin() );
-          getMaxText().setText( "" + getMax() );
-          getStepText().setText( "" + getStep() );
+          getMinText().setText( "" + getMin() ); //$NON-NLS-1$
+          getMaxText().setText( "" + getMax() ); //$NON-NLS-1$
+          getStepText().setText( "" + getStep() ); //$NON-NLS-1$
         }
         catch( Exception ex )
         {

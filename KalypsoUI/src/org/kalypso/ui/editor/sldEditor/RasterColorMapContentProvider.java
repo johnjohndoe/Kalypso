@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 
@@ -67,7 +68,7 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public Object[] getElements( final Object inputElement )
   {
     final RasterSymbolizer symb = (RasterSymbolizer) inputElement;
@@ -104,15 +105,15 @@ public class RasterColorMapContentProvider implements IStructuredContentProvider
         tableColumn.dispose();
 
       final TableColumn quantityColumn = new TableColumn( table, SWT.NONE );
-      quantityColumn.setText( "Bezeichnung" );
+      quantityColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.1") ); //$NON-NLS-1$
       quantityColumn.setWidth( 100 );
 
       final TableColumn opacityColumn = new TableColumn( table, SWT.NONE );
-      opacityColumn.setText( "Wert" );
+      opacityColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.2") ); //$NON-NLS-1$
       opacityColumn.setWidth( 50 );
 
       final TableColumn colorColumn = new TableColumn( table, SWT.NONE );
-      colorColumn.setText( "Farbe" );
+      colorColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider.3") ); //$NON-NLS-1$
       colorColumn.setWidth( 50 );
 
       final PROPS[] propValues = PROPS.values();

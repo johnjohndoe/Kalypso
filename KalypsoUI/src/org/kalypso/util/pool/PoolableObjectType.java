@@ -155,6 +155,6 @@ public class PoolableObjectType implements IPoolableObjectType
   @Override
   public String toString( )
   {
-    return getClass().getName() + ": location=" + getLocation() + " type=" + getType() + " context= " + getContext();
+    return getClass().getName() + ": location=" + getLocation() + " type=" + getType() + " context= " + getContext(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

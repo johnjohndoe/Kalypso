@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -85,7 +86,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
     /* If there is no theme, no legend could be shown. */
     if( theme == null )
-      return createError( composite, "Keine Legende verfügbar." );
+      return createError( composite, Messages.getString("org.kalypso.ui.views.properties.LegendPropertyPage.0") ); //$NON-NLS-1$
 
     /* Get the legend graphic. */
     Image legendGraphic = null;
@@ -93,7 +94,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     try
     {
       /* Get the legend graphic. */
-      legendGraphic = theme.getLegendGraphic( new Font( composite.getDisplay(), "Arial", 10, SWT.NORMAL ) );
+      legendGraphic = theme.getLegendGraphic( new Font( composite.getDisplay(), "Arial", 10, SWT.NORMAL ) ); //$NON-NLS-1$
     }
     catch( CoreException e )
     {
@@ -102,7 +103,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
     /* No legend available. */
     if( legendGraphic == null )
-      return createError( composite, "Keine Legende verfügbar." );
+      return createError( composite, Messages.getString("org.kalypso.ui.views.properties.LegendPropertyPage.2") ); //$NON-NLS-1$
 
     /* Create a group. */
     Composite group = new Composite( composite, SWT.BORDER );

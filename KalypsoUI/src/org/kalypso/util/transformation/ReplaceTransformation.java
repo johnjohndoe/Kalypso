@@ -63,6 +63,7 @@ import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.java.io.ReaderUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.io.StreamUtilities;
+import org.kalypso.i18n.Messages;
 
 /**
  * @deprecated use ant task instead in your model-configuration
@@ -77,7 +78,7 @@ public class ReplaceTransformation extends AbstractTransformation
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
-    monitor.beginTask( "Transform", 2000 );
+    monitor.beginTask( Messages.getString("org.kalypso.util.transformation.ReplaceTransformation.0"), 2000 ); //$NON-NLS-1$
 
     final Properties replaceProps = new Properties();
 
@@ -88,10 +89,10 @@ public class ReplaceTransformation extends AbstractTransformation
       final String key = (String)entry.getKey();
       final String value = (String)entry.getValue();
 
-      if( key.startsWith( "protocol" ) )
+      if( key.startsWith( "protocol" ) ) //$NON-NLS-1$
       {
-        final String[] strings = value.split( "=" );
-        replaceProps.put( strings[0] + ":", strings[1] );
+        final String[] strings = value.split( "=" ); //$NON-NLS-1$
+        replaceProps.put( strings[0] + ":", strings[1] ); //$NON-NLS-1$
       }
     }
 
@@ -104,7 +105,7 @@ public class ReplaceTransformation extends AbstractTransformation
       final String key = (String)entry.getKey();
       final String value = (String)entry.getValue();
 
-      if( key.startsWith( "file" ) )
+      if( key.startsWith( "file" ) ) //$NON-NLS-1$
       {
         try
         {

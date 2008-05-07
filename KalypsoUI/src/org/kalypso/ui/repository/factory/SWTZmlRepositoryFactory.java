@@ -64,7 +64,7 @@ public class SWTZmlRepositoryFactory extends HeadlessZmlRepositoryFactory
   {
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "", KalypsoGisPlugin
+    final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "", KalypsoGisPlugin //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         .getDefault() );
 
     final int res = dlg.open();

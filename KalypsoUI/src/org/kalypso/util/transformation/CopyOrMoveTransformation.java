@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
+import org.kalypso.i18n.Messages;
 
 /**
  * @deprecated use ant task instead in your model-configuration
@@ -64,13 +65,13 @@ public class CopyOrMoveTransformation extends AbstractTransformation
   public static final int MODE_COPY = 2;
 
   /** Eingabedatei: Absoluter Pfad im Workspace */
-  public final static String PROP_INPUT = "input";
+  public final static String PROP_INPUT = "input"; //$NON-NLS-1$
 
   /** Ausgabedatei: Absoluter Pfad im Workspace */
-  public final static String PROP_OUTPUT = "output";
+  public final static String PROP_OUTPUT = "output"; //$NON-NLS-1$
 
   /** ignore error */
-  public final static String PROP_IGNOREERROR = "ignoreError";
+  public final static String PROP_IGNOREERROR = "ignoreError"; //$NON-NLS-1$
 
   private final int m_mode;
 
@@ -85,7 +86,7 @@ public class CopyOrMoveTransformation extends AbstractTransformation
   public void transformIntern( final Properties properties, final BufferedWriter msgWriter,
       final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
-    monitor.beginTask( "Transform", 3000 );
+    monitor.beginTask( Messages.getString("org.kalypso.util.transformation.CopyOrMoveTransformation.3"), 3000 ); //$NON-NLS-1$
 
     final String input = properties.getProperty( PROP_INPUT );
     final String output = properties.getProperty( PROP_OUTPUT );
@@ -94,14 +95,14 @@ public class CopyOrMoveTransformation extends AbstractTransformation
     try
     {
       if( input == null )
-        throw new TransformationException( "Parameter 'input' nicht gesetzt" );
+        throw new TransformationException( Messages.getString("org.kalypso.util.transformation.CopyOrMoveTransformation.4") ); //$NON-NLS-1$
       if( output == null || output.length() == 0 )
-        throw new TransformationException( "Parameter 'output' nicht gesetzt" );
+        throw new TransformationException( Messages.getString("org.kalypso.util.transformation.CopyOrMoveTransformation.5") ); //$NON-NLS-1$
 
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
       final IFile inputFile = root.getFile( new Path( input ) );
       if( inputFile == null || !inputFile.exists() )
-        throw new TransformationException( "input file doesn't exist or is not a file: " + input );
+        throw new TransformationException( Messages.getString("org.kalypso.util.transformation.CopyOrMoveTransformation.6") + input ); //$NON-NLS-1$
 
       final IFile outputFile = root.getFile( new Path( output ) );
 
@@ -124,7 +125,7 @@ public class CopyOrMoveTransformation extends AbstractTransformation
     }
     catch( TransformationException e )
     {
-      if( ignoreError != null && "true".equals( ignoreError ) )
+      if( ignoreError != null && "true".equals( ignoreError ) ) //$NON-NLS-1$
         return;
       throw e;
     }

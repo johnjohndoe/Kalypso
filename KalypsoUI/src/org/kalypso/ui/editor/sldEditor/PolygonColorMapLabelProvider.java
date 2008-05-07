@@ -109,15 +109,15 @@ public class PolygonColorMapLabelProvider extends LabelProvider implements ITabl
 
       case from:
         // TODO: fixed scale is not good; consider examination of all existing values
-        return String.format( "%.2f", entry.getFrom( null ) );
+        return String.format( "%.2f", entry.getFrom( null ) ); //$NON-NLS-1$
       case to:
-        return String.format( "%.2f", entry.getTo( null ) );
+        return String.format( "%.2f", entry.getTo( null ) ); //$NON-NLS-1$
 
       case stroke:
-        return "";
+        return ""; //$NON-NLS-1$
 
       case fill:
-        return "";
+        return ""; //$NON-NLS-1$
 
       default:
         throw new IllegalArgumentException();

@@ -66,6 +66,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.xml.Mapper;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -89,27 +90,27 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ObservationResolver extends AbstractTransformation
 {
-  private static final String PROP_SOURCEOBS1 = "sourceObservation1";
+  private static final String PROP_SOURCEOBS1 = "sourceObservation1"; //$NON-NLS-1$
 
-  private static final String PROP_SOURCEOBS2 = "sourceObservation2";
+  private static final String PROP_SOURCEOBS2 = "sourceObservation2"; //$NON-NLS-1$
 
-  private static final String PROP_RANGEMODE1 = "rangeMode1";
+  private static final String PROP_RANGEMODE1 = "rangeMode1"; //$NON-NLS-1$
 
-  private static final String PROP_RANGEMODE2 = "rangeMode2";
+  private static final String PROP_RANGEMODE2 = "rangeMode2"; //$NON-NLS-1$
 
-  private static final String PROP_TARGETOBS = "targetObservation";
+  private static final String PROP_TARGETOBS = "targetObservation"; //$NON-NLS-1$
 
-  private static final String PROP_GML = "gml";
+  private static final String PROP_GML = "gml"; //$NON-NLS-1$
 
-  private static final String PROP_FEATURE = "feature";
+  private static final String PROP_FEATURE = "feature"; //$NON-NLS-1$
 
-  private static final String PROP_TARGETFOLDER = "targetFolder";
+  private static final String PROP_TARGETFOLDER = "targetFolder"; //$NON-NLS-1$
 
-  private static final String PROP_STARTSIM = "startsim";
+  private static final String PROP_STARTSIM = "startsim"; //$NON-NLS-1$
 
-  private static final String PROP_ENDSIM = "endsim";
+  private static final String PROP_ENDSIM = "endsim"; //$NON-NLS-1$
 
-  private static final String PROP_STARTFORECAST = "startforecast";
+  private static final String PROP_STARTFORECAST = "startforecast"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties,
@@ -117,22 +118,22 @@ public class ObservationResolver extends AbstractTransformation
    */
   protected void transformIntern( final Properties properties, final BufferedWriter msgWriter, final BufferedWriter logWriter, final IProgressMonitor monitor ) throws TransformationException
   {
-    monitor.beginTask( "Zeitreihen auflösen", 3000 );
+    monitor.beginTask( Messages.getString("org.kalypso.util.transformation.ObservationResolver.11"), 3000 ); //$NON-NLS-1$
 
     // PROPS parsen
-    final String gmlPath = properties.getProperty( PROP_GML, "" );
-    final String featureName = properties.getProperty( PROP_FEATURE, "" );
-    final String sourceObsName1 = properties.getProperty( PROP_SOURCEOBS1, "" );
+    final String gmlPath = properties.getProperty( PROP_GML, "" ); //$NON-NLS-1$
+    final String featureName = properties.getProperty( PROP_FEATURE, "" ); //$NON-NLS-1$
+    final String sourceObsName1 = properties.getProperty( PROP_SOURCEOBS1, "" ); //$NON-NLS-1$
     final String sourceObsName2 = properties.getProperty( PROP_SOURCEOBS2, null );
-    final String targetObsName = properties.getProperty( PROP_TARGETOBS, "" );
-    final String targetFolderName = properties.getProperty( PROP_TARGETFOLDER, "" );
+    final String targetObsName = properties.getProperty( PROP_TARGETOBS, "" ); //$NON-NLS-1$
+    final String targetFolderName = properties.getProperty( PROP_TARGETFOLDER, "" ); //$NON-NLS-1$
 
-    final String startsimString = properties.getProperty( PROP_STARTSIM, "" );
-    final String endsimString = properties.getProperty( PROP_ENDSIM, "" );
-    final String startforecastString = properties.getProperty( PROP_STARTFORECAST, "" );
+    final String startsimString = properties.getProperty( PROP_STARTSIM, "" ); //$NON-NLS-1$
+    final String endsimString = properties.getProperty( PROP_ENDSIM, "" ); //$NON-NLS-1$
+    final String startforecastString = properties.getProperty( PROP_STARTFORECAST, "" ); //$NON-NLS-1$
 
-    final String rangeMode1 = properties.getProperty( PROP_RANGEMODE1, "start-middle" );
-    final String rangeMode2 = properties.getProperty( PROP_RANGEMODE2, "middle-stop" );
+    final String rangeMode1 = properties.getProperty( PROP_RANGEMODE1, "start-middle" ); //$NON-NLS-1$
+    final String rangeMode2 = properties.getProperty( PROP_RANGEMODE2, "middle-stop" ); //$NON-NLS-1$
 
     try
     {
@@ -148,7 +149,7 @@ public class ObservationResolver extends AbstractTransformation
       final IProject project = targetFolder.getProject();
       final IFile gmlFile = root.getFile( new Path( gmlPath ) );
       if( gmlFile == null )
-        throw new TransformationException( "Datei nicht gefunden: " + gmlPath );
+        throw new TransformationException( Messages.getString("org.kalypso.util.transformation.ObservationResolver.22") + gmlPath ); //$NON-NLS-1$
 
       final URL gmlURL = ResourceUtilities.createURL( gmlFile );
 
@@ -157,7 +158,7 @@ public class ObservationResolver extends AbstractTransformation
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlURL, resolver, null );
       final IFeatureType ft = workspace.getFeatureType( featureName );
       if( ft == null )
-        throw new TransformationException( "Featurename unbekannt: " + featureName );
+        throw new TransformationException( Messages.getString("org.kalypso.util.transformation.ObservationResolver.23") + featureName ); //$NON-NLS-1$
 
       final Feature[] features = workspace.getFeatures( ft );
 
@@ -180,11 +181,11 @@ public class ObservationResolver extends AbstractTransformation
   {
     final UrlResolver resolver = new UrlResolver();
 
-    resolver.addReplaceToken( "project", "platform:/resource/" + project.getName() + "/" );
-    resolver.addReplaceToken( "calcdir", "platform:/resource/" + calcdir.getFullPath().toString() + "/" );
-    resolver.addReplaceToken( "startsim", startsim );
-    resolver.addReplaceToken( "startforecast", startforecast );
-    resolver.addReplaceToken( "endsim", endsim );
+    resolver.addReplaceToken( "project", "platform:/resource/" + project.getName() + "/" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    resolver.addReplaceToken( "calcdir", "platform:/resource/" + calcdir.getFullPath().toString() + "/" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    resolver.addReplaceToken( "startsim", startsim ); //$NON-NLS-1$
+    resolver.addReplaceToken( "startforecast", startforecast ); //$NON-NLS-1$
+    resolver.addReplaceToken( "endsim", endsim ); //$NON-NLS-1$
 
     return resolver;
   }
@@ -205,7 +206,7 @@ public class ObservationResolver extends AbstractTransformation
       checkColumn( featureType, sourceName2 );
     checkColumn( featureType, targetName );
 
-    monitor.beginTask( "Zeitreihen auslesen", features.length * 2 );
+    monitor.beginTask( Messages.getString("org.kalypso.util.transformation.ObservationResolver.33"), features.length * 2 ); //$NON-NLS-1$
 
     // parse range modi
     // TODO: input validation should be done at the gui level
@@ -236,7 +237,7 @@ public class ObservationResolver extends AbstractTransformation
       catch( final Exception e )
       {
         // migth occur when obs not defined on the server
-        write( "Zeitreihe möglicherweise unbekannt: " + ((TimeseriesLinkType) feature.getProperty( prop )).getHref(), e.getLocalizedMessage(), msgWriter, logWriter );
+        write( Messages.getString("org.kalypso.util.transformation.ObservationResolver.34") + ((TimeseriesLinkType) feature.getProperty( prop )).getHref(), e.getLocalizedMessage(), msgWriter, logWriter ); //$NON-NLS-1$
         e.printStackTrace();
         continue;
       }
@@ -308,7 +309,7 @@ public class ObservationResolver extends AbstractTransformation
 
   private Date parseRange( final Date start, final Date middle, final Date stop, String rangeMode1, boolean firstOrLast, final Date standard )
   {
-    final String[] strings = rangeMode1.split( "-" );
+    final String[] strings = rangeMode1.split( "-" ); //$NON-NLS-1$
     if( strings == null || strings.length != 2 )
       return standard;
 
@@ -320,13 +321,13 @@ public class ObservationResolver extends AbstractTransformation
 
   private Date mapRange( final String string, final Date start, final Date middle, final Date stop, final Date standard )
   {
-    if( "start".equals( string ) )
+    if( "start".equals( string ) ) //$NON-NLS-1$
       return start;
 
-    if( "middle".equals( string ) )
+    if( "middle".equals( string ) ) //$NON-NLS-1$
       return middle;
 
-    if( "stop".equals( string ) )
+    if( "stop".equals( string ) ) //$NON-NLS-1$
       return stop;
 
     return standard;
@@ -353,8 +354,8 @@ public class ObservationResolver extends AbstractTransformation
 
     final IPropertyType sourceFTP = ft.getProperty( sourceName );
     if( sourceFTP == null )
-      throw new TransformationException( "Spalte existiert nicht oder ist nicht vom Typ " + linkClass + ": " + sourceName );
+      throw new TransformationException( Messages.getString("org.kalypso.util.transformation.ObservationResolver.39") + linkClass + ": " + sourceName ); //$NON-NLS-1$ //$NON-NLS-2$
     if( sourceFTP instanceof IValuePropertyType && !(((IValuePropertyType) sourceFTP).getValueClass() == linkClass) )
-      throw new TransformationException( "Spalte existiert nicht oder ist nicht vom Typ " + linkClass + ": " + sourceName );
+      throw new TransformationException( Messages.getString("org.kalypso.util.transformation.ObservationResolver.41") + linkClass + ": " + sourceName ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

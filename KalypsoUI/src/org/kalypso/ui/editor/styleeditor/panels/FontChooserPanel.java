@@ -126,7 +126,7 @@ public class FontChooserPanel
     textData.left = new FormAttachment( 340, 1000, 0 );
     textData.top = new FormAttachment( 10, 1000, 0 );
     text.setLayoutData( textData );
-    text.setText( "abc" );
+    text.setText( "abc" ); //$NON-NLS-1$
     text.setFont( font );
     text.setForeground( new org.eclipse.swt.graphics.Color( null, color.getRed(), color.getGreen(), color.getBlue() ) );
 
@@ -137,7 +137,7 @@ public class FontChooserPanel
     fontChooserButtonData.left = new FormAttachment( 540, 1000, 0 );
     fontChooserButtonData.top = new FormAttachment( 100, 1000, 0 );
     fontChooserButton.setLayoutData( fontChooserButtonData );
-    fontChooserButton.setText( "..." );
+    fontChooserButton.setText( "..." ); //$NON-NLS-1$
 
     final FontDialog dialog = new FontDialog( composite.getShell() );
     dialog.setFontList( font.getFontData() );

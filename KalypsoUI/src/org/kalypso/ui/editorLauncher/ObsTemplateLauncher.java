@@ -57,15 +57,15 @@ public class ObsTemplateLauncher implements IEditorLauncher
    */
   public void open( final IPath filePath )
   {
-    final IOFileFilter ottFilter = FileFilterUtils.suffixFileFilter( ".ott" );
-    final IOFileFilter odtFilter = FileFilterUtils.suffixFileFilter( ".odt" );
+    final IOFileFilter ottFilter = FileFilterUtils.suffixFileFilter( ".ott" ); //$NON-NLS-1$
+    final IOFileFilter odtFilter = FileFilterUtils.suffixFileFilter( ".odt" ); //$NON-NLS-1$
 
     final FileFilter filter = FileFilterUtils.orFileFilter( odtFilter, ottFilter );
 
-    final IDefaultTemplateLauncher dlTable = new DefaultObservationEditorLauncher( "<Standard Tabellen Editor>.ott",
-        ".ott" );
-    final IDefaultTemplateLauncher dlDiag = new DefaultObservationEditorLauncher( "<Standard Diagramm Editor>.odt",
-        ".odt" );
+    final IDefaultTemplateLauncher dlTable = new DefaultObservationEditorLauncher( "<Standard Tabellen Editor>.ott", //$NON-NLS-1$
+        ".ott" ); //$NON-NLS-1$
+    final IDefaultTemplateLauncher dlDiag = new DefaultObservationEditorLauncher( "<Standard Diagramm Editor>.odt", //$NON-NLS-1$
+        ".odt" ); //$NON-NLS-1$
 
     ViewEditorLauncherHelper.showTemplateDialog( filePath, filter, new IDefaultTemplateLauncher[]
     {

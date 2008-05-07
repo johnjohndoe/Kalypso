@@ -38,47 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.pool;
+package org.kalypso.util.swt;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
-import org.kalypso.loader.LoaderException;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
-final class SaveAndDisposeInfoJob extends UIJob
+/**
+ * @author kuch
+ *
+ */
+public class WorkbenchMessages
 {
-  private final KeyInfo m_info;
+  private static final String BUNDLE_NAME = "org.kalypso.util.swt.messages"; //$NON-NLS-1$
 
-  public SaveAndDisposeInfoJob( final String name, final KeyInfo info )
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private WorkbenchMessages( )
   {
-    super( name );
-    m_info = info;
   }
 
-  @Override
-  public IStatus runInUIThread( final IProgressMonitor monitor )
+  public static String getString( String key )
   {
     try
     {
-      final String location = m_info.getKey().getLocation();
-      final String message = Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.0") + location + Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.1"); //$NON-NLS-1$ //$NON-NLS-2$
-      final boolean doSave = MessageDialog.openQuestion( getDisplay().getActiveShell(), Messages.getString("org.kalypso.util.pool.SaveAndDisposeInfoJob.2"), message ); //$NON-NLS-1$
-      if( doSave )
-        m_info.saveObject( monitor );
+      return RESOURCE_BUNDLE.getString( key );
     }
-    catch( final LoaderException e )
+    catch( MissingResourceException e )
     {
-      return StatusUtilities.statusFromThrowable( e );
+      return '!' + key + '!';
     }
-    finally
-    {
-      m_info.dispose();
-    }
-
-    return Status.OK_STATUS;
   }
 }

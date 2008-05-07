@@ -194,7 +194,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
         {
           try
           {
-            final Mark newMark = StyleFactory.createMark( "square" );
+            final Mark newMark = StyleFactory.createMark( "square" ); //$NON-NLS-1$
             pointSymbolizer.getGraphic().addMarksAndExtGraphic( newMark );
             setSelectionIndex( graphic.getMarksAndExtGraphics().length - 1 );
             draw();
@@ -306,7 +306,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     groupLayout.marginHeight = 2;
 
     final Group group = new Group( tabItemComposite, SWT.NULL );
-    group.setText( "" );
+    group.setText( "" ); //$NON-NLS-1$
     final GridData fillGroupData = new GridData();
     fillGroupData.widthHint = 202;
     group.setLayoutData( fillGroupData );
@@ -317,7 +317,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     if( object instanceof Mark )
     {
       final Mark mark = (Mark) object;
-      tabItem.setText( "Mark" + (markCounter++) );
+      tabItem.setText( "Mark" + (markCounter++) ); //$NON-NLS-1$
       final ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( group, MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
       wellKnownNameComboBox.addPanelListener( new PanelListener()
       {
@@ -400,7 +400,7 @@ public class PointSymbolizerLayout extends AbstractSymbolizerLayout
     else if( object instanceof ExternalGraphic )
     {
       final ExternalGraphic externalGraphic = (ExternalGraphic) object;
-      tabItem.setText( "ExtGraph" + (extGraphicCounter++) );
+      tabItem.setText( "ExtGraph" + (extGraphicCounter++) ); //$NON-NLS-1$
       UrlInputPanel urlInputPanel;
       try
       {

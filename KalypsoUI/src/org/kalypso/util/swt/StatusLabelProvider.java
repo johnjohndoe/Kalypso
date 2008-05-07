@@ -50,6 +50,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 
@@ -66,11 +67,11 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
     DF.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
   }
 
-  private static final String TIME = "time";
+  private static final String TIME = "time"; //$NON-NLS-1$
 
-  private static final String MESSAGE = "message";
+  private static final String MESSAGE = "message"; //$NON-NLS-1$
 
-  private static final String SEVERITY = "severity";
+  private static final String SEVERITY = "severity"; //$NON-NLS-1$
 
   private final Object[] m_columnProperties;
 
@@ -85,9 +86,9 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
    */
   public static void configureTableViewer( final DefaultTableViewer tableViewer )
   {
-    tableViewer.addColumn( SEVERITY, "Art", null, 30, 0, false, SWT.CENTER, false, true );
-    tableViewer.addColumn( MESSAGE, "Beschreibung", null, 500, 0, false, SWT.LEFT, true, true );
-    tableViewer.addColumn( TIME, "Zeit", null, 150, 0, false, SWT.LEFT, false, true );
+    tableViewer.addColumn( SEVERITY, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.3"), null, 30, 0, false, SWT.CENTER, false, true ); //$NON-NLS-1$
+    tableViewer.addColumn( MESSAGE, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.4"), null, 500, 0, false, SWT.LEFT, true, true ); //$NON-NLS-1$
+    tableViewer.addColumn( TIME, Messages.getString("org.kalypso.util.swt.StatusLabelProvider.5"), null, 150, 0, false, SWT.LEFT, false, true ); //$NON-NLS-1$
 
     tableViewer.setLabelProvider( new StatusLabelProvider( tableViewer.getColumnProperties() ) );
   }
@@ -95,7 +96,7 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
   /**
    * @see org.kalypso.gml.ui.jface.FeatureWrapperLabelProvider#getColumnImage(java.lang.Object, int)
    */
-  @SuppressWarnings("restriction")
+  @SuppressWarnings("restriction") //$NON-NLS-1$
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     final IStatus status = statusForElement( element );
@@ -133,7 +134,7 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
   {
     final IStatus status = statusForElement( element );
     if( status == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final Object columnProperty = m_columnProperties[columnIndex];
     if( columnProperty == MESSAGE )
@@ -145,6 +146,6 @@ public class StatusLabelProvider extends LabelProvider implements ITableLabelPro
         return ((IGeoStatus) status).getTime().toString();
     }
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 }

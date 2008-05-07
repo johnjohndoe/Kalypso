@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -112,7 +113,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     }
   }
 
-  protected static String MAP_POSITION_TEXT = "%.2f / %.2f";
+  protected static String MAP_POSITION_TEXT = "%.2f / %.2f"; //$NON-NLS-1$
 
   private IAdapterFinder<MapPanel> m_closeFinder = new EditorFirstAdapterFinder<MapPanel>();
 
@@ -161,7 +162,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
 
     /* The label. */
     m_label = new Label( m_composite, SWT.NONE );
-    m_label.setToolTipText( "Mouse map position" );
+    m_label.setToolTipText( Messages.getString("org.kalypso.ui.views.map.MapCoordinateStatusLineItem.1") ); //$NON-NLS-1$
     GridData gridData = new GridData( GridData.FILL, GridData.CENTER, true, true );
     gridData.widthHint = 175;
     m_label.setLayoutData( gridData );
@@ -188,7 +189,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     if( activePage != null )
       m_adapterListener.init( activePage );
 
-    m_updateLabelJob = new UpdateLabelJob( "Updating position label ..." );
+    m_updateLabelJob = new UpdateLabelJob( Messages.getString("org.kalypso.ui.views.map.MapCoordinateStatusLineItem.2") ); //$NON-NLS-1$
 
     return m_composite;
   }

@@ -71,29 +71,30 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author kuch
  */
 public class KalypsoScreenshotPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
-  private static final String KALYPSO_MAP_SCREENSHOT_SETTINGS = "kalypso.map.screenshot.settings";
+  private static final String KALYPSO_MAP_SCREENSHOT_SETTINGS = "kalypso.map.screenshot.settings"; //$NON-NLS-1$
 
-  private static final String DEFAULT_SCREENSHOT_WIDTH = "400";
+  private static final String DEFAULT_SCREENSHOT_WIDTH = "400"; //$NON-NLS-1$
 
-  public static final String KEY_SCREENSHOT_WIDTH = "kalypso_screenshot_width";
+  public static final String KEY_SCREENSHOT_WIDTH = "kalypso_screenshot_width"; //$NON-NLS-1$
 
-  public static final String KEY_SCREENSHOT_HEIGHT = "kalypso_screenshot_height";
+  public static final String KEY_SCREENSHOT_HEIGHT = "kalypso_screenshot_height"; //$NON-NLS-1$
 
-  public static final String KEY_SCREENSHOT_FORMAT = "kalypso_screenshot_format";
+  public static final String KEY_SCREENSHOT_FORMAT = "kalypso_screenshot_format"; //$NON-NLS-1$
 
-  public static final String KEY_SCREENSHOT_TARGET = "kalypso_screenshot_target";
+  public static final String KEY_SCREENSHOT_TARGET = "kalypso_screenshot_target"; //$NON-NLS-1$
 
-  private static final String DEFAULT_SCREENSHOT_HEIGHT = "300";
+  private static final String DEFAULT_SCREENSHOT_HEIGHT = "300"; //$NON-NLS-1$
 
-  private static final String DEFAULT_SCREENSHOT_FORMAT = "png";
+  private static final String DEFAULT_SCREENSHOT_FORMAT = "png"; //$NON-NLS-1$
 
-  private static final String DEFAULT_SCREENSHOT_TARGET = "c:\\temp";
+  private static final String DEFAULT_SCREENSHOT_TARGET = "c:\\temp"; //$NON-NLS-1$
 
   static public IPreferenceStore getPreferences( )
   {
@@ -141,8 +142,8 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
   {
     super();
 
-    setTitle( "Kalypso map screenshot settings" );
-    setDescription( "Configure your basic screenshot settings." );
+    setTitle( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.9") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.10") ); //$NON-NLS-1$
   }
 
   protected void checkPage( )
@@ -151,12 +152,12 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     final String sHeight = m_height.getText();
 
-    Pattern p = Pattern.compile( "\\d*\\D+\\d*" );
+    Pattern p = Pattern.compile( "\\d*\\D+\\d*" ); //$NON-NLS-1$
     Matcher m = p.matcher( sHeight );
     if( (sHeight == null) || m.matches() )
     {
-      setMessage( "" );
-      setErrorMessage( "Invalid screenshot height." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.13") ); //$NON-NLS-1$
 
       return;
     }
@@ -164,20 +165,20 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     final int iHeight = new Integer( sHeight );
     if( iHeight <= 0 )
     {
-      setMessage( "" );
-      setErrorMessage( "Invalid screenshot height." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.15") ); //$NON-NLS-1$
 
       return;
     }
 
     final String sWidth = m_width.getText();
 
-    p = Pattern.compile( "\\d*\\D+\\d*" );
+    p = Pattern.compile( "\\d*\\D+\\d*" ); //$NON-NLS-1$
     m = p.matcher( sWidth );
     if( (sWidth == null) || m.matches() )
     {
-      setMessage( "" );
-      setErrorMessage( "Invalid screenshot width." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.18") ); //$NON-NLS-1$
 
       return;
     }
@@ -186,8 +187,8 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     if( iWidth <= 0 )
     {
-      setMessage( "" );
-      setErrorMessage( "Invalid screenshot width." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.20") ); //$NON-NLS-1$
 
       return;
     }
@@ -195,17 +196,17 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     final ISelection selection = m_cmbFormat.getSelection();
     if( selection == null )
     {
-      setMessage( "" );
-      setErrorMessage( "Invalid screenshot export format." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.22") ); //$NON-NLS-1$
 
       return;
     }
 
     final String text = m_target.getText();
-    if( (text == null) || "".equals( text ) )
+    if( (text == null) || "".equals( text ) ) //$NON-NLS-1$
     {
-      setMessage( "" );
-      setErrorMessage( "Target directory missing." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.25") ); //$NON-NLS-1$
 
       return;
     }
@@ -213,16 +214,16 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     final File file = new File( text );
     if( !file.exists() )
     {
-      setMessage( "" );
-      setErrorMessage( "Target directory doesn't exists. Select an existing dir." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.27") ); //$NON-NLS-1$
 
       return;
     }
 
     if( !file.isDirectory() )
     {
-      setMessage( "" );
-      setErrorMessage( "Target directory isn't a directory." );
+      setMessage( "" ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.29") ); //$NON-NLS-1$
 
       return;
     }
@@ -247,7 +248,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
      * SCREENSHOTS
      ******************************************************************************************************************/
     final Group grScreen = new Group( composite, SWT.NONE );
-    grScreen.setText( "Format settings" );
+    grScreen.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.30") ); //$NON-NLS-1$
     grScreen.setLayout( new GridLayout() );
     grScreen.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -257,7 +258,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* screenshot width */
     final Label lWidth = new Label( cgrScreen, SWT.NONE );
-    lWidth.setText( "Width" );
+    lWidth.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.31") ); //$NON-NLS-1$
 
     m_width = new Text( cgrScreen, SWT.BORDER );
     m_width.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -278,7 +279,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* screenshot height */
     final Label lHeight = new Label( cgrScreen, SWT.NONE );
-    lHeight.setText( "Height" );
+    lHeight.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.32") ); //$NON-NLS-1$
 
     m_height = new Text( cgrScreen, SWT.BORDER );
     m_height.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -299,9 +300,9 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* screenshot format */
     final Label lFormat = new Label( cgrScreen, SWT.NONE );
-    lFormat.setText( "Format" );
+    lFormat.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.33") ); //$NON-NLS-1$
 
-    final String[] formats = new String[] { "jpg", "png" };
+    final String[] formats = new String[] { "jpg", "png" }; //$NON-NLS-1$ //$NON-NLS-2$
 
     m_cmbFormat = new ComboViewer( cgrScreen, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     m_cmbFormat.setContentProvider( new ArrayContentProvider() );
@@ -316,10 +317,10 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
         if( element instanceof String )
         {
           final String value = (String) element;
-          if( "jpg".equals( value ) )
-            return "JPEG";
-          else if( "png".equals( value ) )
-            return "PNG";
+          if( "jpg".equals( value ) ) //$NON-NLS-1$
+            return "JPEG"; //$NON-NLS-1$
+          else if( "png".equals( value ) ) //$NON-NLS-1$
+            return "PNG"; //$NON-NLS-1$
         }
 
         return super.getText( element );
@@ -345,12 +346,12 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
 
     /* target folder */
     final Group grTarget = new Group( composite, SWT.NONE );
-    grTarget.setText( "Storage settings" );
+    grTarget.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.40") ); //$NON-NLS-1$
     grTarget.setLayout( new GridLayout( 3, false ) );
     grTarget.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final Label lTarget = new Label( grTarget, SWT.NONE );
-    lTarget.setText( "Store into folder:" );
+    lTarget.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.41") ); //$NON-NLS-1$
 
     m_target = new Text( grTarget, SWT.READ_ONLY | SWT.BORDER );
     m_target.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -363,7 +364,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
     } );
 
     final Button bTarget = new Button( grTarget, SWT.NONE );
-    bTarget.setText( "..." );
+    bTarget.setText( Messages.getString("org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage.42") ); //$NON-NLS-1$
 
     bTarget.addSelectionListener( new SelectionAdapter()
     {
@@ -421,19 +422,19 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
   static private void checkStore( final IPreferenceStore store )
   {
     final String width = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH );
-    if( (width == null) || "".equals( width ) )
+    if( (width == null) || "".equals( width ) ) //$NON-NLS-1$
       store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_WIDTH, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
 
     final String height = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT );
-    if( (height == null) || "".equals( height ) )
+    if( (height == null) || "".equals( height ) ) //$NON-NLS-1$
       store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_HEIGHT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_HEIGHT );
 
     final String format = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT );
-    if( (format == null) || "".equals( format ) )
+    if( (format == null) || "".equals( format ) ) //$NON-NLS-1$
       store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_FORMAT, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_FORMAT );
 
     final String target = store.getString( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET );
-    if( (target == null) || "".equals( target ) )
+    if( (target == null) || "".equals( target ) ) //$NON-NLS-1$
       store.setValue( KalypsoScreenshotPreferencePage.KEY_SCREENSHOT_TARGET, KalypsoScreenshotPreferencePage.DEFAULT_SCREENSHOT_TARGET );
 
     if( store instanceof PreferenceStore )

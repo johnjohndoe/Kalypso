@@ -51,13 +51,14 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderListener;
 import org.kalypso.loader.LoaderException;
 
 public final class KeyInfo extends Job implements ILoaderListener
 {
-  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) );
+  private final static boolean DO_LOG = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.ui/debug/resourcepool/keys" ) ); //$NON-NLS-1$
 
   protected final static Logger LOGGER = Logger.getLogger( KeyInfo.class.getName() );
 
@@ -74,7 +75,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
-    super( "Lade Resource: " + key.toString() );
+    super( Messages.getString("org.kalypso.util.pool.KeyInfo.1") + key.toString() ); //$NON-NLS-1$
 
     m_key = key;
     m_loader = loader;
@@ -131,7 +132,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       if( m_object == object )
       {
         if( DO_LOG )
-          LOGGER.info( "Object " + object + " invalid for key: " + m_key );
+          LOGGER.info( Messages.getString("org.kalypso.util.pool.KeyInfo.2") + object + Messages.getString("org.kalypso.util.pool.KeyInfo.3") + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
 
         m_loader.release( m_object );
         m_object = null;
@@ -193,7 +194,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       try
       {
         if( DO_LOG )
-          LOGGER.info( "Loading object for key: " + m_key );
+          LOGGER.info( Messages.getString("org.kalypso.util.pool.KeyInfo.4") + m_key ); //$NON-NLS-1$
         m_object = m_loader.load( location, m_key.getContext(), monitor );
       }
       catch( final Throwable e )
@@ -205,7 +206,7 @@ public final class KeyInfo extends Job implements ILoaderListener
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
 
-        return StatusUtilities.statusFromThrowable( e, "Fehler beim Laden von " + location );
+        return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.util.pool.KeyInfo.5") + location ); //$NON-NLS-1$
       }
     }
 
@@ -230,14 +231,14 @@ public final class KeyInfo extends Job implements ILoaderListener
   public String toString( )
   {
     final StringBuffer b = new StringBuffer();
-    b.append( "KeyInfo:\n" );
+    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.6") ); //$NON-NLS-1$
     if( m_object != null )
-      b.append( "  pooled object (type): " + m_object.getClass().getName() + "\n" );
+      b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.7") + m_object.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else
-      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\n pooled object (type): NULL \n" );
-    b.append( "  loader (type): " + m_loader.getClass().getName() + "\n" );
-    b.append( "  key: " + m_key + "\n" );
-    b.append( "  number of listeners: " + m_listeners.size() + "\n" );
+      b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.9") ); //$NON-NLS-1$
+    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.10") + m_loader.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.12") + m_key + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.14") + m_listeners.size() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     return b.toString();
   }
 

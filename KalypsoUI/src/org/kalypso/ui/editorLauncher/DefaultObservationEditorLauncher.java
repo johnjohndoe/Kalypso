@@ -98,7 +98,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
       final IPath projectRelativePath = file.getProjectRelativePath();
 
       final PseudoTemplateEditorInput input = new PseudoTemplateEditorInput( new TemplateStorage( file,
-          ResourceUtilities.createURL( file ), "project:/" + projectRelativePath ), m_fileExtension );
+          ResourceUtilities.createURL( file ), "project:/" + projectRelativePath ), m_fileExtension ); //$NON-NLS-1$
 
       return input;
     }

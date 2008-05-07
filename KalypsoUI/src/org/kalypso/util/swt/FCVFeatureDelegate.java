@@ -107,7 +107,7 @@ public class FCVFeatureDelegate implements IFCVDelegate
       final EnumerationRestriction r = (EnumerationRestriction) restriction;
 
       final Object[] enumeration = r.getEnumeration();
-      final String[] labels = r.getLabels( "en_EN" );
+      final String[] labels = r.getLabels( "en_EN" ); //$NON-NLS-1$
 
       if( enumeration.length != labels.length )
         throw new NotImplementedException();

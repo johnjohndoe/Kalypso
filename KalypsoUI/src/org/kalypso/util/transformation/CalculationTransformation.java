@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.java.lang.CatchThread;
+import org.kalypso.i18n.Messages;
 
 /**
  * @deprecated use ant task instead in your model-configuration
@@ -65,10 +66,10 @@ import org.kalypso.contribs.java.lang.CatchThread;
 public class CalculationTransformation extends AbstractTransformation
 {
   /** Dateiname für das Ergebnis */
-  public static final String PROP_OUTPUT = "output";
+  public static final String PROP_OUTPUT = "output"; //$NON-NLS-1$
 
   /** Key/Value Paare */
-  public static final String PROP_ENTRY = "entry";
+  public static final String PROP_ENTRY = "entry"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.util.transformation.AbstractTransformation#transformIntern(java.util.Properties, java.io.BufferedWriter, java.io.BufferedWriter, org.eclipse.core.runtime.IProgressMonitor)
@@ -86,7 +87,7 @@ public class CalculationTransformation extends AbstractTransformation
       {
         protected void runIntern() throws Throwable
         {
-          targetProperties.store( pos, "Steuerparameter der Berechnung" );
+          targetProperties.store( pos, Messages.getString("org.kalypso.util.transformation.CalculationTransformation.2") ); //$NON-NLS-1$
           pos.close();
         }
       };

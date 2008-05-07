@@ -125,7 +125,7 @@ public class ColorChooserPanel
     colorChooserButtonData.left = new FormAttachment( 540, 1000, 0 );
     colorChooserButtonData.top = new FormAttachment( 100, 1000, 0 );
     colorChooserButton.setLayoutData( colorChooserButtonData );
-    colorChooserButton.setText( "..." );
+    colorChooserButton.setText( "..." ); //$NON-NLS-1$
 
     final ColorDialog dialog = new ColorDialog( composite.getShell() );
     dialog.setRGB( color.getRGB() );

@@ -56,9 +56,9 @@ public class LogicalFilterComboPanel extends FilterComboPanel
   {
     super( parent );
     items = new String[3];
-    items[0] = "AND";
-    items[1] = "OR";
-    items[2] = "NOT";
+    items[0] = "AND"; //$NON-NLS-1$
+    items[1] = "OR"; //$NON-NLS-1$
+    items[2] = "NOT"; //$NON-NLS-1$
     init();
   }
 

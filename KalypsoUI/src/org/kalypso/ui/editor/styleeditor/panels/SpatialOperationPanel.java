@@ -38,27 +38,27 @@ import org.eclipse.swt.widgets.Composite;
 public class SpatialOperationPanel extends FilterComboPanel
 {
 
-  public static final String EQUALS = "EQUALS";
+  public static final String EQUALS = "EQUALS"; //$NON-NLS-1$
 
-  public static final String TOUCHES = "TOUCHES";
+  public static final String TOUCHES = "TOUCHES"; //$NON-NLS-1$
 
-  public static final String WITHIN = "WITHIN";
+  public static final String WITHIN = "WITHIN"; //$NON-NLS-1$
 
-  public static final String OVERLAPS = "OVERLAPS";
+  public static final String OVERLAPS = "OVERLAPS"; //$NON-NLS-1$
 
-  public static final String CROSSES = "CROSSES";
+  public static final String CROSSES = "CROSSES"; //$NON-NLS-1$
 
-  public static final String INTERSECTS = "INTERSECTS";
+  public static final String INTERSECTS = "INTERSECTS"; //$NON-NLS-1$
 
-  public static final String CONTAINS = "CONTAINS";
+  public static final String CONTAINS = "CONTAINS"; //$NON-NLS-1$
 
-  public static final String DWITHIN = "DWITHIN";
+  public static final String DWITHIN = "DWITHIN"; //$NON-NLS-1$
 
-  public static final String BEYOND = "BEYOND";
+  public static final String BEYOND = "BEYOND"; //$NON-NLS-1$
 
-  public static final String BBOX = "BBOX";
+  public static final String BBOX = "BBOX"; //$NON-NLS-1$
 
-  public static final String DISJOINT = "DISJOINT";
+  public static final String DISJOINT = "DISJOINT"; //$NON-NLS-1$
 
   public SpatialOperationPanel( Composite parent )
   {

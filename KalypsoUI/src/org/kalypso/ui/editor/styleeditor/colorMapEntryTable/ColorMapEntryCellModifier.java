@@ -97,10 +97,10 @@ public class ColorMapEntryCellModifier implements ICellModifier
           .getRGB();
       break;
     case 3: // OPACITY
-      result = colorMapEntry.getOpacity() + "";
+      result = colorMapEntry.getOpacity() + ""; //$NON-NLS-1$
       break;
     default:
-      result = "";
+      result = ""; //$NON-NLS-1$
     }
     return result;
   }
@@ -127,7 +127,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
     case 1: // VALUE
       valueString = ( (String)value ).trim();
       if( valueString.length() == 0 )
-        valueString = "0";
+        valueString = "0"; //$NON-NLS-1$
       colorMapEntry.setQuantity( Double.parseDouble( valueString ) );
       break;
     case 2: // COLOR
@@ -136,7 +136,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
     case 3: // OPACITY
       valueString = ( (String)value ).trim();
       if( valueString.length() == 0 )
-        valueString = "0";
+        valueString = "0"; //$NON-NLS-1$
       double opacity = Double.parseDouble( valueString );
       if( opacity <= 1 && opacity >= 0 )
       {

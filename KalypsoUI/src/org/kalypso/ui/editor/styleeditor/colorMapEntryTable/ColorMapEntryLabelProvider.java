@@ -59,7 +59,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
    */
   public String getColumnText( Object element, int columnIndex )
   {
-    String result = "";
+    String result = ""; //$NON-NLS-1$
     ColorMapEntry colorMapEntry = (ColorMapEntry) element;
     switch( columnIndex )
     {
@@ -67,13 +67,13 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
         result = colorMapEntry.getLabel();
         break;
       case 1:
-        result = colorMapEntry.getQuantity() + "";
+        result = colorMapEntry.getQuantity() + ""; //$NON-NLS-1$
         break;
       case 2:
         // no label
         break;
       case 3:
-        result = colorMapEntry.getOpacity() + "";
+        result = colorMapEntry.getOpacity() + ""; //$NON-NLS-1$
         break;
       default:
         break;
