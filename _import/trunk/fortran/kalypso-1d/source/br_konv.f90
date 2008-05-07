@@ -1,4 +1,4 @@
-!     Last change:  MD   12 Mar 2008    4:02 pm
+!     Last change:  MD    7 May 2008    9:12 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -250,6 +250,8 @@ CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q
 INTEGER, INTENT(IN)            :: nr_q_out
 
 
+
+
 IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
   write (UNIT_OUT_LOG, 20) staso, str1, q, q1, nprof, hr, rg, hvst, hrst
   20 format (//1X, 'Subroutine BR_KONV', /, &
@@ -356,6 +358,7 @@ i1 = iokl
 i2 = iokl + npl
 
 !JK   WENN BERECHNUNG NACH DARCY-WEISBACH
+!MD   Entfernen aller Bewuchselemente in der Brueckenoeffnung
 if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
   DO i = i1, i2
     ax (i) = 0.0
@@ -364,6 +367,7 @@ if (FLIESSGESETZ == 'DW_M_FORMBW' .or. FLIESSGESETZ == 'DW_O_FORMBW') then
   END DO
 ENDIF
 
+!MD   Zuweisen der Ersatzrauheit ks=raub in der Bruecke
 IF (iokl.gt.1) then
   DO i = 1, iokl
     raul (i) = rau (i)
@@ -439,11 +443,12 @@ ENDIF
 
 nknot = i2
 
-!  erniedrigen der profilwerte profil '1' um (hmin-hsuw)
+!  Absenken der profilwerte profil '1' um d1 = (hmin-hsuw)
 !  --> profilwerte profil '3'
-
+! -----------------------------------------------------
 d1 = hmin - hsuw
 hminn = 1000.
+
 
 DO i = 1, nknot
 
@@ -470,6 +475,9 @@ END DO
             &  'ax=', F6.2, '  ay=', F6.2, '  dp=', F6.2)
 31 format (1X, 'i=', I3,'  x1=', F10.3, '  h1=', F10.3, '  rau=', F8.3)
 
+
+!MD  Absenken der Geometrie im Profil 3 (UW Brücke) um die Differenz d1 zwischen der
+!MD  tiefste Sohlhoehe in Profil 1 (OW Brücke) hmin und der ggbn Sohle im Unterwasser hsuw
 hsohl = hmin - d1
 hmax = hmax - d1
 
@@ -519,6 +527,10 @@ ENDIF
 !  s(i)  = s_orig(i)
 !end do
 
+
+!MD Normale Profilberechnung im Unterwasser-Profil 3 der Brücke
+!MD  ohne Druckanfluss oder aehnliches
+! ----------------------------------------------------------------------
 CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, indmax, &
             & psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
 
@@ -608,25 +620,16 @@ CALL intdat (staso, ifehl)
 !** schiessen            nblatt=nblatt+1
 !** schiessen            call kopf(nblatt,nz,jw5,jw7,idr1)
 !** schiessen          endif
-
-
 !** schiessen         write(jw5,15)
 !** schiessen15  format(/,t10,'schiessende stroemung im uw-profil/pr."3"
 !** schiessen    +       ',/,t10,'--> weiter mit Impulsberechung  ')
-
-
 !** schiessen          goto 200
 !** schiessen      endif
 !
 !      stroemen:
-
-
 !**      if (hr3.ge.hukmax) then
-
 !     brueckenberechnung konventionelle methode:
-
 !        geometrie im uw-profil '3':
-
 !**
 !***********************************************************************
 
@@ -635,18 +638,12 @@ CALL intdat (staso, ifehl)
 
 !JK     SCHREIBEN IN KONTROLLFILE
 WRITE (UNIT_OUT_LOG, '(/,''anfangsgeometrie im uw-profil'',/)')
-
-!WP
-!write (UNIT_OUT_LOG,*) 'Zeile 533 in brkon, Starte GEOMET!'
-
+!WP  write (UNIT_OUT_LOG,*) 'Zeile 533 in brkon, Starte GEOMET!'
 
 CALL geomet (hr3, x1, h1, hdif, hsohl, nknot, il, ir, q, wl3, rhy, ifehl2)
-!WP
-!write (UNIT_OUT_LOG,*) 'Zeile 538 in brkon, Ende GEOMET!'
-
+!WP  write (UNIT_OUT_LOG,*) 'Zeile 538 in brkon, Ende GEOMET!'
 
 aue3 = aue
-
 ! energiehoehe im uw --> he3
 
 vm = q / fges
@@ -658,6 +655,13 @@ IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
   33 format (1X, 'AUE3 = ', F12.5, '  VM = ', F12.5, ' q = ', F12.5, ' FGES = ', F12.5)
 ENDIF
 
+
+
+
+! -----------------------------------------------------------------------------------
+!MD  Berechnungen im Oberwasser der Brücke: Profil 1
+!MD   mit Druck bzw. Wehrabfluss und Abflussaufteilung (siehe CALL abfluss)
+! -----------------------------------------------------------------------------------
 
 ! 1.te Schaetzung: he1=he3
 ! ------------------------
@@ -704,7 +708,18 @@ IF (ifehl2.ne.0) then
   WRITE (UNIT_OUT_LOG, '(''stop in bruecke_konv'')')
   WRITE (UNIT_OUT_LOG, '(''Korrektur der Hoehe heb um -dx/10.'')')
 
-  heb = heb - dx / 10.
+
+! MD: 05.05.2008  AUSKOMMENTIERT
+! -----------------------------------
+!   heb = heb - dx / 10.
+
+! MD: 05.05.2008  heb liegt schon am Minimum (=he3)
+! MD:         weiteres Absenken --> Programmabbruch
+! -----------------------------------------------------
+  heb = heb + dx / 10.
+!------------------------------------------------------
+
+
   IF (ibiter.gt.itbmax) then
     !JK  SCHREIBEN IN KONTROLLFILE
     WRITE (UNIT_OUT_LOG, '(''auch nach wiederholter Korrektur.'')')
@@ -729,6 +744,7 @@ isch = isch + 1
 
 !MD CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, hr3, qd,  &
 !MD            & qw, qgesb, aue3, wl3, iartb)
+
 
 !JK      SCHREIBEN IN KONTROLLFILE
 IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
@@ -782,10 +798,11 @@ heaa = - 1000.
 
 
 
-
-!JK  ---------------------------------------------------------------------------------
-!JK  ITERATIONSSCHLEIFE ZUR BERECHNUNG DER ENERGIEHOEHE
-!JK  ---------------------------------------------------------------------------------
+!  ---------------------------------------------------------------------------------
+!
+!  ITERATIONSSCHLEIFE ZUR BERECHNUNG DER ENERGIEHOEHE
+!
+!  ---------------------------------------------------------------------------------
 
 DO 100 i = 1, itmax_brkon
 
@@ -796,10 +813,12 @@ DO 100 i = 1, itmax_brkon
   dfq = abs (q - qgesa)
   dfh = abs (heaa - heb)
 
+
+  !MD  Wenn Abweichung der Abflüsse Q und Qges,a minimal
+  !-------------------------------------------------------
   IF ( dfq .le. (q/100.) ) then
 
     !write (*,*) 'In BR_KONV. dfq < q/100!'
-
     ! Energiehoehe gefunden --> weiter mit hr1=he
     hr1 = hea
 
@@ -807,14 +826,12 @@ DO 100 i = 1, itmax_brkon
       IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
       ENDIF
-
       !JK  ZUR IMPULSBERECHNUNG
       GOTO 200
 
     ENDIF
 
     IF (iartt.eq.0) then
-
       !JK   SCHREIBEN IN KONTROLLFILE
       IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '('' --> weiter mit hr1 = '',f7.3)') hr1
@@ -829,9 +846,7 @@ DO 100 i = 1, itmax_brkon
 
         !JK  UEBERFALLFLAECHE => DRUCKABFLUSS+WEHRABFLUSS
         IF (aue.gt.1.e-04) then
-
           nz = nz + 6
-
           IF (nz.gt.50) then
             nblatt = nblatt + 1
             CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -847,7 +862,6 @@ DO 100 i = 1, itmax_brkon
         !JK  KEINE UEBERFALLFLAECHE => DRUCKABFLUSS
         ELSE
           nz = nz + 6
-
           IF (nz.gt.50) then
             nblatt = nblatt + 1
             CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -885,21 +899,22 @@ DO 100 i = 1, itmax_brkon
     ENDIF
 
 
+
   !JK  ELSEIF ZU (dfq.le.q/100.)
+  !MD  Wenn Abweichung der Energiehoehen heaa und hea minimal
+  !---------------------------------------------------------
   ELSEIF (abs (dfh) .le.0.01) then
 
     ! Iteration hat in Bezug auf Wasserspiegel konvergiert.
     hr1 = heb
 
     IF (hr1 .le. hukmax) then
-
       !JK   SCHREIBEN IN KONTROLLFILE
       IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax --> weiter mit impuls'')')
       ENDIF
       !JK  ZU IMPULSBERECHNUNG
       GOTO 200
-
     ENDIF
 
     IF (iartt.eq.0) then
@@ -921,7 +936,6 @@ DO 100 i = 1, itmax_brkon
         !JK  UEBERFALLFLAECHE => DRUCKABFLUSS+WEHRABFLUSS
         IF (aue.gt.1.e-04) then
           nz = nz + 6
-
           IF (nz.gt.50) then
             nblatt = nblatt + 1
             CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -936,9 +950,7 @@ DO 100 i = 1, itmax_brkon
 
         !JK  KEINE UEBERFALLFLAECHE => DRUCKABFLUSS
         ELSE
-
           nz = nz + 6
-
           IF (nz .gt. 50) then
             nblatt = nblatt + 1
             CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -975,6 +987,7 @@ DO 100 i = 1, itmax_brkon
     ENDIF
 
 
+
   !JK  ELSEIF ZU (dfq.le.q/100.)
   ELSEIF (i.eq.1 .and. qgesa.gt.q) then
 
@@ -993,7 +1006,13 @@ DO 100 i = 1, itmax_brkon
     !JK  ZU IMPULSBERECHNUNG
     GOTO 200
 
+
+
+
+
   !JK   ELSE ZU (dfq.le.q/100.)
+  !MD  Wenn weder dif_Q noch dif_h klein genug --> Schaetzen neuer Startwerte fuer hea und heb
+  !-----------------------------------------------------------------------------------------
   ELSE
 
     ! Schaetzung neue energiehoehe:
@@ -1001,9 +1020,16 @@ DO 100 i = 1, itmax_brkon
 
     110 CONTINUE
 
+    ! MD: 05.05.2008: Neue Differenzbildung innerhalb der Scheife
+    !------------------------------------------------------------
+    qdif2 = qgesb - q
+    ! MD: 05.05.2008
+    !------------------------------------------------------------
+
     qdif1 = qgesa - q
 
     !JK  WENN NULLSTELLE
+    !MD   Wenn der gesuchte Abfluss zwischen Qges,a und Qges,b
     IF ( (qdif1.gt.0.and.qdif2.lt.0) .or. (qdif1.lt.0.and.qdif2.gt.0) ) then
 
       heaa = hea
@@ -1014,7 +1040,6 @@ DO 100 i = 1, itmax_brkon
         hr1 = heb
 
         IF (hr1 .le. hukmax) then
-
           !JK   SCHREIBEN IN KONTROLLFILE
           IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(''energiehoehe tiefer hukmax -->'', &
@@ -1026,7 +1051,6 @@ DO 100 i = 1, itmax_brkon
         ENDIF
 
         IF (iartt.eq.0) then
-
           !JK   SCHREIBEN IN KONTROLLFILE
           IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(''Konvergenz im Wasserspiegel erreicht.'')')
@@ -1043,7 +1067,6 @@ DO 100 i = 1, itmax_brkon
             !JK  UEBERFALLFLAECHE => DRUCKABFLUSS + WEHRABFLUSS
             IF (aue.gt.1.e-04) then
               nz = nz + 6
-
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
                 CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -1060,7 +1083,6 @@ DO 100 i = 1, itmax_brkon
             !JK   KEINE UEBERFALLFLAECHE => DRUCKABLUSS
             ELSE
               nz = nz + 6
-
               IF (nz.gt.50) then
                 nblatt = nblatt + 1
                 CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -1080,13 +1102,11 @@ DO 100 i = 1, itmax_brkon
 
         !JK   ELSE ZU (iartt.eq.0)
         ELSE
-
           !JK  SCHREIBEN IN KONTROLLFILE
           IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(''unvollkommener ueberfall'',/)')
             WRITE (UNIT_OUT_LOG, '(''--> weiter mit impuls'',/)')
           ENDIF
-
           !JK   ZU IMPULSBERECHNUNG
           GOTO 200
 
@@ -1096,14 +1116,68 @@ DO 100 i = 1, itmax_brkon
       !JK  ENDIF ZU (abs(dfh) .le. 0.01)
       ENDIF
 
-      hea = hea + 0.1 * (heb - hea)
+
+! MD: 05.05.2008  AUSKOMMENTIERT
+! -----------------------------------
+!      hea = hea + 0.1 * (heb - hea)
+
+
+
+      ! MD: 05.05.2008 Verbesserung der Anpassung der neuen
+      ! MD:            Schaetzwerte fuer hea und heb
+      ! ------------------------------------------------------------
+      df = (qgesa - qgesb) / (hea - heb)
+
+      IF (abs (df) .lt.1.e-04) then
+
+        IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+          WRITE (UNIT_OUT_LOG, '(''df--> 0! --> hea = hea+ 0.1*(heb-hea)'')')
+        ENDIF
+
+        IF (ABS(qdif2).ge.ABS(qdif1)) THEN  ! Wenn hea und Qges,a naeher dran
+          heb = heb + 0.1 * (hea - heb)      !  --> heb wird nach rechts verschoben
+
+        Elseif (ABS(qdif2).lt.ABS(qdif1)) THEN  ! Wenn heb und Qges,b naeher dran
+          hea = hea + 0.1 * (heb - hea)         !  --> hea wird nach links verschoben
+        END IF
+
+      ELSE
+        ! Geradengleichung der tangente und schnitt mit Sollwert q:
+        IF (ABS(qdif2).ge.ABS(qdif1)) THEN  ! Wenn hea und Qges,a naeher dran
+          heb = heb + (q - qgesb) / df      !  --> heb wird nach rechts verschoben
+        Elseif (ABS(qdif2).lt.ABS(qdif1)) THEN  ! Wenn heb und Qges,b naeher dran
+          hea = hea + (q - qgesa) / df         !  --> hea wird nach links verschoben
+        END IF
+
+      Endif
+
+      IF (hea.le.he3) THEN
+        hea = he3 + (dx / 10.)
+      END IF
+
+      IF (heb.lt.he3) THEN
+        heb = he3 + (dx / 1000.)
+      END IF
+      ! -----------------------------------------------------------
+
 
       CALL geomet (hea, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
 
       isch = isch + 1
-
       CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3, &
              & qd, qw, qgesa, aue3, wl3, iartt)
+
+
+      ! MD: 05.05.2008  Neuberechnung auch fuer neue Energiehoehe heb
+      ! -------------------------------------------------------------------------
+      CALL geomet (heb, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
+
+      isch = isch + 1
+      CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, &
+             & qd, qw, qgesb, aue3, wl3, iartt)
+      ! -------------------------------------------------------------------------
+
+
 
       !JK   SCHREIBEN IN KONTROLLFILE
       IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
@@ -1111,35 +1185,99 @@ DO 100 i = 1, itmax_brkon
         WRITE (UNIT_OUT_LOG, '(i2,1x,7(f8.3,1x))') isch, ad, aue, wl, hea, qd, qw, qgesa
       ENDIF
 
+
+
+! MD: 05.05.2008  AUSKOMMENTIERT
+!   Kann zu Endlosschleife fuehren
+!------------------------------------
       !JK  ZU NULLSTELLE
-      GOTO 110
+!      GOTO 110
+! MD: 05.05.2008  AUSKOMMENTIERT
+
+
+
+
 
     !JK   ELSE ZU NULLSTELLE
+    !MD   Wenn Wert Q nicht zwischen Qges,a und Qges,b
+    ! ------------------------------------------------------------------
     ELSE
 
+
+      ! MD: 05.05.2008 Auskommentiert
+      !----------------------------------------------------------
+!      df = (qgesa - qgesb) / (hea - heb)
+!      heb = hea
+!      iartb = iartt
+!      qgesb = qgesa
+!
+!      IF (abs (df) .lt.1.e-04) then
+!
+!        !JK  SCHREIBEN IN KONTROLLFILE
+!        IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
+!          WRITE (UNIT_OUT_LOG, '(''df--> 0! --> he1=he1+0.1'')')
+!        ENDIF
+!        hea = hea + 0.1
+!
+!      ELSE
+!
+!        ! Geradengleichung der tangente und schnitt mit Sollwert q:
+!        hea = hea + (q - qgesa) / df
+!
+!        IF (heaa.gt.0) then
+!          IF (heaa.lt.hea) hea = heaa
+!        ENDIF
+!
+!      ENDIF
+      ! MD: 05.05.2008 Auskommentiert
+      !-----------------------------------------------------------
+
+
+
+      ! MD: 05.05.2008  Verbesserung der Anpassung der neuen
+      ! MD:             Schaetzwerte fuer hea und heb
+      ! -------------------------------------------------------------
+
+      ! Steiguung der Geraden zwischen hea und heb
       df = (qgesa - qgesb) / (hea - heb)
-      heb = hea
-      iartb = iartt
-      qgesb = qgesa
 
       IF (abs (df) .lt.1.e-04) then
 
-        !JK  SCHREIBEN IN KONTROLLFILE
         IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
-          WRITE (UNIT_OUT_LOG, '(''df--> 0! --> he1=he1+0.1'')')
+          WRITE (UNIT_OUT_LOG, '(''df--> 0! --> hea = hea+ 0.1*(heb-hea)'')')
         ENDIF
-        hea = hea + 0.1
+
+        IF (ABS(qdif2).ge.ABS(qdif1)) THEN  ! Wenn hea und Qges,a naeher dran (Q rechts von hea)
+          heb = hea                !  --> heb wird zum Wert hea (nach rechs auf x-Achse) verschoben
+          hea = hea + (dx / 10.)      !  --> hea wird weiter nach rechts verschoben
+
+        Elseif (ABS(qdif2).lt.ABS(qdif1)) THEN  ! Wenn heb und Qges,b naeher dran (Q links von heb)
+          hea = heb                 !  --> hea wird zum Wert heb (nach links auf x-Achse) verschoben
+          heb = heb - (dx / 10.)       !  --> heb wird nach links verschoben
+        END IF
 
       ELSE
-
         ! Geradengleichung der tangente und schnitt mit Sollwert q:
-        hea = hea + (q - qgesa) / df
+        IF (ABS(qdif2).ge.ABS(qdif1)) THEN  ! Wenn hea und Qges,a naeher dran (Q rechts von hea)
+          heb = hea
+          hea = hea + (q - qgesa) / df      !  --> hea wird nach rechts verschoben
 
-        IF (heaa.gt.0) then
-          IF (heaa.lt.hea) hea = heaa
-        ENDIF
+        Elseif (ABS(qdif2).lt.ABS(qdif1)) THEN  ! Wenn heb und Qges,b naeher dran  (Q links von heb)
+          hea = heb
+          heb = heb + (q - qgesb) / df      !  --> heb wird nach links verschoben
+        END IF
 
-      ENDIF
+      Endif
+
+      IF (hea.le.he3) THEN
+        hea = he3 + (dx / 10.)
+      END IF
+
+      IF (heb.lt.he3) THEN
+        heb = he3 + (dx / 1000.)
+      END IF
+      ! --------------------------------------------------
+
 
     !JK  ENDIF ZU NULLSTELLE
     ENDIF
@@ -1151,6 +1289,19 @@ DO 100 i = 1, itmax_brkon
     isch = isch + 1
     CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, hea, he3,  &
      & qd, qw, qgesa, aue3, wl3, iartt)
+
+
+
+    ! MD: 05.05.2008  Neuberechnung auch fuer neue Energiehoehe heb
+    ! -------------------------------------------------------------------------
+    CALL geomet (heb, x1, h1, hdif, hsohl, nknot, il, ir, q, wl, rhy, ifehl2)
+
+    isch = isch + 1
+    CALL abfluss (ad, aue, apg, wl, rhy, raub, breite, heb, he3, &
+             & qd, qw, qgesb, aue3, wl3, iartt)
+    ! -------------------------------------------------------------------------
+
+
 
     !JK  SCHREIBEN IN KONTROLLFILE
     IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
@@ -1176,6 +1327,8 @@ DO 100 i = 1, itmax_brkon
   !JK   ENDIF ZU (dfq.le.q/100.)
   ENDIF
 
+  !--> Weiter in der DO-Schleife
+
 !JK   ENDE ITERATION ---------------------------------------------                      
 100 END DO
                                                                         
@@ -1188,7 +1341,16 @@ WRITE (UNIT_OUT_LOG, '(''maximale anzahl der iterationsschritte ueberschritten =
 
 
 
-! Brueckenberechnung mit impulsgleichung:
+
+
+
+
+!  ---------------------------------------------------------------------------------
+!
+!  ITERATIONSSCHLEIFE ZUR BERECHNUNG MIT IMPULSBILANZ
+!
+!  ---------------------------------------------------------------------------------
+
 
 200 CONTINUE
 
@@ -1201,7 +1363,6 @@ iart = 3
 iartt = 0
 
 ! /* kennung fuer die art der Impulsgleichung
-
 ! print *,'impulsberechnung profil 3'
 
 IF ( (hr3 - hsohl) .le.0.0001) then
@@ -1294,15 +1455,14 @@ ELSE
   ENDIF
 
 
+
   ! ************************************************
   ! impulsberechnung profil '2'
   ! *************************************************
-  ! impulsberechnung in profil '2' --> kontrolle der
-  ! fliesszustaende im brueckenbereich
 
+  ! impulsberechnung in profil '2' --> kontrolle der fliesszustaende im brueckenbereich
   ! mittels impuls m3 auf profil '3' -->  berechnung der fliess-
-  ! tiefe in profil '2' mittels impulsgleichung:
-  !               m3 = m2 !!
+  ! tiefe in profil '2' mittels impulsgleichung: m3 = m2 !!
 
   ! Iterativer prozess:
   hdif = hokmax - hsuw
@@ -1352,15 +1512,15 @@ ELSE
 
   ENDIF
 
+
+
   ! ************************************************
   ! impulsberechnung profil '1'
   ! *************************************************
 
   ! mittels impuls m3 auf profil '3' -->  berechnung der fliess-
-  ! tiefe in profil '1' mittels impulsgleichung:
-  ! m3 = m1 !!
-
-  !  profil '1' --> ow-profil !!
+  ! tiefe in profil '1' mittels impulsgleichung: m3 = m1 !!
+  ! profil '1' --> ow-profil !!
 
   8000 continue
 
@@ -1400,11 +1560,19 @@ ELSE
     WRITE (UNIT_OUT_LOG, '(/,t10,''ad  aue apl  apg '',/,t10,4f10.3)') ad, aue, apl, apg
   ENDIF
 
+
+
+
+  ! ************************************************
+  ! Auswertung aller Ergbenisse aus impulsberechnung
+  ! *************************************************
+
+  ! MD: Wenn Druckabfluss unter der Bruecke --> Ausgabe
+  ! -------------------------------------------------------------------
   IF (hr1.ge.hukmax.or.hr2.ge.hukmax.or.hr3.ge.hukmax) then
 
     !write (*,*) 'In BR_KONV. Typ = Druckabfluss'
-
-    !  druckabfluss
+    ! druckabfluss
 
     !JK   SCHREIBEN IN KONTROLLFILE
     IF (Q_Abfrage.ne.'BR_SCHLEIFE') then
@@ -1427,11 +1595,14 @@ ELSE
     ENDIF
     nz = nz + 2
 
+
+  !MD: Wenn kein Druckabfluss, also freier Abfluss unter der Bruecke
+  !MD   --> Schießende Strömung oder Strömen mit Pfeilerstau nach Yarnell
+  ! --------------------------------------------------------------------
   !JK      ELSE ZU DRUCKABFLUSS
   ELSE
 
     !write (*,*) 'In BR_KONV. Typ = kein Druckabfluss'
-
     ! Kontrolle, ob schiessende stroemung in '2'
 
     !JK  SCHREIBEN IN KONTROLLFILE
@@ -1463,6 +1634,8 @@ ELSE
       nz = nz + 2
       CONTINUE
 
+
+    !MD  Strömen mit Pfeilerstau nach Yarnell
     !JK        ELSE ZU (froud.ge.1.)
     ELSE
 
@@ -1514,9 +1687,7 @@ ELSE
 
           !JK  SCHREIBEN IN KONTROLLFILE
           write (UNIT_OUT_LOG, 13)
-
           nz = nz + 2
-
           IF (nz.gt.50) then
             nblatt = nblatt + 1
             CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -1531,9 +1702,7 @@ ELSE
 
         !JK  SCHREIBEN IN KONTROLLFILE
         write (UNIT_OUT_LOG, 13)
-
         nz = nz + 2
-
         IF (nz.gt.50) then
           nblatt = nblatt + 1
           CALL kopf (nblatt, nz, UNIT_OUT_TAB, UNIT_OUT_PRO, idr1)
@@ -1556,6 +1725,9 @@ ENDIF
 
 
 
+
+!MD Sprungmarke zur Endauswertung bzw. Sonderbehandlung des unvollkommenen Überfalls bzw. Überströmens
+! -------------------------------------------------------------------------------------------------------
 9999 CONTINUE
 
 !write (*,*) 'In BR_KONV. Sprungmarke 9999. IARTT = ', iartt
