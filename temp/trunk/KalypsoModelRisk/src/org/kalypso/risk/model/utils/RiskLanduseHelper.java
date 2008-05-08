@@ -252,7 +252,7 @@ public class RiskLanduseHelper
             if( nameList != null && nameList.size() > 0 )
             {
               final String landuseClassName = nameList.get( 0 );
-              final Double assetValue = new Double( featureMember.getProperty( propValue ).toString() );
+              final Double assetValue = Double.valueOf( featureMember.getProperty( propValue ).toString() );
 
               /* create new landuse classes */
               // if( !controlModel.containsLanduseClass( landuseClassName ) )
