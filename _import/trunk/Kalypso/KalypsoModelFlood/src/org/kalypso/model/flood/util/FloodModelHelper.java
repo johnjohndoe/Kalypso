@@ -222,8 +222,14 @@ public class FloodModelHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
+      final String themeProp = kalypsoTheme.getProperty( "themeId", "" );
+
       // REMARK: not nice, but not otherwise possible: use name to find the theme.
+      // changed into check of the theme properties (this code is left for compatibility purposes)
       if( kalypsoTheme instanceof AbstractCascadingLayerTheme && kalypsoTheme.getName().getKey().equals( "Wasserspiegellagen" ) )
+        return (AbstractCascadingLayerTheme) kalypsoTheme;
+
+      else if( kalypsoTheme instanceof AbstractCascadingLayerTheme && themeProp.equals( "waterlevelThemes" ) )
         return (AbstractCascadingLayerTheme) kalypsoTheme;
     }
 
