@@ -51,11 +51,15 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
     {
       final IKalypsoTheme[] themes = mapModell.getAllThemes();
       for( final IKalypsoTheme element : themes )
-        if( element.getName().getKey().equals( "Risikozonen (gerastert)" ) ) //$NON-NLS-1$
+      {
+        final String themeProperty = element.getProperty( "themeId", "" );
+        // check below is because of downgrade purposes
+        if( themeProperty.equals( "riskZonesGridTheme" ) || element.getName().getKey() == "Risikozonen (gerastert)" || element.getName().getKey() == "Risikozonen (raster)" )
         {
           mapModell.activateTheme( element );
           break;
         }
+      }
     }
 
     final CoverageManagementWidget coverageManagementWidget = new CoverageManagementWidget( Messages.getString( "ExportRiskZoneCoveragesWidgetHandler.3" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -72,5 +76,4 @@ public class ExportRiskZoneCoveragesWidgetHandler extends AbstractHandler implem
 
     return null;
   }
-
 }

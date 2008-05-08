@@ -32,6 +32,7 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.CascadingKalypsoTheme;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.risk.Messages;
@@ -61,59 +62,6 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class RiskModelHelper
 {
-  /**
-   * gets the {@link CascadingKalypsoTheme} with the given name
-   * 
-   * @param mapModell
-   *            map modell
-   * @param name
-   *            name of the theme
-   * @return
-   * 
-   * @deprecated use the theme properties instead
-   */
-  @Deprecated
-  public static CascadingKalypsoTheme getCascadingTheme( final GisTemplateMapModell mapModell, final String name )
-  {
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( name ) ) //$NON-NLS-1$
-        return (CascadingKalypsoTheme) kalypsoTheme;
-    }
-    return null;
-  }
-
-  /**
-   * gets the {@link CascadingKalypsoTheme} with the given name or property
-   * 
-   * @param mapModell
-   *            map modell
-   * @param name
-   *            name of the theme
-   * @param property
-   *            id property of the theme
-   * @return
-   */
-  public static CascadingKalypsoTheme getCascadingTheme( final GisTemplateMapModell mapModell, final String name, final String property )
-  {
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" );
-
-      // REMARK: not nice, but not otherwise possible: use name to find the theme.
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( name ) ) //$NON-NLS-1$
-        return (CascadingKalypsoTheme) kalypsoTheme;
-
-      // changed into check of the theme properties (the code above is left for compatibility purposes)
-      // TODO: find a solution in order to upgrade maps of old projects, so that they get the porperties set.
-      else if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( property ) )
-        return (CascadingKalypsoTheme) kalypsoTheme;
-    }
-
-    return null;
-  }
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
@@ -498,7 +446,8 @@ public class RiskModelHelper
   {
     /* get cascading them that holds the damage layers */
     final String damageThemeProperty = "damagePotentialThemes";
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ), damageThemeProperty ); //$NON-NLS-1$
+
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ), damageThemeProperty );
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -529,7 +478,7 @@ public class RiskModelHelper
   {
     /* get cascading them that holds the damage layers */
     final String depthThemeProperty = "depthGridThemes";
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ), depthThemeProperty ); //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ), depthThemeProperty );
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
