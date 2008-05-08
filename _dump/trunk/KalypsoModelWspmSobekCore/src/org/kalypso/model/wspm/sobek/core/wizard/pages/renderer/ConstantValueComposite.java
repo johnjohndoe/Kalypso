@@ -170,7 +170,7 @@ public class ConstantValueComposite extends Composite
 
   public Double getConstValue( )
   {
-    return Double.valueOf( m_constant.getText() );
+    return Double.valueOf( m_constant.getText().replaceAll( ",", "." ) );
   }
 
   public Integer getConstValueIntervall( )
