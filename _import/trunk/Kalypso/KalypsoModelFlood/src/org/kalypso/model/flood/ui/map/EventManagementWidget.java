@@ -129,6 +129,7 @@ import org.kalypso.model.flood.ui.map.operations.ImportTinOperation;
 import org.kalypso.model.flood.ui.map.operations.RemoveEventOperation;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.GisTemplateUserStyle;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -139,6 +140,7 @@ import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
@@ -866,7 +868,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     final String eventName = dialog.getValue();
     final IFloodModel model = m_model;
     final IFolder eventsFolder = getEventsFolder();
-    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( getMapPanel().getMapModell() );
+    final IMapModell mapModell = getMapPanel().getMapModell();
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
     Assert.isNotNull( wspThemes, "Wasserspiegel-Themen nicht vorhanden" );
 
     final URL sldContent = getClass().getResource( "resources/wsp.sld" );
@@ -948,7 +951,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
     if( m_treeSelection == null )
       return;
 
-    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( getMapPanel().getMapModell() );
+    final IMapModell mapModell = getMapPanel().getMapModell();
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
     final Shell shell = event.display.getActiveShell();
 
     final ICoreRunnableWithProgress operation = new RemoveEventOperation( m_treeSelection, m_dataProvider, wspThemes );
@@ -1084,7 +1088,8 @@ public class EventManagementWidget extends AbstractWidget implements IWidgetWith
 
   private void updateThemeNames( )
   {
-    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( getMapPanel().getMapModell() );
+    final IMapModell mapModell = getMapPanel().getMapModell();
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
     final IRunoffEvent event = getCurrentEvent();
     final IKalypsoTheme[] allThemes = wspThemes.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )

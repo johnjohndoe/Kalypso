@@ -13,8 +13,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.gml.ui.map.CoverageManagementWidget;
-import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.widgets.ActivateWidgetJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -51,7 +51,7 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     if( mapModell != null )
     {
       // get "Wasserspiegellagen" cascading theme
-      final AbstractCascadingLayerTheme wspTheme = FloodModelHelper.findWspTheme( mapModell );
+      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
       if( wspTheme != null )
         mapModell.activateTheme( wspTheme );
     }
