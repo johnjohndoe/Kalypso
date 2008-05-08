@@ -69,7 +69,10 @@ public class RiskModelHelper
    * @param name
    *            name of the theme
    * @return
+   * 
+   * @deprecated use the theme properties instead
    */
+  @Deprecated
   public static CascadingKalypsoTheme getCascadingTheme( final GisTemplateMapModell mapModell, final String name )
   {
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
@@ -78,6 +81,37 @@ public class RiskModelHelper
       if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( name ) ) //$NON-NLS-1$
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
+    return null;
+  }
+
+  /**
+   * gets the {@link CascadingKalypsoTheme} with the given name or property
+   * 
+   * @param mapModell
+   *            map modell
+   * @param name
+   *            name of the theme
+   * @param property
+   *            id property of the theme
+   * @return
+   */
+  public static CascadingKalypsoTheme getCascadingTheme( final GisTemplateMapModell mapModell, final String name, final String property )
+  {
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    for( final IKalypsoTheme kalypsoTheme : allThemes )
+    {
+      final String themeProp = kalypsoTheme.getProperty( "themeId", "" );
+
+      // REMARK: not nice, but not otherwise possible: use name to find the theme.
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( name ) ) //$NON-NLS-1$
+        return (CascadingKalypsoTheme) kalypsoTheme;
+
+      // changed into check of the theme properties (the code above is left for compatibility purposes)
+      // TODO: find a solution in order to upgrade maps of old projects, so that they get the porperties set.
+      else if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( property ) )
+        return (CascadingKalypsoTheme) kalypsoTheme;
+    }
+
     return null;
   }
 
@@ -350,7 +384,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("RiskModelHelper.14") + i + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "RiskModelHelper.14" ) + i + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -463,7 +497,8 @@ public class RiskModelHelper
   public static void updateDamageLayers( final IFolder scenarioFolder, final IRasterDataModel model, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ) ); //$NON-NLS-1$
+    final String damageThemeProperty = "damagePotentialThemes";
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ), damageThemeProperty ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -493,7 +528,8 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ) ); //$NON-NLS-1$
+    final String depthThemeProperty = "depthGridThemes";
+    final CascadingKalypsoTheme parentKalypsoTheme = getCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ), depthThemeProperty ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
