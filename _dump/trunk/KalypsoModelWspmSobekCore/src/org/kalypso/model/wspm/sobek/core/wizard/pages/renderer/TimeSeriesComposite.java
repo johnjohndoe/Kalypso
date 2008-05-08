@@ -145,7 +145,8 @@ public class TimeSeriesComposite extends Composite
     {
       final IRepositoryContainer containter = m_page.getModel().getRepositoryContainer();
       final IRepositoryItem item = containter.findItem( timeseriesLink.getHref() );
-      m_reposTree.setSelection( new StructuredSelection( item ) );
+      if( item != null )
+        m_reposTree.setSelection( new StructuredSelection( item ) );
     }
 
     checkPageCompleted();
