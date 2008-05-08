@@ -182,6 +182,15 @@ public class WizardFeatureTextBox
     return m_text;
   }
 
+  public Double getAsDouble( ) throws NumberFormatException
+  {
+    final String text = getText();
+    if( text == null || "".equals( text.trim() ) )
+      return null;
+
+    return Double.valueOf( getText().replaceAll( ",", "." ) );
+  }
+
   protected void processListener( )
   {
     for( final Runnable listener : m_listener )
@@ -192,7 +201,7 @@ public class WizardFeatureTextBox
   {
     m_text = text;
 
-    new UIJob( Messages.getString("org.kalypso.util.swt.WizardFeatureTextBox.4") ) //$NON-NLS-1$
+    new UIJob( Messages.getString( "org.kalypso.util.swt.WizardFeatureTextBox.4" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
