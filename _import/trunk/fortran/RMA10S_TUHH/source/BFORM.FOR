@@ -1,4 +1,4 @@
-C     Last change:  K    21 Jun 2007    7:06 pm
+C     Last change:  WP    9 May 2008   10:33 am
 CIPK  LAST UPDATE JUNE 27 2005  ADDCONTROL STRUCTURES
 cipk  last update Aug 14 1998   fix occasional bug when restarting
 CIPK  LAST UPDATE NOV 12 1996
@@ -14,9 +14,22 @@ CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK JUN05
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
 C-
+!nis,may08: Include locals for boundary conditions regarding Marsh-option
+      REAL (KIND = 8) :: RealDepth, VirtDepth
+      !two passing dummies
+      REAL (KIND = 8) :: dum1, dum2
+!-
+
 C-
 C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
+      !nis,may08: Initialize boundary condition's auxiliary variables
+      RealDepth = 0.0d0
+      VirtDepth = 0.0d0
+      dum1      = 0.0
+      dum2      = 0.0
+      !-
+
       IF(KK .EQ. 0) THEN
         NLA=1
         NTA=NP
@@ -68,8 +81,27 @@ CIPK NOV96 INDICATE A ZERO PROJECTION PARAMETER
         ENDIF
       ENDIF
       IF(NFIX(J)/1000 .EQ. 0) ALFA(J)=0.0
-      IF(MOD(NFIX(J)/100,10).NE.0) SPEC(J,3)=SPEC(J,3)-AO(J)
+
+      !nis,may08 What about the Marsh-option, shouldn't the boundary conditions also be transformed with marsh option?
+      !IF(MOD(NFIX(J)/100,10).NE.0) SPEC(J,3)=SPEC(J,3)-AO(J)
+      IF(MOD(NFIX(J)/100,10).NE.0) then
+        !Intially spec (j, 3) includes water stages in absolute values; at the end of this if-logic, spec (j, 3) contains the water depth
+        !regarding ADO (Marsh) or AO (not Marsh)
+        !
+        !Marsh option active: Adapt water stage boundary conditions regarding the deep slot bed elevation ADO
+        if (idnopt < 0) then
+          RealDepth = SPEC(j, 3) - ado (j)
+          call amf(RealDepth, VirtDepth, akp(j), adt(j), adb(j),
+     +             dum1, dum2, 1)
+          SPEC(j, 3) = VirtDepth
+        !Marsh option not active: Adapt water stage boundary conditions regarding the normal bed elevation AO
+        else
+          SPEC(J,3)=SPEC(J,3)-AO(J)
+        end if
+      endif
+      !-
       GO TO 549
+
   540 IF(NFIX(J)/1000 .NE. 13) GO TO 542
 CIPK JUN05
       ISUBM(J)=0
