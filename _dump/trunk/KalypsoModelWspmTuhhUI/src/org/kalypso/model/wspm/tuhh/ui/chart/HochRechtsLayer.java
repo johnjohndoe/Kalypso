@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -87,8 +86,8 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[2];
-    changes[0] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) );
-    changes[1] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) );
+    changes[0] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_HOCHWERT ) );
+    changes[1] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty(  IWspmTuhhConstants.POINT_PROPERTY_RECHTSWERT ) );
 
     final ProfilOperation operation = new ProfilOperation( "Datensatz entfernen: " + toString(), m_profile, changes, true );
     new ProfilOperationJob( operation ).schedule();

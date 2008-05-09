@@ -59,12 +59,10 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -317,11 +315,9 @@ public class CreateProfileDeviderWizard extends Wizard
     for( final IProfilPointMarker marker : existingMarkers )
       profil.removePointMarker( marker );
 
-    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
-
     for( final IRecord markerPoint : pointMap.values() )
     {
-      final IProfilPointMarker marker = markerProvider.createProfilPointMarker( markerType, markerPoint );
+      final IProfilPointMarker marker = profil.createPointMarker(markerType.getId(), markerPoint );
 
       // HACK: this is the only place where we use tuhh-stuff. Refaktor in order to reuse this code for other profile
       // types.

@@ -121,6 +121,14 @@ public abstract class AbstractObservationBuilding implements IProfileObject
   }
 
   /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValueFor(String)
+   */
+  public Object getValueFor( String componentID )
+  {
+    return getValue( getObjectProperty( componentID ) );
+  }
+
+  /**
    * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValue(org.kalypso.observation.result.IComponent,
    *      java.lang.Object)
    */
@@ -135,6 +143,14 @@ public abstract class AbstractObservationBuilding implements IProfileObject
 
     IRecord record = result.size() == 0 ? result.createRecord() : result.get( 0 );
     record.setValue( index, value );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValueFor(String, java.lang.Object)
+   */
+  public void setValueFor( final String componentID, final Object value )
+  {
+    setValue( getObjectProperty( componentID ), value );
   }
 
   /**

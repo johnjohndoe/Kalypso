@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.validator.AbstractValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
@@ -60,7 +61,7 @@ public class RauheitRule extends AbstractValidatorRule
 {
   public void validate( final IProfil profil, final IValidatorMarkerCollector collector ) throws CoreException
   {
-    if( profil == null )
+    if( profil == null || istDurchlass( profil.getProfileObjects() ) )
       return;
 
     IComponent pointProp = profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS );
@@ -87,7 +88,7 @@ public class RauheitRule extends AbstractValidatorRule
       final Double value = ProfilUtil.getDoubleValueFor( pointProp.getId(), point );
       if( value.isNaN() )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Datentyp für "+ pointProp.getName(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "unzulässiger Datentyp für " + pointProp.getName(), "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), pointProp.getId(), pluginId );
         break;
       }
       else if( value <= 0.0 )
@@ -96,5 +97,17 @@ public class RauheitRule extends AbstractValidatorRule
         break;
       }
     }
+  }
+
+  private final boolean istDurchlass( final IProfileObject[] objects )
+  {
+    if( objects == null || objects.length < 1 )
+      return false;
+    final String building = objects[0].getId();
+    if( building.equals( IWspmTuhhConstants.BUILDING_TYP_EI ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_MAUL ) || building.equals( IWspmTuhhConstants.BUILDING_TYP_KREIS )
+        || building.equals( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ ) )
+      return true;
+    return false;
+
   }
 }

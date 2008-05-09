@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -115,9 +114,9 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-    changes[1] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-    changes[2] = new PointPropertyRemove( m_profile, ProfilObsHelper.getPropertyFromId( m_profile, IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+    changes[0] = new PointPropertyRemove( m_profile,  m_profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+    changes[1] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
+    changes[2] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
     final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", m_profile, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
@@ -247,10 +246,13 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
       return;
     Point2D p2dL = null;
     boolean hasValue = false;
+    final IComponent cHoehe = ProfilUtil.getComponentForID( points[0].getOwner().getComponents(), IWspmConstants.POINT_PROPERTY_HOEHE );
     for( final IRecord point : points )
     {
 
-      final Point2D p2dR = ProfilUtil.getPoint2D( point, ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      
+      
+      final Point2D p2dR = ProfilUtil.getPoint2D( point,cHoehe );
       if( p2dL != null && hasValue )
       {
         final double xl = p2dL.getX();

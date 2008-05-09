@@ -54,7 +54,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.WspPanel;
@@ -150,8 +150,8 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
 
       try
       {
-        final double x = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_BREITE ) );
-        final double y = (Double) p.getValue( ProfilObsHelper.getPropertyFromId( p, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+        final Double x = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_BREITE ,p );
+        final Double y = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_HOEHE ,p );
 
         final Point point = logical2screen( new Point2D.Double( x, y ) );
 

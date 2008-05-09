@@ -64,8 +64,12 @@ public interface IProfileObject
   public IComponent[] getObjectProperties( );
 
   public Object getValue( IComponent component );
+  
+  public Object getValueFor( String componentID );
 
   public void setValue( IComponent component, Object value );
+  
+  public void setValueFor( String componentID, Object value );
 
   public IObservation<TupleResult> getObservation( );
 

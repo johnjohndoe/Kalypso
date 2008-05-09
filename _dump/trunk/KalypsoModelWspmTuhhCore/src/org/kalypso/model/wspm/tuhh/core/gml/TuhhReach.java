@@ -58,7 +58,6 @@ import org.kalypso.model.wspm.core.gml.WspmReach;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin;
@@ -173,28 +172,31 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
         continue;
 
       final IProfil profil = profileMember.getProfil();
-      final IProfilPointMarker[] deviders = profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, profil.getType() ) );
-      for( final IProfilPointMarker devider : deviders )
+      final IComponent[] markerTypes = profil.getPointMarkerTypes();
+      for( final IComponent markerTyp : markerTypes )
       {
-        try
+        final IProfilPointMarker[] deviders = profil.getPointMarkerFor( markerTyp );
+        for( final IProfilPointMarker devider : deviders )
         {
-          final IComponent typ = devider.getId();
-          final IRecord point = devider.getPoint();
-          // REMARK: create the point before the marker because we may have an exception
-          final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point );
+          try
+          {
+            final IRecord point = devider.getPoint();
+            // REMARK: create the point before the marker because we may have an exception
+            final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point );
 
-          final TuhhMarker marker = createMarker( list );
-          list.add( marker.getFeature() );
+            final TuhhMarker marker = createMarker( list );
+            list.add( marker.getFeature() );
 
-          marker.setName( typ.getName() );
-          marker.setType( typ.getId() );
-          marker.setLocation( location );
+            marker.setName( markerTyp.getName() );
+            marker.setType( markerTyp.getId() );
+            marker.setLocation( location );
 
-        }
-        catch( final Exception e )
-        {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
-          KalypsoModelWspmTuhhCorePlugin.getDefault().getLog().log( status );
+          }
+          catch( final Exception e )
+          {
+            final IStatus status = StatusUtilities.statusFromThrowable( e );
+            KalypsoModelWspmTuhhCorePlugin.getDefault().getLog().log( status );
+          }
         }
       }
     }

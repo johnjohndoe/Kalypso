@@ -58,7 +58,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
@@ -86,16 +85,16 @@ public class TrennerLayer extends AbstractProfilChartLayer
   public TrennerLayer( final ProfilChartView pcv )
   {
     super( IWspmTuhhConstants.LAYER_DEVIDER, pcv, pcv.getDomainRange(), pcv.getValueRangeLeft(), "Flieﬂzonen" );
-    IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType());
+    IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
 
     m_colorRegistry = pcv.getColorRegistry();
 
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, provider.getColorFor(IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE));
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, provider.getColorFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, provider.getColorFor(IWspmTuhhConstants.MARKER_TYP_BORDVOLL) );
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_BORDVOLL, provider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
     if( !m_colorRegistry.getKeySet().contains( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, provider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE) );
+      m_colorRegistry.put( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, provider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
   }
 
   @Override
@@ -111,12 +110,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
   public void editProfil( final Point point, final Object data )
   {
     final IProfilPointMarker activeDevider = (IProfilPointMarker) data;
-
-    final IRecord destinationPoint = ProfilUtil.findNearestPoint( getProfil(), screen2logical( point ).getX() );
+    final IProfil profil = getProfil();
+    final IRecord destinationPoint = ProfilUtil.findNearestPoint( profil, screen2logical( point ).getX() );
 // final int index = getProfil().indexOfProperty( activeDevider.getId() );
 //
 // final IRecord oldPos = activeDevider.getPoint();
-    final IProfilPointMarker[] markers = getProfil().getPointMarkerFor( destinationPoint );
+    final IProfilPointMarker[] markers = profil.getPointMarkerFor( destinationPoint );
     for( final IProfilPointMarker marker : markers )
     {
       if( marker.getId().getId().equals( activeDevider.getId().getId() ) )
@@ -125,13 +124,13 @@ public class TrennerLayer extends AbstractProfilChartLayer
       }
     }
 
-    final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", getProfil(), true );
+    final ProfilOperation operation = new ProfilOperation( activeDevider.toString() + " verschieben", profil, true );
     operation.addChange( new PointMarkerSetPoint( activeDevider, destinationPoint ) );
 
     final String id = activeDevider.getId().getId() == IWspmTuhhConstants.MARKER_TYP_WEHR ? IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR : null;
 
     if( id == IWspmTuhhConstants.MARKER_TYP_WEHR )
-      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, ProfilObsHelper.getPropertyFromId( activeDevider.getPoint(), IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
+      operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR ) ) );
     else
       operation.addChange( new ActiveObjectEdit( getProfil(), destinationPoint, null ) );
 
@@ -226,21 +225,21 @@ public class TrennerLayer extends AbstractProfilChartLayer
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) ), 20 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), 20 );
       if( info != null )
         return info;
     }
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) ), 40 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), 40 );
       if( info != null )
         return info;
     }
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
     {
 
-      info = getDeviderInfo( point, profil.getPointMarkerFor( ProfilObsHelper.getPropertyFromId( profil, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) ), 0 );
+      info = getDeviderInfo( point, profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), 0 );
       if( info != null )
         return info;
     }
@@ -267,19 +266,19 @@ public class TrennerLayer extends AbstractProfilChartLayer
     gc.setLineStyle( SWT.LINE_SOLID );
     final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
-      paintDevider( gc, ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ), top, true );
+      paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, top, true );
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
-      paintDevider( gc, ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ), top + 20, false );
+      paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, top + 20, false );
 
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
-      paintDevider( gc, ProfilObsHelper.getPropertyFromId( getProfil(), IWspmTuhhConstants.MARKER_TYP_BORDVOLL ), top + 40, false );
+      paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, top + 40, false );
   }
 
-  public void paintDevider( final GCWrapper gc, final IComponent devider, final int top, final boolean isClosed )
+  public void paintDevider( final GCWrapper gc, final String deviderID, final int top, final boolean isClosed )
   {
+    final IComponent devider = getProfil().hasPointProperty( deviderID );
     if( devider == null )
       return;
-
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( devider );
     final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
     final int iBreite = getProfil().indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );

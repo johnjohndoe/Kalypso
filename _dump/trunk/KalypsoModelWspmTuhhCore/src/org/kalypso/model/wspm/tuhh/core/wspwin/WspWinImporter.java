@@ -273,14 +273,14 @@ public class WspWinImporter
       {
         final WspmProfile profile = importProfile( profDir, tuhhProject, addedProfiles, bean, isDirectionUpstreams, isNotTuhhProject );
 
-        final double profStation = profile.getStation();
-        final double beanStation = bean.getStation();
+        final BigDecimal profStation = profile.getBigStation();
+        final BigDecimal beanStation = new BigDecimal(bean.getStation());
 
-        if( Math.abs( profStation - beanStation ) > 0.001 )
+        if( Math.abs( profStation.doubleValue() - beanStation.doubleValue() ) > 0.001 )
         {
           final String msg = String.format( "Achtung: Stationierung der Profildatei (%s - %.4f) passt nicht zur Station in der profproj.txt (Zustand '%s - %s' - %.4f). Station wird korrigiert.", bean.getFileName(), profStation, bean.getWaterName(), bean.getStateName(), beanStation );
           status.add( StatusUtilities.createWarningStatus( msg ) );
-          profile.setStation( bean.getStation() );
+          profile.setBigStation( new BigDecimal(bean.getStation()) );
         }
       }
       catch( final IOException e )
@@ -632,8 +632,8 @@ public class WspWinImporter
     {
       final IRecord record = result.createRecord();
       result.add( record );
-      record.setValue( stationComp, entry.getKey() );
-      record.setValue( valueComp, entry.getValue() );
+      record.setValue(result.indexOf( stationComp) , entry.getKey() );
+      record.setValue( result.indexOf( valueComp), entry.getValue() );
     }
 
     // TODO: WSP Fixierung nur schreiben, wenn Anzahl größer 0

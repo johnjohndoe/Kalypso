@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 
@@ -79,15 +77,14 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
   {
     if( m_deviderType == "" || profil.getPoints().length <1)
       throw new IllegalStateException();
-    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
-
+   
     final IComponent cTarget = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     if( cTarget == null )
     {
       if( profil.getPoints().length > 0 )
       {
-        final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
-        final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, profil.getPoint( 0 ) );
+        final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
         m1.setInterpretedValue( true );
         m2.setInterpretedValue( true );
         profil.setActivePoint( profil.getPoint( 0 ) );
@@ -100,16 +97,16 @@ public class AddDeviderResolution extends AbstractProfilMarkerResolution
       final IProfilPointMarker[] markers = profil.getPointMarkerFor( cTarget );
       if( markers.length > 0 )
       {
-        final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, markers[0].getPoint() );
-        final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
+        final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, markers[0].getPoint() );
+        final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, markers[markers.length - 1].getPoint() );
         m1.setInterpretedValue( true );
         m2.setInterpretedValue( true );
         profil.setActivePoint( markers[0].getPoint() );
       }
       else
       {
-        final IProfilPointMarker m1 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( 0 ) );
-        final IProfilPointMarker m2 = markerProvider.createProfilPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
+        final IProfilPointMarker m1 = profil.createPointMarker( m_deviderType, profil.getPoint( 0 ) );
+        final IProfilPointMarker m2 = profil.createPointMarker( m_deviderType, profil.getPoint( profil.getPoints().length - 1 ) );
         m1.setInterpretedValue( true );
         m2.setInterpretedValue( true );
         profil.setActivePoint( profil.getPoint( 0 ) );

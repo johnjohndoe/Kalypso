@@ -93,24 +93,24 @@ public class MarkerListConsister extends GmlWorkspaceListener implements IGmlWor
     // }
   }
 
-  /** First try: we recreate ALL list everytime ONE profile changes. */
-  private void recreateLists( final GMLWorkspace workspace )
-  {
-    final TuhhWspmProject project = new TuhhWspmProject( workspace.getRootFeature() );
-    final WspmWaterBody[] waterBodies = project.getWaterBodies();
-    for( final WspmWaterBody water : waterBodies )
-    {
-      final WspmReach[] reaches = water.getReaches();
-      final Feature[] reachFeatures = new Feature[reaches.length];
-      for( int i = 0; i < reaches.length; i++ )
-      {
-        reachFeatures[i] = reaches[i].getFeature();
-        final TuhhReach tuhhReach = new TuhhReach( reachFeatures[i] );
-        tuhhReach.recreateMarkerList();
-      }
-      // TODO: generate also event for FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE and hand over changed
-      // features
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reachFeatures, null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    }
-  }
+//  /** First try: we recreate ALL list everytime ONE profile changes. */
+//  private void recreateLists( final GMLWorkspace workspace )
+//  {
+//    final TuhhWspmProject project = new TuhhWspmProject( workspace.getRootFeature() );
+//    final WspmWaterBody[] waterBodies = project.getWaterBodies();
+//    for( final WspmWaterBody water : waterBodies )
+//    {
+//      final WspmReach[] reaches = water.getReaches();
+//      final Feature[] reachFeatures = new Feature[reaches.length];
+//      for( int i = 0; i < reaches.length; i++ )
+//      {
+//        reachFeatures[i] = reaches[i].getFeature();
+//        final TuhhReach tuhhReach = new TuhhReach( reachFeatures[i] );
+//        tuhhReach.recreateMarkerList();
+//      }
+//      // TODO: generate also event for FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE and hand over changed
+//      // features
+//      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, reachFeatures, null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+//    }
+//  }
 }

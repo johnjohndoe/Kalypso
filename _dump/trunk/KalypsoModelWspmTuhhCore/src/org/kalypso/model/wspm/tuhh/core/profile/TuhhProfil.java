@@ -126,7 +126,7 @@ public class TuhhProfil extends AbstractProfil
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     if( provider==null )
-      throw new IllegalStateException( "no ProfilPointProvider founf for: "+ getType() );
+      throw new IllegalStateException( "no ProfilPointProvider found for: "+ getType() );
 
     final IComponent marker = getPointPropertyFor( markerID );
     /* first check, if provider provides markerType */
