@@ -1,4 +1,4 @@
-!     Last change:  WP   21 Apr 2008    1:51 pm
+!     Last change:  WP   24 Apr 2008    2:26 pm
 subroutine TransVelDistribution
 
 !description
@@ -150,7 +150,8 @@ transitionloop: do i = 1, MaxLT
     if (j < 4) then
 
       !Getting the specific discharges at the transition
-      WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'      
+      WRITE(*,*) 'Calculating velocity distribution for discharge: ', discharge, 'm³/s'
+      WRITE(*,*) 'It will be applied as Q-BC at 2D-line'
       call QGENtrans (TransLi, TransNo, Discharge, 0.0, waspi)
 
       !input:
@@ -362,9 +363,11 @@ transitionloop: do i = 1, MaxLT
   !calculate discharge be cross product ([V] x [L])
   if (derivative == 1) then
     q2D(i) = SUMX - SUMY
+
     !testing
-    WRITE(*,*) 'Abfluss 2D: ', i, q2d(i)
+    WRITE(*,*) 'calculated discharge at 2D-line. It must be the same than discharge calculated as BC for this line: ', i, q2d(i)
     !testing-
+
   ELSEIF (derivative == 2) then
     dq2ddh(i) = SUMX - sumy
 

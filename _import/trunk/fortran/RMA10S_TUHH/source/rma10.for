@@ -1,4 +1,4 @@
-C     Last change:  WP   22 Apr 2008    4:41 pm
+C     Last change:  WP    5 May 2008    1:42 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -60,6 +60,19 @@ cipk aug98 add character statement
       LOGICAL WBM
 ! djw 02/11/04  - Hook for WBM Routines
 
+      !called subroutines
+      !SECOND       : get the processor time to examine the calculation speed ???
+      !INITL        : allocation and initialization of the global variables defined in the modules
+      !INCSTRC      : reading and organizing in the control structure data from external file
+      !INTIMES      : reading and organizing in time series data from external file
+      !input        : reading all input data and managing the storage of that data in the proper arrays
+      !autoconverge : using autoconverge to automatically adapt the calculation parameters leading to convergence
+      !FileHeaders  : writes headers into different output files; moved, because of reading purposes within this subroutine
+      !GENT         : reads in external network parts from another file.
+      !cwr_init     : initializes the cwr-values during restart, if there are some values, that are already calculated and written
+      !FLDIR        : calculates the flow direction of 1D-elements
+
+
 !EFa jun07, necessary for autoconverge
       extranita = 50.
       temp_iteqv = 0.
@@ -69,7 +82,7 @@ cipk aug98 add character statement
       temp_iurvl1 = 0.
       temp_maxnn = 0.
 !-
-      CALL SECOND(TA)       
+      CALL SECOND(TA)
       ALLOCATE (VSING(8,MAXP))
 C-
 c  the following variable turns:
@@ -85,40 +98,58 @@ CIPK DEC00 separate initialisation
 C      MAXP = MNP
 C      MAXE = MEL
 c      IR1MAX=MEQ
-      MAXN=1
-      NDF=6
+
+      !MAXN = current iteration cycle
+      !NDF  = number of active degrees of freedom
+      !TOASK: Why is maxn initialized at this point?
+      MAXN = 1
+      NDF  = 6
 
 !nis,jun07: Moving this subroutine to a point before initl is called (so from rma10.mainroutine, nbs has no value, what leads to errors while calling zvrs from file.subroutine)
 C      CALL FILE(1)
 
-
+      !INCSTR = unit no. for flow controller data (control structure data); (line INCSTR)
+      !INTIMS = unit no. for time series data (line INTIMS)
 CIPK JUN05  Input control structure data
       IF (INCSTR == 20) CALL INCSTRC
 CIPK JUN05  Input time series data
       IF (INTIMS == 22) CALL INTIMES
 
+
+      !ND1   = ???
+      !ICFL  = ???
+      !NDFF  = ???
+      !NDG   = ???
+      !IDRYC = ???
       ND1 = NSCR
 !     ICFL=1
 !     ICFL=0
-      ICFL=6
-      NDFF=9
-      NDG=5
-      IDRYC=0
+      ICFL  = 6
+      NDFF  = 9
+      NDG   = 5
+      IDRYC = 0
 
+
+
+      !ALPHA  = factor for time derivative of variables
+      !thetcn = reciproc value of ALPHA for usage in time derivative formula
 CIPK AUG95 MAKE ALPHA 1.8
-      ALPHA=1.8
+      ALPHA = 1.8
 CIPK JUN05      ALPHA=2.0
 cipk feb01 add thetcn
-      thetcn=1./alpha
+      thetcn = 1./ alpha
+
 C-
 C......INPUT GEOMETRY ETC
 C-
-      CALL INPUT(IBIN)
+      CALL INPUT (IBIN)
 
-
+      !beiauto = switch for autoconverge usage; Why is it a type real switch and not integer?
       !EFa jun07, output for autoconverge
-      if (beiauto.ne.0.) call autoconverge(-1.0)
+      if (beiauto /= 0.) call autoconverge (-1.0)
 
+      !nis,Apr08: Write File header outputs in external subroutine
+      !call FileHeaders ()
 CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
       IF(IRMAFM .GT. 0) THEN
         WRITE(HEADER(41:60),'(2I10)') NP,NE
@@ -224,9 +255,10 @@ CIPK JAN03
         ENDIF
       ENDIF
 
-CIPK JUN03 SETUP STRESS WEIGHTING 
 
-      IF(ICORDIN .NE. 0) CALL GENT
+CIPK JUN03 SETUP STRESS WEIGHTING 
+      !ICORDIN = unit no. for external grid data (line INSCORD)
+      IF (ICORDIN /= 0) CALL GENT
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,apr06: Initializing c_wr-values out of file or to default values 1.3. input-cwr-file
@@ -238,8 +270,8 @@ CIPK JUN03 SETUP STRESS WEIGHTING
         WRITE(*,*)'going to cwr_init'
         CALL cwr_init
       ELSE
-        DO i = 1,MaxE
-          c_wr(i) = 1.0
+        DO i = 1, MaxE
+          c_wr (i) = 1.0
         ENDDO
       ENDIF
 !-
@@ -249,35 +281,34 @@ C-
 C.......  Establish flow directions for one dimensional elements
 C-
       CALL FLDIR
+
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                 NiS,apr06: Start of STEADY STATE CALCULATION
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C......TEST FOR STEADY STATE
 C-
-      IF(NITI .EQ. 0) GO TO 350
-      NITA=NITI
+      !NITI = no. of possible iterations for steady state calculations
+      !NITA = no. of possible iterations for the current time step or calculation run (steady); it is always a copy
+      IF (NITI == 0) GO TO 350
+      NITA = NITI
 C-
 C......PROCESS STEADY VALUES
 C-
       !EFa jul07, necessary for autoconverge
-      if (beiauto.ne.0.) then
+      if (beiauto /= 0.) call autoconverge (1.)
 
-        call autoconverge(1.)
+      !reinitialize the current iteration cycle variable at the beginning of the steady state calculation
+      MAXN = 0
 
-      end if
-      !-
-      MAXN=0
+      !this is the real iteration cycle starting point
+      !***********************************************
 
-200   MAXN=MAXN+1
+200   MAXN = MAXN + 1
 
       !EFa jun07, autoconverge
-      if (beiauto.ne.0.) then
-      
-        call autoconverge(2.)
-
-      end if
-      !-
+      if (beiauto /= 0.) call autoconverge (2.)
 
 C     REWIND IVS
 
@@ -1666,3 +1697,4 @@ CIPK JUL01      STOP
       end do
 
       end subroutine
+

@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  EF   25 Apr 2008    3:24 pm
+C     Last change:  WP    5 May 2008    3:05 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -609,7 +609,7 @@ C-
       DSALDY=0.0
 CIPK SEP02 ADD WAVE DATA INTERPOLATION
       TP=0.0
-	HSV=0.0
+      HSV=0.0
       WDIR=0.0
 C-
 C......ESTABLISH VELOCITIES
@@ -635,8 +635,8 @@ C-
       MR=NCON(M)
 CIPK SEP02 INTERPOLATE WAVE DATA
       TP=TP+XN(M)*PEAKPRD(MR)
-	HSV=HSV+XN(M)*WAVEHT(MR)
-	WDIR=WDIR+XN(M)*WAVEDR(MR)
+      HSV=HSV+XN(M)*WAVEHT(MR)
+      WDIR=WDIR+XN(M)*WAVEDR(MR)
 
       AKX=AKX+(UUDST(MR)*CX+VVDST(MR)*SA)*XN(M)
       AKY=AKY+(-UUDST(MR)*SA+VVDST(MR)*CX)*XN(M)
@@ -695,8 +695,8 @@ CIPK SEP02
         MR=NCON(MC)
         H = H + XM(M)*VEL(3,MR)
 cipk jun02
-	  GAIN=GAIN+XM(M)*GAN(MR)
-	  WSELL=WSELL+WSLL(MR)*XM(M)
+        GAIN=GAIN+XM(M)*GAN(MR)
+        WSELL=WSELL+WSLL(MR)*XM(M)
 CIPK SEP02
 CIPK DEC05
         !nis,jun07: ICK is not assigned, whenn ntx == 0 (beginning of program), therefore jump
@@ -770,8 +770,8 @@ c      s=s/5.
 
 CIPK AUG03 ADD TEST TO REMOVE STRESSES WHEN DRY
       IF(H+AZER .LT. ABED) THEN
-	  SIGMAX=0.
-	  SIGMAZ=0.
+        SIGMAX=0.
+        SIGMAZ=0.
       ENDIF
 
       ROAVG=RHO
@@ -852,15 +852,15 @@ CIPK AUG06 ADD AVERAGE TEST
         ENDIF
 
         GRATE=0.0
-	  srcsnk=0.
+        srcsnk=0.
         HS=H
         IF(LSAND .GT. 0) THEN
-	    CALL MKSAND(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
-	  ENDIF
+          CALL MKSAND(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
+        ENDIF
 
         IF(LSS .GT. 0) THEN
-	    CALL MKSSED(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
-	  ENDIF
+          CALL MKSSED(SALT,HS,VSET,SRCSNK,GRATE,NETYP(NN))
+        ENDIF
 
 
         DRDS=DRODSD(SALT,IGF)
@@ -872,9 +872,9 @@ C	ENDIF
 
 CIPK AUG02 TEST FOR SHALLOW OR NEGATIVE DEPTH TO SET STRESS TO ZERO.
       IF(WSELL-ABED .LT. ZSTDEP) THEN
-	  SIGMAX=0.
-	  SIGMAZ=0.
-	ENDIF
+        SIGMAX=0.
+        SIGMAZ=0.
+      ENDIF
       IF(WSELL .LT. ABED) THEN
 CIPK AUG06
         IF(LSS .EQ. 0) THEN
@@ -882,9 +882,9 @@ CIPK AUG06
           srcsnk=0.
         ENDIF
 cipk aug02  make wind stress zero over dry areas
-  	  sigmax=0.
-	  sigmaz=0.
-	ENDIF
+        sigmax=0.
+        sigmaz=0.
+      ENDIF
 
 cipk may03  reduce grate and srcsnk to zero when IEDROP active
 c
@@ -892,34 +892,34 @@ c
 
         IF(IMMT .EQ. iedrop(ned)) THEN
           grate=0.
-    	    srcsnk=0.
-	  ENDIF
-	enddo
+          srcsnk=0.
+        ENDIF
+      enddo
 
       DO M=1,NCN
         MR=NCON(M)
-	  if(WSLL(mr) -ao(mr) .lt. zstdep) then
-	    sigmax=0.
-	    sigmaz=0.
+        if(WSLL(mr) -ao(mr) .lt. zstdep) then
+          sigmax=0.
+          sigmaz=0.
 CIPK AUG06
           IF(LSS .EQ. 0) THEN
             grate=0.
             srcsnk=0.
           ENDIF
 cipk may03  reduce nodal rates to zero
-	    alpha1(mr)=0.
-	    alpha2(mr)=0.
-	  endif
+          alpha1(mr)=0.
+          alpha2(mr)=0.
+        endif
 
         do ned=1,9
 cipk may03  reduce nodal rates to zero when IEDROP active
 
           IF(IMMT .EQ. iedrop(ned)) THEN
-  	      alpha1(mr)=0.
-	      alpha2(mr)=0.
-	    ENDIF
-	  enddo
-	enddo
+            alpha1(mr)=0.
+            alpha2(mr)=0.
+          ENDIF
+        enddo
+      enddo
 
       DRODX=DRDS*DSALDX
       DRODZ=DRDS*DSALDY
@@ -930,8 +930,8 @@ CIPK SEP02 ADD AN ICE THICKNESS TEST FOR WIND STRESS
         SIGMAX = SIGMAX/RHO
         SIGMAZ = SIGMAZ/RHO
       ELSE
-	  SIGMAX=0.0
-	  SIGMAZ=0.
+        SIGMAX=0.0
+        SIGMAZ=0.
       ENDIF
       GHC = GRAV*H
       VECQ = SQRT((R*UBF)**2+(S*VBF)**2)
@@ -1039,12 +1039,14 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
 
       IF(ISLP .EQ. 1  .AND. IDIFSW .EQ. 5) THEN
+        !TODEL: This seems to be testoutput
         IF(NN .EQ. 225) THEN
-	    AAAA=0
-	  ENDIF
+          AAAA=0
+        ENDIF
+
         SHEARVEL=VECQ*SQRT(FFACT)
-	  DIFX=SHEARVEL*H*ABS(ORT(NR,8))
-	  DIFY=DIFX*ABS(ORT(NR,9))
+        DIFX=SHEARVEL*H*ABS(ORT(NR,8))
+        DIFY=DIFX*ABS(ORT(NR,9))
 c	  peclet=vecq*abs((xl(3)+xl(5)))/2/difx
 C        IF((NN .EQ. 1284  .OR.  NN .EQ. 479)  .AND.  I .EQ. 5) THEN
 c	    WRite(129,'(3i5,4g15.6)') nn,i,MAXN,shearvel,difx,dify,thnn
@@ -1053,12 +1055,12 @@ C	  ENDIF
 	ENDIF
 
       if(difx .lt. ort(nr,14)) then
-	  if(difx .gt. 0.) then
+        if(difx .gt. 0.) then
            dify=ort(nr,14)*dify/difx
         else
-	     dify=ort(nr,14)
-	  endif
-	  difx=ort(nr,14)
+          dify=ort(nr,14)
+        endif
+        difx=ort(nr,14)
       endif
 
 CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
@@ -1076,46 +1078,53 @@ CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
           ABW=HSV/(2.*SINH(ARG))
           UBW  = 2.*PI/TP*ABW
         ENDIF
-	  CORWDIR=WDIR-THNN
-	  IF(S .EQ. 0.  .AND.  R .EQ. 0.) THEN
-	    CURRDIR=0.
-	  ELSE
-	    CURRDIR=ATAN2(S,R)
+        CORWDIR=WDIR-THNN
+        IF(S .EQ. 0.  .AND.  R .EQ. 0.) THEN
+          CURRDIR=0.
+        ELSE
+          CURRDIR=ATAN2(S,R)
         ENDIF
-	  IF(ABS(CURRDIR-CORWDIR) .LT. PI/4.) THEN
-	    GAM=1.1
-	  ELSEIF(ABS(CURRDIR-CORWDIR) .GT. 1.75*PI) THEN
-	    IF(ABS(ABS(CURRDIR-CORWDIR)-2.*PI) .LT. PI/4.) THEN
-	      GAM=1.1
-	    ELSE
-	      GAM=0.75
-	    ENDIF
-	  ELSE
-	    GAM=0.75
-	  ENDIF
-	  if(vecq .gt. 0.00001) then
-	    IF(GAM*UBW/VECQ .GT. 2.30) THEN
-	      FENH=10.
-	    ELSE
-	      FENH=EXP(GAM*UBW/VECQ)
-	    ENDIF
-	  else
-	    fenh=10.
-	  endif
-	  IF(FENH .GT. 10.) FENH=10.
+        IF(ABS(CURRDIR-CORWDIR) .LT. PI/4.) THEN
+          GAM=1.1
+        ELSEIF(ABS(CURRDIR-CORWDIR) .GT. 1.75*PI) THEN
+          IF(ABS(ABS(CURRDIR-CORWDIR)-2.*PI) .LT. PI/4.) THEN
+            GAM=1.1
+          ELSE
+            GAM=0.75
+          ENDIF
+        ELSE
+          GAM=0.75
+        ENDIF
+        if(vecq .gt. 0.00001) then
+          IF(GAM*UBW/VECQ .GT. 2.30) THEN
+            FENH=10.
+          ELSE
+            FENH=EXP(GAM*UBW/VECQ)
+          ENDIF
+        else
+          fenh=10.
+        endif
+        IF(FENH .GT. 10.) FENH=10.
         IF(EFMAN .GT. 0.) THEN
-	    EFCHEZ=H**0.166667/EFMAN
-	  ELSE
-	    EFCHEZ=CHEZ(NN)
-	  ENDIF
-	  FCT=12.*H/10**(EFCHEZ/18.)
+          EFCHEZ=H**0.166667/EFMAN
+        ELSE
+          EFCHEZ=CHEZ(NN)
+        ENDIF
+        FCT=12.*H/10**(EFCHEZ/18.)
         FACTO=FENH*FCT
-	  EFCHEZA=18.*LOG10(12.*H/FACTO)
+        EFCHEZA=18.*LOG10(12.*H/FACTO)
         FRICCR=EFCHEZ/EFCHEZA
-	  FFACT=FFACT*FRICCR
-	ENDIF
+        FFACT=FFACT*FRICCR
+      ENDIF
 CIPK SEP02 END ADDITION
 
+
+!nis,com,may08:
+!Scale the friction factor, if it is in the Marsh-slot. The value reaches FMULT = 1,0, if the water depth directly correspondes with the
+!bottom border of the transition range (ADB)
+!It is linearily increased down to ADO, where it reaches the friction correction factor given by the user (range 5.0 to 20.0)
+!
+!
 CIPK NOV97
       IF(H .LT. AKAPMG*BRANG) THEN
 C	    frsc=ort(ntyp,7)**2-1.
@@ -1128,17 +1137,19 @@ C       dfmdh=0.0
       ENDIF
 C        dffact=ffact*dfmdh+fmult*dffdh
       FFACT=FFACT*FMULT
+
+
 cipk nov97 end changes
 CIPK MAR01 ADD DRAG AND REORGANIZE      TFRIC = 0.0
       IF( VECQ .GT. 1.0E-6 ) THEN
-	  TFRIC = FFACT / VECQ
-	  TDRAGX = GRAV*DRAGX(NR)/VECQ
-	  TDRAGY = GRAV*DRAGY(NR)/VECQ
+        TFRIC = FFACT / VECQ
+        TDRAGX = GRAV*DRAGX(NR)/VECQ
+        TDRAGY = GRAV*DRAGY(NR)/VECQ
       ELSE
-	  TFRIC = 0.0
-	  TDRAGX = 0.0
-	  TDRAGY = 0.0
-	ENDIF
+        TFRIC = 0.0
+        TDRAGX = 0.0
+        TDRAGY = 0.0
+      ENDIF
 
 CIPK AUG06 ADD QIN 
       QIN=0.
@@ -1157,30 +1168,41 @@ cipk jun05
       !-
 
 CIPK MAR01 CLEANUP LOGIC
-	IF(ICYC .LE. 0) THEN
+      IF(ICYC .LE. 0) THEN
         FRN = 0.0
         FSN = 0.0
 CIPK MAR01      IF( ICYC .LE. 0 ) GO TO 279
-	ELSE
+      ELSE
         FRN=H*BETA1
         FSN=H*BETA2
-	ENDIF
+      ENDIF
 CIPK MAR01 SET SIDF=0 FOR DRY CASE
-	IF(H+AZER .GT. ABED) THEN
+      IF(H+AZER .GT. ABED) THEN
 CIPK JAN02 ADD SIDFF 
 CIPK JAN04 ADD SIDFQQ 
-	  SIDFT=SIDFQ+SIDFF(NN)
-	  SIDFQQ=SIDFQQ+SIDFF(NN)
-        ELSE
-	  SIDFT=SIDFF(NN)
-	  SIDFQQ=SIDFF(NN)
-	ENDIF
+        SIDFT=SIDFQ+SIDFF(NN)
+        SIDFQQ=SIDFQQ+SIDFF(NN)
+      ELSE
+        SIDFT=SIDFF(NN)
+        SIDFQQ=SIDFF(NN)
+      ENDIF
 
 C.....EVALUATE THE BASIC EQUATIONS WITH PRESENT VALUES.....
 
 C
 C.....MOMENTUM TERMS.....
 C
+!nis,may08,com: term definitions
+!GHC  = grav * h
+!grav = gravitational constant
+!h    = water depth
+!R    = vx
+!S    = vy
+
+
+
+
+
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT  
 cipk jan03  279 FRN = FRN + H*(AKX*R*DRDX + S*DRDZ) + R*SIDFT
 cipk jan03      FSN = FSN + H*(AKY*S*DSDZ + R*DSDX) + S*SIDFT

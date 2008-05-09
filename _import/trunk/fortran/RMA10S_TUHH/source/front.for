@@ -1,4 +1,4 @@
-C     Last change:  WP   10 Jan 2008    7:09 pm
+C     Last change:  WP    2 May 2008    1:14 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -86,51 +86,56 @@ C
       !nis,jun07: Initializing it from the beginning of the array
       !DO J=1,NSZF
       DO J = 0, NSZF
-      !-
-        NLSTEL(J)=0
+        NLSTEL (J) = 0
       ENDDO
-      K=NESAV+1
-      DO NN=1,NESAV
-        K=K-1
-        N=NFIXH(K)
-        IF(N .LE. NE  .AND.  N .GT. 0) THEN
-          IF(ICOLLAPE(N) .EQ. 1  .AND.  IMAT(N)/1000 .NE. 1) GO TO 480
 
-          IF(IMAT(N) .GT. 0) THEN
-            ncn=20
-            IF(ITEQV(MAXN) .EQ. 5) THEN
-              DO  I=1,8
-                NCON(I)=NOPS(N,I)
-                IF(NCON(I) .GT. 0) NCN=I
+      K = NESAV + 1
+
+      AssignNLSTEL: DO NN = 1, NESAV
+        !run through all elements, using the reordering number and starting with the highest. Purpose is to get the element, that is solved
+        !as the last of all the elements, a degree of freedom is connected to.
+        K = K - 1
+        N = NFIXH (K)
+        IF (N <= NE .AND. N > 0) THEN
+          IF (ICOLLAPE (N) == 1 .AND. IMAT (N)/1000 /= 1)
+     +      CYCLE AssignNLSTEL
+
+          IF (IMAT (N) > 0) THEN
+            ncn = 20
+            IF (ITEQV (MAXN) == 5) THEN
+              DO I = 1, 8
+                NCON (I) = NOPS (N, I)
+                IF (NCON (I) > 0) NCN = I
               ENDDO
             ELSE
-              DO I=1,NCN
-                NCON(I)=NOP(N,I)
+              DO I = 1, NCN
+                NCON (I) = NOP (N, I)
               ENDDO
             ENDIF
-            MRC=N
+            MRC = N
+
 cipk oct98 update to f90
-            NTYP=NETYP(N)
+            NTYP = NETYP (N)
 
           !NiS,may06,com: for junction elements (7 (1D) or 17 (2D))
-            IF(MOD(NTYP,10) .EQ. 7) THEN
+            IF (MOD (NTYP, 10) == 7) THEN
 CIPK JAN99 SKIP OUT FOR 2DV
-              if(ntyp .NE. 17) THEN
+              if (ntyp /= 17) THEN
 C-
 C...... Search to see if any entry in NLSTEL
 C-
-                DO M=1,NCN
-                  L=NCON(M)
+                DO M = 1, NCN
+                  L = NCON (M)
 C SKIP OUT FOR ZERO
-                  if(l .GT. 0) THEN
-                    DO I=1,7
-                      J=NBC(L,I)
-                      IF(J .GT. 0) THEN
-                        IF(NLSTEL(J) .GT. 0) THEN
-                          IF(NREORD(NLSTEL(J)) .GT. NREORD(MRC)) THEN
-                            MRC=NLSTEL(J)
+                  if (l > 0) THEN
+                    DO I = 1, 7
+                      J = NBC (L, I)
+                      IF (J > 0) THEN
+                        IF (NLSTEL (J) > 0) THEN
+                          IF (NREORD (NLSTEL (J)) > NREORD (MRC)) THEN
+                            MRC = NLSTEL (J)
                           ENDIF
-                          NLSTEL(J)=0
+                          NLSTEL (J) = 0
                         ENDIF
                       ENDIF
                     ENDDO
@@ -138,17 +143,17 @@ C SKIP OUT FOR ZERO
                 ENDDO
               ENDIF
             ENDIF
-  421       CONTINUE
-            DO M=1,NCN
-              L=NCON(M)
+
+            DO M = 1, NCN
+              L = NCON (M)
 CIPK JAN99 SKIP OUT FOR 2DV
-              if(l .GT. 0) THEN
+              if (l > 0) THEN
 CIPK MAY02 SWITCH NDF TO 7
-                DO I=1,7
-                  J=NBC(L,I)
-                  IF(J .NE. 0) THEN
-                    IF(NLSTEL(J) .EQ. 0) THEN
-                      NLSTEL(J)=MRC
+                DO I = 1, 7
+                  J = NBC (L, I)
+                  IF (J /= 0) THEN
+                    IF (NLSTEL (J) == 0) THEN
+                      NLSTEL (J) = MRC
                     ENDIF
                   ENDIF
                 ENDDO
@@ -156,18 +161,18 @@ CIPK MAY02 SWITCH NDF TO 7
             ENDDO
           ENDIF
         ENDIF
-  480 CONTINUE
-      ENDDO
+      ENDDO AssignNLSTEL
+      !NLSTEL (J) : Stores the nfixh-number of the element with the highest nfixh-number, where the degree of freedom J is connected to.
 
       NELL=0
       NELM=0
 c      DO N=1,NP
 c        WRITE(75,*) 'nbc',nrx,N,(NBC(N,M),M=1,4)
 c      ENDDO
-c      do n=1,nszf
-c        write(75,*) 'nlst',n,nlstel(n),netyp(n)
-c      enddo
-
+!      do n=1,nszf
+!        write(*,*) 'nlst',n,nlstel(n),netyp(n)
+!      enddo
+!
 C
 C     ASSEMBLY
 C
