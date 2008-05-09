@@ -2355,7 +2355,12 @@
                 <guimenuitem>Element(e) hinzufügen</guimenuitem> bzw.
                 <guimenuitem>Element(e) entfernen</guimenuitem> ausgewählt
                 werden. Wenn bei der Selektion auch 1D Elemente markiert
-                wurden, werden diese nicht mit hinzugefügt.</entry>
+                wurden, werden diese nicht mit hinzugefügt. Eine weitere
+                Möglichkeit ist nach der Selektion auf der Tastatur entweder
+                <emphasis role="bold">Einfg</emphasis> zu drücken, um die
+                selektierten Elemente hinzuzufügen, bzw. auf <emphasis
+                role="bold">Entf</emphasis>, damit die Elemente aus der
+                Berechnungseinheit entfernt werden.</entry>
               </row>
 
               <row>
@@ -2378,7 +2383,12 @@
                 <guimenuitem>Element(e) hinzufügen</guimenuitem> bzw.
                 <guimenuitem>Element(e) entfernen</guimenuitem> ausgewählt
                 werden. Wenn bei der Selektion auch 2D Elemente markiert
-                wurden, werden diese nicht mit hinzugefügt.</entry>
+                wurden, werden diese nicht mit hinzugefügt. Eine weitere
+                Möglichkeit ist nach der Selektion auf der Tastatur entweder
+                <emphasis role="bold">Einfg</emphasis> zu drücken, um die
+                selektierten Elemente hinzuzufügen, bzw. auf <emphasis
+                role="bold">Entf</emphasis>, damit die Elemente aus der
+                Berechnungseinheit entfernt werden.</entry>
               </row>
 
               <row>

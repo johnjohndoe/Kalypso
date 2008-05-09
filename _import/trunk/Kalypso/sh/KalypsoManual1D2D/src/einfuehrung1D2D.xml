@@ -552,6 +552,35 @@
       enthalten, in denen der Benutzer die gewünschten Funktionen auswählen
       kann.</para>
 
+      <para>Zusätzlich zu der Menüleiste können die grundlegenden
+      Kartenfunktionalitäten, wie Zoomen und Ausschnitt verschieben, auch über
+      die Tastatur mit folgenden Tastenkombinationen gesteuert werden:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>Strg + Pfeiltasten: Ausschnitt in die entsprechende Richtung
+          verschieben</para>
+        </listitem>
+
+        <listitem>
+          <para>Strg + "+" (sowohl Tastatur als auch Nummernblock möglich):
+          Hereinzoomen (statisch)</para>
+        </listitem>
+
+        <listitem>
+          <para>Strg + "-" : Herauszoomen (statisch)</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Der Vorteil in der Bedienung mit der Tastatur ist bei den späteren
+      Arbeitsschritten des Preprocessing von Bedeutung. Muss z. B. in der
+      Karte etwas selektiert werden und ist aber nicht in dem Kartenausschnitt
+      zu sehen, müsste der Arbeitsschritt erst abgebrochen und zunächst der
+      Kartenausschnitt verschoben werden. Mit dieser Funktionalität der
+      Tastatur können somit auch mehrere Selektionen in verschiedenen
+      Kartenabschnitten vorgenommen werden, ohne dass zwischendurch die
+      Selektion unterbrochen werden muss.</para>
+
       <section id="Kalypso1D2DKartenselektion">
         <title>Selektion von Elementen in der Karte</title>
 
@@ -559,45 +588,366 @@
           <primary>Selektion in der Karte</primary>
         </indexterm>
 
-        <para>Für die Selektion von Elementen in der Karte gibt es generell
-        drei Optionen:</para>
+        <para>Sobald für einen Arbeitsschritt eine Selektion von z. B.
+        Elementen erforderlich ist, öffnet sich ein Menüfenster in der Karte,
+        das bei der Selektion helfen soll. In der Abbildung unten ist
+        beispielhaft das Menüfenster zum Hinzufügen von Elementen zu einer
+        Berechnungseinheit zu sehen. Es gibt folgende drei Selektionsmodi, die
+        durch Betätigen der Space Taste gewechselt werden können:</para>
 
         <itemizedlist>
           <listitem>
-            <para>ein einzelnes Element selektieren: Mit der linken Maustaste
-            in das Element klicken.</para>
+            <para>Rechteck (Standardeinstellung): Linke Maustaste gedrückt
+            halten und ein Rechteck aufziehen. Danach müssen alle Elemente
+            umschlossen sein, die markiert werden sollen, denn es werden nur
+            die Elemente selektiert, die komplett im Rechteck liegen!</para>
           </listitem>
 
           <listitem>
-            <para>mehrere Elemente selektieren mit einem Rechteck: Linke
-            Maustaste gedrückt halten und ein Rechteck aufziehen. Danach
-            müssen alle Elemente umschlossen sein, die markiert werden sollen,
-            denn es werden nur die Elemente selektiert, die komplett im
-            Rechteck liegen!</para>
+            <para>Polygon: Mit der linken Maustaste auf die Eckpunkte des
+            Polygons klicken und alle Elemente umschließen, die markiert
+            werden sollen, denn es werden wiederum nur die Elemente
+            selektiert, die komplett innerhalb des Polygons liegen! Das
+            Polygon wird mit einem Doppelklick auf den letzten Punkt des
+            Polygons beendet.</para>
           </listitem>
 
           <listitem>
-            <para>mehrere Elemente selektieren mit einem Polygon: Shift-Taste
-            drücken und während des gesamten Vorgangs gedrückt halten. Mit der
-            linken Maustaste auf die Eckpunkte des Polygons klicken und alle
-            Elemente umschließen, die markiert werden sollen, denn es werden
-            wiederum nur die Elemente selektiert, die komplett innerhalb des
-            Polygons liegen! Das Polygon wird mit einem Doppelklick
-            beendet.</para>
+            <para>Punkt: ein einzelnes Element mit der linken Maustaste
+            selektieren</para>
           </listitem>
         </itemizedlist>
 
-        <para>Wenn im ersten Schritt nicht alle gewünschten Elemente
-        selektiert wurden, kann der Selektionsvorgang fortgesetzt werden,
-        indem die Strg-Taste gedrückt gehalten wird. Die alte Selektion wird
-        dadurch nicht aufgehoben.</para>
+        <para>Der ausgewählte Selektionsmodus wird in dem Menüfenster
+        angezeigt.</para>
 
-        <para>Ein selektiertes Element lässt sich wieder deselektieren, indem
-        es erneut markiert wird (hier muss wiederum die Strg-Taste während des
-        gesamten Vorgangs gedrückt gehalten werden, damit die Selektion nicht
-        komplett aufgehoben wird). Wenn alle selektierten Elemente wieder
-        deselektieren werden sollen, muss mit linken Maustaste auf die Karte
-        geklickt werden.</para>
+        <figure>
+          <title>Zwei Beispielmenüfenster für die Selektion von
+          Elementen</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Selektion.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Nachdem der erste Selektionsvorgang abgeschlossen ist, gibt es
+        drei Möglichkeiten die Auswahl zu bearbeiten. Diese Funktionalitäten
+        werden hinter dem Selektionsmodus in eckigen Klammern angezeigt (siehe
+        Abbildung oben, unteres Menüfenster). Folgende drei Möglichkeiten
+        stehen zur Verfügung:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Elemente zur ersten Selektion <emphasis
+            role="bold">Hinzufügen</emphasis>: Während des gesamten
+            Selektionsvorgangs muss die Shift-Taste gedrückt gehalten werden.
+            Die ausgewählten Elemente werden zur alten Selektion
+            hinzugefügt.</para>
+          </listitem>
+
+          <listitem>
+            <para>Selektion <emphasis role="bold">Umschalten</emphasis>:
+            Während des gesamten Selektionsvorgangs muss die Strg-Taste
+            gedrückt gehalten werden. Bei dieser Art der Selektion werden
+            bereits selektierte Elemente deselektiert und umgekehrt.</para>
+          </listitem>
+
+          <listitem>
+            <para>Selektion <emphasis role="bold">Verschneiden</emphasis>:
+            Während des gesamten Selektionsvorgangs muss die Alt-Taste
+            gedrückt gehalten werden. Durch diese Selektion wird die alte
+            Selektion aufgehoben. Zusätzlich werden bei der Rechteck- und
+            Polygonselektion nun nicht nur die Elemente selektiert, die
+            innerhalb des Rechtecks bzw. Polygons liegen, sondern auch
+            diejenigen, die geschnitten werden. </para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </section>
+
+    <section id="Kalypso1D2DDiagramm">
+      <title>Arbeiten und Darstellung im Diagramm</title>
+
+      <indexterm>
+        <primary>Arbeiten im Diagramm in Kalypso1D2D</primary>
+      </indexterm>
+
+      <para>Einige Berechnungsergebnisse werden als Diagramm ausgegeben
+      (Beispiel: Ganglinien). In der nachfolgenden Abbildung ist so ein
+      Diagramm dargestellt, an dem nachfolgend einige Funktionalitäten
+      erläutert werden.</para>
+
+      <figure>
+        <title>Ansicht eines Diagramms</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata align="left" fileref="img/1D2D/Diagramm_Ansicht.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <table>
+        <title>Die Grundfunktionen des Diagramms</title>
+
+        <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <colspec colwidth="5*" />
+
+          <tbody>
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_zoomen.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verkleinert einen gewählten
+              Kartenausschnitt, hereinzoomen</entry>
+
+              <entry align="left" valign="middle">Ausschnitt wählen (ziehe
+              Fenster von links oben nach rechts unten)</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Hand.png"
+                               scale="110" valign="middle" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Verschieben</entry>
+
+              <entry valign="middle">Blatt anfassen und Diagrammausschnitt
+              verschieben</entry>
+            </row>
+
+            <row>
+              <entry><mediaobject>
+                  <imageobject>
+                    <imagedata align="center"
+                               fileref="img/1D2D/Icon_Karte_Gesamtansicht.png"
+                               scale="110" />
+                  </imageobject>
+                </mediaobject></entry>
+
+              <entry align="left" valign="middle">Maximieren der
+              Diagrammansicht</entry>
+
+              <entry align="left" valign="middle">Zeigt das gesamte Diagramm
+              an</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+
+      <para>Die Abbildung oben zeigt ein Diagramm, das drei Kurven enthält.
+      Die Zugehörigkeit der Kurven zu den Achsen wird über die Farbe
+      definiert.</para>
+
+      <para><emphasis role="bold">Zoomen</emphasis></para>
+
+      <para>Zusätzlich zu der normalen in der Tabelle erwähnten Zoomfunktion
+      ist es auch möglich einzelne Achsen zu zoomen bzw. auf allen drei Achsen
+      entweder vertikal oder horizontal zu zoomen. Hierfür muss der Icon mit
+      der Lupe aktiviert sein.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Shift- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger entweder <emphasis
+          role="bold">auf</emphasis> einer vertikalen Achse (Bsp:
+          Wasserspiegel, Abfluss oder Geschwindigkeit) oder der horizontalen
+          Achse (Bsp: Datum) einen Ausschnitt wählen (linke Maustaste so lange
+          gedrückt halten, bis gewünschter Ausschnitt violett markiert ist,
+          dann Maustaste loslassen). Auf diese Weise werden <emphasis
+          role="bold">alle Achsen</emphasis> hereingezoomt und der Ausschnitt
+          wird nicht "verzerrt".</para>
+
+          <figure>
+            <title>Im Diagramm alle Achsen hereinzoomen</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Zoom_hor_ver.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Alt- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger <emphasis
+          role="bold">auf</emphasis> der gewünschten vertikalen Achse einen
+          Ausschnitt wählen (linke Maustaste so lange gedrückt halten, bis
+          gewünschter Ausschnitt violett markiert ist, dann Maustaste
+          loslassen). Auf diese Weise wird die <emphasis role="bold">eine
+          Achse</emphasis> hereingezoomt. Der Ausschnitt der anderen Achsen
+          bleibt gleich. In der nachfolgenden Abbildung ist dies anhand der
+          Wasserspiegelachse dargestellt. Es ist zu sehen, dass die Achsen
+          Abfluss und Geschwindigkeit gleich bleiben.</para>
+
+          <figure>
+            <title>Im Diagramm eine Achse hereinzoomen (hier:
+            Wasserspiegel)</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Zoom_Alt.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+      </itemizedlist>
+
+      <para><emphasis role="bold">Ausschnitt verschieben</emphasis></para>
+
+      <para>Zusätzlich zu der normalen in der Tabelle erwähnten Panfunktion
+      ist es auch möglich den Ausschnitt einzelner Achsen zu verschieben bzw.
+      den Ausschnitt aller drei Achsen entweder vertikal oder horizontal zu
+      verschieben.</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Shift- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger entweder <emphasis
+          role="bold">auf</emphasis> eine vertikale Achse (Bsp: Wasserspiegel,
+          Abfluss oder Geschwindigkeit) oder auf die horizontale Achse (Bsp:
+          Datum) klicken und den Ausschnitt <emphasis role="bold">aller
+          Achsen</emphasis> nach oben oder unten verschieben (vertikale
+          Achse), bzw. von rechts nach links (horizontale Achse). Ein
+          Verschieben in eine andere Richtung wird dadurch blockiert.</para>
+
+          <figure>
+            <title>Ausschnitt verschieben mit gedrückter Shift- Taste</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Pan_Shift.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Alt- Taste</emphasis> gedrückt halten
+          und mit dem linken gehaltenen Mauszeiger <emphasis
+          role="bold">auf</emphasis> die gewünschte vertikale Achse klicken
+          und den Ausschnitt der <emphasis role="bold">einen Achse</emphasis>
+          nach oben oder unten verschieben. Der Ausschnitt der beiden anderen
+          Achsen bleibt so erhalten.</para>
+
+          <figure>
+            <title>Ausschnitt einer Achse verschieben mit gedrückter Alt-
+            Taste</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Diagramm_Pan_Alt.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </listitem>
+      </itemizedlist>
+
+      <section id="Kalypso1D2DTabelle">
+        <title>Tabelle</title>
+
+        <indexterm>
+          <primary>Arbeiten mit der Tabelle zum Diagramm in
+          Kalypso1D2D</primary>
+        </indexterm>
+
+        <para>Wie in den Abbildungen oben schon zu sehen ist, gehört zu jedem
+        Diagramm auch eine Tabelle, in der die Werte einzeln aufgeführt sind.
+        Um die Tabelle zu betrachen, muss zunächst der Reiter
+        <guilabel>Tabelle</guilabel> aktiviert werden.</para>
+
+        <figure>
+          <title>Ansicht einer Tabelle</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Tabelle_Ansicht.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <table>
+          <title>Die Grundfunktionen der Tabelle</title>
+
+          <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_kopieren.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Tabelle kopieren</entry>
+
+                <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+                wird und kein Eintrag markiert ist, dann wird die gesamte
+                Tabelle in den Zwischenspeicher abgelegt und kann z. B. in
+                Word oder Excel kopiert werden. Wenn vorher ein Eintrag
+                markiert wurde, dann wird nur dieser eine Eintrag in den
+                Zwischenspeicher abgelegt.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_einfuegen.png"
+                                 scale="110" valign="middle" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Einfügen</entry>
+
+                <entry valign="middle">Mit dieser Funktion können Tabellen,
+                die z.B. in Excel erstellt und im Zwischenspeicher abgelegt
+                worden sind in Kalypso1D2D per Knopfdruck eingefügt
+                werden.</entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/Icon_Tabelle_loeschen.png"
+                                 scale="110" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Eintrag löschen</entry>
+
+                <entry align="left" valign="middle">Um einen Eintrag in der
+                Tabelle zu löschen, muss dieser zunächst markiert werden.
+                Durch Betätigung des Knopfes wird dieser dann
+                gelöscht.</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
       </section>
     </section>
   </section>
