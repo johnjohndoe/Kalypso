@@ -1,4 +1,4 @@
-C     Last change:  K     4 Jun 2007    8:15 am
+C     Last change:  WP    5 May 2008   10:46 am
 CIPK  LAST UPDATE MAR 29 2005  RESET CORRECTION FOR CONSISTENCY WITH RMA2
 cipk  last update Mar 13 1998   fix initialization for no marsh case
 CIPK  NEW ROUTINE NOVEMBER 13 1997
@@ -109,9 +109,11 @@ CIPK MAR05
           WRITE(LOUT,6174) J,AC1,AC2,AC3,AC4
  6174     FORMAT(I10,4F14.2)
           ADB(J)=AO(J)-AC2/2.
-          !nis,jun07: Shall n instead of j be used there?
-          ADT(N)=ADB(N)+AC2
-          !-
+
+          !TOASK: Why is N instead of J used here?
+          !ADT(N)=ADB(N)+AC2
+          ADT(J)=ADB(J)+AC2
+
           AKP(J)=AC3
           IF (AC1 .EQ. 0.0) THEN
             ADO(J) = AC4
