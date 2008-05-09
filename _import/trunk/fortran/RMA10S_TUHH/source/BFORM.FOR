@@ -1,4 +1,4 @@
-C     Last change:  WP    9 May 2008   10:33 am
+C     Last change:  WP    9 May 2008   10:44 am
 CIPK  LAST UPDATE JUNE 27 2005  ADDCONTROL STRUCTURES
 cipk  last update Aug 14 1998   fix occasional bug when restarting
 CIPK  LAST UPDATE NOV 12 1996
@@ -6,6 +6,7 @@ CIPK  LAST UPDATE SEPT 26 1996
       SUBROUTINE BFORM(KK)
       USE BLK10MOD
       USE BLKSUBMOD
+      USE BLKDRMOD
       SAVE
 C-
 C...... Routine to setup boundary condtions
