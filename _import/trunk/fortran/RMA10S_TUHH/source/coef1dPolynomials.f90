@@ -1,4 +1,4 @@
-!Last change:  WP   24 Apr 2008   12:58 pm
+!Last change:  WP   29 Apr 2008    3:35 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -269,7 +269,7 @@ do i = 1, 3, 2
 
   !fix waterdepth for h-boundaries
   if (byparts == 1) then
-    IF (MOD(NFIX(N1)/100,10) .EQ. 2) THEN
+    IF (MOD (NFIX (N1) / 100, 10) == 2) THEN
       vel (3, n1) = spec (n1, 3)
     end if
   endif
@@ -590,6 +590,10 @@ do i = 1, 2
     end do
   ENDIF !ntx=1
 enddo
+
+
+!calculate additional energy losses regarding the continuous widening or contraction of the element
+!slope_l = CalcSlope_l (vel (1:2, n1), vel (1:2, n3), ah (n1), ah (n3), dahdh (n1), dahdh (n3), cord (n1, 1:2), cord (n3, 1:2), grav)
 
 !********************************************************************************************************************************************
 !GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP   GAUSS LOOP
@@ -1557,7 +1561,7 @@ TransitionCorrection: do l = 1, ncn, 2
     !1D-2D:
     ELSEIF (TransLines (i, 4) == 2 .or. TransLines (i, 4) == 3) then
       !set residual entry for 1D-node - water stage restriction
-      WRITE(*,*) spec(m, 3), VEL (3, m), ao(m)
+      WRITE(*,*) spec(m, 3), VEL (3, m), ao(m), VEL (3, m) + ao(m)
       f (irw)           = VEL (3, m) - (spec(m, 3) - ao (m))
       estifm (irw, irw) = 0.0
       estifm (irw, irh) = - 1.0
