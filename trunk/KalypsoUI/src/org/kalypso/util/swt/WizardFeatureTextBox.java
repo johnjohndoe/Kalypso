@@ -141,7 +141,7 @@ public class WizardFeatureTextBox
         {
           final Double value = (Double) m_property;
 
-          final String text = String.format( "%.4f", value ); //$NON-NLS-1$
+          final String text = String.format( "%.2f", value ); //$NON-NLS-1$
           m_textBox.setText( text );
           m_text = text;
         }
@@ -149,7 +149,7 @@ public class WizardFeatureTextBox
         {
           final BigDecimal value = (BigDecimal) m_property;
 
-          final String text = String.format( "%.4f", value ); //$NON-NLS-1$
+          final String text = String.format( "%.2f", value ); //$NON-NLS-1$
           m_textBox.setText( text );
           m_text = text;
         }
