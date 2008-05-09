@@ -1,3 +1,4 @@
+C     Last change:  WP   29 Apr 2008   12:46 pm
 CIPK  LAST UPDATE AUG 09 2005 MAJOR REVISION TO ADD XOUTL,YOUTL
 CIPK  LAST UPDATE NOV 17 2004 ADD INITIAL VALUE FOR INDIC
       SUBROUTINE GENT
@@ -35,17 +36,17 @@ C     Read locations
 C     Read data for outline
 cipk aug05 add COUT option
       
-	  IF(DLIN80(1:3) .EQ. 'OUT') THEN
-	    IPOL=1
+      IF (DLIN80(1:3) .EQ. 'OUT') THEN
+        IPOL=1
           N2=N1+8
           READ(DLIN80,'(8X,9I8)') (IPOLY(N),N=N1,N2)
           N1=N1+9
-	  ELSEIF(DLIN80(1:4) .EQ. 'COUT') THEN
-	    IPOL=0
+      ELSEIF(DLIN80(1:4) .EQ. 'COUT') THEN
+        IPOL=0
           READ(DLIN80,'(8X,2F16.0)') XOUTL(N1),YOUTL(N1)
-	    N1=N1+1
-	    N2=N1
-	  ENDIF
+        N1=N1+1
+        N2=N1
+      ENDIF
         GO TO 250
       ENDIF
       IF(N1 .GT. 1) THEN
@@ -59,17 +60,17 @@ C     Determine number of points read
               GO TO 300
             ENDIF
           ENDDO
-	  ELSE
-	    NPOLY=N1-1
-	    IF(XOUTL(NPOLY) .NE. XOUTL(1)  .OR.  
+      ELSE
+        NPOLY=N1-1
+        IF(XOUTL(NPOLY) .NE. XOUTL(1)  .OR.
      +       YOUTL(NPOLY) .NE. YOUTL(1)) THEN
-	      NPOLY=NPOLY+1
-	      XOUTL(NPOLY) =XOUTL(1)
-	      YOUTL(NPOLY) =YOUTL(1)
-	    ENDIF
-	    GO TO 320
-	  ENDIF
-	 
+          NPOLY=NPOLY+1
+          XOUTL(NPOLY) =XOUTL(1)
+          YOUTL(NPOLY) =YOUTL(1)
+        ENDIF
+        GO TO 320
+      ENDIF
+
   300   CONTINUE
         IF(IPOLY(NPOLY) .NE. IPOLY(1)) THEN
           NPOLY=NPOLY+1
