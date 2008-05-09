@@ -114,10 +114,22 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
       final Integer pre = m_condition.getLastfall().getPreSimulationTime();
       start.add( GregorianCalendar.HOUR, pre * -1 );
 
-      if( m_tsEnds.getDateTime().before( start.getTime() ) )
+      if( m_tsEnds.getDateTime().before( start ) )
       {
         setMessage( null );
         setErrorMessage( Messages.PageEditBoundaryConditionGeneral_5 );
+        setPageComplete( false );
+
+        return;
+      }
+
+      if( m_tsBegins.getDateTime().after( start ) )
+      {
+        final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
+        final String date = df.format( start.getTime() );
+
+        setMessage( null );
+        setErrorMessage( String.format( "Start time of the boundary condition must be at least: Calculation case start time - pre simulation time (%s)", date ) );
         setPageComplete( false );
 
         return;
@@ -294,5 +306,4 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
   {
     return m_tsBegins.getDateTime();
   }
-
 }

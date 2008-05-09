@@ -96,7 +96,6 @@ public class FinishWorkerEditBoundaryCondition implements ICoreRunnableWithProgr
    */
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-
     try
     {
       final IBoundaryNodeLastfallCondition condition = m_node.getLastfallCondition( m_lastfall );
