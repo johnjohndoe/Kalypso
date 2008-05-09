@@ -142,12 +142,18 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
 
       final List<BigDecimal> myValues = new ArrayList<BigDecimal>();
 
-// /* get first segment -> boundary condition start value -> timeseries start value */
-      Double value = (Double) values.getElement( 0, valueAxis );
-// myValues.add( BigDecimal.valueOf( value ) );
-//
-// addResult( result, cStart.getTime(), myValues );
-// myValues.clear();
+      Double value = null;
+
+      /* get first segment -> boundary condition start value -> timeseries start value */
+      final Date startDate = (Date) values.getElement( 0, dateAxis );
+      if( !startDate.equals( cStart.getTime() ) )
+      {
+        value = (Double) values.getElement( 0, valueAxis );
+        myValues.add( BigDecimal.valueOf( value ) );
+
+        addResult( result, cStart.getTime(), myValues );
+        myValues.clear();
+      }
 
       /* get time series values, iterate over the whole results, start and end values are only needed for filling */
       for( int i = 0; i < values.getCount(); i++ )
@@ -161,12 +167,16 @@ public class ZmlTimeSeriesProvider extends AbstractTimeSeriesProvider
         myValues.clear();
       }
 
-// /* get last segment -> boundary condition end value */
-// value = (Double) values.getElement( values.getCount() - 1, valueAxis );
-// myValues.add( BigDecimal.valueOf( value ) );
-//
-// addResult( result, cEnd.getTime(), myValues );
-// myValues.clear();
+      /* get last segment -> boundary condition end value */
+      final Date endDate = (Date) values.getElement( values.getCount() - 1, dateAxis );
+      if( !endDate.equals( cEnd.getTime() ) )
+      {
+        value = (Double) values.getElement( values.getCount() - 1, valueAxis );
+        myValues.add( BigDecimal.valueOf( value ) );
+
+        addResult( result, cEnd.getTime(), myValues );
+        myValues.clear();
+      }
     }
     catch( final SensorException e )
     {

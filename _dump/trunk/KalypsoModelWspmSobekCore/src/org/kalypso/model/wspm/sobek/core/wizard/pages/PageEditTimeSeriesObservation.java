@@ -62,7 +62,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.TupleResultFeatureControlWrapper;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
+import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
 import org.kalypso.ogc.gml.om.table.handlers.FixedComponentUIHandlerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypsodeegree.model.feature.Feature;
@@ -126,7 +126,7 @@ public class PageEditTimeSeriesObservation extends WizardPage
       if( QN_DATE.equals( qname ) )
         handler = new ComponentUiDateHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%tF %tH:%tM", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       else
-        handler = new ComponentUiDoubleHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        handler = new ComponentUiDecimalHandler( i, true, true, false, component.getName(), SWT.NONE, 100, 45, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       provider.add( i, handler );
     }
