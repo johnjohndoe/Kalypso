@@ -445,9 +445,9 @@ public class RiskModelHelper
   public static void updateDamageLayers( final IFolder scenarioFolder, final IRasterDataModel model, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final String damageThemeProperty = "damagePotentialThemes";
+    final String damageThemeProperty = "damagePotentialThemes"; //$NON-NLS-1$
 
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ), damageThemeProperty );
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.12" ), damageThemeProperty ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     deleteExistingMapLayers( parentKalypsoTheme );
@@ -477,8 +477,8 @@ public class RiskModelHelper
   public static void updateWaterdepthLayers( final IFolder scenarioFolder, final IRasterDataModel model, final List<AsciiRasterInfo> rasterInfos, final GisTemplateMapModell mapModell ) throws Exception
   {
     /* get cascading them that holds the damage layers */
-    final String depthThemeProperty = "depthGridThemes";
-    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ), depthThemeProperty );
+    final String depthThemeProperty = "depthGridThemes"; //$NON-NLS-1$
+    final CascadingKalypsoTheme parentKalypsoTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, org.kalypso.risk.Messages.getString( "RiskModelHelper.13" ), depthThemeProperty ); //$NON-NLS-1$
 
     /* delete existing damage layers */
     // TODO: manage that only the newly imported gets deleted.
