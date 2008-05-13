@@ -60,6 +60,7 @@ import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
@@ -215,28 +216,6 @@ public class FloodModelHelper
   }
 
   /**
-   * Finds the wsp cascading theme containing the event themes.
-   */
-  public static AbstractCascadingLayerTheme findWspTheme( final IMapModell mapModell )
-  {
-    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    for( final IKalypsoTheme kalypsoTheme : allThemes )
-    {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" );
-
-      // REMARK: not nice, but not otherwise possible: use name to find the theme.
-      // changed into check of the theme properties (this code is left for compatibility purposes)
-      if( kalypsoTheme instanceof AbstractCascadingLayerTheme && kalypsoTheme.getName().getKey().equals( "Wasserspiegellagen" ) )
-        return (AbstractCascadingLayerTheme) kalypsoTheme;
-
-      else if( kalypsoTheme instanceof AbstractCascadingLayerTheme && themeProp.equals( "waterlevelThemes" ) )
-        return (AbstractCascadingLayerTheme) kalypsoTheme;
-    }
-
-    return null;
-  }
-
-  /**
    * shows a {@link ListSelectionDialog} in which the user can select {@link IRunoffEvent} for further processing
    * 
    * @param shell
@@ -287,7 +266,7 @@ public class FloodModelHelper
 
   public static IKalypsoTheme findThemeForEvent( final IMapModell mapModell, final IRunoffEvent runoffEvent )
   {
-    final AbstractCascadingLayerTheme wspThemes = FloodModelHelper.findWspTheme( mapModell );
+    final AbstractCascadingLayerTheme wspThemes = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
 
     if( runoffEvent == null || wspThemes == null )
       return null;
