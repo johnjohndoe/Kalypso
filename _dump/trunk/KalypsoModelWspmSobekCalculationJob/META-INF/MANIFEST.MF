@@ -1,9 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelWspmSobekResultProcessing Plug-in
-Bundle-SymbolicName: org.kalypso.model.wspm.sobek.calculation.job
+Bundle-SymbolicName: org.kalypso.model.wspm.sobek.calculation.job;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.model.wspm.sobek.calculation.job.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.kalypso.simulation.core,
+ org.kalypso.contribs.java
 Eclipse-LazyStart: true
