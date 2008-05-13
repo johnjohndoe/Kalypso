@@ -143,9 +143,11 @@ de_DE</programArgs>
       <plugin id="org.eclipse.update.core"/>
       <plugin id="org.eclipse.update.core.win32" fragment="true"/>
       <plugin id="org.eclipse.update.ui"/>
+      <plugin id="org.eclipse.wst.common.uriresolver"/>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
       <plugin id="org.kalypso.KalypsoManual1D2D"/>
+      <plugin id="org.kalypso.KalypsoManualFlood"/>
       <plugin id="org.kalypso.KalypsoManualRisk"/>
       <plugin id="org.kalypso.ModelSimulationBase"/>
       <plugin id="org.kalypso.NACalcJob"/>
