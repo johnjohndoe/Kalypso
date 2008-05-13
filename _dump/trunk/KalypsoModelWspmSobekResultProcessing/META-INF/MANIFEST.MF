@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelWspmSobekResultProcessing Plug-in
+Bundle-SymbolicName: org.kalypso.model.wspm.sobek.result.processing
+Bundle-Version: 1.0.0
+Bundle-Activator: org.kalypso.model.wspm.sobek.result.processing.Activator
+Require-Bundle: org.eclipse.core.runtime
+Eclipse-LazyStart: true
