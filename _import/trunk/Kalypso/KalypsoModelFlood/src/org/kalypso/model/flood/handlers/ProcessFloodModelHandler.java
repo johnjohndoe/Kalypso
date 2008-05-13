@@ -68,6 +68,7 @@ import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.core.FloodModelProcess;
 import org.kalypso.model.flood.util.FloodModelHelper;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.CascadingThemeHelper;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -145,7 +146,8 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       // - at least one grid present
 
       final IMapModell mapModell = mapPanel.getMapModell();
-      final AbstractCascadingLayerTheme wspTheme = FloodModelHelper.findWspTheme( mapModell );
+      final AbstractCascadingLayerTheme wspTheme = CascadingThemeHelper.getNamedCascadingTheme( mapModell, "Wasserspiegellagen", "waterlevelThemes" );
+
       final IStatus processResult = runCalculation( model, eventsToProcess, dataProvider, wspTheme );
 
       if( processResult.isOK() )
