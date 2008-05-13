@@ -42,23 +42,39 @@ package org.kalypso.model.wspm.sobek.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.pub.EmptyNodeImplementation;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.model.wspm.sobek.core.utils.FNGmlUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author kuch
@@ -242,5 +258,91 @@ public class Branch implements IBranch
   public void setUpperNode( final INode node ) throws Exception
   {
     FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getCrossSectionNodes()
+   */
+  public ICrossSectionNode[] getCrossSectionNodes( ) throws CoreException
+  {
+    Map<Double, ICrossSectionNode> myNodes;
+    try
+    {
+      /* sort nodes by their position on line */
+      final GM_Curve branch = getGeometryProperty();
+      final LineString jtsBranch = (LineString) JTSAdapter.export( branch );
+
+      myNodes = new TreeMap<Double, ICrossSectionNode>();
+      final INode[] nodes = getNodes();
+
+      for( final INode node : nodes )
+      {
+        if( node instanceof ICrossSectionNode )
+        {
+          final ICrossSectionNode csn = (ICrossSectionNode) node;
+          final GM_Point location = csn.getLocation();
+          final Point jtsLocation = (Point) JTSAdapter.export( location );
+
+          final double distance = JTSUtilities.pointDistanceOnLine( jtsBranch, jtsLocation );
+          if( distance != Double.NaN )
+            myNodes.put( distance, csn );
+          else
+          {
+            final IStatus status = StatusUtilities.createErrorStatus( String.format( "Can't determine position of cross section node %s on branch %s", csn.getId(), getId() ) );
+            throw new CoreException( status );
+          }
+        }
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      final IStatus status = StatusUtilities.createErrorStatus( e.getMessage() );
+      throw new CoreException( status );
+    }
+
+    return myNodes.values().toArray( new ICrossSectionNode[] {} );
+  }
+
+  private INode[] getNodes( )
+  {
+    final List<INode> myNodes = new ArrayList<INode>();
+
+    final IModelMember model = getModelMember();
+    final INode[] nodes = model.getNodeMembers();
+
+    for( final INode node : nodes )
+    {
+      if( node instanceof AbstractConnectionNode )
+      {
+        final AbstractConnectionNode n = (AbstractConnectionNode) node;
+        final IBranch[] inflowingBranches = n.getInflowingBranches();
+        final IBranch[] outflowingBranches = n.getOutflowingBranches();
+
+        if( ArrayUtils.contains( inflowingBranches, this ) )
+          myNodes.add( node );
+        else if( ArrayUtils.contains( outflowingBranches, this ) )
+          myNodes.add( node );
+      }
+      else if( node instanceof ICrossSectionNode )
+      {
+        final ICrossSectionNode n = (ICrossSectionNode) node;
+        if( equals( n.getLinkToBranch() ) )
+          myNodes.add( node );
+      }
+      else if( node instanceof EmptyNodeImplementation )
+      {
+        final EmptyNodeImplementation n = (EmptyNodeImplementation) node;
+        if( equals( n.getLinkToBranch() ) )
+          myNodes.add( node );
+      }
+      else if( node instanceof ISbkStructure )
+      {
+        final ISbkStructure n = (ISbkStructure) node;
+        if( equals( n.getLinkToBranch() ) )
+          myNodes.add( node );
+      }
+    }
+
+    return myNodes.toArray( new INode[] {} );
   }
 }
