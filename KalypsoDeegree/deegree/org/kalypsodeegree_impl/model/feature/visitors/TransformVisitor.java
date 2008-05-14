@@ -11,7 +11,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -59,9 +58,7 @@ public class TransformVisitor implements FeatureVisitor
       final IPropertyType[] ftps = featureType.getProperties();
       for( final IPropertyType ftp : ftps )
       {
-        if( ftp instanceof VirtualFeatureTypeProperty )
-          continue;
-        if( featureType.isVirtualProperty( ftp ) )
+        if( ftp.isVirtual() )
           continue;
 
         if( f instanceof Feature_Impl )

@@ -59,7 +59,7 @@ In order to use such functions, add appinfo elements to your gml application sch
             <meta.element labelAttribute="name"/>
          </appInfo>
          <documentation>
-            This element registers a function property for gml types.
+            This element registers a function property implementation that can later be used to be referenced from a gml application schema or applied to a certain gml type via the &apos;property&apos; element of this extension-point.
          </documentation>
       </annotation>
       <complexType>

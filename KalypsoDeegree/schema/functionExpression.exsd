@@ -7,9 +7,9 @@
       </appInfo>
       <documentation>
          Instances of this extension-point represent implementations of the ogc:expression function element.
-&lt;br/&gt;
+&lt;br&gt;
 The extension id id of implementations will correepsond to the &apos;name&apos; attribute of the Ogc:Function element.
-&lt;br/&gt;
+&lt;br&gt;
 See {http://www.opengis.net/ogc}Function in http://schemas.opengis.net/filter/1.1.0/expr.xsd of the OGC Schemata.
       </documentation>
    </annotation>

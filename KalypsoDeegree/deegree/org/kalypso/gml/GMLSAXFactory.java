@@ -106,7 +106,7 @@ public class GMLSAXFactory
     final ContentHandler contentHandler = m_xmlReader.getContentHandler();
 
     // handle prefixes...
-    // theses are mandatory
+    // these are mandatory
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.GML2, null ), NS.GML2 );
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XLINK, null ), NS.XLINK );
     contentHandler.startPrefixMapping( m_nsMapper.getPreferredPrefix( NS.XSD, null ), NS.XSD );
@@ -172,12 +172,18 @@ public class GMLSAXFactory
     contentHandler.startElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart, a );
 
     for( final IPropertyType pt : properties )
+    {
+      // Virtual properties are properties which does not get serialized...
+      if( pt.isVirtual() )
+        continue;
+
       if( pt instanceof IRelationType )
         process( feature, (IRelationType) pt );
       else if( pt instanceof IValuePropertyType )
         process( feature, (IValuePropertyType) pt );
       else
         throw new UnsupportedOperationException();
+    }
 
     contentHandler.endElement( uri, localPart, prefixedQName.getPrefix() + ":" + localPart );
   }

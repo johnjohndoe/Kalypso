@@ -2,72 +2,83 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
- *  ---------------------------------------------------------------------------*/package org.kalypsodeegree_impl.gml.schema.virtual;
+ *   
+ *  ---------------------------------------------------------------------------*/
+package org.kalypsodeegree_impl.gml.schema.function;
 
-import javax.xml.namespace.QName;
+import java.util.Map;
 
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 
 /**
- * @author Nadja
+ * Returns the boundary of a RectifiedGridCoverage as a GM_Surface.
+ * 
+ * @author Gernot Belger
  */
-public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyType
+public class RectifiedGridCoverageBoundaryFunctionProperty extends FeaturePropertyFunction
 {
-  public VirtualRasterFeatureTypeProperty( final QName featureQName )
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
+   */
+  @Override
+  public void init( final Map<String, String> properties )
   {
-    super( featureQName, new QName( "virtual", "rasterGridDomainBoundary" ), 0, 1, GeometryUtilities.getPolygonClass() );
+    // TODO Auto-generated method stub
+
   }
 
   /**
-   * @see org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty#getVirtuelValue(org.kalypsodeegree.model.feature.Feature)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  public Object getVirtuelValue( final Feature feature )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    final RectifiedGridDomain rgDomain = (RectifiedGridDomain) feature.getProperty( "rectifiedGridDomain" );
-    if( rgDomain == null )
-      return null;
-
     try
     {
+      final RectifiedGridCoverage rgc = new RectifiedGridCoverage( feature );
+      final RectifiedGridDomain rgDomain = rgc.getGridDomain();
+      if( rgDomain == null )
+        return null;
+
       return rgDomain.getGM_Surface( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     }
     catch( final Exception e )
@@ -78,27 +89,12 @@ public class VirtualRasterFeatureTypeProperty extends AbstractVirtualPropertyTyp
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#getType()
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  public String getType( )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-    return GM_Polygon.class.getName();
+    return valueToSet;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isNullable()
-   */
-  @Override
-  public boolean isNullable( )
-  {
-    return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureTypeProperty#isGeometryProperty()
-   */
-  public boolean isGeometryProperty( )
-  {
-    return true;
-  }
 }

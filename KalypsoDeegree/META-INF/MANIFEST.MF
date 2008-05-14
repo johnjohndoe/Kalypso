@@ -15,7 +15,6 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/xtiff-jai/xtiff-jai.jar,
  build/bin
 Bundle-Vendor: kalypso.org
-Bundle-Localization: plugin
 Require-Bundle: org.junit,
  org.kalypso.gmlschema;visibility:=reexport,
  org.kalypso.contribs.ogc2x,
@@ -96,7 +95,6 @@ Export-Package: com.sun.media.jai.codec,
  org.kalypsodeegree_impl.gml.schema.schemata.gml2_2002,
  org.kalypsodeegree_impl.gml.schema.schemata.obslink,
  org.kalypsodeegree_impl.gml.schema.schemata.updateObservationMapping,
- org.kalypsodeegree_impl.gml.schema.virtual,
  org.kalypsodeegree_impl.graphics.displayelements,
  org.kalypsodeegree_impl.graphics.displayelements.strokearrow,
  org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries,

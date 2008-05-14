@@ -126,9 +126,8 @@ public class MapModellPainter extends Job implements IPainter
   {
     final IMapModell mapModell = m_mapPanel.getMapModell();
     if( mapModell != null )
-    {
-      setName( "Karte zeichnen: " + mapModell.getName() );
-    }
+      setName( "Karte zeichnen: " + mapModell.getName().getValue() );
+
     Graphics2D gr = null;
     Job repaintJob = null;
     try

@@ -75,11 +75,11 @@ public class CheckFeaturePropertyHandler implements IFeaturePropertyHandler
       if( pt instanceof IValuePropertyType )
       {
         // TODO:This doesn´t work - what to do?
-        // REMARK: WHAT? does not work?? This is a test if thee value fits to
+        // REMARK: WHAT? does not work?? This is a test if the value fits to
         // the type of the property. Test here is necessary because if
         // we do not test here we will get later ClassCastExceptions
         // and there we do not know why.
-        // Next: please contact me instead of just commenting ist out. Gernot
+        // Next: please contact me instead of just commenting it out. Gernot
         // final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
         // if( valueToSet != null && !valueClass.isAssignableFrom( valueToSet.getClass() ) )
         // throw new IllegalArgumentException( "Wrong type of value (" + valueToSet.getClass() + ") for qname: " +

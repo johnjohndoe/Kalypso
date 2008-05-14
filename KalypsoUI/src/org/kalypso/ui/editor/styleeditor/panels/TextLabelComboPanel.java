@@ -49,29 +49,26 @@ import java.util.ArrayList;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class TextLabelComboPanel extends ComboPanel
 {
 
-  public TextLabelComboPanel( Composite parent, String label, IFeatureType featureType, String value )
+  public TextLabelComboPanel( final Composite parent, final String label, final IFeatureType featureType, final String value )
   {
     super( parent, label );
     // read possible items to get the label text from
     final ArrayList<String> labelStringItems = new ArrayList<String>();
     final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
-      if( ! GeometryUtilities.isGeometry(ftp[i]) )
+    {
+      if( !GeometryUtilities.isGeometry( ftp[i] ) )
         labelStringItems.add( ftp[i].getName() );
-    final IPropertyType[] vftp = VirtualPropertyUtilities.getVirtualProperties(featureType);
-    for( int i = 0; i < vftp.length; i++ )
-      if(! GeometryUtilities.isGeometry(vftp[i]) )
-        labelStringItems.add( vftp[i].getName() );
+    }
+
     items = new String[labelStringItems.size()];
     for( int j = 0; j < items.length; j++ )
       items[j] = labelStringItems.get( j );
@@ -88,13 +85,13 @@ public class TextLabelComboPanel extends ComboPanel
     }
   }
 
-  public String getSelectedFeatureTypeProperty()
+  public String getSelectedFeatureTypeProperty( )
   {
     return items[getSelection()];
   }
 
   // sets the comboBox to a default state
-  public void reset()
+  public void reset( )
   {
     comboBox.setText( "..." ); //$NON-NLS-1$
   }
@@ -103,7 +100,7 @@ public class TextLabelComboPanel extends ComboPanel
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#getSelection()
    */
   @Override
-  public int getSelection()
+  public int getSelection( )
   {
     return selection_index;
   }
@@ -112,7 +109,7 @@ public class TextLabelComboPanel extends ComboPanel
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
   @Override
-  public void setSelection( int index )
+  public void setSelection( final int index )
   {
     selection_index = index;
   }
