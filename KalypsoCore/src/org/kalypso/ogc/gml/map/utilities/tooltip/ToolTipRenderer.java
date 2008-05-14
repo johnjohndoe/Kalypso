@@ -68,7 +68,7 @@ public class ToolTipRenderer
 
   public static final Insets DEFAULT_INSETS = new Insets( 4, 5, 4, 5 );
 
-  private static Pattern LINE_SPLIT = Pattern.compile( "$", Pattern.MULTILINE );
+  private static Pattern LINE_SPLIT = Pattern.compile( "$", Pattern.MULTILINE ); //$NON-NLS-1$
 
   private final Insets m_insets;
 
@@ -261,7 +261,7 @@ public class ToolTipRenderer
     m_rows = new String[rows.length];
     for( int i = 0; i < rows.length; i++ )
     {
-      m_rows[i] = rows[i].replaceAll( "\n|\r", "" );
+      m_rows[i] = rows[i].replaceAll( "\n|\r", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 

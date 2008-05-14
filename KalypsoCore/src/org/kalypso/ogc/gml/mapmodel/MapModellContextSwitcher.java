@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -84,7 +85,7 @@ public class MapModellContextSwitcher
     {
       if( m_oldContext != null )
       {
-        logger.finest( "Deactivating context: " + m_oldContext.getContextId() );
+        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.0") + m_oldContext.getContextId() ); //$NON-NLS-1$
         m_contextService.deactivateContext( m_oldContext );
       }
       if( m_theme == null )
@@ -97,11 +98,11 @@ public class MapModellContextSwitcher
         final Context context = m_contextService.getContext( contextId );
         if( !context.isDefined() )
         {
-          context.define( contextId, contextId, "org.kalypso.ogc.gml.map.context" );
+          context.define( contextId, contextId, "org.kalypso.ogc.gml.map.context" ); //$NON-NLS-1$
         }
-        logger.finest( "Activating context: " + contextId );
+        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.2") + contextId ); //$NON-NLS-1$
         m_oldContext = m_contextService.activateContext( contextId );
-        logger.finest( "Active contexts: " + Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) );
+        logger.finest( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellContextSwitcher.3") + Arrays.deepToString( m_contextService.getActiveContextIds().toArray() ) ); //$NON-NLS-1$
       }
     }
 

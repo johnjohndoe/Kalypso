@@ -37,23 +37,23 @@ package org.kalypso.ogc.sensor.zml;
 public interface ZmlURLConstants
 {
   /** fragment part of the url denoting a Zml-Url with a context, not a Zml-Id */
-  public final static String FRAGMENT_USEASCONTEXT = "useascontext";
+  public final static String FRAGMENT_USEASCONTEXT = "useascontext"; //$NON-NLS-1$
 
   /** URL-Scheme that identifies the observation service */
-  public final static String SCHEME_OCS = "kalypso-ocs";
+  public final static String SCHEME_OCS = "kalypso-ocs"; //$NON-NLS-1$
 
   /** Observation-Metadata Property-Name for the OCS-identifier */
-  public final static String MD_OCS_ID = "OCS-ID";
+  public final static String MD_OCS_ID = "OCS-ID"; //$NON-NLS-1$
 
   /** Specification-Tags for the Zml-Request in the URL */
 //  public final static String TAG_REQUEST1 = "<request"; // !NOTE: without ending '>'
 //
 //  public final static String TAG_REQUEST2 = "</request>";
-    public final static String TAG_REQUEST = "request";
+    public final static String TAG_REQUEST = "request"; //$NON-NLS-1$
 
 
   /** Filter-Tags for the Zml-Filter in the URL */
-  public static final String TAG_FILTER1 = "<filter>";
+  public static final String TAG_FILTER1 = "<filter>"; //$NON-NLS-1$
 
-  public static final String TAG_FILTER2 = "</filter>";
+  public static final String TAG_FILTER2 = "</filter>"; //$NON-NLS-1$
 }

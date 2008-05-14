@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.CsvTargetType;
 import org.kalypso.gml.util.CsvTargetType.Column;
 import org.kalypso.ogc.gml.convert.target.ITargetHandler;
@@ -78,7 +79,7 @@ public class CsvTargetHandler implements ITargetHandler
         ((FeatureList) featureFromPath).accept( visitor );
       }
       else
-        throw new GmlConvertException( "FeaturePath zeigt nicht auf eine Feature-Liste: " + featurePath );
+        throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.CsvTargetHandler.0") + featurePath ); //$NON-NLS-1$
     }
     catch( final GmlConvertException gce )
     {
@@ -86,7 +87,7 @@ public class CsvTargetHandler implements ITargetHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( "Daten wurden nicht gespeichert", e );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.CsvTargetHandler.1"), e ); //$NON-NLS-1$
     }
     finally
     {

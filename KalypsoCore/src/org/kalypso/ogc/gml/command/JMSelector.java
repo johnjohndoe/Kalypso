@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -134,8 +135,8 @@ public class JMSelector
       catch( final Exception err )
       {
         System.out.println( err.getMessage() );
-        System.out.println( "...using workaround \"box selection\"" );
-        System.out.println( "set view dependent radius" );
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.command.JMSelector.0") ); //$NON-NLS-1$
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.command.JMSelector.1") ); //$NON-NLS-1$
         resultList.addAll( select( position, 0.0001d, list, false ) );
       }
     }

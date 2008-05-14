@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypso.contribs.java.util.DoubleComparator;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -88,7 +89,7 @@ public abstract class AbstractTuppleModel implements ITuppleModel
   public int getPositionFor( final IAxis axis ) throws SensorException
   {
     if( !m_axes2pos.containsKey( axis ) )
-      throw new SensorException( "Model does not contain axis: " + axis );
+      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.AbstractTuppleModel.0") + axis ); //$NON-NLS-1$
 
     return m_axes2pos.get( axis ).intValue();
   }

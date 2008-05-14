@@ -67,13 +67,13 @@ public class NativeObservationZmlAdapter implements INativeObservationAdapter
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_title = config.getAttribute( "label" );
-    m_axisTypeValue = config.getAttribute( "axisType" );
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
   public IObservation createObservationFromSource( final File source ) throws Exception
   {
-    final IObservation parseXML = ZmlFactory.parseXML( source.toURL(), "ID" );
+    final IObservation parseXML = ZmlFactory.parseXML( source.toURL(), "ID" ); //$NON-NLS-1$
     return parseXML;
   }
 
@@ -97,7 +97,7 @@ public class NativeObservationZmlAdapter implements INativeObservationAdapter
   public IAxis[] createAxis( )
   {
 // return new IAxis[0];
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;

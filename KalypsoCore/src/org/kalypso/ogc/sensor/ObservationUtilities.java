@@ -55,6 +55,7 @@ import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -68,7 +69,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
  */
 public class ObservationUtilities
 {
-  private static final String MSG_ERROR_NOAXISTYPE = "Keine Achse gefunden vom Typ: ";
+  private static final String MSG_ERROR_NOAXISTYPE = Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.0"); //$NON-NLS-1$
 
   private static final Comparator<IAxis> AXIS_SORT_COMPARATOR = new AxisSortComparator();
 
@@ -314,7 +315,7 @@ public class ObservationUtilities
           {
             e.printStackTrace();
 
-            writer.write( "Fehler" );
+            writer.write( Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.1") ); //$NON-NLS-1$
           }
 
           if( j < axes.length - 1 )
@@ -371,7 +372,7 @@ public class ObservationUtilities
       {
         e.printStackTrace();
 
-        sb.append( "Fehler" );
+        sb.append( Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.2") ); //$NON-NLS-1$
       }
 
       if( i < axes.length - 1 )
@@ -422,7 +423,7 @@ public class ObservationUtilities
       catch( NoSuchElementException e )
       {
         if( fullCompatibilityExpected && !KalypsoStatusUtils.isStatusAxis( destAxes[i] ) )
-          throw new IllegalStateException( "Required axis " + destAxes[i] + " from " + dest + " could not be found in " + source );
+          throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.3") + destAxes[i] + Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.4") + dest + Messages.getString("org.kalypso.ogc.sensor.ObservationUtilities.5") + source ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         // else ignored, try with next one
       }

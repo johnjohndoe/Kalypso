@@ -43,6 +43,7 @@ package org.kalypso.core.gml.provider;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * This wizard lets the user choose from various available gml sources.
@@ -71,7 +72,7 @@ public class GmlSourceChooserWizard extends Wizard
 
     setDialogSettings( getDialogSettings() );
 
-    m_page = new GmlSourceChooserPage( "sourceProviderPage", "Auswahl", null, m_provider );
+    m_page = new GmlSourceChooserPage( "sourceProviderPage", Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserWizard.1"), null, m_provider ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

@@ -46,6 +46,7 @@ import java.util.List;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -136,7 +137,7 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
 
     final GMLWorkspace workspace = feature.getWorkspace();
     if( workspace == null )
-      throw (new IllegalStateException( "workspace can't be null" ));
+      throw (new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.KalypsoCascadingThemeSelection.0") )); //$NON-NLS-1$
 
     if( workspace instanceof CommandableWorkspace )
       return (CommandableWorkspace) workspace;

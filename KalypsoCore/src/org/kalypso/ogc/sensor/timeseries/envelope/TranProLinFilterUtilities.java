@@ -86,7 +86,7 @@ public class TranProLinFilterUtilities
     final Observation observationType = ZmlFactory.createXML( resultObservation, request );
     String name = observationType.getName();
     if( name == null )
-      name = "";
+      name = ""; //$NON-NLS-1$
     observationType.setName( name + sufix );
     final Marshaller m = ZmlFactory.getMarshaller();
     m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
@@ -95,7 +95,7 @@ public class TranProLinFilterUtilities
     try
     {
       stream = new FileOutputStream( resultFile );
-      writer = new OutputStreamWriter( stream, "UTF-8" );
+      writer = new OutputStreamWriter( stream, "UTF-8" ); //$NON-NLS-1$
       m.marshal( observationType, writer );
     }
     finally

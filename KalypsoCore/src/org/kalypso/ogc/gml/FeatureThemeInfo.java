@@ -47,6 +47,7 @@ import java.util.Properties;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -86,8 +87,8 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
 
     m_theme = (IKalypsoFeatureTheme) theme;
 
-    m_format = props.getProperty( "format" );
-    final String geomStr = props.getProperty( "geometry" );
+    m_format = props.getProperty( "format" ); //$NON-NLS-1$
+    final String geomStr = props.getProperty( "geometry" ); //$NON-NLS-1$
     m_geom = geomStr == null ? null : QName.valueOf( geomStr );
   }
 
@@ -97,7 +98,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
    */
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_theme, "call init before first use" );
+    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.FeatureThemeInfo.2") ); //$NON-NLS-1$
 
     // not yet implemented
     appendQuickInfo( formatter, pos );
@@ -107,22 +108,22 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
-    Assert.isNotNull( m_theme, "call init before first use" );
+    Assert.isNotNull( m_theme, Messages.getString("org.kalypso.ogc.gml.FeatureThemeInfo.4") ); //$NON-NLS-1$
 
     final FeatureList featureList = m_theme.getFeatureList();
     if( featureList == null )
     {
-      formatter.format( "- keine Daten geladen -" );
+      formatter.format( Messages.getString("org.kalypso.ogc.gml.FeatureThemeInfo.5") ); //$NON-NLS-1$
       return;
     }
 
     final List foundFeatures = featureList.query( pos, null );
     if( foundFeatures.size() == 0 )
     {
-      formatter.format( "-" );
+      formatter.format( "-" ); //$NON-NLS-1$
       return;
     }
     
@@ -152,7 +153,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
     }
     if( feature == null )
     {
-      formatter.format( "-" );
+      formatter.format( "-" ); //$NON-NLS-1$
       return;
     }
     final String label;
@@ -161,7 +162,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo
     else
       label = FeatureHelper.tokenReplace( feature, m_format );
 
-    formatter.format( "%s", label );
+    formatter.format( "%s", label ); //$NON-NLS-1$
   }
 
 }

@@ -72,7 +72,7 @@ public class Storage
     String href = null;
     do
     {
-      href = "storage-" + i + ".dat";
+      href = "storage-" + i + ".dat"; //$NON-NLS-1$ //$NON-NLS-2$
       i++;
       storage = new File( m_repositoryBase, href );
     }

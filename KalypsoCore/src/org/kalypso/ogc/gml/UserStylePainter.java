@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -84,7 +85,7 @@ public class UserStylePainter
 
   public void paintFeatureTypeStyles( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final IPaintDelegate paintDelegate ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Display-Elemente", m_style.getFeatureTypeStyles().length );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.UserStylePainter.0"), m_style.getFeatureTypeStyles().length ); //$NON-NLS-1$
 
     final FeatureTypeStyle[] fts = m_style.getFeatureTypeStyles();
 
@@ -119,7 +120,7 @@ public class UserStylePainter
 
   private void paintRule( final GMLWorkspace workspace, final Double scale, final GM_Envelope bbox, final FeatureList features, final Boolean selected, final IProgressMonitor monitor, final Rule rule, final QName qname, final IPaintDelegate delegate ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Rule", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.UserStylePainter.1"), 100 ); //$NON-NLS-1$
 
     final List< ? > visibleFeatures = features.query( bbox, null );
 
@@ -138,7 +139,7 @@ public class UserStylePainter
 
   private void paintFeature( final GMLWorkspace workspace, final Double scale, final Boolean selected, final Rule rule, final Filter filter, final Object featureOrLink, final QName qname, final IProgressMonitor monitor, final IPaintDelegate delegate ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Feature", 100 );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.UserStylePainter.2"), 100 ); //$NON-NLS-1$
 
     /* resolve any links */
     final Feature feature = FeatureHelper.getFeature( workspace, featureOrLink );

@@ -68,7 +68,7 @@ public abstract class ObjectCatalog<O> extends Storage
 
   private final Class<O> m_supportingClass;
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public ObjectCatalog( File repositoryBase, CatalogManager manager, Class<O> supportingClass )
   {
     super( repositoryBase );
@@ -85,7 +85,7 @@ public abstract class ObjectCatalog<O> extends Storage
       final String uri = baseCatalog.resolve( systemID, publicID );
       // BUGFIX: if uri now start with 'urn', the id was not resolved, so we just return
       // Maybe there is a better way to handle that?
-      if( uri.startsWith( "urn" ) )
+      if( uri.startsWith( "urn" ) ) //$NON-NLS-1$
         return null;
       
       final URL urlFeatureStyle = resolver.resolveURL( uri );

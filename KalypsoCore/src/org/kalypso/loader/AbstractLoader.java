@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author belger
@@ -194,7 +195,7 @@ public abstract class AbstractLoader implements ILoader, IResourceChangeListener
    */
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
-    throw new LoaderException( "Operation not supported" );
+    throw new LoaderException( Messages.getString("org.kalypso.loader.AbstractLoader.0") ); //$NON-NLS-1$
   }
 
   /**

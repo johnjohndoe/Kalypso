@@ -47,6 +47,7 @@ import java.util.Properties;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -68,7 +69,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
 {
-  private static final String DEFAULT_FORMAT_STRING = "Wert: %.2f";
+  private static final String DEFAULT_FORMAT_STRING = Messages.getString("org.kalypso.ogc.gml.map.themeinfo.TriangulatedSurfaceThemeInfo.0"); //$NON-NLS-1$
 
   /**
    * Value of the property for a format string.<br>
@@ -76,14 +77,14 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
    * <code>Value: %.3f</code>.<br>
    * Defaults to <code>Wert: %.2f</code>.
    */
-  public final static String PROP_FORMAT = "format";
+  public final static String PROP_FORMAT = "format"; //$NON-NLS-1$
 
   /**
    * Value of the property which indicates the name of the featue-property containing the triangulated surface geometry.<br>
    * Must be a qname of the form {namespace}localPart.<br>
    * If not set, the first property of type gml:TriangulatedSurface will be used.
    */
-  public final static String PROP_GEOMETRY = "geometry";
+  public final static String PROP_GEOMETRY = "geometry"; //$NON-NLS-1$
 
   private IKalypsoFeatureTheme m_theme;
 
@@ -122,7 +123,7 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
    *      org.kalypsodeegree.model.geometry.GM_Position)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
     Assert.isNotNull( m_theme );

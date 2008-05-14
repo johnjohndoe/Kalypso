@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -96,7 +97,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
     /* Info Panel */
     final Group infoGroup = new Group( panel, SWT.NONE );
-    infoGroup.setText( "Information" );
+    infoGroup.setText( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.0") ); //$NON-NLS-1$
     infoGroup.setLayout( new FillLayout() );
     final GridData infoGridData = new GridData( SWT.FILL, SWT.FILL, true, true );
     infoGroup.setLayoutData( infoGridData );
@@ -167,7 +168,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
     {
       final Label label = new Label( infoGroup, SWT.NONE );
       label.setAlignment( SWT.CENTER );
-      label.setText( "Selektieren Sie Elemente aus dem Baum" );
+      label.setText( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.1") ); //$NON-NLS-1$
     }
     else
     {
@@ -199,7 +200,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
     setPageComplete( choosenSources.length > 0 );
 
     if( choosenSources.length == 0 )
-      setMessage( "Wählen Sie bitte mindestens einen Wasserspiegel", WARNING );
+      setMessage( Messages.getString("org.kalypso.core.gml.provider.GmlSourceChooserPage.2"), WARNING ); //$NON-NLS-1$
     else
       setMessage( null );
   }

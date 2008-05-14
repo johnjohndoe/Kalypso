@@ -50,6 +50,7 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -84,20 +85,20 @@ public class ShapeSerializer
 
   private static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
-  private static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" );
+  private static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_SHAPE_TYPE = new QName( SHP_NAMESPACE_URI, "ShapeType" );
+  private static final QName PROPERTY_SHAPE_TYPE = new QName( SHP_NAMESPACE_URI, "ShapeType" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_FEATURE_MEMBER = new QName( SHP_NAMESPACE_URI, "featureMember" );
+  public static final QName PROPERTY_FEATURE_MEMBER = new QName( SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" );
+  private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" );
+  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
 
   /**
    * Pseudo QNAME, placeholder for the gml-id to be written.
    */
-  public static final QName QNAME_GMLID = new QName( Gml2ShapeConverter.class.getName() + "gmlid" );
+  public static final QName QNAME_GMLID = new QName( Gml2ShapeConverter.class.getName() + "gmlid" ); //$NON-NLS-1$
 
   private ShapeSerializer( )
   {
@@ -111,7 +112,7 @@ public class ShapeSerializer
 
     try
     {
-      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
+      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" ); //$NON-NLS-1$
 
       // if no dataProvider is set take the StandardProvider
       if( shapeDataProvider == null )
@@ -124,7 +125,7 @@ public class ShapeSerializer
     {
       e.printStackTrace();
 
-      throw new GmlSerializeException( "Shape konnte nicht geschrieben werden", e );
+      throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.7"), e ); //$NON-NLS-1$
     }
   }
 
@@ -184,11 +185,11 @@ public class ShapeSerializer
         for( final Entry<String, String> entry : mapping.entrySet() )
           data[datacount++] = kalypsoFeature.getProperty( entry.getValue() );
 
-        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data );
+        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data ); //$NON-NLS-1$
         shapeFeatures.add( feature );
       }
 
-      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
+      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" ); //$NON-NLS-1$
 
       if( shapeDataProvider == null )
         shapeDataProvider = new StandardShapeDataProvider( shapeFeatures.toArray( new Feature[shapeFeatures.size()] ) );
@@ -203,7 +204,7 @@ public class ShapeSerializer
     {
       e.printStackTrace();
 
-      throw new GmlSerializeException( "Shape konnte nicht geschrieben werden", e );
+      throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.10"), e ); //$NON-NLS-1$
     }
   }
 
@@ -223,7 +224,7 @@ public class ShapeSerializer
   public static void serializeFeatures( final Feature[] features, final Map<String, QName> mapping, final QName geomProperty, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
     if( features.length == 0 )
-      throw new GmlSerializeException( "Keine Daten vorhanden. Leere Shape Datei kann nicht geschrieben werden." );
+      throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.11") ); //$NON-NLS-1$
 
     final IFeatureType featureType = features[0].getFeatureType();
     final IValuePropertyType geoPt = (IValuePropertyType) featureType.getProperty( geomProperty );
@@ -240,7 +241,7 @@ public class ShapeSerializer
       if( qname == ShapeSerializer.QNAME_GMLID )
       {
         /* If it is the pseudo gml-id qname, create a string-property */
-        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
+        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
         ftps[count] = GMLSchemaFactory.createValuePropertyType( PROPERTY_SHAPE_TYPE, new QName( SHP_NAMESPACE_URI, entry.getKey() ), typeHandler, 1, 1, false );
       }
       else
@@ -276,11 +277,11 @@ public class ShapeSerializer
             data[datacount++] = kalypsoFeature.getProperty( qname );
         }
 
-        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data );
+        final Feature feature = FeatureFactory.createFeature( null, null, "" + i, shapeFeatureType, data ); //$NON-NLS-1$
         shapeFeatures.add( feature );
       }
 
-      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" );
+      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" ); //$NON-NLS-1$
 
       // if no dataProvider is set take the StandardProvider
       if( shapeDataProvider == null )
@@ -296,7 +297,7 @@ public class ShapeSerializer
     {
       e.printStackTrace();
 
-      throw new GmlSerializeException( "Shape konnte nicht geschrieben werden. \n" + e.getMessage(), e );
+      throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.15") + e.getMessage(), e ); //$NON-NLS-1$
     }
   }
 
@@ -326,8 +327,8 @@ public class ShapeSerializer
   public static Feature createShapeRootFeature( final IFeatureType childFeatureType )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
+    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) ); //$NON-NLS-1$
+    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) ); //$NON-NLS-1$
 
     final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.ROOT_FEATURETYPE, ShapeSerializer.PROPERTY_NAME, stringTH, 1, 1, false );
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.ROOT_FEATURETYPE, ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
@@ -335,7 +336,7 @@ public class ShapeSerializer
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
     final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
 
-    return FeatureFactory.createFeature( null, null, "root", collectionFT, true );
+    return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
 
   public final static GMLWorkspace deserialize( final String fileBase, final String sourceCrs ) throws GmlSerializeException
@@ -368,7 +369,7 @@ public class ShapeSerializer
     }
     catch( final Exception e )
     {
-      throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
+      throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.19"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -379,7 +380,7 @@ public class ShapeSerializer
         }
         catch( final IOException e )
         {
-          throw new GmlSerializeException( "Fehler beim Laden der Shape-Dateien", e );
+          throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.ShapeSerializer.20"), e ); //$NON-NLS-1$
         }
     }
   }

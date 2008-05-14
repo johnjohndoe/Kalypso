@@ -9,6 +9,7 @@ import java.util.Properties;
 import javax.xml.bind.JAXBElement;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.AddFeaturesMappingType;
 import org.kalypso.gml.util.ChangeFeaturesMappingType;
 import org.kalypso.gml.util.FeaturemappingSourceType;
@@ -103,7 +104,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     else if( mapping instanceof ChangeFeaturesMappingType )
       return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID, toID );
     else
-      throw new GmlConvertException( "Mapping-Type wird nicht unterstützt: " + mapping.getClass().getName() );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler.0") + mapping.getClass().getName() ); //$NON-NLS-1$
   }
 
   private FeatureList getFeatureList( final GMLWorkspace workspace, final String path ) throws GmlConvertException
@@ -112,6 +113,6 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     if( featureFromPath instanceof FeatureList )
       return (FeatureList)featureFromPath;
 
-    throw new GmlConvertException( "Dieser FeaturePath zeigt auf keine FeatureListe: " + path );
+    throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler.1") + path ); //$NON-NLS-1$
   }
 }

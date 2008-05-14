@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -63,7 +64,7 @@ public final class CsvFeatureReader
     final List<Feature> list = new ArrayList<Feature>();
 
     final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
-    final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props );
+    final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
     final IRelationType memberRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
@@ -94,7 +95,7 @@ public final class CsvFeatureReader
         continue;
 
       final String[] tokens = line.split( delemiter );
-      list.add( createFeatureFromTokens( parent, parentRelation, "" + lnr.getLineNumber(), tokens, ft ) );
+      list.add( createFeatureFromTokens( parent, parentRelation, "" + lnr.getLineNumber(), tokens, ft ) ); //$NON-NLS-1$
     }
     return;
   }
@@ -115,7 +116,7 @@ public final class CsvFeatureReader
       for( final int colNumber : info.columns )
       {
         if( colNumber >= tokens.length )
-          throw new CsvException( "Zeile " + index + ": Spaltenindex " + colNumber + " zu groß für FeatureProperty '" + ftp.getQName() + "'" + "\nNur " + tokens.length + " Spalten gefunden." );
+          throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.3") + index + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.4") + colNumber + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.5") + ftp.getQName() + "'" + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.7") + tokens.length + Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.8") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
       }
 
       data[i] = parseColumns( vpt, info.format, info.columns, tokens, info.ignoreFormatExceptions );
@@ -135,7 +136,7 @@ public final class CsvFeatureReader
       final Object data = FeatureHelper.createFeaturePropertyFromStrings( vpt, format, input );
 
       if( data == null )
-        throw new CsvException( "Unbekannter Datentyp: " + vpt.getQName() );
+        throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.9") + vpt.getQName() ); //$NON-NLS-1$
 
       return data;
     }
@@ -144,7 +145,7 @@ public final class CsvFeatureReader
       if( ignoreFormatExceptions )
         return null;
 
-      throw new CsvException( "Formatfehler beim Lesen der Spalten: " + columns, nfe );
+      throw new CsvException( Messages.getString("org.kalypso.ogc.gml.serialize.CsvFeatureReader.10") + columns, nfe ); //$NON-NLS-1$
     }
   }
 }

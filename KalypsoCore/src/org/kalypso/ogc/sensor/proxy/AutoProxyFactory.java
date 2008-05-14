@@ -90,7 +90,7 @@ public class AutoProxyFactory implements IProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( TimeserieConstants.MD_WQTABLE, "" );
+    final String wq = mdl.getProperty( TimeserieConstants.MD_WQTABLE, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {
@@ -129,7 +129,7 @@ public class AutoProxyFactory implements IProxyFactory
       catch( final Exception e )
       {
         final StackTraceElement trace = e.getStackTrace()[0];
-        System.out.println( trace.getClassName() + ":" + trace.getMethodName() + "#" + trace.getLineNumber() );
+        System.out.println( trace.getClassName() + ":" + trace.getMethodName() + "#" + trace.getLineNumber() ); //$NON-NLS-1$ //$NON-NLS-2$
         // e.printStackTrace();
         return obs;
       }
@@ -146,7 +146,7 @@ public class AutoProxyFactory implements IProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( TimeserieConstants.MD_WQWECHMANN, "" );
+    final String wq = mdl.getProperty( TimeserieConstants.MD_WQWECHMANN, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {

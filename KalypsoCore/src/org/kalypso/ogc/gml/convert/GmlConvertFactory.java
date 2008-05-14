@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.CsvSourceType;
 import org.kalypso.gml.util.CsvTargetType;
@@ -99,7 +100,7 @@ public class GmlConvertFactory
     final GMLWorkspace gml = GmlConvertFactory.loadSource( resolver, context, convert.getSource().getValue(), externData );
     final TargetType target = convert.getTarget().getValue();
     GmlConvertFactory.writeIntoTarget( resolver, context, gml, target );
-    final String message = "Ergebnis wurde nach " + convert.getTarget().getValue().getHref() + " geschrieben.";
+    final String message = Messages.getString("org.kalypso.ogc.gml.convert.GmlConvertFactory.0") + convert.getTarget().getValue().getHref() + Messages.getString("org.kalypso.ogc.gml.convert.GmlConvertFactory.1"); //$NON-NLS-1$ //$NON-NLS-2$
     return new Status( IStatus.OK, IKalypsoCoreConstants.PLUGIN_ID, 0, message, null );
   }
 
@@ -125,7 +126,7 @@ public class GmlConvertFactory
     else if( source instanceof RegisterSourceType )
       handler = new RegisterSourceHandler( (RegisterSourceType) source, externData );
     else
-      throw new GmlConvertException( "Unbekannter Source-Type: " + source.getClass().getName() );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.GmlConvertFactory.2") + source.getClass().getName() ); //$NON-NLS-1$
     return handler.getWorkspace();
   }
 
@@ -142,7 +143,7 @@ public class GmlConvertFactory
     else if( target instanceof GmlTargetType )
       handler = new GmlTargetHandler( resolver, context, (GmlTargetType) target );
     else
-      throw new GmlConvertException( "Unbekannter Target-Type: " + target.getClass().getName() );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.GmlConvertFactory.3") + target.getClass().getName() ); //$NON-NLS-1$
     handler.saveWorkspace( gml );
   }
 }

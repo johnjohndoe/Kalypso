@@ -101,8 +101,8 @@ public class CatalogSLD extends ObjectCatalog<FeatureTypeStyle>
       final Source source = new DOMSource( doc );
 
       final Transformer t = TransformerFactory.newInstance().newTransformer();
-      t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-      t.setOutputProperty( OutputKeys.INDENT, "yes" );
+      t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" ); //$NON-NLS-1$ //$NON-NLS-2$
+      t.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
       t.transform( source, new StreamResult( os ) );
     }
     catch( Exception e )

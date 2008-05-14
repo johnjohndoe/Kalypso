@@ -65,6 +65,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.urn.IURNGenerator;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 
 /**
@@ -106,7 +107,7 @@ public class CatalogManager
   {
     final Class key = urnGenerator.getSupportingClass();
     if( m_urnGenerators.containsKey( key ) )
-      throw new UnsupportedOperationException( "URNGenerator already registered for class " + key.toString() );
+      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogManager.0") + key.toString() ); //$NON-NLS-1$
     m_urnGenerators.put( key, urnGenerator );
   }
 
@@ -115,7 +116,7 @@ public class CatalogManager
     if( m_baseCatalog != null )
       return m_baseCatalog;
 
-    final String baseURN = new String( "urn:" );
+    final String baseURN = new String( "urn:" ); //$NON-NLS-1$
     final String path = CatalogUtilities.getPathForCatalog( baseURN );
 
     final File catalogFile = new File( m_baseDir, path );
@@ -126,7 +127,7 @@ public class CatalogManager
 
 // final ICatalog catalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
 // m_baseCatalog = new CachingCatalog( catalog );
-      m_baseCatalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
+      m_baseCatalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) ); //$NON-NLS-1$
 
       return m_baseCatalog;
     }
@@ -137,7 +138,7 @@ public class CatalogManager
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public ICatalog getCatalog( final URI catalogURI )
   {
     InputStream is = null;
@@ -189,7 +190,7 @@ public class CatalogManager
           final DynamicCatalog dynCatalog = (DynamicCatalog) catalog;
           dynCatalog.save( m_baseDir );
           final URL location = dynCatalog.getLocation();
-          catalogsToClose.add( new URI( URLEncoder.encode( location.toString(), "UTF-8" ) ) );
+          catalogsToClose.add( new URI( URLEncoder.encode( location.toString(), "UTF-8" ) ) ); //$NON-NLS-1$
         }
       }
       catch( final Exception e )
@@ -204,8 +205,8 @@ public class CatalogManager
 
   public void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
   {
-    if( !baseURN.endsWith( ":" ) )
-      throw new UnsupportedOperationException( "catalog URN must end with ':' " + baseURN );
+    if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogManager.6") + baseURN ); //$NON-NLS-1$
 
     final String href = CatalogUtilities.getPathForCatalog( baseURN );
     final URL catalogURL = new URL( m_baseDir.toURL(), href );
@@ -213,7 +214,7 @@ public class CatalogManager
     URI catalogURI = null;
     try
     {
-      catalogURI = new URI( URLEncoder.encode( catalogURL.toString(), "UTF-8" ) );
+      catalogURI = new URI( URLEncoder.encode( catalogURL.toString(), "UTF-8" ) ); //$NON-NLS-1$
     }
     catch( final UnsupportedEncodingException e )
     {

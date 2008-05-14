@@ -49,6 +49,7 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -69,7 +70,7 @@ public class FeatureUtils
 {
   public static String chopGeoDataSetName( final String name )
   {
-    final String[] chomp = new String[] { ".sld", ".gml", ".asc", ".shp", ".tif" };
+    final String[] chomp = new String[] { ".sld", ".gml", ".asc", ".shp", ".tif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     boolean bChomp = false;
     for( final String ch : chomp )
@@ -79,11 +80,11 @@ public class FeatureUtils
         break;
       }
 
-    String geoDataSetName = "";
+    String geoDataSetName = ""; //$NON-NLS-1$
 
     if( bChomp )
     {
-      final String[] parts = name.split( "\\." );
+      final String[] parts = name.split( "\\." ); //$NON-NLS-1$
 
       for( int i = 0; i < parts.length - 1; i++ )
         geoDataSetName += parts[i];
@@ -110,17 +111,17 @@ public class FeatureUtils
     if( node == null )
       return null;
 
-    final Object objString = node.getProperty( new QName( namespace, "name" ) );
+    final Object objString = node.getProperty( new QName( namespace, "name" ) ); //$NON-NLS-1$
     if( objString instanceof List )
     {
       final List< ? > names = (List< ? >) objString;
       if( names.size() >= 1 )
         return names.get( 0 ).toString();
 
-      return "Name not defined";
+      return Messages.getString("org.kalypso.ogc.gml.FeatureUtils.8"); //$NON-NLS-1$
     }
     else if( !(objString instanceof String) )
-      return "Name not defined";
+      return Messages.getString("org.kalypso.ogc.gml.FeatureUtils.9"); //$NON-NLS-1$
 
     return (String) objString;
   }
@@ -128,7 +129,7 @@ public class FeatureUtils
   public static FeatureChange getLinkedFeatureChange( final Feature parentFeature, final QName propertyName, final String value )
   {
     final IPropertyType chgProp = parentFeature.getFeatureType().getProperty( propertyName );
-    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value, "", "", "", "", "" );
+    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     return new FeatureChange( parentFeature, chgProp, impl );
   }
@@ -193,7 +194,7 @@ public class FeatureUtils
   public static void setExternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
-    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" );
+    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     final FeatureChange change = new FeatureChange( feature, chgProp, impl );
     final ChangeFeaturesCommand chgCmd = new ChangeFeaturesCommand( workspace, new FeatureChange[] { change } );
@@ -237,7 +238,7 @@ public class FeatureUtils
 
     final Feature result = FeatureHelper.getFeature( targetWorkspace, property );
     if( result == null )
-      throw new IllegalStateException( "Feature with id " + property.toString() + "not found" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.FeatureUtils.20") + property.toString() + Messages.getString("org.kalypso.ogc.gml.FeatureUtils.21") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return result;
   }
@@ -248,10 +249,10 @@ public class FeatureUtils
     for( final IPropertyType propertyType : properties )
     {
       final QName name = propertyType.getQName();
-      if( "name".equals( name.getLocalPart() ) )
+      if( "name".equals( name.getLocalPart() ) ) //$NON-NLS-1$
         return getFeatureName( name.getNamespaceURI(), feature );
     }
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 }

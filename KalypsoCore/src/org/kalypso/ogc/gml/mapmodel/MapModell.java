@@ -55,6 +55,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.core.KalypsoCoreDebug;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
@@ -493,7 +494,7 @@ public class MapModell implements IMapModell
 
   protected void fireThemeActivated( final IKalypsoTheme previouslyActive, final IKalypsoTheme activeTheme )
   {
-    KalypsoCoreDebug.MAP_MODELL.printf( "Active theme changed from '%s' to '%s'%n", previouslyActive, activeTheme );
+    KalypsoCoreDebug.MAP_MODELL.printf( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModell.0"), previouslyActive, activeTheme ); //$NON-NLS-1$
 
     acceptListenersRunnable( new IListenerRunnable()
     {

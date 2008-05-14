@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
@@ -170,7 +171,7 @@ public class TupleResult implements List<IRecord>
   @Override
   public String toString( )
   {
-    return "TupleResult: " + getComponents();
+    return Messages.getString("org.kalypso.observation.result.TupleResult.0") + getComponents(); //$NON-NLS-1$
   }
 
   /**
@@ -436,7 +437,7 @@ public class TupleResult implements List<IRecord>
     final Record r = (Record) record;
 
 // Assert.isTrue( r.getCount() == m_components.size(), "Number of records values not equal to number of components" );
-    Assert.isTrue( r.getOwner() == this, "Illegal record. Record was not created on this tuple result: " + record );
+    Assert.isTrue( r.getOwner() == this, Messages.getString("org.kalypso.observation.result.TupleResult.1") + record ); //$NON-NLS-1$
   }
 
   private void checkRecords( final Collection< ? extends IRecord> c )
@@ -581,7 +582,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, "Exception while propagating tuple-change" );
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.observation.result.TupleResult.2") ); //$NON-NLS-1$
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
@@ -598,7 +599,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, "Exception while propagating tuple-change" );
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.observation.result.TupleResult.3") ); //$NON-NLS-1$
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
@@ -615,7 +616,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, "Exception while propagating tuple-change" );
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.observation.result.TupleResult.4") ); //$NON-NLS-1$
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }

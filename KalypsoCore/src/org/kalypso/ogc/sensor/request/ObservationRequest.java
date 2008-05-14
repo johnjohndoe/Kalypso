@@ -44,6 +44,7 @@ package org.kalypso.ogc.sensor.request;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.zml.request.Request;
 
@@ -134,16 +135,16 @@ public class ObservationRequest implements IRequest
     final StringBuffer bf = new StringBuffer();
 
     if( m_dateRange != null )
-      bf.append( "Date-Range: " ).append( m_dateRange.toString() ).append( "\n" );
+      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.0") ).append( m_dateRange.toString() ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_name != null )
-      bf.append( "Name: " ).append( m_name ).append( "\n" );
+      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.2") ).append( m_name ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_axisTypes.length > 0 )
-      bf.append( "Axis-Types: " ).append( StringUtils.join( m_axisTypes, ',') ).append( "\n" );
+      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.4") ).append( StringUtils.join( m_axisTypes, ',') ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_axisTypesWithStatus.length > 0 )
-      bf.append( "Status for: " ).append( StringUtils.join( m_axisTypesWithStatus, ',') ).append( "\n" );
+      bf.append( Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.6") ).append( StringUtils.join( m_axisTypesWithStatus, ',') ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return bf.toString();
   }
@@ -173,7 +174,7 @@ public class ObservationRequest implements IRequest
     else
       axisTypesWithStatus = StringUtils.split( requestType.getStatusAxes(), ',' );
 
-    final String name = requestType.getName() != null ? requestType.getName() : "unbekannt";
+    final String name = requestType.getName() != null ? requestType.getName() : Messages.getString("org.kalypso.ogc.sensor.request.ObservationRequest.8"); //$NON-NLS-1$
     
     return new ObservationRequest( dr, name, axisTypes, axisTypesWithStatus );
   }

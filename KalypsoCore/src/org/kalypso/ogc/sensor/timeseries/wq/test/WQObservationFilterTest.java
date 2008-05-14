@@ -69,15 +69,15 @@ public class WQObservationFilterTest extends TestCase
     InputStream ins = null;
     try
     {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" );
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
 
       final ITuppleModel wqValues = obs.getValues( null );
 
       assertNotNull( wqValues );
 
-      System.out.println( ObservationUtilities.dump( wqValues, "  " ) );
+      System.out.println( ObservationUtilities.dump( wqValues, "  " ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -95,15 +95,15 @@ public class WQObservationFilterTest extends TestCase
     InputStream ins = null;
     try
     {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" );
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test2.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 
       assertNotNull( values );
 
-      System.out.println( ObservationUtilities.dump( values, "  " ) );
+      System.out.println( ObservationUtilities.dump( values, "  " ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -116,15 +116,15 @@ public class WQObservationFilterTest extends TestCase
     InputStream ins = null;
     try
     {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" );
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test3.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 
       assertNotNull( values );
 
-      System.out.println( ObservationUtilities.dump( values, "  " ) );
+      System.out.println( ObservationUtilities.dump( values, "  " ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -137,15 +137,15 @@ public class WQObservationFilterTest extends TestCase
     InputStream ins = null;
     try
     {
-      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test4.zml" );
+      ins = WQObservationFilterTest.class.getResourceAsStream( "wq-test4.zml" ); //$NON-NLS-1$
 
-      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null );
+      final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), "", null ); //$NON-NLS-1$
 
       final ITuppleModel values = obs.getValues( null );
 
       assertNotNull( values );
 
-      System.out.println( ObservationUtilities.dump( values, "  " ) );
+      System.out.println( ObservationUtilities.dump( values, "  " ) ); //$NON-NLS-1$
     }
     finally
     {

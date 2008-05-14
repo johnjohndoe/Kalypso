@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.ComponentRepaintJob;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
@@ -92,7 +93,7 @@ public class MapModellPainter extends Job implements IPainter
    */
   public MapModellPainter( final MapPanel mapPanel )
   {
-    super( "" );
+    super( "" ); //$NON-NLS-1$
     m_mapPanel = mapPanel;
     setRule( m_painterMutex );
 
@@ -126,7 +127,7 @@ public class MapModellPainter extends Job implements IPainter
   {
     final IMapModell mapModell = m_mapPanel.getMapModell();
     if( mapModell != null )
-      setName( "Karte zeichnen: " + mapModell.getName().getValue() );
+      setName( Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.1") + mapModell.getName().getValue() ); //$NON-NLS-1$
 
     Graphics2D gr = null;
     Job repaintJob = null;
@@ -137,7 +138,7 @@ public class MapModellPainter extends Job implements IPainter
       repaintJob.setPriority( Job.LONG );
       repaintJob.schedule( 500 );
 
-      final SubMonitor progress = SubMonitor.convert( monitor, "Karte wird gezeichnet", 100 );
+      final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.2"), 100 ); //$NON-NLS-1$
 
       ProgressUtilities.worked( progress, 0 );
 
@@ -167,7 +168,7 @@ public class MapModellPainter extends Job implements IPainter
     }
     catch( final Throwable t )
     {
-      return StatusUtilities.statusFromThrowable( t, "Fehler beim Zeichnen der Karte." );
+      return StatusUtilities.statusFromThrowable( t, Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.3") ); //$NON-NLS-1$
     }
     finally
     {
@@ -193,7 +194,7 @@ public class MapModellPainter extends Job implements IPainter
    */
   private Graphics2D createImage( final SubMonitor monitor, final int width, final int height ) throws CoreException
   {
-    monitor.beginTask( "initalisiere Buffer", 100 );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.map.MapModellPainter.4"), 100 ); //$NON-NLS-1$
 
     m_mapImage = m_mapPanel.createImage( width, height );
     if( m_mapImage == null )

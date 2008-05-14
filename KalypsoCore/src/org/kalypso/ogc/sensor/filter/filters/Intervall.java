@@ -42,6 +42,8 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.util.Calendar;
 
+import org.kalypso.core.i18n.Messages;
+
 public class Intervall
 {
   // DO NOT CHANGE NUMBERING
@@ -243,22 +245,22 @@ public class Intervall
   public String toString( )
   {
     final StringBuffer result = new StringBuffer();
-    result.append( " from : " + m_start.getTime().toString() + "\n" );
-    result.append( " to   : " + m_end.getTime().toString() + "\n" );
-    result.append( " duration: " + getDurationInMillis() + " ms \n" );
+    result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.0") + m_start.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.2") + m_end.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.4") + getDurationInMillis() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.5") ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_value != null )
     {
-      result.append( "value : " );
+      result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.6") ); //$NON-NLS-1$
       for( int i = 0; i < m_value.length; i++ )
-        result.append( "  " + m_value[i] );
-      result.append( "\n" );
+        result.append( "  " + m_value[i] ); //$NON-NLS-1$
+      result.append( "\n" ); //$NON-NLS-1$
     }
     if( m_status != null )
     {
-      result.append( "status : " );
+      result.append( Messages.getString("org.kalypso.ogc.sensor.filter.filters.Intervall.9") ); //$NON-NLS-1$
       for( int i = 0; i < m_status.length; i++ )
-        result.append( "  " + m_status[i] );
-      result.append( "\n" );
+        result.append( "  " + m_status[i] ); //$NON-NLS-1$
+      result.append( "\n" ); //$NON-NLS-1$
     }
     return result.toString();
   }

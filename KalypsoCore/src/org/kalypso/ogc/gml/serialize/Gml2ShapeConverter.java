@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -91,7 +92,7 @@ public class Gml2ShapeConverter
     }
 
     /* also write gmlID */
-    propertyMap.put( "gmlID", ShapeSerializer.QNAME_GMLID );
+    propertyMap.put( "gmlID", ShapeSerializer.QNAME_GMLID ); //$NON-NLS-1$
 
     final IValuePropertyType geomProp = featureType.getDefaultGeometryProperty();
 
@@ -106,7 +107,7 @@ public class Gml2ShapeConverter
 
   public void writeShape( final FeatureList featureList, final String shapeFileBase, IShapeDataProvider shapeDataProvider, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Schreibe Shape...", 2 );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.serialize.Gml2ShapeConverter.1"), 2 ); //$NON-NLS-1$
 
     final Feature[] features = featureList.toFeatures();
     try

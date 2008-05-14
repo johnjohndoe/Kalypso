@@ -54,6 +54,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -69,14 +70,14 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationDatAdapter implements INativeObservationAdapter
 {
-  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
+  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
 
   // Tag1 Zeit1 N - Ombrometer Fuhlsbuettel [mm]
   // 01.01.1971 07:30:00 0,1
   // 02.01.1971 07:30:00 0
   // 03.01.1971 07:30:00 0
 
-  public static Pattern m_datPattern = Pattern.compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?(-??[0-9\\.]+)" );
+  public static Pattern m_datPattern = Pattern.compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?(-??[0-9\\.]+)" ); //$NON-NLS-1$
 
   private String m_title;
 
@@ -88,8 +89,8 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_title = config.getAttribute( "label" );
-    m_axisTypeValue = config.getAttribute( "axisType" );
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
   public IObservation createObservationFromSource( File source ) throws Exception
@@ -103,13 +104,13 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
 
     /* this is due to backwards compatibility */
     if( timeZone == null )
-      timeZone = TimeZone.getTimeZone( "GMT+1" );
+      timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
 
     m_grapDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
     ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     return observation;
   }
 
@@ -140,12 +141,12 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
           String dateString = matcher.group( 1 );
           String valueString = matcher.group( 2 );
 
-          String formatedvalue = valueString.replaceAll( "\\,", "\\." );
+          String formatedvalue = valueString.replaceAll( "\\,", "\\." ); //$NON-NLS-1$ //$NON-NLS-2$
           Double value = new Double( Double.parseDouble( formatedvalue ) );
           // Double value = new Double( matcher.group( 2 ) );
 
-          String formatedDate = dateString.replaceAll( "[:;\\.]", " " );
-          Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" );
+          String formatedDate = dateString.replaceAll( "[:;\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+          Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
           Matcher dateMatcher = m_datePattern.matcher( formatedDate );
           if( dateMatcher.matches() )
           {
@@ -153,9 +154,9 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
             for( int i = 1; i <= dateMatcher.groupCount(); i++ )
             {
               if( i > 1 )
-                buffer.append( " " ); // separator
+                buffer.append( " " ); // separator //$NON-NLS-1$
 
-              buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); //
+              buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
               // correct
               // empty
               // fields
@@ -167,19 +168,19 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
           }
           else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+            errorBuffer.append( "line " + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.17") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
         }
         else
         {
-          errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn + "\"\n" );
+          errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.19") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.20") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           numberOfErrors++;
         }
       }
       catch( Exception e )
       {
-        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage() + "\"\n" );
+        errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.22") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.23") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
@@ -205,7 +206,7 @@ public class NativeObservationDatAdapter implements INativeObservationAdapter
    */
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.25"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
 //    TimeserieUtils.getUnit( m_axisTypeValue );
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };

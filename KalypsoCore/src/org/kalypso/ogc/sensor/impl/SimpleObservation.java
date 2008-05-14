@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -83,12 +84,12 @@ public class SimpleObservation implements IObservation
 
   public SimpleObservation( )
   {
-    this( "", "", "", false, null, new MetadataList(), new IAxis[0] );
+    this( "", "", "", false, null, new MetadataList(), new IAxis[0] ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public SimpleObservation( final IAxis[] axes )
   {
-    this( "", "", "", false, null, new MetadataList(), axes );
+    this( "", "", "", false, null, new MetadataList(), axes ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   public SimpleObservation( final String href, final String identifier, final String name, final boolean editable, final Object target, final MetadataList metadata, final IAxis[] axes )
@@ -159,7 +160,7 @@ public class SimpleObservation implements IObservation
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
     if( m_tupples == null )
-      throw new SensorException( "Keine Werte vorhanden." );
+      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.6") ); //$NON-NLS-1$
 
     // TODO this leads to unsaved changes when a value is set because the underlying
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
@@ -202,7 +203,7 @@ public class SimpleObservation implements IObservation
       }
       catch( final NoSuchElementException e )
       {
-        throw new SensorException( "Values Models are not compatible. Current Observation: " + toString(), e );
+        throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.7") + toString(), e ); //$NON-NLS-1$
       }
     }
 
@@ -345,6 +346,6 @@ public class SimpleObservation implements IObservation
   @Override
   public String toString( )
   {
-    return "Obs: " + m_name + " - Id:" + m_identifier + " - Href:" + m_href;
+    return Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.8") + m_name + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.9") + m_identifier + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleObservation.10") + m_href; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.io.StringReader;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.SensorException;
@@ -84,7 +85,7 @@ public class WQFactory
         return WQTableFactory.parse( new InputSource( new StringReader( wqtable ) ) );
       }
 
-      throw new IllegalStateException( "Kann keine WQ-Observation erzeugen: WQ-Beziehung fehlt" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.WQFactory.0") ); //$NON-NLS-1$
     }
     catch( final WQException e )
     {

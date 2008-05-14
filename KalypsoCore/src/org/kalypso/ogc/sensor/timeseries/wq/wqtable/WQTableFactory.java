@@ -20,6 +20,7 @@ import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.commons.serializer.ISerializer;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.xml.sax.InputSource;
@@ -82,11 +83,11 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         final Date validity = ratingTable.getValidity().getTime();
         final Integer offset = ratingTable.getOffset();
 
-        final String[] strX = ratingTable.getX().split( "," );
-        final String[] strY = ratingTable.getY().split( "," );
+        final String[] strX = ratingTable.getX().split( "," ); //$NON-NLS-1$
+        final String[] strY = ratingTable.getY().split( "," ); //$NON-NLS-1$
 
         if( strX.length != strY.length )
-          throw new WQException( "Anzahl von W-Werte und Q-Werte ist nicht gleich" );
+          throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory.2") ); //$NON-NLS-1$
 
         final double[] W = new double[strX.length];
         final double[] Q = new double[strX.length];
@@ -135,8 +136,8 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         final double[] W = new double[pairs.length];
         final double[] Q = new double[pairs.length];
         WQPair.convert2doubles( pairs, W, Q );
-        xmlTable.setX( ArrayUtils.toString( W ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) );
-        xmlTable.setY( ArrayUtils.toString( Q ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) );
+        xmlTable.setX( ArrayUtils.toString( W ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        xmlTable.setY( ArrayUtils.toString( Q ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         xmlTables.getTable().add( xmlTable );
       }

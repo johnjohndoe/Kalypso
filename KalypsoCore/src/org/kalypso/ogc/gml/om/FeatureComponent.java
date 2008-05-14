@@ -102,7 +102,7 @@ public class FeatureComponent extends AbstractComponent
   public String getDescription( )
   {
     if( m_itemDef == null )
-      return "";
+      return ""; //$NON-NLS-1$
     return NamedFeatureHelper.getDescription( m_itemDef );
   }
 
@@ -125,7 +125,7 @@ public class FeatureComponent extends AbstractComponent
     if( m_uri == null )
       return m_itemDef.getId();
 
-    return m_uri + "#" + m_itemDef.getId();
+    return m_uri + "#" + m_itemDef.getId(); //$NON-NLS-1$
   }
 
   public Feature getItemDefinition( )
@@ -136,7 +136,7 @@ public class FeatureComponent extends AbstractComponent
   public String getName( )
   {
     if( m_itemDef == null )
-      return "<no name>";
+      return "<no name>"; //$NON-NLS-1$
     return NamedFeatureHelper.getName( m_itemDef );
   }
 

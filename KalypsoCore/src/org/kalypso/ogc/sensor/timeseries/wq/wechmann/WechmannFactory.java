@@ -164,7 +164,7 @@ public class WechmannFactory
     {
       final Wechmann wt = OF_WECHMANN.createWechmann();
       final List<XMLWechmannSet> sets = wt.getSet();
-      final SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+      final SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ); //$NON-NLS-1$
       for( final Iterator it = wg.iterator(); it.hasNext(); )
       {
         final WechmannSet wset = (WechmannSet) it.next();

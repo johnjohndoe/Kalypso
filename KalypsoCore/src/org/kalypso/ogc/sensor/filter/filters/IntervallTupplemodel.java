@@ -47,6 +47,7 @@ import java.util.List;
 
 import org.kalypso.contribs.java.util.CalendarIterator;
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -384,7 +385,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
 
   public void setElement( int index, Object element, IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt setElement() nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.0") ); //$NON-NLS-1$
     // TODO support it
   }
 
@@ -393,7 +394,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     // TODO: better than this test: should test if axis.isKey() is true
     if( element instanceof Date )
       return m_srcModel.indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Axe "
-        + axis.getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.1") //$NON-NLS-1$
+        + axis.getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallTupplemodel.2") ); //$NON-NLS-1$
   }
 }

@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.virtual;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.factory.AbstractRepositoryFactory;
@@ -72,7 +73,7 @@ public class HeadlessVirtualRepositoryFactory extends AbstractRepositoryFactory
   public IRepository createRepository() throws RepositoryException
   {
     if( getConfiguration() == null )
-      throw new RepositoryException( "Configuration must contain the location" );
+      throw new RepositoryException( Messages.getString("org.kalypso.repository.virtual.HeadlessVirtualRepositoryFactory.0") ); //$NON-NLS-1$
 
     return new VirtualRepository( getClass().getName(), getRepositoryName(), getConfiguration(), isReadOnly() );
   }

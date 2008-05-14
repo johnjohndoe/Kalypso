@@ -62,10 +62,10 @@ public class KalypsoCoreTypeHandlerFactory implements ITypeHandlerFactory<IMarsh
   {
     try
     {
-      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class );
-      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class );
-      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class );
-      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class );
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class ); //$NON-NLS-1$
       final ResourceFileTypeHandler resourceFileTypeHandler = new ResourceFileTypeHandler();
 
       marshallingRegistry.registerTypeHandler( resourceFileTypeHandler );
@@ -80,7 +80,7 @@ public class KalypsoCoreTypeHandlerFactory implements ITypeHandlerFactory<IMarsh
       // this method is also used in headless mode
       if( PlatformUI.isWorkbenchRunning() )
       {
-        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() );
+        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
   }

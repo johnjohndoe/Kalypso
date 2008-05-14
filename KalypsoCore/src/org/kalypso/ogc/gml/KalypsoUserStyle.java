@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
+import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
@@ -200,7 +201,7 @@ public class KalypsoUserStyle implements UserStyle, Marshallable, IWorkbenchAdap
     if( getName() != null )
       return getName();
 
-    return "KalypsoUserStyle: no 'title' or 'name' set.";
+    return Messages.getString("org.kalypso.ogc.gml.KalypsoUserStyle.0"); //$NON-NLS-1$
   }
 
   /**

@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.GmlTargetType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -47,7 +48,7 @@ public class GmlTargetHandler implements ITargetHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( "Daten wurden nicht gespeichert", e );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.target.GmlTargetHandler.0"), e ); //$NON-NLS-1$
     }
     finally
     {

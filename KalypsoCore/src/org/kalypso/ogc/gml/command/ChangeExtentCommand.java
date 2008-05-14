@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -89,6 +90,6 @@ public class ChangeExtentCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Ausschnitt ändern";
+    return Messages.getString("org.kalypso.ogc.gml.command.ChangeExtentCommand.0"); //$NON-NLS-1$
   }
 }

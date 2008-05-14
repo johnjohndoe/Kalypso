@@ -56,6 +56,7 @@ import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.core.KalypsoCoreExtensions;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -90,46 +91,46 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class ObservationFeatureFactory implements IAdapterFactory
 {
-  public final static QName GML_NAME = new QName( NS.GML3, "name" );
+  public final static QName GML_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
-  public final static QName GML_DESCRIPTION = new QName( NS.GML3, "description" );
+  public final static QName GML_DESCRIPTION = new QName( NS.GML3, "description" ); //$NON-NLS-1$
 
-  public final static QName GML_METADATA = new QName( NS.GML3, "metaDataProperty" );
+  public final static QName GML_METADATA = new QName( NS.GML3, "metaDataProperty" ); //$NON-NLS-1$
 
-  public final static QName OM_OBSERVATION = new QName( NS.OM, "Observation" );
+  public final static QName OM_OBSERVATION = new QName( NS.OM, "Observation" ); //$NON-NLS-1$
 
-  public final static QName OM_OBSERVED_PROP = new QName( NS.OM, "observedProperty" );
+  public final static QName OM_OBSERVED_PROP = new QName( NS.OM, "observedProperty" ); //$NON-NLS-1$
 
-  public final static QName OM_RESULT = new QName( NS.OM, "result" );
+  public final static QName OM_RESULT = new QName( NS.OM, "result" ); //$NON-NLS-1$
 
-  public final static QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" );
+  public final static QName OM_RESULTDEFINITION = new QName( NS.OM, "resultDefinition" ); //$NON-NLS-1$
 
-  public final static QName SWE_COMPONENT = new QName( NS.SWE, "component" );
+  public final static QName SWE_COMPONENT = new QName( NS.SWE, "component" ); //$NON-NLS-1$
 
-  public final static QName SWE_ITEMDEFINITION = new QName( NS.SWE, "ItemDefinition" );
+  public final static QName SWE_ITEMDEFINITION = new QName( NS.SWE, "ItemDefinition" ); //$NON-NLS-1$
 
-  public final static QName SWE_PROPERTY = new QName( NS.SWE, "property" );
+  public final static QName SWE_PROPERTY = new QName( NS.SWE, "property" ); //$NON-NLS-1$
 
-  public final static QName SWE_PHENOMENONTYPE = new QName( NS.SWE, "Phenomenon" );
+  public final static QName SWE_PHENOMENONTYPE = new QName( NS.SWE, "Phenomenon" ); //$NON-NLS-1$
 
-  public final static QName SWE_RECORDDEFINITIONTYPE = new QName( NS.SWE, "RecordDefinition" );
+  public final static QName SWE_RECORDDEFINITIONTYPE = new QName( NS.SWE, "RecordDefinition" ); //$NON-NLS-1$
 
-  public final static QName SWE_REPRESENTATION = new QName( NS.SWE, "representation" );
+  public final static QName SWE_REPRESENTATION = new QName( NS.SWE, "representation" ); //$NON-NLS-1$
 
-  private static final QName QNAME_F_SORTED_RECORD_DEFINITION = new QName( NS.SWE_EXTENSIONS, "SortedRecordDefinition" );
+  private static final QName QNAME_F_SORTED_RECORD_DEFINITION = new QName( NS.SWE_EXTENSIONS, "SortedRecordDefinition" ); //$NON-NLS-1$
 
-  private static final QName QNAME_P_SORTED_COMPONENT = new QName( NS.SWE_EXTENSIONS, "sortedComponent" );
+  private static final QName QNAME_P_SORTED_COMPONENT = new QName( NS.SWE_EXTENSIONS, "sortedComponent" ); //$NON-NLS-1$
 
   /**
    * Makes a tuple based observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static IObservation<TupleResult> toObservation( final Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-      throw new IllegalArgumentException( "Feature ist not an Observation: " + f );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.16") + f ); //$NON-NLS-1$
 
     final String name = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_NAME );
     final String desc = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_DESCRIPTION );
@@ -178,7 +179,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     // TODO: move into own method
     // TODO: be more robust against inconsistency between resultDefinition and result
-    final StringTokenizer tk = new StringTokenizer( result == null ? "" : result.trim() );
+    final StringTokenizer tk = new StringTokenizer( result == null ? "" : result.trim() ); //$NON-NLS-1$
     int nb = 0;
     IRecord record = null;
     while( tk.hasMoreElements() )
@@ -194,18 +195,18 @@ public class ObservationFeatureFactory implements IAdapterFactory
       try
       {
         Object value = null;
-        if( "null".equals( token ) )
+        if( "null".equals( token ) ) //$NON-NLS-1$
           value = null;
         else // TODO fabrication method needed!
         if( handler instanceof XsdBaseTypeHandlerString )
         {
           final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
         }
         else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
         {
           final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) );
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
         }
         else
           value = handler.convertToJavaValue( token );
@@ -278,7 +279,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     // REMARK: special case for boolean values, as their string represantation is not always
     // 'true' or 'false'
-    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "boolean" ) ) )
+    if( valueTypeName.equals( new QName( NS.XSD_SCHEMA, "boolean" ) ) ) //$NON-NLS-1$
     {
       // TODO: we need to return a special type handler, that serializes according to the enumeration restriction
       // of the component
@@ -297,7 +298,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IFeatureType featureType = f.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-      throw new IllegalArgumentException( "Feature ist not an Observation: " + f );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.22") + f ); //$NON-NLS-1$
 
     final Feature recordDefinition = ObservationFeatureFactory.getOrCreateRecordDefinition( f );
     return ObservationFeatureFactory.buildComponents( recordDefinition );
@@ -342,7 +343,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IFeatureType featureType = targetObsFeature.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-      throw new IllegalArgumentException( "Feature ist not an Observation: " + targetObsFeature );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.23") + targetObsFeature ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -428,7 +429,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final String id = comp.getId();
     // try to find a dictionary entry for this component, if it exists, create xlinked-feature to it
-    final XLinkedFeature_Impl xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION ), id, "", "", "", "", "" );
+    final XLinkedFeature_Impl xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION ), id, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     if( xlink.getFeature() != null )
       return xlink;
 
@@ -466,11 +467,11 @@ public class ObservationFeatureFactory implements IAdapterFactory
   public static RepresentationType createRepresentationType( final IComponent component )
   {
     if( component == null )
-      throw new IllegalArgumentException( "component is null" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.29") ); //$NON-NLS-1$
 
     final QName valueTypeName = component.getValueTypeName();
 
-    final String classification = "";
+    final String classification = ""; //$NON-NLS-1$
 
     final String unit = component.getUnit();
 
@@ -514,14 +515,14 @@ public class ObservationFeatureFactory implements IAdapterFactory
         final IComponent comp = components[i];
 
         if( comp != components[0] )
-          buffer.append( " " );
+          buffer.append( " " ); //$NON-NLS-1$
 
         final Object value = record.getValue( i );
         final String bufferValue = ObservationFeatureFactory.recordValueToString( value, handler );
         buffer.append( bufferValue );
       }
 
-      buffer.append( "\n" );
+      buffer.append( "\n" ); //$NON-NLS-1$
     }
 
     return buffer.toString();
@@ -530,7 +531,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   private static String recordValueToString( final Object value, final XsdBaseTypeHandler handler )
   {
     if( value == null )
-      return "null";
+      return "null"; //$NON-NLS-1$
 
     // REMARK URLEncoder: encoding of xml file is not known - at this point we assume target encoding as "UTF-8".
     // Windows Eclipse often creates Cp-1252 encoded files
@@ -540,14 +541,14 @@ public class ObservationFeatureFactory implements IAdapterFactory
       if( handler instanceof XsdBaseTypeHandlerString )
       {
         final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-        return myHandler.convertToXMLString( URLEncoder.encode( (String) value, "UTF-8" ) );
+        return myHandler.convertToXMLString( URLEncoder.encode( (String) value, "UTF-8" ) ); //$NON-NLS-1$
       }
 
       if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
       {
         final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
         final XMLGregorianCalendar cal = (XMLGregorianCalendar) value;
-        return URLEncoder.encode( myHandler.convertToXMLString( cal ), "UTF-8" );
+        return URLEncoder.encode( myHandler.convertToXMLString( cal ), "UTF-8" ); //$NON-NLS-1$
       }
 
       return handler.convertToXMLString( value );

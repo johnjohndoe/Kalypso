@@ -55,6 +55,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -80,7 +81,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationDWD5minAdapter implements INativeObservationAdapter
 {
-  private final Pattern m_dwdBlockPattern = Pattern.compile( "[7]{2}\\s+([0-9]{5})\\s+([0-9]{6}).+?" );
+  private final Pattern m_dwdBlockPattern = Pattern.compile( "[7]{2}\\s+([0-9]{5})\\s+([0-9]{6}).+?" ); //$NON-NLS-1$
 
   private String m_title;
 
@@ -100,8 +101,8 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_title = config.getAttribute( "label" );
-    m_axisTypeValue = config.getAttribute( "axisType" );
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
   public IObservation createObservationFromSource( File source ) throws Exception
@@ -111,11 +112,11 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
 
   public IObservation createObservationFromSource( File source, TimeZone timeZone, boolean continueWithErrors ) throws Exception
   {
-    SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" );
+    SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
 
     /* this is due to backwards compatibility */
     if( timeZone == null )
-      timeZone = TimeZone.getTimeZone( "GMT+1" );
+      timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
 
     format.setTimeZone( timeZone );
     m_dateFormat = format;
@@ -123,7 +124,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
     // create axis
     IAxis[] axis = createAxis();
     ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     return observation;
   }
 
@@ -157,7 +158,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
           {
             // String DWDID = matcher.group( 1 );
             String startDateString = matcher.group( 2 );
-            Pattern m_datePattern = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" );
+            Pattern m_datePattern = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
             Matcher dateMatcher = m_datePattern.matcher( startDateString );
             if( dateMatcher.matches() )
             {
@@ -167,12 +168,12 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             }
             else
             {
-              System.out.println( "Das Format des Headers (Startdatum) passt nicht." + startDateString + "Pattern:" + m_datePattern.toString() );
+              System.out.println( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.9") + startDateString + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.10") + m_datePattern.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
           else
           {
-            errorBuffer.append( "line " + lineNumber + " header not parseable: \"" + lineIn + "\"\n" );
+            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.11") + lineNumber + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.12") + lineIn + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.13") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
           step++;
@@ -186,7 +187,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             // TODO: Write status
             if( value > 99.997 )
             {
-              System.out.println( "Messfehler" );
+              System.out.println( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.14") ); //$NON-NLS-1$
               value = 0.0;
             }
             // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
@@ -195,7 +196,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             // {
             valueCollector.add( value );
 
-            buffer.append( " " ); // separator
+            buffer.append( " " ); // separator //$NON-NLS-1$
             Date valueDate = new Date( startDate + (i) * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
             buffer.append( valueDate.toString() );
             dateCollector.add( valueDate );
@@ -233,7 +234,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
    */
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.16"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     TimeserieUtils.getUnit( m_axisTypeValue );
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };

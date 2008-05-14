@@ -63,15 +63,15 @@ public class GridTest extends TestCase
 {
   public void testGridProcessing( ) throws Exception
   {
-    final URL zipResource = getClass().getResource( "resources/dgm2m.zip" );
-    final URL gmlResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + "dgm2m.gml" );
+    final URL zipResource = getClass().getResource( "resources/dgm2m.zip" ); //$NON-NLS-1$
+    final URL gmlResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + "dgm2m.gml" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     /* Read input workspace and coverages */
     final GMLWorkspace inputWorkspace = GmlSerializer.createGMLWorkspace( gmlResource, null );
     final ICoverageCollection inputCoverages = (ICoverageCollection) inputWorkspace.getRootFeature().getAdapter( ICoverageCollection.class );
 
     /* Create output workspace and get handle to coverages */
-    final File tmpFile = File.createTempFile( "gridTest", ".gml" );
+    final File tmpFile = File.createTempFile( "gridTest", ".gml" ); //$NON-NLS-1$ //$NON-NLS-2$
     final GMLWorkspace outputWorkspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, tmpFile.toURL(), null );
     final ICoverageCollection outputCoverages = (ICoverageCollection) outputWorkspace.getRootFeature().getAdapter( ICoverageCollection.class );
 
@@ -92,14 +92,14 @@ public class GridTest extends TestCase
 
       };
 
-      final File file = File.createTempFile( "gridTest_grid", ".ascbin" );
+      final File file = File.createTempFile( "gridTest_grid", ".ascbin" ); //$NON-NLS-1$ //$NON-NLS-2$
       final String filePath = file.getName();
-      GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, filePath, "image/bin", new NullProgressMonitor() );
+      GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, filePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
 
       inputGrid.dispose();
     }
 
     /* Write result workspace */
-    GmlSerializer.serializeWorkspace( tmpFile, outputWorkspace, "UTF-8" );
+    GmlSerializer.serializeWorkspace( tmpFile, outputWorkspace, "UTF-8" ); //$NON-NLS-1$
   }
 }

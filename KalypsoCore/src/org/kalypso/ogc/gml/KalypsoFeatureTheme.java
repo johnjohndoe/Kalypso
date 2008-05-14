@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -106,7 +107,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, "FeatureTheme", mapModel, legendIcon, context, shouldShowChildren );
+    super( name, "FeatureTheme", mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
 
     m_workspace = workspace;
     m_featurePath = featurePath;
@@ -215,7 +216,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final Collection<UserStylePainter> styles = m_styleDisplayMap.values();
     final UserStylePainter[] styleArray = styles.toArray( new UserStylePainter[styles.size()] );
 
-    final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Styles", styleArray.length );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.KalypsoFeatureTheme.1"), styleArray.length ); //$NON-NLS-1$
 
     if( m_featureList == null )
       return;
@@ -422,7 +423,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   protected ImageDescriptor getDefaultIcon( )
   {
     if( m_featureThemeIcon == null )
-      m_featureThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/featureTheme.gif" ) );
+      m_featureThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/featureTheme.gif" ) ); //$NON-NLS-1$
 
     return ImageDescriptor.createFromImage( m_featureThemeIcon );
   }
@@ -465,7 +466,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -490,7 +491,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     // HACK: use featureThemeInfo from KalypsoUI as a default. This is needed, because this feature info the
     // featureType-properties mechanisms from KalypsoUI in order find a registered featureThemeInfo for the current
     // qname
-    final IKalypsoThemeInfo defaultFeatureThemeInfo = KalypsoCoreExtensions.createThemeInfo( "org.kalypso.ui.featureThemeInfo.default", this );
+    final IKalypsoThemeInfo defaultFeatureThemeInfo = KalypsoCoreExtensions.createThemeInfo( "org.kalypso.ui.featureThemeInfo.default", this ); //$NON-NLS-1$
     if( defaultFeatureThemeInfo != null )
       return defaultFeatureThemeInfo;
 

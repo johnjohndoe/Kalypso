@@ -59,7 +59,7 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public class ManipulatorExtensions
 {
-  public final static String MANIPULATOR_EXTENSION_POINT = "org.kalypso.core.obsManipulator";
+  public final static String MANIPULATOR_EXTENSION_POINT = "org.kalypso.core.obsManipulator"; //$NON-NLS-1$
 
   private ManipulatorExtensions( )
   {
@@ -90,7 +90,7 @@ public class ManipulatorExtensions
 
       try
       {
-        manips.add( (IObservationManipulator) element.createExecutableExtension( "class" ) );
+        manips.add( (IObservationManipulator) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
       }
       catch( final CoreException e )
       {

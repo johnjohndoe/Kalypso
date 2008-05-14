@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -99,7 +100,7 @@ public class ActivateThemeCommand implements ICommand
    */
   public String getDescription()
   {
-    return "aktives Thema setzen";
+    return Messages.getString("org.kalypso.ogc.gml.command.ActivateThemeCommand.0"); //$NON-NLS-1$
   }
 
 }

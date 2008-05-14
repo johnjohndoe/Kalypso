@@ -45,6 +45,7 @@ import java.io.File;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author doemming
@@ -57,18 +58,18 @@ public class CatalogUtilities
    * catalogsuffix="_catalog"<br>
    * resulting catalogURN="ogc:sld_catalog"
    */
-  private static final String CATALOG_URN = "_catalog";
+  private static final String CATALOG_URN = "_catalog"; //$NON-NLS-1$
 
-  public static String CATALOG_FILE_NAME = "catalog.xml";
+  public static String CATALOG_FILE_NAME = "catalog.xml"; //$NON-NLS-1$
 
   // TODO find out XML namespace
-  public static final QName BASE = new QName( "xml", "base" );
+  public static final QName BASE = new QName( "xml", "base" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   public static String getPathForCatalog( final String catalogURN )
   {
-    if( !catalogURN.endsWith( ":" ) )
-      throw new UnsupportedOperationException( "catalog uRN must end with ':' " + catalogURN );
-    if( catalogURN.equals( ":" ) )
+    if( !catalogURN.endsWith( ":" ) ) //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogUtilities.5") + catalogURN ); //$NON-NLS-1$
+    if( catalogURN.equals( ":" ) ) //$NON-NLS-1$
       return CATALOG_FILE_NAME;
     final String path = catalogURN.replace( ':', File.separator.charAt( 0 ) );
     if( path.endsWith( File.separator ) )
@@ -81,8 +82,8 @@ public class CatalogUtilities
    */
   public static String createCatalogURN( final String baseURN )
   {
-    if( !baseURN.endsWith( ":" ) )
-      throw new UnsupportedOperationException( "baseURN for catalog must end with suffix ':' " + baseURN );
+    if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogUtilities.8") + baseURN ); //$NON-NLS-1$
     // replace last ':' with catalog suffix, that is the contract
     return baseURN.substring( 0, baseURN.length() - 1 ) + CATALOG_URN;
   }
@@ -96,10 +97,10 @@ public class CatalogUtilities
   public static String getUrnSection( final String urn, int level )
   {
     if( level == 0 )
-      return ":";
+      return ":"; //$NON-NLS-1$
     try
     {
-      final String[] urnParts = urn.split( ":" );
+      final String[] urnParts = urn.split( ":" ); //$NON-NLS-1$
       return urnParts[level - 1];
     }
     catch( Exception e )
@@ -118,10 +119,10 @@ public class CatalogUtilities
    */
   public static int getMaxLevel( final String urn )
   {
-    if( urn == null || "".equals( urn ) || ":".equals( urn ) )
+    if( urn == null || "".equals( urn ) || ":".equals( urn ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return 0;
-    final int result = StringUtils.countMatches( urn, ":" );
-    if( urn.endsWith( ":" ) )
+    final int result = StringUtils.countMatches( urn, ":" ); //$NON-NLS-1$
+    if( urn.endsWith( ":" ) ) //$NON-NLS-1$
       return result;
     return result + 1;
   }
@@ -131,11 +132,11 @@ public class CatalogUtilities
    */
   public static String addURNSection( final String baseURN, final String partURNToAppend )
   {
-    if( baseURN == null || "".equals( baseURN ) || ":".equals( baseURN ) )
+    if( baseURN == null || "".equals( baseURN ) || ":".equals( baseURN ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return partURNToAppend;
-    if( baseURN.endsWith( ":" ) )
+    if( baseURN.endsWith( ":" ) ) //$NON-NLS-1$
       return baseURN + partURNToAppend;
-    return baseURN + ":" + partURNToAppend;
+    return baseURN + ":" + partURNToAppend; //$NON-NLS-1$
   }
 
   /**

@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -51,11 +52,11 @@ import org.w3c.dom.Node;
  */
 public class ResourceFileTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
-  public static final String NSHWS = "http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData";
+  public static final String NSHWS = "http://elbe.wb.tu-harburg.de/floodrisk/waterlevelData"; //$NON-NLS-1$
 
   public static final Class CLASSNAME = IFile.class;
 
-  public static QName QNAME = new QName( NSHWS, "resourceFile" );
+  public static QName QNAME = new QName( NSHWS, "resourceFile" ); //$NON-NLS-1$
 
   public Class getValueClass( )
   {
@@ -86,7 +87,7 @@ public class ResourceFileTypeHandler extends AbstractOldFormatMarshallingTypeHan
 
   public String getShortname( )
   {
-    return "IFile";
+    return "IFile"; //$NON-NLS-1$
   }
 
   /**
@@ -95,7 +96,7 @@ public class ResourceFileTypeHandler extends AbstractOldFormatMarshallingTypeHan
    */
   public Object cloneObject( Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
-    throw new CloneNotSupportedException( "Not clonable!" );
+    throw new CloneNotSupportedException( Messages.getString("org.kalypso.ogc.gml.typehandler.ResourceFileTypeHandler.3") ); //$NON-NLS-1$
   }
 
   /**

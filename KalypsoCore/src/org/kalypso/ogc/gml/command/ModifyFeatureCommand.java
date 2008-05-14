@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.command;
 import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -204,6 +205,6 @@ public class ModifyFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Wert ändern";
+    return Messages.getString("org.kalypso.ogc.gml.command.ModifyFeatureCommand.0"); //$NON-NLS-1$
   }
 }

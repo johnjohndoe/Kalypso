@@ -94,7 +94,7 @@ public final class ZmlURL
   {
     String ssid = href;
     if( !isServerSide( ssid ) )
-      ssid = ZmlURLConstants.SCHEME_OCS + ":" + ssid;
+      ssid = ZmlURLConstants.SCHEME_OCS + ":" + ssid; //$NON-NLS-1$
 
     return ssid;
   }
@@ -104,7 +104,7 @@ public final class ZmlURL
    */
   public static String removeServerSideId( final String href )
   {
-    final String id = href.replaceFirst( ZmlURLConstants.SCHEME_OCS + ":", "" );
+    final String id = href.replaceFirst( ZmlURLConstants.SCHEME_OCS + ":", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return id;
   }
@@ -151,7 +151,7 @@ public final class ZmlURL
     // TODO test if this is correct since only the first ':' found
     // will be returned here. But the url might contain something like
     // foo:bar://stuff hence results might not be correct!!!
-    int ix = strUrl.indexOf( ":" );
+    int ix = strUrl.indexOf( ":" ); //$NON-NLS-1$
     if( ix != -1 )
       return strUrl.substring( 0, ix );
 
@@ -203,15 +203,15 @@ public final class ZmlURL
       return href;
 
     // first remove the existing filter spec (does nothing if not present)
-    String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1 + ".*" + ZmlURLConstants.TAG_FILTER2, "" );
+    String tmp = href.replaceFirst( ZmlURLConstants.TAG_FILTER1 + ".*" + ZmlURLConstants.TAG_FILTER2, "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    filter = filter.replaceAll( "^\\?", "" ); // remove beginning "?"
-    filter = filter.replaceAll( "^" + ZmlURLConstants.TAG_FILTER1, "" ); // remove beginning "<filter>"
-    filter = filter.replaceAll( ZmlURLConstants.TAG_FILTER2 + "$", "" ); // remove ending "</filter>"
+    filter = filter.replaceAll( "^\\?", "" ); // remove beginning "?" //$NON-NLS-1$ //$NON-NLS-2$
+    filter = filter.replaceAll( "^" + ZmlURLConstants.TAG_FILTER1, "" ); // remove beginning "<filter>" //$NON-NLS-1$ //$NON-NLS-2$
+    filter = filter.replaceAll( ZmlURLConstants.TAG_FILTER2 + "$", "" ); // remove ending "</filter>" //$NON-NLS-1$ //$NON-NLS-2$
 
-    String[] strs = tmp.split( "\\?", 2 );
-    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
-      tmp = "?" + strs[0] + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2;
+    String[] strs = tmp.split( "\\?", 2 ); //$NON-NLS-1$
+    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      tmp = "?" + strs[0] + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2; //$NON-NLS-1$
     else
       tmp = strs[0] + '?' + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2;
 
@@ -240,9 +240,9 @@ public final class ZmlURL
       if( requestType.getName() == null )
         requestType.setName( request.getName() );
       if( requestType.getAxes() == null )
-        requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) );
+        requestType.setAxes( StringUtils.join( request.getAxisTypes(), "," ) ); //$NON-NLS-1$
       if( requestType.getStatusAxes() == null )
-        requestType.setStatusAxes( StringUtils.join( request.getAxisTypesWithStatus(), "," ) );
+        requestType.setStatusAxes( StringUtils.join( request.getAxisTypesWithStatus(), "," ) ); //$NON-NLS-1$
 
       if( request.getDateRange() != null )
       {
@@ -281,13 +281,13 @@ public final class ZmlURL
     String requestPart = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
     String tmpUrl;
     if( requestPart != null )
-      tmpUrl = href.replace( requestPart, "" );
+      tmpUrl = href.replace( requestPart, "" ); //$NON-NLS-1$
     else
       tmpUrl = href;
 
-    final String[] strs = tmpUrl.split( "\\?", 2 );
-    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) )
-      tmpUrl = "?" + strs[0];
+    final String[] strs = tmpUrl.split( "\\?", 2 ); //$NON-NLS-1$
+    if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      tmpUrl = "?" + strs[0]; //$NON-NLS-1$
     else
       tmpUrl = strs[0] + '?';
 
@@ -307,6 +307,6 @@ public final class ZmlURL
   public static boolean isEmpty( final String href )
   {
     final String id = getIdentifierPart( href );
-    return id.equalsIgnoreCase( "kalypso-ocs://LEER" ) || id.equalsIgnoreCase( "kalypso-ocs://DUMMY" );
+    return id.equalsIgnoreCase( "kalypso-ocs://LEER" ) || id.equalsIgnoreCase( "kalypso-ocs://DUMMY" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

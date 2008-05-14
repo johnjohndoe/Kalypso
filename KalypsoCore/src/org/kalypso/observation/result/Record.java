@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
@@ -98,7 +99,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   {
     final int index = m_owner.indexOfComponent( comp );
     if( index == -1 )
-      throw new IllegalArgumentException( "Unknown component: " + comp );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.Record.0") + comp ); //$NON-NLS-1$
 
     return index;
   }

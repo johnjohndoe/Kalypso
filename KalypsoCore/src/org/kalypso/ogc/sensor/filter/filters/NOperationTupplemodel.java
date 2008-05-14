@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.util.Date;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -150,13 +151,13 @@ public class NOperationTupplemodel extends AbstractTuppleModel
       }
       return new Integer( value );
     }
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt den Datentyp "
-        + axis.getDataClass().getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.0") //$NON-NLS-1$
+        + axis.getDataClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.1") ); //$NON-NLS-1$
   }
 
   public void setElement( int index, Object element, IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt setElement() nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.2") ); //$NON-NLS-1$
   }
 
   public int indexOf( Object element, IAxis axis ) throws SensorException
@@ -164,7 +165,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     // TODO: better than this test: should test if axis.isKey() is true
     if( element instanceof Date )
       return m_baseModels[0].indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Achse "
-        + axis.getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.3") //$NON-NLS-1$
+        + axis.getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.4") ); //$NON-NLS-1$
   }
 }

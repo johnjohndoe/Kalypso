@@ -47,7 +47,7 @@ public class KalypsoCoreUrlCatalog extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( Class<?> myClass, Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( "http://www.tuhh.de/kalypsoScrabLayer", getClass().getResource( "resources/scrablayer.xsd" ) );
-    catalog.put( "org.kalypso.shape", getClass().getResource( "resources/shape.xsd" ) );
+    catalog.put( "http://www.tuhh.de/kalypsoScrabLayer", getClass().getResource( "resources/scrablayer.xsd" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    catalog.put( "org.kalypso.shape", getClass().getResource( "resources/shape.xsd" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

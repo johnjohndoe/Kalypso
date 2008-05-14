@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -96,6 +97,6 @@ public class MoveThemeDownCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Thema nach unten verschieben";
+    return Messages.getString("org.kalypso.ogc.gml.command.MoveThemeDownCommand.0"); //$NON-NLS-1$
   }
 }

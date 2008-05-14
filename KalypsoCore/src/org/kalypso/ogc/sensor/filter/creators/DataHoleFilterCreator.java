@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.filter.creators;
 
 import java.net.URL;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -61,7 +62,7 @@ public class DataHoleFilterCreator implements IFilterCreator
       throws SensorException
   {
     if( !( aft instanceof DataholeFilterType ) )
-      throw new IllegalArgumentException( "Not a " + DataholeFilterType.class.getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.creators.DataHoleFilterCreator.0") + DataholeFilterType.class.getName() ); //$NON-NLS-1$
 
     final DataholeFilterType ft = (DataholeFilterType)aft;
 

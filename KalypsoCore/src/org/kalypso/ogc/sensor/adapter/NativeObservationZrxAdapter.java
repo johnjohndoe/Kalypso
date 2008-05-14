@@ -56,6 +56,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -72,21 +73,21 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationZrxAdapter implements INativeObservationAdapter
 {
-  private final DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmm" );
+  private final DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmm" ); //$NON-NLS-1$
 
-  private final DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" );
+  private final DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" ); //$NON-NLS-1$
 
-  public static Pattern m_zrxHeaderPattern = Pattern.compile( "#.*" );
+  public static Pattern m_zrxHeaderPattern = Pattern.compile( "#.*" ); //$NON-NLS-1$
 
-  public static Pattern m_zrxDataPattern = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" );
+  public static Pattern m_zrxDataPattern = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" ); //$NON-NLS-1$
 
-  public static Pattern m_zrxSNAMEPattern = Pattern.compile( "(#\\S*SNAME)(\\w+)(\\|\\*\\|\\S*)" );
+  public static Pattern m_zrxSNAMEPattern = Pattern.compile( "(#\\S*SNAME)(\\w+)(\\|\\*\\|\\S*)" ); //$NON-NLS-1$
 
   private String m_title;
 
   private String m_axisTypeValue;
 
-  private String m_SNAME = "titel";
+  private String m_SNAME = "titel"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
@@ -94,8 +95,8 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_title = config.getAttribute( "label" );
-    m_axisTypeValue = config.getAttribute( "axisType" );
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
   public IObservation createObservationFromSource( final File source ) throws Exception
@@ -110,7 +111,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
 
     /* this is due to backwards compatibility */
     if( timeZone == null )
-      timeZone = TimeZone.getTimeZone( "GMT+1" );
+      timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
 
     m_zrxDateFormat.setTimeZone( timeZone );
     m_zrxDateFormatSec.setTimeZone( timeZone );
@@ -119,7 +120,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
     return observation;
   }
 
@@ -153,7 +154,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
             }
             catch( Exception e )
             {
-              errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+              errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.11") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.12") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               numberOfErrors++;
             }
           }
@@ -165,7 +166,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
             }
             catch( Exception e )
             {
-              errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+              errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.14") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.15") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
               numberOfErrors++;
             }
           }
@@ -175,7 +176,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           }
           catch( Exception e )
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + " value not parseable: \"" + lineIn + "\"\n" );
+            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.17") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.18") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
           dateCollector.add( date );
@@ -192,14 +193,14 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
           }
           else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn + "\"\n" );
+            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.20") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.21") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
         }
       }
       catch( Exception e )
       {
-        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage() + "\"\n" );
+        errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.23") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.24") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
@@ -207,8 +208,8 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
     {
 
       MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-      messageBox.setMessage( "Too many errors, probably wrong format selected. Continue (slow operation)?" );
-      messageBox.setText( "Import errors" );
+      messageBox.setMessage( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.26") ); //$NON-NLS-1$
+      messageBox.setText( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.27") ); //$NON-NLS-1$
       if( messageBox.open() == SWT.NO )
         return null;
       else
@@ -237,7 +238,7 @@ public class NativeObservationZrxAdapter implements INativeObservationAdapter
    */
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.28"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;

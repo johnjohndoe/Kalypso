@@ -41,6 +41,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -64,15 +65,15 @@ import org.kalypsodeegree_impl.graphics.sld.UserStyle_Impl;
  */
 public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme
 {
-  public static final String STYLE_NAME = "ScrabLayerStyle";
+  public static final String STYLE_NAME = "ScrabLayerStyle"; //$NON-NLS-1$
 
-  public static final String POLYGON_GEOM_PROP_NAME = "geomPolygon";
+  public static final String POLYGON_GEOM_PROP_NAME = "geomPolygon"; //$NON-NLS-1$
 
-  public static final String LINESTRING_GEOM_PROP_NAME = "geomLineString";
+  public static final String LINESTRING_GEOM_PROP_NAME = "geomLineString"; //$NON-NLS-1$
 
-  public static final String POINT_GEOM_PROP_NAME = "geomPoint";
+  public static final String POINT_GEOM_PROP_NAME = "geomPoint"; //$NON-NLS-1$
 
-  public static final String FEATURE_MEMBER = "scrabLayerMember";
+  public static final String FEATURE_MEMBER = "scrabLayerMember"; //$NON-NLS-1$
 
   private static final String CONTEXT = ScrabLayerFeatureTheme.class.getName();
 
@@ -87,12 +88,12 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
 
   public ScrabLayerFeatureTheme( final I10nString layerName, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( layerName, "scrab", mapModel, legendIcon, context, shouldShowChildren );
+    super( layerName, "scrab", mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
 
     m_selectionManager = selectionManager;
     m_scrapThemeIcon = null;
 
-    final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" );
+    final URL scrabLayerURL = getClass().getResource( "/org/kalypso/core/resources/basicScrabLayer.gml" ); //$NON-NLS-1$
     CommandableWorkspace workspace = null;
     try
     {
@@ -110,7 +111,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
     }
 
     // IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, ScrabLayerFeatureTheme.FEATURE_MEMBER, new I10nString( "Skizzier-Thema" ), selectionManager, mapModel, legendIcon, context, shouldShowChildren );
+    m_scrabLayerTheme = new KalypsoFeatureTheme( workspace, ScrabLayerFeatureTheme.FEATURE_MEMBER, new I10nString( Messages.getString("org.kalypso.ogc.gml.ScrabLayerFeatureTheme.7") ), selectionManager, mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
     // add styles for visualisation
     final ArrayList<Symbolizer> symbolizers = new ArrayList<Symbolizer>();
     symbolizers.add( StyleFactory.createPointSymbolizer( StyleFactory.createGraphic( null, null, 1, 5, 0 ), new PropertyName( ScrabLayerFeatureTheme.POINT_GEOM_PROP_NAME ) ) );
@@ -118,7 +119,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
     symbolizers.add( StyleFactory.createPolygonSymbolizer( StyleFactory.createStroke(), StyleFactory.createFill( Color.GRAY, 0.5d ), new PropertyName( ScrabLayerFeatureTheme.POLYGON_GEOM_PROP_NAME ) ) );
     // Added/commented by Dejan //symbolizers.add( StyleFactory.createRasterSymbolizer() );
     final FeatureTypeStyle featureTypeStyle = StyleFactory.createFeatureTypeStyle( ScrabLayerFeatureTheme.STYLE_NAME, symbolizers.toArray( new Symbolizer[symbolizers.size()] ) );
-    final UserStyle style = (UserStyle_Impl) StyleFactory.createStyle( ScrabLayerFeatureTheme.STYLE_NAME, ScrabLayerFeatureTheme.STYLE_NAME, "empty Abstract", featureTypeStyle );
+    final UserStyle style = (UserStyle_Impl) StyleFactory.createStyle( ScrabLayerFeatureTheme.STYLE_NAME, ScrabLayerFeatureTheme.STYLE_NAME, "empty Abstract", featureTypeStyle ); //$NON-NLS-1$
     m_scrabLayerTheme.addStyle( new KalypsoUserStyle( style, style.getName() ) );
   }
 
@@ -299,7 +300,7 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
   protected ImageDescriptor getDefaultIcon( )
   {
     if( m_scrapThemeIcon == null )
-      m_scrapThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/scrapTheme.gif" ) );
+      m_scrapThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/scrapTheme.gif" ) ); //$NON-NLS-1$
 
     return ImageDescriptor.createFromImage( m_scrapThemeIcon );
   }

@@ -54,6 +54,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -87,7 +88,7 @@ public class FilterFactory
    */
   protected FilterFactory( )
   {
-    final InputStream ins = getClass().getResourceAsStream( "resource/filters.props" );
+    final InputStream ins = getClass().getResourceAsStream( "resource/filters.props" ); //$NON-NLS-1$
     final Properties props = new Properties();
     try
     {
@@ -182,7 +183,7 @@ public class FilterFactory
       return null;
     final int i2 = strUrl.indexOf( ZmlURLConstants.TAG_FILTER2, i1 );
     if( i2 == -1 )
-      throw new SensorException( "URL-fragment does not contain a valid filter specification. URL: " + strUrl );
+      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.filter.FilterFactory.1") + strUrl ); //$NON-NLS-1$
     final String strFilterXml = strUrl.substring( i1 + ZmlURLConstants.TAG_FILTER1.length(), i2 );
     return strFilterXml;
   }

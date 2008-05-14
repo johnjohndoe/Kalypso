@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
@@ -47,7 +48,7 @@ public class WQTableSet implements IWQConverter
   public WQTable getFor( final Date date )
   {
     if( m_tables.size() == 0 )
-      throw new IllegalStateException( "Keine WQ-Tabellen vorhanden" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet.0") ); //$NON-NLS-1$
 
     final SortedSet<Date> headSet = m_dates.headSet( date );
 

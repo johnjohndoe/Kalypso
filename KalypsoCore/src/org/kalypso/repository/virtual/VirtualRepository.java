@@ -195,7 +195,7 @@ public class VirtualRepository extends AbstractRepository
    */
   public String getIdentifier( )
   {
-    return m_identifier + "://";
+    return m_identifier + "://"; //$NON-NLS-1$
   }
 
   /**

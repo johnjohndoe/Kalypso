@@ -47,6 +47,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -76,7 +77,7 @@ public class ThemePainter
   {
     final IMapModell mapModell = m_mapPanel.getMapModell();
     final IKalypsoTheme[] m_themes = getVisibleThemes( mapModell );
-    final SubMonitor progress = SubMonitor.convert( monitor, "zeichne Themen", m_themes.length );
+    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString("org.kalypso.ogc.gml.map.ThemePainter.0"), m_themes.length ); //$NON-NLS-1$
 
     final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
     final GeoTransform projection = m_mapPanel.getProjection();

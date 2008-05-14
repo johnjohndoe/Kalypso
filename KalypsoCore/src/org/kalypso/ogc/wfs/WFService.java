@@ -34,6 +34,7 @@ import org.deegree.ogcwebservices.wfs.capabilities.FeatureTypeList;
 import org.deegree.ogcwebservices.wfs.capabilities.WFSCapabilities;
 import org.deegree.ogcwebservices.wfs.capabilities.WFSCapabilitiesDocument;
 import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -58,7 +59,7 @@ import org.xml.sax.SAXException;
  */
 public class WFService
 {
-  public static String WFS_PREFIX = "wfs";
+  public static String WFS_PREFIX = "wfs"; //$NON-NLS-1$
 
   private String m_wfsURL;
 
@@ -95,7 +96,7 @@ public class WFService
     createHttpClient();
 
     // TODO validate string
-    setWfsURL( wfsURL + "?REQUEST=GetCapabilities&VERSION=1.1.0&SERVICE=WFS" );
+    setWfsURL( wfsURL + "?REQUEST=GetCapabilities&VERSION=1.1.0&SERVICE=WFS" ); //$NON-NLS-1$
     WFSCapabilitiesDocument wfsCapsDoc = new WFSCapabilitiesDocument();
 
     try
@@ -104,12 +105,12 @@ public class WFService
     }
     catch( MalformedURLException e )
     {
-      System.out.println( "Invalid URL.\nException: " + e.getLocalizedMessage() );
+      System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.2") + e.getLocalizedMessage() ); //$NON-NLS-1$
       throw e;
     }
     catch( IOException e )
     {
-      System.out.println( "IOException when opening: " + this.m_wfsURL + " \nException: " + e.getLocalizedMessage() );
+      System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.3") + this.m_wfsURL + Messages.getString("org.kalypso.ogc.wfs.WFService.4") + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
       throw e;
     }
     catch( SAXException e )
@@ -123,7 +124,7 @@ public class WFService
     }
     catch( InvalidCapabilitiesException e )
     {
-      System.out.println( "Could not initalize WFS capabilities.\nException: " + e.getLocalizedMessage() );
+      System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.5") + e.getLocalizedMessage() ); //$NON-NLS-1$
       throw e;
     }
   }
@@ -164,7 +165,7 @@ public class WFService
     {
       for( int i = 0; i < ops.length && m_descrFtUrl == null; i++ )
       {
-        if( ops[i].getName().equals( "DescribeFeatureType" ) )
+        if( ops[i].getName().equals( "DescribeFeatureType" ) ) //$NON-NLS-1$
         {
           DCPType[] dcps = ops[i].getDCPs();
           if( dcps.length > 0 )
@@ -182,25 +183,25 @@ public class WFService
     }
 
     if( m_descrFtUrl == null )
-      throw new RuntimeException( "Service does not have a DescribeFeatureType operation accessible by HTTP GET or POST." );
+      throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.7") ); //$NON-NLS-1$
 
     QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
     String format = null;
     try
     {
-      format = URLEncoder.encode( "text/xml; subtype=gml/3.1.1", "UTF-8" );
+      format = URLEncoder.encode( "text/xml; subtype=gml/3.1.1", "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( UnsupportedEncodingException e )
     {
       throw e;
     }
 
-    String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace()
-        + ")";
+    String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        + ")"; //$NON-NLS-1$
 
-    String httpProtocolMethod = isGet ? "HTTP_GET" : "HTTP_POST";
+    String httpProtocolMethod = isGet ? "HTTP_GET" : "HTTP_POST"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    System.out.println( "Using " + httpProtocolMethod + " to get feature type description from " + m_descrFtUrl + serverReq );
+    System.out.println( Messages.getString("org.kalypso.ogc.wfs.WFService.17") + httpProtocolMethod + Messages.getString("org.kalypso.ogc.wfs.WFService.18") + m_descrFtUrl + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$
 
     HttpMethod httpMethod = createHttpMethod( httpProtocolMethod );// new GetMethod( serverUrl );
 
@@ -227,8 +228,8 @@ public class WFService
     }
     catch( Exception e )
     {
-      String mesg = "Error fetching FeatureType description";
-      System.out.println( mesg + " for " + featureType + " from " + uri + " using " + m_descrFtUrl + "?" + serverReq );
+      String mesg = Messages.getString("org.kalypso.ogc.wfs.WFService.19"); //$NON-NLS-1$
+      System.out.println( mesg + Messages.getString("org.kalypso.ogc.wfs.WFService.20") + featureType + Messages.getString("org.kalypso.ogc.wfs.WFService.21") + uri + Messages.getString("org.kalypso.ogc.wfs.WFService.22") + m_descrFtUrl + "?" + serverReq ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       throw new Exception( mesg, e );
     }
   }
@@ -278,8 +279,8 @@ public class WFService
 
   public void setWfsURL( String wfsURL )
   {
-    if( wfsURL == null || "".equals( wfsURL ) )
-      throw new IllegalArgumentException( "The URL for the WFServer cannot be null or empty." );
+    if( wfsURL == null || "".equals( wfsURL ) ) //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFService.25") ); //$NON-NLS-1$
 
     this.m_wfsURL = wfsURL;
   }
@@ -341,7 +342,7 @@ public class WFService
 
     for( int i = 0; i < ops.length && m_getFeatureUrl == null; i++ )
     {
-      if( ops[i].getName().equals( "GetFeature" ) )
+      if( ops[i].getName().equals( "GetFeature" ) ) //$NON-NLS-1$
       {
         DCPType[] dcps = ops[i].getDCPs();
         if( dcps.length > 0 )
@@ -350,7 +351,7 @@ public class WFService
     }
 
     if( m_getFeatureUrl == null )
-      throw new RuntimeException( "Service does not have a GetFeature operation accessible by HTTP POST." );
+      throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.27") ); //$NON-NLS-1$
 
     return m_getFeatureUrl;
   }
@@ -383,12 +384,12 @@ public class WFService
   {
     HttpMethod httpMethod = null;
 
-    if( "HTTP_GET".equals( methodName ) )
+    if( "HTTP_GET".equals( methodName ) ) //$NON-NLS-1$
       httpMethod = new GetMethod();
-    else if( "HTTP_POST".equals( methodName ) )
+    else if( "HTTP_POST".equals( methodName ) ) //$NON-NLS-1$
       httpMethod = new PostMethod();
     else
-      throw new IllegalArgumentException( "method mame must be either 'HTTP_GET' or 'HTTP_POST'" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.wfs.WFService.30") ); //$NON-NLS-1$
 
     return httpMethod;
   }
@@ -492,36 +493,36 @@ public class WFService
   {
     StringBuffer sb = new StringBuffer();
 
-    sb.append( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" );
-    sb.append( "<wfs:GetFeature " );
+    sb.append( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" ); //$NON-NLS-1$
+    sb.append( "<wfs:GetFeature " ); //$NON-NLS-1$
 
-    String oFormat = "text/xml; subtype=gml/3.1.1";
+    String oFormat = "text/xml; subtype=gml/3.1.1"; //$NON-NLS-1$
     if( oFormat != null )
-      sb.append( " outputFormat=\"" + oFormat + "\"" );
+      sb.append( " outputFormat=\"" + oFormat + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     String version = wfsCaps.getVersion();
     if( version != null && version.length() > 0 )
-      sb.append( " version=\"" + version + "\" " );
-    sb.append( " xmlns:gml=\"http://www.opengis.net/gml\" " );
-    sb.append( " xmlns:wfs=\"http://www.opengis.net/wfs\"" );
-    sb.append( " xmlns:ogc=\"http://www.opengis.net/ogc\"" );
+      sb.append( " version=\"" + version + "\" " ); //$NON-NLS-1$ //$NON-NLS-2$
+    sb.append( " xmlns:gml=\"http://www.opengis.net/gml\" " ); //$NON-NLS-1$
+    sb.append( " xmlns:wfs=\"http://www.opengis.net/wfs\"" ); //$NON-NLS-1$
+    sb.append( " xmlns:ogc=\"http://www.opengis.net/ogc\"" ); //$NON-NLS-1$
     if( maxFeatureAsString != null && maxFeatureAsString.length() > 0 )
-      sb.append( " maxFeatures=\"" + maxFeatureAsString + "\"" );
-    sb.append( " >\n" );
+      sb.append( " maxFeatures=\"" + maxFeatureAsString + "\"" ); //$NON-NLS-1$ //$NON-NLS-2$
+    sb.append( " >\n" ); //$NON-NLS-1$
     String namespaceURI = ftQName.getNamespaceURI();
     String localPart = ftQName.getLocalPart();
     if( version == null ) // deegree1 gazetteer
-      sb.append( "<wfs:Query typeName=\"" + localPart + "\">\n" );
+      sb.append( "<wfs:Query typeName=\"" + localPart + "\">\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else if( namespaceURI != null && namespaceURI.length() > 0 )
-      sb.append( "<wfs:Query typeName=\"sn99:" + localPart + "\" xmlns:sn99=\"" + namespaceURI + "\">\n" );
+      sb.append( "<wfs:Query typeName=\"sn99:" + localPart + "\" xmlns:sn99=\"" + namespaceURI + "\">\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else
-      sb.append( "<wfs:Query typeName=\"" + localPart + "\">\n" );
+      sb.append( "<wfs:Query typeName=\"" + localPart + "\">\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( filter != null && filter.length() > 0 )
-      sb.append( filter ).append( "\n" );
+      sb.append( filter ).append( "\n" ); //$NON-NLS-1$
 
-    sb.append( "</wfs:Query>\n" );
-    sb.append( "</wfs:GetFeature>" );
+    sb.append( "</wfs:Query>\n" ); //$NON-NLS-1$
+    sb.append( "</wfs:GetFeature>" ); //$NON-NLS-1$
 
     System.out.println( sb.toString() );
 
@@ -536,7 +537,7 @@ public class WFService
     {
       for( int i = 0; i < ops.length && m_descrFtUrl == null; i++ )
       {
-        if( ops[i].getName().equals( "DescribeFeatureType" ) )
+        if( ops[i].getName().equals( "DescribeFeatureType" ) ) //$NON-NLS-1$
         {
           DCPType[] dcps = ops[i].getDCPs();
           if( dcps.length > 0 )
@@ -549,23 +550,23 @@ public class WFService
     }
 
     if( m_descrFtUrl == null )
-      throw new RuntimeException( "Service does not have a DescribeFeatureType operation accessible by HTTP GET or POST." );
+      throw new RuntimeException( Messages.getString("org.kalypso.ogc.wfs.WFService.55") ); //$NON-NLS-1$
 
     QualifiedName ft = getQualiNameByFeatureTypeName( featureType );
     String format = null;
     try
     {
-      format = URLEncoder.encode( "text/xml; subtype=gml/3.1.1", "UTF-8" );
+      format = URLEncoder.encode( "text/xml; subtype=gml/3.1.1", "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( UnsupportedEncodingException e )
     {
       throw e;
     }
 
-    String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace()
-        + ")";
+    String serverReq = "SERVICE=WFS&REQUEST=DescribeFeatureType&version=1.1.0&OUTPUTFORMAT=" + format + "&TYPENAME=" + featureType + "&NAMESPACE=xmlns(" + ft.getPrefix() + "=" + ft.getNamespace() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        + ")"; //$NON-NLS-1$
 
-    return new URL( m_descrFtUrl + "?" + serverReq );
+    return new URL( m_descrFtUrl + "?" + serverReq ); //$NON-NLS-1$
   }
 
   /**

@@ -50,6 +50,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -201,7 +202,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Geometrie ändern";
+    return Messages.getString("org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand.0"); //$NON-NLS-1$
   }
 
   /**

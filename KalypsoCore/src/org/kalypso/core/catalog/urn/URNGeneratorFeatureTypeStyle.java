@@ -53,7 +53,7 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
  */
 public class URNGeneratorFeatureTypeStyle implements IURNGenerator
 {
-  private final static String BASETYPE = "sld";
+  private final static String BASETYPE = "sld"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.core.catalog.IURNGenerator#getSupportingClass()
@@ -88,7 +88,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
         return null;
       final String baseURN = generator.generateURNFor( featureTypeName );
       final String title = fts.getName();
-      return baseURN + ":" + BASETYPE + ":" + URNUtilities.convertURN( title );
+      return baseURN + ":" + BASETYPE + ":" + URNUtilities.convertURN( title ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return null;
   }
@@ -105,7 +105,7 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
     final String baseURN = generator.generateURNFor( related );
     if( baseURN == null )
       return null;
-    return baseURN + ":" + BASETYPE + ":*";
+    return baseURN + ":" + BASETYPE + ":*"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -120,6 +120,6 @@ public class URNGeneratorFeatureTypeStyle implements IURNGenerator
     final String baseURN = generator.generateURNFor( related );
     if( baseURN == null )
       return null;
-    return baseURN + ":" + BASETYPE + ":default";
+    return baseURN + ":" + BASETYPE + ":default"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

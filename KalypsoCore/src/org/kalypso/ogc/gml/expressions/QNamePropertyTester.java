@@ -11,10 +11,10 @@ public class QNamePropertyTester extends PropertyTester
 {
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    if( "qname".equals( property ) )
+    if( "qname".equals( property ) ) //$NON-NLS-1$
     {
       final Feature feature = (Feature) receiver;
-      final String excpectedStr = expectedValue.toString().replaceAll( "\"", "" ); // strip "
+      final String excpectedStr = expectedValue.toString().replaceAll( "\"", "" ); // strip " //$NON-NLS-1$ //$NON-NLS-2$
       final QName expectedQName = QName.valueOf( excpectedStr );
       return GMLSchemaUtilities.substitutes( feature.getFeatureType(), expectedQName );
     }

@@ -64,6 +64,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -111,39 +112,39 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   private static final long serialVersionUID = 1L;
 
-  public final static String WIDGET_ZOOM_IN = "ZOOM_IN";
+  public final static String WIDGET_ZOOM_IN = "ZOOM_IN"; //$NON-NLS-1$
 
-  public final static String WIDGET_ZOOM_IN_RECT = "ZOOM_IN_RECT";
+  public final static String WIDGET_ZOOM_IN_RECT = "ZOOM_IN_RECT"; //$NON-NLS-1$
 
-  public final static String WIDGET_PAN = "PAN";
+  public final static String WIDGET_PAN = "PAN"; //$NON-NLS-1$
 
-  public final static String WIDGET_EDIT_FEATURE = "EDIT_FEATURE_WITH_GEOMETRY";
+  public final static String WIDGET_EDIT_FEATURE = "EDIT_FEATURE_WITH_GEOMETRY"; //$NON-NLS-1$
 
-  public final static String WIDGET_SELECT = "SELECT";
+  public final static String WIDGET_SELECT = "SELECT"; //$NON-NLS-1$
 
-  public final static String WIDGET_EDIT_GEOMETRY = "EDIT_GEOMETRY";
+  public final static String WIDGET_EDIT_GEOMETRY = "EDIT_GEOMETRY"; //$NON-NLS-1$
 
-  public final static String WIDGET_UNSELECT = "UNSELECT";
+  public final static String WIDGET_UNSELECT = "UNSELECT"; //$NON-NLS-1$
 
-  public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT";
+  public final static String WIDGET_TOGGLE_SELECT = "TOGGLE_SELECT"; //$NON-NLS-1$
 
-  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE";
+  public final static String WIDGET_CREATE_FEATURE = "CREATE_FEATURE"; //$NON-NLS-1$
 
-  public final static String WIDGET_CREATE_FEATURE_WITH_GEOMETRY = "CREATE_FEATURE_WITH_GEOMETRY";
+  public final static String WIDGET_CREATE_FEATURE_WITH_GEOMETRY = "CREATE_FEATURE_WITH_GEOMETRY"; //$NON-NLS-1$
 
-  public final static String WIDGET_CREATE_FEATURE_WITH_POINT = "CREATE_FEATURE_WITH_POINT";
+  public final static String WIDGET_CREATE_FEATURE_WITH_POINT = "CREATE_FEATURE_WITH_POINT"; //$NON-NLS-1$
 
-  public final static String WIDGET_EDIT_FEATURE_GEOMETRY = "WIDGET_EDIT_FEATURE_GEOMETRY";
+  public final static String WIDGET_EDIT_FEATURE_GEOMETRY = "WIDGET_EDIT_FEATURE_GEOMETRY"; //$NON-NLS-1$
 
-  public final static String WIDGET_CREATE_FEATURE_WITH_LINESTRING = "CREATE_FEATURE_WITH_LINESTRING";
+  public final static String WIDGET_CREATE_FEATURE_WITH_LINESTRING = "CREATE_FEATURE_WITH_LINESTRING"; //$NON-NLS-1$
 
-  public final static String WIDGET_CREATE_FEATURE_WITH_POLYGON = "CREATE_FEATURE_WITH_POLYGON";
+  public final static String WIDGET_CREATE_FEATURE_WITH_POLYGON = "CREATE_FEATURE_WITH_POLYGON"; //$NON-NLS-1$
 
-  public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT";
+  public static final String WIDGET_SINGLE_SELECT = "SINGLE_SELECT"; //$NON-NLS-1$
 
   static
   {
-    System.setProperty( "sun.awt.noerasebackground", "true" );
+    System.setProperty( "sun.awt.noerasebackground", "true" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private final IFeatureSelectionManager m_selectionManager;
@@ -182,7 +183,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   private Boolean m_shouldPaint = true;
 
-  private String m_message = "";
+  private String m_message = ""; //$NON-NLS-1$
 
   private final IMapModellListener m_modellListener = new MapModellAdapter()
   {
@@ -359,7 +360,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         toAdd = new EasyFeatureWrapper[0];
 
       default:
-        throw new UnsupportedOperationException( "Unknown selection mode: " + selectionMode );
+        throw new UnsupportedOperationException( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.18") + selectionMode ); //$NON-NLS-1$
     }
 
     selectionManager2.changeSelection( toRemove, toAdd );
@@ -661,12 +662,12 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       if( m_model == null )
       {
         if( m_modellPainter == null )
-          m_modellPainter = new TextPainter( "Loading map...", w, h );
+          m_modellPainter = new TextPainter( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.19"), w, h ); //$NON-NLS-1$
         else
-          m_modellPainter = new TextPainter( "No data available...", w, h );
+          m_modellPainter = new TextPainter( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.20"), w, h ); //$NON-NLS-1$
       }
       else if( (m_model != null) && (m_model.getThemeSize() == 0) )
-        m_modellPainter = new TextPainter( "No map themes", w, h );
+        m_modellPainter = new TextPainter( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.21"), w, h ); //$NON-NLS-1$
       else
       {
         // Why -2 ?

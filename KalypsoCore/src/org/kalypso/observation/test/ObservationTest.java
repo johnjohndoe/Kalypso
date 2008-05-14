@@ -62,8 +62,8 @@ public class ObservationTest extends TestCase
 {
   public static IObservation<TupleResult> createTestObservation( )
   {
-    final Component dc = new Component( "DATE", "Date", "", null, null, XmlTypes.XS_DATE, null, null );
-    final Component vc = new Component( "VALUE", "Value", "", null, null, XmlTypes.XS_DOUBLE, "m", null );
+    final Component dc = new Component( "DATE", "Date", "", null, null, XmlTypes.XS_DATE, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final Component vc = new Component( "VALUE", "Value", "", null, null, XmlTypes.XS_DOUBLE, "m", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     final IComponent[] comps = { dc, vc };
     final TupleResult tupleResult = new TupleResult( comps );
 
@@ -81,9 +81,9 @@ public class ObservationTest extends TestCase
     }
 
     final List<MetadataObject> mdList = new ArrayList<MetadataObject>();
-    mdList.add( new MetadataObject( "Test", "Nothing" ) );
+    mdList.add( new MetadataObject( "Test", "Nothing" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return new Observation<TupleResult>( "Test-Observation", "", tupleResult, mdList );
+    return new Observation<TupleResult>( "Test-Observation", "", tupleResult, mdList ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void testDummy( )

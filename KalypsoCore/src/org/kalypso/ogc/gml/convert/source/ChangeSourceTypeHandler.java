@@ -51,6 +51,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.KalypsoCoreExtensions;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.ChangeSourceType.Visitor;
 import org.kalypso.gml.util.ChangeSourceType.Visitor.Argument;
@@ -98,7 +99,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
     }
     catch( final ClassUtilityException e )
     {
-      throw new GmlConvertException( "Features konnten nicht geändert werden.", e );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler.0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -136,7 +137,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
       try
       {
         final Properties properties = new Properties();
-        properties.put( "context", m_context.toExternalForm() );
+        properties.put( "context", m_context.toExternalForm() ); //$NON-NLS-1$
         properties.putAll( arguments );
 
         return KalypsoCoreExtensions.createFeatureVisitor( visitorID, properties );
@@ -147,7 +148,7 @@ public class ChangeSourceTypeHandler implements ISourceHandler
       }
     }
 
-    throw new GmlConvertException( "Either visitorClass or visitorID must be set" );
+    throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler.2") ); //$NON-NLS-1$
   }
 
   private Properties createArguments( final List argumentList )

@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  */
 public class TemplateUtilitites
 {
-  private static final String SCHEMA_PATH = "etc/schemas/template/";
+  private static final String SCHEMA_PATH = "etc/schemas/template/"; //$NON-NLS-1$
 
   private static final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance( W3C_XML_SCHEMA_NS_URI );
 
@@ -101,12 +101,12 @@ public class TemplateUtilitites
 
   public static Schema getFeatureviewSchema( )
   {
-    return getTemplateSchema( "featureview.xsd" );
+    return getTemplateSchema( "featureview.xsd" ); //$NON-NLS-1$
   }
 
   public static synchronized Schema getGismapviewSchema( )
   {
-    return getTemplateSchema( "gismapview.xsd" );
+    return getTemplateSchema( "gismapview.xsd" ); //$NON-NLS-1$
   }
 
   private static synchronized Schema getTemplateSchema( final String schemaFilename )
@@ -140,7 +140,7 @@ public class TemplateUtilitites
 
     // REMARK: only validate in trace mode, because this lead often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
-    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/gismapview" ) ) )
+    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/gismapview" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       marshaller.setSchema( TemplateUtilitites.getGismapviewSchema() );
 
     return marshaller;
@@ -152,7 +152,7 @@ public class TemplateUtilitites
 
     // REMARK: only validate in trace mode, because this lead often to errors
     // because the 'href' attribute of the styledLayers are anyURIs, but its values are often not.
-    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/gismapview" ) ) )
+    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/gismapview" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       unmarshaller.setSchema( getGismapviewSchema() );
 
     return unmarshaller;
@@ -162,7 +162,7 @@ public class TemplateUtilitites
   {
     final Unmarshaller unmarshaller = JC_FEATUREVIEW.createUnmarshaller();
 
-    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/featureview" ) ) )
+    if( "true".equals( Platform.getDebugOption( KalypsoCorePlugin.getID() + "/debug/validatebinding/featureview" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       unmarshaller.setSchema( TemplateUtilitites.getFeatureviewSchema() );
 
     return unmarshaller;

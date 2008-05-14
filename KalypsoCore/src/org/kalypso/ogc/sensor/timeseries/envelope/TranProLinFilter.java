@@ -50,6 +50,7 @@ import java.util.logging.Logger;
 
 import org.kalypso.commons.math.IMathOperation;
 import org.kalypso.commons.math.MathOperationFactory;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -99,7 +100,7 @@ public class TranProLinFilter extends AbstractObservationFilter
     m_axisTypes = axisTypes;
     m_operation = MathOperationFactory.createMathOperation( operator );
     if( dateBegin != null && dateEnd != null && (dateBegin.after( dateEnd ) || dateBegin.equals( dateEnd )) )
-      throw new IllegalArgumentException( "Anfangsdatum und Enddatum sind nicht gültig: " + dateBegin + " - " + dateEnd );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.0") + dateBegin + " - " + dateEnd ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -161,7 +162,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       if( sourceIndexEnd > outerSourceCount - 1 )
       {
-        System.out.println( "bloed" );
+        System.out.println( Messages.getString("org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.2") ); //$NON-NLS-1$
       }
 
       int targetMaxRows = sourceIndexEnd - sourceIndexBegin + 1;
@@ -272,7 +273,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       e.printStackTrace();
       final Logger logger = Logger.getLogger( getClass().getName() );
-      logger.log( Level.WARNING, "Umhüllende konnte nicht erzeugt werden. (WQ-Parameter vollständig ?)", e );
+      logger.log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.3"), e ); //$NON-NLS-1$
       return outerSource;
     }
   }
