@@ -42,5 +42,5 @@ package org.kalypsodeegree.model.geometry;
 
 public interface ISurfacePatchVisitor<P extends GM_SurfacePatch>
 {
-  public boolean visit( final P surfacePatch, double elevationSample ) throws Exception;
+  public boolean visit( final P surfacePatch, double elevationSample );
 }

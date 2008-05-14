@@ -77,7 +77,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
-  public boolean visit( final GM_Triangle triangle, final double elevationSample ) throws Exception
+  public boolean visit( final GM_Triangle triangle, final double elevationSample )
   {
     getTriangleSurface( triangle );
     return true;

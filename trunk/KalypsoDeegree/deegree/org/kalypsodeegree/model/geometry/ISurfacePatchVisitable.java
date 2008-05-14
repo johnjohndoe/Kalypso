@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.geometry;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+
 /**
  * @author Patrice Congo
  */
 public interface ISurfacePatchVisitable<P extends GM_SurfacePatch>
 {
-  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor<P> surfacePatchVisitor ) throws GM_Exception;
+  public void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor<P> surfacePatchVisitor, IProgressMonitor monitor ) throws GM_Exception, CoreException;
 }

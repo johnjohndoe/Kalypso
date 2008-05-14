@@ -46,13 +46,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
@@ -63,8 +61,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> implements ISurfacePatchVisitor<T>
 {
-  private static final PolygonSymbolizer m_defaultSymbolizer = new PolygonSymbolizer_Impl();
-
   private static final double VAL_EPS = 0.0000001;
 
   private final Graphics m_gc;
@@ -84,15 +80,15 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitor#visit(org.kalypsodeegree.model.geometry.GM_SurfacePatch,
    *      double)
    */
-  public boolean visit( final T patch, final double elevationSample ) throws Exception
+  public boolean visit( final T patch, final double elevationSample )
   {
     paintThisSurface( patch );
     return true;
   }
 
-  private void paintThisSurface( final GM_SurfacePatch patch ) throws Exception
+  private void paintThisSurface( final GM_SurfacePatch patch )
   {
-    GM_Triangle triangle = (GM_Triangle) patch;
+    final GM_Triangle triangle = (GM_Triangle) patch;
     getTriangleSurface( m_projection, triangle );
   }
 
