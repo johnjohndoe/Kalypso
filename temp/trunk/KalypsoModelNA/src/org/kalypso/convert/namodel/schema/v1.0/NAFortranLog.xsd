@@ -6,7 +6,7 @@
 			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<import namespace="http://www.opengis.net/gml"/>
 	<element name="LogMessage" type="naLog:LogType"/>
 	<complexType name="LogType">
 		<complexContent>
