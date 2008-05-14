@@ -55,7 +55,7 @@ public class ProfilOperationJob extends Job
 {
   private final static MutexRule MUTEX = new MutexRule();
 
-  private ProfilOperationRunnable m_runnable;
+  private final ProfilOperationRunnable m_runnable;
 
   public ProfilOperationJob( final IUndoableOperation operation )
   {
@@ -74,8 +74,6 @@ public class ProfilOperationJob extends Job
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
-    System.out.println( "profil job!" ); //$NON-NLS-1$
-    
     return m_runnable.execute( monitor );
   }
 
