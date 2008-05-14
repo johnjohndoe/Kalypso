@@ -49,8 +49,13 @@ import java.util.ListIterator;
 
 import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.deegree.model.crs.UnknownCRSException;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -405,7 +410,7 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
     {
       return CRSHelper.getDimension( getCoordinateSystem() );
     }
-    catch( UnknownCRSException e )
+    catch( final UnknownCRSException e )
     {
       // TODO How to deal with this error? What to return?
       e.printStackTrace();
@@ -535,28 +540,40 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
 
   /**
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor)
+   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_Triangle> surfacePatchVisitor )
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_Triangle> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
+    monitor.beginTask( "", IProgressMonitor.UNKNOWN );
+
     final ItemVisitor visitor = new ItemVisitor()
     {
       public void visitItem( final Object item )
       {
         final GM_Triangle t = (GM_Triangle) item;
+        surfacePatchVisitor.visit( t, Double.NaN );
         try
         {
-          surfacePatchVisitor.visit( t, Double.NaN );
+          ProgressUtilities.worked( monitor, 1 );
         }
-        catch( Exception e )
+        catch( final CoreException e )
         {
-          e.printStackTrace();
+          // We cannot throw a CoreException here, so we just throw to an runtime-exception....
+          throw new OperationCanceledException();
         }
       }
     };
 
-    final Envelope searchEnv = JTSAdapter.export( envToVisit );
-    m_index.query( searchEnv, visitor );
+    try
+    {
+      final Envelope searchEnv = JTSAdapter.export( envToVisit );
+      m_index.query( searchEnv, visitor );
+    }
+    catch( final OperationCanceledException e )
+    {
+      // ... which is catched here an we re-throw a true CoreException(Cancel)
+      throw new CoreException( Status.CANCEL_STATUS );
+    }
   }
 
   /**
@@ -604,10 +621,10 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 

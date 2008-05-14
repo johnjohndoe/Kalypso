@@ -68,8 +68,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.deegree.crs.transformations.coordinate.CRSTransformation;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -736,18 +739,16 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor)
+   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor ) throws GM_Exception
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor, final IProgressMonitor monitor ) throws CoreException
   {
-    try
+    monitor.beginTask( "", m_list.size() );
+
+    for( final T patch : m_list )
     {
-      for( final T patch : m_list )
-        visitor.visit( patch, Double.NaN );
-    }
-    catch( final Exception e )
-    {
-      throw new GM_Exception( e.getLocalizedMessage(), e );
+      visitor.visit( patch, Double.NaN );
+      ProgressUtilities.worked( monitor, 1 );
     }
   }
 
@@ -755,10 +756,10 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @see org.kalypsodeegree.model.geometry.GM_Object#transform(org.deegree.crs.transformations.CRSTransformation,
    *      java.lang.String)
    */
-  public GM_Object transform( CRSTransformation trans, String targetOGCCS ) throws Exception
+  public GM_Object transform( final CRSTransformation trans, final String targetOGCCS ) throws Exception
   {
     /* If the target is the same coordinate system, do not transform. */
-    String coordinateSystem = getCoordinateSystem();
+    final String coordinateSystem = getCoordinateSystem();
     if( coordinateSystem == null || coordinateSystem.equalsIgnoreCase( targetOGCCS ) )
       return this;
 
@@ -782,7 +783,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#setCoordinateSystem(java.lang.String)
    */
   @Override
-  public void setCoordinateSystem( String crs )
+  public void setCoordinateSystem( final String crs )
   {
     super.setCoordinateSystem( crs );
 

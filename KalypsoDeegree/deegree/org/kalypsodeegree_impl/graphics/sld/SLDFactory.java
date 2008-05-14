@@ -646,7 +646,7 @@ public class SLDFactory
 
     // optional: <NamedLayer>(s) / <UserLayer>(s)
     final NodeList nodelist = element.getChildNodes();
-    final ArrayList layerList = new ArrayList( 100 );
+    final List<Layer> layerList = new ArrayList<Layer>( 100 );
 
     for( int i = 0; i < nodelist.getLength(); i++ )
       if( nodelist.item( i ) instanceof Element )
@@ -665,7 +665,7 @@ public class SLDFactory
           layerList.add( SLDFactory.createUserLayer( urlResolver, child ) );
       }
 
-    final Layer[] layers = (Layer[]) layerList.toArray( new Layer[layerList.size()] );
+    final Layer[] layers = layerList.toArray( new Layer[layerList.size()] );
 
     return new StyledLayerDescriptor_Impl( name, title, version, abstract_, layers );
   }
@@ -1093,7 +1093,7 @@ public class SLDFactory
 
     // optional: different Symbolizer-elements
     final NodeList symbolizerNL = element.getChildNodes();
-    final ArrayList symbolizerList = new ArrayList();
+    final List<Symbolizer> symbolizerList = new ArrayList<Symbolizer>();
 
     for( int i = 0; i < symbolizerNL.getLength(); i++ )
     {
@@ -1134,7 +1134,7 @@ public class SLDFactory
       }
     }
 
-    final Symbolizer[] symbolizers = (Symbolizer[]) symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
+    final Symbolizer[] symbolizers = symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
 
     return new Rule_Impl( symbolizers, name, title, abstract_, legendGraphic, filter, isAnElseFilter, min, max );
   }
