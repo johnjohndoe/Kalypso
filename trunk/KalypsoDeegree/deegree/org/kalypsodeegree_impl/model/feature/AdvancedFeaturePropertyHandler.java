@@ -41,20 +41,16 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IDetailedFeatureType;
-import org.kalypso.gmlschema.feature.IFeatureContentType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType;
 import org.kalypsodeegree.KalypsoDeegreeExtensions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -78,84 +74,35 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
 
   private final Map<QName, IFeaturePropertyHandler> m_handlers = new HashMap<QName, IFeaturePropertyHandler>();
 
-  public static final QName QNAME_FUNCTION = new QName( NS.KALYPSO_APPINFO, "functionId" );
-
-  public static final QName QNAME_PROPERTY = new QName( NS.KALYPSO_APPINFO, "property" );
-
-  public static final QName QNAME_NAME = new QName( NS.KALYPSO_APPINFO, "name" );
-
-  public static final QName QNAME_VALUE = new QName( NS.KALYPSO_APPINFO, "value" );
-
   public AdvancedFeaturePropertyHandler( final IFeatureType featureType )
   {
-    if( featureType instanceof IDetailedFeatureType )
+    // We simply check, if any property is a virtual property with attached functionId
+    // For each of those we create a special handler
+    final IPropertyType[] properties = featureType.getProperties();
+    for( final IPropertyType propertyType : properties )
     {
-      final IDetailedFeatureType dft = (IDetailedFeatureType) featureType;
-
-      final IFeatureContentType featureContentType = dft.getFeatureContentType();
-      final XmlObject[] funcProps = featureContentType.collectFunctionProperties();
-      for( final XmlObject funcProp : funcProps )
+      if( propertyType instanceof IVirtualFunctionValuePropertyType )
       {
+        final QName qname = propertyType.getQName();
+        final IVirtualFunctionValuePropertyType virtualPt = (IVirtualFunctionValuePropertyType) propertyType;
+        final String functionId = virtualPt.getFunctionId();
+        final Map<String, String> functionProperties = virtualPt.getFunctionProperties();
+
         try
         {
-          final XmlCursor funcCursor = funcProp.newCursor();
-
-          final String functionId = funcCursor.getAttributeText( QNAME_FUNCTION );
-          final String property = funcCursor.getAttributeText( QNAME_PROPERTY );
-
-          final String[] qnameParts = property.split( ":" );
-          final String propertyNamespace = funcCursor.namespaceForPrefix( qnameParts[0] );
-          final String propertyLocalPart = qnameParts[1];
-
-          final QName propertyQName = new QName( propertyNamespace, propertyLocalPart );
-
-          /* final */IPropertyType pt = featureType.getProperty( propertyQName );
-          // introducing virtual property
-          if( pt == null )
-            pt = featureType.getVirtualProperty( propertyQName );
-
-          if( pt == null )
-          {
-            final IStatus status = StatusUtilities.createWarningStatus( "Unknown property-qname in function-property definition: " + property );
-            KalypsoDeegreePlugin.getDefault().getLog().log( status );
-          }
-          else
-          {
-            final XmlObject[] parameters = funcProp.selectPath( "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' ./kapp:parameter" );
-            final Map<String, String> properties = parseParameters( parameters );
-
-            final FeaturePropertyFunction propertyFunction = KalypsoDeegreeExtensions.createPropertyFunction( functionId, properties );
-            m_handlers.put( pt.getQName(), propertyFunction );
-          }
+          final FeaturePropertyFunction propertyFunction = KalypsoDeegreeExtensions.createPropertyFunction( functionId, functionProperties );
+          m_handlers.put( qname, propertyFunction );
         }
-        catch( final Exception e )
+        catch( final CoreException e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          final String msg = String.format( "Failed to create property function with id '%s' for property '%s'", functionId, qname );
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+
+          // Simply log errors to the error log, but continue
           KalypsoDeegreePlugin.getDefault().getLog().log( status );
         }
-
       }
     }
-  }
-
-  private Map<String, String> parseParameters( final XmlObject[] parameters )
-  {
-    /* IMPORTENT: Use linked hash map in order to preserve parameter order. */
-    final Map<String, String> properties = new LinkedHashMap<String, String>();
-
-    for( final XmlObject parameter : parameters )
-    {
-      final XmlObject[] names = parameter.selectChildren( QNAME_NAME );
-      final XmlObject[] values = parameter.selectChildren( QNAME_VALUE );
-
-      final String name = names.length == 0 ? null : names[0].newCursor().getTextValue();
-      final String value = values.length == 0 ? null : values[0].newCursor().getTextValue();
-
-      if( name != null && value != null )
-        properties.put( name, value );
-    }
-
-    return properties;
   }
 
   /**

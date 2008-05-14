@@ -73,7 +73,6 @@ import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -170,8 +169,7 @@ public class AddSymbolizerPanel
       }
     } );
 
-    List<String> geometryItems = queryGeometriesPropertyNames( m_featureType.getProperties(), null );
-    geometryItems = queryGeometriesPropertyNames( VirtualPropertyUtilities.getVirtualProperties( m_featureType ), geometryItems );
+    final List<String> geometryItems = queryGeometriesPropertyNames( m_featureType.getProperties(), null );
     if( geometryItems != null && geometryItems.size() > 0 )
     {
       m_geometryCombo.setItems( geometryItems.toArray( new String[geometryItems.size()] ) );

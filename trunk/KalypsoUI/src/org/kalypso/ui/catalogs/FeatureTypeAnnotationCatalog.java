@@ -84,11 +84,6 @@ public class FeatureTypeAnnotationCatalog implements IAnnotationProvider
       if( m_annotationCache.containsKey( cacheKey ) )
         return m_annotationCache.get( cacheKey );
 
-      if( cacheKey.equals( "{http://www.opengis.net/gml}name" ) ) //$NON-NLS-1$
-      {
-        System.out.println( "Hallo Thomas, Du" ); //$NON-NLS-1$
-      }
-
       // REMARK: catalog is registered for feature type, not for qname
       // Hint for a refaktoring on the CatalogManager
       final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();

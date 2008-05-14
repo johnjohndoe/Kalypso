@@ -10,15 +10,12 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.virtual.IVirtualFunctionPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -81,6 +78,8 @@ public class Feature_Impl extends AbstractFeature
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperties()
    */
+  @SuppressWarnings("deprecation")
+  @Deprecated
   public Object[] getProperties( )
   {
     return m_properties;
@@ -98,22 +97,10 @@ public class Feature_Impl extends AbstractFeature
     if( pt == null )
       throw new IllegalArgumentException( "pt may not null" );
 
-    /* Special case for this kind of virtual property types */
-    // TODO: get rid of all theses different virtual property thing is
-    // Use IFeaturePropertyHandler in a consistent way instead!
-    if( pt instanceof VirtualFeatureTypeProperty )
-      return getVirtuelProperty( (VirtualFeatureTypeProperty) pt );
-
     final int pos = m_featureType.getPropertyPosition( pt );
     if( pos == -1 )
     {
-      if( m_featureType.isVirtualProperty( pt ) )
-      {
-        final IFeaturePropertyHandler fsh = getPropertyHandler();
-        return fsh.getValue( this, pt, null );
-      }
       final String msg = String.format( "Unknown property (%s) for type: %s", pt, m_featureType );
-
       throw new IllegalArgumentException( msg );
     }
 
@@ -137,58 +124,12 @@ public class Feature_Impl extends AbstractFeature
       {
         final Object o = getProperty( element );
         if( o == null )
-        {
           continue;
-        }
-        if( element.isList() )
-        {
-          result.addAll( (List) o );
-        }
-        else
-        {
-          result.add( (GM_Object) o );
-        }
-      }
-    }
 
-    // add virtual function properties
-    final IVirtualFunctionPropertyType[] virtualFuncGeo = m_featureType.getVirtualGeometryProperties();
-    for( final IVirtualFunctionPropertyType pt : virtualFuncGeo )
-    {
-      final Object virGeoProp = getProperty( pt );
-      if( virGeoProp == null )
-      {
-        continue;
-      }
-      else if( pt.isList() )
-      {
-        result.addAll( (List) virGeoProp );
-      }
-      else
-      {
-        result.add( (GM_Object) virGeoProp );
-      }
-    }
-
-    // TODO allways use virtual ftp to calculate bbox ??
-    final VirtualFeatureTypeProperty[] vftp = VirtualPropertyUtilities.getVirtualProperties( m_featureType );
-    for( final VirtualFeatureTypeProperty element : vftp )
-    {
-      if( GeometryUtilities.isGeometry( element ) )
-      {
-        final Object o = getVirtuelProperty( element );
-        if( o == null )
-        {
-          continue;
-        }
         if( element.isList() )
-        {
           result.addAll( (List) o );
-        }
         else
-        {
           result.add( (GM_Object) o );
-        }
       }
     }
 
@@ -202,26 +143,19 @@ public class Feature_Impl extends AbstractFeature
   {
     final IValuePropertyType defaultGeomProp = m_featureType.getDefaultGeometryProperty();
     if( defaultGeomProp == null )
-    {
-      final IVirtualFunctionPropertyType[] virtualGeometryProperties = m_featureType.getVirtualGeometryProperties();
-      if( virtualGeometryProperties == null )
-        return null;
-      else if( virtualGeometryProperties.length > 0 )
-        return (GM_Object) getProperty( virtualGeometryProperties[0] );
-      else
-        return null;
-    }
+      return null;
 
     final Object prop = getProperty( defaultGeomProp );
     if( defaultGeomProp.isList() )
     {
-      // TODO: ugly! do not do such a thing
       final List props = (List) prop;
       return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
     }
-    if( !((prop == null) || (prop instanceof GM_Object)) )
-      throw new UnsupportedOperationException( "wrong geometry type" );
-    return (GM_Object) prop;
+
+    if( prop == null || prop instanceof GM_Object )
+      return (GM_Object) prop;
+
+    throw new IllegalStateException( "Wrong geometry type: " + prop.getClass().getName() );
   }
 
   /**
@@ -280,14 +214,6 @@ public class Feature_Impl extends AbstractFeature
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty)
-   */
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt )
-  {
-    return vpt.getVirtuelValue( this );
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
    */
   public void setProperty( final IPropertyType pt, final Object value )
@@ -295,22 +221,8 @@ public class Feature_Impl extends AbstractFeature
     final int pos = m_featureType.getPropertyPosition( pt );
     if( pos == -1 )
     {
-      // if there is not regula property look for virtual
-      // function property
-      if( m_featureType.isVirtualProperty( pt ) )
-      {
-        final IFeaturePropertyHandler fsh = getPropertyHandler();
-        fsh.setValue( this, pt, null );
-        if( fsh.invalidateEnvelope( pt ) )
-        {
-          invalidEnvelope();
-        }
-      }
-      else
-      {
-        final String message = String.format( "Feature[%s] does not know this property %s", toString(), pt.getQName().toString() );
-        throw new RuntimeException( new GMLSchemaException( message ) );
-      }
+      final String message = String.format( "Feature[%s] does not know this property %s", toString(), pt.getQName().toString() );
+      throw new RuntimeException( new GMLSchemaException( message ) );
     }
     else
     {

@@ -84,7 +84,6 @@ import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeRegistry;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
 /**
@@ -114,8 +113,8 @@ public class FeatureFactory
    */
   public static Feature createFeature( final Feature parent, final IRelationType parentRelation, final String id, final IFeatureType featureType, final Object[] properties )
   {
-    /// TODO: but the feature into the workspace!
-    
+    // / TODO: but the feature into the workspace!
+
     return new Feature_Impl( parent, parentRelation, featureType, id, properties );
   }
 
@@ -259,26 +258,6 @@ public class FeatureFactory
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP )
   {
     return new SplitSort( parentFeature, parentFTP );
-  }
-
-  public static IPropertyType[] createVirtualFeatureTypeProperties( final IFeatureType realFeatureType )
-  {
-    final List<IPropertyType> result = new ArrayList<IPropertyType>();
-    final VirtualFeatureTypeRegistry registry = VirtualFeatureTypeRegistry.getInstance();
-    final IPropertyType[] properties = realFeatureType.getProperties();
-
-    for( final IPropertyType ftp : properties )
-    {
-      final IPropertyType[] newFtp = registry.getVirtualFeatureTypePropertiesFor( ftp );
-      for( final IPropertyType element : newFtp )
-        result.add( element );
-    }
-
-    final IPropertyType[] vftp = registry.getVirtualFeatureTypePropertiesFor( realFeatureType );
-    for( final IPropertyType element : vftp )
-      result.add( element );
-
-    return result.toArray( new IPropertyType[result.size()] );
   }
 
   public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, final NamespaceContext namespaceContext )

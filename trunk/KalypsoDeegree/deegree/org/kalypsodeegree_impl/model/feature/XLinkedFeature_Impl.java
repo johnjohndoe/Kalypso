@@ -12,7 +12,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 
 /**
  * A Feature implementation wich delegates all calls to another feature, proved by a feature provider.
@@ -195,17 +194,6 @@ public class XLinkedFeature_Impl extends AbstractFeature
       return null;
 
     return feature.getEnvelope();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty)
-   */
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty vpt )
-  {
-    final Feature feature = getFeature();
-    if( feature == null )
-      return null;
-    return feature.getVirtuelProperty( vpt );
   }
 
   /**

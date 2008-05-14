@@ -86,6 +86,11 @@
                id="org.kalypso.gmlschema.functionProperty.addition"
                name="Addition">
          </function>
+         <function
+               class="org.kalypsodeegree_impl.gml.schema.function.RectifiedGridCoverageBoundaryFunctionProperty"
+               id="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
+               name="RectifiedGridCoverage-Boundary">
+         </function>
      </extension>
      <extension
            point="org.kalypso.deegree.featureRule">
@@ -149,6 +154,17 @@
       <initializer
             class="org.kalypso.preferences.KalypsoDeegreePreferenceInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.kalypso.gmlschema.virtualProperty">
+      <virtualProperty
+            allowSubstitution="true"
+            feature="{http://www.opengis.net/gml}RectifiedGridCoverage"
+            function="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
+            isList="false"
+            qname="{virtual}rasterGridDomainBoundary"
+            value="{http://www.opengis.net/gml}PolygonPropertyType">
+      </virtualProperty>
    </extension>
 
 </plugin>

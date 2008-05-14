@@ -49,7 +49,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 
 /**
  * Another feature implementation used by the dictionary catalog.
@@ -169,14 +168,6 @@ public class DictionaryFeature implements Feature
   public Object getProperty( final String propLocalName )
   {
     return m_feature.getProperty( propLocalName );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getVirtuelProperty(org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty)
-   */
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType )
-  {
-    return m_feature.getVirtuelProperty( virtualPropertyType );
   }
 
   /**

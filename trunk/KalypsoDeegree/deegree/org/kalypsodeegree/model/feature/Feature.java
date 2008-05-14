@@ -5,7 +5,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
 
 /**
  * A GML Feature represents a general object.
@@ -33,9 +32,6 @@ public interface Feature extends DeegreeFeature, IAdaptable
    * @see #getParent()
    */
   public IRelationType getParentRelation( );
-
-  // TODO: remove this from the interface VirtualProperty should behave exactly like normal properties
-  public Object getVirtuelProperty( final VirtualFeatureTypeProperty virtualPropertyType );
 
   public void setProperty( final IPropertyType propertyType, final Object value );
 

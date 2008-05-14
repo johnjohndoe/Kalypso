@@ -66,8 +66,12 @@ public abstract class AbstractFeatureBinder implements IFeatureWrapper2
     m_featureToBind = featureToBind;
     m_qnameToBind = qnameToBind;
 
-    final String msg = String.format( "featureToBind (%s) does not substitute %s", featureToBind.getFeatureType().getQName(), qnameToBind );
-    Assert.isLegal( GMLSchemaUtilities.substitutes( featureToBind.getFeatureType(), qnameToBind ), msg );
+    // REMARK: first check, then create error message... Always producing the error message costs very much performance!
+    if( !GMLSchemaUtilities.substitutes( featureToBind.getFeatureType(), qnameToBind ) )
+    {
+      final String msg = String.format( "featureToBind (%s) does not substitute %s", featureToBind.getFeatureType().getQName(), qnameToBind );
+      Assert.isLegal( false, msg );
+    }
   }
 
   /**

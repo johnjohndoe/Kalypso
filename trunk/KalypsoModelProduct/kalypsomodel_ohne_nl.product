@@ -13,7 +13,7 @@
    <configIni use="custom" path="/KalypsoModelProduct/etc/config.ini"/>
 
    <launcherArgs>
-      <vmArgs>-Xmx512m</vmArgs>
+      <vmArgs>-Xmx1024m  -XX:PermSize=64M -XX:MaxPermSize=128M</vmArgs>
    </launcherArgs>
 
    <windowImages i16="/KalypsoModelProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoModelProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoModelProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoModelProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoModelProduct/etc/applicationicons/icon_128.gif"/>
@@ -39,6 +39,9 @@
    <intro introId="org.kalypso.model.product.introID"/>
 
    <vm>
+      <linux type="ee">J2SE-1.5</linux>
+      <macos type="ee">J2SE-1.5</macos>
+      <solaris type="ee">J2SE-1.5</solaris>
       <windows type="ee">J2SE-1.5</windows>
    </vm>
 
@@ -135,6 +138,8 @@
       <plugin id="org.eclipse.update.core"/>
       <plugin id="org.eclipse.update.core.win32" fragment="true"/>
       <plugin id="org.eclipse.update.ui"/>
+      <plugin id="org.eclipse.wst.common.uriresolver"/>
+      <plugin id="org.eclipse.wst.internet.cache"/>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
       <plugin id="org.kalypso.KalypsoManual1D2D"/>
@@ -184,7 +189,6 @@
       <plugin id="org.kalypso.ui.addlayer"/>
       <plugin id="org.kalypso.ui.rrm"/>
       <plugin id="org.kalypso.wizard.CreateNAProject"/>
-      <plugin id="org.kalypso.workflow"/>
       <plugin id="org.kalypso.wspwin.core"/>
       <plugin id="org.mortbay.jetty"/>
    </plugins>

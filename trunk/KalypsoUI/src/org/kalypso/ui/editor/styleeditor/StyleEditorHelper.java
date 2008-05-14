@@ -43,7 +43,6 @@ package org.kalypso.ui.editor.styleeditor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 
 public class StyleEditorHelper
 {
@@ -51,9 +50,6 @@ public class StyleEditorHelper
   {
     // HACK: we assume that we have a simple PropertyName here, but this is not allways the case
     final String path = propName.getValue();
-    final IPropertyType ftp = ft.getProperty( path );
-    if( ftp == null )
-      return VirtualPropertyUtilities.getPropertyType( ft, path );
-    return ftp;
+    return ft.getProperty( path );
   }
 }

@@ -54,7 +54,6 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -63,8 +62,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -124,8 +121,8 @@ public class UserStylePainter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Zeichne Rule", 100 );
 
-    final List<?> visibleFeatures = features.query( bbox, null );
-    
+    final List< ? > visibleFeatures = features.query( bbox, null );
+
     ProgressUtilities.worked( progress, 15 );
 
     final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( visibleFeatures.size() );
@@ -147,7 +144,6 @@ public class UserStylePainter
     final Feature feature = FeatureHelper.getFeature( workspace, featureOrLink );
 
     /* Check for selection */
-
     try
     {
       /* Only paint really visible features */
@@ -160,6 +156,7 @@ public class UserStylePainter
           for( final Symbolizer symbolizer : symbolizers )
           {
             final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+            // TODO: shoudlnt there be at least some debug output if this happens?
             if( displayElement != null )
             {
               /* does scale apply? */

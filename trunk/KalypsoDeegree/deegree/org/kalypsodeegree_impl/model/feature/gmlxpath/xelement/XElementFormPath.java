@@ -50,8 +50,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualFeatureTypeProperty;
-import org.kalypsodeegree_impl.gml.schema.virtual.VirtualPropertyUtilities;
 
 /**
  * xelement that represents a path-xpath element s *
@@ -120,21 +118,16 @@ public class XElementFormPath extends AbstractXElement
     return value;
   }
 
+  @SuppressWarnings("deprecation")
   private IPropertyType getPropertyType( final IFeatureType featureType, final QName qname )
   {
     final String nsuri = qname.getNamespaceURI();
     final String localPart = qname.getLocalPart();
 
-    final IPropertyType pt = nsuri == XMLConstants.NULL_NS_URI ? featureType.getProperty( localPart ) : featureType.getProperty( qname );
+    if( nsuri == XMLConstants.NULL_NS_URI )
+      return featureType.getProperty( localPart );
 
-    if( pt != null )
-      return pt;
-
-    final VirtualFeatureTypeProperty vpt = VirtualPropertyUtilities.getPropertyType( featureType, localPart );
-    if( vpt != null )
-      return vpt;
-
-    return null;
+    return featureType.getProperty( qname );
   }
 
   /**
