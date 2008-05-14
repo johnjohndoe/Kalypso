@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
+import org.kalypso.core.i18n.Messages;
+
 /**
  * ObservationConstants
  * 
@@ -48,14 +50,14 @@ package org.kalypso.ogc.sensor;
 public interface ObservationConstants
 {
   /** Name of the observation */
-  public final static String MD_NAME = "Name";
+  public final static String MD_NAME = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.0"); //$NON-NLS-1$
 
   /** Description of the observation */
-  public final static String MD_DESCRIPTION = "Beschreibung";
+  public final static String MD_DESCRIPTION = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.1"); //$NON-NLS-1$
 
   /** Some information about the Origin of the observation */
-  public final static String MD_ORIGIN = "Entstehung";
+  public final static String MD_ORIGIN = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.2"); //$NON-NLS-1$
 
   /** Some information about the Scenario into which this observation got delivered */
-  public final static String MD_SCENARIO = "Szenario";
+  public final static String MD_SCENARIO = Messages.getString("org.kalypso.ogc.sensor.ObservationConstants.3"); //$NON-NLS-1$
 }

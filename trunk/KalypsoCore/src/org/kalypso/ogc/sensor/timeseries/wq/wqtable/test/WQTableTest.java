@@ -943,9 +943,9 @@ public class WQTableTest extends TestCase
 
     double W = wqt.getWFor( Q );
 
-    System.out.println( "For Q= " + Q + " W= " + W );
+    System.out.println( "For Q= " + Q + " W= " + W ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    System.out.println( "For W= " + W + " Q= " + wqt.getQFor( W ) );
+    System.out.println( "For W= " + W + " Q= " + wqt.getQFor( W ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     assertTrue( Double.compare( Q, wqt.getQFor( W ) ) == 0 );
   }
@@ -956,9 +956,9 @@ public class WQTableTest extends TestCase
 
     double W = wqt.getWFor( Q );
 
-    System.out.println( "For Q= " + Q + " W= " + W );
+    System.out.println( "For Q= " + Q + " W= " + W ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    System.out.println( "For W= " + W + " Q= " + wqt.getQFor( W ) );
+    System.out.println( "For W= " + W + " Q= " + wqt.getQFor( W ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     assertTrue( Double.compare( Q, wqt.getQFor( W ) ) == 0 );
   }
@@ -971,7 +971,7 @@ public class WQTableTest extends TestCase
     {
       wqt.getWFor( Q );
 
-      assertNull( "Should not come here" );
+      assertNull( "Should not come here" ); //$NON-NLS-1$
     }
     catch( WQException e )
     {
@@ -987,7 +987,7 @@ public class WQTableTest extends TestCase
     {
       wqt.getWFor( Q );
 
-      assertNull( "Should not come here" );
+      assertNull( "Should not come here" ); //$NON-NLS-1$
     }
     catch( WQException e )
     {
@@ -997,30 +997,30 @@ public class WQTableTest extends TestCase
 
   public void testDiverses() throws WQException, ParseException
   {
-    final InputStream stream = getClass().getResourceAsStream( "ratingtable-example.xml" );
+    final InputStream stream = getClass().getResourceAsStream( "ratingtable-example.xml" ); //$NON-NLS-1$
 
     final WQTableSet tableSet = WQTableFactory.parse( new InputSource( stream ) );
 
     System.out.println( tableSet );
 
-    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
 
-    final Date d1 = sdf.parse( "01.04.1996 04:32" );
+    final Date d1 = sdf.parse( "01.04.1996 04:32" ); //$NON-NLS-1$
     final WQTable table1 = tableSet.getFor( d1 );
     // TODO: why 01:00, the file has no date??
 //    final Date td1 = sdf.parse( "01.11.1997 01:00" );
-    final Date td1 = sdf.parse( "01.11.1997 00:00" );
+    final Date td1 = sdf.parse( "01.11.1997 00:00" ); //$NON-NLS-1$
     assertTrue( table1.getValidity().equals( td1 ) );
 
-    final Date d2 = sdf.parse( "04.11.1998 3:55" );
+    final Date d2 = sdf.parse( "04.11.1998 3:55" ); //$NON-NLS-1$
     final WQTable table2 = tableSet.getFor( d2 );
-    final Date td2 = sdf.parse( "01.11.1998 00:00" );
+    final Date td2 = sdf.parse( "01.11.1998 00:00" ); //$NON-NLS-1$
 //    final Date td2 = sdf.parse( "01.11.1998 01:00" );
     assertTrue( table2.getValidity().equals( td2 ) );
 
-    final Date d3 = sdf.parse( "01.04.2000 6:34" );
+    final Date d3 = sdf.parse( "01.04.2000 6:34" ); //$NON-NLS-1$
     final WQTable table3 = tableSet.getFor( d3 );
-    final Date td3 = sdf.parse( "01.10.1999 00:00" );
+    final Date td3 = sdf.parse( "01.10.1999 00:00" ); //$NON-NLS-1$
 //    final Date td3 = sdf.parse( "01.10.1999 02:00" );
     assertTrue( table3.getValidity().equals( td3 ) );
 

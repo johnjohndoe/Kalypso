@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.commons.parser.ParserException;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -73,7 +74,7 @@ public class ValueFilterCreator implements IFilterCreator
   public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
     if( !(aft instanceof ValueFilterType) )
-      throw new IllegalArgumentException( "Not a " + ValueFilterType.class.getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.creators.ValueFilterCreator.0") + ValueFilterType.class.getName() ); //$NON-NLS-1$
 
     final ValueFilterType ft = (ValueFilterType) aft;
 

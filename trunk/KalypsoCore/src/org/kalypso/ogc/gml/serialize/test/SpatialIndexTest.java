@@ -82,20 +82,20 @@ public class SpatialIndexTest extends TestCase
 
   public void testBigShape( ) throws Exception
   {
-    doTheTest( "resources/bigShape.zip", "mod", ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    doTheTest( "resources/bigShape.zip", "mod", ShapeSerializer.PROPERTY_FEATURE_MEMBER ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void testBigGml( ) throws Exception
   {
-    doTheTest( "resources/bigGml.zip", "nodeResult.gml", new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "nodeResultMember" ) );
+    doTheTest( "resources/bigGml.zip", "nodeResult.gml", new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "nodeResultMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   private void doTheTest( final String zipResourcePath, final String filename, final QName propQName ) throws Exception
   {
-    final TimeLogger logger = new TimeLogger( "Start spatial index test" );
+    final TimeLogger logger = new TimeLogger( "Start spatial index test" ); //$NON-NLS-1$
     final GMLWorkspace workspace = loadWorkspace( zipResourcePath, filename );
     logger.takeInterimTime();
-    logger.printCurrentInterim( "File loaded in: " );
+    logger.printCurrentInterim( "File loaded in: " ); //$NON-NLS-1$
 
     final SplitSort sort = new SplitSort( null, null );
 
@@ -104,40 +104,40 @@ public class SpatialIndexTest extends TestCase
       sort.add( object );
 
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Index built in: " );
+    logger.printCurrentInterim( "Index built in: " ); //$NON-NLS-1$
 
     final GM_Envelope boundingBox = featureList.getBoundingBox();
 
     sort.query( boundingBox, null );
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Index queried in: " );
+    logger.printCurrentInterim( "Index queried in: " ); //$NON-NLS-1$
 
     sort.query( boundingBox, null );
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Index queried again in: " );
+    logger.printCurrentInterim( "Index queried again in: " ); //$NON-NLS-1$
 
     sort.invalidate( featureList.first() );
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Index invalidated in: " );
+    logger.printCurrentInterim( "Index invalidated in: " ); //$NON-NLS-1$
 
     sort.query( boundingBox, null );
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Index queried again in: " );
+    logger.printCurrentInterim( "Index queried again in: " ); //$NON-NLS-1$
 
-    logger.printCurrentTotal( "Total: " );
+    logger.printCurrentTotal( "Total: " ); //$NON-NLS-1$
   }
 
   private GMLWorkspace loadWorkspace( final String relativeResourcePath, final String filename ) throws Exception
   {
     final URL resource = getClass().getResource( relativeResourcePath );
 
-    final File unzipDir = FileUtilities.createNewTempDir( "unzip" );
+    final File unzipDir = FileUtilities.createNewTempDir( "unzip" ); //$NON-NLS-1$
 
     ZipUtilities.unzip( resource, unzipDir );
 
     final File fileBase = new File( unzipDir, filename );
 
-    if( filename.toLowerCase().endsWith( ".gml" ) )
+    if( filename.toLowerCase().endsWith( ".gml" ) ) //$NON-NLS-1$
       return GmlSerializer.createGMLWorkspace( fileBase.toURL(), null );
 
     return ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoCorePlugin.getDefault().getCoordinatesSystem() );

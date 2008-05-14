@@ -54,6 +54,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -69,9 +70,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationGrapAdapter implements INativeObservationAdapter
 {
-  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" );
+  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
 
-  public static Pattern m_grapPattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2}).+?([0-9\\.]+)" );
+  public static Pattern m_grapPattern = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2}).+?([0-9\\.]+)" ); //$NON-NLS-1$
 
   private String m_title;
 
@@ -83,8 +84,8 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_title = config.getAttribute( "label" );
-    m_axisTypeValue = config.getAttribute( "axisType" );
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
   public IObservation createObservationFromSource( File source ) throws Exception
@@ -98,13 +99,13 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
 
     /* this is due to backwards compatibility */
     if( timeZone == null )
-      timeZone = TimeZone.getTimeZone( "GMT+1" );
+      timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
 
     m_grapDateFormat.setTimeZone( timeZone );
     // create axis
     IAxis[] axis = createAxis();
     ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", "titel", false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     return observation;
   }
 
@@ -131,8 +132,8 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
           String dateString = matcher.group( 1 );
           Double value = new Double( matcher.group( 2 ) );
 
-          String formatedDate = dateString.replaceAll( "[:\\.]", " " );
-          Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" );
+          String formatedDate = dateString.replaceAll( "[:\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+          Pattern m_datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
           Matcher dateMatcher = m_datePattern.matcher( formatedDate );
           if( dateMatcher.matches() )
           {
@@ -140,8 +141,8 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
             for( int i = 1; i <= dateMatcher.groupCount(); i++ )
             {
               if( i > 1 )
-                buffer.append( " " ); // separator
-              buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); //
+                buffer.append( " " ); // separator //$NON-NLS-1$
+              buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
               // correct
               // empty
               // fields
@@ -153,19 +154,19 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
           }
           else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + " date not parseable: \"" + lineIn + "\"\n" );
+            errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.14") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.15") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             numberOfErrors++;
           }
         }
         else
         {
-          errorBuffer.append( "line " + reader.getLineNumber() + " is not parseable: \"" + lineIn + "\"\n" );
+          errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.17") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.18") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           numberOfErrors++;
         }
       }
       catch( Exception e )
       {
-        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage() + "\"\n" );
+        errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.20") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.21") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
@@ -191,7 +192,7 @@ public class NativeObservationGrapAdapter implements INativeObservationAdapter
    */
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.23"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     TimeserieUtils.getUnit( m_axisTypeValue );
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };

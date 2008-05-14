@@ -3,6 +3,7 @@ package org.kalypso.ogc.gml.convert.source;
 import java.net.URL;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.GmlSourceType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -39,7 +40,7 @@ public class GmlSourceHandler implements ISourceHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( "GML konnte nicht geladen werden: " + m_href, e );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.GmlSourceHandler.0") + m_href, e ); //$NON-NLS-1$
     }
   }
 

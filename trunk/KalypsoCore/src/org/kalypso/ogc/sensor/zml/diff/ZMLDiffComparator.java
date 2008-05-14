@@ -34,6 +34,7 @@ import java.util.Date;
 
 import org.kalypso.commons.diff.IDiffComparator;
 import org.kalypso.commons.diff.IDiffLogger;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -65,12 +66,12 @@ public class ZMLDiffComparator implements IDiffComparator
     boolean result = false;
     InputStream i1 = (InputStream)content;
     InputStream i2 = (InputStream)content2;
-    IObservation obs1 = ZmlFactory.parseXML( new InputSource( i1 ), "1", null );
-    IObservation obs2 = ZmlFactory.parseXML( new InputSource( i2 ), "2", null );
+    IObservation obs1 = ZmlFactory.parseXML( new InputSource( i1 ), "1", null ); //$NON-NLS-1$
+    IObservation obs2 = ZmlFactory.parseXML( new InputSource( i2 ), "2", null ); //$NON-NLS-1$
     //    result |= diffMetadata( logger, obs1.getMetadataList(), obs2.getMetadataList() );
     //    result |= diffAxis( logger, obs1.getAxisList(), obs2.getAxisList() );
     logger.block();
-    logger.log( DIFF_INFO, "Wertevergleich" );
+    logger.log( DIFF_INFO, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.2") ); //$NON-NLS-1$
     boolean valuesResult = diffValues( logger, obs1, obs2 );
     logger.unblock( valuesResult );
 
@@ -102,7 +103,7 @@ public class ZMLDiffComparator implements IDiffComparator
     final int max2 = values2.getCount();
     if( max1 != max2 )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, "Anzahl der Werte : " + max1 + " : " + max2 );
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.3") + max1 + " : " + max2 ); //$NON-NLS-1$ //$NON-NLS-2$
       return true;
     }
     final double v1 = ( (Double)values1.getElement( 0, valueAxis1 ) ).doubleValue();
@@ -119,7 +120,7 @@ public class ZMLDiffComparator implements IDiffComparator
       final Date date2 = (Date)values2.getElement( i, dateAxis2 );
       if( !date1.equals( date2 ) )
       {
-        logger.log( IDiffComparator.DIFF_CONTENT, "Datum  " + date1 + " : " + date2 );
+        logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.5") + date1 + " : " + date2 ); //$NON-NLS-1$ //$NON-NLS-2$
         return true;
       }
       final double value1 = ( (Double)values1.getElement( i, valueAxis1 ) ).doubleValue();
@@ -144,15 +145,15 @@ public class ZMLDiffComparator implements IDiffComparator
     }
     if( result )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, "Anzahl Überschreitungen : #" + diffCount );
-      logger.log( IDiffComparator.DIFF_CONTENT, "maximale Überschreitung : " + maxDelta );
-      logger.log( IDiffComparator.DIFF_CONTENT, "Summe Überscheitungen " + differenceAll + " (delta >" + m_tollerance
-          + ")" );
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.7") + diffCount ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.8") + maxDelta ); //$NON-NLS-1$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.9") + differenceAll + Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.10") + m_tollerance //$NON-NLS-1$ //$NON-NLS-2$
+          + Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.11") ); //$NON-NLS-1$
     }
     if( minValue1 != minValue2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, "min " + minValue1 + " : " + minValue2 );
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.12") + minValue1 + Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.13") + minValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
     if( maxValue1 != maxValue2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, "max " + maxValue1 + " : " + maxValue2 );
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.14") + maxValue1 + Messages.getString("org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.15") + maxValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
     return result;
   }
 

@@ -58,6 +58,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -355,12 +356,12 @@ public class MapUtilities
   public static IStatus exportLegends( List<IKalypsoTheme> themes, File file, int format, IProgressMonitor monitor )
   {
     /* Monitor. */
-    monitor.beginTask( "Exporting legend", themes.size() * 100 + 100 );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.0"), themes.size() * 100 + 100 ); //$NON-NLS-1$
 
     try
     {
       /* This font will be used to generate the legend. */
-      Font font = new Font( Display.getCurrent(), "Arial", 10, SWT.NORMAL );
+      Font font = new Font( Display.getCurrent(), "Arial", 10, SWT.NORMAL ); //$NON-NLS-1$
 
       /* Memory for the legends. */
       ArrayList<Image> legends = new ArrayList<Image>();
@@ -372,7 +373,7 @@ public class MapUtilities
         IKalypsoTheme theme = themes.get( i );
 
         /* Monitor. */
-        monitor.subTask( "Creating legend from \"" + theme.getName() + "\" ..." );
+        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.2") + theme.getName() + Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.3") ); //$NON-NLS-1$ //$NON-NLS-2$
 
         /* Get the legend. */
         Image legend = theme.getLegendGraphic( font );
@@ -385,7 +386,7 @@ public class MapUtilities
 
       /* No legends there. Perhaps all themes did not provide legends. */
       if( legends.size() == 0 )
-        return StatusUtilities.createWarningStatus( "No legends available ..." );
+        return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.4") ); //$NON-NLS-1$
 
       /* Calculate the size. */
       int width = 0;
@@ -493,9 +494,9 @@ public class MapUtilities
         /* Get the current scale. */
         double mapScale = MapUtilities.getMapScale( mapPanel );
 
-        System.out.println( "Min:" + minScaleDenominator );
-        System.out.println( "Scale:" + mapScale );
-        System.out.println( "Max:" + maxScaleDenominator );
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.5") + minScaleDenominator ); //$NON-NLS-1$
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.6") + mapScale ); //$NON-NLS-1$
+        System.out.println( Messages.getString("org.kalypso.ogc.gml.map.utilities.MapUtilities.7") + maxScaleDenominator ); //$NON-NLS-1$
 
         /* Is one rule is lying between the constraint, the theme is still visible. */
         if( minScaleDenominator <= mapScale && mapScale <= maxScaleDenominator )

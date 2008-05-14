@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -111,7 +112,7 @@ public class WQTuppleModel extends AbstractTuppleModel
     super( axes );
 
     if( converter == null )
-      throw new IllegalArgumentException( "WQ-Converter darf nicht null sein" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel.0") ); //$NON-NLS-1$
 
     m_model = model;
     m_converter = converter;

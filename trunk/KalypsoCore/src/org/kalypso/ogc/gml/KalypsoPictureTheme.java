@@ -38,6 +38,7 @@ import javax.media.jai.TiledImage;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
@@ -61,14 +62,14 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   public static IKalypsoTheme getPictureTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell modell, final String legendGraphic, final boolean shouldShowChildren ) throws Exception
   {
-    final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" };
+    final String[] arrWorldTypes = new String[] { "tif", "jpg", "png", "gif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     final String system = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     if( ArrayUtils.contains( arrWorldTypes, layerType.getLinktype().toLowerCase() ) )
       return new KalypsoPictureThemeWorldFile( layerName, layerType, context, modell, system, legendGraphic, shouldShowChildren );
-    else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) )
+    else if( "gmlpic".equals( layerType.getLinktype().toLowerCase() ) ) //$NON-NLS-1$
       return new KalypsoPictureThemeGml( layerName, layerType, context, modell, legendGraphic, shouldShowChildren );
 
-    throw new IllegalStateException( "not supported layerType: " + layerType.getLinktype() );
+    throw new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureTheme.5") + layerType.getLinktype() ); //$NON-NLS-1$
   }
 
   private TiledImage m_image = null;
@@ -107,14 +108,14 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     final ObjectFactory extentFac = new ObjectFactory();
 
     layer.setName( m_layerType.getName() );
-    layer.setFeaturePath( "" );
+    layer.setFeaturePath( "" ); //$NON-NLS-1$
 
     layer.setVisible( visible );
     layer.setId( id );
     layer.setHref( m_layerType.getHref() );
     layer.setLinktype( m_layerType.getLinktype() );
-    layer.setActuate( "onRequest" );
-    layer.setType( "simple" );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
 
     final String legendIcon = getLegendIcon();
     if( legendIcon != null )
@@ -136,7 +137,7 @@ abstract public class KalypsoPictureTheme extends AbstractKalypsoTheme
     catch( final Exception e2 )
     {
       e2.printStackTrace();
-      KalypsoPictureTheme.LOGGER.warning( "Transformation of bbox for full extend failed" );
+      KalypsoPictureTheme.LOGGER.warning( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureTheme.9") ); //$NON-NLS-1$
     }
     return bbox;
   }

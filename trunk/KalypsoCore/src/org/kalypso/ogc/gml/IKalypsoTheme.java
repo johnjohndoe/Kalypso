@@ -65,12 +65,12 @@ public interface IKalypsoTheme extends IAdaptable, IWorkbenchAdapter
   /**
    * Name of the property which determines if the user is allowed to deleted this theme.
    */
-  public final static String PROPERTY_DELETEABLE = "deleteable";
+  public final static String PROPERTY_DELETEABLE = "deleteable"; //$NON-NLS-1$
 
   /**
    * Name of the property which determines the id of the IKalypsoThemeInfo for this theme.
    */
-  public final static String PROPERTY_THEME_INFO_ID = "themeInfoId";
+  public final static String PROPERTY_THEME_INFO_ID = "themeInfoId"; //$NON-NLS-1$
 
   /**
    * * Adds a listener to the list of listeners. Has no effect if the same listeners is already registered.

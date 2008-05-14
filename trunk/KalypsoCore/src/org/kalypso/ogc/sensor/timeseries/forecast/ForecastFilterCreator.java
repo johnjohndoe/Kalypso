@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.forecast;
 
 import java.net.URL;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -61,7 +62,7 @@ public class ForecastFilterCreator implements IFilterCreator
       throws SensorException
   {
     if( !( aft instanceof ForecastFilterType ) )
-      throw new IllegalArgumentException( "Not a " + ForecastFilterType.class.getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator.0") + ForecastFilterType.class.getName() ); //$NON-NLS-1$
 
     final ForecastFilterType ft = (ForecastFilterType)aft;
 

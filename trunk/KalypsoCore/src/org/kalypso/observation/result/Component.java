@@ -42,6 +42,7 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 
@@ -71,9 +72,9 @@ public class Component extends AbstractComponent
   public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon)
   {
     if( name == null )
-      throw new IllegalArgumentException( "name argument must not be null for " + getClass().getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.Component.0") + getClass().getName() ); //$NON-NLS-1$
     if( valueTypeName == null )
-      throw new IllegalArgumentException( "valueTypeName argument must not be null for " + getClass().getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.Component.1") + getClass().getName() ); //$NON-NLS-1$
 
     m_id = id;
     m_unit = unit;
@@ -153,7 +154,7 @@ public class Component extends AbstractComponent
   @Override
   public String toString( )
   {
-    return m_name + "[" + m_valueTypeName + "]";
+    return m_name + "[" + m_valueTypeName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

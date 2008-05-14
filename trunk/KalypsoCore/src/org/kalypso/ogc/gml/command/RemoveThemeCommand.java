@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -76,7 +77,7 @@ public class RemoveThemeCommand implements ICommand
     final String deleteableStr = m_theme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
     final boolean deletable = Boolean.parseBoolean( deleteableStr );
     if( !deletable )
-      throw new IllegalStateException( "Trying to delete a non-deleteable theme: " + m_theme.getName() );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.command.RemoveThemeCommand.0") + m_theme.getName() ); //$NON-NLS-1$
 
     m_mapModell.removeTheme( m_theme );
   }
@@ -102,6 +103,6 @@ public class RemoveThemeCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Thema nach unten verschieben";
+    return Messages.getString("org.kalypso.ogc.gml.command.RemoveThemeCommand.1"); //$NON-NLS-1$
   }
 }

@@ -51,7 +51,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 public class KalypsoFeatureThemeTester extends PropertyTester
 {
 
-  private static final String FEATURE_TYPE = "featureType";
+  private static final String FEATURE_TYPE = "featureType"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],

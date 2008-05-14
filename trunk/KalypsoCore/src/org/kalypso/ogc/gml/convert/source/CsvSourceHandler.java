@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.CsvSourceType;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -64,7 +65,7 @@ public class CsvSourceHandler implements ISourceHandler
           final Integer col = columnList.get( i );
           columns[i] = col.intValue();
         }
-        final QName qname = new QName( "namespace", element.getName() );
+        final QName qname = new QName( "namespace", element.getName() ); //$NON-NLS-1$
         final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
         final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, qname, typeHandler, 0, 1, false );
         final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
@@ -80,7 +81,7 @@ public class CsvSourceHandler implements ISourceHandler
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new GmlConvertException( "CSV konnte nicht geladen werden: " + href, e );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.CsvSourceHandler.1") + href, e ); //$NON-NLS-1$
     }
     finally
     {

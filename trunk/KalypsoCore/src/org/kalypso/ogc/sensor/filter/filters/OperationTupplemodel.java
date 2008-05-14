@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.util.Date;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -110,13 +111,13 @@ public class OperationTupplemodel extends AbstractTuppleModel
         return new Double( value / m_operand );
       }
     }
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt den datentyp "
-        + object.getClass().getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.0") //$NON-NLS-1$
+        + object.getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.1") ); //$NON-NLS-1$
   }
 
   public void setElement( int index, Object element, IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt setElement() nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.2") ); //$NON-NLS-1$
     // TODO support it
   }
 
@@ -124,8 +125,8 @@ public class OperationTupplemodel extends AbstractTuppleModel
   {
     if( element instanceof Date )
       return m_baseModel.indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName() + " unterstuetzt indexOf fuer die Axe "
-        + axis.getName() + " nicht." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.3") //$NON-NLS-1$
+        + axis.getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationTupplemodel.4") ); //$NON-NLS-1$
     // TODO support it
   }
 }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.phenomenon;
 
+import org.kalypso.core.i18n.Messages;
+
 /**
  * An {@link IPhenomenon} implementation based on a dictionary entry.
  * 
@@ -73,7 +75,7 @@ public class DictionaryPhenomenon implements IPhenomenon
    */
   public String getID( )
   {
-    throw new UnsupportedOperationException( "TODO Load dict-feature and retrieve data from it" );
+    throw new UnsupportedOperationException( "TODO Load dict-feature and retrieve data from it" ); //$NON-NLS-1$
   }
 
   /**

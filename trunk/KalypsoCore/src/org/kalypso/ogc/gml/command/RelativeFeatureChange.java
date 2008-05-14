@@ -46,6 +46,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.kalypso.commons.math.MathOperationFactory;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -96,38 +97,38 @@ public class RelativeFeatureChange extends FeatureChange
     if( rawProperty instanceof Number )
     {
       final Number numericProperty = (Number) rawProperty;
-      if( "".equals( m_operator ) )
+      if( "".equals( m_operator ) ) //$NON-NLS-1$
       {
         return m_operand;
       }
-      else if( "=".equals( m_operator ) )
+      else if( "=".equals( m_operator ) ) //$NON-NLS-1$
       {        
         return castDoubleAsType( numericProperty.getClass(), m_operand );
       }
-      else if( "+".equals( m_operator ) )
+      else if( "+".equals( m_operator ) ) //$NON-NLS-1$
       {
-        return calculate( numericProperty, m_operand, "add" );
+        return calculate( numericProperty, m_operand, "add" ); //$NON-NLS-1$
       }
-      else if( "-".equals( m_operator ) )
+      else if( "-".equals( m_operator ) ) //$NON-NLS-1$
       {
-        return calculate( numericProperty, m_operand, "subtract" );
+        return calculate( numericProperty, m_operand, "subtract" ); //$NON-NLS-1$
       }
-      else if( "*".equals( m_operator ) )
+      else if( "*".equals( m_operator ) ) //$NON-NLS-1$
       {
-        return calculate( numericProperty, m_operand, "multiply" );
+        return calculate( numericProperty, m_operand, "multiply" ); //$NON-NLS-1$
       }
-      else if( "/".equals( m_operator ) )
+      else if( "/".equals( m_operator ) ) //$NON-NLS-1$
       {
-        return calculate( numericProperty, m_operand, "divide" );
+        return calculate( numericProperty, m_operand, "divide" ); //$NON-NLS-1$
       }
       else
       {
-        throw new IllegalArgumentException( "Operator was not one of: empty string, +, -, *, /, =" );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.10") ); //$NON-NLS-1$
       }
     }
     else
     {
-      throw new IllegalArgumentException( "Property not numeric, was: " + rawProperty.getClass().getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.11") + rawProperty.getClass().getName() ); //$NON-NLS-1$
     }
 
   }
@@ -136,7 +137,7 @@ public class RelativeFeatureChange extends FeatureChange
    * Calculates the result either by treating both arguments as a primitive double value or as a
    * {@link java.math.BigDecimal}. The result will be of the same type as the first operand.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private <T extends Number> Number calculate( final T firstOperand, final double secondOperand, final String bigTypesMethodName )
   {
     final Number result;
@@ -153,7 +154,7 @@ public class RelativeFeatureChange extends FeatureChange
       }
       catch( Exception e )
       {
-        throw new IllegalArgumentException( "Could not apply " + secondOperand + " to method BigDecimal." + bigTypesMethodName + "(). First operand was " + firstOperand, e );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.13") + secondOperand + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.14") + bigTypesMethodName + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.15") + firstOperand, e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
       if( firstOperand instanceof BigInteger )
       {
@@ -190,23 +191,23 @@ public class RelativeFeatureChange extends FeatureChange
       final Constructor<? extends Number> stringConstructor = type.getConstructor( String.class );
       try
       {
-        result = stringConstructor.newInstance( "" + doubleValue );
+        result = stringConstructor.newInstance( "" + doubleValue ); //$NON-NLS-1$
       }
       catch( InvocationTargetException e )
       {
-        result = stringConstructor.newInstance( "" + (long) doubleValue );
+        result = stringConstructor.newInstance( "" + (long) doubleValue ); //$NON-NLS-1$
       }
     }
     catch( InvocationTargetException e )
     {
       // the underlying constructor has probably thrown a NumberFormatException
-      final NumberFormatException newException = new NumberFormatException( "Could not cast double " + doubleValue + " as class " + type.getClass().getName() );
+      final NumberFormatException newException = new NumberFormatException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.18") + doubleValue + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.19") + type.getClass().getName() ); //$NON-NLS-1$ //$NON-NLS-2$
       newException.initCause( e );
       throw newException;
     }
     catch( Exception e )
     {
-      throw new IllegalArgumentException( "Could not cast double " + doubleValue + " as class " + type.getClass().getName(), e );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.20") + doubleValue + Messages.getString("org.kalypso.ogc.gml.command.RelativeFeatureChange.21") + type.getClass().getName(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return result;
   }
@@ -215,7 +216,7 @@ public class RelativeFeatureChange extends FeatureChange
    * checks if the property type is a {@link org.kalypso.gmlschema.property.IValuePropertyType} and can be cast as
    * {@link Number}
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static boolean isNumeric( IPropertyType propertyType )
   {
     return propertyType instanceof IValuePropertyType && Number.class.isAssignableFrom( ((IValuePropertyType) propertyType).getValueClass() );

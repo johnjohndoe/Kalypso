@@ -64,7 +64,7 @@ public class FeatureListChange extends FeatureChange
   /**
    * @see org.kalypso.ogc.gml.command.FeatureChange#getNewValue()
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getNewValue( )
   {

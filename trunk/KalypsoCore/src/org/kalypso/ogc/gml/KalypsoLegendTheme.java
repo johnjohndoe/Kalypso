@@ -78,7 +78,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
   private final int m_styleHeight = 50;
 
-  private final Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 );
+  private final Font m_font = new Font( "SansSerif", Font.BOLD, m_styleHeight / 5 ); //$NON-NLS-1$
 
   private final IMapModellListener m_modellListener = new MapModellAdapter()
   {
@@ -131,7 +131,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
 
   public KalypsoLegendTheme( final I10nString name, final IMapModell mapModell, final String legendIcon, final URL context, final boolean shouldShowChildren )
   {
-    super( name, "legend", mapModell, legendIcon, context, shouldShowChildren );
+    super( name, "legend", mapModell, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
 
     m_legendThemeIcon = null;
 
@@ -245,7 +245,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     int yMax = hMax / heightPerLegend;
     if( yMax > legendSize )
       yMax = legendSize;
-    System.out.println( "Image: " + xMax * widthPerLegend + "x" + hMax );
+    System.out.println( "Image: " + xMax * widthPerLegend + "x" + hMax ); //$NON-NLS-1$ //$NON-NLS-2$
     final Image tmpImage = new BufferedImage( xMax * widthPerLegend, yMax * heightPerLegend, BufferedImage.TYPE_INT_RGB );
     final Graphics g = tmpImage.getGraphics();
     g.setPaintMode();
@@ -256,7 +256,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     {
       for( int y = 0; y < yMax; y++ )
       {
-        System.out.println( "x" + x + " y" + y );
+        System.out.println( "x" + x + " y" + y ); //$NON-NLS-1$ //$NON-NLS-2$
         final int legendIndex = x * yMax + y;
         if( legendIndex < stylesCol.size() )
         {
@@ -288,7 +288,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
     g.fillRect( 0, 0, width, height );
     // test
     g.clipRect( 0, 0, width, height );
-    final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
+    final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false ); //$NON-NLS-1$
     KalypsoLegendUtilities.updatePropertiesForLegend( feature );
     final DisplayElement[] des = DisplayElementFactory.createDisplayElement( feature, style );
     for( final DisplayElement de : des )
@@ -313,7 +313,7 @@ public class KalypsoLegendTheme extends AbstractKalypsoTheme
   protected ImageDescriptor getDefaultIcon( )
   {
     if( m_legendThemeIcon == null )
-      m_legendThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/legendTheme.gif" ) );
+      m_legendThemeIcon = new org.eclipse.swt.graphics.Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/legendTheme.gif" ) ); //$NON-NLS-1$
 
     return ImageDescriptor.createFromImage( m_legendThemeIcon );
   }

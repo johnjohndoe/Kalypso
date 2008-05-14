@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
@@ -90,7 +91,7 @@ public class WechmannFunction
   {
     if( W - W1 < 0 )
     {
-      throw new WQException( "( W - W1 ) < 0, ln( W - W1 ) nicht möglich" );
+      throw new WQException( "( W - W1 ) < 0, ln( W - W1 ) nicht möglich" ); //$NON-NLS-1$
       //return 0;
     }
 
@@ -121,9 +122,9 @@ public class WechmannFunction
       throws WQException
   {
     if( K2 == 0 )
-      throw new WQException( "Dividieren durch 0 (K2 = 0)" );
+      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.1") ); //$NON-NLS-1$
     if( Q < 0 )
-      throw new WQException( "Q < 0, ln( Q ) nicht möglich" );
+      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.2") ); //$NON-NLS-1$
 
     return W1 + Math.exp( ( Math.log( Q ) - LNK1 ) / K2 );
   }

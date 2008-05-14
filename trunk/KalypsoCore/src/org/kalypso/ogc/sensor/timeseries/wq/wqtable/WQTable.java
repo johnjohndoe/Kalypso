@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
@@ -20,7 +21,7 @@ public class WQTable
 
   private final TreeSet<WQPair> m_wSortedPairs;
 
-  private final static WQException CANNOT_INTERPOLATE_EXCEPTION = new WQException( "Kann nicht interpolieren" );
+  private final static WQException CANNOT_INTERPOLATE_EXCEPTION = new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.0") ); //$NON-NLS-1$
 
   private final LinearEquation EQ = new LinearEquation();
 
@@ -141,7 +142,7 @@ public class WQTable
     }
     catch( SameXValuesException e )
     {
-      throw new WQException( "Kann nicht interpolieren für Q= " + q, e );
+      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.1") + q, e ); //$NON-NLS-1$
     }
 
     return EQ.computeX( q );
@@ -165,7 +166,7 @@ public class WQTable
     }
     catch( SameXValuesException e )
     {
-      throw new WQException( "Kann nicht interpolieren für W= " + w, e );
+      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.2") + w, e ); //$NON-NLS-1$
     }
 
     return EQ.computeY( w );
@@ -195,7 +196,7 @@ public class WQTable
     final StringBuffer sb = new StringBuffer();
 
     final DateFormat df = DateFormat.getDateTimeInstance();
-    sb.append( "Gültigkeit: " ).append( df.format( m_validity ) ).append( " Offset: " ).append( m_offset );//.append( "\n" ).append(
+    sb.append( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.3") ).append( df.format( m_validity ) ).append( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.4") ).append( m_offset );//.append( "\n" ).append( //$NON-NLS-1$ //$NON-NLS-2$
     //    m_wSortedPairs ).append( "\n" );
 
     return sb.toString();

@@ -54,6 +54,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.types.StyledLayerType;
@@ -83,7 +84,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 
     m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
     if( m_coverages.size() != 1 )
-      throw new NotImplementedException( "Collection of Images not implemented!" );
+      throw new NotImplementedException( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureThemeGml.0") ); //$NON-NLS-1$
 
     for( final ICoverage coverage : m_coverages )
     {
@@ -121,7 +122,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
           final URL imageContext = UrlResolverSingleton.resolveUrl( getURLContext(), getStyledLayerType().getHref() );
 
           final URL imageUrl = UrlResolverSingleton.resolveUrl( imageContext, type.getFileName() );
-          final RenderedOp image = JAI.create( "url", imageUrl );
+          final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
           setImage( new TiledImage( image, true ) );
           image.dispose();
 

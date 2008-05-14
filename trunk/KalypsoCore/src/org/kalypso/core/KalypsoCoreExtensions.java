@@ -59,6 +59,7 @@ import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalogContribution;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.core.gml.provider.IGmlSourceProvider;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.om.IComponentHandler;
@@ -72,26 +73,26 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
  */
 public class KalypsoCoreExtensions
 {
-  private final static String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor";
+  private final static String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor"; //$NON-NLS-1$
 
-  private final static String CATALOG_CONTRIBUTIONS_EXTENSION_POINT = "org.kalypso.core.catalogContribution";
+  private final static String CATALOG_CONTRIBUTIONS_EXTENSION_POINT = "org.kalypso.core.catalogContribution"; //$NON-NLS-1$
 
   /** id -> config-element */
   private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
 
   /* extension-point 'componentHandler' */
 
-  private final static String COMPONENT_HANDLER_EXTENSION_POINT = "org.kalypso.core.componentHandler";
+  private final static String COMPONENT_HANDLER_EXTENSION_POINT = "org.kalypso.core.componentHandler"; //$NON-NLS-1$
 
   private static Map<String, IComponentHandler> THE_COMPONENT_MAP = null;
 
   /* Theme-Info Extension-Point */
-  private static final String THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo";
+  private static final String THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> THE_THEME_INFO_MAP = null;
 
   /* GmlSourceProvider Extension-Point */
-  private static final String GML_SOURCE_PROVIDER_EXTENSION_POINT = "org.kalypso.core.gmlSourceProvider";
+  private static final String GML_SOURCE_PROVIDER_EXTENSION_POINT = "org.kalypso.core.gmlSourceProvider"; //$NON-NLS-1$
 
   public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
   {
@@ -104,7 +105,7 @@ public class KalypsoCoreExtensions
       THE_VISITOR_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
       {
-        final String configid = element.getAttribute( "id" );
+        final String configid = element.getAttribute( "id" ); //$NON-NLS-1$
         THE_VISITOR_MAP.put( configid, element );
       }
     }
@@ -113,7 +114,7 @@ public class KalypsoCoreExtensions
       return null;
 
     final IConfigurationElement element = THE_VISITOR_MAP.get( id );
-    final FeatureVisitor visitor = (FeatureVisitor) element.createExecutableExtension( "class" );
+    final FeatureVisitor visitor = (FeatureVisitor) element.createExecutableExtension( "class" ); //$NON-NLS-1$
     if( visitor instanceof IPropertiesFeatureVisitor )
       ((IPropertiesFeatureVisitor) visitor).init( properties );
 
@@ -124,7 +125,7 @@ public class KalypsoCoreExtensions
   {
     if( !Platform.isRunning() )
     {
-      System.out.println( "Platform is not running, plugins are not available" );
+      System.out.println( Messages.getString("org.kalypso.core.KalypsoCoreExtensions.7") ); //$NON-NLS-1$
       return;
     }
 
@@ -138,15 +139,15 @@ public class KalypsoCoreExtensions
       try
       {
         final String name = element.getName();
-        if( "catalogContribution".equals( name ) )
+        if( "catalogContribution".equals( name ) ) //$NON-NLS-1$
         {
-          final Object createExecutableExtension = element.createExecutableExtension( "class" );
+          final Object createExecutableExtension = element.createExecutableExtension( "class" ); //$NON-NLS-1$
           final ICatalogContribution catalogContribution = (ICatalogContribution) createExecutableExtension;
           catalogContribution.contributeTo( catalogManager );
         }
-        else if( "urnGenerator".equals( name ) )
+        else if( "urnGenerator".equals( name ) ) //$NON-NLS-1$
         {
-          final Object createExecutableExtension = element.createExecutableExtension( "class" );
+          final Object createExecutableExtension = element.createExecutableExtension( "class" ); //$NON-NLS-1$
           final IURNGenerator urnGenerator = (IURNGenerator) createExecutableExtension;
           catalogManager.register( urnGenerator );
         }
@@ -177,8 +178,8 @@ public class KalypsoCoreExtensions
         try
         {
           // TODO: anti-eclipse! do not instantiate exension before they are REALLY needed
-          final String configid = element.getAttribute( "id" );
-          final IComponentHandler handler = (IComponentHandler) element.createExecutableExtension( "class" );
+          final String configid = element.getAttribute( "id" ); //$NON-NLS-1$
+          final IComponentHandler handler = (IComponentHandler) element.createExecutableExtension( "class" ); //$NON-NLS-1$
           THE_COMPONENT_MAP.put( configid, handler );
         }
         catch( final CoreException e )
@@ -208,21 +209,21 @@ public class KalypsoCoreExtensions
       THE_THEME_INFO_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
       {
-        final String configid = element.getAttribute( "id" );
+        final String configid = element.getAttribute( "id" ); //$NON-NLS-1$
         THE_THEME_INFO_MAP.put( configid, element );
       }
     }
 
     final String id;
     final Properties props = new Properties();
-    if( themeInfoId.contains( "?" ) )
+    if( themeInfoId.contains( "?" ) ) //$NON-NLS-1$
     {
       final int queryPartIndex = themeInfoId.indexOf( '?' );
       id = themeInfoId.substring( 0, queryPartIndex );
 
       // replace in order to handle empty query
-      final String query = themeInfoId.substring( queryPartIndex ).replaceAll( "\\?", "" );
-      PropertiesUtilities.collectProperties( query, "&", "=", props );
+      final String query = themeInfoId.substring( queryPartIndex ).replaceAll( "\\?", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      PropertiesUtilities.collectProperties( query, "&", "=", props ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
       id = themeInfoId;
@@ -230,7 +231,7 @@ public class KalypsoCoreExtensions
     try
     {
       final IConfigurationElement element = THE_THEME_INFO_MAP.get( id );
-      final IKalypsoThemeInfo info = (IKalypsoThemeInfo) element.createExecutableExtension( "class" );
+      final IKalypsoThemeInfo info = (IKalypsoThemeInfo) element.createExecutableExtension( "class" ); //$NON-NLS-1$
       info.init( theme, props );
       return info;
     }
@@ -257,21 +258,21 @@ public class KalypsoCoreExtensions
     final IConfigurationElement[] providerElements = extensionPoint.getConfigurationElements();
     for( final IConfigurationElement providerElement : providerElements )
     {
-      final String providerId = providerElement.getAttribute( "id" );
+      final String providerId = providerElement.getAttribute( "id" ); //$NON-NLS-1$
 
-      final IConfigurationElement[] categoryElements = providerElement.getChildren( "category" );
+      final IConfigurationElement[] categoryElements = providerElement.getChildren( "category" ); //$NON-NLS-1$
       for( final IConfigurationElement categoryElement : categoryElements )
       {
-        final String categoryId = categoryElement.getAttribute( "id" );
+        final String categoryId = categoryElement.getAttribute( "id" ); //$NON-NLS-1$
         if( category == null || category.equals( categoryId ) )
         {
           try
           {
-            result.add( (IGmlSourceProvider) providerElement.createExecutableExtension( "class" ) );
+            result.add( (IGmlSourceProvider) providerElement.createExecutableExtension( "class" ) ); //$NON-NLS-1$
           }
           catch( final Throwable e )
           {
-            final IStatus status = StatusUtilities.statusFromThrowable( e, "Failed to create gml source provider: " + providerId );
+            final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.core.KalypsoCoreExtensions.25") + providerId ); //$NON-NLS-1$
             KalypsoCorePlugin.getDefault().getLog().log( status );
           }
 

@@ -52,8 +52,8 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
  */
 public class KalypsoCoreDebug
 {
-  public static Debug MAP_MODELL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapModell" );
+  public static Debug MAP_MODELL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapModell" ); //$NON-NLS-1$
 
-  public static Debug SPATIAL_INDEX_PAINT = new Debug( KalypsoCorePlugin.getDefault(), "/debug/spatialIndex/paint" );
+  public static Debug SPATIAL_INDEX_PAINT = new Debug( KalypsoCorePlugin.getDefault(), "/debug/spatialIndex/paint" ); //$NON-NLS-1$
 
 }

@@ -52,6 +52,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.zml.filters.IntervallFilterType;
@@ -63,18 +64,18 @@ public class IntervallFilterTest extends TestCase
 {
   public void testIntervallFilter( ) throws Exception
   {
-    final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+    final SimpleDateFormat XML_DATETIME_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ); //$NON-NLS-1$
 
     Writer writer = null;
     try
     {
-      final URL resource = getClass().getResource( "Niederschlag.zml" );
+      final URL resource = getClass().getResource( Messages.getString("org.kalypso.ogc.sensor.filter.test.IntervallFilterTest.1") ); //$NON-NLS-1$
 
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
       final SimpleLinkType xlink = linkFac.createSimpleLinkType();
       final String href = resource.toExternalForm();
       xlink.setHref( href );
-      xlink.setType( "simple" );
+      xlink.setType( "simple" ); //$NON-NLS-1$
 
       final ObjectFactory fac = new ObjectFactory();
       // TODO: probably the second filter factory will be forgotten everywhere
@@ -87,8 +88,8 @@ public class IntervallFilterTest extends TestCase
 
       final IntervallFilterType intervallFilter = fac.createIntervallFilterType();
       intervallFilter.setAmount( 10 );
-      intervallFilter.setCalendarField( "MINUTE" );
-      intervallFilter.setMode( "sum" );
+      intervallFilter.setCalendarField( Messages.getString("org.kalypso.ogc.sensor.filter.test.IntervallFilterTest.3") ); //$NON-NLS-1$
+      intervallFilter.setMode( "sum" ); //$NON-NLS-1$
       intervallFilter.setDefaultStatus( 4 );
       intervallFilter.setDefaultValue( 12.9 );
       intervallFilter.setFilter( fac.createZmlFilter( zmlFilter ) );
@@ -105,7 +106,7 @@ public class IntervallFilterTest extends TestCase
       // The concrete problem here is, that the double '//' are removed by the URL-parser
       // So later, the filter will not be parsed correctly.
       // I have no idea how to fix this at the moment, so the test is commented out
-      final URL zmlURL = new URL( resource, href + "?" + filterInline );
+      final URL zmlURL = new URL( resource, href + "?" + filterInline ); //$NON-NLS-1$
 //      final IObservation observation = ZmlFactory.parseXML( zmlURL, "id" );
 //
 //      // ZML geht von

@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -80,7 +81,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public boolean equals( Object obj )
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.0") ); //$NON-NLS-1$
 
     return m_obs.equals( obj );
   }
@@ -88,7 +89,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public IAxis[] getAxisList()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.1") ); //$NON-NLS-1$
 
     return m_obs.getAxisList();
   }
@@ -96,7 +97,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public String getIdentifier()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.2") ); //$NON-NLS-1$
 
     return m_obs.getIdentifier();
   }
@@ -104,7 +105,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public MetadataList getMetadataList()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.3") ); //$NON-NLS-1$
 
     return m_obs.getMetadataList();
   }
@@ -112,7 +113,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public String getName()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.4") ); //$NON-NLS-1$
 
     return m_obs.getName();
   }
@@ -120,7 +121,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public Object getTarget()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.5") ); //$NON-NLS-1$
 
     return m_obs.getTarget();
   }
@@ -128,7 +129,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public ITuppleModel getValues( IRequest args ) throws SensorException
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.6") ); //$NON-NLS-1$
 
     return m_obs.getValues( args );
   }
@@ -137,7 +138,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public int hashCode()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.7") ); //$NON-NLS-1$
 
     return m_obs.hashCode();
   }
@@ -145,7 +146,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public boolean isEditable()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.8") ); //$NON-NLS-1$
 
     return m_obs.isEditable();
   }
@@ -153,7 +154,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void setValues( ITuppleModel values ) throws SensorException
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.9") ); //$NON-NLS-1$
 
     m_obs.setValues( values );
   }
@@ -162,7 +163,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public String toString( )
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.10") ); //$NON-NLS-1$
 
     return m_obs.toString();
   }
@@ -170,7 +171,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void addListener( IObservationListener listener )
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.11") ); //$NON-NLS-1$
 
     m_obs.addListener( listener );
   }
@@ -178,7 +179,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void removeListener( IObservationListener listener )
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.12") ); //$NON-NLS-1$
 
     m_obs.removeListener( listener );
   }
@@ -186,7 +187,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void clearListeners()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.13") ); //$NON-NLS-1$
 
     m_obs.clearListeners();
   }
@@ -194,7 +195,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void fireChangedEvent( final Object source )
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.14") ); //$NON-NLS-1$
 
     m_obs.fireChangedEvent( source );
   }
@@ -202,7 +203,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public String getHref()
   {
     if( m_obs == null )
-      throw new IllegalStateException( "Internal observation is null" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.15") ); //$NON-NLS-1$
 
     return m_obs.getHref();
   }

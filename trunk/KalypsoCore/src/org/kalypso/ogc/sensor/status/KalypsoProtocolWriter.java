@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.status;
 
 import java.io.PrintWriter;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -80,7 +81,7 @@ public class KalypsoProtocolWriter
   {
     analyseValues( new IObservation[]
     { observation }, new ITuppleModel[]
-    { model }, summaryWriter, detailsWriter, "" );
+    { model }, summaryWriter, detailsWriter, "" ); //$NON-NLS-1$
   }
 
   /**
@@ -90,7 +91,7 @@ public class KalypsoProtocolWriter
       final PrintWriter summaryWriter, final PrintWriter detailsWriter, final String summInfo ) throws SensorException
   {
     if( observations.length != models.length )
-      throw new IllegalArgumentException( "Arrays not same length" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.1") ); //$NON-NLS-1$
 
     final StringBuffer bf = new StringBuffer();
 
@@ -116,8 +117,8 @@ public class KalypsoProtocolWriter
             {
               bError = true;
 
-              bf.append( "[" + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] ) + " - "
-                  + KalypsoStatusUtils.getTooltipFor( nbValue ) + "]\n" );
+              bf.append( "[" + KalypsoStatusUtils.getAxisLabelFor( statusAxes[iAxes] ) + " - " //$NON-NLS-1$ //$NON-NLS-2$
+                  + KalypsoStatusUtils.getTooltipFor( nbValue ) + "]\n" ); //$NON-NLS-1$
             }
           }
 
@@ -129,25 +130,25 @@ public class KalypsoProtocolWriter
             {
               sumDone = true;
 
-              String header = "Warnung in Zeitreihe: " + observations[i].getName();
+              String header = Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.5") + observations[i].getName(); //$NON-NLS-1$
 
-              String desc = observations[i].getMetadataList().getProperty( ObservationConstants.MD_DESCRIPTION, "" );
+              String desc = observations[i].getMetadataList().getProperty( ObservationConstants.MD_DESCRIPTION, "" ); //$NON-NLS-1$
               if( desc.length() > 0 )
               {
-                desc += " aus "
-                    + observations[i].getMetadataList().getProperty( ObservationConstants.MD_ORIGIN, "<unbekannt>" );
+                desc += Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.7") //$NON-NLS-1$
+                    + observations[i].getMetadataList().getProperty( ObservationConstants.MD_ORIGIN, Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.8") ); //$NON-NLS-1$
 
-                header += " (" + desc + ")";
+                header += " (" + desc + ")"; //$NON-NLS-1$ //$NON-NLS-2$
               }
 
               if( summaryWriter != null )
                 summaryWriter.println( header );
 
               detailsWriter.println( summInfo + header );
-              detailsWriter.println( "Details:" );
+              detailsWriter.println( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.11") ); //$NON-NLS-1$
             }
 
-            detailsWriter.write( ObservationUtilities.dump( models[i], "  ", ix, true ) + " Grund: " + bf.toString() );
+            detailsWriter.write( ObservationUtilities.dump( models[i], "  ", ix, true ) + Messages.getString("org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.13") + bf.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
           }
         }
       }

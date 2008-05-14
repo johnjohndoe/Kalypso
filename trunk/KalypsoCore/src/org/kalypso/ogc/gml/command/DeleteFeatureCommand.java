@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -157,7 +158,7 @@ public class DeleteFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Feature löschen";
+    return Messages.getString("org.kalypso.ogc.gml.command.DeleteFeatureCommand.0"); //$NON-NLS-1$
   }
 
   private void delete( ) throws Exception

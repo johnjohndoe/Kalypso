@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 
 /**
@@ -90,7 +91,7 @@ public final class DefaultAxis extends AbstractAxis implements IAxis
       final boolean isKey, final boolean persistable )
   {
     if( dataClass == null )
-      throw new IllegalArgumentException("Argument dataClass is null");
+      throw new IllegalArgumentException(Messages.getString("org.kalypso.ogc.sensor.impl.DefaultAxis.0")); //$NON-NLS-1$
     
     m_label = label;
     m_type = type;

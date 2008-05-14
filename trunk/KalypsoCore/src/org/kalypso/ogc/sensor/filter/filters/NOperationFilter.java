@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -70,16 +71,16 @@ public class NOperationFilter extends AbstractObservationFilter
   public NOperationFilter( NOperationFilterType filter )
   {
     final String operator = filter.getOperator();
-    if( operator.equals( "+" ) )
+    if( operator.equals( "+" ) ) //$NON-NLS-1$
       m_operation = OPERATION_PLUS;
-    else if( operator.equals( "-" ) )
+    else if( operator.equals( "-" ) ) //$NON-NLS-1$
       m_operation = OPERATION_MINUS;
-    else if( operator.equals( "*" ) )
+    else if( operator.equals( "*" ) ) //$NON-NLS-1$
       m_operation = OPERATION_MAL;
-    else if( operator.equals( "/" ) )
+    else if( operator.equals( "/" ) ) //$NON-NLS-1$
       m_operation = OPERATION_DURCH;
     else
-      throw new IllegalArgumentException( "unknown operator '" + operator + "' in filter" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.4") + operator + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.5") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -101,6 +102,6 @@ public class NOperationFilter extends AbstractObservationFilter
   @Override
   public void setValues( ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.6") ); //$NON-NLS-1$
   }
 }

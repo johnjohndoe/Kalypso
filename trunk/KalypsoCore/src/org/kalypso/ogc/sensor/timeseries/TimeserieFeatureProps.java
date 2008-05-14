@@ -50,22 +50,22 @@ import java.util.Properties;
 public class TimeserieFeatureProps
 {
   /** If set, use this property of the feature to create name */
-  private final static String PROP_NAMECOLUMN = "nameColumn";
+  private final static String PROP_NAMECOLUMN = "nameColumn"; //$NON-NLS-1$
 
   /** If {@link #PROP_NAMECOLUMN}is not set, use this name instead */
-  private final static String PROP_NAMESTRING = "nameString";
+  private final static String PROP_NAMESTRING = "nameString"; //$NON-NLS-1$
 
-  private final static String PROP_LINKCOLUM = "linkColumn";
+  private final static String PROP_LINKCOLUM = "linkColumn"; //$NON-NLS-1$
 
-  private final static String PROP_COLOR = "color";
+  private final static String PROP_COLOR = "color"; //$NON-NLS-1$
 
   /** Line width as float */
-  private final static String PROP_LINE_WIDTH = "lineWidth";
+  private final static String PROP_LINE_WIDTH = "lineWidth"; //$NON-NLS-1$
   
   /** Lenght of simple dash as float */
-  private final static String PROP_LINE_DASH = "lineDash";
+  private final static String PROP_LINE_DASH = "lineDash"; //$NON-NLS-1$
 
-  private final static String DEFAULT_NAMESTRING = "%obsname% (%axisname%)";
+  private final static String DEFAULT_NAMESTRING = "%obsname% (%axisname%)"; //$NON-NLS-1$
 
   private final String m_nameColumn;
 
@@ -73,7 +73,7 @@ public class TimeserieFeatureProps
 
   private final String m_filter;
 
-  private static final String PROP_FILTER = "filter";
+  private static final String PROP_FILTER = "filter"; //$NON-NLS-1$
 
   private final String m_nameString;
 
@@ -98,7 +98,7 @@ public class TimeserieFeatureProps
     m_lineDash = lineDash;
 
     if( nameColumn != null && nameString == null )
-      m_nameString = "%featureprop%";
+      m_nameString = "%featureprop%"; //$NON-NLS-1$
     else if( nameString == null )
       m_nameString = DEFAULT_NAMESTRING;
     else

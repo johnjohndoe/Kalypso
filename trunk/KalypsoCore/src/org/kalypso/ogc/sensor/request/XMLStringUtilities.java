@@ -57,14 +57,14 @@ public class XMLStringUtilities
     int pos1 = text.indexOf( xmlTag );
     if( pos1 < 0 )
       return null;
-    int pos2 = text.indexOf( xmlTag + ">", pos1 + 1 );
+    int pos2 = text.indexOf( xmlTag + ">", pos1 + 1 ); //$NON-NLS-1$
     if( pos2 < 0 )
       return null;
-    int bPos1 = getBefore( text, "<", pos1 );
+    int bPos1 = getBefore( text, "<", pos1 ); //$NON-NLS-1$
     if( bPos1 < 0 )
       return null;
 
-    int bPos2 = getAfter( text, ">", pos2 );
+    int bPos2 = getAfter( text, ">", pos2 ); //$NON-NLS-1$
     if( bPos2 < 0 )
       return null;
 
@@ -79,7 +79,7 @@ public class XMLStringUtilities
 
   private static boolean isValid( String space )
   {
-    return !space.matches( ".*(<|>).*" );
+    return !space.matches( ".*(<|>).*" ); //$NON-NLS-1$
   }
 
   private static int getAfter( String text, String pattern, int pos )

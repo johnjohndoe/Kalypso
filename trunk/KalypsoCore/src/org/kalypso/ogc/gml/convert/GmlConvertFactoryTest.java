@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author belger
@@ -31,22 +32,22 @@ public class GmlConvertFactoryTest extends TestCase
 
     try
     {
-      ZipUtilities.unzip( getClass().getResourceAsStream( "resources/testcasedata.zip" ), tmpdir );
+      ZipUtilities.unzip( getClass().getResourceAsStream( "resources/testcasedata.zip" ), tmpdir ); //$NON-NLS-1$
 
-      doGmc( "1_egmpar_hwp_import.gmc", tmpdir );
-      checkFile( "saalemodell1.gml", tmpdir );
+      doGmc( "1_egmpar_hwp_import.gmc", tmpdir ); //$NON-NLS-1$
+      checkFile( "saalemodell1.gml", tmpdir ); //$NON-NLS-1$
 
-      doGmc( "2_wlmpar_hwp_import.gmc", tmpdir );
-      checkFile( "saalemodell2.gml", tmpdir );
+      doGmc( "2_wlmpar_hwp_import.gmc", tmpdir ); //$NON-NLS-1$
+      checkFile( "saalemodell2.gml", tmpdir ); //$NON-NLS-1$
 
-      doGmc( "3_pegel_std_import.gmc", tmpdir );
-      checkFile( "saalemodell3.gml", tmpdir );
+      doGmc( "3_pegel_std_import.gmc", tmpdir ); //$NON-NLS-1$
+      checkFile( "saalemodell3.gml", tmpdir ); //$NON-NLS-1$
 
-      doGmc( "EXPORT_egmpar_hwp.gmc", tmpdir );
-      final File resultfile = checkFile( "export_egmpar.csv", tmpdir );
+      doGmc( "EXPORT_egmpar_hwp.gmc", tmpdir ); //$NON-NLS-1$
+      final File resultfile = checkFile( "export_egmpar.csv", tmpdir ); //$NON-NLS-1$
 
       // diff files
-      final File exportSoll = new File( tmpdir, "export_egmpar.csv.soll" );
+      final File exportSoll = new File( tmpdir, "export_egmpar.csv.soll" ); //$NON-NLS-1$
       istFis = new FileInputStream( resultfile );
       sollFis = new FileInputStream( exportSoll );
       IOUtils.contentEquals( istFis, sollFis );
@@ -70,7 +71,7 @@ public class GmlConvertFactoryTest extends TestCase
   {
     final File file = new File( dir, filename );
     final URL url = file.toURL();
-    assertTrue( "Return status must be ok", GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap() ).isOK() );
+    assertTrue( Messages.getString("org.kalypso.ogc.gml.convert.GmlConvertFactoryTest.10"), GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap() ).isOK() ); //$NON-NLS-1$
   }
 
 }

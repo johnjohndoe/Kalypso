@@ -59,7 +59,7 @@ import org.xml.sax.InputSource;
 public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   // public static final class CLASS_ZmlInlineIdealKcWtLaiType=new
-  public static final String NAMESPACE = "inline.zml.kalypso.org";
+  public static final String NAMESPACE = "inline.zml.kalypso.org"; //$NON-NLS-1$
 
   public final QName m_typeName;
 
@@ -120,7 +120,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
     IObservation obs = null;
     try
     {
-      obs = ZmlFactory.parseXML( new InputSource( reader ), "null-id", null );
+      obs = ZmlFactory.parseXML( new InputSource( reader ), "null-id", null ); //$NON-NLS-1$
       reader.close();
     }
     catch( final SensorException e )
@@ -139,7 +139,7 @@ public class ZmlInlineTypeHandler extends AbstractOldFormatMarshallingTypeHandle
    */
   public String getShortname( )
   {
-    return "ZmlInline";
+    return "ZmlInline"; //$NON-NLS-1$
   }
 
   /**

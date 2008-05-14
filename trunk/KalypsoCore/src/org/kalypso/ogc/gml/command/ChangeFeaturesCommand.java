@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -119,7 +120,7 @@ public class ChangeFeaturesCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Feature verändern";
+    return Messages.getString("org.kalypso.ogc.gml.command.ChangeFeaturesCommand.0"); //$NON-NLS-1$
   }
 
   protected void applyChanges( final FeatureChange[] changes )

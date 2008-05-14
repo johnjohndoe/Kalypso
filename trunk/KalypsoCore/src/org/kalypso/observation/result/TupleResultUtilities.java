@@ -49,6 +49,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 
 /**
@@ -307,11 +308,11 @@ public class TupleResultUtilities
 
       final IComponent sourceComponent = ComponentUtilities.findComponentByID( sourceResult.getComponents(), sourceID );
       if( sourceComponent == null )
-        throw new IllegalArgumentException( "Source component not found: " + sourceID );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.TupleResultUtilities.0") + sourceID ); //$NON-NLS-1$
 
       final IComponent targetComponent = ComponentUtilities.findComponentByID( targetResult.getComponents(), targetID );
       if( targetComponent == null )
-        throw new IllegalArgumentException( "Source component not found: " + targetID );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.TupleResultUtilities.1") + targetID ); //$NON-NLS-1$
 
       sourceComponents[count] = sourceComponent;
       targetComponents[count] = targetComponent;

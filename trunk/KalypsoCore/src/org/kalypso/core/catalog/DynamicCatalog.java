@@ -176,9 +176,9 @@ public class DynamicCatalog implements ICatalog
    */
   public void addEntry( final String uri, final String systemID, final String publicID )
   {
-    if( systemID != null && !"".equals( systemID ) )
+    if( systemID != null && !"".equals( systemID ) ) //$NON-NLS-1$
       addEntry( uri, systemID, SYSTEM_ID, false );
-    if( publicID != null && !"".equals( publicID ) )
+    if( publicID != null && !"".equals( publicID ) ) //$NON-NLS-1$
       addEntry( uri, publicID, PUBLIC_ID, false );
   }
 
@@ -191,18 +191,18 @@ public class DynamicCatalog implements ICatalog
    */
   public void addEntryRelative( final String uri, final String systemID, final String publicID )
   {
-    if( systemID != null && !"".equals( systemID ) )
+    if( systemID != null && !"".equals( systemID ) ) //$NON-NLS-1$
       addEntry( uri, systemID, SYSTEM_ID, true );
-    if( publicID != null && !"".equals( publicID ) )
+    if( publicID != null && !"".equals( publicID ) ) //$NON-NLS-1$
       addEntry( uri, publicID, PUBLIC_ID, true );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private void addEntry( final String uri, final String entryID, final int entryType, final boolean relative )
   {
-    if( entryID == null || "".equals( entryID ) )
+    if( entryID == null || "".equals( entryID ) ) //$NON-NLS-1$
       return;
-    if( !entryID.startsWith( "urn:" ) )
+    if( !entryID.startsWith( "urn:" ) ) //$NON-NLS-1$
     {
       switch( entryType )
       {
@@ -218,7 +218,7 @@ public class DynamicCatalog implements ICatalog
       return;
     }
     final int max = CatalogUtilities.getMaxLevel( entryID );
-    final String baseURN = CatalogUtilities.getUrnSection( entryID, 1, max - 1 ) + ":";
+    final String baseURN = CatalogUtilities.getUrnSection( entryID, 1, max - 1 ) + ":"; //$NON-NLS-1$
     // check the internal policy for our dynamic catalogs
 
     // either
@@ -293,7 +293,7 @@ public class DynamicCatalog implements ICatalog
     // catalog seems to be non existing
     final int maxLevel = CatalogUtilities.getMaxLevel( myBaseURN );
     final String urnSection = CatalogUtilities.getUrnSection( baseURN, maxLevel + 1 );
-    final String newCatalogURIBase = CatalogUtilities.addURNSection( myBaseURN, urnSection ) + ":";
+    final String newCatalogURIBase = CatalogUtilities.addURNSection( myBaseURN, urnSection ) + ":"; //$NON-NLS-1$
     final String newCatalogURN = CatalogUtilities.createCatalogURN( newCatalogURIBase );
     try
     {
@@ -314,7 +314,7 @@ public class DynamicCatalog implements ICatalog
 
     final System catalogSystemEntry = CatalogManager.OBJECT_FACTORY_CATALOG.createSystem();
     catalogSystemEntry.setSystemId( newCatalogURN );
-    catalogSystemEntry.setUri( urnSection + "/" + CatalogUtilities.CATALOG_FILE_NAME );
+    catalogSystemEntry.setUri( urnSection + "/" + CatalogUtilities.CATALOG_FILE_NAME ); //$NON-NLS-1$
     publicOrSystemOrUri.add( CatalogManager.OBJECT_FACTORY_CATALOG.createSystem( catalogSystemEntry ) );
     // next time catalog will be available
     addEntry( uri, entryID, entryType, relative );
@@ -407,7 +407,7 @@ public class DynamicCatalog implements ICatalog
    * @param resolveContext
    *            If true, the found entry is resolved against the catalogs location, if false it is directly returned.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private List<String> internResolve( final String systemID, final String publicID, List<String> collector, final boolean doCollectURN, final boolean supportPattern, final boolean local, final boolean resolveContext )
   {
     if( collector == null )
@@ -527,21 +527,21 @@ public class DynamicCatalog implements ICatalog
   {
     if( !supportPattern )
       return requestedID.equals( entryID );
-    if( requestedID.endsWith( "*" ) )
+    if( requestedID.endsWith( "*" ) ) //$NON-NLS-1$
     {
       final String prefixToTest = requestedID.substring( 0, requestedID.length() - 1 );
       return entryID.startsWith( prefixToTest );
     }
     else
     {
-      final String[] requestedStrings = requestedID.split( ":" );
-      final String[] entryStrings = entryID.split( ":" );
+      final String[] requestedStrings = requestedID.split( ":" ); //$NON-NLS-1$
+      final String[] entryStrings = entryID.split( ":" ); //$NON-NLS-1$
       if( requestedStrings.length == entryStrings.length )
       {
         for( int i = 0; i < entryStrings.length; i++ )
         {
           final String requestedString = requestedStrings[i];
-          if( !requestedString.equals( "*" ) && !requestedString.equals( entryStrings[i] ) )
+          if( !requestedString.equals( "*" ) && !requestedString.equals( entryStrings[i] ) ) //$NON-NLS-1$
             return false;
         }
         return true;
@@ -589,7 +589,7 @@ public class DynamicCatalog implements ICatalog
   @Override
   public String toString( )
   {
-    return "XML-Catalog: \n ID=" + m_catalog.getId().toString() + "\n Base=" + getBase() + "\n context: " + m_context.toString();
+    return "XML-Catalog: \n ID=" + m_catalog.getId().toString() + "\n Base=" + getBase() + "\n context: " + m_context.toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
 }

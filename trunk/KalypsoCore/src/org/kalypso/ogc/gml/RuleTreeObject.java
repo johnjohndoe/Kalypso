@@ -50,6 +50,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Rule;
 
 public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
@@ -90,14 +91,14 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   public String toString( )
   {
     if( m_rule == null )
-      return "<no styles set>";
+      return "<no styles set>"; //$NON-NLS-1$
 
     if( m_rule.getTitle() != null )
       return m_rule.getTitle();
     else if( m_rule.getName() != null )
       return m_rule.getName();
     else
-      return "rule";
+      return "rule"; //$NON-NLS-1$
   }
 
   /**
@@ -204,7 +205,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
       throw new IllegalStateException();
 
     if( m_rule == null )
-      return "<no styles set>";
+      return "<no styles set>"; //$NON-NLS-1$
 
     if( m_rule.getTitle() != null )
       return m_rule.getTitle();
@@ -212,7 +213,7 @@ public class RuleTreeObject implements IWorkbenchAdapter, ITooltipProvider
     if( m_rule.getName() != null )
       return m_rule.getName();
 
-    return "Rule: neither 'title' nor 'name' defined.";
+    return Messages.getString("org.kalypso.ogc.gml.RuleTreeObject.3"); //$NON-NLS-1$
   }
 
   /**

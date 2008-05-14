@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -95,7 +96,7 @@ public class EnableThemeCommand implements ICommand
    */
   public String getDescription( )
   {
-    return "Theme " + (m_bEnable ? "anzeigen" : "verstecken");
+    return Messages.getString("org.kalypso.ogc.gml.command.EnableThemeCommand.0") + (m_bEnable ? Messages.getString("org.kalypso.ogc.gml.command.EnableThemeCommand.1") : Messages.getString("org.kalypso.ogc.gml.command.EnableThemeCommand.2")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
 }

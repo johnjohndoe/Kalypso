@@ -41,6 +41,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -135,11 +136,11 @@ public class RequestFactory
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );
     }
     // create observation instance
-    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, null, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) );
+    final SimpleObservation obs = new SimpleObservation( "", "", request.getName(), false, null, new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$
     // update metadata
     final MetadataList mdl = obs.getMetadataList();
-    mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" );
-    mdl.setProperty( ObservationConstants.MD_ORIGIN, "Request-Mechanismus" );
+    mdl.setProperty( ObservationConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" ); //$NON-NLS-1$
+    mdl.setProperty( ObservationConstants.MD_ORIGIN, Messages.getString("org.kalypso.ogc.sensor.request.RequestFactory.3") ); //$NON-NLS-1$
     return obs;
   }
 
@@ -150,7 +151,7 @@ public class RequestFactory
   {
     final Request xmlReq = parseRequest( href );
     if( xmlReq == null )
-      throw new SensorException( "Request ungültig, kann keine Default-Observation erzeugen" );
+      throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.request.RequestFactory.4") ); //$NON-NLS-1$
     return createDefaultObservation( xmlReq );
   }
 
@@ -172,7 +173,7 @@ public class RequestFactory
     }
     final String xmlStr = writer.toString();
     if( !includeXmlHeader )
-      return xmlStr.replaceAll( "<\\?xml.*>", "" ).replaceAll( "\n", "" );
+      return xmlStr.replaceAll( "<\\?xml.*>", "" ).replaceAll( "\n", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     return xmlStr;
   }
 }

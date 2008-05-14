@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.timeseries.interpolation;
 import java.net.URL;
 
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -62,7 +63,7 @@ public class InterpolationFilterCreator implements IFilterCreator
       throws SensorException
   {
     if( !( aft instanceof InterpolationFilterType ) )
-      throw new IllegalArgumentException( "Not a " + InterpolationFilterType.class.getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator.0") + InterpolationFilterType.class.getName() ); //$NON-NLS-1$
 
     final InterpolationFilterType ft = (InterpolationFilterType)aft;
 

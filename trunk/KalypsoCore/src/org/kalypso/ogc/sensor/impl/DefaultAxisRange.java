@@ -81,6 +81,6 @@ public class DefaultAxisRange implements IAxisRange
   @Override
   public String toString( )
   {
-    return m_from.toString() + " -> " + m_to.toString();
+    return m_from.toString() + " -> " + m_to.toString(); //$NON-NLS-1$
   }
 }

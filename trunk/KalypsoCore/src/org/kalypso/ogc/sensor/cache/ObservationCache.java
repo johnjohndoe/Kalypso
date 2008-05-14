@@ -78,7 +78,7 @@ public class ObservationCache
   public ObservationCache( final int timeout, final int size )
   {
     final LfuCacheFactory factory = new LfuCacheFactory();
-    m_cache = factory.newInstance( "view.observations", timeout, size );
+    m_cache = factory.newInstance( "view.observations", timeout, size ); //$NON-NLS-1$
   }
 
   public IObservation getObservationFor( final IAdaptable adapt )

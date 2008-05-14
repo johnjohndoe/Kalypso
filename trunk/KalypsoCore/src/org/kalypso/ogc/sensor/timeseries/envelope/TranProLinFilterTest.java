@@ -58,30 +58,30 @@ public class TranProLinFilterTest extends TestCase
   public void testGetValues() throws SensorException
   {
     final IObservation obs = TimeserieUtils.createTestTimeserie( new String[]
-    { "W" }, 10, false );
+    { "W" }, 10, false ); //$NON-NLS-1$
 
     assertEquals( 10, obs.getValues(null).getCount() );
     
-    System.out.println( ObservationUtilities.dump( obs.getValues(null), "   " ) );
+    System.out.println( ObservationUtilities.dump( obs.getValues(null), "   " ) ); //$NON-NLS-1$
     
-    final TranProLinFilter filter = new TranProLinFilter( null, null,"*", 1, 1.15 ,0,null);
+    final TranProLinFilter filter = new TranProLinFilter( null, null,"*", 1, 1.15 ,0,null); //$NON-NLS-1$
     filter.initFilter( null, obs, null );
     
     assertEquals( 10, filter.getValues(null).getCount() );
 
-    Number valueOrg = (Number)obs.getValues(null).getElement( 0, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) );
-    Number valueNew = (Number)filter.getValues(null).getElement( 0, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) );
+    Number valueOrg = (Number)obs.getValues(null).getElement( 0, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
+    Number valueNew = (Number)filter.getValues(null).getElement( 0, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue(), valueNew.doubleValue(), 0.001 );
     
-    valueOrg = (Number)obs.getValues(null).getElement( 9, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) );
-    valueNew = (Number)filter.getValues(null).getElement( 9, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) );
+    valueOrg = (Number)obs.getValues(null).getElement( 9, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
+    valueNew = (Number)filter.getValues(null).getElement( 9, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue() * 1.15, valueNew.doubleValue(), 0.001 );
 
     final StringWriter w1 = new StringWriter();
-    ObservationUtilities.dump( obs.getValues(null), "\t", w1 );
+    ObservationUtilities.dump( obs.getValues(null), "\t", w1 ); //$NON-NLS-1$
 
     final StringWriter w2 = new StringWriter();
-    ObservationUtilities.dump( filter.getValues(null), "\t", w2 );
+    ObservationUtilities.dump( filter.getValues(null), "\t", w2 ); //$NON-NLS-1$
     
     assertFalse( w1.toString().equals( w2.toString() ) );
   }

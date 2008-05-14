@@ -52,39 +52,39 @@ public class ZmlURLTest extends TestCase
 {
   public void testInsertQueryPart()
   {
-    assertEquals( ZmlURL.insertQueryPart( "test://foo.bar.script", "<request><some request stuff></request><filter><some filter stuff></filter>" ),
-        "test://foo.bar.script?<request><some request stuff></request><filter><some filter stuff></filter>" );
+    assertEquals( ZmlURL.insertQueryPart( "test://foo.bar.script", "<request><some request stuff></request><filter><some filter stuff></filter>" ), //$NON-NLS-1$ //$NON-NLS-2$
+        "test://foo.bar.script?<request><some request stuff></request><filter><some filter stuff></filter>" ); //$NON-NLS-1$
   }
 
   public void testInsertFilter()
   {
-    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script", "<some filter stuff>" ),
-        "test://foo.bar.script?<filter><some filter stuff></filter>" );
-    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script?", "<some filter stuff>" ),
-        "test://foo.bar.script?<filter><some filter stuff></filter>" );
-    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script", "<filter><some filter stuff></filter>" ),
-        "test://foo.bar.script?<filter><some filter stuff></filter>" );
-    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script?<filter><some filter stuff></filter>",
-        "<some other filter stuff>" ), "test://foo.bar.script?<filter><some other filter stuff></filter>" );
+    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script", "<some filter stuff>" ), //$NON-NLS-1$ //$NON-NLS-2$
+        "test://foo.bar.script?<filter><some filter stuff></filter>" ); //$NON-NLS-1$
+    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script?", "<some filter stuff>" ), //$NON-NLS-1$ //$NON-NLS-2$
+        "test://foo.bar.script?<filter><some filter stuff></filter>" ); //$NON-NLS-1$
+    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script", "<filter><some filter stuff></filter>" ), //$NON-NLS-1$ //$NON-NLS-2$
+        "test://foo.bar.script?<filter><some filter stuff></filter>" ); //$NON-NLS-1$
+    assertEquals( ZmlURL.insertFilter( "test://foo.bar.script?<filter><some filter stuff></filter>", //$NON-NLS-1$
+        "<some other filter stuff>" ), "test://foo.bar.script?<filter><some other filter stuff></filter>" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertEquals(
         ZmlURL
             .insertFilter(
-                "test://foo.bar.script?<request xmlns=\"blablabla\"><some request></request><filter><some filter stuff></filter>",
-                "<some other filter stuff>" ),
-        "test://foo.bar.script?<filter><some other filter stuff></filter><request xmlns=\"blablabla\"><some request></request>" );
+                "test://foo.bar.script?<request xmlns=\"blablabla\"><some request></request><filter><some filter stuff></filter>", //$NON-NLS-1$
+                "<some other filter stuff>" ), //$NON-NLS-1$
+        "test://foo.bar.script?<filter><some other filter stuff></filter><request xmlns=\"blablabla\"><some request></request>" ); //$NON-NLS-1$
   }
 
   public void testInsertRequest()
   {
-    assertEquals( ZmlURL.insertRequest( "test://foo.bar.script", "<request><some request stuff></request>" ),
-        "test://foo.bar.script?<request><some request stuff></request>" );
-    assertEquals( ZmlURL.insertRequest( "test://foo.bar.script?", "<request><some request stuff></request>" ),
-        "test://foo.bar.script?<request><some request stuff></request>" );
-    assertEquals( ZmlURL.insertRequest( "test://foo.bar.script?<request><original request stuff></request>",
-        "<request><some request stuff></request>" ), "test://foo.bar.script?<request><some request stuff></request>" );
+    assertEquals( ZmlURL.insertRequest( "test://foo.bar.script", "<request><some request stuff></request>" ), //$NON-NLS-1$ //$NON-NLS-2$
+        "test://foo.bar.script?<request><some request stuff></request>" ); //$NON-NLS-1$
+    assertEquals( ZmlURL.insertRequest( "test://foo.bar.script?", "<request><some request stuff></request>" ), //$NON-NLS-1$ //$NON-NLS-2$
+        "test://foo.bar.script?<request><some request stuff></request>" ); //$NON-NLS-1$
+    assertEquals( ZmlURL.insertRequest( "test://foo.bar.script?<request><original request stuff></request>", //$NON-NLS-1$
+        "<request><some request stuff></request>" ), "test://foo.bar.script?<request><some request stuff></request>" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertEquals( ZmlURL.insertRequest(
-        "test://foo.bar.script?<request><original request stuff></request><filter><some filter stuff></filter>",
-        "<request><some request stuff></request>" ),
-        "test://foo.bar.script?<request><some request stuff></request><filter><some filter stuff></filter>" );
+        "test://foo.bar.script?<request><original request stuff></request><filter><some filter stuff></filter>", //$NON-NLS-1$
+        "<request><some request stuff></request>" ), //$NON-NLS-1$
+        "test://foo.bar.script?<request><some request stuff></request><filter><some filter stuff></filter>" ); //$NON-NLS-1$
   }
 }

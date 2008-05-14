@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IFile;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.ShpSourceType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -50,7 +51,7 @@ public class ShpSourceHandler implements ISourceHandler
     }
     catch( final Exception e )
     {
-      throw new GmlConvertException( "Shape konnte nicht geladen werden: " + m_href, e );
+      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.ShpSourceHandler.0") + m_href, e ); //$NON-NLS-1$
     }
   }
 

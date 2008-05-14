@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.IKalypsoCoreConstants;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * <pre>
@@ -90,8 +91,8 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
     String path = resource.toString();
 
     // blöder HACK weil sonst werden die Resourcen nicht richtig verglichen
-    if( path.indexOf( "//" ) != -1 )
-      path = path.replaceAll( "//", "/" );
+    if( path.indexOf( "//" ) != -1 ) //$NON-NLS-1$
+      path = path.replaceAll( "//", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return path;
   }
@@ -118,11 +119,11 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       // The other resources will remain in the map.
       // This solves it, but is an ugly hack.
       String pathFor = pathFor( resource );
-      if( pathFor.endsWith( ".shx" ) )
+      if( pathFor.endsWith( ".shx" ) ) //$NON-NLS-1$
       {
         String path = pathFor.substring( 0, pathFor.length() - 4 );
-        String shpPath = path + ".shp";
-        String dbfPath = path + ".dbf";
+        String shpPath = path + ".shp"; //$NON-NLS-1$
+        String dbfPath = path + ".dbf"; //$NON-NLS-1$
 
         m_resourceMap.remove( shpPath );
         m_resourceMap.remove( dbfPath );
@@ -175,7 +176,7 @@ public class AbstractLoaderResourceDeltaVisitor implements IResourceDeltaVisitor
       }
       catch( final Exception e )
       {
-        throw new CoreException( new Status( IStatus.ERROR, IKalypsoCoreConstants.PLUGIN_ID, 0, "Fehler beim Wiederherstellen einer Resource", e ) );
+        throw new CoreException( new Status( IStatus.ERROR, IKalypsoCoreConstants.PLUGIN_ID, 0, Messages.getString("org.kalypso.loader.AbstractLoaderResourceDeltaVisitor.6"), e ) ); //$NON-NLS-1$
       }
       finally
       {

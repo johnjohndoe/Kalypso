@@ -58,6 +58,7 @@ import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -77,9 +78,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
  */
 public class TimeserieUtils
 {
-  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/config.properties" );
+  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/config.properties" ); //$NON-NLS-1$
 
-  private static String m_basename = "config";
+  private static String m_basename = "config"; //$NON-NLS-1$
 
   private static Properties m_config;
 
@@ -145,7 +146,7 @@ public class TimeserieUtils
    */
   public final static String[] findOutMDAlarmLevel( final IObservation obs )
   {
-    return findOutMDBeginningWith( obs, "Alarmstufe" );
+    return findOutMDBeginningWith( obs, Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -155,7 +156,7 @@ public class TimeserieUtils
    */
   public final static Color getColorForAlarmLevel( final String mdAlarm )
   {
-    final String strColor = getProperties().getProperty( "COLOR_" + mdAlarm );
+    final String strColor = getProperties().getProperty( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.3") + mdAlarm ); //$NON-NLS-1$
     if( strColor == null )
       return Color.RED;
 
@@ -185,7 +186,7 @@ public class TimeserieUtils
   {
     if( from != null && to != null )
     {
-      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, TimeserieConstants.DEFAULT_DF.format( from ) + ";" + TimeserieConstants.DEFAULT_DF.format( to ) );
+      obs.getMetadataList().setProperty( TimeserieConstants.MD_VORHERSAGE, TimeserieConstants.DEFAULT_DF.format( from ) + ";" + TimeserieConstants.DEFAULT_DF.format( to ) ); //$NON-NLS-1$
     }
   }
 
@@ -207,7 +208,7 @@ public class TimeserieUtils
     final String range = mdl.getProperty( TimeserieConstants.MD_VORHERSAGE );
     if( range != null )
     {
-      final String[] splits = range.split( ";" );
+      final String[] splits = range.split( ";" ); //$NON-NLS-1$
       if( splits.length == 2 )
       {
         try
@@ -237,7 +238,7 @@ public class TimeserieUtils
    */
   public static String getUnit( final String type )
   {
-    final String strUnit = getProperties().getProperty( "AXISUNIT_" + type, "" );
+    final String strUnit = getProperties().getProperty( "AXISUNIT_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return strUnit;
   }
@@ -251,7 +252,7 @@ public class TimeserieUtils
    */
   public static String getName( final String type )
   {
-    final String strName = getProperties().getProperty( "AXISNAME_" + type, "" );
+    final String strName = getProperties().getProperty( "AXISNAME_" + type, "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return strName;
   }
@@ -265,7 +266,7 @@ public class TimeserieUtils
    */
   public static Color getColorFor( final String type )
   {
-    final String strColor = getProperties().getProperty( "AXISCOLOR_" + type );
+    final String strColor = getProperties().getProperty( "AXISCOLOR_" + type ); //$NON-NLS-1$
 
     if( strColor != null )
       return StringUtilities.stringToColor( strColor );
@@ -280,7 +281,7 @@ public class TimeserieUtils
    */
   public static Color getColorForMD( final String mdKey )
   {
-    final String strColor = getProperties().getProperty( "MDCOLOR_" + mdKey );
+    final String strColor = getProperties().getProperty( "MDCOLOR_" + mdKey ); //$NON-NLS-1$
 
     if( strColor != null )
       return StringUtilities.stringToColor( strColor );
@@ -302,7 +303,7 @@ public class TimeserieUtils
    */
   public static String getTypeForUnit( final String unit )
   {
-    return getProperties().getProperty( "UNIT_TO_TYPE_" + unit, "" );
+    return getProperties().getProperty( "UNIT_TO_TYPE_" + unit, "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -310,7 +311,7 @@ public class TimeserieUtils
    */
   public static boolean isKey( final String type )
   {
-    return Boolean.valueOf( getProperties().getProperty( "IS_KEY_" + type, "false" ) ).booleanValue();
+    return Boolean.valueOf( getProperties().getProperty( "IS_KEY_" + type, "false" ) ).booleanValue(); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -357,7 +358,7 @@ public class TimeserieUtils
       return nf;
 
     // parse the format spec and only take the min-fraction-digit part
-    final String regex = "%([0-9]*)\\.?([0-9]*)f";
+    final String regex = "%([0-9]*)\\.?([0-9]*)f"; //$NON-NLS-1$
     final Pattern pattern = Pattern.compile( regex );
     final Matcher matcher = pattern.matcher( format );
     if( matcher.matches() )
@@ -391,11 +392,11 @@ public class TimeserieUtils
   {
     try
     {
-      return Class.forName( getProperties().getProperty( "AXISCLASS_" + type, "" ) );
+      return Class.forName( getProperties().getProperty( "AXISCLASS_" + type, "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final ClassNotFoundException e )
     {
-      throw new IllegalArgumentException( "Axis-type is not supported: " + type );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.19") + type ); //$NON-NLS-1$
     }
   }
 
@@ -416,7 +417,7 @@ public class TimeserieUtils
    */
   public static String getDefaultFormatString( final String type )
   {
-    return getProperties().getProperty( "FORMAT_" + type );
+    return getProperties().getProperty( "FORMAT_" + type ); //$NON-NLS-1$
   }
 
   /**
@@ -470,7 +471,7 @@ public class TimeserieUtils
    */
   public static String getCoordinateSystemNameForGkr( final String gkr )
   {
-    final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null );
+    final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null ); //$NON-NLS-1$
     if( crsName == null )
       KalypsoCorePlugin.getDefault().getCoordinatesSystem();
 
@@ -495,6 +496,6 @@ public class TimeserieUtils
     if( axisType.equals( TimeserieConstants.TYPE_RUNOFF ) || axisType.equals( TimeserieConstants.TYPE_VOLUME ) )
       return new Double( converter.computeQ( date, alarmLevel.doubleValue() ) );
 
-    throw new WQException( "Kann die Alarmstufe nicht nach " + axisType + " konvertieren." );
+    throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22") + axisType + Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

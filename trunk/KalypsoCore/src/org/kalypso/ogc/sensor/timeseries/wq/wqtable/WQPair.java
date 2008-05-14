@@ -1,5 +1,7 @@
 package org.kalypso.ogc.sensor.timeseries.wq.wqtable;
 
+import org.kalypso.core.i18n.Messages;
+
 /**
  * WQPair
  * 
@@ -30,7 +32,7 @@ public final class WQPair
   @Override
   public String toString( )
   {
-    return "W= " + m_w + " Q= " + m_q;
+    return "W= " + m_w + " Q= " + m_q; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public static void convert2doubles( final WQPair[] pairs, final double[] W, final double[] Q )
@@ -54,7 +56,7 @@ public final class WQPair
   public static WQPair[] convert2pairs( final double[] W, final double[] Q )
   {
     if( W.length != Q.length )
-      throw new IllegalArgumentException( "Anzahl von Ws und Qs ist nicht gleich" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair.2") ); //$NON-NLS-1$
 
     final WQPair[] pairs = new WQPair[W.length];
     for( int i = 0; i < W.length; i++ )
@@ -66,7 +68,7 @@ public final class WQPair
   public static WQPair[] convert2pairs( final Number[] W, final Number[] Q )
   {
     if( W.length != Q.length )
-      throw new IllegalArgumentException( "Anzahl von Ws und Qs ist nicht gleich" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair.3") ); //$NON-NLS-1$
 
     final WQPair[] pairs = new WQPair[W.length];
     for( int i = 0; i < W.length; i++ )

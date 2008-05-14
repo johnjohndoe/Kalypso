@@ -85,7 +85,7 @@ public class URNGeneratorIFeatureType implements IURNGenerator
       final QName qName = (QName) object;
       final String namespaceURI = qName.getNamespaceURI();
       final String localPart = qName.getLocalPart();
-      return "urn:ogc:gml:featuretype:" + URNUtilities.convertURN( namespaceURI ) + ":" + URNUtilities.convertURN( localPart );
+      return "urn:ogc:gml:featuretype:" + URNUtilities.convertURN( namespaceURI ) + ":" + URNUtilities.convertURN( localPart ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     return null;
   }

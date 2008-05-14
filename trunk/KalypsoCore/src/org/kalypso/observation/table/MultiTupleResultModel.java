@@ -45,6 +45,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.kalypso.commons.tuple.impl.AbstractTupleModel;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -86,7 +87,7 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
       fireColumnAdded( m_keyColumn );
     }
     else if( !m_keyColumn.isCompatible( col.getKeyComponent() ) )
-      throw new IllegalArgumentException( "Key Components are not compatible" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.table.MultiTupleResultModel.0") ); //$NON-NLS-1$
 
     if( containsColumn( col ) )
       return;
@@ -231,7 +232,7 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
       return rowKey.getValue();
 
     if( !(columnKey instanceof TupleResultColumn) )
-      throw new IllegalArgumentException( "columnKey is not a KeyColumn nor a TupleResultColumn" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.table.MultiTupleResultModel.1") ); //$NON-NLS-1$
 
     final TupleResultColumn col = (TupleResultColumn) columnKey;
 
@@ -277,7 +278,7 @@ public class MultiTupleResultModel extends AbstractTupleModel<MTRMRow, MTRMColum
   protected void setValueIntern( final Object value, final MTRMRow rowKey, final MTRMColumn columnKey )
   {
     if( !(columnKey instanceof TupleResultColumn) )
-      throw new IllegalArgumentException( "columnKey is not a TupleResultColumn" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.table.MultiTupleResultModel.2") ); //$NON-NLS-1$
 
     final TupleResultColumn col = (TupleResultColumn) columnKey;
     final TupleResult tr = col.getTupleResult();

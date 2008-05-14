@@ -58,6 +58,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -81,7 +82,7 @@ public class MapModellHelper
 
   public MapModellHelper( )
   {
-    throw new UnsupportedOperationException( "Do not instantiate this helper class" );
+    throw new UnsupportedOperationException( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -110,7 +111,7 @@ public class MapModellHelper
     {
       public IStatus execute( IProgressMonitor monitor ) throws InterruptedException
       {
-        monitor.beginTask( "Karte wird geladen...", IProgressMonitor.UNKNOWN );
+        monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.1"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
         Thread.sleep( 250 );
 
@@ -144,7 +145,7 @@ public class MapModellHelper
    * 
    * @return scale of the map
    */
-  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, @SuppressWarnings("unused")
+  public static double calcScale( final IMapModell model, final GM_Envelope bbox, final int mapWidth, @SuppressWarnings("unused") //$NON-NLS-1$
   final int mapHeight )
   {
     try
@@ -172,7 +173,7 @@ public class MapModellHelper
     }
     catch( final Exception e )
     {
-      Debug.debugException( e, "Exception occured when calculating scale!" );
+      Debug.debugException( e, Messages.getString("org.kalypso.ogc.gml.mapmodel.MapModellHelper.3") ); //$NON-NLS-1$
     }
 
     return 0.0;
@@ -184,11 +185,11 @@ public class MapModellHelper
       return null;
 
     final String crs = model.getCoordinatesSystem();
-    if( crs.equalsIgnoreCase( "EPSG:4326" ) )
+    if( crs.equalsIgnoreCase( "EPSG:4326" ) ) //$NON-NLS-1$
       return bbox;
 
     // transform the bounding box of the request to EPSG:4326
-    final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" );
+    final GeoTransformer transformer = new GeoTransformer( "EPSG:4326" ); //$NON-NLS-1$
     return transformer.transformEnvelope( bbox, crs );
   }
 

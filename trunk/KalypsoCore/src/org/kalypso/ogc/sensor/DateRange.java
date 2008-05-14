@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * Simple Date Range
@@ -126,7 +127,7 @@ public class DateRange implements Comparable
   public String toString( )
   {
     DateFormat df = DateFormat.getDateTimeInstance();
-    return df.format( m_from ) + " - " + df.format( m_to );
+    return df.format( m_from ) + " - " + df.format( m_to ); //$NON-NLS-1$
   }
 
   /**
@@ -163,7 +164,7 @@ public class DateRange implements Comparable
       return 1;
 
     if( !(other instanceof DateRange) )
-      throw new IllegalArgumentException( "Not comparing with a DateRangeArgument" );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.DateRange.1") ); //$NON-NLS-1$
 
     final DateRange dra = (DateRange) other;
 

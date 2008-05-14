@@ -86,6 +86,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.GMLException;
 import org.kalypso.gml.GMLWorkspaceInputSource;
 import org.kalypso.gml.GMLWorkspaceReader;
@@ -151,8 +152,8 @@ public final class GmlSerializer
     try
     {
       final XMLReader reader = new GMLWorkspaceReader( idMap );
-      reader.setFeature( "http://xml.org/sax/features/namespaces", true );
-      reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true );
+      reader.setFeature( "http://xml.org/sax/features/namespaces", true ); //$NON-NLS-1$
+      reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true ); //$NON-NLS-1$
 
       final InputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
       inputSource.setEncoding( charsetEncoding );
@@ -165,14 +166,14 @@ public final class GmlSerializer
       final TransformerFactory tFac = TransformerFactory.newInstance();
       final Transformer transformer = tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
-      transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
-      transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+      transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+      transformer.setOutputProperty( OutputKeys.METHOD, "xml" ); //$NON-NLS-1$
       // TODO: maybe also use OutputKeys.CDATA_SECTION_ELEMENTS ? See the marshallMethod of the XSDBaseTypeHandlerString
       transformer.transform( source, result );
     }
     catch( final Exception e )
     {
-      throw new GmlSerializeException( "Fehler beim Schreiben des GML Stream", e );
+      throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.4"), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -217,7 +218,7 @@ public final class GmlSerializer
       if( isr.getEncoding() == null )
       {
         IOUtils.closeQuietly( isr );
-        throw new NullPointerException( "Es konnte kein Encoding für die GMLUrl ermittelt werden. Dies sollte auf Client-Seite eigentlich nie passieren. Serverseitig darf diese Methode nicht benutzt werden." );
+        throw new NullPointerException( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.5") ); //$NON-NLS-1$
       }
 
       reader = new BufferedReader( isr );
@@ -246,18 +247,18 @@ public final class GmlSerializer
 
   public static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IFeatureProviderFactory factory ) throws Exception
   {
-    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) );
+    final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) ); //$NON-NLS-1$
 
     TimeLogger perfLogger = null;
     if( doTrace )
-      perfLogger = new TimeLogger( "Start loading gml workspace" );
+      perfLogger = new TimeLogger( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.7") ); //$NON-NLS-1$
 
     final GMLWorkspace workspace = parseGml( inputSource, null, true, context, factory );
 
     if( perfLogger != null )
     {
       perfLogger.takeInterimTime();
-      perfLogger.printCurrentTotal( "Finished loading gml workspace in: " );
+      perfLogger.printCurrentTotal( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.8") ); //$NON-NLS-1$
     }
 
     return workspace;
@@ -273,7 +274,7 @@ public final class GmlSerializer
     final SAXParser saxParser = saxFac.newSAXParser();
     // make namespace-prefxes visible to content handler
     // used to allow necessary schemas from gml document
-    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
+    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE ); //$NON-NLS-1$
 
     final XMLReader xmlReader = saxParser.getXMLReader();
 
@@ -314,7 +315,7 @@ public final class GmlSerializer
   {
     try
     {
-      monitor.beginTask( "Creating gml file", 2 );
+      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.10"), 2 ); //$NON-NLS-1$
       final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
       final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureType, ResourceUtilities.createURL( targetFile ), providerFactory );
       monitor.worked( 1 );
@@ -339,7 +340,7 @@ public final class GmlSerializer
 
   public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Creating gml file", 2 );
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.11"), 2 ); //$NON-NLS-1$
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
 

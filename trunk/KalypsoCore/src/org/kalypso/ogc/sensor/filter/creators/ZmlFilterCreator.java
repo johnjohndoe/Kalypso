@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.filter.creators;
 
 import java.net.URL;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -62,7 +63,7 @@ public final class ZmlFilterCreator implements IFilterCreator
       throws SensorException
   {
     if( !( aft instanceof ZmlFilterType ) )
-      throw new IllegalArgumentException( "Not a " + ZmlFilterType.class.getName() );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator.0") + ZmlFilterType.class.getName() ); //$NON-NLS-1$
 
     final ZmlFilterType ft = (ZmlFilterType)aft;
 

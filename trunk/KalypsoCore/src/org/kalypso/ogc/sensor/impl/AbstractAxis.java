@@ -108,6 +108,6 @@ public abstract class AbstractAxis implements IAxis
     if( getUnit().length() == 0 )
       return getName();
 
-    return getName() + " - " + getUnit();
+    return getName() + " - " + getUnit(); //$NON-NLS-1$
   }
 }

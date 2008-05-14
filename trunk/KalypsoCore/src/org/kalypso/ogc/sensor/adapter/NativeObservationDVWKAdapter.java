@@ -55,6 +55,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -71,15 +72,15 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class NativeObservationDVWKAdapter implements INativeObservationAdapter
 {
-  public static Pattern m_patternLine = Pattern.compile( "[A-Za-z0-9]{4}\\s([0-9\\s]{10})\\s*([0-9]{1,2})\\s*([0-9]{1,2})([A-Za-z\\s]{1})(.*)" );
+  public static Pattern m_patternLine = Pattern.compile( "[A-Za-z0-9]{4}\\s([0-9\\s]{10})\\s*([0-9]{1,2})\\s*([0-9]{1,2})([A-Za-z\\s]{1})(.*)" ); //$NON-NLS-1$
 
-  public static Pattern m_subPatternData = Pattern.compile( "\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})" );
+  public static Pattern m_subPatternData = Pattern.compile( "\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})" ); //$NON-NLS-1$
 
   private String m_title;
 
   private String m_axisTypeValue;
 
-  private String m_SNAME = "titel";
+  private String m_SNAME = "titel"; //$NON-NLS-1$
 
   private TimeZone m_timeZone;
 
@@ -89,8 +90,8 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
    */
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_title = config.getAttribute( "label" );
-    m_axisTypeValue = config.getAttribute( "axisType" );
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
   public IObservation createObservationFromSource( final File source ) throws Exception
@@ -105,7 +106,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
 
     /* this is due to backwards compatibility */
     if( timeZone == null )
-      m_timeZone = TimeZone.getTimeZone( "GMT+1" );
+      m_timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
     else
       m_timeZone = timeZone;
 
@@ -114,7 +115,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
     final ITuppleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel );
+    final SimpleObservation observation = new SimpleObservation( "href", "ID", m_SNAME, false, null, metaDataList, axis, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
     return observation;
   }
 
@@ -141,7 +142,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
         if( matcher.matches() )
         {
           // end of file?
-          if( matcher.group( 4 ).equals( "E" ) )
+          if( matcher.group( 4 ).equals( "E" ) ) //$NON-NLS-1$
             break;
 
           final String dateTime = matcher.group( 1 );
@@ -169,7 +170,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
           }
 
           // data line
-          if( matcher.group( 4 ).equals( "N" ) )
+          if( matcher.group( 4 ).equals( "N" ) ) //$NON-NLS-1$
           {
             // TODO check if this is means all zeros for the whole day
             // or just for this hour,
@@ -202,7 +203,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
                 }
                 catch( Exception e )
                 {
-                  errorBuffer.append( "line " + reader.getLineNumber() + " value not parseable: \"" + lineIn + "\"\n" );
+                  errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.10") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.11") + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                   numberOfErrors++;
                 }
                 calendar.add( GregorianCalendar.MINUTE, 5 );
@@ -215,7 +216,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
       }
       catch( Exception e )
       {
-        errorBuffer.append( "line " + reader.getLineNumber() + " throws exception \"" + e.getLocalizedMessage() + "\"\n" );
+        errorBuffer.append( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.13") + reader.getLineNumber() + Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.14") + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         numberOfErrors++;
       }
     }
@@ -223,8 +224,8 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
     {
 
       MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-      messageBox.setMessage( "Too many errors, probably wrong format selected. Continue (slow operation)?" );
-      messageBox.setText( "Import errors" );
+      messageBox.setMessage( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.16") ); //$NON-NLS-1$
+      messageBox.setText( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.17") ); //$NON-NLS-1$
       if( messageBox.open() == SWT.NO )
         return null;
       else
@@ -253,7 +254,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
    */
   public IAxis[] createAxis( )
   {
-    final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
+    final IAxis dateAxis = new DefaultAxis( Messages.getString("org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.18"), TimeserieConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
     final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
     final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;

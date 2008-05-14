@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.util.NoSuchElementException;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -132,7 +133,7 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     m_axes[m_axes.length - 1] = m_destStatusAxis;
 
     if( name.length() == 0 )
-      throw new IllegalArgumentException( "Angegebene Typ für zu erzeugende Achsen wird nicht unterstützt: " + m_proxyAxisType );
+      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy.0") + m_proxyAxisType ); //$NON-NLS-1$
   }
 
   /**

@@ -38,20 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.dict;
+package org.kalypso.core.i18n;
 
-import java.net.URL;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
-import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalog;
-import org.kalypso.core.catalog.ICatalogContribution;
-
-public class KalypsoCoreDictionaryCatalogContribution implements ICatalogContribution
+/**
+ * @author kuch
+ *
+ */
+public class Messages
 {
-  public void contributeTo( final CatalogManager catalogManager )
+  private static final String BUNDLE_NAME = "org.kalypso.core.i18n.messages"; //$NON-NLS-1$
+
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private Messages( )
   {
-    final URL catalogURL = getClass().getResource( "resources/catalog.xml" ); //$NON-NLS-1$
-    final ICatalog baseCatalog = catalogManager.getBaseCatalog();
-    baseCatalog.addNextCatalog( catalogURL );
+  }
+
+  public static String getString( String key )
+  {
+    try
+    {
+      return RESOURCE_BUNDLE.getString( key );
+    }
+    catch( MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
   }
 }

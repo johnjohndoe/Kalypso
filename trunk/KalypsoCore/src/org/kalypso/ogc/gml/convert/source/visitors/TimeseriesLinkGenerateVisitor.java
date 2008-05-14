@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.convert.source.visitors;
 
 import java.util.Properties;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -66,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
 {
-  private static final String WISKI_SIM_PATTERN = "${wiski_sim:";
+  private static final String WISKI_SIM_PATTERN = "${wiski_sim:"; //$NON-NLS-1$
   private final ObjectFactory m_linkFactory = new ObjectFactory();
 
   private final String m_hrefPattern;
@@ -78,7 +79,7 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
    */
   public TimeseriesLinkGenerateVisitor( final Properties properties )
   {
-    this( properties.getProperty( "link", "<Link-Property nicht gesetzt>" ), properties.getProperty( "href", "" ) );
+    this( properties.getProperty( "link", Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.2") ), properties.getProperty( "href", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
   public TimeseriesLinkGenerateVisitor( final String propertyName, final String hrefPattern )
@@ -109,10 +110,10 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     
     // Feature ID
     final String fid = f.getId();
-    final String fidOnlyDigits = fid.replaceAll( "\\D", "" );
+    final String fidOnlyDigits = fid.replaceAll( "\\D", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     
-    href = href.replaceAll( "\\Q${fid}\\E", fid );
-    href = href.replaceAll( "\\Q${fidOnlyDigits}\\E", fidOnlyDigits );
+    href = href.replaceAll( "\\Q${fid}\\E", fid ); //$NON-NLS-1$
+    href = href.replaceAll( "\\Q${fidOnlyDigits}\\E", fidOnlyDigits ); //$NON-NLS-1$
     href = replaceProperties( f, href );
     
     // wiski pattern
@@ -123,7 +124,7 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
 
   private String replaceProperties( final Feature f, final String href )
   {
-    final String PROPERTY = "${property";
+    final String PROPERTY = "${property"; //$NON-NLS-1$
 
     String newHref = href;
     while( true )
@@ -138,7 +139,7 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
       
       final String name = newHref.substring( start + PROPERTY.length() + 1, stop );
       final Object value = f.getProperty( name );
-      final String replacement = value == null ? "<null>" : value.toString();
+      final String replacement = value == null ? "<null>" : value.toString(); //$NON-NLS-1$
       newHref = newHref.substring( 0, start ) + replacement + newHref.substring( stop + 1 );
     }
     
@@ -152,9 +153,9 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
     int index;
     while( ( index = result.indexOf( WISKI_SIM_PATTERN ) ) != -1 )
     {
-      final int index2 = result.indexOf( "}", index + 1 );
+      final int index2 = result.indexOf( "}", index + 1 ); //$NON-NLS-1$
       if( index2 == -1 )
-        throw new IllegalArgumentException( "Pattern " + WISKI_SIM_PATTERN + "property} endet nicht mit }" );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.12") + WISKI_SIM_PATTERN + Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.13") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final String propertyName = result.substring( index + WISKI_SIM_PATTERN.length(), index2 );
       final Object property = f.getProperty( propertyName );
@@ -162,9 +163,9 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
       final String simId;
       
       if( property == null )
-        simId = "";
+        simId = ""; //$NON-NLS-1$
       else if( !( property instanceof TimeseriesLinkType ) )
-        throw new IllegalArgumentException( "Property ist kein TimeseriesLinkType: " + propertyName );
+        throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.convert.source.visitors.TimeseriesLinkGenerateVisitor.15") + propertyName ); //$NON-NLS-1$
       else
       {
         final TimeseriesLinkType link = (TimeseriesLinkType)property;
@@ -183,11 +184,11 @@ public class TimeseriesLinkGenerateVisitor implements FeatureVisitor
   {
     final int lastPoint = href.lastIndexOf( '.' );
     if( lastPoint == -1 )
-      return "";
+      return ""; //$NON-NLS-1$
     
     final String name = href.substring( 0, lastPoint );
     final String tail = href.substring( lastPoint );
     
-    return name + ".Sim" + tail;
+    return name + ".Sim" + tail; //$NON-NLS-1$
   }
 }

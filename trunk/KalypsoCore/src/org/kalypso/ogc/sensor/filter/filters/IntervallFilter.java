@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.Date;
 
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -78,9 +79,9 @@ public class IntervallFilter extends AbstractObservationFilter
   public IntervallFilter( IntervallFilterType filter )
   {
     final String mode = filter.getMode();
-    if( "intensity".equalsIgnoreCase( mode ) )
+    if( "intensity".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
       m_mode = MODE_INTENSITY;
-    else if( "sum".equalsIgnoreCase( mode ) )
+    else if( "sum".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
       m_mode = MODE_SUM;
     else
       m_mode = MODE_INTENSITY; // default is intensity
@@ -124,6 +125,6 @@ public class IntervallFilter extends AbstractObservationFilter
   @Override
   public void setValues( ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + " setValues() wird zur Zeit nicht unterstuetzt ." );
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallFilter.2") ); //$NON-NLS-1$
   }
 }

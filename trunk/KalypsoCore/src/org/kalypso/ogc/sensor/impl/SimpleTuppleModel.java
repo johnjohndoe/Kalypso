@@ -47,6 +47,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -249,7 +250,7 @@ public class SimpleTuppleModel extends AbstractTuppleModel
   {
     // for debug purposes! once problem with "null" is solved remove?
     if( element == null )
-      Logger.getLogger( SimpleTuppleModel.class.getName() ).warning( "Setting a null element at index= " + index + " for axis " + axis );
+      Logger.getLogger( SimpleTuppleModel.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.impl.SimpleTuppleModel.0") + index + Messages.getString("org.kalypso.ogc.sensor.impl.SimpleTuppleModel.1") + axis ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_tupples.setValueAt( element, index, getPositionFor( axis ) );
   }

@@ -51,7 +51,7 @@ public final class CsvWriterVisitor implements FeatureVisitor
   private String propertyToString( final Object property )
   {
     if( property instanceof Double )
-      return String.format( Locale.US, "%f", property );
+      return String.format( Locale.US, "%f", property ); //$NON-NLS-1$
       
     return property.toString();
   }

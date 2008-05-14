@@ -125,7 +125,7 @@ public class KalypsoLegendUtilities
       if( GeometryUtilities.isUndefinedGeometry( vpt ) )
         return DEFAULT_POINT;
       final String type = vpt.getValueClass().getName();
-      if( type.startsWith( "java.lang." ) )
+      if( type.startsWith( "java.lang." ) ) //$NON-NLS-1$
       {
         final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
         if( annotation != null )

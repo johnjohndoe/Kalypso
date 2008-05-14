@@ -285,11 +285,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       switch( status.getSeverity() )
       {
         case IStatus.ERROR:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_ERROR_PATH" );
+          return sharedImages.getImageDescriptor( "IMG_OBJS_ERROR_PATH" ); //$NON-NLS-1$
         case IStatus.WARNING:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_WARNING_PATH" );
+          return sharedImages.getImageDescriptor( "IMG_OBJS_WARNING_PATH" ); //$NON-NLS-1$
         case IStatus.INFO:
-          return sharedImages.getImageDescriptor( "IMG_OBJS_INFO_PATH" );
+          return sharedImages.getImageDescriptor( "IMG_OBJS_INFO_PATH" ); //$NON-NLS-1$
       }
     }
 
@@ -343,7 +343,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
       return ImageDescriptor.createFromImage( m_externIcon );
 
     /* Check, if it is a special URN. */
-    final Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE );
+    final Pattern p = Pattern.compile( "^urn:kalypso:map:theme:swtimage:style:(.*):rule:(.*)$", Pattern.MULTILINE ); //$NON-NLS-1$
     final Matcher m = p.matcher( m_legendIcon.trim() );
 
     /* A special URN was defined. Evaluate it. */
@@ -419,7 +419,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     try
     {
       /* A URL or URN was given. */
-      if( m_legendIcon.startsWith( "urn" ) )
+      if( m_legendIcon.startsWith( "urn" ) ) //$NON-NLS-1$
       {
         // search for url
         final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
@@ -462,7 +462,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   protected ImageDescriptor getDefaultIcon( )
   {
     if( m_standardThemeIcon == null )
-      m_standardThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/standardTheme.gif" ) );
+      m_standardThemeIcon = new Image( Display.getCurrent(), getClass().getResourceAsStream( "resources/standardTheme.gif" ) ); //$NON-NLS-1$
 
     return ImageDescriptor.createFromImage( m_standardThemeIcon );
   }
@@ -489,7 +489,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     final IStatus status = getStatus();
     if( !status.isOK() )
     {
-      sb.append( " - " );
+      sb.append( " - " ); //$NON-NLS-1$
       sb.append( status.getMessage() );
     }
 
@@ -499,7 +499,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings("unused") //$NON-NLS-1$
   public org.eclipse.swt.graphics.Image getLegendGraphic( final org.eclipse.swt.graphics.Font font ) throws CoreException
   {
     final int BORDER = 0;
@@ -689,7 +689,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
   public Object getAdapter( final Class adapter )
   {

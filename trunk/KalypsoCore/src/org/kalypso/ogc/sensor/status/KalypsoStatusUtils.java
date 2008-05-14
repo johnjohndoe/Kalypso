@@ -48,6 +48,7 @@ import java.util.NoSuchElementException;
 
 import javax.swing.ImageIcon;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
@@ -58,24 +59,24 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
  */
 public class KalypsoStatusUtils
 {
-  private final static String STATUS_AXIS_LABELPREFIX = "_kalypso_status_";
+  private final static String STATUS_AXIS_LABELPREFIX = "_kalypso_status_"; //$NON-NLS-1$
 
-  public final static String STATUS_AXIS_TYPE = "kalypso-status";
+  public final static String STATUS_AXIS_TYPE = "kalypso-status"; //$NON-NLS-1$
 
   public final static Class STATUS_AXIS_DATACLASS = Integer.class;
 
-  public final static String STATUS_AXIS_UNIT = "";
+  public final static String STATUS_AXIS_UNIT = ""; //$NON-NLS-1$
 
-  private final static ImageIcon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/question.gif" ), "question" );
+  private final static ImageIcon ICON_QUESTION = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/question.gif" ), "question" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final static ImageIcon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/warning.gif" ), "warning" );
+  private final static ImageIcon ICON_WARNING = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/warning.gif" ), "warning" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   // private final static Icon ICON_ERROR = new ImageIcon(
   // KalypsoStatusUtils.class.getResource( "resource/error.gif" ) );
 
-  private final static ImageIcon ICON_CONFLICT = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/conflict.gif" ) );
+  private final static ImageIcon ICON_CONFLICT = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/conflict.gif" ) ); //$NON-NLS-1$
 
-  private final static ImageIcon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" );
+  private final static ImageIcon ICON_WRITE = new ImageIcon( KalypsoStatusUtils.class.getResource( "resource/write.gif" ), "write" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private final static Color COLOR_LIGHTYELLOW = new Color( 248, 243, 192 );
 
@@ -106,7 +107,7 @@ public class KalypsoStatusUtils
    */
   public static String getAxisLabelFor( final IAxis axis )
   {
-    return axis.getName().replaceAll( STATUS_AXIS_LABELPREFIX, "" );
+    return axis.getName().replaceAll( STATUS_AXIS_LABELPREFIX, "" ); //$NON-NLS-1$
   }
 
   /**
@@ -119,7 +120,7 @@ public class KalypsoStatusUtils
   public static IAxis createStatusAxisFor( final IAxis axis, final boolean persistable ) throws IllegalArgumentException
   {
     if( isStatusAxis( axis ) )
-      throw new IllegalArgumentException( "Axis " + axis + " is already a status axis!" );
+      throw new IllegalArgumentException( "Axis " + axis + Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.12") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new DefaultAxis( STATUS_AXIS_LABELPREFIX + axis.getName(), STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false, persistable );
   }
@@ -174,7 +175,7 @@ public class KalypsoStatusUtils
         return axes[i];
     }
 
-    throw new NoSuchElementException( "No Status-Axis found" );
+    throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.13") ); //$NON-NLS-1$
   }
 
   /**
@@ -191,7 +192,7 @@ public class KalypsoStatusUtils
         return axes[i];
     }
 
-    throw new NoSuchElementException( "No Status-Axis found for: " + axis );
+    throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.14") + axis ); //$NON-NLS-1$
   }
 
   /**
@@ -257,7 +258,7 @@ public class KalypsoStatusUtils
     }
 
     if( list.size() == 0 )
-      throw new NoSuchElementException( "No axis found of class: " + desired );
+      throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.15") + desired ); //$NON-NLS-1$
 
     return list.toArray( new IAxis[list.size()] );
   }
@@ -286,7 +287,7 @@ public class KalypsoStatusUtils
       }
     }
 
-    throw new NoSuchElementException( "No Axis found of class: " + desired );
+    throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.16") + desired ); //$NON-NLS-1$
   }
 
   /**
@@ -344,13 +345,13 @@ public class KalypsoStatusUtils
     if( iconDescription == null )
       return null;
 
-    if( "question".equalsIgnoreCase( iconDescription ) )
+    if( "question".equalsIgnoreCase( iconDescription ) ) //$NON-NLS-1$
       return ICON_QUESTION;
-    if( "warning".equalsIgnoreCase( iconDescription ) )
+    if( "warning".equalsIgnoreCase( iconDescription ) ) //$NON-NLS-1$
       return ICON_WARNING;
-    if( "write".equalsIgnoreCase( iconDescription ) )
+    if( "write".equalsIgnoreCase( iconDescription ) ) //$NON-NLS-1$
       return ICON_WRITE;
-    if( "conflict".equalsIgnoreCase( iconDescription ) )
+    if( "conflict".equalsIgnoreCase( iconDescription ) ) //$NON-NLS-1$
       return ICON_CONFLICT;
 
     try
@@ -370,19 +371,19 @@ public class KalypsoStatusUtils
   public static String getTooltipFor( final int mask )
   {
     if( checkMask( mask, KalypsoStati.BIT_CHECK ) )
-      return "Wert auf Gültigkeit prüfen";
+      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.21"); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_REQUIRED ) )
-      return "Eingabe erforderlich";
+      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.22"); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_USER_MODIFIED ) )
-      return "Vom Benutzer geändert";
+      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.23"); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_DERIVATION_ERROR ) )
-      return "Wert konnte nicht abgeleitet werden";
+      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.24"); //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
-      return "Wert wurde abgeleitet";
+      return Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.25"); //$NON-NLS-1$
 
     return null;
   }

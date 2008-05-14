@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
@@ -90,7 +91,7 @@ public class WechmannGroup implements IWQConverter
       i = -i - 2;
 
     if( i < 0 )
-      throw new WQException( "Fuer diesen Zeitpunkt ist keine WQ-Beziehung definiert" );
+      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup.0") ); //$NON-NLS-1$
 
     return m_map.get( dates[i] );
   }

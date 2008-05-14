@@ -91,7 +91,7 @@ public class ThemeStyleTreeObject implements IWorkbenchAdapter, ITooltipProvider
   {
     if( m_style == null )
     {
-      return "<no styles set>";
+      return "<no styles set>"; //$NON-NLS-1$
     }
 
     if( m_style.getName() != null )

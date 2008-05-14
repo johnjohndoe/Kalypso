@@ -116,7 +116,7 @@ public class KalypsoCorePlugin extends Plugin
     if( m_catalogManager == null )
     {
       final File stateLocation = getStateLocation().toFile();
-      final File managerDir = new File( stateLocation, "catalogManager" );
+      final File managerDir = new File( stateLocation, "catalogManager" ); //$NON-NLS-1$
       managerDir.mkdirs();
       m_catalogManager = new CatalogManager( managerDir );
       KalypsoCoreExtensions.loadXMLCatalogs( m_catalogManager );
@@ -130,7 +130,7 @@ public class KalypsoCorePlugin extends Plugin
     if( m_sldCatalog == null )
     {
       final File stateLocation = getStateLocation().toFile();
-      final File styleCatalogDir = new File( stateLocation, "style-catalog" );
+      final File styleCatalogDir = new File( stateLocation, "style-catalog" ); //$NON-NLS-1$
       styleCatalogDir.mkdirs();
       m_sldCatalog = new CatalogSLD( getCatalogManager(), styleCatalogDir );
     }

@@ -67,7 +67,7 @@ public class ZmlLinkValues implements IZmlValues
   /**
    * value of the href link that specifies that the zml values are stored in the data element
    */
-  public final static String DATA_REF = "#data";
+  public final static String DATA_REF = "#data"; //$NON-NLS-1$
 
   private final AbstractCSV m_csv;
 

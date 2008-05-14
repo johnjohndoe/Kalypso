@@ -78,7 +78,7 @@ public class SimpleObservationTest extends TestCase
   
   public static IObservation getTestObservation() throws SensorException
   {
-    return ZmlFactory.parseXML( SimpleObservationTest.class.getResource( "test.zml" ), "" );
+    return ZmlFactory.parseXML( SimpleObservationTest.class.getResource( "test.zml" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
   
   public void testAxis()

@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.zml.values;
 
 import java.util.Map;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
@@ -84,7 +85,7 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
-      throw new IllegalStateException( "No Axis" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel.0") ); //$NON-NLS-1$
 
     final IZmlValues values = m_valuesMap.get( axis );
     if( values == null )
@@ -99,7 +100,7 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
-      throw new IllegalStateException( "No Axis" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel.1") ); //$NON-NLS-1$
 
     final IZmlValues values = m_valuesMap.get( axis );
     if( values == null )
@@ -114,7 +115,7 @@ public class ZmlTuppleModel extends AbstractTuppleModel
   public void setElement( final int index, final Object element, final IAxis axis ) throws SensorException
   {
     if( m_valuesMap.size() == 0 )
-      throw new IllegalStateException( "No Axis" );
+      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel.2") ); //$NON-NLS-1$
 
     m_valuesMap.get( axis ).setElement( index, element );
   }

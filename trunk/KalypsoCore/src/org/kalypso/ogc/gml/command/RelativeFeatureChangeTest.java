@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author skurzbach
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("unchecked") //$NON-NLS-1$
 public class RelativeFeatureChangeTest extends TestCase
 {
   private static final int COMMAND_COUNT = 5;
@@ -77,7 +77,7 @@ public class RelativeFeatureChangeTest extends TestCase
    */
   public RelativeFeatureChangeTest( ) throws Exception
   {
-    final URL modelFile = getClass().getResource( "resources/testFeature.gml" );
+    final URL modelFile = getClass().getResource( "resources/testFeature.gml" ); //$NON-NLS-1$
     m_workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( modelFile, null ) );
 
     final Feature m_feature = m_workspace.getRootFeature();
@@ -99,19 +99,19 @@ public class RelativeFeatureChangeTest extends TestCase
       if( RelativeFeatureChange.isNumeric( propertyType ) )
       {
         // add 2.5 to value
-        final RelativeFeatureChange fcADD = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "+", 2.5 );
+        final RelativeFeatureChange fcADD = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "+", 2.5 ); //$NON-NLS-1$
         m_changes[0].add( fcADD );
         // multiply value by 2.5
-        final RelativeFeatureChange fcMULTIPLY = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "*", 2.5 );
+        final RelativeFeatureChange fcMULTIPLY = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "*", 2.5 ); //$NON-NLS-1$
         m_changes[1].add( fcMULTIPLY );
         // subtract 2.5 from value
-        final RelativeFeatureChange fcSUBTRACT = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "-", 2.5 );
+        final RelativeFeatureChange fcSUBTRACT = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "-", 2.5 ); //$NON-NLS-1$
         m_changes[2].add( fcSUBTRACT );
         // divide value by 2.5
-        final RelativeFeatureChange fcDIVIDE = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "/", 2.5 );
+        final RelativeFeatureChange fcDIVIDE = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "/", 2.5 ); //$NON-NLS-1$
         m_changes[3].add( fcDIVIDE );
         // set all values to 1.0
-        final RelativeFeatureChange fcSET = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "=", 1.0 );
+        final RelativeFeatureChange fcSET = new RelativeFeatureChange( m_original, (IValuePropertyType) propertyType, "=", 1.0 ); //$NON-NLS-1$
         m_changes[4].add( fcSET );
       }
     }

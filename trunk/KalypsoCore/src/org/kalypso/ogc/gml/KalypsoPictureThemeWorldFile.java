@@ -69,10 +69,10 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     super( layerName, layerType, context, modell, legendGraphic, shouldShowChildren );
 
     final String href = layerType.getHref();
-    if( href == null || !href.contains( "." ) )
+    if( href == null || !href.contains( "." ) ) //$NON-NLS-1$
       throw new IllegalStateException();
 
-    final String[] arrFileName = href.split( "#" );
+    final String[] arrFileName = href.split( "#" ); //$NON-NLS-1$
     if( arrFileName.length != 2 )
       throw new IllegalStateException();
 
@@ -84,7 +84,7 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
     {
       final IGridMetaReader reader = verifier.getRasterMetaReader( imageUrl, system );
 
-      final RenderedOp image = JAI.create( "url", imageUrl );
+      final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
       setImage( new TiledImage( image, true ) );
 
       // TODO: the image keeps does not release the stream onto the tiff
