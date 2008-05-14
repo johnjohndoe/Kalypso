@@ -4,6 +4,10 @@
 <!-- ===================================================================== -->
 <project name="Build specific targets and properties" default="noDefault">
 
+	<!-- REMARK: set this to your eclipse workspace location -->
+	<!-- Sadly, there seems to be no way to use some globally defined properties here... -->
+	<property name="workspace_loc" value="C:/Eclipse/KalypsoHead332"/>
+	
 	<!-- ===================================================================== -->
 	<!-- Default target                                                        -->
 	<!-- ===================================================================== -->
@@ -95,7 +99,7 @@
 	<!--   target.folder - destination folder                                  -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.bin.parts">
-		<copydir dest="${target.folder}/lib" src="C:/sdk/eclipse/workspace/deegree2/lib"/>
+		<copydir dest="${target.folder}/lib" src="${workspace_loc}/deegree2/lib"/>
 	</target>
 
 	<!-- ===================================================================== -->
@@ -113,7 +117,7 @@
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
 	<target name="pre.gather.sources">
-		<copydir dest="${target.folder}/deegree" src="C:/sdk/eclipse/workspace/deegree2/src"/>
+		<copydir dest="${target.folder}/deegree" src="${workspace_loc}/deegree2/src"/>
 	</target>
 
 	<!-- ===================================================================== -->
