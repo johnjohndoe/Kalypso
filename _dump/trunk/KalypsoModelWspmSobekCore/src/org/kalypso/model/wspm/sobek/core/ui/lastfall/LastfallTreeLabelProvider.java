@@ -50,6 +50,8 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallConditi
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kuch
@@ -128,9 +130,12 @@ public class LastfallTreeLabelProvider extends LabelProvider
           if( IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eZml.equals( type ) )
           {
             // REMARK: empty obs throws Nullpointer exception!
-            condition.getTimeSeriesObservation();
-
-            item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) ); //$NON-NLS-1$
+            final IObservation<TupleResult> observation = condition.getTimeSeriesObservation();
+            final TupleResult result = observation.getResult();
+            if( result.size() > 2 )
+              item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) ); //$NON-NLS-1$
+            else
+              item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
           }
           else if( IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eConstant.equals( type ) )
           {
