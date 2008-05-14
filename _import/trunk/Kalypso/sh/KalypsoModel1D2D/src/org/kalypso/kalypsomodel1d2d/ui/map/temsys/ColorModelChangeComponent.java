@@ -43,8 +43,6 @@ package org.kalypso.kalypsomodel1d2d.ui.map.temsys;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ColorSelector;
@@ -58,8 +56,6 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -80,6 +76,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.ui.map.temsys.viz.ElevationColorControl;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.ITerrainElevationModelSystem;
@@ -190,7 +188,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
   {
     preferenceStore_.removePropertyChangeListener( storePropertyChangeListener_ );
 
-    for( org.eclipse.swt.graphics.Color color : m_colorList )
+    for( final org.eclipse.swt.graphics.Color color : m_colorList )
       color.dispose();
   }
 
@@ -494,7 +492,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
     backgroundColor.dispose();
 
     // border
-    org.eclipse.swt.graphics.Color foregroundColor = new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) );
+    final org.eclipse.swt.graphics.Color foregroundColor = new org.eclipse.swt.graphics.Color( disp, new RGB( 0, 0, 0 ) );
     graphicCanvas.setForeground( foregroundColor );
     graphicCanvas.drawRectangle( 0, coordStart, 19, classHeigth );
 
@@ -572,9 +570,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
         switch( event.keyCode )
         {
           case SWT.CR:
-            System.out.println( "Enter" ); //$NON-NLS-1$
-
-            checkMaxTextValue( elevationChooseComposite, maxText );
+            checkMaxTextValue( maxText );
         }
       }
     } );
@@ -590,30 +586,14 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        checkMaxTextValue( elevationChooseComposite, maxText );
+        checkMaxTextValue( maxText );
       }
     } );
 
-    maxText.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( final ModifyEvent e )
-      {
-        final String tempText = maxText.getText();
-
-        final Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" ); //$NON-NLS-1$
-        final Matcher m = p.matcher( tempText );
-
-        if( !m.matches() )
-        {
-          maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
-        }
-        else
-        {
-          maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-          tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-      }
-    } );
+    final Display display = elevationChooseComposite.getDisplay();
+    final org.eclipse.swt.graphics.Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
+    final org.eclipse.swt.graphics.Color badColor = display.getSystemColor( SWT.COLOR_RED );
+    maxText.addModifyListener( new DoubleModifyListener( goodColor, badColor ) );
 
     final Text minText = new Text( elevationChooseComposite, SWT.BORDER );
     final double minElevation = ElevationColorControl.getMinElevation();
@@ -629,7 +609,7 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
         switch( event.keyCode )
         {
           case SWT.CR:
-            checkMinTextValue( elevationChooseComposite, minText );
+            checkMinTextValue( minText );
         }
       }
     } );
@@ -645,30 +625,11 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
       @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        checkMinTextValue( elevationChooseComposite, minText );
+        checkMinTextValue( minText );
       }
     } );
 
-    minText.addModifyListener( new ModifyListener()
-    {
-      public void modifyText( final ModifyEvent e )
-      {
-        final String tempText = minText.getText();
-
-        final Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" ); //$NON-NLS-1$
-        final Matcher m = p.matcher( tempText );
-
-        if( !m.matches() )
-        {
-          minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
-        }
-        else
-        {
-          minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-          tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-      }
-    } );
+    minText.addModifyListener( new DoubleModifyListener( goodColor, badColor ) );
 
     final Composite colorChooseComposite = new Composite( optionsColorGroup, SWT.NONE );
     colorChooseComposite.setLayout( new GridLayout( 1, false ) );
@@ -852,54 +813,42 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
    * @param minText
    *            the text field
    */
-  private void checkMinTextValue( final Composite elevationChooseComposite, final Text minText )
+  private void checkMinTextValue( final Text minText )
   {
-    String tempText = minText.getText();
+    final String tempText = minText.getText();
 
-    final Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" ); //$NON-NLS-1$
-    final Matcher m = p.matcher( tempText );
+    Double db = NumberUtils.parseQuietDouble( tempText );
 
-    if( !m.matches() )
+    if( db < m_dataModel.getElevationModelSystem().getMinElevation() )
     {
-      minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+      db = m_dataModel.getElevationModelSystem().getMinElevation();
+      minText.setText( db.toString() );
     }
-    else
+    else if( db >= m_dataModel.getElevationModelSystem().getMaxElevation() )
     {
-      minText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
+      db = m_dataModel.getElevationModelSystem().getMinElevation();
+      minText.setText( db.toString() );
+    }
 
-      Double db = new Double( tempText );
-      if( db < m_dataModel.getElevationModelSystem().getMinElevation() )
+    if( m_maxTextLabel.getText() != null )
+    {
+      String textMax = m_maxTextLabel.getText();
+      textMax = textMax.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
+      final Double maxValue = new Double( textMax );
+      if( db >= maxValue )
       {
-        db = m_dataModel.getElevationModelSystem().getMinElevation();
+        db = maxValue - 0.01;
         minText.setText( db.toString() );
       }
-      else if( db >= m_dataModel.getElevationModelSystem().getMaxElevation() )
-      {
-        db = m_dataModel.getElevationModelSystem().getMinElevation();
-        minText.setText( db.toString() );
-      }
-
-      if( m_maxTextLabel.getText() != null )
-      {
-        String textMax = m_maxTextLabel.getText();
-        textMax = textMax.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
-        final Double maxValue = new Double( textMax );
-        if( db >= maxValue )
-        {
-          db = maxValue - 0.01;
-          minText.setText( db.toString() );
-        }
-      }
-
-      m_minElevationBorder = db;
-      ElevationColorControl.setMinElevation( m_minElevationBorder );
-      preferenceStore_.setValue( ELEV_MIN, m_minElevationBorder );
-      m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
-      windowCanvas.redraw();
-      m_applyColors.setSelection( true );
-      m_minTextLabel.setText( String.format( "%.3f", db ) ); //$NON-NLS-1$
     }
+
+    m_minElevationBorder = db;
+    ElevationColorControl.setMinElevation( m_minElevationBorder );
+    preferenceStore_.setValue( ELEV_MIN, m_minElevationBorder );
+    m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
+    windowCanvas.redraw();
+    m_applyColors.setSelection( true );
+    m_minTextLabel.setText( String.format( "%.3f", db ) ); //$NON-NLS-1$
   }
 
   /**
@@ -910,51 +859,39 @@ public class ColorModelChangeComponent implements IColorModelPreferenceConstants
    * @param maxText
    *            the text field
    */
-  private void checkMaxTextValue( final Composite elevationChooseComposite, final Text maxText )
+  private void checkMaxTextValue( final Text maxText )
   {
-    String tempText = maxText.getText();
+    final String tempText = maxText.getText();
 
-    final Pattern p = Pattern.compile( "[0-9]+[\\.\\,]?[0-9]+?" ); //$NON-NLS-1$
-    final Matcher m = p.matcher( tempText );
+    Double db = NumberUtils.parseQuietDouble( tempText );
 
-    if( !m.matches() )
+    if( db > m_dataModel.getElevationModelSystem().getMaxElevation() )
     {
-      maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+      db = m_dataModel.getElevationModelSystem().getMaxElevation();
+      maxText.setText( db.toString() );
     }
-    else
+    else if( db <= m_dataModel.getElevationModelSystem().getMinElevation() )
     {
-      maxText.setBackground( elevationChooseComposite.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-      tempText = tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      Double db = new Double( tempText );
-      if( db > m_dataModel.getElevationModelSystem().getMaxElevation() )
+      db = m_dataModel.getElevationModelSystem().getMaxElevation();
+      maxText.setText( db.toString() );
+    }
+    if( m_minTextLabel.getText() != null )
+    {
+      String textMin = m_minTextLabel.getText();
+      textMin = textMin.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
+      final Double minValue = new Double( textMin );
+      if( db <= minValue )
       {
-        db = m_dataModel.getElevationModelSystem().getMaxElevation();
+        db = minValue + 0.01;
         maxText.setText( db.toString() );
       }
-      else if( db <= m_dataModel.getElevationModelSystem().getMinElevation() )
-      {
-        db = m_dataModel.getElevationModelSystem().getMaxElevation();
-        maxText.setText( db.toString() );
-      }
-      if( m_minTextLabel.getText() != null )
-      {
-        String textMin = m_minTextLabel.getText();
-        textMin = textMin.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
-        final Double minValue = new Double( textMin );
-        if( db <= minValue )
-        {
-          db = minValue + 0.01;
-          maxText.setText( db.toString() );
-        }
-      }
-      m_maxElevationBorder = db;
-      ElevationColorControl.setMaxElevation( m_maxElevationBorder );
-      preferenceStore_.setValue( ELEV_MAX, m_maxElevationBorder );
-      m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
-      windowCanvas.redraw();
-      m_maxTextLabel.setText( String.format( "%.3f", db ) ); //$NON-NLS-1$
     }
+    m_maxElevationBorder = db;
+    ElevationColorControl.setMaxElevation( m_maxElevationBorder );
+    preferenceStore_.setValue( ELEV_MAX, m_maxElevationBorder );
+    m_colorModel.setElevationMinMax( m_minElevationBorder, m_maxElevationBorder );
+    windowCanvas.redraw();
+    m_maxTextLabel.setText( String.format( "%.3f", db ) ); //$NON-NLS-1$
   }
 
 }

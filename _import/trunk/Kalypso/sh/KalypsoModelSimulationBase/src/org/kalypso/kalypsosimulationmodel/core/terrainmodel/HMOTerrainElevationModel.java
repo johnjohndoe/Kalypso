@@ -46,8 +46,12 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 
-import org.kalypso.core.KalypsoCorePlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -74,7 +78,6 @@ import com.vividsolutions.jts.io.ParseException;
  */
 public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePatchVisitable<GM_SurfacePatch>
 {
-
   public static final double[][] NO_INTERIOR = {};
 
   public static final GM_Position[][] NO_INTERIOR_POS = {};
@@ -87,7 +90,7 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
 
   private Quadtree triangles;
 
-  private final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  private final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   public HMOTerrainElevationModel( final URL hmoFileURL ) throws IOException, ParseException
   {
@@ -135,7 +138,6 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
    */
   public GM_Envelope getBoundingBox( )
   {
-    // TODO patrice why not return the real geo object
     try
     {
       // GM_Position min = JTSAdapter.wrap( union. ).getEnvelope();
@@ -157,7 +159,6 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
    */
   public String getCoordinateSystem( )
   {
-    // TODO Patrice this hard coded and not okay put it into the gml
     return crs;
   }
 
@@ -191,10 +192,10 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
+   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
     Assert.throwIAEOnNullParam( envToVisit, "envToVisit" ); //$NON-NLS-1$
     Assert.throwIAEOnNullParam( surfacePatchVisitor, "surfacePatchVisitor" ); //$NON-NLS-1$
@@ -203,9 +204,16 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
     final Coordinate min = JTSAdapter.export( envToVisit.getMin() );
     final Envelope jtsEnv = new Envelope( min, max );
     final List triToVisit = triangles.query( jtsEnv );
+
+    monitor.beginTask( "", triToVisit.size() );
+
+    final IProgressMonitor nullMonitor = new NullProgressMonitor(); // we reuse the same null-monitor here to avoid
+    // production of thousands of sub-monitor, that do
+    // nothing...
     for( final Object tri : triToVisit )
     {
-      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor );
+      ((TriangleData) tri).acceptSurfacePatches( envToVisit, surfacePatchVisitor, nullMonitor );
+      ProgressUtilities.worked( monitor, 1 );
     }
   }
 
@@ -234,9 +242,4 @@ public class HMOTerrainElevationModel implements IElevationProvider, ISurfacePat
   {
     // TODO
   }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#getDiscretisationInterval()
-   */
-
 }

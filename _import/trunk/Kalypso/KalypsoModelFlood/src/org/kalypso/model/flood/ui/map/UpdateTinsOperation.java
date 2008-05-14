@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -64,7 +65,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.TriangulatedSurfaceTriangleEater;
 import org.kalypso.model.flood.binding.IFloodModel;
@@ -74,6 +74,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -140,7 +141,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
   }
 
   @SuppressWarnings("unchecked")
-  private IStatus updateTinReference( final ITinReference ref, final SubMonitor monitor ) throws Exception
+  private IStatus updateTinReference( final ITinReference ref, final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( ref.getName(), 100 );
 
@@ -159,6 +160,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
     TriangulatedSurfaceTriangleEater eater;
     GMLWorkspace sourceWorkspace;
 
+    final IProgressMonitor subMon = new SubProgressMonitor( monitor, 33 );
     switch( sourceType )
     {
       case gml:
@@ -188,7 +190,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         ProgressUtilities.worked( monitor, 33 );
 
         monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
-        clonedSurface.acceptSurfacePatches( clonedSurface.getEnvelope(), minmaxVisitor );
+        clonedSurface.acceptSurfacePatches( clonedSurface.getEnvelope(), minmaxVisitor, subMon );
 
         desc = String.format( "Daten importiert:%nHerkunft: %s # %s%nDatum: %3$te.%3$tm.%3$tY %3$tk:%3$tM", sourceLocation.toExternalForm(), sourcePath.toString(), sourceDate );
 
@@ -202,9 +204,9 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
       case hmo:
         crs = getCoordinateSytem( properties.getProperty( "srs" ) );
-        eater = new TriangulatedSurfaceTriangleEater( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+        eater = new TriangulatedSurfaceTriangleEater( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
-        final GeoTransformer transformer = new GeoTransformer( KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+        final GeoTransformer transformer = new GeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
         final URL hmoLocation = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() );
 
@@ -213,14 +215,14 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         final LinearRing[] rings = hmoReader.read( r );
 
         int count = 0;
-        for( LinearRing ring : rings )
+        for( final LinearRing ring : rings )
         {
           count++;
           final List<GM_Point> pointList = new LinkedList<GM_Point>();
           monitor.subTask( "lade Eingangsdaten... importiere Dreiecke: " + count + " / " + rings.length + "... " );
           for( int i = 0; i < ring.getNumPoints() - 1; i++ )
           {
-            GM_Object object = JTSAdapter.wrap( ring.getPointN( i ) );
+            final GM_Object object = JTSAdapter.wrap( ring.getPointN( i ) );
 
             final GM_Point point = (GM_Point) object;
             point.setCoordinateSystem( crs );
@@ -234,7 +236,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         ProgressUtilities.worked( monitor, 33 );
         monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
 
-        gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor );
+        gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor, subMon );
 
         // TODO: check for right time zone?
         desc = String.format( "Daten importiert:%nHerkunft: %s %nDatum: %2$te.%2$tm.%2$tY %2$tk:%2$tM", sourceLocation.toExternalForm(), sourceDate );
@@ -256,8 +258,8 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         eater = new TriangulatedSurfaceTriangleEater( crs );
 
         final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() );
-        String file2 = shapeURL.getFile();
-        File file = new File( file2 );
+        final String file2 = shapeURL.getFile();
+        final File file = new File( file2 );
         // final IFile file = ResourceUtilities.findFileFromURL( shapeURL );
         final String absolutePath = file.getAbsolutePath();
         final String shapeBase = FileUtilities.nameWithoutExtension( absolutePath );
@@ -271,29 +273,29 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           final Feature fRoot = sourceWorkspace.getRootFeature();
           final FeatureList lstMembers = (FeatureList) fRoot.getProperty( new QName( "namespace", "featureMember" ) );
 
-          GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryProperty();
+          final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryProperty();
           gmSurface = new GM_TriangulatedSurface_Impl( crs );
 
           if( geom instanceof GM_MultiSurface )
           {
             // conversion
             // convert the gm_surfaces.exterior rings into gm.triangle
-            for( Object object : lstMembers )
+            for( final Object object : lstMembers )
             {
               if( object instanceof Feature )
               {
-                Feature feat = (Feature) object;
-                GM_Object[] geometryProperties = feat.getGeometryProperties();
+                final Feature feat = (Feature) object;
+                final GM_Object[] geometryProperties = feat.getGeometryProperties();
                 if( geometryProperties[0] instanceof GM_MultiSurface )
                 {
-                  GM_MultiSurface polygonSurface = (GM_MultiSurface) geometryProperties[0];
-                  GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
+                  final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometryProperties[0];
+                  final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
 
                   // add the triangles into the gm_triang_surfaces
-                  for( int i = 0; i < triangles.length; i++ )
+                  for( final GM_Triangle element : triangles )
                   {
                     GM_Triangle triangle;
-                    triangle = triangles[i];
+                    triangle = element;
                     gmSurface.add( triangle );
                     monitor.subTask( "konvertiere Shapedaten... importierte Dreiecke: " + gmSurface.size() );
                   }
@@ -304,7 +306,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
 
           monitor.subTask( "aktualisiere Metadaten (min/max/...)" );
 
-          gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor );
+          gmSurface.acceptSurfacePatches( gmSurface.getEnvelope(), minmaxVisitor, subMon );
           // TODO: check for right time zone?
           desc = String.format( "Daten importiert:%nHerkunft: %s %nDatum: %2$te.%2$tm.%2$tY %2$tk:%2$tM", sourceLocation.toExternalForm(), sourceDate );
 
@@ -315,7 +317,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           ref.setUpdateDate( sourceDate );
           ref.setTin( gmSurface );
         }
-        catch( GmlSerializeException e )
+        catch( final GmlSerializeException e )
         {
           e.printStackTrace();
           StatusUtilities.statusFromThrowable( e, "Wasserspiegelimport fehlgeschlagen." );
@@ -324,7 +326,6 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
         break;
 
     }
-    ProgressUtilities.worked( monitor, 33 );
 
     /* Fire modell event as feature was changed */
     final Feature refFeature = ref.getFeature();

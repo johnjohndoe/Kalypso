@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsosimulationmodel.core.terrainmodel;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -73,7 +75,7 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
 
   private GM_Triangle_Impl m_trianglePath;
 
-  public TriangleData( final LinearRing ring, String crs )
+  public TriangleData( final LinearRing ring, final String crs )
   {
     // TODO: there is no need to divide the triangles anymore, because now they get split at
     // the real borders. Therefore convert the ring into an Triangle an paint it.
@@ -86,15 +88,15 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
     planeEquation = JTSUtilities.calculateTrianglePlaneEquation( coords );
     centerElevation = calculateCenterElevation( coords );
 
-    GM_Position pos1 = JTSAdapter.wrap( ring.getCoordinateN( 0 ) );
-    GM_Position pos2 = JTSAdapter.wrap( ring.getCoordinateN( 1 ) );
-    GM_Position pos3 = JTSAdapter.wrap( ring.getCoordinateN( 2 ) );
+    final GM_Position pos1 = JTSAdapter.wrap( ring.getCoordinateN( 0 ) );
+    final GM_Position pos2 = JTSAdapter.wrap( ring.getCoordinateN( 1 ) );
+    final GM_Position pos3 = JTSAdapter.wrap( ring.getCoordinateN( 2 ) );
 
     try
     {
       m_trianglePath = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, crs );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -140,20 +142,13 @@ class TriangleData implements ISurfacePatchVisitable<GM_SurfacePatch>
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#aceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitor)
+   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor )
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception, CoreException
   {
-    try
-    {
-      surfacePatchVisitor.visit( m_trianglePath, centerElevation );
-    }
-    catch( Exception e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    surfacePatchVisitor.visit( m_trianglePath, centerElevation );
+    monitor.done();
   }
 
   public double getMinElevation( )

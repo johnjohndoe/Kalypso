@@ -45,12 +45,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -58,6 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree_impl.model.geometry.GM_Triangle_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -69,16 +70,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePatchVisitable<GM_SurfacePatch>
 {
-  private static final List<GM_Position> NULL_LIST = Collections.<GM_Position> emptyList();
-
-  // /**
-  // * the asc data source File or URL containing the elevation info
-  // */
-  // private Object ascSource;
-
-  // TODO check using polygons
   /**
-   * The envelop if the reagion of interest
+   * The envelop if the region of interest
    */
   private double cellSize;
 
@@ -101,7 +94,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    */
   private GM_Envelope maxEnvelope;
 
-  private final String crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+  private final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   /**
    * Create an elevation provider based on the given asc file, in the specified region of interest. if the
@@ -115,17 +108,6 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    *             if asc file is null or is a directory or does not exist or is not accesible (cannot be read)
    * 
    */
-  // public ASCTerrainElevationModel(
-  // File ascFile,
-  // GM_Envelope regionOfInterest)
-  // throws IllegalArgumentException, FileNotFoundException
-  // {
-  // Assert.throwIAEOnNulOrIsDirOrNotExistsOrNotReadable( ascFile );
-  // // Assert.throwIAEOnNullParam( regionOfInterest, "regionOfInterest" );
-  // this.regionOfInterest=regionOfInterest;
-  // this.ascSource=ascFile;
-  // parse( ascFile );
-  // }
   public ASCTerrainElevationModel( final URL ascFileURL ) throws IllegalArgumentException, IOException
   {
     parse( ascFileURL.openStream() );
@@ -191,12 +173,10 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
     }
     catch( final NumberFormatException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     catch( final IOException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     finally
@@ -209,9 +189,7 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   {
     final GM_Position posMin = GeometryFactory.createGM_Position( xllcorner, yllcorner );
     final GM_Position posMax = GeometryFactory.createGM_Position( xllcorner + cellSize * N_COLS, yllcorner + cellSize * N_ROWS );
-    final GM_Envelope envelope = GeometryFactory.createGM_Envelope( posMin, posMax, getCoordinateSystem() );
-    return envelope;
-
+    return GeometryFactory.createGM_Envelope( posMin, posMax, getCoordinateSystem() );
   }
 
   /**
@@ -222,68 +200,16 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
     final int col = (int) Math.floor( (location.getX() - xllcorner) / cellSize );
     final int row = (int) Math.floor( (location.getY() - yllcorner) / cellSize );
     if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
-    {
       return elevations[row][col];
-    }
-    else
-    {
-      return Double.NaN;
-    }
+
+    return Double.NaN;
   }
 
-  public List<GM_Position> getCellLLCornerIterator( final GM_Envelope env )
-  {
-
-    final GM_Envelope envToShow = GMRectanglesClip.getIntersectionEnv( maxEnvelope, env );
-
-    if( envToShow == null )
-    {
-      return NULL_LIST;
-    }
-    else
-    {
-      return makeCellsLLCornerIterator( env );
-    }
-  }
-
-  private List<GM_Position> makeCellsLLCornerIterator( final GM_Envelope env )
-  {
-    final double xmin = env.getMin().getX();
-    final int col = (int) Math.floor( (xmin - xllcorner) / cellSize );
-    final double ymin = env.getMin().getY();
-    int row = (int) Math.floor( (ymin - yllcorner) / cellSize );
-    if( row < 0 )
-    {
-      row = 0;
-    }
-    final ArrayList<GM_Position> poses = new ArrayList<GM_Position>();
-
-    if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
-    {
-      final int N_COL_ENV = (int) Math.floor( env.getWidth() / cellSize );
-      final int N_ROW_ENV = (int) Math.floor( env.getHeight() / cellSize );
-      for( int i = 0; i < N_ROW_ENV; i++ )
-      {
-        for( int j = 0; j < N_COL_ENV; j++ )
-        {
-          final double x = xmin + j * cellSize;
-          final double y = ymin + i * cellSize;
-          final double z = elevations[row + i][col + j];
-
-          final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
-          poses.add( position );
-        }
-      }
-      //    
-      return poses;
-    }
-    else
-    {
-      return NULL_LIST;
-    }
-  }
-
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor ) throws GM_Exception
+  /**
+   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_SurfacePatch> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException, GM_Exception
   {
     final GM_Envelope env = GMRectanglesClip.getIntersectionEnv( maxEnvelope, envToVisit );
     final double xmin = env.getMin().getX();
@@ -291,15 +217,14 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
     final double ymin = env.getMin().getY();
     int row = (int) Math.floor( (ymin - yllcorner) / cellSize );
     if( row < 0 )
-    {
       row = 0;
-    }
 
     if( col < N_COLS && row < N_ROWS && col >= 0 && row >= 0 )
     {
+      monitor.beginTask( "", row );
+
       final int N_COL_ENV = (int) Math.floor( env.getWidth() / cellSize );
       final int N_ROW_ENV = (int) Math.floor( env.getHeight() / cellSize );
-      final double[][] interior = new double[][] {};
       for( int i = 0; i < N_ROW_ENV; i++ )
       {
         for( int j = 0; j < N_COL_ENV; j++ )
@@ -310,24 +235,18 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
           final double yPlusCellSize = y + cellSize;
           final double z = elevations[row + i][col + j];
 
-          final double[] exterior = new double[] { x, y, z,// lowerleft corner
-              xPlusCellSize, y, z,// lower right side
-              xPlusCellSize, yPlusCellSize, z,// upper right corner
-              x, yPlusCellSize, z, // upper left corner
-              x, y, z };
-          final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( exterior, interior, 3, crs );
-          try
-          {
-            if( !surfacePatchVisitor.visit( patch, z ) )
-            {
-              return;
-            }
-          }
-          catch( final Exception e )
-          {
-            throw new GM_Exception( e.getLocalizedMessage(), e );
-          }
+          final GM_Position pos0 = GeometryFactory.createGM_Position( x, y, z );
+          final GM_Position pos1 = GeometryFactory.createGM_Position( xPlusCellSize, y, z );
+          final GM_Position pos2 = GeometryFactory.createGM_Position( xPlusCellSize, yPlusCellSize, z );
+          final GM_Position pos3 = GeometryFactory.createGM_Position( x, yPlusCellSize, z );
+
+          final GM_Triangle_Impl patch1 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos0, pos1, pos3 }, crs );
+          final GM_Triangle_Impl patch2 = GeometryFactory.createGM_Triangle( new GM_Position[] { pos1, pos2, pos3 }, crs );
+          surfacePatchVisitor.visit( patch1, z );
+          surfacePatchVisitor.visit( patch2, z );
         }
+
+        ProgressUtilities.worked( monitor, 1 );
       }
     }
     else
@@ -355,7 +274,6 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
    */
   public String getCoordinateSystem( )
   {
-    // TODO Patrice introduce the it in the schema
     return this.crs;
   }
 
@@ -384,14 +302,4 @@ public class ASCTerrainElevationModel implements IElevationProvider, ISurfacePat
   {
 
   }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.terrainmodel.SurfacePatchVisitable#getDiscretisationInterval()
-   */
-  public double getDiscretisationInterval( )
-  {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
 }
