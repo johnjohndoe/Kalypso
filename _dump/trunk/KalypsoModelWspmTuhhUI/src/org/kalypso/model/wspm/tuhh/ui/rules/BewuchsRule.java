@@ -114,11 +114,11 @@ public class BewuchsRule extends AbstractValidatorRule
         int i = leftIndex;
         for( final IRecord point : Flussschl )
         {
-          final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX,  point);
-          final Double ay =  ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY,  point);
-          final Double dp =  ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP,  point);
+          final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+          final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+          final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
 
-          if( ax.isNaN() || ay.isNaN()|| dp.isNaN() )
+          if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
           {
             continue;
           }
@@ -133,16 +133,16 @@ public class BewuchsRule extends AbstractValidatorRule
 
         if( profil.getProfileObjects().length == 0 )
         {
-          final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX,  points[lastIndex] );
+          final Double ax1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, points[lastIndex] );
 
           if( (VorlandLhasValues == true && !ax1.isNaN()) && (VorlandLhasValues && ax1 == 0.0) )
-            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + profil.getStation() , lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// ,
-         
-          final Double ax2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX,  rightP );
+            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + profil.getStation(), lastIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// ,
+
+          final Double ax2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, rightP );
 
           if( (VorlandLhasValues == true && !ax2.isNaN()) && (VorlandLhasValues && ax2 == 0.0) )
-            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + profil.getStation() , rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// ,
-         
+            collector.createProfilMarker( IMarker.SEVERITY_INFO, "Bewuchsparameter an Trennflächen überprüfen", "km " + profil.getStation(), rightIndex, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );// ,
+
         }
       }
     }
@@ -160,12 +160,14 @@ public class BewuchsRule extends AbstractValidatorRule
       return false;
     for( final IRecord point : subList )
     {
-      final Double ax = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_BEWUCHS_AX , point );
-      final Double ay = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_BEWUCHS_AY , point );
-      final Double dp = ProfilUtil.getDoubleValueFor(  IWspmConstants.POINT_PROPERTY_BEWUCHS_DP , point );
+      final Double ax = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+      final Double ay = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+      final Double dp = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP, point );
       if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiges Datenformat", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );
+        // TODO: führt zu 1000 Fehlern, wenn der Bewuchs nicht gesetzt ist (nach Zuweisung Landnutzung z.b.)
+// collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiges Datenformat", "km " + Double.toString(
+// profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );
         continue;
       }
       else
