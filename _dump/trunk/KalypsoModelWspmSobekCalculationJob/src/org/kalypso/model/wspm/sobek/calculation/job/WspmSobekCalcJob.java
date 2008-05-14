@@ -54,14 +54,14 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class WspmSobekCalcJob implements ISimulation
 {
+  private static final String CALCJOB_SPEC = "model_spec.xml"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
    */
   public URL getSpezifikation( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return getClass().getResource( CALCJOB_SPEC );
   }
 
   /**
@@ -72,6 +72,7 @@ public class WspmSobekCalcJob implements ISimulation
   {
     // TODO Auto-generated method stub
 
+    final int asdfasdf = 0;
   }
 
 }
