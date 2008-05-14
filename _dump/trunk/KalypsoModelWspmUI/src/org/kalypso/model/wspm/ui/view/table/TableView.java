@@ -56,7 +56,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
@@ -101,7 +100,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class TableView extends ViewPart implements IAdapterEater<IProfilProvider2>, IProfilProviderListener, ITupleResultViewerProvider
 {
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   private final AdapterPartListener<IProfilProvider2> m_profilProviderListener = new AdapterPartListener<IProfilProvider2>( IProfilProvider2.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   protected Form m_form;
@@ -344,7 +343,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       m_provider.addProfilProviderListener( this );
 
     final ProfilViewData viewData = m_provider == null ? null : m_provider.getViewData();
-    onProfilProviderChanged( m_provider, null, m_profile, null, viewData );
+    final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
+    onProfilProviderChanged( m_provider, m_profile, newProfile, null, viewData );
   }
 
   /**
@@ -355,7 +355,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
    */
   public void onProfilProviderChanged( final IProfilProvider2 provider, final IProfil oldProfile, final IProfil newProfile, final ProfilViewData oldViewData, final ProfilViewData newViewData )
   {
-
     if( m_profile != null )
       m_profile.removeProfilListener( m_profileListener );
 
@@ -384,7 +383,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
