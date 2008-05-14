@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.ui.lastfall;
 
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Image;
@@ -51,6 +55,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -127,13 +132,46 @@ public class LastfallTreeLabelProvider extends LabelProvider
           if( type == null )
             item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
 
+          // FIXME - wait for eclipse 3.4 and show tooltip text of tree items (why is open / done, etc)
+
           if( IBoundaryNodeLastfallCondition.BOUNDARY_CONDITION_TYPE.eZml.equals( type ) )
           {
             // REMARK: empty obs throws Nullpointer exception!
             final IObservation<TupleResult> observation = condition.getTimeSeriesObservation();
             final TupleResult result = observation.getResult();
             if( result.size() > 2 )
-              item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) ); //$NON-NLS-1$
+            {
+              /* determine date range of observation */
+              final IRecord recordStart = result.get( 0 );
+              final XMLGregorianCalendar xmlStart = (XMLGregorianCalendar) recordStart.getValue( 0 );
+
+              final IRecord recordEnd = result.get( result.size() - 1 );
+              final XMLGregorianCalendar xmlEnd = (XMLGregorianCalendar) recordEnd.getValue( 0 );
+
+              final GregorianCalendar lastfallStart = lastfall.getLastfallStart();
+              final GregorianCalendar lastfallEnd = lastfall.getLastfallEnd();
+
+              final Integer preSimulationTime = lastfall.getPreSimulationTime();
+              lastfallStart.add( GregorianCalendar.HOUR, preSimulationTime * -1 );
+
+              final GregorianCalendar start = xmlStart.toGregorianCalendar();
+              final GregorianCalendar end = xmlEnd.toGregorianCalendar();
+
+              if( start.after( lastfallStart ) )
+              {
+                item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
+              }
+              else if( end.before( lastfallEnd ) )
+              {
+                item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
+              }
+              else
+              {
+                item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_done.gif" ) ) ); //$NON-NLS-1$
+              }
+
+            }
+
             else
               item.setImage( new Image( null, getClass().getResourceAsStream( "icons/tree_open.gif" ) ) ); //$NON-NLS-1$
           }
