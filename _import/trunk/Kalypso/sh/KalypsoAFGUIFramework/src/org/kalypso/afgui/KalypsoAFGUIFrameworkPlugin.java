@@ -2,11 +2,11 @@ package org.kalypso.afgui;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -227,20 +227,22 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
       final File file = new File( fileName );
       if( file.exists() )
-      {
         file.delete();
-      }
+
+      FileOutputStream os = null;
       try
       {
-        properties.storeToXML( new FileOutputStream( file ), "" );
-      }
-      catch( final FileNotFoundException e1 )
-      {
-        e1.printStackTrace();
+        os = new FileOutputStream( file );
+        properties.storeToXML( os, "" );
+        os.close();
       }
       catch( final IOException e1 )
       {
         e1.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( os );
       }
 
       try
