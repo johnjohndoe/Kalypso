@@ -29,7 +29,7 @@ public class GuiTypeRegistrySingleton
   }
 
   @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public static ITypeRegistry<IGuiTypeHandler> getTypeRegistry( )
+  public static synchronized ITypeRegistry<IGuiTypeHandler> getTypeRegistry( )
   {
     if( m_typeRegistry == null )
     {
@@ -59,7 +59,7 @@ public class GuiTypeRegistrySingleton
     return m_typeRegistry;
   }
 
-  public static void reloadTypeRegistry( )
+  public static synchronized void reloadTypeRegistry( )
   {
     m_typeRegistry = null;
     getTypeRegistry();
