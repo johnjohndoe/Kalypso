@@ -7,5 +7,6 @@ Bundle-Activator: org.kalypso.model.wspm.sobek.calculation.job.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.simulation.core,
- org.kalypso.contribs.java
+ org.kalypso.contribs.java,
+ org.kalypso.commons
 Eclipse-LazyStart: true

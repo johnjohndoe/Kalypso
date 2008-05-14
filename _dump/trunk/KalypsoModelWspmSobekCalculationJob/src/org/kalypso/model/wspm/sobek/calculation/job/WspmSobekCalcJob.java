@@ -41,8 +41,11 @@
 package org.kalypso.model.wspm.sobek.calculation.job;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -70,7 +73,22 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    // TODO Auto-generated method stub
+    InputStream zipStream = null;
+    zipStream = getClass().getResourceAsStream( "/org/kalypso/model/wspm/sobek/calculation/job/fake/sobek.zip" ); //$NON-NLS-1$
+    if( zipStream != null )
+    {
+      try
+      {
+        ZipUtilities.unzipApache( zipStream, tmpdir, true, "IBM850" ); //$NON-NLS-1$
+        zipStream.close();
+
+        resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+    }
 
     final int asdfasdf = 0;
   }

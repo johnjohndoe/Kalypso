@@ -18,9 +18,9 @@
 		<input id="RIVER_LINE_CS" type="string" optional="true" description="The coordinate system of the river line." />
 	-->
 
-	<!-- Ergebniss -->
+	<!-- Results -->
+		<output id="TEST_OUTPUT" description="Test result." />
 	<!--
-		<output id="RESULT_WST" description="The result out of FLYS." />
 		<output id="RESULT_DIFF" description="The results of the comparison between the old and new .wst-values." />
 		<output id="RESULT_HTML" description="The results of the comparison between the old and new .wst-values as HTML table." />
 		<output id="RESULT_HTML_EXPERT" description="The results of the comparison between the old and new .wst-values as HTML table with tooltips." />
