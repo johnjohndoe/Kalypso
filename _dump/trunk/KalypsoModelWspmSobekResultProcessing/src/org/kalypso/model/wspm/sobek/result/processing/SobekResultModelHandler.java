@@ -1,13 +1,19 @@
 package org.kalypso.model.wspm.sobek.result.processing;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+
 import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class SobekResultModelHandler implements ISobekResultModel
 {
@@ -41,7 +47,29 @@ public class SobekResultModelHandler implements ISobekResultModel
     if( !file.exists() )
       return null;
 
-    throw new NotImplementedException();
-  }
+    final InputStream is = new BufferedInputStream( file.getContents() );
+    try
+    {
+      final JAXBContext jc = JAXBContext.newInstance( nl.wldelft.fews.pi.ObjectFactory.class );
+      final Unmarshaller u = jc.createUnmarshaller();
+      final JAXBElement<TimeSeriesComplexType> jaxRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
 
+      return jaxRoot.getValue();
+    }
+    catch( final Exception e )
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( "Reading Sobek Cross Section Node data file - failed." ) );
+    }
+    finally
+    {
+      try
+      {
+        is.close();
+      }
+      catch( final IOException e )
+      {
+        throw new CoreException( StatusUtilities.createWarningStatus( "Error closing Sobek Cross Section Node input stream." ) );
+      }
+    }
+  }
 }

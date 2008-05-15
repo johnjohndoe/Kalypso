@@ -7,6 +7,7 @@ Bundle-Activator: org.kalypso.model.wspm.sobek.result.processing.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.kalypso.contribs.eclipsercp,
- org.kalypso.model.wspm.sobek.core
+ org.kalypso.model.wspm.sobek.core,
+ org.kalypso.jwsdp
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.sobek.result.processing
