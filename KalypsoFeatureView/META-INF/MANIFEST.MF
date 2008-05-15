@@ -9,9 +9,6 @@ Bundle-Localization: plugin
 Export-Package: org.kalypso.featureview,
  org.kalypso.featureview.views,
  org.kalypso.featureview.views.actions
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.kalypso.deegree,
- org.kalypso.ui,
- org.eclipse.ui.forms
+Require-Bundle: org.kalypso.deegree,
+ org.kalypso.ui
 Eclipse-LazyStart: true
