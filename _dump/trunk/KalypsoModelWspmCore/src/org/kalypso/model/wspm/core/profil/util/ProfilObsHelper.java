@@ -46,7 +46,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -61,7 +60,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * Profile Observation Helper<br>
  * Functions around new observation stuff of IProfile (extends IObservation)
- *
+ * 
  * @author kimwerner, kuch
  */
 
@@ -72,6 +71,7 @@ public class ProfilObsHelper
   /**
    * @deprecated {@link IProfil} use {@link IRecord[]} instead.
    */
+  @Deprecated
   public static LinkedList<IRecord> toProfilPoints( final TupleResult result )
   {
     final LinkedList<IRecord> myPoints = new LinkedList<IRecord>();
@@ -87,6 +87,7 @@ public class ProfilObsHelper
   }
 
   // TODO: move this to FeatureHelper
+  @SuppressWarnings("unchecked")
   public static IObservation<TupleResult>[] getProfileObjects( final Feature profileFeature )
   {
 
@@ -106,9 +107,11 @@ public class ProfilObsHelper
     return myResults.toArray( new IObservation[] {} );
 
   }
+
   /**
    * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
    */
+  @Deprecated
   public static IComponent getPropertyFromId( final IRecord point, final String id )
   {
     if( id == null )
@@ -125,9 +128,11 @@ public class ProfilObsHelper
 
     return null;
   }
+
   /**
    * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
    */
+  @Deprecated
   public static IComponent getPropertyFromId( final IProfil profil, final String id )
   {
     if( id == null )
@@ -143,9 +148,11 @@ public class ProfilObsHelper
 
     return null;
   }
+
   /**
    * @deprecated Use {@link IProfil#getPointProperties()} instead.
    */
+  @Deprecated
   public static IComponent[] getPropertyFromId( final IProfil profil, final String[] ids )
   {
     final List<IComponent> list = new ArrayList<IComponent>();
@@ -156,18 +163,21 @@ public class ProfilObsHelper
 
     return list.toArray( new IComponent[] {} );
   }
+
   /**
-   * @deprecated @Use {@link IComponent#getPrecision()} instead.
+   * @deprecated
+   * @Use {@link IComponent#getPrecision()} instead.
    */
+  @Deprecated
   public static double getPrecision( final IComponent property )
   {
-     return property.getPrecision();
+    return property.getPrecision();
   }
-
 
   /**
    * @deprecated Use {@link IProfileObject#getObjectProperty(String)} instead.
    */
+  @Deprecated
   public static IComponent getPropertyFromId( final IProfileObject building, final String id )
   {
     if( id == null )
@@ -190,9 +200,11 @@ public class ProfilObsHelper
 
     return null;
   }
+
   /**
    * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
    */
+  @Deprecated
   public static IComponent getPropertyFromId( final IProfilPointPropertyProvider[] provider, final String property )
   {
     for( final IProfilPointPropertyProvider ppp : provider )
@@ -203,9 +215,11 @@ public class ProfilObsHelper
 
     return null;
   }
+
   /**
    * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
    */
+  @Deprecated
   public static IComponent getComponentById( final IComponent[] components, final String id )
   {
     for( final IComponent component : components )

@@ -42,12 +42,10 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
@@ -87,34 +85,36 @@ public class ProfilMidTarget extends AbstractPointsTarget
   private final void insertPointsInternal( final IProfil profile, final List<IRecord> points )
   {
     final int pointsCount = points.size();
-    final IComponent[] existingProps = profile.getPointProperties();
+
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    final TupleResult owner = points.get( 0 ).getOwner();
+    final int iPointsBreite = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iPointsHoehe = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
       final IRecord activePkt = profile.getActivePoint();
       final IRecord targetPkt = activePkt != null ? activePkt : profile.createProfilPoint();
-      final double deltaX = (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) )
-          - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double deltaY = (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) )
-          - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+      final double deltaX = (Double) points.get( 0 ).getValue( iPointsBreite ) - (Double) targetPkt.getValue( iBreite );
+      final double deltaY = (Double) points.get( 0 ).getValue( iPointsHoehe ) - (Double) targetPkt.getValue( iHoehe );
       int i = changes.length - 1;
       for( final IRecord point : points )
       {
         final IRecord newPoint = targetPkt.cloneRecord();
-        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_BREITE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) )
-            - deltaX );
-        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) )
-            - deltaY );
-        for( final IComponent prop : existingProps )
+        newPoint.setValue( iBreite, (Double) point.getValue( iPointsBreite ) - deltaX );
+        newPoint.setValue( iHoehe, (Double) point.getValue( iPointsHoehe ) - deltaY );
+        for( final IComponent prop : owner.getComponents() )
         {
-          final IComponent[] pointProperties = profile.getPointProperties();
 
-          if( ArrayUtils.contains( pointProperties, prop ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() ) )
+          if( !(IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) || IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() )) )
           {
-            final IComponent[] components = point.getOwner().getComponents();
-            if( ArrayUtils.contains( components, prop ) )
-              newPoint.setValue( prop, point.getValue( prop ) );
+
+            final int index = profile.indexOfProperty( prop.getId() );
+            if( index > -1 )
+              newPoint.setValue( index, point.getValue( owner.indexOfComponent( prop ) ) );
           }
         }
         changes[i--] = new PointAdd( profile, targetPkt, newPoint );

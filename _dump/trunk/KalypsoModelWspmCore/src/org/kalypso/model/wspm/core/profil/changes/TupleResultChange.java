@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 
 /**
  * @author kuch
@@ -52,7 +51,7 @@ public class TupleResultChange implements IProfilChange
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint)
    */
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     hint.setPointsChanged();
 

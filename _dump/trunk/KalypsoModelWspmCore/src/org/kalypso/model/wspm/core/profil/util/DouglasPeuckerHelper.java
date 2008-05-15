@@ -51,9 +51,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * Helper for thinning a profile with the Douglas Peucker algorithm.
@@ -228,27 +226,27 @@ public class DouglasPeuckerHelper
   protected static double calcDistance( IRecord beginPoint, IRecord endPoint, IRecord middlePoint )
   {
 
-    final IComponent breiteComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_BREITE );
-    final IComponent hoeheComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_HOEHE );
+//    final IComponent breiteComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_BREITE );
+//    final IComponent hoeheComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_HOEHE );
+//
+//    final TupleResult ownerBegin = beginPoint.getOwner();
+//    final int breiteIndexBegin = ownerBegin.indexOfComponent( breiteComp );
+//    final int hoeheIndexBegin = ownerBegin.indexOfComponent( hoeheComp );
+//
+//    final TupleResult ownerMiddle = middlePoint.getOwner();
+//    final int breiteIndexMiddle = ownerMiddle.indexOfComponent( breiteComp );
+//    final int hoeheIndexMiddle = ownerMiddle.indexOfComponent( hoeheComp );
+//
+//    final TupleResult ownerEnd = endPoint.getOwner();
+//    final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
+//    final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
 
-    final TupleResult ownerBegin = beginPoint.getOwner();
-    final int breiteIndexBegin = ownerBegin.indexOfComponent( breiteComp );
-    final int hoeheIndexBegin = ownerBegin.indexOfComponent( hoeheComp );
-
-    final TupleResult ownerMiddle = middlePoint.getOwner();
-    final int breiteIndexMiddle = ownerMiddle.indexOfComponent( breiteComp );
-    final int hoeheIndexMiddle = ownerMiddle.indexOfComponent( hoeheComp );
-
-    final TupleResult ownerEnd = endPoint.getOwner();
-    final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
-    final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
-
-    double bx = (Double) beginPoint.getValue( breiteIndexBegin );
-    double by = (Double) beginPoint.getValue( hoeheIndexBegin );
-    double ex = (Double) endPoint.getValue( breiteIndexMiddle );
-    double ey = (Double) endPoint.getValue( hoeheIndexMiddle );
-    double mx = (Double) middlePoint.getValue( breiteIndexEnd );
-    double my = (Double) middlePoint.getValue( hoeheIndexEnd );
+    Double bx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, beginPoint );//(Double) beginPoint.getValue( breiteIndexBegin );
+    Double by = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, beginPoint );//(Double) beginPoint.getValue( hoeheIndexBegin );
+    Double ex = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endPoint );//(Double) endPoint.getValue( breiteIndexMiddle );
+    Double ey = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, endPoint );//(Double) endPoint.getValue( hoeheIndexMiddle );
+    Double mx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, middlePoint );//(Double) middlePoint.getValue( breiteIndexEnd );
+    Double my = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, middlePoint );//(Double) middlePoint.getValue( hoeheIndexEnd );
 
     double f = (ey - by) / (ex - bx);
 

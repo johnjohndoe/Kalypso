@@ -42,12 +42,10 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
@@ -81,46 +79,52 @@ public class ProfilEndTarget extends AbstractPointsTarget
       return;
     final IRecord endPoint = result.get( result.size() - 1 );
     final IRecord point = result.createRecord();
+
     final IComponent[] properties = profile.getPointProperties();
     for( final IComponent property : properties )
+    {
+      final int iProp = profile.indexOfProperty( property );
       if( IWspmConstants.POINT_PROPERTY_BREITE.equals( property.getId() ) )
-        point.setValue( property, (Double) endPoint.getValue( property ) + 20 );
-      else if( !ArrayUtils.contains( profile.getPointMarkerTypes(), property ) )
-        point.setValue( property, endPoint.getValue( property ) );
-
+        point.setValue( iProp, (Double) endPoint.getValue( iProp ) + 20 );
+      else if( !profile.isPointMarker( property.getId() ) )
+        point.setValue( iProp, endPoint.getValue( iProp ) );
+    }
     result.add( point );
   }
 
   public void insertPointsInternal( final IProfil profile, final List<IRecord> points )
   {
     final int pointsCount = points.size();
-    final IComponent[] existingProps = profile.getPointProperties();
+
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    final TupleResult owner = points.get( 0 ).getOwner();
+    final int iPointsBreite = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iPointsHoehe = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
       final IRecord[] existingPoints = profile.getPoints();
       final IRecord targetPkt = existingPoints.length == 0 ? profile.createProfilPoint() : existingPoints[existingPoints.length - 1];
-      // final IProfilPoint targetPkt = (activePkt != null) ? activePkt : pem.getProfil().getPoints().getLast();
-      final double deltaX = existingPoints.length == 0 ? 0.0 : (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_BREITE ) )
-          - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_BREITE ) );
-      final double deltaY = existingPoints.length == 0 ? 0.0 : (Double) points.get( 0 ).getValue( ProfilObsHelper.getPropertyFromId( points.get( 0 ), IWspmConstants.POINT_PROPERTY_HOEHE ) )
-          - (Double) targetPkt.getValue( ProfilObsHelper.getPropertyFromId( targetPkt, IWspmConstants.POINT_PROPERTY_HOEHE ) );
+
+      final double deltaX = existingPoints.length == 0 ? 0.0 : (Double) points.get( 0 ).getValue( iPointsBreite ) - (Double) targetPkt.getValue( iBreite );
+      final double deltaY = existingPoints.length == 0 ? 0.0 : (Double) points.get( 0 ).getValue( iPointsHoehe ) - (Double) targetPkt.getValue( iHoehe );
+
       int i = changes.length - 1;
       for( final IRecord point : points )
       {
         final IRecord newPoint = targetPkt.cloneRecord();
-        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_BREITE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ) )
-            - deltaX );
-        newPoint.setValue( ProfilObsHelper.getPropertyFromId( newPoint, IWspmConstants.POINT_PROPERTY_HOEHE ), (Double) point.getValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ) )
-            - deltaY );
-        for( final IComponent prop : existingProps )
-          if( profile.hasPointProperty( prop ) && !IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) && !IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() ) )
+        newPoint.setValue( iBreite, (Double) point.getValue( iPointsBreite ) - deltaX );
+        newPoint.setValue( iHoehe, (Double) point.getValue( iPointsHoehe ) - deltaY );
+        for( final IComponent prop : owner.getComponents() )
+          if( !(IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) || IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() )) )
           {
-            final IComponent[] components = point.getOwner().getComponents();
 
-            if( ArrayUtils.contains( components, prop ) )
-              newPoint.setValue( prop, point.getValue( prop ) );
+            final int index = profile.indexOfProperty( prop.getId() );
+            if( index > -1 )
+              newPoint.setValue( index, point.getValue( owner.indexOfComponent( prop ) ) );
           }
         changes[i--] = new PointAdd( profile, existingPoints.length == 0 ? null : targetPkt, newPoint );
       }

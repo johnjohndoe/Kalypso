@@ -102,9 +102,10 @@ public class ObservationStationResult implements IStationResult
       final IComponent stationComp = TupleResultUtilities.findComponentById( result, "urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" ); //$NON-NLS-1$
       if( stationComp != null )
       {
+        final int index = result.indexOfComponent( stationComp );
         for( final IRecord record : result )
         {
-          final Number value = (Number) record.getValue( stationComp );
+          final Number value = (Number) record.getValue( index );
           m_recordMap.put( value.doubleValue(), record );
         }
       }
@@ -137,6 +138,7 @@ public class ObservationStationResult implements IStationResult
 
     final IRecord record = m_recordMap.get( m_station );
     final IComponent comp = m_idMap.get( componentId );
-    return (record == null || comp == null) ? null : (Number) record.getValue( comp );
+    final int index = record.getOwner().indexOfComponent( comp );
+    return (record == null || comp == null) ? null : (Number) record.getValue( index );
   }
 }

@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -55,9 +56,10 @@ import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -225,10 +227,24 @@ public class ImportTrippleHelper
     final double z;
     /* observation of profile */
 
+    final HashMap<String, IComponent> components = ProfilUtil.getComponentsFromRecord( point );
+
+    final IComponent cRechtswert = components.get( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = components.get( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent cBreite = components.get( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent cHoehe = components.get( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    final TupleResult owner = point.getOwner();
+    final int iRechtswert = owner.indexOf( cRechtswert );
+    final int iHochwert = owner.indexOf( cHochwert );
+    final int iBreite = owner.indexOf( cBreite );
+    final int iHoehe = owner.indexOf( cHoehe );
+
     if( tokenizer.hasMoreElements() )
     {
       x = Double.parseDouble( tokenizer.nextToken() );
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), x );
+
+      point.setValue( iRechtswert, x );
     }
     else
       return false;
@@ -236,7 +252,7 @@ public class ImportTrippleHelper
     if( tokenizer.hasMoreElements() )
     {
       y = Double.parseDouble( tokenizer.nextToken() );
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOCHWERT ), y );
+      point.setValue( iHochwert, y );
     }
     else
       return false;
@@ -244,7 +260,7 @@ public class ImportTrippleHelper
     if( tokenizer.hasMoreElements() )
     {
       z = Double.parseDouble( tokenizer.nextToken() );
-      point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_HOEHE ), z );
+      point.setValue( iHoehe, z );
     }
     else
       return false;
@@ -256,7 +272,7 @@ public class ImportTrippleHelper
     else
       width = 0;
 
-    point.setValue( ProfilObsHelper.getPropertyFromId( point, IWspmConstants.POINT_PROPERTY_BREITE ), width );
+    point.setValue( iBreite, width );
 
     return true;
   }
@@ -273,13 +289,14 @@ public class ImportTrippleHelper
     final GeometryFactory factory = new GeometryFactory();
 
     /* get the segment length of the already imported profile points */
-    distance = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( profilPointList.get( profilPointList.size() - 1 ), IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final IRecord last = profilPointList.get( profilPointList.size() - 1 );
+    distance = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE,last  );
 
     /* add the segment length of the segment defined by the last imported profile point and the new to add profile point */
-    final double x1 = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( profilPointList.get( profilPointList.size() - 1 ), IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-    final double y1 = (Double) profilPointList.get( profilPointList.size() - 1 ).getValue( ProfilObsHelper.getPropertyFromId( profilPointList.get( profilPointList.size() - 1 ), IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
-    final double x2 = (Double) profilPoint.getValue( ProfilObsHelper.getPropertyFromId( profilPoint, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-    final double y2 = (Double) profilPoint.getValue( ProfilObsHelper.getPropertyFromId( profilPoint, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, last );
+    final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, last );
+    final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, profilPoint );
+    final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, profilPoint );
 
     final Coordinate coordinates1 = new Coordinate( x1, y1 );
     final Coordinate coordinates2 = new Coordinate( x2, y2 );

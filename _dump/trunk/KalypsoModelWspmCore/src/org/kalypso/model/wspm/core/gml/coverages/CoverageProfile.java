@@ -54,11 +54,9 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -71,6 +69,7 @@ import com.vividsolutions.jts.geom.Point;
  * This class should help handling coverages and profiles.
  * 
  * @author Holger Albert
+ * @author kimwerner
  */
 public class CoverageProfile
 {
@@ -181,10 +180,26 @@ public class CoverageProfile
     IProfil profile = ProfilFactory.createProfil( m_type );
 
     /* The needed components. */
-    IComponent cRechtswert = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    IComponent cHochwert = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    IComponent cBreite = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_BREITE );
-    IComponent cHoehe = ProfilObsHelper.getPropertyFromId( profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+    IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    IComponent cHochwert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    IComponent cBreite = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    IComponent cHoehe = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+
+    /* add components if necessary */
+    if( !profile.hasPointProperty( cRechtswert ) )
+      profile.addPointProperty( cRechtswert );
+    if( !profile.hasPointProperty( cHochwert ) )
+      profile.addPointProperty( cHochwert );
+    if( !profile.hasPointProperty( cBreite ) )
+      profile.addPointProperty( cBreite );
+    if( !profile.hasPointProperty( cHoehe ) )
+      profile.addPointProperty( cHoehe );
+
+    /* get index for component */
+    final int iRechtswert = profile.indexOfProperty( cRechtswert );
+    final int iHochwert = profile.indexOfProperty( cHochwert );
+    final int iBreite = profile.indexOfProperty( cBreite );
+    final int iHoehe = profile.indexOfProperty( cHoehe );
 
     /* Iterate over all points in the curve. */
     Iterator<Entry<Double, Point>> iterator = points.entrySet().iterator();
@@ -206,7 +221,7 @@ public class CoverageProfile
       if( Double.isNaN( value ) )
         continue;
 
-      /* All neccessary values. */
+      /* All necessary values. */
       double rechtswert = coordinate.x;
       double hochwert = coordinate.y;
       double breite = distance;
@@ -215,15 +230,13 @@ public class CoverageProfile
       /* Create a new profile point. */
       IRecord profilePoint = profile.createProfilPoint();
 
-      final TupleResult owner = profilePoint.getOwner();
-
       /* Add geo values. */
-      profilePoint.setValue( owner.indexOfComponent( cRechtswert ), rechtswert );
-      profilePoint.setValue( owner.indexOfComponent( cHochwert ), hochwert );
+      profilePoint.setValue( iRechtswert, rechtswert );
+      profilePoint.setValue( iHochwert, hochwert );
 
       /* Add length section values. */
-      profilePoint.setValue( owner.indexOfComponent( cBreite ), breite );
-      profilePoint.setValue( owner.indexOfComponent( cHoehe ), hoehe );
+      profilePoint.setValue( iBreite, breite );
+      profilePoint.setValue( iHoehe, hoehe );
 
       /* Add the new point to the profile. */
       profile.addPoint( profilePoint );

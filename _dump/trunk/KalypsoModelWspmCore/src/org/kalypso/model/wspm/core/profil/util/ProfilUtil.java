@@ -70,13 +70,38 @@ import com.vividsolutions.jts.geom.LineString;
 public class ProfilUtil
 {
   /**
-   * @return the DoubleValues of each point for this pointProperty in the correct order
+   * @return the values of each point for this pointProperty in the correct order
    */
   public static Object[] getValuesFor( final IProfil profil, final IComponent pointProperty )
   {
     final IRecord[] points = profil.getPoints();
     final Object[] values = new Object[points.length];
     final int iProp = profil.indexOfProperty( pointProperty );
+    if( iProp < 0 )
+      return values;
+    int i = 0;
+
+    for( final IRecord point : points )
+    {
+      final Object value = point.getValue( iProp );
+      if( value == null )
+        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$
+      values[i] = value;
+      i++;
+    }
+    return values;
+  }
+
+  /**
+   * @return the DoubleValues of each point for this pointProperty in the correct order
+   */
+  public static Object[] getValuesFor( final IRecord[] points, final IComponent pointProperty )
+  {
+    if( points == null || points.length < 1 )
+      return new Object[0];
+    final TupleResult owner = points[0].getOwner();
+    final Object[] values = new Object[points.length];
+    final int iProp = owner.indexOfComponent( pointProperty );
     if( iProp < 0 )
       return values;
     int i = 0;
@@ -248,7 +273,14 @@ public class ProfilUtil
       propHash.put( component.getId(), component );
     return propHash;
   }
-
+  public final static HashMap<String, IComponent> getComponentsFromRecord( final IRecord record )
+  {
+    final HashMap<String, IComponent> propHash = new HashMap<String, IComponent>();
+    final TupleResult owner = record.getOwner();
+    for( final IComponent component : owner.getComponents())
+      propHash.put( component.getId(), component );
+    return propHash;
+  }
   public static final IRecord splitSegment( final IProfil profile, final IRecord startPoint, final IRecord endPoint )
   {
     if( startPoint == null || endPoint == null )

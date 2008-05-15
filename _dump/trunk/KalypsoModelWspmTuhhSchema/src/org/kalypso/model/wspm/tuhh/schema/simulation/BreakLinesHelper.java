@@ -55,7 +55,6 @@ import java.util.TreeMap;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
@@ -72,6 +71,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -105,7 +105,7 @@ public class BreakLinesHelper implements IWspmConstants
     if( reachProfileSegments.length > 0 )
     {
       final GMLWorkspace triangleWorkspace = FeatureFactory.createGMLWorkspace( new QName( NS_WSPMCOMMONS, "TriangulatedSurfaceFeature" ), tinFile.toURL(), null );
-      final String defaultCrs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( defaultCrs );
       final Feature triangleFeature = triangleWorkspace.getRootFeature();
       triangleFeature.setProperty( new QName( NS_WSPMCOMMONS, "triangulatedSurfaceMember" ), surface );
@@ -192,7 +192,7 @@ public class BreakLinesHelper implements IWspmConstants
 
     final Map<Double, Double> wspMap = new TreeMap<Double, Double>();
     for( final IRecord record : result )
-      wspMap.put( ((BigDecimal) record.getValue( statComponent )).doubleValue(), ((BigDecimal) record.getValue( wspComp )).doubleValue() );
+      wspMap.put( ((BigDecimal) record.getValue( result.indexOf( statComponent ) )).doubleValue(), ((BigDecimal) record.getValue( result.indexOf( wspComp ) )).doubleValue() );
     return wspMap;
   }
 

@@ -73,7 +73,7 @@ public class AddPercentValueOperator implements IPointPropertyCalculator
 
         if( result.hasComponent( property ) )
         {
-          final Double oldValue = (Double) point.getValue( property );
+          final Double oldValue = (Double) point.getValue( result.indexOf( property ));
           final double newValue = oldValue * operand;
           changes.add( new PointPropertyEdit( point, property, newValue ) );
         }

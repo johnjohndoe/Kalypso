@@ -210,7 +210,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, bp.getId() );
       result.addComponent( component );
       final Object value = building.getValue( component );
-      record.setValue( component, value );
+      record.setValue( result.indexOf( component), value );
     }
 
     final IObservation<TupleResult> observation = building.getObservation();

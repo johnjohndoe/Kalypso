@@ -59,11 +59,12 @@ public class ProfilPropertyOperation
   {
     for( final IProfil profil : profiles )
     {
+      final int index = profil.indexOfProperty( property );
       for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
-          point.setValue( property, value );
+          point.setValue( index, value );
         }
       }
     }
@@ -73,13 +74,14 @@ public class ProfilPropertyOperation
   {
     for( final IProfil profil : profiles )
     {
+      final int index = profil.indexOfProperty( property );
       for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
-          final Double oldValue = (Double) point.getValue( property );
+          final Double oldValue = (Double) point.getValue( index );
           final Double newValue = oldValue * value;
-          point.setValue( property, newValue );
+          point.setValue( index, newValue );
         }
       }
     }
@@ -89,13 +91,14 @@ public class ProfilPropertyOperation
   {
     for( final IProfil profil : profiles )
     {
+      final int index = profil.indexOfProperty( property );
       for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
-          final Double oldValue = (Double) point.getValue( property );
+          final Double oldValue = (Double) point.getValue( index );
           final Double newValue = oldValue + value;
-          point.setValue( property, newValue );
+          point.setValue( index, newValue );
         }
       }
     }

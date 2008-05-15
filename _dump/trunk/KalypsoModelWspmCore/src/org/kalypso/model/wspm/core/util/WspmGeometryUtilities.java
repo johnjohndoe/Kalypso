@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util;
 
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.transformation.GeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -58,7 +58,7 @@ public class WspmGeometryUtilities
   {
     try
     {
-      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       GEO_TRANSFORMER = new GeoTransformer( targetCRS );
     }
     catch( final Exception e )

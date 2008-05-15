@@ -62,8 +62,9 @@ import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
@@ -75,6 +76,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * Helper class to import a DA50 file and apply its values to a list of profiles.
  * 
  * @author Gernot Belger
+ * @author kimwerner
  */
 public class DA50Importer
 {
@@ -161,8 +163,8 @@ public class DA50Importer
 
     final IRecord firstPP = points[0];
     final IRecord lastPP = points[points.length - 1];
-    final double firstBreite = (Double) firstPP.getValue( ProfilObsHelper.getPropertyFromId( firstPP, IWspmConstants.POINT_PROPERTY_BREITE ) );
-    final double lastBreite = (Double) lastPP.getValue( ProfilObsHelper.getPropertyFromId( lastPP, IWspmConstants.POINT_PROPERTY_BREITE ) );
+    final Double firstBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, firstPP );
+    final Double lastBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastPP );
 
     double yOffset = 0;
     if( bRefFirst )
@@ -176,13 +178,21 @@ public class DA50Importer
     final double rwLast = startPos.getX() + yLast * vx;
     final double hwLast = startPos.getY() + yLast * vy;
 
-    profil.addPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
-    profil.addPointProperty( ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT ) );
+    final IComponent cRechtswert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
-    firstPP.setValue( ProfilObsHelper.getPropertyFromId( firstPP, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), rwFirst );
-    firstPP.setValue( ProfilObsHelper.getPropertyFromId( firstPP, IWspmConstants.POINT_PROPERTY_HOCHWERT ), hwFirst );
-    lastPP.setValue( ProfilObsHelper.getPropertyFromId( lastPP, IWspmConstants.POINT_PROPERTY_RECHTSWERT ), rwLast );
-    lastPP.setValue( ProfilObsHelper.getPropertyFromId( lastPP, IWspmConstants.POINT_PROPERTY_HOCHWERT ), hwLast );
+    if( !profil.hasPointProperty( cRechtswert ) )
+      profil.addPointProperty( cRechtswert );
+    if( !profil.hasPointProperty( cHochwert ) )
+      profil.addPointProperty( cHochwert );
+
+    final int iHochwert = profil.indexOfProperty( cHochwert );
+    final int iRechtswert = profil.indexOfProperty( cRechtswert );
+
+    firstPP.setValue( iRechtswert, rwFirst );
+    firstPP.setValue( iHochwert, hwFirst );
+    lastPP.setValue( iRechtswert, rwLast );
+    lastPP.setValue( iHochwert, hwLast );
   }
 
   private static DA50Entry[] readDA50( final LineNumberReader lnr ) throws IOException, CoreException
@@ -262,9 +272,9 @@ public class DA50Importer
 
     public final GM_Point end;
 
-    public DA50Entry( @SuppressWarnings("hiding") //$NON-NLS-1$
-    final double station, @SuppressWarnings("hiding") //$NON-NLS-1$
-    final GM_Point start, @SuppressWarnings("hiding") //$NON-NLS-1$
+    public DA50Entry( @SuppressWarnings("hiding")//$NON-NLS-1$
+    final double station, @SuppressWarnings("hiding")//$NON-NLS-1$
+    final GM_Point start, @SuppressWarnings("hiding")//$NON-NLS-1$
     final GM_Point end )
     {
       this.station = station;

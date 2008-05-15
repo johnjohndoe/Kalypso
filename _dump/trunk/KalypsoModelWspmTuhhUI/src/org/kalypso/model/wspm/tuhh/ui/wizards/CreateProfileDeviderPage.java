@@ -70,7 +70,6 @@ import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
@@ -224,9 +223,8 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final String type = profile.getProfil().getType();
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
-    final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( type );
-
-    String[] markerTypes = markerProvider.getMarkerTypes();
+  
+    final String[] markerTypes = provider.getPointProperties();
     IComponent[] markerComponents = new IComponent[markerTypes.length];
     for( int i = 0; i < markerTypes.length; i++ )
       markerComponents[i] = provider.getPointProperty( markerTypes[i] );
