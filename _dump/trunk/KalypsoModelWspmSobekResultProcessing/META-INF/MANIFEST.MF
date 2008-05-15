@@ -4,10 +4,7 @@ Bundle-Name: KalypsoModelWspmSobekResultProcessing Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.sobek.result.processing
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.model.wspm.sobek.result.processing.Activator
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.kalypso.contribs.eclipsercp,
- org.kalypso.model.wspm.sobek.core,
+Require-Bundle: org.kalypso.model.wspm.sobek.core,
  org.kalypso.jwsdp
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.sobek.result.processing

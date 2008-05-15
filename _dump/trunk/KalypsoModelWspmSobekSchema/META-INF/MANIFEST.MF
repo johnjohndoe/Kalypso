@@ -7,8 +7,6 @@ Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Vendor.0
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypso.model.wspm.sobek.schema.KalypsoModelWspmSobekSchemaPlugin
-Require-Bundle: org.kalypso.contribs.java,
- org.kalypso.deegree,
- org.kalypso.core,
- org.kalypso.model.wspm.sobek.core,
+Require-Bundle: org.kalypso.core,
  org.kalypso.chart.ext.base
+Export-Package: org.kalypso.model.wspm.sobek.schema
