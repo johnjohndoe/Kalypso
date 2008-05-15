@@ -3,9 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.google.earth.export;singleton:=true
 Bundle-Version: 1.0.0
-Require-Bundle: org.kalypso.core,
- org.eclipse.core.resources,
- org.junit4,
+Require-Bundle: org.junit4,
  org.kalypso.ui,
  org.eclipse.core.expressions
 Export-Package: org.kalypso.google.earth.export.constants,

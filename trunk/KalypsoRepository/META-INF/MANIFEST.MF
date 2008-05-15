@@ -11,8 +11,5 @@ Export-Package: org.kalypso.repository,
  org.kalypso.repository.factory,
  org.kalypso.repository.file,
  org.kalypso.repository.service
-Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
- org.kalypso.commons;visibility:=reexport,
- org.kalypso.jwsdp,
- org.kalypso.contribs.java,
+Require-Bundle: org.kalypso.jwsdp,
  org.junit
