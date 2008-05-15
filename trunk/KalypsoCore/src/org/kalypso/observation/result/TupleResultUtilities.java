@@ -125,6 +125,7 @@ public class TupleResultUtilities
     {
       return null;
     }
+    final int iComp = result.indexOfComponent(  comp );
     final QName valueTypeName = comp.getValueTypeName();
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
@@ -132,7 +133,7 @@ public class TupleResultUtilities
       final List<Boolean> values = new ArrayList<Boolean>();
       for( final IRecord record : result )
       {
-        values.add( (Boolean) record.getValue( comp ) );
+        values.add( (Boolean) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -148,7 +149,7 @@ public class TupleResultUtilities
       final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
       for( final IRecord record : result )
       {
-        values.add( (java.lang.Double) record.getValue( comp ) );
+        values.add( (java.lang.Double) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -163,7 +164,7 @@ public class TupleResultUtilities
       final List<Date> values = new ArrayList<Date>();
       for( final IRecord record : result )
       {
-        values.add( (Date) record.getValue( comp ) );
+        values.add( (Date) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -176,7 +177,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (String) record.getValue( comp ) );
+        values.add( (String) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -189,7 +190,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (record.getValue( comp )).toString() );
+        values.add( (record.getValue( iComp )).toString() );
       }
       if( values.size() < 1 )
       {
@@ -213,13 +214,14 @@ public class TupleResultUtilities
       return null;
     }
     final QName valueTypeName = comp.getValueTypeName();
+    final int iComp = result.indexOfComponent(  comp );
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
     {
       final List<Boolean> values = new ArrayList<Boolean>();
       for( final IRecord record : result )
       {
-        values.add( (Boolean) record.getValue( comp ) );
+        values.add( (Boolean) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -235,7 +237,7 @@ public class TupleResultUtilities
       final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
       for( final IRecord record : result )
       {
-        values.add( (java.lang.Double) record.getValue( comp ) );
+        values.add( (java.lang.Double) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -250,7 +252,7 @@ public class TupleResultUtilities
       final List<Date> values = new ArrayList<Date>();
       for( final IRecord record : result )
       {
-        values.add( (Date) record.getValue( comp ) );
+        values.add( (Date) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -263,7 +265,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (String) record.getValue( comp ) );
+        values.add( (String) record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -276,7 +278,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (record.getValue( comp )).toString() );
+        values.add( (record.getValue( iComp )).toString() );
       }
       if( values.size() < 1 )
       {
@@ -326,8 +328,8 @@ public class TupleResultUtilities
 
       for( int i = 0; i < sourceComponents.length; i++ )
       {
-        final Object value = sourceRecord.getValue( sourceComponents[i] );
-        targetRecord.setValue( targetComponents[i], value );
+        final Object value = sourceRecord.getValue( sourceResult.indexOfComponent(  sourceComponents[i] ));
+        targetRecord.setValue( targetResult.indexOfComponent( targetComponents[i]), value );
       }
 
       targetResult.add( targetRecord );
