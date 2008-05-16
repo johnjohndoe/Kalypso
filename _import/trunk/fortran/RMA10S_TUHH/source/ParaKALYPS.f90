@@ -1,4 +1,4 @@
-!     Last change:  WP   24 Apr 2008   10:09 am
+!     Last change:  NIS  14 May 2008    6:22 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -88,7 +88,7 @@ INTEGER :: WriteNodeBlock     ! (==1: Writes the nodal values into output.out fi
 !nis,jan08: new variables for profile interpolation
 INTEGER, ALLOCATABLE :: IntPolNo (:), NeighProf (:, :), IntPolElts (:, :)
 INTEGER              :: maxIntPolElts
-LOGICAL, ALLOCATABLE :: IntPolProf (:)
+LOGICAL, ALLOCATABLE :: IntPolProf (:), IsPolynomNode (:)
 INTEGER              :: statElSz, statNoSz, NodesToIntPol
 REAL (KIND = 8), ALLOCATABLE :: kmWeight(:)
 

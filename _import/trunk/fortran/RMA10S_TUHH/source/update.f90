@@ -1,4 +1,4 @@
-!     Last change:  NIS  22 Apr 2008   11:44 pm
+!     Last change:  NIS  15 May 2008   10:48 pm
 !     Last change:  NIS  22 Apr 2008   11:02 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
@@ -204,7 +204,7 @@ UpdateDOFs: DO KK = 1, NDFM
 
     !TOASK
     !nis,sep07: If node is deactivated because element is deactivated, it might still have invalid WSLL, therefore refresh that WSLL
-    IF(vel(1,j) == 0.0 .AND. vel(2,j) == 0.0) then
+    IF (vel (1, j) == 0.0 .AND. vel (2, j) == 0.0) then
       WSLL (J) = ado(j) + 0.0
     endif
 
@@ -303,26 +303,39 @@ UpdateDOFs: DO KK = 1, NDFM
           VEL (K,     J) = VEL (K, J)     + EX * COS (ALFA (J))
         ENDIF
 
-      !UPDATE WATER DEPTH CONSIDERING UNDER CIRCUMSTANCES THE MARSH ALGORITHM
-      !**********************************************************************
+      !UPDATE WATER DEPTH CONSIDERING UNDER CIRCUMSTANCES OF THE MARSH ALGORITHM
+      !*************************************************************************
       ELSEIF (K == 3) then
 
 !IPK APR05
-        H1 = VEL (3, J)
-        CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
+
 
         !TOASK: What has the no transformation option to do with the effective porosity used in the marsh approach
-        IF (inotr == 1) THEN
+        !IF (inotr == 1) THEN
+        if (idnopt < 0 .and. (.not. IsPolynomNode (J))) then
+          !calculate the porosity of the Marsh range; although it should be already rmembered
+          H1 = VEL (3, J)
+          CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
+
           !nis,comment: efpor is updated for every node by usage of amf.subroutine
           EX = EX * EFPOR
         ENDIF
+
+        !calculate the changes to be applied on the water stage
         VN = VEL (3, J) + EX
+
 
 !
 !.......Check sign of depth change
 !
-        IF (AKP (J) > 0.9999) THEN
+        !nis,com: akp is the effective porosity; this value is set to 1.0 in Marsh.subroutine, if Marsh option is
+        !         not in use
+        !nis,may08: Make sure, that the node is not fetched into the Marsh-Algorithm, if it is a 1D node with polnyomial approach
+        !IF (AKP (J) > 0.9999) THEN
+        IF (AKP (J) > 0.9999 .or. IsPolynomNode (J)) THEN
           VEL (3, J) = VN
+
+        !if Marsh option is acitve
         ELSE
 !
 !.......Test for results passing through transition points
@@ -352,23 +365,34 @@ UpdateDOFs: DO KK = 1, NDFM
       !calculate the changes for the water depths, average as well as maximum changes, considering the transformations from the marsh algorithm
       !made before the following lines
       horg = hel (j)
-      vt = vel (3, j)
-      CALL AMF (HEL (J), VT, AKP (J), ADT (J), ADB (J), D1, D2, 0)
-      aex = abs (hel (j) - horg)
-      IF (AEX > ABS (EMAX (K))) THEN
-        emax (k) = hel (j) - horg
+      !nis,may08: differ between application of Marsh approach
+      if (idnopt == 0 .or. IsPolynomNode (J)) then
+        hel (j) = VEL (3, J)
+      else
+        vt = vel (3, j)
+        CALL AMF (HEL (J), VT, AKP (J), ADT (J), ADB (J), D1, D2, 0)
+      end if
+
+      !calculate the changes in water depth
+      aex = hel (j) - horg
+      !check whehter changes are more than current maximum changes until now
+      IF (ABS(AEX) > ABS (EMAX (K))) THEN
+
+        !remember the maximum depth changes and the node where it applies
+        emax (k) = aex
         NMX (K) = J
       ENDIF
 
 !IPK APR01 UPDATE WATER SURFACE ELEVATION
 
-      IF (IDNOPT /= 0) THEN
+      !calculate the water stage
+      IF (IDNOPT == 0 .or. IsPolynomNode (J)) THEN
+        WSLL (J) = VEL (3, J) + AO (J)
+      ELSE
         HS = VEL (3, J)
         ISWT = 0
         CALL AMF (H, HS, AKP (J), ADT (J), ADB(J), AME1, D2, ISWT)
         WSLL (J) = H + ADO (J)
-      ELSE
-        WSLL (J) = VEL (3, J) + AO (J)
       ENDIF
 
 !IPK MAY02 ALLOW FOR ICK=7

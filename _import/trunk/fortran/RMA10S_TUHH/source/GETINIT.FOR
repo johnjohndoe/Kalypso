@@ -1,4 +1,4 @@
-C     Last change:  WP   24 Apr 2008   11:58 am
+C     Last change:  NIS  14 May 2008    5:07 pm
 CIPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 cipk  last update FEB 11 2004  add IOV option
 cipk  last update sEP 30 2002 ADD READ OF ICETHICKNESS FROM RESTART FILE
@@ -179,13 +179,6 @@ cipk MAY96 decode TET
 
 cipk nov02 set bed to input level
       do N=1,npx
-
-      !nis,jun07: This must be something for testing
-      !TODO: delete this stuff
-      IF(N .EQ. 2150  .OR.  N .EQ. 2359  .OR.  N .EQ. 1836) THEN
-        AAA=0
-      ENDIF
-      !-
 
 CIPK APR03
         VAAA=VEL(3,N)

@@ -1,4 +1,4 @@
-!     Last change:  NIS  18 Apr 2008   10:28 am
+!     Last change:  NIS  15 May 2008    8:16 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1245,6 +1245,8 @@ reading: do
       IF (KSWIT /= 1) then
         linestat = 0
         read (linie, *, iostat = linestat) id_local, i, j, qgef(i), (qpoly(j, i, k), k = 0, 12)
+        !remember, that the node is a 1D polynomial approach node
+        if (.not. IsPolynomNode (i)) IsPolynomNode (i) = .true.
       endif
     end if
     if (linie(1:3) .eq. 'ALP') then
@@ -2161,7 +2163,8 @@ ENDDO
 
 
 call InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
-                    & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, MaxLT, TransLines)
+                    & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, &
+                    & MaxLT, TransLines, IsPolynomNode)
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,mar06: COMMENTS
@@ -2740,18 +2743,19 @@ END SUBROUTINE start_node
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 subroutine InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, MaxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
                           & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, MaxLT, &
-                          & TransLines )
+                          & TransLines, IsPolynomNode)
+
 implicit none
-INTEGER, intent (IN) :: statElSz, statNoSz, MaxP, MaxE, MaxLT, MaxIntPolElts
-integer, intent (in) :: IntPolNo (1: MaxE)
+INTEGER, intent (IN)    :: statElSz, statNoSz, MaxP, MaxE, MaxLT, MaxIntPolElts
+integer, intent (in)    :: IntPolNo (1: MaxE)
 INTEGER, intent (INOUT) :: IntPolElts (1: MaxE, 1: MaxIntPolElts)
 integer, intent (inout) :: NeighProf (1: MaxP, 1: 2)
 integer, intent (inout) :: ncorn (MaxE)
 integer, intent (inout) :: nop (1: MaxE, 1: 8), imat (1: MaxE)
-real, intent (inout) :: cord (1: MaxP, 1: 2)
-REAL, intent (inout) :: ao (1: MaxP), kmx (1: MaxP), kmWeight (1: MaxP)
-REAL, INTENT (INOUT) :: qgef (1: MaxP)
-LOGICAL, INTENT (INOUT) :: IntPolProf (1: MaxP), TransitionElement (1: MaxE)
+real, intent (inout)    :: cord (1: MaxP, 1: 2)
+REAL, intent (inout)    :: ao (1: MaxP), kmx (1: MaxP), kmWeight (1: MaxP)
+REAL, INTENT (INOUT)    :: qgef (1: MaxP)
+LOGICAL, INTENT (INOUT) :: IntPolProf (1: MaxP), IsPolynomNode (1: MaxP), TransitionElement (1: MaxE)
 INTEGER, INTENT (INOUT) :: TransLines (1: MaxLT, 1: 3)
 !
 !*********local ones***********
@@ -2786,7 +2790,7 @@ do i = 1, statElSz
         nop (i, 3) = NewNode
 
         call GenNewNode (NewNode, i, origx, origy, nop(i, 1), nop (i, 4), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef(nop(i, 1)), qgef (nop (i, 4)), qgef (NewNode))
+                      &  qgef(nop(i, 1)), qgef (nop (i, 4)), qgef (NewNode), IsPolynomNode (NewNode))
         cord (nop (i, 3), 1) = cord (nop (i, 1), 1) + DX * j
         cord (nop (i, 3), 2) = cord (nop (i, 1), 2) + DY * j
         ao (NewNode) = ao (nop (i, 1)) + DH
@@ -2798,7 +2802,7 @@ do i = 1, statElSz
         end if
         !recalculate the position of the midside node at first element
         call GenNewNode (nop (i, 2), i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (nop (i, 2), :), IntPolProf (nop (i, 2)), &
-                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (nop (i, 2)))
+                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (nop (i, 2)), IsPolynomNode (nop (i, 2)))
         cord (nop (i, 2), 1) = 0.5 * (cord (nop (i, 1), 1) + cord (nop (i, 3), 1))
         cord (nop (i, 2), 2) = 0.5 * (cord (nop (i, 1), 2) + cord (nop (i, 3), 2))
         ao (nop (i, 2)) = 0.5 * (ao (nop (i, 1)) + ao (nop (i, 3)))
@@ -2819,7 +2823,7 @@ do i = 1, statElSz
         NewNode = NewNode + 1
         nop (NewElt, 3) = NewNode
         call GenNewNode (NewNode, i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNode))
+                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNode), IsPolynomNode (NewNode))
         cord (NewNode, 1) = cord (nop (i, 1), 1) + DX * j
         cord (NewNode, 2) = cord (nop (i, 1), 2) + DY * j
         ao (NewNode) = ao (nop (i, 1)) + DH * j
@@ -2833,7 +2837,7 @@ do i = 1, statElSz
         NewNode = NewNode + 1
         nop (NewElt, 2) = NewNode
         call GenNewNode (NewNode, i, origx, origy, nop (i, 1), nop (i, 4), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNode))
+                      &  qgef (nop (i, 1)), qgef (nop (i, 4)), qgef (NewNode), IsPolynomNode (NewNode))
         cord (nop (NewElt, 2), 1) = 0.5 * (cord (nop (NewElt, 1), 1) + cord (nop (NewElt, 3), 1))
         cord (nop (NewElt, 2), 2) = 0.5 * (cord (nop (NewElt, 1), 2) + cord (nop (NewElt, 3), 2))
         ao (NewNode) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
@@ -2870,7 +2874,7 @@ do i = 1, statElSz
         NewNode = NewNode + 1
         nop (NewElt, 2) = NewNode
         call GenNewNode (NewNode, i, origx, origy, nop (i, 1), nop (NewElt, 3), NeighProf (NewNode, :), IntPolProf (NewNode), &
-                      &  qgef (nop (i, 1)), qgef (nop (NewElt, 3)), qgef (NewNode))
+                      &  qgef (nop (i, 1)), qgef (nop (NewElt, 3)), qgef (NewNode), IsPolynomNode (NewNode))
         cord (NewNode, 1) = 0.5 * (cord (nop (NewElt, 1), 1) + cord (nop (NewElt, 3), 1))
         cord (NewNode, 2) = 0.5 * (cord (nop (NewElt, 1), 2) + cord (nop (NewElt, 3), 2))
         ao (NewNode) = 0.5 * (ao (nop (NewElt, 1)) + ao (nop (NewElt, 3)))
@@ -2887,16 +2891,21 @@ end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-subroutine GenNewNode (NewNode, OrigElt, cordx, cordy, neighbour1, neighbour2, NewNeighProf, LogIntPolProf, qgef1, qgef2, qgefOut)
+subroutine GenNewNode (NewNode, OrigElt, cordx, cordy, neighbour1, neighbour2, NewNeighProf, LogIntPolProf, qgef1, qgef2, qgefOut, &
+&                      IsPolynomNode)
 implicit none
-integer, intent (in)  :: NewNode
-integer, intent (out) :: NewNeighProf (1:2)
-INTEGER, INTENT (IN)  :: OrigElt
+
+!input
+integer, intent (in)          :: NewNode
+INTEGER, INTENT (IN)          :: OrigElt
 REAL (KIND = 8), INTENT (IN)  :: cordx, cordy
 REAL (KIND = 8), INTENT (IN)  :: qgef1, qgef2
+INTEGER, INTENT (IN)          :: neighbour1, neighbour2
+
+!output
+integer, intent (out)         :: NewNeighProf (1:2)
 REAL (KIND = 8), INTENT (OUT) :: qgefOut
-INTEGER, INTENT (IN)  :: neighbour1, neighbour2
-Logical, intent (out) :: LogIntPolProf
+Logical, intent (out)         :: LogIntPolProf, IsPolynomNode
 
 NewNeighProf(1) = neighbour1
 NewNeighProf(2) = neighbour2
@@ -2908,6 +2917,7 @@ else
   qgefOut = qgef1
 end if
 LogIntPolProf = .true.
+IsPolynomNode = .true.
 END subroutine
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

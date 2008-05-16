@@ -1,4 +1,4 @@
-C     Last change:  WP   10 Apr 2008    3:07 pm
+C     Last change:  NIS  15 May 2008    8:35 pm
 cipk  last update FEB 26 2007 REFINE TEST FOR SUBMERGENCE
 cipk  last update nov 28 2006 allow for 1-d control structures
 cipk  last update JUNE 22 2005 ADD TO rma10
@@ -15,7 +15,7 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 *-
 *...... Test for and set submerged weir elements
 *-
-      if(maxn .eq. 1) then
+      if(maxn == 1) then
         DO N=1,NP
           IF (NFIX (N) / 100 .EQ. 12) THEN
             ISUBM(N)=0
@@ -25,7 +25,7 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 C
 C     This indicates a boundary node
 C
-            ISUBM(N)=0
+            ISUBM (N) = 0
           ELSE
             ISUBM(N)=-1
           ENDIF
@@ -48,25 +48,32 @@ CIPK JUN05
 cipk outnov06           IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
 cipk dec00
 
-            !this is a weir or a control structure defined by tabular data
-            if(njt(imat(nn)-900) .eq. 10) then
+            !tabular data control structure element
+            if (njt (imat (nn) - 900) == 10) then
 cipk outnov06              if(maxn .ne. 1) go to 332
 cipk outnov06              ISUBMEL(nn)=0
 cipk jul04
-              ncn=ncorn(nn)
-       	      DO K=1,NCN,2
-                IF(TRANSEL(NOP(NN,K)) .LT. -9000.) THEN
-                  TRANSEL(NOP(NN,K))=10000.
-                  WHGT(NOP(NN,K))=10000.
+              !number of corner nodes
+              ncn = ncorn (nn)
+              !only for corner nodes
+       	      DO K = 1, NCN, 2
+                IF (TRANSEL (NOP (NN, K)) < -9000.) THEN
+                  TRANSEL (NOP (NN, K)) = 10000.
+                  WHGT (NOP (NN, K)) = 10000.
                 ENDIF
               ENDDO
 CIPK nov06
-              IF(NCTREF(IMAT(NN)) .EQ. 0) THEN
-                if(maxn .ne. 1) go to 332
-                ISUBMEL(nn)=0
+              !NCTREF :: nctref is weir number in definition file
+              IF (NCTREF (IMAT (NN)) == 0) THEN
+                !do this only in the first iteration
+                if (maxn /= 1) go to 332
+                ISUBMEL (nn) = 0
 cipk jul04
-                ncn=ncorn(nn)
-                IF(NCN .EQ. 8) THEN
+                ncn = ncorn (nn)
+
+                !for 2D control structure elements with tabular data
+                !***************************************************
+                IF (NCN == 8) THEN
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,1),WSLL(NOP(NN,1)),WSLL(NOP(NN,7)),
      +            WHGT(NOP(NN,1)),WHGT(NOP(NN,7)),TRANSEL(NOP(NN,1))
@@ -162,11 +169,15 @@ cipk oct00
                   ISUBMEL(nn)=1
 CIPK NOV06 ISUBMEL =1 MEANS SUBMERGED
                   GO TO 332
+
+                !for 1D control structure elements with tabular data
+                !***************************************************
                 ELSE
 
                   WRITE(75,6001) 
      +            NN,N,NOP(NN,1),WSLL(NOP(NN,1)),WSLL(NOP(NN,3)),
      +            WHGT(NOP(NN,1)),WHGT(NOP(NN,3)),TRANSEL(NOP(NN,1))
+                  call FLUSH (75)
 
 CIPK JUL04            IF(WSLL(NOP(NN,1)) .LT. WHGT(NOP(NN,1))+.35) THEN
                   IF(WSLL(NOP(NN,1)) .LT. TRANSEL(NOP(NN,1))) THEN
@@ -242,7 +253,7 @@ c             WRITE(75,*) 'SUBSET2',NN,ISUBMEL(NN),ISUBM(24)
 
                 if(isubmel(nn) .eq. 1) then
                   write(75,*) 'At step',icyc,' element ',nn,' submerged'
-                elseif(WSLL(NOP(NN,1)) .GT. WHGT(NOP(NN,1))  .OR.
+                elseif (WSLL (NOP (NN, 1)) .GT. WHGT(NOP(NN,1))  .OR.
      +            WSLL(NOP(NN,3)) .GT. WHGT(NOP(NN,3))  .OR.
      +            WSLL(NOP(NN,5)) .GT. WHGT(NOP(NN,5))  .OR.
      +            WSLL(NOP(NN,7)) .GT. WHGT(NOP(NN,7)))  THEN

@@ -1,3 +1,4 @@
+C     Last change:  NIS  14 May 2008    6:48 pm
 CIPK LAST UPDATE June 06 2006 add mass output and refine compuatation of mass laid down
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  last update MAY 02 2003 turn off bed activity for selected element types
@@ -206,17 +207,16 @@ CIPK MAY02 UPDATE BED ELEVATION
 	!  Added conditional if block
 	!
 !      Updatebed = 0.0
-!	If (Update bed.NE.0.0) Then
+!	If (Updatebed /= 0.0) Then
       
       DO N=1,NP
-	  if(n .eq. 701) then
-	    aaa=0
-	  endif
-	  DEP=VEL(3,N)
-	  DIFF=ELEVB(N)-AO(N)
-	  AO(N)=ELEVB(N)
+
+        DEP=VEL(3,N)
+        DIFF=ELEVB(N)-AO(N)
+        AO(N)=ELEVB(N)
         ADO(N)=ADO(N)+DIFF
         HEL(N)=WSLL(N)-ADO(N)
+        !TODO: Differ between Marsh and not-Marsh as well as dimensions; it shouldn't be applied for 1D Polynomial
         CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
         VEL(3,N)=HTP
 	  RATIO=vel(3,n)/(vel(3,n)+diff)

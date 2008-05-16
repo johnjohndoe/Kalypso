@@ -1,4 +1,4 @@
-!Last change:  WP   29 Feb 2008    9:10 am
+!Last change:  NIS  15 May 2008   10:54 pm
 !Last change:  WP    7 Feb 2008    3:42 pm
 SUBROUTINE WTFORM(Q, NCTR, HOW, HUW)
 USE CSVAR
@@ -9,25 +9,26 @@ implicit none
 
 !dummys ins
 REAL (KIND = 8), INTENT (INout)  :: huw, how
-INTEGER, INTENT (IN) :: NCTR
+INTEGER, INTENT (IN)             :: NCTR
 !dummy outs
-REAL (KIND = 8), INTENT (OUT) :: Q
+REAL (KIND = 8), INTENT (OUT)    :: Q
 
 !general locals
-INTEGER :: nrhi, nchi
-INTEGER :: i, j, k
+INTEGER         :: nrhi, nchi
+INTEGER         :: i, j, k
 REAL (KIND = 8) :: Diff, dummy
 
 !locals for water stage method
 REAL (KIND = 8) :: Q11, Q12, Q21, Q22, QRH, QRL
 REAL (KIND = 8) :: WTC, WTR
+
 !locals for energy method with linear functions
-REAL (KIND = 8) :: qfact, huw_tmp
 REAL (KIND = 8), ALLOCATABLE :: valuesOnLine (:)
+REAL (KIND = 8) :: qfact, huw_tmp
 REAL (KIND = 8) :: CalcPolynomial2, HUPP, HLOW
 REAL (KIND = 8) :: A(0:1)
-INTEGER :: noOfOutQs
-INTEGER :: Pos, FindPolynom
+INTEGER         :: noOfOutQs
+INTEGER         :: Pos, FindPolynom
 
 
 !locals for energy method with IDW
@@ -106,6 +107,7 @@ if (UseEnergyCstrc == 0) then
 
 
 !energy slope with partly linear equations
+!*****************************************
 ELSEIF (UseEnergyCstrc == 1) then
 
   !very special case
@@ -114,14 +116,7 @@ ELSEIF (UseEnergyCstrc == 1) then
     return
   end if
 
-  !TODO
-  !testing
-  !if (huw > how) then
-  !  WRITE(*,*) 'Unterwasser höher Oberwasser'
-  !  pause
-  !end if
-  !testing-
-
+  !if flow is turning around: introduce direction factor and switch water stages
   if (how < huw) then
     QFact = -1.0
     huw_tmp = huw
@@ -134,22 +129,28 @@ ELSEIF (UseEnergyCstrc == 1) then
   !get the number of entries in array
   noOfOutQs = UBOUND (cstrcRange, 3)
 
-  !testing
-  !WRITE(*,*) noOfOutQs
-  !pause
-  !testing-
+  !valuesOnLine
+  !
+  !  how
+  !  |
+  !  |    |    Q1  Q2
+  !  |    |    /   /
+  !  |        /   /
+  !  | ------/   /
+  !  | ---------/
+  !  |
+  !  |    |
+  !  |    | (valuesOnLine)
+  !  |    |
+  !  |
+  !  |-------------------->huw
+
+  !valuesOnLine :: valuesOnLine are giving all the how values from the Q-curves corresponding to huw and how
 
   ALLOCATE (valuesOnLine (1: noOfOutQs))
 
   do i = 1, noOfOutQs
     Pos = findPolynom (cstrcRange (nctr, i, :), huw, noOfOutQs)
-    !testing
-    !if (huw > how) then
-    !  WRITE(*,*) huw, (cstrcRange(nctr, i, j), j=1, noOfOutQs)
-    !  WRITE(*,*) Pos
-    !  pause
-    !endif
-    !testing-
     if (Pos > noOfOutQs) then
       findLast: do j = 1, noOfOutQs
 

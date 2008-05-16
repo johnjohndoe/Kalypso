@@ -1,4 +1,4 @@
-C     Last change:  WP   25 Oct 2007   10:35 am
+C     Last change:  NIS  15 May 2008    8:55 pm
 CIPK  LAST UPDATE JUNE 27 2005 ADD CONTROL STRUCTURES
 cipk  last update sep20 2001 revise test for NSPL to allow for NSPL=2
 CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
@@ -238,14 +238,6 @@ CIPK JUN05  SETUP FOR SUBMERGENGE
       ENDIF
 
 C-
-      !nis,feb07,testing
-      !do i = 1, 379
-      !  WRITE(*,*) 'node: ', i, nfix(i), alfa(i), 'test Winkel'
-      !  !if (nfix(i)  == 0 .and. nfix(i-1) /= 0) pause
-      !enddo
-      !pause
-      !-
-
       DO 701 N=1,NPM
 
         NFIX(N)=NFIXK(N)

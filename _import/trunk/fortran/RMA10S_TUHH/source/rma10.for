@@ -1,4 +1,4 @@
-C     Last change:  WP    5 May 2008    1:42 pm
+C     Last change:  NIS  15 May 2008    9:23 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -108,12 +108,6 @@ c      IR1MAX=MEQ
 !nis,jun07: Moving this subroutine to a point before initl is called (so from rma10.mainroutine, nbs has no value, what leads to errors while calling zvrs from file.subroutine)
 C      CALL FILE(1)
 
-      !INCSTR = unit no. for flow controller data (control structure data); (line INCSTR)
-      !INTIMS = unit no. for time series data (line INTIMS)
-CIPK JUN05  Input control structure data
-      IF (INCSTR == 20) CALL INCSTRC
-CIPK JUN05  Input time series data
-      IF (INTIMS == 22) CALL INTIMES
 
 
       !ND1   = ???
@@ -143,6 +137,14 @@ C-
 C......INPUT GEOMETRY ETC
 C-
       CALL INPUT (IBIN)
+
+      !INCSTR = unit no. for flow controller data (control structure data); (line INCSTR)
+      !INTIMS = unit no. for time series data (line INTIMS)
+CIPK JUN05  Input control structure data
+      IF (INCSTR == 20) CALL INCSTRC
+CIPK JUN05  Input time series data
+      IF (INTIMS == 22) CALL INTIMES
+
 
       !beiauto = switch for autoconverge usage; Why is it a type real switch and not integer?
       !EFa jun07, output for autoconverge

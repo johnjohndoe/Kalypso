@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Feb 2008    1:05 pm
+C     Last change:  NIS  15 May 2008    8:11 pm
       MODULE BLK10MOD
 
 CIPK AUG05      INCLUDE 'PARAM.COM'
@@ -184,6 +184,11 @@ C-
      +             ,DRAGX(:),DRAGY(:),IMAN(:),HMAN(:,:)
      +             ,MANTAB(:,:,:)
     
+      !NCTREF :: reference number of the weir type; especially control structures in 2D can consist of
+      !          more than one element with identical material type; material type is referencing to
+      !          weir data in tabular data file
+
+
 C     LAYER VARIABLE
       ALLOCATABLE  THL(:),THLAY(:,:)
 

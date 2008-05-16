@@ -1,3 +1,4 @@
+C     Last change:  NIS  14 May 2008    6:48 pm
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE DEC 22 2005 MAKE SURE RHOBS IS DEFINED
       SUBROUTINE SLUMPIT
@@ -128,15 +129,17 @@ CIPK MAY02 UPDATE BED ELEVATION
 
         IF(N .EQ. 141) THEN
 	  AAA=0
-	  ENDIF
-	  DIFF=ELEVB(N)-AO(N)
-	  IF(DIFF .NE. 0.) THEN
-  	    AO(N)=ELEVB(N)
-	    ADO(N)=ADO(N)+DIFF
+	ENDIF
+
+        !TODO: Differ between Marsh and not-Marsh as well as dimensions; it shouldn't be applied for 1D Polynomial
+	DIFF=ELEVB(N)-AO(N)
+	IF(DIFF .NE. 0.) THEN
+  	  AO(N)=ELEVB(N)
+	  ADO(N)=ADO(N)+DIFF
           HEL(N)=WSLL(N)-ADO(N)
           CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-	    VEL(3,N)=HTP
-	  ENDIF
+	  VEL(3,N)=HTP
+	ENDIF
 
 	ENDDO
 

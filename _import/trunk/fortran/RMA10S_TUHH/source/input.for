@@ -1,4 +1,4 @@
-C     Last change:  WP   24 Apr 2008   10:42 am
+C     Last change:  NIS  15 May 2008    8:54 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -1460,20 +1460,8 @@ cipk jan99 set directions
            n1=nop(n,1)
            if(ndep(n1) .gt. 1) then
 
-!nis,may07
-!Add midside node for polynom approach
-!             !EFa Nov06, gesonderte Richtungsberechnung für 1D-Techke-Elemente
-!             !nis,feb07: Allow for numbered FFF midsides, although this code is not correct!!!
-!             !if (nop(n,2).EQ.-9999) then
-!             if (nop(n,2) < -1000) then
-!             !-
-!               n2=nop(n,3)
-!             else
-!               n2=nop(n,2)
-!             endif
+             !get midside node
              n2=nop(n,2)
-!Add midside node for polynom approach
-!-
 
              if(abs(alfa(n1)-alfa(n2)) .gt. 1.570796  .and.
      +          abs(alfa(n1)-alfa(n2)) .lt. 4.713388) then

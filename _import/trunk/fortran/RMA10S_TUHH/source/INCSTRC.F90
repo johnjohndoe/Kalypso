@@ -1,4 +1,4 @@
-!     Last change:  WP   22 Feb 2008    1:05 pm
+!     Last change:  NIS  15 May 2008    9:12 pm
 !C     Last change:  WP   14 Feb 2008    3:47 pm
 SUBROUTINE INCSTRC
 
@@ -18,19 +18,21 @@ INTEGER :: NMAXM, nrow, ncol
 
 
 !local definitions for Energy usage with linear functions
-INTEGER :: iostatvar, iostateval
-integer :: i, j, k, l
+INTEGER               :: iostatvar, iostateval
+INTEGER               :: i, j, k, l
 CHARACTER (LEN = 250) :: lineToEval
-CHARACTER (LEN = 3) :: lineID
-INTEGER :: MaxWeir, MaxQ, TempWeir, TempQs
-INTEGER :: countOuter, countInner
-REAL (KIND = 8) :: EUW, EUW_old, EOW, EOW_old
-REAL (KIND = 8) :: Qinner, Q_loop
+CHARACTER (LEN = 3)   :: lineID
+INTEGER               :: MaxWeir, MaxQ, TempWeir, TempQs
+INTEGER               :: countOuter, countInner
+REAL (KIND = 8)       :: EUW, EUW_old, EOW, EOW_old
+REAL (KIND = 8)       :: Qinner, Q_loop
 !------
 
 
 
-if (UseEnergyCstrc == 1) then
+!original tabular data approach
+!******************************
+if (UseEnergyCstrc == 0) then
 
   NROWM=0
   NCOLM=0
@@ -41,23 +43,30 @@ if (UseEnergyCstrc == 1) then
     WRITE(*,*) 'Reading title on control structure',DLINC
   ENDIF
 
-  findDataSize: do
-    CALL GINPT(INCSTR,IDC,DLINC)
-    IF(IDC(1:3) .EQ. 'IDC') THEN
-      READ(DLINC,'(3I8)') ID1,NROW,NCOL
-      IF(NROW .GT. NROWM) NROWM=NROW
-      IF(NCOL .GT. NCOLM) NCOLM=NCOL
-      NSETS=NSETS+1
-    ELSEIF(IDC(1:7) .EQ. 'ENDDATA') THEN
-      EXIT findDataSize
+  examineDataSize: do
+    CALL GINPT (INCSTR, IDC, DLINC)
+    IF (IDC (1: 3) == 'IDC') THEN
+      READ (DLINC, '(3I8)') ID1, NROW, NCOL
+      IF (NROW > NROWM) NROWM = NROW
+      IF (NCOL > NCOLM) NCOLM = NCOL
+      NSETS = NSETS + 1
+    ELSEIF (IDC (1:7) == 'ENDDATA') THEN
+      EXIT examineDataSize
     ENDIF
-  ENDDO findDataSize
+  ENDDO examineDataSize
 
   REWIND INCSTR
 
   !weir file shall also be present if no data is available
   if (nrowm == 0) return
+
+  !now read data
   CALL GINPT(INCSTR,IDC,DLINC)
+  !NROWCS :: number data lines (number of downstream water levels)
+  !NCOLCS :: number of data columns (number of upstream water levels)
+  !HRW    :: interpolated water stage in line (downstream)
+  !HCL    :: interpolated water stage in column (upstream)
+  !FLWCS  :: 3D-discharge table array (weir number, line number, column number)
   ALLOCATE (NROWCS (NROWM), NCOLCS (NCOLM), HRW (NSETS, NROWM), HCL (NSETS, NCOLM), FLWCS (NSETS, NROWM, NCOLM))
   CALL GINPT(INCSTR,IDC,DLINC)
   DO K=1,NSETS
@@ -111,7 +120,10 @@ if (UseEnergyCstrc == 1) then
       ENDDO flows
     ENDDO
   ENDDO
-ELSEIF (UseEnergyCstrc == 0) then
+
+!functional data approach with usage of energy levels
+!****************************************************
+ELSEIF (UseEnergyCstrc == 1) then
 
   iostatvar = 0
   MaxWeir = 0

@@ -1,4 +1,4 @@
-!Last change:  WP   29 Apr 2008    3:35 pm
+!Last change:  NIS  15 May 2008    8:54 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1423,20 +1423,20 @@ QBCAssign: DO N=1, NCN, 2
 
   M = NCON (N)
 
-  !EFa aug07, stage-flow boundaries
-  IF(ISTLIN(M) .NE. 0) THEN
+  !if no BC for Q or HQ then cycle
+  IF (NFIX (M)/ 1000 < 13) CYCLE QBCAssign
+
+  !stage-flow boundaries with e-formula
+  IF (ISTLIN (M) /= 0) THEN
     J   = ISTLIN (M)
     AC1 = STQ (J)
     AC2 = STQA (J)
     E0  = STQE (J)
     CP  = STQC (J)
+  !no stage flow boundaries or at least no formula to be applied; it still can be tabular data as stage flow boundary
   ELSE
     AC2 = 0.
   ENDIF
-  !-
-
-  !if no BC for Q then cycle
-  IF(NFIX(M)/1000.LT.13) CYCLE QBCAssign
 
   !line of degree of freedom (velocity)
   IRW = (N-1) * NDF + 1
@@ -1451,47 +1451,43 @@ QBCAssign: DO N=1, NCN, 2
   VT = VEL (1, M) * CX + VEL(2,M) * SA
 
   !all other entrees are zero
-  DO J=1,NEF
-    ESTIFM(IRW,J) = 0.
+  DO J = 1, NEF
+    ESTIFM (IRW, J) = 0.
   ENDDO
 
   !install new boundary condition values
   !ah(m) is cross sectional area; area(nn) is "area" of element that means length
-  ESTIFM(IRW,IRW) = ah(m) * area(nn)
-  ESTIFM(IRW,IRH) = dahdh(m) * vt * area(nn)
-  F(IRW)          = (SPEC(M,1) - VT * ah(m)) * area(nn)
-  !EFa aug07, stage-flow boundaries
-  IF(AC2.ne.0.) THEN
-    IF (IDNOPT.LT .0) THEN
-      HD=VEL(3,M)
-      CALL AMF(HS, HD, AKP(M), ADT(M), ADB(M), AML, DUM2, 0)
-      WSEL = ADO(M)+HS
-    ELSE
-      WSEL = VEL(3,M)+AO(M)
-    ENDIF
-      ESTIFM(IRW,IRH)=ESTIFM(IRW,IRH)-AREA(NN)*(AC2*CP*(WSEL-E0)**(CP-1.0))
-      F(IRW)=F(IRW)+AREA(NN)*(AC2*(WSEL-E0)**CP)
-  ELSEIF (istab(m).gt.0.) then
-    !nis,mar08: bug fix, elevation srfel was not calculated correctly
-    IF (IDNOPT.LT .0) THEN
-      HD=VEL(3,M)
-      CALL AMF(HS, HD, AKP(M), ADT(M), ADB(M), AML, DUM2, 0)
-      srfel = ADO(M)+HS
-    ELSE
-      srfel = VEL(3,M)+AO(M)
-    ENDIF
-    !-
-    if (spec(m,1).lt.0.) then
+  ESTIFM (IRW, IRW) = ah (m) * area (nn)
+  ESTIFM (IRW, IRH) = dahdh (m) * vt * area (nn)
+  F (IRW)           = (SPEC (M, 1) - VT * ah (m)) * area (nn)
+
+  !stage flow boundaries with e-formula
+  IF (AC2 /= 0.) THEN
+    !calculate water suface elevation
+    WSEL = VEL (3, M) +AO (M)
+
+    !form additional boundary condition terms regarding
+    ESTIFM (IRW, IRH) = ESTIFM (IRW, IRH) - AREA (NN) * (AC2 * CP * (WSEL - E0)**(CP - 1.0))
+    F (IRW) = F (IRW) + AREA (NN) * (AC2 * (WSEL - E0)**CP)
+  !stage flow boundaries with tabular data
+  ELSEIF (istab (m) > 0.) then
+    !calculate water surface elevation
+    WSEL = VEL (3, M) + AO (M)
+
+    !direction factor (inflow/ outflow)
+    if (spec (m, 1) < 0.) then
       adir = -1.
     else
       adir = 1.
     end if
 
-    call stfltab(m,srfel,dfdh,ff,1)
-    estifm(irw,irh) = estifm(irw,irh) - area(nn)*dfdh*adir
-    f(irw) = f(irw) + area(nn) * (ff * adir - spec(m,1))
+    !get discharge and derivative of discharge in dependency of the water depth
+    call stfltab (m, WSEL, dfdh, ff, 1)
+
+    !form equations
+    estifm (irw, irh) = estifm (irw, irh) - area (nn) * dfdh * adir
+    f (irw) = f (irw) + area (nn) * (ff * adir - spec (m, 1))
   ENDIF
-  !-
 ENDDO QBCAssign
 
 

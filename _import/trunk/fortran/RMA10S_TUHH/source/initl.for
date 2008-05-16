@@ -1,4 +1,4 @@
-C     Last change:  WP   17 Apr 2008   10:04 am
+C     Last change:  NIS  15 May 2008    8:03 pm
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -511,8 +511,10 @@ cipk sep06
         BEDORIG(J)=0.
         DEPINCR(J)=0.
 CIPK JUN05
+        !nis,com: transition elevation and submerging water stage initialized to unrealistic low values
         WHGT(J)=-10000.
         TRANSEL(J)=-10000.
+
         NSPL(J)=0
         NSTRT(J,1)=0
         NSTRT(J,2)=0
@@ -1016,6 +1018,7 @@ CIPK MAR01
 
       ALLOCATE (IntPolNo (1: MaxE), NeighProf (1: MaxP, 1: 2))
       ALLOCATE (IntPolProf (1: MaxP), kmWeight (1: MaxP))
+      allocate (IsPolynomNode (1: MaxP))
       ALLOCATE (IntPolElts (1: MaxE, 1: maxIntPolElts))
       do i = 1, MaxE
         IntPolNo (i) = 0
@@ -1024,7 +1027,8 @@ CIPK MAR01
         end do
       enddo
       do i = 1, MaxP
-        IntPolProf (i) = .false.
+        IntPolProf (i) = .FALSE.
+        IsPolynomNode (i) = .FALSE.
         NeighProf (i, 1) = 0
         NeighProf (i, 2) = 0
         kmWeight (i) = 1.0D0
