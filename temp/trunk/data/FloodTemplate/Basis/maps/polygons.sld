@@ -163,5 +163,66 @@
 				</Rule>
 			</FeatureTypeStyle>
 		</UserStyle>
+		<UserStyle>
+			<Name>volumePolygonUserStyle</Name>
+			<Title>Volumen-Polygone</Title>
+			<FeatureTypeStyle >
+				<Name>volumePolygonStyle</Name>
+				<FeatureTypeName>{org.kalypso.model.flood}FloodVolumePolygon</FeatureTypeName>
+				<Rule>
+					<Name>areaRule</Name>
+					<Title>Volumen</Title>
+					<MinScaleDenominator>0.0</MinScaleDenominator>
+					<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
+					<PolygonSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>flood:areaMember</ogc:PropertyName>
+						</Geometry>
+						<Fill>
+							<CssParameter name="fill-opacity">0.6</CssParameter>
+							<CssParameter name="fill">#8888dd</CssParameter>
+						</Fill>
+						<Stroke>
+							<CssParameter name="stroke">#aa1111</CssParameter>
+							<CssParameter name="stroke-width">1.0</CssParameter>
+							<CssParameter name="stroke-linejoin">mitre</CssParameter>
+							<CssParameter name="stroke-opacity">1.0</CssParameter>
+							<CssParameter name="stroke-linecap">butt</CssParameter>
+						</Stroke>
+					</PolygonSymbolizer>
+					<TextSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>flood:areaMember</ogc:PropertyName>
+						</Geometry>
+						<Label>
+							<ogc:Function name="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression">
+								<ogc:PropertyName>flood:eventMember</ogc:PropertyName>
+								<ogc:Literal>    /    </ogc:Literal>
+							</ogc:Function>
+						</Label>
+			            <Font>
+			              <CssParameter name="font-family"/>
+			              <CssParameter name="font-color">#000000</CssParameter>
+			              <CssParameter name="font-size">12.0</CssParameter>
+			              <CssParameter name="font-style">normal</CssParameter>
+			              <CssParameter name="font-weight">normal</CssParameter>
+			            </Font>
+			            <Halo>
+			              <Fill>
+			                <CssParameter name="fill-opacity">0.4</CssParameter>
+			                <CssParameter name="fill">#fbf193</CssParameter>
+			              </Fill>
+			              <Stroke>
+			                <CssParameter name="stroke">#000000</CssParameter>
+			                <CssParameter name="stroke-width">1.0</CssParameter>
+			                <CssParameter name="stroke-linejoin">round</CssParameter>
+			                <CssParameter name="stroke-opacity">1.0</CssParameter>
+			                <CssParameter name="stroke-linecap">square</CssParameter>
+			              </Stroke>
+			            </Halo>
+					</TextSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
 	</NamedLayer>
 </StyledLayerDescriptor>
