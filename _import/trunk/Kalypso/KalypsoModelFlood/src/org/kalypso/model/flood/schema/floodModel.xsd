@@ -350,4 +350,43 @@
 		</complexContent>
 	</complexType>
 
+	<element name="FloodVolumePolygon" type="flood:FloodVolumePolygonType" substitutionGroup="flood:AbstractFloodPolygon">
+		<annotation>
+			<documentation xml:lang="de">
+				<name><![CDATA[Volumen-Polygon]]></name>
+				<label><![CDATA[Volumen-Polygon]]></label>
+				<tooltip><![CDATA[Volumen-Polygon]]></tooltip>
+				<description><![CDATA[Volumen-Polygon]]></description>
+			</documentation>
+		</annotation>
+	</element>
+
+	<complexType name="FloodVolumePolygonType">
+		<complexContent>
+			<extension base="flood:AbstractFloodPolygonType">
+				<sequence minOccurs="1" maxOccurs="1">
+					<element name="volume" type="decimal">
+						<annotation>
+							<documentation xml:lang="de">
+								<name><![CDATA[Volumen]]></name>
+								<label><![CDATA[Volumen]]></label>
+								<description><![CDATA[]]></description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="waterlevel" type="decimal">
+						<annotation>
+							<documentation xml:lang="de">
+								<name><![CDATA[Wasserspiegel]]></name>
+								<label><![CDATA[Wasserspiegel]]></label>
+								<description><![CDATA[]]></description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
 </schema>

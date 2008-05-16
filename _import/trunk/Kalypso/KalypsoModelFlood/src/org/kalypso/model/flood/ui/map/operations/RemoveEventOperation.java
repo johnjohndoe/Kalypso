@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
@@ -71,8 +70,7 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
           {
             public void run( )
             {
-              final Shell shell = display.getActiveShell();
-              FloodModelHelper.removeResultCoverages( shell, m_provider, resultCoverages );
+              FloodModelHelper.removeResultCoverages( m_provider, resultCoverages );
             }
           } );
 
@@ -82,9 +80,8 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
         }
 
         /* Delete coverage from collection */
-//        final Feature parentFeature = featureToRemove.getParent();
-//        final IRelationType pt = featureToRemove.getParentRelation();
-
+        // final Feature parentFeature = featureToRemove.getParent();
+        // final IRelationType pt = featureToRemove.getParentRelation();
         final CommandableWorkspace workspace = m_provider.getCommandableWorkSpace( IFloodModel.class );
 
         final DeleteFeatureCommand command = new DeleteFeatureCommand( featureToRemove );
@@ -134,10 +131,10 @@ public final class RemoveEventOperation implements ICoreRunnableWithProgress
           }
         }
         // check for result coverages
-        FeatureList featureList = featureTheme.getFeatureList();
+        final FeatureList featureList = featureTheme.getFeatureList();
         if( featureList != null )
         {
-          for( Object object : featureList )
+          for( final Object object : featureList )
           {
             if( object instanceof Feature )
             {

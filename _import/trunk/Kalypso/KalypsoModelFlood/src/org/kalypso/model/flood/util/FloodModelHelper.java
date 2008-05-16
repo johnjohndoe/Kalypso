@@ -175,7 +175,7 @@ public class FloodModelHelper
   /**
    * removes the specified coverage file
    */
-  public static IStatus removeResultCoverages( final Shell shell, final SzenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
+  public static IStatus removeResultCoverages( final SzenarioDataProvider dataProvider, final ICoverageCollection resultCoverages )
   {
     final ICoverage[] coverages = resultCoverages.toArray( new ICoverage[resultCoverages.size()] );
     try

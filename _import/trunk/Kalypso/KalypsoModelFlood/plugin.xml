@@ -171,6 +171,29 @@
          </class>
       </handler>
       <handler
+            commandId="org.kalypso.model.flood.command.createVolumePolygon">
+         <activeWhen>
+            <reference
+                  definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+            </reference>
+         </activeWhen>
+         <class
+               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                  value="org.kalypso.model.flood.ui.map.CreateFloodPolygonVolumeWidget">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                  value="icons/elcl16/create_flood_polygon_volume.gif">
+            </parameter>
+            <parameter
+                  name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                  value="Volumen-Polygon erzeugen">
+            </parameter>
+         </class>
+      </handler>
+      <handler
             class="org.kalypso.model.flood.handlers.ProcessFloodModelHandler"
             commandId="org.kalypso.model.flood.ProcessFloodModel">
       </handler>
@@ -212,6 +235,9 @@
                type="org.kalypso.model.flood.binding.IFloodClipPolygon">
          </adapter>
          <adapter
+               type="org.kalypso.model.flood.binding.IFloodVolumePolygon">
+         </adapter>
+         <adapter
                type="org.kalypso.model.flood.binding.IRunoffEvent">
          </adapter>
          <adapter
@@ -247,6 +273,11 @@
             id="org.kalypso.model.flood.command.createClipPolygon"
             name="Clip-Polygon erzeugen">
       </command>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.model.flood.command.createVolumePolygon"
+            name="Volumen-Polygon erzeugen">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -264,6 +295,16 @@
            </command>
            <command
                  commandId="org.kalypso.model.flood.command.createClipPolygon"
+                 style="radio">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.kalypso.model.flood.expression.def.abstractFloodPolygonContextActive">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalypso.model.flood.command.createVolumePolygon"
                  style="radio">
               <visibleWhen
                     checkEnabled="false">

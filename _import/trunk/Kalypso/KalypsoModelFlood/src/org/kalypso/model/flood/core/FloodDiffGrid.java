@@ -53,6 +53,7 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.model.flood.binding.IFloodClipPolygon;
 import org.kalypso.model.flood.binding.IFloodExtrapolationPolygon;
 import org.kalypso.model.flood.binding.IFloodPolygon;
+import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -142,6 +143,16 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
       return extrapolValue - terrainValue;
     }
 
+    /* - if volume: get Volume-Waterlevel */
+    final IFloodVolumePolygon volumePolyon = getVolumePolygons( polygons );
+    if( volumePolyon != null )
+    {
+      final BigDecimal volumeWspValue = volumePolyon.getWaterlevel();
+      final double volumeWsp = volumeWspValue == null ? Double.NaN : volumeWspValue.doubleValue();
+      if( !Double.isNaN( volumeWsp ) )
+        return volumeWsp - terrainValue;
+    }
+
     if( Double.isNaN( wspValue ) )
       return Double.NaN;
 
@@ -176,7 +187,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     return Double.NaN;
   }
 
-  private double getExtrapolValue( IFloodExtrapolationPolygon polygon )
+  private double getExtrapolValue( final IFloodExtrapolationPolygon polygon )
   {
     // REMARK: hash for each polygon its wsp, to we do not need to recalculate it each time
     if( m_polygonWsps.containsKey( polygon ) )
@@ -197,9 +208,9 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     return wspValue;
   }
 
-  private IFloodExtrapolationPolygon getExtrapolPolygons( List<IFloodPolygon> polygons )
+  private IFloodExtrapolationPolygon getExtrapolPolygons( final List<IFloodPolygon> polygons )
   {
-    for( IFloodPolygon floodPolygon : polygons )
+    for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodExtrapolationPolygon )
         return (IFloodExtrapolationPolygon) floodPolygon;
@@ -207,9 +218,19 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     return null;
   }
 
-  private boolean containsClipPolygons( List<IFloodPolygon> polygons )
+  private IFloodVolumePolygon getVolumePolygons( final List<IFloodPolygon> polygons )
   {
-    for( IFloodPolygon floodPolygon : polygons )
+    for( final IFloodPolygon floodPolygon : polygons )
+    {
+      if( floodPolygon instanceof IFloodVolumePolygon )
+        return (IFloodVolumePolygon) floodPolygon;
+    }
+    return null;
+  }
+
+  private boolean containsClipPolygons( final List<IFloodPolygon> polygons )
+  {
+    for( final IFloodPolygon floodPolygon : polygons )
     {
       if( floodPolygon instanceof IFloodClipPolygon )
         return true;
@@ -252,7 +273,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
   @Override
-  public void setMax( BigDecimal maxValue )
+  public void setMax( final BigDecimal maxValue )
   {
     if( maxValue != null )
       m_max = maxValue;
@@ -262,7 +283,7 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
   @Override
-  public void setMin( BigDecimal minValue )
+  public void setMin( final BigDecimal minValue )
   {
     if( minValue != null )
       m_min = minValue;

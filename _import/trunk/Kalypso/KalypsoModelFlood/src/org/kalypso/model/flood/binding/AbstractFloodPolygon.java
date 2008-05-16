@@ -44,7 +44,10 @@ import javax.xml.namespace.QName;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
@@ -76,10 +79,27 @@ public abstract class AbstractFloodPolygon extends AbstractFeatureBinder impleme
 
     return false;
   }
-  
-  public boolean contains( GM_Position crd )
+
+  public boolean contains( final GM_Position crd )
   {
-    return getFeature().getDefaultGeometryProperty().contains( crd );
+    return getArea().contains( crd );
   }
-  
+
+  /**
+   * @see org.kalypso.model.flood.binding.IFloodPolygon#getArea()
+   */
+  @SuppressWarnings("unchecked")
+  public GM_Surface<GM_SurfacePatch> getArea( )
+  {
+    return getProperty( QNAME_PROP_AREA, GM_Surface.class );
+  }
+
+  /**
+   * @see org.kalypso.model.flood.binding.IFloodPolygon#getEvents()
+   */
+  public IFeatureWrapperCollection<IRunoffEvent> getEvents( )
+  {
+    return m_runoffEvents;
+  }
+
 }

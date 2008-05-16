@@ -71,6 +71,8 @@ public class KalypsoFloodAdapterFactory implements IAdapterFactory
           return new FloodExtrapolationPolygon( feature );
         else if( featureQName.equals( IFloodClipPolygon.QNAME ) )
           return new FloodClipPolygon( feature );
+        else if( featureQName.equals( IFloodVolumePolygon.QNAME ) )
+          return new FloodVolumePolygon( feature );
         else
           return null;
       }

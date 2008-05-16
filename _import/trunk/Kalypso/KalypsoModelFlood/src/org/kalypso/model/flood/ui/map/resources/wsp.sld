@@ -12,7 +12,7 @@
 				<Rule>
 					<Name>wspRule</Name>
 					<Title>Wasserspiegel</Title>
-					<sldExt:SurfacePolygonSymbolizer xmlns:sldExt="http://www.opengis.net/sldExt" uom="pixel">
+					<sldExt:SurfacePolygonSymbolizer xmlns:sldExt="http://www.opengis.net/sldExt">
 						<Geometry>
 							<ogc:PropertyName>flood:tin</ogc:PropertyName>
 						</Geometry>
@@ -126,6 +126,44 @@
 						<Fill>
 							<CssParameter name="fill-opacity">0.6</CssParameter>
 							<CssParameter name="fill">#dd8888</CssParameter>
+						</Fill>
+						<Stroke>
+							<CssParameter name="stroke">#aa1111</CssParameter>
+							<CssParameter name="stroke-width">1.0</CssParameter>
+							<CssParameter name="stroke-linejoin">mitre</CssParameter>
+							<CssParameter name="stroke-opacity">1.0</CssParameter>
+							<CssParameter name="stroke-linecap">butt</CssParameter>
+						</Stroke>
+					</PolygonSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+		<UserStyle>
+			<Name>volumePolygonUserStyle</Name>
+			<Title>Volumen-Polygone</Title>
+			<FeatureTypeStyle>
+				<Name>volumePolygonStyle</Name>
+				<FeatureTypeName>{org.kalypso.model.flood}FloodVolumePolygon</FeatureTypeName>
+				<Rule>
+					<Name>areaRule</Name>
+					<Title>Clip</Title>
+					<ogc:Filter xmlns:ogc='http://www.opengis.net/ogc'>
+						<ogc:PropertyIsEqualTo>
+							<ogc:Function name="org.kalypso.model.flood.ui.map.EventFilterExpression">
+								<ogc:Literal>%eventFeatureId%</ogc:Literal>
+							</ogc:Function>
+							<ogc:Literal>true</ogc:Literal>
+						</ogc:PropertyIsEqualTo>
+					</ogc:Filter>
+					<MinScaleDenominator>0.0</MinScaleDenominator>
+					<MaxScaleDenominator>1.7976931348623157E308</MaxScaleDenominator>
+					<PolygonSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>flood:areaMember</ogc:PropertyName>
+						</Geometry>
+						<Fill>
+							<CssParameter name="fill-opacity">0.6</CssParameter>
+							<CssParameter name="fill">#8888dd</CssParameter>
 						</Fill>
 						<Stroke>
 							<CssParameter name="stroke">#aa1111</CssParameter>

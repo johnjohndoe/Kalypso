@@ -178,6 +178,14 @@ public final class AddEventOperation implements ICoreRunnableWithProgress
       clipStyle.setType( "simple" );
       styleList.add( clipStyle );
 
+      final Style volumeStyle = new Style();
+      volumeStyle.setLinktype( "sld" );
+      volumeStyle.setStyle( "volumePolygonUserStyle" );
+      volumeStyle.setActuate( "onRequest" );
+      volumeStyle.setHref( styleLocationForEventWsp( event ) );
+      volumeStyle.setType( "simple" );
+      styleList.add( volumeStyle );
+
       wspThemes.addLayer( polygoneLayer );
     }
 

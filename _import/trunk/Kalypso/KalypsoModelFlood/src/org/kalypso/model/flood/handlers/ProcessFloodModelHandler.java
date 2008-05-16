@@ -121,9 +121,8 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
       // decision dialog for user, if he wants to overwrite existing data
       final List<IRunoffEvent> eventListToProcess = new LinkedList<IRunoffEvent>();
 
-      for( int i = 0; i < eventsToProcess.length; i++ )
+      for( final IRunoffEvent runoffEvent : eventsToProcess )
       {
-        final IRunoffEvent runoffEvent = eventsToProcess[i];
         final ICoverageCollection resultCoverages = runoffEvent.getResultCoverages();
 
         if( resultCoverages.size() != 0 )
@@ -131,7 +130,7 @@ public class ProcessFloodModelHandler extends AbstractHandler implements IHandle
           if( MessageDialog.openQuestion( shell, "Fließtiefendaten für Ereignis " + runoffEvent.getName() + "bereits vorhanden", "Sollen vorhandene Daten überschrieben werden?" ) == true )
           {
             // clear existing results (gml and file and themes).
-            IStatus status = FloodModelHelper.removeResultCoverages( shell, dataProvider, resultCoverages );
+            final IStatus status = FloodModelHelper.removeResultCoverages( dataProvider, resultCoverages );
             if( status == Status.OK_STATUS )
               eventListToProcess.add( runoffEvent );
           }

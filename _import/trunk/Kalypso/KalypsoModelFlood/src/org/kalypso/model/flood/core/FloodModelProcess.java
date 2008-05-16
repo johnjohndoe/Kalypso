@@ -42,7 +42,10 @@ package org.kalypso.model.flood.core;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -57,15 +60,23 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.grid.CountGeoGridWalker;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.VolumeGeoGridWalker;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IFloodPolygon;
+import org.kalypso.model.flood.binding.IFloodVolumePolygon;
 import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
+import org.kalypso.transformation.GeoTransformer;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Gernot Belger
@@ -74,6 +85,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  */
 public class FloodModelProcess
 {
+  private static final double VOLUME_EPS = 1.0;
+
   private final IFloodModel m_model;
 
   private final IRunoffEvent[] m_events;
@@ -86,13 +99,14 @@ public class FloodModelProcess
 
   public IStatus process( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, "Berechne Flieﬂtiefen", m_events.length );
+    final SubMonitor progress = SubMonitor.convert( monitor, "Berechne Flieﬂtiefen", m_events.length * 2 );
 
     for( final IRunoffEvent event : m_events )
     {
       try
       {
         progress.subTask( event.getName() );
+        processVolumes( event, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) );
         processEvent( event, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) );
       }
       catch( final CoreException e )
@@ -103,24 +117,130 @@ public class FloodModelProcess
       {
         throw new InvocationTargetException( e );
       }
-
-      ProgressUtilities.worked( progress, 1 );
     }
 
     return Status.OK_STATUS;
+  }
+
+  private void processVolumes( final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
+  {
+    final ICoverageCollection terrainModel = m_model.getTerrainModel();
+    final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
+
+    /* Filter Volume Polygon */
+    final List<IFloodVolumePolygon> volumePolygons = new ArrayList<IFloodVolumePolygon>( polygons.size() );
+    for( final IFloodPolygon floodPolygon : polygons )
+    {
+      if( floodPolygon instanceof IFloodVolumePolygon && floodPolygon.getEvents().contains( event ) )
+        volumePolygons.add( (IFloodVolumePolygon) floodPolygon );
+    }
+
+    final SubMonitor progress = SubMonitor.convert( monitor, volumePolygons.size() );
+    for( final IFloodVolumePolygon floodVolumePolygon : volumePolygons )
+      processVolume( floodVolumePolygon, terrainModel, progress.newChild( 1 ) );
+  }
+
+  private void processVolume( final IFloodVolumePolygon volumePolygon, final ICoverageCollection terrainModel, final IProgressMonitor monitor ) throws Exception
+  {
+    final BigDecimal volumeValue = volumePolygon.getVolume();
+    if( volumeValue == null )
+      return;
+
+    final double volume = volumeValue.doubleValue();
+    if( Double.isNaN( volume ) )
+      return;
+
+    final GM_Object volumeGmObject = volumePolygon.getArea();
+
+    // Min/Max-WSP
+    double minWsp = Double.MAX_VALUE;
+    double maxWsp = -Double.MAX_VALUE;
+    final CountGeoGridWalker countWalker = new CountGeoGridWalker( true );
+    for( final ICoverage coverage : terrainModel )
+    {
+      final IGeoGrid geoGrid = GeoGridUtilities.toGrid( coverage );
+
+      final String sourceCRS = geoGrid.getSourceCRS();
+      final GeoTransformer transformer = new GeoTransformer( sourceCRS );
+      final Geometry volumeGeometry = JTSAdapter.export( transformer.transform( volumeGmObject ) );
+
+      final double cellSize = GeoGridUtilities.calcCellArea( geoGrid.getOffsetX(), geoGrid.getOffsetY() );
+      final BigDecimal maxTerrain = geoGrid.getMax();
+
+      /* Minimal waterlevel is the lowest point */
+      // REMARK: could even be made higher, but than performance if bad, if result is near the minimum
+      minWsp = Math.min( minWsp, geoGrid.getMin().doubleValue() );
+
+      /* The maximum waterlevel per grid, is calculated by assuming that all cells have the maxmimum terrain value */
+      geoGrid.getWalkingStrategy().walk( geoGrid, countWalker, volumeGeometry, new NullProgressMonitor() );
+      final int numberOfCellsCoveringThePolgon = countWalker.getCount();
+
+      final double coveredArea = numberOfCellsCoveringThePolgon * cellSize;
+      final double heightFromZero = volume / coveredArea;
+      final double maxGridWsp = heightFromZero + maxTerrain.doubleValue();
+
+      maxWsp = Math.max( maxWsp, maxGridWsp );
+      maxWsp += maxWsp / 2; // in order to improve performance, if waterlevel is near the maximum
+    }
+
+    final double wsp = searchWsp( volume, minWsp, maxWsp, terrainModel, volumeGmObject );
+    volumePolygon.setWaterlevel( new BigDecimal( wsp ) );
+
+    ProgressUtilities.done( monitor );
+  }
+
+  private double searchWsp( final double targetVolume, final double minWsp, final double maxWsp, final ICoverageCollection terrainModel, final GM_Object volumeGmObject ) throws Exception
+  {
+    // Binary search within min/max; we start in the middle
+    final double currentWsp = (maxWsp + minWsp) / 2;
+
+    // System.out.println( "Current WSP: " + currentWsp );
+    final double currentVolume = calcWsp( volumeGmObject, terrainModel, currentWsp );
+    // System.out.println( "Current Volume: " + currentVolume );
+    // System.out.println( "" );
+
+    if( Math.abs( currentVolume - targetVolume ) < VOLUME_EPS )
+      return currentWsp;
+
+    if( currentVolume < targetVolume )
+      return searchWsp( targetVolume, currentWsp, maxWsp, terrainModel, volumeGmObject );
+    else
+      return searchWsp( targetVolume, minWsp, currentWsp, terrainModel, volumeGmObject );
+  }
+
+  /**
+   * Calculates the volume for a specific wsp value
+   */
+  private double calcWsp( final GM_Object volumeGmObject, final ICoverageCollection terrainModel, final double currentWsp ) throws Exception
+  {
+    final VolumeGeoGridWalker volumeWalker = new VolumeGeoGridWalker( currentWsp, false );
+
+    double volume = 0.0;
+    for( final ICoverage coverage : terrainModel )
+    {
+      final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+
+      final String sourceCRS = grid.getSourceCRS();
+      final GeoTransformer transformer = new GeoTransformer( sourceCRS );
+      final Geometry volumeGeometry = JTSAdapter.export( transformer.transform( volumeGmObject ) );
+
+      grid.getWalkingStrategy().walk( grid, volumeWalker, volumeGeometry, new NullProgressMonitor() );
+
+      volume += volumeWalker.getVolume();
+    }
+
+    return volume;
   }
 
   private void processEvent( final IRunoffEvent event, final IProgressMonitor monitor ) throws Exception
   {
     final ICoverageCollection terrainModel = m_model.getTerrainModel();
     final SubMonitor progress = SubMonitor.convert( monitor, terrainModel.size() * 100 );
+    // TODO: shouldn't we filter by the event?
     final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
-
-    // final SortedFloodPolygonMap sortedPolygons = FloodPolygonHelper.getSortedPolygonsForEvent( event, polygons );
 
     /* check for existing result coverages */
     final ICoverageCollection resultCoverages = event.getResultCoverages();
-
     if( resultCoverages.size() != 0 )
       throw new IllegalStateException( "Event enth‰lt noch Ergebnisse: " + event.getName() );
 
@@ -165,4 +285,19 @@ public class FloodModelProcess
     scenarioFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 
+  // TODO: does not work like that, as we need a feature wrapper collection later to query the list
+  // private IFloodPolygon[] getPolygons( final IRunoffEvent event )
+  // {
+  // final IFeatureWrapperCollection<IFloodPolygon> polygons = m_model.getPolygons();
+  //
+  // final List<IFloodPolygon> filteredPolygons = new ArrayList<IFloodPolygon>();
+  //
+  // for( final IFloodPolygon floodPolygon : polygons )
+  // {
+  // if( floodPolygon.getEvents().contains( event ) )
+  // filteredPolygons.add( floodPolygon );
+  // }
+  //
+  // return filteredPolygons.toArray( new IFloodPolygon[filteredPolygons.size()] );
+  // }
 }
