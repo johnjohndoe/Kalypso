@@ -90,9 +90,9 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
       final GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( grid, new Coordinate( envelope.getMaxX(), envelope.getMaxY() ) );
 
       yStart = Math.max( 0, Math.min( minMinCell.y, maxMaxCell.y ) );
-      yEnd = Math.min( sizeY, Math.max( minMinCell.y, maxMaxCell.y ) );
+      yEnd = Math.min( sizeY, Math.max( minMinCell.y, maxMaxCell.y ) + 1 );
       xStart = Math.max( 0, Math.min( minMinCell.x, maxMaxCell.x ) );
-      xEnd = Math.min( sizeX, Math.max( minMinCell.x, maxMaxCell.x ) );
+      xEnd = Math.min( sizeX, Math.max( minMinCell.x, maxMaxCell.x ) + 1 );
     }
 
     pwo.start( grid );

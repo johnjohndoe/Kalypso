@@ -64,7 +64,7 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
 
-  private String m_noThemesTooltip = Messages.getString("org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget.0"); //$NON-NLS-1$
+  private String m_noThemesTooltip = Messages.getString( "org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget.0" ); //$NON-NLS-1$
 
   private IKalypsoTheme[] m_themes = null;
 
@@ -135,11 +135,11 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
 
     for( final IKalypsoTheme theme : m_themes )
     {
-      formatter.format( headInfo, theme.getName() );
+      formatter.format( headInfo, theme.getName().getValue() );
 
       final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
       if( themeInfo == null )
-        formatter.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget.3") ); //$NON-NLS-1$
+        formatter.format( Messages.getString( "org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget.3" ) ); //$NON-NLS-1$
       else
         themeInfo.appendQuickInfo( formatter, position );
 
