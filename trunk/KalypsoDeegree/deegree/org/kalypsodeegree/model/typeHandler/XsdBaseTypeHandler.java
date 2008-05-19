@@ -129,7 +129,6 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       throw new TypeRegistryException( e );
     }

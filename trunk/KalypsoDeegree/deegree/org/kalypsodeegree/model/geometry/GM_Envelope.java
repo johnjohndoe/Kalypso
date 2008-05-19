@@ -68,12 +68,6 @@ package org.kalypsodeegree.model.geometry;
 public interface GM_Envelope extends Cloneable
 {
   /**
-   * @link aggregationByValue
-   * @clientCardinality 2
-   */
-  /* #GM_Position lnkGM_position; */
-
-  /**
    * returns the width of bounding box
    */
   double getWidth( );
