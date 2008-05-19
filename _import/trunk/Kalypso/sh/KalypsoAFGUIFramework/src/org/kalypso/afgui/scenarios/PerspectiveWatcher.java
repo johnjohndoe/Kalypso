@@ -50,22 +50,6 @@ public class PerspectiveWatcher
         if( workbenchPage == null )
           return Status.CANCEL_STATUS;
 
-//        // remember previous perspective
-//        final IPerspectiveDescriptor perspective = workbenchPage.getPerspective();
-//        final String previousPerspectiveId = perspective.getId();
-//
-//        try
-//        {
-//          // show workflow perspective
-//          // these are the new page and its window, it might be a different one
-//          workbenchPage = workbench.showPerspective( Perspective.ID, activeWorkbenchWindow );
-//          activeWorkbenchWindow = workbenchPage.getWorkbenchWindow();
-//        }
-//        catch( final WorkbenchException e )
-//        {
-//          return e.getStatus();
-//        }
-
         // close all unnecessary views and editors in workflow perspective
         final IViewReference[] viewReferences = workbenchPage.getViewReferences();
         for( final IViewReference reference : viewReferences )
@@ -87,16 +71,6 @@ public class PerspectiveWatcher
         {
           workbenchPage.setEditorAreaVisible( false );
         }
-
-//        try
-//        {
-//          // convert to previous perspective
-//          workbench.showPerspective( previousPerspectiveId, activeWorkbenchWindow );
-//        }
-//        catch( final WorkbenchException e )
-//        {
-//          return e.getStatus();
-//        }
 
         return Status.OK_STATUS;
       }
@@ -127,7 +101,7 @@ public class PerspectiveWatcher
    * 
    * @return The perspective id.
    */
-  public static String getPerspectiveID( Task task )
+  public static String getPerspectiveID( final Task task )
   {
     if( task == null )
       return Perspective.ID;
@@ -137,7 +111,7 @@ public class PerspectiveWatcher
     {
       if( context instanceof PerspectiveContextType )
       {
-        PerspectiveContextType perspectiveContext = (PerspectiveContextType) context;
+        final PerspectiveContextType perspectiveContext = (PerspectiveContextType) context;
         return perspectiveContext.getPerspectiveId();
       }
 
