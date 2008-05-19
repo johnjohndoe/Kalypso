@@ -80,10 +80,9 @@ public class CheckFeaturePropertyHandler implements IFeaturePropertyHandler
         // we do not test here we will get later ClassCastExceptions
         // and there we do not know why.
         // Next: please contact me instead of just commenting it out. Gernot
-        // final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
-        // if( valueToSet != null && !valueClass.isAssignableFrom( valueToSet.getClass() ) )
-        // throw new IllegalArgumentException( "Wrong type of value (" + valueToSet.getClass() + ") for qname: " +
-        // pt.getQName() );
+//        final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
+//        if( valueToSet != null && !valueClass.isAssignableFrom( valueToSet.getClass() ) )
+//          throw new IllegalArgumentException( "Wrong type of value (" + valueToSet.getClass() + ") for qname: " + pt.getQName() );
 
         // TODO: the type check should occur on the real value to set, that is after all other handlers
       }
