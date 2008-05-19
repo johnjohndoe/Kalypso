@@ -149,7 +149,7 @@ public class SHPPolygon implements ISHPGeometry
           {
             for( int j = 0; j < rings.length; j++ )
             {
-              curveList.add( rings[i] );
+              curveList.add( rings[j] );
             }
           }
         }
