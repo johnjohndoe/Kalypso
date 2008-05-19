@@ -1045,7 +1045,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="exeVersion" default="_2_1_1_0">
+					<element name="exeVersion" default="_2_1_2_0">
 						<annotation>
 							<documentation xml:lang="de">
 								<label><![CDATA[Version Rechenkern]]></label>
@@ -1058,33 +1058,43 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
+								<enumeration value="_2_1_2_0">
+									<annotation>
+										<documentation xml:lang="de">
+											<label><![CDATA[_2.1.2.0 (30.04.2008)]]></label>
+										</documentation>
+										<documentation xml:lang="en">
+											<label><![CDATA[_2.1.2.0 (2008/04/30)]]></label>
+										</documentation>
+									</annotation>
+								</enumeration>
 								<enumeration value="_2_1_1_0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[_2_1_1_0 (26.02.2008)]]></label>
+											<label><![CDATA[_2.1.1.0 (26.02.2008)]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[_2_1_1_0 (26.02.2008)]]></label>
+											<label><![CDATA[_2.1.1.0 (2008/02/26)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="_2_1_0_0">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[_2_1_0_0 (19.02.2008)]]></label>
+											<label><![CDATA[_2.1.0.0 (19.02.2008)]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[_2_1_0_0 (19.02.2008)]]></label>
+											<label><![CDATA[_2.1.0.0 (2008/02/19)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
 								<enumeration value="_2_0_6_6">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
+											<label><![CDATA[2.0.6.6 (07.02.2008)]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[2.0.6.6 (7.02.2008)]]></label>
+											<label><![CDATA[2.0.6.6 (2008/02/07)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
