@@ -210,6 +210,14 @@ public class OriginalDiscretizationModelAdaptor implements IModelAdaptor
                 final FeatureList myNodeLinks = (FeatureList) nodeContainer.getProperty( IFE1D2DEdge.WB1D2D_PROP_DIRECTEDNODE );
 
                 final Feature[] myNodes = getFeatures( myNodeLinks );
+
+                final int nodeCount = myNodes.length;
+                if( nodeCount != 2 )
+                {
+                  statusList.add( StatusUtilities.createWarningStatus( String.format( "edge %s has %d nodes", nodeContainer, nodeCount ) ) );
+                  continue nextNode;
+                }
+
                 final Object p0 = myNodes[0].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
                 final Object p1 = myNodes[1].getProperty( IFE1D2DNode.WB1D2D_PROP_POINT );
 
