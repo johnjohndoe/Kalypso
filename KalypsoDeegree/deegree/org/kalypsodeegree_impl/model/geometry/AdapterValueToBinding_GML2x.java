@@ -63,6 +63,7 @@ import ogc2.www.opengis.net.gml.PointType;
 import ogc2.www.opengis.net.gml.PolygonMemberType;
 import ogc2.www.opengis.net.gml.PolygonType;
 
+import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -112,7 +113,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     if( geometry instanceof GM_Curve )
       return createLineStringType( (GM_Curve) geometry, csNameDefault );
     if( geometry instanceof GM_Surface )
-      return createPolygonType( (GM_Surface) geometry, csNameDefault );
+      return createPolygonType( (GM_Surface< ? >) geometry, csNameDefault );
     if( geometry instanceof GM_MultiPoint )
       return createMultiPointType( (GM_MultiPoint) geometry, csNameDefault );
     if( geometry instanceof GM_MultiCurve )
@@ -127,11 +128,11 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   {
     final String csName = getCSName( multiSurface, csNameDefault );
     final MultiPolygonType multiPolygonType = AdapterValueToBinding_GML2x.OF_GML2.createMultiPolygonType();
-    final GM_Surface[] allSurfaces = multiSurface.getAllSurfaces();
+    final GM_Surface< ? >[] allSurfaces = multiSurface.getAllSurfaces();
 
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiPolygonType.getGeometryMember();
 
-    for( final GM_Surface surface : allSurfaces )
+    for( final GM_Surface< ? > surface : allSurfaces )
     {
       final PolygonType polygonType = createPolygonType( surface, csName );
       final PolygonMemberType polygonMemberType = AdapterValueToBinding_GML2x.OF_GML2.createPolygonMemberType();
@@ -185,7 +186,7 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
     return multiPointType;
   }
 
-  private PolygonType createPolygonType( final GM_Surface surface, final String csNameDefault )
+  private PolygonType createPolygonType( final GM_Surface< ? > surface, final String csNameDefault )
   {
     final String csName = getCSName( surface, csNameDefault );
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
@@ -274,22 +275,20 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
    */
   public Element wrapToElement( final GM_Object geometry ) throws GM_Exception
   {
-    final Object bindingGeometry;
     try
     {
-      bindingGeometry = wrapToBinding( geometry );
-      final Marshaller marshaller = AdapterBindingToValue_GML2x.GML2_JAXCONTEXT.createMarshaller();
+      final Object bindingGeometry = wrapToBinding( geometry );
+      final Marshaller marshaller = KalypsoOGC2xJAXBcontext.getContext().createMarshaller();
       final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
       fac.setNamespaceAware( true );
       final DocumentBuilder builder = fac.newDocumentBuilder();
       final Document document = builder.newDocument();
-      final JAXBElement jaxbElement = createJAXBGeometryElement( bindingGeometry );
+      final JAXBElement< ? extends Object> jaxbElement = createJAXBGeometryElement( bindingGeometry );
       marshaller.marshal( jaxbElement, document );
       return document.getDocumentElement();
     }
     catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       throw new GM_Exception( "could not marshall to Element", e );
     }
   }
@@ -297,30 +296,31 @@ public class AdapterValueToBinding_GML2x implements AdapterValueToGMLBinding
   public JAXBElement< ? extends Object> createJAXBGeometryElement( final Object geometry )
   {
     if( geometry instanceof PointType )
-      return AdapterValueToBinding_GML2x.OF_GML2.createPoint( (PointType) geometry );
+      return OF_GML2.createPoint( (PointType) geometry );
     if( geometry instanceof LineStringType )
-      return AdapterValueToBinding_GML2x.OF_GML2.createLineString( (LineStringType) geometry );
+      return OF_GML2.createLineString( (LineStringType) geometry );
     if( geometry instanceof PolygonType )
-      return AdapterValueToBinding_GML2x.OF_GML2.createPolygon( (PolygonType) geometry );
+      return OF_GML2.createPolygon( (PolygonType) geometry );
     if( geometry instanceof MultiPointType )
-      return AdapterValueToBinding_GML2x.OF_GML2.createMultiPoint( (MultiPointType) geometry );
+      return OF_GML2.createMultiPoint( (MultiPointType) geometry );
     if( geometry instanceof MultiLineStringType )
-      return AdapterValueToBinding_GML2x.OF_GML2.createMultiLineString( (MultiLineStringType) geometry );
+      return OF_GML2.createMultiLineString( (MultiLineStringType) geometry );
     if( geometry instanceof MultiPolygonType )
-      return AdapterValueToBinding_GML2x.OF_GML2.createMultiPolygon( (MultiPolygonType) geometry );
+      return OF_GML2.createMultiPolygon( (MultiPolygonType) geometry );
+
     throw new UnsupportedOperationException();
   }
 
   /**
    * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public Object wrapToBinding( final GM_Envelope geometry )
+  public Object wrapToBinding( final GM_Envelope envelope )
   {
     final BoxType boxType = AdapterValueToBinding_GML2x.OF_GML2.createBoxType();
-    final GM_Position[] positions = new GM_Position[] { geometry.getMin(), geometry.getMax() };
+    final GM_Position[] positions = new GM_Position[] { envelope.getMin(), envelope.getMax() };
     final CoordinatesType coordinatesType = createCoordinatesType( positions );
     boxType.setCoordinates( coordinatesType );
-    // TODO support srsname when refactored GM_Envelop to have a SRS
+    boxType.setSrsName( envelope.getCoordinateSystem() );
     return boxType;
   }
 }

@@ -146,8 +146,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       final IGeoGrid grid = getGrid();
       if( grid != null )
       {
+        final String targetCrs = projection.getSourceRect().getCoordinateSystem();
         final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
-        paintGrid( (Graphics2D) g, grid, projection, symbolizer, projection.getSourceRect().getCoordinateSystem(), monitor );
+        paintGrid( (Graphics2D) g, grid, projection, symbolizer, targetCrs, monitor );
       }
     }
     catch( final Exception e )

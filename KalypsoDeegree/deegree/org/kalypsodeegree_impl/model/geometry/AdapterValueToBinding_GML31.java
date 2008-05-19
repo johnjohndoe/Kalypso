@@ -42,7 +42,6 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -89,8 +88,6 @@ import org.w3c.dom.Element;
  */
 public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
 {
-  public final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
-
   private static final String COORDINATES_SEPARATOR = " ";
 
   private static final String DECIMAL_SEPARATOR = ".";
@@ -108,7 +105,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     if( geometry instanceof GM_Curve )
       return createLineStringType( (GM_Curve) geometry, csNameDefault );
     if( geometry instanceof GM_Surface )
-      return createPolygonType( (GM_Surface) geometry, csNameDefault );
+      return createPolygonType( (GM_Surface< ? >) geometry, csNameDefault );
     if( geometry instanceof GM_MultiPoint )
       return createMultiPointType( (GM_MultiPoint) geometry, csNameDefault );
     if( geometry instanceof GM_MultiCurve )
@@ -124,8 +121,8 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     final String csName = getCSName( multiSurface, csNameDefault );
     final MultiPolygonType multiPolygonType = KalypsoOGC31JAXBcontext.GML3_FAC.createMultiPolygonType();
     final List<PolygonPropertyType> polygonMember = multiPolygonType.getPolygonMember();
-    final GM_Surface[] allSurfaces = multiSurface.getAllSurfaces();
-    for( final GM_Surface surface : allSurfaces )
+    final GM_Surface< ? >[] allSurfaces = multiSurface.getAllSurfaces();
+    for( final GM_Surface< ? > surface : allSurfaces )
     {
       final PolygonPropertyType polygonPropertyType = KalypsoOGC31JAXBcontext.GML3_FAC.createPolygonPropertyType();
       final PolygonType polygonType = createPolygonType( surface, csName );
@@ -170,7 +167,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     return multiPointType;
   }
 
-  private PolygonType createPolygonType( final GM_Surface surface, final String csNameDefault )
+  private PolygonType createPolygonType( final GM_Surface< ? > surface, final String csNameDefault )
   {
     final String csName = getCSName( surface, csNameDefault );
     final PolygonType polygonType = KalypsoOGC31JAXBcontext.GML3_FAC.createPolygonType();
@@ -282,7 +279,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     try
     {
       final Object bindingGeometry = wrapToBinding( geometry );
-      final Marshaller marshaller = AdapterBindingToValue_GML31.GML3_JAXCONTEXT.createMarshaller();
+      final Marshaller marshaller = KalypsoOGC31JAXBcontext.getContext().createMarshaller();
       final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
       fac.setNamespaceAware( true );
       final DocumentBuilder builder = fac.newDocumentBuilder();
@@ -299,10 +296,10 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
   /**
    * @see org.kalypsodeegree_impl.model.geometry.AdapterValueToGMLBinding#wrapToBinding(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
-  public Object wrapToBinding( final GM_Envelope geometry )
+  public Object wrapToBinding( final GM_Envelope envelope )
   {
-    final GM_Position min = geometry.getMin();
-    final GM_Position max = geometry.getMax();
+    final GM_Position min = envelope.getMin();
+    final GM_Position max = envelope.getMax();
 
     final EnvelopeType envelopeType = KalypsoOGC31JAXBcontext.GML3_FAC.createEnvelopeType();
 
@@ -322,7 +319,7 @@ public class AdapterValueToBinding_GML31 implements AdapterValueToGMLBinding
     envelopeType.setLowerCorner( lowerCorner );
     envelopeType.setUpperCorner( upperCorner );
 
-    // envelopeType.setSrsName( )
+    envelopeType.setSrsName( envelope.getCoordinateSystem() );
 
     return envelopeType;
   }

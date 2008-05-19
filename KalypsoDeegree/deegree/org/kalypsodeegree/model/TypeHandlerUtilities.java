@@ -264,24 +264,14 @@ public class TypeHandlerUtilities
 
     // {http://www.opengis.net/gml}GeometryPropertyType
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "GeometryPropertyType" ), GeometryUtilities.QN_MULTI_POLYGON, GM_Object.class, true ) );
-    // TODO: the next line is wrong; GM_Envelope is no GM_Object
-    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-    // "BoundingShapeType" ), new QName( NS.GML3, "Envelope" ), GM_Envelope.class, false ) );
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
     // other GML3 types:
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, GM_Object.class, true ) );
-// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider,
-// GeometryUtilities.QN_LOCATION_PROPERTY, GeometryUtilities.QN_LOCATION, LocationPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, GeometryUtilities.QN_DIRECTION_PROPERTY, GeometryUtilities.QN_DIRECTION, DirectionPropertyType.class, false ) );
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "rangeSet" ), RangeSetType.class, false, true, false ) );
 
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
-
-// registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3,
-// "TrianglePatchArrayPropertyType" ), new QName( NS.GML3, "trianglePatches" ), TrianglePatchArrayPropertyType.class,
-// true, true, false ) );
-
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
 
     // for the elements of ConventionalUnitType

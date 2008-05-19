@@ -47,7 +47,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 
@@ -72,18 +71,18 @@ import ogc31.www.opengis.net.gml.PolygonType;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -93,93 +92,34 @@ import org.w3c.dom.Node;
  */
 public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 {
-  final static JAXBContext GML3_JAXCONTEXT = KalypsoOGC31JAXBcontext.getContext();
-
   public AdapterBindingToValue_GML31( )
   {
     // do not instantiate
   }
 
-  public GM_Object createGM_Object( Element element )
-  {
-    // see gml2xadapter
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * TODO implement for filter...
-   */
-  public Element createElement( final String gmlVersion, GM_Object geometry )
-  {
-    // see gml2xadapter
-    throw new UnsupportedOperationException();
-    // TODO
-    // try
-    // {
-    // final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry =
-    // MarshallingTypeRegistrySingleton.getTypeRegistry();
-    // final QName qName = new QName( "namespaceabc", "geometry", "pre" );
-    // final IMarshallingTypeHandler typeHandler = marshallingregistry.getTypeHandlerForClassName(
-    // GeometryUtilities.getPolygonClass() );
-    //
-    // // final AbstractGeometryType bindingGeometry = createBindingGeometryType( geometry );
-    // // final JAXBElement bindingElement = new JAXBElement( qName, bindingGeometry.getClass(), bindingGeometry );
-    //
-    // // final Marshaller marshaller = GML3_JAXCONTEXT.createMarshaller();
-    //
-    // final DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
-    // fac.setNamespaceAware( true );
-    // final DocumentBuilder builder = fac.newDocumentBuilder();
-    // final Document document = builder.newDocument();
-    // final UnMarshallResultEater eater = new UnMarshallResultEater()
-    // {
-    // public void eat( Object value )
-    // {
-    // if( value instanceof Node )
-    // {
-    // String string = XMLHelper.toString( (Node) value );
-    // System.out.println( string );
-    // }
-    // }
-    // };
-    // // Element element = document.createElement("test");
-    // // document.appendChild(element);
-    // final DOMConstructor constructor = new DOMConstructor( document, eater );
-    // constructor.startElement( "bla", "blub", "b:blub", new AttributesImpl() );
-    // typeHandler.marshal( qName, geometry, constructor, null, null, gmlVersion );
-    //
-    // // marshaller.marshal( bindingElement, document );
-    // String string1 = XMLHelper.toString( document );
-    // Node node = constructor.getNode();
-    // String string2 = XMLHelper.toString( node );
-    // return document.getDocumentElement();
-    // }
-    // catch( Exception e )
-    // {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // // called from SpatialOperation.toXML()
-  }
-
-  private GM_Envelope createGM_Envelope( EnvelopeType bindingEnvelope )
+  private GM_Envelope createGM_Envelope( final EnvelopeType bindingEnvelope )
   {
     final List<CoordType> coord = bindingEnvelope.getCoord();
+    final String bindingSrsName = bindingEnvelope.getSrsName();
+    // REMARK: backwards compablity: use kalypso-srs if no srs was found
+    final String srsName = bindingSrsName == null ? KalypsoDeegreePlugin.getDefault().getCoordinateSystem() : bindingSrsName;
+
     if( coord != null && !coord.isEmpty() )
     {
       final CoordType min = coord.get( 0 );
       final CoordType max = coord.get( 1 );
       final GM_Position minPos = createGM_Position( min );
       final GM_Position maxPos = createGM_Position( max );
-      return GeometryFactory.createGM_Envelope( minPos, maxPos, bindingEnvelope.getSrsName() );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos, srsName );
     }
     final CoordinatesType coordinates = bindingEnvelope.getCoordinates();
     if( coordinates != null )
     {
 
       final GM_Position[] positions = createGM_Positions( coordinates );
-      return GeometryFactory.createGM_Envelope( positions[0], positions[1], bindingEnvelope.getSrsName() );
+      return GeometryFactory.createGM_Envelope( positions[0], positions[1], srsName );
     }
+
     // TODO coordinates
 
     final DirectPositionType lowerCorner = bindingEnvelope.getLowerCorner();
@@ -190,7 +130,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final List<Double> max = upperCorner.getValue();
       final GM_Position minPos = GeometryFactory.createGM_Position( min.get( 0 ), min.get( 1 ) );
       final GM_Position maxPos = GeometryFactory.createGM_Position( max.get( 0 ), max.get( 1 ) );
-      return GeometryFactory.createGM_Envelope( minPos, maxPos, bindingEnvelope.getSrsName() );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos, srsName );
     }
 
     final List<DirectPositionType> pos = bindingEnvelope.getPos();
@@ -200,12 +140,13 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       final List<Double> max = pos.get( 1 ).getValue();
       final GM_Position minPos = GeometryFactory.createGM_Position( min.get( 0 ), min.get( 1 ) );
       final GM_Position maxPos = GeometryFactory.createGM_Position( max.get( 0 ), max.get( 1 ) );
-      return GeometryFactory.createGM_Envelope( minPos, maxPos, bindingEnvelope.getSrsName() );
+      return GeometryFactory.createGM_Envelope( minPos, maxPos, srsName );
     }
+
     throw new UnsupportedOperationException();
   }
 
-  private GM_MultiPoint createGM_MultiPoint( MultiPointType type, String cs )
+  private GM_MultiPoint createGM_MultiPoint( final MultiPointType type, final String cs )
   {
     final String co = getCS_CoordinateSystem( cs, type );
     int i = 0;
@@ -252,7 +193,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiPoint( resultPoints, co );
   }
 
-  private GM_MultiCurve createGM_MultiLineString( MultiLineStringType type, String cs ) throws GM_Exception
+  private GM_MultiCurve createGM_MultiLineString( final MultiLineStringType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
     final List<LineStringPropertyType> lineStringMember = type.getLineStringMember();
@@ -269,11 +210,11 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiCurve( curves );
   }
 
-  private GM_MultiSurface createGM_MultiSurface( MultiPolygonType type, String cs ) throws GM_Exception
+  private GM_MultiSurface createGM_MultiSurface( final MultiPolygonType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
     final List<PolygonPropertyType> polygonMember = type.getPolygonMember();
-    final GM_Surface[] surfaces = new GM_Surface[polygonMember.size()];
+    final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[polygonMember.size()];
     final Iterator<PolygonPropertyType> iterator = polygonMember.iterator();
     int i = 0;
     while( iterator.hasNext() )
@@ -286,7 +227,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
-  private GM_Surface createGM_Surface( PolygonType type, String cs ) throws GM_Exception
+  private GM_Surface<GM_SurfacePatch> createGM_Surface( final PolygonType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
     final AbstractRingPropertyType ringType = type.getExterior().getValue();
@@ -307,7 +248,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
   }
 
-  private GM_Position[] createGM_PositionFrom( AbstractRingType abstractRingType )
+  private GM_Position[] createGM_PositionFrom( final AbstractRingType abstractRingType )
   {
     if( abstractRingType instanceof LinearRingType )
     {
@@ -322,7 +263,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       throw new UnsupportedOperationException();
   }
 
-  private GM_Curve createGM_LineString( LineStringType type, String cs ) throws GM_Exception
+  private GM_Curve createGM_LineString( final LineStringType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
     final CoordinatesType coordinates = type.getCoordinates();
@@ -330,7 +271,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_Curve( positions, co );
   }
 
-  private GM_Point createGM_Point( PointType type, String cs )
+  private GM_Point createGM_Point( final PointType type, final String cs )
   {
     final String co = getCS_CoordinateSystem( cs, type );
     final CoordType coord = type.getCoord();
@@ -357,7 +298,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return GeometryFactory.createGM_Point( position, co );
   }
 
-  private GM_Position createGM_Position( CoordType coord )
+  private GM_Position createGM_Position( final CoordType coord )
   {
     final double x = coord.getX().doubleValue();
     final double y = coord.getX().doubleValue();
@@ -407,7 +348,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     return result.toArray( new GM_Position[result.size()] );
   }
 
-  private String getCS_CoordinateSystem( String defaultCS, AbstractGeometryType geom )
+  private String getCS_CoordinateSystem( final String defaultCS, final AbstractGeometryType geom )
   {
     final String srsName = geom.getSrsName();
     if( srsName == null )
@@ -419,7 +360,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromBinding(java.lang.Object)
    */
-  public Object wrapFromBinding( Object bindingGeometry, Class geometryClass ) throws GM_Exception
+  public Object wrapFromBinding( final Object bindingGeometry, final Class geometryClass ) throws GM_Exception
   {
     if( bindingGeometry == null )
       return null;
@@ -463,9 +404,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   /**
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromElement(org.w3c.dom.Element)
    */
-  public Object wrapFromNode( Node node ) throws Exception
+  public Object wrapFromNode( final Node node ) throws Exception
   {
-    final Unmarshaller unmarshaller = GML3_JAXCONTEXT.createUnmarshaller();
+    final Unmarshaller unmarshaller = KalypsoOGC31JAXBcontext.getContext().createUnmarshaller();
     final Object bindingGeometry = unmarshaller.unmarshal( node );
     final Object object = wrapFromBinding( bindingGeometry, null );
     return object;
