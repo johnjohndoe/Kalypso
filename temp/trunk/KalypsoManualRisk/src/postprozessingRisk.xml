@@ -31,11 +31,11 @@
       <primary>Statistische Ergebnisauswertung von KalypsoRisiko</primary>
     </indexterm>
 
-    <para>Öffnen Sie in der Ansicht "Aktivitäten" den Baum
-    <guimenuitem>Postprocessing</guimenuitem> und aktivieren Sie mit einem
-    Doppelklick <guimenuitem>Statistische Auswertung</guimenuitem> um die
-    dazugehörige Feature View zu öffnen. In einer Tabelle werden nun die
-    wichtigsten Daten dargestellt. Dazu gehören:</para>
+    <para>In der Ansicht "Aktivitäten" wird der Baum
+    <guimenuitem>Postprocessing</guimenuitem> geöffnet und
+    <guimenuitem>Statistische Auswertung</guimenuitem> mit einem Doppelklick
+    aktiviert, um die dazugehörige Feature View zu öffnen. In einer Tabelle
+    werden nun die wichtigsten Daten dargestellt. Dazu gehören:</para>
 
     <itemizedlist>
       <listitem>
@@ -71,13 +71,13 @@
       <primary>Exportieren des Schadenspotentials aus KalypsoRisiko</primary>
     </indexterm>
 
-    <para>Öffnen Sie in der Ansicht "Aktivitäten" den Baum
-    <guimenuitem>Postprocessing</guimenuitem> und aktivieren Sie mit einem
-    Doppelklick <guimenuitem>Exportieren des Schadenspotentials (je
-    HQi)</guimenuitem>. Es öffnet sich die dazugehörige Karten Werkzeugansicht
-    mit den verschiedenen Funktionen, um die einzelnen Rasterdateien zu
-    exportieren. Die Funktionen sind in der nachfolgenden Tabelle
-    erläutert.</para>
+    <para>Wenn in der Ansicht "Aktivitäten" der Baum
+    <guimenuitem>Postprocessing</guimenuitem> geöffnet und
+    <guimenuitem>Exportieren des Schadenspotentials (je HQi) </guimenuitem>mit
+    einem Doppelklick aktiviert wird, öffnet sich die dazugehörige Karten
+    Werkzeugansicht mit den verschiedenen Funktionen, um die einzelnen
+    Rasterdateien zu exportieren. Die Funktionen sind in der nachfolgenden
+    Tabelle erläutert.</para>
 
     <figure>
       <title>Karten Werkzeugansicht zum Export eines
@@ -111,14 +111,14 @@
             <entry align="left" valign="middle">Schadenspotential
             exportieren</entry>
 
-            <entry align="left" valign="middle">Wählen Sie zunächst mit dem
-            Pull Down Menü ein Hochwasserereignis aus und markieren Sie
-            anschließend die dazugehörige <filename>*.asc</filename> Datei.
-            Drücken Sie diesen Knopf, um die markierte Rasterdatei zu
-            exportieren. Es öffnet sich der unten dargestellte Assistent, in
-            dem Sie den Pfad eingeben müssen, wo die
-            <filename>*.asc</filename> Datei gespeichert werden soll. Klicken
-            Sie anschließend auf <guibutton>Finish</guibutton> um den Export
+            <entry align="left" valign="middle">zunächst mit dem Pull Down
+            Menü ein Hochwasserereignis auswählen und anschließend die
+            dazugehörige <filename>*.asc</filename> Datei markieren. Dieser
+            Knopf wird gedrückt, um die markierte Rasterdatei zu exportieren.
+            Es öffnet sich der unten dargestellte Assistent, in dem der Pfad
+            eingegeben werden muss, wo die <filename>*.asc</filename> Datei
+            gespeichert werden soll. Anschließend auf
+            <guibutton>Finish</guibutton> klicken um den Export
             abzuschließen.</entry>
           </row>
 
@@ -136,9 +136,9 @@
             <entry align="left" valign="middle">Ereignis in nach oben/ unten
             verschieben</entry>
 
-            <entry align="left" valign="middle">Markieren Sie in der Tabelle
-            ein Ereignis und verschieben Sie es mit den Pfeiltasten entweder
-            nach unten oder nach oben.</entry>
+            <entry align="left" valign="middle">Ein in der Tabelle markiertes
+            Ereignis kann mit den Pfeiltasten entweder nach unten oder nach
+            oben verschoben werden.</entry>
           </row>
 
           <row>
@@ -151,8 +151,8 @@
             <entry align="left" valign="middle">Kartenausschnitt auf
             ausgewählte Kachel verschieben</entry>
 
-            <entry align="left" valign="middle">Markieren Sie in der Tabelle
-            eine Kachel. Wenn Sie nun auf den Knopf drücken, wird der
+            <entry align="left" valign="middle">In der Tabelle eine Kachel
+            markieren. Wenn nun auf den Knopf gedrückt wird, wird der
             Kartenausschnitt genau auf die vorher ausgewählte Kachel
             verschoben und hereingezoomt.</entry>
           </row>
@@ -178,12 +178,13 @@
       <primary>Exportieren der Risikozonen aus KalypsoRisiko</primary>
     </indexterm>
 
-    <para>Öffnen Sie in der Ansicht "Aktivitäten" den Baum
-    <guimenuitem>Postprocessing</guimenuitem> und aktivieren Sie mit einem
-    Doppelklick <guimenuitem>Exportieren der Risikozonen</guimenuitem>. Es
-    öffnet sich die dazugehörige Karten Werkzeugansicht mit den verschiedenen
-    Funktionen, um die Rasterdateien zu exportieren. Die Funktionen sind in
-    der nachfolgenden Tabelle erläutert.</para>
+    <para>Wenn in der Ansicht "Aktivitäten" der Baum
+    <guimenuitem>Postprocessing</guimenuitem> geöffnet und
+    <guimenuitem>Exportieren der Risikozonen</guimenuitem> mit einem
+    Doppelklick aktiviert wird, öffnet sich die dazugehörige Karten
+    Werkzeugansicht mit den verschiedenen Funktionen, um die Rasterdateien zu
+    exportieren. Die Funktionen sind in der nachfolgenden Tabelle
+    erläutert.</para>
 
     <figure>
       <title>Karten Werkzeugansicht zum Export von Risikozonen</title>
@@ -216,12 +217,12 @@
             <entry align="left" valign="middle">Risikozonen
             exportieren</entry>
 
-            <entry align="left" valign="middle">Markieren Sie zunächst in der
-            Tabelle die Rasterdatei. Drücken Sie anschließend diesen Knopf, um
-            die Risikozonen zu exportieren. Es öffnet sich der unten
-            dargestellte Assistent, in dem Sie den Pfad eingeben müssen, wo
-            die <filename>*.asc</filename> Datei gespeichert werden soll.
-            Klicken Sie anschließend auf <guibutton>Finish</guibutton> um den
+            <entry align="left" valign="middle">Zunächst in der Tabelle die
+            Rasterdatei markieren. Anschließend diesen Knopf drücken, um die
+            Risikozonen zu exportieren. Es öffnet sich der unten dargestellte
+            Assistent, in dem der Pfad eingegeben werden muss, wo die
+            <filename>*.asc</filename> Datei gespeichert werden soll.
+            Anschließend auf <guibutton>Finish</guibutton> klickenum den
             Export abzuschließen.</entry>
           </row>
 
@@ -239,9 +240,9 @@
             <entry align="left" valign="middle">Ereignis in nach oben/ unten
             verschieben</entry>
 
-            <entry align="left" valign="middle">Markieren Sie in der Tabelle
-            ein Ereignis und verschieben Sie es mit den Pfeiltasten entweder
-            nach unten oder nach oben.</entry>
+            <entry align="left" valign="middle">Ein in der Tabelle markiertes
+            Ereignis kann mit den Pfeiltasten entweder nach unten oder nach
+            oben verschoben werden.</entry>
           </row>
 
           <row>
@@ -254,9 +255,9 @@
             <entry align="left" valign="middle">Kartenausschnitt auf
             ausgewählte Kachel verschieben</entry>
 
-            <entry align="left" valign="middle">Markieren Sie in der Tabelle
-            eine Kachel. Wenn Sie nun auf den Knopf drücken, wird der
-            Kartenausschnitt genau auf die vorher ausgewählte Kachel
+            <entry align="left" valign="middle">Wenn in der Tabelle eine
+            Kachel markiert und anschließend auf den Knopf gedrückt wird, wird
+            der Kartenausschnitt genau auf die vorher ausgewählte Kachel
             verschoben und hereingezoomt.</entry>
           </row>
         </tbody>

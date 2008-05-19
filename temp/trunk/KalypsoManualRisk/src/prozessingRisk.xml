@@ -16,14 +16,14 @@
       <primary>Risikozonierung in KalypsoRisiko</primary>
     </indexterm>
 
-    <para>Wenn Sie in der Ansicht "Aktivitäten" den Baum
-    <guimenuitem>Processing</guimenuitem> öffnen und anschließend
+    <para>Wenn in der Ansicht "Aktivitäten" der Baum
+    <guimenuitem>Processing</guimenuitem> geöffnet wird und anschließend
     <guimenuitem>Rasterung der Landnutzung</guimenuitem> mit einem Doppelklick
-    aktivieren, dann öffnet sich der nachfolgende Assistent. Mit dem
+    aktiviert wird, dann öffnet sich der nachfolgende Assistent. Mit dem
     Basisraster des Hochwasserereignisses mit der geringsten
     Auftretenswahrscheinlichkeit (im Beispiel HQ100) wird das
-    Landnutzungsraster berechnet. Klicken Sie auf <guibutton>Ja</guibutton>,
-    um die Berechnung zu starten.</para>
+    Landnutzungsraster berechnet. Man klicke auf <guibutton>Ja</guibutton>, um
+    die Berechnung zu starten.</para>
 
     <para>Farbdarstellung aus Zuweisung der Berechnungsparameter
     Preprocessing</para>
@@ -42,13 +42,13 @@
       </mediaobject>
     </figure>
 
-    <para>Die Farbdarstellung der verschiedenen Landnutzungsklassen haben Sie
-    beim Preprocessing festgelegt. Aktivieren Sie zunächst in der Gliederung
-    der Karte den Layer Landnutzung (raster)* (Häkchen setzen). Markieren Sie
-    diesen anschließend und klicken Sie im Menü der Karte auf den Info-Knopf.
-    Wenn Sie nun mit dem Mauscursor auf eine Fläche zeigen, dann wird die
-    Landnutzungsklasse angezeigt. In der folgenden Abbildung ist diese
-    Funktion dargestellt.</para>
+    <para>Die Farbdarstellung der verschiedenen Landnutzungsklassen wurden
+    beim Preprocessing festgelegt. Zunächst ist in der Gliederung der Karte
+    den Layer Landnutzung (raster)* (Häkchen setzen) zu aktivieren.
+    Anschließend muss man diesen markieren und im Menü der Karte auf den
+    Info-Knopf klicken. Wenn nun mit dem Mauscursor auf eine Fläche gezeigt
+    wird, wird die Landnutzungsklasse angezeigt. In der folgenden Abbildung
+    ist diese Funktion dargestellt.</para>
 
     <figure>
       <title>Ansicht nach der Berechnung der Rasterung der Landnutzung</title>
@@ -68,13 +68,13 @@
       <primary>Risikozonierung in KalypsoRisiko</primary>
     </indexterm>
 
-    <para>Wenn Sie in der Ansicht "Aktivitäten" den Baum
-    <guimenuitem>Processing</guimenuitem> öffnen und anschließend
+    <para>Wenn in der Ansicht "Aktivitäten" der Baum
+    <guimenuitem>Processing</guimenuitem> geöffnet und anschließend
     <guimenuitem>Berechnung des Schadenpotentials</guimenuitem> mit einem
-    Doppelklick aktivieren, dann öffnet sich der nachfolgende Assistent. Es
-    wird das spezifische jährliche Schadenspotential für jedes
-    Hochwasserereignis berechnet. Klicken Sie auf <guibutton>Ja</guibutton>,
-    um die Berechnung zu starten.</para>
+    Doppelklick aktiviert wird, dann öffnet sich der nachfolgende Assistent.
+    Es wird das spezifische jährliche Schadenspotential für jedes
+    Hochwasserereignis berechnet. Man klicke auf <guibutton>Ja</guibutton>, um
+    die Berechnung zu starten.</para>
 
     <figure>
       <title>Assistent zum Bestätigen, dass die Berechnung des
@@ -89,8 +89,8 @@
 
     <para>Die berechneten Schadenspotentiale können mittels Info-Knopf in der
     Karte angezeigt werden. In der Abbildung unten ist diese Funktion
-    dargestellt. Wichtig ist dabei, dass Sie das gewünschte Schadenspotential
-    in der Gliederung markiert haben, denn auch wenn mehrere
+    dargestellt. Wichtig ist dabei, dass das gewünschte Schadenspotential in
+    der Gliederung markiert worden ist, denn auch wenn mehrere
     Schadenspotentiale zu verschiedenen HQi gleichzeitig in der Gliederung
     aktiviert sind (mit Häkchen), werden mittels des Info-Knopfes immer die
     Werte angezeigt, die zu dem markierten Schadenspotential gehören. In der
@@ -116,13 +116,13 @@
       <primary>Risikozonierung in KalypsoRisiko</primary>
     </indexterm>
 
-    <para>Wenn Sie in der Ansicht "Aktivitäten" den Baum
-    <guimenuitem>Processing</guimenuitem> öffnen und anschließend
+    <para>Wenn in der Ansicht "Aktivitäten" der Baum
+    <guimenuitem>Processing</guimenuitem> geöffnet und anschließend
     <guimenuitem>Ausweisung des Hochwasserrisikos </guimenuitem>mit einem
-    Doppelklick aktivieren, dann öffnet sich der nachfolgende Assistent.
+    Doppelklick aktiviert wird, dann öffnet sich der nachfolgende Assistent.
     Abhängig von dem jährlichen Schadenspotential, wird jede Fläche einer
-    Risikozone zugewiesen. Die Intervalle für die Zonierung haben Sie beim
-    Preprocessing festgelegt (Risikozonierung). Klicken Sie auf
+    Risikozone zugewiesen. Die Intervalle für die Zonierung wurden beim
+    Preprocessing festgelegt (Risikozonierung). Man klicke auf
     <guibutton>Ja</guibutton>, um die Berechnung zu starten.</para>
 
     <figure>
@@ -136,10 +136,10 @@
       </mediaobject>
     </figure>
 
-    <para>Wenn Sie Risikozonen (raster)* in der Gliederung markieren und in
-    der Karten-Menüleiste den Info-Knopf drücken, dann werden die Risikozonen
-    in der Karte angezeigt, sobald sie mit dem Mauscursor über so einem Gebiet
-    sind. In der nachfolgenden Abbildung ist diese Funktion
+    <para>Wenn Risikozonen (raster)* in der Gliederung markiert worden sind
+    und in der Karten-Menüleiste der Info-Knopf gedrückt wird, dann werden die
+    Risikozonen in der Karte angezeigt, sobald sie mit dem Mauscursor über so
+    einem Gebiet sind. In der nachfolgenden Abbildung ist diese Funktion
     dargestellt.</para>
 
     <figure>

@@ -24,11 +24,13 @@
     Auflistung aller verfügbarer Modelle. Hier ist das KalypsoRisiko Modell zu
     wählen.</para>
 
-    <para>Auf der Welcome Seite von KalypsoRisiko können Sie zwischen den
-    folgenden Aktionen wählen:<itemizedlist>
+    <para>Auf der Welcome Seite von KalypsoRisiko kann zwischen den folgenden
+    Aktionen gewählt werden:</para>
+
+    <para><itemizedlist>
         <listitem>
           <para>Neues Projekt erstellen: Über diese Option kann ein neues
-          Projekt erstellt werden. Wählen Sie hierfür den Knopf
+          Projekt erstellt werden. Hierfür muss dieser Knopf gewählt werden:
           <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/Risk/Icon_Welcome_NeuesProjekt.png" />
@@ -38,18 +40,18 @@
 
         <listitem>
           <para>Vorhandene Projekte öffnen: Bereits vorhandene Projekte können
-          hier bearbeitet werden. Wählen Sie hierfür den Knopf
-          <inlinemediaobject>
+          hier bearbeitet werden. Hierfür muss der Knopf <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/Risk/Icon_Welcome_Projektoeffnen.png" />
               </imageobject>
-            </inlinemediaobject> des Projektes, das Sie öffnen möchten.</para>
+            </inlinemediaobject> des Projektes gewählt werden, das geöffnet
+          werden soll.</para>
         </listitem>
 
         <listitem>
           <para>Vorhandene Projekte löschen: Über diese Option ist es möglich
-          bereits vorhandene Projekte aus dem Workspace zu löschen. Wählen Sie
-          hierfür den Knopf <inlinemediaobject>
+          bereits vorhandene Projekte aus dem Workspace zu löschen. Hierfür
+          muss folgender Knopf gewählt werden: <inlinemediaobject>
               <imageobject>
                 <imagedata fileref="img/Risk/Icon_Welcome_ProjektLoeschen.png" />
               </imageobject>
@@ -102,7 +104,7 @@
         </indexterm>
 
         <para>Der Arbeitsablauf in KalypsoRisiko wird über den Workflow
-        gesteuert. Der Benutzer wird in der Modellbearbeitung einem
+        gesteuert. Der Benutzer wird in der Modellbearbeitung von einem
         Bearbeitungsschritt zum nächsten geführt. Dieser Ablauf soll
         verhindern, dass wichtige Schritte im Modellaufbau oder der Berechnung
         übersehen oder vergessen werden, so dass eine zielgerichtete und
@@ -150,10 +152,10 @@
         </orderedlist>
 
         <para>Innerhalb dieser drei Hauptschritte werden dann alle
-        erforderlichen Unterschritte der Reihe nach durchgeführt. Wenn Sie das
-        Programm einmal verlassen haben und später an Ihrem Projekt
-        weiterarbeiten möchten, so ist der Arbeitsschritt an dem Sie zuletzt
-        gearbeitet haben fett markiert.</para>
+        erforderlichen Unterschritte der Reihe nach durchgeführt. Wenn der
+        Benutzer das Programm einmal verlassen hat und später an seinem
+        Projekt weiterarbeiten möchte, so ist der Arbeitsschritt an dem er
+        zuletzt gearbeitet hat fett markiert.</para>
       </section>
 
       <section id="KalypsoRisikoSzenarienansicht">
@@ -170,8 +172,8 @@
         <para>Das aktivierte Basisszenario (blaue Kugel) wird in
         Fettbuchstaben dargestellt. Dieses ist das ausgewählte Projekt, das
         nun im Navigator geöffnet ist. Um die Funktionen der Ansicht
-        "Szenarien" sichtbar zu machen, müssen Sie ein Basisszenario markieren
-        indem Sie es mit dem linken Mauszeiger anklicken. Es erscheinen
+        "Szenarien" sichtbar zu machen, muss ein Basisszenario markiert werden
+        indem es mit dem linken Mauszeiger angeklickt wird. Es erscheinen
         Symbole, die in der folgenden Tabelle vorgestellt werden.</para>
 
         <figure>
@@ -207,8 +209,8 @@
                 <entry align="left" valign="middle">Neues Projekt
                 erstellen</entry>
 
-                <entry align="left" valign="middle">Wenn Sie diesen Knopf
-                betätigen, öffnet sich der Assistent um ein neues Projekt zu
+                <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+                wird, öffnet sich der Assistent um ein neues Projekt zu
                 erstellen. (Siehe <xref
                 linkend="KalypsoRisikoNeuesProjekt" />)</entry>
               </row>
@@ -222,8 +224,8 @@
 
                 <entry align="left" valign="middle">Szenario löschen</entry>
 
-                <entry align="left" valign="middle">Wenn Sie diesen Knopf
-                betätigen wird das markierte Szenario gelöscht. Es können nur
+                <entry align="left" valign="middle">Wenn dieser Knopf betätigt
+                wird, wird das markierte Szenario gelöscht. Es können nur
                 nicht aktivierte Szenarien gelöscht werden.</entry>
               </row>
 
@@ -237,9 +239,9 @@
                 <entry align="left" valign="middle">Szenario
                 aktivieren</entry>
 
-                <entry valign="middle">Wenn Sie diesen Buttton betätigen wird
-                das markierte Szenario aktiviert. Das aktivierte Szenario wird
-                in Fettbuchstaben dargestellt.</entry>
+                <entry valign="middle">Bei Betätigung dieses Buttons, wird das
+                markierte Szenario aktiviert. Das aktivierte Szenario wird in
+                Fettbuchstaben dargestellt.</entry>
               </row>
 
               <row>
@@ -256,10 +258,11 @@
                 <entry align="left" charoff="" valign="middle">Von
                 Basisszenarien können weitere Szenarien abgeleitet werden. Das
                 Basisszenario, von dem ein Szenario abgeleitet werden soll,
-                sollte nicht aktiviert sein. Markieren Sie das nicht
-                aktivierte Basiszszenario und klicken Sie anschließend auf den
-                Knopf. Es öffnet sich ein Assistent, in dem Sie einen Namen
-                eingeben müssen und gegebenenfalls eine Beschreibung.</entry>
+                sollte nicht aktiviert sein. Bei Markierung des nicht
+                aktivierten Basiszszenarios und anschließendem Klicken auf den
+                Knopf, öffnet sich ein Assistent, in dem ein Name und
+                gegebenenfalls eine Beschreibung eingegeben werden muss
+                .</entry>
               </row>
             </tbody>
           </tgroup>
@@ -285,14 +288,14 @@
         <primary>Neues Projekt erstellen</primary>
       </indexterm>
 
-      <para>Ein Assistent führt Sie durch die Projekterstellung. Hierbei
-      müssen Sie den Projektnamen und den Speicherort des anzulegenden
-      Projektes definieren. Voreingestellt wird als Speicherort immer das
-      festgelegte Arbeitsverzeichnis gewählt. Um einen anderen Speicherort
-      festzulegen, müssen Sie das Häkchen vor <guilabel>Use default
-      location</guilabel> entfernen und dann über den Knopf
+      <para>Ein Assistent führt den Benutzer durch die Projekterstellung.
+      Hierbei muss der Projektname und der Speicherort des anzulegenden
+      Projektes definiert werden. Voreingestellt wird als Speicherort immer
+      das festgelegte Arbeitsverzeichnis gewählt. Um einen anderen Speicherort
+      festzulegen, muss das Häkchen vor <guilabel>Use default
+      location</guilabel> entfernt, und dann über den Knopf
       <guibutton>Durchsuchen...</guibutton> das gewünschte Verzeichnis
-      auswählen. Der Assistent wird durch den Knopf <guibutton>Fertig
+      ausgewählt werden. Der Assistent wird durch den Knopf <guibutton>Fertig
       stellen</guibutton> abgeschlossen. Zugleich wird das neue Projekt
       angelegt und die Risiko Perspektive (siehe <xref
       linkend="KalypsoRisikoPerspektive" />) geöffnet.</para>
@@ -308,12 +311,12 @@
         </mediaobject>
       </figure>
 
-      <para>Wollen Sie ein neues Projekt über die Szenarienansicht erstellen,
-      öffnet sich zunächst der folgende Assistent und Sie müssen auswählen,
-      dass sie ein <guimenuitem>Kalypso Risk Model</guimenuitem> Projekt
-      erstellen möchten. Klicken Sie anschließend auf
-      <guibutton>Next</guibutton> und es erscheint der Assistent, der oben
-      abgebildet ist.</para>
+      <para>Soll ein neues Projekt über die Szenarienansicht erstellt werden,
+      öffnet sich zunächst der folgende Assistent und der Benutzer muss
+      auswählen, dass ein <guimenuitem>Kalypso Risk Model</guimenuitem>
+      Projekt erstellt werden soll. Nachdem anschließend auf
+      <guibutton>Next</guibutton> geklickt wurde, erscheint der Assistent, der
+      oben abgebildet ist.</para>
 
       <figure>
         <title>Assistent zur Erstellung eines neuen Projektes über die
@@ -365,13 +368,13 @@
         </mediaobject>
       </figure>
 
-      <para>Um die Daten komplett von der Festplatte zu löschen wählen Sie
-      <guilabel>Also delete contents under ...</guilabel> . Um das Projekt aus
-      der Kalypso Ansicht zu entfernen wählen Sie <guilabel>Do not delete
-      contents</guilabel>. Um den Löschvorgang abzuschließen klicken Sie auf
-      den Knopf <guibutton>Yes</guibutton>. Wenn Sie den Löschvorgang
-      abbrechen wollen, klicken Sie auf den Knopf
-      <guibutton>No</guibutton>.</para>
+      <para>Um die Daten komplett von der Festplatte zu löschen muss
+      <guilabel>Also delete contents under ...</guilabel> gewählt werden . Um
+      das Projekt aus der Kalypso Ansicht zu entfernen wähle man <guilabel>Do
+      not delete contents</guilabel>. Um den Löschvorgang abzuschließen wird
+      auf den Knopf <guibutton>Yes</guibutton> geklickt. Um den Löschvorgang
+      abzubrechen, muss der Knopf <guibutton>No </guibutton>gewählt
+      werden.</para>
     </section>
 
     <section id="KalypsoRisikoKarte">
@@ -456,8 +459,8 @@
               <entry align="left" valign="middle">Verkleinert den
               Kartenausschnitt, herauszoomen</entry>
 
-              <entry align="left" valign="middle">Wenn Sie diesen Knopf
-              betätigen wird aus der Mitte des Kartenausschnitts herausgezoomt
+              <entry align="left" valign="middle"> Durch Betätigung dieses
+              Knopfes, wird aus der Mitte des Kartenausschnitts herausgezoomt
               in vordefinierten Schritten.</entry>
             </row>
 
@@ -474,8 +477,8 @@
               Kartenausschnitt, hereinzoomen in die Mitte des
               Kartenausschnitts</entry>
 
-              <entry align="left" valign="middle">Wenn Sie diesen Knopf
-              betätigen wird in die Mitte des Kartenausschnitts hereingezoomt
+              <entry align="left" valign="middle">Durch Betätigung dieses
+              Knopfes, wird in die Mitte des Kartenausschnitts hereingezoomt
               in vordefinierten Schritten.</entry>
             </row>
 
@@ -491,8 +494,8 @@
               <entry align="left" valign="middle">Verschieben der
               Kartenansicht nach links, unten, oben oder rechts</entry>
 
-              <entry align="left" valign="middle">Durch betätigen der Knöpfe
-              verschiebt sich der Kartenausschnitt in voreingestellten
+              <entry align="left" valign="middle">Durch betätigen dieser
+              Knöpfe, verschiebt sich der Kartenausschnitt in voreingestellten
               Schritten</entry>
             </row>
 
@@ -548,8 +551,8 @@
               <entry align="left" valign="middle">Gliederung der Karte
               anzeigen/ ausblenden</entry>
 
-              <entry align="left" valign="middle">Wenn Sie diesen Knopf
-              drücken, wird entweder die Gliederung der Karte angezeigt oder
+              <entry align="left" valign="middle">Beim drücken dieses Knopfes,
+              wird entweder die Gliederung der Karte angezeigt oder
               ausgeblendet.</entry>
             </row>
           </tbody>
@@ -568,40 +571,40 @@
 
         <itemizedlist>
           <listitem>
-            <para>ein einzelnes Element selektieren: Klicken Sie mit der
-            linken Maustaste in das Element.</para>
+            <para>ein einzelnes Element selektieren: Mit der linken Maustaste
+            in das Element klicken.</para>
           </listitem>
 
           <listitem>
-            <para>mehrere Elemente selektieren mit einem Rechteck: Halten Sie
-            die linke Maustaste gedrückt und ziehen Sie ein Rechteck auf.
-            Umschließen Sie dabei alle Elemente, die gelöscht werden sollen,
-            denn es werden nur die Elemente selektiert, die komplett im
-            Rechteck liegen!</para>
+            <para>mehrere Elemente selektieren mit einem Rechteck: die linke
+            Maustaste gedrückt halten und ein Rechteck aufziehen. dabei alle
+            Elemente umschließen, die gelöscht werden sollen, denn es werden
+            nur die Elemente selektiert, die komplett im Rechteck
+            liegen!</para>
           </listitem>
 
           <listitem>
-            <para>mehrere Elemente selektieren mit einem Polygon: Drücken Sie
-            die Shift-Taste und halten Sie diese während des gesamten Vorgangs
-            gedrückt. Klicken Sie nun mit der linken Maustaste auf die
-            Eckpunkte des Polygons und umschließen Sie alle Elemente, die
-            gelöscht werden sollen, denn es werden wiederum nur die Elemente
-            gelöscht, die komplett innerhalb des Polygons liegen! Sie beenden
-            ein Polygon mit einem Doppelklick.</para>
+            <para>mehrere Elemente selektieren mit einem Polygon: die
+            Shift-Taste drücken und diese während des gesamten Vorgangs
+            gedrückt halten.mit der linken Maustaste auf die Eckpunkte des
+            Polygons klicken und alle Elemente umschließen, die gelöscht
+            werden sollen, denn es werden wiederum nur die Elemente gelöscht,
+            die komplett innerhalb des Polygons liegen! Polygon mit einem
+            Doppelklick beenden.</para>
           </listitem>
         </itemizedlist>
 
-        <para>Wenn Sie im ersten Schritt nicht alle gewünschten Elemente
-        selektiert haben, halten Sie die Strg-Taste gedrückt und setzen den
-        Selektiervorgang fort. Die alte Selektion wird dadurch nicht
-        aufgehoben.</para>
+        <para>Wenn im ersten Schritt nicht alle gewünschten Elemente
+        selektiert wurden, soll die Strg-Taste gedrückt gehalten, und der
+        Selektiervorgang fortgesezt werden. Die alte Selektion wird dadurch
+        nicht aufgehoben.</para>
 
         <para>Ein selektiertes Element lässt sich wieder deselektieren, indem
         man es erneut markiert (hier muss wiederum die Strg-Taste während des
         gesamten Vorgangs gedrückt gehalten werden, damit die Selektion nicht
-        komplett aufgehoben wird). Wenn Sie alle selektierten Elemente wieder
-        deselektieren möchten, drücken Sie einfach mit der linken Maustaste
-        auf einen beliebigen Punkt in der Karte.</para>
+        komplett aufgehoben wird). Wenn alle selektierten Elemente wieder
+        deselektiert werden sollen, muss einfach mit der linken Maustaste auf
+        einen beliebigen Punkt in der Kartegedrückt werden.</para>
       </section>
     </section>
   </section>
