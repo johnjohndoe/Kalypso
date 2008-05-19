@@ -42,6 +42,12 @@ package org.kalypso.grid;
 
 import java.math.BigDecimal;
 
+import org.deegree.crs.transformations.coordinate.CRSTransformation;
+import org.kalypso.transformation.CachedTransformationFactory;
+import org.kalypso.transformation.TransformUtilities;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -91,46 +97,58 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
    */
   public double getValue( int x, int y ) throws GeoGridException
   {
-    // get the value according to the grids category
-    double value = Double.NaN;
-
-    // check for all categorie's grids if there is a value for that position
-    for( int i = 0; i < m_gridCategories.length; i++ )
+    try
     {
-      final GridCategoryWrapper gridCategory = m_gridCategories[i];
+      // get the value according to the grids category
+      double value = Double.NaN;
 
-      final IGeoGrid[] grids = gridCategory.getGrids();
-
-      for( int j = 0; j < grids.length; j++ )
+      // check for all categorie's grids if there is a value for that position
+      for( int i = 0; i < m_gridCategories.length; i++ )
       {
-        final IGeoGrid grid = grids[j];
+        final GridCategoryWrapper gridCategory = m_gridCategories[i];
 
-        final Coordinate crd = GeoGridUtilities.toCoordinate( this, x, y, null );
+        final IGeoGrid[] grids = gridCategory.getGrids();
 
-        if( m_clipGeometry != null )
+        for( int j = 0; j < grids.length; j++ )
         {
-          /* Get coordinate for raster cell x/y. */
-          final Point point = GF.createPoint( crd );
+          final IGeoGrid grid = grids[j];
 
-          if( m_clipGeometry.contains( point ) )
+          final Coordinate crd = GeoGridUtilities.toCoordinate( this, x, y, null );
+
+          if( m_clipGeometry != null )
           {
-            // TODO: transform to grid's crs
-            final double gridValue = grid.getValue( crd );
+            /* Get coordinate for raster cell x/y. */
+            final Point point = GF.createPoint( crd );
 
-            // only if there is a value for a new gird, overwrite the old value
+            if( m_clipGeometry.contains( point ) )
+            {
+              // transform to grid's crs
+              final GM_Position positionAt = JTSAdapter.wrap( crd );
+
+              /* Transform query position into the crs of the current grid. */
+              final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( this.getSourceCRS(), grid.getSourceCRS() );
+              final GM_Position position = TransformUtilities.transform( positionAt, transformation );
+              final double gridValue = grid.getValue( JTSAdapter.export( position ) );
+
+              // only if there is a value for a new gird, overwrite the old value
+              if( !Double.isNaN( gridValue ) )
+                value = gridCategory.getValue();
+            }
+          }
+          else
+          {
+            final double gridValue = grid.getValue( crd );
             if( !Double.isNaN( gridValue ) )
               value = gridCategory.getValue();
           }
         }
-        else
-        {
-          final double gridValue = grid.getValue( crd );
-          if( !Double.isNaN( gridValue ) )
-            value = gridCategory.getValue();
-        }
       }
+      return value;
     }
-    return value;
+    catch( Exception ex )
+    {
+      throw new GeoGridException( "error while flattening grids", ex );
+    }
   }
 
   /**
