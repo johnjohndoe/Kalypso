@@ -73,7 +73,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.GeoGridCell;
@@ -82,16 +81,13 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
-import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -287,14 +283,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
             /* Get the surface of the cell (in the target coordinate system). */
             final GM_Surface< ? > cell = grid.getCell( i, j, targetCRS );
-
-            /* Paint the cell. */
-            final PolygonSymbolizer impl = new PolygonSymbolizer_Impl();
-            impl.getFill().setFill( color );
-            impl.getStroke().setStroke( color );
-            impl.getStroke().setWidth( 1 );
-            final PolygonDisplayElement displayElement = DisplayElementFactory.buildPolygonDisplayElement( null, cell, impl );
-            displayElement.paint( g, projection, new SubProgressMonitor( monitor, 1 ) );
+            final GM_Envelope cellEnvelope = cell.getEnvelope();
+            final Envelope jtsCellEnvelope = JTSAdapter.export( cellEnvelope );
+            paintEnvelope( g, projection, jtsCellEnvelope, color );
           }
         }
 
@@ -350,6 +341,32 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 // image.dispose();
 // }
 // }
+
+  /**
+   * Paints one cell in form of an envelope.<br>
+   * This is used instead of reusing PolygoneDisplayElement or similar, as for the grid it is crucial, that the border
+   * of two cells is painted without intersection or gap.
+   */
+  private void paintEnvelope( final Graphics2D g, final GeoTransform projection, final Envelope currentCellEnv, final Color color )
+  {
+    // We assume the envelope is normalized here, so we can safely switch minY anc maxY
+    final double paintMinX = projection.getDestX( currentCellEnv.getMinX() );
+    final double paintMinY = projection.getDestY( currentCellEnv.getMinY() );
+    final double paintMaxX = projection.getDestX( currentCellEnv.getMaxX() );
+    final double paintMaxY = projection.getDestY( currentCellEnv.getMaxY() );
+
+    final int x1 = (int) Math.ceil( paintMinX );
+    final int y1 = (int) Math.ceil( paintMaxY );
+
+    final int x2 = (int) Math.ceil( paintMaxX );
+    final int y2 = (int) Math.ceil( paintMinY );
+
+    final int width = x2 - x1;
+    final int height = y2 - y1;
+
+    g.setColor( color );
+    g.fillRect( x1, y1, width, height );
+  }
 
   //
   // THE GRID CACHE
