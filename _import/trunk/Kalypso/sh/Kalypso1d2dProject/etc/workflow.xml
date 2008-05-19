@@ -5,7 +5,7 @@
 	xmlns="http://www.renew.de/workflow/base"
 	xmlns:con="http://www.renew.de/workflow/contexts"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	defaultTask="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Preprocessing">
+	defaultTask="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__NetCstr">
 	<Help>NONE</Help>
 	<Name>Kalypso1D2D-Workflow</Name>
 	<TaskGroup
