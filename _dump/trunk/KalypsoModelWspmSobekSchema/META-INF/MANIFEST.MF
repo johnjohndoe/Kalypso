@@ -8,5 +8,5 @@ Bundle-Vendor: %Bundle-Vendor.0
 Eclipse-LazyStart: true
 Bundle-Activator: org.kalypso.model.wspm.sobek.schema.KalypsoModelWspmSobekSchemaPlugin
 Require-Bundle: org.kalypso.core,
- org.kalypso.chart.ext.base
+ de.openali.odysseus.chart.ext.base
 Export-Package: org.kalypso.model.wspm.sobek.schema
