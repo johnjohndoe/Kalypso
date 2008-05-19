@@ -223,7 +223,7 @@ public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConst
 
     conditionFeature.setProperty( new QName( NS_WSPM_TUHH, "kind" ), type.name() );
     conditionFeature.setProperty( new QName( NS_WSPM_TUHH, "waterlevel" ), new Double( startWsp ) );
-    conditionFeature.setProperty( new QName( NS_WSPM_TUHH, "bottomSlope" ), new Double( startSlope ) );
+    conditionFeature.setProperty( new QName( NS_WSPM_TUHH, "bottomSlope" ), new BigDecimal( startSlope ) );
   }
 
   public START_KONDITION_KIND getStartKind( )

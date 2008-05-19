@@ -342,7 +342,7 @@ public abstract class AbstractProfil implements IProfil
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(java.lang.String)
    */
-  public IProfilPointMarker[] getPointMarkerFor( String pointMarkerID )
+  public IProfilPointMarker[] getPointMarkerFor( final String pointMarkerID )
   {
     final IComponent cmp = hasPointProperty( pointMarkerID );
     if( cmp == null )

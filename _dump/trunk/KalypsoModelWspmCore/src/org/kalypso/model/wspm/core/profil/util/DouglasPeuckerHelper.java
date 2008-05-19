@@ -129,16 +129,16 @@ public class DouglasPeuckerHelper
    *            The profile.
    * @return The profile changes.
    */
-  public static IProfilChange[] reduce( double allowedDistance, IRecord[] points, IProfil profile )
+  public static IProfilChange[] reduce( final double allowedDistance, final IRecord[] points, final IProfil profile )
   {
     /* Reduce points. */
-    IRecord[] pointsToKeep = profile.getMarkedPoints();
-    IRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
+    final IRecord[] pointsToKeep = profile.getMarkedPoints();
+    final IRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
     if( pointsToRemove.length == 0 )
       return new IProfilChange[] {};
 
     /* Remove points. */
-    IProfilChange[] removeChanges = new IProfilChange[pointsToRemove.length];
+    final IProfilChange[] removeChanges = new IProfilChange[pointsToRemove.length];
     for( int i = 0; i < pointsToRemove.length; i++ )
       removeChanges[i] = new PointRemove( profile, pointsToRemove[i] );
 
@@ -156,11 +156,11 @@ public class DouglasPeuckerHelper
    *            The allowed distance.
    * @return The points to remove.
    */
-  public static IRecord[] reducePoints( IRecord[] points, IRecord[] pointsToKeep, double allowedDistance )
+  public static IRecord[] reducePoints( final IRecord[] points, final IRecord[] pointsToKeep, final double allowedDistance )
   {
     /* Reduce segment wise. */
-    Set<IRecord> pointsToKeepList = new HashSet<IRecord>( Arrays.asList( pointsToKeep ) );
-    List<IRecord> pointsToRemove = new ArrayList<IRecord>( points.length - 2 );
+    final Set<IRecord> pointsToKeepList = new HashSet<IRecord>( Arrays.asList( pointsToKeep ) );
+    final List<IRecord> pointsToRemove = new ArrayList<IRecord>( points.length - 2 );
 
     int segmentBegin = 0;
     for( int i = 0; i < points.length; i++ )
@@ -168,10 +168,10 @@ public class DouglasPeuckerHelper
       if( i == segmentBegin )
         continue;
 
-      IRecord point = points[i];
+      final IRecord point = points[i];
       if( pointsToKeepList.contains( point ) || i == points.length - 1 )
       {
-        IRecord[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
+        final IRecord[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
         pointsToRemove.addAll( Arrays.asList( toRemove ) );
         segmentBegin = i;
       }
@@ -181,18 +181,18 @@ public class DouglasPeuckerHelper
   }
 
   /** @return the points with are redundant */
-  private static IRecord[] reduceIt( IRecord[] points, int begin, int end, double allowedDistance )
+  private static IRecord[] reduceIt( final IRecord[] points, final int begin, final int end, final double allowedDistance )
   {
     if( end - begin < 2 )
       return new IRecord[0];
 
     // für alle punkte abstand zu segment[begin-end] ausrechnen
-    double[] distances = new double[end - (begin + 1)];
+    final double[] distances = new double[end - (begin + 1)];
     double maxdistance = 0.0;
     int maxdistIndex = -1;
     for( int i = 0; i < distances.length; i++ )
     {
-      double distance = calcDistance( points[begin], points[end], points[i + begin + 1] );
+      final double distance = calcDistance( points[begin], points[end], points[i + begin + 1] );
       distances[i] = distance;
 
       if( distance > maxdistance )
@@ -205,10 +205,10 @@ public class DouglasPeuckerHelper
     // falls ein punkt dabei, dessen diff > maxdiff, splitten
     if( maxdistance > allowedDistance && maxdistIndex != -1 )
     {
-      IRecord[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
-      IRecord[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
+      final IRecord[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
+      final IRecord[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
 
-      List<IRecord> reduced = new ArrayList<IRecord>( beginReduced.length + endReduced.length );
+      final List<IRecord> reduced = new ArrayList<IRecord>( beginReduced.length + endReduced.length );
 
       reduced.addAll( Arrays.asList( beginReduced ) );
       reduced.addAll( Arrays.asList( endReduced ) );
@@ -216,14 +216,14 @@ public class DouglasPeuckerHelper
     }
 
     // kein Punkt mehr wichtig: alle zwischenpunkte zurückgeben
-    IRecord[] reduced = new IRecord[end - (begin + 1)];
+    final IRecord[] reduced = new IRecord[end - (begin + 1)];
     for( int i = 0; i < reduced.length; i++ )
       reduced[i] = points[i + begin + 1];
 
     return reduced;
   }
 
-  protected static double calcDistance( IRecord beginPoint, IRecord endPoint, IRecord middlePoint )
+  protected static double calcDistance( final IRecord beginPoint, final IRecord endPoint, final IRecord middlePoint )
   {
 
 //    final IComponent breiteComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_BREITE );
@@ -241,16 +241,16 @@ public class DouglasPeuckerHelper
 //    final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
 //    final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
 
-    Double bx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, beginPoint );//(Double) beginPoint.getValue( breiteIndexBegin );
-    Double by = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, beginPoint );//(Double) beginPoint.getValue( hoeheIndexBegin );
-    Double ex = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endPoint );//(Double) endPoint.getValue( breiteIndexMiddle );
-    Double ey = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, endPoint );//(Double) endPoint.getValue( hoeheIndexMiddle );
-    Double mx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, middlePoint );//(Double) middlePoint.getValue( breiteIndexEnd );
-    Double my = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, middlePoint );//(Double) middlePoint.getValue( hoeheIndexEnd );
+    final Double bx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, beginPoint );//(Double) beginPoint.getValue( breiteIndexBegin );
+    final Double by = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, beginPoint );//(Double) beginPoint.getValue( hoeheIndexBegin );
+    final Double ex = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endPoint );//(Double) endPoint.getValue( breiteIndexMiddle );
+    final Double ey = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, endPoint );//(Double) endPoint.getValue( hoeheIndexMiddle );
+    final Double mx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, middlePoint );//(Double) middlePoint.getValue( breiteIndexEnd );
+    final Double my = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, middlePoint );//(Double) middlePoint.getValue( hoeheIndexEnd );
 
-    double f = (ey - by) / (ex - bx);
+    final double f = (ey - by) / (ex - bx);
 
-    double distance = (f * mx - 1 * my - f * bx + by) / Math.sqrt( 1 + f * f );
+    final double distance = (f * mx - 1 * my - f * bx + by) / Math.sqrt( 1 + f * f );
     return Math.abs( distance );
   }
 

@@ -319,16 +319,22 @@ public class PrfSource implements IProfilSource
     writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_BREITE );
     writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_RAUHEIT );
     writeBuildingProperty( bridge, sT, IWspmTuhhConstants.BUILDING_PROPERTY_FORMBEIWERT );
-
-    final IComponent okb = p.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    final double delta = okb == null ? 0.0001 : okb.getPrecision();
+    
     p.addProfileObjects( new IProfileObject[] { bridge } );
+    final IComponent okb = p.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    if (!p.hasPointProperty( okb ))
+      p.addPointProperty( okb );
+    final double delta = okb == null ? 0.0001 : okb.getPrecision();
+
     final PolyLine polyLineO = new PolyLine( dbo.getX(), dbo.getY(), delta );
     final PolyLine polyLineU = new PolyLine( dbu.getX(), dbu.getY(), delta );
     final Range rangeO = new Range( polyLineO.getFirstX(), polyLineO.getLastX(), delta );
     final Range rangeU = new Range( polyLineU.getFirstX(), polyLineU.getLastX(), delta );
+    final IComponent ukb = p.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    if (!p.hasPointProperty( ukb ))
+      p.addPointProperty( ukb );
     final int iOKB = p.indexOfProperty( okb );
-    final int iUKB = p.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    final int iUKB = p.indexOfProperty(ukb);
     for( final IRecord point : p.getPoints() )
     {
       final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );

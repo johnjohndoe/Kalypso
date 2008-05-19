@@ -57,11 +57,12 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelBewuchsResolution;
 import org.kalypso.model.wspm.tuhh.ui.resolutions.DelDeviderResolution;
+import org.kalypso.model.wspm.tuhh.ui.resolutions.MoveDeviderResolution;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * Brï¿½ckenkanten dï¿½rfen nicht unterhalb des Gelï¿½ndeniveaus liegen Oberkante darf nicht unter Unterkante
+ * Brückenkanten dürfen nicht unterhalb des Geländeniveaus liegen Oberkante darf nicht unter Unterkante
  * 
  * @author kimwerner
  */
@@ -150,11 +151,40 @@ public class BrueckeRule extends AbstractValidatorRule
       final IProfilPointMarker[] trenner = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
       if( trenner.length > 1 )
       {
-        if( profil.indexOfPoint( trenner[0].getPoint() ) != innerLeft )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), innerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
-        if( profil.indexOfPoint( trenner[trenner.length - 1].getPoint() ) != innerRight )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), innerRight, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+        final int left = profil.indexOfPoint( trenner[0].getPoint() );
+        final Double h_0 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[left] );
+        final Double ukB_0 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[left] );
+        final Double h_1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[left + 1] );
+        final Double ukB_1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[left + 1] );
+        if( !h_0.isNaN() && !ukB_0.isNaN() && Math.abs( h_0 - ukB_0 ) > delta )
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId , new MoveDeviderResolution(0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,innerLeft));
+        if( !h_1.isNaN() && !ukB_1.isNaN() && ukB_1 - h_1 < delta )
+          collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Trennfläche innerhalb der Brückengeometrie", "km " + Double.toString( profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution(0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,innerLeft));
+
+        final int right = profil.indexOfPoint( trenner[trenner.length - 1].getPoint() );
+        final Double h_2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[right] );
+        final Double ukB_2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[right] );
+        final Double h_3 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[right - 1] );
+        final Double ukB_3 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[right - 1] );
+        if( !h_2.isNaN() && !ukB_2.isNaN() && Math.abs( h_2 - ukB_2 ) > delta )
+          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Trennfläche nicht auf Schnittpunkt Gelände-UK-Brücke", "km " + Double.toString( profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ,new MoveDeviderResolution(trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,innerRight));
+        if( !h_3.isNaN() && !ukB_3.isNaN() && ukB_3 - h_3 < delta )
+          collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Trennfläche innerhalb der Brückengeometrie", "km " + Double.toString( profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId ,new MoveDeviderResolution(trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE,innerRight));
       }
+
+      // mehr als eine Öffnung
+
+      for( int i = innerLeft + 1; i < innerRight; i++ )
+      {
+        final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
+        final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
+        if( !h.isNaN() && !ukB.isNaN() && (Math.abs( h - ukB ) < delta) )
+        {
+          collector.createProfilMarker( IMarker.SEVERITY_INFO, "Mehrfeldbrücke oder Öffnung außerhalb des Flussschlauchs", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
+          break;
+        }
+      }
+
       // Bordvollpunkte
       final IProfilPointMarker[] brdvp = profil.getPointMarkerFor( profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
       if( brdvp.length > 0 )

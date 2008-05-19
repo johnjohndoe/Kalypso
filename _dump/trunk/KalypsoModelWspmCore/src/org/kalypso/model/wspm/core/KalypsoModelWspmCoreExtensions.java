@@ -88,7 +88,7 @@ public class KalypsoModelWspmCoreExtensions
           return rule;
         }
       }
-      catch( CoreException e )
+      catch( final CoreException e )
       {
         e.printStackTrace();
       }

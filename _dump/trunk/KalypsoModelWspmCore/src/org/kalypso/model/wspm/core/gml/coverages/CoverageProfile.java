@@ -91,7 +91,7 @@ public class CoverageProfile
    * @param type
    *            The profile type, which should be created.
    */
-  public CoverageProfile( ICoverage coverage, String type )
+  public CoverageProfile( final ICoverage coverage, final String type )
   {
     m_coverage = coverage;
     m_type = type;
@@ -122,7 +122,7 @@ public class CoverageProfile
    *            The curve, which represents the geometry on the map of the profile.
    * @return The new profile.
    */
-  public IProfil createProfile( GM_Curve curve ) throws Exception
+  public IProfil createProfile( final GM_Curve curve ) throws Exception
   {
     /* Convert to a JTS geometry. */
     final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
@@ -134,16 +134,16 @@ public class CoverageProfile
     else
     {
       final IGeoGrid grid = GeoGridUtilities.toGrid( m_coverage );
-      double x = grid.getOffsetX().x;
+      final double x = grid.getOffsetX().x;
 
       /* STEP 1: Add the points every 1m to the profile. */
 
       /* Add every 1/8 raster size a point. */
-      TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve, x / 8 );
+      final TreeMap<Double, Point> points = JTSUtilities.calculatePointsOnLine( jtsCurve, x / 8 );
 
       /* STEP 2: Compute the width and height for each point of the new line. */
       /* STEP 3: Create the new profile. */
-      IProfil profile = calculatePointsAndCreateProfile( grid, points, curve.getCoordinateSystem() );
+      final IProfil profile = calculatePointsAndCreateProfile( grid, points, curve.getCoordinateSystem() );
 
       if( profile.getPoints().length == 0 )
       {
@@ -174,16 +174,16 @@ public class CoverageProfile
    *            The coordinate system of the points.
    * @return The new profile.
    */
-  private IProfil calculatePointsAndCreateProfile( IGeoGrid grid, TreeMap<Double, Point> points, String csOfPoints ) throws Exception
+  private IProfil calculatePointsAndCreateProfile( final IGeoGrid grid, final TreeMap<Double, Point> points, final String csOfPoints ) throws Exception
   {
     /* Create the new profile. */
-    IProfil profile = ProfilFactory.createProfil( m_type );
+    final IProfil profile = ProfilFactory.createProfil( m_type );
 
     /* The needed components. */
-    IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    IComponent cHochwert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    IComponent cBreite = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    IComponent cHoehe = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent cBreite = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent cHoehe = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     /* add components if necessary */
     if( !profile.hasPointProperty( cRechtswert ) )
@@ -202,33 +202,33 @@ public class CoverageProfile
     final int iHoehe = profile.indexOfProperty( cHoehe );
 
     /* Iterate over all points in the curve. */
-    Iterator<Entry<Double, Point>> iterator = points.entrySet().iterator();
+    final Iterator<Entry<Double, Point>> iterator = points.entrySet().iterator();
     while( iterator.hasNext() )
     {
       /* Get the current entry set. */
-      Entry<Double, Point> entry = iterator.next();
+      final Entry<Double, Point> entry = iterator.next();
 
-      Double distance = entry.getKey();
-      Point point = entry.getValue();
+      final Double distance = entry.getKey();
+      final Point point = entry.getValue();
 
       /* Get grid value. */
-      Coordinate coordinate = point.getCoordinate();
+      final Coordinate coordinate = point.getCoordinate();
 
       /* Transform the coordinate into the CS of the grid. */
-      Coordinate transformedCoordinate = GeoGridUtilities.transformCoordinate( grid, coordinate, csOfPoints );
+      final Coordinate transformedCoordinate = GeoGridUtilities.transformCoordinate( grid, coordinate, csOfPoints );
       /* Get the interpolated value with the coordinate in the coordinate system of the grid. */
-      double value = GeoGridUtilities.getValue( grid, transformedCoordinate, Interpolation.bilinear );
+      final double value = GeoGridUtilities.getValue( grid, transformedCoordinate, Interpolation.bilinear );
       if( Double.isNaN( value ) )
         continue;
 
       /* All necessary values. */
-      double rechtswert = coordinate.x;
-      double hochwert = coordinate.y;
-      double breite = distance;
-      double hoehe = value;
+      final double rechtswert = coordinate.x;
+      final double hochwert = coordinate.y;
+      final double breite = distance;
+      final double hoehe = value;
 
       /* Create a new profile point. */
-      IRecord profilePoint = profile.createProfilPoint();
+      final IRecord profilePoint = profile.createProfilPoint();
 
       /* Add geo values. */
       profilePoint.setValue( iRechtswert, rechtswert );
@@ -253,15 +253,15 @@ public class CoverageProfile
    * @param allowedDistance
    *            The allowed distance [m].
    */
-  private void thinProfile( IProfil profile, double allowedDistance ) throws IllegalProfileOperationException
+  private void thinProfile( final IProfil profile, final double allowedDistance ) throws IllegalProfileOperationException
   {
     /* Get the profile changes. */
-    IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, profile.getPoints(), profile );
+    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, profile.getPoints(), profile );
     if( removeChanges.length == 0 )
       return;
 
     /* Perform the changes. */
-    for( IProfilChange profilChange : removeChanges )
+    for( final IProfilChange profilChange : removeChanges )
       profilChange.doChange( null );
   }
 
@@ -281,7 +281,7 @@ public class CoverageProfile
    * @param coverage
    *            The coverage.
    */
-  public void setCoverage( ICoverage coverage )
+  public void setCoverage( final ICoverage coverage )
   {
     m_coverage = coverage;
   }
@@ -302,7 +302,7 @@ public class CoverageProfile
    * @param type
    *            The profile type.
    */
-  public void setType( String type )
+  public void setType( final String type )
   {
     m_type = type;
   }

@@ -26,7 +26,7 @@ public class KalypsoModelWspmCorePlugin extends Plugin
   private ValidatorFactory m_validatorFactory = null;
 
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
 
@@ -34,7 +34,7 @@ public class KalypsoModelWspmCorePlugin extends Plugin
   }
 
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
 

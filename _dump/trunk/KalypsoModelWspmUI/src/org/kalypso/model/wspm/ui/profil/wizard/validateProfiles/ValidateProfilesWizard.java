@@ -228,14 +228,14 @@ public class ValidateProfilesWizard extends Wizard
               final IMarker[] markers = collector.getMarkers();
               for( IMarker marker : markers )
               {
-                final String quickFixRes = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
+                final String quickFixRes = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, null );
                 if( quickFixRes != null && quickFixes.length > 0 )
                 {
                   final IProfilMarkerResolution mr = KalypsoModelWspmCoreExtensions.getReparatorRule( quickFixRes );
                   boolean resolved = false;
                   for( final Object quickFix : quickFixes )
                   {
-                    if( mr.getClass().getName().equals( quickFix.getClass().getName() ) )
+                    if( mr!=null && mr.getClass().getName().equals( quickFix.getClass().getName() ) )
                     {
                       resolved = mr.resolve( profiles[i] );
                     }

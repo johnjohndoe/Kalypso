@@ -45,7 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 
 public final class ProfilPropertyEdit implements IProfilChange
 {
-  private IProfil m_profil;
+  private final IProfil m_profil;
   private final Object m_property;
 
   private final Object m_newValue;

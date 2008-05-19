@@ -160,7 +160,7 @@ public class ProfilChangeHint
     return m_ProfilPropertyChanged;
   }
 
-  public void setProfilPropertyChanged( boolean profilPropertyChanged )
+  public void setProfilPropertyChanged( final boolean profilPropertyChanged )
   {
     m_ProfilPropertyChanged = profilPropertyChanged;
   }

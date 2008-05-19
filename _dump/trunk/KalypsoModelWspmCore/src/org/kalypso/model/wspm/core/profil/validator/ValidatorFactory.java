@@ -52,8 +52,8 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 
 public class ValidatorFactory
 {
-  private IConfigurationElement[] m_ruleElements;
-  private IConfigurationElement[] m_typeElements;
+  private final IConfigurationElement[] m_ruleElements;
+  private final IConfigurationElement[] m_typeElements;
   private final String[] m_types;
   private final IValidatorRule[] m_rules;
 

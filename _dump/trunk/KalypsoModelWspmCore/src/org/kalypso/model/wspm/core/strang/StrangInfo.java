@@ -15,7 +15,7 @@ public class StrangInfo
 {
   private final ProfilInfo[] m_profiles;
   private int m_index;
-  private Collection<IStranginfoListener> m_listeners = new LinkedList<IStranginfoListener>();
+  private final Collection<IStranginfoListener> m_listeners = new LinkedList<IStranginfoListener>();
   private final IResultSet[] m_results;
 
   public StrangInfo( final ProfilInfo[] profile, final int index, final IResultSet[] results )
@@ -36,7 +36,7 @@ public class StrangInfo
   /**
    * @param index The index to set.
    */
-  public void setIndex( int index )
+  public void setIndex( final int index )
   {
     if( m_index == index )
       return;

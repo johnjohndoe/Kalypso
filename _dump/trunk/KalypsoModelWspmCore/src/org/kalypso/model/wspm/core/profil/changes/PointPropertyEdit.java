@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
+import java.util.Arrays;
+
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -58,7 +60,13 @@ public final class PointPropertyEdit implements IProfilChange
     m_property = property;
     m_newValues = new Object[] { newValue };
   }
-
+  public PointPropertyEdit( final IRecord[] p, final IComponent property, final Object newValue )
+  {
+    m_points = p;
+    m_property = property;
+    m_newValues = new Object[p.length];
+    Arrays.fill(m_newValues,newValue );
+  }
   public PointPropertyEdit( final IRecord[] points, final IComponent property, final Object[] newValues )
   {
     m_points = points;

@@ -53,7 +53,7 @@ public final class PointPropertyAdd implements IProfilChange
 
   private final Object[] m_values;
 
-  private IComponent m_cloneFrom;
+  private final IComponent m_cloneFrom;
 
   public PointPropertyAdd( final IProfil profil, final IComponent property, final Object[] values )
   {

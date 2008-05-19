@@ -89,14 +89,14 @@ public class ProfileProblemView
     final String resArray = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
 
     final String[] resolutions = StringUtils.split( resArray, '\u0000' );
-    final List<IProfilMarkerResolution> markerRes = new ArrayList<IProfilMarkerResolution>( resolutions == null ? 0 : resolutions.length );
-    for( int i = 0; i < markerRes.size(); i++ )
+    final IProfilMarkerResolution[] markerRes = new IProfilMarkerResolution[ resolutions == null ? 0 : resolutions.length ];
+    for( int i = 0; i < markerRes.length; i++ )
     {
       final IProfilMarkerResolution markerResolution = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
       if( markerResolution != null )
-        markerRes.add( markerResolution );
+        markerRes[i]= markerResolution ;
     }
-    return markerRes.toArray( new IProfilMarkerResolution[] {} );
+    return markerRes;
   }
 
   private final void createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String text )
