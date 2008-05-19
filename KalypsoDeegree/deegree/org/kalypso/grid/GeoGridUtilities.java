@@ -55,7 +55,11 @@ import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
@@ -692,5 +696,138 @@ public class GeoGridUtilities
     final double bd = a.distance( d );
 
     return 0.5 * ac * bd;
+  }
+
+  /**
+   * calculates the common envelope for an array of {@link ICoverageCollection}s.
+   * 
+   * @param collections
+   *            the collections
+   * @param intersection
+   *            if true, the envelope results from an intersection of all coverages of the collections. If false, the
+   *            envelope gets calculated by union of the several envelopes.
+   */
+  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, boolean intersection ) throws Exception, GeoGridException, GM_Exception
+  {
+    Geometry globalEnv = null;
+
+    for( int i = 0; i < collections.length; i++ )
+    {
+      final ICoverageCollection collection = collections[i];
+
+      Geometry unionGeom = null;
+      for( int j = 0; j < collection.size(); j++ )
+      {
+        final ICoverage coverage = collection.get( j );
+        final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+
+        final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+        final GM_Surface< ? > surface = GeoGridUtilities.createSurface( grid, targetCRS );
+        final Geometry geometry = JTSAdapter.export( surface );
+
+        if( unionGeom == null )
+          unionGeom = geometry;
+        else
+          unionGeom = unionGeom.union( geometry );
+      }
+
+      if( intersection == true )
+      {
+        if( globalEnv == null )
+          globalEnv = unionGeom;
+        else
+          globalEnv = globalEnv.intersection( unionGeom );
+      }
+      else
+      {
+        if( globalEnv == null )
+          globalEnv = unionGeom;
+        else
+          globalEnv = globalEnv.union( unionGeom );
+      }
+    }
+    return globalEnv;
+  }
+
+  /**
+   * Flattens several grids into one grid, that has the value set for the category as cell value
+   * 
+   * @param gridCategories
+   *            the categories with which the grid get flattened
+   * @param intersection
+   *            if true, the envelope results from an intersection of all grids of the categories. If false, the
+   *            envelope gets calculated by union of the several envelopes.
+   */
+  public static FlattenToCategoryGrid getFlattedGrid( GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
+  {
+    Geometry globalEnv = null;
+    Geometry unionGeom = null;
+
+    /* calculate min cell sizes */
+    double minCellSizeX = Double.MAX_VALUE;
+    double minCellSizeY = Double.MAX_VALUE;
+    for( int i = 0; i < gridCategories.length; i++ )
+    {
+      final GridCategoryWrapper category = gridCategories[i];
+
+      final IGeoGrid[] grids = category.getGrids();
+      for( int j = 0; j < grids.length; j++ )
+      {
+        final IGeoGrid grid = grids[j];
+
+        minCellSizeX = Math.min( Math.abs( grid.getOffsetX().x + grid.getOffsetY().x ), minCellSizeX );
+        minCellSizeY = Math.min( Math.abs( grid.getOffsetX().y + grid.getOffsetY().y ), minCellSizeY );
+
+        final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+        final GM_Surface< ? > surface = GeoGridUtilities.createSurface( grid, targetCRS );
+        final Geometry geometry = JTSAdapter.export( surface );
+
+        if( unionGeom == null )
+          unionGeom = geometry;
+        else
+          unionGeom = unionGeom.union( geometry );
+      }
+
+      if( intersection == true )
+      {
+        if( globalEnv == null )
+          globalEnv = unionGeom;
+        else
+          globalEnv = globalEnv.intersection( unionGeom );
+      }
+      else
+      {
+        if( globalEnv == null )
+          globalEnv = unionGeom;
+        else
+          globalEnv = globalEnv.union( unionGeom );
+      }
+    }
+
+    final GM_Object gmObject = JTSAdapter.wrap( globalEnv );
+    final GM_Envelope newGridEnv = gmObject.getEnvelope();
+
+    /* create grid */
+    // get Bounding box, +1 zelle
+    double originX = newGridEnv.getMin().getX();
+    double originY = newGridEnv.getMin().getY();
+
+    /* calculate necessary number of cells */
+    final double dX = newGridEnv.getMax().getX() - originX;
+    final double dY = newGridEnv.getMax().getY() - originY;
+
+    final int numOfColumns = (int) Math.round( dX / minCellSizeX ) + 1;
+    final int numOfRows = (int) Math.round( dY / minCellSizeY ) + 1;
+
+    final Double CornerY = originY + numOfRows * minCellSizeY;
+
+    final String sourceCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final GM_Point gmOrigin = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( originX, CornerY, sourceCRS );
+
+    final Coordinate origin = JTSAdapter.export( gmOrigin ).getCoordinate();
+    final Coordinate offsetX = new Coordinate( minCellSizeX, 0 );
+    final Coordinate offsetY = new Coordinate( 0, -minCellSizeY );
+
+    return new FlattenToCategoryGrid( gridCategories, globalEnv, origin, offsetX, offsetY, sourceCRS, numOfColumns, numOfRows );
   }
 }

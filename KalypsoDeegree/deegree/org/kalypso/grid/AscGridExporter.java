@@ -60,7 +60,7 @@ import com.vividsolutions.jts.geom.Envelope;
 /**
  * Helper class to export a {@link IGeoGrid} to the ESRI Ascii Grid file format.
  * <p>
- * REMARK: could not be implemented as a {@link IGeoGridWalker} as the walker does not garantuee the order of walked
+ * REMARK: could not be implemented as a {@link IGeoGridWalker} as the walker does not guarantee the order of walked
  * cells.
  * </p>
  * 
