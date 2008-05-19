@@ -54,6 +54,7 @@ import org.kalypso.model.flood.binding.IFloodClipPolygon;
 import org.kalypso.model.flood.binding.IFloodExtrapolationPolygon;
 import org.kalypso.model.flood.binding.IFloodPolygon;
 import org.kalypso.model.flood.binding.IFloodVolumePolygon;
+import org.kalypso.model.flood.binding.IRunoffEvent;
 import org.kalypso.model.flood.binding.ITinReference;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -81,12 +82,15 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
 
   private GM_Triangle m_triangle;
 
-  public FloodDiffGrid( final IGeoGrid terrainGrid, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons )
+  private final IRunoffEvent m_event;
+
+  public FloodDiffGrid( final IGeoGrid terrainGrid, final IFeatureWrapperCollection<ITinReference> tins, final IFeatureWrapperCollection<IFloodPolygon> polygons, final IRunoffEvent event )
   {
     super( terrainGrid );
 
     m_tins = tins;
     m_polygons = polygons;
+    m_event = event;
 
     m_min = new BigDecimal( Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
@@ -248,11 +252,13 @@ public class FloodDiffGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     if( list == null || list.size() == 0 )
       return polygonList;
     else
+    {
       for( final IFloodPolygon polygon : list )
       {
-        if( polygon.contains( pos ) )
+        if( polygon.contains( pos ) && polygon.getEvents().contains( m_event ) )
           polygonList.add( polygon );
       }
+    }
 
     return polygonList;
   }

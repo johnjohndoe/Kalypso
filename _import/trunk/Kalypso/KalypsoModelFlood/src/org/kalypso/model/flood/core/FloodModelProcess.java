@@ -255,7 +255,7 @@ public class FloodModelProcess
       final IGeoGrid terrainGrid = GeoGridUtilities.toGrid( terrainCoverage );
       final IFeatureWrapperCollection<ITinReference> tins = event.getTins();
 
-      final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons );
+      final IGeoGrid diffGrid = new FloodDiffGrid( terrainGrid, tins, polygons, event );
 
       /* set destination: => event folder/results */
       // generate unique name for grid file
