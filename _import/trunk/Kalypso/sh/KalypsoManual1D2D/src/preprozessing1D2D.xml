@@ -22,6 +22,10 @@
     <listitem>
       <para>Rauheitsmodellierung</para>
     </listitem>
+
+    <listitem>
+      <para>Daten exportieren</para>
+    </listitem>
   </orderedlist>
 
   <section id="Kalypso1D2DDatenLaden">
@@ -66,10 +70,10 @@
       <para>Um Hintergrundinformationen bereitzustellen, muss in der Ansicht
       'Aktivitäten' der Baum <guimenu>Preprocessing &gt; Daten laden</guimenu>
       geöffnet werden. Wenn <guibutton>Import von
-      Hintergrundkarten</guibutton> mit einem Doppelklick aktiviert worden
-      ist, öffnet sich ein Assistent, der den Benutzer durch die Möglichkeiten
-      der Dateneinbindung führt. Hierbei ist zunächst die Art der
-      einzubindenden Daten auszuwählen. Mit der Betätigung des Knopfes
+      Hintergrundkarten</guibutton> mit einem Doppelklick aktiviert wird,
+      öffnet sich ein Assistent, der den Benutzer durch die Möglichkeiten der
+      Dateneinbindung führt. Hierbei ist zunächst die Art der einzubindenden
+      Daten auszuwählen. Mit der Betätigung des Knopfes
       <guibutton>Weiter</guibutton> wird der Assistent entsprechend der
       vorherigen Auswahl fortgeführt.</para>
 
@@ -229,7 +233,7 @@
       'Aktivitäten' der Baum <guimenuitem>Preprocessing &gt; Daten
       laden</guimenuitem> geöffnet werden. Wenn <guimenu>Import von
       Höhendaten</guimenu> mit einem Doppelklick aktiviert worden ist, öffnet
-      sich der Assistenten zur Einbindung von Höhendaten. Dieser erfordert
+      sich der Assistent zur Einbindung von Höhendaten. Dieser erfordert
       lediglich die Angabe der Datendatei und wiederum des
       Ursprungkoordinatensystems. Sinnvoll ist es zudem das Höhenmodell zu
       bezeichnen und ggf. eine längere Beschreibung hinzuzufügen. Bei der
@@ -241,12 +245,13 @@
 
       <para>Zunächst müssen im Assistenten die Höhendaten ausgewählt werden.
       Über den Knopf <guibutton>Durchsuchen...</guibutton> kann aus dem
-      Arbeitsverzeichnis die entsprechende <filename>*.hmo</filename> Datei
-      geöffnet und anschließend im Pulldown-Menü das zugehörige
-      Koordinatensystem ausgewählt werden. Standardmäßig ist hier EPSG:31467
-      voreingestellt. Nach der optionalen Eingabe eines Namens und ggf. einer
-      Beschreibung, kann der Assistent über den Kopf <guibutton>Fertig
-      stellen</guibutton> abgeschlossen werden.</para>
+      Arbeitsverzeichnis die entsprechende <filename>*.hmo</filename>,
+      <filename>*.asg</filename> oder <filename>*.asc</filename> Datei
+      geöffnet und anschließend im Pull Down Menü das zugehörige
+      Koordinatensystem ausgewählt werden. Standardmäßig ist hier DHDN /
+      Gauss-Kruger zone 3 voreingestellt. Nach der optionalen Eingabe eines
+      Namens und ggf. einer Beschreibung, kann der Assistent über den Kopf
+      <guibutton>Fertig stellen</guibutton> abgeschlossen werden.</para>
 
       <figure>
         <title>Assistent zum Import von Höhendaten</title>
@@ -259,10 +264,10 @@
       </figure>
 
       <para>Nach der erfolgreichen Einbindung des Höhenmodelles wird es in der
-      Basiskarte angezeigt. Durch die <guimenu>Edit-Optionen</guimenu> am
-      rechten Fensterrand ist eine Auswahl der Höhenmodelle und die
-      Bearbeitung der Farbskala verfügbar. In der Karte wird über den
-      Mauszeiger die aktuelle Höhe der Punkte dargestellt.</para>
+      Basiskarte angezeigt und die Karten Werkzeugansicht geöffnet. In der
+      Karte wird über den Mauszeiger die aktuelle Höhe der Punkte dargestellt.
+      Für die Funktionen der Karten Werkzeugansicht siehe <xref
+      linkend="Kalypso1D2DNetzaufbau_2DNetz_Hoehen" />.</para>
     </section>
 
     <section id="Kalypso1D2DImportRoughness">
@@ -289,8 +294,8 @@
       die verschiedenen Spalten der Attribut-Tabelle der ausgewählten
       Shape-Datei anzeigt. Es ist die Spalte auszuwählen, welche die
       Rauheitsklassifizierung der Polygone enthält. Anschließend muss wieder
-      das zugehörige Ursprungkoordinatensystem ausgewählt werden und der
-      Layertyp der Shape-Datei (der Layertyp ist später für die
+      das zugehörige Ursprungkoordinatensystem und der Layertyp der
+      Shape-Datei ausgewählt werden (der Layertyp ist später für die
       Rauheitsmodellierung wichtig. Siehe <xref
       linkend="Kalypso1D2DRauheitsmodellierung_RauheitszonenBearbeiten" />).
       Mit dem Knopf <guibutton>Weiter</guibutton> wird der Assistent
@@ -313,8 +318,8 @@
       </figure>
 
       <para>Im nächsten Fenster des Assistenten werden auf der linken Seite
-      die Einträger der ausgewählten Rauheitsattribut-Spalte dargestellt.
-      Diese müssen einer in der Rauheitsdatenbank (siehe <xref
+      die Einträge der ausgewählten Rauheitsattribut-Spalte dargestellt. Diese
+      müssen einer in der Rauheitsdatenbank (siehe <xref
       linkend="Kalypso1D2DRauheitsmodellierung" />) vorhandenen Klasse
       zugeordnet werden (z.B. im Fluss ist eine Sohlschüttung vorhanden und
       auf dem Vorland findet man 'Gras mit lockerem Baumbewuchs', etc.).
@@ -375,7 +380,7 @@
       <guibutton>Durchsuchen...</guibutton> kann die entsprechende
       <filename>*.zrx</filename>, <filename>*.csv</filename>,
       <filename>*.grap</filename> oder <filename>*.dat</filename> Datei
-      ausgewählt werden. In dem Pulldown-Menü muss das zugehörige Format
+      ausgewählt werden. In dem Pull Down Menü muss das zugehörige Format
       ausgewählt werden in dem die Datei vorliegt.</para>
 
       <para>Die angegebenen <guilabel>Optionen</guilabel> müssen lediglich
@@ -419,7 +424,7 @@
       Zeitreihenbrowser ein neues Repository anzulegen. Die Zeitreihen des
       aktuellen Projektes befinden sich im Projektverzeichnis unter
       <filename>\imports\timeseries</filename>. Die im Repository vorhandenen
-      Zeitreihen werden durch die Selektion in der Tabellen und
+      Zeitreihen werden durch die Selektion in der Tabellen- und
       Diagrammansicht dargestellt.</para>
     </section>
 
@@ -780,11 +785,8 @@
         </orderedlist>
 
         <note>
-          <para>Die Funktionen <guimenuitem>Netz bearbeiten</guimenuitem> und
-          <guimenuitem>Netzparameter bearbeiten</guimenuitem> sind derzeit
-          noch nicht implementiert. Die 1D Modellierung sollte in WSPM
-          durchgeführt werden. Die Darstellung dient lediglich der Ansicht.
-          Kartenfunktionen zur Bearbeitung der Netzparameter</para>
+          <para>Die Funktion 'Kanalprofilparameter' ist derzeit noch nicht
+          implementiert.</para>
         </note>
 
         <table>
@@ -848,7 +850,7 @@
                 valign="middle">Polynomfunktion zuordnen</entry>
 
                 <entry align="left" valign="middle">Um eine Polynomfunktion
-                zuzuordnen muss zunächst das Pulldownmenü über den kleinen
+                zuzuordnen muss zunächst das Pull Down Menü über den kleinen
                 schwarzen Pfeil neben dem Icon geöffnet werden. Die einzelnen
                 Funktionen sind in der folgenden Tabelle aufgelistet.</entry>
               </row>
@@ -879,6 +881,14 @@
 
                 <entry align="left" valign="middle">Polynomfunktionsparameter
                 einem 1D Knoten hinzufügen</entry>
+
+                <entry align="left" valign="middle">Wenn aus dem Pull Down
+                Menü diese Funktion ausgewählt wurde, muss anschließend in der
+                Karte ein 1D Knoten selektiert werden, zu dem ein
+                Polynomfunktionsparameter hinzugefügt werden soll. Es öffnet
+                sich die Feature View, wo Einstellungen vorgenommen werden
+                müssen. (Siehe <xref
+                linkend="Kalypso1D2DNetzaufbau_1DGewaessernetz_Bauwerke" />)</entry>
               </row>
 
               <row>
@@ -891,11 +901,12 @@
                 <entry align="left" valign="middle">Wehr zu einem 1D Element
                 hinzufügen</entry>
 
-                <entry align="left" valign="middle">Wenn aus dem Pulldownmenü
-                diese Funktion ausgewählt wurde, muss anschließend in der
+                <entry align="left" valign="middle">Wenn aus dem Pull Down
+                Menü diese Funktion ausgewählt wurde, muss anschließend in der
                 Karte ein 1D Element selektiert werden, zu dem ein Wehr
                 hinzugefügt werden soll. Es öffnet sich die Feature View, wo
-                Einstellungen vorgenommen werden müssen.</entry>
+                Einstellungen vorgenommen werden müssen. (Siehe <xref
+                linkend="Kalypso1D2DNetzaufbau_1DGewaessernetz_Bauwerke" />)</entry>
               </row>
 
               <row>
@@ -908,15 +919,144 @@
                 <entry align="left" valign="middle">Brücke zu einem 1D Element
                 hinzufügen</entry>
 
-                <entry align="left" valign="middle">Wenn aus dem Pulldownmenü
-                diese Funktion ausgewählt wurde, muss anschließend in der
+                <entry align="left" valign="middle">Wenn aus dem Pull Down
+                Menü diese Funktion ausgewählt wurde, muss anschließend in der
                 Karte ein 1D Element selektiert werden, zu dem eine Brücke
                 hinzugefügt werden soll. Es öffnet sich die Feature View, wo
-                Einstellungen vorgenommen werden müssen.</entry>
+                Einstellungen vorgenommen werden müssen.(Siehe <xref
+                linkend="Kalypso1D2DNetzaufbau_1DGewaessernetz_Bauwerke" />)</entry>
               </row>
             </tbody>
           </tgroup>
         </table>
+
+        <section id="Kalypso1D2DNetzaufbau_1DGewaessernetz_Bauwerke">
+          <title>Einfügen einer Brücke, eines Wehres und eines
+          Polynomfunktionsparameters</title>
+
+          <indexterm>
+            <primary>Einfügen einer Brücke oder eines Wehres in
+            Kalypso1D2D</primary>
+          </indexterm>
+
+          <para>Das Einfügen einer Brücke und eines Wehres ist von der
+          Durchführung her äquivalent (beim Hinzufügen eines
+          Polynomfunktionsparameters wird anstelle eines 1D Elements ein 1D
+          Knoten ausgewählt). Im Folgenden wird exemplarisch eine Brücke
+          eingefügt. Zunächst muss dafür aus dem Pull Down Menü in der
+          Kartenmenüleiste der Knopf <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Netzp_bearbeiten_Icon_Bruecke+.png" />
+              </imageobject>
+            </inlinemediaobject> gewählt werden. Anschließend kann in der
+          Karte ein 1D Element selektiert werden wo die Brücke eingefügt
+          werden soll. Es öffnet sich die zugehörige Feature View, wo zunächst
+          noch keine Einträge vorzufinden sind. Hier sollte zuerst ein Name
+          und eine Beschreibung des Bauwerkes definiert werden und die
+          Fließrichtung in [°] angegeben werden. Danach muss ein Profil
+          definiert werden. Wenn der Benutzer den Knopf neben dem Label
+          <guilabel>Profil</guilabel> betätigt erscheint folgender
+          Assistent:</para>
+
+          <figure>
+            <title>Assistent zur Auswahl eines Bauwerkprofils</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Bauwerk_01.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>In dem Assistent muss ein Profil ausgewählt werden, das ein
+          Bauwerk enthält. </para>
+
+          <para>Nachfolgend wird erläutert, wie die Brücke weiter bearbeitet
+          werden kann. Dafür muss in der Kartenmenüleiste der Knopf
+          <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Netzp_bearbeiten_Icon_bearbeiten.png" />
+              </imageobject>
+            </inlinemediaobject> gewählt werden und die Brücke selektiert
+          werden. In der folgenden Abbildung ist eine selektierte Brücke zu
+          sehen mit der geöffneten Feature View und dem gelben Hilfefenster
+          mit weiteren Anweisungen. Dem gelben Fenster ist zu entnehmen, dass
+          durch Betätigung der Enter Taste eine neue Berechnung der Parameter
+          gestartet wird.</para>
+
+          <figure>
+            <title>Bearbeiten einer Brücke</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="left"
+                           fileref="img/1D2D/Bauwerk_bearbeiten_01.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Wurde die Enter Taste gedrückt, erscheint folgender Assistent,
+          in dem der zu berechnende Parameter ausgewählt werden muss. Über
+          <guibutton>Next</guibutton> gelangt der Benutzer zum nächsten
+          Schritt.</para>
+
+          <figure>
+            <title>Assistent zum Auswählen von Parametern</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Bauwerk_bearbeiten_02.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Dieser Bearbeitungsschritt entspricht den
+          Berechnungseinstellungen aus KalypsoWSPM. Über
+          <guibutton>Next</guibutton> gelangt der Benutzer zum nächsten
+          Schritt.</para>
+
+          <figure>
+            <title>Berechnungseinstellungen</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Bauwerk_bearbeiten_03.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>In diesem letzten Schritt kann der Benutzer die Berechnung mit
+          <guibutton>Start</guibutton> beginnen. Bei erfolgreicher Berechnung
+          erscheint der folgende Assistent, in dem die Ergebnisausgabe
+          ebenfalls wie in KalypsoWSPM erfolgt. Mit OK wird die Berechnung
+          abgeschlossen.</para>
+
+          <figure>
+            <title>Assistent zum Starten der Simulation und Darstellung der
+            Ergebnisse</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Bauwerk_bearbeiten_04.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Nach erfolgreicher Berechnung erscheint in der Feature View
+          automatisch die Diagrammansicht und die Ergebnisse der Berechnung
+          werden ebenfalls in der Tabelle dargestellt.</para>
+
+          <figure>
+            <title>Feature View nach erfolgreicher Berechnung einer
+            Brücke</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Bauwerk_bearbeiten_05.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
       </section>
     </section>
 
@@ -1035,13 +1175,13 @@
                 <entry align="left" valign="middle">Um ein 2D-Element zu
                 löschen, muss zunächst der Knopf aktiviert werden. Mit der
                 Maus können dann in der Karte die Elemente selektiert werden,
-                die gelöscht werden sollen (wenn die Strg-Taste gedrückt
-                gehalten wird, können auch mehrere Elemente gleichzeitig
-                selektiert werden).<para>Die selektierten Elemente erscheinen
-                nun leuchtend gelb mit einem roten Rand. Mit der Entf-Taste
-                können die Elemente entfernt werden. Ein Assistent fordert
-                noch einmal eine Bestätigung mit <guibutton>OK</guibutton>,
-                bevor die Elemente entgültig gelöscht werden.</para></entry>
+                die gelöscht werden sollen (für die Selektion von Elementen in
+                der Karte siehe Einführung).<para>Die selektierten Elemente
+                erscheinen nun leuchtend gelb mit einem roten Rand. Mit der
+                Entf-Taste können die Elemente entfernt werden. Ein Assistent
+                fordert noch einmal eine Bestätigung mit
+                <guibutton>OK</guibutton>, bevor die Elemente entgültig
+                gelöscht werden.</para></entry>
               </row>
 
               <row>
@@ -1106,10 +1246,11 @@
         <para>Um den Flussschlauchgenerator zu benutzen, muss in der Ansicht
         'Aktivitäten' der Baum <guimenuitem>Preprocessing &gt; Netzaufbau &gt;
         2D-Netz</guimenuitem>. geöffnet werden und der
-        <guimenuitem>Flusschlauchgenerator </guimenuitem>mit einem Doppelklick
-        aktiviert werden. Es öffnet sich der Flussschlauchgenerator und die
-        dazugehörige Karten Werkzeugansicht, wenn die Uferlinien und die
-        Profildaten eingeladen worden sind (siehe Abbildung unten).</para>
+        <guimenuitem>Flussschlauchgenerator </guimenuitem>mit einem
+        Doppelklick aktiviert werden. Es öffnet sich der
+        Flussschlauchgenerator und die dazugehörige Karten Werkzeugansicht,
+        wenn die Uferlinien und die Profildaten eingeladen worden sind (siehe
+        Abbildung unten).</para>
 
         <para>Zunächst sollte überprüft werden, ob die Grundlagen und die
         Profile in der Gliederung aktiviert sind. Es ist sinnvoll ggf. die
@@ -1126,7 +1267,7 @@
           </mediaobject>
         </figure>
 
-        <para>Als erstes wählen muss unter dem Menüpunkt
+        <para>Als erstes muss unter dem Menüpunkt
         <guimenuitem>Profile</guimenuitem> das Profilthema ausgewählt werden.
         Danach können über den Selektionsknopf <inlinemediaobject>
             <imageobject>
@@ -1576,6 +1717,16 @@
           </listitem>
         </itemizedlist>
 
+        <figure>
+          <title>Karten Werkzeugansicht zum Bearbeiten der Höhendaten</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Import_Hoehendaten_KWA.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
         <table>
           <title>Höhenmodell-System Funktionen</title>
 
@@ -1592,29 +1743,23 @@
                     <imageobject>
                       <imagedata fileref="img/1D2D/Hoehenzuweisen_Icon_Pfeiloben.png" />
                     </imageobject>
-                  </mediaobject></entry>
-
-                <entry align="left" valign="middle">Manipulation der
-                Anzeigereihenfolge eines selektierten Höhenmodells</entry>
-
-                <entry align="left" valign="middle">Durch Betätigung des
-                Knopfes wird das selektierte Höhenmodell in der Tabelle nach
-                oben verschoben.</entry>
-              </row>
-
-              <row>
-                <entry><mediaobject>
+                  </mediaobject><mediaobject>
                     <imageobject>
                       <imagedata fileref="img/1D2D/Hoehenzuweisen_Icon_Pfeilunten.png" />
                     </imageobject>
                   </mediaobject></entry>
 
-                <entry align="left" valign="middle">Manipulation der
-                Auswertungsreihenfolge eines selektierten Höhenmodells</entry>
+                <entry align="left" valign="middle">Nach oben/ unten
+                verschieben</entry>
 
-                <entry align="left" valign="middle">Durch Betätigung des
-                Knopfes wird das selektierte Höhenmodell in der Tabelle nach
-                unten verschoben.</entry>
+                <entry align="left" valign="middle">Mit dieser Funktionalität
+                lässt sich die Hierarchie in der Tabelle verändern. Wenn ein
+                Ereignis in der Tabelle markiert ist und dieser Knopf betätigt
+                wird, dann wird es um eine Stelle weiter nach oben/ unten
+                verschoben. Diese Funktionalität ist nur von Bedeutung, wenn
+                sich die Kacheln von zwei Ergebnissen überschneiden. Es wird
+                dann in dem Bereich der Überschneidung die Kachel angezeigt,
+                die in der Hierarchie weiter oben steht.</entry>
               </row>
 
               <row>
@@ -1628,7 +1773,7 @@
                 (zentrieren) und maximieren</entry>
 
                 <entry align="left" valign="middle">Durch Betätigung des
-                Knopfes wird das selektierte Höhenmodell zu zentriert und
+                Knopfes wird das selektierte Höhenmodell zentriert und
                 maximiert.</entry>
               </row>
 
@@ -1655,7 +1800,7 @@
 
         <itemizedlist>
           <listitem>
-            <para>Zuweisung der Höhen direkt auf der Karte</para>
+            <para>Zuweisung der Höhen direkt in der Karte</para>
 
             <para>Mit einem Doppelklick auf einen Knoten können eine
             Höhenzuweisung vorgenommen werden. Die Höheninformation wird aus
@@ -1672,7 +1817,7 @@
 
             <itemizedlist>
               <listitem>
-                <para>Selektieren von Knoten auf der Karte.</para>
+                <para>Selektieren von Knoten in der Karte.</para>
 
                 <para>Die in der Karte selektierten Knoten werden in der
                 Tabelle der editierbaren Knoten hinzugefügt.</para>
@@ -1830,9 +1975,9 @@
 
         <para>Randbedingungen können Kontinuitätslinien oder als Quellen-
         Senkenterme Elementen zugeordnet werden. Dies sind nicht explizit
-        Randbedingungen, sondern die Zeitreihen. Die Randbedingungen werden
-        bei den Berechnungseinstellungen aus diesen Zeitreihen definiert. In
-        der Karte sind Randbedingungen als gelbe Punkte dargestellt bzw. gelb
+        Randbedingungen, sondern Zeitreihen. Die Randbedingungen werden bei
+        den Berechnungseinstellungen aus diesen Zeitreihen definiert. In der
+        Karte sind Randbedingungen als gelbe Punkte dargestellt bzw. gelb
         umrahmte Knoten.</para>
 
         <table align="center" id="symbolleiste im Profileditor wspm">
@@ -1976,64 +2121,11 @@
 
         <para>In der Abbildung oben ist die Feature View der Randbedingungen
         zu sehen. In der Tabelle ist die Zeit mit der dazugehörigen
-        Wassertiefe in [m] dargestellt. Die Werte in der Tabelle entsprechen
-        zunächst dem eingegebenen Standardwert. Die Zeitreihe muss nun manuell
-        editiert werden. Die stationäre Randbedingung ist wiederum nur für
-        eine stationäre Rechnung von Bedeutung.</para>
-
-        <table align="center" id="symbolleiste im Profileditor wspm">
-          <title>Funktionen der Tabelle in der Feature View</title>
-
-          <tgroup align="center" cols="3">
-            <colspec colwidth="1*" />
-
-            <colspec colwidth="2*" />
-
-            <colspec colwidth="5*" />
-
-            <tbody>
-              <row>
-                <entry><figure>
-                    <mediaobject>
-                      <imageobject>
-                        <imagedata align="center"
-                                   fileref="img/1D2D/Icon_Tabelle_kopieren.png"
-                                   scale="110" valign="middle" />
-                      </imageobject>
-                    </mediaobject>
-                  </figure></entry>
-
-                <entry align="left" valign="middle">Tabelle kopieren</entry>
-
-                <entry align="left" valign="middle">Wenn dieser Knopf betätigt
-                wird und kein Eintrag markiert ist, dann wird die gesamte
-                Tabelle in den Zwischenspeicher abgelegt und kann z. B. in
-                Word kopiert werden. Wenn vorher ein Eintrag markiert wurde,
-                dann wird nur dieser eine Eintrag in den Zwischenspeicher
-                abgelegt.</entry>
-              </row>
-
-              <row>
-                <entry><figure>
-                    <mediaobject>
-                      <imageobject>
-                        <imagedata align="center"
-                                   fileref="img/1D2D/Icon_Tabelle_loeschen.png"
-                                   scale="110" valign="middle" />
-                      </imageobject>
-                    </mediaobject>
-                  </figure></entry>
-
-                <entry align="left" valign="middle">Eintrag löschen</entry>
-
-                <entry align="left" valign="middle">Um einen Eintrag in der
-                Tabelle zu löschen, muss dieser zunächst markiert werden.
-                Durch Betätigung des Knopfes wird dieser dann
-                gelöscht.</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
+        Wassertiefe in [m] dargestellt (für den Umgang mit der Tabelle siehe
+        Einführung). Die Werte in der Tabelle entsprechen zunächst dem
+        eingegebenen Standardwert. Die Zeitreihe muss nun manuell editiert
+        werden. Die stationäre Randbedingung ist wiederum nur für eine
+        stationäre Rechnung von Bedeutung.</para>
       </section>
 
       <section id="Kalypso1D2DNetzaufbau_BerechnungseundRB_1DEinmuendung">
@@ -2043,7 +2135,60 @@
           <primary>1D-Einmündungen in Kalypso1D2D</primary>
         </indexterm>
 
-        <para>Diese Funktion wird derzeit noch überarbeitet.</para>
+        <para></para>
+
+        <table>
+          <title>Zusätzliche Kartenfunktionen zur Bearbeitung der
+          1D-Einmündung</title>
+
+          <tgroup align="left" arch="" char="" charoff="" class="" cols="3">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="5*" />
+
+            <tbody>
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata align="center"
+                                 fileref="img/1D2D/1D_Einmuendung+.png"
+                                 width="" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">1D-Einmündung
+                zuordnen</entry>
+
+                <entry align="left" valign="middle"></entry>
+              </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/1D_Einmuendung-.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">einmündung markieren und
+                entfernen</entry>
+
+                <entry align="left" valign="middle"></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <figure>
+          <title>Darstellung einer 1D-Einmündung in der Karte</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="???" />
+            </imageobject>
+          </mediaobject>
+        </figure>
       </section>
 
       <section id="Kalypso1D2DNetzaufbau_BerechnungseundRB_1D2DLinienkopplung">
@@ -2053,10 +2198,27 @@
           <primary>Lininenkopplung Kalypso 1D2D</primary>
         </indexterm>
 
-        <para>Ermöglicht die Erstellung einer Kopplung von 1D zu 2D zwischen
-        einem 1D-Element und einer 2D-Randlinie.</para>
+        <para>Ermöglicht die Erstellung einer Kopplung von 1D zu 2D (und
+        umgekehrt) zwischen einem 1D-Element und einer 2D-Randlinie. Wichtig
+        beim Erstellen einer Kopplung ist die Art (definiert in
+        Fließrichtung). Hier gibt es zwei Möglichkeiten:</para>
 
-        <para>Eine 1D-2D Kopplung erscheint in einem hellen grün</para>
+        <itemizedlist>
+          <listitem>
+            <para>1D nach 2D Übergang (blau in der Karte dargestellt)
+            und</para>
+          </listitem>
+
+          <listitem>
+            <para>2D nach 1D Übergang (grün dargestellt).</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Generell ist die Berechnung am stabilsten, wenn im Oberwasser
+        ein Abfluss vorgegeben wird und im Unterwasser ein Wasserstand. Bei
+        tidebeeinflussten Gewässern sollten sowohl im Oberwasser als auch im
+        Unterwasser die Wasserstände angegeben werden. Hier richtet sich die
+        Art der Kopplung nach der Hauptströmungsrichtung.</para>
 
         <table align="center" id="symbolleiste im Profileditor wspm">
           <title>Zusatzfunktionen der Karte zur Erstellung einer
@@ -2084,11 +2246,11 @@
                 <entry align="left" valign="middle">1D-2D-Linienkopplung
                 erstellen</entry>
 
-                <entry align="left" valign="middle">Zunächst muss die eine
-                Randlinie (z.B. des 1D Elements) markiert werden, die dann rot
-                erscheint und anschließend die andere Randlinie (z.B. die
-                2D-Randlinie), so dass diese ebenfalls rot wird. Mit Enter
-                (Einfügen) wird die Kopplung abgeschlossen.</entry>
+                <entry align="left" valign="middle">Nach Betätigung des
+                Knopfes müssen beide Linien selektiert werden. Mit Enter
+                (Einfügen) wird die Kopplung erstellt und ein Assistent öffnet
+                sich (siehe folgende Abbildung). Dann muss nur noch die Art
+                der Kopplung eingegeben werden.</entry>
               </row>
 
               <row>
@@ -2109,26 +2271,88 @@
                 mit dem Mauszeiger markiert werden, die dann rot erscheint.
                 Mit der Entf-Taste wird die Kopplung wieder entfernt.</entry>
               </row>
+
+              <row>
+                <entry><mediaobject>
+                    <imageobject>
+                      <imagedata fileref="img/1D2D/Icon_Karte_1D2DKopplung_bearbeiten.png" />
+                    </imageobject>
+                  </mediaobject></entry>
+
+                <entry align="left" valign="middle">Kopplung
+                bearbeiten</entry>
+
+                <entry align="left" valign="middle">Zum Bearbeiten der
+                Linienkopplung muss der Knopf betätigt werden und anschließend
+                eine Kopplung selektiert werden, damit sich die Feature View
+                öffnet. (Siehe <xref
+                linkend="Kalypso1D2DNetzaufbau_BerechnungseundRB_1D2DLinienkopplung_bearbeiten" />)</entry>
+              </row>
             </tbody>
           </tgroup>
         </table>
 
         <figure>
-          <title>1D-2D-Linienkopplung erstellen</title>
+          <title>Selektion von zwei Randlinien zum Erstellen einer Kopplung
+          (2D nach 1D)</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/1D2D/1D2DKopplung_erstellen.png" />
+              <imagedata fileref="img/1D2D/1D2DKopplung_erstellen_01.png" />
             </imageobject>
           </mediaobject>
         </figure>
 
         <figure>
-          <title>Erstellte 1D-2D-Linienkopplung</title>
+          <title>Assistent zur Erstellung einer Kopplung</title>
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/1D2D/1D-2DKopplung.png" />
+              <imagedata fileref="img/1D2D/1D2DKopplung_erstellen_assistent.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <figure>
+          <title>Erstellte 1D-2D-Linienkopplung (2D nach 1D Übergang)</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/1D2DKopplung_erstellen_02.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="Kalypso1D2DNetzaufbau_BerechnungseundRB_1D2DLinienkopplung_bearbeiten">
+        <title>1D-2D Linienkopplung bearbeiten</title>
+
+        <indexterm>
+          <primary>Bearbeiten einer 1D-2D Linienkopplung in
+          Kalypso1D2D</primary>
+        </indexterm>
+
+        <para>Die Art der Kopplung kann nachträglich verändert werden. Hierfür
+        muss in der Kartenmenüleiste der Knopf <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/Icon_Karte_1D2DKopplung_bearbeiten.png" />
+            </imageobject>
+          </inlinemediaobject> aktiv sein und die zu bearbeitende Kopplung
+        selektiert werden. Es öffnet sich die Feature View, in der die Art der
+        Kopplung über ein Pull Down Menü eingestellt werden kann. In der
+        folgenden Abbildung ist auf der linken Seite ein 1D nach 2D Übergang
+        dargestellt (Fließrichtung von rechts nach links) und auf der rechten
+        Seite ein 2D nach 1D Übergang (Fließrichtung von oben nach
+        unten).</para>
+
+        <figure>
+          <title>Feature View zur Bearbeitung einer 1D2D
+          Linienkopplung</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/1D2D/1D2DKopplung_2Dnach1D_1Dnach2D.png"
+                         scale="80" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -2313,9 +2537,8 @@
 
                 <entry align="left" valign="middle">Wenn dieser Knopf betätigt
                 wird, öffnet sich ein Assistent, in dem die Eigenschaften der
-                Berechnungseinheit geändert werden können. Dazu gehören der
-                Name und die Subberechnungseinheiten der
-                Berechnungseinheit.</entry>
+                Berechnungseinheit geändert werden können. (siehe <xref
+                linkend="Kalypso1D2DNetzaufbau_BerechnungseundRB_BerechnungseEditieren" />)</entry>
               </row>
             </tbody>
           </tgroup>
@@ -2463,6 +2686,61 @@
             </tbody>
           </tgroup>
         </table>
+
+        <section id="Kalypso1D2DNetzaufbau_BerechnungseundRB_BerechnungseEditieren">
+          <title>Eigenschaften einer Berechnungseinheit editieren</title>
+
+          <indexterm>
+            <primary>Eigenschaften einer Berechnungseinheit editieren in
+            Kalypso1D2D</primary>
+          </indexterm>
+
+          <para>Abhängig von der Art der Berechnungseinheit (1D, 2D oder
+          gekoppelte Einheit) erscheinen bei Betätigung des Knopfes
+          <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Icon_Werkzeug_Berechneinh_editieren.png" />
+              </imageobject>
+            </inlinemediaobject> verschiedene
+          Einstellungsmöglichkeiten.</para>
+
+          <para>Bei einer 1D Berechnungseinheit kann zum einen der Name
+          geändert werden und zum anderen die Anzahl der Interpolationen
+          zwischen zwei Profilen, d. h. wie viele dazwischen interpoliert
+          werden. Dies dient der Verbesserung der Konvergenz bei der
+          Berechnung. In der folgenden Abbildung ist der Assistent zum
+          Editieren einer 1D Berechnungseinheit dargestellt.</para>
+
+          <figure>
+            <title>Assistent zum Editieren einer 1D Berechnungseinheit</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Berechnungseinh_edit_1D.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Im Assistenten einer 2D Berechnungseinheit lässt sich
+          lediglich der Name der Berechnungseinheit verändern.</para>
+
+          <para>In der folgenden Abbildung ist der Assistent zum Editieren
+          einer gekoppelten Berechnungseinheit dargestellt. Auf der linken
+          Seite sind die vorhandenen 1D und 2D Berechnungseinheiten zu sehen,
+          die dann durch Markieren und Benutzung der Pfeiltasten zu der
+          Subberechnungseinheit hinzugefügt werden können.</para>
+
+          <figure>
+            <title>Assistent zum Editieren einer gekoppelten
+            Berechnungseinheit</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/1D2D/Berechnungseinh_edit_gekoppelt.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
       </section>
     </section>
   </section>
@@ -2474,8 +2752,8 @@
       <primary>Rauheitsmodellierung Kalypso 1D2D</primary>
     </indexterm>
 
-    <para>Für die Rauheitsmodellierung müssen Rauheitsshapes importiert worden
-    sein (siehe <xref linkend="Kalypso1D2DImportRoughness" />). Die
+    <para>Für die Rauheitsmodellierung müssen Rauheitsshapes importiert werden
+    (siehe <xref linkend="Kalypso1D2DImportRoughness" />). Die
     Rauheitsmodellierung besteht aus zwei Schritten. Im ersten Schritt werden
     die Rauheitswerte in einer Tabelle bearbeitet. Im zweiten Schritt können
     die Rauheitszonen in der Karte bearbeitet werden und z. B. neue
@@ -2558,12 +2836,12 @@
       Rauheitsklasse gehört ein k<subscript>S</subscript>-Wert. Die
       standardmäßig voreingestellten Werte setzen sich aus den Werten aus der
       Literatur (BWK- und DVWK-Merkblatt) und aus Erfahrung an der Stör
-      zusammen. Die Quelle ist zum Teil der Spalte Beschreibung zu entnehmen.
-      Die voreingestellte Rauheitsklassenzuordnung stammt aus der importierten
-      Shape-Datei. Der Name für die einzelnen Elemente kann also vom Anwender
-      frei gewählt werden.</para>
+      zusammen. Die Quelle ist zum Teil der Spalte 'Beschreibung' zu
+      entnehmen. Die voreingestellte Rauheitsklassenzuordnung stammt aus der
+      importierten Shape-Datei. Der Name für die einzelnen Elemente kann also
+      vom Anwender frei gewählt werden.</para>
 
-      <para>Um Einträge in der Tabelle zu bearbeiten zu können, muss mit der
+      <para>Um Einträge in der Tabelle bearbeiten zu können, muss mit der
       rechten Maustaste der gewünschten Eintrag angeklickt werden (die Zeile
       darf vorher nicht markiert sein, sonst öffnet sich ein anderes Menü).
       Die Funktionalitäten sind der folgenden Abbildung zu entnehmen.</para>
@@ -2612,7 +2890,7 @@
       <guibutton>&lt;kein Link&gt;</guibutton> zu sehen ist, angeklickt
       werden. Es öffnet sich ein Pulldownmenü, in dem der gewünschte Name des
       Bewuchses ausgewählt werden kann. Um eine Verlinkung wieder rückgängig
-      zu machen, muss im Pulldownmenü einfach wieder <guimenuitem>&lt;kein
+      zu machen, muss im Pull Down Menü einfach wieder <guimenuitem>&lt;kein
       Link&gt;</guimenuitem> ausgewählt werden.</para>
 
       <para><emphasis role="bold">Wirbelviskosität:</emphasis></para>
@@ -2646,8 +2924,8 @@
       <para>Um die Einträge zu verlinken, muss in der Tabelle
       Fließwiderstandsklassifizierung der gewünschte Eintrag, wo standardmäßig
       <guibutton>&lt;kein Link&gt;</guibutton> zu sehen ist, angeklickt
-      werden. Es öffnet sich ein Pulldownmenü, in dem der gewünschte Name der
-      Wirbelviskosität (z.B. in der Abbildung entweder Fluss oder Vorland)
+      werden. Es öffnet sich ein Pull Down Menü, in dem der gewünschte Name
+      der Wirbelviskosität (z.B. in der Abbildung entweder Fluss oder Vorland)
       ausgewählt werden kann. Um eine Verlinkung wieder rückgängig zu machen,
       muss im Pull Down Menü einfach wieder <guimenuitem>&lt;kein
       Link&gt;</guimenuitem> ausgewählt werden.</para>
@@ -2768,9 +3046,9 @@
               <entry align="left" valign="middle">Polygon löschen</entry>
 
               <entry align="left" valign="middle">Dieser Knopf muss aktiviert
-              werden, um Polygone zu löschen. Zuerst ein Polygon mit der
-              linken Maustaste markieren, das dann gelb mit einem roten Rand
-              erscheinen sollte. Mit der Entf-Taste wird das Polygon dann
+              werden, um Polygone zu löschen. Zunächst muss ein Polygon mit
+              der linken Maustaste markiert werden, das dann gelb mit einem
+              roten Rand erscheint. Mit der Entf-Taste wird das Polygon dann
               gelöscht.</entry>
             </row>
 
@@ -2920,12 +3198,12 @@
             <imageobject>
               <imagedata fileref="img/1D2D/Rauheitszonen_Icon_Rauheitszonenbearbeiten.png" />
             </imageobject>
-          </inlinemediaobject> können Rauheitspolygone, z.B. zum Zwecke des
+          </inlinemediaobject> können Rauheitspolygone, z. B. zum Zwecke des
         Kalibrierens, editiert werden. Dafür muss ein Polygon mit der linken
         Maustaste markiert werden, dieses dann gelb mit einem roten Rand
-        erscheinen sollte. Unterhalb der Karte öffnet sich die Feature View
-        indem die Einstellungen vorgenommen werden können. Die Ansicht ist in
-        der unteren Abbildung einmal beispielhaft dargestellt.</para>
+        erscheint. Unterhalb der Karte öffnet sich die Feature View in der die
+        Einstellungen vorgenommen werden können. Die Ansicht ist in der
+        unteren Abbildung einmal beispielhaft dargestellt.</para>
 
         <figure>
           <title>Ansicht der Feature View zur Einstellung der Parameter des

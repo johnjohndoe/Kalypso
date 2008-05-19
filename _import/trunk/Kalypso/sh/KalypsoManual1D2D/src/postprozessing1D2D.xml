@@ -98,8 +98,9 @@
           <para>Ausnahme bilden hierbei die Modellhöhen, da diese unabhängig
           von einzelnen Berechnungen sind.</para>
 
-          <para>Durch Anhaken eines Eintrages werden automatisch alle
-          untergeordneten Elemente ebenfalls angehakt.</para>
+          <para>Durch Selektion eines Eintrages durch Setzen eines Häkchens
+          werden automatisch alle untergeordneten Elemente ebenfalls
+          selektiert.</para>
         </listitem>
       </itemizedlist>
 
@@ -111,14 +112,14 @@
           Zeitschritt- oder Ergebnis-Ebene) werden unterschiedliche
           Informationen angezeigt.</para>
 
-          <para>Wurde ein Ergebnis selektiert, kann in der Info-Ansicht
+          <para>Wurde ein Ergebnis selektiert, kann im Informationsfenster
           spezifiziert werden, ob das Ergebnis anhand von Isoflächen oder
           Isolinien angezeigt werden soll. Wenn ein Ergebnis in der Karte
-          dargestellt werden soll, muss das Ergebnis also im Baum angehakt
+          dargestellt werden soll, muss das Ergebnis im Baum selektiert
           sein.</para>
 
           <para>Jedem Ergebnis wird automatisch eine Standard-Darstellung
-          (Style) zugewiesen, der mittles des Style-Managers individuell
+          (Style) zugewiesen, die mittles des Style-Managers individuell
           verändert werden kann.</para>
         </listitem>
       </itemizedlist>
@@ -209,12 +210,9 @@
 
       <para>Im unteren Bereich können die einzelnen Attribute für die Linien
       bzw. Farbflächen geändert werden. Für die Farbflächendarstellung erfolgt
-      eine Interpolation dieser Attribute.</para>
-
-      <para>Der Style Manager wird mit <guilabel>OK </guilabel>beendet.</para>
-
-      <para>Der Assistent wird mit <guilabel> Finish</guilabel>
-      beendet.</para>
+      eine Interpolation dieser Attribute. Der Style Manager kann mit
+      <guibutton>OK</guibutton> beendet werden und der Assistent wird mit
+      <guibutton>Finish</guibutton> geschlossen.</para>
     </section>
 
     <section id="Kalypso1D2DErgebniskarte_anzeigen">
@@ -274,7 +272,8 @@
                   </imageobject>
                 </mediaobject></entry>
 
-              <entry>Zeigt per Cursor, die Werte des TIN´s an</entry>
+              <entry>Der Benutzer kann sich die TIN Werte anzeigen lassen, in
+              dem er mit dem Mauszeiger über die Karte fährt.</entry>
             </row>
           </tbody>
         </tgroup>
@@ -307,7 +306,7 @@
         </mediaobject>
       </figure>
 
-      <para>Wenn der Mauscursor nun über die Karte gefahren wird, wird an den
+      <para>Wenn der Mauszeiger nun über die Karte gefahren wird, wird an den
       Stellen, an denen Ergebnisse vorhanden sind, die entsprechenden Werte
       angezeigt.</para>
 
@@ -329,12 +328,12 @@
         <primary>Ganglinien erstellen in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>Für eindimensionale Modelle (bzw. Berechnungseinheiten) können
-      Ganglinien erstellt werden. In der Ansicht "Aktivitäten" muss der Baum
-      <guimenuitem>Postprocessing &gt; Kartenansicht</guimenuitem> geöffnet
-      werden und <guimenuitem>Ganglinien erstellen</guimenuitem> mit einem
-      Doppelklick aktiviert werden. Es öffnet sich die zugehörige Karten
-      Werkzeugansicht.</para>
+      <para>Sowohl für eindimensionale als auch für zweidimensionale Modelle
+      (bzw. Berechnungseinheiten) können Ganglinien erstellt werden. In der
+      Ansicht 'Aktivitäten' muss der Baum <guimenuitem>Postprocessing &gt;
+      Kartenansicht</guimenuitem> geöffnet werden und <guimenuitem>Ganglinien
+      erstellen</guimenuitem> mit einem Doppelklick aktiviert werden. Es
+      öffnet sich die zugehörige Karten Werkzeugansicht.</para>
 
       <figure>
         <title>Karten Werkzeugansicht zum Erstellen von Ganglinien</title>
@@ -484,7 +483,9 @@
               <entry align="left" valign="middle">Ganglinie
               exportieren</entry>
 
-              <entry align="left" valign="middle"></entry>
+              <entry align="left" valign="middle"><emphasis>Diese
+              Funktionalität ist zur Zeit noch nicht
+              implementiert</emphasis></entry>
             </row>
 
             <row>
@@ -522,7 +523,7 @@
           </inlinemediaobject> betätigt werden. Es öffnet sich der folgende
         Assistent, aus dem zunächst ein Teilmodell ausgewählt werden muss. Mit
         <guibutton>Finish</guibutton> wird der Assistent beendet und das
-        Teilmodell erscheint nun in dem Pull down Menü der Karten
+        Teilmodell erscheint nun in dem Pull Down Menü der Karten
         Werkzeugansicht.</para>
 
         <figure>
@@ -652,7 +653,10 @@
 
         <para><emphasis role="bold">Ganglinie exportieren</emphasis></para>
 
-        <para></para>
+        <note>
+          <para>Diese Funktionalität ist zur Zeit noch nicht
+          implementiert.</para>
+        </note>
       </section>
 
       <section id="Kalypso1D2DGanglinien_Diagramm">
@@ -821,9 +825,9 @@
 
     <para>In Kalypso1D2D können Differenzen gebildet werden. Diese Funktion
     ist besonders gut geeignet um z. B. verschiedene Szenarien miteinander zu
-    vergleichen bzw. um Maximalwerte zu ermitteln. So können z.B. Wasserstände
-    von verschiedenen Hochwasserereignissen miteinander verglichen werden.
-    </para>
+    vergleichen bzw. um Maximalwerte zu ermitteln. So können z. B.
+    Wasserstände von verschiedenen Hochwasserereignissen miteinander
+    verglichen werden.</para>
 
     <section id="Kalypso1D2DDifferenzen_erzeugen">
       <title>Differenzen erzeugen</title>
@@ -852,7 +856,7 @@
 
       <para>Nun muss der Subtrahend ausgewählt werden. Die Werte des
       Subtrahenden werden von denen des Minuenden abgezogen und so eine
-      Differenz erstellt. </para>
+      Differenz erstellt.</para>
 
       <figure>
         <title>Assistent zur Auswahl des Subtrahenden</title>

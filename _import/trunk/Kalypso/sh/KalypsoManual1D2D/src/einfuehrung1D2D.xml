@@ -23,7 +23,7 @@
   von überströmten und durchströmten Bewuchs. Verschiedene Turbulenzmodelle
   sind bei der Simulation verfügbar: Ein konstantes Wirbelviskositätsmodell,
   ein bodeninduziertes Turbulenz-Modell, der PRANDTL'sche Mischungswegansatz
-  und das SMAGORINSKY Modell. Das hydrodynamische Model Kalypso1D2D berechnet
+  und das SMAGORINSKY Modell. Das hydrodynamische Modell Kalypso1D2D berechnet
   Wasserstände und horizontale Komponenten der Fließgeschwindigkeiten sowohl
   für strömenden als auch schießenden Abfluss in offenen Gewässern.</para>
 
@@ -91,7 +91,7 @@
       Workflowansicht, welche den Arbeitsablauf durch die Bereitstellung der
       zu bearbeitenden Aufgaben steuert. Neben der Workflowansicht ist die
       Szenarienansicht in der Perspektive verfügbar. Durch die
-      Szenarienansicht ist die Organisation der Szenarien ermöglicht. Neben
+      Szenarienansicht wird die Organisation der Szenarien ermöglicht. Neben
       diesen ständig vorhandenen Ansichten werden im rechten Fensterbereich je
       nach Aufgabenbearbeitung die Kalypso Ansichten (Kartenansicht, Feature
       View, Diagrammansicht, Tabellenansicht,..) geöffnet.</para>
@@ -114,7 +114,7 @@
         </indexterm>
 
         <para>Der Arbeitsablauf in Kalypso1D2D wird über den Workflow
-        gesteuert. Der Benutzer wird in der Modellbearbeitung einem
+        gesteuert. Der Benutzer wird in der Modellbearbeitung von einem
         Bearbeitungsschritt zum nächsten geführt. Dieser Ablauf soll
         verhindern, dass wichtige Schritte im Modellaufbau oder der Berechnung
         übersehen oder vergessen werden, so dass eine zielgerichtete und
@@ -269,7 +269,7 @@
                 Basisszenarien können weitere Szenarien abgeleitet werden. Das
                 Basisszenario, von dem ein Szenario abgeleitet werden soll,
                 sollte nicht aktiviert sein. Zunächst muss das nicht
-                aktivierte Basiszszenario markiert werden. Wenn nun
+                aktivierte Basisszenario markiert werden. Wenn nun
                 anschließend der Knopf betätigt wird öffnet sich ein
                 Assistent, in dem ein Name und gegebenenfalls eine
                 Beschreibung eingegeben werden muss.</entry>
@@ -608,7 +608,7 @@
             Polygons klicken und alle Elemente umschließen, die markiert
             werden sollen, denn es werden wiederum nur die Elemente
             selektiert, die komplett innerhalb des Polygons liegen! Das
-            Polygon wird mit einem Doppelklick auf den letzten Punkt des
+            Polygon wird mit einem Doppelklick auf den letzten Knoten des
             Polygons beendet.</para>
           </listitem>
 
@@ -661,7 +661,7 @@
             Selektion aufgehoben. Zusätzlich werden bei der Rechteck- und
             Polygonselektion nun nicht nur die Elemente selektiert, die
             innerhalb des Rechtecks bzw. Polygons liegen, sondern auch
-            diejenigen, die geschnitten werden. </para>
+            diejenigen, die geschnitten werden.</para>
           </listitem>
         </itemizedlist>
       </section>
@@ -676,8 +676,8 @@
 
       <para>Einige Berechnungsergebnisse werden als Diagramm ausgegeben
       (Beispiel: Ganglinien). In der nachfolgenden Abbildung ist so ein
-      Diagramm dargestellt, an dem nachfolgend einige Funktionalitäten
-      erläutert werden.</para>
+      Diagramm dargestellt, an dem die Funktionalitäten erläutert
+      werden.</para>
 
       <figure>
         <title>Ansicht eines Diagramms</title>
@@ -758,7 +758,7 @@
 
       <para>Zusätzlich zu der normalen in der Tabelle erwähnten Zoomfunktion
       ist es auch möglich einzelne Achsen zu zoomen bzw. auf allen drei Achsen
-      entweder vertikal oder horizontal zu zoomen. Hierfür muss der Icon mit
+      entweder vertikal oder horizontal zu zoomen. Hierfür muss der Knopf mit
       der Lupe aktiviert sein.</para>
 
       <itemizedlist>

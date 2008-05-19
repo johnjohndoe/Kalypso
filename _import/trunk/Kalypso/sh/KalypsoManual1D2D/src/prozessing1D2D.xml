@@ -6,6 +6,9 @@
     <primary>Processing Kalypso1D2D</primary>
   </indexterm>
 
+  <para>Wenn alle Modelleinstellungen abgeschlossen sind kann mit den
+  Berechnungseinstellungen begonnen werden.</para>
+
   <section id="Kalypso1D2DBerechnungseinstellungen">
     <title>Berechnungseinstellungen</title>
 
@@ -116,7 +119,7 @@
 
       <para>Im Preprocessing hat der Benutzer verschiedene
       Berechnungseinheiten festgelegt. Unter <guilabel>Modellname</guilabel>
-      muss ein Name eingetragen werden und ggf. eine Beschreibung unter
+      muss ein Name eingetragen werden und ggf. eine
       <guilabel>Beschreibung</guilabel>. Zuletzt muss nur noch eine
       Rechenkernversion ausgewählt werden.</para>
 
@@ -161,6 +164,9 @@
       werden, werden dann aus den entsprechenden Zeitreihen (siehe
       Preprocessing) interpoliert.</para>
 
+      <para>Eine Erläuterung zur Anwendung der Tabelle findet der Benutzer in
+      der Einführung.</para>
+
       <figure>
         <title>Berechnungssteuerung</title>
 
@@ -170,59 +176,6 @@
           </imageobject>
         </mediaobject>
       </figure>
-
-      <table align="center" id="symbolleiste im Profileditor wspm">
-        <title>Funktionen der Tabelle bei der Zeitschrittdefinition</title>
-
-        <tgroup align="center" cols="3">
-          <colspec colwidth="1*" />
-
-          <colspec colwidth="2*" />
-
-          <colspec colwidth="5*" />
-
-          <tbody>
-            <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Tabelle_kopieren.png"
-                                 scale="110" valign="middle" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
-
-              <entry align="left" valign="middle">Tabelle kopieren</entry>
-
-              <entry align="left" valign="middle">Wenn dieser Knopf betätigt
-              wird und kein Eintrag markiert ist, dann wird die gesamte
-              Tabelle in den Zwischenspeicher abgelegt und kann z. B. in Word
-              kopiert werden. Wenn vorher ein Eintrag markiert wurde, dann
-              wird nur dieser eine Eintrag in den Zwischenspeicher
-              abgelegt.</entry>
-            </row>
-
-            <row>
-              <entry><figure>
-                  <mediaobject>
-                    <imageobject>
-                      <imagedata align="center"
-                                 fileref="img/1D2D/Icon_Tabelle_loeschen.png"
-                                 scale="110" valign="middle" />
-                    </imageobject>
-                  </mediaobject>
-                </figure></entry>
-
-              <entry align="left" valign="middle">Eintrag löschen</entry>
-
-              <entry align="left" valign="middle">Um einen Eintrag in der
-              Tabelle zu löschen, muss dieser zunächst markiert werden. Durch
-              Betätigung des Knopfes wird dieser dann gelöscht.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
 
       <figure>
         <title>Assistent zur Zeitschrittdefinition</title>
@@ -422,9 +375,9 @@
         </itemizedlist>
 
         <para>Die weiteren Einstellungsmöglichkeiten richten sich nach dem
-        ausgewählten Wirbelviskositätsansatz. Wird z.B. ein Ansatz nach
+        ausgewählten Wirbelviskositätsansatz. Wird z. B. ein Ansatz nach
         Smagorinsky gewählt, muss der sogenannte Smagorinsky-Faktor angegeben
-        werden. Bei anderen Ansätzen, wie z.B. der Abbildung zu entnehmen,
+        werden. Bei anderen Ansätzen, wie z. B. der Abbildung zu entnehmen,
         erscheint das Kästchen grau und es ist keine Eingabe möglich.</para>
 
         <figure>
@@ -601,5 +554,139 @@
         </tbody>
       </tgroup>
     </table>
+
+    <section>
+      <title>Fehleranalyse bei der Berechnung</title>
+
+      <indexterm>
+        <primary>Fehleranalyse bei der Berechnung in Kalypso1D2D</primary>
+      </indexterm>
+
+      <para>Die Berechnung wird durch Fehler im Modell häufig instabil und
+      führt zum Abbruch. In Kalypso1D2D ist für diesen Fall eine Hilfe
+      implementiert, die dem Benutzer hilft den Fehler zu finden und zu
+      beseitigen. Im Folgenden wird eine fehlerhafte Berechnung dargestellt
+      und die Anwendung der Hilfe erläutert. Am Ende des Kapitels findet der
+      Benutzer eine Tabelle mit allen möglichen Fehlermeldungen und einer
+      ausführlichen Beschreibung.</para>
+
+      <note>
+        <para>Zur Zeit ist die Hilfefunktion leider noch nicht vollständig
+        ausgearbeitet, wird aber so schnell wie möglich
+        vervollständigt.</para>
+      </note>
+
+      <para>Ist die Berechnung fehlgeschlagen erscheint der folgende Assistent
+      mit einer kurzen Fehlerbezeichnung. Über den Knopf
+      <guibutton>Details</guibutton> wird eine ausführlichere Beschreibung des
+      Fehlers geöffnet.</para>
+
+      <figure>
+        <title>Assistent der Berechnung mit einer Fehlermeldung</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Fehler_01.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>Der Assistent sollte an dieser Stelle nicht abgebrochen werden.
+      Über den Knopf <guibutton>Next </guibutton>wird trotz der Fehlermeldung
+      eine Ergebnisauswertung vorgenommen. In der Karten Werkzeugansicht ist
+      dann der <guilabel>Log der letzten Berechnung</guilabel> eine weitere
+      Hilfe zum Auffinden des Fehlers im Modell.</para>
+
+      <para>Mit einem einfachen Mausklick mit der linken Maustaste auf die
+      Zeile mit der Fehlermeldung wird die Stelle mit dem Fehler im Modell in
+      der Karte hereingezoomt. Je öfter der Benutzer die Fehlermeldung
+      anklickt, desto weiter wird hereingezoomt. Mit einem Doppelklick auf die
+      Fehlermeldung kann erneut die detaillierte Fehlerbeschreibung angesehen
+      werden.</para>
+
+      <figure>
+        <title>Ergebnisauswertung in der Karten Werkzeugansicht</title>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/1D2D/Fehler_02.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <table align="center" id="symbolleiste im Profileditor wspm">
+        <title>Mögliche Fehlermeldungen bei der Berechnung mit
+        Erläuterung</title>
+
+        <tgroup align="center" cols="2">
+          <colspec colwidth="1*" />
+
+          <colspec colwidth="2*" />
+
+          <tbody>
+            <row>
+              <entry><emphasis role="bold">Fehlermeldung</emphasis></entry>
+
+              <entry align="center" valign="middle"><emphasis
+              role="bold">Beschreibung</emphasis></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left" valign="middle"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+
+            <row>
+              <entry align="left"></entry>
+
+              <entry align="left"></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
   </section>
 </chapter>
