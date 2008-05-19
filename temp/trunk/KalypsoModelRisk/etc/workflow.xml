@@ -2,19 +2,15 @@
 <Workflow URI="http___www.tu-harburg.de_wb_kalypso_risk__WF_KalypsoRisk"
 	xmlns="http://www.renew.de/workflow/base"
 	xmlns:con="http://www.renew.de/workflow/contexts"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	defaultTask="org.kalypso.risk.model.handlers.WaterdepthCollectionsWidgetHandler">
 	<Help>NONE</Help>
 	<Name>KalypsoRisk-Workflow</Name>
 	
 	<!-- TASK DEFINITIONS -->
-	
-	<Task context="ImportWaterdepthRasterContext"
-		URI="http___www.tu-harburg.de_wb_kalypso_risk__ImportLanduseShapeData">
-		<Help><![CDATA[Öffnen Map-view]]></Help>
-		<Name>Kartenansicht öffnen</Name>
-	</Task>
 	<TaskGroup
 		URI="http___www.tu-harburg.de_wb_kalypso_risk__Preprocessing">
+		<Help>Preprocessing: Modellaufbau</Help>
 		<Name>Preprocessing: Modellaufbau</Name>
 		<TaskGroup
 			URI="http___www.tu-harburg.de_wb_kalypso_risk__DataLoad">
