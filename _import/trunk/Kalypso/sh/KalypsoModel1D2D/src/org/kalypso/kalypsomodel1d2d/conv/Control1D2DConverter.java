@@ -194,7 +194,7 @@ public class Control1D2DConverter
 
     // // C0
     final Object[] c0Props = new Object[] { 0, m_controlModel.getIDNOPT(), calendarForFirstTimeStep.get( Calendar.YEAR ), calendarForFirstTimeStep.get( Calendar.DAY_OF_YEAR ),
-        getTimeInPercentage( calendarForFirstTimeStep ), m_controlModel.getIEDSW(), m_controlModel.getTBFACT(), m_controlModel.getTBMIN(), 0 };
+        getTimeInPercentage( calendarForFirstTimeStep ), m_controlModel.getIEDSW(), m_controlModel.getTBFACT(), m_controlModel.getTBMIN(), 1 };
     formatter.format( "C0%14d%8d%8d%8d%8.2f%8d%8.3f%8.2f%8d%n", c0Props ); //$NON-NLS-1$
 
     // C1
@@ -212,7 +212,7 @@ public class Control1D2DConverter
 
     // C4
     final boolean artImpulsstromBeiwert = m_controlModel.getBeient();
-    formatter.format( "C4%14.1f%8.1f%8.1f%56d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert ? 1 : 0 ); //$NON-NLS-1$
+    formatter.format( "C4%14.1f%8.1f%8.1f%40d%n", 0.0, 20.0, 0.0, artImpulsstromBeiwert ? 1 : 0 ); //$NON-NLS-1$
 
     // C5
     formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", m_controlModel.getNITI(), m_controlModel.getNITN(), m_controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 ); //$NON-NLS-1$
