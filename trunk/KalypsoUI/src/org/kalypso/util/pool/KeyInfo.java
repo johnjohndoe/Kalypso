@@ -75,7 +75,7 @@ public final class KeyInfo extends Job implements ILoaderListener
 
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
-    super( Messages.getString("org.kalypso.util.pool.KeyInfo.1") + key.toString() ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.util.pool.KeyInfo.1" ) + key.toString() ); //$NON-NLS-1$
 
     m_key = key;
     m_loader = loader;
@@ -132,7 +132,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       if( m_object == object )
       {
         if( DO_LOG )
-          LOGGER.info( Messages.getString("org.kalypso.util.pool.KeyInfo.2") + object + Messages.getString("org.kalypso.util.pool.KeyInfo.3") + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
+          LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.2" ) + object + Messages.getString( "org.kalypso.util.pool.KeyInfo.3" ) + m_key ); //$NON-NLS-1$ //$NON-NLS-2$
 
         m_loader.release( m_object );
         m_object = null;
@@ -194,7 +194,7 @@ public final class KeyInfo extends Job implements ILoaderListener
       try
       {
         if( DO_LOG )
-          LOGGER.info( Messages.getString("org.kalypso.util.pool.KeyInfo.4") + m_key ); //$NON-NLS-1$
+          LOGGER.info( Messages.getString( "org.kalypso.util.pool.KeyInfo.4" ) + m_key ); //$NON-NLS-1$
         m_object = m_loader.load( location, m_key.getContext(), monitor );
       }
       catch( final Throwable e )
@@ -206,7 +206,7 @@ public final class KeyInfo extends Job implements ILoaderListener
         if( m_key.isIgnoreExceptions() )
           return Status.CANCEL_STATUS;
 
-        return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.util.pool.KeyInfo.5") + location ); //$NON-NLS-1$
+        return StatusUtilities.statusFromThrowable( e, String.format( "%s %s", Messages.getString( "org.kalypso.util.pool.KeyInfo.5" ), location ) ); //$NON-NLS-1$
       }
     }
 
@@ -231,14 +231,14 @@ public final class KeyInfo extends Job implements ILoaderListener
   public String toString( )
   {
     final StringBuffer b = new StringBuffer();
-    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.6") ); //$NON-NLS-1$
+    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.6" ) ); //$NON-NLS-1$
     if( m_object != null )
-      b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.7") + m_object.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.7" ) + m_object.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     else
-      b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.9") ); //$NON-NLS-1$
-    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.10") + m_loader.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.12") + m_key + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( Messages.getString("org.kalypso.util.pool.KeyInfo.14") + m_listeners.size() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.9" ) ); //$NON-NLS-1$
+    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.10" ) + m_loader.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.12" ) + m_key + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.14" ) + m_listeners.size() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     return b.toString();
   }
 
