@@ -157,7 +157,7 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
     {
       final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) m_selection.getFirstElement();
       final CommandableWorkspace workspace = m_selection.getWorkspace( fate.getParentFeature() );
-      WspmImportProfileHelper.loadIntoGml( profiles, fate, workspace );
+      WspmImportProfileHelper.loadIntoGml( profiles, fate, workspace, null );
     }
     catch( final Exception e )
     {

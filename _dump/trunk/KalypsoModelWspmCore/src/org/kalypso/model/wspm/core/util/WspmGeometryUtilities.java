@@ -73,7 +73,7 @@ public class WspmGeometryUtilities
    * We assume that rw/hw are in a GAUSS-KRUEGER coordinate system, the exact one is determined from the first digit of
    * the rw value.
    */
-  public static GM_Point pointFromRrHw( final Double rw, final Double hw, final Double h ) throws Exception
+  public static GM_Point pointFromRwHw( final Double rw, final Double hw, final Double h ) throws Exception
   {
     // TODO: should not be used?
     final String crsName = null;

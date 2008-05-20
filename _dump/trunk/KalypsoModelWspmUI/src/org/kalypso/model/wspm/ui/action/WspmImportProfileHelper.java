@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -70,7 +71,7 @@ public class WspmImportProfileHelper
   /**
    * loads profiles into a given gml.
    */
-  public static void loadIntoGml( final List<IProfil> profiles, final FeatureAssociationTypeElement fate, final CommandableWorkspace workspace ) throws Exception
+  public static void loadIntoGml( final List<IProfil> profiles, final FeatureAssociationTypeElement fate, final CommandableWorkspace workspace, final String crs ) throws Exception
   {
     final ICommand command = new ICommand()
     {
@@ -104,6 +105,13 @@ public class WspmImportProfileHelper
           for( final IProfil profile : profiles )
           {
             final WspmProfile gmlProfile = water.createNewProfile();
+
+            // TODO: set coordinate system
+            if( crs != null )
+              gmlProfile.setSrsName( crs );
+            else
+              gmlProfile.setSrsName( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
             ProfileFeatureFactory.toFeature( profile, gmlProfile.getFeature() );
 
             newFeatureList.add( gmlProfile.getFeature() );
@@ -124,7 +132,7 @@ public class WspmImportProfileHelper
         }
       }
 
-      @SuppressWarnings("unchecked") //$NON-NLS-1$
+      @SuppressWarnings("unchecked")//$NON-NLS-1$
       public void redo( ) throws Exception
       {
         m_profileList.addAll( Arrays.asList( m_addedFeatures ) );
@@ -132,7 +140,7 @@ public class WspmImportProfileHelper
         m_workspace.fireModellEvent( event );
       }
 
-      @SuppressWarnings("unchecked") //$NON-NLS-1$
+      @SuppressWarnings("unchecked")//$NON-NLS-1$
       public void undo( ) throws Exception
       {
         m_profileList.removeAll( Arrays.asList( m_addedFeatures ) );

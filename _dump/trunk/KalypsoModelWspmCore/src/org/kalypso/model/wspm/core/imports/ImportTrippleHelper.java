@@ -290,7 +290,7 @@ public class ImportTrippleHelper
 
     /* get the segment length of the already imported profile points */
     final IRecord last = profilPointList.get( profilPointList.size() - 1 );
-    distance = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE,last  );
+    distance = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, last );
 
     /* add the segment length of the segment defined by the last imported profile point and the new to add profile point */
     final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, last );

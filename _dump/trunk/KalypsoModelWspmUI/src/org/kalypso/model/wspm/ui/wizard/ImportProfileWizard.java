@@ -119,6 +119,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
           /* get file name from wizard */
           final File trippelFile = m_ProfilePage.getFile();
           final String separator = m_ProfilePage.getSeparator();
+          final String crs = m_ProfilePage.getCoordinateSystem();
 
           List<IProfil> profiles = ImportTrippleHelper.importTrippelData( trippelFile, separator, PROFIL_TYPE_PASCHE );
 
@@ -129,7 +130,7 @@ public class ImportProfileWizard extends Wizard implements IWizard
           /* Convert Trippel Data */
           monitor.subTask( Messages.ImportProfileWizard_7 );
 
-          WspmImportProfileHelper.loadIntoGml( profiles, m_fate, m_workspace );
+          WspmImportProfileHelper.loadIntoGml( profiles, m_fate, m_workspace, crs );
 
           /* convert them into the profile-list */
 

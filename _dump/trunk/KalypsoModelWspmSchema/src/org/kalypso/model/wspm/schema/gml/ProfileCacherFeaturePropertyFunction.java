@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
@@ -54,6 +53,7 @@ import org.kalypso.model.wspm.schema.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -134,7 +134,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
           if( srsName == null )
-            srsName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+            srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         }
 
         if( rw == null || hw == null )
@@ -171,7 +171,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  public static GM_Point convertPoint( final IProfil profile, final IRecord profilPoint ) throws Exception
+  public static GM_Point convertPoint( final IProfil profile, final IRecord profilPoint, final String crs ) throws Exception
   {
     final int compRechtswert = TupleResultUtilities.indexOfComponent( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     final int compHochwert = TupleResultUtilities.indexOfComponent( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
@@ -184,6 +184,6 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
     final Double hw = (Double) profilPoint.getValue( compHochwert );
     final Double h = compHoehe == -1 ? null : (Double) profilPoint.getValue( compHoehe );
 
-    return WspmGeometryUtilities.pointFromRrHw( rw, hw, h );
+    return WspmGeometryUtilities.pointFromRwHw( rw, hw, h, crs );
   }
 }
