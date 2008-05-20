@@ -124,13 +124,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
   /**
    * Makes a tuple based observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static IObservation<TupleResult> toObservation( final Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.16") + f ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.om.ObservationFeatureFactory.16" ) + f ); //$NON-NLS-1$
 
     final String name = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_NAME );
     final String desc = (String) FeatureHelper.getFirstProperty( f, ObservationFeatureFactory.GML_DESCRIPTION );
@@ -298,7 +298,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IFeatureType featureType = f.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.22") + f ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.om.ObservationFeatureFactory.22" ) + f ); //$NON-NLS-1$
 
     final Feature recordDefinition = ObservationFeatureFactory.getOrCreateRecordDefinition( f );
     return ObservationFeatureFactory.buildComponents( recordDefinition );
@@ -343,7 +343,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IFeatureType featureType = targetObsFeature.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.23") + targetObsFeature ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.om.ObservationFeatureFactory.23" ) + targetObsFeature ); //$NON-NLS-1$
 
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -467,7 +467,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   public static RepresentationType createRepresentationType( final IComponent component )
   {
     if( component == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.gml.om.ObservationFeatureFactory.29") ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.om.ObservationFeatureFactory.29" ) ); //$NON-NLS-1$
 
     final QName valueTypeName = component.getValueTypeName();
 
@@ -490,10 +490,14 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return KIND.Boolean;
 
-    if( XmlTypes.isNumber( valueTypeName ) )
+    if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )
+    {
+      // TODO: also check, if comp only contains min/maxXXclusive restrictions, else it is no number
+// if( XmlTypes.isNumber( valueTypeName ) )
       return KIND.Number;
+    }
 
-    if( XmlTypes.isDate( valueTypeName ) )
+    if( XmlTypes.isNumber( valueTypeName ) || XmlTypes.isDate( valueTypeName ) )
       return KIND.SimpleType;
 
     return KIND.Word;
