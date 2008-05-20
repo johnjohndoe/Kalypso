@@ -48,8 +48,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
-import org.kalypso.gmlschema.annotation.AnnotationAdapterFactory;
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
@@ -61,9 +60,9 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
  */
 public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
 {
-  protected final Map<Object, ILanguageAnnontationProvider> m_items;
+  protected final Map<Object, IAnnotation> m_items;
 
-  public ComponentUiEnumerationHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final Map<Object, ILanguageAnnontationProvider> items )
+  public ComponentUiEnumerationHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final Map<Object, IAnnotation> items )
   {
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, null );
 
@@ -85,11 +84,10 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
       @Override
       public String getText( Object element )
       {
-        final String lang = AnnotationAdapterFactory.getPlatformLang();
-        final ILanguageAnnontationProvider provider = m_items.get( element );
+        final IAnnotation annotation = m_items.get( element );
 
-        if( provider != null )
-          return provider.getAnnotation( lang ).getLabel().trim();
+        if( annotation != null )
+          return annotation.getLabel().trim();
 
         return super.getText( element );
       }
@@ -127,12 +125,11 @@ public class ComponentUiEnumerationHandler extends AbstractComponentUiHandler
     final int componentIndex = getComponent();
     final Object value = record.getValue( componentIndex );
 
-    final ILanguageAnnontationProvider provider = m_items.get( value );
-    if( provider == null )
+    final IAnnotation annotation = m_items.get( value );
+    if( annotation == null )
       return value.toString();
 
-    final String lang = AnnotationAdapterFactory.getPlatformLang();
-    return provider.getAnnotation( lang ).getLabel().trim();
+    return annotation.getLabel().trim();
   }
 
 }

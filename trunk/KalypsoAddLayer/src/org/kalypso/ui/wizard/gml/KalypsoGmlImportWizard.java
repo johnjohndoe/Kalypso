@@ -53,7 +53,6 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -131,7 +130,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       // find title
       String title = NamedFeatureHelper.getName( feature );
       if( title == null || title.length() < 1 )
-        title = AnnotationUtilities.getAnnotation( ft ).getLabel();
+        title = ft.getAnnotation().getLabel();
       pathList.add( featurepath.toString() );
       titleList.add( title );
     }
@@ -148,7 +147,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
 
       for( final IFeatureType ft : associationFeatureTypes )
       {
-        final String title = AnnotationUtilities.getAnnotation( ft ).getLabel();
+        final String title = ft.getAnnotation().getLabel();
         final String ftpName = ftp.getQName().getLocalPart();
         final String ftName = ft.getQName().getLocalPart();
         final FeaturePath path = new FeaturePath( parentFeaturePath, ftpName + "[" + ftName + "]" );

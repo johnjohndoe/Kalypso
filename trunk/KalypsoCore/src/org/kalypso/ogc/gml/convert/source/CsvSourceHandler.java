@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -13,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.CsvSourceType;
+import org.kalypso.gml.util.CsvSourceType.Featureproperty;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
@@ -20,7 +20,6 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader.CSVInfo;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -50,14 +49,14 @@ public class CsvSourceHandler implements ISourceHandler
   {
     final String href = m_type.getHref();
     final CsvFeatureReader reader = new CsvFeatureReader();
-    final List propList = m_type.getFeatureproperty();
+    final List<Featureproperty> propList = m_type.getFeatureproperty();
     InputStream stream = null;
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     try
     {
-      for( final Iterator propIt = propList.iterator(); propIt.hasNext(); )
+      for( final Featureproperty featureproperty : propList )
       {
-        final CsvSourceType.Featureproperty element = (CsvSourceType.Featureproperty) propIt.next();
+        final CsvSourceType.Featureproperty element = featureproperty;
         final List<Integer> columnList = element.getColumn();
         final int[] columns = new int[columnList.size()];
         for( int i = 0; i < columnList.size(); i++ )
@@ -67,7 +66,7 @@ public class CsvSourceHandler implements ISourceHandler
         }
         final QName qname = new QName( "namespace", element.getName() ); //$NON-NLS-1$
         final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
-        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_FEATURE_MEMBER, qname, typeHandler, 0, 1, false );
+        final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler, 0, 1, false );
         final CSVInfo info = new CsvFeatureReader.CSVInfo( element.getFormat(), columns, element.isIgnoreFormatExceptions() );
         reader.addInfo( ftp, info );
       }
@@ -81,7 +80,7 @@ public class CsvSourceHandler implements ISourceHandler
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new GmlConvertException( Messages.getString("org.kalypso.ogc.gml.convert.source.CsvSourceHandler.1") + href, e ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.CsvSourceHandler.1" ) + href, e ); //$NON-NLS-1$
     }
     finally
     {

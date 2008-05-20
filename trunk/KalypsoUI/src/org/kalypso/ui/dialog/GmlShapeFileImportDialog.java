@@ -80,9 +80,7 @@ import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
@@ -93,6 +91,7 @@ import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
@@ -240,18 +239,18 @@ public class GmlShapeFileImportDialog extends Dialog
     crsData.verticalSpan = 1;
     crsData.horizontalAlignment = SWT.FILL;
     m_crsGroup.setLayoutData( crsData );
-    m_crsGroup.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.3") ); //$NON-NLS-1$
+    m_crsGroup.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.3" ) ); //$NON-NLS-1$
     final Label crsLabel = new Label( m_crsGroup, SWT.NONE );
-    crsLabel.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.4") ); //$NON-NLS-1$
+    crsLabel.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.4" ) ); //$NON-NLS-1$
 
     m_checkCRS = new Combo( m_crsGroup, SWT.NONE );
 
     availableCoordinateSystems( m_checkCRS );
 
-    final String defaultCS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String defaultCS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_checkCRS.select( m_checkCRS.indexOf( defaultCS ) );
 
-    m_checkCRS.setToolTipText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.5") ); //$NON-NLS-1$
+    m_checkCRS.setToolTipText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.5" ) ); //$NON-NLS-1$
     final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_checkCRS.setLayoutData( data );
@@ -276,7 +275,7 @@ public class GmlShapeFileImportDialog extends Dialog
     final Group treeGroup = new Group( parent, SWT.NULL );
     treeGroup.setLayout( new GridLayout() );
     treeGroup.setLayoutData( new GridData() );
-    treeGroup.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.6") ); //$NON-NLS-1$
+    treeGroup.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.6" ) ); //$NON-NLS-1$
     m_viewerComposite = new Composite( treeGroup, SWT.SINGLE );
     final GridLayout layout = new GridLayout();
     layout.numColumns = 1;
@@ -317,7 +316,7 @@ public class GmlShapeFileImportDialog extends Dialog
       }
     } );
 
-    m_treeViewer.setContentProvider( new GMLContentProvider() );
+    m_treeViewer.setContentProvider( new GMLContentProvider( true, false ) );
     m_treeViewer.setLabelProvider( new GMLLabelProvider() );
     m_treeViewer.setUseHashlookup( true );
     if( m_filter != null )
@@ -342,7 +341,7 @@ public class GmlShapeFileImportDialog extends Dialog
   {
     // style
     m_styleGroup = new Group( composite, SWT.NULL );
-    m_styleGroup.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.7") ); //$NON-NLS-1$
+    m_styleGroup.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.7" ) ); //$NON-NLS-1$
 
     final GridData data3 = new GridData();
     data3.horizontalAlignment = GridData.FILL;
@@ -353,7 +352,7 @@ public class GmlShapeFileImportDialog extends Dialog
     m_styleGroup.setLayout( gridLayout1 );
 
     m_styleLabel = new Label( m_styleGroup, SWT.NONE );
-    m_styleLabel.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.8") ); //$NON-NLS-1$
+    m_styleLabel.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.8" ) ); //$NON-NLS-1$
 
     m_styleTextField = new Text( m_styleGroup, SWT.BORDER );
     final GridData data4 = new GridData();
@@ -363,7 +362,7 @@ public class GmlShapeFileImportDialog extends Dialog
     m_styleTextField.setEditable( false );
 
     m_browseButton2 = new Button( m_styleGroup, SWT.PUSH );
-    m_browseButton2.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.9") ); //$NON-NLS-1$
+    m_browseButton2.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.9" ) ); //$NON-NLS-1$
     m_browseButton2.setLayoutData( new GridData( GridData.END ) );
     m_browseButton2.addSelectionListener( new SelectionAdapter()
     {
@@ -380,7 +379,7 @@ public class GmlShapeFileImportDialog extends Dialog
     } );
 
     m_styleNameLabel = new Label( m_styleGroup, SWT.NONE );
-    m_styleNameLabel.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.10") ); //$NON-NLS-1$
+    m_styleNameLabel.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.10" ) ); //$NON-NLS-1$
 
     m_styleNameCombo = new Combo( m_styleGroup, SWT.READ_ONLY );
     final GridData data5 = new GridData();
@@ -414,7 +413,7 @@ public class GmlShapeFileImportDialog extends Dialog
     } );
 
     final Label defaultStyleLabel = new Label( m_styleGroup, SWT.NONE );
-    defaultStyleLabel.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.12") ); //$NON-NLS-1$
+    defaultStyleLabel.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.12" ) ); //$NON-NLS-1$
 
   }
 
@@ -427,9 +426,9 @@ public class GmlShapeFileImportDialog extends Dialog
     topGroupData.horizontalAlignment = GridData.FILL;
     m_group.setLayout( topGroupLayout );
     m_group.setLayoutData( topGroupData );
-    m_group.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.13") ); //$NON-NLS-1$
+    m_group.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.13" ) ); //$NON-NLS-1$
     m_sourceFileLabel = new Label( m_group, SWT.NONE );
-    m_sourceFileLabel.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.14") ); //$NON-NLS-1$
+    m_sourceFileLabel.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.14" ) ); //$NON-NLS-1$
 
     // Set width of source path field
     final GridData data0 = new GridData( GridData.FILL_HORIZONTAL );
@@ -470,7 +469,7 @@ public class GmlShapeFileImportDialog extends Dialog
     } );
 
     m_browseButton = new Button( m_group, SWT.PUSH );
-    m_browseButton.setText( Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.15") ); //$NON-NLS-1$
+    m_browseButton.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.15" ) ); //$NON-NLS-1$
     m_browseButton.setLayoutData( new GridData( GridData.END ) );
     m_browseButton.addSelectionListener( new SelectionAdapter()
     {
@@ -496,8 +495,8 @@ public class GmlShapeFileImportDialog extends Dialog
   protected KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
   {
     if( m_root != null )
-      return new KalypsoResourceSelectionDialog( getShell(), m_root, Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.16"), fileResourceExtensions, m_root, new ResourceSelectionValidator() ); //$NON-NLS-1$
-    return new KalypsoResourceSelectionDialog( getShell(), m_eclipseWorkspace, Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.17"), fileResourceExtensions, m_eclipseWorkspace, new ResourceSelectionValidator() ); //$NON-NLS-1$
+      return new KalypsoResourceSelectionDialog( getShell(), m_root, Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.16" ), fileResourceExtensions, m_root, new ResourceSelectionValidator() ); //$NON-NLS-1$
+    return new KalypsoResourceSelectionDialog( getShell(), m_eclipseWorkspace, Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.17" ), fileResourceExtensions, m_eclipseWorkspace, new ResourceSelectionValidator() ); //$NON-NLS-1$
   }
 
   /**
@@ -536,7 +535,7 @@ public class GmlShapeFileImportDialog extends Dialog
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.createErrorStatus( e.getLocalizedMessage() );
-      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.dialog.GmlShapeFileImportDialog.18"), e.getMessage(), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.18" ), e.getMessage(), status ); //$NON-NLS-1$
     }
 
   }
@@ -720,7 +719,7 @@ public class GmlShapeFileImportDialog extends Dialog
       // find title
       String title = NamedFeatureHelper.getName( feature );
       if( title == null || title.length() < 1 )
-        title = AnnotationUtilities.getAnnotation( ft ).getLabel();
+        title = ft.getAnnotation().getLabel();
       pathList.add( featurepath.toString() );
       titleList.add( title );
     }
@@ -737,7 +736,7 @@ public class GmlShapeFileImportDialog extends Dialog
 
       for( final IFeatureType ft : associationFeatureTypes )
       {
-        final String title = AnnotationUtilities.getAnnotation( ft ).getLabel();
+        final String title = ft.getAnnotation().getLabel();
         final FeaturePath path = new FeaturePath( parentFeaturePath, ftp.getQName().getLocalPart() + "[" + ft.getQName().getLocalPart() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
         pathList.add( path.toString() );
         titleList.add( title );

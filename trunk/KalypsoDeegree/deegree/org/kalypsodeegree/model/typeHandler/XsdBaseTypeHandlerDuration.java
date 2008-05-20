@@ -43,7 +43,6 @@ package org.kalypsodeegree.model.typeHandler;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
-
 /**
  * @author kuch
  */
@@ -56,7 +55,6 @@ public class XsdBaseTypeHandlerDuration extends XsdBaseTypeHandler<Duration>
   {
     super( "duration", Duration.class );
     m_datatypeFactory = datatypeFactory;
-
   }
 
   /**

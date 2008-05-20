@@ -85,7 +85,6 @@ import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationSt
 import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.TableColumnTooltipListener;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -333,7 +332,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       m_selectionManager.removeSelectionListener( m_globalSelectionListener );
   }
 
-  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused") //$NON-NLS-1$
+  public void applyTableTemplate( final Gistableview tableView, final URL context, @SuppressWarnings("unused")
   final boolean dummy )
   {
     m_isApplyTemplate = true;
@@ -351,7 +350,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
         final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString("org.kalypso.ogc.gml.table.LayerTableViewer.7") ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
+        final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.7" ) ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
         setInput( theme );
       }
       final Sort sort = layer.getSort();
@@ -384,7 +383,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
 
       final MapModell pseudoModell = new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null );
 
-      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString("org.kalypso.ogc.gml.table.LayerTableViewer.8") ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
+      final GisTemplateFeatureTheme theme = new GisTemplateFeatureTheme( new I10nString( Messages.getString( "org.kalypso.ogc.gml.table.LayerTableViewer.8" ) ), layer, context, m_selectionManager, pseudoModell, null, true ); //$NON-NLS-1$
       setInput( theme );
 
       final Sort sort = layer.getSort();
@@ -531,7 +530,7 @@ public class LayerTableViewer extends TableViewer implements ModellEventListener
       {
         final IPropertyType property = featureType.getProperty( propertyName );
 
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation( property );
+        final IAnnotation annotation = property.getAnnotation();
         result[0] = annotation.getLabel();
         result[1] = annotation.getTooltip();
       }

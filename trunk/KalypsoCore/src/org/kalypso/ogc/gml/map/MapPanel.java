@@ -360,7 +360,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         toAdd = new EasyFeatureWrapper[0];
 
       default:
-        throw new UnsupportedOperationException( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.18") + selectionMode ); //$NON-NLS-1$
+        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.18" ) + selectionMode ); //$NON-NLS-1$
     }
 
     selectionManager2.changeSelection( toRemove, toAdd );
@@ -662,12 +662,12 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       if( m_model == null )
       {
         if( m_modellPainter == null )
-          m_modellPainter = new TextPainter( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.19"), w, h ); //$NON-NLS-1$
+          m_modellPainter = new TextPainter( Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.19" ), w, h ); //$NON-NLS-1$
         else
-          m_modellPainter = new TextPainter( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.20"), w, h ); //$NON-NLS-1$
+          m_modellPainter = new TextPainter( Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.20" ), w, h ); //$NON-NLS-1$
       }
       else if( (m_model != null) && (m_model.getThemeSize() == 0) )
-        m_modellPainter = new TextPainter( Messages.getString("org.kalypso.ogc.gml.map.MapPanel.21"), w, h ); //$NON-NLS-1$
+        m_modellPainter = new TextPainter( Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), w, h ); //$NON-NLS-1$
       else
       {
         // Why -2 ?
@@ -846,7 +846,6 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         // line and point with radius
         // polygon without radius
         final double gisRadius = Math.abs( transform.getSourceX( startPoint.getX() + radius ) - g1x );
-        final JMSelector selector = new JMSelector();
         final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, getMapModell().getCoordinatesSystem() );
 
         final Feature fe = (Feature) JMSelector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );

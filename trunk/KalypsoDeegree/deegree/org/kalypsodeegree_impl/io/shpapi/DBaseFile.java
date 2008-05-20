@@ -421,7 +421,7 @@ public class DBaseFile
       {
         th = null;
       }
-      ftp[i] = GMLSchemaFactory.createValuePropertyType( m_propertyCustomFeatureMember, new QName( m_customNamespaceURI, column.name ), th, 1, 1, false );
+      ftp[i] = GMLSchemaFactory.createValuePropertyType( new QName( m_customNamespaceURI, column.name ), th, 1, 1, false );
       elementsString = elementsString + "<xs:element name=\"" + column.name + "\" type=\"xs:" + th.getTypeName().getLocalPart() + "\"/>\n";
     }
 
@@ -430,7 +430,7 @@ public class DBaseFile
     // final QName qNameFT = new QName( DBaseFile.NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
     final Class< ? extends GM_Object> geoClass = getGeometryType();
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
-    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( m_propertyCustomFeatureMember, PROPERTY_GEOMETRY, geoTH, 1, 1, false );
+    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, geoTH, 1, 1, false );
 
     try
     {

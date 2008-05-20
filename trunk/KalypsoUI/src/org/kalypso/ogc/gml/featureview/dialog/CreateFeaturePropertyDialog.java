@@ -46,7 +46,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -90,18 +89,18 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
     {
       final IFeatureType targetFeatureType = m_relationType.getTargetFeatureType();
       final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( targetFeatureType, workspace.getGMLSchema(), false, true );
-      
+
       final IFeatureType newFeatureType;
       if( substituts.length == 0 )
       {
         // TODO: error message
         newFeatureType = null;
       }
-      else if( substituts.length == 1  )
+      else if( substituts.length == 1 )
         newFeatureType = substituts[0];
       else
       {
-      // TODO: show list of possible types to user (if more than one type is possible)
+        // TODO: show list of possible types to user (if more than one type is possible)
         newFeatureType = null;
       }
 
@@ -110,17 +109,17 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
 
       final Feature newFeature = workspace.createFeature( m_feature, m_relationType, newFeatureType );
       m_change = new FeatureChange( m_feature, m_relationType, newFeature );
-      
+
       m_listener.openFeatureRequested( null, null ); // in order to force total refresh of feature view
       m_listener.openFeatureRequested( m_feature, m_relationType );
-      
+
       return Window.OK;
     }
 
     // TODO: the other cases (choosing a feature) are not supported yet
-    final String userMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"); //$NON-NLS-1$
-    MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit"), userMessage ); //$NON-NLS-1$
-    
+    final String userMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented" ); //$NON-NLS-1$
+    MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit" ), userMessage ); //$NON-NLS-1$
+
     return Window.CANCEL;
   }
 
@@ -138,20 +137,20 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    final String label = AnnotationUtilities.getAnnotation( m_relationType.getTargetFeatureType() ).getValue( IAnnotation.ANNO_NAME );
+    final String label = m_relationType.getTargetFeatureType().getAnnotation().getValue( IAnnotation.ANNO_NAME );
 
     final StringBuffer msg = new StringBuffer( "'" ); //$NON-NLS-1$
     msg.append( label );
     msg.append( "\' " ); //$NON-NLS-1$
 
     if( m_relationType.isInlineAble() )
-      msg.append( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.2") ); //$NON-NLS-1$
+      msg.append( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.2" ) ); //$NON-NLS-1$
 
     if( m_relationType.isInlineAble() && m_relationType.isLinkAble() )
-      msg.append( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.3") ); //$NON-NLS-1$
+      msg.append( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.3" ) ); //$NON-NLS-1$
 
     if( m_relationType.isLinkAble() )
-      msg.append( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.4") ); //$NON-NLS-1$
+      msg.append( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog.4" ) ); //$NON-NLS-1$
 
     return msg.toString();
   }

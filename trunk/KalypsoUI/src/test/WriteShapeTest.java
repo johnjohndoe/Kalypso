@@ -37,9 +37,9 @@ public class WriteShapeTest extends TestCase
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aNumber" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aString" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType pointType = GMLSchemaFactory.createValuePropertyType( shapeTypeQName, new QName( "anyNS", "aGeometry" ), pointTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aNumber" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aString" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType pointType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), pointTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType[] properties = new IPropertyType[] { pointType, doubleType, stringType };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );

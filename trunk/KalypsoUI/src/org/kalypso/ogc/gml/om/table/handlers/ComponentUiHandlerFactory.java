@@ -46,7 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.i18n.Messages;
@@ -80,7 +80,7 @@ public class ComponentUiHandlerFactory
     final IRestriction[] restrictions = component.getRestrictions();
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
-      final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
+      final Map<Object, IAnnotation> items = RestrictionUtilities.getEnumerationItems( restrictions );
       return new ComponentUiEnumerationHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, items );
     }
 
@@ -97,6 +97,6 @@ public class ComponentUiHandlerFactory
     else if( Q_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
 
-    throw new NotImplementedException( Messages.getString("org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory.6") + valueTypeName ); //$NON-NLS-1$
+    throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory.6" ) + valueTypeName ); //$NON-NLS-1$
   }
 }

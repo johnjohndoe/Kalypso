@@ -57,7 +57,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
@@ -110,7 +109,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
      */
     public BatchEditParametersInputDialog( final Shell shell )
     {
-      super( shell, Messages.getString("org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.1"), null, "0", null ); //$NON-NLS-1$ //$NON-NLS-2$
+      super( shell, Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.1" ), null, "0", null ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override
@@ -118,7 +117,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
     {
       final Composite composite = (Composite) super.createDialogArea( parent );
       final Group m_radioButtonGroup = new Group( composite, SWT.SHADOW_ETCHED_IN );
-      m_radioButtonGroup.setText( Messages.getString("org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.3") ); //$NON-NLS-1$
+      m_radioButtonGroup.setText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.3" ) ); //$NON-NLS-1$
       final FillLayout fillLayout = new FillLayout();
       fillLayout.type = SWT.VERTICAL;
       m_radioButtonGroup.setLayout( fillLayout );
@@ -126,28 +125,28 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
       final ButtonSelectionListener buttonSelectionListener = new ButtonSelectionListener();
 
       final Button equalsButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      equalsButton.setToolTipText( Messages.getString("org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.4") ); //$NON-NLS-1$
+      equalsButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.4" ) ); //$NON-NLS-1$
       equalsButton.setText( "=" ); //$NON-NLS-1$
       equalsButton.addSelectionListener( buttonSelectionListener );
 
       final Button plusButton = new Button( m_radioButtonGroup, SWT.RADIO );
       plusButton.setText( "+" ); //$NON-NLS-1$
-      plusButton.setToolTipText( Messages.getString("org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.7") ); //$NON-NLS-1$
+      plusButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.7" ) ); //$NON-NLS-1$
       plusButton.addSelectionListener( buttonSelectionListener );
       plusButton.setSelection( true );
 
       final Button minusButton = new Button( m_radioButtonGroup, SWT.RADIO );
       minusButton.setText( "-" ); //$NON-NLS-1$
-      minusButton.setToolTipText( Messages.getString("org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.9") ); //$NON-NLS-1$
+      minusButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.9" ) ); //$NON-NLS-1$
       minusButton.addSelectionListener( buttonSelectionListener );
 
       final Button timesButton = new Button( m_radioButtonGroup, SWT.RADIO );
       timesButton.setText( "*" ); //$NON-NLS-1$
-      timesButton.setToolTipText( Messages.getString("org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.11") ); //$NON-NLS-1$
+      timesButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.11" ) ); //$NON-NLS-1$
       timesButton.addSelectionListener( buttonSelectionListener );
 
       final Button divideButton = new Button( m_radioButtonGroup, SWT.RADIO );
-      divideButton.setToolTipText( Messages.getString("org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.12") ); //$NON-NLS-1$
+      divideButton.setToolTipText( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.12" ) ); //$NON-NLS-1$
       divideButton.setText( "/" ); //$NON-NLS-1$
       divideButton.addSelectionListener( buttonSelectionListener );
 
@@ -236,7 +235,7 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
       if( focusedProperty == null )
         newText = text;
       else
-        newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + AnnotationUtilities.getAnnotation( focusedProperty ).getLabel() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        newText = text.replaceAll( " \\(.*\\)", "" ) + " (" + focusedProperty.getAnnotation().getLabel() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       action.setText( newText );
     }
   }
