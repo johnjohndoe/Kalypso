@@ -144,6 +144,7 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
     /* calculate the landuse area [m²] */
     final double totalArea = m_cellSize.doubleValue() * m_numberOfEntries;
     final BigDecimal totalAreaValue = new BigDecimal( totalArea ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    getFeature().setProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA, totalAreaValue );
 
     /* calculate the total damage [€] */
     final BigDecimal totalDamage = m_average.multiply( totalAreaValue );
@@ -195,6 +196,14 @@ public class RiskLanduseStatistic extends AbstractFeatureBinder implements IRisk
   public int compareTo( final IRiskLanduseStatistic o )
   {
     return Integer.valueOf( getReturnPeriod() ).compareTo( Integer.valueOf( o.getReturnPeriod() ) );
+  }
+
+  /**
+   * @see org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic#getFloodedArea()
+   */
+  public BigDecimal getFloodedArea( )
+  {
+    return (BigDecimal) getFeature().getProperty( IRiskLanduseStatistic.PROPERTY_FLOODED_AREA );
   }
 
 }

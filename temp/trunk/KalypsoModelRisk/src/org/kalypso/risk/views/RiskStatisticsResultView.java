@@ -103,7 +103,8 @@ public class RiskStatisticsResultView extends ViewPart
   @Override
   public void dispose( )
   {
-    m_compResult.dispose();
+    if( m_compResult != null )
+      m_compResult.dispose();
     super.dispose();
   }
 

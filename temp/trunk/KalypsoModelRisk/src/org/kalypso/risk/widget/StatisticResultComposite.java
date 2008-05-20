@@ -78,10 +78,10 @@ public class StatisticResultComposite extends Composite
   {
     super( parent, style );
 
-    paint( model );
+    paint(  model );
   }
 
-  private void paint( final IRasterizationControlModel model )
+  private void paint(  final IRasterizationControlModel model )
   {
     final FormToolkit toolkit = new FormToolkit( getDisplay() );
 
@@ -96,15 +96,64 @@ public class StatisticResultComposite extends Composite
         int count = 0;
         for( IComponent component : components )
         {
-          QName valueTypeName = component.getValueTypeName();
-          if( valueTypeName.equals( IWspmConstants.Q_STRING ) )
-            myMap.put( count, new ComponentUiStringHandler( count, false, true, false, component.getName(), SWT.NONE, 200, 30, "%s", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          else if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
-            myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          else if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
-            myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, component.getName(), SWT.RIGHT, 100, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          final String compName = component.getName();
+          final String[] compNameStrings = compName.split( "_" );
 
-          count++;
+          final String phenName = component.getPhenomenon().getName();
+
+          // Total Damage
+          if( phenName.equals( "TotalDamage" ) )//$NON-NLS-1$
+          {
+            // TODO: externalize this string
+            final String headerName = "Total Damage " + compNameStrings[1] + " [€]";//$NON-NLS-2$
+
+            final QName valueTypeName = component.getValueTypeName();
+            if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            count++;
+          }
+          // Flooded Area
+          if( phenName.equals( "FloodedArea" ) )//$NON-NLS-1$
+          {
+            // TODO: externalize this string
+            final String headerName = "Flooded Area " + compNameStrings[1] + " [m²]";//$NON-NLS-2$
+
+            final QName valueTypeName = component.getValueTypeName();
+            if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            count++;
+          }
+          // Averaged Damage
+          if( phenName.equals( "AveragedDamage" ) )//$NON-NLS-1$
+          {
+            // TODO: externalize this string
+            final String headerName = "Average Damage " + compNameStrings[1] + " [€/m²]";//$NON-NLS-2$
+
+            final QName valueTypeName = component.getValueTypeName();
+            if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
+              myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            count++;
+          }
+          if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
+          {
+            // TODO: externalize this string
+            final String headerName = "Average Annual Damage " + " [€/m²/a]";//$NON-NLS-2$
+
+            final QName valueTypeName = component.getValueTypeName();
+            if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
+              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            count++;
+          }
+          if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
+          {
+            // TODO: externalize this string
+            final String headerName = "Landuse Classes";
+
+            final QName valueTypeName = component.getValueTypeName();
+            if( valueTypeName.equals( IWspmConstants.Q_STRING ) )
+              myMap.put( count, new ComponentUiStringHandler( count, false, true, false, headerName, SWT.NONE, 120, 10, "%s", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            count++;
+          }
         }
 
         return myMap;
@@ -112,15 +161,15 @@ public class StatisticResultComposite extends Composite
 
     };
 
-    final DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
+    DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
 
     final Table table = viewer.getTable();
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    final TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
-    final TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
+    TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
+    TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
 
     viewer.setContentProvider( tupleResultContentProvider );
     viewer.setLabelProvider( tupleResultLabelProvider );

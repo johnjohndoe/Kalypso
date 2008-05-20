@@ -34,6 +34,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.actions.riskZonesCalculation.RiskZonesGrid;
@@ -54,10 +55,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgress
 {
   private static final String DICT_URN = "urn:ogc:gml:dict:kalypso:risk:model:riskresultstat"; //$NON-NLS-1$
-
-  private static final String DICT_LANDUSE = DICT_URN + "#ROW_TITLE"; //$NON-NLS-1$
-
-  private static final String DICT_EVENT = DICT_URN + "#EVENT"; //$NON-NLS-1$
 
   private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL"; //$NON-NLS-1$
 
@@ -163,7 +160,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     addComponentsToObs( fObs, result, events );
 
     /* fill TupleResult with data */
-    fillResultWithData( result, controlModel, vectorModel, events );
+    fillResultWithData( result, controlModel, vectorModel );
 
     /* add observation to workspace */
     final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -187,7 +184,8 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
   private static void addComponentsToObs( final Feature fObs, final TupleResult result, final IRiskLanduseStatistic[] riskLanduseStatistics )
   {
     /* add the landuse class name component */
-    final Component componentLanduse = new Component( DICT_LANDUSE, Messages.getString("RiskCalcRiskZonesRunnable.3"), Messages.getString("RiskCalcRiskZonesRunnable.2"), "", "", IWspmConstants.Q_STRING, "null", new Phenomenon( DICT_LANDUSE, Messages.getString("RiskCalcRiskZonesRunnable.8"), Messages.getString("RiskCalcRiskZonesRunnable.9") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+    final String landuseHeader = "Landuse"; //$NON-NLS-1$
+    final Component componentLanduse = new Component( "", landuseHeader, landuseHeader, "", "", IWspmConstants.Q_STRING, "null", new Phenomenon( "", landuseHeader, landuseHeader ) );
     result.addComponent( componentLanduse );
 
     final int numOfDataColumns = riskLanduseStatistics.length;
@@ -197,17 +195,28 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     {
       final String eventName = riskLanduseStatistics[i].getName();
 
-      final String headerName = Messages.getString("RiskCalcRiskZonesRunnable.10") + eventName + " [€]"; //$NON-NLS-1$ //$NON-NLS-2$
+      final String headerNameTotalDamage = "TotalDamage_" + eventName; //$NON-NLS-1$
+      final String headerNameFloodedArea = "FloodedArea_" + eventName;//$NON-NLS-1$
+      final String headerNameAveragedDamage = "AverageDamage_" + eventName;//$NON-NLS-1$
 
-      final IComponent valueComponent = new Component( DICT_EVENT, headerName, headerName, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( DICT_EVENT, headerName, headerName ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      result.addComponent( valueComponent );
+      final IComponent valueComponentTotalDamage = new Component( "", headerNameTotalDamage, headerNameTotalDamage, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "TotalDamage", headerNameTotalDamage ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      result.addComponent( valueComponentTotalDamage );
+
+      final IComponent valueComponentFloodedArea = new Component( "", headerNameFloodedArea, headerNameFloodedArea, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "FloodedArea", headerNameFloodedArea ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      result.addComponent( valueComponentFloodedArea );
+
+      final IComponent valueComponentAveragedDamage = new Component( "", headerNameAveragedDamage, headerNameAveragedDamage, "none", "", IWspmConstants.Q_DECIMAL, BigDecimal.valueOf( 0.0 ), new Phenomenon( "", "AveragedDamage", headerNameAveragedDamage ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      result.addComponent( valueComponentAveragedDamage );
     }
 
     /* add the average annual damage component */
-    result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL ) );
+    final FeatureComponent createDictionaryComponent = ObservationFeatureFactory.createDictionaryComponent( fObs, DICT_ANNUAL );
+
+    result.addComponent( createDictionaryComponent );
+
   }
 
-  private static void fillResultWithData( final TupleResult result, final IRasterizationControlModel controlModel, final IVectorDataModel vectorModel, final IRiskLanduseStatistic[] events )
+  private static void fillResultWithData( final TupleResult result, final IRasterizationControlModel controlModel, final IVectorDataModel vectorModel )
   {
     /* get the size of the table */
     // number of columns is the one for the landuse names + number of flood events + last column
@@ -228,14 +237,32 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
       for( final IRiskLanduseStatistic statistic : landuseStatisticList )
       {
-        final int tableIndex = getIndex( events, statistic );
-        if( tableIndex == -1 )
-          continue;
+        final IComponent[] components = result.getComponents();
+        for( int i = 0; i < components.length; i++ )
+        {
+          final IComponent component = components[i];
+          final String compName = component.getName();
 
-        // here we have to set the total damage [€], because in the table we want to present the total damage values for
-        // each landuse class in €.
-        newRecord.setValue( tableIndex + 1, statistic.getTotalDamage() );
-        // newRecord.setValue( tableIndex + 1, statistic.getDamageSum() );
+          final String[] split = compName.split( "_" );
+
+          final String eventType = split[0];
+          if( split.length > 1 )
+          {
+            final String eventName = split[1];
+
+            if( eventName.equals( statistic.getName() ) )
+            {
+              if( eventType.equals( "TotalDamage" ) )
+                newRecord.setValue( i, statistic.getTotalDamage() );
+
+              if( eventType.equals( "FloodedArea" ) )
+                newRecord.setValue( i, statistic.getFloodedArea() );
+
+              if( eventType.equals( "AverageDamage" ) )
+                newRecord.setValue( i, statistic.getAverageDamage() );
+            }
+          }
+        }
       }
 
       final int recordSize = newRecord.getOwner().getComponents().length;
@@ -294,14 +321,4 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     result.add( lastRecord );
   }
 
-  private static int getIndex( final IRiskLanduseStatistic[] events, final IRiskLanduseStatistic statistic )
-  {
-    for( int i = 0; i < events.length; i++ )
-    {
-      if( ("" + events[i].getName()).equals( "" + statistic.getName() ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        return i;
-    }
-
-    return -1;
-  }
 }

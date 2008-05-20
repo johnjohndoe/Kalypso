@@ -294,6 +294,16 @@
                                                         </xs:documentation>
                                                 </xs:annotation>
                                         </xs:element>
+                                        <xs:element name="statFloodedArea" type="xs:decimal" default="0.0">
+                                                <xs:annotation>
+                                                        <xs:documentation xml:lang="de">
+                                                                <xs:label>betroffene Fläche [m²]</xs:label>
+                                                        </xs:documentation>
+                                                        <xs:documentation xml:lang="en">
+                                                                <xs:label>Flooded Area [m²]</xs:label>
+                                                        </xs:documentation>
+                                                </xs:annotation>
+                                        </xs:element>
                                 </xs:sequence>
                                 <xs:attributeGroup ref="gml:AssociationAttributeGroup"/>
                         </xs:extension>

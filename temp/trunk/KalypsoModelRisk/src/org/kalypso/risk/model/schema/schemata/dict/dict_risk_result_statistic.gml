@@ -30,28 +30,12 @@
 		</swe:ItemDefinition>
 	</gml:dictionaryEntry>
 	<gml:dictionaryEntry>
-		<swe:ItemDefinition gml:id="EVENT">
-			<gml:name>Event</gml:name>
-			<swe:property>
-				<swe:Phenomenon gml:id="Phenomenon_Event">
-					<gml:description>Event</gml:description>
-					<gml:name>Value</gml:name>
-				</swe:Phenomenon>
-			</swe:property>
-			<swe:representation>
-				<swe:Number>
-					<gml:unitOfMeasure uom="€/m²" />
-				</swe:Number>
-			</swe:representation>
-		</swe:ItemDefinition>
-	</gml:dictionaryEntry>
-	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="ANNUAL">
 			<gml:name>Annual Average Damage [€/m²/a]</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_Annual">
 					<gml:description>Averaged Annual Damage [€/m²/a]</gml:description>
-					<gml:name>Value</gml:name>
+					<gml:name>AnnualValue</gml:name>
 				</swe:Phenomenon>
 			</swe:property>
 			<swe:representation>

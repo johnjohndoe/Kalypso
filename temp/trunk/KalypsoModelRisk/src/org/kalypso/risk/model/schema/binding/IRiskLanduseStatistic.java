@@ -90,6 +90,11 @@ public interface IRiskLanduseStatistic extends IFeatureWrapper2, Comparable<IRis
    */
   public QName PROPERTY_TOTAL_DAMAGE = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statTotalDamage" ); //$NON-NLS-1$
 
+  /**
+   * The flooded area for this landuse
+   */
+  public QName PROPERTY_FLOODED_AREA = new QName( KalypsoRiskSchemaCatalog.NS_RASTERIZATION_CONTROL_MODEL, "statFloodedArea" ); //$NON-NLS-1$
+
   public void updateStatistic( final BigDecimal value );
 
   public int getReturnPeriod( );
@@ -105,6 +110,8 @@ public interface IRiskLanduseStatistic extends IFeatureWrapper2, Comparable<IRis
   public BigDecimal getTotalDamage( );
 
   public BigDecimal getAverageAnnualDamage( );
+
+  public BigDecimal getFloodedArea( );
 
   public void setTotalDamage( final BigDecimal averageAnnualDamage );
 
