@@ -171,10 +171,11 @@ public class Restart1DImporter
     for( final TuhhReachProfileSegment segment : reachProfileSegments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
+      String crs = profileMember.getSrsName();
       final BigDecimal station = profileMember.getBigStation();
       final IProfil profil = profileMember.getProfil();
       final IRecord sohlPoint = ProfilUtil.getMinPoint( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
+      final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint, crs );
       map.put( station, point );
     }
 
