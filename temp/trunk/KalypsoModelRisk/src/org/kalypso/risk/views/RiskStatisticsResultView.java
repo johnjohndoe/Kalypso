@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
@@ -74,11 +75,22 @@ public class RiskStatisticsResultView extends ViewPart
       final ICaseDataProvider<IFeatureWrapper2> modelProvider = (ICaseDataProvider<IFeatureWrapper2>) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class );
 
-      m_compResult = new StatisticResultComposite( model, parent, SWT.BORDER );
-      GridLayout gridLayout = new GridLayout();
-      gridLayout.marginWidth = 0;
-      gridLayout.marginHeight = 0;
-      m_compResult.setLayout( gridLayout );
+      if( model == null )
+        new Label( parent, SWT.NONE ).setText( "Riskmodel nicht geladen" );
+      else
+      {
+        m_compResult = new StatisticResultComposite( model, parent, SWT.BORDER );
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 0;
+        m_compResult.setLayout( gridLayout );
+      }
+    }
+    catch( IllegalArgumentException iae )
+    {
+      // This happens on startup, when thi sview gets automatically recreated by eclipse
+      // however its model data is not yet available (maybe even the project is not loaded at all)
+      // Just ignore, the view will be shortly closed by the workflow-system
     }
     catch( CoreException e )
     {
