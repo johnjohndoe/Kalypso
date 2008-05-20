@@ -58,7 +58,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetwork;
 import org.kalypso.kalypsosimulationmodel.core.terrainmodel.IRiverProfileNetworkCollection;
@@ -69,6 +68,7 @@ import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.wizard.ImportProfilePage;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -180,7 +180,6 @@ public class ImportTrippleWizard extends Wizard implements IWizard
    *            the GML river network, in which the profiles will be stored
    * @param addedFeatures
    */
-  @SuppressWarnings("deprecation")//$NON-NLS-1$
   protected IStatus doImportNetwork( final IRiverProfileNetworkCollection networkCollection, final List<Feature> addedFeatures, final List<IProfil> profiles ) throws Exception
   {
     final IRiverProfileNetwork network = networkCollection.addNew( IRiverProfileNetwork.QNAME );
@@ -195,7 +194,7 @@ public class ImportTrippleWizard extends Wizard implements IWizard
 
     final GMLWorkspace workspace = networkFeature.getWorkspace();
 
-    final String coordinatesSystem = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+    final String coordinatesSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     workspace.accept( new TransformVisitor( coordinatesSystem ), networkFeature, FeatureVisitor.DEPTH_INFINITE );
 
     for( final IProfil profile : profiles )
