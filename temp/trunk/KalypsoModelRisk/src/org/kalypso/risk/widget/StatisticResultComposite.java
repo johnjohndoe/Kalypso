@@ -78,10 +78,10 @@ public class StatisticResultComposite extends Composite
   {
     super( parent, style );
 
-    paint( parent, model );
+    paint( model );
   }
 
-  private void paint( final Composite parent, final IRasterizationControlModel model )
+  private void paint( final IRasterizationControlModel model )
   {
     final FormToolkit toolkit = new FormToolkit( getDisplay() );
 
@@ -112,15 +112,15 @@ public class StatisticResultComposite extends Composite
 
     };
 
-    DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
+    final DefaultTableViewer viewer = new DefaultTableViewer( this, SWT.BORDER );
 
     final Table table = viewer.getTable();
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
-    TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
+    final TupleResultContentProvider tupleResultContentProvider = new TupleResultContentProvider( provider );
+    final TupleResultLabelProvider tupleResultLabelProvider = new TupleResultLabelProvider( tupleResultContentProvider );
 
     viewer.setContentProvider( tupleResultContentProvider );
     viewer.setLabelProvider( tupleResultLabelProvider );
