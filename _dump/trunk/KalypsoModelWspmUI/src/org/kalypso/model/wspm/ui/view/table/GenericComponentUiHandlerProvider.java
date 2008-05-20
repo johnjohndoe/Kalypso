@@ -48,7 +48,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -118,7 +118,7 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
     final IRestriction[] restrictions = component.getRestrictions();
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
-      final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
+      final Map<Object, IAnnotation> items = RestrictionUtilities.getEnumerationItems( restrictions );
       return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, 100, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
