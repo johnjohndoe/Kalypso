@@ -6,12 +6,4 @@
     -->
     <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:languages" uri="schemata/dict/dict_languageDef.gml"/>
     <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:riskresultstat" uri="schemata/dict/dict_risk_result_statistic.gml"/>
-    <!-- 
-        Inscription of  "kr_common:DicDefinition" 
-    -->
-    <catalog:public publicId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_risk_schemata_common:DicDefinition:annotation:label:de" uri="${listProperty:http://www.opengis.net/gml#name;0}"/>
-    <catalog:public publicId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_risk_schemata_common:DicDefinition:annotation:label:en" uri="${listProperty:http://www.opengis.net/gml#name;0}"/>
-    <catalog:public publicId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_risk_schemata_common:DicDefinition:annotation:label:nl" uri="${listProperty:http://www.opengis.net/gml#name;0}"/>
-    <catalog:public publicId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_risk_schemata_common:DicDefinition:annotation:label:fr" uri="${listProperty:http://www.opengis.net/gml#name;0}"/>
-    <catalog:public publicId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_risk_schemata_common:DicDefinition:annotation:label:pl" uri="${listProperty:http://www.opengis.net/gml#name;0}"/>
 </catalog:catalog>
