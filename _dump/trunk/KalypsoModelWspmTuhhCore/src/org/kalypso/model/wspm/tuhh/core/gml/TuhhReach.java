@@ -141,6 +141,10 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
   public WspmWaterBody getWaterBody( )
   {
     final Object body = getFeature().getProperty( QNAME_WATER_BODY_LINK_MEMBER );
+
+    if( body == null )
+      return null;
+
     if( body instanceof Feature )
       return new WspmWaterBody( (Feature) body );
     else
@@ -171,6 +175,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
       if( profileMember == null )
         continue;
 
+      String crs = profileMember.getSrsName();
       final IProfil profil = profileMember.getProfil();
       final IComponent[] markerTypes = profil.getPointMarkerTypes();
       for( final IComponent markerTyp : markerTypes )
@@ -182,7 +187,7 @@ public class TuhhReach extends WspmReach implements IWspmConstants, IWspmTuhhCon
           {
             final IRecord point = devider.getPoint();
             // REMARK: create the point before the marker because we may have an exception
-            final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point );
+            final GM_Point location = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point, crs );
 
             final TuhhMarker marker = createMarker( list );
             list.add( marker.getFeature() );

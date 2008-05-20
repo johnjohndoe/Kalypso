@@ -67,6 +67,8 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
   public void setProfileMember( final WspmProfile profileReference )
   {
     getFeature().setProperty( new QName( NS_WSPM_TUHH, "profileMember" ), profileReference.getFeature().getId() );
+
+    getFeature().invalidEnvelope();
   }
 
   // Commented out, because not used by the tuhh-model
@@ -95,18 +97,13 @@ public class TuhhReachProfileSegment extends AbstractFeatureBinder implements IW
     final String href = (String) getFeature().getProperty( new QName( NS_WSPM_TUHH, "profileMember" ) );
     final GMLWorkspace workspace = getFeature().getWorkspace();
     final Feature feature = workspace == null ? null : workspace.getFeature( href );
-    return feature == null ?  null : new WspmProfile( feature );
+    return feature == null ? null : new WspmProfile( feature );
   }
 
   public void setStation( final double station )
   {
     final BigDecimal bigStation = WspmProfile.stationToBigDecimal( station );
     getFeature().setProperty( new QName( NS_WSPM_TUHH, "station" ), bigStation );
-  }
-
-  public void setGeometry( final GM_Curve curve )
-  {
-    getFeature().setProperty( new QName( NS_WSPM_TUHH, "profileLocation" ), curve );
   }
 
   public GM_Curve getGeometry( )

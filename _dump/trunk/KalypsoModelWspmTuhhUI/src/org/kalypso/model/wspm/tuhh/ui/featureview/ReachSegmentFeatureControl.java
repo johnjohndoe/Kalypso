@@ -236,8 +236,12 @@ public class ReachSegmentFeatureControl extends AbstractFeatureControl implement
     {
       final TuhhReach reach = new TuhhReach( feature );
       final WspmWaterBody waterBody = reach.getWaterBody();
-      final List profiles = (List) waterBody.getFeature().getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
-      m_viewer.setInput( profiles );
+
+      if( waterBody != null )
+      {
+        final List profiles = (List) waterBody.getFeature().getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
+        m_viewer.setInput( profiles );
+      }
 
       final TuhhReachProfileSegment[] reachProfileSegments = reach.getReachProfileSegments();
       for( final TuhhReachProfileSegment segment : reachProfileSegments )
