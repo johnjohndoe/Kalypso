@@ -80,7 +80,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -117,7 +116,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private Group sourceGroup;
 
-  private IFeatureType targetFT;
+  private final IFeatureType targetFT;
 
   private Group buttonGroup;
 
@@ -165,7 +164,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @param pageName
    */
-  public KalypsoNAProjectWizardPage( String pageName, IFeatureType featureType )
+  public KalypsoNAProjectWizardPage( final String pageName, final IFeatureType featureType )
   {
     super( pageName );
     setDescription( WizardMessages.getString( "KalypsoNAProjectWizardPage.PageDescriptionPart1" ) //$NON-NLS-1$
@@ -179,7 +178,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    * @param title
    * @param titleImage
    */
-  public KalypsoNAProjectWizardPage( String pageName, String title, ImageDescriptor titleImage, IFeatureType featureType )
+  public KalypsoNAProjectWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IFeatureType featureType )
   {
     super( pageName, title, titleImage );
     setDescription( WizardMessages.getString( "KalypsoNAProjectWizardPage.PageDescription2Part1" ) //$NON-NLS-1$
@@ -189,7 +188,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   }
 
-  private void availableCoordinateSystems( Combo checkCRS )
+  private void availableCoordinateSystems( final Combo checkCRS )
   {
     checkCRS.setItems( CRSHelper.getAllNames().toArray( new String[] {} ) );
   }
@@ -213,18 +212,18 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     setPageComplete( pageComplete );
   }
 
-  private boolean checkCRS( String customCRS )
+  private boolean checkCRS( final String customCRS )
   {
     return CRSHelper.isKnownCRS( customCRS );
   }
 
-  private boolean checkSuffix( Text path )
+  private boolean checkSuffix( final Text path )
   {
     boolean test = false;
-    int dotLoc = path.getText().lastIndexOf( '.' );
+    final int dotLoc = path.getText().lastIndexOf( '.' );
     if( dotLoc != -1 )
     {
-      String ext = path.getText().substring( dotLoc + 1 );
+      final String ext = path.getText().substring( dotLoc + 1 );
       if( ext.equalsIgnoreCase( "shp" ) == false ) //$NON-NLS-1$
         test = false;
       else
@@ -238,7 +237,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    * 
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
    */
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
 
     m_topComposite = new Composite( parent, SWT.NULL );
@@ -254,12 +253,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     setControl( m_topComposite );
   }
 
-  private void createFileGroup( Composite parent )
+  private void createFileGroup( final Composite parent )
   {
 
     fileGroup = new Group( parent, SWT.NULL );
-    GridLayout topGroupLayout = new GridLayout();
-    GridData topGroupData = new GridData();
+    final GridLayout topGroupLayout = new GridLayout();
+    final GridData topGroupData = new GridData();
     topGroupLayout.numColumns = 3;
     topGroupData.horizontalAlignment = GridData.FILL;
     fileGroup.setLayout( topGroupLayout );
@@ -270,14 +269,14 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     fileLabel.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.FileLabelText" ) ); //$NON-NLS-1$
 
     // Set width of Text fields
-    GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData dataCatchment = new GridData( GridData.FILL_HORIZONTAL );
     dataCatchment.widthHint = SIZING_TEXT_FIELD_WIDTH;
 
     m_fileField = new Text( fileGroup, SWT.BORDER );
     m_fileField.setLayoutData( dataCatchment );
     m_fileField.addModifyListener( new ModifyListener()
     {
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         validateFileField();
       }
@@ -287,7 +286,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     browseButton.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.BrowseButtonText" ) ); //$NON-NLS-1$
     browseButton.setLayoutData( new GridData( GridData.END ) );
     browseButton.addSelectionListener( this );
-    Label crsLabel = new Label( fileGroup, SWT.NONE );
+    final Label crsLabel = new Label( fileGroup, SWT.NONE );
     crsLabel.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.CRSLabelText" ) ); //$NON-NLS-1$
 
     m_checkCRS = new Combo( fileGroup, SWT.NONE );
@@ -299,7 +298,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     m_checkCRS.select( m_checkCRS.indexOf( defaultCRS ) );
 
     m_checkCRS.setToolTipText( WizardMessages.getString( "KalypsoNAProjectWizardPage.CRSTooltip" ) ); //$NON-NLS-1$
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = SIZING_TEXT_FIELD_WIDTH;
     m_checkCRS.setLayoutData( data );
     m_checkCRS.addSelectionListener( this );
@@ -314,14 +313,14 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   }
 
-  private void createMappingGroup( Composite parent )
+  private void createMappingGroup( final Composite parent )
   {
     topSCLMappingComposite = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.BORDER );
     topMappingComposite = new Composite( topSCLMappingComposite, SWT.NONE );
-    GridLayout topSCLMappingCompoLayout = new GridLayout();
+    final GridLayout topSCLMappingCompoLayout = new GridLayout();
     topSCLMappingComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     topMappingComposite.setVisible( true );
-    GridLayout topMappingCompoLayout = new GridLayout();
+    final GridLayout topMappingCompoLayout = new GridLayout();
     topMappingCompoLayout.numColumns = 2;
     topMappingComposite.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     topMappingComposite.setLayout( topMappingCompoLayout );
@@ -330,40 +329,40 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     topMappingComposite.pack();
 
     // Top Group
-    Group topGroup = new Group( topMappingComposite, SWT.NONE );
+    final Group topGroup = new Group( topMappingComposite, SWT.NONE );
     topGroup.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.MappingGroupText" ) ); //$NON-NLS-1$
     topGroup.setVisible( true );
-    GridLayout topGroupLayout = new GridLayout();
+    final GridLayout topGroupLayout = new GridLayout();
     topGroupLayout.numColumns = 2;
     topGroupLayout.makeColumnsEqualWidth = true;
     topGroup.setLayout( topGroupLayout );
 
-    GridData topGroupGridData = new GridData( GridData.FILL_HORIZONTAL );
+    final GridData topGroupGridData = new GridData( GridData.FILL_HORIZONTAL );
     topGroupGridData.horizontalSpan = 2;
     topGroup.setLayoutData( topGroupGridData );
     topGroup.pack();
 
     // Source
     sourceGroup = new Group( topGroup, SWT.NONE );
-    GridLayout sourceGroupLayout = new GridLayout();
+    final GridLayout sourceGroupLayout = new GridLayout();
     sourceGroupLayout.verticalSpacing = 2;
     sourceGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     sourceGroup.setLayout( sourceGroupLayout );
     sourceGroup.setVisible( true );
     sourceGroup.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.SourceGroupText" ) ); //$NON-NLS-1$
-    IPropertyType[] targetFtp = targetFT.getProperties();
+    final IPropertyType[] targetFtp = targetFT.getProperties();
     for( int j = 0; j < targetFtp.length; j++ )
     {
       if( !targetFtp[j].getQName().getLocalPart().equals( "boundedBy" ) && targetFtp[j] instanceof IValuePropertyType )
       {
-        Combo combo = new Combo( sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
+        final Combo combo = new Combo( sourceGroup, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE );
         combo.setData( TARGET_KEY, targetFtp[j].getQName().getLocalPart() );
         combo.addSelectionListener( new SelectionAdapter()
         {
           @Override
-          public void widgetSelected( SelectionEvent e )
+          public void widgetSelected( final SelectionEvent e )
           {
-            Widget w = e.widget;
+            final Widget w = e.widget;
             storeSelectionData( w );
           }
         } );
@@ -371,9 +370,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         combo.select( 0 );
       }
     }
-    Point sizeSourceG = sourceGroup.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    final Point sizeSourceG = sourceGroup.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     sourceGroup.setSize( sizeSourceG );
-    GridData sourceGroupGridData = new GridData();
+    final GridData sourceGroupGridData = new GridData();
     sourceGroupGridData.widthHint = Math.max( sizeSourceG.x, MIN_COLUMN_SIZE );
     // sourceGroupGridData.heightHint = Math.max(sizeSourceG.y, SWT.DEFAULT);
     sourceGroup.setLayoutData( sourceGroupGridData );
@@ -382,7 +381,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
     // Target
     targetGroup = new Group( topGroup, SWT.NONE );
-    GridLayout targetGroupLayout = new GridLayout();
+    final GridLayout targetGroupLayout = new GridLayout();
     targetGroupLayout.verticalSpacing = 10;
     targetGroupLayout.marginHeight = 3;
     targetGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
@@ -393,8 +392,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     {
       if( !targetFtp[i].getQName().getLocalPart().equals( "boundedBy" ) && targetFtp[i] instanceof IValuePropertyType )
       {
-        IPropertyType featureTypeProperty = targetFtp[i];
-        Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
+        final IPropertyType featureTypeProperty = targetFtp[i];
+        final Text text = new Text( targetGroup, SWT.NONE | SWT.READ_ONLY );
         text.setText( getAnnotation( featureTypeProperty, LABEL ) );
         text.setToolTipText( getAnnotation( featureTypeProperty, TOOL_TIP ) );
       }
@@ -403,7 +402,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     // OK and Reset buttons group
     buttonGroup = new Group( parent, SWT.NONE );
     buttonGroup.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.ButtonGroupText" ) ); //$NON-NLS-1$
-    GridLayout buttonbarLayout = new GridLayout();
+    final GridLayout buttonbarLayout = new GridLayout();
     buttonbarLayout.numColumns = 2;
     buttonGroup.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
     buttonGroup.setLayout( buttonbarLayout );
@@ -415,9 +414,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     resetButton.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.ResetButtonText" ) ); //$NON-NLS-1$
     resetButton.addSelectionListener( this );
 
-    Point size = topMappingComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    final Point size = topMappingComposite.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     topMappingComposite.setSize( size );
-    GridData topCompoGridData = new GridData();
+    final GridData topCompoGridData = new GridData();
     topCompoGridData.widthHint = Math.min( size.x, 600 );
     topCompoGridData.heightHint = Math.min( size.y, 200 );
     topSCLMappingComposite.setLayoutData( topCompoGridData );
@@ -441,10 +440,10 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private void handelResetSelection( )
   {
-    Control[] cArray = sourceGroup.getChildren();
-    for( int i = 0; i < cArray.length; i++ )
+    final Control[] cArray = sourceGroup.getChildren();
+    for( final Control element : cArray )
     {
-      Combo combo = (Combo) cArray[i];
+      final Combo combo = (Combo) element;
       combo.setData( SOURCE_KEY, NULL_KEY );
       combo.select( 0 );
     }
@@ -458,7 +457,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private void handleFileBrowse( )
   {
-    FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
+    final FileDialog fdialog = new FileDialog( getShell(), SWT.OPEN | SWT.SINGLE );
     fdialog.setFilterExtensions( new String[] { "shp" } ); //$NON-NLS-1$
     fdialog.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.BrowseText" ) ); //$NON-NLS-1$
     fdialog.setFilterNames( new String[] { "Shape Files", //$NON-NLS-1$
@@ -478,13 +477,13 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
         readShapeFile( fileURL );
 
       }
-      catch( MalformedURLException e )
+      catch( final MalformedURLException e )
       {
         e.printStackTrace();
       }
 
     }// if fdialog
-    IFeatureType ft = getSourceFT();
+    final IFeatureType ft = getSourceFT();
     setMaxSourceCombo( ft );
     updateSourceList( ft );
   }// handleFileBrowse
@@ -492,14 +491,13 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @param ft
    */
-  private void setMaxSourceCombo( IFeatureType ft )
+  private void setMaxSourceCombo( final IFeatureType ft )
   {
     int max = 0;
-    IPropertyType[] ftp = ft.getProperties();
-    for( int i = 0; i < ftp.length; i++ )
+    final IPropertyType[] ftp = ft.getProperties();
+    for( final IPropertyType propertyType : ftp )
     {
-      IPropertyType propertyType = ftp[i];
-      int length = propertyType.getQName().getLocalPart().length();
+      final int length = propertyType.getQName().getLocalPart().length();
       if( length > max )
         max = length;
     }
@@ -508,13 +506,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   private void handleOKSelection( )
   {
-    Control[] cArray = sourceGroup.getChildren();
+    final Control[] cArray = sourceGroup.getChildren();
     mapping = new HashMap<Object, Object>();
-    for( int i = 0; i < cArray.length; i++ )
+    for( final Control c : cArray )
     {
-      Control c = cArray[i];
-      Object source = c.getData( SOURCE_KEY );
-      Object target = c.getData( TARGET_KEY );
+      final Object source = c.getData( SOURCE_KEY );
+      final Object target = c.getData( TARGET_KEY );
       mapping.put( target, source );
     }
     setPageComplete( true );
@@ -529,20 +526,20 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   public HashMap getMapping( )
   {
-    HashMap<Object, Object> map = new HashMap<Object, Object>();
-    Control[] cArray = sourceGroup.getChildren();
-    for( int i = 0; i < cArray.length; i++ )
+    final HashMap<Object, Object> map = new HashMap<Object, Object>();
+    final Control[] cArray = sourceGroup.getChildren();
+    for( final Control element : cArray )
     {
-      Combo c = (Combo) cArray[i];
-      Object target = c.getData( TARGET_KEY );
-      Object source = c.getData( SOURCE_KEY );
+      final Combo c = (Combo) element;
+      final Object target = c.getData( TARGET_KEY );
+      final Object source = c.getData( SOURCE_KEY );
       if( source != null )
         map.put( target, source );
     }// for i
     return map;
   }// getMapping
 
-  private void readShapeFile( URL url )
+  private void readShapeFile( final URL url )
   {
     String cs = null;
 
@@ -551,19 +548,19 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     else
       cs = customCS;
 
-    int index = url.getPath().lastIndexOf( "." ); //$NON-NLS-1$
-    String fileBase = url.getPath().substring( 1, index );
+    final int index = url.getPath().lastIndexOf( "." ); //$NON-NLS-1$
+    final String fileBase = url.getPath().substring( 1, index );
 
     try
     {
       sourceWorkspace = ShapeSerializer.deserialize( fileBase, cs );
     }
-    catch( GmlSerializeException e )
+    catch( final GmlSerializeException e )
     {
       e.printStackTrace();
       if( m_topComposite != null && !m_topComposite.isDisposed() )
       {
-        MessageBox message = new MessageBox( m_topComposite.getShell(), SWT.OK );
+        final MessageBox message = new MessageBox( m_topComposite.getShell(), SWT.OK );
         message.setText( WizardMessages.getString( "KalypsoNAProjectWizardPage.TextMessageReadError" ) ); //$NON-NLS-1$
         message.setMessage( WizardMessages.getString( "KalypsoNAProjectWizardPage.MessageReadError" ) + url.getFile() ); //$NON-NLS-1$
         message.open();
@@ -576,17 +573,17 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
    * This method clears the mapping
    */
 
-  public void updateSourceList( IFeatureType srcFT )
+  public void updateSourceList( final IFeatureType srcFT )
   {
-    IPropertyType[] ftp = srcFT.getProperties();
-    IPropertyType[] targetFTP = targetFT.getProperties();
-    Control[] cArray = sourceGroup.getChildren();
+    final IPropertyType[] ftp = srcFT.getProperties();
+    final IPropertyType[] targetFTP = targetFT.getProperties();
+    final Control[] cArray = sourceGroup.getChildren();
     int k = 0;
     for( int i = 0; i < targetFTP.length; i++ )
     {
       if( targetFTP[i] instanceof IValuePropertyType && !targetFTP[i].getQName().getLocalPart().equals( "boundedBy" ) )
       {
-        Combo combo = (Combo) cArray[k];
+        final Combo combo = (Combo) cArray[k];
         combo.setData( SOURCE_KEY, null );
         combo.removeAll();
         combo.setSize( maxSourceComboWidth * 10, SWT.DEFAULT );
@@ -609,14 +606,14 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     }
   }
 
-  public boolean validateFile( URL url )
+  public boolean validateFile( final URL url )
   {
     try
     {
-      InputStream ios = url.openStream();
+      final InputStream ios = url.openStream();
       ios.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       return false;
@@ -655,8 +652,8 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
 
   public List getFeatureList( )
   {
-    Feature rootFeature = sourceWorkspace.getRootFeature();
-    List featureList = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
+    final Feature rootFeature = sourceWorkspace.getRootFeature();
+    final List featureList = (List) rootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
     return featureList;
   }
 
@@ -669,12 +666,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     skipRadioButton.removeSelectionListener( this );
   }
 
-  protected void storeSelectionData( Widget w )
+  protected void storeSelectionData( final Widget w )
   {
-    StringTokenizer st = new StringTokenizer( w.toString() );
+    final StringTokenizer st = new StringTokenizer( w.toString() );
     st.nextToken();
-    String str = st.nextToken();
-    String name = str.substring( 1, str.length() - 1 );
+    final String str = st.nextToken();
+    final String name = str.substring( 1, str.length() - 1 );
     w.setData( SOURCE_KEY, name );
     // System.out
     // .println( "Quelle: " + w.getData( SOURCE_KEY ) + "\tZiel: " + w.getData(
@@ -684,31 +681,29 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * This method gets a specified Annotation of a IFeatureType
    */
-  public String getAnnotation( IPropertyType ftp, int type )
+  public String getAnnotation( final IPropertyType ftp, final int type )
   {
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
-    if( annotation != null )
-    {
-      if( type == TOOL_TIP )
-        return annotation.getTooltip();
-      else if( type == LABEL )
-        return annotation.getLabel();
-      else if( type == DESCRIPTION )
-        return annotation.getDescription();
-    }
-    return ftp.getQName().getLocalPart();
+    final IAnnotation annotation = ftp.getAnnotation();
+    if( type == TOOL_TIP )
+      return annotation.getTooltip();
+    else if( type == LABEL )
+      return annotation.getLabel();
+    else if( type == DESCRIPTION )
+      return annotation.getDescription();
+
+    throw new IllegalArgumentException( "Unknown annotation type: " + type );
   }
 
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
    */
-  public void widgetSelected( SelectionEvent e )
+  public void widgetSelected( final SelectionEvent e )
   {
     Combo c;
-    Widget w = e.widget;
+    final Widget w = e.widget;
     if( w instanceof Button )
     {
-      Button b = (Button) w;
+      final Button b = (Button) w;
       if( b == okButton )
         handleOKSelection();
       if( b == resetButton )
@@ -755,7 +750,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
-  public void widgetDefaultSelected( SelectionEvent e )
+  public void widgetDefaultSelected( final SelectionEvent e )
   {
     // do nothing
   }
@@ -763,9 +758,9 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
    */
-  public void keyPressed( KeyEvent e )
+  public void keyPressed( final KeyEvent e )
   {
-    Widget w = e.widget;
+    final Widget w = e.widget;
     if( w instanceof Combo && e.character == SWT.CR )
     {
       validate();
@@ -776,7 +771,7 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
   /**
    * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
    */
-  public void keyReleased( KeyEvent e )
+  public void keyReleased( final KeyEvent e )
   {
     // do nothing
   }

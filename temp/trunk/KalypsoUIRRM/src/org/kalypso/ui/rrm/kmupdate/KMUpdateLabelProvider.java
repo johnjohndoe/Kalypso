@@ -46,7 +46,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -61,7 +60,7 @@ public class KMUpdateLabelProvider implements ILabelProvider
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
-  public Image getImage( Object element )
+  public Image getImage( final Object element )
   {
     // no images so far
     return null;
@@ -70,27 +69,16 @@ public class KMUpdateLabelProvider implements ILabelProvider
   /**
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     final StringBuffer buffer = new StringBuffer();
-    // if( element instanceof GMLWorkspace )
-    // {
-    // GMLWorkspace gmlWorkspace = (GMLWorkspace) element;
-    // final Feature rootFeature = gmlWorkspace.getRootFeature();
-    // if( rootFeature != null )
-    // {
-    // final IFeatureType featureType = rootFeature.getFeatureType();
-    // final Annotation annotation = AnnotationUtilities.getAnnotation( featureType );
-    // return annotation.getLabel() + " #" + rootFeature.getId();
-    // }
-    // }
 
     if( element instanceof Feature )
     {
       final Feature feature = (Feature) element;
 
       final IFeatureType ft = feature.getFeatureType();
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( ft );
+      final IAnnotation annotation = ft.getAnnotation();
       buffer.append( annotation.getLabel() );
 
       final Object name = feature.getProperty( m_gmlName );
@@ -106,7 +94,7 @@ public class KMUpdateLabelProvider implements ILabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
-  public void addListener( ILabelProviderListener listener )
+  public void addListener( final ILabelProviderListener listener )
   {
     // TODO Auto-generated method stub
 
@@ -124,7 +112,7 @@ public class KMUpdateLabelProvider implements ILabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
-  public boolean isLabelProperty( Object element, String property )
+  public boolean isLabelProperty( final Object element, final String property )
   {
     // TODO Auto-generated method stub
     return false;
@@ -133,7 +121,7 @@ public class KMUpdateLabelProvider implements ILabelProvider
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
-  public void removeListener( ILabelProviderListener listener )
+  public void removeListener( final ILabelProviderListener listener )
   {
     // TODO Auto-generated method stub
 

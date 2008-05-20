@@ -8,8 +8,7 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Export-Package: org.kalypso,
  org.kalypso.wizard,
- org.kalypso.wizard.resources,
- test
+ org.kalypso.wizard.resources
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,

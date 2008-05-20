@@ -131,15 +131,15 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
     final QName featureQName = new QName( "wizard.kalypso.na", "Gewässer" );
 
     final IMarshallingTypeHandler lineStringTH = registry.getTypeHandlerForClassName( GeometryUtilities.getLineStringClass() );
-    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( featureQName, new QName( "wizard.kalypso.na", "Ort" ), lineStringTH, 0, 1, false );
+    final IPropertyType pt1 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "Ort" ), lineStringTH, 0, 1, false );
 
     final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "string" ) );
-    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( featureQName, new QName( "wizard.kalypso.na", "name" ), stringTH, 1, 1, false );
+    final IPropertyType pt2 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "name" ), stringTH, 1, 1, false );
 
-    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( featureQName, new QName( "wizard.kalypso.na", "description" ), stringTH, 1, 1, false );
+    final IPropertyType pt3 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "description" ), stringTH, 1, 1, false );
 
     final IMarshallingTypeHandler integerTH = registry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "int" ) );
-    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( featureQName, new QName( "wizard.kalypso.na", "StrangArt" ), integerTH, 0, 1, false );
+    final IPropertyType pt4 = GMLSchemaFactory.createValuePropertyType( new QName( "wizard.kalypso.na", "StrangArt" ), integerTH, 0, 1, false );
     final IPropertyType[] pts = new IPropertyType[] { pt1, pt2, pt3, pt4 };
 
     return GMLSchemaFactory.createFeatureType( featureQName, pts );

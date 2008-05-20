@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.convert.namodel;
 
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -58,17 +57,17 @@ public class DefaultPathGenerator
     else
       extraString = extra;
     final String observationTitle = getObservationTitle( feature, titleProperty );
-    
+
     final String annotationName = getAnnotationName( feature );
     final String result = annotationName + "/" + observationTitle + extraString + "/" + getTitleForSuffix( suffix ) + ".zml";
-//    return result.replaceAll( "Node", "Knoten" );
+// return result.replaceAll( "Node", "Knoten" );
     return result;
   }
 
   private static String getAnnotationName( final Feature feature )
   {
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType() );
-    return annotation != null ? annotation.getValue(IAnnotation.ANNO_NAME) : feature.getFeatureType().getQName().getLocalPart();
+    final IAnnotation annotation = feature.getFeatureType().getAnnotation();
+    return annotation.getValue( IAnnotation.ANNO_NAME );
   }
 
   private static String getObservationTitle( final Feature feature, final String titleProperty )
@@ -87,7 +86,7 @@ public class DefaultPathGenerator
     return observationTitle + " - " + DefaultPathGenerator.getTitleForSuffix( suffix ) + " " + annotationName;
   }
 
-  public static String getTitleForSuffix( String suffix )
+  public static String getTitleForSuffix( final String suffix )
   {
     // j Temperatur .tmp
     if( suffix.equalsIgnoreCase( "tmp" ) )
@@ -137,7 +136,7 @@ public class DefaultPathGenerator
     // n Evapotranspiration .vet
     if( suffix.equalsIgnoreCase( "vet" ) )
       return "Evapotranspiration";
-    if( suffix.equalsIgnoreCase( "qmr"))
+    if( suffix.equalsIgnoreCase( "qmr" ) )
       return "MuldenRigolen";
     // n Ausgabe hydrotope .hyd
     if( suffix.equalsIgnoreCase( "hyd" ) )
