@@ -44,7 +44,6 @@ import java.net.URL;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -65,7 +64,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   /*
    * @author doemming
    */
-  public EditRelationOptionsLabelProvider( EditRelationOptionsContentProvider contentProvider )
+  public EditRelationOptionsLabelProvider( final EditRelationOptionsContentProvider contentProvider )
   {
     super();
     m_contentProvider = contentProvider;
@@ -86,23 +85,23 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element == null )
       return "null"; //$NON-NLS-1$
     if( element instanceof GMLWorkspace )
     {
       final URL context = ((GMLWorkspace) element).getContext();
-      return context == null ? Messages.getString("org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationOptionsLabelProvider.1") : context.toExternalForm(); //$NON-NLS-1$
+      return context == null ? Messages.getString( "org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationOptionsLabelProvider.1" ) : context.toExternalForm(); //$NON-NLS-1$
     }
     if( element instanceof IFeatureType )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      final IAnnotation annotation = ((IFeatureType) element).getAnnotation();
       return annotation.getTooltip();
     }
     if( element instanceof IPropertyType )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      final IAnnotation annotation = ((IPropertyType) element).getAnnotation();
       return annotation.getLabel();
     }
     if( element instanceof HeavyRelationType )

@@ -60,7 +60,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -97,7 +96,7 @@ public class WizardFeatureTextBox
 
   public String getLabel( )
   {
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( m_feature.getFeatureType().getProperty( m_qn ) );
+    final IAnnotation annotation = m_feature.getFeatureType().getProperty( m_qn ).getAnnotation();
     return annotation.getLabel();
   }
 

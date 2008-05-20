@@ -886,13 +886,6 @@
 			id="org.kalypso.ui.catalogs.ServerPropertiesUrlCatalog" />
 	</extension>
  <extension
-       point="org.kalypso.gmlschema.annotationProvider">
-    <annotationProvider
-          class="org.kalypso.ui.catalogs.FeatureTypeAnnotationCatalog"
-          id="org.kalypso.ui.catalogs.FeatureTypeAnnotationCatalog"
-          name="Feature-Type Annotation Catalog"/>
- </extension>
- <extension
        point="org.eclipse.ui.importWizards">
     <category
           id="org.kalypso.ui.importwizards.kalypso"

@@ -51,7 +51,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -79,7 +78,7 @@ public class WizardFeatureCheckbox
       m_label = fallbackLabel;
     else
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( feature.getFeatureType().getProperty( qname ) );
+      final IAnnotation annotation = feature.getFeatureType().getProperty( qname ).getAnnotation();
       m_label = annotation.getLabel();
     }
   }

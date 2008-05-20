@@ -46,7 +46,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.kalypso.core.jaxb.TemplateUtilitites;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -155,7 +154,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
       validatorLabel.setVisible( true );
 
       if( property == null )
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker.2") + ftp ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker.2" ) + ftp ); //$NON-NLS-1$
       validatorLabel.setProperty( property );
 
       final GridDataType labelGridData = TemplateUtilitites.OF_FEATUREVIEW.createGridDataType();
@@ -194,7 +193,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
    */
   protected IAnnotation getAnnotation( final IPropertyType ftp )
   {
-    return AnnotationUtilities.getAnnotation( ftp );
+    return ftp.getAnnotation();
   }
 
   /**

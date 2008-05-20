@@ -44,7 +44,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.annotation.ILanguageAnnontationProvider;
+import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.gmlschema.swe.RepresentationType;
@@ -88,7 +88,7 @@ public class FeatureComponent extends AbstractComponent
     final IRestriction[] restrictions = getRestrictions();
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
-      final Map<Object, ILanguageAnnontationProvider> items = RestrictionUtilities.getEnumerationItems( restrictions );
+      final Map<Object, IAnnotation> items = RestrictionUtilities.getEnumerationItems( restrictions );
       if( items.size() > 0 )
         return items.keySet().iterator().next();
     }

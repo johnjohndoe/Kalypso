@@ -25,7 +25,6 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -1065,21 +1064,15 @@ public class FeatureHelper
   public static String getAnnotationValue( final Feature feature, final String annotationKey )
   {
     final IFeatureType featureType = feature.getFeatureType();
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
-    // this can happen when we import a shape-file.
-    if( annotation == null )
-      return "no-label";
+    final IAnnotation annotation = featureType.getAnnotation();
 
-    final String label = annotation.getValue( annotationKey );
-    return FeatureHelper.tokenReplace( feature, label );
+    final String value = annotation.getValue( annotationKey );
+    return FeatureHelper.tokenReplace( feature, value );
   }
 
   public static boolean hasReplaceTokens( final IFeatureType featureType, final String annotationKey )
   {
-    final IAnnotation annotation = AnnotationUtilities.getAnnotation( featureType );
-    if( annotation == null )
-      return false;
-
+    final IAnnotation annotation = featureType.getAnnotation();
     final String label = annotation.getValue( annotationKey );
     return label.contains( TokenReplacerEngine.TOKEN_START );
   }

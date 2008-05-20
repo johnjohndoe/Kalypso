@@ -29,7 +29,6 @@
  */
 package org.kalypso.ogc.gml;
 
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -63,7 +62,7 @@ public class KalypsoLegendUtilities
     {
       DEFAULT_LINESTRING = GeometryFactory.createGM_Curve( DEFAULT_LINEPOSITIONS, null );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       DEFAULT_LINESTRING = null;
       e.printStackTrace();
@@ -75,7 +74,7 @@ public class KalypsoLegendUtilities
     {
       DEFAULT_POLYGONE = GeometryFactory.createGM_Surface( DEFAULT_ENVELOPE, null );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
@@ -93,16 +92,16 @@ public class KalypsoLegendUtilities
   {
     final IFeatureType featureType = legendFeature.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType element : properties )
     {
-      final Object legendValue = getLegendValue( properties[i] );
+      final Object legendValue = getLegendValue( element );
       if( legendValue != null )
       {
         try
         {
-          legendFeature.setProperty( properties[i], legendValue );
+          legendFeature.setProperty( element, legendValue );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // TODO generate legendFeature, that has String properties where are no geometries
         }
@@ -110,11 +109,11 @@ public class KalypsoLegendUtilities
     }
   }
 
-  private static Object getLegendValue( final IPropertyType ftp )
+  private static Object getLegendValue( final IPropertyType propertyType )
   {
-    if( ftp instanceof IValuePropertyType )
+    if( propertyType instanceof IValuePropertyType )
     {
-      IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final IValuePropertyType vpt = (IValuePropertyType) propertyType;
 
       if( GeometryUtilities.isPointGeometry( vpt ) || GeometryUtilities.isMultiPointGeometry( vpt ) )
         return DEFAULT_POINT;
@@ -127,10 +126,8 @@ public class KalypsoLegendUtilities
       final String type = vpt.getValueClass().getName();
       if( type.startsWith( "java.lang." ) ) //$NON-NLS-1$
       {
-        final IAnnotation annotation = AnnotationUtilities.getAnnotation( ftp );
-        if( annotation != null )
-          return annotation.getLabel();
-        return ftp.getQName().getLocalPart();
+        final IAnnotation annotation = propertyType.getAnnotation();
+        return annotation.getLabel();
       }
     }
     return null;

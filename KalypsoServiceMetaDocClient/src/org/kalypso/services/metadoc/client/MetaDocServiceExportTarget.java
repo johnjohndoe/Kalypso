@@ -320,7 +320,7 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
 
         e.printStackTrace();
       }
-      final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( featureQName, new QName( "unknown", name ), handler, 0, 1, false );
+      final IValuePropertyType vpt = GMLSchemaFactory.createValuePropertyType( new QName( "unknown", name ), handler, 0, 1, false );
       ftpColl.add( vpt );
       fpColl.put( vpt, realValue );
 

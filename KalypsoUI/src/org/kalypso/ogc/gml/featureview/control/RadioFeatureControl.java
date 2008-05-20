@@ -51,7 +51,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -122,7 +121,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
     if( m_text != null )
       text = m_text;
     else
-      text = AnnotationUtilities.getAnnotation( pt ).getLabel();
+      text = pt.getAnnotation().getLabel();
 
     m_radio.setText( text );
     m_radio.addSelectionListener( m_listener );

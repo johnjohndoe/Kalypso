@@ -78,7 +78,6 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -265,13 +264,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final Feature feature = getFeature();
 
-    final IPropertyType ftp = getProperty( feature, controlType );
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType propertyType = getProperty( featureType, controlType );
 
-    // TODO: this is called much too often for the same ftp, we should cache it somehow
-    // TODO: even better: process annotation while schema is loaded... then we can get it from the ftp itself
-    final IAnnotation annotation = ftp == null ? null : AnnotationUtilities.getAnnotation( ftp );
+    final IAnnotation annotation = propertyType == null ? null : propertyType.getAnnotation();
 
-    final Control control = createControlFromControlType( parent, style, controlType, ftp, annotation );
+    final Control control = createControlFromControlType( parent, style, controlType, propertyType, annotation );
 
     // Set tooltip: an explicitly set tooltip always wins
     final String tooltipControlText = controlType.getTooltip();
@@ -386,7 +384,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         return Boolean.parseBoolean( (String) operationElement );
       else if( operationElement instanceof Element )
       {
-        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.3"), operationElement, feature ); //$NON-NLS-1$
+        KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.3" ), operationElement, feature ); //$NON-NLS-1$
 
         final Element element = (Element) operationElement;
         final NodeList childNodes = element.getChildNodes();
@@ -399,7 +397,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
             final Boolean value = operation.evaluate( feature );
             final boolean result = value == null ? false : value.booleanValue();
 
-            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.4"), result ); //$NON-NLS-1$
+            KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.4" ), result ); //$NON-NLS-1$
 
             return result;
           }
@@ -482,7 +480,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final ValidatorLabelType validatorLabelType = (ValidatorLabelType) controlType;
       if( ftp == null )
         // TODO: should never happen. The error occurs while generating the ValidatorLabelType.
-        System.out.println( Messages.getString("org.kalypso.ogc.gml.featureview.control.FeatureComposite.5") ); //$NON-NLS-1$
+        System.out.println( Messages.getString( "org.kalypso.ogc.gml.featureview.control.FeatureComposite.5" ) ); //$NON-NLS-1$
       else
       {
         final ValidatorFeatureControl vfc = new ValidatorFeatureControl( feature, ftp, m_showOk );
@@ -877,13 +875,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return m_control;
   }
 
-  private IPropertyType getProperty( final Feature feature, final ControlType controlType )
+  private IPropertyType getProperty( final IFeatureType featureType, final ControlType controlType )
   {
     if( controlType instanceof PropertyControlType )
-      return getPropertyTypeForQName( feature.getFeatureType(), ((PropertyControlType) controlType).getProperty() );
+      return getPropertyTypeForQName( featureType, ((PropertyControlType) controlType).getProperty() );
 
     if( controlType instanceof CompositeType )
-      return getPropertyTypeForQName( feature.getFeatureType(), ((CompositeType) controlType).getProperty() );
+      return getPropertyTypeForQName( featureType, ((CompositeType) controlType).getProperty() );
 
     return null;
   }
@@ -893,7 +891,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    * the feature-template. Before, the propertyName was given as xs:string (only the local part), now it is a xs:QName.
    * So old entries are interpreted against the namespace of the featuretemplate.
    */
-  @SuppressWarnings("deprecation") //$NON-NLS-1$
+  @SuppressWarnings("deprecation")
   private IPropertyType getPropertyTypeForQName( final IFeatureType featureType, final QName property )
   {
     if( property == null )

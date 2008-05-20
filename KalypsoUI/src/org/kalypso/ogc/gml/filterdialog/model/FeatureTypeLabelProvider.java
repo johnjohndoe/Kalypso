@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.filterdialog.model;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -56,7 +55,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class FeatureTypeLabelProvider extends LabelProvider
 {
-  private String m_annotationKey;
+  private final String m_annotationKey;
 
   public FeatureTypeLabelProvider( )
   {
@@ -72,7 +71,7 @@ public class FeatureTypeLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public Image getImage( Object element )
+  public Image getImage( final Object element )
   {
     ImageDescriptor descriptor = null;
     if( element instanceof IFeatureType )
@@ -111,12 +110,12 @@ public class FeatureTypeLabelProvider extends LabelProvider
   {
     if( element instanceof IFeatureType )
     {
-      final IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      final IAnnotation annotation = ((IFeatureType) element).getAnnotation();
       return annotation.getValue( m_annotationKey );
     }
     else if( element instanceof IPropertyType )
     {
-      IAnnotation annotation = AnnotationUtilities.getAnnotation( element );
+      final IAnnotation annotation = ((IPropertyType) element).getAnnotation();
       return annotation.getValue( m_annotationKey );
     }
     return ""; //$NON-NLS-1$
