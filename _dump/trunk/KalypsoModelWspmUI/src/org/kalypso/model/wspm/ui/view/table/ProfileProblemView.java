@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -51,6 +48,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.Form;
@@ -77,6 +76,12 @@ public class ProfileProblemView
 
   final private Form m_form;
 
+  protected boolean errors_expanded = false;
+
+  protected boolean warnings_expanded = false;
+
+  protected boolean infos_expanded = false;
+
   public ProfileProblemView( final FormToolkit toolkit, final Form form )
   {
 
@@ -89,33 +94,36 @@ public class ProfileProblemView
     final String resArray = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
 
     final String[] resolutions = StringUtils.split( resArray, '\u0000' );
-    final IProfilMarkerResolution[] markerRes = new IProfilMarkerResolution[ resolutions == null ? 0 : resolutions.length ];
+    final IProfilMarkerResolution[] markerRes = new IProfilMarkerResolution[resolutions == null ? 0 : resolutions.length];
     for( int i = 0; i < markerRes.length; i++ )
     {
       final IProfilMarkerResolution markerResolution = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
       if( markerResolution != null )
-        markerRes[i]= markerResolution ;
+        markerRes[i] = markerResolution;
     }
     return markerRes;
   }
 
-  private final void createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String text )
+  private final Section createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String text )
   {
     Composite container = parent;
+    Section section = null;
     if( markers.length > 1 )
     {
-      final Section section = m_toolkit.createSection( parent, Section.TWISTIE );
+      section = m_toolkit.createSection( parent, Section.TWISTIE );
       section.setLayout( new GridLayout() );
       section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 1 ) );
       section.setTitleBarForeground( section.getDisplay().getSystemColor( color ) );
       section.setToggleColor( section.getDisplay().getSystemColor( color ) );
-
       section.setText( markers.length + " " + text + Messages.TableView_5 ); //$NON-NLS-1$
-      final Composite expanded = m_toolkit.createComposite( section );
-      expanded.setLayout( new GridLayout( 2, false ) );
-      expanded.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-      container = expanded;
+
+      final Composite expanded_section = m_toolkit.createComposite( section );
+      expanded_section.setLayout( new GridLayout( 2, false ) );
+      expanded_section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+      container = expanded_section;
       section.setClient( container );
+
     }
 
     for( final IMarker marker : markers )
@@ -175,7 +183,7 @@ public class ProfileProblemView
       link.setImage( JFaceResources.getResources().createImageWithDefault( getImageDescriptor( marker ) ) );
       link.setForeground( container.getDisplay().getSystemColor( color ) );
     }
-
+    return section;
   }
 
   private ImageDescriptor getImageDescriptor( final IMarker marker )
@@ -201,9 +209,60 @@ public class ProfileProblemView
       return null;
 
     final Composite container = m_toolkit.createComposite( m_form.getHead() );
-    createSection( profil, container, markerIndex.get( IMarker.SEVERITY_ERROR ), SWT.COLOR_RED, Messages.TableView_1 );
-    createSection( profil, container, markerIndex.get( IMarker.SEVERITY_WARNING ), SWT.COLOR_DARK_YELLOW, Messages.TableView_2 );
-    createSection( profil, container, markerIndex.get( IMarker.SEVERITY_INFO ), SWT.COLOR_DARK_BLUE, Messages.TableView_3 );
+    final Section errSec = createSection( profil, container, markerIndex.get( IMarker.SEVERITY_ERROR ), SWT.COLOR_RED, Messages.TableView_1 );
+    final Section warnSec = createSection( profil, container, markerIndex.get( IMarker.SEVERITY_WARNING ), SWT.COLOR_DARK_YELLOW, Messages.TableView_2 );
+    final Section infSec = createSection( profil, container, markerIndex.get( IMarker.SEVERITY_INFO ), SWT.COLOR_DARK_BLUE, Messages.TableView_3 );
+    if( errSec != null )
+    {
+      if( errSec.isExpanded() != errors_expanded )
+        errSec.setExpanded( errors_expanded );
+      errSec.addExpansionListener( new ExpansionAdapter()
+      {
+
+        /**
+         * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+         */
+        @Override
+        public void expansionStateChanged( ExpansionEvent e )
+        {
+          errors_expanded = errSec.isExpanded();
+        }
+      } );
+    }
+    if( warnSec != null )
+    {
+      if( warnSec.isExpanded() != warnings_expanded )
+        warnSec.setExpanded( warnings_expanded );
+      warnSec.addExpansionListener( new ExpansionAdapter()
+      {
+
+        /**
+         * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+         */
+        @Override
+        public void expansionStateChanged( ExpansionEvent e )
+        {
+          warnings_expanded = warnSec.isExpanded();
+        }
+      } );
+    }
+    if( infSec != null )
+    {
+      if( infSec.isExpanded() != infos_expanded )
+        infSec.setExpanded( infos_expanded );
+      infSec.addExpansionListener( new ExpansionAdapter()
+      {
+
+        /**
+         * @see org.eclipse.ui.forms.events.ExpansionAdapter#expansionStateChanged(org.eclipse.ui.forms.events.ExpansionEvent)
+         */
+        @Override
+        public void expansionStateChanged( ExpansionEvent e )
+        {
+          infos_expanded = infSec.isExpanded();
+        }
+      } );
+    }
     container.setLayout( new GridLayout( 2, false ) );
     container.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_form.setHeadClient( container );

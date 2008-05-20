@@ -51,8 +51,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.ide.ResourceUtil;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -108,25 +106,11 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
   /** Flag to prevent update when source of model change is this */
   private boolean m_lockNextModelChange = false;
 
-  private final String m_editorID;
-
   private ValidationProfilListener m_profilValidator;
 
-  public FeatureSelectionProfileProvider( final ISelectionProvider provider, final IEditorPart editorPart )
+  public FeatureSelectionProfileProvider( final ISelectionProvider provider )
   {
     m_provider = provider;
-
-    if( editorPart == null )
-    {
-      m_file = null;
-      m_editorID = null;
-    }
-    else
-    {
-      m_file = ResourceUtil.getFile( editorPart.getEditorInput() );
-      m_editorID = editorPart.getEditorSite().getId();
-    }
-
     m_provider.addSelectionChangedListener( this );
     selectionChanged( new SelectionChangedEvent( m_provider, m_provider.getSelection() ) );
   }
@@ -328,9 +312,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
     final Feature feature = profileMember.getFeature();
     final CommandableWorkspace workspace = fs.getWorkspace( feature );
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
-    // Fallback, if we do not have an editor, try the gml file itself
-    if( m_file == null )
-      m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
+    m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
     IProfil profile = ProfileFeatureFactory.toProfile( profileFeature );
     IStationResult[] results = findResults( profileMember );
@@ -354,7 +336,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider2 imp
 
       if( m_profile != null && m_file != null )
       {
-        m_profilValidator = new ValidationProfilListener( m_profile, m_file, m_editorID, m_feature.getId() );
+        m_profilValidator = new ValidationProfilListener( m_profile, m_file, null, m_feature.getId() );
 
         m_profile.addProfilListener( m_profilValidator );
       }

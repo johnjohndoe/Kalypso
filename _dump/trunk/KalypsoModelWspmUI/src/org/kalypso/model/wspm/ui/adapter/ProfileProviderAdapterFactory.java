@@ -45,7 +45,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -112,8 +111,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
             m_providers.remove( part );
           }
 
-          final IEditorPart editorPart = part instanceof IEditorPart ? (IEditorPart) part : null;
-          final FeatureSelectionProfileProvider featureSelectionProfileProvider = new FeatureSelectionProfileProvider( selectionProvider, editorPart );
+          final FeatureSelectionProfileProvider featureSelectionProfileProvider = new FeatureSelectionProfileProvider( selectionProvider );
 
           m_providers.put( part, featureSelectionProfileProvider );
           part.getSite().getPage().addPartListener( m_partAdapter );

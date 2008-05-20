@@ -40,17 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.resolutions;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -59,8 +59,9 @@ import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.tuhh.ui.KalypsoModelWspmTuhhUIPlugin;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
-import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.PoolableObjectType;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -118,30 +119,45 @@ public abstract class AbstractProfilMarkerResolution implements IProfilMarkerRes
   {
     try
     {
-      final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
-      final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();
-      for( final IWorkbenchWindow wbw : wbws )
-      {
-        final IEditorReference[] editorReferences = wbw == null ? null : wbw.getActivePage().getEditorReferences();
-
-        if( editorReferences == null )
-          return null;
-        for( final IEditorReference editorRef : editorReferences )
-        {
-          if( editorRef.getId().equals( editorId ) )
-          {
-            final IEditorPart editor = editorRef.getEditor( false );
-            final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
-            final GmlTreeView gmlTreeView = gmlEditor == null ? null : gmlEditor.getTreeView();
-            return gmlTreeView == null ? null : gmlTreeView.getWorkspace();
-          }
-        }
-      }
+      final IResource markerResource = marker.getResource();
+      if( !(markerResource instanceof IFile) )
+        return null;
+      final IFile markerFile = (IFile) markerResource;
+      final URL markerURL = ResourceUtilities.createURL( markerFile );
+      
+      final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+      final PoolableObjectType key = new PoolableObjectType( "gml", markerURL.toExternalForm(), markerURL );
+      return (CommandableWorkspace) pool.getObject( key );
+      
+//      final String editorId = (String) marker.getAttribute( IDE.EDITOR_ID_ATTR );
+//      final IWorkbenchWindow[] wbws = PlatformUI.getWorkbench().getWorkbenchWindows();
+//      for( final IWorkbenchWindow wbw : wbws )
+//      {
+//        final IEditorReference[] editorReferences = wbw == null ? null : wbw.getActivePage().getEditorReferences();
+//
+//        if( editorReferences == null )
+//          return null;
+//        for( final IEditorReference editorRef : editorReferences )
+//        {
+//          if( editorRef.getId().equals( editorId ) )
+//          {
+//            final IEditorPart editor = editorRef.getEditor( false );
+//            final GmlEditor gmlEditor = (editor instanceof GmlEditor) ? (GmlEditor) editor : null;
+//            final GmlTreeView gmlTreeView = gmlEditor == null ? null : gmlEditor.getTreeView();
+//            return gmlTreeView == null ? null : gmlTreeView.getWorkspace();
+//          }
+//        }
+//      }
     }
     catch( final CoreException e )
     {
       KalypsoModelWspmTuhhUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       return null;
+    }
+    catch( MalformedURLException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
     return null;
   }

@@ -218,7 +218,7 @@ public class ValidateProfilesWizard extends Wizard
         {
           if( profiles[i] != null )
           {
-            final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource, GmlEditor.ID, "" + profiles[i].getStation(), featureIDs[i] ); //$NON-NLS-1$
+            final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( resource, null, "" + profiles[i].getStation(), featureIDs[i] ); //$NON-NLS-1$
             try
             {
               for( final Object rule : choosenRules )
