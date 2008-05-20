@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.wizards;
+package org.kalypso.model.wspm.ui.wizard;
 
 import javax.xml.namespace.QName;
 
@@ -71,7 +71,6 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureProvider;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup;
 import org.kalypso.model.wspm.ui.wizard.ThemeAndPropertyChooserGroup.PropertyDescriptor;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -223,7 +222,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final String type = profile.getProfil().getType();
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
-  
+
     final String[] markerTypes = provider.getPointProperties();
     IComponent[] markerComponents = new IComponent[markerTypes.length];
     for( int i = 0; i < markerTypes.length; i++ )

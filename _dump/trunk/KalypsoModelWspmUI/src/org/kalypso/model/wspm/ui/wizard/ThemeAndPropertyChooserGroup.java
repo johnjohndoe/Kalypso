@@ -86,9 +86,9 @@ public class ThemeAndPropertyChooserGroup
 
     public final IPropertyTypeFilter filter;
 
-    public PropertyDescriptor( @SuppressWarnings("hiding") //$NON-NLS-1$
-    final String label, @SuppressWarnings("hiding") //$NON-NLS-1$
-    final IPropertyTypeFilter filter, @SuppressWarnings("hiding") //$NON-NLS-1$
+    public PropertyDescriptor( @SuppressWarnings("hiding")//$NON-NLS-1$
+    final String label, @SuppressWarnings("hiding")//$NON-NLS-1$
+    final IPropertyTypeFilter filter, @SuppressWarnings("hiding")//$NON-NLS-1$
     final boolean hideIfUnique )
     {
       this.label = label;
@@ -250,6 +250,7 @@ public class ThemeAndPropertyChooserGroup
     comboViewer.setContentProvider( new ArrayContentProvider() );
     comboViewer.setLabelProvider( new FeatureTypeLabelProvider() );
     comboViewer.setSorter( new ViewerSorter() );
+    comboViewer.setInput( new IPropertyType[] {} );
 
     propertyCombos.put( pd, comboViewer );
     propertyControls.put( pd, new Control[] { label, comboViewer.getControl() } );
@@ -288,7 +289,7 @@ public class ThemeAndPropertyChooserGroup
     if( theme == null )
     {
       for( final ComboViewer comboViewer : propertyCombos.values() )
-        comboViewer.setInput( new Object[] {} );
+        comboViewer.setInput( new IPropertyType[] {} );
     }
     else
     {

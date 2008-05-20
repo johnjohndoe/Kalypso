@@ -49,7 +49,7 @@
                tooltip="Zeigt den selektierten Gewässerstrang in einer Karte an."/>
       </objectContribution>
 
-            <objectContribution
+      <objectContribution
                   adaptable="false"
                   id="org.kalypso.model.wspm.tuhh.ui.object.contribution.org.kalypso.ogc.gml.IKalypsoFeatureTheme.assignRoughnessToProfiles"
                   objectClass="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
@@ -57,7 +57,7 @@
                      name="featureThemeQname"
                      value="org.kalypso.model.wspm.tuhh#ProfileReachSegmentWspmTuhhSteadyState"/>
 		         <action
-		               class="org.kalypso.model.wspm.tuhh.ui.actions.CreateDeviderMapThemeAction"
+		               class="org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"
 		               id="org.kalypso.model.wspm.tuhh.ui.action.CreateDeviderMapThemeAction"
 		               label="Fließzonen erzeugen"
 		               menubarPath="org.kalypso.model.wspm.ui.wspmProfileActions"

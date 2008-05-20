@@ -51,6 +51,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
+import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -109,7 +110,9 @@ public class RoughnessIntersector
     for( final Object object : m_profileFeatures )
     {
       final Feature profileFeature = (Feature) object;
-      final IProfil profil = ProfileFeatureFactory.toProfile( profileFeature );
+      WspmProfile wspmProfile = new WspmProfile( profileFeature );
+      String crs = wspmProfile.getSrsName();
+      final IProfil profil = wspmProfile.getProfil();
       // TODO: check if the profile has all components already.
       // but how to do, we don't know here what components are necessary for the current profile...
       final String label = FeatureHelper.getAnnotationValue( profileFeature, IAnnotation.ANNO_LABEL );
@@ -126,7 +129,7 @@ public class RoughnessIntersector
         if( !acceptPoint( profil, point ) )
           continue;
 
-        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point );
+        final GM_Point geoPoint = ProfileCacherFeaturePropertyFunction.convertPoint( profil, point, crs );
         if( geoPoint == null )
           continue;
         final Geometry jtsPoint = JTSAdapter.export( geoPoint );

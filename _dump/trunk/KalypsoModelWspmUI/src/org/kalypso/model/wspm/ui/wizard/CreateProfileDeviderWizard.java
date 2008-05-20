@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.wizards;
+package org.kalypso.model.wspm.ui.wizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -59,12 +59,13 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
-import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
 import org.kalypso.observation.result.IComponent;
@@ -204,7 +205,7 @@ public class CreateProfileDeviderWizard extends Wizard
       {
         final Feature profileFeature = (Feature) object;
         final WspmProfile profile = new WspmProfile( profileFeature );
-
+        String crs = profile.getSrsName();
         final GM_Curve curve = profile.getLine();
         if( curve == null )
           continue;
@@ -237,7 +238,7 @@ public class CreateProfileDeviderWizard extends Wizard
         }
 
         // create marker for each point
-        if( createNewDevider( profil, pointList.toArray( new Point[pointList.size()] ), deviderType ) )
+        if( createNewDevider( profil, pointList.toArray( new Point[pointList.size()] ), deviderType, crs ) )
           Collections.addAll( changes, ProfileFeatureFactory.toFeatureAsChanges( profil, profileFeature ) );
       }
       catch( final GM_Exception e )
@@ -274,7 +275,7 @@ public class CreateProfileDeviderWizard extends Wizard
   /**
    * At the moment, only existing points are taken
    */
-  private static boolean createNewDevider( final IProfil profil, final Point[] intersectionPoints, final IComponent markerType )
+  private static boolean createNewDevider( final IProfil profil, final Point[] intersectionPoints, final IComponent markerType, String crs )
   {
     // find corresponding profile points // create new profile points
 
@@ -284,7 +285,7 @@ public class CreateProfileDeviderWizard extends Wizard
     for( final IRecord profilPoint : points )
       try
       {
-        final GM_Point pointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, profilPoint );
+        final GM_Point pointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, profilPoint, crs );
         final Point geoPoint = (Point) JTSAdapter.export( pointGeom );
 
         for( final Point p : intersectionPoints )
@@ -294,7 +295,7 @@ public class CreateProfileDeviderWizard extends Wizard
           final double lastDist;
           if( lastProfilPoint != null )
           {
-            final GM_Point lastPointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, lastProfilPoint );
+            final GM_Point lastPointGeom = ProfileCacherFeaturePropertyFunction.convertPoint( profil, lastProfilPoint, crs );
             final Point lastGeoPoint = (Point) JTSAdapter.export( lastPointGeom );
             lastDist = geoPoint.distance( lastGeoPoint );
           }
@@ -315,25 +316,16 @@ public class CreateProfileDeviderWizard extends Wizard
     for( final IProfilPointMarker marker : existingMarkers )
       profil.removePointMarker( marker );
 
+    IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
+
     for( final IRecord markerPoint : pointMap.values() )
     {
-      final IProfilPointMarker marker = profil.createPointMarker(markerType.getId(), markerPoint );
+      final String id = markerType.getId();
+      final IProfilPointMarker marker = profil.createPointMarker( id, markerPoint );
 
-      // HACK: this is the only place where we use tuhh-stuff. Refaktor in order to reuse this code for other profile
-      // types.
-      final Object value;
-      if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( markerType.getId() ) )
-        value = Boolean.TRUE;
-      else if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( markerType.getId() ) )
-        value = "low";
-      else if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( markerType.getId() ) )
-        value = Boolean.TRUE;
-      else if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( markerType.getId() ) )
-        value = new Double( 0.0 );
-      else
-        value = null;
+      final Object defaultValue = markerProvider.getDefaultValue( id );
 
-      marker.setValue( value );
+      marker.setValue( defaultValue );
     }
 
     return pointMap.size() > 0;

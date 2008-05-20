@@ -92,7 +92,7 @@
 		</annotation>
 	</element>
 
-	<element name="AbstractReach" type="wspm:AbstractReachType" substitutionGroup="gml:_Feature">
+	<element name="AbstractReach" type="wspm:AbstractReachType" abstract="true" substitutionGroup="gml:_Feature">
 		<annotation>
 			<documentation xml:lang="de">
 				<name>Gewässerstrang</name>
