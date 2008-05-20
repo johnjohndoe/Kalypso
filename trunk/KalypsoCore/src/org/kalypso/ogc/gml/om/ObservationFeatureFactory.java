@@ -192,6 +192,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
       final String token = tk.nextToken();
       final XsdBaseTypeHandler< ? > handler = typeHandlers[nb];
+
+      if( handler == null )
+        continue;
       try
       {
         Object value = null;
@@ -209,7 +212,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
           value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
         }
         else
+        {
+
           value = handler.convertToJavaValue( token );
+        }
 
         record.setValue( nb, value );
       }
