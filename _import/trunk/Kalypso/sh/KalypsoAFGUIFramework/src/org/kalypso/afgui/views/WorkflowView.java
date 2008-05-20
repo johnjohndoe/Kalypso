@@ -7,13 +7,17 @@ import java.net.URLDecoder;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
@@ -68,9 +72,10 @@ public class WorkflowView extends ViewPart
 
   protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
   {
-    PlatformUI.getWorkbench().getDisplay().asyncExec( new Runnable()
+    Job job = new UIJob( "Executing task" )
     {
-      public void run( )
+      @Override
+      public IStatus runInUIThread( IProgressMonitor monitor )
       {
         if( scenario != null && newProject != null )
         {
@@ -125,8 +130,13 @@ public class WorkflowView extends ViewPart
           setContentDescription( "Kein Szenario aktiv." );
           m_workflowControl.setWorkflow( null );
         }
+
+        return Status.OK_STATUS;
       }
-    } );
+    };
+
+    job.schedule();
+
   }
 
   /**
