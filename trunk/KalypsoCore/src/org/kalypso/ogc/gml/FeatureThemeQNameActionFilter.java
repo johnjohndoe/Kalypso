@@ -67,9 +67,10 @@ public class FeatureThemeQNameActionFilter implements IActionFilterEx
    */
   public boolean testAttribute( final Object target, final String name, final String value )
   {
+
     if( !(target instanceof IKalypsoFeatureTheme) )
       return false;
-    
+
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) target;
 
     if( ATTR_QNAME.equals( name ) )
@@ -81,7 +82,9 @@ public class FeatureThemeQNameActionFilter implements IActionFilterEx
 
         final IFeatureType featureType = theme.getFeatureType();
         if( featureType != null && GMLSchemaUtilities.substitutes( featureType, qName ) )
+        {
           return true;
+        }
       }
     }
 
