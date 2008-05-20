@@ -75,21 +75,22 @@ public class DeviderProvider implements IProfilPointMarkerProvider
 
   /**
    * @deprecated
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(org.kalypso.observation.result.IComponent, org.kalypso.observation.result.IRecord)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(org.kalypso.observation.result.IComponent,
+   *      org.kalypso.observation.result.IRecord)
    */
- 
+
   @SuppressWarnings("deprecation")
   @Deprecated
   public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point )
   {
     /* first check, if provider provides markerType */
-    if( !m_markerTypes.containsKey(cmp.getId() ) )
+    if( !m_markerTypes.containsKey( cmp.getId() ) )
       throw new IllegalStateException( "ProfilPointMarkerProvider doesn't doesnt provides - " + cmp.getName() );
     /* point has component already defined? */
-     if( !point.getOwner().hasComponent( cmp ) )
+    if( !point.getOwner().hasComponent( cmp ) )
     {
       /* else create a new profile component */
-         point.getOwner().addComponent( cmp );
+      point.getOwner().addComponent( cmp );
     }
 
     /* create a new profile point marker */
@@ -130,9 +131,9 @@ public class DeviderProvider implements IProfilPointMarkerProvider
 // final ArrayList<RGB> rgbs = new ArrayList<RGB>(m_markerTypes.values());
 // rgbs.add( 0, new RGB(255,255,255)) ;
 // final ImageData imageData = background.getImageData();
- final int cnt = markers.length;
- final int offset = (16 - (3 * cnt)) / 2;
- int i = 0;
+    final int cnt = markers.length;
+    final int offset = (16 - (3 * cnt)) / 2;
+    int i = 0;
     final Color oldColor = gc.getBackground();
     for( final String marker : markers )
     {
@@ -140,7 +141,7 @@ public class DeviderProvider implements IProfilPointMarkerProvider
       try
       {
         gc.setBackground( color );
-        gc.fillRectangle( offset+4*i++ , 0, 3, 16 );
+        gc.fillRectangle( offset + 4 * i++, 0, 3, 16 );
       }
       finally
       {
@@ -151,8 +152,6 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     }
     // return ImageDescriptor.createFromImageData( imageData );
   }
-
- 
 
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getColorFor(java.lang.String)
@@ -197,6 +196,28 @@ public class DeviderProvider implements IProfilPointMarkerProvider
     {
       return false;
     }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getDefaultValue(java.lang.String)
+   */
+  public Object getDefaultValue( final String id )
+  {
+    // HACK: this is the only place where we use tuhh-stuff. Refaktor in order to reuse this code for other profile
+    // types.
+    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( id ) )
+      return Boolean.TRUE;
+
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( id ) )
+      return "low";
+
+    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( id ) )
+      return Boolean.TRUE;
+
+    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( id ) )
+      return new Double( 0.0 );
+
+    return null;
   }
 
 }

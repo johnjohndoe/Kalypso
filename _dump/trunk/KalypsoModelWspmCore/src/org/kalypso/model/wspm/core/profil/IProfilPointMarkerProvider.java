@@ -65,8 +65,7 @@ public interface IProfilPointMarkerProvider
   public boolean providesPointMarker( final IComponent marker );
 
   /**
-   * @deprecated Use {@link IProfilPointPropertyProvider#isMarker(String)} instead.
-   * component is type of marker?
+   * @deprecated Use {@link IProfilPointPropertyProvider#isMarker(String)} instead. component is type of marker?
    */
   @Deprecated
   public boolean isMarker( final IComponent component );
@@ -86,10 +85,14 @@ public interface IProfilPointMarkerProvider
    */
   @Deprecated
   public IProfilPointMarker createProfilPointMarker( String markerTypTrennflaeche, IRecord p1 );
+
   /**
    * @deprecated Use {@link IProfil#createPointMarker(IComponent, IRecord)} instead.
    */
   @Deprecated
   public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point );
+
+  /** Returns the default value for the given marker */
+  public Object getDefaultValue( final String id );
 
 }
