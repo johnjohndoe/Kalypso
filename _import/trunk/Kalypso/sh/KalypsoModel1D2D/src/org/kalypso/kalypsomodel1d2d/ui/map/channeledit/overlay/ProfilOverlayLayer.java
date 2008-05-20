@@ -221,7 +221,7 @@ public class ProfilOverlayLayer extends AbstractProfilChartLayer
       gmPoint = WspmProfileHelper.getGeoPosition( width, origProfil );
       final String srsName = (String) m_profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
       geoPoint = WspmGeometryUtilities.pointFromPoint( gmPoint, srsName );
-      geoPoint = WspmGeometryUtilities.pointFromRrHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
+      geoPoint = WspmGeometryUtilities.pointFromRwHw( gmPoint.getX(), gmPoint.getY(), gmPoint.getZ() );
     }
     catch( final Exception e )
     {

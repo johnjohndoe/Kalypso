@@ -622,12 +622,13 @@ public class ImportWspmWizard extends Wizard implements IWizard
     for( final TuhhReachProfileSegment segment : segments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
+      final String crs = profileMember.getSrsName();
       final double station = profileMember.getStation();
 
       /* find sohlpunkt */
       final IProfil profil = profileMember.getProfil();
       final IRecord sohlPoint = ProfilUtil.getMinPoint( profil, ProfilObsHelper.getPropertyFromId( profil, IWspmConstants.POINT_PROPERTY_HOEHE ) );
-      final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint );
+      final GM_Point point = ProfileCacherFeaturePropertyFunction.convertPoint( profil, sohlPoint, crs );
 
       // if there is already a node, do not create it again
       final IFE1D2DNode existingNode = discretisationModel.findNode( point, SEARCH_DISTANCE );
