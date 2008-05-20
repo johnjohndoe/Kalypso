@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.virtual.IVirtualFunctionValuePropertyType;
+import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
 import org.kalypsodeegree.KalypsoDeegreeExtensions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
@@ -81,10 +81,10 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType propertyType : properties )
     {
-      if( propertyType instanceof IVirtualFunctionValuePropertyType )
+      if( propertyType instanceof IFunctionPropertyType )
       {
         final QName qname = propertyType.getQName();
-        final IVirtualFunctionValuePropertyType virtualPt = (IVirtualFunctionValuePropertyType) propertyType;
+        final IFunctionPropertyType virtualPt = (IFunctionPropertyType) propertyType;
         final String functionId = virtualPt.getFunctionId();
         final Map<String, String> functionProperties = virtualPt.getFunctionProperties();
 
