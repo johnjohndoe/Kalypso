@@ -303,7 +303,7 @@ public class Branch implements IBranch
     return myNodes.values().toArray( new ICrossSectionNode[] {} );
   }
 
-  private INode[] getNodes( )
+  public INode[] getNodes( )
   {
     final List<INode> myNodes = new ArrayList<INode>();
 

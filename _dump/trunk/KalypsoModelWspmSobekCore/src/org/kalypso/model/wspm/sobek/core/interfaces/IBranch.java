@@ -49,28 +49,30 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
  */
 public interface IBranch
 {
-  String getDescription( );
-
-  Feature getFeature( );
-
-  GM_Curve getGeometryProperty( );
-
-  String getId( );
-
-  INode getLowerNode( );
-
-  IModelMember getModelMember( );
-
-  String getName( );
-
-  INode getUpperNode( );
-
-  void setLowerNode( INode lowerNode ) throws Exception;
-
-  void setUpperNode( INode upperNode ) throws Exception;
-
   /**
    * @return sorted list (by their branch position) of cross section nodes
    */
-  ICrossSectionNode[] getCrossSectionNodes( ) throws CoreException;
+  public ICrossSectionNode[] getCrossSectionNodes( ) throws CoreException;
+
+  public String getDescription( );
+
+  public Feature getFeature( );
+
+  public GM_Curve getGeometryProperty( );
+
+  public String getId( );
+
+  public INode getLowerNode( );
+
+  public IModelMember getModelMember( );
+
+  public String getName( );
+
+  public INode[] getNodes( );
+
+  public INode getUpperNode( );
+
+  public void setLowerNode( INode lowerNode ) throws Exception;
+
+  public void setUpperNode( INode upperNode ) throws Exception;
 }
