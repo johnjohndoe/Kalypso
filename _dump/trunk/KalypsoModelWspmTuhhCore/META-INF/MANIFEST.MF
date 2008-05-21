@@ -7,7 +7,7 @@ Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugi
 Bundle-Vendor: kalypso.org
 Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.ui,
- org.junit,
+ org.junit;resolution:=optional,
  org.kalypso.model.wspm.schema,
  org.kalypso.wspwin.core
 Eclipse-LazyStart: true
