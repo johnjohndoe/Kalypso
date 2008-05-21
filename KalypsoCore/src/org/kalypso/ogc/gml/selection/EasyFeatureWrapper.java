@@ -46,8 +46,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * TODO: Remove this class. However this is still not easy because the parentFeatureProperty is still not
- * known via the api and the workspace of a feature is not a Commandableworkspace
+ * TODO: Remove this class. However this is still not easy because the parentFeatureProperty is still not known via the
+ * api and the workspace of a feature is not a Commandableworkspace
  * 
  * @author belger
  */
@@ -88,23 +88,31 @@ public final class EasyFeatureWrapper
   {
     return m_workspace;
   }
-  
+
   /**
    * Equals which is only based on {@link Feature#equals(Object)}
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
-    if(obj instanceof EasyFeatureWrapper )
+    if( obj instanceof EasyFeatureWrapper )
     {
-      return m_feature.equals( 
-          ((EasyFeatureWrapper)obj).m_feature);
+      return m_feature.equals( ((EasyFeatureWrapper) obj).m_feature );
     }
     else
     {
-      return super.equals(obj);
+      return super.equals( obj );
     }
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return m_feature.hashCode();
   }
 }
