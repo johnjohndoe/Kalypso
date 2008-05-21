@@ -6,5 +6,5 @@ Bundle-Version: 1.0.0
 Bundle-Localization: plugin
 Bundle-Vendor: kalypso.org
 Export-Package: org.kalypso.model.km
-Require-Bundle: org.junit,
+Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.commons
