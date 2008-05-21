@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.sperrzone;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypsodeegree.model.feature.Feature;
@@ -57,7 +57,7 @@ public class Sperrzone implements ISperrzone
 {
   private final Feature m_owner;
 
-  private final Map<IBranch, List<Geometry>> m_map = new HashMap<IBranch, List<Geometry>>();
+  private final Map<IBranch, Set<Geometry>> m_map = new HashMap<IBranch, Set<Geometry>>();
 
   /**
    * @param owner
@@ -84,10 +84,10 @@ public class Sperrzone implements ISperrzone
 
   public void addSperrzone( final IBranch branch, final Geometry[] gmos )
   {
-    List<Geometry> list = m_map.get( branch );
+    Set<Geometry> list = m_map.get( branch );
     if( list == null )
     {
-      list = new ArrayList<Geometry>();
+      list = new HashSet<Geometry>();
       m_map.put( branch, list );
     }
 
@@ -110,7 +110,7 @@ public class Sperrzone implements ISperrzone
    */
   public Geometry[] getGeometries( final IBranch branch )
   {
-    final List<Geometry> list = m_map.get( branch );
+    final Set<Geometry> list = m_map.get( branch );
     if( list == null )
     {
       return new Geometry[] {};
