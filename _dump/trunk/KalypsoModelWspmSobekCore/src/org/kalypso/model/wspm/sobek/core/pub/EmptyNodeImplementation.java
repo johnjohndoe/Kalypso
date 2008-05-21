@@ -48,10 +48,12 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
+import org.kalypso.model.wspm.sobek.core.sperrzone.ISperrzone;
+import org.kalypso.model.wspm.sobek.core.sperrzone.ISperrzonenDistances;
+import org.kalypso.model.wspm.sobek.core.sperrzone.Sperrzone;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -117,28 +119,36 @@ public class EmptyNodeImplementation extends AbstractNode
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone()
    */
-  public GM_Object[] getSperrzone( final IBranch branch )
+  public ISperrzone getSperrzone( )
   {
+    final Sperrzone sperrzone = new Sperrzone( getFeature() );
     try
     {
+      final IBranch branch = getLinkToBranch();
+
       final GM_Point location = getLocation();
-      final Geometry geometry = JTSAdapter.export( location );
+      final Geometry jtsLocation = JTSAdapter.export( location );
+
       final QName name = getFeature().getFeatureType().getQName();
 
       if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( name ) )
       {
-        return new GM_Object[] { JTSAdapter.wrap( geometry.buffer( 15 ) ) };
+        final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.RETARDING_BASIN_NODE );
+        sperrzone.addSperrzone( branch, buffer );
       }
-
-      return new GM_Object[] { JTSAdapter.wrap( geometry.buffer( 10 ) ) };
+      else
+      {
+        final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.DEFAULT_NODE );
+        sperrzone.addSperrzone( branch, buffer );
+      }
     }
     catch( final GM_Exception e )
     {
       e.printStackTrace();
     }
 
-    return new GM_Object[] {};
+    return sperrzone;
   }
 }

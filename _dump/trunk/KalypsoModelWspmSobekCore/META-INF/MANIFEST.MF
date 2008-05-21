@@ -32,6 +32,7 @@ Export-Package: nl.wldelft.fews.pi,
    org.kalypso.model.wspm.sobek.core.interfaces,
    org.kalypso.ogc.gml.map,
    org.kalypsodeegree.model.geometry",
+ org.kalypso.model.wspm.sobek.core.sperrzone,
  org.kalypso.model.wspm.sobek.core.ui.lastfall;
   uses:="org.eclipse.ui.forms.widgets,
    org.eclipse.jface.viewers,

@@ -38,53 +38,31 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.model;
-
-import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
-import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
-import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.ogc.gml.FeatureUtils;
-import org.kalypsodeegree.model.feature.Feature;
+package org.kalypso.model.wspm.sobek.core.sperrzone;
 
 /**
  * @author kuch
  */
-public class ConnectionNode extends AbstractConnectionNode implements IConnectionNode
+public interface ISperrzonenDistances
 {
-  public ConnectionNode( final IModelMember model, final Feature node )
-  {
-    super( model, node );
-  }
+  double CONNECTION_NODE = 10;
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#delete()
-   */
-  public void delete( ) throws Exception
-  {
-    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
-  }
+  double CROSS_SECTION_NODE = 10;
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    return INode.TYPE.eConnectionNode;
-  }
+  double RETARDING_BASIN_NODE = 15;
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
-   */
-  public boolean isEmpty( )
-  {
-    final IBranch[] inflowingBranches = getInflowingBranches();
-    final IBranch[] outflowingBranches = getOutflowingBranches();
+  double DEFAULT_NODE = 10;
 
-    if( (inflowingBranches.length == 0) && (outflowingBranches.length == 0) )
-      return true;
+  double MEASURE_BANK_RECESSION_AND_FILL_UP = 10;
 
-    return false;
-  }
+  double MEASURE_DIVERSION = 10;
+
+  double MEASURE_FLOODPLAIN_LOWERING = 10;
+
+  double MEASURE_MEANDERING = 10;
+
+  double MEASURE_POLDER = 10;
+
+  double MEASURE_WEIR = 10;
 
 }

@@ -46,10 +46,12 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
+import org.kalypso.model.wspm.sobek.core.sperrzone.ISperrzone;
+import org.kalypso.model.wspm.sobek.core.sperrzone.ISperrzonenDistances;
+import org.kalypso.model.wspm.sobek.core.sperrzone.Sperrzone;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -154,28 +156,6 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
     return f;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
-   */
-  public GM_Object[] getSperrzone( final IBranch branch )
-  {
-    if( !getLinkToBranch().equals( branch ) )
-      return new GM_Object[] {};
-
-    try
-    {
-      final GM_Point location = getLocation();
-      final Geometry geometry = JTSAdapter.export( location );
-      return new GM_Object[] { JTSAdapter.wrap( geometry.buffer( 10 ) ) };
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return new GM_Object[] {};
-  }
-
   public enum DEFAULT_ROUGHNESS
   {
     eChezy,
@@ -215,6 +195,31 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
           return Double.NaN;
       }
     }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getSperrzone()
+   */
+  public ISperrzone getSperrzone( )
+  {
+    final Sperrzone sperrzone = new Sperrzone( getFeature() );
+
+    try
+    {
+      final IBranch branch = getLinkToBranch();
+
+      final GM_Point location = getLocation();
+      final Geometry jtsLocation = JTSAdapter.export( location );
+      final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.CROSS_SECTION_NODE );
+
+      sperrzone.addSperrzone( branch, buffer );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return sperrzone;
   }
 
 }

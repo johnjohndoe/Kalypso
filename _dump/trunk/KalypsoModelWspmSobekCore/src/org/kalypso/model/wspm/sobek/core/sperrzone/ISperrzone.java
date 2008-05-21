@@ -38,53 +38,21 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.sobek.core.model;
+package org.kalypso.model.wspm.sobek.core.sperrzone;
 
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
-import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
-import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
-import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
+
+import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author kuch
  */
-public class ConnectionNode extends AbstractConnectionNode implements IConnectionNode
+public interface ISperrzone
 {
-  public ConnectionNode( final IModelMember model, final Feature node )
-  {
-    super( model, node );
-  }
+  public Feature getOwner( );
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#delete()
-   */
-  public void delete( ) throws Exception
-  {
-    FeatureUtils.deleteFeature( getModel().getWorkspace(), getFeature() );
-  }
+  public IBranch[] getBranch( );
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
-   */
-  public TYPE getType( )
-  {
-    return INode.TYPE.eConnectionNode;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#isEmpty()
-   */
-  public boolean isEmpty( )
-  {
-    final IBranch[] inflowingBranches = getInflowingBranches();
-    final IBranch[] outflowingBranches = getOutflowingBranches();
-
-    if( (inflowingBranches.length == 0) && (outflowingBranches.length == 0) )
-      return true;
-
-    return false;
-  }
-
+  public Geometry[] getGeometries( IBranch branch );
 }
