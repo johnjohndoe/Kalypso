@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms  
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <xs:schema xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om" xmlns:krrcm="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel" xmlns:kr_common="http://www.tu-harburg.de/wb/kalypso/risk/schemata/common" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:common="org.kalypso.gml.common" targetNamespace="http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel"
         elementFormDefault="qualified" attributeFormDefault="unqualified">
         <xs:annotation>
@@ -130,7 +148,7 @@
                                         <xs:element name="colorStyle" type="common:color">
                                                 <xs:annotation>
                                                         <xs:documentation xml:lang="de">
-                                                                <xs:label>Farbdarstellung</xs:label> 
+                                                                <xs:label>Farbdarstellung</xs:label>
                                                                 <xs:tooltip>Farbdarstellung der Landnutzungsklasse in der Karte</xs:tooltip>
                                                         </xs:documentation>
                                                         <xs:documentation xml:lang="en">
@@ -339,7 +357,7 @@
                                 <xs:name>spez. Vermögenswert</xs:name>
                                 <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
-                                        </xs:label>
+                                </xs:label>
                         </xs:documentation>
                         <xs:documentation xml:lang="en">
                                 <xs:name>Asset Value</xs:name>
@@ -434,13 +452,10 @@
                                 <xs:label>
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- kein Name -}]]>
                                 </xs:label>
-                               
                         </xs:documentation>
                         <xs:documentation xml:lang="en">
                                 <xs:name>Damage Function</xs:name>
-                               
                                 <xs:label>
-                                        
                                         <![CDATA[${property:http://www.tu-harburg.de/wb/kalypso/risk/schemata/rasterizationControlModel#name;- no name-}]]>
                                 </xs:label>
                         </xs:documentation>
@@ -688,12 +703,11 @@
                                                 </xs:annotation>
                                         </xs:element>
                                         <xs:element name="description" type="xs:string"/>
-                                        <xs:element name="lowerBoundaryValue" type="xs:double" default="0.0"> 
+                                        <xs:element name="lowerBoundaryValue" type="xs:double" default="0.0">
                                                 <xs:annotation>
                                                         <xs:documentation xml:lang="de">
                                                                 <xs:label>unterer Grenzwert für Risikozone [€/m²/a]</xs:label>
                                                                 <xs:label>unterer Grenzwert für Risikozone [€/m²/a]</xs:label>
-         
                                                         </xs:documentation>
                                                         <xs:documentation xml:lang="en">
                                                                 <xs:label>Lower Zone Boundary Value [€/m²/a]</xs:label>
@@ -704,7 +718,7 @@
                                                 <xs:annotation>
                                                         <xs:documentation xml:lang="de">
                                                                 <xs:label>Farbdarstellung</xs:label>
-                                                                <xs:tooltip>Farbdarstellung der Rizikozone in der Karte</xs:tooltip> 
+                                                                <xs:tooltip>Farbdarstellung der Rizikozone in der Karte</xs:tooltip>
                                                         </xs:documentation>
                                                         <xs:documentation xml:lang="en">
                                                                 <xs:label>Color Style</xs:label>
@@ -714,7 +728,7 @@
                                         </xs:element>
                                         <xs:element name="zoneInternalNumber" type="xs:int" default="0">
                                                 <xs:annotation>
-                                                        <xs:documentation xml:lang="de"> 
+                                                        <xs:documentation xml:lang="de">
                                                                 <xs:label>Ordnungszahl</xs:label>
                                                         </xs:documentation>
                                                         <xs:documentation xml:lang="en">
