@@ -1,4 +1,7 @@
-#Fri Sep 15 18:51:08 CEST 2006
+#Fri May 16 13:48:06 CEST 2008
 eclipse.preferences.version=1
 encoding//src/org/kalypso/model/wspm/schema/dict/dict_components.gml=UTF-8
 encoding//src/org/kalypso/model/wspm/schema/dict/dict_profile.gml=UTF-8
+encoding//src/org/kalypso/model/wspm/sobek/schema/schemata/dict/dict_boundary_condition_observation_defs.gml=UTF-8
+encoding//src/org/kalypso/model/wspm/sobek/schema/schemata/dict/dict_sbk_db_struct_observation_defs.gml=UTF-8
+encoding//src/org/kalypso/model/wspm/sobek/schema/schemata/dict/dict_sbk_river_weir_observation_defs.gml=UTF-8

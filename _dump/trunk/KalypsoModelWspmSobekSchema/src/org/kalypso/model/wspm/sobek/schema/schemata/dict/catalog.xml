@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <!-- 
-        Dictionaries 
-    -->
-    
-    <catalog:system systemId="urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs" uri="dict_boundary_condition_observation_defs.gml" />
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	<!--
+		Dictionaries
+	-->
 
-    <catalog:system systemId="urn:ogc:gml:dict:kalypso:wspm:sobek:sbkRiverWeirObservationDefs" uri="dict_sbk_river_weir_observation_defs.gml" />
-    
+	<catalog:system systemId="urn:ogc:gml:dict:kalypso:wspm:sobek:boundaryConditionObservationDefs"	uri="dict_boundary_condition_observation_defs.gml" />
+	<catalog:system	systemId="urn:ogc:gml:dict:kalypso:wspm:sobek:sbkRiverWeirObservationDefs" uri="dict_sbk_river_weir_observation_defs.gml" />
+	<catalog:system	systemId="urn:ogc:gml:dict:kalypso:wspm:sobek:sbkDbStructObservationDefs" uri="dict_sbk_db_struct_observation_defs.gml" />
+
 </catalog:catalog>

@@ -17,6 +17,7 @@
 	<gml:name>Sobek-RiverWeir Component Dictionary</gml:name>
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="SUBMERGEANCE">
+		<!-- submergeance might be the difference of two heights and therefore should have the unit [m]? -->
 			<gml:name>Submergeance</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_Submergeance">
@@ -33,6 +34,7 @@
 	</gml:dictionaryEntry>
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="REDUCTION">
+		<!-- Is reduction a factor and therefore has no unit? -->
 			<gml:name>Reduction</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_Reduction">
