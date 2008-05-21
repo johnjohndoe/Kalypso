@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.sobek.core.pub;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -65,7 +66,7 @@ public interface ISnapPainter
     }
   }
 
-  SnappedBranch[] getSnapPoint( MapPanel panel, GM_Point point );
+  SnappedBranch[] getSnapPoint( MapPanel panel, GM_Point point ) throws CoreException;
 
   Point paint( Graphics g, MapPanel panel, Point currentPoint );
 }
