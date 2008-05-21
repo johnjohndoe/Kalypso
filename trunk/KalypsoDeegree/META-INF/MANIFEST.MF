@@ -15,7 +15,7 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/xtiff-jai/xtiff-jai.jar,
  build/bin
 Bundle-Vendor: kalypso.org
-Require-Bundle: org.junit,
+Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.gmlschema;visibility:=reexport,
  org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31,

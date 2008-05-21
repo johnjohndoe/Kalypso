@@ -18,5 +18,5 @@ Export-Package: ca.edbc.jdbc,
  org.kalypso.dcadapter.resource
 Require-Bundle: org.kalypso.core,
  org.eclipse.ui,
- org.junit
+ org.junit;resolution:=optional
 Eclipse-LazyStart: true

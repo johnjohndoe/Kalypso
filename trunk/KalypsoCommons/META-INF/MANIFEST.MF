@@ -187,7 +187,7 @@ Export-Package: com.thoughtworks.xstream,
  org.kalypso.commons.tuple.impl,
  org.kalypso.commons.xml,
  org.w3c.dom
-Require-Bundle: org.junit,
+Require-Bundle: org.junit;resolution:=optional,
  org.apache.ant;visibility:=reexport,
  org.kalypso.contribs.java;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,

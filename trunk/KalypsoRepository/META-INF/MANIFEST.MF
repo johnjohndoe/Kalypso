@@ -12,4 +12,4 @@ Export-Package: org.kalypso.repository,
  org.kalypso.repository.file,
  org.kalypso.repository.service
 Require-Bundle: org.kalypso.jwsdp,
- org.junit
+ org.junit;resolution:=optional
