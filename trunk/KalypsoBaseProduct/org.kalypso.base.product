@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.1"?>
+
+<product name="Kalypso Simulation Platform" id="org.eclipse.platform.ide" application="org.eclipse.ui.ide.workbench" useFeatures="true">
+
+   <aboutInfo>
+      <image path="/KalypsoBaseProduct/etc/aboutKalypso.gif"/>
+      <text>
+         %productBlurb
+      </text>
+   </aboutInfo>
+
+   <configIni use="custom" path="/KalypsoBaseProduct/etc/config.ini"/>
+
+   <launcherArgs>
+      <programArgs>-consoleLog -debug</programArgs>
+      <vmArgs>-Xmx512m</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i16="/KalypsoBaseProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoBaseProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoBaseProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoBaseProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoBaseProduct/etc/applicationicons/icon_128.gif"/>
+
+   <splash
+      startupProgressRect="0,280,445,15"
+      startupMessageRect="7,220,441,20"
+      startupForegroundColor="000000" />
+   <launcher name="kalypso">
+      <solaris/>
+      <win useIco="false">
+         <bmp
+            winSmallHigh="/KalypsoBaseProduct/etc/launchericons/icon_16_32.bmp"
+            winSmallLow="/KalypsoBaseProduct/etc/launchericons/icon_16_8.bmp"
+            winMediumHigh="/KalypsoBaseProduct/etc/launchericons/icon_32_32.bmp"
+            winMediumLow="/KalypsoBaseProduct/etc/launchericons/icon_32_8.bmp"
+            winLargeHigh="/KalypsoBaseProduct/etc/launchericons/icon_48_32.bmp"
+            winLargeLow="/KalypsoBaseProduct/etc/launchericons/icon_48_8.bmp"/>
+      </win>
+   </launcher>
+
+
+   <vm>
+      <windows type="ee">J2SE-1.5</windows>
+   </vm>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.kalypso.base" version="1.0.0"/>
+      <feature id="org.eclipse.cvs" version="1.0.1.R33x_r20070802-7C79_9_KKG-mDM9e3H5D"/>
+      <feature id="org.eclipse.platform" version="3.3.2.R33x_v20071022-_19UEksF-G8Yc6bUv3Dz"/>
+   </features>
+
+</product>

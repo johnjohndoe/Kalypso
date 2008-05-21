@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoBaseProduct Plug-in
+Bundle-SymbolicName: org.kalypso.base;singleton:=true
+Bundle-Version: 1.0.0
+Eclipse-LazyStart: false
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
