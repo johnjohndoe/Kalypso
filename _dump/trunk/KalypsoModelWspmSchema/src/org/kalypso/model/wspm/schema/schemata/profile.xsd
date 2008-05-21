@@ -1,298 +1,284 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm"
-	xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon"
-	xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified"
-	version="0.1">
-	<annotation>
-		<appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-		</appinfo>
-	</annotation>
-	<import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd" />
-	<import namespace="org.kalypso.gml.common" />
-	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
-	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
-	<import namespace="http://www.opengis.net/swe"
-		schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" />
-	<!-- schema for WSPM Profiles  -->
-	<!-- TODO: KALYPSO-Header einfügen -->
-	<!-- 
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms  
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
+        <import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
+        <import namespace="org.kalypso.gml.common"/>
+        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+        <import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+        <!-- schema for WSPM Profiles  -->
+        <!-- 
 		_________________________________________________________________________________________
 		ELEMENTS
 		_________________________________________________________________________________________
 	-->
-	<element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
-		<annotation>
-			<documentation xml:lang="de">
-				<name>Profil</name>
-				<label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
-				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-leer-}]]></tooltip>
-				<description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
-			</documentation>
-			<documentation xml:lang="en">
-				<name>Profile</name>
-				<label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-not set-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
-				<tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-empty-}]]>
-				</tooltip>
-				<description><![CDATA[${property:http://www.opengis.net/gml#description;-no	description-}]]>
-				</description>
-			</documentation>
-		</annotation>
-	</element>
-	<complexType name="ProfileType">
-		<annotation>
-			<documentation>
-				Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird die Stationierung direkt im
-				Schema berücksichtigt: die Stationierung wird konsequent benutzt um Querprofil zu bearbeiten. Wir packen
-				deswegen diese Information als Element und nicht als Metadata. Ein Querprofil leitet von
-				CommonObservation ab und beinhaltet also die Tupeln. Sie werden anhand von resultDefinition angegeben.
-				Für die zusätzliche Durchlässe, Maulprofile, Kreise und Trapezen wird das Element member definiert.
-			</documentation>
-			<appinfo xmlns:kapp="org.kalypso.appinfo">
-				<kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry"
-					kapp:property="prof:profileLocation" />
-			</appinfo>
-		</annotation>
-		<complexContent>
-			<extension base="om:ObservationType">
-				<sequence>
-					<element name="station" type="wspmcommon:stationDouble" minOccurs="1" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile.
-								<label>Station [km]</label>
-								<tooltip>Stationierung [km]</tooltip>
-							</documentation>
-							<documentation xml:lang="en">
-								The profile stationing, important for editing cross sections.
-								<label>Station [km]</label>
-								<tooltip>Station [km]</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="type" type="string" minOccurs="1" maxOccurs="1">
-						<annotation>
-							<documentation xml:lang="de">
-								Der Profiltyp, bestimmt wie das Profil dargestellt oder validiert wird.
-								<label>Typ</label>
-								<tooltip>Profiltyp</tooltip>
-							</documentation>
-							<documentation xml:lang="en">
-								The profile type, determines how the profile is shown or validated.
-								<label>Type</label>
-								<tooltip>Profile Type</tooltip>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="srsName" type="anyURI" minOccurs="0">
-						<annotation>
-							<documentation xml:lang="de">
-								Same content as gml:srsName. If ommitted, we interpret the coordinates as one of the
-								Gauss-Krueger crses.
-								<label>Koordinatensystem</label>
-								<tooltip>Name eines Koordinatensystems</tooltip>
-								<description><![CDATA[Koordinatensystem, welches für die Profileproperties 'RECHTWERT' und 'HOCHWERT' verwendet wird.]]></description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Coordinate System</label>
-								<tooltip>Name of a Coordinate System</tooltip>
-								<description><![CDATA[Coordinate System, used for the 'RECHTSWERT' and 'HOCHWERT' properties of the profile.]]></description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="profileLocation" type="gml:LineStringPropertyType">
-						<annotation>
-							<appinfo>This property is backed by the profile-observation.</appinfo>
-							<documentation xml:lang="de">
-								<label>Profillinie</label>
-								<tooltip>Profillinie</tooltip>
-								<description>Profillinie</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Profile location</label>
-								<tooltip>Profile location</tooltip>
-								<description>Profile location</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="member" type="om:AbstractObservationPropertyType" minOccurs="0"
-						maxOccurs="unbounded">
-						<annotation>
-							<documentation xml:lang="de">
-								Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und
-								Trapezen können hiermit abgebildet werden.
-							</documentation>
-							<documentation xml:lang="en">
-								List of additional observations: e.g. outlets, arch, circular and trapezoidal profiles
-								can be modelled.
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded" />
-					<element name="imageMember" type="prof:imageFeaturePropertyType" />
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<!-- 
+        <element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Profil</name>
+                                <label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-nicht gesetzt-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
+                                <tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-leer-}]]></tooltip>
+                                <description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Profile</name>
+                                <label><![CDATA[km ${property:org.kalypso.model.wspmprofile#station;-not set-;%.4f} - ${listProperty:http://www.opengis.net/gml#name;0;-}]]></label>
+                                <tooltip><![CDATA[${property:http://www.opengis.net/gml#name;-empty-}]]>
+                                </tooltip>
+                                <description><![CDATA[${property:http://www.opengis.net/gml#description;-no	description-}]]>
+                                </description>
+                        </documentation>
+                </annotation>
+        </element>
+        <complexType name="ProfileType">
+                <annotation>
+                        <documentation> Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird die Stationierung direkt im Schema berücksichtigt: die Stationierung wird konsequent benutzt um Querprofil zu bearbeiten. Wir packen deswegen diese Information als Element und nicht als Metadata. Ein Querprofil leitet von CommonObservation ab und beinhaltet also die Tupeln. Sie werden anhand von resultDefinition angegeben. Für die zusätzliche Durchlässe, Maulprofile, Kreise und
+                                Trapezen wird das Element member definiert. </documentation>
+                        <appinfo xmlns:kapp="org.kalypso.appinfo">
+                                <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry" kapp:property="prof:profileLocation"/>
+                        </appinfo>
+                </annotation>
+                <complexContent>
+                        <extension base="om:ObservationType">
+                                <sequence>
+                                        <element name="station" type="wspmcommon:stationDouble" minOccurs="1" maxOccurs="1">
+                                                <annotation>
+                                                        <documentation xml:lang="de"> Die Profilstationierung, wichtiger Bestandteil für die Bearbeitung von Querprofile. <label>Station [km]</label>
+                                                                <tooltip>Stationierung [km]</tooltip>
+                                                        </documentation>
+                                                        <documentation xml:lang="en"> The profile stationing, important for editing cross sections. <label>Station [km]</label>
+                                                                <tooltip>Station [km]</tooltip>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="type" type="string" minOccurs="1" maxOccurs="1">
+                                                <annotation>
+                                                        <documentation xml:lang="de"> Der Profiltyp, bestimmt wie das Profil dargestellt oder validiert wird. <label>Typ</label>
+                                                                <tooltip>Profiltyp</tooltip>
+                                                        </documentation>
+                                                        <documentation xml:lang="en"> The profile type, determines how the profile is shown or validated. <label>Type</label>
+                                                                <tooltip>Profile Type</tooltip>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="srsName" type="anyURI" minOccurs="0">
+                                                <annotation>
+                                                        <documentation xml:lang="de"> Same content as gml:srsName. If ommitted, we interpret the coordinates as one of the Gauss-Krueger crses. <label>Koordinatensystem</label>
+                                                                <tooltip>Name eines Koordinatensystems</tooltip>
+                                                                <description><![CDATA[Koordinatensystem, welches für die Profileproperties 'RECHTWERT' und 'HOCHWERT' verwendet wird.]]></description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Coordinate System</label>
+                                                                <tooltip>Name of a Coordinate System</tooltip>
+                                                                <description><![CDATA[Coordinate System, used for the 'RECHTSWERT' and 'HOCHWERT' properties of the profile.]]></description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="profileLocation" type="gml:LineStringPropertyType">
+                                                <annotation>
+                                                        <appinfo>This property is backed by the profile-observation.</appinfo>
+                                                        <documentation xml:lang="de">
+                                                                <label>Profillinie</label>
+                                                                <tooltip>Profillinie</tooltip>
+                                                                <description>Profillinie</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Profile location</label>
+                                                                <tooltip>Profile location</tooltip>
+                                                                <description>Profile location</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+                                                <annotation>
+                                                        <documentation xml:lang="de"> Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden. </documentation>
+                                                        <documentation xml:lang="en"> List of additional observations: e.g. outlets, arch, circular and trapezoidal profiles can be modelled. </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded"/>
+                                        <element name="imageMember" type="prof:imageFeaturePropertyType"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!-- 
 	-->
-	<complexType name="imageFeaturePropertyType">
-		<sequence>
-			<element ref="common:Image" />
-		</sequence>
-	</complexType>
-
-	<!--  
+        <complexType name="imageFeaturePropertyType">
+                <sequence>
+                        <element ref="common:Image"/>
+                </sequence>
+        </complexType>
+        <!--  
 	-->
-	<element name="localEnergyLossMember" type="prof:localEnergyLossPropertyType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Verlustbeiwerte</label>
-				<tooltip>Verlustbeiwerte</tooltip>
-				<description>Verlustbeiwerte</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>Attrition coefficients</label>
-				<tooltip>Attrition coefficients</tooltip>
-				<description>Attrition coefficients</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="LocalEnergyLoss" type="prof:LocalEnergyLossType">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>Verlustbeiwert</label>
-				<tooltip>Verlustbeiwert</tooltip>
-				<description>Verlustbeiwert</description>
-			</documentation>
-			<documentation xml:lang="en">
-				<label>Attrition coefficient</label>
-				<tooltip>Attrition coefficient</tooltip>
-				<description>Attrition coefficient</description>
-			</documentation>
-		</annotation>
-	</element>
-	<!-- 
+        <element name="localEnergyLossMember" type="prof:localEnergyLossPropertyType">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Verlustbeiwerte</label>
+                                <tooltip>Verlustbeiwerte</tooltip>
+                                <description>Verlustbeiwerte</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>Attrition coefficients</label>
+                                <tooltip>Attrition coefficients</tooltip>
+                                <description>Attrition coefficients</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="LocalEnergyLoss" type="prof:LocalEnergyLossType">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Verlustbeiwert</label>
+                                <tooltip>Verlustbeiwert</tooltip>
+                                <description>Verlustbeiwert</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>Attrition coefficient</label>
+                                <tooltip>Attrition coefficient</tooltip>
+                                <description>Attrition coefficient</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!-- 
 		_________________________________________________________________________________________
 		TYPES
 		_________________________________________________________________________________________	
 	-->
-	<complexType name="localEnergyLossPropertyType">
-		<sequence>
-			<element ref="prof:LocalEnergyLoss" />
-		</sequence>
-	</complexType>
-	<complexType name="LocalEnergyLossType">
-		<complexContent>
-			<!-- Can't use wspm namespace here because we get cyclic import. -->
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="kind">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Art</label>
-								<tooltip>Art</tooltip>
-								<description>Art des Einzelverlusts</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Type</label>
-								<tooltip>Type</tooltip>
-								<description>Type of local attrition</description>
-							</documentation>
-						</annotation>
-						<simpleType>
-							<restriction base="string">
-								<enumeration value="EINLAUF">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Einlauf</label>
-											<tooltip>Einlauf</tooltip>
-											<description>Einlauf</description>
-										</documentation>
-										<documentation xml:lang="en">
-											<label>Inlet</label>
-											<tooltip>Inlet</tooltip>
-											<description>Inlet</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="KRUEMMER">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Krümmer</label>
-											<tooltip>Krümmer</tooltip>
-											<description>Krümmer</description>
-										</documentation>
-										<documentation xml:lang="en">
-											<label>elbow</label>
-											<tooltip>elbow</tooltip>
-											<description>elbow</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="ZUSATZVERLUST">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Zusatz-Verlust</label>
-											<tooltip>Zusatz-Verlust</tooltip>
-											<description>Zusatz-Verlust</description>
-										</documentation>
-										<documentation xml:lang="en">
-											<label>Additional attrition</label>
-											<tooltip>Additional attrition</tooltip>
-											<description>Additional attrition</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="RECHEN">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Rechen</label>
-											<tooltip>Rechen</tooltip>
-											<description>Rechen</description>
-										</documentation>
-										<documentation xml:lang="en">
-											<label>Rake</label>
-											<tooltip>Rake</tooltip>
-											<description>Rake</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-								<enumeration value="AUSLAUF">
-									<annotation>
-										<documentation xml:lang="de">
-											<label>Auslauf</label>
-											<tooltip>Auslauf</tooltip>
-											<description>Auslauf</description>
-										</documentation>
-										<documentation xml:lang="en">
-											<label>Outlet</label>
-											<tooltip>Outlet</tooltip>
-											<description>Outlet</description>
-										</documentation>
-									</annotation>
-								</enumeration>
-							</restriction>
-						</simpleType>
-					</element>
-					<element name="value" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>Wert</label>
-								<tooltip>Wert</tooltip>
-								<description>Wert des Einzelverlusts</description>
-							</documentation>
-							<documentation xml:lang="en">
-								<label>Value</label>
-								<tooltip>Value</tooltip>
-								<description>Value of local attrition</description>
-							</documentation>
-						</annotation>
-					</element>
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
+        <complexType name="localEnergyLossPropertyType">
+                <sequence>
+                        <element ref="prof:LocalEnergyLoss"/>
+                </sequence>
+        </complexType>
+        <complexType name="LocalEnergyLossType">
+                <complexContent>
+                        <!-- Can't use wspm namespace here because we get cyclic import. -->
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element name="kind">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Art</label>
+                                                                <tooltip>Art</tooltip>
+                                                                <description>Art des Einzelverlusts</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Type</label>
+                                                                <tooltip>Type</tooltip>
+                                                                <description>Type of local attrition</description>
+                                                        </documentation>
+                                                </annotation>
+                                                <simpleType>
+                                                        <restriction base="string">
+                                                                <enumeration value="EINLAUF">
+                                                                        <annotation>
+                                                                                <documentation xml:lang="de">
+                                                                                        <label>Einlauf</label>
+                                                                                        <tooltip>Einlauf</tooltip>
+                                                                                        <description>Einlauf</description>
+                                                                                </documentation>
+                                                                                <documentation xml:lang="en">
+                                                                                        <label>Inlet</label>
+                                                                                        <tooltip>Inlet</tooltip>
+                                                                                        <description>Inlet</description>
+                                                                                </documentation>
+                                                                        </annotation>
+                                                                </enumeration>
+                                                                <enumeration value="KRUEMMER">
+                                                                        <annotation>
+                                                                                <documentation xml:lang="de">
+                                                                                        <label>Krümmer</label>
+                                                                                        <tooltip>Krümmer</tooltip>
+                                                                                        <description>Krümmer</description>
+                                                                                </documentation>
+                                                                                <documentation xml:lang="en">
+                                                                                        <label>elbow</label>
+                                                                                        <tooltip>elbow</tooltip>
+                                                                                        <description>elbow</description>
+                                                                                </documentation>
+                                                                        </annotation>
+                                                                </enumeration>
+                                                                <enumeration value="ZUSATZVERLUST">
+                                                                        <annotation>
+                                                                                <documentation xml:lang="de">
+                                                                                        <label>Zusatz-Verlust</label>
+                                                                                        <tooltip>Zusatz-Verlust</tooltip>
+                                                                                        <description>Zusatz-Verlust</description>
+                                                                                </documentation>
+                                                                                <documentation xml:lang="en">
+                                                                                        <label>Additional attrition</label>
+                                                                                        <tooltip>Additional attrition</tooltip>
+                                                                                        <description>Additional attrition</description>
+                                                                                </documentation>
+                                                                        </annotation>
+                                                                </enumeration>
+                                                                <enumeration value="RECHEN">
+                                                                        <annotation>
+                                                                                <documentation xml:lang="de">
+                                                                                        <label>Rechen</label>
+                                                                                        <tooltip>Rechen</tooltip>
+                                                                                        <description>Rechen</description>
+                                                                                </documentation>
+                                                                                <documentation xml:lang="en">
+                                                                                        <label>Rake</label>
+                                                                                        <tooltip>Rake</tooltip>
+                                                                                        <description>Rake</description>
+                                                                                </documentation>
+                                                                        </annotation>
+                                                                </enumeration>
+                                                                <enumeration value="AUSLAUF">
+                                                                        <annotation>
+                                                                                <documentation xml:lang="de">
+                                                                                        <label>Auslauf</label>
+                                                                                        <tooltip>Auslauf</tooltip>
+                                                                                        <description>Auslauf</description>
+                                                                                </documentation>
+                                                                                <documentation xml:lang="en">
+                                                                                        <label>Outlet</label>
+                                                                                        <tooltip>Outlet</tooltip>
+                                                                                        <description>Outlet</description>
+                                                                                </documentation>
+                                                                        </annotation>
+                                                                </enumeration>
+                                                        </restriction>
+                                                </simpleType>
+                                        </element>
+                                        <element name="value" type="double">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Wert</label>
+                                                                <tooltip>Wert</tooltip>
+                                                                <description>Wert des Einzelverlusts</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Value</label>
+                                                                <tooltip>Value</tooltip>
+                                                                <description>Value of local attrition</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
 </schema>

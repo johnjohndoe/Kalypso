@@ -1,169 +1,182 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.wspm.nawspm" xmlns:nawspm="org.kalypso.model.wspm.nawspm" xmlns:wspm="org.kalypso.model.wspm" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
-	<annotation>
-		<appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-		</appinfo>
-	</annotation>
-	
-	<import namespace="org.kalypso.model.wspm" schemaLocation="wspm.xsd"/>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
-	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
-	<!-- schema for coupling NaModel and WSPM -->
-	<!-- TODO: KALYPSO-Header einfügen -->
-	<!-- 
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms  
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema targetNamespace="org.kalypso.model.wspm.nawspm" xmlns:nawspm="org.kalypso.model.wspm.nawspm" xmlns:wspm="org.kalypso.model.wspm" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="0.1">
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
+        <import namespace="org.kalypso.model.wspm" schemaLocation="wspm.xsd"/>
+        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+        <!-- schema for coupling NaModel and WSPM -->
+        <!-- 
 	_________________________________________________________________________________________
 	ELEMENTS
 	_________________________________________________________________________________________
 	-->
-	<element name="couplingMember" type="nawspm:CouplingPropertyType" substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???couplingMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="Coupling" type="nawspm:CouplingType" substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???Coupling</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<!-- 
+        <element name="couplingMember" type="nawspm:CouplingPropertyType" substitutionGroup="gml:featureMember">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>???couplingMember</label>
+                                <tooltip>???tooltip</tooltip>
+                                <description>???description</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="Coupling" type="nawspm:CouplingType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>???Coupling</label>
+                                <tooltip>???tooltip</tooltip>
+                                <description>???description</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!-- 
 	-->
-	<element name="zuordnungNaWspmMember" type="nawspm:ZuordnungNaWspmPropertyType" substitutionGroup="gml:featureMember">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>???zuordnungNaWspmMember</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<element name="ZuordnungNaWspm" type="nawspm:ZuordnungNaWspmType" substitutionGroup="gml:_Feature">
-		<annotation>
-			<documentation xml:lang="de">
-				<label>zuordnungNaWspm</label>
-				<tooltip>???tooltip</tooltip>
-				<description>???description</description>
-			</documentation>
-		</annotation>
-	</element>
-	<!-- 
+        <element name="zuordnungNaWspmMember" type="nawspm:ZuordnungNaWspmPropertyType" substitutionGroup="gml:featureMember">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>???zuordnungNaWspmMember</label>
+                                <tooltip>???tooltip</tooltip>
+                                <description>???description</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="ZuordnungNaWspm" type="nawspm:ZuordnungNaWspmType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>zuordnungNaWspm</label>
+                                <tooltip>???tooltip</tooltip>
+                                <description>???description</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!-- 
 	_________________________________________________________________________________________
 	TYPES
 	_________________________________________________________________________________________	
 	-->
-	<complexType name="CouplingPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="nawspm:Coupling"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="CouplingType">
-		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
-				<sequence>
-					<element name="couplingParameter" type="string" default="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???couplingParameter</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element ref="wspm:waterBodyMember"/>
-					<element name="resultRunOffEventMember" type="om:AbstractObservationPropertyType">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???resultRunOffEventMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<!-- TODO: 'echtes' NaModell verknüpfen -->
-					<element name="naModelMember" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???naModelMember</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="naGewaesser" type="string" default="1">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???naGewässer</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
+        <complexType name="CouplingPropertyType">
+                <complexContent>
+                        <restriction base="gml:FeaturePropertyType">
+                                <sequence>
+                                        <element ref="nawspm:Coupling"/>
+                                </sequence>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <complexType name="CouplingType">
+                <complexContent>
+                        <extension base="wspm:EmptyFeatureBaseType">
+                                <sequence>
+                                        <element name="couplingParameter" type="string" default="1">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???couplingParameter</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element ref="wspm:waterBodyMember"/>
+                                        <element name="resultRunOffEventMember" type="om:AbstractObservationPropertyType">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???resultRunOffEventMember</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <!-- TODO: 'echtes' NaModell verknüpfen -->
+                                        <element name="naModelMember" type="string">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???naModelMember</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="naGewaesser" type="string" default="1">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???naGewässer</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!-- 
 	-->
-	<complexType name="ZuordnungNaWspmPropertyType">
-		<complexContent>
-			<restriction base="gml:FeaturePropertyType">
-				<sequence>
-					<element ref="nawspm:ZuordnungNaWspm"/>
-				</sequence>
-			</restriction>
-		</complexContent>
-	</complexType>
-	<complexType name="ZuordnungNaWspmType">
-		<complexContent>
-			<extension base="wspm:EmptyFeatureBaseType">
-				<sequence>
-					<!-- TODO: 'echten' NA-Node verknüpfen -->
-					<element name="naNode" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???naNode</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="wspmStation" type="double">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???wspmStation</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-					<element name="zuordnungsParameter" type="string">
-						<annotation>
-							<documentation xml:lang="de">
-								<label>???zuordnungsParameter</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
-							</documentation>
-						</annotation>
-					</element>
-
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-	<!-- 
+        <complexType name="ZuordnungNaWspmPropertyType">
+                <complexContent>
+                        <restriction base="gml:FeaturePropertyType">
+                                <sequence>
+                                        <element ref="nawspm:ZuordnungNaWspm"/>
+                                </sequence>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <complexType name="ZuordnungNaWspmType">
+                <complexContent>
+                        <extension base="wspm:EmptyFeatureBaseType">
+                                <sequence>
+                                        <!-- TODO: 'echten' NA-Node verknüpfen -->
+                                        <element name="naNode" type="string">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???naNode</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="wspmStation" type="double">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???wspmStation</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="zuordnungsParameter" type="string">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???zuordnungsParameter</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!-- 
 	-->
 </schema>
