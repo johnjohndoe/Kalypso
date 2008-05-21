@@ -90,6 +90,6 @@ Export-Package: org.kalypso.binding.ratingtable,
 Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.repository;visibility:=reexport,
  org.kalypso.contribs.ogc31,
- org.junit,
+ org.junit;resolution:=optional,
  org.eclipse.core.expressions
 Eclipse-LazyStart: true

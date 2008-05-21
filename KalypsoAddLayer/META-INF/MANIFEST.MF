@@ -28,5 +28,5 @@ Export-Package: org.kalypso.ui,
  org.kalypso.ui.wizard.wms.resources,
  org.kalypso.ui.wizard.wms.utils
 Require-Bundle: org.kalypso.ui;visibility:=reexport,
- org.junit
+ org.junit;resolution:=optional
 Eclipse-LazyStart: true

@@ -11,5 +11,5 @@ Export-Package: org.kalypso.core.client
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.jwsdp,
  org.kalypso.contribs.java,
- org.junit
+ org.junit;resolution:=optional
 Eclipse-LazyStart: true
