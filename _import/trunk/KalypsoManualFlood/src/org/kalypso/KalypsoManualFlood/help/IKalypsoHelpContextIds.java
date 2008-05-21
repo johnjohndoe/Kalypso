@@ -8,6 +8,38 @@ package org.kalypso.KalypsoManualFlood.help;
 public interface IKalypsoHelpContextIds {
 	public static final String PREFIX = "org.kalypso.manual.";
 
+	public static final String KalypsoFloodProjektbearbeitung = PREFIX
+			+ "KalypsoFloodProjektbearbeitung";
+
+	public static final String KalypsoFloodPerspektive = PREFIX
+			+ "KalypsoFloodPerspektive";
+
+	public static final String KalypsoFloodWorkflow = PREFIX
+			+ "KalypsoFloodWorkflow";
+
+	public static final String KalypsoFloodSzenarienansicht = PREFIX
+			+ "KalypsoFloodSzenarienansicht";
+
+	public static final String KalypsoFloodNeuesProjekt = PREFIX
+			+ "KalypsoFloodNeuesProjekt";
+
+	public static final String KalypsoFloodVorhProjekt = PREFIX
+			+ "KalypsoFloodVorhProjekt";
+
+	public static final String KalypsoFloodVorhProjekt_loeschen = PREFIX
+			+ "KalypsoFloodVorhProjekt_loeschen";
+
+	public static final String KalypsoFloodKarte = PREFIX + "KalypsoFloodKarte";
+
+	public static final String KalypsoFloodKartenselektion = PREFIX
+			+ "KalypsoFloodKartenselektion";
+
+	public static final String KalypsoFloodWSP_Farbpalette = PREFIX
+			+ "KalypsoFloodWSP_Farbpalette";
+
+	public static final String KalypsoFloodDatenakquisition = PREFIX
+			+ "KalypsoFloodDatenakquisition";
+
 	public static final String KalypsoFloodPreprocessing = PREFIX
 			+ "KalypsoFloodPreprocessing";
 
@@ -55,38 +87,6 @@ public interface IKalypsoHelpContextIds {
 
 	public static final String KalypsoFloodFliesstiefen_generieren = PREFIX
 			+ "KalypsoFloodFliesstiefen_generieren";
-
-	public static final String KalypsoFloodProjektbearbeitung = PREFIX
-			+ "KalypsoFloodProjektbearbeitung";
-
-	public static final String KalypsoFloodPerspektive = PREFIX
-			+ "KalypsoFloodPerspektive";
-
-	public static final String KalypsoFloodWorkflow = PREFIX
-			+ "KalypsoFloodWorkflow";
-
-	public static final String KalypsoFloodSzenarienansicht = PREFIX
-			+ "KalypsoFloodSzenarienansicht";
-
-	public static final String KalypsoFloodNeuesProjekt = PREFIX
-			+ "KalypsoFloodNeuesProjekt";
-
-	public static final String KalypsoFloodVorhProjekt = PREFIX
-			+ "KalypsoFloodVorhProjekt";
-
-	public static final String KalypsoFloodVorhProjekt_loeschen = PREFIX
-			+ "KalypsoFloodVorhProjekt_loeschen";
-
-	public static final String KalypsoFloodKarte = PREFIX + "KalypsoFloodKarte";
-
-	public static final String KalypsoFloodKartenselektion = PREFIX
-			+ "KalypsoFloodKartenselektion";
-
-	public static final String KalypsoFloodWSP_Farbpalette = PREFIX
-			+ "KalypsoFloodWSP_Farbpalette";
-
-	public static final String KalypsoFloodDatenakquisition = PREFIX
-			+ "KalypsoFloodDatenakquisition";
 
 	public static final String KalypsoFloodPostprocessing = PREFIX
 			+ "KalypsoFloodPostprocessing";
