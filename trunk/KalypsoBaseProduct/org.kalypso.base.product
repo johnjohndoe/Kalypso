@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.1"?>
 
-<product name="Kalypso Simulation Platform" id="org.eclipse.platform.ide" application="org.eclipse.ui.ide.workbench" useFeatures="true">
+<product name="Kalypso Simulation Platform" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" useFeatures="true">
 
    <aboutInfo>
       <image path="/KalypsoBaseProduct/etc/aboutKalypso.gif"/>
@@ -10,7 +10,7 @@
       </text>
    </aboutInfo>
 
-   <configIni use="custom" path="/KalypsoBaseProduct/etc/config.ini"/>
+   <configIni use="default" path="/KalypsoBaseProduct/etc/config.ini"/>
 
    <launcherArgs>
       <programArgs>-consoleLog -debug</programArgs>
@@ -21,9 +21,10 @@
    <windowImages i16="/KalypsoBaseProduct/etc/applicationicons/icon_16.gif" i32="/KalypsoBaseProduct/etc/applicationicons/icon_32.gif" i48="/KalypsoBaseProduct/etc/applicationicons/icon_48.gif" i64="/KalypsoBaseProduct/etc/applicationicons/icon_64.gif" i128="/KalypsoBaseProduct/etc/applicationicons/icon_128.gif"/>
 
    <splash
-      startupProgressRect="0,280,445,15"
-      startupMessageRect="7,220,441,20"
-      startupForegroundColor="000000" />
+      location="org.kalypso.base"
+      startupProgressRect="0,220,400,15"
+      startupMessageRect="5,200,395,20"
+      startupForegroundColor="0000A0" />
    <launcher name="kalypso">
       <solaris/>
       <win useIco="false">
