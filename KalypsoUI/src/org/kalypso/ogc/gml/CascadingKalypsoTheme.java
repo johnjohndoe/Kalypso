@@ -90,7 +90,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     }
     catch( final MalformedURLException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.0") + context + Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.1") + viewRefUrl ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.0" ) + context + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.1" ) + viewRefUrl ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -100,7 +100,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
   public CascadingKalypsoTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel, final String legendIcon, final boolean shouldShowChildren ) throws Exception
   {
-    super( layerName, Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.2"), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
+    super( layerName, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.2" ), mapModel, legendIcon, context, shouldShowChildren ); //$NON-NLS-1$
 
     m_mapViewRefUrl = layerType.getHref();
 
@@ -126,7 +126,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       startLoadJob();
     }
     else
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.3") + url.toExternalForm() + Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.4") ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.3" ) + url.toExternalForm() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.4" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
@@ -138,7 +138,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
         /* Remove resource listener while saving: prohibits unnecessary reloading when file is saved */
         m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
 
-        getInnerMapModel().createGismapTemplate( bbox, srsName, monitor, m_file );
+        getInnerMapModel().saveGismapTemplate( bbox, srsName, monitor, m_file );
       }
       finally
       {
@@ -212,7 +212,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
   protected void startLoadJob( )
   {
     final IFile file = m_file;
-    final UIJob job = new UIJob( Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.5") + m_file.getName() ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -235,7 +235,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
         }
         catch( final Throwable e )
         {
-          final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.6") + file.getName() + Messages.getString("org.kalypso.ogc.gml.CascadingKalypsoTheme.7") ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6" ) + file.getName() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           setStatus( status );
           return status;
         }
@@ -281,9 +281,13 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     switch( kind )
     {
       case IResourceDelta.CHANGED:
-      case IResourceDelta.REMOVED:
       case IResourceDelta.ADDED:
         startLoadJob();
+        break;
+
+      case IResourceDelta.REMOVED:
+        // TODO: release map and file
+        setStatus( StatusUtilities.createWarningStatus( "File was removed: " + m_file.getFullPath() ) );
         break;
     }
   }

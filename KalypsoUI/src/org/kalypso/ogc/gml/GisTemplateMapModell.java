@@ -101,7 +101,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_selectionManager = selectionManager;
     m_modell = new MapModell( crs, project );
 
-    setName( new I10nString( Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.0"), null ) ); //$NON-NLS-1$
+    setName( new I10nString( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.0" ), null ) ); //$NON-NLS-1$
   }
 
   /**
@@ -256,28 +256,27 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     return new GisTemplateFeatureTheme( layerName, layerType, context, m_selectionManager, this, legendIcon, showChildren );
   }
 
-  // Helper
-  public void createGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor, final IFile file ) throws CoreException
+  /**
+   * Create the gismapview object from the curretn state of the model.
+   */
+  public Gismapview createGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor ) throws CoreException
   {
     if( monitor == null )
       monitor = new NullProgressMonitor();
-    ByteArrayInputStream bis = null;
+
     try
     {
       final IKalypsoTheme[] themes = m_modell.getAllThemes();
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.10"), themes.length * 1000 + 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.10" ), themes.length * 1000 + 1000 ); //$NON-NLS-1$
 
-      final org.kalypso.template.gismapview.ObjectFactory maptemplateFactory = new org.kalypso.template.gismapview.ObjectFactory();
-
-      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final Gismapview gismapview = maptemplateFactory.createGismapview();
-      final Layers layersType = maptemplateFactory.createGismapviewLayers();
+      final Gismapview gismapview = GisTemplateHelper.OF_GISMAPVIEW.createGismapview();
+      final Layers layersType = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewLayers();
       final I10nString name = getName();
       gismapview.setName( name.getKey() );
       final ITranslator i10nTranslator = name.getTranslator();
       if( i10nTranslator != null )
       {
-        final Translator translator = maptemplateFactory.createGismapviewTranslator();
+        final Translator translator = GisTemplateHelper.OF_GISMAPVIEW.createGismapviewTranslator();
         translator.setId( i10nTranslator.getId() );
         translator.getAny().addAll( i10nTranslator.getConfiguration() );
         gismapview.setTranslator( translator );
@@ -285,7 +284,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
       if( bbox != null )
       {
-        final ExtentType extentType = extentFac.createExtentType();
+        final ExtentType extentType = GisTemplateHelper.OF_TEMPLATE_TYPES.createExtentType();
 
         extentType.setTop( bbox.getMax().getY() );
         extentType.setBottom( bbox.getMin().getY() );
@@ -317,10 +316,31 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
             final AbstractKalypsoTheme kalypsoTheme = (AbstractKalypsoTheme) theme;
             final String legendIcon = kalypsoTheme.getLegendIcon();
             if( legendIcon != null )
-              layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+              layer.setLegendicon( GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerTypeLegendicon( legendIcon ) );
           }
         }
       }
+
+      return gismapview;
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  public void saveGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor, final IFile file ) throws CoreException
+  {
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
+
+    ByteArrayInputStream bis = null;
+    try
+    {
+      final IKalypsoTheme[] themes = m_modell.getAllThemes();
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.10" ), themes.length * 1000 + 1000 ); //$NON-NLS-1$
+
+      final Gismapview gismapview = createGismapTemplate( bbox, srsName, new SubProgressMonitor( monitor, 100 ) );
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       GisTemplateHelper.saveGisMapView( gismapview, bos, file.getCharset() );
@@ -335,7 +355,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
     catch( final Throwable e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.GisTemplateMapModell.11") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.11" ) ) ); //$NON-NLS-1$
     }
     finally
     {

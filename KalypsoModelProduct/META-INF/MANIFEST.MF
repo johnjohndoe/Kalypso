@@ -6,18 +6,17 @@ Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
 Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.kalypso.kalypso1d2d.pjt,
+ org.kalypso.KalypsoManual1D2D,
+ org.kalypso.KalypsoManualWSPM,
+ org.kalypso.profil.manual,
+ org.kalypso.tuhhmanual,
+ org.kalypso.ui.rrm,
+ org.kalypso.model.flood,
+ org.kalypso.risk,
+ org.kalypso.model.wspm.tuhh.ui,
+ org.kalypso.wizard.CreateNAProject,
  org.eclipse.ui.intro,
- org.eclipse.ui.forms,
- org.eclipse.swt,
- org.kalypso.contribs.eclipsercp,
- org.eclipse.ui.ide,
- org.eclipse.core.resources,
- org.kalypso.simulation.core,
  org.kalypso.simulation.ui,
- org.kalypso.ui,
- org.eclipse.ui.net,
- org.kalypso.kalypso1d2d.pjt,
  org.kalypso.afgui
 Eclipse-LazyStart: true

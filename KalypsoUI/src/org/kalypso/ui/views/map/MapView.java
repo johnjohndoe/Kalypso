@@ -53,6 +53,7 @@ import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
@@ -145,7 +146,8 @@ public class MapView extends AbstractMapPart implements IViewPart
       }
       catch( final CoreException e )
       {
-        // silently ignore
+        KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+
       }
     }
     super.dispose();
@@ -158,15 +160,18 @@ public class MapView extends AbstractMapPart implements IViewPart
   public void startLoadJob( final IStorage storage )
   {
     final IFile file = getFile();
-    if( (file != null) && !file.equals( storage ) )
+    if( file != null && !file.equals( storage ) )
+    {
       try
       {
         saveMap( new NullProgressMonitor(), file );
       }
       catch( final CoreException e )
       {
-        ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.views.map.MapView.6"), Messages.getString("org.kalypso.ui.views.map.MapView.7"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.views.map.MapView.6" ), Messages.getString( "org.kalypso.ui.views.map.MapView.7" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
+    }
+
     super.startLoadJob( storage );
   }
 }
