@@ -70,3 +70,4 @@ Bundle-ClassPath: dist/libs/log4j/log4j-1.2.12.jar,
  dist/plugins/wfnet-2.2dev_0.6.jar,
  dist/plugins/workflow-2.2dev_0.6.jar,
  dist/loader.jar
+Bundle-Vendor: www.renew.de
