@@ -2,7 +2,7 @@ package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -61,7 +61,7 @@ public class SplitSortContainer
 
   private Envelope m_envelope;
 
-  private Map<Object, Envelope> m_objects = new HashMap<Object, Envelope>();
+  private Map<Object, Envelope> m_objects = new LinkedHashMap<Object, Envelope>();
 
   private SplitSortContainer m_parent;
 
@@ -92,7 +92,7 @@ public class SplitSortContainer
   private void resort( )
   {
     final Map<Object, Envelope> oldObjects = m_objects;
-    m_objects = new HashMap<Object, Envelope>( oldObjects.size() );
+    m_objects = new LinkedHashMap<Object, Envelope>( oldObjects.size() );
 
     for( final Entry<Object, Envelope> entry : oldObjects.entrySet() )
     {
