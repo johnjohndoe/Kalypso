@@ -49,10 +49,15 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
+import de.renew.workflow.base.Workflow;
+import de.renew.workflow.connector.WorkflowProjectNature;
+import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -73,7 +78,7 @@ public class ScenarioHelper
       e.printStackTrace();
       return null;
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
       return null;
@@ -94,7 +99,7 @@ public class ScenarioHelper
       e.printStackTrace();
       return null;
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
       return null;
@@ -103,23 +108,11 @@ public class ScenarioHelper
 
   public static IFolder getFolder( final Scenario scenario )
   {
-    final String name = scenario.getURI();
-    try
-    {
-      final URI uri = new URI( name );
-      final String path = URLDecoder.decode( uri.getPath(), "UTF-8" );
-      return getProject( scenario ).getFolder( path );
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
+    final String scenarioPath = getScenarioPath( scenario );
+    if( scenarioPath == null )
       return null;
-    }
-    catch( UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+
+    return getProject( scenario ).getFolder( scenarioPath );
   }
 
   /**
@@ -164,5 +157,52 @@ public class ScenarioHelper
       return scenario;
 
     return findRootScenario( parentScenario );
+  }
+
+  /**
+   * Returns the path to a given scenario.
+   */
+  public static String getScenarioPath( final Scenario scenario )
+  {
+    try
+    {
+      if( scenario == null )
+        return null;
+
+      final String scenarioUri = scenario.getURI();
+      final URI uri = new URI( scenarioUri );
+      return URLDecoder.decode( uri.getPath(), "UTF-8" );
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  public static Workflow findWorkflow( final Scenario scenario, final CaseHandlingProjectNature newProject )
+  {
+    try
+    {
+      if( scenario == null || newProject == null )
+        return null;
+
+      final WorkflowProjectNature workflowNature = WorkflowProjectNature.toThisNature( newProject.getProject() );
+      if( workflowNature == null )
+        return null;
+
+      return workflowNature.getCurrentWorklist();
+    }
+    catch( final CoreException e )
+    {
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
+    }
+
+    return null;
   }
 }

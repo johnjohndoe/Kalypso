@@ -109,12 +109,6 @@ public class TaskExecutor implements ITaskExecutor
   {
     if( m_activeTask != null && m_authority.canStopTask( m_activeTask ) )
     {
-      final Collection<String> partsToKeep = new ArrayList<String>();
-      partsToKeep.add( WorkflowView.ID );
-      partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
-
       /* Tell the listeners, that the task was stopped. */
       fireTaskStopped( m_activeTask );
 
@@ -129,8 +123,6 @@ public class TaskExecutor implements ITaskExecutor
    */
   public IStatus execute( final Task task )
   {
-    final List<IStatus> statusList = new ArrayList<IStatus>();
-
     if( m_activeTask != null )
     {
       // if the same task is executed again, but it is asynchronous, or if the task cannot be stopped, don't do anything
@@ -147,27 +139,32 @@ public class TaskExecutor implements ITaskExecutor
     final ContextType context = task.getContext();
     if( context != null )
     {
-      statusList.add( activateContext( context ) );
+      final IStatus contextStatus = activateContext( context );
+      if( !contextStatus.isOK() )
+        return contextStatus;
     }
 
     // collect the views that were just opened
     final Collection<String> partsToKeep = collectOpenedViews( context );
     partsToKeep.add( WorkflowView.ID );
-    partsToKeep.add( "org.eclipse.swt.sleak.views.SleakView" );
-
     partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
+
+    // TODO: this must be done otherwise! Closing all views and then reopening is most ineffective and leads to lots of
+    // problems for which strange workaround have to be done...
+    // Probably the whole context stuff is not suitable for this functionality...
+    // Maybe-solution: make one context, that defines the perspective and list of views
+    // Then open/close everything in one go
 
     // forks a new job for cleaning perspective
     final IWorkbench workbench = PlatformUI.getWorkbench();
     PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
 
+    IStatus taskExecutionStatus = Status.OK_STATUS;
     try
     {
       final Object result = m_handlerService.executeCommand( command.getId(), null );
       if( result instanceof IStatus )
-      {
-        statusList.add( (IStatus) result );
-      }
+        taskExecutionStatus = (IStatus) result;
     }
     catch( final NotHandledException e )
     {
@@ -175,33 +172,29 @@ public class TaskExecutor implements ITaskExecutor
     }
     catch( final Throwable e )
     {
-      statusList.add( StatusUtilities.statusFromThrowable( e ) );
+      taskExecutionStatus = StatusUtilities.statusFromThrowable( e );
     }
 
     m_activeTask = task;
 
     /* Tell the listeners, that the task was executed. */
-    fireTaskExecuted( statusList, task );
+    fireTaskExecuted( taskExecutionStatus, task );
 
-    return StatusUtilities.createStatus( statusList, "Beim Ausführen der Aktivität sind Fehler aufgetreten." );
+    return taskExecutionStatus;
   }
 
   private Collection<String> collectOpenedViews( final ContextType context )
   {
     if( context == null )
-    {
       return new ArrayList<String>();
-    }
-    final ContextType cause = context.getParent();
+
+    final ContextType parentContext = context.getParent();
     final Collection<String> result;
-    if( cause != null )
-    {
-      result = collectOpenedViews( cause );
-    }
+    if( parentContext != null )
+      result = collectOpenedViews( parentContext );
     else
-    {
       result = new ArrayList<String>();
-    }
+
     if( context instanceof WorkbenchSiteContext )
     {
       final WorkbenchSiteContext multiContext = (WorkbenchSiteContext) context;
@@ -215,6 +208,7 @@ public class TaskExecutor implements ITaskExecutor
     }
     else if( context instanceof WorkbenchPartContextType )
       result.add( ((WorkbenchPartContextType) context).getPartId() );
+
     return result;
   }
 
@@ -231,12 +225,11 @@ public class TaskExecutor implements ITaskExecutor
     if( parentContext != null )
     {
       // first activate all parent contexts (loop)
-      final List<IStatus> statusList = new ArrayList<IStatus>();
       final IStatus activateContext = activateContext( parentContext );
-      statusList.add( activateContext );
-
+      // break the loop as soon as we have one error, makes no sense to activate context whose parent is not active,
+      // because this will lead probably to more errors (or even deadlocks in the case of the map)
       if( !activateContext.isOK() )
-        return StatusUtilities.createStatus( statusList, "Bei der Aktivierung des Arbeitskontexts sind Fehler aufgetreten." );
+        return activateContext;
 
       return internalActivateContext( context );
     }
@@ -300,7 +293,7 @@ public class TaskExecutor implements ITaskExecutor
   /**
    * @see de.renew.workflow.connector.worklist.ITaskExecutor#addTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
    */
-  public void addTaskExecutionListener( ITaskExecutionListener listener )
+  public void addTaskExecutionListener( final ITaskExecutionListener listener )
   {
     m_taskChangeListeners.add( listener );
   }
@@ -308,7 +301,7 @@ public class TaskExecutor implements ITaskExecutor
   /**
    * @see de.renew.workflow.connector.worklist.ITaskExecutor#removeTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
    */
-  public void removeTaskExecutionListener( ITaskExecutionListener listener )
+  public void removeTaskExecutionListener( final ITaskExecutionListener listener )
   {
     m_taskChangeListeners.remove( listener );
   }
@@ -321,12 +314,12 @@ public class TaskExecutor implements ITaskExecutor
    * @param task
    *            The final task, that was activated.
    */
-  private void fireTaskExecuted( List<IStatus> results, Task task )
+  private void fireTaskExecuted( final IStatus result, final Task task )
   {
     for( int i = 0; i < m_taskChangeListeners.size(); i++ )
     {
-      ITaskExecutionListener listener = m_taskChangeListeners.get( i );
-      listener.handleTaskExecuted( results, task );
+      final ITaskExecutionListener listener = m_taskChangeListeners.get( i );
+      listener.handleTaskExecuted( result, task );
     }
   }
 
@@ -336,11 +329,11 @@ public class TaskExecutor implements ITaskExecutor
    * @param task
    *            The final task, that was activated.
    */
-  private void fireTaskStopped( Task task )
+  private void fireTaskStopped( final Task task )
   {
     for( int i = 0; i < m_taskChangeListeners.size(); i++ )
     {
-      ITaskExecutionListener listener = m_taskChangeListeners.get( i );
+      final ITaskExecutionListener listener = m_taskChangeListeners.get( i );
       listener.handleTaskStopped( task );
     }
   }

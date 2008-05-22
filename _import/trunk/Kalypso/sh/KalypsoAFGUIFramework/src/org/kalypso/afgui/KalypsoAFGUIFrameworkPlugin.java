@@ -1,14 +1,11 @@
 package org.kalypso.afgui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -16,17 +13,23 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.afgui.scenarios.TaskExecutor;
+import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.kalypsosimulationmodel.core.modeling.IModel;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.cases.Case;
+import de.renew.workflow.base.Task;
+import de.renew.workflow.base.Workflow;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
@@ -42,8 +45,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   // The shared instance
   private static KalypsoAFGUIFrameworkPlugin plugin;
 
-  private static final String ACTIVE_WORKCONTEXT_MEMENTO = "activeWorkContext";
-
   private ActiveWorkContext<Scenario> m_activeWorkContext;
 
   private CaseHandlingSourceProvider<Scenario, IModel> m_szenarioSourceProvider;
@@ -55,6 +56,15 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private ITaskExecutor m_taskExecutor;
 
   private TaskExecutionListener m_taskExecutionListener;
+
+  // Executes the default task as soon as the scenario was activated
+  private final IActiveScenarioChangeListener<Scenario> m_activeContextChangeListener = new IActiveScenarioChangeListener<Scenario>()
+  {
+    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario caze )
+    {
+      handleScenarioChanged( newProject, caze );
+    }
+  };
 
   public KalypsoAFGUIFrameworkPlugin( )
   {
@@ -100,6 +110,12 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
         {
           if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
           {
+            // Close all views previously opened by any task in order to let them save themselves
+            final Collection<String> partsToKeep = new ArrayList<String>();
+            partsToKeep.add( WorkflowView.ID );
+            partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
+            PerspectiveWatcher.cleanPerspective( workbench2, partsToKeep );
+
             m_taskExecutor.stopActiveTask();
             return true;
           }
@@ -114,21 +130,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   {
     if( m_activeWorkContext == null )
     {
-      final Properties properties = new Properties();
-      final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
-      final File file = new File( fileName );
-      if( file.exists() )
-      {
-        try
-        {
-          properties.loadFromXML( new FileInputStream( file ) );
-        }
-        catch( final Throwable e )
-        {
-          e.printStackTrace();
-        }
-      }
-      m_activeWorkContext = new ActiveWorkContext<Scenario>( properties, ScenarioHandlingProjectNature.ID );
+      m_activeWorkContext = new ActiveWorkContext<Scenario>( ScenarioHandlingProjectNature.ID );
+      m_activeWorkContext.addActiveContextChangeListener( m_activeContextChangeListener );
     }
 
     if( m_szenarioSourceProvider == null )
@@ -152,6 +155,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
+    if( m_activeWorkContext != null )
+      m_activeWorkContext.removeActiveContextChangeListener( m_activeContextChangeListener );
+
     if( PlatformUI.isWorkbenchRunning() )
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -223,64 +229,41 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   {
     if( PlatformUI.isWorkbenchRunning() && m_activeWorkContext != null )
     {
-      final Properties properties = createProperties();
-      final String fileName = getStateLocation().append( ACTIVE_WORKCONTEXT_MEMENTO ).toOSString();
-      final File file = new File( fileName );
-      if( file.exists() )
-        file.delete();
-
-      FileOutputStream os = null;
-      try
-      {
-        os = new FileOutputStream( file );
-        properties.storeToXML( os, "" );
-        os.close();
-      }
-      catch( final IOException e1 )
-      {
-        e1.printStackTrace();
-      }
-      finally
-      {
-        IOUtils.closeQuietly( os );
-      }
-
       try
       {
         m_activeWorkContext.setCurrentCase( null );
       }
       catch( final CoreException e )
       {
-        e.printStackTrace();
+        getLog().log( e.getStatus() );
       }
     }
 
     m_activeWorkContext = null;
   }
 
-  /**
-   * Creates properties that contain current project and case information for restoring state later
-   * {@link ActiveWorkContext} must not be null when this is called
-   */
-  private Properties createProperties( )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature nature, final Scenario caze )
   {
-    final Properties properties = new Properties();
-    final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
-    if( currentProject != null )
+    // First initialize the context (and loading of all the models); else the default task does not work
+    // REMARK: normally, this should be done inside the scenario framework (for example at the activeWorkContext)
+    // But this is not possible because of the current dependencies between these code parts
+    m_szenarioSourceProvider.resetCase();
+
+    // Then execute default task
+    final Workflow workflow = ScenarioHelper.findWorkflow( caze, nature );
+    final Task defaultTask = workflow == null ? null : workflow.getDefaultTask();
+    if( defaultTask != null )
     {
-      final IProject project = currentProject.getProject();
-      if( project != null )
+      final UIJob job = new UIJob( "Öffne Szenario: " + nature.getProject().getName() + " - " + caze.getName() )
       {
-        final String projectPath = project.getName();
-        properties.put( ActiveWorkContext.MEMENTO_PROJECT, projectPath );
-      }
-      final Case currentCase = m_activeWorkContext.getCurrentCase();
-      if( currentCase != null )
-      {
-        final String caseString = currentCase.getURI();
-        properties.put( ActiveWorkContext.MEMENTO_CASE, caseString );
-      }
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          return getTaskExecutor().execute( defaultTask );
+        }
+      };
+      job.setUser( true );
+      job.schedule();
     }
-    return properties;
   }
 }

@@ -65,7 +65,7 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
       final String uri = CASE_BASE_URI.replaceFirst( Pattern.quote( "${project}" ), projectName ).replaceFirst( Pattern.quote( "${casePath}" ), name ); //$NON-NLS-1$ //$NON-NLS-2$
       newScenario.setURI( uri );
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
     }
@@ -89,7 +89,7 @@ public class ScenarioManager extends AbstractCaseManager<Scenario> implements IS
     {
       newScenario.setURI( parentScenario.getURI() + "/" + URLEncoder.encode( name, "UTF-8" ) );
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
     }
