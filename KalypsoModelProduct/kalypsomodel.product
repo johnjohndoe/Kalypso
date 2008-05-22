@@ -63,81 +63,146 @@ de_DE</programArgs>
       <plugin id="org.apache.lucene"/>
       <plugin id="org.apache.lucene.analysis"/>
       <plugin id="org.eclipse.ant.core"/>
+      <plugin id="org.eclipse.ant.core.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ant.ui"/>
+      <plugin id="org.eclipse.ant.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.compare"/>
+      <plugin id="org.eclipse.compare.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.commands"/>
+      <plugin id="org.eclipse.core.commands.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.contenttype"/>
+      <plugin id="org.eclipse.core.contenttype.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.databinding"/>
+      <plugin id="org.eclipse.core.databinding.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.expressions.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.filebuffers"/>
+      <plugin id="org.eclipse.core.filebuffers.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.jobs.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.net"/>
+      <plugin id="org.eclipse.core.net.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
+      <plugin id="org.eclipse.core.resources.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.resources.win32" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.core.runtime.compatibility"/>
       <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.auth.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.core.runtime.compatibility.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
+      <plugin id="org.eclipse.core.runtime.nl_de" fragment="true"/>
       <plugin id="org.eclipse.core.variables"/>
+      <plugin id="org.eclipse.core.variables.nl_de" fragment="true"/>
       <plugin id="org.eclipse.debug.core"/>
+      <plugin id="org.eclipse.debug.core.nl_de" fragment="true"/>
       <plugin id="org.eclipse.debug.ui"/>
+      <plugin id="org.eclipse.debug.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.app.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.common"/>
+      <plugin id="org.eclipse.equinox.common.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.http.jetty"/>
+      <plugin id="org.eclipse.equinox.http.jetty.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.http.registry"/>
+      <plugin id="org.eclipse.equinox.http.registry.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.http.servlet"/>
+      <plugin id="org.eclipse.equinox.http.servlet.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.jsp.jasper"/>
       <plugin id="org.eclipse.equinox.jsp.jasper.registry"/>
       <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.preferences.nl_de" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
+      <plugin id="org.eclipse.equinox.registry.nl_de" fragment="true"/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.help.appserver"/>
+      <plugin id="org.eclipse.help.appserver.nl_de" fragment="true"/>
       <plugin id="org.eclipse.help.base"/>
+      <plugin id="org.eclipse.help.base.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.help.nl_de" fragment="true"/>
       <plugin id="org.eclipse.help.webapp"/>
+      <plugin id="org.eclipse.help.webapp.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jdt.core"/>
       <plugin id="org.eclipse.jdt.core.manipulation"/>
+      <plugin id="org.eclipse.jdt.core.manipulation.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.jdt.core.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jdt.debug"/>
+      <plugin id="org.eclipse.jdt.debug.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jdt.debug.ui"/>
+      <plugin id="org.eclipse.jdt.debug.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jdt.launching"/>
+      <plugin id="org.eclipse.jdt.launching.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jdt.ui"/>
+      <plugin id="org.eclipse.jdt.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
+      <plugin id="org.eclipse.jface.databinding.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.jface.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jface.text"/>
+      <plugin id="org.eclipse.jface.text.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ltk.core.refactoring"/>
+      <plugin id="org.eclipse.ltk.core.refactoring.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ltk.ui.refactoring"/>
+      <plugin id="org.eclipse.ltk.ui.refactoring.nl_de" fragment="true"/>
       <plugin id="org.eclipse.osgi"/>
+      <plugin id="org.eclipse.osgi.nl_de" fragment="true"/>
       <plugin id="org.eclipse.osgi.services"/>
+      <plugin id="org.eclipse.osgi.services.nl_de" fragment="true"/>
       <plugin id="org.eclipse.search"/>
+      <plugin id="org.eclipse.search.nl_de" fragment="true"/>
       <plugin id="org.eclipse.swt"/>
+      <plugin id="org.eclipse.swt.nl_de" fragment="true"/>
       <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.team.core"/>
+      <plugin id="org.eclipse.team.core.nl_de" fragment="true"/>
       <plugin id="org.eclipse.team.ui"/>
+      <plugin id="org.eclipse.team.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.text"/>
+      <plugin id="org.eclipse.text.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.browser"/>
+      <plugin id="org.eclipse.ui.browser.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.console"/>
+      <plugin id="org.eclipse.ui.console.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.editors"/>
+      <plugin id="org.eclipse.ui.editors.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.externaltools"/>
+      <plugin id="org.eclipse.ui.externaltools.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.forms"/>
+      <plugin id="org.eclipse.ui.forms.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.ide"/>
+      <plugin id="org.eclipse.ui.ide.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.intro"/>
+      <plugin id="org.eclipse.ui.intro.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.navigator"/>
+      <plugin id="org.eclipse.ui.navigator.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.navigator.resources"/>
+      <plugin id="org.eclipse.ui.navigator.resources.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.views"/>
+      <plugin id="org.eclipse.ui.views.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.views.properties.tabbed"/>
+      <plugin id="org.eclipse.ui.views.properties.tabbed.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
+      <plugin id="org.eclipse.ui.workbench.nl_de" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
+      <plugin id="org.eclipse.ui.workbench.texteditor.nl_de" fragment="true"/>
       <plugin id="org.eclipse.update.configurator"/>
+      <plugin id="org.eclipse.update.configurator.nl_de" fragment="true"/>
       <plugin id="org.eclipse.update.core"/>
+      <plugin id="org.eclipse.update.core.nl_de" fragment="true"/>
       <plugin id="org.eclipse.update.core.win32" fragment="true"/>
       <plugin id="org.eclipse.update.ui"/>
+      <plugin id="org.eclipse.update.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.wst.common.uriresolver"/>
       <plugin id="org.junit"/>
       <plugin id="org.junit4"/>
+      <plugin id="org.junit4.nl_de" fragment="true"/>
       <plugin id="org.kalypso.KalypsoManual1D2D"/>
       <plugin id="org.kalypso.KalypsoManualWSPM"/>
       <plugin id="org.kalypso.ModelSimulationBase"/>
