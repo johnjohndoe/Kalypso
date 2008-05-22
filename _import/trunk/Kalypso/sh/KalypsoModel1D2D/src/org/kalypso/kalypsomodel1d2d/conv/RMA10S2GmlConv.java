@@ -79,8 +79,6 @@ public class RMA10S2GmlConv
 
   private static final Pattern ARC_LINE_PATTERN2 = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
 
-  private static final Pattern NODE_INFO_LINE_PATTERN = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*)\\s*" );
-
   private static final Pattern ELEMENT_LINE_PATTERN_4 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([0-9]+).*" );
 
   private static final Pattern ELEMENT_LINE_PATTERN_3 = Pattern.compile( "FE\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+)\\s+([\\+\\-]?[0-9]+).*" );
@@ -208,7 +206,7 @@ public class RMA10S2GmlConv
         final BigDecimal hours = new BigDecimal( hourString );
 
         // REMARK: we read the calculation core time with the time zone, as defined in Kalypso Preferences
-        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() ); //$NON-NLS-1$
+        final Calendar calendar = Calendar.getInstance( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
         calendar.clear();
         calendar.set( year, 0, 1 );
 
