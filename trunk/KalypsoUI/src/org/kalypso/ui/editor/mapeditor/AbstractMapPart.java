@@ -102,6 +102,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -114,7 +115,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
 // (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
 // functionality (save when dirty, command target).
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")
 public abstract class AbstractMapPart extends AbstractEditorPart implements IExportableObjectFactory, IMapPanelProvider
 {
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
@@ -237,7 +238,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
   private void initMapPanel( final IWorkbenchPartSite site )
   {
-    m_statusBar.setText( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.4") ); //$NON-NLS-1$
+    m_statusBar.setText( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.4" ) ); //$NON-NLS-1$
 
     // both IViewSite und IEditorSite give access to actionBars
     final IActionBars actionBars = getActionBars( site );
@@ -257,15 +258,27 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       {
         if( m_saving )
           return;
+
         final IFile file = getFile();
         if( file == null )
           return;
+
         if( event.getType() != IResourceChangeEvent.POST_CHANGE )
           return;
+
         final IResourceDelta rootDelta = event.getDelta();
         final IResourceDelta fileDelta = rootDelta.findMember( file.getFullPath() );
         if( fileDelta == null )
           return;
+
+        switch( fileDelta.getKind() )
+        {
+          case IResourceDelta.REMOVED:
+            // Unhook from that file; else we still try to save it even if it is already deleted
+            setFile( null );
+            return;
+        }
+
         if( (fileDelta.getFlags() & IResourceDelta.CONTENT) != 0 )
           startLoadJob( file );
       }
@@ -283,7 +296,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
     final boolean doCreateMenu = this instanceof IEditorPart;
-    
+
     m_control = MapPartHelper.createMapPanelPartControl( parent, m_mapPanel, site, doCreateMenu );
     site.setSelectionProvider( m_mapPanel );
 
@@ -409,7 +422,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    */
   public void startLoadJob( final IStorage storage )
   {
-    final Job job = new Job( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.5") + storage.getName() ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.5" ) + storage.getName() ) //$NON-NLS-1$
     {
       @Override
       public IStatus run( final IProgressMonitor monitor )
@@ -440,7 +453,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     if( m_saving )
       return;
 
-    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.6"), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 
     String partName = null;
     try
@@ -467,7 +480,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       if( !m_disposed )
       {
-        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoCorePlugin.getDefault().getCoordinatesSystem(), project, m_selectionManager );
+        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
         mapModell.createFromTemplate( gisview );
         setMapModell( mapModell );
 
@@ -489,7 +502,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       monitor.done();
 
-      final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.7"); //$NON-NLS-1$
+      final String fileName = getFile() != null ? FileUtilities.nameWithoutExtension( getFile().getName() ) : Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.7" ); //$NON-NLS-1$
       if( partName == null )
         partName = fileName;
       setCustomName( partName );
@@ -520,10 +533,10 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_saving = true;
     try
     {
-      monitor.beginTask( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.8"), 2000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.8" ), 2000 ); //$NON-NLS-1$
       final GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
-      final String srsName = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
-      m_mapModell.createGismapTemplate( boundingBox, srsName, monitor, file );
+      final String srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      m_mapModell.saveGismapTemplate( boundingBox, srsName, monitor, file );
     }
     catch( final CoreException e )
     {
@@ -533,7 +546,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     catch( final Throwable e )
     {
       m_saving = false;
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.9") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.9" ) ) ); //$NON-NLS-1$
     }
     m_saving = false;
 
@@ -553,11 +566,11 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       workbench.getDisplay().asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+        @SuppressWarnings("synthetic-access")
         public void run( )
         {
           if( m_mapModell == null )
-            setPartName( Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.11") ); //$NON-NLS-1$
+            setPartName( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.11" ) ); //$NON-NLS-1$
           else
             setPartName( m_mapModell.getLabel( m_mapModell ) );
         }
@@ -589,7 +602,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     {
       workbench.getDisplay().asyncExec( new Runnable()
       {
-        @SuppressWarnings("synthetic-access") //$NON-NLS-1$
+        @SuppressWarnings("synthetic-access")
         public void run( )
         {
           setPartName( m_partName );
@@ -652,7 +665,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     final double width = bounds.width;
     final double height = bounds.height;
     final double actualWidthToHeigthRatio = width / height;
-    final IWizardPage page = new ImageExportPage( configuration, "mapprops", Messages.getString("org.kalypso.ui.editor.mapeditor.AbstractMapPart.16"), imgDesc, actualWidthToHeigthRatio ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IWizardPage page = new ImageExportPage( configuration, "mapprops", Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.16" ), imgDesc, actualWidthToHeigthRatio ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new IWizardPage[] { page };
   }

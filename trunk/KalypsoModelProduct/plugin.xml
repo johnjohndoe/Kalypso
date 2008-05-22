@@ -14,7 +14,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.kalypso.model.product.kalypsomodelapplication"
-            name="Kalypso Simulation Platform">
+            name="Kalypso">
          <property
                name="aboutImage"
                value="etc/aboutKalypso.gif"/>
@@ -32,7 +32,7 @@
                value="000000"/>
          <property
                name="appName"
-               value="Kalypso Simulation Platform">
+               value="Kalypso">
          </property>
          <property
                name="startupProgressRect"
