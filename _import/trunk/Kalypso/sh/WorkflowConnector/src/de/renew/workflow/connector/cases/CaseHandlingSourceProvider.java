@@ -11,7 +11,6 @@ import org.eclipse.ui.AbstractSourceProvider;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class CaseHandlingSourceProvider<T extends Case, D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
@@ -34,22 +33,17 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
   /** data provider for the current szenario */
   private final ICaseDataProvider<D> m_dataProvider;
 
-  private final IActiveScenarioChangeListener<T> workContextChangeListener = new IActiveScenarioChangeListener<T>()
-  {
-    @SuppressWarnings("synthetic-access")
-    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, T scenario )
-    {
-      m_dataProvider.setCurrent( getSzenarioFolder() );
-
-      fireSourceChanged( 0, getCurrentState() );
-    }
-  };
-
   public CaseHandlingSourceProvider( final ActiveWorkContext<T> context, final ICaseDataProvider<D> dataProvider )
   {
     m_activeWorkContext = context;
     m_dataProvider = dataProvider;
-    m_activeWorkContext.addActiveContextChangeListener( workContextChangeListener );
+  }
+
+  public void resetCase( )
+  {
+    m_dataProvider.setCurrent( getSzenarioFolder() );
+
+    fireSourceChanged( 0, getCurrentState() );
   }
 
   /**
@@ -57,7 +51,6 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
    */
   public void dispose( )
   {
-    m_activeWorkContext.removeActiveContextChangeListener( workContextChangeListener );
   }
 
   /**
@@ -96,15 +89,14 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
     final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
     if( currentProject == null || currentCase == null )
       return null;
-    else
-    {
-      // TODO: is this really up to date? We allways assume that the scenarioFolder is a IFolder
-      // TODO: comment why we need that
-      final IPath projectPath = currentProject.getRelativeProjectPath( currentCase );
-      if( projectPath.isEmpty() )
-        return currentProject.getProject();
-      return currentProject.getProject().getFolder( projectPath );
-    }
+
+    // TODO: is this really up to date? We always assume that the scenarioFolder is a IFolder
+    // TODO: comment why we need that
+    final IPath projectPath = currentProject.getRelativeProjectPath( currentCase );
+    if( projectPath.isEmpty() )
+      return currentProject.getProject();
+
+    return currentProject.getProject().getFolder( projectPath );
   }
 
   private ICaseDataProvider<D> getDataProvider( )
