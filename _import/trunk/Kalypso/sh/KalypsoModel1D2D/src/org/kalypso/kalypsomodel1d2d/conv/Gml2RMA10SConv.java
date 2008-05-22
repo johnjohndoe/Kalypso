@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -641,7 +642,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
   private void writeElementsNodesAndEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws CoreException, IOException
   {
     final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
-    final Set<IFE1D2DEdge> edgeSet = new HashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
+    final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
 
     if( elementsInBBox.size() == 0 )
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Das Modell enthält keine Elemente. Berechnung nicht möglich.", null ) );
