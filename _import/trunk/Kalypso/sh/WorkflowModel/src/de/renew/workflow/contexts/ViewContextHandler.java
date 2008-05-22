@@ -40,7 +40,7 @@ public class ViewContextHandler extends AbstractHandler implements IExecutableEx
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -52,11 +52,11 @@ public class ViewContextHandler extends AbstractHandler implements IExecutableEx
       final IWorkbenchPage workbenchPage = activeWorkbenchWindow.getActivePage();
       try
       {
-        workbenchPage.showView( m_viewId );
+        workbenchPage.showView( m_viewId, null, IWorkbenchPage.VIEW_VISIBLE );
       }
       catch( final PartInitException e )
       {
-        throw new ExecutionException( Messages.getString("ViewContextHandler.0") + m_viewId, e ); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString( "ViewContextHandler.0" ) + m_viewId, e ); //$NON-NLS-1$
       }
       return Status.OK_STATUS;
     }

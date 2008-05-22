@@ -43,23 +43,19 @@ public class PerspectiveContextHandler extends AbstractHandler implements IExecu
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if( activeWorkbenchWindow != null && m_perspectiveId != null )
+    final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if( activeWorkbenchWindow == null || m_perspectiveId == null )
+      throw new ExecutionException( "Could not activate perspective: " + m_perspectiveId );
+
+    try
     {
       final IWorkbench workbench = activeWorkbenchWindow.getWorkbench();
-      try
-      {
-        workbench.showPerspective( m_perspectiveId, activeWorkbenchWindow );
-      }
-      catch( final WorkbenchException e )
-      {
-        throw new ExecutionException( Messages.getString( "PerspectiveContextHandler.0" ) + m_perspectiveId, e ); //$NON-NLS-1$
-      }
+      workbench.showPerspective( m_perspectiveId, activeWorkbenchWindow );
       return Status.OK_STATUS;
     }
-    else
+    catch( final WorkbenchException e )
     {
-      return Status.CANCEL_STATUS;
+      throw new ExecutionException( Messages.getString( "PerspectiveContextHandler.0" ) + m_perspectiveId, e ); //$NON-NLS-1$
     }
   }
 

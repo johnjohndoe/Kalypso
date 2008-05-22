@@ -50,7 +50,9 @@ import de.renew.workflow.base.Task;
 public interface ITaskExecutor
 {
   /**
-   * Called when a task needs to be executed
+   * Called when a task needs to be executed<br>
+   * This method MUST be called in the swt-thread.
+   * 
    */
   public IStatus execute( final Task task );
 

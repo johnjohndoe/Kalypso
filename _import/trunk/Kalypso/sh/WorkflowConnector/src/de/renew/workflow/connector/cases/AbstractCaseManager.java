@@ -74,7 +74,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
 
   public static final String CASE_BASE_URI = "case://${project}/${casePath}";
 
-  private final JAXBContext JC;
+  private final JAXBContext m_jc;
 
   private final List<ICaseManagerListener<T>> m_listeners = new ArrayList<ICaseManagerListener<T>>();
 
@@ -99,11 +99,10 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
    */
   public AbstractCaseManager( final IProject project, final JAXBContext jc ) throws CoreException
   {
-    JC = jc;
+    m_jc = jc;
     m_project = project;
 
     final IFolder folder = project.getFolder( METADATA_FOLDER );
-
     if( !folder.exists() )
     {
       try
@@ -113,6 +112,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
       catch( final CoreException e )
       {
         // ignore
+        e.printStackTrace();
       }
     }
 
@@ -121,9 +121,6 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
     loadModel();
   }
 
-  /**
-   * 
-   */
   private void loadModel( ) throws CoreException
   {
     if( !m_metaDataFile.exists() )
@@ -136,7 +133,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
       try
       {
         final URL url = m_metaDataFile.getRawLocationURI().toURL();
-        m_cases = (CaseList) JC.createUnmarshaller().unmarshal( url );
+        m_cases = (CaseList) m_jc.createUnmarshaller().unmarshal( url );
       }
       catch( final Throwable e )
       {
@@ -146,27 +143,15 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
     }
   }
 
-  /**
-   * 
-   */
   public abstract T createCase( final String name ) throws CoreException;
 
-  /**
-   * 
-   */
   public abstract void removeCase( final T caze, IProgressMonitor monitor ) throws CoreException;
 
-  /**
-   * 
-   */
   protected final void internalAddCase( final Case caze )
   {
     m_cases.getCases().add( caze );
   }
 
-  /**
-   * 
-   */
   protected final void internalRemoveCase( final Case caze )
   {
     m_cases.getCases().remove( caze );
@@ -199,6 +184,7 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
   public void persist( @SuppressWarnings("unused")
   final IProgressMonitor monitor )
   {
+    // TODO: comment, why in a job?!
     final Job job = new Job( "" )
     {
       /**
@@ -213,26 +199,24 @@ public abstract class AbstractCaseManager<T extends Case> implements ICaseManage
         {
           monitor.beginTask( "Szenarien speichern.", 5000 );
           final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-          JC.createMarshaller().marshal( m_cases, bos );
+          m_jc.createMarshaller().marshal( m_cases, bos );
+          bos.close();
           monitor.worked( 2000 );
           final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-          bos.close();
           m_metaDataFile.refreshLocal( 0, null );
           if( m_metaDataFile.exists() )
-          {
             m_metaDataFile.setContents( bis, false, true, null );
-          }
           else
           {
             FolderUtilities.mkdirs( m_metaDataFile.getParent() );
             m_metaDataFile.create( bis, false, null );
           }
+
           bis.close();
         }
         catch( final Exception e )
         {
-          final IStatus status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
-          return status;
+          return new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
         }
         finally
         {

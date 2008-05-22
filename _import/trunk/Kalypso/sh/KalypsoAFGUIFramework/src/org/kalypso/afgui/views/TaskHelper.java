@@ -54,7 +54,6 @@ import de.renew.workflow.base.Workflow;
  */
 public class TaskHelper
 {
-
   public static TreePath findPart( final String uri, final Workflow workflow )
   {
     return findPartInTaskGroups( uri, workflow.getTasks(), TreePath.EMPTY );

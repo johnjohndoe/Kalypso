@@ -1,30 +1,22 @@
 package org.kalypso.afgui.views;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 
-import de.renew.workflow.base.Task;
 import de.renew.workflow.base.Workflow;
-import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
@@ -72,71 +64,29 @@ public class WorkflowView extends ViewPart
 
   protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final Scenario scenario )
   {
-    Job job = new UIJob( "Executing task" )
+    final String scenarioPath = ScenarioHelper.getScenarioPath( scenario );
+    final String projectName = newProject == null ? null : newProject.getProject().getName();
+
+    final String contentDescription;
+    if( scenario == null || newProject == null )
+      contentDescription = "Kein Szenario aktiv.";
+    else
+      contentDescription = "Aktives Szenario: " + projectName + scenarioPath;
+
+    final UIJob job = new UIJob( "Update Content Description" )
     {
+      @SuppressWarnings("synthetic-access")
       @Override
-      public IStatus runInUIThread( IProgressMonitor monitor )
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        if( scenario != null && newProject != null )
-        {
-          String scenarioPathName = "<Fehler>";
-          try
-          {
-            final URI uri = new URI( scenario.getURI() );
-            scenarioPathName = URLDecoder.decode( uri.getPath(), "UTF-8" );
-          }
-          catch( final URISyntaxException e )
-          {
-            e.printStackTrace();
-          }
-          catch( UnsupportedEncodingException e )
-          {
-            e.printStackTrace();
-          }
-
-          final String projectName = newProject.getProject().getName();
-          setContentDescription( "Aktives Szenario: " + projectName + scenarioPathName );
-          try
-          {
-            final WorkflowProjectNature workflowNature = WorkflowProjectNature.toThisNature( newProject.getProject() );
-            if( workflowNature == null )
-            {
-              m_workflowControl.setWorkflow( null );
-            }
-            else
-            {
-              final Workflow currentWorklist = workflowNature.getCurrentWorklist();
-              m_workflowControl.setWorkflow( currentWorklist );
-              final Task defaultTask = currentWorklist.getDefaultTask();
-              if( defaultTask != null )
-              {
-                m_workflowControl.doTask( defaultTask );
-              }
-            }
-          }
-          catch( final CoreException e )
-          {
-            // TODO: do NOT eat exceptions!
-            // TODO: better error handling
-            // Consider using a UIJob instead, that thrown exceptions are shown as error dialog
-
-            // project is not open or such
-            m_workflowControl.setWorkflow( null );
-            StatusManager.getManager().handle( e.getStatus(), StatusManager.SHOW | StatusManager.LOG );
-          }
-        }
-        else
-        {
-          setContentDescription( "Kein Szenario aktiv." );
-          m_workflowControl.setWorkflow( null );
-        }
-
+        setContentDescription( contentDescription );
+        final Workflow workflow = ScenarioHelper.findWorkflow( scenario, newProject );
+        m_workflowControl.setWorkflow( workflow );
         return Status.OK_STATUS;
       }
     };
-
+    job.setUser( false );
     job.schedule();
-
   }
 
   /**
@@ -159,7 +109,6 @@ public class WorkflowView extends ViewPart
     m_activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
     m_workflowControl = new WorkflowControl( KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor() );
-    m_workflowControl.restoreState( memento );
   }
 
   /**
@@ -168,7 +117,6 @@ public class WorkflowView extends ViewPart
   @Override
   public void saveState( final IMemento memento )
   {
-    m_workflowControl.saveState( memento );
   }
 
   /**

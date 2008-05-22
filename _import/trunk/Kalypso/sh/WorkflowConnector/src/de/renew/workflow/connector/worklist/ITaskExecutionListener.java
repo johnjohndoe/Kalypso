@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.worklist;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 
 import de.renew.workflow.base.Task;
@@ -62,7 +60,7 @@ public interface ITaskExecutionListener
    * @param task
    *            The task, which was activated.
    */
-  public void handleTaskExecuted( List<IStatus> results, Task task );
+  public void handleTaskExecuted( IStatus result, Task task );
 
   /**
    * This function is called, after a task was stopped.
