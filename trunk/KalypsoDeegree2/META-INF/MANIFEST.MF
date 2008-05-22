@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.kalypso.deegree2
 Bundle-SymbolicName: org.kalypso.deegree2;singleton:=true
 Bundle-Version: 2.1.0
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: www.deegree.org
 Eclipse-LazyStart: true
 Require-Bundle: org.eclipse.core.runtime
 Bundle-ClassPath: lib/acme/acme.jar,
