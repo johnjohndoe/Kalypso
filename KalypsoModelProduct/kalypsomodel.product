@@ -124,6 +124,8 @@ de_DE</programArgs>
       <plugin id="org.eclipse.help.base"/>
       <plugin id="org.eclipse.help.base.nl_de" fragment="true"/>
       <plugin id="org.eclipse.help.nl_de" fragment="true"/>
+      <plugin id="org.eclipse.help.ui"/>
+      <plugin id="org.eclipse.help.ui.nl_de" fragment="true"/>
       <plugin id="org.eclipse.help.webapp"/>
       <plugin id="org.eclipse.help.webapp.nl_de" fragment="true"/>
       <plugin id="org.eclipse.jdt.core"/>
@@ -204,6 +206,9 @@ de_DE</programArgs>
       <plugin id="org.junit4"/>
       <plugin id="org.junit4.nl_de" fragment="true"/>
       <plugin id="org.kalypso.KalypsoManual1D2D"/>
+      <plugin id="org.kalypso.KalypsoManualFlood"/>
+      <plugin id="org.kalypso.KalypsoManualNA"/>
+      <plugin id="org.kalypso.KalypsoManualRisk"/>
       <plugin id="org.kalypso.KalypsoManualWSPM"/>
       <plugin id="org.kalypso.ModelSimulationBase"/>
       <plugin id="org.kalypso.NACalcJob"/>
@@ -240,14 +245,12 @@ de_DE</programArgs>
       <plugin id="org.kalypso.model.wspm.ui"/>
       <plugin id="org.kalypso.model1d2d"/>
       <plugin id="org.kalypso.optimize"/>
-      <plugin id="org.kalypso.profil.manual"/>
       <plugin id="org.kalypso.repository"/>
       <plugin id="org.kalypso.risk"/>
       <plugin id="org.kalypso.rrm.kalininmiljukov"/>
       <plugin id="org.kalypso.services.core.client"/>
       <plugin id="org.kalypso.simulation.core"/>
       <plugin id="org.kalypso.simulation.ui"/>
-      <plugin id="org.kalypso.tuhhmanual"/>
       <plugin id="org.kalypso.ui"/>
       <plugin id="org.kalypso.ui.addlayer"/>
       <plugin id="org.kalypso.ui.rrm"/>

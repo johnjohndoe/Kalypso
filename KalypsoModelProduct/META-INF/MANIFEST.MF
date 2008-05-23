@@ -9,8 +9,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.kalypso1d2d.pjt,
  org.kalypso.KalypsoManual1D2D,
  org.kalypso.KalypsoManualWSPM,
- org.kalypso.profil.manual,
- org.kalypso.tuhhmanual,
  org.kalypso.ui.rrm,
  org.kalypso.model.flood,
  org.kalypso.risk,
@@ -18,5 +16,9 @@ Require-Bundle: org.kalypso.kalypso1d2d.pjt,
  org.kalypso.wizard.CreateNAProject,
  org.eclipse.ui.intro,
  org.kalypso.simulation.ui,
- org.kalypso.afgui
+ org.kalypso.afgui,
+ org.eclipse.help.ui,
+ org.kalypso.KalypsoManualFlood,
+ org.kalypso.KalypsoManualRisk,
+ org.kalypso.KalypsoManualNA
 Eclipse-LazyStart: true
