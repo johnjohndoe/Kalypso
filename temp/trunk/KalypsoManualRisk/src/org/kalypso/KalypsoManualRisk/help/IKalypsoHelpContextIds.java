@@ -47,28 +47,4 @@ public interface IKalypsoHelpContextIds {
 	public static final String KalypsoRisikoBerechnungsparameter_Risikozonierung = PREFIX
 			+ "KalypsoRisikoBerechnungsparameter_Risikozonierung";
 
-	public static final String KalypsoRiskProcessing = PREFIX
-			+ "KalypsoRiskProcessing";
-
-	public static final String KalypsoRisikoRasterung_Landnutzung = PREFIX
-			+ "KalypsoRisikoRasterung_Landnutzung";
-
-	public static final String KalypsoRisikoBerechnung_Schadenspotential = PREFIX
-			+ "KalypsoRisikoBerechnung_Schadenspotential";
-
-	public static final String KalypsoRisikoAusweisung_HQ_Risiko = PREFIX
-			+ "KalypsoRisikoAusweisung_HQ_Risiko";
-
-	public static final String KalypsoRiskPostprocessing = PREFIX
-			+ "KalypsoRiskPostprocessing";
-
-	public static final String KalypsoRiskStatistische_Auswertung = PREFIX
-			+ "KalypsoRiskStatistische_Auswertung";
-
-	public static final String KalypsoRiskExport_Schadenspotential = PREFIX
-			+ "KalypsoRiskExport_Schadenspotential";
-
-	public static final String KalypsoRiskExport_Risikozonen = PREFIX
-			+ "KalypsoRiskExport_Risikozonen";
-
 }
