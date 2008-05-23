@@ -5,7 +5,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
@@ -58,9 +57,8 @@ public class WaterdepthCollectionsWidgetHandler extends AbstractHandler implemen
     final WaterdepthCollectionsManagementWidget widget = new WaterdepthCollectionsManagementWidget();
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
+    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", widget, mapPanel, activePart ); //$NON-NLS-1$
     job.schedule();
 
     return null;
