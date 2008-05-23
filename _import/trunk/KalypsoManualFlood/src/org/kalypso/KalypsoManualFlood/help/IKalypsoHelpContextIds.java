@@ -8,6 +8,9 @@ package org.kalypso.KalypsoManualFlood.help;
 public interface IKalypsoHelpContextIds {
 	public static final String PREFIX = "org.kalypso.manual.";
 
+	public static final String KalypsoFloodPreprocessing = PREFIX
+			+ "KalypsoFloodPreprocessing";
+
 	public static final String KalypsoFloodProjektbearbeitung = PREFIX
 			+ "KalypsoFloodProjektbearbeitung";
 
@@ -40,9 +43,6 @@ public interface IKalypsoHelpContextIds {
 	public static final String KalypsoFloodDatenakquisition = PREFIX
 			+ "KalypsoFloodDatenakquisition";
 
-	public static final String KalypsoFloodPreprocessing = PREFIX
-			+ "KalypsoFloodPreprocessing";
-
 	public static final String KalypsoFloodDatenLaden = PREFIX
 			+ "KalypsoFloodDatenLaden";
 
@@ -57,9 +57,6 @@ public interface IKalypsoHelpContextIds {
 
 	public static final String KalypsoFloodImportBackgroundmaps_WebMapService = PREFIX
 			+ "KalypsoFloodImportBackgroundmaps_WebMapService";
-
-	public static final String KalypsoFloodWSP_Daten_verwalten = PREFIX
-			+ "KalypsoFloodWSP-Daten_verwalten";
 
 	public static final String KalypsoFloodWSP_NeuesEreignis = PREFIX
 			+ "KalypsoFloodWSP_NeuesEreignis";
@@ -81,9 +78,6 @@ public interface IKalypsoHelpContextIds {
 
 	public static final String KalypsoFloodUeberschwemmungsgebiete_Extrapolationspolygon = PREFIX
 			+ "KalypsoFloodUeberschwemmungsgebiete_Extrapolationspolygon";
-
-	public static final String KalypsoFloodUeberschwemmungsgebiete_Clip_Polygon = PREFIX
-			+ "KalypsoFloodUeberschwemmungsgebiete_Clip-Polygon";
 
 	public static final String KalypsoFloodFliesstiefen_generieren = PREFIX
 			+ "KalypsoFloodFliesstiefen_generieren";
