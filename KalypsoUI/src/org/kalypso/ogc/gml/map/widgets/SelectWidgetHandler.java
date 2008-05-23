@@ -11,10 +11,12 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -69,40 +71,33 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
     final String widgetParameter;
     if( widgetFromEvent != null )
-    {
       widgetParameter = widgetFromEvent;
-    }
     else
-    {
       widgetParameter = m_widgetClassFromExtension;
-    }
 
     final String pluginFromEvent = event.getParameter( PARAM_PLUGIN_ID );
     final String pluginParameter;
     if( pluginFromEvent != null )
-    {
       pluginParameter = pluginFromEvent;
-    }
     else
-    {
       pluginParameter = m_pluginIdFromExtension;
-    }
 
     final IWidget widget = getWidgetFromBundle( pluginParameter, widgetParameter );
     if( widget == null )
     {
-      final String msg = String.format( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6"), pluginParameter, widgetParameter ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6" ), pluginParameter, widgetParameter ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createWarningStatus( msg );
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return status;
     }
 
-    final IWorkbenchPart activePart = (IWorkbenchPart) applicationContext.getVariable( ISources.ACTIVE_PART_NAME );
     final Shell shell = (Shell) applicationContext.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
-    final MapPanel mapPanel = activePart == null ? null : (MapPanel) activePart.getAdapter( MapPanel.class );
+
+    final IWorkbenchWindow window = (IWorkbenchWindow) applicationContext.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final AbstractMapPart abstractMapPart = findMapPart( window );
+    final MapPanel mapPanel = abstractMapPart == null ? null : (MapPanel) abstractMapPart.getMapPanel();
     if( mapPanel == null )
-      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7") ); //$NON-NLS-1$
+      return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
 
     /* Always make sure that the map was fully loaded */
     // REMARK: we first test directly, without ui-operation, in order to enhance performance if the map already is open.
@@ -114,11 +109,46 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
         return null;
     }
 
-    final UIJob job = new ActivateWidgetJob( display, Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10"), widget, mapPanel, activePart ); //$NON-NLS-1$
+    final UIJob job = new ActivateWidgetJob( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.10" ), widget, mapPanel, abstractMapPart ); //$NON-NLS-1$
     // Probably not necessary
-    final AbstractMapPart abstractMapPart = (AbstractMapPart) activePart;
     job.setRule( abstractMapPart.getSchedulingRule().getSelectWidgetSchedulingRule() );
     job.schedule();
+
+    return null;
+  }
+
+  /**
+   * Search for a workbench part in the active page of the given window that is an {@link AbstractMapPart}.<br>
+   * Search order is: active part, view parts, editor parts.
+   */
+  private AbstractMapPart findMapPart( final IWorkbenchWindow window )
+  {
+    if( window == null )
+      return null;
+
+    final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+      return null;
+
+    final IWorkbenchPart activePart = page.getActivePart();
+    if( activePart instanceof AbstractMapPart )
+      return (AbstractMapPart) activePart;
+
+    final IViewReference[] viewReferences = page.getViewReferences();
+    for( final IViewReference viewReference : viewReferences )
+    {
+      final IWorkbenchPart part = viewReference.getView( false );
+      if( part instanceof AbstractMapPart )
+        return (AbstractMapPart) part;
+    }
+
+    final IEditorReference[] editorReferences = page.getEditorReferences();
+    for( final IEditorReference editorReference : editorReferences )
+    {
+      final IWorkbenchPart part = editorReference.getEditor( false );
+      if( part instanceof AbstractMapPart )
+        return (AbstractMapPart) part;
+    }
 
     return null;
   }
@@ -128,6 +158,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     return AbstractUIPlugin.imageDescriptorFromPlugin( pluginId, imageFilePath );
   }
 
+  @SuppressWarnings("unchecked")
   private IWidget getWidgetFromBundle( final String pluginId, final String widgetName )
   {
     try
@@ -151,21 +182,21 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   {
     if( data != null && data instanceof Map )
     {
-      final Map parameterMap = (Map) data;
+      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
       m_pluginIdFromExtension = (String) parameterMap.get( PARAM_PLUGIN_ID );
       m_widgetClassFromExtension = (String) parameterMap.get( PARAM_WIDGET_CLASS );
       m_widgetIconFromExtension = (String) parameterMap.get( PARAM_WIDGET_ICON );
       m_widgetTooltipFromExtension = (String) parameterMap.get( PARAM_WIDGET_TOOLTIP );
     }
+
     if( m_pluginIdFromExtension == null )
-    {
       m_pluginIdFromExtension = config.getContributor().getName();
-    }
   }
 
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
+  @SuppressWarnings("unchecked")
   public void updateElement( final UIElement element, final Map parameters )
   {
     if( m_widgetIconFromExtension != null )
@@ -194,7 +225,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
       // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
       if( actualWidget != null )
       {
-        String actualWidgetClass = actualWidget.getClass().getName();
+        final String actualWidgetClass = actualWidget.getClass().getName();
         if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
           element.setChecked( true );
         else
