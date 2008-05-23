@@ -125,12 +125,16 @@ public class TaskExecutor implements ITaskExecutor
   {
     if( m_activeTask != null )
     {
-      // if the same task is executed again, but it is asynchronous, or if the task cannot be stopped, don't do anything
-      if( (m_activeTask.getType() == EActivityType.ASYNCHRONOUS && m_activeTask == task) || !m_authority.canStopTask( m_activeTask ) )
-      {
-        // everything is ok
+      // if the same task is executed again, but it is asynchronous, don't do anything
+      if( m_activeTask.getType() == EActivityType.ASYNCHRONOUS && m_activeTask == task )
         return Status.OK_STATUS;
-      }
+
+      // Try to stop the active task, if the task cannot be stopped, don't do anything
+      // REMARK: this is used to ask the user, if the data should be saved or not
+      // It is a bit questionable if this is the right place...; should be reconsidered
+      final boolean canStopTask = m_authority.canStopTask( m_activeTask );
+      if( !canStopTask )
+        return Status.OK_STATUS;
     }
 
     final String name = task.getURI();

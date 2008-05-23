@@ -6,7 +6,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
@@ -61,9 +60,8 @@ public class VisualizeDepthDataHandler extends AbstractHandler implements IHandl
     coverageManagementWidget.setGridFolder( scenarioFolder.getFolder( "grids" ) );
 
     final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    final Display display = shell.isDisposed() ? activePart.getSite().getShell().getDisplay() : shell.getDisplay();
 
-    final ActivateWidgetJob job = new ActivateWidgetJob( display, "Select Widget", coverageManagementWidget, mapPanel, activePart );
+    final ActivateWidgetJob job = new ActivateWidgetJob( "Select Widget", coverageManagementWidget, mapPanel, activePart );
     job.schedule();
 
     return null;
