@@ -4,7 +4,6 @@ import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -33,9 +32,9 @@ public final class ActivateWidgetJob extends UIJob
 
   public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category"; //$NON-NLS-1$
 
-  public ActivateWidgetJob( final Display jobDisplay, final String name, final IWidget widget, final MapPanel mapPanel, final IWorkbenchPart activePart )
+  public ActivateWidgetJob( final String name, final IWidget widget, final MapPanel mapPanel, final IWorkbenchPart activePart )
   {
-    super( jobDisplay, name );
+    super( name );
     m_widget = widget;
     m_mapPanel = mapPanel;
     m_activePart = activePart;
@@ -61,9 +60,9 @@ public final class ActivateWidgetJob extends UIJob
     {
       return e.getStatus();
     }
-    catch( CommandException e )
+    catch( final CommandException e )
     {
-      IStatus status = StatusUtilities.statusFromThrowable( e );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
 
       KalypsoGisPlugin.getDefault().getLog().log( status );
 
