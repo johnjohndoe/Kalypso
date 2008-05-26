@@ -113,6 +113,23 @@
                                         </element>
                                         <element name="paramID" type="string" nillable="true"/>
                                         <element name="unit" type="string" nillable="true"/>
+                                        <element name="stationAlongBranch" type="double" nillable="false">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <name>Stationierung am Branch [m]</name>
+                                                                <label>Stationierung am Branch [m]</label>
+                                                                <tooltip>Stationierung am Branch [m]</tooltip>
+                                                                <description>Stationierung am Branch [m]</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <name>Station along Branch [m]</name>
+                                                                <label>Station along Branch [m]</label>
+                                                                <tooltip>Station along Branch [m]</tooltip>
+                                                                <description>Station along Branch [m]</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="branchID" type="string" nillable="true"/>
                                         <element name="maxValue" type="double" nillable="true"/>
                                         <element name="lastValue" type="double" nillable="true"/>
                                         <!-- Liste von Paaren "duration - value" -->
