@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.risk.plugin.KalypsoRiskPlugin
 Require-Bundle: org.kalypso.ui.addlayer,
  org.kalypso.afgui,
- de.openali.odysseus.chart.ui,
  org.kalypso.ModelSimulationBase,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.ui,
