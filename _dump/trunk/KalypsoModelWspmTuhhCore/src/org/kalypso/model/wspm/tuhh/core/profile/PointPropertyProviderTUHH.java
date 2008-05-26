@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.core.profile;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.AbstractPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -58,28 +55,42 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
+public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
 {
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#isMarker(org.kalypso.observation.result.IComponent)
-   */
-  public boolean isMarker( String markerID )
-  {
-    
-    return m_markers.contains( markerID );
-  }
-
-  private final Set<String> m_properties = new LinkedHashSet<String>();
-  private final Set<String> m_markers = new LinkedHashSet<String>();
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil()
-   */
-  public IProfil createProfil( )
-  {
-    return createProfil( new TupleResult() );
-  }
   
+ 
+  public PointPropertyProviderTUHH( )
+  {
+    m_properties.add( IWspmConstants.POINT_PROPERTY_BREITE );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_HOEHE );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    m_properties.add( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+
+    m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
+    m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
+    m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+
+    // Markers
+    /**
+     * see #isMarker(IComponent)
+     */
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
+    m_markers.add( IWspmTuhhConstants.MARKER_TYP_WEHR );
+
+    // Markers are properties also
+    m_properties.addAll( m_markers );
+  }
+
+ 
+ 
+
   /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil(org.kalypso.observation.result.TupleResult)
    */
@@ -99,46 +110,33 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
     return new TuhhProfil( result );
   }
 
-  public PointPropertyProviderTUHH( )
-  {
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BREITE );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_HOEHE );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
-    m_properties.add( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
-
-    m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
-    m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEWEHR );
-    m_properties.add( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
-
-    //Markers
-    /**
-     * see #isMarker(IComponent)
-     */
-    m_markers.add( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    m_markers.add( IWspmTuhhConstants.MARKER_TYP_BORDVOLL );
-    m_markers.add( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
-    m_markers.add( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    
-    // Markers are properties also
-    m_properties.addAll( m_markers );
-  }
-
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getPointProperties()
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getDefaultValue(java.lang.String)
    */
-  public String[] getPointProperties( )
+  @Override
+  public Object getDefaultValue( String propertyID )
   {
-    return m_properties.toArray( new String[] {} );
+    // HACK: @see FeatureComponent#getDefaultValue()
+    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( propertyID ) )
+      return Boolean.TRUE;
+
+    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( propertyID ) )
+      return "low";
+
+    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( propertyID ) )
+      return Boolean.TRUE;
+
+    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( propertyID ) )
+      return new Double( 0.0 );
+
+   return super.getDefaultValue( propertyID );
+
   }
 
-  public static final IComponent createPointProperty( final String property )
+  
+  public IComponent getPointProperty( final String propertyId )
   {
-    final String[] split = property.split( "#" );
+    final String[] split = propertyId.split( "#" );
     final String urn = split[0];
 
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
@@ -153,25 +151,6 @@ public class PointPropertyProviderTUHH implements IProfilPointPropertyProvider
     return featureComponent;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#providesPointProperty(java.lang.String)
-   */
-  public boolean providesPointProperty( final String profilPointProperty )
-  {
-    return m_properties.contains( profilPointProperty );
-  }
-
-  public IComponent getPointProperty( final String propertyId )
-  {
-    return createPointProperty( propertyId );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#checkComponents(org.kalypso.observation.result.TupleResult)
-   */
-  public void checkComponents( final TupleResult result ) throws IllegalArgumentException
-  {
-    // TODO do it
-  }
+  
 
 }

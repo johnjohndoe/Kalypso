@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmProfile;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.schema.gml.ProfileCacherFeaturePropertyFunction;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.wizard.FeatureThemeWizardUtilitites.FOUND_PROFILES;
@@ -316,14 +316,14 @@ public class CreateProfileDeviderWizard extends Wizard
     for( final IProfilPointMarker marker : existingMarkers )
       profil.removePointMarker( marker );
 
-    IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profil.getType() );
+    IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders(  profil.getType() );
 
     for( final IRecord markerPoint : pointMap.values() )
     {
       final String id = markerType.getId();
       final IProfilPointMarker marker = profil.createPointMarker( id, markerPoint );
 
-      final Object defaultValue = markerProvider.getDefaultValue( id );
+      final Object defaultValue = provider.getDefaultValue( id );
 
       marker.setValue( defaultValue );
     }

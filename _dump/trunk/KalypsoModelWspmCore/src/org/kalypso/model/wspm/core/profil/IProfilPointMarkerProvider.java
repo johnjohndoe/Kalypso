@@ -42,33 +42,12 @@ package org.kalypso.model.wspm.core.profil;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
  */
 public interface IProfilPointMarkerProvider
 {
-  /**
-   * @deprecated Use {@link IProfilPointPropertyProvider#getPointProperties()},{@link IProfilPointPropertyProvider#isMarker(String)}instead.
-   * @return all markers
-   */
-  @Deprecated
-  public String[] getMarkerTypes( );
-
-  /**
-   * @return true if the provider supports the pointMarker with given Id
-   * @see #getMarkerTypes()
-   */
-  @Deprecated
-  public boolean providesPointMarker( final IComponent marker );
-
-  /**
-   * @deprecated Use {@link IProfilPointPropertyProvider#isMarker(String)} instead. component is type of marker?
-   */
-  @Deprecated
-  public boolean isMarker( final IComponent component );
 
   /**
    * @return the icon for this markerId, used in the TableView, using context of background image
@@ -79,20 +58,5 @@ public interface IProfilPointMarkerProvider
    * @return the color for this markerId, used in the TableView, ChartView
    */
   public RGB getColorFor( final String marker );
-
-  /**
-   * @deprecated Use {@link IProfil#createPointMarker(IComponent, IRecord)} instead.
-   */
-  @Deprecated
-  public IProfilPointMarker createProfilPointMarker( String markerTypTrennflaeche, IRecord p1 );
-
-  /**
-   * @deprecated Use {@link IProfil#createPointMarker(IComponent, IRecord)} instead.
-   */
-  @Deprecated
-  public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point );
-
-  /** Returns the default value for the given marker */
-  public Object getDefaultValue( final String id );
 
 }

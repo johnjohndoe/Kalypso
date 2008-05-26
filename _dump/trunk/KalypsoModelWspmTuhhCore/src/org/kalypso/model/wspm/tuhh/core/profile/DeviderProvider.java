@@ -45,19 +45,10 @@ import java.util.HashMap;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
- * TODO - IPointPropertyProvider and IMarkerProvider should be the same Provider Class - in TupleResult view, their is
- * no difference between them - only column name (type) defines markers
- * 
  * @author kimwerner
  */
 public class DeviderProvider implements IProfilPointMarkerProvider
@@ -74,63 +65,11 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   }
 
   /**
-   * @deprecated
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(org.kalypso.observation.result.IComponent,
-   *      org.kalypso.observation.result.IRecord)
-   */
-
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public IProfilPointMarker createProfilPointMarker( IComponent cmp, IRecord point )
-  {
-    /* first check, if provider provides markerType */
-    if( !m_markerTypes.containsKey( cmp.getId() ) )
-      throw new IllegalStateException( "ProfilPointMarkerProvider doesn't doesnt provides - " + cmp.getName() );
-    /* point has component already defined? */
-    if( !point.getOwner().hasComponent( cmp ) )
-    {
-      /* else create a new profile component */
-      point.getOwner().addComponent( cmp );
-    }
-
-    /* create a new profile point marker */
-    return new ProfilDevider( cmp, point );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#createProfilPointMarker(java.lang.String,
-   *      org.kalypso.observation.result.IRecord)
-   */
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public IProfilPointMarker createProfilPointMarker( final String markerType, final IRecord point )
-  {
-    /* first check, if provider provides markerType */
-    if( !m_markerTypes.containsKey( markerType ) )
-      throw new IllegalStateException( "ProfilPointMarkerProvider doesn't doesnt provides - " + markerType );
-
-    /* point has component already defined? */
-    final IComponent[] components = point.getOwner().getComponents();
-    IComponent comp = ProfilObsHelper.getComponentById( components, markerType );
-    if( comp == null )
-    {
-      /* create a new profile component */
-      comp = PointPropertyProviderTUHH.createPointProperty( markerType );
-      point.getOwner().addComponent( comp );
-    }
-
-    /* create a new profile point marker */
-    return new ProfilDevider( comp, point );
-  }
-
-  /**
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getImageFor(java.lang.String)
    */
   public void drawMarker( final String[] markers, GC gc )
   {
-// final ArrayList<RGB> rgbs = new ArrayList<RGB>(m_markerTypes.values());
-// rgbs.add( 0, new RGB(255,255,255)) ;
-// final ImageData imageData = background.getImageData();
+
     final int cnt = markers.length;
     final int offset = (16 - (3 * cnt)) / 2;
     int i = 0;
@@ -150,7 +89,6 @@ public class DeviderProvider implements IProfilPointMarkerProvider
       }
 
     }
-    // return ImageDescriptor.createFromImageData( imageData );
   }
 
   /**
@@ -160,64 +98,4 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   {
     return m_markerTypes.get( marker );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getMarkers()
-   */
-  @SuppressWarnings("deprecation")
-  public String[] getMarkerTypes( )
-  {
-    return m_markerTypes.keySet().toArray( new String[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#isMarker(org.kalypso.observation.result.IComponent)
-   */
-  @Deprecated
-  @SuppressWarnings("deprecation")
-  public boolean isMarker( final IComponent component )
-  {
-    return m_markerTypes.containsKey( component.getId() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#providesPointMarker(org.kalypso.observation.result.IComponent)
-   */
-  @Deprecated
-  @SuppressWarnings("deprecation")
-  public boolean providesPointMarker( final IComponent marker )
-  {
-    try
-    {
-      IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( IWspmTuhhConstants.NS_WSPM_TUHH );
-      return provider.providesPointProperty( marker.getId() );
-    }
-    catch( final IllegalStateException e )
-    {
-      return false;
-    }
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider#getDefaultValue(java.lang.String)
-   */
-  public Object getDefaultValue( final String id )
-  {
-    // HACK: this is the only place where we use tuhh-stuff. Refaktor in order to reuse this code for other profile
-    // types.
-    if( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE.equals( id ) )
-      return Boolean.TRUE;
-
-    if( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE.equals( id ) )
-      return "low";
-
-    if( IWspmTuhhConstants.MARKER_TYP_BORDVOLL.equals( id ) )
-      return Boolean.TRUE;
-
-    if( IWspmTuhhConstants.MARKER_TYP_WEHR.equals( id ) )
-      return new Double( 0.0 );
-
-    return null;
-  }
-
 }
