@@ -1,4 +1,4 @@
-!     Last change:  NIS  15 May 2008   10:48 pm
+!     Last change:  WP   21 May 2008    6:36 pm
 !     Last change:  NIS  22 Apr 2008   11:02 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
@@ -204,7 +204,7 @@ UpdateDOFs: DO KK = 1, NDFM
 
     !TOASK
     !nis,sep07: If node is deactivated because element is deactivated, it might still have invalid WSLL, therefore refresh that WSLL
-    IF (vel (1, j) == 0.0 .AND. vel (2, j) == 0.0) then
+    IF (NDRY (J) == 2) then
       WSLL (J) = ado(j) + 0.0
     endif
 
