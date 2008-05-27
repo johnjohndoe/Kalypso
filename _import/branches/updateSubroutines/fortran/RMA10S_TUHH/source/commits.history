@@ -52,3 +52,7 @@ bugfix - ErrorMessagesAndStop had wrong entry
 Nico Schrage
 
 
+Änderungen 27.05.2008
+---------------------
+Mit dem 27.05.2008 wurde ein Versionstag eingeführt. Die erste Version heißt v_0_0_1. Sie ist Grundlage des Vergleiches von RMA10S 3.5g mit RMA10SK. Ab diesem Punkt muss geprüft werden, inwiefern Änderungen gegenüber RMA10S 3.5g eingetreten sind. Von der Version aus wird exakt dokumentiert, was sich im Detail geändert hat.
+Außerdem wurde mit dem Datum ein Branch eingeführt, der dazu gedacht ist, die Subroutinen zu aktualisieren, d.h. auf f90 zu bringen und veraltete Strukturen (z.B. Jumpmarks) zu eliminieren.
