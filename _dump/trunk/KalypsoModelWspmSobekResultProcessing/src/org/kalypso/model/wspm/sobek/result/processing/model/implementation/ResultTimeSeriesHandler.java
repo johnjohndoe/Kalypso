@@ -83,8 +83,9 @@ public class ResultTimeSeriesHandler extends AbstractFeatureWrapper implements I
 
     }
 
-    // FIXME
-    throw new NotImplementedException();
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( (Feature) obj );
+
+    return observation;
   }
 
   public String getParameterId( )

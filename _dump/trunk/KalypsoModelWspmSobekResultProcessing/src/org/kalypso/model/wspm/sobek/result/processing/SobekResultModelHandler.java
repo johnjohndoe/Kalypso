@@ -5,13 +5,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 
+import nl.wldelft.fews.pi.EventComplexType;
+import nl.wldelft.fews.pi.TimeSerieComplexType;
 import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
 import org.eclipse.core.resources.IFile;
@@ -23,6 +28,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -138,6 +144,8 @@ public class SobekResultModelHandler implements ISobekResultModel
       {
         final TimeSeriesComplexType binding = getCrossSectionBinding( node );
         fillEmptyWorkspace( workspace, binding );
+
+        // FIXME save workspace onto disk
       }
 
       return null;
@@ -150,11 +158,44 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   private void fillEmptyWorkspace( final CommandableWorkspace workspace, final TimeSeriesComplexType binding ) throws CoreException
   {
+    /* observation of result workspace */
     final IResultTimeSeries handler = new ResultTimeSeriesHandler( workspace.getRootFeature() );
-
     final IObservation<TupleResult> observation = handler.getObservation();
-    final IObservation<TupleResult> observation2 = handler.getObservation();
 
+    /* read out time series binding and fill observation */
+    final List<TimeSerieComplexType> series = binding.getSeries();
+    if( series.size() != 1 )
+      throw new CoreException( StatusUtilities.createErrorStatus( "Parsing / Transformation of TimeSeriesComplexType doesn't support multiple result time series." ) );
+
+    final TupleResult result = observation.getResult();
+
+    for( final TimeSerieComplexType ts : series )
+    {
+      final List<EventComplexType> events = ts.getEvent();
+      for( final EventComplexType event : events )
+      {
+        /* data */
+        final XMLGregorianCalendar date = event.getDate();
+        final XMLGregorianCalendar time = event.getTime();
+
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.set( GregorianCalendar.DAY_OF_MONTH, date.getDay() );
+        calendar.set( GregorianCalendar.MONTH, date.getMonth() );
+        calendar.set( GregorianCalendar.YEAR, date.getYear() );
+        calendar.set( GregorianCalendar.HOUR_OF_DAY, time.getHour() );
+        calendar.set( GregorianCalendar.MINUTE, time.getMinute() );
+        calendar.set( GregorianCalendar.SECOND, time.getSecond() );
+
+        final Double value = event.getValue();
+
+        /* new record */
+        final IRecord record = result.createRecord();
+        record.setValue( 0, calendar.getTime() );
+        record.setValue( 1, value );
+
+        result.add( record );
+      }
+    }
   }
 
   private void registerWorkspaces( final ICrossSectionNode node, final GMLWorkspace gml, final CommandableWorkspace cmd )
