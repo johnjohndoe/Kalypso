@@ -30,3 +30,4 @@ Export-Package: org.kalypso.ui.wizards.imports,
  org.kalypso.ui.wizards.imports.observation,
  org.kalypso.ui.wizards.imports.roughness,
  org.kalypso.ui.wizards.results
+Bundle-Vendor: kalypso.sourceforge.net

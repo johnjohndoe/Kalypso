@@ -24,4 +24,4 @@ Export-Package: org.kalypso.kalypsosimulationmodel.core,
  org.kalypso.kalypsosimulationmodel.utils,
  test.org.kalypso.kalypsosimulationmodel
 Eclipse-LazyStart: true 
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net

@@ -76,3 +76,4 @@ Export-Package: org.kalypso.kalypsomodel1d2d,
  org.kalypso.kalypsomodel1d2d.ui.wizard.profileImport,
  test.org.kalypso.kalypsomodel1d2d
 Bundle-Activator: org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin
+Bundle-Vendor: kalypso.sourceforge.net

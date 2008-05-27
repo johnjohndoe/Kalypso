@@ -4,7 +4,7 @@ Bundle-Name: org.kalypso.afgui.KalypsoAFGUIFramework
 Bundle-SymbolicName: org.kalypso.afgui; singleton:=true
 Bundle-Version: 0.0.0
 Bundle-Activator: org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin
-Bundle-Vendor: org.kalypso
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: de.renew.workflow.connector;visibility:=reexport,
  de.renew.workflow.model;visibility:=reexport,

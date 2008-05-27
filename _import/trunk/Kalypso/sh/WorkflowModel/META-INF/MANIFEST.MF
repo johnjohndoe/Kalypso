@@ -20,3 +20,4 @@ Import-Package: javax.xml.bind;version="2.0.0",
  javax.xml.bind.helpers;version="2.0.0",
  javax.xml.bind.util;version="2.0.0"
 Bundle-Activator: de.renew.workflow.base.WorkflowModelPlugin
+Bundle-Vendor: kalypso.sourceforge.net
