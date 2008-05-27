@@ -1,171 +1,187 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This file is part of Kalypso
-        
-        Copyright (c) 2008 by
-        
-        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
-        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
-        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
-        
-        Kalypso is free software: you can redistribute it and/or modify it under the terms  
-        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
-        Foundation, either version 3 of the License, or (at your option) any later version.
-        
-        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
-        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-        
-        You should have received a copy of the GNU Lesser General Public
-        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+
+	Copyright (c) 2008 by
+
+	Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+	Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+	(Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+
+	Kalypso is free software: you can redistribute it and/or modify it under the terms
+	of the GNU Lesser General Public License (LGPL) as published by the Free Software
+	Foundation, either version 3 of the License, or (at your option) any later version.
+
+	Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+	warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public
+	License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekResultTs="org.kalypso.model.wspm.sobek.result.ts" targetNamespace="org.kalypso.model.wspm.sobek.result.ts" elementFormDefault="qualified" version="0.1">
-        <annotation>
-                <appinfo xmlns:kapp="org.kalypso.appinfo">
-                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-                </appinfo>
-        </annotation>
-        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
-        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
-        <import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd"/>
-        <!-- 
-                _________________________________________________________________________________________
-                Elements
-                _________________________________________________________________________________________	
-        -->
-        <element name="ResultTs" type="wspmSobekResultTs:ResultTsType" substitutionGroup="gml:_Feature">
-                <annotation>
-                        <documentation xml:lang="de">
-                                <name>Ergebnis-Zeitreihe</name>
-                                <label>${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</label>
-                                <tooltip>Ergebnis-Zeitreihe - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</tooltip>
-                                <description>Ergebnis-Zeitreihe - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</description>
-                        </documentation>
-                        <documentation xml:lang="en">
-                                <name>Result Time Series</name>
-                                <label>${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</label>
-                                <tooltip>Result Time Series - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</tooltip>
-                                <description>Result Time Series - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</description>
-                        </documentation>
-                </annotation>
-        </element>
-        <element name="durationValuePairMember" type="wspmSobekResultTs:DurationValuePairPropertyType">
-                <annotation>
-                        <documentation xml:lang="de">
-                                <name>durationValuePairMember</name>
-                                <label>durationValuePairMember</label>
-                                <tooltip>durationValuePairMember</tooltip>
-                                <description>durationValuePairMember</description>
-                        </documentation>
-                        <documentation xml:lang="en">
-                                <name>durationValuePairMember</name>
-                                <label>durationValuePairMember</label>
-                                <tooltip>durationValuePairMember</tooltip>
-                                <description>durationValuePairMember</description>
-                        </documentation>
-                </annotation>
-        </element>
-        <element name="DurationValuePair" type="wspmSobekResultTs:DurationValuePairType" substitutionGroup="gml:_Feature">
-                <annotation>
-                        <documentation xml:lang="de">
-                                <name>Zeitdauer - Wert Paar</name>
-                                <label>Zeitdauer - Wert Paar</label>
-                                <tooltip>Zeitdauer - Wert Paar</tooltip>
-                                <description>Zeitdauer - Wert Paar</description>
-                        </documentation>
-                        <documentation xml:lang="en">
-                                <name>Duration - Value Pair</name>
-                                <label>Duration - Value Pair</label>
-                                <tooltip>Duration - Value Pair</tooltip>
-                                <description>Duration - Value Pair</description>
-                        </documentation>
-                </annotation>
-        </element>
-        <!-- 
-                _________________________________________________________________________________________
-                TYPES
-                _________________________________________________________________________________________	
-        -->
-        <complexType name="ResultTsPropertyType">
-                <sequence>
-                        <element ref="wspmSobekResultTs:ResultTs"/>
-                </sequence>
-        </complexType>
-        <complexType name="ResultTsType">
-                <complexContent>
-                        <extension base="wspmSobekCommon:EmptyFeatureBaseType">
-                                <sequence>
-                                        <element name="uniqueID" type="wspmSobekCommon:uniqueIdType"/>
-                                        <element name="stationName" type="string" nillable="true"/>
-                                        <element name="name" type="string" nillable="true">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <name>Bezeichnung</name>
-                                                                <label>Bezeichnung</label>
-                                                                <tooltip>Bezeichnung</tooltip>
-                                                                <description>Bezeichnung</description>
-                                                        </documentation>
-                                                        <documentation xml:lang="en">
-                                                                <name>Name</name>
-                                                                <label>Name</label>
-                                                                <tooltip>Name</tooltip>
-                                                                <description>Name</description>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
-                                        <element name="paramID" type="string" nillable="true"/>
-                                        <element name="unit" type="string" nillable="true"/>
-                                        <element name="stationAlongBranch" type="double" nillable="false">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <name>Stationierung am Branch [m]</name>
-                                                                <label>Stationierung am Branch [m]</label>
-                                                                <tooltip>Stationierung am Branch [m]</tooltip>
-                                                                <description>Stationierung am Branch [m]</description>
-                                                        </documentation>
-                                                        <documentation xml:lang="en">
-                                                                <name>Station along Branch [m]</name>
-                                                                <label>Station along Branch [m]</label>
-                                                                <tooltip>Station along Branch [m]</tooltip>
-                                                                <description>Station along Branch [m]</description>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
-                                        <element name="branchID" type="string" nillable="true"/>
-                                        <element name="maxValue" type="double" nillable="true"/>
-                                        <element name="lastValue" type="double" nillable="true"/>
-                                        <!-- Liste von Paaren "duration - value" -->
-                                        <element ref="wspmSobekResultTs:durationValuePairMember" minOccurs="0" maxOccurs="unbounded"/>
-                                        <element name="resultMember" type="om:AbstractObservationPropertyType"/>
-                                </sequence>
-                        </extension>
-                </complexContent>
-        </complexType>
-        <complexType name="DurationValuePairPropertyType">
-                <sequence>
-                        <element ref="wspmSobekResultTs:DurationValuePair"/>
-                </sequence>
-        </complexType>
-        <complexType name="DurationValuePairType">
-                <complexContent>
-                        <extension base="wspmSobekCommon:EmptyFeatureBaseType">
-                                <sequence>
-                                        <element name="timePeriod" type="duration" default="P0DT0H0M" nillable="false">
-                                                <annotation>
-                                                        <documentation xml:lang="de">PnYnMnDTnHnMnS "P0DT0H0M" <name>Zeitdauer (PnDTnHnM = dd HH:mm)</name>
-                                                                <label>Zeitdauer (dd HH:mm)</label>
-                                                                <tooltip>Zeitdauer (dd HH:mm)</tooltip>
-                                                                <description>Zeitdauer (dd HH:mm)</description>
-                                                        </documentation>
-                                                        <documentation xml:lang="en">
-                                                                <name>Time Period (dd HH:mm)</name>
-                                                                <label>Time Period (dd HH:mm)</label>
-                                                                <tooltip>Time Period (dd HH:mm)</tooltip>
-                                                                <description>Time Period (dd HH:mm)</description>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
-                                        <element name="value" type="double" nillable="false"/>
-                                </sequence>
-                        </extension>
-                </complexContent>
-        </complexType>
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd" />
+	<import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
+	<import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd" />
+	<!--
+		_________________________________________________________________________________________
+		Elements
+		_________________________________________________________________________________________
+	-->
+	<element name="ResultTs" type="wspmSobekResultTs:ResultTsType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Ergebnis-Zeitreihe</name>
+				<label>${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</label>
+				<tooltip>Ergebnis-Zeitreihe - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</tooltip>
+				<description>Ergebnis-Zeitreihe - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Result Time Series</name>
+				<label>${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</label>
+				<tooltip>Result Time Series - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</tooltip>
+				<description>Result Time Series - ${property:org.kalypso.model.wspm.sobek.result.ts#uniqueID}</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="durationValuePairMember" type="wspmSobekResultTs:DurationValuePairPropertyType">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>durationValuePairMember</name>
+				<label>durationValuePairMember</label>
+				<tooltip>durationValuePairMember</tooltip>
+				<description>durationValuePairMember</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>durationValuePairMember</name>
+				<label>durationValuePairMember</label>
+				<tooltip>durationValuePairMember</tooltip>
+				<description>durationValuePairMember</description>
+			</documentation>
+		</annotation>
+	</element>
+	<element name="DurationValuePair" type="wspmSobekResultTs:DurationValuePairType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Zeitdauer - Wert Paar</name>
+				<label>Zeitdauer - Wert Paar</label>
+				<tooltip>Zeitdauer - Wert Paar</tooltip>
+				<description>Zeitdauer - Wert Paar</description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Duration - Value Pair</name>
+				<label>Duration - Value Pair</label>
+				<tooltip>Duration - Value Pair</tooltip>
+				<description>Duration - Value Pair</description>
+			</documentation>
+		</annotation>
+	</element>
+	<!--
+		_________________________________________________________________________________________
+		TYPES
+		_________________________________________________________________________________________
+	-->
+	<complexType name="ResultTsPropertyType">
+		<sequence>
+			<element ref="wspmSobekResultTs:ResultTs" />
+		</sequence>
+	</complexType>
+	<complexType name="ResultTsType">
+		<complexContent>
+			<extension base="wspmSobekCommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="uniqueID" type="wspmSobekCommon:uniqueIdType" />
+					<element name="stationName" type="string" nillable="true" />
+					<element name="name" type="string" nillable="true">
+						<annotation>
+							<documentation xml:lang="de">
+								<name>Bezeichnung</name>
+								<label>Bezeichnung</label>
+								<tooltip>Bezeichnung</tooltip>
+								<description>Bezeichnung</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<name>Name</name>
+								<label>Name</label>
+								<tooltip>Name</tooltip>
+								<description>Name</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="paramID" type="string" nillable="true" />
+					<element name="unit" type="string" nillable="true" />
+					<element name="stationAlongBranch" type="double" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								<name>Stationierung am Branch [m]</name>
+								<label>Stationierung am Branch [m]</label>
+								<tooltip>Stationierung am Branch [m]</tooltip>
+								<description>Stationierung am Branch [m]</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<name>Station along Branch [m]</name>
+								<label>Station along Branch [m]</label>
+								<tooltip>Station along Branch [m]</tooltip>
+								<description>Station along Branch [m]</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="branchID" type="string" nillable="true" />
+					<element name="maxValue" type="double" nillable="true" />
+					<element name="lastValue" type="double" nillable="true" />
+					<!-- Liste von Paaren "duration - value" -->
+					<element ref="wspmSobekResultTs:durationValuePairMember" minOccurs="0" maxOccurs="unbounded" />
+					<element name="resultMember" type="wspmSobekResultTs:TimeSeriesObservationPropertyType" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="TimeSeriesDefTable" type="wspmSobekResultTs:TimeSeriesDefTableType" substitutionGroup="om:Observation" />
+	<complexType name="TimeSeriesObservationPropertyType">
+		<sequence>
+			<element ref="wspmSobekResultTs:TimeSeriesDefTable" />
+		</sequence>
+	</complexType>
+	<complexType name="TimeSeriesDefTableType">
+		<complexContent>
+			<extension base="om:ObservationType" />
+		</complexContent>
+	</complexType>
+	<complexType name="DurationValuePairPropertyType">
+		<sequence>
+			<element ref="wspmSobekResultTs:DurationValuePair" />
+		</sequence>
+	</complexType>
+	<complexType name="DurationValuePairType">
+		<complexContent>
+			<extension base="wspmSobekCommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="timePeriod" type="duration" default="P0DT0H0M" nillable="false">
+						<annotation>
+							<documentation xml:lang="de">
+								PnYnMnDTnHnMnS "P0DT0H0M"
+								<name>Zeitdauer (PnDTnHnM = dd HH:mm)</name>
+								<label>Zeitdauer (dd HH:mm)</label>
+								<tooltip>Zeitdauer (dd HH:mm)</tooltip>
+								<description>Zeitdauer (dd HH:mm)</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<name>Time Period (dd HH:mm)</name>
+								<label>Time Period (dd HH:mm)</label>
+								<tooltip>Time Period (dd HH:mm)</tooltip>
+								<description>Time Period (dd HH:mm)</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="value" type="double" nillable="false" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
 </schema>

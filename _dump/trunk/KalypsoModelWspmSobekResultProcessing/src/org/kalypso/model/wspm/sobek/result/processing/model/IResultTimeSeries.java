@@ -2,6 +2,7 @@ package org.kalypso.model.wspm.sobek.result.processing.model;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -46,6 +47,10 @@ public interface IResultTimeSeries extends Feature
 
   public static final QName QN_RESULT_MEMBER = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "resultMember" );
 
+  public static final String DICT_OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#DATE"; //$NON-NLS-1$
+
+  public static final String DICT_OBS_WATERLEVEL = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#WATERLEVEL"; //$NON-NLS-1$
+
   public String getUniqueId( );
 
   public String getStationName( );
@@ -66,5 +71,5 @@ public interface IResultTimeSeries extends Feature
 
   IValuePairMembers getValuePairs( );
 
-  IObservation<TupleResult> getObservation( );
+  IObservation<TupleResult> getObservation( ) throws CoreException;
 }
