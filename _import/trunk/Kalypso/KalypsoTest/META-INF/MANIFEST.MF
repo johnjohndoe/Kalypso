@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoTest
 Bundle-SymbolicName: org.kalypso.test
 Bundle-Version: 1.0.0
-Bundle-Localization: plugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.contribs.java,
@@ -16,7 +15,6 @@ Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.junit;resolution:=optional,
  org.kalypso.simulation.core,
  org.kalypso.ui,
- org.kalypso.dss,
  org.kalypso.model.KalypsoModelFlows,
  org.kalypso.contribs.ogc31
 Export-Package: org.kalypso.flowsdss,
