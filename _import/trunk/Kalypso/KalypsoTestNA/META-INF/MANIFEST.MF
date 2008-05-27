@@ -4,7 +4,7 @@ Bundle-Name: KalypsoTestNA
 Bundle-SymbolicName: org.kalypso.test.na
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.test,
  org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,
@@ -16,5 +16,4 @@ Require-Bundle: org.kalypso.test,
  org.kalypso.NACalcJob,
  org.kalypso.ant,
  org.kalypso.simulation.core,
- org.kalypso.dwd,
- org.kalypso.dss
+ org.kalypso.dwd
