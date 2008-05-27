@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoServiceCore
 Bundle-SymbolicName: org.kalypso.services.core
 Bundle-Version: 1.0.0
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.services,
  org.kalypso.services.common

@@ -8,7 +8,7 @@ Bundle-ClassPath: lib/jcommon-0.9.6.jar,
  lib/opencsv/opencsv-1.8.jar,
  .
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
-Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: com.keypoint,
  org.jfree,

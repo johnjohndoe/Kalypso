@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.kalypso.services.metadoc.client; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: KalypsoServiceMetaDocClient.jar
 Bundle-Activator: org.kalypso.services.metadoc.client.KalypsoServiceMetaDocClientPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,

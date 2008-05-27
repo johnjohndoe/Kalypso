@@ -4,7 +4,7 @@ Bundle-Name: KalypsoServiceObs
 Bundle-SymbolicName: org.kalypso.services.observation
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.commons,
  org.kalypso.core,

@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.kalypso.services.user.client; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: KalypsoClientUser.jar
 Bundle-Activator: org.kalypso.services.user.client.KalypsoServiceUserClientPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.services.user.client
 Require-Bundle: org.eclipse.core.runtime,

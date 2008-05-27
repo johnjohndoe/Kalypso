@@ -4,7 +4,7 @@ Bundle-Name: KalypsoServiceCalc
 Bundle-SymbolicName: org.kalypso.services.simulation
 Bundle-Version: 1.0.0
 Bundle-Localization: plugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.contribs.java,

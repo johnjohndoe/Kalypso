@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/commons-configuration-1.1.jar,
  .
 Bundle-Activator: org.kalypso.metadoc.KalypsoMetaDocPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.apache.commons.configuration,
  org.apache.commons.configuration.beanutils,
