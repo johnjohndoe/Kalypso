@@ -120,18 +120,16 @@
 			<xs:extension base="simBase:AbstractControlModelType">
 				<xs:sequence>
 					<xs:element ref="wb1d2d:calculationUnit" />
-					<xs:element name="Version" default="NEW">
+					<xs:element name="Version">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
 								<xs:label>Version</xs:label>
-								<xs:tooltip>
-									Version des Rechenkerns RMA 10S
-								</xs:tooltip>
+								<xs:tooltip>Version des Rechenkerns RMA 10S</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
-								<xs:enumeration value="Version 3.5" />
+								<xs:minLength value="1"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>

@@ -57,7 +57,7 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
    * Sets the active case handling project
    */
   @SuppressWarnings("unchecked")
-  private void setCurrentProject( final CaseHandlingProjectNature currentProject ) throws CoreException
+  protected void setCurrentProject( final CaseHandlingProjectNature currentProject ) throws CoreException
   {
     if( m_currentProjectNature == currentProject )
       return;
@@ -165,15 +165,14 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
     // /* Set base case as current for the newly selected project */
     // final T caseToActivate = m_caseManager == null ? null : m_caseManager.getCases().get( 0 );
 
-    // final IResourceDelta delta = event.getDelta();
-    if( (event.getType() == IResourceChangeEvent.PRE_DELETE || event.getType() == IResourceChangeEvent.PRE_CLOSE) )
+    if( event.getType() == IResourceChangeEvent.PRE_DELETE || event.getType() == IResourceChangeEvent.PRE_CLOSE )
     {
       // if the currently active project is deleted or closed
       if( m_currentProjectNature != null && m_currentProjectNature.getProject().equals( event.getResource() ) )
       {
         try
         {
-          // deactivate the current case
+          // project was closed or deleted, deactivate the current case
           setCurrentCase( null );
         }
         catch( final CoreException e )
@@ -186,100 +185,105 @@ public class ActiveWorkContext<T extends Case> implements IResourceChangeListene
         }
       }
     }
-    // else if( event.getType() == IResourceChangeEvent.POST_CHANGE )
-    // {
-    // // post change event after some modifications
-    // final IResourceDelta[] openedChildren = delta.getAffectedChildren();
-    // IResource resource = null;
-    //
-    // if( openedChildren.length > 0 )
-    // {
-    // final IResourceDelta resourceDelta = openedChildren[0];
-    // if( (resourceDelta.getFlags() & (IResourceDelta.OPEN | IResourceDelta.ADDED)) > 0 )
-    // // if the first affected resource was opened or added, remember this resource
-    // resource = resourceDelta.getResource();
-    // }
-    //
-    // if( resource != null && resource.getType() == IResource.PROJECT )
-    // {
-    // // this is an opened or added resource, if it is a project that was opened or added, go on
-    // final IProject project = (IProject) resource;
-    // if( project.isOpen() )
-    // {
-    //
-    // display.asyncExec( new Runnable()
-    // {
-    // /**
-    // * @see java.lang.Runnable#run()
-    // */
-    // public void run( )
-    // {
-    // IProjectNature nature = null;
-    // try
-    // {
-    // // get the case handling project nature if available
-    // nature = project.getNature( m_natureID );
-    // }
-    // catch( final CoreException e )
-    // {
-    // // nature does not exist or such, ignore
-    // }
-    // final Shell activeShell = display.getActiveShell();
-    // if( nature != null )
-    // {
-    // // if project has a nature
-    // final CaseHandlingProjectNature caseHandlingNature = (CaseHandlingProjectNature) nature;
-    // try
-    // {
-    // final WorkbenchContentProvider workbenchContentProvider = new WorkbenchContentProvider();
-    // final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
-    // final ListDialog dialog = new ListDialog( activeShell );
-    // dialog.setTitle( "Szenario-Projekt" );
-    // dialog.setMessage( String.format( "Das Projekt \"%s\" enthält Szenarien.\nMöchten Sie ein Szenario aktivieren?",
-    // project.getName() ) );
-    // dialog.setContentProvider( workbenchContentProvider );
-    // dialog.setLabelProvider( workbenchLabelProvider );
-    // dialog.setInput( caseHandlingNature );
-    // dialog.setBlockOnOpen( true );
-    //
-    // dialog.open();
-    // final Object[] result = dialog.getResult();
-    // if( result != null )
-    // {
-    // final T caze = (T) result[0];
-    // setCurrentProject( caseHandlingNature );
-    // setCurrentCase( caze );
-    // }
-    // }
-    // catch( final CoreException e )
-    // {
-    // final IStatus status = e.getStatus();
-    // ErrorDialog.openError( activeShell, "Problem beim Öffnen des Projektes", "Projekt wurde nicht aktiviert.", status
-    // );
-    // WorkflowConnectorPlugin.getDefault().getLog().log( status );
-    // }
-    // }
-    // else
-    // // nature is null, so it must have been removed from this project
-    // {
-    // if( m_currentProjectNature != null && project.equals( m_currentProjectNature.getProject() ) )
-    // {
-    // try
-    // {
-    // setCurrentProject( null );
-    // }
-    // catch( final CoreException e )
-    // {
-    // final IStatus status = e.getStatus();
-    // ErrorDialog.openError( activeShell, "Problem", "Projekt wurde nicht deaktiviert.", status );
-    // WorkflowConnectorPlugin.getDefault().getLog().log( status );
-    // }
-    // }
-    // }
-    // }
-    // } );
-    // }
-    // }
-    // }
+    else if( event.getType() == IResourceChangeEvent.POST_CHANGE )
+    {
+      // TODO: does not work for new projects (they are activated anyway!)
+      // Symptoms: dialog pops up, but is empty; NPE after that
+
+      // // post change event after some modifications
+      // final IResourceDelta delta = event.getDelta();
+      // final IResourceDelta[] openedChildren = delta.getAffectedChildren();
+      //
+      // if( openedChildren.length == 0 )
+      // return;
+      //
+      // final IResourceDelta resourceDelta = openedChildren[0];
+      // if( (resourceDelta.getFlags() & (IResourceDelta.OPEN | IResourceDelta.ADDED)) == 0 )
+      // return;
+      //
+      // // if the first affected resource was opened or added, remember this resource
+      // final IResource resource = resourceDelta.getResource();
+      // if( resource.getType() != IResource.PROJECT )
+      // return;
+      //
+      // // this is an opened or added resource, if it is a project that was opened or added, go on
+      // final IProject project = (IProject) resource;
+      // if( !project.isOpen() )
+      // return;
+      //
+      // IProjectNature nature = null;
+      // try
+      // {
+      // // get the case handling project nature if available
+      // nature = project.getNature( m_natureID );
+      // }
+      // catch( final CoreException e )
+      // {
+      // // nature does not exist or such, ignore
+      // return;
+      // }
+      //
+      // final CaseHandlingProjectNature caseHandlingNature = (CaseHandlingProjectNature) nature;
+      // if( caseHandlingNature == null && m_currentProjectNature != null && project.equals(
+      // m_currentProjectNature.getProject() ) )
+      // {
+      // try
+      // {
+      // // TODO: when does this ever happen? a new project was opened, and is already active
+      //
+      // // nature is null, so it must have been removed from this project: close the scenario
+      // setCurrentProject( null );
+      // }
+      // catch( final CoreException e )
+      // {
+      // final IStatus status = e.getStatus();
+      // WorkflowConnectorPlugin.getDefault().getLog().log( status );
+      // }
+      // return;
+      // }
+      //
+      // final UIJob job = new UIJob( "" )
+      // {
+      // @Override
+      // public IStatus runInUIThread( IProgressMonitor monitor )
+      // {
+      // final Shell shell = getDisplay().getActiveShell();
+      // {
+      // try
+      // {
+      // // A project was opened and has the right nature: ask user if it should be activated as well
+      //
+      // final WorkbenchContentProvider workbenchContentProvider = new WorkbenchContentProvider();
+      // final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
+      // final ListDialog dialog = new ListDialog( shell );
+      // dialog.setTitle( "Szenario-Projekt" );
+      // dialog.setMessage( String.format( "Das Projekt \"%s\" enthält Szenarien.\nMöchten Sie ein Szenario
+      // aktivieren?", project.getName() ) );
+      // dialog.setContentProvider( workbenchContentProvider );
+      // dialog.setLabelProvider( workbenchLabelProvider );
+      // dialog.setInput( caseHandlingNature );
+      // dialog.setBlockOnOpen( true );
+      //
+      // dialog.open();
+      // final Object[] result = dialog.getResult();
+      // if( result != null && result.length > 0 )
+      // {
+      // final T caze = (T) result[0];
+      // setCurrentProject( caseHandlingNature );
+      // setCurrentCase( caze );
+      // }
+      // }
+      // catch( final CoreException e )
+      // {
+      // final IStatus status = e.getStatus();
+      // ErrorDialog.openError( shell, "Problem beim Öffnen des Projektes", "Projekt wurde nicht aktiviert.", status );
+      // WorkflowConnectorPlugin.getDefault().getLog().log( status );
+      // }
+      // }
+      // return null;
+      // }
+      // };
+      // job.schedule();
+    }
   }
 }

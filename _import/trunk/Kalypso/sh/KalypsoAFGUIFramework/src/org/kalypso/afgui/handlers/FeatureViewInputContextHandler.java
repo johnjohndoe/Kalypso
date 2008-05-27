@@ -4,15 +4,15 @@
 package org.kalypso.afgui.handlers;
 
 import java.net.URL;
-import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -26,28 +26,47 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * Loads a template file in the current feature view. Requires that the current context contains the feature view. Use a
- * {@link ViewContextHandler} for this purpose.
+ * {@link ViewContextHandler} for this purpose.<br>
+ * Supported parameters:
+ * <ul>
+ * <li>input (optional): (scenario relative) path to a .gft file; if set this file will be shown in the feature view</li>
+ * <li>gml (optional): (scenario relative) path to a .gml file; if set, the root feature of this file will be shown in
+ * the feature view</li>
+ * <li>viewTitle (optiona): If set, the title of the view will be set to this value</li>
+ * </ul>
+ * One of 'input' or 'gml' must be set.
  * 
  * @author Stefan Kurzbach
  */
-public class FeatureViewInputContextHandler extends AbstractHandler implements IExecutableExtension
+public class FeatureViewInputContextHandler extends AbstractHandler
 {
-  public static final String FEATUREVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.featureViewInput"; //$NON-NLS-1$
+  private static final String PARAM_GML = "gml";
 
-  private String m_featureViewInput;
+  private static final String PARAM_VIEW_TITLE = "viewTitle";
+
+  private final String m_featureViewInput;
+
+  private final String m_gmlPath;
+
+  private final String m_viewTitle;
 
   /**
    * Creates a new {@link FeatureViewInputContextHandler} that loads the given input file
    */
-  public FeatureViewInputContextHandler( final String input )
+  public FeatureViewInputContextHandler( final Properties properties )
   {
-    m_featureViewInput = input;
+    m_featureViewInput = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT, null );
+    m_gmlPath = properties.getProperty( PARAM_GML, null );
+    m_viewTitle = properties.getProperty( PARAM_VIEW_TITLE, null );
+
+    Assert.isTrue( m_featureViewInput != null || m_gmlPath != null, "Parameter 'input' not set for featureViewInputContext" );
   }
 
   /**
@@ -55,13 +74,13 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
    */
   @SuppressWarnings("unchecked")
   @Override
-  public Object execute( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     // TODO: that is strange and probably bug-prone. Why not just use scenario-relative paths for the .gft file?
-    final IFolder folder = SzenarioDataProvider.findModelContext( szenarioFolder, m_featureViewInput );
+    final IFolder folder = m_featureViewInput == null ? null : SzenarioDataProvider.findModelContext( szenarioFolder, m_featureViewInput );
     // TODO: directly throw exceptions if something is missing
     final IFile file;
     if( folder != null && m_featureViewInput != null )
@@ -73,51 +92,56 @@ public class FeatureViewInputContextHandler extends AbstractHandler implements I
     final IWorkbenchPage page = window == null ? null : window.getActivePage();
     final IViewPart view = page == null ? null : page.findView( FeatureTemplateView.ID );
 
-    if( file != null && file.exists() && view != null && view instanceof FeatureTemplateView )
-    {
-      final FeatureTemplateView mapView = (FeatureTemplateView) view;
+    if( !(view instanceof FeatureTemplateView) )
+      throw new ExecutionException( "FeatureTemplateView not found. Must be open in order to execute this context." );
 
-      final UIJob job = new UIJob( "Loading " + file.getName() )
+    final String gmlPath = m_gmlPath;
+    if( file == null && gmlPath == null )
+      throw new ExecutionException( "Unable to find .gft file: " + m_featureViewInput );
+
+    final FeatureTemplateView featureView = (FeatureTemplateView) view;
+    final String viewTitle = m_viewTitle;
+
+    final UIJob job = new UIJob( "FeatureView wird geöffnet" )
+    {
+      @Override
+      public IStatus runInUIThread( IProgressMonitor monitor )
       {
-        @Override
-        public IStatus runInUIThread( IProgressMonitor monitor )
+        try
         {
-          try
+          final Featuretemplate template;
+          // either the file is set OR we have a gmlPath (was checked above)
+          if( file == null )
           {
-            Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( file );
-
-            URL urlContext = ResourceUtilities.createURL( file );
-
-            mapView.setTemplate( template, urlContext, null, null, null );
-
-            return Status.OK_STATUS;
+            // if we have a gmlPath we create a pseudo template here
+            template = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplate();
+            template.setName( "TODO: Name" );
+            Layer layer = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplateLayer();
+            layer.setHref( gmlPath );
+            layer.setLinktype( "gml" );
+            layer.setFeaturePath( "#fid#root" ); // always use root feature; maybe get from parameter some day
+            template.setLayer( layer );
           }
-          catch( Throwable e )
-          {
-            return StatusUtilities.statusFromThrowable( e );
-          }
+          else
+            template = GisTemplateHelper.loadGisFeatureTemplate( file );
+
+          if( viewTitle != null )
+            template.setName( viewTitle );
+
+          final URL urlContext = ResourceUtilities.createURL( szenarioFolder );
+
+          featureView.setTemplate( template, urlContext, null, null, null );
+
+          return Status.OK_STATUS;
         }
-      };
-      job.schedule();
+        catch( Throwable e )
+        {
+          return StatusUtilities.statusFromThrowable( e );
+        }
+      }
+    };
+    job.schedule();
 
-      return Status.OK_STATUS;
-    }
-    else
-    {
-      return Status.CANCEL_STATUS;
-    }
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-  {
-    if( data instanceof Map )
-    {
-      final Map parameterMap = (Map) data;
-      m_featureViewInput = (String) parameterMap.get( FEATUREVIEW_INPUT );
-    }
+    return Status.OK_STATUS;
   }
 }

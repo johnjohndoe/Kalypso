@@ -128,9 +128,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     final Shell shell = m_treeViewer.getControl().getShell();
     final String title = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.2" );//$NON-NLS-1$
     final String message = org.kalypso.afgui.views.Messages.getString( "WorkflowControl.3" ); //$NON-NLS-1$
-    ErrorDialog.openError( shell, title, message + task.getName(), result, IStatus.WARNING | IStatus.ERROR );
     if( !result.isOK() )
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( result );
+    ErrorDialog.openError( shell, title, message + task.getName(), result, IStatus.WARNING | IStatus.ERROR );
   }
 
   public void setWorkflow( final Workflow workflow )

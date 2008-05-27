@@ -141,27 +141,20 @@ public class TaskExecutor implements ITaskExecutor
     final Command command = getCommand( m_commandService, name, task instanceof TaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
 
     final ContextType context = task.getContext();
-    if( context != null )
-    {
-      final IStatus contextStatus = activateContext( context );
-      if( !contextStatus.isOK() )
-        return contextStatus;
-    }
+    final IStatus contextStatus = context == null ? Status.OK_STATUS : activateContext( context );
 
     // collect the views that were just opened
     final Collection<String> partsToKeep = collectOpenedViews( context );
     partsToKeep.add( WorkflowView.ID );
     partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
 
-    // TODO: this must be done otherwise! Closing all views and then reopening is most ineffective and leads to lots of
-    // problems for which strange workaround have to be done...
-    // Probably the whole context stuff is not suitable for this functionality...
-    // Maybe-solution: make one context, that defines the perspective and list of views
-    // Then open/close everything in one go
-
     // forks a new job for cleaning perspective
     final IWorkbench workbench = PlatformUI.getWorkbench();
     PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
+
+    // REMARK: we return AFTER closing all unnecessary views, else some open views may remain in case of errors
+    if( !contextStatus.isOK() )
+      return contextStatus;
 
     IStatus taskExecutionStatus = Status.OK_STATUS;
     try

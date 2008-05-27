@@ -277,16 +277,20 @@ Wechseln Sie durch Aktivieren der entsprechenden Taskgruppe den Bearbeitungsmodu
 					handlerFactoryId="kalypsoContextHandlerFactory">
 					<con:Parameter name="type"
 						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/roughness.gft" />
+					<con:Parameter name="gml"
+						value="project:/.metadata/roughness.gml" />
+					<con:Parameter name="viewTitle"
+						value="Rauheitsdatenbank" />
 				</con:ExtensionContext>
 				<con:ExtensionContext id="CalcParams"
 					parent="FeatureView"
 					handlerFactoryId="kalypsoContextHandlerFactory">
 					<con:Parameter name="type"
 						value="featureViewInputContext" />
-					<con:Parameter name="input"
-						value="templates/control.gft" />
+					<con:Parameter name="gml"
+						value="models/control.gml" />
+					<con:Parameter name="viewTitle"
+						value="Berechnungseinstellungen" />
 				</con:ExtensionContext>
 			</con:ViewContext>
 

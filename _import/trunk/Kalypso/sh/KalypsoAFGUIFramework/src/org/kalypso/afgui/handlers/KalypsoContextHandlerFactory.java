@@ -41,8 +41,10 @@
 package org.kalypso.afgui.handlers;
 
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.runtime.Assert;
 
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.ExtensionContext;
@@ -52,7 +54,7 @@ import de.renew.workflow.contexts.ExtensionContext.Parameter;
 /**
  * Extends the capabilities of the {@link WorkflowContextHandlerFactory} by the required context handlers for the
  * specific Kalypso contexts. These are {@link MapViewInputContext}, {@link FeatureViewInputContext} and
- * {@link ThemeContext}.
+ * {@link ThemeContext}.<br>
  * 
  * @author Stefan Kurzbach
  */
@@ -60,55 +62,45 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
 {
   private static final String PARAM_TYPE = "type"; //$NON-NLS-1$
 
-  private static final String PARAM_INPUT = "input"; //$NON-NLS-1$
+  public static final String PARAM_INPUT = "input"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
    */
   public IHandler getHandler( final ContextType context )
   {
-    if( context instanceof ExtensionContext )
-    {
-      final ExtensionContext extensionContext = (ExtensionContext) context;
-      final List<Parameter> parameters = extensionContext.getParameter();
-      String type = null;
-      String input = null;
-      for( final Parameter parameter : parameters )
-      {
-        if( parameter.getName().equals( PARAM_TYPE ) )
-        {
-          type = parameter.getValue();
-        }
-        else if( parameter.getName().equals( PARAM_INPUT ) )
-        {
-          input = parameter.getValue();
-        }
-      }
+    if( !(context instanceof ExtensionContext) )
+      return null;
 
-      // TODO: do not chek input here; let the context handler throw an exception if
-      // its prerequisites are not met
-      if( "mapViewInputContext".equals( type ) ) //$NON-NLS-1$
-      {
-        if( input != null )
-        {
-          return new MapViewInputContextHandler( input );
-        }
-      }
-      else if( "featureViewInputContext".equals( type ) ) //$NON-NLS-1$
-      {
-        if( input != null )
-        {
-          return new FeatureViewInputContextHandler( input );
-        }
-      }
-      else if( "themeContext".equals( type ) ) //$NON-NLS-1$
-      {
-        if( input != null )
-        {
-          return new ThemeContextHandler( input );
-        }
-      }
-    }
+    final ExtensionContext extensionContext = (ExtensionContext) context;
+    final List<Parameter> parameters = extensionContext.getParameter();
+    final Properties properties = new Properties();
+    for( final Parameter parameter : parameters )
+      properties.put( parameter.getName(), parameter.getValue() );
+
+    final String type = properties.getProperty( PARAM_TYPE, null );
+    Assert.isNotNull( type, "'type' parameter not set for extension-context" );
+
+    final IHandler handler = createHander( type, properties );
+    Assert.isNotNull( handler, "Could not instantiate extension-context: " + type );
+    return handler;
+  }
+
+  private IHandler createHander( final String type, final Properties properties )
+  {
+    // TODO Why is there not extension point for this stuff?! the id should map to an implementor which is registered
+    // via an extension. Need refaktoring!
+
+    if( "mapViewInputContext".equals( type ) ) //$NON-NLS-1$
+      return new MapViewInputContextHandler( properties );
+
+    if( "featureViewInputContext".equals( type ) ) //$NON-NLS-1$
+      return new FeatureViewInputContextHandler( properties );
+
+    if( "themeContext".equals( type ) ) //$NON-NLS-1$
+      return new ThemeContextHandler( properties );
+
+    // TODO: throw exception
     return null;
   }
 }

@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
@@ -55,14 +54,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.osgi.service.datalocation.Location;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.Building1D2DConverter;
 import org.kalypso.kalypsomodel1d2d.conv.BuildingIDProvider;
@@ -78,6 +78,7 @@ import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -86,9 +87,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class RMA10Calculation implements ISimulation1D2DConstants
 {
-  /** Name of rma10s.exe used for calculation */
-  private static final String RMA10S_KALYPSO_EXE = "RMA10sKalypso.exe";
-
   private final IFEDiscretisationModel1d2d m_discretisationModel;
 
   private final IFlowRelationshipModel m_flowRelationshipModel;
@@ -128,16 +126,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     return m_discretisationModel;
   }
 
-  private String getKalypso1D2DKernelPath( ) throws CoreException
-  {
-    final String version = m_controlModel.getVersion();
-
-    if( version.equals( "Version 3.5" ) )
-      return ISimulation1D2DConstants.SIM_EXE_FILE_3_5;
-
-    throw new CoreException( StatusUtilities.createErrorStatus( "Rechenkern-Version nicht unterstützt: " + version ) );
-  }
-
   public IControlModel1D2D getControlModel( )
   {
     return m_controlModel;
@@ -171,8 +159,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     try
     {
       writeRma10Files( progress.newChild( 10 ) );
-      copyExecutable( progress.newChild( 1 ) );
-      return startCalcCore( progress.newChild( 89 ) );
+      return startCalcCore( progress.newChild( 90 ) );
     }
     catch( final CoreException ce )
     {
@@ -265,30 +252,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     }
   }
 
-  private void copyExecutable( final IProgressMonitor monitor ) throws CoreException
-  {
-    try
-    {
-      m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "Kopiere Rechenkern in temporäres Verzeichnis..." );
-      monitor.subTask( "Kopiere Rechenkern in temporäres Verzeichnis..." );
-
-      final String exeResource = ISimulation1D2DConstants.RMA10S_BASE + getKalypso1D2DKernelPath();
-      final File destFile = new File( m_tmpDir, RMA10S_KALYPSO_EXE );
-      final URL exeUrl = getClass().getResource( exeResource );
-      FileUtils.copyURLToFile( exeUrl, destFile );
-    }
-    catch( final IOException e )
-    {
-      final String msg = String.format( "Fehler beim Kopieren der rma10s.exe aus den Programm-Resourcen: %s", e.toString() );
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, CODE_PRE, msg, e ) );
-    }
-    finally
-    {
-      ProgressUtilities.done( monitor );
-    }
-
-  }
-
   /**
    * Runs the rma10s simulation, i.e. starts the rma10s.exe in the temp-dir and waits until the process returns.
    */
@@ -307,15 +270,15 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     FileOutputStream errorOS = null;
     try
     {
+      final File exeFile = findRma10skExe();
+
+      final String commandString = exeFile.getAbsolutePath();
+
       // Run the Calculation
       logOS = new FileOutputStream( new File( m_tmpDir, "exe.log" ) );
       errorOS = new FileOutputStream( new File( m_tmpDir, "exe.err" ) );
 
-      final File exeFile = new File( m_tmpDir, RMA10S_KALYPSO_EXE );
-      final String commandString = exeFile.getAbsolutePath();
       final ICancelable progressCancelable = new ProgressCancelable( progress );
-      // TODO: somehow monitor progress of executable via its output...
-
       final Runnable idleRunnable = new Runnable()
       {
         public void run( )
@@ -329,6 +292,8 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
       m_log.formatLog( IStatus.INFO, CODE_RUNNING_FINE, "RMA10s wird ausgeführt: %s", commandString );
       ProcessHelper.startProcess( commandString, new String[0], m_tmpDir, progressCancelable, 0, logOS, errorOS, null, 250, idleRunnable );
+
+      // TODO: specific error message if exe was not found
 
       // TODO: read other outputs:
       // - error-log
@@ -349,9 +314,13 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
       return new MultiStatus( PluginUtilities.id( KalypsoModel1D2DPlugin.getDefault() ), CODE_RMA10S, new IStatus[] { errorStatus }, "Fehlermeldung vom Rechenkern (ERROR.DAT)", null );
     }
+    catch( final CoreException ce )
+    {
+      throw ce;
+    }
     catch( final Throwable e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, "Fehler beim Ausführen der " + RMA10S_KALYPSO_EXE, e );
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, CODE_RMA10S, "Fehler beim Ausführen von RMA10SK", e );
       throw new CoreException( status );
     }
     finally
@@ -361,6 +330,28 @@ public class RMA10Calculation implements ISimulation1D2DConstants
 
       ProgressUtilities.done( progress );
     }
+  }
+
+  private File findRma10skExe( ) throws CoreException
+  {
+    // Determine exe filename
+    final String version = m_controlModel.getVersion();
+    if( version == null || version.length() == 0 )
+      // REMARK: maybe could instead use a default or the one with the biggest version number?
+      throw new CoreException( StatusUtilities.createErrorStatus( "RMA10SK Version nicht gesetzt. Wählen Sie die Version in den Berechnungseinstellungen." ) );
+
+    final String exeName = ISimulation1D2DConstants.SIM_EXE_FILE_PREFIX + version + ".exe";
+
+    // REMARK: This is OS dependent; we use should use a pattern according to OS
+    final Location installLocation = Platform.getInstallLocation();
+    final File installDir = FileUtils.toFile( installLocation.getURL() );
+    final File exeDir = new File( installDir, "bin" );
+    final File exeFile = new File( exeDir, exeName );
+    if( exeFile.exists() )
+      return exeFile;
+
+    final String exeMissingMsg = String.format( "Die Ausführbare Datei (%s) ist nicht vorhanden.\nRMA10SK ist nicht Teil von Kalypso sondern muss gesondert erworden werden. Weitere Informationen finden Sie unter http://kalypso.sourceforge.net.", exeFile.getAbsolutePath() );
+    throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
   }
 
   private int getMaxNumberOfSteps( )
@@ -432,7 +423,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       final BigDecimal rw = new BigDecimal( lines[5].substring( 13, 26 ).trim() );
       final BigDecimal hw = new BigDecimal( lines[5].substring( 38, 51 ).trim() );
 
-      location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+      location = GeometryFactory.createGM_Point( rw.doubleValue(), hw.doubleValue(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     }
 
     return m_log.log( severity, CODE_RMA10S, message, location, null );

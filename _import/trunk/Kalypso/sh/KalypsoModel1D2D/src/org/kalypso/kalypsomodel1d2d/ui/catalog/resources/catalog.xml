@@ -49,6 +49,22 @@
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.Timesteps.gft" />
 
 	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl:ControlModel:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.ControlModel.gft" />
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl:TimestepsObservation:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.TimestepsObservation.gft" />
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl:ControlModelCollection:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.ControlModelCollection.gft" />
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl:ControlModelGroup:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_1d2dControl.ControlModelGroup.gft" />
+
+	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_observation:ObservationWithSource:featureview:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_observation.ObservationWithSource.gft" />
 
@@ -67,6 +83,10 @@
 	<catalog:system
 		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase:RoughnessPolygon:featureview:default"
 		uri="http___www.tu-harburg.de_wb_kalypso_schemata_simulationbase.RoughnessPolygon.gft" />
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.tu-harburg.de_wb_kalypso_schemata_roughness:RoughnessClsCollection:featureview:default"
+		uri="http___www.tu-harburg.de_wb_kalypso_schemata_roughness.RoughnessClsCollection.gft" />
 
 	<!--  Transition element -->
 	<catalog:system

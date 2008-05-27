@@ -3,7 +3,7 @@
  */
 package org.kalypso.afgui.handlers;
 
-import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -11,8 +11,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -34,18 +33,18 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Stefan Kurzbach
  */
-public class MapViewInputContextHandler extends AbstractHandler implements IExecutableExtension
+public class MapViewInputContextHandler extends AbstractHandler
 {
-  public static final String MAPVIEW_INPUT = "org.kalypso.kalypso1d2d.pjt.contexts.mapViewInput"; //$NON-NLS-1$
-
-  private String m_mapViewInput;
+  private final String m_mapViewInput;
 
   /**
    * Creates a new {@link MapViewInputContextHandler} that loads the given input file
    */
-  public MapViewInputContextHandler( final String input )
+  public MapViewInputContextHandler( final Properties properties )
   {
-    m_mapViewInput = input;
+    m_mapViewInput = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
+
+    Assert.isNotNull( m_mapViewInput, "Parameter 'input' not set for mapViewInputContext" );
   }
 
   /**
@@ -113,20 +112,6 @@ public class MapViewInputContextHandler extends AbstractHandler implements IExec
       widgetManager.setActualWidget( null );
 
       return Status.OK_STATUS;
-    }
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
-  @SuppressWarnings("unchecked")
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-  {
-    if( data instanceof Map )
-    {
-      final Map parameterMap = (Map) data;
-      m_mapViewInput = (String) parameterMap.get( MAPVIEW_INPUT );
     }
   }
 }

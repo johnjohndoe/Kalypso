@@ -63,7 +63,7 @@ public interface ISimulation1D2DConstants
 
   public static final String BC_WQ_File = "wqusw.txt";
 
-  public static final String SIM_EXE_FILE_3_5 = "RMA10S35Kalypso.exe";
+  public static final String SIM_EXE_FILE_PREFIX = "rma10sk_";
 
   /** The date representing the steady calculation step */
   public static final Date STEADY_DATE = new Date( 0 );

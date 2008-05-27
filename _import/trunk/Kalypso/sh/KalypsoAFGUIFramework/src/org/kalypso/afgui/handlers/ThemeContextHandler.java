@@ -3,13 +3,12 @@
  */
 package org.kalypso.afgui.handlers;
 
-import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
@@ -27,17 +26,17 @@ import org.kalypso.ui.views.map.MapView;
  * 
  * @author Stefan Kurzbach
  */
-public class ThemeContextHandler extends AbstractHandler implements IExecutableExtension
+public class ThemeContextHandler extends AbstractHandler
 {
-  public static final String CONTEXT_THEME_FEATURE_TYPE = "org.kalypso.kalypso1d2d.pjt.contexts.theme"; //$NON-NLS-1$
-
-  private String m_featureType;
+  private final String m_featureType;
 
   private ActivateThemeJob m_activateThemeJob;
 
-  public ThemeContextHandler( final String featureType )
+  public ThemeContextHandler( final Properties properties )
   {
-    m_featureType = featureType;
+    m_featureType = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
+
+    Assert.isNotNull( m_featureType, "Parameter 'input' not set for themeContext" );
   }
 
   /**
@@ -88,19 +87,5 @@ public class ThemeContextHandler extends AbstractHandler implements IExecutableE
     }
 
     return Status.OK_STATUS;
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
-  @SuppressWarnings("unchecked")
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-  {
-    if( data instanceof Map )
-    {
-      final Map parameterMap = (Map) data;
-      m_featureType = (String) parameterMap.get( CONTEXT_THEME_FEATURE_TYPE );
-    }
   }
 }

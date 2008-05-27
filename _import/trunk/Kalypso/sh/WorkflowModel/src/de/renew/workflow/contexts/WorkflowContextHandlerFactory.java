@@ -93,8 +93,7 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
     {
       final ExtensionContext multiContext = (ExtensionContext) context;
       final IContextHandlerFactory factory = ContextHandlerFactoryExtension.getFactory( multiContext );
-      final IHandler contextHandler = factory.getHandler( multiContext );
-      return contextHandler;
+      return factory.getHandler( multiContext );
     }
     else
       return null;
