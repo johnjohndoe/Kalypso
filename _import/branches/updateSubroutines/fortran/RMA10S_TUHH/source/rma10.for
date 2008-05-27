@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Feb 2008   12:47 pm
+C     Last change:  WP   22 May 2008    9:08 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -60,6 +60,19 @@ cipk aug98 add character statement
       LOGICAL WBM
 ! djw 02/11/04  - Hook for WBM Routines
 
+      !called subroutines
+      !SECOND       : get the processor time to examine the calculation speed ???
+      !INITL        : allocation and initialization of the global variables defined in the modules
+      !INCSTRC      : reading and organizing in the control structure data from external file
+      !INTIMES      : reading and organizing in time series data from external file
+      !input        : reading all input data and managing the storage of that data in the proper arrays
+      !autoconverge : using autoconverge to automatically adapt the calculation parameters leading to convergence
+      !FileHeaders  : writes headers into different output files; moved, because of reading purposes within this subroutine
+      !GENT         : reads in external network parts from another file.
+      !cwr_init     : initializes the cwr-values during restart, if there are some values, that are already calculated and written
+      !FLDIR        : calculates the flow direction of 1D-elements
+
+
 !EFa jun07, necessary for autoconverge
       extranita = 50.
       temp_iteqv = 0.
@@ -69,7 +82,7 @@ cipk aug98 add character statement
       temp_iurvl1 = 0.
       temp_maxnn = 0.
 !-
-      CALL SECOND(TA)       
+      CALL SECOND(TA)
       ALLOCATE (VSING(8,MAXP))
 C-
 c  the following variable turns:
@@ -85,46 +98,62 @@ CIPK DEC00 separate initialisation
 C      MAXP = MNP
 C      MAXE = MEL
 c      IR1MAX=MEQ
-      MAXN=1
-      NDF=6
+
+      !MAXN = current iteration cycle
+      !NDF  = number of active degrees of freedom
+      !TOASK: Why is maxn initialized at this point?
+      MAXN = 1
+      NDF  = 6
 
 !nis,jun07: Moving this subroutine to a point before initl is called (so from rma10.mainroutine, nbs has no value, what leads to errors while calling zvrs from file.subroutine)
 C      CALL FILE(1)
 
 
-CIPK JUN05  Input control structure data
-      IF(INCSTR .EQ. 20) CALL INCSTRC
 
-CIPK JUN05  Input time series data
-      IF(INTIMS .EQ. 22) CALL INTIMES
+      !ND1   = ???
+      !ICFL  = ???
+      !NDFF  = ???
+      !NDG   = ???
+      !IDRYC = ???
+      ND1 = NSCR
+!     ICFL=1
+!     ICFL=0
+      ICFL  = 6
+      NDFF  = 9
+      NDG   = 5
+      IDRYC = 0
 
-      ND1=NSCR
-c      ICFL=1
-c     ICFL=0
-      ICFL=6
-      NDFF=9
-      NDG=5
-      IDRYC=0
+
+
+      !ALPHA  = factor for time derivative of variables
+      !thetcn = reciproc value of ALPHA for usage in time derivative formula
 CIPK AUG95 MAKE ALPHA 1.8
-      ALPHA=1.8
+!nis,may08: Use 1.6 again
+      ALPHA = 1.6
 CIPK JUN05      ALPHA=2.0
 cipk feb01 add thetcn
-      thetcn=1./alpha
+      thetcn = 1./ alpha
+
 C-
 C......INPUT GEOMETRY ETC
 C-
-      CALL INPUT(IBIN)
+      CALL INPUT (IBIN)
 
+      !INCSTR = unit no. for flow controller data (control structure data); (line INCSTR)
+      !INTIMS = unit no. for time series data (line INTIMS)
+CIPK JUN05  Input control structure data
+      IF (INCSTR == 20) CALL INCSTRC
+CIPK JUN05  Input time series data
+      IF (INTIMS == 22) CALL INTIMES
+
+
+      !beiauto = switch for autoconverge usage; Why is it a type real switch and not integer?
       !EFa jun07, output for autoconverge
-      if (beiauto.ne.0.) then
+      if (beiauto /= 0.) call autoconverge (-1.0)
 
-      call autoconverge(-1.0)
-  
-      end if
-      !-
-
+      !nis,Apr08: Write File header outputs in external subroutine
+      !call FileHeaders ()
 CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
-
       IF(IRMAFM .GT. 0) THEN
         WRITE(HEADER(41:60),'(2I10)') NP,NE
         HEADER(101:172)=TITLE   
@@ -132,7 +161,6 @@ CIPK MAR00  ADD FORMATION AND OUTPUT OF HEADER
       ENDIF
 
 CIPK JUN02 ADD BED DATA OUTFILE HEADER
-
       IF(IBEDOT .GT. 0) THEN
         HEADER(1:5)='RMA11'
         WRITE(HEADER(41:60),'(2I10)') NP,NE
@@ -141,7 +169,6 @@ CIPK JUN02 ADD BED DATA OUTFILE HEADER
       ENDIF
 
 CIPK JAN03 ADD WAVE DATA OUTFILE HEADER
-
       IF(IWAVOT .GT. 0) THEN
         HEADER(1:5)='RMA11'
         WRITE(HEADER(41:60),'(2I10)') NP,NE
@@ -231,9 +258,10 @@ CIPK JAN03
         ENDIF
       ENDIF
 
-CIPK JUN03 SETUP STRESS WEIGHTING 
 
-      IF(ICORDIN .NE. 0) CALL GENT
+CIPK JUN03 SETUP STRESS WEIGHTING 
+      !ICORDIN = unit no. for external grid data (line INSCORD)
+      IF (ICORDIN /= 0) CALL GENT
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,apr06: Initializing c_wr-values out of file or to default values 1.3. input-cwr-file
@@ -245,8 +273,8 @@ CIPK JUN03 SETUP STRESS WEIGHTING
         WRITE(*,*)'going to cwr_init'
         CALL cwr_init
       ELSE
-        DO i = 1,MaxE
-          c_wr(i) = 1.0
+        DO i = 1, MaxE
+          c_wr (i) = 1.0
         ENDDO
       ENDIF
 !-
@@ -256,35 +284,34 @@ C-
 C.......  Establish flow directions for one dimensional elements
 C-
       CALL FLDIR
+
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                 NiS,apr06: Start of STEADY STATE CALCULATION
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C-
 C......TEST FOR STEADY STATE
 C-
-      IF(NITI .EQ. 0) GO TO 350
-      NITA=NITI
+      !NITI = no. of possible iterations for steady state calculations
+      !NITA = no. of possible iterations for the current time step or calculation run (steady); it is always a copy
+      IF (NITI == 0) GO TO 350
+      NITA = NITI
 C-
 C......PROCESS STEADY VALUES
 C-
       !EFa jul07, necessary for autoconverge
-      if (beiauto.ne.0.) then
+      if (beiauto /= 0.) call autoconverge (1.)
 
-        call autoconverge(1.)
+      !reinitialize the current iteration cycle variable at the beginning of the steady state calculation
+      MAXN = 0
 
-      end if
-      !-
-      MAXN=0
+      !this is the real iteration cycle starting point
+      !***********************************************
 
-200   MAXN=MAXN+1
+200   MAXN = MAXN + 1
 
       !EFa jun07, autoconverge
-      if (beiauto.ne.0.) then
-      
-        call autoconverge(2.)
-
-      end if
-      !-
+      if (beiauto /= 0.) call autoconverge (2.)
 
 C     REWIND IVS
 
@@ -294,18 +321,31 @@ C     REWIND IVS
 !-
 
 !nis,jun07: Moving distribution calculation to this place because of dry node handling
+      !testing
+      WRITE(*,*) 'vor transveldistribution'
+      !testing-
       if (MaxLT /= 0) call TransVelDistribution
+      !testing
+      WRITE(*,*) 'vor transveldistribution'
+      !testing-
 !-
 
 C-
 C......  Process dry nodes
 C-
         IF(IDSWT .NE. 0) THEN
+
           IF(IDRYC .EQ. 0) THEN
             WRITE(*,*) 'ENTERING REWET'
             CALL REWET
+            !testing
+            WRITE(*,*) 'nach rewet und vor del'
+            !testing-
             WRITE(*,*) 'ENTERING DRY'
             CALL DEL
+            !testing
+            WRITE(*,*) 'nach del'
+            !testing-
             IDRYC=IDSWT
           ENDIF
         ENDIF
@@ -366,6 +406,7 @@ c  250 CONTINUE
       !WRITE(9919,*) 'maxn', maxn
       !-
 
+
       CALL FRONT(1)
 
       !close testfile
@@ -409,7 +450,13 @@ CIPK AUG04      IPRTF=IABS(NPRTF)
      +             .OR. NCONV .EQ. 1) THEN
          CALL OUTPUT(2)
 
+      !testing
+      WRITE(*,*) 'vor check'
+      !testing-
          CALL CHECK
+      !testing
+      WRITE(*,*) 'nach check'
+      !testing-
 CIPK MAR00
 CIPK DEC00      ELSE
 CIPK DEC00
@@ -445,7 +492,7 @@ cipk apr01              ENDDO
 cipk apr01            ENDIF
 cipk apr01          ENDIF
 cipk apr01        ENDDO
-      
+
 CIPK DEC00      ENDIF
 CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
       TETT=(DAYOFY-1)*24.+TET
@@ -486,7 +533,13 @@ CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
 !NiS,apr06: calculating the cwr-values for trees WITHIN THE ITERATION.
 !           Calculation of actualized tree-parameters; file is only written in dependency of itefreq
         IF (IVEGETATION /= 0) THEN
+          !testing
+          WRITE(*,*) 'vor get_element_cwr'
+          !testing-
           CALL get_element_cwr
+          !testing
+          WRITE(*,*) 'nach get_element_cwr'
+          !testing-
         END IF
 !-
       IF(MAXN .LT. NITA) GO TO 200
@@ -745,10 +798,11 @@ C        CALL HEATEX(ORT,NMAT,DELT,LOUT,IYRR,TET)
         CALL SWANDT
 
 CIPK AUG95 USE ALPHA=1.8
+!nis,may08: Use 1.6 again
 cipk dec99 test for delta = 0
         if(delt .gt. 0.) then
 
-          ALTM=1.8/DELT
+          ALTM=1.6/DELT
 CIPK          ALTM=2.0/DELT
 CIPK MAY02
           ALPHASN=1.8
@@ -804,33 +858,60 @@ CIPK NOV97  458 CONTINUE
         IF (ITEQV(MAXN) .NE. 5  .AND.  IOPTZD .GT. 0
      +    .AND. IOPTZD .LT. 3 ) CALL MELLII
 
-        DO 460 J=1,NP
+
+        !nis,apr08,com: updating the time derivatives
+
+        ForallNodes: DO J=1,NP
 cipk mar98 add logic to update HEL
+
+          !vel(3, j) : virtual depth (calculation depth) of node j
+          !vtm       : copy of virtual depth (calculation depth) of node j
+          !hel (j)   : transformed depth (depth over slot minimum of node j
+
+          !get the transformed depth
           VTM=VEL(3,J)
           CALL AMF(HEL(J),VTM,AKP(J),ADT(J),ADB(J),D1,D2,0)
 
-          DO 450 K=NDL,NDF
+          !NDL : Lowest degree of freedom to work on, is set if something is read from an external file (?); normally NDL = 1
+          !NDF : Highest degree of freedom to work on
+          !IESPC(k, j) : (???)
+          !VEl (k, j) : k-th degree of freedom of node j (velocities, virtual water depth, concentrations)
+          !thetcn:
+
+          !check for all degrees of freedom
+          ForAllDOFs: DO K = NDL, NDF
 CIPK SEP96        VOLD(K,J)=VEL(K,J)
 CIPK SEP96        VDOTO(K,J)=VDOT(K,J)
-            IF(IESPC(K,J) .EQ. 0) THEN
+            IF (IESPC (K, J) == 0) THEN
 CIPK DEC00            VEL(K,J)=VEL(K,J)+DELT*VDOT(K,J)
 
 cipk dec00 rewrite projection approach add switch
 
-              IF(IPROJ .EQ. 0) THEN
-                VEL(K,J)=VEL(K,J)+DELT*VDOT(K,J)
-              ELSEIF(IPROJ .EQ. 2) THEN
-                dtfac=thetcn*vdot(k,j)+(1.-thetcn)*v2ol(k,j)
-                vel(k,j)=vel(k,j)+ delt*dtfac
-cc              VEL(K,J)=VEL(K,J)+VEL(K,J)-V2OL(K,J)
-               VDOT(K,J)=ALTM*(VEL(K,J)-VOLD(K,J))-VDOTO(K,J)*(ALPHA-1.)
+
+              !calculate the current value of variable and the derivative basing on the approach to be used
+              !apply transformation of variable, but don't use update of time derivative
+              IF(IPROJ == 0) THEN
+                VEL (K, J) = VEL (K, J) + DELT * VDOT (K, J)
+
+              !use projection for the variable of current run by the old variable and the variable of the penultimate calculation step
+              ELSEIF(IPROJ == 2) THEN
+                dtfac =
+     +            thetcn * vdot (k, j) + (1. - thetcn) * v2ol (k, j)
+                vel (k, j) =
+     +            vel (k, j) + delt * dtfac
+                VDOT (K, J) =
+     +            ALTM * (VEL (K, J) - VOLD (K, J))
+     +            - VDOTO (K, J) * (ALPHA - 1.)
+
+              !classical method without time projection, but just calculating the time derivative based on the Finite Difference Scheme
+              !IPROJ == 1 (normally)
               ELSE
                VDOT(K,J)=ALTM*(VEL(K,J)-VOLD(K,J))-VDOTO(K,J)*(ALPHA-1.)
               ENDIF
 
             ENDIF
+          ENDDO ForAllDOFs
 
-  450     CONTINUE
 
           IF(NDL .EQ. 1) THEN
             IF(IESPC(3,J) .EQ. 0) THEN
@@ -858,7 +939,7 @@ cipk apr01 insert consistent argument
               ENDIF
             ENDIF
           ENDIF
-  460   CONTINUE
+        ENDDO ForallNodes
 
 cipk dec00 set water surface elevation
 
@@ -1646,3 +1727,4 @@ CIPK JUL01      STOP
       end do
 
       end subroutine
+
