@@ -134,7 +134,6 @@ public class SobekResultModelHandler implements ISobekResultModel
       {
         final TimeSeriesComplexType binding = getCrossSectionBinding( node );
         fillEmptyWorkspace( workspace, binding );
-
       }
 
       return null;
