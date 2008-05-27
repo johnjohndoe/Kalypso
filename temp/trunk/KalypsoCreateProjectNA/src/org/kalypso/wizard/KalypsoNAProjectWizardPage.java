@@ -433,9 +433,12 @@ public class KalypsoNAProjectWizardPage extends WizardPage implements SelectionL
     final IRelationType ftp = (IRelationType) rootFT.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
     final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
-    final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
-    final IFeatureType shapeFT = associationFeatureTypes[0];
-    return shapeFT;
+    //TODO: Why substitutes? Only valid shape types (exact match) should be possible
+    //SpecialPropertyMapper does not exist for GM_Object -> GM_Surface
+    //final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
+    //final IFeatureType shapeFT = associationFeatureTypes[0];
+    //return shapeFT;
+    return associationFeatureType;
   }
 
   private void handelResetSelection( )
