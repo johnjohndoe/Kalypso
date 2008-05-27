@@ -4,7 +4,7 @@ import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 
 public interface ISobekResultModel
 {
@@ -15,6 +15,6 @@ public interface ISobekResultModel
    */
   TimeSeriesComplexType getCrossSectionBinding( ICrossSectionNode node ) throws CoreException;
 
-  GMLWorkspace getCrossSectionTimeSeries( ICrossSectionNode node ) throws CoreException;
+  IResultTimeSeries getCrossSectionTimeSeries( ICrossSectionNode node ) throws CoreException;
 
 }

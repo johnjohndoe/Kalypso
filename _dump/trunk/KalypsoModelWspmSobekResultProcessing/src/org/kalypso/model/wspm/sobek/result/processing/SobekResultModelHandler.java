@@ -5,18 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.XMLGregorianCalendar;
 
-import nl.wldelft.fews.pi.EventComplexType;
-import nl.wldelft.fews.pi.TimeSerieComplexType;
 import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
 import org.eclipse.core.resources.IFile;
@@ -27,32 +23,39 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class SobekResultModelHandler implements ISobekResultModel
 {
+  private static JAXBContext JC = null;
+
   private final IFolder m_resultFolder;
 
   private static final Map<ICrossSectionNode, GMLWorkspace> m_workspaces = new HashMap<ICrossSectionNode, GMLWorkspace>();
 
   private static final Map<ICrossSectionNode, CommandableWorkspace> m_commandables = new HashMap<ICrossSectionNode, CommandableWorkspace>();
 
-  private SobekResultModelHandler( final IFolder resultFolder )
+  private SobekResultModelHandler( final IFolder resultFolder ) throws JAXBException
   {
     m_resultFolder = resultFolder;
+
+    if( JC == null )
+    {
+      JC = JAXBContext.newInstance( nl.wldelft.fews.pi.ObjectFactory.class );
+    }
+
   }
 
   /**
    * @param resultFolder
    *            Sobek result folder
    * @return Sobek Result Model
+   * @throws JAXBException
    */
-  public static ISobekResultModel getHandler( final IFolder resultFolder ) throws CoreException
+  public static ISobekResultModel getHandler( final IFolder resultFolder ) throws CoreException, JAXBException
   {
     if( !resultFolder.exists() )
       throw new CoreException( StatusUtilities.createErrorStatus( "Sobek result folder doesn't exists" ) );
@@ -81,8 +84,8 @@ public class SobekResultModelHandler implements ISobekResultModel
     final InputStream is = new BufferedInputStream( iFile.getContents() );
     try
     {
-      final JAXBContext jc = JAXBContext.newInstance( nl.wldelft.fews.pi.ObjectFactory.class );
-      final Unmarshaller u = jc.createUnmarshaller();
+
+      final Unmarshaller u = JC.createUnmarshaller();
       final JAXBElement<TimeSeriesComplexType> jaxRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
 
       return jaxRoot.getValue();
@@ -104,13 +107,13 @@ public class SobekResultModelHandler implements ISobekResultModel
     }
   }
 
-  public GMLWorkspace getCrossSectionTimeSeries( final ICrossSectionNode node ) throws CoreException
+  public IResultTimeSeries getCrossSectionTimeSeries( final ICrossSectionNode node ) throws CoreException
   {
     try
     {
       final CommandableWorkspace cmd = m_commandables.get( node );
       if( cmd != null )
-        return cmd;
+        return new ResultTimeSeriesHandler( cmd.getRootFeature() );
 
       /* get cross section node result file */
       IFile iFile = getCrossSectionNodeResultFile( node, ".gml" );
@@ -143,58 +146,19 @@ public class SobekResultModelHandler implements ISobekResultModel
       if( empty )
       {
         final TimeSeriesComplexType binding = getCrossSectionBinding( node );
-        fillEmptyWorkspace( workspace, binding );
 
-        // FIXME save workspace onto disk
+        final ResultWorker worker = new ResultWorker( workspace, binding, node );
+        worker.process();
+
+        // save changes
+        GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), workspace, "UTF-8" ); //$NON-NLS-1$
       }
 
-      return null;
+      return new ResultTimeSeriesHandler( workspace.getRootFeature() );
     }
     catch( final Exception e )
     {
       throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
-    }
-  }
-
-  private void fillEmptyWorkspace( final CommandableWorkspace workspace, final TimeSeriesComplexType binding ) throws CoreException
-  {
-    /* observation of result workspace */
-    final IResultTimeSeries handler = new ResultTimeSeriesHandler( workspace.getRootFeature() );
-    final IObservation<TupleResult> observation = handler.getObservation();
-
-    /* read out time series binding and fill observation */
-    final List<TimeSerieComplexType> series = binding.getSeries();
-    if( series.size() != 1 )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Parsing / Transformation of TimeSeriesComplexType doesn't support multiple result time series." ) );
-
-    final TupleResult result = observation.getResult();
-
-    for( final TimeSerieComplexType ts : series )
-    {
-      final List<EventComplexType> events = ts.getEvent();
-      for( final EventComplexType event : events )
-      {
-        /* data */
-        final XMLGregorianCalendar date = event.getDate();
-        final XMLGregorianCalendar time = event.getTime();
-
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.set( GregorianCalendar.DAY_OF_MONTH, date.getDay() );
-        calendar.set( GregorianCalendar.MONTH, date.getMonth() );
-        calendar.set( GregorianCalendar.YEAR, date.getYear() );
-        calendar.set( GregorianCalendar.HOUR_OF_DAY, time.getHour() );
-        calendar.set( GregorianCalendar.MINUTE, time.getMinute() );
-        calendar.set( GregorianCalendar.SECOND, time.getSecond() );
-
-        final Double value = event.getValue();
-
-        /* new record */
-        final IRecord record = result.createRecord();
-        record.setValue( 0, calendar.getTime() );
-        record.setValue( 1, value );
-
-        result.add( record );
-      }
     }
   }
 

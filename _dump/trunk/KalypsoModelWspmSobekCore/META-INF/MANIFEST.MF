@@ -47,7 +47,7 @@ Export-Package: nl.wldelft.fews.pi,
    org.eclipse.jface.wizard,
    org.eclipse.ui"
 Require-Bundle: org.kalypso.model.wspm.core,
- org.kalypso.ui,
+ org.kalypso.ui;visibility:=reexport,
  org.kalypso.model.wspm.sobek.schema;visibility:=reexport,
  de.openali.odysseus.chart.ext.base
 Bundle-Activator: org.kalypso.model.wspm.sobek.core.KalypsoModelWspmSobekCorePlugin
