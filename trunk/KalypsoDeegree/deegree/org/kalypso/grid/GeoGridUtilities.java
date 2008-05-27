@@ -119,7 +119,8 @@ public class GeoGridUtilities
   }
 
   /**
-   * Calculates the cell within a {@link IGeoGrid} from a geo position.
+   * Calculates the cell within a {@link IGeoGrid} from a geo position. We use a gird point as a center point
+   * representation.
    */
   public static GeoGridCell cellFromPosition( final IGeoGrid raster, final Coordinate pos ) throws GeoGridException
   {
@@ -128,8 +129,9 @@ public class GeoGridUtilities
     final Coordinate offsetX = raster.getOffsetX();
     final Coordinate offsetY = raster.getOffsetY();
 
-    final double dx = pos.x - origin.x;
-    final double dy = pos.y - origin.y;
+    // fit to the center point grid representation
+    final double dx = pos.x - (origin.x - offsetX.x / 2 - offsetY.x / 2);
+    final double dy = pos.y - (origin.y - offsetX.y / 2 - offsetY.y / 2);
 
     final double det = offsetX.x * offsetY.y - offsetY.x * offsetX.y;
     final double cellx = (dx * offsetY.y - dy * offsetX.y) / det;
@@ -163,8 +165,8 @@ public class GeoGridUtilities
     final Coordinate origin = grid.getOrigin();
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetY();
-    final double x1 = origin.x + offsetX.x * i;
-    final double y1 = origin.y + offsetY.y * j;
+    final double x1 = origin.x + offsetX.x * (i - 1 / 2);
+    final double y1 = origin.y + offsetY.y * (j - 1 / 2);
 
     final double x2 = x1 + offsetX.x;
     final double y2 = y1 + offsetY.y;
@@ -219,8 +221,8 @@ public class GeoGridUtilities
     final double x1 = origin.x;
     final double y1 = origin.y;
 
-    final double x2 = x1 + offsetX.x * grid.getSizeX();
-    final double y2 = y1 + offsetY.y * grid.getSizeY();
+    final double x2 = x1 + offsetX.x * (grid.getSizeX() - 1);
+    final double y2 = y1 + offsetY.y * (grid.getSizeY() - 1);
 
     return new Envelope( x1, x2, y1, y2 );
   }
@@ -243,8 +245,8 @@ public class GeoGridUtilities
       final Coordinate offsetX = grid.getOffsetX();
       final Coordinate offsetY = grid.getOffsetY();
 
-      final double x1 = origin.x;
-      final double y1 = origin.y;
+      final double x1 = origin.x - (offsetX.x + offsetY.x) / 2;
+      final double y1 = origin.y - (offsetX.y + offsetY.y) / 2;
 
       final double x2 = x1 + offsetX.x * grid.getSizeX();
       final double y2 = y1 + offsetY.y * grid.getSizeY();
@@ -279,7 +281,8 @@ public class GeoGridUtilities
   }
 
   /**
-   * This function creates the cell at the given (cell-)coordinates in a grid.
+   * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a surface
+   * with the grid point as center point of the surface.
    * 
    * @param grid
    *            The grid.
@@ -298,11 +301,11 @@ public class GeoGridUtilities
     {
       final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
 
-      final double cellX1 = cellCoordinate.x;
-      final double cellY1 = cellCoordinate.y;
-
       final double offsetX = grid.getOffsetX().x;
       final double offsetY = grid.getOffsetY().y;
+
+      final double cellX1 = cellCoordinate.x - offsetX / 2;
+      final double cellY1 = cellCoordinate.y - offsetY / 2;
 
       final double cellX2 = cellX1 + offsetX;
       final double cellY2 = cellY1 + offsetY;
@@ -580,18 +583,48 @@ public class GeoGridUtilities
 
   private static double interpolateBilinear( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
   {
-    // Find four adjacent cells
+    /* Find four adjacent cells */
     final GeoGridCell c11 = cellFromPosition( grid, crd );
-    final GeoGridCell c12 = new GeoGridCell( c11.x + 1, c11.y );
-    final GeoGridCell c21 = new GeoGridCell( c11.x, c11.y + 1 );
-    final GeoGridCell c22 = new GeoGridCell( c11.x + 1, c11.y + 1 );
+
+    // check on which side of the cell we are
+    final Coordinate crd11 = toCoordinate( grid, c11 );
+
+    final double centerX = crd11.x;
+    final double centerY = crd11.y;
+
+    int cellShiftX = 0;
+    int cellShiftY = 0;
+
+    if( crd.x < centerX && crd.y > centerY )
+    {
+      cellShiftX = -1;
+      cellShiftY = -1;
+    }
+    else if( crd.x < centerX && crd.y < centerY )
+    {
+      cellShiftX = -1;
+      cellShiftY = 1;
+    }
+    else if( crd.x > centerX && crd.y > centerY )
+    {
+      cellShiftX = 1;
+      cellShiftY = -1;
+    }
+    else if( crd.x > centerX && crd.y < centerY )
+    {
+      cellShiftX = 1;
+      cellShiftY = 1;
+    }
+
+    final GeoGridCell c12 = new GeoGridCell( c11.x + cellShiftX, c11.y );
+    final GeoGridCell c21 = new GeoGridCell( c11.x, c11.y + cellShiftY );
+    final GeoGridCell c22 = new GeoGridCell( c11.x + cellShiftX, c11.y + cellShiftY );
 
     final double v11 = grid.getValueChecked( c11.x, c11.y );
     final double v12 = grid.getValueChecked( c12.x, c12.y );
     final double v21 = grid.getValueChecked( c21.x, c21.y );
     final double v22 = grid.getValueChecked( c22.x, c22.y );
 
-    final Coordinate crd11 = toCoordinate( grid, c11 );
     final Coordinate crd12 = toCoordinate( grid, c12 );
     final Coordinate crd21 = toCoordinate( grid, c21 );
     final Coordinate crd22 = toCoordinate( grid, c22 );

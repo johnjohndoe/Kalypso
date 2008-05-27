@@ -63,7 +63,8 @@ public interface IGeoGrid extends IGeoValueProvider
   public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException;
 
   /**
-   * This function returns the cell at the given (cell-)coordinates.
+   * This function returns the cell at the given (cell-)coordinates. We interpret the grid cell as a surface
+   * with the grid point as center point of the cell.
    * 
    * @param x
    *            The (cell-)coordinate x.
