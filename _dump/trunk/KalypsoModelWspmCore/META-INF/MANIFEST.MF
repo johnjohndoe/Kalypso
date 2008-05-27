@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.core; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin
-Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Vendor: kalypso.sourceforge.net
 Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.gml,
  org.kalypso.model.wspm.core.gml.assignment,

@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.ui; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
-Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.ui,
  de.belger.swtchart.core;visibility:=reexport,
