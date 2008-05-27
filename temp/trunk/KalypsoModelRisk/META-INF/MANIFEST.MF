@@ -17,3 +17,4 @@ Export-Package: org.kalypso.risk.model.actions.dataImport.waterdepth,
  org.kalypso.risk.model.schema.binding,
  org.kalypso.risk.model.utils,
  org.kalypso.risk.widget
+Bundle-Vendor: kalypso.sourceforge.net
