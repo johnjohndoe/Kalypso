@@ -1,4 +1,4 @@
-!     Last change:  WP   17 Dec 2007    4:39 pm
+!     Last change:  WP   22 May 2008    9:09 am
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -211,7 +211,7 @@ end subroutine get_element_cwr
 
 
 !--------------------------------------------------------------------------------------------
-subroutine GET_NODE_SLOPE(slope,eslope)
+subroutine GET_NODE_SLOPE(slope, eslope)
 !
 ! For each node the slope of the water surface is calculated.
 !
@@ -233,8 +233,8 @@ USE Blk10mod
 !NiS,apr06: changing mnd to MaxP
 !REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT) :: slope    ! Calculated slope of water surface
 !REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT) :: eslope   ! Calculated slope of energy curve/surface
-REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT) :: slope    ! Calculated slope of water surface
-REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT) :: eslope   ! Calculated slope of energy curve/surface
+REAL (KIND = 4), DIMENSION (1: MaxP), INTENT (OUT) :: slope    ! Calculated slope of water surface
+REAL (KIND = 4), DIMENSION (1: MaxP), INTENT (OUT) :: eslope   ! Calculated slope of energy curve/surface
 !-
 
 ! Local variables
@@ -372,7 +372,7 @@ end do outer1D
 ! the slope will be interpolated from the neighbouring points.
 !nis,dec06: Correction of line, replacing mnd with MaxP
 !call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, mnd)
-call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, MaxP)
+call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, MaxP, IsPolynomNode)
 !-
 
 !nis,dec06,testing
@@ -515,7 +515,7 @@ end subroutine GET_MIN_ANGLE_POINTS
 
 
 !----------------------------------------------------------------------------------------
-subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope, nconnect, neighb, mnd)
+subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope, nconnect, neighb, mnd, IsPolynomNode)
 !
 ! For some nodes the slope could not be detected directly (e.g. if the node is dry).
 ! To have a completely filled array of slopes for each node of the mesh, the slope of the
@@ -534,9 +534,11 @@ implicit none
 INTEGER, INTENT(IN)                           :: nodecnt
 REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT) :: slope
 REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT) :: eslope
-INTEGER, DIMENSION(1:mnd), INTENT(IN)         :: nconnect
-INTEGER, DIMENSION(1:mnd,0:100),INTENT(IN)    :: neighb
-LOGICAL, DIMENSION(1:mnd), INTENT(INOUT)      :: marker_slope
+INTEGER, DIMENSION (1: mnd), INTENT(IN)         :: nconnect
+INTEGER, DIMENSION (1: mnd, 0: 100), INTENT (IN)    :: neighb
+LOGICAL, DIMENSION (1: mnd), INTENT(INOUT)      :: marker_slope
+LOGICAL, DIMENSION (1: mnd), INTENT(INOUT)      :: IsPolynomNode
+
 INTEGER, INTENT(IN)                           :: mnd
 
 ! Local variables
@@ -552,13 +554,19 @@ anz = 0
 numbertest: do i = 1, nodecnt
   !nis,jan07: There might be dead nodes within the network. Their coordinates are initialized by -1e20. These nodes have to be cycled.
   if (cord(i,1) .lt. (-0.5E20) .and. cord(i,2) .lt. (-0.5E20)) then
-    !Those nodes shouldn't be a hindrance factor
+    !Those nodes shouldn't be a hindrance factor, so give them attribute 'has slope = true'
     marker_slope(i) = .True.
     !anz shouldn't be increased
     CYCLE numbertest
   END if
-  !-
 
+  !nis,may08: Mark 1D nodes as having a slope
+  if (IsPolynomNode (i)) then
+    marker_slope (i) = .true.
+    CYCLE numbertest
+  endif
+
+  !all other nodes, that have no slope yet and have a number of neighbours are counted
   if (.not. marker_slope(i) .and. nconnect(i) /= 0) then
 	    anz = anz + 1
   end if
@@ -572,7 +580,7 @@ end do numbertest
 ! using interpolation from values of neighbour nodes.
 ! If there are large dry floodplains, it is not possible
 ! to interpolate the missing values in one loop.
-! It has to be iterativ!
+! It has to be iterative!
 
 eliminate: do
 
@@ -591,38 +599,35 @@ eliminate: do
     !WRITE(*,*)'marker: ', marker_slope(i)
     !-
 
-    if (.not. marker_slope(i)) then
-      !nis,dec06,testing
-      !WRITE(*,*) i, nconnect(i)
-      !-
+    if (marker_slope(i)) CYCLE all_nodes
 
-       temp_anz = 0
-       temp_slope = 0.0
-       temp_eslope= 0.0
+     !initialize local counters
+     temp_anz = 0
+     temp_slope = 0.0
+     temp_eslope= 0.0
 
-       all_neighb: do j = 1, nconnect(i)
-         !nis,oct06,testing:
-         !WRITE(*,*)'nachbarn: ', nconnect(i)
-         !WRITE(*,*)'Nachbar: ', neighb(i,j), marker_slope(neighb(i,j))
-         !-
-         if ( marker_slope(neighb(i,j)) ) then
-           temp_anz   = temp_anz + 1
-           temp_slope = temp_slope + slope(neighb(i,j))
-           temp_eslope = temp_eslope + eslope(neighb(i,j))
-         end if
-
-       end do all_neighb
-
-       ! Interpolated value will only be applied
-       ! if more than 2 neighbours have valid values!
-       if (temp_anz >= 2) then
-         slope(i) = temp_slope/temp_anz
-         eslope(i) = temp_eslope/temp_anz
-         marker_slope(i) = .true.
-         anz = anz - 1
+     all_neighb: do j = 1, nconnect(i)
+       !nis,oct06,testing:
+       !WRITE(*,*)'nachbarn: ', nconnect(i)
+       !WRITE(*,*)'Nachbar: ', neighb(i,j), marker_slope(neighb(i,j))
+       !-
+       if ( marker_slope(neighb(i,j)) .and. (.not. IsPolynomNode (neighb (i, j)))) then
+         temp_anz   = temp_anz + 1
+         temp_slope = temp_slope + slope(neighb(i,j))
+         temp_eslope = temp_eslope + eslope(neighb(i,j))
        end if
 
-    end if
+     end do all_neighb
+
+     ! Interpolated value will only be applied
+     ! if more than 2 neighbours have valid values!
+     if (temp_anz >= 2) then
+       slope(i) = temp_slope/temp_anz
+       eslope(i) = temp_eslope/temp_anz
+       marker_slope(i) = .true.
+       anz = anz - 1
+     end if
+
 
   end do all_nodes
 
