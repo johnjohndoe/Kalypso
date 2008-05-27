@@ -613,7 +613,7 @@ public class RiskModelHelper
         if( periods[i] == null || periods[i] == 0 )
           continue;
 
-        /* get the probability for each retrun period */
+        /* get the probability for each return period */
         final double p1 = 1 / periods[i];
         final double p2 = 1 / periods[i + 1];
 
@@ -629,7 +629,8 @@ public class RiskModelHelper
         final IRiskLanduseStatistic statEntry1 = periodSortedMap.get( periods[i] );
         final IRiskLanduseStatistic statEntry2 = periodSortedMap.get( periods[i + 1] );
 
-        final BigDecimal sumStat = statEntry2.getDamageSum().add( statEntry1.getDamageSum() );
+        // final BigDecimal sumStat = statEntry2.getDamageSum().add( statEntry1.getDamageSum() );
+        final BigDecimal sumStat = statEntry2.getAverageDamage().add( statEntry1.getAverageDamage() );
         final double value = sumStat.doubleValue() / 2;
         final BigDecimal si = new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 

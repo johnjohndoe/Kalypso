@@ -42,10 +42,13 @@ package org.kalypso.risk.model.actions.riskZonesCalculation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.deegree.crs.transformations.coordinate.CRSTransformation;
@@ -138,15 +141,24 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
   {
     try
     {
+      /* we need a sorted list of the annual coverage collections */
+      final SortedMap<Double, IAnnualCoverageCollection> covMap = new TreeMap<Double, IAnnualCoverageCollection>();
+      for( IAnnualCoverageCollection cov : m_annualCoverageCollection )
+        covMap.put( cov.getReturnPeriod().doubleValue(), cov );
+
+      final Collection<IAnnualCoverageCollection> collections = covMap.values();
+      final IAnnualCoverageCollection[] covArray = collections.toArray( new IAnnualCoverageCollection[collections.size()] );
+
+      /* fill the probabilities and damages */
       final double[] damage = new double[m_annualCoverageCollection.size()];
       final double[] probability = new double[m_annualCoverageCollection.size()];
 
-      /* fill the probabilies and damages */
-      for( int i = 0; i < probability.length; i++ )
+      for( int i = probability.length - 1; i >= 0; i-- )
       {
-        final IAnnualCoverageCollection collection = m_annualCoverageCollection.get( i );
+        final IAnnualCoverageCollection collection = covArray[i];
 
         final double value = getValue( collection, x, y );
+
         damage[i] = Double.isNaN( value ) ? 0.0 : value;
         probability[i] = 1.0 / collection.getReturnPeriod();
       }
@@ -258,21 +270,26 @@ public class RiskZonesGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
     if( isUrbanLanduseType == null )
       return Double.NaN;
 
-    IRiskZoneDefinition selectedRiskZoneDefinition = null;
+    SortedMap<Double, IRiskZoneDefinition> defs = getRiskZoneDefiniion( isUrbanLanduseType );
+    SortedMap<Double, IRiskZoneDefinition> headMap = defs.headMap( damageValue );
+    if( headMap.isEmpty() )
+      return Double.NaN;
 
-    double minDifference = Double.MAX_VALUE;
+    Double lastKey = headMap.lastKey();
+    return headMap.get( lastKey ).getOrdinalNumber();
+  }
+
+  private SortedMap<Double, IRiskZoneDefinition> getRiskZoneDefiniion( final boolean isUrbanLanduse )
+  {
+    final SortedMap<Double, IRiskZoneDefinition> treeMap = new TreeMap<Double, IRiskZoneDefinition>();
 
     for( final IRiskZoneDefinition riskZoneDefinition : m_riskZoneDefinitionsList )
-      if( isUrbanLanduseType.equals( riskZoneDefinition.isUrbanLanduseType() ) && damageValue >= riskZoneDefinition.getLowerBoundary() )
-      {
-        final double difference = damageValue - riskZoneDefinition.getLowerBoundary();
-        if( difference < minDifference )
-        {
-          minDifference = difference;
-          selectedRiskZoneDefinition = riskZoneDefinition;
-        }
-      }
-    return selectedRiskZoneDefinition != null ? selectedRiskZoneDefinition.getOrdinalNumber() : Double.NaN;
+    {
+      if( riskZoneDefinition.isUrbanLanduseType().booleanValue() == isUrbanLanduse )
+        treeMap.put( riskZoneDefinition.getLowerBoundary(), riskZoneDefinition );
+    }
+
+    return treeMap;
   }
 
 }

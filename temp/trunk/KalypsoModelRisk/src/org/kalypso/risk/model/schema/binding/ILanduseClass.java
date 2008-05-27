@@ -78,6 +78,8 @@ public interface ILanduseClass extends IColorStyledFeatureWrapper
 
   public IRiskLanduseStatistic createNewStatisticEntry( );
 
+  public void clearStatisticEntries( );
+
   public boolean containsStatisticEntry( final int returnPeriod );
 
   public List<IRiskLanduseStatistic> getLanduseStatisticList( );

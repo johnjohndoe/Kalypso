@@ -93,7 +93,7 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   public double getAverageAnnualDamage( )
   {
     final Double value = (Double) getFeature().getProperty( ILanduseClass.PROP_ANNUAL_AVERAGE_DAMAGE );
-    return value == null ? 0 : value.intValue();
+    return value == null ? 0 : value.doubleValue();
   }
 
   public void setMaxAnnualDamage( double value )
@@ -284,5 +284,15 @@ public class LanduseClass extends AbstractFeatureBinder implements ILanduseClass
   public double getCellSize( )
   {
     return m_cellSize;
+  }
+
+  /**
+   * @see org.kalypso.risk.model.schema.binding.ILanduseClass#clearStatisticEntries()
+   */
+  public void clearStatisticEntries( )
+  {
+    m_statList.clear();
+    final FeatureList list = (FeatureList) getFeature().getProperty( ILanduseClass.PROP_DAMAGE_STATISTIC_LIST );
+    list.clear();
   }
 }

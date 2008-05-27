@@ -141,7 +141,7 @@ public class StatisticResultComposite extends Composite
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
-              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%.00f", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
           if( phenName.equals( "Landuse" ) )//$NON-NLS-1$

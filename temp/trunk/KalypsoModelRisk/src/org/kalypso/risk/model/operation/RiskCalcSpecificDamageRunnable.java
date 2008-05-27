@@ -64,6 +64,8 @@ public final class RiskCalcSpecificDamageRunnable implements ICoreRunnableWithPr
     {
       /* clear existing data */
       specificDamageCoverageCollection.clear();
+      for( ILanduseClass landuseClass : landuseClassesList )
+        landuseClass.clearStatisticEntries();
 
       /* loop over all waterdepths */
       for( final IAnnualCoverageCollection srcAnnualCoverages : m_rasterDataModel.getWaterlevelCoverageCollection() )
