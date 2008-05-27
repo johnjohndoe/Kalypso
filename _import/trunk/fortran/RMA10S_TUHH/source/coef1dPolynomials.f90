@@ -1,4 +1,4 @@
-!Last change:  NIS  15 May 2008    8:54 pm
+!Last change:  NIS  22 May 2008    8:38 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1107,7 +1107,7 @@ Gaussloop: DO I = 1, NGP
   !Terms B - D: Convective terms
   FEEAN =                                                                                          &
           !Term B: Convective term
-    &   + vflowint(i)**2 * (dareaintdh(i) * dbeiintdh(i) + areaint(i) * d2beiintdhdx(i))           &
+    &   + vflowint(i)**2 * (dareaintdh(i) * dbeiintdx(i) + areaint(i) * d2beiintdhdx(i))           &
           !Term C: Convective term
     &   + vflowint(i)**2 * (dbeiintdh(i) * daintdx(i) + beiint(i) * d2aidhdx(i))                   &
           !Term D: Convective term
