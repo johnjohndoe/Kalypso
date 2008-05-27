@@ -3,6 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoManualNA Plug-in
 Bundle-SymbolicName: org.kalypso.KalypsoManualNA;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Vendor: org.kalypso
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.eclipse.help
 Export-Package: org.kalypso.KalypsoManualNA.help
