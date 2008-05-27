@@ -116,7 +116,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
- *
+ * 
  * @author Belger
  */
 public class GisTemplateHelper
@@ -124,6 +124,10 @@ public class GisTemplateHelper
   public static final ObjectFactory OF_GISMAPVIEW = new ObjectFactory();
 
   public static final org.kalypso.template.types.ObjectFactory OF_TEMPLATE_TYPES = new org.kalypso.template.types.ObjectFactory();
+
+  public static final JAXBContext JC_FEATUREVIEW = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
+
+  public static final org.kalypso.template.featureview.ObjectFactory OF_FEATUREVIEW = new org.kalypso.template.featureview.ObjectFactory();
 
   private GisTemplateHelper( )
   {
@@ -152,7 +156,7 @@ public class GisTemplateHelper
 
   public final static Featuretemplate loadGisFeatureTemplate( final URL url, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.0"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.0" ), 1000 ); //$NON-NLS-1$
 
     InputStream inputStream = null;
     try
@@ -167,11 +171,11 @@ public class GisTemplateHelper
     }
     catch( final JAXBException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.1"), e ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.1" ), e ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.2"), e ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.2" ), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -182,7 +186,7 @@ public class GisTemplateHelper
 
   public final Featuretemplate loadGisFeatureTemplate( final InputStream inputStream, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.3"), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.3" ), 1000 ); //$NON-NLS-1$
     try
     {
       final InputSource is = new InputSource( inputStream );
@@ -190,7 +194,7 @@ public class GisTemplateHelper
     }
     catch( final JAXBException e )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.gml.GisTemplateHelper.4") ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.4" ) ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -200,8 +204,7 @@ public class GisTemplateHelper
 
   public static final Featuretemplate loadGisFeatureTemplate( final InputSource is ) throws JAXBException
   {
-    final JAXBContext context = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
-    final Unmarshaller unmarshaller = context.createUnmarshaller();
+    final Unmarshaller unmarshaller = JC_FEATUREVIEW.createUnmarshaller();
 
     return (Featuretemplate) unmarshaller.unmarshal( is );
   }
@@ -256,7 +259,7 @@ public class GisTemplateHelper
   /**
    * Führt ein Pattern-Ersetzen durch, bevor die Gistableview geparst wird Jeder key der Properties wird durch seinen
    * value ersetzt. Funktioniert nur zeilenweise, d.h.
-   *
+   * 
    * @param file
    * @param replaceProps
    * @return Gistableview
@@ -326,7 +329,7 @@ public class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
-   *
+   * 
    * @return gismapview new empty map with a layer list
    */
   public static Gismapview emptyGisView( )
