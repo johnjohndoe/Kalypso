@@ -4,7 +4,7 @@ Bundle-Name: KalypsoServiceObsClient Plug-in
 Bundle-SymbolicName: org.kalypso.services.observation.client; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.services.observation.client.KalypsoServiceObsClientPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.services.observation.client,
  org.kalypso.services.ocs,

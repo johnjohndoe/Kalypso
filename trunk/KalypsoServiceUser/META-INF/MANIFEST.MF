@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoServiceUser
 Bundle-SymbolicName: org.kalypso.services.user;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.services.core,
  org.kalypso.commons,
  org.kalypso.contribs.java,

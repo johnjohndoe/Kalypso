@@ -4,7 +4,7 @@ Bundle-Name: KalypsoFeatureView Plug-in
 Bundle-SymbolicName: org.kalypso.featureview; singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Activator: org.kalypso.featureview.KalypsoFeatureViewPlugin
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.featureview,
  org.kalypso.featureview.views,

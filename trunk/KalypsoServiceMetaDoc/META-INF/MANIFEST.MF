@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoServiceMetaDoc
 Bundle-SymbolicName: org.kalypso.services.metadoc
 Bundle-Version: 1.0.0
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.jwsdp,

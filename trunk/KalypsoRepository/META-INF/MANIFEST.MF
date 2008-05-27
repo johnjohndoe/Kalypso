@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoRepository
 Bundle-SymbolicName: org.kalypso.repository; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Vendor: kalypso.org
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: org.kalypso.repository,
  org.kalypso.repository.conf,
