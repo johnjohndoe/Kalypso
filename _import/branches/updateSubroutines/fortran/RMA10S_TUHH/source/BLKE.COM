@@ -1,0 +1,3 @@
+!C-
+      COMMON/BLKE/ ESTIFM(80,80)
+!C-
