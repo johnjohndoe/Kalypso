@@ -458,17 +458,16 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   public @Override
   boolean equals( final Object that )
   {
-    if( (that == null) || !(that instanceof GM_Object_Impl) )
-    {
+    if( that == this )
+      return true;
+
+    if( that == null || !(that instanceof GM_Object_Impl) )
       return false;
-    }
 
     if( m_crs != null )
     {
       if( !m_crs.equals( ((GM_Object) that).getCoordinateSystem() ) )
-      {
         return false;
-      }
     }
     else
     {

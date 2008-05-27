@@ -143,13 +143,22 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   @Override
   public boolean equals( final Object other )
   {
+    if( other == this )
+      return true;
+
     if( super.equals( other ) && (other instanceof GM_Point) )
     {
       final GM_Point p = (GM_Point) other;
       boolean flagEq = (Math.abs( getX() - p.getX() ) < MUTE) && (Math.abs( getY() - p.getY() ) < MUTE);
       if( getCoordinateDimension() == 3 )
       {
-        flagEq = flagEq && (Math.abs( getZ() - p.getZ() ) < MUTE);
+        final double z1 = getZ();
+        final double z2 = p.getZ();
+
+        if( Double.isNaN( z1 ) && Double.isNaN( z2 ) )
+          flagEq = flagEq && true;
+        else
+          flagEq = flagEq && (Math.abs( z1 - z2 ) < MUTE);
       }
       return flagEq;
     }
