@@ -48,6 +48,7 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
@@ -59,7 +60,6 @@ import org.kalypso.model.wspm.sobek.core.wizard.pages.PageEditBoundaryConditionT
 import org.kalypso.model.wspm.sobek.core.wizard.worker.AbstractTimeSeriesProvider;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.FinishWorkerEditBoundaryCondition;
 import org.kalypso.model.wspm.sobek.core.wizard.worker.ITimeSeriesProvider;
-import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch

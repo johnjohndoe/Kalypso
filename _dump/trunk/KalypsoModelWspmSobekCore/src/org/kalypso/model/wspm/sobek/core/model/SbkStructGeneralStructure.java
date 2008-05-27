@@ -318,7 +318,7 @@ public class SbkStructGeneralStructure extends SbkStructure implements ISbkStruc
 
     return Double.NaN;
   }
-  
+
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
    */

@@ -46,10 +46,10 @@ import java.util.Set;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.model.wspm.sobek.core.Messages;
 
 /**
  * @author kuch

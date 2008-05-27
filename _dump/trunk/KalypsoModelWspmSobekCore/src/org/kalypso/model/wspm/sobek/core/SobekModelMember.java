@@ -306,7 +306,6 @@ public class SobekModelMember implements ISobekModelMember
     return m_workspace;
   }
 
- 
   /**
    *
    */

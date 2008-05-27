@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.ui.lastfall;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -164,7 +165,7 @@ public class LastfallTreeLabelProvider extends LabelProvider
                 final GregorianCalendar lastfallEnd = lastfall.getLastfallEnd();
 
                 final Integer preSimulationTime = lastfall.getPreSimulationTime();
-                lastfallStart.add( GregorianCalendar.HOUR, preSimulationTime * -1 );
+                lastfallStart.add( Calendar.HOUR, preSimulationTime * -1 );
 
                 final GregorianCalendar start = xmlStart.toGregorianCalendar();
                 final GregorianCalendar end = xmlEnd.toGregorianCalendar();

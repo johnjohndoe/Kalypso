@@ -112,9 +112,7 @@ public class Sperrzone implements ISperrzone
   {
     final Set<Geometry> list = m_map.get( branch );
     if( list == null )
-    {
       return new Geometry[] {};
-    }
 
     return list.toArray( new Geometry[] {} );
   }

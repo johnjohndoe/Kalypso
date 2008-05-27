@@ -89,8 +89,6 @@ public class WspmSobekCalcJob implements ISimulation
         e.printStackTrace();
       }
     }
-
-    final int asdfasdf = 0;
   }
 
 }

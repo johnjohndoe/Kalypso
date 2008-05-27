@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.wspm.sobek.core.Messages;
+
 /**
  * @author kuch
  */

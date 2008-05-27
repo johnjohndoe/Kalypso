@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class SobekResultModelHandler implements ISobekResultModel
@@ -147,8 +147,7 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   private void fillEmptyWorkspace( final CommandableWorkspace workspace, final TimeSeriesComplexType binding )
   {
-    final Feature rootFeature = workspace.getRootFeature();
-    final int asdfasd = 0;
+    final ResultTimeSeriesHandler handler = new ResultTimeSeriesHandler( workspace.getRootFeature() );
   }
 
   private void registerWorkspaces( final ICrossSectionNode node, final GMLWorkspace gml, final CommandableWorkspace cmd )

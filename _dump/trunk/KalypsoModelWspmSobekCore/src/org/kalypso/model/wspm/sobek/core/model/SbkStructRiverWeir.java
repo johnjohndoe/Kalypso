@@ -160,7 +160,7 @@ public class SbkStructRiverWeir extends SbkStructure implements ISbkStructRiverW
 
     return Double.NaN;
   }
-  
+
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
    */

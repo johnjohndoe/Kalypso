@@ -86,7 +86,7 @@ public class SobekWizardEditTimeSeriesObservation extends Wizard implements INew
   @Override
   public boolean performFinish( )
   {
-    final FeatureChange[]  changes = m_page.getCommands();
+    final FeatureChange[] changes = m_page.getCommands();
 
     final GMLWorkspace gmlWorkspace = m_condition.getTimeSeriesObservationFeature().getWorkspace();
     final CommandableWorkspace workspace;

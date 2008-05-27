@@ -79,6 +79,7 @@ public class SbkStructCompoundStructure extends SbkStructure implements ISbkStru
 
     return myStructs.toArray( new ISbkStructure[] {} );
   }
+
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.INode#getType()
    */

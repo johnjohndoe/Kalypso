@@ -66,21 +66,15 @@ public abstract class AbstractTimeSeriesProvider implements ITimeSeriesProvider
   {
 
     if( BOUNDARY_CONDITION_TYPE.eConstant.equals( type ) )
-    {
       return new ConstantTimeSeriesProvider( general, timeSeries );
-    }
     else if( BOUNDARY_CONDITION_TYPE.eZml.equals( type ) )
     {
       final BOUNDARY_TYPE node_type = general.getBoundaryNodeType();
 
       if( BOUNDARY_TYPE.eWQ.equals( node_type ) )
-      {
         return new ZmlWQRelationTimeSeriesProvider( general, timeSeries );
-      }
       else
-      {
         return new ZmlTimeSeriesProvider( general, timeSeries );
-      }
     }
     else
       throw new NotImplementedException();

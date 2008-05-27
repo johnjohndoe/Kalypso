@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.wizard.pages;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -112,7 +113,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
       final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
       final Integer pre = m_condition.getLastfall().getPreSimulationTime();
-      start.add( GregorianCalendar.HOUR, pre * -1 );
+      start.add( Calendar.HOUR, pre * -1 );
 
       if( m_tsEnds.getDateTime().before( start ) )
       {
@@ -244,7 +245,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
       {
         final GregorianCalendar start = m_condition.getLastfall().getLastfallStart();
         final Integer pre = m_condition.getLastfall().getPreSimulationTime();
-        start.add( GregorianCalendar.HOUR, pre * -1 );
+        start.add( Calendar.HOUR, pre * -1 );
 
         m_tsBegins = new LastfallDateChooser( start );
       }

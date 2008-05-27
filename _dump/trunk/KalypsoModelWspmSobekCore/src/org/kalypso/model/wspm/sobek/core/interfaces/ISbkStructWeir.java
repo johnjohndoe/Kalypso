@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-
 /**
  * @author thuel2
  */
@@ -56,7 +55,7 @@ public interface ISbkStructWeir extends ISbkStructure
   public String getFlowDirection( );
 
   public double getLateralContractionCoeffCW( );
-  
-  public void setLinkToBranch(IBranch branch) throws Exception;
+
+  public void setLinkToBranch( IBranch branch ) throws Exception;
 
 }
