@@ -1,4 +1,4 @@
-!     Last change:  WP   24 Apr 2008   12:58 pm
+!     Last change:  NIS  22 May 2008    3:31 am
 !subroutines for testoutput from coef1DfE subroutine
 
 subroutine MomOvVel (daintdt, areaint, vflowint, dbeiintdx, beiint, daintdx, dvintdx, grav, sfint, icyc, sidft)
@@ -143,7 +143,7 @@ subroutine Mom (nn, i, icyc, byparts, areaint, daintdt, daintdx, dareaintdh, vfl
   pause
 end subroutine
 
-subroutine ElementResult (nn, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3, vel_res, ah1, ah3, sfnod, sfwicht, &
+subroutine ElementResult (nn, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3, vel_res, ah1, ah3, sfnod, &
            &  dahdh1, dahdh3, d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, dareaintdh, d2areaintdh, daintdx, d2aintdx, &
            &  d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schint, sfint, dsfintdh1, vflowint, dvintdx)
 
@@ -155,7 +155,7 @@ subroutine ElementResult (nn, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3, vel_
   INTEGER, INTENT (IN) :: nop1, nop3, nn
   REAL (KIND = 8), INTENT (IN) :: sbot, xl (3), area
   real (kind = 8), intent (IN) :: qh1, qh3, ah1, ah3, dahdh1, dahdh3, vel_res (3), h1, h3
-  REAL (KIND = 8), INTENT (IN), dimension (1:2) :: sfnod, sfwicht, d2ahdh, dqhdh, d2qhdh
+  REAL (KIND = 8), INTENT (IN), dimension (1:2) :: sfnod, d2ahdh, dqhdh, d2qhdh
   REAL (KIND = 8), INTENT (IN), dimension (1:4) :: hhint, dhhintdx, areaint, dareaintdh, d2areaintdh, daintdx, d2aintdx, d2aidhdx
   REAL (KIND = 8), INTENT (IN), dimension (1:4) :: qschint, dqsintdh, d2qsidh, dqsintdx
   REAL (KIND = 8), INTENT (IN), dimension (1:4) :: s0schint, sfint, dsfintdh1
@@ -177,7 +177,6 @@ subroutine ElementResult (nn, nop1, nop3, h1, h3, sbot, xl, area, qh1, qh3, vel_
   WRITE(*,'(a18,2(1x,f13.8))') '    Fliessgeschw: ', vel_res(1), vel_res(3)
   WRITE(*,'(a18,2(1x,f13.8))') '   Fliessflaeche: ', ah1, ah3
   WRITE(*,'(a18,2(1x,f13.8))') '    Reibgefaelle: ', sfnod(1), sfnod(2)
-  WRITE(*,'(a18,2(1x,f13.8))') '    Wichtung    : ', sfwicht(1), sfwicht(2)
 
   WRITE(*,'(a18,2(1x,f13.8))') '           dahdh: ', dahdh1, dahdh3
   WRITE(*,'(a18,2(1x,f13.8))') '         d2ahdh2: ', d2ahdh(1), d2ahdh(2)

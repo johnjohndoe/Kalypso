@@ -1,4 +1,4 @@
-!Last change:  NIS  22 May 2008    8:38 pm
+!Last change:  NIS  22 May 2008    8:35 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -96,7 +96,6 @@ REAL (KIND = 8) :: dqsintdx(1:4)
 REAL (KIND = 8) :: d2qsidhdx(1:4)
 
 REAL (KIND = 8) :: s0schint(1:4)
-REAL (KIND = 8) :: sfwicint(1:4)
 REAL (KIND = 8) :: sfint(1:4)
 REAL (KIND = 8) :: dsfintdh1(1:4)
 REAL (KIND = 8) :: beiint(1:4)
@@ -122,7 +121,6 @@ REAL (KIND = 8) :: d2ahdh(1:2)
 REAL (KIND = 8) :: dqhdh(1:2)
 REAL (KIND = 8) :: d2qhdh(1:2)
 REAL (KIND = 8) :: sfnod(1:2)
-REAL (KIND = 8) :: sfwicht(1:2)
 
 REAL (KIND = 8) :: FRN, FRNX
 REAL (KIND = 8) :: FEEAN, FEEBN, FEECN
@@ -180,7 +178,6 @@ init1: DO j = 1, 4
   dqsintdx(j)    = 0.0
   d2qsidhdx(j)   = 0.0
   s0schint(j)    = 0.0
-  sfwicint(j)    = 0.0
   sfint(j)       = 0.0
   dsfintdh1(j)   = 0.0
   beiint(j)      = 0.0
@@ -229,7 +226,6 @@ init2: do j = 1, 2
   dvdtaltzs(j) = 0.0
 end do init2
 init3: DO i = 1, 2
-  sfwicht(i)    = 1.0
   Intah(i)      = 0.0
   dqhdh(i)      = 0.0
   d2ahdh(i)     = 0.0
@@ -478,7 +474,7 @@ do i = 1, 2
   endif
 
   !Sf
-  sfnod(i) = sfwicht(i) * vel_res(j) * ah(n) * ABS (vel_res(j) * ah(n)) / (qh(n)**2) * qgef(n)
+  sfnod(i) = vel_res(j) * ah(n) * ABS (vel_res(j) * ah(n)) / (qh(n)**2) * qgef(n)
 
   !Calculation case
   if (ntx == 1) then
@@ -590,7 +586,6 @@ do i = 1, 2
     end do
   ENDIF !ntx=1
 enddo
-
 
 !calculate additional energy losses regarding the continuous widening or contraction of the element
 !slope_l = CalcSlope_l (vel (1:2, n1), vel (1:2, n3), ah (n1), ah (n3), dahdh (n1), dahdh (n3), cord (n1, 1:2), cord (n3, 1:2), grav)
@@ -810,17 +805,8 @@ Gaussloop: DO I = 1, NGP
 
       !Sf,0 at GP
       s0schint(i) = qgef(n1) * xm(1) + qgef(n3) * xm(2)
-      !weighting factor
-      sfwicint(i) = sfwicht(1) * xm(1) + sfwicht(2) * xm(2)
       !Sf at GP
-      sfint(i) = sfwicint(i) * s0schint(i) * vflowint(i) * ABS (vflowint(i)) * areaint(i)**2 / qschint(i)**2
-
-      !ATTENTION ATTENTION ATTENTION
-      !this is only valid for a rectangular channel of the width of 14.0 meters
-      !calculation of lambda at that place
-      if (i == 1) lambdaTot (nn) = 0.0
-      lambdaTot (nn) = lambdaTot (nn) + sfint(i) * 8.0 * grav * 14.0*hhint(i) / (14.0+2.0*hhint(i)) / vflowint(i)**2 * HFACT(i)/2.0
-      !-
+      sfint(i) = s0schint(i) * vflowint(i) * ABS (vflowint(i)) * areaint(i)**2 / qschint(i)**2
 
       !dSf/dh at GP
       dsfintdh1(i) = s0schint(i) * vflowint(i) * ABS(vflowint(i))                      &
@@ -1142,7 +1128,8 @@ Gaussloop: DO I = 1, NGP
   IF (icyc > 0) THEN
     FEEAN = FEEAN                    &
          !Term A1
-    &   + dareaintdh(i) * dvintdt(i) &
+!    &   + dareaintdh(i) * dvintdt(i) &
+    &   + vflowint(i) * d2areaintdh(i) * dhht(i) &
          !Term A2
     &   + dareaintdh(i) * dhintdt(i)
 
@@ -1582,7 +1569,7 @@ enddo outer
 !control output
 if (testoutput == 2) &
   & call ElementResult (nn, nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), qh(n1), qh(n3), vel_res, &
-                       &  ah(n1), ah(n3), sfnod, sfwicht, dahdh(n1), dahdh(n3), d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, &
+                       &  ah(n1), ah(n3), sfnod, dahdh(n1), dahdh(n3), d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, &
                        &  dareaintdh, d2areaintdh, daintdx, d2aintdx, d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schin, &
                        &  sfint, sdfintdh1, vflowint, dvintdx)
 
