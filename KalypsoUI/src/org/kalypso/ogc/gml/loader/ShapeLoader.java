@@ -51,6 +51,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.command.ICommandManager;
+import org.kalypso.commons.command.ICommandManagerListener;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -59,6 +61,9 @@ import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.pool.KeyInfo;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -70,6 +75,29 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 public class ShapeLoader extends AbstractLoader
 {
   private final UrlResolver m_urlResolver = new UrlResolver();
+
+  /** A special command listener, which sets the dirty flag on the corresponding KeyInfo for the loaded workspace. */
+  private final ICommandManagerListener m_commandManagerListener = new ICommandManagerListener()
+  {
+    public void onCommandManagerChanged( final ICommandManager source )
+    {
+      final Object[] objects = getObjects();
+      for( final Object element : objects )
+      {
+        final CommandableWorkspace workspace = (CommandableWorkspace) element;
+        final ICommandManager cm = workspace.getCommandManager();
+        if( cm == source )
+        {
+          final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+          final KeyInfo info = pool.getInfo( workspace );
+          if( info != null )
+          {
+            info.setDirty( source.isDirty() );
+          }
+        }
+      }
+    }
+  };
 
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
@@ -153,7 +181,7 @@ public class ShapeLoader extends AbstractLoader
       }
 
       if( sourceFile == null )
-        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.10") + shpSource ); //$NON-NLS-1$
+        throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.10" ) + shpSource ); //$NON-NLS-1$
 
       // Workspace laden
       final String sourceCrs = sourceSrs;
@@ -161,7 +189,8 @@ public class ShapeLoader extends AbstractLoader
 
       final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs );
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
-
+      workspace.addCommandManagerListener( m_commandManagerListener );
+      
       try
       {
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
@@ -206,17 +235,31 @@ public class ShapeLoader extends AbstractLoader
         ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath(), null );
       }
       else
-        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.12") + shpURL ); //$NON-NLS-1$
+        throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.12" ) + shpURL ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.13") + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.13" ) + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.ShapeLoader.15") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.15" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
+  }
+  
+  /**
+   * @see org.kalypso.loader.AbstractLoader#release(java.lang.Object)
+   */
+  @Override
+  public void release( final Object object )
+  {
+    final CommandableWorkspace workspace = (CommandableWorkspace) object;
+    workspace.removeCommandManagerListener( m_commandManagerListener );
+
+    super.release( object );
+
+    workspace.dispose();
   }
 }
