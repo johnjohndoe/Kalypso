@@ -125,7 +125,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   }
 
   /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#setLinkedBranch()
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructWeir#setLinkToBranch()
    */
   public void setLinkToBranch( final IBranch branch ) throws Exception
   {

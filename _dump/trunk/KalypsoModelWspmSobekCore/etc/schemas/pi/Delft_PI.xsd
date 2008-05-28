@@ -13,17 +13,21 @@
         </appinfo>
     </annotation>
     <include schemaLocation="pi_sharedtypes.xsd"/>
-    <include schemaLocation="pi_profiles.xsd"/>
+        <!-- 
+                hinzugefügt -->
+        <include schemaLocation="pi_bceFixes.xsd"/>
+        
+<!--    <include schemaLocation="pi_profiles.xsd"/>-->
     <include schemaLocation="pi_branches.xsd"/>
-    <include schemaLocation="pi_cells.xsd"/>
+<!--    <include schemaLocation="pi_cells.xsd"/>-->
     <!-- 
         einkommentiert -->
     <include schemaLocation="pi_crosssections.xsd"/>
-    <include schemaLocation="pi_latinputs.xsd"/>
+<!--    <include schemaLocation="pi_latinputs.xsd"/>-->
     <include schemaLocation="pi_locations.xsd"/>
-    <include schemaLocation="pi_mapstacks.xsd"/>
-    <include schemaLocation="pi_polygons.xsd"/>
-    <include schemaLocation="pi_state.xsd"/>
+<!--    <include schemaLocation="pi_mapstacks.xsd"/>-->
+<!--    <include schemaLocation="pi_polygons.xsd"/>-->
+<!--    <include schemaLocation="pi_state.xsd"/>-->
     <!-- 
         einkommentiert -->
     <include schemaLocation="pi_timeseries.xsd"/>
@@ -36,11 +40,20 @@
     <!-- 
         auskommentiert -->
     <!--<include schemaLocation="pi_parameters.xsd"/>-->
-    <include schemaLocation="pi_diag.xsd"/>
+<!--    <include schemaLocation="pi_diag.xsd"/>-->
     <!-- 
         auskommentiert -->
     <!--<include schemaLocation="pi_table.xsd"/>-->
-    <!-- 
+        <!-- 
+                hinzugefügt -->
+        <include schemaLocation="pi_boundaries.xsd"/>
+        <!-- 
         hinzugefügt -->
     <include schemaLocation="pi_structures.xsd"/>
+        
+  
+
+        <!-- 
+                hinzugefügt -->
+        <include schemaLocation="configuration.xsd"/>
 </schema>

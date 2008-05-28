@@ -43,11 +43,13 @@ package org.kalypso.model.wspm.sobek.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructCompundStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
+import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -87,5 +89,13 @@ public class SbkStructCompoundStructure extends SbkStructure implements ISbkStru
   public TYPE getType( )
   {
     return TYPE.eSbkStructCompoundStructure;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructCompundStructure#setLinkToBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
+   */
+  public void setLinkToBranch( IBranch branch ) throws Exception
+  {
+    FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, branch.getFeature() ); //$NON-NLS-1$
   }
 }

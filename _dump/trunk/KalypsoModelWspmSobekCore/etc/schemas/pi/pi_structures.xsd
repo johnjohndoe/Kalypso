@@ -6,7 +6,8 @@
 <!--targetNamespace="http://www.wldelft.nl/fews/PI" -->
 <!--elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0>-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fews="http://www.wldelft.nl/fews/PI" targetNamespace="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
-	<!-- pi_sharedtypes type="fews:idString" -->
+        <xs:include schemaLocation="pi_bceFixes.xsd"/>
+        <!-- pi_sharedtypes type="fews:idString" -->
 	<xs:element name="structureId" type="xs:string"/>
 	<xs:element name="structureName" type="xs:string"/>
 	<xs:element name="measurementStationId" type="xs:string"/>
@@ -38,7 +39,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="Rows">
+	<!--<xs:element name="Rows">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="fews:row" minOccurs="0" maxOccurs="unbounded"/>
@@ -52,7 +53,7 @@
 				<xs:element ref="fews:cell" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
+	</xs:element>-->
 	<xs:element name="roughnessType" type="xs:string"/>
 	<xs:element name="parameter">
 		<xs:complexType mixed="true">
@@ -80,7 +81,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="column">
+<!--	<xs:element name="column">
 		<xs:complexType>
 			<xs:attribute name="type" use="required">
 				<xs:simpleType>
@@ -91,7 +92,7 @@
 				</xs:simpleType>
 			</xs:attribute>
 		</xs:complexType>
-	</xs:element>
+	</xs:element>-->
 	<xs:element name="Triggers">
 		<xs:complexType>
 			<xs:sequence>
@@ -160,7 +161,7 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="interpolation">
+<!--	<xs:element name="interpolation">
 		<xs:complexType>
 			<xs:simpleContent>
 				<xs:extension base="xs:integer">
@@ -183,15 +184,15 @@
 				</xs:extension>
 			</xs:simpleContent>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="info">
+	</xs:element>-->
+<!--	<xs:element name="info">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="fews:interpolation" minOccurs="0"/>
 				<xs:element ref="fews:Columns"/>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
+	</xs:element>-->
 	<xs:element name="controllerType" type="xs:string"/>
 	<xs:element name="controllerName" type="xs:string"/>
 	<xs:element name="controllerId" type="xs:string"/>
@@ -219,14 +220,14 @@
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="controlFrequency" type="xs:byte"/>
-	<xs:element name="Columns">
+	<!--<xs:element name="Columns">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="fews:column" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="count" type="xs:byte" use="required"/>
 		</xs:complexType>
-	</xs:element>
+	</xs:element>-->
 	<xs:element name="tabulatedCrossSection">
 		<xs:complexType>
 			<xs:sequence>
