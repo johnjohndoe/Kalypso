@@ -87,7 +87,7 @@ public class LastFallExplorer
 {
   static private final Font fTextBold = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
-  private static ViewerSorter m_sorter = new ViewerSorter()
+  public static ViewerSorter m_sorter = new ViewerSorter()
   {
     /**
      * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
