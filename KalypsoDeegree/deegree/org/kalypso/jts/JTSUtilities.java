@@ -794,7 +794,10 @@ public class JTSUtilities
   }
 
   /**
-   * inverts a given geometry
+   * Inverts a given geometry.
+   * 
+   * @param geometry
+   *            The geometry, which should be inverted.
    */
   public static Geometry invert( final Geometry geometry )
   {
@@ -807,13 +810,66 @@ public class JTSUtilities
 
       final Set<Coordinate> myCoordinates = new LinkedHashSet<Coordinate>();
       for( int i = coordinates.length - 1; i >= 0; i-- )
-      {
         myCoordinates.add( coordinates[i] );
-      }
 
       return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
     }
 
     throw new NotImplementedException();
+  }
+
+  /**
+   * This function adds a z-coordinate to each point of a line string. It interpolates the z-coordinate, using the
+   * length of the line segment between the start point (parameter start) and the current point. The last point will get
+   * the maximum as the z-coordinate (parameter end).
+   * 
+   * @param lineString
+   *            To each point on this line string the z-coordinate will be added.
+   * @param start
+   *            A start value (a start time, for example).
+   * @param end
+   *            A end value (an end time, for example).
+   * @return A new line string with z-coordinate.
+   */
+  public static LineString addInterpolatedZCoordinates( LineString lineString, double start, double end ) throws SameXValuesException
+  {
+    /* Interpolate the times for each points, if time is given. */
+
+    /* List with the coordinates of the new line string. */
+    List<Coordinate> coordinates = new ArrayList<Coordinate>();
+
+    /* The x-axis represents the distance on the line string. */
+    double x1 = 0.0;
+    double x2 = lineString.getLength();
+
+    /* The y-axis represents the values given by the parameters (a time, for example). */
+    double y1 = start;
+    double y2 = end;
+
+    /* Create the linear equation. */
+    LinearEquation equation = new LinearEquation( x1, y1, x2, y2 );
+
+    for( int i = 0; i < lineString.getNumPoints(); i++ )
+    {
+      /* Get the points. */
+      Point point = lineString.getPointN( i );
+
+      /* The distance from start to this point. */
+      /* If this point is the start, it should be 0. */
+      /* If this point is the end, it should be lineString.getLength(). */
+      double distance = pointDistanceOnLine( lineString, point );
+
+      /* Compute the x to this point (needed time to this point, for example). */
+      double x = equation.computeY( distance );
+
+      /* Create the coordinate. */
+      Coordinate coordinate = new Coordinate( point.getX(), point.getY(), x );
+      coordinates.add( coordinate );
+    }
+
+    /* Create the new line string. */
+    GeometryFactory factory = new GeometryFactory( lineString.getPrecisionModel(), lineString.getSRID() );
+
+    return factory.createLineString( coordinates.toArray( new Coordinate[] {} ) );
   }
 }

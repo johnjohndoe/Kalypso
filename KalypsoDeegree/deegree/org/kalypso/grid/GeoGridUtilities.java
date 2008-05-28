@@ -45,9 +45,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 
-import junit.framework.Assert;
-
 import org.deegree.crs.transformations.coordinate.CRSTransformation;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.math.LinearEquation;
@@ -267,8 +266,7 @@ public class GeoGridUtilities
       final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
-      Assert.assertNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
-
+      Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
         return (GM_Surface< ? >) surface.transform( CachedTransformationFactory.getInstance().createFromCoordinateSystems( grid.getSourceCRS(), targetCRS ), targetCRS );
 
@@ -326,8 +324,7 @@ public class GeoGridUtilities
       final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
-      Assert.assertNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
-
+      Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
         return (GM_Surface< ? >) surface.transform( CachedTransformationFactory.getInstance().createFromCoordinateSystems( grid.getSourceCRS(), targetCRS ), targetCRS );
 

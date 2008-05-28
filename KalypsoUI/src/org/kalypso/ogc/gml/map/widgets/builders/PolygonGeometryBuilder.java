@@ -127,7 +127,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   {
     m_points.add( p );
 
-    if( m_points.size() == m_cnt_points )
+    if( m_points.size() > 2 && m_points.size() == m_cnt_points )
       return finish();
 
     return null;
@@ -177,7 +177,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     if( m_result != null )
       return m_result;
 
-    if( (m_points.size() == m_cnt_points) || ((m_cnt_points == 0) && (m_points.size() > 2)) )
+    if( (m_points.size() > 2) && ((m_cnt_points == m_points.size()) || (m_cnt_points <= 2)) )
     {
       final GeoTransformer transformer = new GeoTransformer( m_crs );
 
