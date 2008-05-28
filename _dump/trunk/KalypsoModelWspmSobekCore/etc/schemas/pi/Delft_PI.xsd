@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fews="http://www.wldelft.nl/fews/PI" targetNamespace="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified"
     attributeFormDefault="unqualified" version="1.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
-    <!-- 
+    <!--
     hinzugefügt mit notwendigen Headerinformationen -->
     <annotation>
         <appinfo>
@@ -13,14 +13,14 @@
         </appinfo>
     </annotation>
     <include schemaLocation="pi_sharedtypes.xsd"/>
-        <!-- 
+        <!--
                 hinzugefügt -->
         <include schemaLocation="pi_bceFixes.xsd"/>
-        
+
 <!--    <include schemaLocation="pi_profiles.xsd"/>-->
     <include schemaLocation="pi_branches.xsd"/>
 <!--    <include schemaLocation="pi_cells.xsd"/>-->
-    <!-- 
+    <!--
         einkommentiert -->
     <include schemaLocation="pi_crosssections.xsd"/>
 <!--    <include schemaLocation="pi_latinputs.xsd"/>-->
@@ -28,32 +28,32 @@
 <!--    <include schemaLocation="pi_mapstacks.xsd"/>-->
 <!--    <include schemaLocation="pi_polygons.xsd"/>-->
 <!--    <include schemaLocation="pi_state.xsd"/>-->
-    <!-- 
+    <!--
         einkommentiert -->
     <include schemaLocation="pi_timeseries.xsd"/>
-    <!-- 
+    <!--
         auskommentiert -->
     <!--<include schemaLocation="pi_datacluster.xsd"/>-->
-    <!-- 
+    <!--
         auskommentiert -->
     <!--<include schemaLocation="pi_dataclusterdefinition.xsd"/>-->
-    <!-- 
+    <!--
         auskommentiert -->
     <!--<include schemaLocation="pi_parameters.xsd"/>-->
 <!--    <include schemaLocation="pi_diag.xsd"/>-->
-    <!-- 
+    <!--
         auskommentiert -->
     <!--<include schemaLocation="pi_table.xsd"/>-->
-        <!-- 
+        <!--
                 hinzugefügt -->
-        <include schemaLocation="pi_boundaries.xsd"/>
-        <!-- 
+        <!-- <include schemaLocation="pi_boundaries.xsd"/> -->
+        <!--
         hinzugefügt -->
     <include schemaLocation="pi_structures.xsd"/>
-        
-  
 
-        <!-- 
+
+
+        <!--
                 hinzugefügt -->
         <include schemaLocation="configuration.xsd"/>
 </schema>
