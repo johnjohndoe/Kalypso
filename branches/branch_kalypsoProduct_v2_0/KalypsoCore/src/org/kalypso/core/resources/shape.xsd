@@ -1,0 +1,169 @@
+<xs:schema xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:common="org.kalypso.gml.common" xmlns:shp="org.kalypso.shape"
+	targetNamespace="org.kalypso.shape" elementFormDefault="qualified"
+	attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<!-- ***************************IMPORTS********************************* -->
+	<xs:import namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+	<xs:import namespace="org.kalypso.gml.common"
+		schemaLocation="platform:/resource/KalypsoDeegree/deegree/org/kalypsodeegree_impl/gml/schema/schemata/commons/commons.xsd" />
+
+	<!-- ***************************DEFINITIONS***************************** -->
+	<xs:element name="ShapeCollection"
+		substitutionGroup="gml:_Feature">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="common:EmptyFeatureBaseType">
+					<xs:sequence>
+						<xs:element name="name"
+							type="xs:string" />
+						<xs:element name="type"
+							type="shp:ShapeTypeNumber" />
+						<xs:element name="featureMember"
+							type="shp:ShapeMemberPropertyType" minOccurs="0"
+							maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType name="ShapeMemberPropertyType">
+		<xs:sequence minOccurs="1" maxOccurs="1">
+			<xs:element ref="shp:_Shape" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="_Shape" abstract="true" type="shp:ShapeType"
+		substitutionGroup="gml:_Feature" />
+	<xs:complexType name="ShapeType">
+		<xs:complexContent>
+			<xs:extension base="common:EmptyFeatureBaseType">
+				<xs:sequence>
+					<xs:element name="GEOM" type="gml:LocationPropertyType"
+						minOccurs="1" maxOccurs="1" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ShapeGeometryPropertyType">
+		<xs:choice minOccurs="1" maxOccurs="1">
+			<xs:element ref="gml:multiPointProperty" />
+			<xs:element ref="gml:multiCurveProperty" />
+			<xs:element ref="gml:multiSurfaceProperty" />
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:simpleType name="ShapeTypeNumber">
+		<xs:restriction base="xs:int">
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>Null</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>Point</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>Polyline</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>Polygone</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>Multipoint</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>PointZ</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="13">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>PolylineZ</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="15">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>PolygoneZ</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="18">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>MultiPointZ</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="21">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>PointM</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="23">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>PolylineM</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="25">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>PolygonM</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="28">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>MultipointM</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="31">
+				<xs:annotation>
+					<xs:documentation xml:lang="de">
+						<xs:label>Multipatch</xs:label>
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,47 @@
+<level name="eben1">
+	<zml ID="8977hjh" name="tolle zeitreihe">
+		<vorhersagefilter>
+			<messung>	
+				<additionFilter>
+					<summand>
+						<offsetFilter offset="-3">
+						   <zmlLink>
+						</offsetFilter>
+		      		</summand>
+					<summand>
+						<faktorFilter faktor="2">
+						   <zmlLink>
+						</faktorFilter>
+		      		</summand>
+					<summand>
+						<faktorFilter faktor="2">
+						   <zmlLink>
+						</faktorFilter>
+		      		</summand>      		
+		     	</additionFilter>
+			</messung>
+			<vorhersage>
+				<rasterFilter>
+					<rasterSource href="RasterDatei.txt"/>
+					<rasterConf   href="conf.gml"/>
+				</rasterFilter>
+			</vorhersage>
+		</vorhersagefilter>
+	</zml>
+</level>
+
+...
+
+TYP           |    logik   | echte Daten
+-----------------------------------------
+Wasserstand
+ gemessen
+ vorhesage
+ 
+Niederschlag
+ gemessen		VirtualRep. PSICompact
+ vorhersage     VirtualRep. RASTER
+ 
+ 
+ 
+ 

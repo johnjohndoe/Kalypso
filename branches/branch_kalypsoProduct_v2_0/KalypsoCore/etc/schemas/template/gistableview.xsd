@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Gernot Belger (Björnsen Beratende Ingenieure GmbH) -->
+<xs:schema targetNamespace="gistableview.template.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kalypso="types.template.kalypso.org">
+	<xs:import namespace="types.template.kalypso.org" schemaLocation="./layerTypes.xsd"/>
+	<xs:element name="gistableview">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="layer">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="kalypso:layerType">
+								<xs:sequence>
+									<xs:element name="column" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:attribute name="name" type="xs:string" use="required"/>
+											<xs:attribute name="label" type="xs:string" use="optional"/>
+											<xs:attribute name="tooltip" type="xs:string" use="optional"/>
+											<xs:attribute name="editable" type="xs:boolean" use="optional" default="false"/>
+											<xs:attribute name="width" type="xs:int" use="optional" default="100"/>
+											<xs:attribute name="alignment" type="xs:string" use="optional" default="SWT.CENTER"/>
+											<xs:attribute name="format" type="xs:string" use="optional" default=""/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="sort" minOccurs="0" maxOccurs="1">
+										<xs:complexType>
+											<xs:attribute name="propertyName" type="xs:string" use="required"/>
+											<xs:attribute name="inverse" type="xs:boolean" use="optional" default="false"/>
+										</xs:complexType>
+									</xs:element>
+										<xs:element name="filter" type="xs:anyType" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>
+													<p>Filter expression in order to filter the list of shown features.</p>
+													<p>Only features that pass through all filter expression will be shown.</p>
+													<p>The content of this element is of type anyUri in order to not let it be bound automatically. The content will instead be parsed by deegree.</p>
+													<p> At the moment, only ogc:filter expressions are supported.</p>
+												</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+								</xs:sequence>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
