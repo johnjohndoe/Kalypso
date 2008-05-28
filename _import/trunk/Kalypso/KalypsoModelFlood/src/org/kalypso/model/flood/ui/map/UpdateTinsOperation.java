@@ -50,8 +50,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -271,7 +269,7 @@ public class UpdateTinsOperation implements ICoreRunnableWithProgress
           sourceWorkspace = ShapeSerializer.deserialize( shapeBase, crs );
 
           final Feature fRoot = sourceWorkspace.getRootFeature();
-          final FeatureList lstMembers = (FeatureList) fRoot.getProperty( new QName( "namespace", "featureMember" ) );
+          final FeatureList lstMembers = (FeatureList) fRoot.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
           final GM_Object geom = ((Feature) lstMembers.get( 0 )).getDefaultGeometryProperty();
           gmSurface = new GM_TriangulatedSurface_Impl( crs );
