@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: de.renew.workflow.connector;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
-Bundle-Vendor: %providerName
+Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: de.renew.workflow.connector,
  de.renew.workflow.connector.cases,
