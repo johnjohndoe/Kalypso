@@ -22,12 +22,12 @@
 <topic href="ch01s02s01.html" label="Perspektiven und Views in KalypsoWSPM"/>
 </context>
 <context id="kalypso_wspm_Perspektive_Spiegellinienberechnung">
-<description>Perspektive "Spiegellinienberechnung"</description>
-<topic href="ch01s02s01.html#kalypso_wspm_Perspektive_Spiegellinienberechnung" label="Perspektive &quot;Spiegellinienberechnung&quot;"/>
+<description>Perspektive Spiegellinienberechnung</description>
+<topic href="ch01s02s01.html#kalypso_wspm_Perspektive_Spiegellinienberechnung" label="Perspektive Spiegellinienberechnung"/>
 </context>
 <context id="kalypso_wspm_Perspektive_Profileditor_manager">
-<description>Perspektive "Profileditor/ Profil Manager"</description>
-<topic href="ch01s02s01.html#kalypso_wspm_Perspektive_Profileditor_manager" label="Perspektive &quot;Profileditor/ Profil Manager&quot;"/>
+<description>Perspektive Profileditor - Profil Manager</description>
+<topic href="ch01s02s01.html#kalypso_wspm_Perspektive_Profileditor_manager" label="Perspektive Profileditor - Profil Manager"/>
 </context>
 <context id="kalypso_wspm_neues_projekt">
 <description>Neues Projekt erstellen</description>
@@ -64,9 +64,9 @@
 <topic href="ch02.html" label="Preprozessing - Modellaufbau"/>
 </context>
 <context id="kalypso_wspm_neues_gewässer">
-<description>Definition eines neuen Gewässers
-      im Projekt</description>
-<topic href="ch02s01.html" label="Definition eines neuen Gewässers&#10;      im Projekt"/>
+<description>Definition eines neuen Gewässers im
+    Projekt</description>
+<topic href="ch02s01.html" label="Definition eines neuen Gewässers im&#10;    Projekt"/>
 </context>
 <context id="kalypso_wspm_Profile_editieren">
 <description>Profile editieren</description>
@@ -82,8 +82,8 @@
 </context>
 <context id="kalypso_wspm_Profileditortabelle_NeuerPunkt">
 <description>Anlegen bzw. Einfügen eines neuen Profilpunktes in der
-          Tabelle</description>
-<topic href="ch02s02s02.html#kalypso_wspm_Profileditortabelle_NeuerPunkt" label="Anlegen bzw. Einfügen eines neuen Profilpunktes in der&#10;          Tabelle"/>
+        Tabelle</description>
+<topic href="ch02s02s02.html#kalypso_wspm_Profileditortabelle_NeuerPunkt" label="Anlegen bzw. Einfügen eines neuen Profilpunktes in der&#10;        Tabelle"/>
 </context>
 <context id="kalypso_wspm_Profileditortabelle_PunktLöschen">
 <description>Löschen eines Profilpunktes</description>
@@ -111,9 +111,9 @@
 </context>
 <context id="kalypso_wspm_Profileditorlegende_Rauheit">
 <description>Rauheit k<sub>s</sub> und
-          k<sub>st</sub>
+        k<sub>st</sub>
 </description>
-<topic href="ch02s02s03.html#kalypso_wspm_Profileditorlegende_Rauheit" label="Rauheit ks und&#10;          kst"/>
+<topic href="ch02s02s03.html#kalypso_wspm_Profileditorlegende_Rauheit" label="Rauheit ks und&#10;        kst"/>
 </context>
 <context id="kalypso_wspm_Profileditorlegende_Rauheitszuweisung_Polygone">
 <description>Rauheitszuweisung via Polygone</description>
@@ -133,8 +133,8 @@
 </context>
 <context id="kalypso_wspm_Profileditorlegende_Durchlass">
 <description>Durchlass mit Trapezprofil, Maulprofil, Kreisprofil oder mit
-          Eiprofil</description>
-<topic href="ch02s02s03.html#kalypso_wspm_Profileditorlegende_Durchlass" label="Durchlass mit Trapezprofil, Maulprofil, Kreisprofil oder mit&#10;          Eiprofil"/>
+        Eiprofil</description>
+<topic href="ch02s02s03.html#kalypso_wspm_Profileditorlegende_Durchlass" label="Durchlass mit Trapezprofil, Maulprofil, Kreisprofil oder mit&#10;        Eiprofil"/>
 </context>
 <context id="kalypso_wspm_Gewässerstrang_editieren">
 <description>Gewässerstrang editieren</description>
@@ -146,8 +146,8 @@
 </context>
 <context id="kalypso_wspm_Gewässerstrang_Gewässerprofile_InKarte_einladen">
 <description>Einladen von Gewässerprofilen &amp; -strängen in die
-        Karte</description>
-<topic href="ch02s03s02.html" label="Einladen von Gewässerprofilen &amp; -strängen in die&#10;        Karte"/>
+      Karte</description>
+<topic href="ch02s03s02.html" label="Einladen von Gewässerprofilen &amp; -strängen in die&#10;      Karte"/>
 </context>
 <context id="kalypso_wspm_Abflussereignisse_editieren">
 <description>Abflussereignisse editieren</description>
