@@ -8,13 +8,13 @@
 -->
 
 <bookinfo>
-  <title>Niederschlag-Abfluss-Modell KalypsoNA</title>
+  <title>Kalypso Hydrology - Anwenderhandbuch</title>
 
   <subtitle>
 				<mediaobject>
 				<imageobject>
 					<imagedata align="center"
-						fileref="img/bookinfo/kalypsoNA.png"
+						fileref="img/bookinfo/KalypsoNA.png"
 						format="PNG" scale="85"/>
 				</imageobject>
 			</mediaobject>
@@ -28,7 +28,8 @@
     <address>Denickestrasse 22 21073 Hamburg</address>
   </author>
 
-  <pubdate>Version 1.0.3, August 2007</pubdate>
+  <!-- Als Version wird immer die korrespondierende Version des Programms verwendet -->
+  <pubdate>Version 2.0.0, Mai 2008</pubdate>
 
   <!-- Bei den beiden folgenden Tags funktioniert das Profiling nicht
   		deshalb müsste man hier eigene bookinfos pro deploy machen, wenns benötigt wird.
