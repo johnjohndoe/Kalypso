@@ -131,6 +131,7 @@
 					</element>
 					<element name="branchID" type="string" nillable="true" />
 					<element name="maxValue" type="double" nillable="true" />
+					<element name="minValue" type="double" nillable="true" />
 					<element name="lastValue" type="double" nillable="true" />
 					<!-- Liste von Paaren "duration - value" -->
 					<element ref="wspmSobekResultTs:durationValuePairMember" minOccurs="0" maxOccurs="unbounded" />

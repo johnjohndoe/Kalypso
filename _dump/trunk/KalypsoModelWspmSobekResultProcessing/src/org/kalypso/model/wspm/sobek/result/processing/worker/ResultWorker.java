@@ -59,6 +59,8 @@ public class ResultWorker
 
   private double m_max = Double.MIN_VALUE;
 
+  private double m_min = Double.MAX_VALUE;
+
   private double m_last = Double.NaN;
 
   /* result table <Waterlevel, Number of Intervalls> */
@@ -107,8 +109,7 @@ public class ResultWorker
         final Double value = event.getValue();
 
         /* statistic results */
-        determineMax( value );
-        determineLast( value );
+        determineMinMaxLast( value );
 
         addResultTableValue( value );
 
@@ -158,6 +159,7 @@ public class ResultWorker
         properties.put( IResultTimeSeries.QN_BRANCH_ID, branch.getId() ); // distance
 
         properties.put( IResultTimeSeries.QN_MAX_VALUE, m_max );
+        properties.put( IResultTimeSeries.QN_MIN_VALUE, m_min );
         properties.put( IResultTimeSeries.QN_LAST_VALUE, m_last );
 
         FeatureUtils.updateProperties( m_workspace, m_handler, properties );
@@ -232,15 +234,12 @@ public class ResultWorker
     m_resultTable.put( myValue, ++integer );
   }
 
-  private void determineLast( final Double value )
+  private void determineMinMaxLast( final Double value )
   {
+    m_min = Math.min( m_min, value );
+    m_max = Math.max( m_max, value );
     m_last = value;
 
-  }
-
-  private void determineMax( final Double value )
-  {
-    m_max = Math.max( m_max, value );
   }
 
 }

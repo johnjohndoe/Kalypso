@@ -127,4 +127,9 @@ public class ResultTimeSeriesHandler extends AbstractFeatureWrapper implements I
     return null;
   }
 
+  public Double getMinValue( )
+  {
+    return (Double) getProperty( QN_MIN_VALUE );
+  }
+
 }

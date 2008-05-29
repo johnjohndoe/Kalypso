@@ -51,6 +51,8 @@ public interface IResultTimeSeries extends Feature
 
   public static final String DICT_OBS_WATERLEVEL = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#WATERLEVEL"; //$NON-NLS-1$
 
+  public static final QName QN_MIN_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "minValue" );
+
   public String getUniqueId( );
 
   public String getStationName( );
@@ -66,6 +68,8 @@ public interface IResultTimeSeries extends Feature
   public String getBranchId( );
 
   public Double getMaxValue( );
+
+  public Double getMinValue( );
 
   public Double getLastValue( );
 
