@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <contexts>
 <context id="Kalypso1D2DAllgemeines">
-<description>Allgemeine Einführung HN-Modell Kalypso1D2D</description>
-<topic href="ch01.html" label="Allgemeine Einführung HN-Modell Kalypso1D2D"/>
+<description>Allgemeine Einführung Kalypso 1D2D</description>
+<topic href="ch01.html" label="Allgemeine Einführung Kalypso 1D2D"/>
 </context>
 <context id="Kalypso1D2DProjektbearbeitung">
 <description>Projektbearbeitung</description>
