@@ -15,6 +15,7 @@ import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 public class ResultTimeSeriesHandler extends AbstractFeatureWrapper implements IResultTimeSeries
 {
@@ -37,7 +38,7 @@ public class ResultTimeSeriesHandler extends AbstractFeatureWrapper implements I
 
   public Double getMaxValue( )
   {
-    return  (Double) getProperty( QN_MAX_VALUE );
+    return (Double) getProperty( QN_MAX_VALUE );
   }
 
   public String getName( )
@@ -119,8 +120,11 @@ public class ResultTimeSeriesHandler extends AbstractFeatureWrapper implements I
 
   public IValuePairMembers getValuePairs( )
   {
-    // FIXME
-    throw new NotImplementedException();
+    Object property = getProperty( QN_VALUE_PAIRS );
+    if( property instanceof FeatureList )
+      return new ValuePairMembersHandler( (FeatureList) property );
+
+    return null;
   }
 
 }

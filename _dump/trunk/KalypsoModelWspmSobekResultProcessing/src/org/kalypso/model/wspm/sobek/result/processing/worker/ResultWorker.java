@@ -220,13 +220,16 @@ public class ResultWorker
 
   private void addResultTableValue( final Double value )
   {
-    Integer integer = m_resultTable.get( value );
+    // Normalise value to precision .4f
+    Double myValue = Double.valueOf( value * 10000 ).intValue() / 10000d;
+
+    Integer integer = m_resultTable.get( myValue );
     if( integer == null )
     {
       integer = 0;
     }
 
-    m_resultTable.put( value, ++integer );
+    m_resultTable.put( myValue, ++integer );
   }
 
   private void determineLast( final Double value )
