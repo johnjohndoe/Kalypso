@@ -49,10 +49,7 @@ import java.awt.event.KeyEvent;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -106,16 +103,15 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
     {
       e.consume();
 
-      MapPanel mapPanel = getMapPanel();
+      final MapPanel mapPanel = getMapPanel();
       if( mapPanel == null )
         return;
 
-      IStatus status = DeleteFeElementsHelper.deleteSelectedFeElements( mapPanel );
-      if( status != Status.OK_STATUS )
+      final IStatus status = DeleteFeElementsHelper.deleteSelectedFeElements( mapPanel );
+      if( !status.isOK() )
       {
-        final Shell shell = Display.getCurrent().getActiveShell();
-        if( shell != null )
-          MessageDialog.openError( shell, "1D-Elemente löschen", status.getMessage() );
+        // TODO: should be error instead, but probably never happens at all
+        SWT_AWT_Utilities.showSwtMessageBoxInformation( "1D-Elemente löschen", status.getMessage() );
       }
     }
     super.keyPressed( e );
