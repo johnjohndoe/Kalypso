@@ -55,7 +55,6 @@ import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
  */
 public class StandardShapeDataProvider implements IShapeDataProvider
 {
-
   private Feature[] m_features;
 
   private byte m_shptype;
@@ -170,7 +169,7 @@ public class StandardShapeDataProvider implements IShapeDataProvider
    * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getFeatureProperty(int,
    *      org.kalypso.gmlschema.property.IPropertyType)
    */
-  public Object getFeatureProperty( int featureIndex, IPropertyType propertyType )
+  public Object getFeatureProperty( final int featureIndex, final IPropertyType propertyType )
   {
     return m_features[featureIndex].getProperty( propertyType );
   }

@@ -38,13 +38,10 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 /**
  * Class representing a field descriptor of a dBase III/IV file
- * 
  * <P>
  * <B>Last changes <B>: <BR>
  * 28.04.00 ap: constructor declared and implemented <BR>
  * 28.04.00 ap: method getFieldDescriptor() declared and implemented <BR>
- * 
- * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 28.04.2000
@@ -53,7 +50,6 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 public class FieldDescriptor
 {
-
   /**
    * fieldinformation as byte array
    */
@@ -63,11 +59,10 @@ public class FieldDescriptor
    * constructor recieves name and type of the field, the length of the field in bytes and the decimalcount. the
    * decimalcount is only considered if type id "N" or "F", it's maxvalue if fieldlength - 2!
    */
-  public FieldDescriptor( String name, String type, byte fieldlength, byte decimalcount ) throws DBaseException
+  public FieldDescriptor( final String name, final String type, final byte fieldlength, final byte decimalcount ) throws DBaseException
   {
-
-    if( ( !type.equalsIgnoreCase( "C" ) ) && ( !type.equalsIgnoreCase( "D" ) ) && ( !type.equalsIgnoreCase( "F" ) )
-        && ( !type.equalsIgnoreCase( "N" ) ) && ( !type.equalsIgnoreCase( "M" ) ) && ( !type.equalsIgnoreCase( "L" ) ) )
+    if( (!type.equalsIgnoreCase( "C" )) && (!type.equalsIgnoreCase( "D" )) && (!type.equalsIgnoreCase( "F" )) && (!type.equalsIgnoreCase( "N" )) && (!type.equalsIgnoreCase( "M" ))
+        && (!type.equalsIgnoreCase( "L" )) )
       throw new DBaseException( "data type is not supported" );
 
     data = new byte[32];
@@ -77,7 +72,7 @@ public class FieldDescriptor
       data[i] = 0x0;
 
     // copy name into the first 11 bytes
-    byte[] dum = name.getBytes();
+    final byte[] dum = name.getBytes();
 
     int cnt = dum.length;
 
@@ -87,7 +82,7 @@ public class FieldDescriptor
     for( int i = 0; i < cnt; i++ )
       data[i] = dum[i];
 
-    byte[] b = type.getBytes();
+    final byte[] b = type.getBytes();
 
     data[11] = b[0];
 
@@ -119,7 +114,7 @@ public class FieldDescriptor
   /**
    * method: public byte[] getFieldDescriptor() returns the field descriptor as byte array
    */
-  public byte[] getFieldDescriptor()
+  public byte[] getFieldDescriptor( )
   {
 
     return data;
