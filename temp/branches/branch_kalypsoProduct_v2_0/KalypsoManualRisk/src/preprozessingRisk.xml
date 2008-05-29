@@ -3,7 +3,7 @@
   <title>Preprocessing - Modellaufbau</title>
 
   <indexterm>
-    <primary>Preprocessing KalypsoRisiko</primary>
+    <primary>Preprocessing Kalypso Risk</primary>
   </indexterm>
 
   <para>Nach der Datenaufbereitung im betrachteten Gewässer kann mit dem
@@ -24,7 +24,7 @@
     <title>Daten laden</title>
 
     <indexterm>
-      <primary>Daten einladen in KalypsoRisiko</primary>
+      <primary>Daten einladen in Kalypso Risk</primary>
     </indexterm>
 
     <para>Der erste Schritt zum Modellaufbau besteht darin, die benötigten
@@ -34,7 +34,7 @@
       <title>Import von Hintergrunddaten</title>
 
       <indexterm>
-        <primary>Import von Hintergrunddaten in KalypsoRisiko</primary>
+        <primary>Import von Hintergrunddaten in Kalypso Risk</primary>
       </indexterm>
 
       <para>Es gibt drei Möglichkeiten Hintergrundinformationen für die
@@ -84,7 +84,7 @@
         JPG</title>
 
         <indexterm>
-          <primary>Import von TIF oder JPG Daten in KalypsoRisiko</primary>
+          <primary>Import von TIF oder JPG Daten in Kalypso Risk</primary>
         </indexterm>
 
         <para>Bei der Auswahl von <filename>*.tif</filename> oder
@@ -127,7 +127,7 @@
         SHP</title>
 
         <indexterm>
-          <primary>Import von SHP Daten in KalypsoRisiko</primary>
+          <primary>Import von SHP Daten in Kalypso Risk</primary>
         </indexterm>
 
         <para>Bei der Auswahl von <filename>*.shp</filename> ist neben der
@@ -158,7 +158,7 @@
         <title>Web-Map-Service einbinden</title>
 
         <indexterm>
-          <primary>Einbinden eines Web-Map-Services in KalypsoRisiko</primary>
+          <primary>Einbinden eines Web-Map-Services in Kalypso Risk</primary>
         </indexterm>
 
         <para>Bei der Einbindung des Web-Map-Services muss lediglich die URL
@@ -188,7 +188,7 @@
       <title>Import von Landnutzungsdaten</title>
 
       <indexterm>
-        <primary>Import von Landnutzungsdaten in KalypsoRisiko</primary>
+        <primary>Import von Landnutzungsdaten in Kalypso Risk</primary>
       </indexterm>
 
       <para>Um Landnutzungsdaten zu importieren, muss in der Ansicht
@@ -234,7 +234,7 @@
         </listitem>
       </itemizedlist>
 
-      <para>Wenn der Benutzer bereits einmal mit KalypsoRisiko gearbeitet, und
+      <para>Wenn der Benutzer bereits einmal mit Kalypso Risk gearbeitet, und
       eine Datenbank erstellt hat, die auch sinnvoll für ihr neu erstelltes
       Projekt ist, dann sollte er diese importieren. Hierfür bräuchte er auf
       den Knopf <guibutton>Durchsuchen</guibutton> zu klicken und die
@@ -296,7 +296,7 @@
       <title>Import von Wassertiefendaten</title>
 
       <indexterm>
-        <primary>Import von Wassertiefendaten in KalypsoRisiko</primary>
+        <primary>Import von Wassertiefendaten in Kalypso Risk</primary>
       </indexterm>
 
       <para>Um Wassertiefendaten zu importieren, muss in der Ansicht
@@ -392,7 +392,7 @@
       <title>Bearbeiten von Ü-Daten für HQi</title>
 
       <indexterm>
-        <primary>Bearbeiten von Ü-Daten für HQi in KalypsoRisiko</primary>
+        <primary>Bearbeiten von Ü-Daten für HQi in Kalypso Risk</primary>
       </indexterm>
 
       <para>Um die Daten der Hochwasserereignisse zu bearbeiten, ist in der
@@ -519,7 +519,7 @@
       <title>Bearbeiten von Ü-Rasterdaten</title>
 
       <indexterm>
-        <primary>Bearbeiten von Ü-Rasterdaten in KalypsoRisiko</primary>
+        <primary>Bearbeiten von Ü-Rasterdaten in Kalypso Risk</primary>
       </indexterm>
 
       <para>Um Rasterdaten zu bearbeiten, muss in der Ansicht "Aktivitäten",
@@ -707,7 +707,7 @@
     <title>Berechnungsparameter</title>
 
     <indexterm>
-      <primary>Einstellen der Berechnungsparameter in KalypsoRisiko</primary>
+      <primary>Einstellen der Berechnungsparameter in Kalypso Risk</primary>
     </indexterm>
 
     <para>Nachdem das Laden aller notwendigen Daten nun abgeschlossen ist,
@@ -717,7 +717,7 @@
       <title>Festlegen der Berechnungsparameter</title>
 
       <indexterm>
-        <primary>Festlegen der Berechnungsparameter in KalypsoRisiko</primary>
+        <primary>Festlegen der Berechnungsparameter in Kalypso Risk</primary>
       </indexterm>
 
       <para>Um Berechnungsparameter festzulegen, muss in der Ansicht
@@ -820,7 +820,7 @@
       <title>Risikozonierung</title>
 
       <indexterm>
-        <primary>Risikozonierung in KalypsoRisiko</primary>
+        <primary>Risikozonierung in Kalypso Risk</primary>
       </indexterm>
 
       <para>Um die Risikozonierung zu bearbeiten, muss in der Ansicht

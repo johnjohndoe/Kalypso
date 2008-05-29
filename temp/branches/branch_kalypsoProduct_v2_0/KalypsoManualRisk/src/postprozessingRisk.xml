@@ -3,7 +3,7 @@
   <title>Postprocessing - Ergebnisauswertung</title>
 
   <indexterm>
-    <primary>Preprocessing KalypsoRisiko</primary>
+    <primary>Preprocessing Kalypso Risk</primary>
   </indexterm>
 
   <para>Wenn alle Berechnungen durchgeführt worden sind, werden die Ergebnisse
@@ -28,7 +28,7 @@
     <title>Statistische Auswertung</title>
 
     <indexterm>
-      <primary>Statistische Ergebnisauswertung von KalypsoRisiko</primary>
+      <primary>Statistische Ergebnisauswertung von Kalypso Risk</primary>
     </indexterm>
 
     <para>In der Ansicht "Aktivitäten" wird der Baum
@@ -68,7 +68,7 @@
     <title>Exportieren des Schadenspotentials (je HQi)</title>
 
     <indexterm>
-      <primary>Exportieren des Schadenspotentials aus KalypsoRisiko</primary>
+      <primary>Exportieren des Schadenspotentials aus Kalypso Risk</primary>
     </indexterm>
 
     <para>Wenn in der Ansicht "Aktivitäten" der Baum
@@ -175,7 +175,7 @@
     <title>Exportieren der Risikozonen</title>
 
     <indexterm>
-      <primary>Exportieren der Risikozonen aus KalypsoRisiko</primary>
+      <primary>Exportieren der Risikozonen aus Kalypso Risk</primary>
     </indexterm>
 
     <para>Wenn in der Ansicht "Aktivitäten" der Baum

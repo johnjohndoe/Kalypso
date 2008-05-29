@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="KalypsoRiskPreprocessing">
-  <title>Allgemeine Einführung KalypsoRisiko</title>
+  <title>Allgemeine Einführung Kalypso Risk</title>
 
   <indexterm>
-    <primary>Preprocessing KalypsoRisiko</primary>
+    <primary>Preprocessing Kalypso Risk</primary>
   </indexterm>
 
-  <para>Mit KalypsoRiskio können Schadenspotentiale von Hochwasserereignissen
+  <para>Mit Kalypso Risk können Schadenspotentiale von Hochwasserereignissen
   berechnet werden. Das Schadenspotential wird ausschließlich über monetäre
   Werte beziffert. Diese können über mikroskalige oder mesoskalige Ansätze
   erhoben werden. Über den jährlichen Schadenserwartungswert können diese in
@@ -17,14 +17,14 @@
     <title>Projektbearbeitung</title>
 
     <para><indexterm>
-        <primary>KalypsoRisiko Projektbearbeitung</primary>
+        <primary>Kalypso Risk Projektbearbeitung</primary>
       </indexterm></para>
 
     <para>Beim Programmstart erscheint zunächst die Welcome Seite mit einer
-    Auflistung aller verfügbarer Modelle. Hier ist das KalypsoRisiko Modell zu
+    Auflistung aller verfügbarer Modelle. Hier ist das Kalypso Risk Modell zu
     wählen.</para>
 
-    <para>Auf der Welcome Seite von KalypsoRisiko kann zwischen den folgenden
+    <para>Auf der Welcome Seite von Kalypso Risk kann zwischen den folgenden
     Aktionen gewählt werden:</para>
 
     <para><itemizedlist>
@@ -70,14 +70,14 @@
     </figure>
 
     <section id="KalypsoRisikoPerspektive">
-      <title>Die KalypsoRisiko Perspektive</title>
+      <title>Die Kalypso Risk Perspektive</title>
 
       <indexterm>
-        <primary>KalypsoRisiko Perspektive</primary>
+        <primary>Kalypso Risk Perspektive</primary>
       </indexterm>
 
-      <para>Die Bearbeitung der KalypsoRisiko Projekte erfolgt einheitlich in
-      der KalypsoRisiko Perspektive. Hauptelement der Perspektive ist die
+      <para>Die Bearbeitung der Kalypso Risk Projekte erfolgt einheitlich in
+      der Kalypso Risk Perspektive. Hauptelement der Perspektive ist die
       Workflowansicht, welche den Arbeitsablauf durch die Bereitstellung der
       zu bearbeitenden Aufgaben steuert. Neben der Workflowansicht ist die
       Szenarienansicht in der Perspektive verfügbar. Durch die
@@ -87,7 +87,7 @@
       View, Diagrammansicht, Tabellenansicht,..) geöffnet.</para>
 
       <figure>
-        <title>Perspektive in KalypsoRisiko</title>
+        <title>Perspektive in Kalypso Risk</title>
 
         <mediaobject>
           <imageobject>
@@ -100,10 +100,10 @@
         <title>Workflow</title>
 
         <indexterm>
-          <primary>Workflow KalypsoRisiko</primary>
+          <primary>Workflow Kalypso Risk</primary>
         </indexterm>
 
-        <para>Der Arbeitsablauf in KalypsoRisiko wird über den Workflow
+        <para>Der Arbeitsablauf in Kalypso Risk wird über den Workflow
         gesteuert. Der Benutzer wird in der Modellbearbeitung von einem
         Bearbeitungsschritt zum nächsten geführt. Dieser Ablauf soll
         verhindern, dass wichtige Schritte im Modellaufbau oder der Berechnung
@@ -302,7 +302,7 @@
 
       <figure>
         <title>Assistent um ein neues Projekt zu erstellen in
-        KalypsoRisiko</title>
+        Kalypso Risk</title>
 
         <mediaobject>
           <imageobject>
@@ -613,7 +613,7 @@
     <title>Datenakquisition</title>
 
     <indexterm>
-      <primary>Datenakquisition und Aufbereitung KalypsoRisiko</primary>
+      <primary>Datenakquisition und Aufbereitung Kalypso Risk</primary>
     </indexterm>
 
     <para>Für die Modellierung eines Risiko Modells müssen die in folgender

@@ -3,7 +3,7 @@
   <title>Processing - Rasterung und Berechnung</title>
 
   <indexterm>
-    <primary>Preprocessing KalypsoRisiko</primary>
+    <primary>Preprocessing Kalypso Risk</primary>
   </indexterm>
 
   <para>Wenn alle Daten geladen und fertig bearbeitet worden sind, kann nun
@@ -13,7 +13,7 @@
     <title>Rasterung der Landnutzung</title>
 
     <indexterm>
-      <primary>Risikozonierung in KalypsoRisiko</primary>
+      <primary>Risikozonierung in Kalypso Risk</primary>
     </indexterm>
 
     <para>Wenn in der Ansicht "Aktivitäten" der Baum
@@ -65,7 +65,7 @@
     <title>Berechnung des Schadenspotentials</title>
 
     <indexterm>
-      <primary>Risikozonierung in KalypsoRisiko</primary>
+      <primary>Risikozonierung in Kalypso Risk</primary>
     </indexterm>
 
     <para>Wenn in der Ansicht "Aktivitäten" der Baum
@@ -113,7 +113,7 @@
     <title>Ausweisung des Hochwasserrisikos</title>
 
     <indexterm>
-      <primary>Risikozonierung in KalypsoRisiko</primary>
+      <primary>Risikozonierung in Kalypso Risk</primary>
     </indexterm>
 
     <para>Wenn in der Ansicht "Aktivitäten" der Baum
