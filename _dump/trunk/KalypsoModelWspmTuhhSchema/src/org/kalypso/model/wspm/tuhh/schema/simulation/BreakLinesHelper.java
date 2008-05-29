@@ -125,13 +125,11 @@ public class BreakLinesHelper implements IWspmConstants
       for( final TuhhReachProfileSegment reach : reachProfileSegments )
       {
         final GM_Curve geometry = reach.getGeometry();
+        final BigDecimal station = reach.getStation();
         if( geometry == null ) // ignore profiles without geometry
           continue;
 
-        final BigDecimal station = reach.getStation();
-
         final Double wsp = wspMap.get( station.doubleValue() );
-
         final GM_Curve thinProfile = thinnedOutClone( geometry, epsThinning, gmlVersion );
         if( wsp != null )
         {
@@ -139,35 +137,24 @@ public class BreakLinesHelper implements IWspmConstants
           // simulation does not cover the whole reach.
           final GM_Curve newProfile = GeometryUtilities.setValueZ( thinProfile.getAsLineString(), wsp );
 
-// /* Write the profile as breakline */
-// final Feature breakLineFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE,
-// "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
-// breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), newProfile );
-// breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
-// breakLineFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
-
           /* Triangulate two adjacent profiles */
           if( lastProfile != null )
           {
             final GM_Position[] polygonPoses = GeometryUtilities.getPolygonfromCurves( lastProfile, newProfile );
 
-            // //
+            // Write the curve as breakline into breakline file
             final GM_Curve polygoneRing = GeometryFactory.createGM_Curve( polygonPoses, defaultCrs );
             final Feature ringFeature = FeatureHelper.addFeature( rootFeature, new QName( NS_WSPM_BREAKLINE, "breaklineMember" ), new QName( NS_WSPM_BREAKLINE, "Breakline" ) );
             ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "geometry" ), polygoneRing );
             ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "station" ), station );
             ringFeature.setProperty( new QName( NS_WSPM_BREAKLINE, "wsp" ), wsp );
-            // //
 
+            // Interpolate triangles between two adjacent curves and add them to the triangulated surface
             final GM_Position[][] triangles = GeometryUtilities.triangulateRing( polygonPoses );
-
-// if( station.equals( new BigDecimal( "11.7350" ) )/* || station.equals( new BigDecimal( "11.8380" ) */)
+            for( final GM_Position[] triangle : triangles )
             {
-              for( final GM_Position[] triangle : triangles )
-              {
-                final GM_Triangle_Impl gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
-                surface.add( gmTriangle );
-              }
+              final GM_Triangle_Impl gmTriangle = GeometryFactory.createGM_Triangle( triangle, defaultCrs );
+              surface.add( gmTriangle );
             }
           }
 
