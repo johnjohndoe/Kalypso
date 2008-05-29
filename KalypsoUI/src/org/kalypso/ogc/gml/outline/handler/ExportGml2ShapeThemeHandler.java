@@ -91,20 +91,18 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.1" ) ); //$NON-NLS-1$
 
     final Shell shell = part.getSite().getShell();
-    final String title = Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2"); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.2" ); //$NON-NLS-1$
 
     final IStructuredSelection sel = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
-    final Object[] array = sel.toArray();
-
     final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) sel.getFirstElement();
     final FeatureList featureList = theme == null ? null : theme.getFeatureList();
-    if( featureList == null )
+    if( featureList == null || featureList.size() == 0 )
     {
-      MessageDialog.openWarning( shell, title, Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.3") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.3" ) ); //$NON-NLS-1$
       return Status.CANCEL_STATUS;
     }
 
@@ -118,7 +116,8 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
     fileDialog.setFilterExtensions( new String[] { "*.*", "*.shp", "*.dbf" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    fileDialog.setFilterNames( new String[] { Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.8"), Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.9"), Messages.getString("org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.10") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    fileDialog.setFilterNames( new String[] {
+        Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.8" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.9" ), Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.10" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     fileDialog.setText( title );
     if( lastDirPath != null )
     {
@@ -141,14 +140,14 @@ public class ExportGml2ShapeThemeHandler extends AbstractHandler implements IHan
 
     final Job job = new Job( title + " - " + result ) //$NON-NLS-1$
     {
-      @SuppressWarnings("unchecked") //$NON-NLS-1$
+      @SuppressWarnings("unchecked")
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
         IShapeDataProvider shapeDataProvider = null;
 
-        Feature feature = (Feature) featureList.get( 0 );
-        GM_Object geometryProperty = feature.getDefaultGeometryProperty();
+        final Feature feature = (Feature) featureList.get( 0 );
+        final GM_Object geometryProperty = feature.getDefaultGeometryProperty();
         if( geometryProperty instanceof GM_TriangulatedSurface_Impl )
         {
           final byte shapeType = ShapeConst.SHAPE_TYPE_POLYGONZ;
