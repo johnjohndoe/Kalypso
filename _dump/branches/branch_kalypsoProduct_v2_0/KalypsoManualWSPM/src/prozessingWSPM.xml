@@ -1,0 +1,971 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="kalypso_wspm_prozessing">
+  <title>Prozessing</title>
+
+    <indexterm>
+      <primary>Prozessing KalypsoWSPM</primary>
+    </indexterm>
+
+    <section id="kalypso_wspm_Berechnungsvariante_editieren">
+   <title>Berechnungsvariante editieren</title>
+
+      <indexterm>
+        <primary>Berechnungsvarianten und -einstellungen in
+        KalypsoWSPM</primary>
+      </indexterm>
+
+      <para>Unter einer Berechnungsvariante können zahlreiche
+      Berechnungseinstellungen vorgenommen werden. Die Wahl der richtigen
+      Berechnungseinstellung ist vom vorliegenden Gewässermodell und von der
+      gewünschten Berechnung abhängig. Der Benutzer hat die Möglichkeit,
+      mehrere Berechnungsvarianten zunächst zu erstellen, zu ändern oder zu
+      löschen und anschließend die Spiegellinienberechnung für diese
+      Berechnungsvarianten auszuführen.</para>
+
+      <section id="kalypso_wspm_Berechnungsvariante_Neu">
+        <title>Anlegen einer neuen Berechnungsvariante</title>
+
+        <indexterm>
+          <primary>Eine neue Berechnungsvariante anlegen in
+          KalypsoWSPM</primary>
+        </indexterm>
+
+        <para>Eine neue Berechnungsvariante kann in der Perspektive
+        Spiegellinienberechnung im Datenbaum angelegt werden.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie in den Datenbaum</para>
+          </listitem>
+
+          <listitem>
+            <para>Selektieren Sie
+            <guilabel>Berechnungsvariante</guilabel></para>
+          </listitem>
+
+          <listitem>
+            <para>Gehen Sie mit der rechten Maustaste auf <guimenuitem>Neu
+            &gt; Berechnungsvariante - stationär (TU-HH)</guimenuitem></para>
+          </listitem>
+
+          <listitem>
+            <para>Definieren Sie in der FeatureView die Parameter der
+            Berechnung.</para>
+          </listitem>
+        </itemizedlist>
+
+        <figure>
+          <title>Anlegen einer neuen Berechnungsvariante in der Perspektive
+          der Spiegellinienberechnung</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/Berechnungseinstellung.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section id="kalypso_wspm_Berechnungsparameter_Einstellung">
+        <title>Einstellung der Berechnungsparameter</title>
+
+        <indexterm>
+          <primary>Berechnungsparameter einstellen in KalypsoWSPM</primary>
+        </indexterm>
+
+        <para>Folgende Vorgaben sind für eine Berechnungsvariante
+        vorzunehmen:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Selektieren Sie den <guilabel>Gewässerstrang</guilabel> und
+            das gewünschte <guilabel>Abflussereignis</guilabel></para>
+          </listitem>
+
+          <listitem>
+            <para>Der Berechnungsabschnitt muss händisch eingegeben werden
+            (von Profil bis Profil)</para>
+          </listitem>
+
+          <listitem>
+            <para>Fließgesetz</para>
+          </listitem>
+
+          <listitem>
+            <para>Berechnungsart</para>
+          </listitem>
+
+          <listitem>
+            <para>Numerische Parameter</para>
+          </listitem>
+
+          <listitem>
+            <para>Zusatzoption mit und ohne Brücken/ Wehre</para>
+          </listitem>
+
+          <listitem>
+            <para>Randbedingung am Unterwasser (Gefälle, Grenztiefe oder
+            Wasserstand)</para>
+          </listitem>
+
+          <listitem>
+            <para>Ungleichförmige Berechnung mit Q-Intervallen (nur wenn
+            stationär, ungleichförmige Berechnung oder Berechnung mit
+            konstantem Reibungsgefälle)</para>
+          </listitem>
+        </itemizedlist>
+
+        <section id="kalypso_wspm_Berechnungsparameter_Fließgesetz">
+          <title>Wahl des Fließgesetzes</title>
+
+          <indexterm>
+            <primary>Fließgesetz auswählen in KalypsoWSPM</primary>
+          </indexterm>
+
+          <para>Das grundlegende Verfahren zur Berechnung des Wasserspiegels
+          mit dem BERNOULLI’schen Energiehöhenvergleich wird im Handbuch zum
+          Rechenkern ausführlich beschrieben. Zur Ermittlung des
+          Energieliniengefälles bietet KalypsoWSPM dem Anwender drei
+          Berechnungsvarianten, die auf den Fließgesetzen von
+          GAUCKLER-MANNING-STRICKLER bzw. DARCY-WEISSBACH beruhen.</para>
+
+          <figure>
+            <title>Pull-Down-Menu für die Einstellung des
+            Fließgesetzes</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Berechnungseinstellung_Fließgesetz.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para><emphasis role="bold">Fließgesetz nach
+          GAUCKLER-MANNING-STRICKLER</emphasis></para>
+
+          <para>Wird die Berechnung der Reibungsverluste nach
+          MANNING-STRICKLER durchgeführt, so wird jeweils nur eine Rauheit für
+          linkes Vorland, Flussbett und rechtes Vorland berücksichtigt. Sind
+          mehr als drei Rauheiten im Profil angegeben, so erfolgen Mittelungen
+          für die Werte in den jeweiligen Teilabflussquerschnitten. Bei der
+          Wahl dieser Berechnungsvariante werden die profilbezogenen Werte aus
+          der Spalte Rauheit als k<subscript>st</subscript>-Werte ausgelesen.
+          Demzufolge sind in dieser Spalte die richtigen hydraulischen
+          Parameter für eine Berechnung nach MANNING-STRICKLER anzusetzen. Die
+          angegebenen Bewuchsparameter bleiben in der Berechnung
+          unberücksichtigt.</para>
+
+          <para><emphasis role="bold">Fließgesetz nach DARCY-WEISSBACH (offene
+          Gerinne)</emphasis></para>
+
+          <para>Wird die Berechnung der Reibungsverluste nach DARCY-WEISSBACH
+          für offene Gerinne durchgeführt, so wird der Widerstandsbeiwert für
+          das Fließgesetz von DARCY-WEISSBACH nach dem Verfahren nach PASCHE
+          (DVWK-Merkblatt Nr. 220) berechnet. Dazu wird das Gewässerprofil in
+          die Teilquerschnitte Hauptgerinne, Vorland links, Vorland rechts
+          untergliedert. Die einzelnen Bereiche sind durch Trennflächen
+          getrennt. Die Lage der Trennflächen ist abhängig von der
+          Gerinnegeometrie und der Rauheit. Für die Vorländer und die
+          Hauptgerinne wird jeweils ein Widerstandsbeiwert bestimmt.</para>
+
+          <para><emphasis role="bold">Fließgesetz nach DARCY-WEISSBACH
+          (Rohrströmung)</emphasis></para>
+
+          <para>Die Berechnung der Reibungsverluste nach DARCY-WEISSBACH für
+          Rohrströmung empfiehlt sich für Gewässerstränge, die ausschließlich
+          durch geschlossene Profilquerschnitte durchströmt werden. Hierbei
+          ist der alleinige abflusswirksame Querschnitt das definierte
+          Durchlassprofil. Es findet keine Dreiteilung des Querschnittes
+          statt. Formbeiwerte infolge Bewuchs werden nicht
+          berücksichtigt.</para>
+        </section>
+
+        <section id="kalypso_wspm_Berechnungsparameter_Abflussereignis">
+          <title>Berechnungsarten und Abflussereignisse</title>
+
+          <indexterm>
+            <primary>Berechnungsarten und Abflussereignisse in
+            KalypsoWSPM</primary>
+          </indexterm>
+
+          <para>Je nach gewünschter Berechnung ist eine der drei Optionen
+          auszuwählen.</para>
+
+          <para><emphasis role="bold">Bordvollberechnung für
+          stationär-gleichförmige Abflussverhältnisse:</emphasis></para>
+
+          <para>Diese Berechnungsvariante ist anzusetzen, wenn der
+          Bordvollabfluss bestimmt werden soll. Hierzu sind die Bordvollpunkte
+          je Profil anzugeben. Werden diese nicht definiert, so wird
+          standardgemäß davon ausgegangen, dass die Lage der Trennflächen den
+          Bordvollpunkten identisch ist. Bei dieser Berechnung wird von
+          stationär gleichförmigen Abflussverhältnissen ausgegangen und anhand
+          der gegebenen Bordvollpunkte der gesuchte Abflusswert Q-bordvoll
+          bestimmt. Bauwerke wie Wehre und Brücken werden nicht
+          berücksichtigt. Lokale Einschnürungs- oder Aufweitungsverluste
+          werden mitberechnet.</para>
+
+          <table align="center" id="kalypso_na-mapping_teilgebiete">
+            <title>Zulässige Auswahl für eine Bordvoll-Berechnung (stationär
+            gleichförmig)</title>
+
+            <tgroup align="center" cols="2">
+              <colspec align="left" colwidth="1*" />
+
+              <colspec align="left" />
+
+              <colspec align="left" />
+
+              <tbody>
+                <row>
+                  <entry>NAME</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>GEWÄSSERSTRANGDATEI</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BERECHNUNGSMODUS</entry>
+
+                  <entry><emphasis role="bold">Bordvoll
+                  gleichförmig</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>FLIESSGESETZ<itemizedlist>
+                      <listitem>
+                        <para>DARCY-WEISSBACH mit Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DARCY-WEISSBACH ohne Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>MANNING-STRICKLER</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ANFANGSSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ENDSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ART DER RANDBEDINGUNG<itemizedlist>
+                      <listitem>
+                        <para>Grenztiefe</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>stationär gleichförmiges Gefälle</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Anfangs-Wasserspiegel</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>VERZÖGERUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>DVWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para><emphasis
+                        role="bold">Bjoernsen</emphasis></para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DFG = BWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Keiner</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>nach Bjoernsen</entry>
+                </row>
+
+                <row>
+                  <entry>ITERATIONSART<itemizedlist>
+                      <listitem>
+                        <para>einfach</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>exakt</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>REIBUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>Trapez</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>geometrisch</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BRÜCKEN</entry>
+
+                  <entry><emphasis role="bold">KEINE</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>WEHRE</entry>
+
+                  <entry><emphasis role="bold">KEINE</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>ABFLUSSEREIGNIS</entry>
+
+                  <entry><emphasis role="bold">KEINES</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MIN_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MAX_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>DELTA_Q</entry>
+
+                  <entry><emphasis role="bold">nicht
+                  erforderlich</emphasis></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <para><emphasis role="bold">Bordvollberechnung für
+          stationär-ungleichförmige Abflussverhältnisse:</emphasis></para>
+
+          <para>Leider ist hier der Begriff „Bordvoll“ falsch gewählt und hat
+          nichts mit der Berechnung zu tun. Diese Berechnungsvariante ist
+          anzusetzen, wenn eine stetige intervallweise Steigerung des
+          Abflusses entlang des Gewässers untersucht werden soll. Hierzu ist
+          nicht eine spezielles Abflussereignis vorzugeben, sondern ein
+          sogenanntes Abflussintervall. Dabei kann lediglich ein konstanter
+          Abflusswert entlang des gesamten Gewässers definiert werden.
+          Variabel ist der minimale und der maximale Abfluss sowie eine
+          festgelegte Abflussschrittweite.</para>
+
+          <figure>
+            <title>Anlegen einer stationär-ungleichförmigen Berechnung mit
+            Abflussintervall</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Berechnungseinstellung_statunGl.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Eine stationär-ungleichförmige Berechnung wird üblicherweise
+          für die Berechnung von w-Q Beziehungen oder ähnlichen
+          Abflussbeziehungen je Profil angesetzt. <note>
+              <para>Das darüberstehende Abflussereignis wird nicht
+              berücksichtigt.</para>
+            </note></para>
+
+          <table align="center" id="kalypso_na-mapping_teilgebiete">
+            <title>Zulässige Auswahl für eine Abflussstaffelung (stationär
+            ungleichförmig)</title>
+
+            <tgroup align="center" cols="2">
+              <colspec align="left" colwidth="1*" />
+
+              <colspec align="left" />
+
+              <colspec align="left" />
+
+              <tbody>
+                <row>
+                  <entry>NAME</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>GEWÄSSERSTRANGDATEI</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BERECHNUNGSMODUS</entry>
+
+                  <entry><emphasis role="bold">"Bordvoll" stationär
+                  ungleichförmig</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>FLIESSGESETZ<itemizedlist>
+                      <listitem>
+                        <para>DARCY-WEISSBACH mit Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DARCY-WEISSBACH ohne Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>MANNING-STRICKLER</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ANFANGSSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ENDSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ART DER RANDBEDINGUNG<itemizedlist>
+                      <listitem>
+                        <para>Grenztiefe</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>stationär gleichförmiges Gefälle</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Anfangs-Wasserspiegel</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>VERZÖGERUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>DVWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Bjoernsen</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DFG = BWK (wird empfohlen)</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Keiner</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ITERATIONSART<itemizedlist>
+                      <listitem>
+                        <para>einfach</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>exakt</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>REIBUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>Trapez</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>geometrisch</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BRÜCKEN</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>WEHRE</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ABFLUSSEREIGNIS</entry>
+
+                  <entry><emphasis role="bold">KEINES</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MIN_Q</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MAX_Q</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>DELTA_Q</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+
+          <para><emphasis
+          role="bold">Wasserspiegellagenberechnung</emphasis></para>
+
+          <para>Die Wasserspiegellagenberechnung ist der
+          Standardberechnungsfall, der den Wasserstand eines Gewässers unter
+          Vorgabe eines speziellen Abflussereignisses ermittelt. Wird diese
+          Berechnung ausgewählt, ist auch eine entsprechende Abflussdatei zu
+          referenzieren. Das Abflussereignis kann aus einem Pull-Down-Menu
+          selektiert werden. Über den Button am rechten Rand gelangt der
+          Anwender direkt zurück zum Abflussereignis und kann dort
+          editieren.</para>
+
+          <para><note>
+              <para>Das Abflussintervall wird nicht eingelesen, sollte der
+              Übersichtlichkeit halber aber dennoch mit null belegt
+              sein.</para>
+            </note></para>
+
+          <figure>
+            <title>Anlegen einer Wasserspiegellagenberechnung mit speziellen
+            Abflussereignis</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Berechnungseinstellung_Abflussereignis.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <table align="center" id="kalypso_na-mapping_teilgebiete">
+            <title>Zulässige Auswahl für eine Wasserspiegellagenberechnung
+            (stationär ungleichförmig)</title>
+
+            <tgroup align="center" cols="2">
+              <colspec align="left" colwidth="1*" />
+
+              <colspec align="left" />
+
+              <colspec align="left" />
+
+              <tbody>
+                <row>
+                  <entry>NAME</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>GEWÄSSERSTRANGDATEI</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BERECHNUNGSMODUS</entry>
+
+                  <entry><emphasis
+                  role="bold">Wasserspiegellagenberechnung</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>FLIESSGESETZ<itemizedlist>
+                      <listitem>
+                        <para>DARCY-WEISSBACH mit Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DARCY-WEISSBACH ohne Formbeiwert</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>MANNING-STRICKLER</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ANFANGSSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ENDSTATION</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ART DER RANDBEDINGUNG<itemizedlist>
+                      <listitem>
+                        <para>Grenztiefe</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>stationär gleichförmiges Gefälle</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Anfangs-Wasserspiegel</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>VERZÖGERUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>DVWK</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Bjoernsen</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>DFG = BWK (wird empfohlen)</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>Keiner</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ITERATIONSART<itemizedlist>
+                      <listitem>
+                        <para>einfach</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>exakt</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>REIBUNGSVERLUST<itemizedlist>
+                      <listitem>
+                        <para>Trapez</para>
+                      </listitem>
+
+                      <listitem>
+                        <para>geometrisch</para>
+                      </listitem>
+                    </itemizedlist></entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>BRÜCKEN</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>WEHRE</entry>
+
+                  <entry>frei wählbar</entry>
+                </row>
+
+                <row>
+                  <entry>ABFLUSSEREIGNIS</entry>
+
+                  <entry><emphasis role="bold">erforderlich</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MIN_Q</entry>
+
+                  <entry><emphasis role="bold">keines</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>MAX_Q</entry>
+
+                  <entry><emphasis role="bold">keines</emphasis></entry>
+                </row>
+
+                <row>
+                  <entry>DELTA_Q</entry>
+
+                  <entry><emphasis role="bold">keines</emphasis></entry>
+                </row>
+              </tbody>
+            </tgroup>
+          </table>
+        </section>
+
+        <section id="kalypso_wspm_Berechnungsparameter_Berechnungsabschnitt">
+          <title>Wahl des Gewässerstrangs und des
+          Berechnungsabschnittes</title>
+
+          <indexterm>
+            <primary>Wahl des Gewässerstrangs und des Berechnungsabschnittes
+            in KalypsoWSPM</primary>
+          </indexterm>
+
+          <para>Für die Selektion des Gewässerstrangs stehen in einem
+          Pull-Down-Menu die bislang definierte und angelegten Gewässerstränge
+          zur Verfügung. Über den Button am rechten Rand gelangt der Anwender
+          direkt zurück zum Gewässerstrang und kann dort editieren.</para>
+
+          <figure>
+            <title>Wahl des Gewässerstrangs und des
+            Berechnungsabschnittes</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Berechnungseinstellung_Gewaesserstrang.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para>Der Berechnungsabschnitt ist händisch vorzugeben. Hierbei ist
+          zu beachten, dass die Anfangsstation der Berechnung kleiner ist als
+          die Endstation, da KalypsoWSPM vom Unterwasser zum Oberwasser
+          rechnet.</para>
+        </section>
+
+        <section id="kalypso_wspm_Berechnungsparameter_Numerische_Parameter">
+          <title>Numerische Parameter</title>
+
+          <indexterm>
+            <primary>Numerische Parameter einstellen in KalypsoWSPM</primary>
+          </indexterm>
+
+          <para>Insgesamt stehen fünf Parameter zur Verfügung: Die
+          Iterationsgenauigkeit, der Verzögerungsverlust (siehe
+          Ungleichförmigkeitsbeiwert β im Benutzerhandbuch zum Rechenkern),
+          die Berechnung der Reibungsverluste und zwei Zusatzoptionen.</para>
+
+          <figure>
+            <title>Wahl der numerischen Parameter</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Berechnungseinstellung_NumPara.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <para><emphasis role="bold">Wahl der
+          Iterationsgenauigkeit:</emphasis></para>
+
+          <para>Hier steht zum einen die einfach Iteration und die genau
+          Iteration im Einschlussintervall zur Verfügung. Die erste Variante
+          ist für Gewässer ohne zahlreiche Sonderbauwerke wie Brücken und Wehr
+          gut geeignet. Für Gewässer mit Brücken kann sich gelegentlich die
+          zweite Variante besser eignen. Eine Berechnung mit genauer Iteration
+          ist zeitintensiver, kann aber bei Gewässern mit zahlreichen
+          Sonderbauwerke stabiler sein.</para>
+
+          <para><emphasis role="bold">Wahl des
+          Verzögerungsverlustes:</emphasis></para>
+
+          <para>Der Verzögerungsverlust beschreibt die Wahl des
+          Ungleichförmigkeitsbeiwertes β der in die Arbeitsgleichung mit
+          eingeht. Der Ungleichförmigkeitsbeiwert bildet geometrische
+          Einschnürungen und Aufweitungen ab. Hierzu sei auf das
+          Benutzerhandbuch zum Rechenkern verwiesen. Empfohlen wird der
+          Ungleichförmigkeitsbeiwert β nach BWK, der derzeit in der Oberfläche
+          über dem „Ansatz nach DFG“ verfügbar ist.</para>
+
+          <para><emphasis role="bold">Berechnung von
+          Reibungsverlusten:</emphasis></para>
+
+          <para>Der Reibungsverlust stellt einen kontinuierlichen Verlust dar,
+          der durch Integration über den Streckenabschnitt zwischen zwei
+          Profilen gewonnen wird. Hierzu stehen zwei Varianten bereit: der
+          Ansatz nach Trapezformel oder über die geometrische Mittelung. Je
+          nach geometrischer Varianz des Gewässers bietet sich für geringe
+          geometrische Ungleichförmigkeit der Profile der Ansatz nach
+          Trapezformel nach NAUDASCHER an, in dem das Integral für den
+          Reibungsverlust bei nur allmählicher geometrischer Änderung mit
+          Hilfe der Trapezformel in guter Näherung berechnet wird. Bei starker
+          Variation der Geometrie und der Rauheit, insbesondere bei Auftreten
+          einer Diskontinuität, führt die Trapezformel zu einer Überschätzung
+          des Rauheitsverlustes. In diesem Fall erweist sich die Annäherung
+          des Integrals über das geometrische Mittel als genauer.</para>
+
+          <para><emphasis role="bold">Zusatzoptionen:</emphasis></para>
+
+          <para>Hier können über das Setzen oder Entfernen des Häkchens
+          Brücken und/ oder Wehre in der Berechnung aktiviert oder deaktiviert
+          werden.</para>
+        </section>
+
+        <section id="kalypso_wspm_Berechnungsparameter_Untere_Randbedingung">
+          <title>Untere Randbedingung am 1. Profil</title>
+
+          <indexterm>
+            <primary>Untere Randbedingung am 1. Profil in
+            KalypsoWSPM</primary>
+          </indexterm>
+
+          <para>Am ersten Profil ist ein sogenannter Anfangswert für den
+          Berechnungsstart vorzugeben. Hierzu stehen drei Optionen zur
+          Auswahl:</para>
+
+          <para><emphasis role="bold">Bekannte
+          Wasserstand-Abfluss-Beziehung:</emphasis> Die Wasserspiegellage kann
+          direkt in das Feld Anfangswasserspiegel eingegeben werden. Dies kann
+          beispielsweise auf bewegliche Wehre mit einem fest vorgegebenen
+          Stauziel zutreffen. In diesem Fall legen Sie das Anfangsprofil
+          direkt oberhalb des Wehres. Der <emphasis
+          role="bold">Anfangswasserstand</emphasis> entspricht dann dem
+          Stauziel.</para>
+
+          <para><emphasis role="bold">Querschnitt oberhalb eines
+          Fließwechsels:</emphasis> An einem Fließwechsel tritt zwangsläufig
+          die Grenztiefe (Übergang Strömen - Schießen) auf. Diese kann mit
+          Hilfe des Extremalprinzips im Anfangsprofil des
+          Berechnungsabschnitts iterativ berechnet werden. Wählen Sie dazu
+          <guilabel>Grenztiefe</guilabel>.</para>
+
+          <para><emphasis role="bold">Querschnitt mit annähernd gleichförmigem
+          Abfluss:</emphasis> Aktivieren Sie den Punkt <emphasis
+          role="bold">stationär gleichförmiges Gefälle</emphasis>, wird die
+          Normalwassertiefe iterativ aus dem angegebenen Energieliniengefälle
+          (absolut) im ersten Profil berechnet.</para>
+        </section>
+      </section>
+
+      <section id="kalypso_wspm_Berechnung_Starten">
+        <title>Starten der Berechnung</title>
+
+        <indexterm>
+          <primary>Berechnung starten in KalypsoWSPM</primary>
+        </indexterm>
+
+        <para>Nachdem alle Berechnungsparameter festlegt wurden, kann die
+        Berechnung gestartet werden.</para>
+
+        <figure>
+          <title>Beispielansicht für eine vollständige
+          Berechnungsvariante</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="img/WSPM/Berechnung_Starten.png" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>Für den Start der Berechnung:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Gehen Sie auf das Berechnungssymbol <inlinemediaobject>
+                <imageobject>
+                  <imagedata fileref="img/WSPM/Berechnung_Rechenschieber.png"
+                             scale="110" />
+                </imageobject>
+              </inlinemediaobject></para>
+          </listitem>
+
+          <listitem>
+            <para>Die Daten müssen gespeichert werden, bevor die Berechnung
+            durchgeführt werden kann. Ein Dialog erscheint mit der Frage, ob
+            die Daten gespeichert werden sollen Klicken Sie auf
+            <guibutton>OK</guibutton> und die Berechnung wird gestartet. Wenn
+            Sie die Daten nicht speichern möchten, klicken Sie auf
+            <guibutton>Abbrechen</guibutton> und es wird keine Berechnung
+            durchgeführt.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Rechts erscheint die Konsole die Prozessausgaben angibt. In der
+        Konsole sind Details über den Fortschritt der Berechnung zu erfahren.
+        Ist die Berechnung abgeschlossen, so wird dies in der Konsole anzeigt
+        mit:</para>
+
+        <para><literal>BUILD SUCCESSFUL Total time: xxx
+        seconds</literal></para>
+
+        <para>Mit Abschluss einer erfolgreichen Berechnung wurde im Navigator
+        ein Ergebnisse-Ordner erzeugt <xref
+        linkend="kalypso_wspm_Ergebnis_Ausgabe" />. Während der Berechnung
+        erscheint eine Berechnungsfortschrittsanzeige.</para>
+      </section>
+    </section>
+  
+</chapter>
