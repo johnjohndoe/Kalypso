@@ -6,8 +6,12 @@ package org.kalypso.risk.model.operation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.eclipse.core.resources.IFile;
@@ -46,6 +50,7 @@ import org.kalypso.risk.model.schema.binding.IRiskLanduseStatistic;
 import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
+import org.kalypso.risk.model.utils.RiskStatisticTableValues;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -54,6 +59,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgress
 {
+
   private static final String DICT_URN = "urn:ogc:gml:dict:kalypso:risk:model:riskresultstat"; //$NON-NLS-1$
 
   private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL"; //$NON-NLS-1$
@@ -281,44 +287,213 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
       result.add( newRecord );
     }
 
+    calculateLastRow( result );
+  }
+
+  /**
+   * the last row of the obs table represents the following data:<br>
+   * <ul>
+   * <li>for each event:
+   * <ul>
+   * <li>the summation of all flooded areas over all landuse classes
+   * <li>the summation of all damages of over landuse classes
+   * <li>the average damage value derived by the summation values
+   * </ul>
+   * <li>the average annual damage value derived by the average damage values for each event as computed before.
+   * </ul>
+   */
+  private static void calculateLastRow( final TupleResult result )
+  {
     /* specific damage value for each event */
     final IRecord lastRecord = result.createRecord();
     final int columnSize = result.getComponents().length;
 
-    // name
-    lastRecord.setValue( 0, "Summation" ); //$NON-NLS-1$
+    /* name */
+    lastRecord.setValue( 0, "Total" );
 
-    // specific damage values per event
+    final Map<String, RiskStatisticTableValues> eventMap = new HashMap<String, RiskStatisticTableValues>();
+
+    /* specific damage values per event */
+    // At first we fill in the summation of total damage and flooded area to be sure that these values are present if we
+    // want to calculate the averaged values
     for( int index = 1; index < columnSize; index++ )
     {
-      BigDecimal sum = new BigDecimal( 0.0 );
-
-      for( int rowIndex = 0; rowIndex < result.size(); rowIndex++ )
+      final IComponent rowComp = result.getComponent( index );
+      final String compName = rowComp.getName();
+      final String[] split = compName.split( "_" );//$NON-NLS-1$
+      final String eventType = split[0];
+      if( split.length > 1 )
       {
-        final IRecord record = result.get( rowIndex );
+        final String eventName = split[1];
 
-        // @hack last value (annual) is type of double
-        final Object object = record.getValue( index );
-        if( object instanceof BigDecimal )
+        RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
+        if( statisticTableValues == null )
         {
-          final BigDecimal value = (BigDecimal) record.getValue( index );
-          sum = sum.add( value );
+          statisticTableValues = new RiskStatisticTableValues( eventName );
+          eventMap.put( eventName, statisticTableValues );
         }
-        else if( object instanceof Double )
+
+        if( eventType.equals( "TotalDamage" ) )//$NON-NLS-1$
         {
-          final Double value = (Double) record.getValue( index );
-          sum = sum.add( BigDecimal.valueOf( value ) );
+          // calculate the sum for total damage and the flooded area
+          final BigDecimal sum = calculateColumnSum( result, index );
+
+          // set the value
+          lastRecord.setValue( index, sum );
+
+          // remember the value
+          statisticTableValues.setTotalDamageValue( sum );
+        }
+        else if( eventType.equals( "FloodedArea" ) )//$NON-NLS-1$
+        {
+          // calculate the sum for total damage and the flooded area
+          final BigDecimal sum = calculateColumnSum( result, index );
+
+          // set the value
+          lastRecord.setValue( index, sum );
+
+          // remember the value
+          statisticTableValues.setFloodedAreaValue( sum );
         }
       }
-
-      // @hack last value (annual) is type of double
-      if( index == columnSize - 1 )
-        lastRecord.setValue( index, sum.doubleValue() );
-      else
-        lastRecord.setValue( index, sum );
     }
 
+    // next we fill in the average damage
+    for( int index = 1; index < columnSize; index++ )
+    {
+      final IComponent rowComp = result.getComponent( index );
+      final String compName = rowComp.getName();
+      final String[] split = compName.split( "_" );//$NON-NLS-1$
+      final String eventType = split[0];
+      if( split.length > 1 )
+      {
+        final String eventName = split[1];
+
+        RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
+        if( statisticTableValues == null )
+          System.out.println( "error while comupting risk statistic table" );
+
+        if( eventType.equals( "AverageDamage" ) )//$NON-NLS-1$
+        {
+          // get the values of the summation and calculate the new average value with it
+          final BigDecimal averageDamageValue = statisticTableValues.getAverageDamageValue();
+          lastRecord.setValue( index, averageDamageValue );
+        }
+      }
+    }
+
+    // at last we calculate the average annual damage value
+    int index = columnSize - 1;
+
+    final IComponent rowComp = result.getComponent( index );
+    final String phenName = rowComp.getPhenomenon().getName();
+
+    if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
+    {
+      // get the calculated total values for all events with corresponding periods
+      final Map<Double, RiskStatisticTableValues> periodSortedMap = getPeriods( columnSize, result, eventMap );
+
+      /* calculate the average annual damage by integrating the specific average damage values */
+      double averageSum = calculateAverageDamageValue( periodSortedMap );
+
+      // calculate the sum for average annual damage
+      lastRecord.setValue( index, averageSum );
+    }
+    // and add the record
     result.add( lastRecord );
+  }
+
+  private static double calculateAverageDamageValue( final Map<Double, RiskStatisticTableValues> periodSortedMap )
+  {
+    double averageSum = 0.0;
+
+    final Set<Double> keySet = periodSortedMap.keySet();
+
+    final Double[] periods = keySet.toArray( new Double[keySet.size()] );
+
+    for( int i = 0; i < periods.length - 1; i++ )
+    {
+      if( periods[i] == null || periods[i] == 0 )
+        continue;
+
+      /* get the probability for each return period */
+      final double p1 = 1 / periods[i];
+      final double p2 = 1 / periods[i + 1];
+
+      /* calculate the difference */
+      final double d_pi = p1 - p2;
+
+      /*
+       * get the specific damage summation value for this and the next return period an calculate the difference
+       * (divided by 2). This means nothing else than to calculate the area for trapezoid with ha=specific value 1 and
+       * hb= specific value 2. The width of the trapezoid is the difference of the probabilities that belong to both
+       * specific damages values.
+       */
+      final RiskStatisticTableValues statEntry1 = periodSortedMap.get( periods[i] );
+      final RiskStatisticTableValues statEntry2 = periodSortedMap.get( periods[i + 1] );
+
+      // final BigDecimal sumStat = statEntry2.getDamageSum().add( statEntry1.getDamageSum() );
+      final BigDecimal sumStat = statEntry2.getAverageDamageValue().add( statEntry1.getAverageDamageValue() );
+      final double value = sumStat.doubleValue() / 2;
+      final BigDecimal si = new BigDecimal( value ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+
+      /* calculate the average damage and add it */
+      averageSum = averageSum + si.doubleValue() * d_pi;
+    }
+    return averageSum;
+  }
+
+  private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, Map<String, RiskStatisticTableValues> eventMap )
+  {
+    final Map<Double, RiskStatisticTableValues> periodSortedMap = new TreeMap<Double, RiskStatisticTableValues>();
+
+    // collect all Averaged Values for all events
+    for( int index = 1; index < columnSize; index++ )
+    {
+      final IComponent rowComp = result.getComponent( index );
+      final String compName = rowComp.getName();
+      final String[] split = compName.split( "_" );//$NON-NLS-1$
+      final String eventType = split[0];
+      if( eventType.equals( "AverageDamage" ) && split.length > 1 )
+      {
+        final String eventName = split[1];
+
+        final String anu = eventName.substring( 2 );
+
+        final Scanner scanner = new Scanner( anu );
+        Double annuality = 0.0;
+        if( scanner.hasNextDouble() )
+          annuality = scanner.nextDouble();
+
+        if( annuality == null )
+          continue;
+
+        periodSortedMap.put( annuality, eventMap.get( eventName ) );
+      }
+    }
+    return periodSortedMap;
+
+  }
+
+  private static BigDecimal calculateColumnSum( final TupleResult result, int index )
+  {
+    BigDecimal sum = new BigDecimal( 0.0 );
+    for( int rowIndex = 0; rowIndex < result.size(); rowIndex++ )
+    {
+      final IRecord record = result.get( rowIndex );
+      final Object object = record.getValue( index );
+      if( object instanceof BigDecimal )
+      {
+        final BigDecimal value = (BigDecimal) record.getValue( index );
+        sum = sum.add( value );
+      }
+      else if( object instanceof Double )
+      {
+        final Double value = (Double) record.getValue( index );
+        sum = sum.add( BigDecimal.valueOf( value ) );
+      }
+    }
+    return sum;
   }
 
 }
