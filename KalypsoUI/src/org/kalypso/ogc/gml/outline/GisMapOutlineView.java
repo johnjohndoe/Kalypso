@@ -53,15 +53,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter;
@@ -77,6 +74,8 @@ import org.kalypso.ui.views.map.MapView;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
+ * TODO: A new view is not necessary. Ask Alex Burtscher about how he solved it for the Chart-Outline. Simply deriving
+ * from the existing outline is enough, also adapt the map view to its outline page. <br>
  * A legend view that uses the {@link GisMapOutlineViewer}. Provides the same view on a {@link IMapModell} as a
  * {@link org.kalypso.ui.editor.mapeditor.GisMapOutlinePage}. Usable with all view or editors that extend
  * {@link AbstractMapPart}.
@@ -108,7 +107,59 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
 
   protected AbstractMapPart m_mapPart;
 
-  private IPartListener m_partListener;
+  private final IPartListener m_partListener = new PartAdapter()
+  {
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partOpened(org.eclipse.ui.IWorkbenchPart)
+     */
+    @Override
+    public void partOpened( IWorkbenchPart part )
+    {
+      // TODO: this is not always correct, we should do this only if the active part is not a map part
+      // But: this makes it too complicated now... see the TODO on the class comment; we do not need this view at all
+      findMapPart( part );
+    }
+
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partActivated(org.eclipse.ui.IWorkbenchPart)
+     */
+    @Override
+    public void partActivated( final IWorkbenchPart part )
+    {
+      findMapPart( part );
+    }
+
+    private void findMapPart( final IWorkbenchPart part )
+    {
+      if( (part instanceof AbstractMapPart) && (part instanceof IEditorPart) )
+      {
+        final IWorkbenchPartSite activatedSite = part.getSite();
+        if( activatedSite != null )
+        {
+          final IWorkbenchWindow workbenchWindow = activatedSite.getWorkbenchWindow();
+          if( workbenchWindow != null )
+          {
+            final IWorkbenchPage activePage = workbenchWindow.getActivePage();
+            if( (activePage != null) && activePage.isEditorAreaVisible() )
+              setMapPart( (AbstractMapPart) part );
+          }
+        }
+      }
+      else if( (part instanceof AbstractMapPart) && (part instanceof IViewPart) )
+        setMapPart( (AbstractMapPart) part );
+    }
+
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partClosed(org.eclipse.ui.IWorkbenchPart)
+     */
+    @Override
+    public void partClosed( final IWorkbenchPart part )
+    {
+      if( part instanceof AbstractMapPart )
+        if( m_mapPart == part )
+          setMapPart( null );
+    }
+  };
 
   private MapPanel m_panel;
 
@@ -147,52 +198,6 @@ public class GisMapOutlineView extends ViewPart implements IMapModellView
       setMapPart( (AbstractMapPart) activeEditor );
     else if( mapView instanceof AbstractMapPart )
       setMapPart( (AbstractMapPart) mapView );
-  }
-
-  /**
-   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-   */
-  @Override
-  public void init( final IViewSite site, final IMemento memento ) throws PartInitException
-  {
-    super.init( site, memento );
-    m_partListener = new PartAdapter()
-    {
-      /**
-       * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partActivated(org.eclipse.ui.IWorkbenchPart)
-       */
-      @Override
-      public void partActivated( final IWorkbenchPart part )
-      {
-        if( (part instanceof AbstractMapPart) && (part instanceof IEditorPart) )
-        {
-          final IWorkbenchPartSite activatedSite = part.getSite();
-          if( activatedSite != null )
-          {
-            final IWorkbenchWindow workbenchWindow = activatedSite.getWorkbenchWindow();
-            if( workbenchWindow != null )
-            {
-              final IWorkbenchPage activePage = workbenchWindow.getActivePage();
-              if( (activePage != null) && activePage.isEditorAreaVisible() )
-                setMapPart( (AbstractMapPart) part );
-            }
-          }
-        }
-        else if( (part instanceof AbstractMapPart) && (part instanceof IViewPart) )
-          setMapPart( (AbstractMapPart) part );
-      }
-
-      /**
-       * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter#partClosed(org.eclipse.ui.IWorkbenchPart)
-       */
-      @Override
-      public void partClosed( final IWorkbenchPart part )
-      {
-        if( part instanceof AbstractMapPart )
-          if( m_mapPart == part )
-            setMapPart( null );
-      }
-    };
   }
 
   protected void setMapPart( final AbstractMapPart mapPart )
