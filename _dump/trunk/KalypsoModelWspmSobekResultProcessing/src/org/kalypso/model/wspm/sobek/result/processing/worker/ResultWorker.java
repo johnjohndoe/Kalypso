@@ -1,6 +1,7 @@
 package org.kalypso.model.wspm.sobek.result.processing.worker;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class ResultWorker
 
   private final TimeSeriesComplexType m_binding;
 
-  private double m_max = Double.NaN;
+  private double m_max = Double.MIN_VALUE;
 
   private double m_last = Double.NaN;
 
@@ -96,12 +97,12 @@ public class ResultWorker
         final XMLGregorianCalendar time = event.getTime();
 
         final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.set( GregorianCalendar.DAY_OF_MONTH, date.getDay() );
-        calendar.set( GregorianCalendar.MONTH, date.getMonth() );
-        calendar.set( GregorianCalendar.YEAR, date.getYear() );
-        calendar.set( GregorianCalendar.HOUR_OF_DAY, time.getHour() );
-        calendar.set( GregorianCalendar.MINUTE, time.getMinute() );
-        calendar.set( GregorianCalendar.SECOND, time.getSecond() );
+        calendar.set( Calendar.DAY_OF_MONTH, date.getDay() );
+        calendar.set( Calendar.MONTH, date.getMonth() );
+        calendar.set( Calendar.YEAR, date.getYear() );
+        calendar.set( Calendar.HOUR_OF_DAY, time.getHour() );
+        calendar.set( Calendar.MINUTE, time.getMinute() );
+        calendar.set( Calendar.SECOND, time.getSecond() );
 
         final Double value = event.getValue();
 
