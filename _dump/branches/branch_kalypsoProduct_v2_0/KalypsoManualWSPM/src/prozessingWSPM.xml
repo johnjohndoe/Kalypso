@@ -3,7 +3,7 @@
   <title>Prozessing</title>
 
     <indexterm>
-      <primary>Prozessing KalypsoWSPM</primary>
+      <primary>Prozessing Kalypso WSPM</primary>
     </indexterm>
 
     <section id="kalypso_wspm_Berechnungsvariante_editieren">
@@ -11,7 +11,7 @@
 
       <indexterm>
         <primary>Berechnungsvarianten und -einstellungen in
-        KalypsoWSPM</primary>
+        Kalypso WSPM</primary>
       </indexterm>
 
       <para>Unter einer Berechnungsvariante können zahlreiche
@@ -27,7 +27,7 @@
 
         <indexterm>
           <primary>Eine neue Berechnungsvariante anlegen in
-          KalypsoWSPM</primary>
+          Kalypso WSPM</primary>
         </indexterm>
 
         <para>Eine neue Berechnungsvariante kann in der Perspektive
@@ -70,7 +70,7 @@
         <title>Einstellung der Berechnungsparameter</title>
 
         <indexterm>
-          <primary>Berechnungsparameter einstellen in KalypsoWSPM</primary>
+          <primary>Berechnungsparameter einstellen in Kalypso WSPM</primary>
         </indexterm>
 
         <para>Folgende Vorgaben sind für eine Berechnungsvariante
@@ -119,13 +119,13 @@
           <title>Wahl des Fließgesetzes</title>
 
           <indexterm>
-            <primary>Fließgesetz auswählen in KalypsoWSPM</primary>
+            <primary>Fließgesetz auswählen in Kalypso WSPM</primary>
           </indexterm>
 
           <para>Das grundlegende Verfahren zur Berechnung des Wasserspiegels
           mit dem BERNOULLI’schen Energiehöhenvergleich wird im Handbuch zum
           Rechenkern ausführlich beschrieben. Zur Ermittlung des
-          Energieliniengefälles bietet KalypsoWSPM dem Anwender drei
+          Energieliniengefälles bietet Kalypso WSPM dem Anwender drei
           Berechnungsvarianten, die auf den Fließgesetzen von
           GAUCKLER-MANNING-STRICKLER bzw. DARCY-WEISSBACH beruhen.</para>
 
@@ -185,7 +185,7 @@
 
           <indexterm>
             <primary>Berechnungsarten und Abflussereignisse in
-            KalypsoWSPM</primary>
+            Kalypso WSPM</primary>
           </indexterm>
 
           <para>Je nach gewünschter Berechnung ist eine der drei Optionen
@@ -780,7 +780,7 @@
 
           <indexterm>
             <primary>Wahl des Gewässerstrangs und des Berechnungsabschnittes
-            in KalypsoWSPM</primary>
+            in Kalypso WSPM</primary>
           </indexterm>
 
           <para>Für die Selektion des Gewässerstrangs stehen in einem
@@ -801,7 +801,7 @@
 
           <para>Der Berechnungsabschnitt ist händisch vorzugeben. Hierbei ist
           zu beachten, dass die Anfangsstation der Berechnung kleiner ist als
-          die Endstation, da KalypsoWSPM vom Unterwasser zum Oberwasser
+          die Endstation, da Kalypso WSPM vom Unterwasser zum Oberwasser
           rechnet.</para>
         </section>
 
@@ -809,7 +809,7 @@
           <title>Numerische Parameter</title>
 
           <indexterm>
-            <primary>Numerische Parameter einstellen in KalypsoWSPM</primary>
+            <primary>Numerische Parameter einstellen in Kalypso WSPM</primary>
           </indexterm>
 
           <para>Insgesamt stehen fünf Parameter zur Verfügung: Die
@@ -878,7 +878,7 @@
 
           <indexterm>
             <primary>Untere Randbedingung am 1. Profil in
-            KalypsoWSPM</primary>
+            Kalypso WSPM</primary>
           </indexterm>
 
           <para>Am ersten Profil ist ein sogenannter Anfangswert für den
@@ -913,7 +913,7 @@
         <title>Starten der Berechnung</title>
 
         <indexterm>
-          <primary>Berechnung starten in KalypsoWSPM</primary>
+          <primary>Berechnung starten in Kalypso WSPM</primary>
         </indexterm>
 
         <para>Nachdem alle Berechnungsparameter festlegt wurden, kann die

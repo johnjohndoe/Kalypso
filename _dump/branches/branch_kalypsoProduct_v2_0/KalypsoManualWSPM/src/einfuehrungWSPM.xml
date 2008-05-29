@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="einfuehrungkalypso_wspm">
-  <title>Einführung KalypsoWSPM</title>
+  <title>Einführung Kalypso WSPM</title>
 
   <indexterm>
-    <primary>1D Spiegellinienmodell KalypsoWSPM</primary>
+    <primary>1D Spiegellinienmodell Kalypso WSPM</primary>
   </indexterm>
 
-  <para>Die Benutzeroberfläche KalypsoWSPM dient der Anwendung des
+  <para>Die Benutzeroberfläche Kalypso WSPM dient der Anwendung des
   Spiegellinienprogramms (Kalypso1D). Die Einbindung der Modelldaten
   (Steuerdaten, Ein- und Ausgabedaten) erfolgt über die Spezifizierung der
   Daten nach Standards des OpenGIS-Consortiums (siehe
@@ -14,10 +14,10 @@
   am Bildschirm bearbeitet und modifiziert werden. Durch die Konzeption der
   Oberfläche fällt es dem Benutzer leicht, sich in das Programm einzuarbeiten
   bzw. es zu bedienen. Damit entfällt das aufwendige Editieren von
-  ASCII-Eingabedateien unter Einhaltung eines bestimmten Formats. KalypsoWSPM
+  ASCII-Eingabedateien unter Einhaltung eines bestimmten Formats. Kalypso WSPM
   übernimmt diese Aufgaben für den Benutzer.</para>
 
-  <para>Das Preprozessing von KalypsoWSPM stellt dem Anwender nicht nur eine
+  <para>Das Preprozessing von Kalypso WSPM stellt dem Anwender nicht nur eine
   vereinfachte Eingabe der Berechnungsgrundlagen bereit, sondern nimmt ihm
   auch die Datenorganisation vollständig ab. Für die vereinfachte Eingabe und
   Modifikation von Profildaten wurde der graphisch interaktive <emphasis
@@ -34,7 +34,7 @@
   rasche Überprüfung der Auswirkungen von Veränderungen bei den hydraulischen
   oder geometrischen Parametern.</para>
 
-  <para>Nicht zuletzt ermöglicht KalypsoWSPM zeitsparend eine Abarbeitung von
+  <para>Nicht zuletzt ermöglicht Kalypso WSPM zeitsparend eine Abarbeitung von
   zuvor erstellten Berechnungsvarianten. Die Ergebnisse der
   Spiegellinienberechnung werden in anschaulicher Form in Längsschnitten,
   Überschwemmungskarten und als Tabellen ausgegeben. Hierbei bietet ein
@@ -64,7 +64,7 @@
     </listitem>
   </itemizedlist>
 
-  <para>Das vorliegende Kapitel beschreibt die Benutzeroberfläche KalypsoWSPM,
+  <para>Das vorliegende Kapitel beschreibt die Benutzeroberfläche Kalypso WSPM,
   die auf den Rechenkern Kalypso1D von Prof. Pasche zugeschnitten ist.</para>
 
   <para>Die theoretischen Grundlagen der Spiegellinienberechnung des
@@ -101,7 +101,7 @@
   Lizenz weiterentwickelt. In Zusammenarbeit der Firma BCE mit der TUHH wird
   das Programm laufend weiterentwickelt.</para>
 
-  <para>Der Rechenkern der Benutzeroberfläche KalypsoWSPM ist weitestgehend
+  <para>Der Rechenkern der Benutzeroberfläche Kalypso WSPM ist weitestgehend
   identisch mit dem unter der Benutzeroberfläche WspWin genutzten Programm.
   Die Oberfläche WspWin wurde deutschlandweit bei einer Vielzahl von Projekten
   eingesetzt.</para>
@@ -157,7 +157,7 @@
     <title>Datenakquisition</title>
 
     <indexterm>
-      <primary>Datenakquisition und Aufbereitung KalypsoWSPM</primary>
+      <primary>Datenakquisition und Aufbereitung Kalypso WSPM</primary>
     </indexterm>
 
     <para>Zum Aufbau eines eindimensionalen Strömungsmodells sind zunächst
@@ -352,16 +352,16 @@
     <title>Kalypso-Startseite und Welcome-Dialog</title>
 
     <indexterm>
-      <primary>Startseite von KalypsoWSPM</primary>
+      <primary>Startseite von Kalypso WSPM</primary>
     </indexterm>
 
     <para>Beim Programmstart erscheint zunächst die Welcome Seite mit einer
-    Auflistung aller verfügbarer Modelle. Hier ist das KalypsoWSPM Modell zu
+    Auflistung aller verfügbarer Modelle. Hier ist das Kalypso WSPM Modell zu
     wählen.</para>
 
     <figure>
       <title>Kalypso Welcome Seite mit allen verfügbaren Modellen (links):
-      KalypsoWSPM Welcome Seite (rechts)</title>
+      Kalypso WSPM Welcome Seite (rechts)</title>
 
       <mediaobject>
         <imageobject>
@@ -371,7 +371,7 @@
       </mediaobject>
     </figure>
 
-    <para>Die Welcome Seite des KalypsoWSPM Modells erscheint mit folgenden
+    <para>Die Welcome Seite des Kalypso WSPM Modells erscheint mit folgenden
     Elementen:</para>
 
     <itemizedlist>
@@ -382,7 +382,7 @@
 
       <listitem>
         <para>Neues Projekt erstellen: Über diese Option kann man ein neues
-        KalypsoWSPM Projekt erstellen. Wählen Sie hierfür den Button
+        Kalypso WSPM Projekt erstellen. Wählen Sie hierfür den Button
         <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/WSPM/Icon_NeuesProjekt.png" />
@@ -415,10 +415,10 @@
     </itemizedlist>
 
     <section id="kalypso_wspm_Perspektiven_Views">
-      <title>Perspektiven und Views in KalypsoWSPM</title>
+      <title>Perspektiven und Views in Kalypso WSPM</title>
 
       <indexterm>
-        <primary>Perspektiven und Views in KalypsoWSPM</primary>
+        <primary>Perspektiven und Views in Kalypso WSPM</primary>
       </indexterm>
 
       <para>Grundsätzlich stehen für die Bearbeitung eines WSPM-Modells dem
@@ -613,7 +613,7 @@
       <title>Neues Projekt erstellen</title>
 
       <indexterm>
-        <primary>Neues KalypsoWSPM Projekt erstellen</primary>
+        <primary>Neues Kalypso WSPM Projekt erstellen</primary>
       </indexterm>
 
       <para>Für das Anlegen eines neuen WSPM-Projektes ist der Button
@@ -628,7 +628,7 @@
       1d-Spiegellinienberechnung &gt; Projekt</guimenuitem>.</para>
 
       <figure>
-        <title>Assistent zum Anlegen eines neuen KalypsoWSPM Projektes</title>
+        <title>Assistent zum Anlegen eines neuen Kalypso WSPM Projektes</title>
 
         <mediaobject>
           <imageobject>
@@ -642,7 +642,7 @@
       <title>Importieren von WspWin-Projekten</title>
 
       <indexterm>
-        <primary>WspWin-Projekte in KalypsoWSPM importieren</primary>
+        <primary>WspWin-Projekte in Kalypso WSPM importieren</primary>
       </indexterm>
 
       <para>Für den Import eines WspWin-Projektes ist der Button
@@ -710,15 +710,15 @@
       <title>Bereits vorhandene Projekte bearbeiten...</title>
 
       <indexterm>
-        <primary>Bereits vorhandene Projekte mit KalypsoWSPM
+        <primary>Bereits vorhandene Projekte mit Kalypso WSPM
         bearbeiten</primary>
       </indexterm>
 
-      <para>Wählen Sie auf der KalypsoWSPM Welcome Seite den Button
+      <para>Wählen Sie auf der Kalypso WSPM Welcome Seite den Button
       <guibutton> Bereits vorhandene Projekte bearbeiten</guibutton>.</para>
 
       <section id="kalypso_wspm_Import_wspmProjekt">
-        <title>Import eines bestehenden KalypsoWSPM-Projektes aus einem
+        <title>Import eines bestehenden Kalypso WSPM-Projektes aus einem
         anderen Ordner</title>
 
         <indexterm>
@@ -806,7 +806,7 @@
     <title id="kalypso_wspm_Modellstruktur">Modellstruktur</title>
 
     <indexterm>
-      <primary>Modellstruktur eines KalypsoWSPM Projektes</primary>
+      <primary>Modellstruktur eines Kalypso WSPM Projektes</primary>
     </indexterm>
 
     <para>Gehen Sie im Navigator auf das Projekt, welches geöffnet werden soll
@@ -843,7 +843,7 @@
       in der Baumansicht</title>
 
       <indexterm>
-        <primary>Arbeiten in der Baumansicht in KalypsoWSPM</primary>
+        <primary>Arbeiten in der Baumansicht in Kalypso WSPM</primary>
       </indexterm>
 
       <para>Markieren Sie <guimenuitem>Baumansicht</guimenuitem> und klicken
@@ -863,7 +863,7 @@
       </figure>
 
       <para>Über dem Feature View finden Sie (je nach Element) folgende
-      Zusatzfunktionen für KalypsoWSPM:</para>
+      Zusatzfunktionen für Kalypso WSPM:</para>
 
       <table align="center" id="kalypso_wspmsymbole_featureview">
         <title>Symbole im Feature View</title>
@@ -952,14 +952,14 @@
     <title>WspWin Schnittstelle</title>
 
     <indexterm>
-      <primary>KalypsoWSPM WspWin Schnittstelle</primary>
+      <primary>Kalypso WSPM WspWin Schnittstelle</primary>
     </indexterm>
 
     <section>
       <title>Import von Daten aus WspWin</title>
 
       <indexterm>
-        <primary>WspWin-Projekte in KalypsoWSPM importieren</primary>
+        <primary>WspWin-Projekte in Kalypso WSPM importieren</primary>
       </indexterm>
 
       <para><xref linkend="kalypso_wspm_wspwin_Projekt_importieren" /></para>
@@ -969,7 +969,7 @@
       <title>Export von Daten in WspWin</title>
 
       <indexterm>
-        <primary>Daten von KalypsoWSPM nach WspWin exportieren</primary>
+        <primary>Daten von Kalypso WSPM nach WspWin exportieren</primary>
       </indexterm>
 
       <para>Mit einem Export können nur geänderte Profile ausgelagert werden
