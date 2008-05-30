@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelProduct Plug-in
 Bundle-SymbolicName: org.kalypso.model.product; singleton:=true
-Bundle-Version: 0.0.1
+Bundle-Version: 2.0.0.20080530rc1
 Bundle-Activator: org.kalypso.model.product.KalypsoModelProductPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
@@ -20,5 +20,6 @@ Require-Bundle: org.kalypso.kalypso1d2d.pjt,
  org.eclipse.help.ui,
  org.kalypso.KalypsoManualFlood,
  org.kalypso.KalypsoManualRisk,
- org.kalypso.KalypsoManualNA
+ org.kalypso.KalypsoManualNA,
+ org.kalypso.ui.observationimport
 Eclipse-LazyStart: true

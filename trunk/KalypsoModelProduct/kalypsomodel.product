@@ -250,6 +250,7 @@ de_DE</programArgs>
       <plugin id="org.kalypso.simulation.ui"/>
       <plugin id="org.kalypso.ui"/>
       <plugin id="org.kalypso.ui.addlayer"/>
+      <plugin id="org.kalypso.ui.observationimport"/>
       <plugin id="org.kalypso.ui.rrm"/>
       <plugin id="org.kalypso.wizard.CreateNAProject"/>
       <plugin id="org.kalypso.wspwin.core"/>
