@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <contexts>
 <context id="einfuehrungkalypso_wspm">
-<description>Einführung KalypsoWSPM</description>
-<topic href="ch01.html" label="Einführung KalypsoWSPM"/>
+<description>Einführung Kalypso WSPM</description>
+<topic href="ch01.html" label="Einführung Kalypso WSPM"/>
 </context>
 <context id="kalypso_wspm_Datenakquisition">
 <description>Datenakquisition</description>
@@ -18,8 +18,8 @@
 <topic href="ch01s02.html" label="Kalypso-Startseite und Welcome-Dialog"/>
 </context>
 <context id="kalypso_wspm_Perspektiven_Views">
-<description>Perspektiven und Views in KalypsoWSPM</description>
-<topic href="ch01s02s01.html" label="Perspektiven und Views in KalypsoWSPM"/>
+<description>Perspektiven und Views in Kalypso WSPM</description>
+<topic href="ch01s02s01.html" label="Perspektiven und Views in Kalypso WSPM"/>
 </context>
 <context id="kalypso_wspm_Perspektive_Spiegellinienberechnung">
 <description>Perspektive Spiegellinienberechnung</description>
@@ -42,9 +42,9 @@
 <topic href="ch01s02s04.html" label="Bereits vorhandene Projekte bearbeiten..."/>
 </context>
 <context id="kalypso_wspm_Import_wspmProjekt">
-<description>Import eines bestehenden KalypsoWSPM-Projektes aus einem
+<description>Import eines bestehenden Kalypso WSPM-Projektes aus einem
         anderen Ordner</description>
-<topic href="ch01s02s04.html#kalypso_wspm_Import_wspmProjekt" label="Import eines bestehenden KalypsoWSPM-Projektes aus einem&#10;        anderen Ordner"/>
+<topic href="ch01s02s04.html#kalypso_wspm_Import_wspmProjekt" label="Import eines bestehenden Kalypso WSPM-Projektes aus einem&#10;        anderen Ordner"/>
 </context>
 <context id="kalypso_wspm_Projekt_Öffnen_Navigator">
 <description>Zusätzliche Funktionen

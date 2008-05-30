@@ -103,6 +103,8 @@ public class ProfileFeatureFactory implements IWspmConstants
     final FeatureChange[] changes = ProfileFeatureFactory.toFeatureAsChanges( profile, targetFeature );
     for( final FeatureChange change : changes )
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
+
+    targetFeature.invalidEnvelope();
   }
 
   public static BigDecimal getProfileStation( final Feature profileFeature )
@@ -119,7 +121,7 @@ public class ProfileFeatureFactory implements IWspmConstants
    * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
    * changes.
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   public static FeatureChange[] toFeatureAsChanges( final IProfil profile, final Feature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
@@ -191,9 +193,10 @@ public class ProfileFeatureFactory implements IWspmConstants
     }
     catch( final Exception e )
     {
-      // nothing TODO?
-      final int i = changes.size();
+      // TODO: better error handling!
+      e.printStackTrace();
     }
+
     return changes.toArray( new FeatureChange[changes.size()] );
   }
 
@@ -210,7 +213,7 @@ public class ProfileFeatureFactory implements IWspmConstants
       final IComponent component = ObservationFeatureFactory.createDictionaryComponent( obsFeature, bp.getId() );
       result.addComponent( component );
       final Object value = building.getValue( component );
-      record.setValue( result.indexOf( component), value );
+      record.setValue( result.indexOf( component ), value );
     }
 
     final IObservation<TupleResult> observation = building.getObservation();

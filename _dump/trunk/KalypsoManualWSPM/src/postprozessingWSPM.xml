@@ -3,7 +3,7 @@
   <title>Postprozessing</title>
 
     <indexterm>
-      <primary>Postprozessing KalypsoWSPM</primary>
+      <primary>Postprozessing Kalypso WSPM</primary>
     </indexterm>
 
     <para>Ist eine Berechnung erfolgreich durchgeführt wurden alle
@@ -17,7 +17,7 @@
       <title>Ergebnis-Ausgabe</title>
 
       <indexterm>
-        <primary>Ergebnisausgabe in KalypsoWSPM</primary>
+        <primary>Ergebnisausgabe in Kalypso WSPM</primary>
       </indexterm>
 
       <para>Im Navigator wird mit erfolgreichem Abschluss einer Berechnung ein
@@ -69,7 +69,7 @@
         <title>Ausgabe der Ergebnisse in der Karte</title>
 
         <indexterm>
-          <primary>Ergebnisausgabe in der Karte in KalypsoWSPM</primary>
+          <primary>Ergebnisausgabe in der Karte in Kalypso WSPM</primary>
         </indexterm>
 
         <para>Eine Karte mit den enthaltenen Ergebnissen wird nur erzeugt,
@@ -146,7 +146,7 @@
         <title>Ausgabe der Ergebnisse im Längsschnitt</title>
 
         <indexterm>
-          <primary>Ergebnisausgabe im Längsschnitt in KalypsoWSPM</primary>
+          <primary>Ergebnisausgabe im Längsschnitt in Kalypso WSPM</primary>
         </indexterm>
 
         <para>Der Längsschnitt liegt im Navigator unter dem Ordner
@@ -222,7 +222,7 @@
         <title>Ausgabe der Ergebnisse in der Tabelle</title>
 
         <indexterm>
-          <primary>Ergebnisausgabe in der Tabelle in KalypsoWSPM</primary>
+          <primary>Ergebnisausgabe in der Tabelle in Kalypso WSPM</primary>
         </indexterm>
 
         <para>Die Ergebnis-Tabelle liegt im Navigator unter dem Ordner
@@ -336,7 +336,7 @@
         <title>Ausgabe der Ergebnisse in der Liste</title>
 
         <indexterm>
-          <primary>Ergebnisausgabe in der Liste in KalypsoWSPM</primary>
+          <primary>Ergebnisausgabe in der Liste in Kalypso WSPM</primary>
         </indexterm>
 
         <para>Die Ausgabe in der Liste entspricht der Ausgabedatei die bei
@@ -455,7 +455,7 @@
       <title>Erzeugung der Fließtiefen</title>
 
       <indexterm>
-        <primary>Erzeugung der Fließtiefen in KalypsoWSPM</primary>
+        <primary>Erzeugung der Fließtiefen in Kalypso WSPM</primary>
       </indexterm>
 
       <para>Für die Verschneidung der Fließtiefen muss ein georeferenzierter
@@ -469,7 +469,7 @@
         <title>Verschneidung der Fließtiefen</title>
 
         <indexterm>
-          <primary>Verschneidung der Fließtiefen in KalypsoWSPM</primary>
+          <primary>Verschneidung der Fließtiefen in Kalypso WSPM</primary>
         </indexterm>
 
         <para>Öffnen Sie die Karte mit den gewünschten Ergebnissen, die
@@ -556,7 +556,7 @@
       <title>Kartenansichten und Karten einladen</title>
 
       <indexterm>
-        <primary>Kartenansichten und Karten einladen in KalypsoWSPM</primary>
+        <primary>Kartenansichten und Karten einladen in Kalypso WSPM</primary>
       </indexterm>
 
       <para><guimenuitem>Datei &gt; Neu... &gt; Andere... &gt; Kalypso &gt;
@@ -623,7 +623,7 @@
 
         <indexterm>
           <primary>Symbolleiste für die Kartenbearbeitung in
-          KalypsoWSPM</primary>
+          Kalypso WSPM</primary>
         </indexterm>
 
         <para>Unter dem Hauptmenü (am oberen Rand) findet der Benutzer eine
@@ -887,7 +887,7 @@
 
         <indexterm>
           <primary>In der Gliederung der Karte arbeiten in
-          KalypsoWSPM</primary>
+          Kalypso WSPM</primary>
         </indexterm>
 
         <para>Über die Gliederung der Karte können, vergleichbar mit ArcView,

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<toc topic="index.html" label="1D Wasserspiegellagenmodell KalypsoWSPM">
-<topic href="ch01.html" label="Einführung KalypsoWSPM">
+<toc topic="index.html" label="Kalypso WSPM - Anwenderhandbuch">
+<topic href="ch01.html" label="Einführung Kalypso WSPM">
 <topic href="ch01s01.html" label="Datenakquisition">
 <topic href="ch01s01s01.html" label="Was enthält ein Spiegellinien-Modell? Allgemeine&#10;      Begriffserläuterungen"/>
 </topic>
 <topic href="ch01s02.html" label="Kalypso-Startseite und Welcome-Dialog">
-<topic href="ch01s02s01.html" label="Perspektiven und Views in KalypsoWSPM">
+<topic href="ch01s02s01.html" label="Perspektiven und Views in Kalypso WSPM">
 <topic href="ch01s02s01.html#kalypso_wspm_Perspektive_Spiegellinienberechnung" label="Perspektive Spiegellinienberechnung"/>
 <topic href="ch01s02s01.html#kalypso_wspm_Perspektive_Profileditor_manager" label="Perspektive Profileditor - Profil Manager"/>
 </topic>
 <topic href="ch01s02s02.html" label="Neues Projekt erstellen"/>
 <topic href="ch01s02s03.html" label="Importieren von WspWin-Projekten"/>
 <topic href="ch01s02s04.html" label="Bereits vorhandene Projekte bearbeiten...">
-<topic href="ch01s02s04.html#kalypso_wspm_Import_wspmProjekt" label="Import eines bestehenden KalypsoWSPM-Projektes aus einem&#10;        anderen Ordner"/>
+<topic href="ch01s02s04.html#kalypso_wspm_Import_wspmProjekt" label="Import eines bestehenden Kalypso WSPM-Projektes aus einem&#10;        anderen Ordner"/>
 </topic>
 </topic>
 <topic href="ch01s03.html" label="Modellstruktur">
