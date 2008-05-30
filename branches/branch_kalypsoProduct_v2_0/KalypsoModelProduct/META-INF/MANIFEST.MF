@@ -20,5 +20,6 @@ Require-Bundle: org.kalypso.kalypso1d2d.pjt,
  org.eclipse.help.ui,
  org.kalypso.KalypsoManualFlood,
  org.kalypso.KalypsoManualRisk,
- org.kalypso.KalypsoManualNA
+ org.kalypso.KalypsoManualNA,
+ org.kalypso.ui.observationimport
 Eclipse-LazyStart: true
