@@ -53,14 +53,6 @@
    <extension
          point="org.kalypso.contribs.eclipseplatform.projectTemplate">
       <project
-            data="etc/demos/testDemo.zip"
-            description="Dies ist ein leeres Demo-Projekt, es erzeugt das gleiche leere Projekt wie bei &apos;Projekt neu&apos;. Sobald Testdaten zur Verfügung stehen, soll es durch diese ersetzt werden."
-            icon="icons/obj16/legend_col1.gif"
-            label="Test (leer)"
-            projectName="TestDemoTuhh"
-            category="org.kalypso.model.wspm.tuhh.demoProjects">
-      </project>
-      <project
             data="etc/projectTemplate.zip"
             description="Die leere Vorlage für ein WSPM-TUHH Projekt."
             label="Leere Vorlage"
