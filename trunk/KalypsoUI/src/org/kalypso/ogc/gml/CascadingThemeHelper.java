@@ -121,5 +121,4 @@ public class CascadingThemeHelper
     }
     return null;
   }
-
 }
