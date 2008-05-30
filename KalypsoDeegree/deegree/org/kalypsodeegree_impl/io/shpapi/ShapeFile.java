@@ -802,14 +802,11 @@ public class ShapeFile
       /* create a new SHP type entry in the specified shape type */
       /* convert feature geometry into output geometry */
       ISHPGeometry shpGeom = getShapeGeometry( dataProvider.getGeometry( i ), dataProvider.getOutputShapeConstant() );
-// if( shpGeom == null )
-// throw new UnsupportedOperationException( "Data type (" + dataProvider.getGeometry( i ).toString() + ") cannot
-// converted into the specified shape type ("
-// + ShapeConst.getShapeConstantAsString( dataProvider.getOutputShapeConstant() ) + ") or geometry is null." );
+      if( shpGeom == null )
+        throw new UnsupportedOperationException( "Data type (" + dataProvider.getGeometry( i ).toString() + ") cannot converted into the specified shape type ("
+            + ShapeConst.getShapeConstantAsString( dataProvider.getOutputShapeConstant() ) + ") or geometry is null." );
 
-      byte[] byteArray = null;
-      if( shpGeom != null )
-        byteArray = shpGeom.writeShape();
+      byte[] byteArray = shpGeom.writeShape();
 
       /* check for null geometry */
       if( byteArray == null )

@@ -157,9 +157,6 @@ public class ShapeUtils
    */
   public static int writeBox( byte[] b, int off, SHPEnvelope box )
   {
-    if( box == null )
-      box = new SHPEnvelope();
-
     final double minX = box.west;
     final double minY = box.south;
     final double maxX = box.east;
