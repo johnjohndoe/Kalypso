@@ -6,9 +6,16 @@
       <project
             category="org.kalypso.model.wspm.tuhh.demoProjects"
             data="etc/demos/WspmDemo.zip"
-            description="Einfaches Beispielprojekt mit einem Strang ohne Bauwerke."
+            description="Ein einfaches Beispielprojekt bestehend aus einem Strang ohne Bauwerke."
             label="WSPM Demo Projekt"
             projectName="WSPMDemo">
+      </project>
+      <project
+            category="org.kalypso.model.flood.demoProject"
+            data="etc/demos/FloodDemo.zip"
+            description="Ein einfaches Beispielprojekt, basierend auf den Ergebnissen des WSPMDemo Beispielprojekts."
+            label="FLOOD Demo Projekt"
+            projectName="FloodDemo">
       </project>
    </extension>
 
