@@ -52,11 +52,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IPageChangingListener;
 import org.eclipse.jface.dialogs.PageChangingEvent;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
@@ -75,6 +79,14 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard
 {
+  private final IPageChangingListener m_pageChangeingListener = new IPageChangingListener()
+  {
+    public void handlePageChanging( PageChangingEvent event )
+    {
+      doHandlePageChangeing( event );
+    }
+  };
+
   private final ProjectTemplatePage m_templateProjectPage;
 
   /**
@@ -89,13 +101,42 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
   }
 
   /**
+   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
+   */
+  @Override
+  public void setContainer( final IWizardContainer wizardContainer )
+  {
+    final IWizardContainer currentContainer = getContainer();
+    if( currentContainer instanceof WizardDialog )
+      ((WizardDialog) currentContainer).removePageChangingListener( m_pageChangeingListener );
+
+    super.setContainer( wizardContainer );
+
+    if( wizardContainer instanceof WizardDialog )
+      ((WizardDialog) wizardContainer).addPageChangingListener( m_pageChangeingListener );
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    final IWizardContainer wizardContainer = getContainer();
+    if( wizardContainer instanceof WizardDialog )
+      ((WizardDialog) wizardContainer).removePageChangingListener( m_pageChangeingListener );
+
+    super.dispose();
+  }
+
+  /**
    * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
    */
   @Override
   public void createPageControls( final Composite pageContainer )
   {
     // Overwritten in order to NOT create the pages during initialization, so we can set
-    // the project name later before the next page is created, this work however only once :-(
+    // the project name later before the next page is created, this works however only once :-(
 
     // HACK: special case: the resource page: will lead to NPE if not created
     final IWizardPage page = getPage( "basicReferenceProjectPage" );
@@ -125,12 +166,25 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard
     // HACK: to do so, we just skip this particular page
     // Unfortunately we cannot just override 'addPages' and do not add the second page,
     // because the BasicNewProjectResourceWizard relies on the second page to exist.
-    final IWizardPage[] pages = getPages();
+    final IWizardPage nextPage = super.getNextPage( page );
+    if( nextPage instanceof WizardNewProjectReferencePage )
+      return super.getNextPage( nextPage );
 
-    if( page.equals( pages[0] ) )
-      return null;
+    return nextPage;
+  }
 
-    return super.getNextPage( page );
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#getPreviousPage(org.eclipse.jface.wizard.IWizardPage)
+   */
+  @Override
+  public IWizardPage getPreviousPage( final IWizardPage page )
+  {
+    // HACK: see get next page
+    final IWizardPage previousPage = super.getPreviousPage( page );
+    if( previousPage instanceof WizardNewProjectReferencePage )
+      return super.getPreviousPage( previousPage );
+
+    return previousPage;
   }
 
   @Override
