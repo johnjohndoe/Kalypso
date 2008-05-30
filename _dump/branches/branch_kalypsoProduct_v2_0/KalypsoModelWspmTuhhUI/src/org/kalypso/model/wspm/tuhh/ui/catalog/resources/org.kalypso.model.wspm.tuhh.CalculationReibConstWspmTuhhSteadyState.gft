@@ -85,6 +85,7 @@
 		tooltip="Sohlgefälle (absolut!) am ersten Profil (Unterlauf), abhängig von der Art der Randbedingung"
 		style="SWT.BORDER">
 		<gft:gridData horizontalSpan="1" horizontalAlignment="GridData.FILL" grabExcessHorizontalSpace="true" />
+		<gft:format>%.5f</gft:format>
 	</gft:text>
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />

@@ -61,6 +61,7 @@
 				</ogc:Not>
 			</gft:excludeOperation>
 		</gft:gridData>
+		<gft:format>%.2f</gft:format>
 	</gft:text>
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:visibleOperation>
@@ -138,7 +139,8 @@
 					</ogc:PropertyIsEqualTo>
 				</ogc:Not>
 			</gft:excludeOperation>
-		</gft:gridData>			
+		</gft:gridData>	
+		<gft:format>%.5f</gft:format>		
 	</gft:text>
 	<gft:label visible="false" style="SWT.NONE">
 		<gft:visibleOperation>
