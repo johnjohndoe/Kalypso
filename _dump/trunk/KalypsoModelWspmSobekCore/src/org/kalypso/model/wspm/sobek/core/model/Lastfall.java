@@ -80,7 +80,7 @@ public class Lastfall implements ILastfall
    */
   public GregorianCalendar getLastfallEnd( )
   {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
+    final Object property = getFeature().getProperty( ILastfall.QN_SIMULATION_END );
     if( property instanceof XMLGregorianCalendar )
       return ((XMLGregorianCalendar) property).toGregorianCalendar();
 
@@ -92,7 +92,7 @@ public class Lastfall implements ILastfall
    */
   public GregorianCalendar getLastfallStart( )
   {
-    final Object property = getFeature().getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    final Object property = getFeature().getProperty( ILastfall.QN_SIMULATION_BEGIN );
     if( property instanceof XMLGregorianCalendar )
       return ((XMLGregorianCalendar) property).toGregorianCalendar();
 
@@ -142,6 +142,22 @@ public class Lastfall implements ILastfall
    */
   public Integer getPreSimulationTime( )
   {
-    return Integer.valueOf( getFeature().getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME ).toString() );
+    return Integer.valueOf( getFeature().getProperty( ILastfall.QN_SIMULATION_PRE_TIME ).toString() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getSimulationTimeStep()
+   */
+  public Integer getSimulationTimeStep( )
+  {
+    return Integer.valueOf( getFeature().getProperty( QN_SIMULATION_TIMESTEP ).toString() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getTimeStepMultiplier()
+   */
+  public Integer getTimeStepMultiplier( )
+  {
+    return Integer.valueOf( getFeature().getProperty( QN_SIMULATION_TIMESTEP_MULTIPLIER ).toString() );
   }
 }

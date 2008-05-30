@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.contribs.eclipse.jface.viewers.FacadeComboViewer;
 import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.ui.boundarycondition.LastfallDateChooser;
@@ -138,8 +139,8 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
       /* check lastfall start and ending dates */
       final Feature lastfall = m_condition.getLastfall().getFeature();
-      final XMLGregorianCalendar lastfallStart = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
-      final XMLGregorianCalendar lastfallEnd = (XMLGregorianCalendar) lastfall.getProperty( ISobekConstants.QN_LASTFALL_SIMULATION_END );
+      final XMLGregorianCalendar lastfallStart = (XMLGregorianCalendar) lastfall.getProperty( ILastfall.QN_SIMULATION_BEGIN );
+      final XMLGregorianCalendar lastfallEnd = (XMLGregorianCalendar) lastfall.getProperty( ILastfall.QN_SIMULATION_END );
 
       final GregorianCalendar lastfallGregorianStart = lastfallStart.toGregorianCalendar();
       final GregorianCalendar lastfallGregorianEnd = lastfallEnd.toGregorianCalendar();
@@ -204,23 +205,23 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     bn.setEnabled( false );
 
     /* start of calculation case */
-    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, iGroup );
+    new WizardFeatureLabel( lastfall, ILastfall.QN_SIMULATION_BEGIN, iGroup );
 
-    final WizardFeatureTextBox bnStart = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN );
+    final WizardFeatureTextBox bnStart = new WizardFeatureTextBox( lastfall, ILastfall.QN_SIMULATION_BEGIN );
     bnStart.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bnStart.setEnabled( false );
 
     /* end of calculation case */
-    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END, iGroup );
+    new WizardFeatureLabel( lastfall, ILastfall.QN_SIMULATION_END, iGroup );
 
-    final WizardFeatureTextBox bnEnd = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END );
+    final WizardFeatureTextBox bnEnd = new WizardFeatureTextBox( lastfall, ILastfall.QN_SIMULATION_END );
     bnEnd.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     bnEnd.setEnabled( false );
 
     /* presimulation time */
-    new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME, iGroup );
+    new WizardFeatureLabel( lastfall, ILastfall.QN_SIMULATION_PRE_TIME, iGroup );
 
-    final WizardFeatureTextBox preSim = new WizardFeatureTextBox( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_PRE_TIME );
+    final WizardFeatureTextBox preSim = new WizardFeatureTextBox( lastfall, ILastfall.QN_SIMULATION_PRE_TIME );
     preSim.draw( iGroup, new GridData( GridData.FILL, GridData.FILL, true, false ), SWT.BORDER | SWT.READ_ONLY );
     preSim.setEnabled( false );
 
@@ -238,7 +239,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
     {
 
       /* begin date */
-      new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_BEGIN, container );
+      new WizardFeatureLabel( lastfall, ILastfall.QN_SIMULATION_BEGIN, container );
 
       /* newly created boundary condition? */
       if( m_condition.getObservationStart() == null )
@@ -264,7 +265,7 @@ public class PageEditBoundaryConditionGeneral extends WizardPage implements IBou
 
       /* end date */
       /* newly created boundary condition? */
-      new WizardFeatureLabel( lastfall, ISobekConstants.QN_LASTFALL_SIMULATION_END, container );
+      new WizardFeatureLabel( lastfall, ILastfall.QN_SIMULATION_END, container );
 
       if( m_condition.getObservationEnd() == null )
         m_tsEnds = new LastfallDateChooser( m_condition.getLastfall().getLastfallEnd() );

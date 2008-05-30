@@ -105,16 +105,6 @@ public class ISobekConstants
 
   public static final String F_HYDRAULIC_UNIQUE_ID = "uniqueID"; //$NON-NLS-1$
 
-  public static final String F_LASTFALL_SIMULATION_BEGIN = "simulationBegin"; //$NON-NLS-1$
-
-  public static final String F_LASTFALL_SIMULATION_END = "simulationEnd"; //$NON-NLS-1$
-
-  public static final String F_LASTFALL_SIMULATION_PRE_TIME = "preSimulationTime"; //$NON-NLS-1$
-
-  public static final String F_LASTFALL_SIMULATION_TIMESTEP = "simulationTimestep"; //$NON-NLS-1$
-
-  public static final String F_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER = "resultTimeStepAsMultiple"; //$NON-NLS-1$
-
   public static final String F_LN_LINKS_TO_BRANCH = "linksToBranch"; //$NON-NLS-1$
 
   public static final String F_NOFDP_HYDRAULIC_PROFILE = "Profile"; //$NON-NLS-1$
@@ -464,16 +454,6 @@ public class ISobekConstants
   public static final QName QN_HYDRAULIC_UNIQUE_ID = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_UNIQUE_ID );
 
   public static final QName QN_HYDRAULICNODE_LINKED_BRANCH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_HYDRAULIC_NODE_LINKED_BRANCH );
-
-  public static final QName QN_LASTFALL_SIMULATION_BEGIN = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_BEGIN );
-
-  public static final QName QN_LASTFALL_SIMULATION_END = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_END );
-
-  public static final QName QN_LASTFALL_SIMULATION_PRE_TIME = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_PRE_TIME );
-
-  public static final QName QN_LASTFALL_SIMULATION_TIMESTEP = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_TIMESTEP );
-
-  public static final QName QN_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LASTFALL_SIMULATION_TIMESTEP_MULTIPLIER );
 
   public static final QName QN_LN_LINKS_TO_BRANCH = new QName( ISobekConstants.NS_SOBEK, ISobekConstants.F_LN_LINKS_TO_BRANCH );
 

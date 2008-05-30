@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import java.util.GregorianCalendar;
 
+import javax.xml.namespace.QName;
+
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -49,6 +51,17 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ILastfall
 {
+
+  public static final QName QN_SIMULATION_BEGIN = new QName( ISobekConstants.NS_SOBEK, "simulationBegin" );//$NON-NLS-1$
+
+  public static final QName QN_SIMULATION_END = new QName( ISobekConstants.NS_SOBEK, "simulationEnd" );//$NON-NLS-1$
+
+  public static final QName QN_SIMULATION_PRE_TIME = new QName( ISobekConstants.NS_SOBEK, "preSimulationTime" );//$NON-NLS-1$
+
+  public static final QName QN_SIMULATION_TIMESTEP = new QName( ISobekConstants.NS_SOBEK, "simulationTimestep" );//$NON-NLS-1$
+
+  public static final QName QN_SIMULATION_TIMESTEP_MULTIPLIER = new QName( ISobekConstants.NS_SOBEK, "resultTimeStepAsMultiple" );//$NON-NLS-1$
+
   public Feature getFeature( );
 
   GregorianCalendar getLastfallEnd( );
@@ -60,5 +73,9 @@ public interface ILastfall
   String getName( );
 
   public Integer getPreSimulationTime( );
+
+  public Integer getSimulationTimeStep( );
+
+  public Integer getTimeStepMultiplier( );
 
 }
