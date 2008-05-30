@@ -107,6 +107,7 @@
 				<!-- TODO this should also be in the output -->
 				<!--?NLS TYPE="org.eclipse.help.contexts"?-->
 /**
+ * GENERATED FILE, DO NOT MODIFY.
  * @see KalypsoManual common-eclipse.xsl and KalypsoBuild/publishing/docbook-xsl-1.69.1/eclipse/eclipse-ex.xsl
  *
  */				
