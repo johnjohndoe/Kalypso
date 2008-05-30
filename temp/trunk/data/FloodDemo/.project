@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>FloodDemo</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+		<nature>de.renew.workflow.connector.WorkflowProjectNature</nature>
+		<nature>org.kalypso.afgui.ScenarioHandlingProjectNature</nature>
+	</natures>
+</projectDescription>
