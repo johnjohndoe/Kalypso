@@ -1,0 +1,91 @@
+package idvyjkcyhb6xq7cyhe3qeb;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id215q9cyhgw4thcyhgym3a.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.adapter:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#idi9jacyhgw4thcyhgymfi.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.xml:oiref> 
+*/
+class reference1 {
+}/**
+@__ref <oiref:design#Class#id2i5g1cyhgw4thcyhgyncm.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.services:oiref> 
+*/
+class reference2 {
+}/**
+@__ref <oiref:design#Class#id4t7y1cyhgw4thcyhgyp8r.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.gml:oiref> 
+*/
+class reference3 {
+}/**
+@__ref <oiref:design#Class#idi5kicyhgw4thcyhgypg0.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.enterprise:oiref> 
+*/
+class reference4 {
+}/**
+@__ref <oiref:design#Class#id3pzspcyhgw4thcyhgyphe.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.tools:oiref> 
+*/
+class reference5 {
+}/**
+@__ref <oiref:design#Class#id9z87cyhgw4thcyhgypjc.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.security:oiref> 
+*/
+class reference6 {
+}/**
+@__ref <oiref:design#Class#id46rkocyhgw4thcyhgyq0v.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.model:oiref> 
+*/
+class reference7 {
+}/**
+@__ref <oiref:design#Class#id4esxjcyhgw4thcyhgyqw1.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.io:oiref> 
+*/
+class reference8 {
+}/**
+@__ref <oiref:design#Class#id3nqv9cyivh26ucyivnaku.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.deegree.graphics:oiref> 
+*/
+class reference15 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id46rkocyhgw4thcyhgyq0v.diagram:oiref>=413,10,85,139,1:oigroup>
+<oigroup:<oiref:design#Class#id3nqv9cyivh26ucyivnaku.diagram:oiref>=518,10,154,173,0:oigroup>
+<oigroup:<oiref:design#Class#id3pzspcyhgw4thcyhgyphe.diagram:oiref>=358,363,87,72,1:oigroup>
+<oigroup:<oiref:design#Class#id2i5g1cyhgw4thcyhgyncm.diagram:oiref>=205,10,188,319,1:oigroup>
+<oigroup:<oiref:design#Class#id215q9cyhgw4thcyhgym3a.diagram:oiref>=10,10,175,148,1:oigroup>
+<oigroup:<oiref:design#Class#id4esxjcyhgw4thcyhgyqw1.diagram:oiref>=413,190,63,63,1:oigroup>
+<oigroup:<oiref:design#Class#id9z87cyhgw4thcyhgypjc.diagram:oiref>=10,294,165,243,1:oigroup>
+<oigroup:<oiref:design#Class#idi9jacyhgw4thcyhgymfi.diagram:oiref>=10,190,94,91,1:oigroup>
+<oigroup:<oiref:design#Class#idi5kicyhgw4thcyhgypg0.diagram:oiref>=190,370,136,72,1:oigroup>
+<oigroup:<oiref:design#Class#id4t7y1cyhgw4thcyhgyp8r.diagram:oiref>=522,196,160,490,1:oigroup>
+*/
+class __positions {
+}
