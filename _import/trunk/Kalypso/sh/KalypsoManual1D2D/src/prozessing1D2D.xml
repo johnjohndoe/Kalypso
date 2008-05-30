@@ -562,18 +562,17 @@
         <primary>Fehleranalyse bei der Berechnung in Kalypso1D2D</primary>
       </indexterm>
 
-      <para>Die Berechnung wird durch Fehler im Modell häufig instabil und
-      führt zum Abbruch. In Kalypso1D2D ist für diesen Fall eine Hilfe
-      implementiert, die dem Benutzer hilft den Fehler zu finden und zu
-      beseitigen. Im Folgenden wird eine fehlerhafte Berechnung dargestellt
-      und die Anwendung der Hilfe erläutert. Am Ende des Kapitels findet der
-      Benutzer eine Tabelle mit allen möglichen Fehlermeldungen und einer
-      ausführlichen Beschreibung.</para>
+      <para>Die Berechnung wird durch Fehler im Modell instabil und führt zum
+      Abbruch. In Kalypso1D2D ist für diesen Fall eine Hilfe implementiert,
+      die dem Benutzer unterstützt, den Fehler zu finden und zu beseitigen. Im
+      Folgenden wird eine fehlerhafte Berechnung dargestellt und die Anwendung
+      der Hilfe erläutert. Am Ende des Kapitels findet der Benutzer eine
+      Tabelle mit möglichen Fehlermeldungen und einer Beschreibung.</para>
 
       <note>
-        <para>Zur Zeit ist die Hilfefunktion leider noch nicht vollständig
-        ausgearbeitet, wird aber so schnell wie möglich
-        vervollständigt.</para>
+        <para>Die Liste der möglichen Fehler wird sukzessive gefüllt und
+        ständig erweitert werden. Derzeit ist eine vollständige Liste noch
+        nicht verfübar.</para>
       </note>
 
       <para>Ist die Berechnung fehlgeschlagen erscheint der folgende Assistent
@@ -632,21 +631,29 @@
             </row>
 
             <row>
-              <entry align="left"></entry>
+              <entry align="left">Execution terminated by excess
+              changes</entry>
 
-              <entry align="left" valign="middle"></entry>
+              <entry align="left" valign="middle">Im letzten berechneten
+              Zeitschritt ist das Modell divergiert, d.h. die Änderungen im
+              iterativen Lösungsverfahren wurden zu groß. Abhilfe kann das
+              Verändern von Zeitschrittweiten oder auch die Erhöhung der
+              Dämpfung bringen. Eine weitere Ursache kann eine schlechte
+              Modellbeschaffenheit sein, wenn beispielsweise die Ausuferung
+              eines Gewässers erreicht ist.</entry>
             </row>
 
             <row>
-              <entry align="left"></entry>
+              <entry align="left">Unsatisfied elimination error</entry>
 
-              <entry align="left"></entry>
+              <entry align="left">Das Modell konnte nicht ordnungsgemäß
+              gestartet werden, weil Netzprobleme bestehen.</entry>
             </row>
 
             <row>
-              <entry align="left"></entry>
+              <entry align="left">... to be continued</entry>
 
-              <entry align="left"></entry>
+              <entry align="left">... as soon as possible</entry>
             </row>
 
             <row>

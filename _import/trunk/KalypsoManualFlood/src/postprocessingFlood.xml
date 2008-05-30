@@ -192,7 +192,7 @@
       <title>Neue Fließtiefen hinzufügen</title>
 
       <indexterm>
-        <primary>Fließtiefen hinzufügen in KalypsoFloodModeller</primary>
+        <primary>Fließtiefen hinzufügen in Kalypso Flood</primary>
       </indexterm>
 
       <para>Es besteht die Möglichkeit zu den berechneten Fließtiefen
@@ -228,7 +228,7 @@
 
       <indexterm>
         <primary>Fließtiefendaten exportieren in
-        KalypsoFloodModeller</primary>
+        Kalypso Flood</primary>
       </indexterm>
 
       <para>Um Fließtiefendaten zu exportieren muss in der Karten

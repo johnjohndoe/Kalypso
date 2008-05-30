@@ -8,7 +8,7 @@
 -->
 
 <bookinfo>
-  <title>HN-Modell Kalypso1D2D</title>
+  <title>Kalypso 1D2D - Anwenderhandbuch</title>
 
   <subtitle>
 			<mediaobject>
@@ -28,7 +28,8 @@
     <address>Denickestrasse 22 21073 Hamburg</address>
   </author>
 
-  <pubdate>Version 1.0.0, Juli 2007</pubdate>
+  <!-- Als Version wird immer die korrepsondierende Version des Programms verwendet -->
+  <pubdate>Version 2.0.0, Mai 2008</pubdate>
 
   <!-- Bei den beiden folgenden Tags funktioniert das Profiling nicht
   		deshalb müsste man hier eigene bookinfos pro deploy machen, wenns benötigt wird.

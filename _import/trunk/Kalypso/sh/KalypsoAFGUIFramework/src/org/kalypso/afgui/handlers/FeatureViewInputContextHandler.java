@@ -39,7 +39,7 @@ import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
  * <li>input (optional): (scenario relative) path to a .gft file; if set this file will be shown in the feature view</li>
  * <li>gml (optional): (scenario relative) path to a .gml file; if set, the root feature of this file will be shown in
  * the feature view</li>
- * <li>viewTitle (optiona): If set, the title of the view will be set to this value</li>
+ * <li>viewTitle (optional): If set, the title of the view will be set to this value</li>
  * </ul>
  * One of 'input' or 'gml' must be set.
  * 
@@ -110,25 +110,28 @@ public class FeatureViewInputContextHandler extends AbstractHandler
         try
         {
           final Featuretemplate template;
+          final URL urlContext;
           // either the file is set OR we have a gmlPath (was checked above)
           if( file == null )
           {
             // if we have a gmlPath we create a pseudo template here
             template = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplate();
-            template.setName( "TODO: Name" );
+            template.setName( "Feature View" );
             Layer layer = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplateLayer();
             layer.setHref( gmlPath );
             layer.setLinktype( "gml" );
             layer.setFeaturePath( "#fid#root" ); // always use root feature; maybe get from parameter some day
             template.setLayer( layer );
+            urlContext = ResourceUtilities.createURL( szenarioFolder );
           }
           else
+          {
             template = GisTemplateHelper.loadGisFeatureTemplate( file );
+            urlContext = ResourceUtilities.createURL( file );
+          }
 
           if( viewTitle != null )
             template.setName( viewTitle );
-
-          final URL urlContext = ResourceUtilities.createURL( szenarioFolder );
 
           featureView.setTemplate( template, urlContext, null, null, null );
 
