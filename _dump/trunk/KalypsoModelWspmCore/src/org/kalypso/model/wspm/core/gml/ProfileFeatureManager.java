@@ -41,7 +41,12 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilObsHelper;
@@ -140,4 +145,22 @@ public class ProfileFeatureManager
     m_pCache++;
   }
 
+  private IObservation<TupleResult>[] getProfileObjects( final Feature profileFeature )
+  {
+
+    final List< ? > objects = (List< ? >) profileFeature.getProperty( new QName( IWspmConstants.NS_WSPMPROF, "member" ) );
+    if( objects.size() == 0 )
+      return new IObservation[]{};
+
+    final List<IObservation<TupleResult>> myResults = new ArrayList<IObservation<TupleResult>>();
+
+    // iterate over all profile objects and create its IProfileObject representation
+    for( final Object obj : objects )
+    {
+      final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( (Feature) obj );
+      myResults.add( obs );
+    }
+    return myResults.toArray( new IObservation[] {} );
+
+  }
 }

@@ -102,6 +102,8 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
       profChanges.add( pointPropertyEdit );
 
       hint.setPointValuesChanged();
+      if (m_profil.isPointMarker( component.getId() ))
+        hint.setMarkerMoved();
     }
 
     m_profil.fireProfilChanged( hint, profChanges.toArray( new IProfilChange[profChanges.size()] ) );

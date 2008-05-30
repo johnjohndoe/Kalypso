@@ -192,14 +192,12 @@ public class RauheitenPanel extends AbstractProfilView
     } );
 
     addLabel( panel, "Rauheitstyp", "Rauheitstyp" );
-    
+
     final Group auto = new Group( panel, SWT.None );
     auto.setText( "Rahheiten für Fliesszonen" );
     auto.setLayout( new GridLayout( 2, false ) );
     auto.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     ((GridData) auto.getLayoutData()).horizontalSpan = 2;
-    
-    
 
     // automatisches übernehmen wenn Marker geschoben werden
     final GridData checkData = new GridData( SWT.FILL, SWT.FILL, true, false );
@@ -326,7 +324,7 @@ public class RauheitenPanel extends AbstractProfilView
   {
     final IProfil profil = getProfil();
     final ProfilOperation operation = new ProfilOperation( "Rauheiten ändern", profil, true );
-    operation.addChange( new PointPropertyEdit( profil.getPoints( l, r), profil.hasPointProperty( m_rauheitTyp ), value ) );
+    operation.addChange( new PointPropertyEdit( profil.getPoints( l, r ), profil.hasPointProperty( m_rauheitTyp ), value ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
@@ -388,17 +386,17 @@ public class RauheitenPanel extends AbstractProfilView
   void updateControls( )
   {
     final IProfil profil = getProfil();
-    if( profil.hasPointProperty( m_rauheitTyp ) != null )
-      return;
-
-    for( final IComponent component : m_RauheitTypes.values() )
+    if( profil.hasPointProperty( m_rauheitTyp ) == null )
     {
-      if( profil.hasPointProperty( component ) )
+      for( final IComponent component : m_RauheitTypes.values() )
       {
-        // IMPORTANT: set _rauheitTyp first, so setSelection does not cause another profile change
-        m_rauheitTyp = component.getId();
-        m_rauheitCombo.setSelection( new StructuredSelection( component ) );
-        break;
+        if( profil.hasPointProperty( component ) )
+        {
+          // IMPORTANT: set _rauheitTyp first, so setSelection does not cause another profile change
+          m_rauheitTyp = component.getId();
+          m_rauheitCombo.setSelection( new StructuredSelection( component ) );
+          break;
+        }
       }
     }
     if( !m_updateOnDeviderMove.isDisposed() )

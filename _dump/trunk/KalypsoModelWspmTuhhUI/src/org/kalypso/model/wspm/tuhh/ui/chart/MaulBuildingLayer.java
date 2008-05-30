@@ -120,17 +120,15 @@ public class MaulBuildingLayer extends AbstractBuildingLayer
     final IProfileObject building = getBuilding();
     final Double bezX = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_X, building );
     final Double bezY = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BEZUGSPUNKT_Y, building );
-    final Double durchmesser = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, building );
-    if( bezX.isNaN() || bezY.isNaN() || durchmesser.isNaN() )
+    final Double w = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE, building );
+    final Double h = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.BUILDING_PROPERTY_HOEHE, building );
+    if( bezX.isNaN() || bezY.isNaN() || w.isNaN() || h.isNaN() )
       return null;
 
-    final Point2D topLeft = new Point2D.Double( bezX - durchmesser / 2, bezY );
-    final double w = durchmesser;
-    final double h = durchmesser;
+    final Point2D topLeft = new Point2D.Double( bezX - w / 2.0, bezY );
     final Rectangle2D oval = new Rectangle2D.Double( topLeft.getX(), topLeft.getY(), w, h );
     return oval;
-    
-   
+
   }
 
   /**

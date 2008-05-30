@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectEdit;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -84,7 +85,6 @@ public class BuildingPanel extends AbstractProfilView
   {
     super( profile, viewdata );
 
-    // TODO IProfileObjects now returned as list from IProfile
     final IProfileObject[] profileObjects = getProfil().getProfileObjects();
     if( profileObjects.length > 0 )
       m_building = profileObjects[0];
@@ -95,7 +95,23 @@ public class BuildingPanel extends AbstractProfilView
 
   private String getLabel( final IComponent property )
   {
-    return property.getName() + " [" + property.getUnit() + "]";
+
+    String label = property.getName();
+    
+// TUHH Hack for tube cross section TRAPEZ,EI,MAUL,KREIS
+    if( IWspmTuhhConstants.BUILDING_PROPERTY_BREITE.equals( property.getId() ) )
+    {
+      if( IWspmTuhhConstants.BUILDING_TYP_TRAPEZ.equals( m_building.getId() ) )
+        label = "untere Seite";
+      else if( IWspmTuhhConstants.BUILDING_TYP_KREIS.equals( m_building.getId() ) )
+        label = "Durchmesser";
+      else if( IWspmTuhhConstants.BUILDING_TYP_MAUL.equals( m_building.getId() ) )
+        label = "größte Breite";
+      else if( IWspmTuhhConstants.BUILDING_TYP_EI.equals( m_building.getId() ) )
+        label = "größte Breite";
+    }
+
+    return label + " [" + property.getUnit() + "]";
   }
 
   /**

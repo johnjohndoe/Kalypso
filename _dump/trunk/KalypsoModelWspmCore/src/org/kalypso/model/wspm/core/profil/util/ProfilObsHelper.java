@@ -86,7 +86,10 @@ public class ProfilObsHelper
     return myPoints;
   }
 
-  // TODO: move this to FeatureHelper
+  /**
+   * @deprecated not used
+   */
+  @Deprecated
   @SuppressWarnings("unchecked")
   public static IObservation<TupleResult>[] getProfileObjects( final Feature profileFeature )
   {
