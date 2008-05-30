@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  Provide schema for the result model metadata
+	@author Patrice Congo
+	@author Antanaskovic Dejan
+-->
+
+<xs:schema
+	targetNamespace="http://www.tu-harburg.de/wb/kalypso/schemata/simulationmetadatamodel"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml"
+	xmlns:simMeta1d2d="http://www.tu-harburg.de/wb/kalypso/schemata/simulationmetadatamodel"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml"
+		schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+
+
+	<xs:element name="SimulationDescriptionCollection"
+		type="simMeta1d2d:SimulationDescriptionCollectionType"
+		substitutionGroup="gml:_FeatureCollection">
+	</xs:element>
+	<xs:complexType name="SimulationDescriptionCollectionType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element ref="simMeta1d2d:modelDescriptor"
+						minOccurs="0" maxOccurs="unbounded" />
+				<!-- -->
+					<xs:element ref="simMeta1d2d:simulationDescriptor"
+						minOccurs="0" maxOccurs="unbounded" />
+						<!-- -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:element name="modelDescriptor"
+		type="simMeta1d2d:ModelDescriptorPropertyType" />
+	<xs:complexType name="ModelDescriptorPropertyType">
+		<xs:annotation>
+			<xs:documentation>later</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="simMeta1d2d:ModelDescriptor" 
+						minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="ModelDescriptor"
+		type="simMeta1d2d:ModelDescriptorType"
+		substitutionGroup="gml:_Feature">
+	</xs:element>
+	<xs:complexType name="ModelDescriptorType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:element name="modelID" type="xs:string" />
+					<xs:element name="modelName" type="xs:string" />
+					<xs:element name="modelType" type="xs:string"/>
+					<xs:element name="workspacePath" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:element name="resultModelDescriptor"
+		type="simMeta1d2d:ResultModelDescriptorPropertyType" />
+	<xs:complexType name="ResultModelDescriptorPropertyType">
+		<xs:annotation>
+			<xs:documentation>later</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="simMeta1d2d:ResultModelDescriptor"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+	
+	<xs:element name="simulationType">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="Steady" />
+				<xs:enumeration value="Qsteady" />
+				<xs:enumeration value="Unsteady" />
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<xs:element name="ResultModelDescriptor"
+		type="simMeta1d2d:ResultModelDescriptorType"
+		substitutionGroup="simMeta1d2d:ModelDescriptor">
+	</xs:element>
+	<xs:complexType name="ResultModelDescriptorType">
+		<xs:complexContent>
+			<xs:extension base="simMeta1d2d:ModelDescriptorType">
+				<xs:sequence>
+					<xs:element ref="simMeta1d2d:simulationType"/>
+					<xs:element name="time" type="xs:dateTime"/>
+					<xs:element name="timeStepNum" type="xs:integer"/>
+					<xs:element name="tinDepth" type="xs:string"/>
+					<xs:element name="tinVelocity" type="xs:string"/>
+					<xs:element name="tinWaterLevel" type="xs:string"/>
+					<xs:element name="gmt" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+<!-- -->
+	<xs:element name="simulationDescriptor"
+		type="simMeta1d2d:SimulationDescriptorPropertyType" />
+	<xs:complexType name="SimulationDescriptorPropertyType">
+		<xs:sequence>
+			<xs:element ref="simMeta1d2d:SimulationDescriptor"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+		<xs:attributeGroup ref="gml:AssociationAttributeGroup" />
+	</xs:complexType>
+
+	<xs:element name="SimulationDescriptor"
+		type="simMeta1d2d:SimulationDescriptorType"
+		substitutionGroup="gml:_FeatureCollection">
+<!--  TODO: do not inherit from FeatureCollection, this is disadvised by GML-Documentation...
+	Moreover: this feature has now an arbitrary collections of features plus an collection of simulationTypes, this is probably not what is intended.
+ -->		
+	</xs:element>
+	<xs:complexType name="SimulationDescriptorType">
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureCollectionType">
+				<xs:sequence>
+					<xs:element ref="simMeta1d2d:simulationType"/>
+					
+					<xs:element name="scenarioName" type="xs:string"/>
+					
+					<xs:element name="startTime" type="xs:dateTime"/>
+					
+					<xs:element name="endTime" type="xs:dateTime"/>
+					
+					<xs:element name="restarted" 
+						type="xs:boolean" default="false" />
+					<xs:element name="autoconverged" type="xs:boolean" default="false" />
+					
+					<xs:element name="calculationUnit"
+						type="simMeta1d2d:ModelDescriptorPropertyType" />
+					
+					<xs:element name="controlModel"
+						type="simMeta1d2d:ModelDescriptorPropertyType" />
+					<xs:element name="result"
+						type="simMeta1d2d:ResultModelDescriptorPropertyType" 
+						minOccurs="1" maxOccurs="unbounded" />
+					<!--
+					-->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>
