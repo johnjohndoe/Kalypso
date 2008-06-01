@@ -162,6 +162,26 @@ public class ObservationUtilities
   }
 
   /**
+   * Finds the axis of the given observation that has the given type.
+   * 
+   * @param axes
+   *          the list of axes to scan
+   * @param axisType
+   *          the type of the axis which is searched
+   * @return the first axis found, null if no axis of this type was found
+   */
+  public static IAxis findAxisByTypeNoEx( final IAxis[] axes, final String axisType ) throws NoSuchElementException
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( axes[i].getType().equalsIgnoreCase( axisType ) )
+        return axes[i];
+    }
+
+    return null;
+  }
+
+  /**
    * Return true if one of the axis is of the given type
    */
   public static boolean hasAxisOfType( final IAxis[] axes, final String axisType )
