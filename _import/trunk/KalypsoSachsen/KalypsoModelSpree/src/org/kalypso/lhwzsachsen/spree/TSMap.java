@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -53,9 +54,11 @@ public class TSMap
 
   /** name (String) -> IObservation */
   private Map m_obsMap = new HashMap();
-  
+
   /** name (String) -> accuracy (Double) */
   private Map m_accuracyMap = new HashMap();
+
+  private double m_defaultAccuracy = LhwzHelper.getDefaultUmhuellendeAccuracy();
 
   public void addObservation( final IObservation obs, final String name ) throws SensorException,
       NoSuchElementException
@@ -64,14 +67,14 @@ public class TSMap
 
     final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
 
-    final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, getTypeForName( name ) );
+    final IAxis valueAxis = ObservationUtilities.findAxisByTypeNoEx( axisList, getTypeForName( name ) );
 
     final ITuppleModel model = obs.getValues( null );
 
     for( int j = 0; j < model.getCount(); j++ )
     {
       final Date date = (Date)model.getElement( j, dateAxis );
-      final Number val = (Number)model.getElement( j, valueAxis );
+      final Number val = valueAxis == null ? null : (Number)model.getElement( j, valueAxis );
       final Double value = val == null ? null : new Double( val.doubleValue() );
 
       putValue( name, date, value );
@@ -119,13 +122,13 @@ public class TSMap
   {
     m_accuracyMap.put( name, accuracy );
   }
-  
+
   public double getAccuracy( final String name )
   {
-    final Double accuracy = (Double)m_accuracyMap.get(name);
+    final Double accuracy = (Double)m_accuracyMap.get( name );
     if( accuracy == null )
-      return 5d;
-    
+      return m_defaultAccuracy;
+
     return accuracy.doubleValue();
   }
 }

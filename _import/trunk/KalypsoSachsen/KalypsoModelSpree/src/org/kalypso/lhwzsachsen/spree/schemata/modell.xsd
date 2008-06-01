@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.spree.modell" version="0.1" xmlns:spree="org.kalypso.spree.modell" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.spree.modell" version="0.1" xmlns:spree="org.kalypso.spree.modell" xmlns:ombrometer="org.kalypso.spree.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+	<annotation>
+    	<appinfo xmlns:kapp="org.kalypso.appinfo">
+        	<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
 	<import namespace="http://www.opengis.net/gml" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/feature.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/xlinks.xsd"/>
 	<import namespace="obslink.zml.kalypso.org" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/obslink.xsd"/>
+	<import namespace="org.kalypso.spree.ombrometer" schemaLocation="ombrometer.xsd"/>
 
 	<!-- Eigentliches Spree-Modell -->	
 	<element name="SpreeModell" type="spree:_SpreeModellType"/>
@@ -13,6 +19,15 @@
 					<element name="PegelCollectionAssociation" type="spree:PegelCollectionAssociationType"/>
 					<element name="TalsperreCollectionAssociation" type="spree:TalsperreCollectionAssociationType"/>
 					<element name="VorgabeCollectionAssociation" type="spree:VorgabeCollectionAssociationType"/>
+					<element name="OmbrometerCollectionAssociation" type="ombrometer:OmbrometerCollectionAssociationType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Ombrometer-Liste</label>
+								<tooltip>Liste der Ombrometer</tooltip>
+								<description>Liste der Ombrometer</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -67,18 +82,17 @@
 					<element name="accuracyPrediction" type="double" minOccurs="0">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Vorhersagegenauigkeit</label>
-								<tooltip>Genauigkeit der Vorhersage in cm pro Tag zur Berechnung der Umhüllenden</tooltip>
-								<description>Genauigkeit der Vorhersage in cm pro Tag zur Berechnung der Umhüllenden</description>
+								<label>Vorhersagegenauigkeit [%/(60h)]</label>
+								<tooltip>Genauigkeit der Vorhersage in % pro 60 Stunden zur Berechnung der Umhüllenden</tooltip>
+								<description>Genauigkeit der Vorhersage in % pro 60 Stunden zur Berechnung der Umhüllenden</description>
 							</documentation>
 							<documentation xml:lang="en">
-								<label>accuracyForecast</label>
-								<tooltip>Accuracy of prediction in cm per day in order to calculate confidence interval</tooltip>
-								<description>Accuracy of prediction in cm per day in order to calculate confidence interval</description>
+								<label>Forecast Accuracy [%/(60h)]</label>
+								<tooltip>Accuracy of prediction in % per 60 hours in order to calculate confidence interval</tooltip>
+								<description>Accuracy of prediction in % per 60 hours in order to calculate confidence interval</description>
 							</documentation>
 						</annotation>
 					</element>
-					
 				</sequence>
 			</extension>
 		</complexContent>
@@ -93,6 +107,24 @@
 					<element name="Bodenfeuchte" type="double"/>
 					<element name="BodenfeuchteMax" type="double"/>
 					<element name="Niederschlag_rechnung" type="obslink:TimeseriesLinkFeatureProperty"/>
+				    <element name="GEOM_EZG" type="gml:PolygonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Einzugsgebietgrenzen</label>
+								<tooltip>Geometrie des Einzugsgebietes</tooltip>
+								<description>Geometrische Begrenzung des Einzugsgebietes</description>
+							</documentation>
+						</annotation>
+				    </element>
+					<element name="gewichtung" type="spree:GewichtungsAssociationType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung Ombrometer</label>
+								<tooltip>Zuordnung der Ombrometerstationen zu diesem Einzugsgebiet</tooltip>
+								<description>Gewichtungsfaktoren zur Zuordnung von Ombrrometern zu diesem Einzugsgebiet</description>
+							</documentation>
+						</annotation>
+					</element>
 				</sequence>
 			</extension>
 		</complexContent>
@@ -212,6 +244,46 @@
 	<complexType name="_ZuflussType">
 		<complexContent>
 			<extension base="spree:_VorgabeType"/>
+		</complexContent>
+	</complexType>
+	
+	
+	<!-- Relation TG nach RelationsFeature -->
+	<complexType name="GewichtungsAssociationType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="spree:GewichtungsElement"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- RelationsFeature -->
+	<element name="GewichtungsElement" type="spree:GewichtungsType" substitutionGroup="gml:_Feature"/>
+	<complexType name="GewichtungsType">
+		<complexContent>
+			<extension base="spree:EmptyFeatureBaseType">
+				<sequence>
+					<element name="faktor" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung</label>
+								<tooltip>Gewichtungsfaktor</tooltip>
+								<description>Gewichtungsfaktor mit welchem der Zugeordnete Omrometer zu diesem Einzugsgebiet veranschlagt wird.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="ombrometerMember" type="ombrometer:OmbrometerAssociationType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlagsstation</label>
+								<tooltip>Niederschlagsstation</tooltip>
+								<description>Niederschlagsstation</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
 		</complexContent>
 	</complexType>
 </schema>
