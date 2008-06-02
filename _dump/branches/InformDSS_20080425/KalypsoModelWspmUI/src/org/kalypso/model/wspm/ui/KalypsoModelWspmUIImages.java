@@ -53,6 +53,8 @@ public class KalypsoModelWspmUIImages
 
   public static final ImageDescriptor ID_CHART_EXPORT = id( "icons/elcl16/chart_export_img.gif" ); //$NON-NLS-1$
 
+  public static final ImageDescriptor ID_CHART_SCREENSHOT = id( "icons/elcl16/chart_screenshot_img.gif" ); //$NON-NLS-1$
+
   public static final ImageDescriptor ID_CHART_MAXIMIZE = id( "icons/elcl16/chart_maximize.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor ID_CHART_ZOOM_OUT = id( "icons/elcl16/chart_zoom_out.gif" ); //$NON-NLS-1$

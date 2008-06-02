@@ -66,7 +66,7 @@ public enum ProfilChartActionsEnum
 
   EDIT(Messages.ProfilChartActionsEnum_6, Messages.ProfilChartActionsEnum_7, KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_CHECK_BOX),
   MAXIMIZE(Messages.ProfilChartActionsEnum_8, Messages.ProfilChartActionsEnum_9, KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON),
-  EXPORT_IMAGE(Messages.ProfilChartActionsEnum_10, Messages.ProfilChartActionsEnum_11, KalypsoModelWspmUIImages.ID_CHART_EXPORT, null, IAction.AS_PUSH_BUTTON);
+  EXPORT_IMAGE(Messages.ProfilChartActionsEnum_10, Messages.ProfilChartActionsEnum_11, KalypsoModelWspmUIImages.ID_CHART_SCREENSHOT, null, IAction.AS_PUSH_BUTTON);
 
   private final String m_label;
 
