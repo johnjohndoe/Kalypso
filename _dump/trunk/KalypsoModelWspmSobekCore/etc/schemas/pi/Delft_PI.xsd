@@ -46,7 +46,7 @@
     <!--<include schemaLocation="pi_table.xsd"/>-->
         <!--
                 hinzugefügt -->
-        <!-- <include schemaLocation="pi_boundaries.xsd"/> -->
+         <include schemaLocation="pi_boundaries.xsd"/> 
         <!--
         hinzugefügt -->
     <include schemaLocation="pi_structures.xsd"/>

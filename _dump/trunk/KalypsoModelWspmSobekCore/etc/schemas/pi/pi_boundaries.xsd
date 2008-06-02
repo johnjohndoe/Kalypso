@@ -64,9 +64,9 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="cell" type="xs:string"/>-->
-	<xs:element name="Table">
+	<!--<xs:element name="Table">
 		<xs:complexType/>
-	</xs:element>
+	</xs:element>-->
 	<!--<xs:element name="Interpolation">
 		<xs:complexType>
 			<xs:simpleContent>
