@@ -60,18 +60,20 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
 
 /**
- * This action is contributed to IFile Objects. If they are Zml-Files, then
- * the WQ-Relation is shown, if availabe.
- *
+ * This action is contributed to IFile Objects. If they are Zml-Files, then the WQ-Relation is shown, if availabe.
+ * 
  * @author schlienger
  */
 public class ViewWQRelationObjectContribution implements IObjectActionDelegate
 {
-  private String m_wqString = null;
+
   private IWorkbenchPart m_part = null;
 
+  private ISelection m_selection;
+
   /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
+   *      org.eclipse.ui.IWorkbenchPart)
    */
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
   {
@@ -83,13 +85,36 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
    */
   public void run( final IAction action )
   {
-    if( m_wqString != null )
+    final Object object = ((IStructuredSelection) m_selection).getFirstElement();
+    IFile file = null;
+    if( object instanceof IFile )
+    {
+      file = (IFile) object;
+    }
+    String wqString = null;
+
+    if( file != null )
     {
       try
       {
-        final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( m_wqString ) ) );
+        final URL url = ResourceUtilities.createURL( file );
+        final IObservation obs = ZmlFactory.parseXML( url, "" );
+        wqString = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
+        action.setEnabled( wqString != null );
+      }
+      catch( final Exception ignored )
+      {
+        action.setEnabled( false );
+      }
+    }
 
-        final WQRelationDialog dlg = new WQRelationDialog( m_part.getSite().getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.0"), set ); //$NON-NLS-1$
+    if( wqString != null )
+    {
+      try
+      {
+        final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( wqString ) ) );
+
+        final WQRelationDialog dlg = new WQRelationDialog( m_part.getSite().getShell(), Messages.getString( "org.kalypso.ogc.sensor.view.wq.ViewWQRelationObjectContribution.0" ), set );
         dlg.open();
       }
       catch( final Exception e )
@@ -100,34 +125,21 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
    */
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    m_wqString = null;
-    
+    m_selection = selection;
+
     if( selection instanceof IStructuredSelection )
     {
-      final Object object = ( (IStructuredSelection)selection ).getFirstElement();
-      
+      final Object object = ((IStructuredSelection) selection).getFirstElement();
+
       if( object instanceof IFile )
       {
-        final IFile file = (IFile)object;
-        if( ! file.getFileExtension().equalsIgnoreCase( "zml" ) ) //$NON-NLS-1$
-          action.setEnabled(false);
-        
-        try
-        {
-          final URL url = ResourceUtilities.createURL( file );
-          final IObservation obs = ZmlFactory.parseXML( url, "" ); //$NON-NLS-1$
-          m_wqString = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQTABLE );
-          
-          action.setEnabled( m_wqString != null );
-        }
-        catch( final Exception ignored )
-        {
-          action.setEnabled(false);
-        } 
+        final IFile file = (IFile) object;
+        action.setEnabled( file.getFileExtension().equalsIgnoreCase( "zml" ) );
       }
     }
   }
