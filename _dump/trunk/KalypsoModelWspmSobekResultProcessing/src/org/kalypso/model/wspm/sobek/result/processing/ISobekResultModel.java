@@ -4,6 +4,7 @@ import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 
 public interface ISobekResultModel
@@ -17,4 +18,5 @@ public interface ISobekResultModel
 
   IResultTimeSeries getCrossSectionTimeSeries( ICrossSectionNode node ) throws CoreException;
 
+  IBranchHydrographModel getBranchHydrographModel( ) throws CoreException;
 }

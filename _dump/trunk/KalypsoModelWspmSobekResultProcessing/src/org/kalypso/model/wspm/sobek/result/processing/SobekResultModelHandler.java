@@ -21,11 +21,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class SobekResultModelHandler implements ISobekResultModel
@@ -37,6 +39,10 @@ public class SobekResultModelHandler implements ISobekResultModel
   private static final Map<ICrossSectionNode, GMLWorkspace> m_workspaces = new HashMap<ICrossSectionNode, GMLWorkspace>();
 
   private static final Map<ICrossSectionNode, CommandableWorkspace> m_commandables = new HashMap<ICrossSectionNode, CommandableWorkspace>();
+
+  private GMLWorkspace m_branchesWorkspace;
+
+  private CommandableWorkspace m_branchesCommandableWorkspace;
 
   private SobekResultModelHandler( final IFolder resultFolder ) throws JAXBException
   {
@@ -186,5 +192,51 @@ public class SobekResultModelHandler implements ISobekResultModel
     }
 
     m_workspaces.clear();
+
+    m_branchesWorkspace.dispose();
+    m_branchesCommandableWorkspace.dispose();
+
+    m_branchesWorkspace = null;
+    m_branchesCommandableWorkspace = null;
+  }
+
+  public IBranchHydrographModel getBranchHydrographModel( ) throws CoreException
+  {
+    try
+    {
+      if( m_branchesCommandableWorkspace == null )
+      {
+        final IFolder folder = m_resultFolder.getFolder( "output/branches/" );
+        IFile iBase;
+        if( !folder.exists() )
+        {
+          folder.create( true, false, new NullProgressMonitor() );
+
+          iBase = folder.getFile( "hydrograhps.gml" );
+
+          final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekBranchHydrograph.gml" );
+          iBase.create( stream, true, new NullProgressMonitor() );
+        }
+        else
+        {
+          iBase = folder.getFile( "hydrograhps.gml" );
+        }
+
+        /* parse gml workspace */
+        final URL url = iBase.getRawLocationURI().toURL();
+
+        m_branchesWorkspace = GmlSerializer.createGMLWorkspace( url, null );
+        m_branchesCommandableWorkspace = new CommandableWorkspace( m_branchesWorkspace );
+      }
+
+      Feature root = m_branchesCommandableWorkspace.getRootFeature();
+
+      return null;
+    }
+    catch( Exception e )
+    {
+      throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
+    }
+
   }
 }
