@@ -135,6 +135,8 @@ public class ISobekConstants
 
   public static final String NS_SOBEK_RESULT_TIME_SERIES = "org.kalypso.model.wspm.sobek.result.ts"; //$NON-NLS-1$
 
+  public static final String NS_SOBEK_RESULT_BRANCH_HYDROGRAPHS = "org.kalypso.model.wspm.sobek.result.ls"; //$NON-NLS-1$
+
   public static final String NS_WSPM_PROFILE = "org.kalypso.model.wspmprofile"; //$NON-NLS-1$
 
   public static final String P_HYDRAULIC_BOUNDARY_NODE_CONDITION_BEGINS = "observationBegin"; //$NON-NLS-1$

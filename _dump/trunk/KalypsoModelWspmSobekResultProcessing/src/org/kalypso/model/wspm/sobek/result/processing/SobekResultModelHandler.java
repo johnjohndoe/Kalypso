@@ -23,11 +23,13 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
+import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchHydraphModelHandler;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class SobekResultModelHandler implements ISobekResultModel
@@ -230,6 +232,10 @@ public class SobekResultModelHandler implements ISobekResultModel
       }
 
       Feature root = m_branchesCommandableWorkspace.getRootFeature();
+      Object property = root.getProperty( IBranchHydrographModel.QN_HYDROGRAPHS );
+
+      if( property instanceof FeatureList )
+        return new BranchHydraphModelHandler( m_branchesCommandableWorkspace, (FeatureList) property );
 
       return null;
     }
