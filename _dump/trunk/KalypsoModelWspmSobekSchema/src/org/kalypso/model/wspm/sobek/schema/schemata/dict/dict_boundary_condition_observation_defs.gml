@@ -26,12 +26,7 @@
                                         <gml:unitOfMeasure uom="m NHN"/>
                                 </swe:SimpleType>
                         </swe:representation>
-                        <!--
-                        <swe:representation>
-                                <swe:Number>
-                                        <gml:unitOfMeasure uom="m NHN"/>
-                                </swe:Number>
-                        </swe:representation>-->
+
                 </swe:ItemDefinition>
         </gml:dictionaryEntry>
         <gml:dictionaryEntry>

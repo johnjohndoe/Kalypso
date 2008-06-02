@@ -70,6 +70,9 @@ public class WspmSobekUrlCatalog extends AbstractUrlCatalog implements IWspmSobe
     catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK_RESUL_TS, myClass.getResource( "wspmSobekResultTS.xsd" ) ); //$NON-NLS-1$
     prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK_RESUL_TS, "wspmSobekResultTs" ); //$NON-NLS-1$
 
+    catalog.put( IWspmSobekConstants.NS_WSPM_SOBEK_RESULT_LS, myClass.getResource( "wspmSobekResultLS.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( IWspmSobekConstants.NS_WSPM_SOBEK_RESULT_LS, "wspmSobekResultLs" ); //$NON-NLS-1$
+
   }
 
 }

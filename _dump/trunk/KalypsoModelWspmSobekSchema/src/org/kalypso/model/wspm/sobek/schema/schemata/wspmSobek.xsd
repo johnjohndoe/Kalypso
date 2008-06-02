@@ -817,7 +817,7 @@
 		_________________________________________________________________________________________
 		LINK PROPERTIES
 		_________________________________________________________________________________________
-	-->
+        -->
         <complexType name="LinkageNodeLinkPropertyType">
                 <sequence minOccurs="0" maxOccurs="0">
                         <element ref="wspmSobek:LinkageNode"/>

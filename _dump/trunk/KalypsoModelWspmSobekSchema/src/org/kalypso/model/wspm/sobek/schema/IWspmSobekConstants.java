@@ -69,4 +69,6 @@ public interface IWspmSobekConstants
 
   public static final String NS_WSPM_SOBEK_RESUL_TS = "org.kalypso.model.wspm.sobek.result.ts"; //$NON-NLS-1$
 
+  public static final String NS_WSPM_SOBEK_RESULT_LS = "org.kalypso.model.wspm.sobek.result.ls"; //$NON-NLS-1$
+
 }
