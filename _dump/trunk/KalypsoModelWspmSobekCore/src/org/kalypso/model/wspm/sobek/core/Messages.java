@@ -49,157 +49,7 @@ public class Messages extends NLS
 {
   private static final String BUNDLE_NAME = "org.kalypso.model.wspm.sobek.core.messages"; //$NON-NLS-1$
 
-  public static String DateTimeDialog_0;
-
-  public static String DateTimeDialog_1;
-
   public static String FNGmlUtils_0;
-
-  public static String LastfallDateChooser_0;
-
-  public static String LastFallExplorer_1;
-
-  public static String LastFallExplorer_10;
-
-  public static String LastFallExplorer_11;
-
-  public static String LastFallExplorer_12;
-
-  public static String LastFallExplorer_13;
-
-  public static String LastFallExplorer_14;
-
-  public static String LastFallExplorer_3;
-
-  public static String LastFallExplorer_5;
-
-  public static String LastFallExplorer_7;
-
-  public static String LastFallExplorer_9;
-
-  public static String LastfallTreeContentProvider_0;
-
-  public static String LastfallTreeLabelProvider_3;
-
-  public static String PageEditBoundaryConditionGeneral_0;
-
-  public static String PageEditBranch_1;
-
-  public static String PageEditBranch_2;
-
-  public static String PageEditBranch_4;
-
-  public static String PiSobekModelUtils_0;
-
-  public static String PiSobekModelUtils_1;
-
-  public static String PiSobekModelUtils_2;
-
-  public static String PiSobekModelUtils_3;
-
-  public static String PiSobekModelUtils_4;
-
-  public static String PiSobekModelUtils_5;
-
-  public static String SobekWizardEditBoundaryCondition_0;
-
-  public static String PageEditBoundaryConditionGeneral_1;
-
-  public static String PageEditBoundaryConditionGeneral_10;
-
-  public static String PageEditBoundaryConditionGeneral_2;
-
-  public static String PageEditBoundaryConditionGeneral_3;
-
-  public static String PageEditBoundaryConditionGeneral_4;
-
-  public static String PageEditBoundaryConditionGeneral_5;
-
-  public static String PageEditBoundaryConditionGeneral_6;
-
-  public static String PageEditBoundaryConditionGeneral_7;
-
-  public static String PageEditBoundaryConditionGeneral_8;
-
-  public static String PageEditBoundaryConditionGeneral_9;
-
-  public static String PageEditBoundaryNode_1;
-
-  public static String PageEditBoundaryNode_2;
-
-  public static String PageEditBoundaryNode_3;
-
-  public static String PageEditBoundaryNode_4;
-
-  public static String PageEditCrossSectionNode_1;
-
-  public static String PageEditCrossSectionNode_2;
-
-  public static String PageEditCrossSectionNode_8;
-
-  public static String PageEditCrossSectionNode_9;
-
-  public static String PageEditTimeSeriesObservation_4;
-
-  public static String PageEditTimeSeriesObservation_5;
-
-  public static String ZmlTimeSeriesProvider_1;
-
-  public static String ZmlTimeSeriesProvider_2;
-
-  public static String ZmlTimeSeriesProvider_3;
-
-  public static String PageEditBoundaryConditionTimeSeries_1;
-
-  public static String PageEditBoundaryConditionTimeSeries_11;
-
-  public static String PageEditBoundaryConditionTimeSeries_12;
-
-  public static String PageEditBoundaryConditionTimeSeries_13;
-
-  public static String PageEditBoundaryConditionTimeSeries_14;
-
-  public static String PageEditBoundaryConditionTimeSeries_15;
-
-  public static String PageEditBoundaryConditionTimeSeries_18;
-
-  public static String PageEditBoundaryConditionTimeSeries_2;
-
-  public static String PageEditBoundaryConditionTimeSeries_3;
-
-  public static String PageEditBoundaryConditionTimeSeries_4;
-
-  public static String PageEditBoundaryConditionTimeSeries_5;
-
-  public static String PageEditBoundaryConditionTimeSeries_6;
-
-  public static String PageEditBoundaryConditionTimeSeries_8;
-
-  public static String PageEditBoundaryConditionTimeSeries_9;
-
-  public static String PageEditLastfall_1;
-
-  public static String PageEditLastfall_11;
-
-  public static String PageEditLastfall_13;
-
-  public static String PageEditLastfall_14;
-
-  public static String PageEditLastfall_15;
-
-  public static String PageEditLastfall_16;
-
-  public static String PageEditLastfall_2;
-
-  public static String PageEditLastfall_4;
-
-  public static String PageEditLastfall_5;
-
-  public static String PageEditLastfall_6;
-
-  public static String PageEditLastfall_7;
-
-  public static String PageEditLastfall_9;
 
   public static String AbstractNode_0;
 
@@ -208,30 +58,6 @@ public class Messages extends NLS
   public static String Branch_1;
 
   public static String BranchMaker_0;
-
-  public static String FNCreateCrossSectionNode_0;
-
-  public static String FNCreateCrossSectionNode_1;
-
-  public static String FNCreateCrossSectionNode_2;
-
-  public static String FNCreateCrossSectionNode_3;
-
-  public static String FNCreateCrossSectionNode_4;
-
-  public static String FNExtendBranch_1;
-
-  public static String FNExtendBranch_2;
-
-  public static String FNExtendBranch_3;
-
-  public static String FNExtendBranch_4;
-
-  public static String FNExtendBranch_5;
-
-  public static String FNExtendBranch_6;
-
-  public static String FNExtendBranch_7;
 
   public static String FNNodeUtils_1;
 
@@ -243,14 +69,6 @@ public class Messages extends NLS
 
   public static String IBoundaryNodeLastfallCondition_5;
 
-  public static String SelectSnappedBranchDialog_0;
-
-  public static String SelectSnappedBranchDialog_1;
-
-  public static String SelectSnappedBranchDialog_2;
-
-  public static String SelectSnappedBranchDialog_3;
-
   public static String SobekModelMember_0;
 
   public static String SobekModelMember_1;
@@ -259,7 +77,6 @@ public class Messages extends NLS
 
   public static String SobekModelMember_3;
 
-  public static String SobekModelMember_5;
   static
   {
     // initialize resource bundle
