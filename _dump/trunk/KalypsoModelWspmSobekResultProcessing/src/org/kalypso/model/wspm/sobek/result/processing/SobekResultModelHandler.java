@@ -208,24 +208,9 @@ public class SobekResultModelHandler implements ISobekResultModel
     {
       if( m_branchesCommandableWorkspace == null )
       {
-        final IFolder folder = m_resultFolder.getFolder( "output/branches/" );
-        IFile iBase;
-        if( !folder.exists() )
-        {
-          folder.create( true, false, new NullProgressMonitor() );
-
-          iBase = folder.getFile( "hydrograhps.gml" );
-
-          final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekBranchHydrograph.gml" );
-          iBase.create( stream, true, new NullProgressMonitor() );
-        }
-        else
-        {
-          iBase = folder.getFile( "hydrograhps.gml" );
-        }
-
         /* parse gml workspace */
-        final URL url = iBase.getRawLocationURI().toURL();
+        IFile file = getBranchHydrogrographWorkspaceFile();
+        final URL url = file.getRawLocationURI().toURL();
 
         m_branchesWorkspace = GmlSerializer.createGMLWorkspace( url, null );
         m_branchesCommandableWorkspace = new CommandableWorkspace( m_branchesWorkspace );
@@ -235,7 +220,7 @@ public class SobekResultModelHandler implements ISobekResultModel
       Object property = root.getProperty( IBranchHydrographModel.QN_HYDROGRAPHS );
 
       if( property instanceof FeatureList )
-        return new BranchHydraphModelHandler( m_branchesCommandableWorkspace, (FeatureList) property );
+        return new BranchHydraphModelHandler( this, m_branchesCommandableWorkspace, (FeatureList) property );
 
       return null;
     }
@@ -243,6 +228,26 @@ public class SobekResultModelHandler implements ISobekResultModel
     {
       throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
     }
+  }
 
+  public IFile getBranchHydrogrographWorkspaceFile( ) throws CoreException
+  {
+    final IFolder folder = m_resultFolder.getFolder( "output/branches/" );
+    IFile iBase;
+    if( !folder.exists() )
+    {
+      folder.create( true, false, new NullProgressMonitor() );
+
+      iBase = folder.getFile( "hydrograhps.gml" );
+
+      final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekBranchHydrograph.gml" );
+      iBase.create( stream, true, new NullProgressMonitor() );
+    }
+    else
+    {
+      iBase = folder.getFile( "hydrograhps.gml" );
+    }
+
+    return iBase;
   }
 }
