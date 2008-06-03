@@ -243,8 +243,6 @@ public class Messages extends NLS
 
   public static String IBoundaryNodeLastfallCondition_5;
 
-  public static String NodeUtils_1;
-
   public static String SelectSnappedBranchDialog_0;
 
   public static String SelectSnappedBranchDialog_1;

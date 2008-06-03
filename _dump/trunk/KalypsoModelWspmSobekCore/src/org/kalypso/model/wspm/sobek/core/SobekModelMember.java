@@ -60,7 +60,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.model.wspm.sobek.core.interfaces.INodeUtils;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructure;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
@@ -68,11 +67,9 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode.BOUNDARY_TYPE;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.BranchMaker;
 import org.kalypso.model.wspm.sobek.core.model.Lastfall;
-import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
 import org.kalypso.model.wspm.sobek.core.pub.FNNodeUtils;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -88,7 +85,7 @@ public class SobekModelMember implements ISobekModelMember
 
   public static ISobekModelMember getModel( ) throws CoreException
   {
-    return SobekModelMember.getModel( m_lastUsedWorkspace, null, null );
+    return SobekModelMember.getModel( m_lastUsedWorkspace, null );
   }
 
   /**
@@ -99,7 +96,7 @@ public class SobekModelMember implements ISobekModelMember
    * @param reposContainer
    *            Time Series repository container
    */
-  public static ISobekModelMember getModel( final CommandableWorkspace workspace, final Feature modelMember, final IRepositoryContainer reposContainer ) throws CoreException
+  public static ISobekModelMember getModel( final CommandableWorkspace workspace, final Feature modelMember ) throws CoreException
   {
     if( workspace == null )
       throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), Messages.SobekModelMember_0 ) );
@@ -112,19 +109,16 @@ public class SobekModelMember implements ISobekModelMember
     if( modelMember == null )
       throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), Messages.SobekModelMember_1 ) );
 
-    return new SobekModelMember( workspace, modelMember, reposContainer );
+    return new SobekModelMember( workspace, modelMember );
   }
 
   private final Feature m_modelMember;
 
-  private final IRepositoryContainer m_reposContainer;
-
   private final CommandableWorkspace m_workspace;
 
-  protected SobekModelMember( final CommandableWorkspace workspace, final Feature modelMember, final IRepositoryContainer reposContainer )
+  protected SobekModelMember( final CommandableWorkspace workspace, final Feature modelMember )
   {
     m_workspace = workspace;
-    m_reposContainer = reposContainer;
 
     if( modelMember == null )
       throw new IllegalStateException( Messages.SobekModelMember_2 );
@@ -291,22 +285,6 @@ public class SobekModelMember implements ISobekModelMember
     }
 
     return myNodes.toArray( new INode[] {} );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getNodeUtils()
-   */
-  public INodeUtils getNodeUtils( )
-  {
-    return new NodeUtils( this );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#getRepositoryContainer()
-   */
-  public IRepositoryContainer getRepositoryContainer( )
-  {
-    return m_reposContainer;
   }
 
   public ISbkStructure[] getSbkStructures( )

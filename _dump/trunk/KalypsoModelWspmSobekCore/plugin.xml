@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension
-         point="org.kalypso.deegree.gmlWorkspaceListener">
-      <listener
-            class="org.kalypso.model.wspm.sobek.core.workspace.listener.WorkspaceListenerBoundaryNodeWQRelation"
-            id="org.kalypso.model.wspm.sobek.core.workspace.listener.WorkspaceListenerBoundaryNodeWQRelation"
-            name="Ensure consistence of boundary node wq relationships ">
-         <qname
-               localPart="BoundaryConditionNode"
-               namespace="org.kalypso.model.wspm.sobek">
-         </qname>
-      </listener>
-   </extension>
+
 
 </plugin>
