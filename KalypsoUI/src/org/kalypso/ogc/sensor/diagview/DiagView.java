@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
@@ -134,21 +134,21 @@ public class DiagView extends ObsView
     return m_showLegend;
   }
 
-  public void setTitle( String title )
+  public void setTitle( final String title )
   {
     m_title = title;
 
     refreshView( null );
   }
 
-  public void setLegendName( String name )
+  public void setLegendName( final String name )
   {
     m_legendName = name;
 
     refreshView( null );
   }
 
-  public void setShowLegend( boolean show )
+  public void setShowLegend( final boolean show )
   {
     m_showLegend = show;
 
@@ -196,7 +196,7 @@ public class DiagView extends ObsView
 
       for( int i = 0; i < valueAxis.length; i++ )
       {
-        if( keyAxis == valueAxis[i] )
+        if( valueAxis[i].isKey() )
           continue;
 
         final String valueAxisType = valueAxis[i].getType();

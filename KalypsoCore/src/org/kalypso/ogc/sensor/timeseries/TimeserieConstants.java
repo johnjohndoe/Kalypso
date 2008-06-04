@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries;
 
@@ -75,6 +75,9 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   /** Datum */
   public final static String TYPE_DATE = "date"; //$NON-NLS-1$
+
+  /** Day - day 0-365 */
+  public final static String TYPE_DAY = "DAY"; //$NON-NLS-1$
 
   /** Füllung (VOLUMEN) */
   public static final String TYPE_VOLUME = "V"; //$NON-NLS-1$
@@ -124,52 +127,52 @@ public abstract class TimeserieConstants implements ObservationConstants
 
   // METADATEN
 
-  public final static String MD_TIMEZONE = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.17"); //$NON-NLS-1$
+  public final static String MD_TIMEZONE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.17" ); //$NON-NLS-1$
 
-  public final static String MD_WQWECHMANN = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.18"); //$NON-NLS-1$
+  public final static String MD_WQWECHMANN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.18" ); //$NON-NLS-1$
 
-  public final static String MD_WQTABLE = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.19"); //$NON-NLS-1$
+  public final static String MD_WQTABLE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.19" ); //$NON-NLS-1$
 
-  public final static String MD_GKR = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.20"); //$NON-NLS-1$
+  public final static String MD_GKR = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.20" ); //$NON-NLS-1$
 
-  public final static String MD_GKH = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.21"); //$NON-NLS-1$
+  public final static String MD_GKH = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.21" ); //$NON-NLS-1$
 
-  public final static String MD_COORDSYS = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.22"); //$NON-NLS-1$
+  public final static String MD_COORDSYS = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.22" ); //$NON-NLS-1$
 
-  public final static String MD_ALARM_1 = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.23"); //$NON-NLS-1$
+  public final static String MD_ALARM_1 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.23" ); //$NON-NLS-1$
 
-  public final static String MD_ALARM_2 = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.24"); //$NON-NLS-1$
+  public final static String MD_ALARM_2 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.24" ); //$NON-NLS-1$
 
-  public final static String MD_ALARM_3 = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.25"); //$NON-NLS-1$
+  public final static String MD_ALARM_3 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.25" ); //$NON-NLS-1$
 
-  public final static String MD_ALARM_4 = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.26"); //$NON-NLS-1$
+  public final static String MD_ALARM_4 = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.26" ); //$NON-NLS-1$
 
-  public final static String MD_PEGELNULLPUNKT = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.27"); //$NON-NLS-1$
+  public final static String MD_PEGELNULLPUNKT = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.27" ); //$NON-NLS-1$
 
-  public final static String MD_HOEHENANGABEART = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.28"); //$NON-NLS-1$
+  public final static String MD_HOEHENANGABEART = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.28" ); //$NON-NLS-1$
 
-  public final static String MD_MESSTISCHBLATT = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.29"); //$NON-NLS-1$
+  public final static String MD_MESSTISCHBLATT = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.29" ); //$NON-NLS-1$
 
-  public final static String MD_FLUSSGEBIET = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.30"); //$NON-NLS-1$
+  public final static String MD_FLUSSGEBIET = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.30" ); //$NON-NLS-1$
 
-  public final static String MD_GEWAESSER = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.31"); //$NON-NLS-1$
+  public final static String MD_GEWAESSER = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.31" ); //$NON-NLS-1$
 
   /** Stationskennziffer */
-  public final static String MD_KENNZIFFER = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.32"); //$NON-NLS-1$
+  public final static String MD_KENNZIFFER = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.32" ); //$NON-NLS-1$
 
   /**
    * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
    */
-  public final static String MD_VORHERSAGE = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.33"); //$NON-NLS-1$
+  public final static String MD_VORHERSAGE = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.33" ); //$NON-NLS-1$
 
-  public final static String MD_DATE_BEGIN = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.34"); //$NON-NLS-1$
+  public final static String MD_DATE_BEGIN = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.34" ); //$NON-NLS-1$
 
-  public final static String MD_DATE_END = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.35"); //$NON-NLS-1$
+  public final static String MD_DATE_END = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.35" ); //$NON-NLS-1$
 
   /** the forecast feature is used in some of the views to mark the forecast date-range */
-  public static final String FEATURE_FORECAST = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.36"); //$NON-NLS-1$
+  public static final String FEATURE_FORECAST = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.36" ); //$NON-NLS-1$
 
   /** the alarm-level feature used to show the alarm-levels in some views */
-  public static final String FEATURE_ALARMLEVEL = Messages.getString("org.kalypso.ogc.sensor.timeseries.TimeserieConstants.37"); //$NON-NLS-1$
+  public static final String FEATURE_ALARMLEVEL = Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieConstants.37" ); //$NON-NLS-1$
 
 }

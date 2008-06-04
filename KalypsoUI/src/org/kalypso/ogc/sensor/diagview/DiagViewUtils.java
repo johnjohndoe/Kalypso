@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
@@ -290,6 +290,8 @@ public class DiagViewUtils
     final String direction = isKey == true ? DiagramAxis.DIRECTION_HORIZONTAL : DiagramAxis.DIRECTION_VERTICAL;
     String position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_LEFT;
 
+    // TODO: move this stuff into config.properties as everything else
+
     if( axisType.equals( TimeserieConstants.TYPE_DATE ) )
       return new DiagramAxis( axisType, "date", label, unit, direction, position, false ); //$NON-NLS-1$
 
@@ -322,18 +324,20 @@ public class DiagViewUtils
     if( axisType.equals( TimeserieConstants.TYPE_EVAPORATION ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
+    position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_LEFT;
+
     // default axis
-    return new DiagramAxis( axisType, "double", label, unit, direction, DiagramAxis.POSITION_LEFT, false ); //$NON-NLS-1$
+    return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
   }
 
   /**
    * Apply the given xml-template representation to the diagview.
    * 
    * @param ignoreHref
-   *          [optional] tricky, used in the context of the wizard where token replace takes place. If a href could not
-   *          be replaced, it is set to a specific tag-value and the ignoreHref parameter if specified denotes is
-   *          compared to each href found in the template. If it is found, then the href is ignored and the
-   *          corresponding observation isn't loaded.
+   *            [optional] tricky, used in the context of the wizard where token replace takes place. If a href could
+   *            not be replaced, it is set to a specific tag-value and the ignoreHref parameter if specified denotes is
+   *            compared to each href found in the template. If it is found, then the href is ignored and the
+   *            corresponding observation isn't loaded.
    */
   public static IStatus applyXMLTemplate( final DiagView view, final Obsdiagview xml, final URL context, final boolean synchron, final String ignoreHref )
   {
@@ -385,7 +389,7 @@ public class DiagViewUtils
       // Hack: elemente, die durch token-replace nicht richtig aufgelöst werden einfach übergehen
       if( ignoreHref != null && href.indexOf( ignoreHref ) != -1 )
       {
-        Logger.getLogger( DiagViewUtils.class.getName() ).warning( Messages.getString("org.kalypso.ogc.sensor.diagview.DiagViewUtils.16") + href ); //$NON-NLS-1$
+        Logger.getLogger( DiagViewUtils.class.getName() ).warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.16" ) + href ); //$NON-NLS-1$
         continue;
       }
 
@@ -393,14 +397,14 @@ public class DiagViewUtils
       stati.add( loader.getResult() );
     }
 
-    return StatusUtilities.createStatus( stati, Messages.getString("org.kalypso.ogc.sensor.diagview.DiagViewUtils.17") ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( stati, Messages.getString( "org.kalypso.ogc.sensor.diagview.DiagViewUtils.17" ) ); //$NON-NLS-1$
   }
 
   /**
    * Return the first axis of the mappings list which is not a key axis.
    * 
    * @param mappings
-   *          array of obs-diag axes mappings
+   *            array of obs-diag axes mappings
    * @return obs axis (not a key axis) or null if not found
    */
   public static IAxis getValueAxis( final AxisMapping[] mappings )
