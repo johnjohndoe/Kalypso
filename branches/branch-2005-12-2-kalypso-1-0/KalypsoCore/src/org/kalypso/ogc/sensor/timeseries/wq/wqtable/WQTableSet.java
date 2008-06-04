@@ -1,9 +1,8 @@
 package org.kalypso.ogc.sensor.timeseries.wq.wqtable;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -15,9 +14,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
  */
 public class WQTableSet implements IWQConverter
 {
-  private final HashMap m_tables = new HashMap();
-
-  private final SortedSet m_dates;
+  private final SortedMap m_tables = new TreeMap();
 
   private final String m_fromType;
 
@@ -35,10 +32,9 @@ public class WQTableSet implements IWQConverter
     m_fromType = fromType;
     m_toType = toType;
 
+    // TODO: why map+set? why not use just one map?
     for( int i = 0; i < tables.length; i++ )
       m_tables.put( tables[i].getValidity(), tables[i] );
-
-    m_dates = new TreeSet( m_tables.keySet() );
   }
 
   /**
@@ -49,13 +45,13 @@ public class WQTableSet implements IWQConverter
     if( m_tables.size() == 0 )
       throw new IllegalStateException( "Keine WQ-Tabellen vorhanden" );
 
-    final SortedSet headSet = m_dates.headSet( date );
+    final SortedMap headSet = m_tables.headMap( date );
 
     final Date key;
     if( headSet.isEmpty() )
-      key = (Date)m_dates.first();
+      key = (Date)m_tables.firstKey();
     else
-      key = (Date)headSet.last();
+      key = (Date)headSet.lastKey();
 
     return (WQTable)m_tables.get( key );
   }
@@ -85,7 +81,7 @@ public class WQTableSet implements IWQConverter
   }
 
   /**
-   * @return list of tables backed by this set
+   * @return list of tables backed by this set; sorted by their validity
    */
   public WQTable[] getTables()
   {

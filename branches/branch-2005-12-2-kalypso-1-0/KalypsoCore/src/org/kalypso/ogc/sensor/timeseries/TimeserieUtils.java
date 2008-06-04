@@ -195,8 +195,8 @@ public class TimeserieUtils
         defaultIs.close();
 
         // If we have a configured config file, use it as standard
-        final URL configUrl = Platform.getConfigurationLocation().getURL();
-        String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
+        final URL configUrl = Platform.isRunning() ? Platform.getConfigurationLocation().getURL() : null;
+        final String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
         final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl,
             timeseriesConfigLocation );
 
