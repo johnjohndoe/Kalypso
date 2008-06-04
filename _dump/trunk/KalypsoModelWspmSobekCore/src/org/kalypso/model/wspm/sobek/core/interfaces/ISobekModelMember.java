@@ -53,7 +53,10 @@ public interface ISobekModelMember extends IModelMember
     eBranches,
     eCrossSections,
     eStructures,
-    eBoundaryConditions
+    eBoundaryConditions,
+    eConfigXML,
+    eConfigOPR
+
   }
 
   public void dispose( );
