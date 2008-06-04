@@ -1,24 +1,25 @@
 package org.kalypso.model.wspm.sobek.calculation.job;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin
+public class KalypsoModelWspmSobekCalculationJobActivator extends Plugin
 {
 
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.model.wspm.sobek.calculation.job";
 
   // The shared instance
-  private static Activator plugin;
+  private static KalypsoModelWspmSobekCalculationJobActivator plugin;
 
   /**
    * The constructor
    */
-  public Activator( )
+  public KalypsoModelWspmSobekCalculationJobActivator( )
   {
   }
 
@@ -51,7 +52,7 @@ public class Activator extends AbstractUIPlugin
    * 
    * @return the shared instance
    */
-  public static Activator getDefault( )
+  public static KalypsoModelWspmSobekCalculationJobActivator getDefault( )
   {
     return plugin;
   }
