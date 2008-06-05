@@ -330,6 +330,8 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   protected void calculateParam( )
   {
     setValid( true );
+    
+    // TODO: why does the point does not calculate its envelope?!
   }
 
   @Override
