@@ -56,3 +56,50 @@ Nico Schrage
 ---------------------
 Mit dem 27.05.2008 wurde ein Versionstag eingeführt. Die erste Version heißt v_0_0_1. Sie ist Grundlage des Vergleiches von RMA10S 3.5g mit RMA10SK. Ab diesem Punkt muss geprüft werden, inwiefern Änderungen gegenüber RMA10S 3.5g eingetreten sind. Von der Version aus wird exakt dokumentiert, was sich im Detail geändert hat.
 Außerdem wurde mit dem Datum ein Branch eingeführt, der dazu gedacht ist, die Subroutinen zu aktualisieren, d.h. auf f90 zu bringen und veraltete Strukturen (z.B. Jumpmarks) zu eliminieren.
+
+Version 0.0.1 (tag gesetzt)
+---------------------------
+001.) initialer Startpunkt für Versionierung
+
+--- Nico Schrage, 27.05.2008
+
+Version 0.0.2 (laufende Änderungen)
+-----------------------------------
+001.) Neuschreiben der Routinen DEL, REWET nach neuer Struktur; Löschen aller Sprungmarken
+      und Strukturieren der Schleifen
+002.) rma10.for wurde nicht korrekt aus HEAD übernommen in Version 0.0.1. sie muss mit
+      Datei-Version 1.32 von HEAD überschrieben werden für Version 0.0.1
+
+--- Nico Schrage, 27.05.2008
+
+003.) Anpassung des rewettings an Marsh-Algorithmus. Dazu wird zunächst die "reale
+      Fließtiefe" über der slot Tiefe des Marshbereiches bestimmt. Daraufhin wird der
+      Wasserstand über die slot-Tiefe der benachbarten Modellknoten berechnet und die
+      Wassertiefe in die Rechentiefe (virtuelle Fließtiefe) umgerechnet. Diese Option
+      läuft parallel zur alten Implementierung, in der der Marsh-Algorithmus nicht
+      berücksichtigt wird.
+004.) Berücksichtigung von head losses beim rewetting ausgeschaltet; HLOS wird weiterhin
+      berechnet, jedoch beim Extrapolieren der Werte nach außen nicht berücksichtigt. Kann
+      ohne Probleme wieder eingeschaltet werden.
+005.) Format updates in coef11nt.for: Loops 290, 360 and 365 were changed to become 'normal' do-loops
+006.) Minor change in RMA10.for without relevance (splitting a line into to lines)
+007.) Write out kilometer if present to the list of changes in the console output: Purpose is to
+      find the problematic position of 1D-nodes, that were interpolated. From those nodes,
+      the user doesn't know, where it is accept with the knowledge of the kilometer.
+008.) bug in LOAD3.FOR: Initializing NodeIsDry was done with the wrong running variable
+009.) bug in input.for: testoutput was initialized, if C7 line was not available
+010.) catch ERROR in input.for, if user defines more than 90 iterations in steady or unsteady definition.
+      Introduce new Error messages 1008 or 1009 in ErrorMessagesAndStop.for.
+011.) Interpolate restart values for 1D midside nodes from the corner nodes, if restart was activated,
+      but no restart value is available. It's done in getinit.for.
+012.) Move the interpolation from restart values of interpolated nodes to a place after the RESTARTTEST
+      loop within getinit. This provides the possiblity to introduce the structures of Kalypso applications
+      into the other restart files/ model files, too.
+013.) coef1DPolynomials.f90 has more changes (because of equation mistakes):
+      - momentum equation should use -sidft instead of + sidft (momentum equation and derivatives)
+      - correction in Term A2 in the derivative of the momentum equation over depth, where dv/dt has to be replaced by dh/dt
+      - delete old code in Term A1 of the derivative of the momentum equation over depth
+      - correction of the time derivative of the derivative of the continuity equation over depth
+      - exchange wrong names of terms in the derivative of the continuity equation over depth
+
+--- Nico Schrage, 05.06.2008
