@@ -1,5 +1,3 @@
-!     Last change:  WP    5 Jun 2008    4:56 pm
-!     Last change:  NIS  22 Apr 2008   11:02 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -442,7 +440,7 @@ WriteDOFOutputs: DO J = 1, 7
   !write first line including informations about time step and iteration cycle
   IF (J == 1) THEN
     !Write out kilometer of problematic node, if it is a 1D node with kilometer
-    IF (nmx (j) == 0) THEN
+    IF (NMX (j) == 0) THEN
       WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
     ELSEIF (kmx (nmx (j)) /= 0.0) THEN
       WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J), kmx (nmx (j)), IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
@@ -451,7 +449,7 @@ WriteDOFOutputs: DO J = 1, 7
     ENDIF
   ELSE
     IF (nmx (j) == 0) THEN
-      WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
+      WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2)
     ELSEIF (kmx (nmx (j)) /= 0.0) THEN
       WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J), kmx (nmx (J)), IVAR (J, 1), IVAR (J, 2)
     ELSE
