@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  WP   17 Apr 2008   11:57 am
+C     Last change:  NIS   5 Jun 2008    9:44 am
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -333,10 +333,6 @@ CIPK JUN03
        ELSEIF (IGEO ==2) then
          call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, 0)
 
-!         do i = 1, maxp
-!           WRITE(*,*) i, PolySplitsA(i)
-!         end do
-!         pause
 
   !NiS,apr06: adding this transformation like it is called after RDRM1 (see above)
          NCLL = NCL
