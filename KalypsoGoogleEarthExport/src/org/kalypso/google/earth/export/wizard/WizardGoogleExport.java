@@ -46,8 +46,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.google.earth.export.Messages;
 import org.kalypso.google.earth.export.constants.IGoogleEarthExportSettings;
@@ -56,7 +56,7 @@ import org.kalypso.ui.views.map.MapView;
 /**
  * @author kuch
  */
-public class WizardGoogleExport extends Wizard implements INewWizard
+public class WizardGoogleExport extends Wizard implements IWorkbenchWizard
 {
 
   private PageGoogleExport m_page;
