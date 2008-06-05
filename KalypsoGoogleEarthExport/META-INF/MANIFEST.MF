@@ -9,3 +9,4 @@ Require-Bundle: org.junit4,
 Export-Package: org.kalypso.google.earth.export.constants,
  org.kalypso.google.earth.export.interfaces
 Bundle-Localization: plugin
+Eclipse-LazyStart: true
