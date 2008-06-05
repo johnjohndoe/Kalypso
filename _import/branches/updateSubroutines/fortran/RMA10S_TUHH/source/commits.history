@@ -101,5 +101,7 @@ Version 0.0.2 (laufende Änderungen)
       - delete old code in Term A1 of the derivative of the momentum equation over depth
       - correction of the time derivative of the derivative of the continuity equation over depth
       - exchange wrong names of terms in the derivative of the continuity equation over depth
+014.) Introduce ERROR output into file, if at stage flow boundary conditions, the water stage is out of the specified range.
+      The ErrorMessageAndStop subroutine is called from stfltab.for. In ErrorMessageAndStop the errors 4002 and 4003 are introduced      
 
 --- Nico Schrage, 05.06.2008

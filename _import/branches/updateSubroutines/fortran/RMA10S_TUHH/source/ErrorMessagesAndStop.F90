@@ -1,4 +1,4 @@
-!     Last change:  WP    5 Jun 2008    6:16 pm
+!     Last change:  NIS   5 Jun 2008    8:24 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -177,6 +177,14 @@ elseif (ErrorID == 4001) then
   WRITE (ErrorUnit, 4001) ObjectID
   WRITE (        *, 4001) ObjectID
 
+elseif (ErrorID == 4002) then
+  WRITE (ErrorUnit, 4002) ObjectID
+  WRITE (        *, 4002) ObjectID
+
+elseif (ErrorID == 4003) then
+  WRITE (ErrorUnit, 4003) ObjectID
+  WRITE (        *, 4003) ObjectID
+
 elseif (ErrorID == 4101) then
   WRITE (ErrorUnit, 4101)
   WRITE (        *, 4101)
@@ -326,6 +334,15 @@ end if
             & 1x, 'at node ', I6, '. Please increase' / &
             & 1x, 'URFC, change time step or boundary condition' / &
             & 1x, 'values in general')
+ !stfltab: stage flow boundaries are problematic
+ 4002 format (1x, 'ERROR - SURFACE ELEVATION BELOW LOWEST TABLE ENTRY' / &
+!            & 1x, 'ILINTB,SRFEL,ELEVTBL(ILINTB,1)', ILINTB, SRFEL
+!     +                 ,ELEVTBL(ILINTB,1)
+            & 1x, 'EXECUTION TERMINATED')
+ 4003 format (1x, 'ERROR - WATER SURFACE ELEVATION ABOVE HIGHEST TABLE ENTRY' / &
+!      WRITE(75,*)'ILINTB,SRFEL,ELEVTBL(ILINTB,1)',ILINTB,SRFEL
+!     +                 ,ELEVTBL(ILINTB,1)
+            & 1x, 'EXECUTION TERMINATED')
 
 !4100   Autoconverge Errors
  4101 format (1x, 'ERROR - Autoconverge not successful')
