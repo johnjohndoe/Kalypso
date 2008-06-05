@@ -280,7 +280,7 @@ public class DisplayElementFactory
     return displayElement;
   }
 
-  private static DisplayElement buildSurfaceLineDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfaceLineSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildSurfaceLineDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfaceLineSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
   {
     final LineColorMap colorMap = symbolizer.getColorMap();
 
@@ -300,7 +300,7 @@ public class DisplayElementFactory
     return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
   }
 
-  private static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final GM_Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
   {
     final PolygonColorMap colorMap = symbolizer.getColorMap();
 

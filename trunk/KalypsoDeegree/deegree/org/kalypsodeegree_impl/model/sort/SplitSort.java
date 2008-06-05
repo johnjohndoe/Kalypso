@@ -53,9 +53,11 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -89,6 +91,11 @@ public class SplitSort implements FeatureList
         if( fe != null )
           return fe.getEnvelope();
       }
+      else if( object instanceof GM_Object )
+      {
+        GM_Object geometry = (GM_Object) object;
+        return GeometryUtilities.getEnvelope( geometry );
+      }
 
       return null;
     }
@@ -109,11 +116,33 @@ public class SplitSort implements FeatureList
 
   private final IEnvelopeProvider m_envelopeProvider;
 
+  /**
+   * The constructor.
+   * 
+   * @param parentFeature
+   *            The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
+   *            null then.
+   * @param parentFTP
+   *            The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
+   *            parentFeature is also null then.
+   */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP )
   {
     this( parentFeature, parentFTP, null );
   }
 
+  /**
+   * The constructor.
+   * 
+   * @param parentFeature
+   *            The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
+   *            null then.
+   * @param parentFTP
+   *            The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
+   *            parentFeature is also null then.
+   * @param envelopeProvider
+   *            The provider returns evenlopes. If null, the default one is used.
+   */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
     m_parentFeature = parentFeature;

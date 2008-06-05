@@ -707,7 +707,10 @@ public class GeometryUtilities
     return geometryProperty;
   }
 
-  /** Return the envelope for the given geometry. If its a point, return the singular envelope containing this point. */
+  /**
+   * Return the envelope for the given geometry. If its a point, return the singular envelope containing this point.<br>
+   * TODO Very dubious... why does the point does not provide an envelope?
+   */
   public static GM_Envelope getEnvelope( final GM_Object geometry )
   {
     if( geometry instanceof GM_Point )
