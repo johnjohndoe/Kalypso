@@ -7,19 +7,19 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class KalypsoModelWspmSobekCalculationJobActivator extends Plugin
+public class KalypsoModelWspmSobekCalculationJobPlugin extends Plugin
 {
 
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.model.wspm.sobek.calculation.job";
 
   // The shared instance
-  private static KalypsoModelWspmSobekCalculationJobActivator plugin;
+  private static KalypsoModelWspmSobekCalculationJobPlugin plugin;
 
   /**
    * The constructor
    */
-  public KalypsoModelWspmSobekCalculationJobActivator( )
+  public KalypsoModelWspmSobekCalculationJobPlugin( )
   {
   }
 
@@ -52,7 +52,7 @@ public class KalypsoModelWspmSobekCalculationJobActivator extends Plugin
    * 
    * @return the shared instance
    */
-  public static KalypsoModelWspmSobekCalculationJobActivator getDefault( )
+  public static KalypsoModelWspmSobekCalculationJobPlugin getDefault( )
   {
     return plugin;
   }
