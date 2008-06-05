@@ -1,4 +1,4 @@
-C     Last change:  NIS  15 May 2008    8:54 pm
+C     Last change:  WP    5 Jun 2008    6:15 pm
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -388,11 +388,17 @@ cipk sep04
         STOP 'LOOKING FOR C5'
       ENDIF 
       READ(DLIN,5011) NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
+      !check for maximum values
+      if (NITI > 90) call ErrorMessageAndStop (1008, 0, 0.0d0, 0.0d0)
+      if (ncyc > 0 .and. nitn > 90)
+     +  call ErrorMessageAndStop (1009, 0, 0.0d0, 0.0d0)
+
 !NiS,may06: In the case of Kalypso-2D format input file for geometry, it is among other things predetermined, from which time step to start.
 !           This timestep is saved in the global variable iaccyc. If the value is (iaccyc > 1), it means, that the beginning time step is not
 !           the over all beginning. For that reason, no steady calculation can be started. This means, that the user has to be informed about
 !           the occuring error, if  (iaccyc > 1) .and. (NITI /= 0)
       !EFa jun07, necessary for autoconverge
+
       nitizero = niti
       nitnzero = nitn
       if (niti.ne.0.) then
@@ -457,6 +463,7 @@ cipk mar06 allow for output file rewind
       !Set the standard values
       else
         WriteNodeBlock = 0
+        testoutput = 0
       end if
 
 CIPK ADD ICNSV AND IAVEL AND MAKE ORDER OPTIONAL

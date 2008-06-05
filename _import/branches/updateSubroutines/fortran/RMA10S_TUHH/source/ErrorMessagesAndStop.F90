@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2008   12:08 pm
+!     Last change:  WP    5 Jun 2008    6:16 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -46,6 +46,14 @@ elseif (ErrorID == 1006) then
 elseif (ErrorID == 1007) then
   WRITE (ErrorUnit, 1007)
   WRITE (        *, 1007)
+
+elseif (ErrorID == 1008) then
+  WRITE (ErrorUnit, 1008)
+  WRITE (        *, 1008)
+
+elseif (ErrorID == 1009) then
+  WRITE (ErrorUnit, 1009)
+  WRITE (        *, 1009)
 
 elseif (ErrorID == 1101) then
   WRITE (ErrorUnit, 1101) ObjectID
@@ -190,7 +198,7 @@ end if
 
 !999    Position of Error
 !***
-  998 FORMAT (1x, 'No coordinates of ERROR available')
+  998 FORMAT (1x, 'No coordinates for ERROR available')
   999 FORMAT (1x, 'Error occurs at or near to position: ' / &
             & 1x, 'Rechtswert: ', f13.4, '; Hochwert: ', f13.4 / &
             & 1x, 'EXECUTION TERMINATED')
@@ -209,6 +217,11 @@ end if
  !elflows
  1007 format (1x, 'ERROR - TOO MANY ELEMENT INFLOWS.' / &
             & 1x, 'Reduce the number of element inflows! Program will be stopped')
+ !input
+ 1008 format (1x, 'ERROR - too many possible iterations for steady step defined. '/ &
+            & 1x, 'maximum number is 90')
+ 1009 format (1x, 'ERROR - too many possible iterations for unsteady steps defined. '/ &
+            & 1x, 'maximum number is 90')
 
 !1100  Errors with nodes
 !****

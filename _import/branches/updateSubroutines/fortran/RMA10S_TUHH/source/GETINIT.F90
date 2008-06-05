@@ -1,4 +1,4 @@
-!     Last change:  NIS  22 May 2008    9:23 pm
+!     Last change:  WP    5 Jun 2008    6:19 pm
 !     Last change:  NIS   5 May 2008   11:42 pm
 !IPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 !ipk  last update FEB 11 2004  add IOV option
@@ -72,15 +72,6 @@ IF (NB > 0 .and. NB < 100) then
     npx = maxp-1
     ndx = 9
 
-    !introducing the restart values for interpolated profiles
-    do i = 1, maxp
-!      if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
-      if (IntPolProf (i)) then
-        do j = 1, 3
-          vel (j, i) = (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) + kmWeight(i)  * vel (j, NeighProf(i, 2))
-        end do
-      end if
-    end do
   ELSE
 
 !IPK APR06   READ FOR SUS SED DATA ONLY
@@ -155,6 +146,27 @@ IF (NB > 0 .and. NB < 100) then
     ENDIF
   ENDIF RESTARTTEST
 
+  !introducing the restart values for interpolated profiles
+  do i = 1, maxp
+    !if (IntPolProf (i) .and. vel (1, i) == 0.0D0) then
+    if (IntPolProf (i)) then
+      do j = 1, 3
+        vel (j, i) = (1.0D0 - kmWeight(i)) * vel (j, NeighProf(i, 1)) + kmWeight(i)  * vel (j, NeighProf(i, 2))
+      end do
+    end if
+  end do
+
+  !Interpolate variables at midside nodes, if they were not present
+  Assign1DMidsidesValues: DO i = 1, MaxE
+    IF (nop (i, 1) == 0) CYCLE Assign1DMidsidesValues
+    IF (IsPolynomNode (nop (i, 1))) THEN
+      IF (vel (1, nop (i, 1)) /= 0.0 .and. vel (1, nop (i, 2)) == 0.0) THEN
+        DO j = 1, 2
+          vel (j, nop (i, 2)) = 0.5 * (vel (j, nop (i, 1)) + vel (j, nop (i, 3)))
+        ENDDO
+      ENDIF
+    ENDIF
+  ENDDO Assign1DMidsidesValues
 
   !ipk FEB04  add IOV option
   !nis,may08: IOV is option to overwrite date of result, that has been read in before
@@ -202,7 +214,7 @@ IF (NB > 0 .and. NB < 100) then
 
     !current water surface elevation
     WSLL (N) = HEL (N) + ADO (N)
-!    HEL(N)=WSLL(N)-ADO(N)
+    !HEL(N)=WSLL(N)-ADO(N)
     !calculate back the virtual water depth (h > hsig; switch = 1)
     CALL AMF (HEL (N), VAAA, AKP (N), ADT (N), ADB (N), D1, D2, 1)
     VEL (3, N) = VAAA
@@ -258,6 +270,7 @@ IF (NB > 0 .and. NB < 100) then
       ENDDO
     ENDDO nodeloop
   ENDIF
+
 
 !*******************************************************************************************************************
 !RESTARTING FROM CONTROL FILE RESTARTING FROM CONTROL FILE RESTARTING FROM CONTROL FILE RESTARTING FROM CONTROL FILE
@@ -403,7 +416,7 @@ ELSEIF (NB == 0) then
       ELSEIF (imat(n) == 89 .and. IntPolProf (na)) then
         VEL (3, na) = kmWeight (na)             * 0.5 *(hhmin (NeighProf (na, 1)) + hhmax (NeighProf (na, 1))) &
         &             + (1.0D0 - kmWeight (na)) * 0.5 *(hhmin (NeighProf (na, 2)) + hhmax (NeighProf (na, 2)))
-              !fill vel(3,*) midsides for polynomial approach
+      !fill vel(3,*) midsides for polynomial approach
       ENDIF
 
       !get the midside value

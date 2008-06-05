@@ -1,4 +1,4 @@
-C     Last change:  WP   22 May 2008    9:08 am
+C     Last change:  WP    4 Jun 2008    4:46 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -1150,7 +1150,8 @@ CIPK JAN97 END CHANGES
 
         !nis,feb07,testing: Write whole matrix
         !if (maxn > -1) then
-        !  write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+        !  write
+        !+      (matrixname,'(a3,i3.3,a1,i3.3a4)')'mat',maxn,'_',icyc,'.txt'
         !  teststat = 0
         !  open (9919, matrixname, iostat = teststat)
         !  if (teststat /= 0) STOP 'ERROR - while opening matrix file'

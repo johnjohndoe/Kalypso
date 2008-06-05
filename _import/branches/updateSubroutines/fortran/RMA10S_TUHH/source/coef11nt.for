@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   24 Apr 2008   10:11 am
+C     Last change:  WP    2 Jun 2008    9:55 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -541,7 +541,7 @@ cipk APR99 add for more flexible width term
         MR=NCON(MC)
         AKE=AKE+XM(M)*UUDST(MR)
         UBF=UBF+XM(M)*UBFC(MC)
-        BETA3=BETA3+XM(M)*VDOT(3,MR)
+        BETA3 = BETA3 + XM (M) * VDOT (3, MR)
         DHDX = DHDX + DMX(M)*VEL(3,MR)
 cipk nov97      DAODX = DAODX + DMX(M)*AO(MR)
         IF (IDNOPT.GE.0) THEN
@@ -877,14 +877,17 @@ C
 C.....CONTINUITY EQUATION.....
 C
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
-      FRNC=ACR*DRDX+DACR*R-SIDFT
-      IF(ICYC.GT.0) FRNC=FRNC+BETA3*WTOT
-      DO 290 M=1,NCNX
-        IA = 3 + 2*NDF*(M-1)
+      FRNC = ACR * DRDX + DACR * R - SIDFT
+      IF (ICYC > 0) FRNC = FRNC + BETA3 * WTOT
+      DO M = 1, NCNX
+        IA = 3 + 2 * NDF * (M - 1)
         !nis,oct,com: continuity equation, just for the corner nodes
         !             IA becomes: 3, 3+2NDF
-        F(IA) = F(IA) - AMW*XM(M)*FRNC
-  290 CONTINUE
+        F (IA) = F(IA) - AMW * XM (M) * FRNC
+      ENDDO
+
+
+
 C-
 C......THE SALINITY EQUATION
 C-
@@ -1038,30 +1041,35 @@ C-
 C
 C.....FORM THE CONTINUITY EQUATIONS.....
 C
-      TA=AMW*ACR
-      TX=AMW*DACR
-      TB=AMW*(DRDX*WSRF+R*DACRH)
-      TC=AMW*R*DACRI
-      IF(ICYC .NE. 0) TB=TB+AMW*(ALTM*WSRF+BETA3*SSLOP)
-     .                   +AMW*ALTM*WIDSTR                               APR86
-      IA=3-2*NDF
-      DO 365 M=1,NCNX
-      IA=IA+2*NDF
-      IB=1-NDF
-      EA=XM(M)*TA
-      EB=XM(M)*TX
-      DO 360 N = 1, NCN
-      IB=IB+NDF
-      ESTIFM(IA,IB)=ESTIFM(IA,IB)+(EA*DNX(N)+EB*XN(N))*QFACT(N)
-  360 CONTINUE
-      EA=XM(M)*TB
-      EB=XM(M)*TC
-      IB=3-2*NDF
-      DO 363 N=1,NCNX
-      IB=IB+2*NDF
-      ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*EA+DMX(N)*EB
-  363 CONTINUE
-  365 CONTINUE
+      TA = AMW * ACR
+      TX = AMW * DACR
+      TB = AMW * (DRDX * WSRF + R * DACRH)
+      TC = AMW * R * DACRI
+      IF (ICYC /= 0) TB = TB + AMW * (ALTM * WSRF + BETA3 * SSLOP)
+     +                   + AMW * ALTM * WIDSTR                               APR86
+      IA = 3 - 2 * NDF
+
+      DO M = 1, NCNX
+        IA = IA + 2 * NDF
+        IB = 1 - NDF
+        EA = XM (M) * TA
+        EB = XM (M) * TX
+        !continuity over velocity
+        DO N = 1, NCN
+          IB=IB+NDF
+          ESTIFM (IA, IB) = ESTIFM (IA, IB)
+     +                    + (EA * DNX (N) + EB * XN (N)) * QFACT(N)
+        ENDDO
+
+        EA = XM (M) * TB
+        EB = XM (M) * TC
+        IB = 3 - 2 * NDF
+        !continuity over depth
+        DO N = 1, NCNX
+          IB = IB + 2 * NDF
+          ESTIFM (IA, IB) = ESTIFM (IA, IB) + XM (N) * EA + DMX (N) * EB
+        ENDDO
+      ENDDO
 C-
 C......FORM THE SALINITY EQUATION
 C-

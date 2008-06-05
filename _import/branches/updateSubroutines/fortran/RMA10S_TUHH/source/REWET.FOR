@@ -1,4 +1,4 @@
-C     Last change:  WP   21 May 2008    5:23 pm
+C     Last change:  WP    5 Jun 2008    3:48 pm
 
       SUBROUTINE REWET
       USE BLK10MOD
@@ -121,8 +121,26 @@ c  207         HF=1./(VEL(3,KK)-DSET)*ALOG(VEL(3,KK)/DSET)
 
               !TODO: Marsh-algorithm must be considered here, because this might cause stair structures at the border?!?
               !*********************************************************************************************************
-              DEP = VEL (3, KK) + AO (KK) - AO (K) - HLOS
-              IF (DEP <= 0.) cycle ForWetNodes
+              !nis,may08: consider marsh algorithm, if rewetting
+              !           don't consider head loss, if rewetting
+              if (idnopt == 0) then
+                !DEP = VEL (3, KK) + AO (KK) - AO (K) - HLOS
+                DEP = VEL (3, KK) + AO (KK) - AO (K)
+                if (dep <= 0.0d0) cycle ForWetNodes
+              elseif (idnopt < 0) then
+                VirtDepth = vel (3, kk)
+                RealDepth = 0.0d0
+                CALL AMF(RealDepth,VirtDepth, AKP(KK), ADT(KK),ADB(KK),
+     +                   DUM1, DUM2, 0)
+                !RealDepth = RealDepth + ado (kk) - ado (k) - HLOS
+                RealDepth = RealDepth + ado (kk) - ado (k)
+                !if not rewetted
+                if (RealDepth <= 0.0d0) cycle ForWetNodes
+                !otherwise calculate flow depth of potentially rewetted node
+                CALL AMF(RealDepth, Dep, AKP(K), ADT(K),ADB(K),
+     +                   DUM1, DUM2, 1)
+              endif
+                
               VEL (3, K) = DEP
               VDOT (3, K) = ALTM * (VEL (3, K) - VOLD (3, K))
               VDOTO (3, K) = 0.

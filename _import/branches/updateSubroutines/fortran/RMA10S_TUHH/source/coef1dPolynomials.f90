@@ -1,4 +1,4 @@
-!Last change:  NIS  22 May 2008    8:35 pm
+!Last change:  WP    5 Jun 2008    4:53 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -1006,7 +1006,7 @@ Gaussloop: DO I = 1, NGP
            !Term G: bottom slope term
       &    - grav * areaint(i) * sbot                              &
            !Term H: sideflow term
-      &    + sidft * vflowint(i)
+      &    - sidft * vflowint(i)
 
   !Term E: Hydrostatic term
   IF     (byparts == 2) THEN
@@ -1023,9 +1023,9 @@ Gaussloop: DO I = 1, NGP
   !Term A: Unsteady terms
   IF (icyc > 0) THEN
     FRN = FRN                                                    &
-      !Term A1: Unsteady term
-      &    + areaint(i) * dvintdt(i)                             &
       !Term A2: Unsteady term
+      &    + areaint(i) * dvintdt(i)                             &
+      !Term A1: Unsteady term
       &    + vflowint(i) * daintdt(i)
 
   ENDIF
@@ -1127,11 +1127,10 @@ Gaussloop: DO I = 1, NGP
   !Term A: unsteady term
   IF (icyc > 0) THEN
     FEEAN = FEEAN                    &
-         !Term A1
-!    &   + dareaintdh(i) * dvintdt(i) &
+          !Term A1
     &   + vflowint(i) * d2areaintdh(i) * dhht(i) &
-         !Term A2
-    &   + dareaintdh(i) * dhintdt(i)
+          !Term A2
+    &   + dareaintdh(i) * dvintdt(i)
 
   ENDIF
 
@@ -1209,12 +1208,12 @@ Gaussloop: DO I = 1, NGP
             !Term F: Friction term
       &   + 2.0 * grav * sfint(i) * areaint(i) / vflowint(i)  &
             !Term H: Sideflow term
-      &   + sidft
+      &   - sidft
 
   !Term A: unsteady term
   if (icyc > 0) then
     FEEAN = FEEAN    &
-          !Term A2
+          !Term A1
     &   + daintdt(i)
   end if
 
@@ -1255,7 +1254,7 @@ Gaussloop: DO I = 1, NGP
     &  + vflowint(i) * d2aidhdx(i)
   if (icyc > 0) then
     EA = EA                           &
-    &  + dareaintdh(i) * dhintdt(i)
+    &  + d2areaintdh(i) * dhintdt(i) + dareaintdh(i) * altm
 
   end if
   EB =                                &
@@ -1279,10 +1278,10 @@ Gaussloop: DO I = 1, NGP
   EB = 0.0
 
   EA =               &
-       !Term C
+       !Term B
     & + daintdx(i)
   EB =               &
-         !Term B
+       !Term C
     & + areaint(i)
 
   do l = 1, 2
