@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
@@ -106,7 +106,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben
- * 
+ *
  * @author Belger
  */
 public final class GmlSerializer
@@ -285,7 +285,11 @@ public final class GmlSerializer
     xmlReader.setContentHandler( exceptionHandler );
     xmlReader.parse( inputSource );
 
-    return exceptionHandler.getWorkspace();
+    final GMLWorkspace workspace = exceptionHandler.getWorkspace();
+
+
+
+    return workspace;
   }
 
   public static GMLWorkspace createGMLWorkspace( final File file, final URL schemaURLhint, final boolean useGMLSChemaCache, final IFeatureProviderFactory factory ) throws Exception
