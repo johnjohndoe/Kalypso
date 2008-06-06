@@ -51,9 +51,9 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
+import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -63,6 +63,8 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.ByteUtils;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -82,8 +84,6 @@ import org.kalypsodeegree_impl.tools.TimeTools;
 public class DBaseFile
 {
   public static final String SHP_NAMESPACE_URI = "org.kalypso.shape";
-
-  public static final QName PROPERTY_GEOMETRY = new QName( SHP_NAMESPACE_URI, "GEOM" );
 
   private final String m_customNamespaceURI;
 
@@ -405,24 +405,28 @@ public class DBaseFile
     // final QName qNameFT = new QName( DBaseFile.NS_SHAPEFILE, fname.replaceAll( ".+(/,\\\\)", "" ) );
     final Class< ? extends GM_Object> geoClass = getGeometryType();
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
-    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, geoTH, 1, 1, false );
+    ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( m_customNamespaceURI, "GEOM" ), geoTH, 1, 1, false );
+
+    final String geometryPropertyTypeString = "gml:"+ geoTH.getShortname();
 
     try
     {
       final InputStream schemaTemplateInput = getClass().getResource( "resources/shapeCustomTemplate.xsd" ).openStream();
       String schemaString = IOUtils.toString( schemaTemplateInput );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), m_suffix );
+      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" ), geometryPropertyTypeString );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), elementsString );
+
       final File tempFile = TempFileUtilities.createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
       tempFile.deleteOnExit();
       final FileOutputStream fileOutputStream = new FileOutputStream( tempFile );
       fileOutputStream.write( schemaString.getBytes( "UTF8" ) );
       fileOutputStream.flush();
       fileOutputStream.close();
-      final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURL() );
+      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURL() );
       // final IGMLSchema schema = GMLSchemaFactory.createGMLSchema( new StringInputStream( schemaString ), "3.1.1", new
       // File( fname ).getParentFile().toURL() );
-      return GMLSchemaFactory.createFeatureType( m_propertyCustomFeatureMember, ftp, schema );
+      return GMLSchemaFactory.createFeatureType( m_propertyCustomFeatureMember, ftp, schema, new QName( SHP_NAMESPACE_URI, "_Shape" ) );
     }
     catch( final IOException e )
     {

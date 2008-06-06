@@ -81,7 +81,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 public class ShapeSerializer
 {
 
-  public static final QName PROPERTY_GEOMETRY = DBaseFile.PROPERTY_GEOMETRY;
+//  public static final QName PROPERTY_GEOMETRY = DBaseFile.PROPERTY_GEOMETRY;
 
   private static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
@@ -89,7 +89,7 @@ public class ShapeSerializer
 
   private static final QName PROPERTY_SHAPE_TYPE = new QName( SHP_NAMESPACE_URI, "ShapeType" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_FEATURE_MEMBER = new QName( SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
+  public static final QName PROPERTY_FEATURE_MEMBER = ShapeFile.PROPERTY_FEATURE_MEMBER;
 
   private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
 
@@ -152,7 +152,9 @@ public class ShapeSerializer
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler typeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, typeHandler, 0, 1, false );
+    final String namespace = featureType.getQName().getNamespaceURI();
+    final QName geomP = new QName(namespace, ShapeFile.GEOM);
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( geomP, typeHandler, 0, 1, false );
 
     int count = 1;
     for( final Map.Entry<String, String> entry : mapping.entrySet() )
@@ -231,7 +233,9 @@ public class ShapeSerializer
 
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
-    ftps[0] = GMLSchemaFactory.createValuePropertyType( PROPERTY_GEOMETRY, geoTypeHandler, 0, 1, false );
+    final String namespace = featureType.getQName().getNamespaceURI();
+    final QName geomP = new QName(namespace, ShapeFile.GEOM);
+    ftps[0] = GMLSchemaFactory.createValuePropertyType( geomP, geoTypeHandler, 0, 1, false );
 
     int count = 1;
     for( final Entry<String, QName> entry : mapping.entrySet() )
@@ -334,8 +338,8 @@ public class ShapeSerializer
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
     final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
-    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
-
+    final QName fcQName = new QName("http://www.opengis.net/gml", "_FeatureCollection");
+    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps, (GMLSchema) childFeatureType.getGMLSchema(), fcQName );
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
 
