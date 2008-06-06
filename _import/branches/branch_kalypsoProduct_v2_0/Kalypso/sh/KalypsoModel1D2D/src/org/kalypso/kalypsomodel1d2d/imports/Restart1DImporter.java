@@ -137,7 +137,7 @@ public class Restart1DImporter
       final IFolder stepFolder = m_scenarioFolder.getFolder( fullPath );
       FolderUtilities.mkdirs( stepFolder );
 
-      /* Now really create the results.hml */
+      /* Now really create the results.gml */
       final GMLWorkspace resultWorkspace = FeatureFactory.createGMLWorkspace( INodeResultCollection.QNAME, null, null );
       final INodeResultCollection nodeResults = (INodeResultCollection) resultWorkspace.getRootFeature().getAdapter( INodeResultCollection.class );
 

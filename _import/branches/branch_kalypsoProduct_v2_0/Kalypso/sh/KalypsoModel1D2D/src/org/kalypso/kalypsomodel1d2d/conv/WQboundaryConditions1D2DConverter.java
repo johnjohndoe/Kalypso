@@ -110,11 +110,14 @@ public class WQboundaryConditions1D2DConverter
       final TupleResultIndex tupleResultIndex = new TupleResultIndex( obsResult, wComponent );
       final Iterator<IRecord> tupleIterator = tupleResultIndex.getIterator();
       format.format( "CTL%13d%n", bcParentID );
+
+      final int wIndex = obsResult.indexOfComponent( wComponent );
+      final int qIndex = obsResult.indexOfComponent( qComponent );
       while( tupleIterator.hasNext() )
       {
         final IRecord record = tupleIterator.next();
-        final BigDecimal w = (BigDecimal) record.getValue( wComponent );
-        final BigDecimal q = (BigDecimal) record.getValue( qComponent );
+        final BigDecimal w = (BigDecimal) record.getValue( wIndex );
+        final BigDecimal q = (BigDecimal) record.getValue( qIndex );
         format.format( "STD%13.4f%8.3f%n", w, q );
       }
 

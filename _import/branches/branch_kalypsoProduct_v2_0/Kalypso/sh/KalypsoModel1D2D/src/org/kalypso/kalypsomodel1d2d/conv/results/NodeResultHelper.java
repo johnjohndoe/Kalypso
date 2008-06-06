@@ -44,7 +44,6 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
@@ -62,6 +61,7 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.observation.result.IRecord;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -219,7 +219,7 @@ public class NodeResultHelper
     // get the intersection points
     // get the crs from the profile-gml
     final String srsName = profile.getSrsName();
-    final String crs = srsName == null ? KalypsoCorePlugin.getDefault().getCoordinatesSystem() : srsName;
+    final String crs = srsName == null ? KalypsoDeegreePlugin.getDefault().getCoordinateSystem() : srsName;
 
     // final double waterlevel = nodeResult.getWaterlevel();
 
@@ -230,7 +230,7 @@ public class NodeResultHelper
     final GM_Curve curve = ProfilUtil.getLine( profil, crs );
 
     /* simplify the profile */
-    final double epsThinning = 0.10;
+    final double epsThinning = 0.50;
     final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
     thinnedCurve.setCoordinateSystem( crs );
 
