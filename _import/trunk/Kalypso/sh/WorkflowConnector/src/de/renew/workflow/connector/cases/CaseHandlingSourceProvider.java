@@ -31,7 +31,7 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
   protected ActiveWorkContext<T> m_activeWorkContext;
 
   /** data provider for the current szenario */
-  private final ICaseDataProvider<D> m_dataProvider;
+  private ICaseDataProvider<D> m_dataProvider;
 
   public CaseHandlingSourceProvider( final ActiveWorkContext<T> context, final ICaseDataProvider<D> dataProvider )
   {
@@ -51,6 +51,8 @@ public class CaseHandlingSourceProvider<T extends Case, D extends Object> extend
    */
   public void dispose( )
   {
+    m_activeWorkContext = null;
+    m_dataProvider = null;
   }
 
   /**
