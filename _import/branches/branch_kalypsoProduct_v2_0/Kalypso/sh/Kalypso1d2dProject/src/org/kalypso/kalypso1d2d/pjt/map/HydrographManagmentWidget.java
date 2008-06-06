@@ -40,7 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.map;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -130,6 +134,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.wizards.results.SelectCalcUnitForHydrographWizard;
 import org.kalypso.util.pool.ResourcePool;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -991,6 +996,38 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
   {
     if( m_delegateWidget != null )
       m_delegateWidget.paint( g );
+
+    if( m_selectedHydrograph != null )
+      paintHydrographInMap( g );
+  }
+
+  private void paintHydrographInMap( final Graphics g )
+  {
+    final Graphics2D g2 = (Graphics2D) g;
+    final GM_Point point = (GM_Point) m_selectedHydrograph.getLocation();
+    final MapPanel mapPanel = getMapPanel();
+
+    if( mapPanel == null )
+      return;
+
+    final GeoTransform projection = mapPanel.getProjection();
+
+    final int x = (int) projection.getDestX( point.getX() );
+    final int y = (int) projection.getDestY( point.getY() );
+
+    final int sizeOuter = 16;
+    final Color defaultColor = g2.getColor();
+    Color color = new Color( 255, 30, 30 );
+    g2.setColor( color );
+
+    final Stroke defaultStroke = g2.getStroke();
+    final BasicStroke stroke = new BasicStroke( 3 );
+    g2.setStroke( stroke );
+
+    g2.drawRect( x - sizeOuter / 2, y - sizeOuter / 2, sizeOuter, sizeOuter );
+
+    g2.setColor( defaultColor );
+    g2.setStroke( defaultStroke );
   }
 
   public void setHydrographViewerSelection( final StructuredSelection selection )
