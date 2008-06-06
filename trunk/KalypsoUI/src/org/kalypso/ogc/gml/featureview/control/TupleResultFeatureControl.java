@@ -56,7 +56,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -82,9 +81,6 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypso.ogc.gml.om.table.LastLineCellModifier;
-import org.kalypso.ogc.gml.om.table.LastLineContentProvider;
-import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
@@ -116,13 +112,7 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
   private TupleResultContentProvider m_tupleResultContentProvider;
 
-  private LastLineContentProvider m_lastLineContentProvider;
-
   private TupleResultLabelProvider m_tupleResultLabelProvider;
-
-  private LastLineLabelProvider m_lastLineLabelProvider;
-
-  private Color m_lastLineBackground;
 
   private TupleResult m_tupleResult;
 
@@ -179,8 +169,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
 
-    m_lastLineBackground = new Color( parent.getDisplay(), 170, 230, 255 );
-
     m_tupleResultContentProvider = new TupleResultContentProvider( m_handlerProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
@@ -189,43 +177,10 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     final TupleResultCellModifier tupleResultCellModifier = new TupleResultCellModifier( m_tupleResultContentProvider );
 
-    final TupleResultContentProvider tupleResultContentProvider = m_tupleResultContentProvider;
-    final LastLineCellModifier lastLineCellModifier = new LastLineCellModifier( tupleResultCellModifier )
-    {
-      @Override
-      protected Object createNewElement( )
-      {
-        final TupleResult result = tupleResultContentProvider.getResult();
-        if( result != null )
-          return result.createRecord();
+    m_viewer.setContentProvider( m_tupleResultContentProvider );
+    m_viewer.setLabelProvider( m_tupleResultLabelProvider );
 
-        return null;
-      }
-
-      @Override
-      protected void addElement( final Object newElement, final String property, final Object value )
-      {
-        final TupleResult result = tupleResultContentProvider.getResult();
-        final IRecord record = (IRecord) newElement;
-        tupleResultCellModifier.modifyRecord( record, property, value );
-        result.add( record );
-      }
-    };
-
-    if( m_recordsFixed )
-    {
-      m_viewer.setContentProvider( m_tupleResultContentProvider );
-      m_viewer.setLabelProvider( m_tupleResultLabelProvider );
-    }
-    else
-    {
-      m_lastLineContentProvider = new LastLineContentProvider( m_tupleResultContentProvider );
-      m_lastLineLabelProvider = new LastLineLabelProvider( m_tupleResultLabelProvider, m_lastLineBackground );
-      m_viewer.setContentProvider( m_lastLineContentProvider );
-      m_viewer.setLabelProvider( m_lastLineLabelProvider );
-    }
-
-    m_viewer.setCellModifier( lastLineCellModifier );
+    m_viewer.setCellModifier( tupleResultCellModifier );
     m_viewer.setInput( null );
 
     updateControl();
@@ -310,14 +265,6 @@ public class TupleResultFeatureControl extends AbstractFeatureControl implements
 
     m_tupleResultContentProvider.dispose();
     m_tupleResultLabelProvider.dispose();
-
-    if( m_lastLineContentProvider != null )
-      m_lastLineContentProvider.dispose();
-
-    if( m_lastLineLabelProvider != null )
-      m_lastLineLabelProvider.dispose();
-
-    m_lastLineBackground.dispose();
 
     if( m_tupleResult != null )
     {
