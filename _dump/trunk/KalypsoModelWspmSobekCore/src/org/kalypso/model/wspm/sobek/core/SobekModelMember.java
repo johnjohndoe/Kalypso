@@ -346,34 +346,4 @@ public class SobekModelMember implements ISobekModelMember
     removeModel( getWorkspace() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.IModelMember#getNodeMembers(java.lang.Class)
-   */
-  public INode[] getNodeMembers( final Class< ? > type )
-  {
-    List<INode> myNodes = new ArrayList<INode>();
-
-    INode[] nodes = getNodeMembers();
-    for( INode node : nodes )
-    {
-      if( node.getClass().equals( type ) )
-      {
-        myNodes.add( node );
-      }
-      else
-      {
-        Class[] interfaces = type.getInterfaces();
-        for( Class c : interfaces )
-        {
-          if( c.equals( type ) )
-          {
-            myNodes.add( node );
-            break;
-          }
-        }
-      }
-    }
-
-    return myNodes.toArray( new INode[] {} );
-  }
 }
