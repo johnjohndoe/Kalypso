@@ -81,6 +81,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -333,10 +334,11 @@ public class RiskLanduseHelper
     for( int i = 0; i < shapeFeatureList.size(); i++ )
     {
       final Feature shpFeature = (Feature) shapeFeatureList.get( i );
+      final QName shpGeomQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), ShapeFile.GEOM );
       final QName shpPropQName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
       final String shpPropertyValue = shpFeature.getProperty( shpPropQName ).toString();
 
-      final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( ShapeSerializer.PROPERTY_GEOMETRY );
+      final GM_Object shpGeometryProperty = (GM_Object) shpFeature.getProperty( shpGeomQName );
 
       // we don't like multi surfaces, so...
       if( shpGeometryProperty instanceof GM_MultiSurface )
