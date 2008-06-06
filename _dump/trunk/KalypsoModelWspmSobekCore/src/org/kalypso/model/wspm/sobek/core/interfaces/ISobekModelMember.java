@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
-
 /**
  * @author kuch
  */
@@ -60,4 +59,5 @@ public interface ISobekModelMember extends IModelMember
   }
 
   public void dispose( );
+
 }

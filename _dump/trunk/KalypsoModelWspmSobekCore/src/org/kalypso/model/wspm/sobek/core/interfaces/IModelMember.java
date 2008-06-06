@@ -86,5 +86,10 @@ public interface IModelMember
    */
   public INode[] getNodeMembers( );
 
+  /**
+   * get all node members of type
+   */
+  public INode[] getNodeMembers( Class< ? > type );
+
   public CommandableWorkspace getWorkspace( );
 }
