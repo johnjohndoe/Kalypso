@@ -72,10 +72,10 @@
                                                 <description>Wasserstand</description>
                                         </documentation>
                                         <documentation xml:lang="en">
-                                                <name>water level</name>
-                                                <label>water level</label>
-                                                <tooltip>water level</tooltip>
-                                                <description>water level</description>
+                                                <name>Water Level</name>
+                                                <label>Water Level</label>
+                                                <tooltip>Water Level</tooltip>
+                                                <description>Water Level</description>
                                         </documentation>
                                 </annotation>
                         </enumeration>

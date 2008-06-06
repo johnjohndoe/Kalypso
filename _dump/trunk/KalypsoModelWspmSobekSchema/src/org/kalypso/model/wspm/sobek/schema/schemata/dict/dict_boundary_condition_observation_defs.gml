@@ -11,10 +11,10 @@
         <gml:name>Boundary Condition Component Dictionary</gml:name>
         <gml:dictionaryEntry>
                 <swe:ItemDefinition gml:id="W">
-                        <gml:name>Waterlevel [m NHN]</gml:name>
+                        <gml:name>%waterlevelItemName</gml:name>
                         <swe:property>
                                 <swe:Phenomenon gml:id="Phenomenon_W">
-                                        <gml:description>Waterlevel </gml:description>
+                                        <gml:description>Waterlevel</gml:description>
                                         <gml:name>W</gml:name>
                                 </swe:Phenomenon>
                         </swe:property>
@@ -31,7 +31,7 @@
         </gml:dictionaryEntry>
         <gml:dictionaryEntry>
                 <swe:ItemDefinition gml:id="Q">
-                        <gml:name>Discharge [m³/s]</gml:name>
+                        <gml:name>%dischargeItemName</gml:name>
                         <swe:property>
                                 <swe:Phenomenon gml:id="Phenomenon_Q">
                                         <gml:description>Discharge</gml:description>
@@ -56,7 +56,7 @@
         <gml:dictionaryEntry>
                 <swe:ItemDefinition gml:id="DATE">
                         <gml:description>Date</gml:description>
-                        <gml:name>Date</gml:name>
+                        <gml:name>%dateItemName</gml:name>
                         <swe:property xlink:href="Phenomenon_DATE"/>
                         <swe:representation>
                                 <swe:SimpleType>

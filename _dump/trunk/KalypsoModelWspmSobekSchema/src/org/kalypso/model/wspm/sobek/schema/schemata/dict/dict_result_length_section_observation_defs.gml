@@ -17,7 +17,7 @@
 	<gml:name>Result Length Section Component Dictionary</gml:name>
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="STATION">
-			<gml:description>Station [m]</gml:description>
+			<gml:description>%stationItemName</gml:description>
 			<gml:name>Station [m]</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_STATION">
@@ -39,7 +39,7 @@
 	</gml:dictionaryEntry>
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WATERLEVEL">
-			<gml:name>Waterlevel [m NHN]</gml:name>
+			<gml:name>%waterlevelItemName</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_W">
 					<gml:description>Waterlevel</gml:description>
@@ -58,7 +58,7 @@
 	</gml:dictionaryEntry>
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="DISCHARGE">
-			<gml:name>Discharge [m³/s]</gml:name>
+			<gml:name>%dischargeItemName</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_Q">
 					<gml:description>Discharge</gml:description>
@@ -77,7 +77,7 @@
 	</gml:dictionaryEntry>
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="LABEL">
-			<gml:name>Label</gml:name>
+			<gml:name>%labelItemName</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_LABEL">
 					<gml:description>Label</gml:description>

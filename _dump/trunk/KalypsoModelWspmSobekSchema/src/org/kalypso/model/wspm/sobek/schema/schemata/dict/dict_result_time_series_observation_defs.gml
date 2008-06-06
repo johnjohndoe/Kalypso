@@ -10,7 +10,7 @@
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="DATE">
 			<gml:description>Date</gml:description>
-			<gml:name>Date</gml:name>
+			<gml:name>%dateItemName</gml:name>
 			<swe:property xlink:href="Phenomenon_DATE" />
 			<swe:representation>
 				<swe:SimpleType>
@@ -23,7 +23,7 @@
 
 	<gml:dictionaryEntry>
 		<swe:ItemDefinition gml:id="WATERLEVEL">
-			<gml:name>Waterlevel [m NHN]</gml:name>
+			<gml:name>%waterleveItemName</gml:name>
 			<swe:property>
 				<swe:Phenomenon gml:id="Phenomenon_W">
 					<gml:description>Waterlevel</gml:description>

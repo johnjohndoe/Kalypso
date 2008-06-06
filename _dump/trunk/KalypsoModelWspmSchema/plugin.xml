@@ -34,6 +34,15 @@
                localPart="Profile"
                namespace="org.kalypso.model.wspmprofile"/>
       </listener>
+      <listener
+            class="org.kalypso.model.wspm.schema.gml.DictI18nGmlListener"
+            id="org.kalypso.model.wspm.schema.gml.DictI18nGmlListener"
+            name="Dict 18n listener">
+         <qname
+               localPart="Dictionary"
+               namespace="http://www.opengis.net/gml">
+         </qname>
+      </listener>
    </extension>
 
 </plugin>

@@ -15,7 +15,7 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="BREITE">
-   <gml:name>Breite [m]</gml:name>
+   <gml:name>%breiteItemName</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Breite">
      <gml:description/>
@@ -35,7 +35,7 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="HOEHE">
-          <gml:name>Höhe [m NHN]</gml:name>
+          <gml:name>%hoeheItemName</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Hoehe">
      <gml:description/>
@@ -67,7 +67,7 @@
    </swe:representation>
   </swe:ItemDefinition>
  </gml:dictionaryEntry>
- 
+
  <gml:dictionaryEntry>
    <swe:ItemDefinition gml:id="RAUHEIT_KST">
     <gml:name>Rauheit kst</gml:name>
@@ -87,7 +87,7 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="HOCHWERT">
-   <gml:name>Hochwert</gml:name>
+   <gml:name>%hochwertItemName</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Hochwert">
      <gml:description/>
@@ -104,7 +104,7 @@
 
  <gml:dictionaryEntry>
   <swe:ItemDefinition gml:id="RECHTSWERT">
-   <gml:name>Rechtswert</gml:name>
+   <gml:name>%rechtswertItemName</gml:name>
    <swe:property>
     <swe:Phenomenon gml:id="Phenomenon_Rechtswert">
      <gml:description/>
