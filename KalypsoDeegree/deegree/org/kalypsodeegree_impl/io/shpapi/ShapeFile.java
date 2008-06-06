@@ -44,6 +44,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -84,6 +86,10 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class ShapeFile
 {
+  public static final QName PROPERTY_FEATURE_MEMBER = new QName( DBaseFile.SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
+
+  public static final String GEOM = "GEOM";
+
   private DBaseFile m_dbf = null;
 
   private final SHP2WKS shpwks = new SHP2WKS();
@@ -311,7 +317,8 @@ public class ShapeFile
 
     final Feature feature = m_dbf.getFRow( parent, parentRelation, RecNo, allowNull );
     final GM_Object geo = getGM_ObjectByRecNo( RecNo );
-    final IPropertyType pt = feature.getFeatureType().getProperty( DBaseFile.PROPERTY_GEOMETRY );
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType pt = featureType.getProperty( new QName( featureType.getQName().getNamespaceURI(), GEOM ) );
     feature.setProperty( pt, geo );
 
     return feature;

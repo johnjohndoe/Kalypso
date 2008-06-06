@@ -94,6 +94,7 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
@@ -305,6 +306,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_mapModellContextSwitcher.setMapModell( m_mapPanel.getMapModell() );
 
     final AbstractMapPart thisPart = this;
+    final MapPanel finalMapPanel = m_mapPanel;
     getSite().getPage().addPartListener( new IPartListener2()
     {
 
@@ -327,7 +329,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
 
       public void partClosed( final IWorkbenchPartReference partRef )
       {
-        // nothing to do
+        final MapPanelSourceProvider sourceProvider = MapPanelSourceProvider.getInstance();
+        sourceProvider.unsetActiveMapPanel( finalMapPanel );
       }
 
       public void partDeactivated( final IWorkbenchPartReference partRef )
@@ -614,6 +617,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   /**
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {

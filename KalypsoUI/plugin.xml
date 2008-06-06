@@ -2451,6 +2451,16 @@
                         </command>
                   </toolbar>
             </menuContribution>
+            <menuContribution
+                  locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?after=navigation">
+               <dynamic
+                     class="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureToolbarContribution"
+                     id="org.kalypso.gis.newFeature.menuContribution">
+                  <visibleWhen
+                        checkEnabled="true">
+                  </visibleWhen>
+               </dynamic>
+            </menuContribution>
             
       </extension>
       
@@ -2600,13 +2610,13 @@
                   id="org.kalypso.ogc.gml.map.GisEditorOrMapIsActive">
                <or>
                   <with
-                        variable="activeEditorId">
+                        variable="activeEditor">
                      <instanceof
                            value="org.kalypso.ui.editor.mapeditor.AbstractMapPart">
                      </instanceof>
                   </with>
                   <with
-                        variable="activePartId">
+                        variable="activePart">
                      <instanceof
                            value="org.kalypso.ui.editor.mapeditor.AbstractMapPart">
                      </instanceof>
@@ -2634,6 +2644,21 @@
                         </or>
                   </iterate>
             </definition>
+      </extension>
+      <extension
+            point="org.eclipse.ui.commands">
+         <command
+               categoryId="org.kalypso.ogc.gml.map.category"
+               defaultHandler="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureHandler"
+               description="%org.kalypso.ui.editor.actions.FeatureAddActionDelegate.tooltip"
+               id="org.kalypso.gis.newFeature.command"
+               name="%org.kalypso.ui.editor.actions.FeatureAddActionDelegate.label">
+            <commandParameter
+                  id="org.kalypso.gis.newFeature.type"
+                  name="%org.kalypso.ui.editor.actions.FeatureAddActionDelegate.parameterType"
+                  optional="false">
+            </commandParameter>
+         </command>
       </extension>
  
 </plugin>

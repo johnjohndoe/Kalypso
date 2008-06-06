@@ -74,6 +74,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
+import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -88,7 +89,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")//$NON-NLS-1$
 public class MapPartHelper
 {
   private MapPartHelper( )
@@ -121,6 +122,8 @@ public class MapPartHelper
             mapPanel.requestFocus();
           }
         } );
+        final MapPanelSourceProvider sourceProvider = MapPanelSourceProvider.getInstance();
+        sourceProvider.setActiveMapPanel( mapPanel );
       }
     } );
 
@@ -189,12 +192,12 @@ public class MapPartHelper
         {
         }
       };
-      final IMenuManager themeManager = new MenuManager( Messages.getString("org.kalypso.ui.editor.mapeditor.MapPartHelper.2"), "themeActions" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IMenuManager themeManager = new MenuManager( Messages.getString( "org.kalypso.ui.editor.mapeditor.MapPartHelper.2" ), "themeActions" ); //$NON-NLS-1$ //$NON-NLS-2$
       ObjectActionContributorManager.getManager().contributeObjectActions( part, themeManager, selectionProvider );
       manager.add( themeManager );
     }
 
-    // add additions seperator: if not, eclipse whines
+    // add additions separator: if not, eclipse whines
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
@@ -282,7 +285,7 @@ public class MapPartHelper
     /**
      * @see org.eclipse.jface.viewers.IStructuredSelection#iterator()
      */
-    public Iterator iterator( )
+    public Iterator<FeatureAssociationTypeElement> iterator( )
     {
       return m_selection.iterator();
     }
@@ -306,7 +309,7 @@ public class MapPartHelper
     /**
      * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
      */
-    public List toList( )
+    public List<FeatureAssociationTypeElement> toList( )
     {
       return m_selection;
     }
