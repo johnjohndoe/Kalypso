@@ -80,6 +80,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -147,7 +148,10 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final IStatus simulationStatus = doRunCalculation( monitor );
     m_simulationStatus = evaluateSimulationResult( simulationStatus );
 
-    m_log.log( m_simulationStatus );
+    // check if status is allready in collection
+    final IStatusCollection statusCollection = m_log.getStatusCollection();
+    if( !statusCollection.contains( simulationStatus ) )
+      m_log.log( m_simulationStatus );
 
     return m_simulationStatus;
   }
@@ -212,7 +216,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       monitor.subTask( "Schreibe ASCII-Daten: Finite Elemente Netz..." );
       final File modelFile = new File( m_tmpDir, MODEL_2D );
       final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
-      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( m_discretisationModel, m_flowRelationshipModel, calculationUnit, m_roughnessModel, m_restartNodes, false, true );
+      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( m_discretisationModel, m_flowRelationshipModel, calculationUnit, m_roughnessModel, m_restartNodes, false, true, m_log );
       converter2D.writeRMA10sModel( modelFile );
       ProgressUtilities.worked( progress, 20 );
 
@@ -221,7 +225,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       progress.subTask( "Schreibe ASCII-Daten: Randbedingungen und Berechnungssteuerung..." );
       final File r10file = new File( m_tmpDir, ISimulation1D2DConstants.R10_File );
       final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
-      final Control1D2DConverter controlConverter = new Control1D2DConverter( m_controlModel, m_flowRelationshipModel, m_roughnessModel, converter2D, buildingProvider );
+      final Control1D2DConverter controlConverter = new Control1D2DConverter( m_controlModel, m_flowRelationshipModel, m_roughnessModel, converter2D, buildingProvider, m_log );
       controlConverter.writeR10File( r10file );
       ProgressUtilities.worked( progress, 20 );
 
