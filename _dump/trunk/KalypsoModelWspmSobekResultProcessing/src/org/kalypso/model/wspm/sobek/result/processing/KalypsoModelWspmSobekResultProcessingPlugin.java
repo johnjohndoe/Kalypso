@@ -10,7 +10,7 @@ public class KalypsoModelWspmSobekResultProcessingPlugin extends Plugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.model.wspm.sobek.result.processing";
+  public static final String PLUGIN_ID = "org.kalypso.model.wspm.sobek.result.processing"; //$NON-NLS-1$
 
   // The shared instance
   private static KalypsoModelWspmSobekResultProcessingPlugin plugin;

@@ -1,7 +1,6 @@
 package org.kalypso.model.wspm.sobek.calculation.job;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -11,7 +10,7 @@ public class KalypsoModelWspmSobekCalculationJobPlugin extends Plugin
 {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.model.wspm.sobek.calculation.job";
+  public static final String PLUGIN_ID = "org.kalypso.model.wspm.sobek.calculation.job"; //$NON-NLS-1$
 
   // The shared instance
   private static KalypsoModelWspmSobekCalculationJobPlugin plugin;

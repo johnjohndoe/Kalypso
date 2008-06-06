@@ -49,6 +49,8 @@ public class Messages extends NLS
 {
   private static final String BUNDLE_NAME = "org.kalypso.model.wspm.sobek.core.messages"; //$NON-NLS-1$
 
+  public static String Branch_0;
+
   public static String FNGmlUtils_0;
 
   public static String AbstractNode_0;

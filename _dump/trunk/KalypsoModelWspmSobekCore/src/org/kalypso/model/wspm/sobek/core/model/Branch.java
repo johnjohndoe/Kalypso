@@ -288,7 +288,7 @@ public class Branch implements IBranch
             myNodes.put( distance, csn );
           else
           {
-            final IStatus status = StatusUtilities.createErrorStatus( String.format( "Can't determine position of cross section node %s on branch %s", csn.getId(), getId() ) );
+            final IStatus status = StatusUtilities.createErrorStatus( String.format( Messages.Branch_0, csn.getId(), getId() ) );
             throw new CoreException( status );
           }
         }

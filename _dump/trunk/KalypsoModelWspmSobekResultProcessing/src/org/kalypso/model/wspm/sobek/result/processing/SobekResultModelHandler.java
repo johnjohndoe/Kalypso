@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchHydraphModelHandler;
@@ -66,7 +67,7 @@ public class SobekResultModelHandler implements ISobekResultModel
   public static ISobekResultModel getHandler( final IFolder resultFolder ) throws CoreException, JAXBException
   {
     if( !resultFolder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Sobek result folder doesn't exists" ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_0 ) );
 
     return new SobekResultModelHandler( resultFolder );
   }
@@ -74,9 +75,9 @@ public class SobekResultModelHandler implements ISobekResultModel
   private IFile getCrossSectionNodeResultFile( final ICrossSectionNode node, final String extension ) throws CoreException
   {
 
-    final IFolder folder = m_resultFolder.getFolder( "output/nodes/csn/" );
+    final IFolder folder = m_resultFolder.getFolder( "output/nodes/csn/" ); //$NON-NLS-1$
     if( !folder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Sobek cross section node result folder doesn't exists" ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_2 ) );
 
     final IFile iFile = folder.getFile( node.getId() + extension );
     if( !iFile.exists() )
@@ -87,7 +88,7 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   public TimeSeriesComplexType getCrossSectionBinding( final ICrossSectionNode node ) throws CoreException
   {
-    final IFile iFile = getCrossSectionNodeResultFile( node, ".xml" );
+    final IFile iFile = getCrossSectionNodeResultFile( node, ".xml" ); //$NON-NLS-1$
 
     final InputStream is = new BufferedInputStream( iFile.getContents() );
     try
@@ -100,7 +101,7 @@ public class SobekResultModelHandler implements ISobekResultModel
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( "Reading Sobek Cross Section Node data file - failed." ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_4 ) );
     }
     finally
     {
@@ -110,7 +111,7 @@ public class SobekResultModelHandler implements ISobekResultModel
       }
       catch( final IOException e )
       {
-        throw new CoreException( StatusUtilities.createWarningStatus( "Error closing Sobek Cross Section Node input stream." ) );
+        throw new CoreException( StatusUtilities.createWarningStatus( Messages.SobekResultModelHandler_5 ) );
       }
     }
   }
@@ -124,19 +125,19 @@ public class SobekResultModelHandler implements ISobekResultModel
         return new ResultTimeSeriesHandler( cmd.getRootFeature() );
 
       /* get cross section node result file */
-      IFile iFile = getCrossSectionNodeResultFile( node, ".gml" );
+      IFile iFile = getCrossSectionNodeResultFile( node, ".gml" ); //$NON-NLS-1$
 
       boolean empty = false;
 
       /* gml file doesn't exists - create a new empty gml (workspace) file */
       if( iFile == null )
       {
-        final IFile iCSN = getCrossSectionNodeResultFile( node, ".xml" );
+        final IFile iCSN = getCrossSectionNodeResultFile( node, ".xml" ); //$NON-NLS-1$
 
         final IFolder parent = (IFolder) iCSN.getParent();
-        iFile = parent.getFile( node.getId() + ".gml" );
+        iFile = parent.getFile( node.getId() + ".gml" ); //$NON-NLS-1$
 
-        final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekResultTimeSeries.gml" );
+        final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekResultTimeSeries.gml" ); //$NON-NLS-1$
         iFile.create( stream, true, new NullProgressMonitor() );
 
         empty = true;
@@ -232,20 +233,20 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   public IFile getBranchHydrogrographWorkspaceFile( ) throws CoreException
   {
-    final IFolder folder = m_resultFolder.getFolder( "output/branches/" );
+    final IFolder folder = m_resultFolder.getFolder( "output/branches/" ); //$NON-NLS-1$
     IFile iBase;
     if( !folder.exists() )
     {
       folder.create( true, false, new NullProgressMonitor() );
 
-      iBase = folder.getFile( "hydrograhps.gml" );
+      iBase = folder.getFile( "hydrograhps.gml" ); //$NON-NLS-1$
 
-      final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekBranchHydrograph.gml" );
+      final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekBranchHydrograph.gml" ); //$NON-NLS-1$
       iBase.create( stream, true, new NullProgressMonitor() );
     }
     else
     {
-      iBase = folder.getFile( "hydrograhps.gml" );
+      iBase = folder.getFile( "hydrograhps.gml" ); //$NON-NLS-1$
     }
 
     return iBase;

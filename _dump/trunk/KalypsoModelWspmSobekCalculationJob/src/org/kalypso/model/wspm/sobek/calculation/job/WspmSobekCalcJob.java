@@ -82,7 +82,7 @@ public class WspmSobekCalcJob implements ISimulation
         ZipUtilities.unzipApache( zipStream, tmpdir, true, "IBM850" ); //$NON-NLS-1$
         zipStream.close();
 
-        resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) );
+        resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final IOException e )
       {
