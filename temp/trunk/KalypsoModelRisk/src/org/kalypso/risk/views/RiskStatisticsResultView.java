@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypso.risk.widget.StatisticResultComposite;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -76,7 +77,7 @@ public class RiskStatisticsResultView extends ViewPart
       final IRasterizationControlModel model = modelProvider.getModel( IRasterizationControlModel.class );
 
       if( model == null )
-        new Label( parent, SWT.NONE ).setText( "Riskmodel nicht geladen" );
+        new Label( parent, SWT.NONE ).setText( Messages.getString("org.kalypso.risk.views.RiskStatisticsResultView.0") ); //$NON-NLS-1$
       else
       {
         m_compResult = new StatisticResultComposite( model, parent, SWT.BORDER );

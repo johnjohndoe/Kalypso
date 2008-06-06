@@ -63,6 +63,7 @@ import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiStringHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
+import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.schema.binding.IRasterizationControlModel;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -97,7 +98,7 @@ public class StatisticResultComposite extends Composite
         for( IComponent component : components )
         {
           final String compName = component.getName();
-          final String[] compNameStrings = compName.split( "_" );
+          final String[] compNameStrings = compName.split( "_" ); //$NON-NLS-1$
 
           final String phenName = component.getPhenomenon().getName();
 
@@ -105,7 +106,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "TotalDamage" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = "Total Damage " + compNameStrings[1] + " [€]";//$NON-NLS-2$
+            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.1") + compNameStrings[1] + " [€]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
@@ -116,7 +117,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "FloodedArea" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = "Flooded Area " + compNameStrings[1] + " [m²]";//$NON-NLS-2$
+            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.2") + compNameStrings[1] + " [m²]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
@@ -127,7 +128,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "AveragedDamage" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = "Average Damage " + compNameStrings[1] + " [€/m²]";//$NON-NLS-2$
+            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.3") + compNameStrings[1] + " [€/m²]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
@@ -137,7 +138,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "AnnualValue" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = "Average Annual Damage " + " [€/m²/a]";//$NON-NLS-2$
+            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.4") + " [€/m²/a]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
@@ -147,7 +148,7 @@ public class StatisticResultComposite extends Composite
           if( phenName.equals( "Landuse" ) )//$NON-NLS-1$
           {
             // TODO: externalize this string
-            final String headerName = "Landuse Classes";
+            final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.5"); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
             if( valueTypeName.equals( IWspmConstants.Q_STRING ) )
