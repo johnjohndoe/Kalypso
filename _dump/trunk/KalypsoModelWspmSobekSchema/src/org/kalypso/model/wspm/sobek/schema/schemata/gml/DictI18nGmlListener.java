@@ -70,7 +70,7 @@ public class DictI18nGmlListener extends GmlWorkspaceListener
 
     // determine, if we are interested in this gml file
     final String file = context.getFile();
-    if( !file.startsWith( "/org/kalypso/model/wspm/sobek/schema/dict/" ) )//$NON-NLS-1$
+    if( !file.startsWith( "/org/kalypso/model/wspm/sobek/schema/schemata/dict/" ) )//$NON-NLS-1$
       return;
 
     // try to load properties
