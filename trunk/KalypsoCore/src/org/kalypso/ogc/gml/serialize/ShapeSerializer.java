@@ -81,7 +81,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 public class ShapeSerializer
 {
 
-//  public static final QName PROPERTY_GEOMETRY = DBaseFile.PROPERTY_GEOMETRY;
+// public static final QName PROPERTY_GEOMETRY = DBaseFile.PROPERTY_GEOMETRY;
 
   private static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
@@ -153,7 +153,7 @@ public class ShapeSerializer
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler typeHandler = geoPt.getTypeHandler();
     final String namespace = featureType.getQName().getNamespaceURI();
-    final QName geomP = new QName(namespace, ShapeFile.GEOM);
+    final QName geomP = new QName( namespace, ShapeFile.GEOM );
     ftps[0] = GMLSchemaFactory.createValuePropertyType( geomP, typeHandler, 0, 1, false );
 
     int count = 1;
@@ -234,7 +234,7 @@ public class ShapeSerializer
     final IPropertyType[] ftps = new IPropertyType[mapping.size() + 1];
     final IMarshallingTypeHandler geoTypeHandler = geoPt.getTypeHandler();
     final String namespace = featureType.getQName().getNamespaceURI();
-    final QName geomP = new QName(namespace, ShapeFile.GEOM);
+    final QName geomP = new QName( namespace, ShapeFile.GEOM );
     ftps[0] = GMLSchemaFactory.createValuePropertyType( geomP, geoTypeHandler, 0, 1, false );
 
     int count = 1;
@@ -338,8 +338,14 @@ public class ShapeSerializer
     final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
     final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
-    final QName fcQName = new QName("http://www.opengis.net/gml", "_FeatureCollection");
-    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps, (GMLSchema) childFeatureType.getGMLSchema(), fcQName );
+
+    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps );
+
+    // FIXME - code didn't work when childFeatureType.getGMLSchema() is type of EmptyGmlSchema!
+// final QName fcQName = new QName( "http://www.opengis.net/gml", "_FeatureCollection" );
+// final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps,
+// (GMLSchema) childFeatureType.getGMLSchema(), fcQName );
+
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
 
