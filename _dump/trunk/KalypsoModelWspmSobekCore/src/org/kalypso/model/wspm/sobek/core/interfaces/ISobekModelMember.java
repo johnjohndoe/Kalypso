@@ -57,7 +57,4 @@ public interface ISobekModelMember extends IModelMember
     eConfigOPR
 
   }
-
-  public void dispose( );
-
 }

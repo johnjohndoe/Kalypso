@@ -41,9 +41,7 @@
 package org.kalypso.model.wspm.sobek.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -79,15 +77,6 @@ import org.kalypsodeegree.model.feature.Feature;
 public class SobekModelMember implements ISobekModelMember
 {
 
-  private static CommandableWorkspace m_lastUsedWorkspace = null;
-
-  private static Map<CommandableWorkspace, SobekModelMember> m_models = new HashMap<CommandableWorkspace, SobekModelMember>();
-
-  public static ISobekModelMember getModel( ) throws CoreException
-  {
-    return SobekModelMember.getModel( m_lastUsedWorkspace, null );
-  }
-
   /**
    * @param workspace
    *            CommandableWorspace instance for posting new feature, updating features, aso
@@ -100,14 +89,6 @@ public class SobekModelMember implements ISobekModelMember
   {
     if( workspace == null )
       throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), Messages.SobekModelMember_0 ) );
-
-    final SobekModelMember model = m_models.get( workspace );
-
-    if( model != null )
-      return model;
-
-    if( modelMember == null )
-      throw new CoreException( new Status( IStatus.ERROR, SobekModelMember.class.toString(), Messages.SobekModelMember_1 ) );
 
     return new SobekModelMember( workspace, modelMember );
   }
@@ -127,9 +108,6 @@ public class SobekModelMember implements ISobekModelMember
       throw new IllegalStateException( Messages.SobekModelMember_3 + ISobekConstants.QN_SOBEK_MODEL_MEMBER );
 
     m_modelMember = modelMember;
-
-    m_models.put( workspace, this );
-    m_lastUsedWorkspace = workspace;
   }
 
   /**
@@ -331,19 +309,6 @@ public class SobekModelMember implements ISobekModelMember
         sbkStructNodes.add( node );
 
     return sbkStructNodes.toArray( new ISbkStructure[] {} );
-  }
-
-  public static void removeModel( final CommandableWorkspace workspace )
-  {
-    m_models.remove( workspace );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember#dispose()
-   */
-  public void dispose( )
-  {
-    removeModel( getWorkspace() );
   }
 
 }
