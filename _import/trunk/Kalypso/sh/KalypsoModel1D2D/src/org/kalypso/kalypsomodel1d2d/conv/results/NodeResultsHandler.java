@@ -586,6 +586,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return Status.OK_STATUS;
   }
 
+  @SuppressWarnings("unchecked")
   private ICalculationUnit1D getCalcUnit( final ElementResult elementResult )
   {
     if( m_discModel == null )

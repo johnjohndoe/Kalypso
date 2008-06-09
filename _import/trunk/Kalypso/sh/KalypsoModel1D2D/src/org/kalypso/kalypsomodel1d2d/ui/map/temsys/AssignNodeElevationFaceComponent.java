@@ -140,6 +140,7 @@ public class AssignNodeElevationFaceComponent
         try
         {
           newElevation = Double.parseDouble( (String) value );
+
         }
         catch( Throwable th )
         {

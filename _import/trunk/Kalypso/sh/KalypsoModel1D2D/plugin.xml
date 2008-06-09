@@ -944,4 +944,29 @@
            icon="icons/obj16/saveBuildingParameter.gif">
      </image>
   </extension>
+  <extension
+        id="velodiff2d"
+        point="org.eclipse.core.runtime.applications">
+     <application
+           cardinality="singleton-global"
+           thread="main"
+           visible="true">
+        <run
+              class="org.kalypso.kalypsomodel1d2d.apps.velodiff2d.VeloDiff2dApplication">
+        </run>
+     </application>
+  </extension>
+  <extension
+        id="velodiff2d"
+        point="org.eclipse.core.runtime.products">
+     <product
+           application="org.kalypso.model1d2d.velodiff2d"
+           description="VeloDiff2D"
+           name="VeloDiff">
+        <property
+              name="appName"
+              value="VeloDiff">
+        </property>
+     </product>
+  </extension>
 </plugin>

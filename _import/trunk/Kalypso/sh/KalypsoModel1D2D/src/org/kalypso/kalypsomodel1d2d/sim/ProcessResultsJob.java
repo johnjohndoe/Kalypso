@@ -285,6 +285,15 @@ public class ProcessResultsJob extends Job
               triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
               triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeit" );
 
+            case VELOCITY_X:
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeitskomponente X" );
+              break;
+
+            case VELOCITY_Y:
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "m/s" );
+              triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "parameter" ), "Geschwindigkeitskomponente Y" );
+
               break;
             case WATERLEVEL:
               triangleFeature.setProperty( new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "unit" ), "müNN" );
@@ -406,6 +415,22 @@ public class ProcessResultsJob extends Job
             min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
             ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeiten", "TIN der tiefengemittelten Fließgeschwindigkeiten", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY.gml" ), Status.OK_STATUS, min, max );
+
+            break;
+
+          case VELOCITY_X:
+
+            min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeitskomponente X", "TIN der tiefengemittelten Geschwindigkeitskomponenten in X-Richtung", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_X.gml" ), Status.OK_STATUS, min, max );
+
+            break;
+
+          case VELOCITY_Y:
+
+            min = new BigDecimal( m_resultMinMaxCatcher.getMinVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            max = new BigDecimal( m_resultMinMaxCatcher.getMaxVelocityAbs() ).setScale( 3, BigDecimal.ROUND_HALF_UP );
+            ResultMeta1d2dHelper.addDocument( m_stepResultMeta, "Geschwindigkeitskomponente Y", "TIN der tiefengemittelten Geschwindigkeitskomponenten in Y-Richtung", IDocumentResultMeta.DOCUMENTTYPE.tinVelo, new Path( "Tin/tin_VELOCITY_Y.gml" ), Status.OK_STATUS, min, max );
 
             break;
 

@@ -177,19 +177,26 @@ public class TriangulatedSurfaceTriangleEater implements ITriangleEater
         {
           case VELOCITY:
             z = nodes.get( i ).getAbsoluteVelocity();
-
             break;
+
+          case VELOCITY_X:
+            z = nodes.get( i ).getVelocity().get( 0 );
+            break;
+
+          case VELOCITY_Y:
+            z = nodes.get( i ).getVelocity().get( 1 );
+            break;
+
           case WATERLEVEL:
             z = nodes.get( i ).getWaterlevel();
-
             break;
+
           case DEPTH:
             z = nodes.get( i ).getDepth();
             break;
 
           case TERRAIN:
             z = nodes.get( i ).getPoint().getZ();
-
             break;
 
           case SHEARSTRESS:
