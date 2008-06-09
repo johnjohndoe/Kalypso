@@ -89,7 +89,7 @@ final public class BuildingBruecke extends AbstractObservationBuilding
     final IComponent uk = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
     if( !profil.hasPointProperty( uk ) )
       profil.addPointProperty( uk, hoehe );
-    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE );
+    final IComponent ok = profil.getPointPropertyFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE );
     if( !profil.hasPointProperty( ok ) )
       profil.addPointProperty( ok, hoehe );
   }
