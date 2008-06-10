@@ -102,6 +102,14 @@ Version 0.0.2 (laufende Änderungen)
       - correction of the time derivative of the derivative of the continuity equation over depth
       - exchange wrong names of terms in the derivative of the continuity equation over depth
 014.) Introduce ERROR output into file, if at stage flow boundary conditions, the water stage is out of the specified range.
-      The ErrorMessageAndStop subroutine is called from stfltab.for. In ErrorMessageAndStop the errors 4002 and 4003 are introduced      
+      The ErrorMessageAndStop subroutine is called from stfltab.for. In ErrorMessageAndStop the errors 4002 and 4003 are introduced
 
 --- Nico Schrage, 05.06.2008
+
+015.) Correct derivative according to h of dh/dt was not considered. Hence the d^2a/dhdt was wrong. Now derivative is considered.
+016.) Correct implementation of flow coefficient on the GAUSS nodes. The flow coefficient was calculated by using the nodal values of the
+      element's corner nodes. Correct is to calculate the flow coefficients by the water depth present at the particular GAUSS node for both
+      element's corner nodes. According to the linear weighting approximation. The two values should be interpolated between to obtain the
+      particular GAUSS node's value.
+      
+--- Nico Schrage, 10.06.2008      
