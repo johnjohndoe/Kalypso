@@ -838,6 +838,9 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( m_restartNodes == null )
       return;
 
+    if( m_restartNodes.getSize() == 0 )
+      return;
+
     final INodeResult node = m_restartNodes.getNodeResultAtPosition( x, y );
     if( node == null )
     {
