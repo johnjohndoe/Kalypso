@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -229,22 +230,44 @@ public class ValidateProfilesWizard extends Wizard
               for( IMarker marker : markers )
               {
                 final String quickFixRes = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, null );
+
                 if( quickFixRes != null && quickFixes.length > 0 )
                 {
-                  final IProfilMarkerResolution mr = KalypsoModelWspmCoreExtensions.getReparatorRule( quickFixRes );
-                  boolean resolved = false;
-                  for( final Object quickFix : quickFixes )
+
+                  // final String resArray = marker.getAttribute(
+                  // IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
+
+                  final String[] resolutions = StringUtils.split( quickFixRes, '\u0000' );
+                  final IProfilMarkerResolution[] markerRes = new IProfilMarkerResolution[resolutions == null ? 0 : resolutions.length];
+                  for( int j = 0; j < markerRes.length; j++ )
                   {
-                    if( mr!=null && mr.getClass().getName().equals( quickFix.getClass().getName() ) )
+                    final IProfilMarkerResolution mr = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[j] );
+// if( markerResolution != null )
+// markerRes[i] = markerResolution;
+// }
+// return markerRes;
+//                  
+//                  
+//                  
+//                  
+//                  
+//                  
+//                  
+// final IProfilMarkerResolution mr = KalypsoModelWspmCoreExtensions.getReparatorRule( quickFixRes );
+                    boolean resolved = false;
+                    for( final Object quickFix : quickFixes )
                     {
-                      resolved = mr.resolve( profiles[i] );
+                      if( mr != null && mr.getClass().getName().equals( quickFix.getClass().getName() ) )
+                      {
+                        resolved = mr.resolve( profiles[i] );
+                      }
                     }
-                  }
-                  if( resolved )
-                  {
-                    marker.delete();
-                    for( final FeatureChange change : ProfileFeatureFactory.toFeatureAsChanges( profiles[i], (Feature) profilFeatures[i] ) )
-                      featureChanges.add( change );
+                    if( resolved )
+                    {
+                      marker.delete();
+                      for( final FeatureChange change : ProfileFeatureFactory.toFeatureAsChanges( profiles[i], (Feature) profilFeatures[i] ) )
+                        featureChanges.add( change );
+                    }
                   }
                 }
               }

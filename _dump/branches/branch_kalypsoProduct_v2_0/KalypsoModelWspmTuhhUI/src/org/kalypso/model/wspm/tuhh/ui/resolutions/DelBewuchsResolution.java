@@ -52,10 +52,25 @@ import org.kalypso.observation.result.IRecord;
 
 public class DelBewuchsResolution extends AbstractProfilMarkerResolution
 {
+  private  Integer m_leftIndex = 0;
+
+  private  Integer m_rightIndex= 0;
+  
+  private boolean m_initialized = false;
 
   public DelBewuchsResolution( )
   {
     super( "Bewuchsparameter im Fluﬂschlauch entfernen", null, null );
+   
+
+  }
+
+  public DelBewuchsResolution( final int leftIndex, final int rightIndex )
+  {
+    super( "Bewuchsparameter entfernen", null, null );
+    m_leftIndex = leftIndex;
+    m_rightIndex = rightIndex;
+    m_initialized = true;
   }
 
   /**
@@ -64,20 +79,27 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
    */
   public boolean resolve( final IProfil profil )
   {
-    final IComponent cTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
-    if( cTrennF == null )
-      return false;
-    final IProfilPointMarker[] deviders = profil.getPointMarkerFor( cTrennF );
-    if( deviders.length < 2 )
-      return false;
-    final int l = profil.indexOfPoint( deviders[0].getPoint() );
-    final int r = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
-    if( l >= r )
+    
+    if( !m_initialized )
+    {
+      final IComponent cTrennF = profil.hasPointProperty( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
+      if( cTrennF == null )
+        return false;
+      final IProfilPointMarker[] deviders = profil.getPointMarkerFor( cTrennF );
+      if( deviders.length < 2 )
+        return false;
+
+      m_leftIndex = profil.indexOfPoint( deviders[0].getPoint() );
+      m_rightIndex = profil.indexOfPoint( deviders[deviders.length - 1].getPoint() );
+
+    }
+    
+    if( m_leftIndex >= m_rightIndex )
       return false;
     final int iAX = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX );
     final int iAY = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY );
     final int iDP = profil.indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP );
-    for( int i = l; i < r; i++ )
+    for( int i = m_leftIndex; i < m_rightIndex; i++ )
     {
       final IRecord point = profil.getPoint( i );
       point.setValue( iAX, 0.0 );
@@ -86,5 +108,32 @@ public class DelBewuchsResolution extends AbstractProfilMarkerResolution
     }
     return true;
   }
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#setData(java.lang.String)
+   */
+  @Override
+  public void setData( String parameterStream )
+  {
+    final String[] params = getParameter( parameterStream );
+    try
+    {
+      m_leftIndex = new Integer( params[1] );
+      m_rightIndex = new Integer(params[2]);
+      m_initialized = true;
+    }
+    catch( Exception e )
+    {
+      throw new IllegalArgumentException();
+    }
 
+  }
+  
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.resolutions.AbstractProfilMarkerResolution#getSerializedParameter()
+   */
+  @Override
+  public String getSerializedParameter( )
+  {
+    return super.getSerializedParameter() + ";" + m_leftIndex + ";" + m_rightIndex;
+  }
 }
