@@ -1,4 +1,4 @@
-!Last change:  WP   10 Jun 2008    2:53 pm
+!Last change:  WP   10 Jun 2008    3:49 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -99,6 +99,8 @@ REAL (KIND = 8) :: s0schint(1:4)
 REAL (KIND = 8) :: sfint(1:4)
 REAL (KIND = 8) :: dsfintdh1(1:4)
 REAL (KIND = 8) :: beiint(1:4)
+REAL (KIND = 8) :: beiint1(1:4)
+REAL (KIND = 8) :: beiint2(1:4)
 
 !flow coeficient node
 REAL (KIND = 8) :: bei(1:2)
@@ -106,7 +108,11 @@ REAL (KIND = 8) :: dbeidh(1:2)
 REAL (KIND = 8) :: d2beidh(1:2)
 !flow coeficient GP
 REAL (KIND = 8) :: dbeiintdh(1:4)
+REAL (KIND = 8) :: dbeiintdh1(1:4)
+REAL (KIND = 8) :: dbeiintdh2(1:4)
 REAL (KIND = 8) :: d2beiintdh(1:4)
+REAL (KIND = 8) :: d2beiintdh1(1:4)
+REAL (KIND = 8) :: d2beiintdh2(1:4)
 REAL (KIND = 8) :: dbeiintdx(1:4)
 REAL (KIND = 8) :: d2beiintdhdx(1:4)
 
@@ -181,8 +187,14 @@ init1: DO j = 1, 4
   sfint(j)       = 0.0
   dsfintdh1(j)   = 0.0
   beiint(j)      = 0.0
+  beiint1(j)     = 0.0
+  beiint2(j)     = 0.0
   dbeiintdh(j)   = 0.0
+  dbeiintdh1(j)  = 0.0
+  dbeiintdh2(j)  = 0.0
   d2beiintdh(j)  = 0.0
+  d2beiintdh1(j) = 0.0
+  d2beiintdh2(j) = 0.0
   dbeiintdx(j)   = 0.0
   d2beiintdhdx(j)= 0.0
   vflowint(j)    = 0.0
@@ -814,22 +826,121 @@ Gaussloop: DO I = 1, NGP
       dsfintdh1(i) = s0schint(i) * vflowint(i) * ABS(vflowint(i))                      &
       &              * (QSchint(i)**2 * 2 * areaint(i) * dareaintdh(i) - areaint(i)**2 &
       &              * 2 * Qschint(i) * dqsintdh(i)) / Qschint(i)**4
+    ENDIF
 
-      !The following has to be resetted (April 2007)!!!
-      !secondary variables: flow-coefficient (e.g. Boussinesq) and its derivatives
+    !now do the flow coeficient
+    !**************************
+
+    !flow coeficient not considered
+    IF (beient == 0) THEN
+      beiint (i)       = 1.0
+      dbeiintdh  (i)   = 0.0
+      d2beiintdh (i)   = 0.0
+      dbeiintdx (i)    = 0.0
+      d2beiintdhdx (i) = 0.0
+
+    !use momentum coeficient
+    ELSEIF (beient == 1) THEN
+      !polynomial position for a(h)-calculations
+      PP(1) = findPolynom (polyRangeB (RefNodeN1, :), hhint(i), PolySplitsB (RefNodeN1))
+      PP(2) = findPolynom (polyRangeB (RefNodeN3, :), hhint(i), PolySplitsB (RefNodeN3))
+
       !beta at GP
-      beiint(i) = xm(1) * bei(1) + xm(2) * bei(2)
+      IF (k == 1) THEN
+        beiint1(i) = 0.0D0
+        beiint2(i) = 0.0D0
+      ENDIF
+      beiint1(i) = beiint1(i) + WeightN1 * CalcPolynomial (Alphapoly (PP(1), RefNodeN1, 0:12), hhint(i))
+      beiint2(i) = beiint2(i) + WeightN3 * CalcPolynomial (Alphapoly (PP(2), RefNodeN3, 0:12), hhint(i))
+      IF (k == 2) beiint(i) = xm(1) * beiint1(i) + xm(2) * beiint2(i)
+
       !dbeta/dh at GP
-      dbeiintdh(i) = xm(1) * dbeidh(1) + xm(2) * dbeidh(2)
+      IF (k == 1) THEN
+        dbeiintdh1(i) = 0.0D0
+        dbeiintdh2(i) = 0.0D0
+      ENDIF
+      dbeiintdh1(i) = dbeiintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (Alphapoly (PP(1), RefNodeN1, 0:12), hhint(i))
+      dbeiintdh2(i) = dbeiintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (Alphapoly (PP(2), RefNodeN3, 0:12), hhint(i))
+      if (k == 2) dbeiintdh(i) = xm(1) * dbeiintdh1(i) + xm(2) * dbeiintdh2(i)
+
       !d2beta/dh2 at GP
-      d2beiintdh(i) = xm(1) * d2beidh(1) + xm(2) * d2beidh(2)
-      !dbeta/dx at GP
-      dbeiintdx(i) = dmx(1) * bei(1) + xm(1) * dbeidh(1) * dhhintdx(i) &
-      &             +dmx(2) * bei(2) + xm(2) * dbeidh(2) * dhhintdx(i)
-      !d2beta/dx2
-      d2beiintdhdx(i) = dmx(1) * dbeidh(1) + xm(1) * d2beidh(1) * dhhintdx(i) &
-      &                +dmx(2) * dbeidh(2) + xm(2) * d2beidh(2) * dhhintdx(i)
-    end if
+      IF (k == 1) THEN
+       d2beiintdh1(i) = 0.0D0
+       d2beiintdh2(i) = 0.0D0
+      ENDIF
+      d2beiintdh1(i) = d2beiintdh1(i) + WeightN1 * CalcPolynomial2ndDerivative (Alphapoly (PP(1), RefNodeN1, 0:12), hhint(i))
+      d2beiintdh2(i) = d2beiintdh2(i) + WeightN3 * CalcPolynomial2ndDerivative (Alphapoly (PP(2), RefNodeN3, 0:12), hhint(i))
+      IF (k == 2) d2beiintdh(i) = xm(1) * d2beiintdh1(i) + xm(2) * d2beiintdh2(i)
+
+      !derivatives over dx
+      IF (k == 2) THEN
+        !dQSch/dx at GP
+        dbeiintdx(i)  = dmx(1) * (beiint1(i) + h1 * dbeiintdh(i)) + dmx(2) * (beiint2(i) + h3 * dbeiintdh(i))
+        !d2QSch/dhdx at GP
+        d2beiintdhdx(i) = dmx(1) * dbeiintdh1(i) + xm(1) * d2beiintdh1(i) * dhhintdx(i) &
+        &               + dmx(2) * dbeiintdh2(i) + xm(2) * d2beiintdh2(i) * dhhintdx(i)
+      ENDIF
+
+
+    !use energy coeficient
+    ELSEIF (beient == 2) THEN
+      !polynomial position for a(h)-calculations
+      PP(1) = findPolynom (polyRangeB (RefNodeN1, :), hhint(i), PolySplitsB (RefNodeN1))
+      PP(2) = findPolynom (polyRangeB (RefNodeN3, :), hhint(i), PolySplitsB (RefNodeN3))
+
+      !beta at GP
+      IF (k == 1) THEN
+        beiint1(i) = 0.0D0
+        beiint2(i) = 0.0D0
+      ENDIF
+      beiint1(i) = beiint1(i) + WeightN1 * CalcPolynomial (Betapoly (PP(1), RefNodeN1, 0:12), hhint(i))
+      beiint2(i) = beiint2(i) + WeightN3 * CalcPolynomial (Betapoly (PP(2), RefNodeN3, 0:12), hhint(i))
+      IF (k == 2) beiint(i) = xm(1) * beiint1(i) + xm(2) * beiint2(i)
+
+      !dbeta/dh at GP
+      IF (k == 1) THEN
+        dbeiintdh1(i) = 0.0D0
+        dbeiintdh2(i) = 0.0D0
+      ENDIF
+      dbeiintdh1(i) = dbeiintdh1(i) + WeightN1 * CalcPolynomial1stDerivative (Betapoly (PP(1), RefNodeN1, 0:12), hhint(i))
+      dbeiintdh2(i) = dbeiintdh2(i) + WeightN3 * CalcPolynomial1stDerivative (Betapoly (PP(2), RefNodeN3, 0:12), hhint(i))
+      IF (k == 2) dbeiintdh(i) = xm(1) * dbeiintdh1(i) + xm(2) * dbeiintdh2(i)
+
+      !d2beta/dh2 at GP
+      IF (k == 1) THEN
+       d2beiintdh1(i) = 0.0D0
+       d2beiintdh2(i) = 0.0D0
+      ENDIF
+      d2beiintdh1(i) = d2beiintdh1(i) + WeightN1 * CalcPolynomial2ndDerivative (Betapoly (PP(1), RefNodeN1, 0:12), hhint(i))
+      d2beiintdh2(i) = d2beiintdh2(i) + WeightN3 * CalcPolynomial2ndDerivative (Betapoly (PP(2), RefNodeN3, 0:12), hhint(i))
+      IF (k == 2) d2beiintdh(i) = xm(1) * d2beiintdh1(i) + xm(2) * d2beiintdh2(i)
+
+      !derivatives over dx
+      IF (k == 2) THEN
+        !dQSch/dx at GP
+        dbeiintdx(i)  = dmx(1) * (beiint1(i) + h1 * dbeiintdh(i)) + dmx(2) * (beiint2(i) + h3 * dbeiintdh(i))
+        !d2QSch/dhdx at GP
+        d2beiintdhdx(i) = dmx(1) * dbeiintdh1(i) + xm(1) * d2beiintdh1(i) * dhhintdx(i) &
+        &               + dmx(2) * dbeiintdh2(i) + xm(2) * d2beiintdh2(i) * dhhintdx(i)
+      ENDIF
+
+
+    !switch of convective terms
+    ELSEIF (beient == 3) THEN
+      beiint (i)       = 0.0
+      dbeiintdh  (i)   = 0.0
+      d2beiintdh (i)   = 0.0
+      dbeiintdx (i)    = 0.0
+      d2beiintdhdx (i) = 0.0
+
+    !wrong input leads to usage of beient == 0
+    ELSE
+      beiint (i)       = 1.0
+      dbeiintdh  (i)   = 0.0
+      d2beiintdh (i)   = 0.0
+      dbeiintdx (i)    = 0.0
+      d2beiintdhdx (i) = 0.0
+    ENDIF
 
     !mass center calculations
 !    if (byparts == 3) then
