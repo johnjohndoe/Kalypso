@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.map.widgets.newfeature;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.Command;
@@ -59,12 +60,15 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
@@ -156,21 +160,48 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
 
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
     final IFeatureType featureType = featureTheme.getFeatureType();
+    
     if( featureType == null )
     {
       m_currentItems = new CommandContributionItem[0];
       return m_currentItems;
     }
+    
+    final FeatureList featureList = featureTheme.getFeatureList();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType fatp = featureList.getParentFeatureTypeProperty();
+    
+    final int maxOccurs = fatp.getMaxOccurs();
 
-    final IFeatureType substitutionGroupFT = featureType.getSubstitutionGroupFT();
-    if( substitutionGroupFT == null )
+    /* If we may not inline features we cannot create them via 'new' */
+    if( !fatp.isInlineAble() )
+      // Just return
+      return null;
+
+    /*
+     * Direct properties (maxoccurs = 1) can only be added if not already there.
+     */
+    if( maxOccurs == 1 && parentFeature.getProperty( fatp ) != null )
     {
       m_currentItems = new CommandContributionItem[0];
       return m_currentItems;
     }
 
+    /*
+     * If maxoccurs > 1 we have a list, and we may test if the list is already full.
+     */
+    else if( maxOccurs > 1 )
+    {
+      final List list = (List) parentFeature.getProperty( fatp );
+      if( list != null && list.size() >= maxOccurs )
+      {
+        m_currentItems = new CommandContributionItem[0];
+        return m_currentItems;
+      }
+    }
+
     final IGMLSchema contextSchema = featureType.getGMLSchema();
-    final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( substitutionGroupFT, contextSchema, false, true );
+    final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, contextSchema, false, true );
 
     final CommandContributionItem[] items = new CommandContributionItem[featureTypes.length];
     final IServiceLocator locator = PlatformUI.getWorkbench();
@@ -183,7 +214,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
       final IAnnotation annotation = featureType.getAnnotation();
 
       String tooltip = null;
-      if( annotation != null && !FeatureHelper.hasReplaceTokens( substitutionGroupFT, IAnnotation.ANNO_TOOLTIP ) )
+      if( annotation != null && !FeatureHelper.hasReplaceTokens( featureType, IAnnotation.ANNO_TOOLTIP ) )
       {
         tooltip = annotation.getValue( IAnnotation.ANNO_TOOLTIP );
       }
