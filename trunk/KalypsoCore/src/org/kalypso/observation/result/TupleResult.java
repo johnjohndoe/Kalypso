@@ -503,6 +503,28 @@ public class TupleResult implements List<IRecord>
     fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
     return added;
   }
+  
+  /**
+   * Adds a component to this tuple result. Does nothing if an equal component was already added.
+   * <p>
+   * Set the value for all records of this tupleResult, wrong type will raise an Exception later
+   */
+  public final boolean addComponent( final IComponent comp, final Object defaultValue)
+  {
+    final boolean added = m_components.add( comp );
+
+    for( final IRecord record : this )
+    {
+      final Record r = (Record) record;
+      r.set( m_components.size() - 1, defaultValue );
+    }
+
+    if( m_sortComponents.contains( comp ) )
+      m_isSorted = false;
+
+    fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
+    return added;
+  }
 
   /**
    * removes all components of type IComponent
