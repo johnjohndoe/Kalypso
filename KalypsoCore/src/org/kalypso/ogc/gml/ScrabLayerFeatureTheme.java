@@ -152,6 +152,16 @@ public class ScrabLayerFeatureTheme extends AbstractKalypsoTheme implements IKal
       return m_scrabLayerTheme.getFeatureType();
     return null;
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
+   */
+  public String getFeaturePath( )
+  {
+    if( m_scrabLayerTheme != null )
+      return m_scrabLayerTheme.getFeaturePath();
+    return null;
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
