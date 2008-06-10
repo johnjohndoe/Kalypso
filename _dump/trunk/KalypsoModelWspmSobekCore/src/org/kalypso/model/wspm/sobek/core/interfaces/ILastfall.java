@@ -64,13 +64,13 @@ public interface ILastfall
 
   public Feature getFeature( );
 
-  GregorianCalendar getLastfallEnd( );
+  public GregorianCalendar getLastfallEnd( );
 
-  GregorianCalendar getLastfallStart( );
+  public GregorianCalendar getLastfallStart( );
 
   public IModelMember getModelMember( );
 
-  String getName( );
+  public String getName( );
 
   public Integer getPreSimulationTime( );
 
