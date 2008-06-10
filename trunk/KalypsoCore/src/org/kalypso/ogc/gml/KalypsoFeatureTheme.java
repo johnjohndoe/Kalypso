@@ -174,6 +174,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     return m_featureType;
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
+   */
+  public String getFeaturePath( )
+  {
+    return m_featurePath;
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,

@@ -438,6 +438,16 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       return m_theme.getFeatureType();
     return null;
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
+   */
+  public String getFeaturePath( )
+  {
+    if( m_theme != null )
+      return m_theme.getFeaturePath();
+    return null;
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)

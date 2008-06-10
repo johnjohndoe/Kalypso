@@ -60,6 +60,8 @@ public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
   public ISchedulingRule getSchedulingRule( );
 
   public IFeatureType getFeatureType( );
+  
+  public String getFeaturePath();
 
   public void addStyle( final KalypsoUserStyle style );
 

@@ -60,6 +60,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -83,8 +84,8 @@ public class NewFeatureWidget extends AbstractCreateGeometryWidget implements IW
 
   public NewFeatureWidget( final QName name, final QName[] geomProperties )
   {
-    super(name, geomProperties );
-    
+    super( name, geomProperties );
+
     m_sourceProviderListener = new ISourceProviderListener()
     {
 
@@ -101,25 +102,29 @@ public class NewFeatureWidget extends AbstractCreateGeometryWidget implements IW
       private void cancel( )
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
-        if(workbench == null || workbench.isClosing())
+        if( workbench == null || workbench.isClosing() )
           return;
-        
+
         final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-        if(activeWorkbenchWindow == null)
+        if( activeWorkbenchWindow == null )
           return;
-        
+
         final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-        if(activePage == null)
+        if( activePage == null )
           return;
-        
+
         final Display display = workbench.getDisplay();
         display.asyncExec( new Runnable()
         {
           public void run( )
           {
-            getMapPanel().getWidgetManager().setActualWidget( null );
+            final MapPanel mapPanel = getMapPanel();
+            if( mapPanel != null )
+              mapPanel.getWidgetManager().setActualWidget( null );
+
             final IViewPart widgetView = activePage.findView( MapWidgetView.ID );
-            activePage.hideView( widgetView );
+            if( widgetView != null )
+              activePage.hideView( widgetView );
           }
         } );
       }
