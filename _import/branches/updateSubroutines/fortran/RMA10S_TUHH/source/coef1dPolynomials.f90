@@ -1,4 +1,4 @@
-!Last change:  NIS   9 Jun 2008    9:38 pm
+!Last change:  WP   10 Jun 2008    2:53 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -755,7 +755,7 @@ Gaussloop: DO I = 1, NGP
       d2aidhdx(i) = dmx(1) *  daintdh1(i) +  xm(1) * d2aintdh1(i) * dhhintdx(i) &
       &            +dmx(2) *  daintdh2(i) +  xm(2) * d2aintdh2(i) * dhhintdx(i)
       !dA/dt at GP
-      daintdt(i) = d2areaintdh(i) * dhintdt(i) + dareaintdh(i) * altm
+      daintdt(i)  = (xm(1) * daintdh1(i) + xm(2) * daintdh2(i)) * dhintdt(i)
     end if
 
     !sec
@@ -1130,7 +1130,7 @@ Gaussloop: DO I = 1, NGP
   IF (icyc > 0) THEN
     FEEAN = FEEAN                    &
           !Term A1
-    &   + vflowint(i) * daintdt(i) &
+    &   + vflowint(i) * (d2areaintdh(i) * dhintdt(i) + dareaintdh(i) * altm) &
           !Term A2
     &   + dareaintdh(i) * dvintdt(i)
 
@@ -1217,6 +1217,12 @@ Gaussloop: DO I = 1, NGP
     FEEAN = FEEAN    &
           !Term A1
     &   + daintdt(i)
+
+!nis,jun08: This should be activated, but it doesn't work fine then!
+!         !Term A2
+!       + areaint(i) * altm
+!-
+
   end if
 
   !FEEBN FEEBN FEEBN
@@ -1256,7 +1262,7 @@ Gaussloop: DO I = 1, NGP
     &  + vflowint(i) * d2aidhdx(i)
   if (icyc > 0) then
     EA = EA                           &
-    &  + daintdt(i)
+    &  + d2areaintdh(i) * dhintdt(i) + dareaintdh(i) * altm
 
   end if
   EB =                                &
