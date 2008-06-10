@@ -80,69 +80,11 @@ public class AddRowHandler extends AbstractHandler
     final int size = tupleResult == null ? 0 : tupleResult.size();
     final IRecord next = index < size - 2 ? tupleResult.get( index + 1 ) : null;
     final IRecord row = tupleResult.createRecord();
-    if( target == null )
-    {
-      for( final IComponent component : tupleResult.getComponents() )
-      {
-        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
-          row.setValue( component, 0.0 );
-      }
-    }
-    else
-    {
-      // Big TODO: remove this code from here... we should find a central place (component handler?) that tells how to
-      // interpolate new values
-      for( final IComponent component : tupleResult.getComponents() )
-      {
-        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) && (target instanceof IRecord) ) //$NON-NLS-1$
-        {
-          if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE".equals( component.getId() ) ) //$NON-NLS-1$
-          {
-            if( next != null )
-            {
-              final Object b1 = ((IRecord) target).getValue( component );
-              if( b1 == null )
-                continue;
-              final Object l = next.getValue( component );
-              if( l == null )
-                continue;
-              row.setValue( component, (Double) b1 - ((Double) b1 - (Double) l) / 2.0 );
-            }
-            else
-            {
-              final Object value = ((IRecord) target).getValue( component );
-              if( value != null )
-                row.setValue( component, (Double) value + 10 );
-              else
-                row.setValue( component, component.getDefaultValue() );
-            }
-          }
-          else if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE".equals( component.getId() ) ) //$NON-NLS-1$
-          {
-            if( next != null )
-            {
-              final Object h1 = ((IRecord) target).getValue( component );
-              if( h1 == null )
-                continue;
-              final Object z = next.getValue( component );
-              if( z == null )
-                continue;
-              row.setValue( component, (Double) h1 - ((Double) h1 - (Double) z) / 2.0 );
-            }
-            else
-            {
-              final Object value = ((IRecord) target).getValue( component );
-              if( value != null )
-                row.setValue( component, value );
-              else
-                row.setValue( component, component.getDefaultValue() );
-            }
-          }
-          else
-            row.setValue( component, ((IRecord) target).getValue( component ) );
-        }
-      }
-    }
+
+    // TODO: the createRecord Method should fill the row with default values recieved from the tupleResult components
+    // Big TODO: remove this code from here... we should find a central place (component handler?) that tells how to
+    // get default values or interpolate new values
+    fillRow( target, row, next );
 
     if( next != null )
       tupleResult.add( index + 1, row );
@@ -161,5 +103,76 @@ public class AddRowHandler extends AbstractHandler
     }.schedule();
 
     return null;
+  }
+
+  private final void fillRow( final Object target, final IRecord row, final IRecord next )
+  {
+
+    final TupleResult tupleResult = row.getOwner();
+    if( target == null )
+    {
+      for( int i = 0; i < tupleResult.size(); i++ )
+      {
+        final IComponent component = tupleResult.getComponent( i );
+        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
+          row.setValue( i, 0.0 );
+      }
+    }
+    else
+    {
+
+      for( int i = 0; i < tupleResult.size(); i++ )
+
+      {
+        final IComponent component = tupleResult.getComponent( i );
+        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) && (target instanceof IRecord) ) //$NON-NLS-1$
+        {
+          if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE".equals( component.getId() ) ) //$NON-NLS-1$
+          {
+            if( next != null )
+            {
+              final Object b1 = ((IRecord) target).getValue( i );
+              if( b1 == null )
+                continue;
+              final Object l = next.getValue( i );
+              if( l == null )
+                continue;
+              row.setValue( i, (Double) b1 - ((Double) b1 - (Double) l) / 2.0 );
+            }
+            else
+            {
+              final Object value = ((IRecord) target).getValue( i );
+              if( value != null )
+                row.setValue( i, (Double) value + 10 );
+              else
+                row.setValue( i, component.getDefaultValue() );
+            }
+          }
+          else if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE".equals( component.getId() ) ) //$NON-NLS-1$
+          {
+            if( next != null )
+            {
+              final Object h1 = ((IRecord) target).getValue( i );
+              if( h1 == null )
+                continue;
+              final Object z = next.getValue( i );
+              if( z == null )
+                continue;
+              row.setValue( i, (Double) h1 - ((Double) h1 - (Double) z) / 2.0 );
+            }
+            else
+            {
+              final Object value = ((IRecord) target).getValue( i );
+              if( value != null )
+                row.setValue( i, value );
+              else
+                row.setValue( i, component.getDefaultValue() );
+            }
+          }
+          else
+            row.setValue( i, ((IRecord) target).getValue( i ) );
+        }
+      }
+    }
   }
 }
