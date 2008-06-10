@@ -1,4 +1,4 @@
-!Last change:  WP    5 Jun 2008    4:53 pm
+!Last change:  NIS   9 Jun 2008    9:38 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -426,9 +426,9 @@ do i = 1, 2
 
   !test for valid water depth range
   if (h < hhmin(n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
-    WRITE (*,*) 'WARNING - waterdepth at node', n, 'less than Hmin', n, vel(3, n), hhmin(n)
+    WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') less than Hmin', hhmin(n)
   ELSEIF (h > hhmax (n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
-    WRITE (*,*) 'WARNING - waterdepth at node', n, 'greater than Hmax', n, vel(3, n), hhmax(n)
+    WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') greater than Hmax', hhmax(n)
   end if
 
   !look for the position of the polynomial
@@ -601,6 +601,7 @@ Gaussloop: DO I = 1, NGP
 !C-
 !C......DEFINE SHAPE FUNCTIONS
 !C-
+
   !quadratic shape-functions
   XN(1)=(1.-AFACT(I))*(1.-2.*AFACT(I))
   XN(2)=(1.-AFACT(I))*4.*AFACT(I)
@@ -622,6 +623,7 @@ Gaussloop: DO I = 1, NGP
       DNX(J)=DNX(J)/TFR
     enddo
   ENDIF
+
   !linear shape-functions
   XM(1)  = 1.0 - AFACT(I)
   XM(2)  = AFACT(I)
@@ -630,7 +632,7 @@ Gaussloop: DO I = 1, NGP
 
   IF(NTX .NE. 0) THEN
     !Questionable: Why do we not use just one local variable for the parameters at the Gauss-nodes. They are just used once
-    H=VEL(3,N1)*XM(1)+VEL(3,N3)*XM(2)
+    H = VEL (3, N1) * XM (1) + VEL (3, N3) * XM (2)
   ELSE
     H=1.0
   ENDIF
@@ -753,7 +755,7 @@ Gaussloop: DO I = 1, NGP
       d2aidhdx(i) = dmx(1) *  daintdh1(i) +  xm(1) * d2aintdh1(i) * dhhintdx(i) &
       &            +dmx(2) *  daintdh2(i) +  xm(2) * d2aintdh2(i) * dhhintdx(i)
       !dA/dt at GP
-      daintdt(i)  = (xm(1) * daintdh1(i) + xm(2) * daintdh2(i)) * dhintdt(i)
+      daintdt(i) = d2areaintdh(i) * dhintdt(i) + dareaintdh(i) * altm
     end if
 
     !sec
@@ -1128,7 +1130,7 @@ Gaussloop: DO I = 1, NGP
   IF (icyc > 0) THEN
     FEEAN = FEEAN                    &
           !Term A1
-    &   + vflowint(i) * d2areaintdh(i) * dhht(i) &
+    &   + vflowint(i) * daintdt(i) &
           !Term A2
     &   + dareaintdh(i) * dvintdt(i)
 
@@ -1254,7 +1256,7 @@ Gaussloop: DO I = 1, NGP
     &  + vflowint(i) * d2aidhdx(i)
   if (icyc > 0) then
     EA = EA                           &
-    &  + d2areaintdh(i) * dhintdt(i) + dareaintdh(i) * altm
+    &  + daintdt(i)
 
   end if
   EB =                                &
