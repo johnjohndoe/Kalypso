@@ -592,7 +592,7 @@ public class FileUtilities
    */
   public static String setSuffix( final String fileName, final String suffix )
   {
-    final int index = fileName.indexOf( '.' );
+    final int index = fileName.lastIndexOf( '.' );
     if( index == -1 )
       return fileName + '.' + suffix;
 
