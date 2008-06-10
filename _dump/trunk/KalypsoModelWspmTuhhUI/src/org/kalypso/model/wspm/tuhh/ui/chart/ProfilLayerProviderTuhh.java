@@ -118,11 +118,11 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       addableLayer.add( IWspmTuhhConstants.LAYER_EI );
       addableLayer.add( IWspmTuhhConstants.LAYER_MAUL );
     }
-    if( profile.hasPointProperty(IWspmConstants.POINT_PROPERTY_BEWUCHS_AX )!=null  && !existingLayers.contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
+    if( profile.hasPointProperty(IWspmConstants.POINT_PROPERTY_BEWUCHS_AX )==null  && !existingLayers.contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_BEWUCHS );
-    if(  profile.hasPointProperty(IWspmConstants.POINT_PROPERTY_HOEHE )!=null  && !existingLayers.contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
+    if(  profile.hasPointProperty(IWspmConstants.POINT_PROPERTY_HOEHE )==null  && !existingLayers.contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_GELAENDE );
-    if( profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_HOCHWERT ) !=null && !existingLayers.contains( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
+    if( profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_HOCHWERT ) ==null && !existingLayers.contains( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     if( existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_QUICKVIEW ) || !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT_KST ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT_KST );
@@ -147,9 +147,9 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
       final IProfilChange[] changes = new IProfilChange[3];
-      changes[0] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
-      changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-      changes[2] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+      changes[0] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ),0.0 );
+      changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ),0.0  );
+      changes[2] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ),0.0  );
       final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
       return new IProfilChartLayer[] { new BewuchsLayer( view ) };

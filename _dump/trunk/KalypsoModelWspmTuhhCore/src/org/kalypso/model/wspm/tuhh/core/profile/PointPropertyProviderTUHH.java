@@ -136,7 +136,7 @@ public class PointPropertyProviderTUHH extends AbstractPointPropertyProvider
   
   public IComponent getPointProperty( final String propertyId )
   {
-    final String[] split = propertyId.split( "#" );
+    final String[] split = propertyId.split( "#" ); //$NON-NLS-1$
     final String urn = split[0];
 
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();

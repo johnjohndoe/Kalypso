@@ -55,9 +55,9 @@ import org.kalypso.model.wspm.tuhh.core.wspwin.prf.PrfSource;
 /**
  * @author kimwerner
  */
-public class TuhhProfileUtilities
+public class WspmTuhhProfileHelper
 {
-  private TuhhProfileUtilities( )
+  private WspmTuhhProfileHelper( )
   {
     // Helperclass, do not instantiate
   }

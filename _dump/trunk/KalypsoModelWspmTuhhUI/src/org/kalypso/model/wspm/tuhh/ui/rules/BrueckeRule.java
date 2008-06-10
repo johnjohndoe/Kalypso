@@ -182,7 +182,7 @@ public class BrueckeRule extends AbstractValidatorRule
             collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Trennfläche innerhalb der Brückengeometrie", "km " + Double.toString( profil.getStation() ), left, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( 0, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerLeft ) );
           if( !h_3.isNaN() && !ukB_3.isNaN() && ukB_3 - h_3 < delta )
             collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Trennfläche innerhalb der Brückengeometrie", "km " + Double.toString( profil.getStation() ), right, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new MoveDeviderResolution( trenner.length - 1, IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE, innerRight ) );
- 
+
           // mehr als eine Öffnung
           for( int i = innerLeft + 1; i < innerRight; i++ )
           {
@@ -210,15 +210,18 @@ public class BrueckeRule extends AbstractValidatorRule
 
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bordvollpunkte sind zu entfernen", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( brdvp[0].getPoint() ), IWspmConstants.POINT_PROPERTY_BREITE, pluginId, delRes );
       }
+
+      int minmax = 0;
+      boolean hatBewuchs = false;
       Double minOK = Double.MAX_VALUE;
       Double maxUK = Double.MIN_VALUE;
-      int minmax = 0;
+
       for( int i = outerLeft; i < outerRight; i++ )
       {
         final Double h = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, points[i] );
         final Double okB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, points[i] );
         final Double ukB = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, points[i] );
-        if( (minmax == 0) && (i > innerLeft) && (i < innerRight) )
+        if( (minmax == 0) && (i >= innerLeft) && (i <= innerRight) )
         {
           minOK = Math.min( minOK, okB );
           maxUK = Math.max( maxUK, ukB );
@@ -236,13 +239,16 @@ public class BrueckeRule extends AbstractValidatorRule
           continue;
         final Double bewuchs = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, points[i] );
         if( bewuchs != 0.0 )
-          collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution() );
+          hatBewuchs = true;
       }
       if( minmax > 0 )
       {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, "kleinste Höhe der Oberkante liegt unter größter Höhe der Unterkante", "km " + Double.toString( profil.getStation() ), minmax, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
       }
-
+      if( hatBewuchs )
+      {
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution( outerLeft, outerRight ) );
+      }
     }
     catch( final Exception e )
     {

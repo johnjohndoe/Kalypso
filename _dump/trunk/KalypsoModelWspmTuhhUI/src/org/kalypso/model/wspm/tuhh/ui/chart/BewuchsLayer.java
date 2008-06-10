@@ -114,29 +114,15 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   public void removeYourself( )
   {
     final IProfilChange[] changes = new IProfilChange[3];
-    changes[0] = new PointPropertyRemove( m_profile,  m_profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
+    changes[0] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) );
     changes[1] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY ) );
-    changes[2] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty(  IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
+    changes[2] = new PointPropertyRemove( m_profile, m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ) );
     final ProfilOperation operation = new ProfilOperation( "Bewuchs entfernen", m_profile, changes, true );
     new ProfilOperationJob( operation ).schedule();
   }
 
   public Rectangle2D getBounds( )
   {
-// try
-// {
-// final IProfilPoint p = m_pem.getProfil().getPoints().getFirst();
-// final double x = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
-// final double y = p.getValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE );
-// final Point2D p2 = new Point2D.Double( x, y );
-// return new Rectangle2D.Double( p2.getX(), p2.getY(), 0, 0 );
-// }
-// catch( Exception e )
-// {
-// e.printStackTrace();
-// return new Rectangle2D.Double( 0, 0, 0, 0 );
-//
-// }
     return IChartLayer.MINIMAL_RECT;
   }
 
@@ -250,9 +236,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     for( final IRecord point : points )
     {
 
-      
-      
-      final Point2D p2dR = ProfilUtil.getPoint2D( point,cHoehe );
+      final Point2D p2dR = ProfilUtil.getPoint2D( point, cHoehe );
       if( p2dL != null && hasValue )
       {
         final double xl = p2dL.getX();

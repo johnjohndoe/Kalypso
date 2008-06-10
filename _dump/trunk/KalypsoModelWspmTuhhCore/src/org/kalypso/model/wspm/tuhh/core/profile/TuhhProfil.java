@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.impl.AbstractProfil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.tuhh.core.Messages;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingBruecke;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.building.BuildingWehr;
 import org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass.BuildingEi;
@@ -66,7 +67,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class TuhhProfil extends AbstractProfil
 {
-  public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype";
+  public static final String PROFIL_TYPE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
   public TuhhProfil( final TupleResult result )
   {
@@ -82,7 +83,7 @@ public class TuhhProfil extends AbstractProfil
   public IProfileObject[] addProfileObjects( final IProfileObject[] profileObjects )
   {
     if( profileObjects == null || profileObjects.length > 1 )
-      throw new IllegalStateException( "only one profileObject allowed" );
+      throw new IllegalStateException( Messages.TuhhProfil_1 );
     setProperty( PROFILE_OBJECTS, null );
     if( profileObjects.length > 0 )
       return super.addProfileObjects( profileObjects );
@@ -99,7 +100,7 @@ public class TuhhProfil extends AbstractProfil
   public void createProfileObjects( final IObservation<TupleResult>[] profileObjects )
   {
     if( profileObjects == null || profileObjects.length > 1 )
-      throw new IllegalStateException( "only one profileObject allowed" );
+      throw new IllegalStateException( Messages.TuhhProfil_1 );
     final IProfileObject profileObject = createProfileObjectInternal(profileObjects[0] );
     addProfileObjects( new IProfileObject[] { profileObject } );
   }
@@ -126,12 +127,12 @@ public class TuhhProfil extends AbstractProfil
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     if( provider==null )
-      throw new IllegalStateException( "no ProfilPointProvider found for: "+ getType() );
+      throw new IllegalStateException( Messages.TuhhProfil_3+ getType() );
 
     final IComponent marker = getPointPropertyFor( markerID );
     /* first check, if provider provides markerType */
     if( !provider.isMarker( markerID ) )
-      throw new IllegalStateException( "ProfilPointProvider doesn'tprovides - " + marker.getName() + " as Marker" );
+      throw new IllegalStateException( Messages.TuhhProfil_4 + marker.getName() + Messages.TuhhProfil_5 );
     /* point has component already defined? */
     if( !hasPointProperty( marker) )
     {
@@ -203,7 +204,7 @@ public class TuhhProfil extends AbstractProfil
       return null;
 
     final String id = component.getId();
-    if( id.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) && value.equals( "none" ) )
+    if( id.equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) && value.equals( "none" ) ) //$NON-NLS-1$
       return null;
 
     if( id.equals( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) && value.equals( Boolean.FALSE ) )
