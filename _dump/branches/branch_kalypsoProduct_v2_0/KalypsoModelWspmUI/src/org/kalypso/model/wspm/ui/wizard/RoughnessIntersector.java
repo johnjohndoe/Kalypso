@@ -45,7 +45,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -179,12 +182,16 @@ public class RoughnessIntersector
             if( newValue != null )
               if( componentId != null )
               {
+
                 final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
-// final IComponent component = ProfilObsHelper.getPropertyFromId( profil, componentId );
 
                 final IComponent component = provider.getPointProperty( componentId );
 
-                profil.addPointProperty( component );
+                Object defaultValue = component.getDefaultValue();
+                if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
+                  defaultValue = 0.0;
+
+                profil.addPointProperty( component, defaultValue );
 
                 point.setValue( owner.indexOfComponent( component ), newValue );
               }

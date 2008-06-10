@@ -166,8 +166,7 @@ public class BewuchsRule extends AbstractValidatorRule
       if( ax.isNaN() || ay.isNaN() || dp.isNaN() )
       {
         // TODO: führt zu 1000 Fehlern, wenn der Bewuchs nicht gesetzt ist (nach Zuweisung Landnutzung z.b.)
-// collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiges Datenformat", "km " + Double.toString(
-// profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "ungültiges Datenformat", "km " + Double.toString( profil.getStation() ), profil.indexOfPoint( point ), IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId );
         continue;
       }
       else

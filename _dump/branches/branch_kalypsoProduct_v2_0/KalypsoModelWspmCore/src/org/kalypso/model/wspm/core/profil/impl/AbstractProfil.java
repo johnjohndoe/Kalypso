@@ -133,7 +133,17 @@ public abstract class AbstractProfil implements IProfil
 
     getResult().addComponent( pointProperty );
   }
+  public void addPointProperty( final IComponent pointProperty, final Object defaultValue)
+  {
+    if( pointProperty == null )
+      throw new IllegalStateException( Messages.AbstractProfil_2 );
 
+    final IComponent[] pointProperties = getPointProperties();
+    if( ArrayUtils.contains( pointProperties, pointProperty ) )
+      return;
+
+    getResult().addComponent( pointProperty, defaultValue );
+  }
   public void addPointProperty( final IComponent pointProperty, final IComponent initialValues )
   {
     if( pointProperty == null )

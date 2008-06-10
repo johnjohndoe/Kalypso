@@ -64,7 +64,11 @@ public interface IProfil extends IObservation<TupleResult>
    * @param pointProperty
    */
   public void addPointProperty( final IComponent pointProperty );
+
+  public void addPointProperty( final IComponent pointProperty, final Object defaultValue );
+
   public IComponent getPointPropertyFor( final String propertyID );
+
   public void addPointProperty( final IComponent pointProperty, final IComponent initialValues );
 
   /**
