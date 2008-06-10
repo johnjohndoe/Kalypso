@@ -51,6 +51,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ILastfall
 {
+  public static final QName QN_NAME = new QName( ISobekConstants.NS_SOBEK, "name" );//$NON-NLS-1$
 
   public static final QName QN_SIMULATION_BEGIN = new QName( ISobekConstants.NS_SOBEK, "simulationBegin" );//$NON-NLS-1$
 
