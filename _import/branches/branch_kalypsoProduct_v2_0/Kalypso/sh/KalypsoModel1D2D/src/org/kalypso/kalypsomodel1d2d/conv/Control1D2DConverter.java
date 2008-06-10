@@ -324,8 +324,10 @@ public class Control1D2DConverter
           formatter.format( "%nCC2     " ); //$NON-NLS-1$
         formatter.format( "%8d", nodeID ); //$NON-NLS-1$
       }
-      if( nodes.length % 9 != 0 )
-        formatter.format( "%n" ); //$NON-NLS-1$
+
+      // Why this "if" was here?
+      // if( nodes.length % 9 != 0 )
+      formatter.format( "%n" ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( formatter );
     }
