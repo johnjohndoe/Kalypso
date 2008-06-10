@@ -134,4 +134,12 @@ public class RestartNodes
     return (INodeResult) feature.getAdapter( INodeResult.class );
   }
 
+  public int getSize( )
+  {
+    if( m_nodes == null )
+      return 0;
+
+    return m_nodes.size();
+  }
+
 }
