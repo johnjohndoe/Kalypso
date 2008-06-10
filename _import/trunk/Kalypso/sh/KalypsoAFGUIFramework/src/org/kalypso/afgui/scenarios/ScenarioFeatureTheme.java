@@ -296,6 +296,14 @@ public class ScenarioFeatureTheme extends AbstractKalypsoTheme implements IKalyp
       return m_theme.getFeatureType();
     return null;
   }
+  
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
+   */
+  public String getFeaturePath( )
+  {
+    return m_featurePath;
+  }
 
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
