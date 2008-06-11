@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
+
 /**
  * @author kuch
  */
@@ -55,6 +56,12 @@ public interface ISobekModelMember extends IModelMember
     eBoundaryConditions,
     eConfigXML,
     eConfigOPR
+  }
 
+  public enum SOURCE
+  {
+    eLocations,
+    eBranches,
+    eCrossSections
   }
 }

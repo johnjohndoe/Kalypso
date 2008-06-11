@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -310,5 +311,6 @@ public class SobekModelMember implements ISobekModelMember
 
     return sbkStructNodes.toArray( new ISbkStructure[] {} );
   }
+
 
 }
