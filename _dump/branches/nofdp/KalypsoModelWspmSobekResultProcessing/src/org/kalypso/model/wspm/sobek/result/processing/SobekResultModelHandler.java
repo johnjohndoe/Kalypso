@@ -29,6 +29,7 @@ import org.kalypso.model.wspm.sobek.result.processing.model.implementation.Resul
 import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.util.pool.PoolHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -147,7 +148,7 @@ public class SobekResultModelHandler implements ISobekResultModel
       final URL url = iFile.getRawLocationURI().toURL();
 
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( url, null );
-      final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
+      final CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( gmlWorkspace );
 
       registerWorkspaces( node, gmlWorkspace, workspace );
 
@@ -214,7 +215,7 @@ public class SobekResultModelHandler implements ISobekResultModel
         final URL url = file.getRawLocationURI().toURL();
 
         m_branchesWorkspace = GmlSerializer.createGMLWorkspace( url, null );
-        m_branchesCommandableWorkspace = new CommandableWorkspace( m_branchesWorkspace );
+        m_branchesCommandableWorkspace = PoolHelper.getCommandableWorkspace( m_branchesWorkspace );
       }
 
       Feature root = m_branchesCommandableWorkspace.getRootFeature();

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.pub;
 
@@ -68,8 +68,8 @@ import org.kalypso.model.wspm.sobek.core.model.SbkStructWeir;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.util.pool.PoolHelper;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -91,15 +91,10 @@ public class FNNodeUtils
     if( (nodeType != null) && ((TYPE.eBoundaryNode.equals( nodeType ) || TYPE.eConnectionNode.equals( nodeType ) || TYPE.eLinkageNode.equals( nodeType ))) )
       values.put( targetFeatureType.getProperty( ISobekConstants.QN_HYDRAULIC_NODE_CONNECTION_TYPE ), nodeType.getTypeOfConnectionNode() );
 
-    CommandableWorkspace cw;
-    final GMLWorkspace workspace = model.getFeature().getWorkspace();
-    if( workspace instanceof CommandableWorkspace )
-      cw = (CommandableWorkspace) workspace;
-    else
-      cw = new CommandableWorkspace( workspace );
+    final CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( model.getFeature().getWorkspace() );
 
-    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( cw, targetFeatureType, model.getFeature(), targetPropertyType, -1, values, selectionManager );
-    cw.postCommand( command );
+    final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, targetFeatureType, model.getFeature(), targetPropertyType, -1, values, selectionManager );
+    workspace.postCommand( command );
 
     return FNNodeUtils.getNode( model, command.getNewFeature() );
   }
