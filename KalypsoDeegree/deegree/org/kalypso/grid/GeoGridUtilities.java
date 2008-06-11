@@ -750,9 +750,28 @@ public class GeoGridUtilities
       {
         final ICoverage coverage = collection.get( j );
         final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
+        final Envelope envelope = grid.getEnvelope();
 
-        final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        final GM_Surface< ? > surface = GeoGridUtilities.createSurface( grid, targetCRS );
+        final double minX = envelope.getMinX();
+        final double minY = envelope.getMinY();
+        final double maxX = envelope.getMaxX();
+        final double maxY = envelope.getMaxY();
+
+        /* Create the coordinates for the outer ring. */
+        final GM_Position c1 = GeometryFactory.createGM_Position( minX, minY );
+        final GM_Position c2 = GeometryFactory.createGM_Position( maxX, minY );
+        final GM_Position c3 = GeometryFactory.createGM_Position( maxX, maxY );
+        final GM_Position c4 = GeometryFactory.createGM_Position( minX, maxY );
+
+        /* Create the outer ring. */
+        final GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+
+        /* Create the surface patch. */
+        final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+
+        /* Create the surface. */
+        final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+
         final Geometry geometry = JTSAdapter.export( surface );
 
         if( unionGeom == null )
@@ -790,7 +809,7 @@ public class GeoGridUtilities
    */
   public static FlattenToCategoryGrid getFlattedGrid( GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
   {
-    Geometry globalEnv = null;
+    Geometry globalGridSurfaceBoundary = null;
     Geometry unionGeom = null;
 
     /* calculate min cell sizes */
@@ -810,6 +829,7 @@ public class GeoGridUtilities
 
         final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
         final GM_Surface< ? > surface = GeoGridUtilities.createSurface( grid, targetCRS );
+
         final Geometry geometry = JTSAdapter.export( surface );
 
         if( unionGeom == null )
@@ -820,36 +840,36 @@ public class GeoGridUtilities
 
       if( intersection == true )
       {
-        if( globalEnv == null )
-          globalEnv = unionGeom;
+        if( globalGridSurfaceBoundary == null )
+          globalGridSurfaceBoundary = unionGeom;
         else
-          globalEnv = globalEnv.intersection( unionGeom );
+          globalGridSurfaceBoundary = globalGridSurfaceBoundary.intersection( unionGeom );
       }
       else
       {
-        if( globalEnv == null )
-          globalEnv = unionGeom;
+        if( globalGridSurfaceBoundary == null )
+          globalGridSurfaceBoundary = unionGeom;
         else
-          globalEnv = globalEnv.union( unionGeom );
+          globalGridSurfaceBoundary = globalGridSurfaceBoundary.union( unionGeom );
       }
     }
 
-    final GM_Object gmObject = JTSAdapter.wrap( globalEnv );
+    final GM_Object gmObject = JTSAdapter.wrap( globalGridSurfaceBoundary );
     final GM_Envelope newGridEnv = gmObject.getEnvelope();
 
     /* create grid */
     // get Bounding box, +1 zelle
-    double originX = newGridEnv.getMin().getX();
-    double originY = newGridEnv.getMin().getY();
+    double originX = newGridEnv.getMin().getX() + minCellSizeX / 2;
+    double originY = newGridEnv.getMin().getY() + minCellSizeY / 2;
 
     /* calculate necessary number of cells */
-    final double dX = newGridEnv.getMax().getX() - originX;
-    final double dY = newGridEnv.getMax().getY() - originY;
+    final double dX = newGridEnv.getMax().getX() - minCellSizeX / 2 - originX;
+    final double dY = newGridEnv.getMax().getY() - minCellSizeY / 2 - originY;
 
     final int numOfColumns = (int) Math.round( dX / minCellSizeX ) + 1;
     final int numOfRows = (int) Math.round( dY / minCellSizeY ) + 1;
 
-    final Double CornerY = originY + numOfRows * minCellSizeY;
+    final Double CornerY = originY + (numOfRows - 1) * minCellSizeY;
 
     final String sourceCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final GM_Point gmOrigin = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( originX, CornerY, sourceCRS );
@@ -858,6 +878,6 @@ public class GeoGridUtilities
     final Coordinate offsetX = new Coordinate( minCellSizeX, 0 );
     final Coordinate offsetY = new Coordinate( 0, -minCellSizeY );
 
-    return new FlattenToCategoryGrid( gridCategories, globalEnv, origin, offsetX, offsetY, sourceCRS, numOfColumns, numOfRows );
+    return new FlattenToCategoryGrid( gridCategories, globalGridSurfaceBoundary, origin, offsetX, offsetY, sourceCRS, numOfColumns, numOfRows );
   }
 }
