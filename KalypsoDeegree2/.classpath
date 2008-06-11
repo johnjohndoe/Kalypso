@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="org/deegree/io/datastore/sql/oracle/JGeometryAdapter.java|org/deegree/io/datastore/sql/oracle/OracleDatastore.java|org/deegree/io/datastore/sql/oracle/OracleSpatialWhereBuilder.java|org/deegree/io/oraclegeoraster/GeoRasterReader.java|org/deegree/io/oraclegeoraster/GeoRasterWriter.java|org/deegree/model/coverage/grid/oracle/OracleGeoRasterGridCoverageReader.java|org/deegree/security/drm/SQLRegistry.java|org/deegree/tools/raster/OracleGeoRasterExporter.java|org/deegree/tools/raster/OracleGeoRasterImporter.java" kind="src" path="deegree"/>
+	<classpathentry exported="true" kind="lib" path="lib/deegree2_20080527.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/arcsde/jsde90_sdk.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/batik-awt-util.jar"/>
@@ -65,7 +65,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/xml/jaxen-1.1-beta-8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart/jcommon-1.0.12.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart/jfreechart-1.0.9.jar"/>
-	<classpathentry exported="true" kind="lib" path="build" sourcepath="build"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="build"/>
