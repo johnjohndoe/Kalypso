@@ -216,7 +216,7 @@ public class FNGmlUtils
    * @param lowerNodeType
    *            lower node type of branch
    */
-  public static INode[] createBranch( final IModelMember model, final GM_Curve curve, final INode[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
+  public static Object[] createBranch( final IModelMember model, final GM_Curve curve, final INode[] nodes, final TYPE upperNodeType, final TYPE lowerNodeType ) throws Exception
   {
     if( curve.getAsLineString().getNumberOfPoints() < 2 )
       throw new IllegalStateException( Messages.FNGmlUtils_0 );
@@ -237,31 +237,24 @@ public class FNGmlUtils
     final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, ftBranch, model.getFeature(), rtBranchMember, -1, null, selectionManager );
     workspace.postCommand( command );
 
-    try
-    {
-      final Feature branch = command.getNewFeature();
-      final String id = Branch.createBranchId( model );
+    final Feature branch = command.getNewFeature();
+    final String id = Branch.createBranchId( model );
 
-      final Map<QName, Object> values = new HashMap<QName, Object>();
-      values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_RIVER_LINE, curve );
-      values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, curve.getLength() );
-      values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
-      values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
+    final Map<QName, Object> values = new HashMap<QName, Object>();
+    values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_RIVER_LINE, curve );
+    values.put( ISobekConstants.QN_HYDRAULIC_BRANCH_LENGTH, curve.getLength() );
+    values.put( ISobekConstants.QN_HYDRAULIC_UNIQUE_ID, id );
+    values.put( ISobekConstants.QN_HYDRAULIC_NAME, id );
 
-      FeatureUtils.updateProperties( workspace, branch, values );
+    FeatureUtils.updateProperties( workspace, branch, values );
 
-      final IBranch myBranch = new Branch( model, branch );
-      myBranch.setUpperNode( upperNode );
-      myBranch.setLowerNode( lowerNode );
+    final IBranch myBranch = new Branch( model, branch );
+    myBranch.setUpperNode( upperNode );
+    myBranch.setLowerNode( lowerNode );
 
-      FNGmlUtils.addBranchesToLinkToNodes( model, new INode[] { upperNode, lowerNode } );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    FNGmlUtils.addBranchesToLinkToNodes( model, new INode[] { upperNode, lowerNode } );
 
-    return new INode[] { upperNode, lowerNode };
+    return new Object[] { new Branch( model, branch ), upperNode, lowerNode };
   }
 
   public static void createInflowBranch( final IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
@@ -316,5 +309,29 @@ public class FNGmlUtils
     final INode lowerNode = branch.getLowerNode();
 
     FNGmlUtils.createBranch( model, curve, new INode[] { upperNode, lowerNode }, TYPE.eConnectionNode, TYPE.eConnectionNode );
+  }
+
+  public static INode[] getNodes( final Object[] objects )
+  {
+    List<INode> nodes = new ArrayList<INode>();
+
+    for( Object obj : objects )
+    {
+      if( obj instanceof INode )
+        nodes.add( (INode) obj );
+    }
+
+    return nodes.toArray( new INode[] {} );
+  }
+
+  public static IBranch getBranch( final Object[] objects )
+  {
+    for( Object object : objects )
+    {
+      if( object instanceof IBranch )
+        return (IBranch) object;
+    }
+
+    return null;
   }
 }
