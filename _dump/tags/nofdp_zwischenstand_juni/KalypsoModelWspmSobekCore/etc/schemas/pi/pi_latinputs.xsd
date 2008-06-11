@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema"  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="LatInputs" type="fews:LatInputsComplexType">
+		<annotation>
+			<documentation>Lateral (or BranchBoundary inputs)</documentation>
+		</annotation>
+	</element>
+	<complexType name="LatInputsComplexType">
+		<annotation>
+			<documentation>Lateral (or BranchBoundary inputs)</documentation>
+		</annotation>
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL"/>
+			<element name="input" type="fews:LatInputComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="LatInputComplexType">
+		<choice>
+			<element name="value" type="double">
+				<annotation>
+					<documentation>A constant value for the lateral discharge</documentation>
+				</annotation>
+			</element>
+			<element name="key">
+				<annotation>
+					<documentation>A key combination to link to a TimeSeries</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="locationId" type="fews:LocationIdSimpleType"/>
+						<element name="parameter" type="fews:ParameterSimpleType"/>
+					</sequence>
+				</complexType>
+			</element>
+		</choice>
+		<attribute name="latId" type="fews:idString" use="required">
+			<annotation>
+				<documentation>ID of this lateral input</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="x" type="double" use="required">
+			<annotation>
+				<documentation>Geographical co-ordinate (Easting)</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="y" type="double" use="required">
+			<annotation>
+				<documentation>Geographical co-ordinate (Northing)</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="branchId" type="string" use="required">
+			<annotation>
+				<documentation>ID of the branch this lateral input
+                    is located on</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="chainage" type="string" use="required">
+			<annotation>
+				<documentation>The chainage of the lateral discharge</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+</schema>

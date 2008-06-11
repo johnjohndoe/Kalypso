@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fews="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="Polygons" type="fews:PolygonsComplexType">
+		<annotation>
+			<documentation>(dynamic) polygons</documentation>
+		</annotation>
+	</element>
+	<complexType name="PolygonsComplexType">
+		<annotation>
+			<documentation>(dynamic) polygons</documentation>
+		</annotation>
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL">
+				<annotation>
+					<documentation>The geographical datum for the location data.
+                        Presently only WGS-1984, OS 1936 and LOCAL are recognised.
+                        LOCAL indicates a local grid.</documentation>
+				</annotation>
+			</element>
+			<element name="timeZone" type="fews:TimeZoneSimpleType" minOccurs="0"/>
+			<element name="polygon" type="fews:PolygonComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="PolygonComplexType">
+		<sequence>
+			<element name="locationId" type="fews:LocationIdSimpleType"/>
+			<element name="parameterId" type="fews:ParameterSimpleType"/>
+			<element name="timeStep" type="fews:TimeStepComplexType"/>
+			<element name="startDate" type="fews:DateTimeComplexType">
+				<annotation>
+					<documentation>date/time of the first event</documentation>
+				</annotation>
+			</element>
+			<element name="endDate" type="fews:DateTimeComplexType">
+				<annotation>
+					<documentation>date/time of the last event</documentation>
+				</annotation>
+			</element>
+			<element name="name" type="fews:nameString" minOccurs="0">
+				<annotation>
+					<documentation>optional descriptive name</documentation>
+				</annotation>
+			</element>
+			<element name="upstreamId" type="fews:idString" minOccurs="0">
+				<annotation>
+					<documentation>ID of the upstream polygont.
+                        If no id is given, this catchment is either on
+                        its own or the topmost catchment in a series.</documentation>
+				</annotation>
+			</element>
+			<element name="downstreamId" type="fews:idString" minOccurs="0">
+				<annotation>
+					<documentation>ID of the downstream polygon.
+                        If no id is given, this polygon is either on
+                        its own or the last catchment in a series.</documentation>
+				</annotation>
+			</element>
+			<element name="event" type="fews:PolygonEventComplexType" maxOccurs="unbounded"/>
+			<element name="comment" type="fews:commentString" minOccurs="0">
+				<annotation>
+					<documentation>use this field as a notebook to add comments, suggestions
+                        description of data entered etc.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="PolygonPtComplexType">
+		<attribute name="x" type="double" use="required"/>
+		<attribute name="y" type="double" use="required"/>
+		<attribute name="z" type="double" use="optional"/>
+		<attribute name="mark" type="int" use="optional">
+			<annotation>
+				<documentation>Optional mark identifying special points(i.e.):
+                    1 = catchment outlet
+                    2 = saddle
+                    3 = high-point</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="PolygonCentroidComplexType">
+		<annotation>
+			<documentation>Areal weighted polygon centroid</documentation>
+		</annotation>
+		<sequence>
+			<element name="x" type="double">
+				<annotation>
+					<documentation>X coordinate of the point (Easting)</documentation>
+				</annotation>
+			</element>
+			<element name="y" type="double">
+				<annotation>
+					<documentation>Y coordinate of the point (Northing)</documentation>
+				</annotation>
+			</element>
+			<element name="z" type="double">
+				<annotation>
+					<documentation>Z coordinate of the point (altitude)</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="PolygonEventComplexType">
+		<sequence>
+			<element name="shape" type="fews:PolygonShapeComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="date" type="date" use="required"/>
+		<attribute name="time" type="time" use="required"/>
+	</complexType>
+	<complexType name="PolygonShapeComplexType">
+		<sequence>
+			<element name="centroid" type="fews:PolygonCentroidComplexType" minOccurs="0">
+				<annotation>
+					<documentation>Areal weighted polygon centroid</documentation>
+				</annotation>
+			</element>
+			<element name="value" type="double" minOccurs="0">
+				<annotation>
+					<documentation>Optional uniform value for the area covered by this polygon for this event</documentation>
+				</annotation>
+			</element>
+			<element name="area" type="double" minOccurs="0">
+				<annotation>
+					<documentation>optional polygon area</documentation>
+				</annotation>
+			</element>
+			<element name="pt" type="fews:PolygonPtComplexType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+</schema>

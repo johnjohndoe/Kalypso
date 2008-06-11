@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:fews="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+	<element name="dataCluster" type="fews:DataClusterComplexType">
+		<annotation>
+			<documentation>A DataCluster is generic XML file which contains the model data  either be it state or measurement or model parameters</documentation>
+		</annotation>
+	</element>
+	<!-- -->
+	<complexType name="DataClusterComplexType">
+		<annotation>
+			<documentation>A DataCluster is generic XML file which contains the model data  either be it state or measurement or model parameters</documentation>
+		</annotation>
+		<sequence>
+			<element name="dataClusterId" type="fews:idString" minOccurs="0">
+				<annotation>
+					<documentation>id of this data cluster, defined by the module</documentation>
+				</annotation>
+			</element>
+			<element name="general" type="fews:DataClusterGeneralComplexType"/>
+			<element name="timeStamp" type="fews:DateTimeComplexType" minOccurs="0">
+				<annotation>
+					<documentation>date and time this data is valid for/was taken</documentation>
+				</annotation>
+			</element>
+			<element name="constantValues" type="fews:ModelConstantsComplexType" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="data" type="fews:ModelDataComplexType" maxOccurs="unbounded">
+				<annotation>
+					<documentation>data is should be present in the dataCluster definition file</documentation>
+				</annotation>
+			</element>
+			<element name="file" type="fews:DataClusterFileDefinitionComplexType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Global data cluster file to be used for reading the data for all the above mentioned data id. Each data Cluster location consists of a read and a writelocation. The type attribute indicates whether this points to a file or a directory.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<!-- -->
+	<complexType name="DataClusterFileDefinitionComplexType">
+		<annotation>
+			<documentation>data Cluster file definition consist of file location location and its contents. The type attribute indicates whether this points to a file or a directory </documentation>
+		</annotation>
+		<sequence>
+			<element name="location" type="anyURI">
+				<annotation>
+					<documentation>file location to read data from (URI). If this points to a file a single file is read, if this points to a dir, the entire dir is read</documentation>
+				</annotation>
+			</element>
+			<element name="contents" type="fews:ContentComplexType" maxOccurs="unbounded">
+				<annotation>
+					<documentation>contents of file or directory. If type is file then provide position and if it is directory then provide the file name. This file then represent only one data variable</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="id" type="fews:idString" use="required"/>
+		<attribute name="type" type="string" use="required">
+			<annotation>
+				<documentation>type: either file or directory</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="size" type="int" use="optional"/>
+	</complexType>
+	<!-- -->
+	<complexType name="ContentComplexType">
+		<attribute name="dataId" type="fews:idString" use="required">
+			<annotation>
+				<documentation source=" data ID or parameter ID for e.g. V(velocaity0, S(waterlevel), should match with the id used in DataCluster definition"/>
+			</annotation>
+		</attribute>
+		<attribute name="position" type="int" use="optional">
+			<annotation>
+				<documentation source="position within the global file"/>
+			</annotation>
+		</attribute>
+		<attribute name="file" type="fews:nameString" use="optional"/>
+	</complexType>
+	<!-- -->
+	<complexType name="ModelDataComplexType">
+		<annotation>
+			<documentation>module data</documentation>
+		</annotation>
+		<choice>
+			<element name="fileId" type="fews:idString" minOccurs="0">
+				<annotation>
+					<documentation>Id of the Binary file</documentation>
+				</annotation>
+			</element>
+			<element name="values" type="string" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>values to be entered here if an array and if it is not to be read from binary file</documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="dataId" type="fews:idString" use="required">
+			<annotation>
+				<documentation source=" data ID or parameter ID for e.g. V(velocaity0, S(waterlevel), should match with the id used in DataCluster definition"/>
+			</annotation>
+		</attribute>
+		<attribute name="value" type="string" use="optional">
+			<annotation>
+				<documentation>value
+</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="defaultValue" type="string" use="optional">
+			<annotation>
+				<documentation>defaut value to be used for the whole array dimension, using default value is handy if e.g. to initialize all water levels to 0.0m 
+</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="missVal" type="string" use="optional" default="-999.0">
+			<annotation>
+				<documentation>miss Value can be model dependent however application reading data can have its own missing value reprensentation 
+</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="conversionFactor" type="string" use="optional" default="1"/>
+	</complexType>
+	<!-- -->
+	<complexType name="ModelConstantsComplexType">
+		<annotation>
+			<documentation>module constants</documentation>
+		</annotation>
+		<attribute name="constantsId" type="fews:idString" use="required">
+			<annotation>
+				<documentation source=" data ID or parameter ID for e.g. V(velocaity0, S(waterlevel), should match with the id used in DataCluster definition"/>
+			</annotation>
+		</attribute>
+		<attribute name="intValue" type="int" use="optional">
+			<annotation>
+				<documentation>value
+</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="floatValue" type="float" use="optional"/>
+	</complexType>
+	<!-- -->
+	<!-- GeneralComplexType -->
+	<complexType name="DataClusterGeneralComplexType">
+		<sequence>
+			<element name="description" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Optional description</documentation>
+				</annotation>
+			</element>
+			<element name="rootDir" type="string">
+				<annotation>
+					<documentation>Root directory for all the Data files and definition files</documentation>
+				</annotation>
+			</element>
+			<element name="dataDir" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Data directory where the binary data file can be found, directory path is relative to the root dir</documentation>
+				</annotation>
+			</element>
+			<element name="dataClusterDefinition" type="string">
+				<annotation>
+					<documentation>name and directory path of Data Cluster Definition file, directory path is relative to the root dir</documentation>
+				</annotation>
+			</element>
+			<element name="timeZone" type="fews:TimeZoneSimpleType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+</schema>
