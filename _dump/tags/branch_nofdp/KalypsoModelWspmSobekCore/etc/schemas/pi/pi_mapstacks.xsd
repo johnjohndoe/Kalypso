@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  Delft FEWS Published Interface (Copyright 2003 WL | Delft Hydraulics) -->
+<schema targetNamespace="http://www.wldelft.nl/fews/PI" xmlns:fews="http://www.wldelft.nl/fews/PI" xmlns="http://www.w3.org/2001/XMLSchema"  elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="pi_sharedtypes.xsd"/>
+    <!--todo create complex types for Ascii-->
+    <!--todo change documentation for patterns ???, -->
+    <element name="MapStacks" type="fews:MapStacksComplexType">
+		<annotation>
+			<documentation>
+                Maps stacks are time series of grid data
+
+                Three data formats are supported:
+                - usgs bil, bip
+                - pcraster native format
+                - ascii format
+
+                In the usgs format all timeSteps are in a single file. In the other two formats
+                each time step is stored in a separate file. The order of the maps is determined
+                by the file extension and the last two characters of the first part of the filename:
+
+                (e.g. evap0000.001, evap0000.002 …. evap0000.999, evap0001.000).
+
+                This limits the size of a stack of maps to 9999999.
+            </documentation>
+		</annotation>
+	</element>
+	<complexType name="MapStacksComplexType">
+		<annotation>
+			<documentation>
+                Maps stacks are time series of grid data
+
+                Three data formats are supported:
+                - usgs bil, bip
+                - pcraster native format
+                - ascii format
+
+                In the usgs format all timeSteps are in a single file. In the other two formats
+                each time step is stored in a separate file. In this case it is required to indicate the position of the file number
+                by a ??? pattern. Only one pattern may exists. The  number of question marks in the pattern is user defined.
+
+                e.g. pattern is evap.??? results to evap.001 …. evap.999
+                e.g. pattern is evap????.asc results to evap0001.asc …. evap9999.asc
+
+            </documentation>
+		</annotation>
+		<sequence>
+			<element name="geoDatum" type="fews:GeoDatumStringType" default="LOCAL"/>
+			<element name="timeZone" type="fews:TimeZoneSimpleType" default="0.0" minOccurs="0"/>
+			<element name="mapStack" type="fews:MapStackComplexType" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="version" type="fews:versionString" use="required" fixed="1.2"/>
+	</complexType>
+	<complexType name="MapStackComplexType">
+		<sequence>
+			<element name="locationId" type="fews:LocationIdSimpleType"/>
+			<element name="parameterId" type="fews:ParameterSimpleType"/>
+			<element name="timeStep" type="fews:TimeStepComplexType">
+				<annotation>
+					<documentation>If non equidistant mapstacks are used the datetime elements are required</documentation>
+				</annotation>
+			</element>
+			<element name="startDate" type="fews:DateTimeComplexType">
+				<annotation>
+					<documentation>date/time of the first event</documentation>
+				</annotation>
+			</element>
+			<element name="endDate" type="fews:DateTimeComplexType">
+				<annotation>
+					<documentation>date/time of the last event</documentation>
+				</annotation>
+			</element>
+			<element name="file" type="fews:FileComplexType">
+				<annotation>
+					<documentation>Link to one of the three
+                        supported file formats.
+                        For each file another file
+                        with the positions of the cell
+                        centrepoints most be present.
+                        See cells.xsd</documentation>
+				</annotation>
+			</element>
+			<element name="event" type="fews:DateTimeComplexType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Date and time of each event in the stack. This is needed for non equidistant data. The number of event elements MUST match the number of maps/profile etc</documentation>
+				</annotation>
+			</element>
+			<element name="comment" type="fews:commentString" minOccurs="0">
+				<annotation>
+					<documentation>use this field as a notebook to add comments, suggestions
+                        description of data entered etc.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="FileComplexType">
+		<annotation>
+			<documentation>Link to one of the three
+                supported file formats.
+                For each file another file
+                with the positions of the cell
+                centrepoints most be present.
+                See cells.xsd</documentation>
+		</annotation>
+		<choice>
+			<element name="usgs">
+				<complexType>
+					<attribute name="file" type="anyURI" use="required"/>
+					<attribute name="header" type="anyURI" use="required"/>
+				</complexType>
+			</element>
+			<element name="pcrgrid">
+				<complexType>
+					<attribute name="file" type="anyURI" use="required">
+						<annotation>
+							<documentation>eg:
+                                temp????.???
+                                See mapstack description</documentation>
+						</annotation>
+					</attribute>
+				</complexType>
+			</element>
+			<element name="ascii">
+				<annotation>
+					<documentation> </documentation>
+				</annotation>
+				<complexType>
+					<attribute name="file" type="anyURI" use="required">
+						<annotation>
+							<documentation>eg:
+                                temp????.???
+                                See mapstack description</documentation>
+						</annotation>
+					</attribute>
+				</complexType>
+			</element>
+		</choice>
+		<attribute name="locations" type="anyURI" use="optional">
+			<annotation>
+				<documentation>Required file with xyz co-ordinates(lat-long) for each centre-point
+                    of the grid. the format of the file is described
+                    in cells.xsd</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+</schema>

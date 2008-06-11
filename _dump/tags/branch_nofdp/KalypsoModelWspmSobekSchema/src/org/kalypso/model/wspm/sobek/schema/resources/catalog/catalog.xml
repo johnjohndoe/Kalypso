@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml"
+	xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+	<!-- PROPERTIES -->
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.sobek.structures:SbkRiverWeir:uiproperties:default"
+		uri="properties/sbkRiverWeir.properties" />
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.sobek.structures:SbkDatabaseStructure:uiproperties:default"
+		uri="properties/sbkDatabaseStructure.properties" />
+</catalog:catalog>

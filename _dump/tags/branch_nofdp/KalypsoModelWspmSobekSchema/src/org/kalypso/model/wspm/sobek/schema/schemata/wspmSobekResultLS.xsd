@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekResultLs="org.kalypso.model.wspm.sobek.result.ls" targetNamespace="org.kalypso.model.wspm.sobek.result.ls" elementFormDefault="qualified" version="0.1">
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
+        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+        <import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd"/>
+        <!--
+                _________________________________________________________________________________________
+                Elements
+                _________________________________________________________________________________________
+        -->
+        <element name="ResultLsList" type="wspmSobekResultLs:ResultLsListType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Ergebnis-Längsschnitte</name>
+                                <label>Ergebnis-Längsschnitte</label>
+                                <tooltip>Ergebnis-Längsschnitte</tooltip>
+                                <description>Ergebnis-Längsschnitte</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Result Length Sections</name>
+                                <label>Result Length Sections</label>
+                                <tooltip>Result Length Sections</tooltip>
+                                <description>Result Length Sections</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="resultLsMember" type="wspmSobekResultLs:ResultLsPropertyType">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Ergebnis-Längsschnitte</name>
+                                <label>Ergebnis-Längsschnitte</label>
+                                <tooltip>Ergebnis-Längsschnitte</tooltip>
+                                <description>Ergebnis-Längsschnitte</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Ergebnis-Längsschnitte</name>
+                                <label>Ergebnis-Längsschnitte</label>
+                                <tooltip>Ergebnis-Längsschnitte</tooltip>
+                                <description>Ergebnis-Längsschnitte</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="ResultLs" type="wspmSobekResultLs:ResultLsType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Ergebnis-Längsschnitt</name>
+                                <label>${property:org.kalypso.model.wspm.sobek.result.ls#branchID}</label>
+                                <tooltip>Ergebnis-Längsschnitt - ${property:org.kalypso.model.wspm.sobek.result.ls#branchID}</tooltip>
+                                <description>Ergebnis-Längsschnitt - ${property:org.kalypso.model.wspm.sobek.result.ls#branchID}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Result Length Section</name>
+                                <label>${property:org.kalypso.model.wspm.sobek.result.ls#branchID}</label>
+                                <tooltip>Result Length Section - ${property:org.kalypso.model.wspm.sobek.result.ls#branchID}</tooltip>
+                                <description>Result Length Section - ${property:org.kalypso.model.wspm.sobek.result.ls#branchID}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!--
+                _________________________________________________________________________________________
+                TYPES
+                _________________________________________________________________________________________
+        -->
+        <complexType name="ResultLsListPropertyType">
+                <sequence>
+                        <element ref="wspmSobekResultLs:ResultLsList"/>
+                </sequence>
+        </complexType>
+        <complexType name="ResultLsListType">
+                <complexContent>
+                        <extension base="wspmSobekCommon:EmptyFeatureBaseType">
+                                <sequence>
+                                        <element ref="wspmSobekResultLs:resultLsMember" minOccurs="0" maxOccurs="unbounded">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <name>Längsschnitte</name>
+                                                                <label>Längsschnitte</label>
+                                                                <tooltip>Längsschnitte</tooltip>
+                                                                <description>Längsschnitte</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <name>Lengh Sections</name>
+                                                                <label>Lengh Sections</label>
+                                                                <tooltip>Lengh Sections</tooltip>
+                                                                <description>Lengh Sections</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <complexType name="ResultLsPropertyType">
+                <sequence>
+                        <element ref="wspmSobekResultLs:ResultLs"/>
+                </sequence>
+        </complexType>
+        <complexType name="ResultLsType">
+                <complexContent>
+                        <extension base="wspmSobekCommon:EmptyFeatureBaseType">
+                                <sequence>
+                                        <element name="branchID" type="wspmSobekCommon:uniqueIdType"/>
+                                        <element name="name" type="string" nillable="true">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <name>Bezeichnung</name>
+                                                                <label>Bezeichnung</label>
+                                                                <tooltip>Bezeichnung</tooltip>
+                                                                <description>Bezeichnung</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <name>Name</name>
+                                                                <label>Name</label>
+                                                                <tooltip>Name</tooltip>
+                                                                <description>Name</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="paramID" type="string" nillable="true"/>
+                                        <element name="unit" type="string" nillable="true"/>
+                                        <element name="resultMember" type="wspmSobekResultLs:TimeSeriesObservationPropertyType"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <element name="TimeSeriesDefTable" type="wspmSobekResultLs:TimeSeriesDefTableType" substitutionGroup="om:Observation"/>
+        <complexType name="TimeSeriesObservationPropertyType">
+                <sequence>
+                        <element ref="wspmSobekResultLs:TimeSeriesDefTable"/>
+                </sequence>
+        </complexType>
+        <complexType name="TimeSeriesDefTableType">
+                <complexContent>
+                        <extension base="om:ObservationType"/>
+                </complexContent>
+        </complexType>
+</schema>

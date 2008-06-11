@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Structures xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wldelft.nl/fews/PI ../Delft_PI.xsd" xmlns="http://www.wldelft.nl/fews/PI">
+    <structure>
+        <structureId>structureId0</structureId>
+        <structureName>structureName0</structureName>
+        <branchId>branchId0</branchId>
+        <x>3.14159E0</x>
+        <y>3.14159E0</y>
+        <StructureDefinitions>
+            <structureDefinition>
+                <structureDefinitionId>structureDefinitionId0</structureDefinitionId>
+                <structureDefinitionName>structureDefinitionName0</structureDefinitionName>
+                <structureDefinitionType>structureDefinitionType0</structureDefinitionType>
+                <Parameters>
+                    <parameter type="boolean" id="id1"> </parameter>
+                    <parameter type="boolean" id="id3"> </parameter>
+                    <parameter type="boolean" id="id5"> </parameter>
+                </Parameters>
+            </structureDefinition>
+        </StructureDefinitions>
+    </structure>
+</Structures>

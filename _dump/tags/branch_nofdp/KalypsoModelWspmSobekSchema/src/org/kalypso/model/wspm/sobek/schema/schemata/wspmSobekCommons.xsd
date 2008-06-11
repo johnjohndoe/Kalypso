@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms  
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:om="http://www.opengis.net/om" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" targetNamespace="org.kalypso.model.wspm.sobek.common" elementFormDefault="qualified" version="0.1">
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
+        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+        <!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+        <complexType name="EmptyFeatureBaseType">
+                <complexContent>
+                        <restriction base="gml:AbstractFeatureType">
+                                <!-- Force id attribute, because Kalypso needs it -->
+                                <attribute ref="gml:id" use="required"/>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <!-- 
+	-->
+        <simpleType name="stationDouble">
+                <restriction base="decimal">
+                        <fractionDigits value="4"/>
+                </restriction>
+        </simpleType>
+        <simpleType name="boundaryConditionType">
+                <restriction base="string">
+                        <enumeration value="bc_q">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Abfluss</name>
+                                                <label>Abfluss</label>
+                                                <tooltip>Abfluss</tooltip>
+                                                <description>Abfluss</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Discharge</name>
+                                                <label>Discharge</label>
+                                                <tooltip>Discharge</tooltip>
+                                                <description>Discharge</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="bc_w">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Wasserstand</name>
+                                                <label>Wasserstand</label>
+                                                <tooltip>Wasserstand</tooltip>
+                                                <description>Wasserstand</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Water Level</name>
+                                                <label>Water Level</label>
+                                                <tooltip>Water Level</tooltip>
+                                                <description>Water Level</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="bc_wq">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>W/Q-Tabelle</name>
+                                                <label>W/Q-Tabelle</label>
+                                                <tooltip>W/Q-Tabelle</tooltip>
+                                                <description>W/Q-Tabelle</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Q-H Relation</name>
+                                                <label>Q-H Relation</label>
+                                                <tooltip>Q-H Relation</tooltip>
+                                                <description>Q-H Relation</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="connectionNodeEnumType">
+                <restriction base="string">
+                        <enumeration value="base">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Connection Node</name>
+                                                <label>Connection Node</label>
+                                                <tooltip>Connection Node</tooltip>
+                                                <description>Connection Node</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Connection Node</name>
+                                                <label>Connection Node</label>
+                                                <tooltip>Connection Node</tooltip>
+                                                <description>Connection Node</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="linkage">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Linkage Node</name>
+                                                <label>Linkage Node</label>
+                                                <tooltip>Linkage Node</tooltip>
+                                                <description>Linkage Node</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Linkage Node</name>
+                                                <label>Linkage Node</label>
+                                                <tooltip>Linkage Node</tooltip>
+                                                <description>Linkage Node</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="boundaryCondition">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Boundary Condition Node</name>
+                                                <label>Boundary Condition Node</label>
+                                                <tooltip>Boundary Condition Node</tooltip>
+                                                <description>Boundary Condition Node</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Boundary Condition Node</name>
+                                                <label>Boundary Condition Node</label>
+                                                <tooltip>Boundary Condition Node</tooltip>
+                                                <description>Boundary Condition Node</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <!-- 
+		______________________________
+		Very basic simple types
+		______________________________
+	-->
+        <simpleType name="uniqueIdType">
+                <restriction base="string"> </restriction>
+        </simpleType>
+        <simpleType name="yesNoType">
+                <restriction base="string">
+                        <enumeration value="Yes">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Ja</name>
+                                                <label>Ja</label>
+                                                <tooltip>Ja</tooltip>
+                                                <description>Ja</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Yes</name>
+                                                <label>Yes</label>
+                                                <tooltip>Yes</tooltip>
+                                                <description>Yes</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="No">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Nein</name>
+                                                <label>Nein</label>
+                                                <tooltip>Nein</tooltip>
+                                                <description>Nein</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>No</name>
+                                                <label>No</label>
+                                                <tooltip>No</tooltip>
+                                                <description>No</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <!-- 
+		______________________________
+		Special Sobek simple types (especially enumerations)
+		______________________________
+	-->
+        <simpleType name="sbkInterpolationTypeType">
+                <restriction base="string">
+                        <enumeration value="Interpolation.Continuous">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>stufenlos</name>
+                                                <label>stufenlos</label>
+                                                <tooltip>stufenlos</tooltip>
+                                                <description>stufenlos</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>continuous</name>
+                                                <label>continuous</label>
+                                                <tooltip>continuous</tooltip>
+                                                <description>continuous</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Interpolation.Block">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>stückweise konstant</name>
+                                                <label>stückweise konstant</label>
+                                                <tooltip>stückweise konstant</tooltip>
+                                                <description>stückweise konstant</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>block</name>
+                                                <label>block</label>
+                                                <tooltip>block</tooltip>
+                                                <description>block</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkFlowDirectionInclNoneType">
+                <restriction base="string">
+                        <enumeration value="Direction.Both">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>positiv und negativ</name>
+                                                <label>positiv und negativ</label>
+                                                <tooltip>positiv und negativ</tooltip>
+                                                <description>positiv und negativ</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>positive and negative</name>
+                                                <label>positive and negative</label>
+                                                <tooltip>positive and negative</tooltip>
+                                                <description>positive and negative</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Direction.Positive">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>positiv</name>
+                                                <label>positiv</label>
+                                                <tooltip>positiv</tooltip>
+                                                <description>positiv</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>positive</name>
+                                                <label>positive</label>
+                                                <tooltip>positive</tooltip>
+                                                <description>positive</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Direction.Negative">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>negativ</name>
+                                                <label>negativ</label>
+                                                <tooltip>negativ</tooltip>
+                                                <description>negativ</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>negative</name>
+                                                <label>negative</label>
+                                                <tooltip>negative</tooltip>
+                                                <description>negative</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Direction.None">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>keine</name>
+                                                <label>keine</label>
+                                                <tooltip>keine</tooltip>
+                                                <description>keine</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>none</name>
+                                                <label>none</label>
+                                                <tooltip>none</tooltip>
+                                                <description>none</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkFlowDirectionType">
+                <restriction base="string">
+                        <enumeration value="Direction.Both">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>positiv und negativ</name>
+                                                <label>positiv und negativ</label>
+                                                <tooltip>positiv und negativ</tooltip>
+                                                <description>positiv und negativ</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>positive and negative</name>
+                                                <label>positive and negative</label>
+                                                <tooltip>positive and negative</tooltip>
+                                                <description>positive and negative</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Direction.Positive">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>positiv</name>
+                                                <label>positiv</label>
+                                                <tooltip>positiv</tooltip>
+                                                <description>positiv</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>positive</name>
+                                                <label>positive</label>
+                                                <tooltip>positive</tooltip>
+                                                <description>positive</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Direction.Negative">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>negativ</name>
+                                                <label>negativ</label>
+                                                <tooltip>negativ</tooltip>
+                                                <description>negativ</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>negative</name>
+                                                <label>negative</label>
+                                                <tooltip>negative</tooltip>
+                                                <description>negative</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkFlowDirectionPosAndNegType">
+                <restriction base="string">
+                        <enumeration value="Direction.Positive">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>positiv</name>
+                                                <label>positiv</label>
+                                                <tooltip>positiv</tooltip>
+                                                <description>positiv</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>positive</name>
+                                                <label>positive</label>
+                                                <tooltip>positive</tooltip>
+                                                <description>positive</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Direction.Negative">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>negativ</name>
+                                                <label>negativ</label>
+                                                <tooltip>negativ</tooltip>
+                                                <description>negativ</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>negative</name>
+                                                <label>negative</label>
+                                                <tooltip>negative</tooltip>
+                                                <description>negative</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkControlPositionType">
+                <restriction base="string">
+                        <enumeration value="PumpControl.Upward">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>aufwärts</name>
+                                                <label>aufwärts</label>
+                                                <tooltip>aufwärts</tooltip>
+                                                <description>aufwärts</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>upward</name>
+                                                <label>upward</label>
+                                                <tooltip>upward</tooltip>
+                                                <description>upward</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="PumpControl.Downward">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>abwärts</name>
+                                                <label>abwärts</label>
+                                                <tooltip>abwärts</tooltip>
+                                                <description>abwärts</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>downward</name>
+                                                <label>downward</label>
+                                                <tooltip>downward</tooltip>
+                                                <description>downward</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="PumpControl.Both">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>auf- und abwärts</name>
+                                                <label>auf- und abwärts</label>
+                                                <tooltip>auf- und abwärts</tooltip>
+                                                <description>auf- und abwärts</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>up- and downward</name>
+                                                <label>up- and downward</label>
+                                                <tooltip>up- and downward</tooltip>
+                                                <description>up- and downward</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkRiverDatabaseStructInterpolationTypeType">
+                <restriction base="string">
+                        <enumeration value="Sobek.RiverDatabaseStructure.InterpolationType.Linear">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>linear</name>
+                                                <label>linear</label>
+                                                <tooltip>linear</tooltip>
+                                                <description>linear</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>linear</name>
+                                                <label>linear</label>
+                                                <tooltip>linear</tooltip>
+                                                <description>linear</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Sobek.RiverDatabaseStructure.InterpolationType.Spline">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Spline</name>
+                                                <label>Spline</label>
+                                                <tooltip>Spline</tooltip>
+                                                <description>Spline</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>spline</name>
+                                                <label>spline</label>
+                                                <tooltip>spline</tooltip>
+                                                <description>spline</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkReductionTypeType">
+                <restriction base="string">
+                        <enumeration value="ReductionFactor.Constant">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>konstant</name>
+                                                <label>konstant</label>
+                                                <tooltip>konstant</tooltip>
+                                                <description>konstant</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>constant</name>
+                                                <label>constant</label>
+                                                <tooltip>constant</tooltip>
+                                                <description>constant</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="ReductionFactor.Waterlevel">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Höhendifferenz [m]</name>
+                                                <label>Höhendifferenz [m]</label>
+                                                <tooltip>Höhendifferenz [m]</tooltip>
+                                                <description>Höhendifferenz [m]</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Level Difference [m]</name>
+                                                <label>Level Difference [m]</label>
+                                                <tooltip>Level Difference [m]</tooltip>
+                                                <description>Level Difference [m]</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkCrestShapeType">
+                <restriction base="string">
+                        <enumeration value="Sobek.Structures.RiverWeir.CrestShape.Broad">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>breit</name>
+                                                <label>breit</label>
+                                                <tooltip>breit</tooltip>
+                                                <description>breit</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>broad</name>
+                                                <label>broad</label>
+                                                <tooltip>broad</tooltip>
+                                                <description>broad</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Sobek.Structures.RiverWeir.CrestShape.Triangular">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>dreieckig</name>
+                                                <label>dreieckig</label>
+                                                <tooltip>dreieckig</tooltip>
+                                                <description>dreieckig</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>triangular</name>
+                                                <label>triangular</label>
+                                                <tooltip>triangular</tooltip>
+                                                <description>triangular</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Sobek.Structures.RiverWeir.CrestShape.Round">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>rund</name>
+                                                <label>rund</label>
+                                                <tooltip>rund</tooltip>
+                                                <description>rund</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>round</name>
+                                                <label>round</label>
+                                                <tooltip>round</tooltip>
+                                                <description>round</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Sobek.Structures.RiverWeir.CrestShape.Sharp">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>spitz</name>
+                                                <label>spitz</label>
+                                                <tooltip>spitz</tooltip>
+                                                <description>spitz</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>sharp</name>
+                                                <label>sharp</label>
+                                                <tooltip>sharp</tooltip>
+                                                <description>sharp</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkRiverDatabaseStructSecondAxisTypeType">
+                <restriction base="string">
+                        <enumeration value="Sobek.RiverDatabaseStructure.SecondAxisValue.h2">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>h2</name>
+                                                <label>h2</label>
+                                                <tooltip>h2</tooltip>
+                                                <description>h2</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>h2</name>
+                                                <label>h2</label>
+                                                <tooltip>h2</tooltip>
+                                                <description>h2</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="Sobek.RiverDatabaseStructure.SecondAxisValue.Deltah">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>delta h</name>
+                                                <label>delta h</label>
+                                                <tooltip>delta h</tooltip>
+                                                <description>delta h</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>delta h</name>
+                                                <label>delta h</label>
+                                                <tooltip>delta h</tooltip>
+                                                <description>delta h</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="sbkInterpolationPeriodType">
+                <restriction base="string">
+                        <enumeration value="Seconds">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Sekunden</name>
+                                                <label>Sekunden</label>
+                                                <tooltip>Sekunden</tooltip>
+                                                <description>Sekunden</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Seconds</name>
+                                                <label>Seconds</label>
+                                                <tooltip>Seconds</tooltip>
+                                                <description>Seconds</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="No">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>keine</name>
+                                                <label>keine</label>
+                                                <tooltip>keine</tooltip>
+                                                <description>keine</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>No</name>
+                                                <label>No</label>
+                                                <tooltip>No</tooltip>
+                                                <description>No</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                </restriction>
+        </simpleType>
+        <simpleType name="lastBoundaryTypeType">
+                <restriction base="string">
+                        <enumeration value="zml">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>ZML-Import</name>
+                                                <label>ZML-Import</label>
+                                                <tooltip>ZML-Import</tooltip>
+                                                <description>ZML-Import</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>ZML Import</name>
+                                                <label>ZML Import</label>
+                                                <tooltip>ZML Import</tooltip>
+                                                <description>ZML Import</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <enumeration value="const">
+                                <annotation>
+                                        <documentation xml:lang="de">
+                                                <name>Konstante Zeitreihe</name>
+                                                <label>Konstante Zeitreihe</label>
+                                                <tooltip>Konstante Zeitreihe</tooltip>
+                                                <description>Konstante Zeitreihe</description>
+                                        </documentation>
+                                        <documentation xml:lang="en">
+                                                <name>Constant Time Series</name>
+                                                <label>Constant Time Series</label>
+                                                <tooltip>Constant Time Series</tooltip>
+                                                <description>Constant Time Series</description>
+                                        </documentation>
+                                </annotation>
+                        </enumeration>
+                        <!-- 
+			<enumeration value="openmi">
+				<annotation>
+					<documentation xml:lang="de">
+						<name>openMI</name>
+						<label>openMI</label>
+						<tooltip>openMI</tooltip>
+						<description>openMI</description>
+					</documentation>
+					<documentation xml:lang="en">
+						<name>openMI</name>
+						<label>openMI</label>
+						<tooltip>openMI</tooltip>
+						<description>openMI</description>
+					</documentation>
+				</annotation>
+			</enumeration>
+			-->
+                </restriction>
+        </simpleType>
+        <complexType name="TablePropertyType">
+                <sequence>
+                        <element ref="wspmSobekCommon:Table"/>
+                </sequence>
+        </complexType>
+        <element name="Table" type="wspmSobekCommon:TableType" substitutionGroup="om:Observation">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Sbk Table</name>
+                                <label>Sbk Table</label>
+                                <tooltip>Sbk Table</tooltip>
+                                <description>Sbk Table</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Sbk Table</name>
+                                <label>Sbk Table</label>
+                                <tooltip>Sbk Table</tooltip>
+                                <description>Sbk Table</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <complexType name="TableType">
+                <complexContent>
+                        <extension base="om:ObservationType">
+                                <sequence>
+                                        <element name="interpolationType" type="wspmSobekCommon:sbkInterpolationTypeType" default="Interpolation.Continuous" nillable="false">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <name>Art der Interpolation</name>
+                                                                <label>Art der Interpolation</label>
+                                                                <tooltip>Art der Interpolation</tooltip>
+                                                                <description>Art der Interpolation</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <name>Type of interpolation</name>
+                                                                <label>Type of interpolation</label>
+                                                                <tooltip>Type of interpolation</tooltip>
+                                                                <description>Type of interpolation</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="interpolationPeriod" type="wspmSobekCommon:sbkInterpolationPeriodType" default="No" nillable="false">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <name>Periode</name>
+                                                                <label>Periode</label>
+                                                                <tooltip>Periode</tooltip>
+                                                                <description>Periode</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <name>period</name>
+                                                                <label>period</label>
+                                                                <tooltip>period</tooltip>
+                                                                <description>period</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="interpolationValue" type="int" default="0" nillable="false">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <name>value</name>
+                                                                <label>value</label>
+                                                                <tooltip>value</tooltip>
+                                                                <description>value</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <name>value</name>
+                                                                <label>value</label>
+                                                                <tooltip>value</tooltip>
+                                                                <description>value</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!-- 
+		______________________________
+		Very basic simple types
+		______________________________
+	-->
+        <simpleType name="notNegDoubleType">
+                <restriction base="double">
+                        <minInclusive value="0"/>
+                </restriction>
+        </simpleType>
+        <simpleType name="percentageType">
+                <restriction base="double">
+                        <minInclusive value="0"/>
+                        <maxInclusive value="100"/>
+                </restriction>
+        </simpleType>
+        <simpleType name="posDoubleType">
+                <restriction base="double">
+                        <minExclusive value="0"/>
+                </restriction>
+        </simpleType>
+        <simpleType name="notNegIntType">
+                <restriction base="int">
+                        <minInclusive value="0"/>
+                </restriction>
+        </simpleType>
+</schema>

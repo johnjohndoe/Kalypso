@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms  
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmSobek="org.kalypso.model.wspm.sobek" xmlns:wspmSobekCommon="org.kalypso.model.wspm.sobek.common" xmlns:wspmSobekStructures="org.kalypso.model.wspm.sobek.structures" xmlns:wspmSobekProj="org.kalypso.model.wspm.sobek.project" targetNamespace="org.kalypso.model.wspm.sobek.project" elementFormDefault="qualified" version="0.1">
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
+        <import namespace="org.kalypso.model.wspm.sobek" schemaLocation="wspmSobek.xsd"/>
+        <import namespace="org.kalypso.model.wspm.sobek.common" schemaLocation="wspmSobekCommons.xsd"/>
+        <import namespace="org.kalypso.model.wspm.sobek.structures" schemaLocation="wspmSobekStructures.xsd"/>
+        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+        <!-- schema for WSPM projects -->
+        <!-- 
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+        <element name="WspmSobekProject" type="wspmSobekProj:WspmSobekProjectType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>WSPM-Projekt</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+                                <tooltip>WSPM-Projekt</tooltip>
+                                <description>${property:http://www.opengis.net/gml#description;-Beschreibung nicht gesetzt-}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>WSPM project</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+                                <tooltip>WSPM projekt</tooltip>
+                                <description>${property:http://www.opengis.net/gml#description;-no description-}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="sobekModelMember" type="wspmSobekProj:SobekModelPropertyType">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Sobek-Modell (PI)</name>
+                                <label>Sobek-Modell (PI)</label>
+                                <tooltip>Sobek-Modell (PI)</tooltip>
+                                <description>Sobek-Modell (PI)</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Sobek-Model (PI)</name>
+                                <label>Sobek-Model (PI)</label>
+                                <tooltip>Sobek-Model (PI)</tooltip>
+                                <description>Sobek-Model (PI)</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="SobekModel" type="wspmSobekProj:SobekModelType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>NOFDP-1D-Modell</name>
+                                <label>NOFDP-1D-Modell</label>
+                                <tooltip>NOFDP-1D-Modell</tooltip>
+                                <description>...</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Sobek-Model (PI)</name>
+                                <label>Sobek-Model (PI)</label>
+                                <tooltip>Sobek-Model (PI)</tooltip>
+                                <description>...</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!-- 
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________	
+	-->
+        <complexType name="WspmSobekProjectType">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence> </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <complexType name="SobekModelPropertyType">
+                <sequence>
+                        <element ref="wspmSobekProj:SobekModel"/>
+                </sequence>
+        </complexType>
+        <complexType name="SobekModelType">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element ref="wspmSobek:nodeMember" minOccurs="2" maxOccurs="unbounded"/>
+                                        <element ref="wspmSobek:branchMember" minOccurs="1" maxOccurs="unbounded"/>
+                                        <!--  since it is not yet known how results will be organized, the calcLinks are commented out, it might also be necessary to add calcPoints explicitely
+					<element ref="wspmSobek:calcLinkMember" minOccurs="1" maxOccurs="unbounded"/>  -->
+                                        <element ref="wspmSobek:lastfallMember" minOccurs="1" maxOccurs="unbounded"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+</schema>
