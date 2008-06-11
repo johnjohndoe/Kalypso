@@ -70,7 +70,8 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/xml/jaxen-1.1-beta-8.jar,
  lib/jfreechart/jcommon-1.0.12.jar,
  lib/jfreechart/jfreechart-1.0.9.jar,
- build
+ build,
+ lib/deegree2_20080527.jar
 Export-Package: com.vividsolutions.jts;version="1.8.0",
  com.vividsolutions.jts.algorithm;version="1.8.0",
  com.vividsolutions.jts.geom;version="1.8.0",
