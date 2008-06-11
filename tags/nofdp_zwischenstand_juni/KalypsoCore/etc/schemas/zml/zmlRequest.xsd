@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="request.zml.kalypso.org" elementFormDefault="qualified" 
+	attributeFormDefault="unqualified" xmlns="request.zml.kalypso.org"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"	>
+	<xs:element name="request">
+		<xs:annotation>
+			<xs:documentation><![CDATA[
+				A Zml-Request is used to specify what is expected by a client
+				from the server-side observation.
+				
+				For instance, one might want to have a date-axis and a W-axis
+				when requesting the values for a specific observation id. Using
+				a request, this information can be encapsulated into the
+				URL when asking the server.
+				]]> 
+				</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string" minOccurs="0" 
+					maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>The name of the default observation 
+							that might be created when no underlying 
+							observation is found.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="axes" type="xs:string" minOccurs="0" 
+					maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>A comma separated list of axes types 
+							which are requested. Example: 
+							date,W</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="statusAxes" type="xs:string" minOccurs="0" 
+					maxOccurs="1">
+					<xs:annotation>
+						<xs:documentation>A comma separated list of axes types 
+							for which a status-axis should be generated. Only
+							the axes types found in the 'axes'-Element are
+							elligible to have a status-axis.
+							</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dateFrom" type="xs:dateTime" minOccurs="0" maxOccurs="1" >
+					<xs:annotation>
+						<xs:documentation>The from-part of the date-range for which 
+						to retrieve the observation values.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="dateTo" type="xs:dateTime" minOccurs="0" maxOccurs="1" >
+					<xs:annotation>
+						<xs:documentation>The to-part of the date-range for which 
+						to retrieve the observation values.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
