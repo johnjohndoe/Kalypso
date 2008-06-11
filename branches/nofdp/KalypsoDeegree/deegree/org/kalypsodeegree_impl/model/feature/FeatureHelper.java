@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -1298,9 +1298,7 @@ public class FeatureHelper
     }
 
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
-    {
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
-    }
 
     final Feature newFeature = workspace.createFeature( parentFeature, parentRelation, newFeatureType );
     try
@@ -1326,9 +1324,7 @@ public class FeatureHelper
     final IFeatureType featureType = schema.getFeatureType( newFeatureQName );
     final IPropertyType parentPT = parentFeature.getFeatureType().getProperty( propQName );
     if( !(parentPT instanceof IRelationType) )
-    {
       throw new IllegalArgumentException( "Property not a IRelationType=" + parentPT + " propQname=" + propQName );
-    }
 
     // TOASK does not include the feature into any workspace
 
@@ -1378,9 +1374,7 @@ public class FeatureHelper
       {
         f = fw.getFeature();
         if( f == null )
-        {
           throw new IllegalArgumentException( "All feature wrapper must wrapp a non null feature:" + c );
-        }
         fl.add( f );
       }
     }
