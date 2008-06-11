@@ -1,0 +1,744 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+        
+        Copyright (c) 2008 by
+        
+        Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+        Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+        (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+        
+        Kalypso is free software: you can redistribute it and/or modify it under the terms  
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+        Foundation, either version 3 of the License, or (at your option) any later version.
+        
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+        warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+        
+        You should have received a copy of the GNU Lesser General Public
+        License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmprofile="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
+        <annotation>
+                <appinfo xmlns:kapp="org.kalypso.appinfo">
+                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+                </appinfo>
+        </annotation>
+        <import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
+        <import namespace="org.kalypso.model.wspmrunoff" schemaLocation="runOff.xsd"/>
+        <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>
+        <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
+        <import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
+        <import namespace="org.kalypso.model.wspmprofile" schemaLocation="profile.xsd"/>
+        <!-- schema for WSPM = 'water surface profile model' -->
+        <!--
+	_________________________________________________________________________________________
+	ELEMENTS
+	_________________________________________________________________________________________
+	-->
+        <element name="calculationMember" type="wspm:CalculationPropertyType" substitutionGroup="gml:featureMember">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>WSPM-Berechnungen</label>
+                                <tooltip>WSPM-Berechnungen</tooltip>
+                                <description>WSPM-Berechnungen</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>WSPM calculations</label>
+                                <tooltip>WSPM calculations</tooltip>
+                                <description>WSPM calculations</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="AbstractCalculation" abstract="true" type="wspm:AbstractCalculationType" substitutionGroup="gml:_Feature"/>
+        <!--
+	-->
+        <element name="waterBodyMember" type="wspm:WaterBodyPropertyType">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Gewässer</label>
+                                <tooltip>Gewässer</tooltip>
+                                <description>Gewässer</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>Water bodies</label>
+                                <tooltip>Water bodies</tooltip>
+                                <description>Water bodies</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="WaterBody" type="wspm:WaterBodyType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Gewässer</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+                                <tooltip>Gewässer</tooltip>
+                                <description><![CDATA[ ${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>River</name>
+                                <label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+                                <tooltip>River</tooltip>
+                                <description><![CDATA[ ${property:http://www.opengis.net/gml#description;-no description-}]]></description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!--
+	-->
+        <element name="reachMember" type="wspm:ReachPropertyType">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Gewässerstrang</label>
+                                <tooltip>Gewässerstrang</tooltip>
+                                <description>Gewässerstrang</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>River string</label>
+                                <tooltip>River string</tooltip>
+                                <description>River string</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="AbstractReach" type="wspm:AbstractReachType" abstract="true" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Gewässerstrang</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>River string</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="roughnessDefinitionCollectionMember" type="wspm:RoughnessDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Rauheitsklassen-Listen</label>
+                                <tooltip>Rauheitsklassen-Listen</tooltip>
+                                <description>Rauheitsklassen-Listen</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>Roughness definition lists</label>
+                                <tooltip>Roughness definition lists</tooltip>
+                                <description>Roughness definition lists</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="RoughnessDefinitionCollection" type="wspm:RoughnessDefinitionCollectionType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Rauheitsklassen-Liste</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Rauheitsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Rauheitsklassen-Liste ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Roughness definition list</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Roughness definition list ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Roughness definition list ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!--
+	-->
+        <element name="roughnessDefinitionMember" type="wspm:RoughnessDefinitionPropertyType" substitutionGroup="gml:featureMember">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Rauheitsklassen</label>
+                                <tooltip>Rauheitsklassen</tooltip>
+                                <description>Rauheitsklassen</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>Roughness definitions</label>
+                                <tooltip>Roughness definitions</tooltip>
+                                <description>Roughness definitions</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="RoughnessDefinition" type="wspm:RoughnessDefinitionType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Rauheitsklasse</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Rauheitsklasse ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Rauheitsklasse ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Roughness definition</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Roughness definition ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Roughness definition ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!--
+	-->
+        <element name="vegetationDefinitionCollectionMember" type="wspm:VegetationDefinitionCollectionPropertyType" substitutionGroup="gml:featureMember">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Bewuchsklassen-Listen</label>
+                                <tooltip>Bewuchsklassen-Listen</tooltip>
+                                <description>Bewuchsklassen-Listen</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>Vegetation definition lists</label>
+                                <tooltip>Vegetation definition lists</tooltip>
+                                <description>Vegetation definition lists</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="VegetationDefinitionCollection" type="wspm:VegetationDefinitionCollectionType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Bewuchsklassen-Liste</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Bewuchsklassen-Liste ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Bewuchsklassen-Liste ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Vegetation definition list</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Vegetation definition list ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Vegetation definition list ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!--
+	-->
+        <element name="vegetationDefinitionMember" type="wspm:VegetationDefinitionPropertyType" substitutionGroup="gml:featureMember">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <label>Bewuchsklassen</label>
+                                <tooltip>Bewuchsklassen</tooltip>
+                                <description>Bewuchsklassen</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <label>Vegetation definitions</label>
+                                <tooltip>Vegetation definitions</tooltip>
+                                <description>Vegetation definitions</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <element name="VegetationDefinition" type="wspm:VegetationDefinitionType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Bewuchsklasse</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Bewuchsklasse ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Bewuchsklasse ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Vegetation definition</name>
+                                <label>${property:http://www.opengis.net/gml#name}</label>
+                                <tooltip>Vegetation definition ${property:http://www.opengis.net/gml#name}</tooltip>
+                                <description>Vegetation definition ${property:http://www.opengis.net/gml#name}</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!--
+	-->
+        <element name="CalcCreation" type="wspm:calcCreationType" substitutionGroup="gml:_Feature">
+                <annotation>
+                        <documentation xml:lang="de">
+                                <name>Info zur Erstellung der Berechnung</name>
+                                <label>Erstellung</label>
+                                <tooltip>Erstellung der Berechnung</tooltip>
+                                <description>Erstellung der Berechnung</description>
+                        </documentation>
+                        <documentation xml:lang="en">
+                                <name>Information about calculation creation</name>
+                                <label>Creation</label>
+                                <tooltip>Calculation creation</tooltip>
+                                <description>Calculation creation</description>
+                        </documentation>
+                </annotation>
+        </element>
+        <!--
+	_________________________________________________________________________________________
+	TYPES
+	_________________________________________________________________________________________
+	-->
+        <complexType name="CalculationPropertyType">
+                <complexContent>
+                        <restriction base="gml:FeaturePropertyType">
+                                <sequence>
+                                        <element ref="wspm:AbstractCalculation"/>
+                                </sequence>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <complexType name="AbstractCalculationType" abstract="true">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element name="calcCreationMember" type="wspm:calcCreationInlinePropertyType">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Erstellung</label>
+                                                                <tooltip>Erstellung der Berechnung</tooltip>
+                                                                <description>Erstellung der Berechnung</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Creation</label>
+                                                                <tooltip>Calculation creation</tooltip>
+                                                                <description>Calculation creation</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <!--element ref="wspm:resultMember" minOccurs="0" maxOccurs="unbounded"/-->
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!--
+	-->
+        <complexType name="ReachPropertyType">
+                <sequence>
+                        <element ref="wspm:AbstractReach"/>
+                </sequence>
+        </complexType>
+        <complexType name="AbstractReachType" abstract="true">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType"/>
+                </complexContent>
+        </complexType>
+        <complexType name="WaterBodyPropertyType">
+                <sequence minOccurs="0">
+                        <element ref="wspm:WaterBody"/>
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        </complexType>
+        <complexType name="WaterBodyLinkPropertyType">
+                <sequence minOccurs="0" maxOccurs="0">
+                        <element ref="wspm:WaterBody"/>
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        </complexType>
+        <complexType name="WaterBodyType">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element name="refNr" type="string" nillable="true">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Gewässerkennziffer</label>
+                                                                <tooltip>Gewässerkennziffer (optional)</tooltip>
+                                                                <description>Gewässerkennziffer (optional)</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>River reference number</label>
+                                                                <tooltip>River reference number (optional)</tooltip>
+                                                                <description>River reference number (optional)</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="waterBodyCenterLine" type="gml:LineStringSegmentType">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Gewässerachse</label>
+                                                                <tooltip>Gewässerachse</tooltip>
+                                                                <description>Gewässerachse</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>River center line</label>
+                                                                <tooltip>River center line</tooltip>
+                                                                <description>River center line</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="isDirectionUpstream" type="boolean" default="true">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Stationierung beginnt an der Mündung</label>
+                                                                <tooltip><![CDATA[ Angabe der Stationierungsrichtung.
+Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]]>
+                                                                </tooltip>
+                                                                <description><![CDATA[ Angabe der Stationierungsrichtung.
+Falls angekreuzt, wird die Stationierung entgegen der Fließrichtung gewählt. ]]></description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Stationing starts at mouth</label>
+                                                                <tooltip><![CDATA[ Stationing direction.
+Selection means that stationing will be against flow direction. ]]>
+                                                                </tooltip>
+                                                                <description><![CDATA[ Stationing direction.
+Selection means that stationing will be against flow direction. ]]></description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="profileMember" minOccurs="0" maxOccurs="unbounded" type="wspm:ProfileInlinePropertyType">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Profile</label>
+                                                                <tooltip>Profile</tooltip>
+                                                                <description>Profile</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Profiles</label>
+                                                                <tooltip>Profiles</tooltip>
+                                                                <description>Profiles</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element ref="wspm:reachMember" minOccurs="0" maxOccurs="unbounded">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Gewässerstränge</label>
+                                                                <tooltip>Gewässerstränge</tooltip>
+                                                                <description>Gewässerstränge</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>River strings</label>
+                                                                <tooltip>River strings</tooltip>
+                                                                <description>River strings</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="runOffEventMember" type="runoff:RunOffEventInlinePropertyType" minOccurs="0" maxOccurs="unbounded">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Abflussereignisse</label>
+                                                                <tooltip>Abflussereignisse</tooltip>
+                                                                <description>Abflussereignisse</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Discharge events</label>
+                                                                <tooltip>Discharge events</tooltip>
+                                                                <description>Discharge events</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="waterlevelFixationMember" type="runoff:WaterlevelFixationInlinePropertyType" minOccurs="0" maxOccurs="unbounded">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Wasserspiegelfixierungen</label>
+                                                                <tooltip>Wasserspiegelfixierungen</tooltip>
+                                                                <description>Wasserspiegelfixierungen</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Water surface fixings</label>
+                                                                <tooltip>Water surface fixings</tooltip>
+                                                                <description>Water surface fixings</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <complexType name="ProfileInlinePropertyType">
+                <sequence minOccurs="1" maxOccurs="1">
+                        <element ref="wspmprofile:Profile"/>
+                </sequence>
+        </complexType>
+        <complexType name="ProfileLinkPropertyType">
+                <sequence minOccurs="0" maxOccurs="0">
+                        <element ref="wspmprofile:Profile"/>
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup"/>
+        </complexType>
+        <!-- Overwritten to have a nice annotation.
+	HM, geht nicht, wie muss mans machen?
+	 -->
+        <!--
+	<complexType name="RunOffEventPropertyType">
+		<sequence minOccurs="0">
+			<element ref="om:AbstractObservation">
+				<annotation>
+					<documentation xml:lang="de">
+						<label>${listProperty:http://www.opengis.net/gml#name;0}</label>
+						<tooltip>Abflussereignis</tooltip>
+						<description>Abflussereignis</description>
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup"/>
+	</complexType>
+	-->
+        <!--
+	-->
+        <!--	<complexType name="ResultPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:Result"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="ResultType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element ref="wspm:calculationMember"/>
+					<element name="calculationTime" type="dateTime">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???Zeitpunkt der Berechnung</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="wspm:documentMember" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="observationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???resultObservationMember</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>-->
+        <!--
+	-->
+        <!--	<complexType name="DocumentPropertyType">
+		<complexContent>
+			<restriction base="gml:FeaturePropertyType">
+				<sequence>
+					<element ref="wspm:Document"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	<complexType name="DocumentType">
+		<complexContent>
+			<extension base="wspmcommon:EmptyFeatureBaseType">
+				<sequence>
+					<element name="label" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>???label</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="filePath" type="string">
+						<annotation>
+							<documentation xml:lang="de"><![CDATA[
+								TODO: eigenen Typ definieren +
+								type handler (z.B. datei öffnen beim klick)]]>
+								<label>???filePath</label>
+								<tooltip>???tooltip</tooltip>
+								<description>???description</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>-->
+        <!--
+	-->
+        <complexType name="RoughnessDefinitionCollectionPropertyType">
+                <complexContent>
+                        <restriction base="gml:FeaturePropertyType">
+                                <sequence>
+                                        <element ref="wspm:RoughnessDefinitionCollection"/>
+                                </sequence>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <complexType name="RoughnessDefinitionCollectionType">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element ref="wspm:roughnessDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!--
+	-->
+        <complexType name="RoughnessDefinitionPropertyType">
+                <complexContent>
+                        <restriction base="gml:FeaturePropertyType">
+                                <sequence>
+                                        <element ref="wspm:RoughnessDefinition"/>
+                                </sequence>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <complexType name="RoughnessDefinitionType">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element name="label" type="string">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???label</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="category" type="int">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???category</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="valueKS" type="double">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???valueKS</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="valueKST" type="double">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???valueKST</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!--
+	-->
+        <complexType name="VegetationDefinitionCollectionPropertyType">
+                <complexContent>
+                        <restriction base="gml:FeaturePropertyType">
+                                <sequence>
+                                        <element ref="wspm:VegetationDefinitionCollection"/>
+                                </sequence>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <complexType name="VegetationDefinitionCollectionType">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element ref="wspm:vegetationDefinitionMember" minOccurs="0" maxOccurs="unbounded"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!--
+	-->
+        <complexType name="VegetationDefinitionPropertyType">
+                <complexContent>
+                        <restriction base="gml:FeaturePropertyType">
+                                <sequence>
+                                        <element ref="wspm:VegetationDefinition"/>
+                                </sequence>
+                        </restriction>
+                </complexContent>
+        </complexType>
+        <complexType name="VegetationDefinitionType">
+                <complexContent>
+                        <extension base="gml:AbstractFeatureType">
+                                <sequence>
+                                        <element name="label" type="string">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???label</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="category" type="int">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???category</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="valueAX" type="double">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???valueAX</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="valueAY" type="double">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???valueAY</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="valueDP" type="double">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>???valueDP</label>
+                                                                <tooltip>???tooltip</tooltip>
+                                                                <description>???description</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+        <!--
+	-->
+        <complexType name="calcCreationInlinePropertyType">
+                <sequence minOccurs="1" maxOccurs="1">
+                        <element ref="wspm:CalcCreation"/>
+                </sequence>
+        </complexType>
+        <complexType name="calcCreationType">
+                <complexContent>
+                        <extension base="wspmcommon:EmptyFeatureBaseType">
+                                <sequence>
+                                        <element name="user" type="string" nillable="true">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Erstellt von</label>
+                                                                <tooltip>Ersteller</tooltip>
+                                                                <description>Ersteller</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="en">
+                                                                <label>Created by</label>
+                                                                <tooltip>Creator</tooltip>
+                                                                <description>Creator</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="date" type="dateTime" nillable="true">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Erstellt am</label>
+                                                                <tooltip>Erstelldatum</tooltip>
+                                                                <description>Erstelldatum</description>
+                                                        </documentation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Created on</label>
+                                                                <tooltip>Date of creation</tooltip>
+                                                                <description>Date of creation</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+</schema>

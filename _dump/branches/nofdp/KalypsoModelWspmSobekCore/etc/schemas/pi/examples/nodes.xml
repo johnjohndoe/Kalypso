@@ -1,0 +1,76 @@
+<?xml version="1.0" standalone="no"?>
+<Locations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.wldelft.nl/fews/PI ../Delft_PI.xsd"
+ xmlns="http://www.wldelft.nl/fews/PI" version="1.2">
+	<geoDatum>LOCAL</geoDatum>
+	<location locationId="3">
+		<stationName/>
+		<longName/>
+		<x>252605</x>
+		<y>473015</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="29">
+		<stationName/>
+		<longName/>
+		<x>255587.713280665</x>
+		<y>471112.019465246</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="2">
+		<stationName/>
+		<longName/>
+		<x>258485.707217026</x>
+		<y>472940.37654237</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="43">
+		<stationName/>
+		<longName/>
+		<x>254087.133896142</x>
+		<y>473746.728894332</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="44">
+		<stationName/>
+		<longName/>
+		<x>256966.370590196</x>
+		<y>471702.719444009</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="48">
+		<stationName/>
+		<longName/>
+		<x>253946.454578843</x>
+		<y>472330.924183329</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="49">
+		<stationName/>
+		<longName/>
+		<x>254312.220803821</x>
+		<y>471871.490866513</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="52">
+		<stationName/>
+		<longName/>
+		<x>255409.519478753</x>
+		<y>474149.905070314</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="53">
+		<stationName/>
+		<longName/>
+		<x>256441.167805613</x>
+		<y>473737.352704193</y>
+		<locationType>Sobek.Nodes.Connection</locationType>
+	</location>
+	<location locationId="28">
+		<stationName/>
+		<longName/>
+		<x>255475.181270074</x>
+		<y>472978.778400034</y>
+		<locationType>Sobek.Nodes.linkage@1</locationType>
+	</location>
+</Locations>

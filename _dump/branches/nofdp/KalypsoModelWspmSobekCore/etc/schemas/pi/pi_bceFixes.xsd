@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fews="http://www.wldelft.nl/fews/PI" targetNamespace="http://www.wldelft.nl/fews/PI" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+        <xs:element name="Rows">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="fews:row" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="row">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="fews:cell" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="column">
+                <xs:complexType>
+                        <xs:attribute name="type" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="datetime"/>
+                                                <xs:enumeration value="double"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="cell" type="xs:string"/>
+        <xs:element name="info">
+                <xs:complexType>
+                        <xs:sequence>
+                                <!-- oder interpolation GROß geschrieben -->
+                                <xs:element ref="fews:interpolation" minOccurs="0"/>
+                                <xs:element ref="fews:Columns"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="Columns">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="fews:column" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="count" type="xs:byte" use="required"/>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="interpolation">
+                <xs:complexType>
+                        <xs:simpleContent>
+                                <xs:extension base="xs:integer">
+                                        <xs:attribute name="type" use="required">
+                                                <xs:simpleType>
+                                                        <xs:restriction base="xs:string">
+                                                                <xs:enumeration value="Interpolation.Block"/>
+                                                                <xs:enumeration value="Interpolation.Continuous"/>
+                                                        </xs:restriction>
+                                                </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="period" use="required">
+                                                <xs:simpleType>
+                                                        <xs:restriction base="xs:string">
+                                                                <xs:enumeration value="Seconds"/>
+                                                                <xs:enumeration value="No"/>
+                                                        </xs:restriction>
+                                                </xs:simpleType>
+                                        </xs:attribute>
+                                </xs:extension>
+                        </xs:simpleContent>
+                </xs:complexType>
+        </xs:element>
+</xs:schema>
