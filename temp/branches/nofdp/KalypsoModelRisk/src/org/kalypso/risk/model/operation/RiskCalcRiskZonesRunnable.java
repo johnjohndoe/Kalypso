@@ -51,6 +51,7 @@ import org.kalypso.risk.model.schema.binding.IVectorDataModel;
 import org.kalypso.risk.model.utils.RiskLanduseHelper;
 import org.kalypso.risk.model.utils.RiskModelHelper;
 import org.kalypso.risk.model.utils.RiskStatisticTableValues;
+import org.kalypso.util.pool.PoolHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -148,7 +149,8 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
     /* task: create an observation */
     final Feature controlModelFeature = controlModel.getFeature();
-    final CommandableWorkspace workspace = new CommandableWorkspace( controlModelFeature.getWorkspace() );
+
+    CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( controlModelFeature.getWorkspace() );
 
     final IPropertyType property = controlModelFeature.getFeatureType().getProperty( IRasterizationControlModel.PROPERTY_STATISTIC_OBS );
     final IRelationType relation = (IRelationType) property;
@@ -371,7 +373,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
         RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
         if( statisticTableValues == null )
-          System.out.println( Messages.getString("org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.16") ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "org.kalypso.risk.model.operation.RiskCalcRiskZonesRunnable.16" ) ); //$NON-NLS-1$
 
         if( eventType.equals( "AverageDamage" ) )//$NON-NLS-1$
         {
@@ -443,7 +445,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     return averageSum;
   }
 
-  private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, Map<String, RiskStatisticTableValues> eventMap )
+  private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, final Map<String, RiskStatisticTableValues> eventMap )
   {
     final Map<Double, RiskStatisticTableValues> periodSortedMap = new TreeMap<Double, RiskStatisticTableValues>();
 
@@ -475,7 +477,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   }
 
-  private static BigDecimal calculateColumnSum( final TupleResult result, int index )
+  private static BigDecimal calculateColumnSum( final TupleResult result, final int index )
   {
     BigDecimal sum = new BigDecimal( 0.0 );
     for( int rowIndex = 0; rowIndex < result.size(); rowIndex++ )
