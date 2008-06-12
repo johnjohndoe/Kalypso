@@ -47,6 +47,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,7 +133,7 @@ public class GmlLoader extends AbstractLoader
     InputStream is = null;
     try
     {
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.1"), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.1" ), 1000 ); //$NON-NLS-1$
 
       final URL gmlURL = m_urlResolver.resolveURL( context, source );
 
@@ -150,11 +151,11 @@ public class GmlLoader extends AbstractLoader
       TimeLogger perfLogger = null;
       if( doTrace )
       {
-        perfLogger = new TimeLogger( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.2") ); //$NON-NLS-1$
+        perfLogger = new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.2" ) ); //$NON-NLS-1$
       }
 
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.3") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.3" ) ); //$NON-NLS-1$
       workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
       final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
@@ -166,7 +167,7 @@ public class GmlLoader extends AbstractLoader
       if( perfLogger != null )
       {
         perfLogger.takeInterimTime();
-        perfLogger.printCurrentTotal( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.4") ); //$NON-NLS-1$
+        perfLogger.printCurrentTotal( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.4" ) ); //$NON-NLS-1$
       }
 
       final Feature rootFeature = workspace.getRootFeature();
@@ -174,7 +175,7 @@ public class GmlLoader extends AbstractLoader
 
       for( final IModelAdaptor modelAdaptor : modelAdaptors )
       {
-        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.5") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.5" ) ); //$NON-NLS-1$
         workspace = modelAdaptor.adapt( workspace );
         resultList.add( modelAdaptor.getResult() );
       }
@@ -183,7 +184,7 @@ public class GmlLoader extends AbstractLoader
       {
         // some adaptation occured, so directly save workspace
         // but create a backup (.bak) of old workspace
-        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.6") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.6" ) ); //$NON-NLS-1$
 
         if( gmlFile != null )
         {
@@ -191,11 +192,11 @@ public class GmlLoader extends AbstractLoader
           backup( gmlFile, backupPath, monitor, 0, resultList );
         }
 
-        monitor.subTask( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.8") ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.8" ) ); //$NON-NLS-1$
         save( source, context, monitor, workspace );
       }
 
-      setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.9"), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
+      setStatus( StatusUtilities.createStatus( resultList, String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.9" ), gmlURL.toExternalForm() ) ) ); //$NON-NLS-1$
 
       return workspace;
     }
@@ -209,7 +210,7 @@ public class GmlLoader extends AbstractLoader
     {
       e.printStackTrace();
       setStatus( StatusUtilities.statusFromThrowable( e ) );
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.10") + source + Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.11") + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.10" ) + source + Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.11" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {
@@ -232,7 +233,7 @@ public class GmlLoader extends AbstractLoader
     {
       try
       {
-        resultList.add( StatusUtilities.createInfoStatus( String.format( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.13"), gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
+        resultList.add( StatusUtilities.createInfoStatus( String.format( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.13" ), gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
         gmlFile.copy( currentTry, false, monitor );
       }
       catch( final CoreException e )
@@ -247,7 +248,7 @@ public class GmlLoader extends AbstractLoader
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.14"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.14" ); //$NON-NLS-1$
   }
 
   /**
@@ -284,24 +285,22 @@ public class GmlLoader extends AbstractLoader
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
       {
-        final OutputStreamWriter w = new FileWriter( new File( gmlURL.getFile() ) );
+        final OutputStreamWriter w = new FileWriter( new File( URLDecoder.decode( gmlURL.getFile() ) ) );
         GmlSerializer.serializeWorkspace( w, workspace );
       }
       else
-      {
-        throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.16") + gmlURL ); //$NON-NLS-1$
-      }
+        throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.16" ) + gmlURL ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
 
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.17") + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.17" ) + source + "\n" + e.getLocalizedMessage(), e ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final Throwable e )
     {
       e.printStackTrace();
-      throw new LoaderException( Messages.getString("org.kalypso.ogc.gml.loader.GmlLoader.19") + e.getLocalizedMessage(), e ); //$NON-NLS-1$
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.19" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
     }
     finally
     {
