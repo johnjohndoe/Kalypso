@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -68,7 +67,6 @@ public class PoolHelper
       }
     }
 
-    // TODO create new abstract pool
-    throw new NotImplementedException();
+    return new CommandableWorkspace( workspace );
   }
 }
