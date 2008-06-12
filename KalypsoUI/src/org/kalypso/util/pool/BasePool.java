@@ -60,9 +60,8 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * @author kuch
  */
-public abstract class AbstractPool implements IPoolListener, ICommandTarget
+public abstract class BasePool implements IPoolListener, ICommandTarget
 {
-
   protected IPoolableObjectType m_poolKey = null;
 
   protected CommandableWorkspace m_workspace = null;
@@ -96,6 +95,7 @@ public abstract class AbstractPool implements IPoolListener, ICommandTarget
       pool.removePoolListener( this );
 
       m_poolKey = null;
+      m_workspace = null;
     }
   }
 
