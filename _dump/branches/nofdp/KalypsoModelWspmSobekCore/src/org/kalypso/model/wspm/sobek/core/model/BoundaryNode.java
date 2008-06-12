@@ -93,7 +93,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       final Feature member = (Feature) object;
 
       final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
-      if( fLastfall == null )
+      if( fLastfall == null ) // lastfall doesn't exist - remove entry! - perhaps, system.out and continue statement
         throw new IllegalStateException( Messages.BoundaryNode_0 );
 
       // $ANALYSIS-IGNORE
