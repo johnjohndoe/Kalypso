@@ -1,4 +1,4 @@
-!     Last change:  MD   30 May 2008    5:35 pm
+!     Last change:  MD   12 Jun 2008    1:50 pm
 
 !***************************************************************************************************
 !**   MODUL VARIABLEN                                                                            ***
@@ -8,7 +8,7 @@
       IMPLICIT NONE
       SAVE
 
-      INTEGER, parameter :: maxwert = 10000      ! Max. Anzahl von Werten insgesamt
+      INTEGER, parameter :: maxwert = 100000      ! Max. Anzahl von Werten insgesamt
       INTEGER, parameter :: maxprf = 1000        ! Max. Anzahl von Profilen
 
 !**   CHARACTERANWEISUNGEN
@@ -250,9 +250,9 @@ USE VARIABLEN
 IMPLICIT NONE
 
 write (*,*) ' -----------------------------------------------------'
-write (*,*) ' *          Version 0.2.8 zur Polynomerzeugung        '
+write (*,*) ' *          Version 0.2.9 zur Polynomerzeugung        '
 write (*,*) ' *                                                    '
-write (*,*) ' *          Stand: 30.05.2008                         '
+write (*,*) ' *          Stand: 12.06.2008                         '
 write (*,*) ' -----------------------------------------------------'
 
 
