@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -52,9 +50,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class PoolHelper
 {
-  private static List<CommandableWorkspace> m_workspaces = new ArrayList<CommandableWorkspace>(); // @hack see lower
-
-  // todo
 
   public static CommandableWorkspace getCommandableWorkspace( final GMLWorkspace workspace )
   {
@@ -73,20 +68,7 @@ public class PoolHelper
       }
     }
 
-    CommandableWorkspace[] workspaces = m_workspaces.toArray( new CommandableWorkspace[] {} );
-    for( CommandableWorkspace cw : workspaces )
-    {
-      // isDisposed //TODO
-
-      if( cw.getContext().equals( workspace.getContext() ) )
-        return cw;
-    }
-
-    // TODO perhaps it's better to create a new pool object...
-    CommandableWorkspace cw = new CommandableWorkspace( workspace );
-    m_workspaces.add( cw );
-
-    return cw;
-
+    // TODO create new abstract pool
+    throw new NotImplementedException();
   }
 }
