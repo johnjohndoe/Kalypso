@@ -1,4 +1,4 @@
-!Last change:  WP   10 Jun 2008    3:49 pm
+!Last change:  WP   10 Jun 2008    7:11 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -40,14 +40,13 @@ REAL (KIND = 8) :: d2aintdh1(1:4), d2aintdh2(1:4)
 REAL (KIND = 8) :: qschint1(1:4),  qschint2(1:4)
 REAL (KIND = 8) :: dqsintdh1(1:4), dqsintdh2(1:4)
 real (KIND = 8) :: d2qsidh1(1:4),  d2qsidh2(1:4)
-REAL (KIND = 8) :: IntahRand
 REAL (KIND = 8) :: sbot
 
 REAL (KIND = 8) :: CalcPolynomial, CalcPolynomialIntegral, CalcPolynomial1stDerivative, CalcPolynomial2ndDerivative
 REAL (KIND = 8) :: speclocal
 
 INTEGER :: i, j, k, Pos, TrID
-INTEGER :: PPA(1:2), PPQ(1:2), PPB(1:2), findpolynom, PP(1:2)
+INTEGER :: PPA(1:2), findpolynom, PP(1:2)
 
 !new variables
 !BC-values
@@ -102,10 +101,6 @@ REAL (KIND = 8) :: beiint(1:4)
 REAL (KIND = 8) :: beiint1(1:4)
 REAL (KIND = 8) :: beiint2(1:4)
 
-!flow coeficient node
-REAL (KIND = 8) :: bei(1:2)
-REAL (KIND = 8) :: dbeidh(1:2)
-REAL (KIND = 8) :: d2beidh(1:2)
 !flow coeficient GP
 REAL (KIND = 8) :: dbeiintdh(1:4)
 REAL (KIND = 8) :: dbeiintdh1(1:4)
@@ -121,12 +116,6 @@ REAL (KIND = 8) :: dhdtaltzs(1:2)
 REAL (KIND = 8) :: hhalt(1:2)
 REAL (KIND = 8) :: dqdtaltzs(1:2)
 REAL (KIND = 8) :: dvdtaltzs(1:2)
-
-REAL (KIND = 8) :: Intah(1:2)
-REAL (KIND = 8) :: d2ahdh(1:2)
-REAL (KIND = 8) :: dqhdh(1:2)
-REAL (KIND = 8) :: d2qhdh(1:2)
-REAL (KIND = 8) :: sfnod(1:2)
 
 REAL (KIND = 8) :: FRN, FRNX
 REAL (KIND = 8) :: FEEAN, FEEBN, FEECN
@@ -237,16 +226,6 @@ init2: do j = 1, 2
   dqdtaltzs(j) = 0.0
   dvdtaltzs(j) = 0.0
 end do init2
-init3: DO i = 1, 2
-  Intah(i)      = 0.0
-  dqhdh(i)      = 0.0
-  d2ahdh(i)     = 0.0
-  d2qhdh(i)     = 0.0
-  sfnod(i)      = 0.0
-  bei(i)        = 1.0
-  dbeidh(i)     = 0.0
-  d2beidh(i)    = 0.0
-ENDDO init3
 
 !initialize gravitation factor for unit system
 IF (GRAV .LT. 32.)  THEN
@@ -447,46 +426,21 @@ do i = 1, 2
   !TODO: This should be replaced by a binary search
   if (.NOT. IntPolProf(n)) then
     PPA(1) = findPolynom (polyRangeA (n, :), vel(3, n), PolySplitsA (n))
-    PPQ(1) = findPolynom (polyRangeQ (n, :), vel(3, n), PolySplitsQ (n))
     PPA(2) = PPA(1)
-    PPQ(2) = PPQ(1)
-    if (beient == 1 .or. beient == 2) then
-      PPB(1) = findPolynom (polyRangeB (n, :), h, PolySplitsB (n))
-      PPB(2) = PPB(1)
-    end if
   else
     PPA(1) = findPolynom (polyRangeA (NeighProf (n, 1), :), vel (3, n), PolySplitsA (NeighProf (n, 1)))
     PPA(2) = findPolynom (polyRangeA (NeighProf (n, 2), :), vel (3, n), PolySplitsA (NeighProf (n, 2)))
-    PPQ(1) = findPolynom (polyRangeQ (NeighProf (n, 1), :), vel (3, n), PolySplitsQ (NeighProf (n, 1)))
-    PPQ(2) = findPolynom (polyRangeQ (NeighProf (n, 2), :), vel (3, n), PolySplitsQ (NeighProf (n, 2)))
-    if (beient == 1 .or. beient == 2) then
-      PPB(1) = findPolynom (polyRangeB (NeighProf (n, 1), :), h, PolySplitsB (NeighProf (n, 1)))
-      PPB(2) = findPolynom (polyRangeB (NeighProf (n, 2), :), h, PolySplitsB (NeighProf (n, 2)))
-    endif
   end if
 
 
   if (.not. IntPolProf (n)) then
     !A(h)
     ah(n)    = CalcPolynomial (apoly (PPA (1), n, 0:12), h)
-    ![A(h)]
-    Intah(i) = CalcPolynomialIntegral (apoly (PPA (1), n, 0:12), h)
-    !QSch(h)
-    qh(n)    = CalcPolynomial (qpoly (PPQ (1), n, 0:12), h)
   else
     !A(h)
     ah(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (apoly (PPA (1), NeighProf (n, 1), 0: 12), h) &
              & +        kmWeight (n)  * CalcPolynomial (apoly (PPA (2), NeighProf (n, 2), 0: 12), h)
-    ![A(h)]
-    Intah(i) =   (1.0 - kmWeight (n)) * CalcPolynomialIntegral (apoly (PPA (1), NeighProf (n, 1), 0: 12), h) &
-             & +        kmWeight (n)  * CalcPolynomialIntegral (apoly (PPA (2), NeighProf (n, 2), 0: 12), h)
-    !QSch(h)
-    qh(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (qpoly (PPQ (1), NeighProf (n, 1), 0:12), h) &
-             & +        kmWeight (n)  * CalcPolynomial (qpoly (PPQ (2), NeighProf (n, 2), 0:12), h)
   endif
-
-  !Sf
-  sfnod(i) = vel_res(j) * ah(n) * ABS (vel_res(j) * ah(n)) / (qh(n)**2) * qgef(n)
 
   !Calculation case
   if (ntx == 1) then
@@ -502,10 +456,8 @@ do i = 1, 2
       dvvt (n) = vdot (1, n) * COS (alfa (n)) + vdot (2, n) * SIN (alfa (n))
     end if
 
+
     dahdh(n) = 0.0D0
-    dqhdh(i) = 0.0D0
-    d2ahdh(i) = 0.0D0
-    d2qhdh(i) = 0.0D0
 
     do j = 1, 2
       !get the node to calculate values from for node n
@@ -532,69 +484,7 @@ do i = 1, 2
 
       !dA(h)/dh
       dahdh(n)  = dahdh (n) + LocalWeight * calcPolynomial1stDerivative (apoly (PPA (j), node, 0:12), vel(3, n))
-      !dQSch(h)/dh
-      dqhdh(i)  = dqhdh (i) + LocalWeight * calcPolynomial1stDerivative (qpoly (PPQ (j), node, 0:12), vel(3, n))
 
-      !d2A(h)/dh2
-      d2ahdh(i) = d2ahdh (i) + LocalWeight * calcPolynomial2ndDerivative (apoly (PPA (j), node, 0:12), vel(3, n))
-      !d2QSch(h)/dh2
-      d2qhdh(i) = d2qhdh (i) + LocalWeight * calcPolynomial2ndDerivative (qpoly (PPQ (j), node, 0:12), vel(3, n))
-
-
-      !no flow coefficient
-      if (beient /= 0) then
-
-        !initialize values of flow coefficient of course only in the first run
-        if (j == 1) then
-          bei (i)     = 0.0
-          dbeidh (i)  = 0.0
-          d2beidh (i) = 0.0
-        end if
-
-        !energy coeficient
-        IF(beient == 1) THEN
-          bei(i)     =     bei (i) + LocalWeight * CalcPolynomial              (alphapoly (PPB(j), node, 0:12), h)
-          dbeidh(i)  =  dbeidh (i) + LocalWeight * CalcPolynomial1stDerivative (alphapoly (PPB(j), node, 0:12), h)
-          d2beidh(i) = d2beidh (i) + LocalWeight * calcPolynomial2ndDerivative (alphapoly (PPB(j), node, 0:12), h)
-
-        !momentum flow coefficient
-        ELSEIF (beient == 2) THEN
-          bei(i)     =     bei (i) + LocalWeight * CalcPolynomial              (betapoly (PPB (j), node, 0:12), h)
-          dbeidh(i)  =  dbeidh (i) + LocalWeight * CalcPolynomial1stDerivative (betapoly (PPB (j), node, 0:12), h)
-          d2beidh(i) = d2beidh (i) + LocalWeight * calcPolynomial2ndDerivative (betapoly (PPB (j), node, 0:12), h)
-        !This point is reached, if the waterlevel rises over the crest of bordful discharge. Then it will give a warning because of wrong switch
-        !of using flow coeficient. Flow coeficient is then ignored.
-        ELSEIF (beient == 3) then
-          bei (i) = 0.0
-        ELSE
-          WRITE (lout, *) 'WARNING - wrong parameter beient'
-          WRITE (lout, *) 'Check in input file, whether beient has a legal value (0, 1 or 2)'
-          WRITE (lout, *) 'program goes on without flow parameter (default option beient = 0)'
-          WRITE (*, *) 'WARNING - wrong parameter beient'
-          WRITE (*, *) 'Check in input file, whether beient has a legal value (0, 1 or 2)'
-          WRITE (*, *) 'program goes on without flow parameter (default option beient = 0)'
-          !Reset beient
-          beient = 0
-          bei(i) = 1.0
-        ENDIF
-      endif
-
-      !If there was no restart, don't apply flow factor for stabilization reasons. The number of iterations for this is set to default
-      !moment_off = 15, but may be changed by the user in C2-line
-      if (maxn < moment_off .and. nb == 0 .and. icyc <=1) then
-        bei (i)     = 0.0
-        dbeidh (i)  = 0.0
-        d2beidh (i) = 0.0
-      end if
-      if (testoutput == 3) then
-        WRITE(*,*) 'Beiwerte - Element: ', nn, ' Knoten: ', i
-        WRITE(*,*) 'moment_off: ', moment_off, maxn, nb, icyc
-        WRITE(*,*) '  Depth(i): ', h
-        WRITE(*,*) '    bei(i): ', bei(i)
-        WRITE(*,*) ' dbeidh(i): ', dbeidh(i)
-        WRITE(*,*) 'd2beidh(i): ', d2beidh(i)
-        pause
-      end if
     end do
   ENDIF !ntx=1
 enddo
@@ -1686,8 +1576,8 @@ enddo outer
 
 !control output
 if (testoutput == 2) &
-  & call ElementResult (nn, nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), qh(n1), qh(n3), vel_res, &
-                       &  ah(n1), ah(n3), sfnod, dahdh(n1), dahdh(n3), d2ahdh, dqhdh, d2qhdh, hhint, dhhintdx, areaint, &
+  & call ElementResult (nn, nop (nn, 1), nop (nn, 3), h1, h3, sbot, xl, area(nn), vel_res, &
+                       &  ah(n1), ah(n3), dahdh(n1), dahdh(n3), hhint, dhhintdx, areaint, &
                        &  dareaintdh, d2areaintdh, daintdx, d2aintdx, d2aidhdx, qschint, dqsintdh, d2qsidh, dqsintdx, s0schin, &
                        &  sfint, sdfintdh1, vflowint, dvintdx)
 
