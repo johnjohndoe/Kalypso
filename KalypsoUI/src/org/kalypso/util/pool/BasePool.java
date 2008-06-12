@@ -114,7 +114,9 @@ public abstract class BasePool implements IPoolListener, ICommandTarget
    */
   public boolean isDisposed( )
   {
-    // TODO Auto-generated method stub
+    if( m_poolKey == null && m_workspace == null )
+      return true;
+
     return false;
   }
 
