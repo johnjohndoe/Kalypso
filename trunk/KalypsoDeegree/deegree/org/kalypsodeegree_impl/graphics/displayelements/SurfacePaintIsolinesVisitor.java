@@ -100,7 +100,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
     {
       /* Define how the triangles will be drawn. */
       PolygonSymbolizer triangleSymbolizer = new PolygonSymbolizer_Impl();
-      triangleSymbolizer.getFill().setOpacity( 10.0 );
+      triangleSymbolizer.getFill().setOpacity( 0 );
       triangleSymbolizer.getStroke().setStroke( Color.BLACK );
       triangleSymbolizer.getStroke().setWidth( 1 );
 
