@@ -127,7 +127,7 @@ public class FNGmlUtils
 
   /**
    * removes all empty nodes
-   * 
+   *
    * @param branch
    *            the branch which will be removed from the model
    */
@@ -288,10 +288,10 @@ public class FNGmlUtils
     FNGmlUtils.createBranch( model, curve, nodes, TYPE.eLinkageNode, TYPE.eConnectionNode );
   }
 
-  public static void createProfileNode( final ISobekModelMember model, final IBranch branch, final GM_Point pointOnBranch, final Feature profile ) throws Exception
+  public static INode createProfileNode( final ISobekModelMember model, final IBranch branch, final GM_Point pointOnBranch, final Feature profile ) throws Exception
   {
     if( branch == null || pointOnBranch == null || profile == null )
-      return;
+      return null;
 
     /* create new profile node */
     final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
@@ -301,6 +301,7 @@ public class FNGmlUtils
     FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, profile ); //$NON-NLS-1$
 
     node.getFeature().invalidEnvelope();
+    return node;
   }
 
   public static void extendBranch( final IModelMember model, final IBranch branch, final GM_Curve curve ) throws Exception
