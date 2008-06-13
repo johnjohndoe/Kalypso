@@ -120,6 +120,9 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
             /* Get coordinate for raster cell x/y. */
             final Point point = GF.createPoint( crd );
 
+            // if the point is part of clip geometry points the contains method returns false, but we want that this
+            // coordinate is also considered! So, we use not the grid envelope but the grid surface, which represents
+            // the outer boundary of the grid cells(not the grid points!) as buffer.
             if( m_clipGeometry.contains( point ) )
             {
               // transform to grid's crs
