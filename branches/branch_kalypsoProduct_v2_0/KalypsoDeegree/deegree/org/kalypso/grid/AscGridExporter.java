@@ -144,7 +144,7 @@ public class AscGridExporter
     double minY = envelope.getMinY();
 
     double xllcorner = minX - size;
-    double yllcorner = minY + size;
+    double yllcorner = minY - size;
 
     // TODO: add parameter to let user decide, if xllcorner or xllcenter
 
