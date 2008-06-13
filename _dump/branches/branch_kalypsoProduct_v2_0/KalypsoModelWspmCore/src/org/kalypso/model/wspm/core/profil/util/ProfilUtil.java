@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -204,21 +205,23 @@ public class ProfilUtil
   public static final void flipProfile( final IProfil profile )
   {
     final HashMap<String, IComponent> properties = getComponentsFromProfile( profile );
-// final IComponent cmpBreite = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-// if( cmpBreite == null )
-// throw new IllegalStateException( Messages.ProfilUtil_0 );
-    final IRecord[] points = profile.getPoints();
-    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    if( iBreite < 0 )
-      throw new IllegalStateException( Messages.ProfilUtil_0 );
-    for( final IRecord point : points )
+
+    TupleResult result = profile.getResult();
+    IRecord[] rows = result.toArray( new IRecord[] {} );
+    result.clear();
+
+    final int indexBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+
+    /* flip the profile by re-adding with negative width */
+    for( IRecord record : rows )
     {
-      final Double breite = (Double) point.getValue( iBreite );
-      point.setValue( iBreite, -breite );
+      Double breite = (Double) record.getValue( indexBreite );
+      record.setValue( indexBreite, Double.valueOf( breite * -1 ) );
+
+      WspmProfileHelper.addRecordByWidth( profile, record );
     }
 
-    ArrayUtils.reverse( points );
-
+    final IRecord[] points = profile.getPoints();
     IRecord previousPoint = null;
     for( final IRecord point : points )
     {
@@ -264,6 +267,7 @@ public class ProfilUtil
       }
       previousPoint = point;
     }
+
   }
 
   public final static HashMap<String, IComponent> getComponentsFromProfile( final IProfil profile )
@@ -273,14 +277,16 @@ public class ProfilUtil
       propHash.put( component.getId(), component );
     return propHash;
   }
+
   public final static HashMap<String, IComponent> getComponentsFromRecord( final IRecord record )
   {
     final HashMap<String, IComponent> propHash = new HashMap<String, IComponent>();
     final TupleResult owner = record.getOwner();
-    for( final IComponent component : owner.getComponents())
+    for( final IComponent component : owner.getComponents() )
       propHash.put( component.getId(), component );
     return propHash;
   }
+
   public static final IRecord splitSegment( final IProfil profile, final IRecord startPoint, final IRecord endPoint )
   {
     if( startPoint == null || endPoint == null )
