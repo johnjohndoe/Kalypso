@@ -737,7 +737,7 @@ public class GeoGridUtilities
    *            if true, the envelope results from an intersection of all coverages of the collections. If false, the
    *            envelope gets calculated by union of the several envelopes.
    */
-  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, boolean intersection ) throws Exception, GeoGridException, GM_Exception
+  public static Geometry getCommonGridEnvelopeForCollections( final ICoverageCollection[] collections, final boolean intersection ) throws Exception, GeoGridException, GM_Exception
   {
     Geometry globalEnv = null;
 
@@ -807,7 +807,7 @@ public class GeoGridUtilities
    *            if true, the envelope results from an intersection of all grids of the categories. If false, the
    *            envelope gets calculated by union of the several envelopes.
    */
-  public static FlattenToCategoryGrid getFlattedGrid( GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
+  public static FlattenToCategoryGrid getFlattedGrid( final GridCategoryWrapper[] gridCategories, final boolean intersection ) throws GM_Exception, GeoGridException
   {
     Geometry globalGridSurfaceBoundary = null;
     Geometry unionGeom = null;
