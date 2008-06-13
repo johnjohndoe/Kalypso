@@ -1045,7 +1045,7 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 		<complexContent>
 			<extension base="wspmcommon:EmptyFeatureBaseType">
 				<sequence>
-					<element name="exeVersion" default="_2_1_2_0">
+					<element name="exeVersion" default="_2_1_2_1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label><![CDATA[Version Rechenkern]]></label>
@@ -1058,13 +1058,13 @@ Zulässiger Wertebereich: [1, 10000[]]></tooltip>
 						</annotation>
 						<simpleType>
 							<restriction base="string">
-								<enumeration value="_2_1_2_0">
+								<enumeration value="_2_1_2_1">
 									<annotation>
 										<documentation xml:lang="de">
-											<label><![CDATA[_2.1.2.0 (30.04.2008)]]></label>
+											<label><![CDATA[_2.1.2.1 (07.05.2008)]]></label>
 										</documentation>
 										<documentation xml:lang="en">
-											<label><![CDATA[_2.1.2.0 (2008/04/30)]]></label>
+											<label><![CDATA[_2.1.2.1 (2008/05/07)]]></label>
 										</documentation>
 									</annotation>
 								</enumeration>
