@@ -118,10 +118,10 @@ public class FeatureUtils
       if( names.size() >= 1 )
         return names.get( 0 ).toString();
 
-      return Messages.getString("org.kalypso.ogc.gml.FeatureUtils.8"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.8" ); //$NON-NLS-1$
     }
     else if( !(objString instanceof String) )
-      return Messages.getString("org.kalypso.ogc.gml.FeatureUtils.9"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.9" ); //$NON-NLS-1$
 
     return (String) objString;
   }
@@ -191,6 +191,10 @@ public class FeatureUtils
     workspace.postCommand( chgCmd );
   }
 
+  /**
+   * @param value
+ *            xyz.gml#featureId
+   */
   public static void setExternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
@@ -238,7 +242,7 @@ public class FeatureUtils
 
     final Feature result = FeatureHelper.getFeature( targetWorkspace, property );
     if( result == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.ogc.gml.FeatureUtils.20") + property.toString() + Messages.getString("org.kalypso.ogc.gml.FeatureUtils.21") ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.20" ) + property.toString() + Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.21" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return result;
   }
