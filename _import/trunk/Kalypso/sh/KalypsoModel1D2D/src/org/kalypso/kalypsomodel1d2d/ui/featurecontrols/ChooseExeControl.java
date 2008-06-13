@@ -115,7 +115,7 @@ public class ChooseExeControl extends AbstractFeatureControl implements IFeature
     final Shell shell = e.display.getActiveShell();
 
     // find all possible exes
-    final Pattern pattern = Pattern.compile( m_exePattern );
+    final Pattern pattern = Pattern.compile( m_exePattern, Pattern.CASE_INSENSITIVE );
     final File[] exeFiles = m_exeDir.listFiles( new FilenameFilter()
     {
       public boolean accept( final File dir, final String name )
