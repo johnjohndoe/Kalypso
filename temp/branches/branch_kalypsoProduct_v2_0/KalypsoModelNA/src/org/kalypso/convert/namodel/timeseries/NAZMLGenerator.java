@@ -48,6 +48,8 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.xml.bind.Marshaller;
 
@@ -91,11 +93,11 @@ public class NAZMLGenerator
    * generate copy of custom timeseriesfile to zml-format, and returns timeserieslink
    * 
    * @param copySource
-   *          url to the data to copy
+   *            url to the data to copy
    * @param targetBaseDir
-   *          basedir for targetfile
+   *            basedir for targetfile
    * @param targetRelativePath
-   *          relative path from basedir to store target zml file
+   *            relative path from basedir to store target zml file
    */
   public static TimeseriesLinkType copyToTimeseriesLink( URL copySource, String axis1Type, String axis2Type, File targetBaseDir, String targetRelativePath, boolean relative, boolean simulateCopy ) throws Exception
   {
@@ -123,7 +125,7 @@ public class NAZMLGenerator
 
   /**
    * @param location
-   *          location of zml data
+   *            location of zml data
    */
   public static TimeseriesLinkType generateobsLink( String location ) throws Exception
   {
@@ -241,5 +243,41 @@ public class NAZMLGenerator
       else
         writer.write( m_grapDateFormat.format( date ) + " " + value.toString() + "\n" );
     }
+  }
+
+  public static void createSyntheticFile( final Writer writer, final String valueAxisType, final IObservation observation, final Date simulationStart, final Date simulationEnd, final int minutesOfTimeStep ) throws Exception
+  {
+    if( simulationStart.after( simulationEnd ) )
+      return;
+    final DateFormat dateFormat = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyyMMddHHmm" ) );
+    final IAxis[] axis = observation.getAxisList();
+    final IAxis valueAxis = ObservationUtilities.findAxisByType( axis, valueAxisType );
+
+    final ITuppleModel values = observation.getValues( null );
+    final SortedMap<Date, Double> valuesMap = new TreeMap<Date, Double>();
+    final long interpolationStep = (simulationEnd.getTime() - simulationStart.getTime()) / values.getCount();
+    for( int i = 0; i < values.getCount(); i++ )
+    {
+      final Date date = new Date( simulationStart.getTime() + i * interpolationStep );
+      final Double value = (Double) values.getElement( i, valueAxis );
+      valuesMap.put( date, value );
+    }
+    final Interpolator interpolator = new Interpolator( valuesMap );
+    final long syntheticTimeseriesStep = minutesOfTimeStep * 60000; // milliseconds
+
+    Date currentDate = simulationStart;
+    writer.write( "\n" );
+    writer.write( "       " + dateFormat.format( currentDate ) + "\n" );
+    writer.write( "grap\n" );
+    do
+    {
+      final double value = interpolator.getValue( currentDate );
+      if( value < 0.0 )
+        writer.write( m_grapDateFormat.format( currentDate ) + " 0.0\n" );
+      else
+        writer.write( m_grapDateFormat.format( currentDate ) + " " + String.format( "%5.3f", value ) + "\n" );
+      currentDate = new Date( currentDate.getTime() + syntheticTimeseriesStep );
+    }
+    while( currentDate.before( simulationEnd ) );
   }
 }

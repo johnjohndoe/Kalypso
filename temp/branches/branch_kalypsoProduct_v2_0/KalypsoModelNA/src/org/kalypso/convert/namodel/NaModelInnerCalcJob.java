@@ -695,6 +695,7 @@ public class NaModelInnerCalcJob implements ISimulation
         final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
         // final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
         newNodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, resultValue );
+        newNodeFE.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
     }
   }
@@ -744,6 +745,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
         nodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
         newNode.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, zuflussValue );
+        newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP) );
       }
       final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )

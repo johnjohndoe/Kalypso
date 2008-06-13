@@ -557,7 +557,7 @@ public class CatchmentManager extends AbstractManager
           while( iter1.hasNext() )
           {
             final Feature fe = (Feature) iter1.next();
-            String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_XJAH ) );
+            String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
             if( annuality.equals( annualityKey.toString() ) )
             {
               Object tnProp = fe.getProperty( NaModelConstants.CATCHMENT_PROP_STATN_DIAG );

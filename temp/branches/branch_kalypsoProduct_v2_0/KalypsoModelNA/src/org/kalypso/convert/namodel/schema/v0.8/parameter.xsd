@@ -320,6 +320,21 @@
 					<!--
 (typchar,*)(1)_(typkap,*)(1)_(typwp,*)(1)_(typfk,*)(1)_(typbfm,*)(1)_(typkf,*)(1)_(typbf0,*)(1)
 -->
+					<!-- JH: wird in na-modell nicht verwendet -->
+					<element name="typkap" type="string">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Kurzzeichen kap. Aufstieg</label>
+								<tooltip>Kurzzeichen kap. Aufstieg (zur Zeit nicht verwendet)</tooltip>
+								<description/>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>cap. uprise</label>
+								<tooltip/>
+								<description/>
+							</documentation>
+						</annotation>
+					</element>
 					<element name="typwp">
 						<annotation>
 							<documentation xml:lang="de">
