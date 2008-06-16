@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,10 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
@@ -287,14 +289,22 @@ public class SobekModelMember implements ISobekModelMember
   /**
    *
    */
-  public void deleteSbkStructs( ) throws Exception
+  public MultiStatus deleteSbkStructs( )
   {
+    MultiStatus returnStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmSobekCorePlugin.getDefault() ), IStatus.OK, "", null );//$NON-NLS-1$
 
     final ISbkStructure[] nodes = getSbkStructureTypeNodeMembers();
     for( final ISbkStructure node : nodes )
-      node.delete();
-
-    return;
+      try
+      {
+        node.delete();
+      }
+      catch( Exception e )
+      {
+        e.printStackTrace();
+        returnStatus.add( StatusUtilities.createErrorStatus( String.format( "Sobek Structure Node %s (%s) couldn't be deleted.", node.getName(), node.getId() ) ) );
+      }
+    return returnStatus;
   }
 
   /**
@@ -311,6 +321,5 @@ public class SobekModelMember implements ISobekModelMember
 
     return sbkStructNodes.toArray( new ISbkStructure[] {} );
   }
-
 
 }
