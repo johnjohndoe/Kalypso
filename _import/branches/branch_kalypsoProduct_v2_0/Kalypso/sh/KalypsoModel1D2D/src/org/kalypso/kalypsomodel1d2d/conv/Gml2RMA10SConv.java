@@ -391,7 +391,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
           middleNodeID = m_nodesIDProvider.getOrAdd( gmlID );
 
           /* Write it: Station is not needed, because the element length is taken from real nodes. */
-          formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
+          formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null, true );
         }
         else
           middleNodeID = getConversionID( edge.getMiddleNode() );
@@ -623,12 +623,23 @@ public class Gml2RMA10SConv implements INativeIDProvider
           throw new CoreException( status );
         }
       }
-      formatNode( formatter, nodeID, point, station );
+      formatNode( formatter, nodeID, point, station, false );
       FormatterUtils.checkIoException( formatter );
     }
   }
 
-  private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station ) throws IOException
+  /**
+   * @param formatter
+   * @param nodeID
+   *            the id of the node
+   * @param point
+   *            the geo point of the node
+   * @param station
+   *            the station of the node (only for 1d nodes, else null)
+   * @param isMidside
+   *            flag, if the node is a midside node (for writing the restart file)
+   */
+  private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station, final boolean isMidside ) throws IOException
   {
     /* Now really write the nodes */
     final double x = point.getX();
@@ -647,7 +658,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station ); //$NON-NLS-1$
 
-    writeRestartLines( formatter, nodeID, x, y );
+    if( !isMidside )
+      writeRestartLines( formatter, nodeID, x, y );
   }
 
   private void writeSplittedPolynomials( final Formatter formatter, final String kind, final int nodeID, final int polynomialNo, final IPolynomial1D poly, final Double extraValue ) throws IOException
@@ -845,7 +857,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     if( node == null )
     {
       // this could be the case for instance, if the user has created a short cut between two 1d nodes. At the
-      // calculated position exists no restart node. what to do??
+      // calculated position exists no (midside node) restart node. what to do??
 
       final GM_Point position = GeometryFactory.createGM_Point( x, y, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", position, null );

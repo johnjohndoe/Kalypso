@@ -230,7 +230,7 @@ public class NodeResultHelper
     final GM_Curve curve = ProfilUtil.getLine( profil, crs );
 
     /* simplify the profile */
-    final double epsThinning = 0.50;
+    final double epsThinning = 1.0;
     final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
     thinnedCurve.setCoordinateSystem( crs );
 
