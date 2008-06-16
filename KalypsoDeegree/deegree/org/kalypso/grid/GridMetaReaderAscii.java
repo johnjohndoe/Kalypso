@@ -61,25 +61,35 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
   private RectifiedGridDomain m_domain;
 
-  private final URL m_urlImage;
-
   private String m_noDataValue;
 
   public GridMetaReaderAscii( final URL urlImage, final String cs )
   {
-    m_urlImage = urlImage;
     m_cs = cs;
-    setup();
-  }
 
-  private void setup( )
-  {
-    if( m_urlImage == null )
+    if( urlImage == null )
       throw (new IllegalStateException());
 
     try
     {
-      final AsciiGridReader reader = new AsciiGridReader( new File( m_urlImage.getFile() ) );
+      final AsciiGridReader reader = new AsciiGridReader( new File( urlImage.getFile() ) );
+      m_domain = reader.getGridDomain( m_cs );
+      m_noDataValue = reader.getNoDataValue();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+  }
+
+  public GridMetaReaderAscii( final File image, final String cs )
+  {
+    m_cs = cs;
+
+    try
+    {
+      final AsciiGridReader reader = new AsciiGridReader( image );
       m_domain = reader.getGridDomain( m_cs );
       m_noDataValue = reader.getNoDataValue();
     }
