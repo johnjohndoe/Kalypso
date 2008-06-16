@@ -59,8 +59,7 @@ public interface IBoundaryNode extends IConnectionNode
     {
       final String type = (String) node.getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_TYPE );
 
-      // $ANALYSIS-IGNORE
-      if( BOUNDARY_TYPE.eW.toString().equals( type ) )
+      if( type == null || BOUNDARY_TYPE.eW.toString().equals( type ) )
         return BOUNDARY_TYPE.eW;
       else if( BOUNDARY_TYPE.eQ.toString().equals( type ) )
         return BOUNDARY_TYPE.eQ;
