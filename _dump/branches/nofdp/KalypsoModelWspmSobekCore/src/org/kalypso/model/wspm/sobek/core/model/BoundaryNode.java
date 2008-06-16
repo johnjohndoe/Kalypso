@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.sobek.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.model.wspm.sobek.core.Messages;
@@ -84,25 +85,14 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
    */
   public IBoundaryNodeLastfallCondition getLastfallCondition( final ILastfall lastfall ) throws Exception
   {
-    final List< ? > members = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
-    for( final Object object : members )
+    IBoundaryNodeLastfallCondition[] conditions = getLastfallConditions();
+    for( IBoundaryNodeLastfallCondition condition : conditions )
     {
-      if( !(object instanceof Feature) )
-        continue;
-
-      final Feature member = (Feature) object;
-
-      final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
-      if( fLastfall == null ) // lastfall doesn't exist - remove entry! - perhaps, system.out and continue statement
-        throw new IllegalStateException( Messages.BoundaryNode_0 );
-
-      // $ANALYSIS-IGNORE
-      if( lastfall.getFeature().equals( fLastfall ) )
-        return new BoundaryNodeLastfallCondition( lastfall, this, member );
+      if( condition.getLastfall().getFeature().equals( lastfall.getFeature() ) )
+        return condition;
     }
 
-    final Feature condition = NodeUtils.createBoundaryNodeLastfallCondition( lastfall, this );
-    return new BoundaryNodeLastfallCondition( lastfall, this, condition );
+    return null;
   }
 
   /**
@@ -127,4 +117,28 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
     return false;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode#getLastfallConditions()
+   */
+  public IBoundaryNodeLastfallCondition[] getLastfallConditions( ) throws Exception
+  {
+    List<BoundaryNodeLastfallCondition> conditions = new ArrayList<BoundaryNodeLastfallCondition>();
+
+    final List< ? > members = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
+    for( final Object object : members )
+    {
+      if( !(object instanceof Feature) )
+        continue;
+
+      final Feature member = (Feature) object;
+
+      final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
+      if( fLastfall == null ) // lastfall doesn't exist - remove entry! - perhaps, system.out and continue statement
+        throw new IllegalStateException( Messages.BoundaryNode_0 );
+
+      conditions.add( new BoundaryNodeLastfallCondition( new Lastfall( getModelMember(), fLastfall ), this, member ) );
+    }
+
+    return conditions.toArray( new IBoundaryNodeLastfallCondition[] {} );
+  }
 }

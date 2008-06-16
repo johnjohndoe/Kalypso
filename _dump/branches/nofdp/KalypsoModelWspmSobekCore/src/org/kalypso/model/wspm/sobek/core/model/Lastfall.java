@@ -47,7 +47,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
-import org.kalypso.model.wspm.sobek.core.interfaces.ISobekModelMember;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -57,11 +56,11 @@ import org.kalypsodeegree.model.feature.Feature;
 public class Lastfall implements ILastfall
 {
 
-  private final ISobekModelMember m_sobekModelMember;
+  private final IModelMember m_sobekModelMember;
 
   private final Feature m_lastfall;
 
-  public Lastfall( final ISobekModelMember sobekModelMember, final Feature lastfall )
+  public Lastfall( final IModelMember sobekModelMember, final Feature lastfall )
   {
     m_sobekModelMember = sobekModelMember;
     m_lastfall = lastfall;

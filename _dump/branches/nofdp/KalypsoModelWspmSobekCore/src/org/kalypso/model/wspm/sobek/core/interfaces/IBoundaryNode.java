@@ -111,4 +111,6 @@ public interface IBoundaryNode extends IConnectionNode
   public BOUNDARY_TYPE getBoundaryType( );
 
   public IBoundaryNodeLastfallCondition getLastfallCondition( ILastfall lastfall ) throws Exception;
+
+  public IBoundaryNodeLastfallCondition[] getLastfallConditions( ) throws Exception;
 }

@@ -19,4 +19,6 @@ public interface ISobekResultModel
   IResultTimeSeries getCrossSectionTimeSeries( ICrossSectionNode node ) throws CoreException;
 
   IBranchHydrographModel getBranchHydrographModel( ) throws CoreException;
+
+  public void dispose( );
 }

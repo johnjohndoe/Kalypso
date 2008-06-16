@@ -94,7 +94,6 @@ public class SobekResultModelHandler implements ISobekResultModel
     final InputStream is = new BufferedInputStream( iFile.getContents() );
     try
     {
-
       final Unmarshaller u = JC.createUnmarshaller();
       final JAXBElement<TimeSeriesComplexType> jaxRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
 
@@ -140,6 +139,7 @@ public class SobekResultModelHandler implements ISobekResultModel
 
         final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekResultTimeSeries.gml" ); //$NON-NLS-1$
         iFile.create( stream, true, new NullProgressMonitor() );
+        stream.close();
 
         empty = true;
       }
