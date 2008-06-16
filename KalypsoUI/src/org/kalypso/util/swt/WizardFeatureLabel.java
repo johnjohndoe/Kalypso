@@ -57,6 +57,8 @@ public class WizardFeatureLabel
 {
   private String m_text;
 
+  private String m_fallback = "";
+
   public WizardFeatureLabel( final String text, final Composite body )
   {
     draw( text, body, new GridData( GridData.FILL, GridData.CENTER, false, false ) );
@@ -87,6 +89,7 @@ public class WizardFeatureLabel
   @Deprecated
   public WizardFeatureLabel( final Feature feature, final QName qname, final String fallback, final Composite body, final GridData gridData )
   {
+    m_fallback = fallback;
     if( feature == null )
       draw( fallback, body, gridData );
     else
