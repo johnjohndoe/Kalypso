@@ -32,8 +32,7 @@ public class ResultTimeSeriesHandler extends AbstractFeatureWrapper implements I
 
   public Double getLastValue( )
   {
-    // FIXME
-    throw new NotImplementedException();
+    return (Double) getProperty( QN_LAST_VALUE );
   }
 
   public Double getMaxValue( )
