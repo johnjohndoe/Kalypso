@@ -47,7 +47,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -285,7 +284,7 @@ public class GmlLoader extends AbstractLoader
       }
       else if( file == null && gmlURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
       {
-        final OutputStreamWriter w = new FileWriter( new File( URLDecoder.decode( gmlURL.getFile() ) ) );
+        final OutputStreamWriter w = new FileWriter( new File( gmlURL.getFile() ) );
         GmlSerializer.serializeWorkspace( w, workspace );
       }
       else
