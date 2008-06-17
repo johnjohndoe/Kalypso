@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.sobek.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBoundaryNodeLastfallCondition;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
@@ -133,8 +132,8 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       final Feature member = (Feature) object;
 
       final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
-      if( fLastfall == null ) // lastfall doesn't exist - remove entry! - perhaps, system.out and continue statement
-        throw new IllegalStateException( Messages.BoundaryNode_0 );
+      if( fLastfall == null ) // TODO lastfall doesn't exist - remove entry! - perhaps, system.out and continue statement
+        continue;
 
       conditions.add( new BoundaryNodeLastfallCondition( new Lastfall( getModelMember(), fLastfall ), this, member ) );
     }
