@@ -197,8 +197,11 @@ public class SobekResultModelHandler implements ISobekResultModel
 
     m_workspaces.clear();
 
-    m_branchesWorkspace.dispose();
-    m_branchesCommandableWorkspace.dispose();
+    if( m_branchesWorkspace != null )
+      m_branchesWorkspace.dispose();
+
+    if( m_branchesCommandableWorkspace != null )
+      m_branchesCommandableWorkspace.dispose();
 
     m_branchesWorkspace = null;
     m_branchesCommandableWorkspace = null;
