@@ -565,7 +565,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
-        final IStatus status = handleLengthSectionData( nodes[i], flowRelation1d, calcUnit );
+        handleLengthSectionData( nodes[i], flowRelation1d, calcUnit );
         // TODO: right now, no consequences of the returned status
         m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
@@ -586,6 +586,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     return Status.OK_STATUS;
   }
 
+  @SuppressWarnings("unchecked")
   private ICalculationUnit1D getCalcUnit( final ElementResult elementResult )
   {
     if( m_discModel == null )

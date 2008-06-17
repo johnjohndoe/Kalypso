@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.results;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -178,7 +179,17 @@ public class SimpleNodeResult implements INodeResult
    */
   public List<Double> getVelocity( )
   {
-    return m_velocity;
+    final double depth = getDepth();
+
+    if( depth > 0 )
+      return m_velocity;
+    else
+    {
+      final List<Double> veloList = new ArrayList<Double>();
+      veloList.add( 0.0 );
+      veloList.add( 0.0 );
+      return veloList;
+    }
   }
 
   /**
@@ -360,4 +371,11 @@ public class SimpleNodeResult implements INodeResult
     m_nodeAssigned = assign;
   }
 
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtualVelocity()
+   */
+  public List<Double> getVirtualVelocity( )
+  {
+    return m_velocity;
+  }
 }

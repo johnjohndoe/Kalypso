@@ -162,6 +162,23 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   @SuppressWarnings("unchecked")
   public List<Double> getVelocity( )
   {
+    final double depth = getDepth();
+
+    /* if node is wet, return the real velocity. If not, return 0 */
+    if( depth > 0 )
+      return (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
+    else
+    {
+      final List<Double> veloList = new ArrayList<Double>();
+      veloList.add( 0.0 );
+      veloList.add( 0.0 );
+      return veloList;
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<Double> getVirtualVelocity( )
+  {
     return (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOCITY );
   }
 

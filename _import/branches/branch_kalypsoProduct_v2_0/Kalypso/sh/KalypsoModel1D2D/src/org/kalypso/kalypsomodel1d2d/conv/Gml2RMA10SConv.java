@@ -866,7 +866,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
     final double vx;
     final double vy;
-    final List<Double> velocity = node.getVelocity();
+    final List<Double> velocity = node.getVirtualVelocity();
     if( velocity != null )
     {
       vx = velocity.get( 0 );

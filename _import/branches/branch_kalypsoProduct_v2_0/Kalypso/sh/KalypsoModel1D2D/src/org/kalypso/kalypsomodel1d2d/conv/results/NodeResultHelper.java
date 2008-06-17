@@ -106,6 +106,7 @@ public class NodeResultHelper
       assignMidsideNodeData( nodeDown, midsideNode ); // assignment leads into extrapolation of the water level!!
       return;
     }
+
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() > 0 )
     {
       assignMidsideNodeData( nodeUp, midsideNode ); // assignment leads into extrapolation of the water level!!
@@ -143,7 +144,7 @@ public class NodeResultHelper
     if( depth < 0 )
     {
       midsideNode.setDepth( 0.0 );
-      setVelocity( midsideNode, 0.0 );
+      // setVelocity( midsideNode, 0.0 );
     }
     else
     {
@@ -183,16 +184,26 @@ public class NodeResultHelper
     if( depth < 0 )
     {
       midsideNode.setDepth( 0.0 );
-      setVelocity( midsideNode, 0.0 );
+      // setVelocity( midsideNode, 0.0 );
     }
     else
     {
       midsideNode.setDepth( depth );
 
-      final List<Double> velocities = new LinkedList<Double>();
-      velocities.add( node.getAbsoluteVelocity() );
-      velocities.add( 0.0 );
-      setVelocity( midsideNode, getMeanValue( velocities ) );
+      // set the velocity of the midside node to a dummy value derived from the corner node, if the midside node itself
+      // has no velocity value.
+      // REMARK: This is dangerous, because we don't have any vector data anymore!
+      // TODO: check if this is really necessary
+
+      // final List<Double> velocity = midsideNode.getVelocity();
+      // if( velocity.get( 0 ) == 0.0 && velocity.get( 1 ) == 0.0 )
+      // {
+      // final List<Double> velocities = new LinkedList<Double>();
+      // velocities.add( node.getAbsoluteVelocity() );
+      // velocities.add( 0.0 );
+      //
+      // setVelocity( midsideNode, getMeanValue( velocities ) );
+      // }
     }
   }
 
