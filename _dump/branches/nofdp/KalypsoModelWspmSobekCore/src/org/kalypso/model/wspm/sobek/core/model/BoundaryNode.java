@@ -91,7 +91,8 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
         return condition;
     }
 
-    return null;
+    final Feature condition = NodeUtils.createBoundaryNodeLastfallCondition( lastfall, this );
+    return new BoundaryNodeLastfallCondition( lastfall, this, condition );
   }
 
   /**
@@ -132,7 +133,8 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
       final Feature member = (Feature) object;
 
       final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
-      if( fLastfall == null ) // TODO lastfall doesn't exist - remove entry! - perhaps, system.out and continue statement
+      if( fLastfall == null ) // TODO lastfall doesn't exist - remove entry! - perhaps, system.out and continue
+                              // statement
         continue;
 
       conditions.add( new BoundaryNodeLastfallCondition( new Lastfall( getModelMember(), fLastfall ), this, member ) );
