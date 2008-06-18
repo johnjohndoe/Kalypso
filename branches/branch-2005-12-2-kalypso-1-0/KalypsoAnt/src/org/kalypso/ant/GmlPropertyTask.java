@@ -50,6 +50,7 @@ import java.util.List;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.kalypso.ant.deleteDuringUpgrade.ApacheCalendarUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -71,7 +72,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class GmlPropertyTask extends Task
 {
   private final PropertyAdder m_propertyAdder = new PropertyAdder( this );
-  
+
   private final List m_properties = new LinkedList();
 
   /** URL from where to read the gml */
@@ -165,6 +166,7 @@ public class GmlPropertyTask extends Task
       final Date dateValue = (Date)value;
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
+      final String dateTruncField = property.getDateTruncField();
       final Date date;
       if( dateoffset != null && dateoffsetfield != null )
       {
@@ -175,6 +177,11 @@ public class GmlPropertyTask extends Task
       }
       else
         date = dateValue;
+
+      if( dateTruncField != null )
+        // TODO during upgrade to new KALYPSO replace usage of "trunc" with method from
+        // org.apache.commons.lang.CalendarUtils
+        ApacheCalendarUtils.trunc( date, Integer.valueOf( dateTruncField ).intValue() );
 
       m_propertyAdder.addProperty( name, "" + date.getTime(), null );
     }
@@ -218,6 +225,9 @@ public class GmlPropertyTask extends Task
     /** HACK: if the property is a date, the offset to this field. Must be One of Calendar.HOUR_OF_DAY, etc. */
     private String m_dateoffsetfield;
 
+    /** HACK: if the property is a date, truncation manipulation to this field. Must be One of Calendar.HOUR_OF_DAY, etc. */
+    private String m_dateTruncField;
+
     public final Integer getDateoffset()
     {
       return m_dateoffset;
@@ -236,6 +246,16 @@ public class GmlPropertyTask extends Task
     public final void setDateoffsetfield( String dateoffsetfield )
     {
       m_dateoffsetfield = dateoffsetfield;
+    }
+
+    public final String getDateTruncField()
+    {
+      return m_dateTruncField;
+    }
+
+    public final void setDateTruncField( final String dateTruncfield )
+    {
+      m_dateTruncField = dateTruncfield;
     }
 
     public final String getFeatureID()
