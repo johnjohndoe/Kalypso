@@ -106,4 +106,9 @@ public class ElbePolteConst
 
   public static final String RECHENKERN_ZIP = "HWObereElbe.zip";
   public static final String RECHENKERN_EXE = "HWObereElbe.exe";
+
+  public static final String CALC_CANCELLED = "Berechnung wurde durch den Benutzer abgebrochen.";
+  public static final String CALC_FINISHED = "Berechnung ist beendet.";
+  public static final String CALC_CALL = "Rechenkern wird aufgerufen";
+
 }

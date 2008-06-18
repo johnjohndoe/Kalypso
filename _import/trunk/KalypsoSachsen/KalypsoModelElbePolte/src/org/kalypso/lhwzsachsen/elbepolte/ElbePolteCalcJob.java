@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
@@ -79,15 +80,22 @@ public class ElbePolteCalcJob implements ICalcJob
     final File logfile = new File( outputDir, "elbePolte.log" );
 
     PrintWriter pw = null;
+    FileWriter fw = null;
     final Map metaMap = new HashMap();
     try
     {
-      pw = new PrintWriter( new FileWriter( logfile ) );
-      pw.println( "Modell Berechnung wird gestartet" );
+      fw = new FileWriter( logfile );
+      pw = new PrintWriter( fw );
+
+      pw.println( "Modell Berechnung wird gestartet (" + ElbePolteUtils.getAktuelleUhrzeit() + ")" );
       pw.println();
 
       if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
+      }
       final Properties props = new Properties();
       monitor.setMessage( "Dateien für Rechenkern werden erzeugt" );
       pw.println( "Dateien für Rechenkern werden erzeugt" );
@@ -106,17 +114,25 @@ public class ElbePolteCalcJob implements ICalcJob
 
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
+      }
 
-      monitor.setMessage( "Rechenkern wird aufgerufen" );
-      pw.println( "Rechenkern wird aufgerufen" );
+      monitor.setMessage( ElbePolteConst.CALC_CALL );
+      pw.println( ElbePolteConst.CALC_CALL );
       startCalculation( exeDir, pw, monitor, nativeOutDir );
 
       resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
 
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
+      }
 
       monitor.setMessage( "Ergebnisse werden zurückgelesen" );
       pw.println( "Ergebnisse werden zurückgelesen" );
@@ -132,9 +148,14 @@ public class ElbePolteCalcJob implements ICalcJob
 
       monitor.setProgress( 34 );
       if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
+      }
 
-      pw.println( "Berechnung beendet" );
+      monitor.setMessage( ElbePolteConst.CALC_FINISHED );
+      pw.println( ElbePolteConst.CALC_FINISHED );
 
     }
     catch( final Exception e )
@@ -145,10 +166,11 @@ public class ElbePolteCalcJob implements ICalcJob
     }
     finally
     {
-      if( pw != null )
-        pw.close();
-
-      resultEater.addResult( "ERGEBNISSE", new File( outputDir, "Ergebnisse" ) );
+      IOUtils.closeQuietly( pw );
+      IOUtils.closeQuietly( fw );
+      resultEater.addResult( "LOG", logfile );
+      resultEater.addResult( "ERGEBNISSE", new File( outputDir, ICalcServiceConstants.RESULT_DIR_NAME ) );
+      monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_FINISHED );
     }
   }
 
@@ -166,7 +188,6 @@ public class ElbePolteCalcJob implements ICalcJob
     final FileVisitorHwvs2Zml fleVisitorPegel = new FileVisitorHwvs2Zml( outputDir, props,
         ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_modellwerte", true, metaMap );
     FileUtilities.accept( nativeOutDir, fleVisitorPegel, true );
-
 
     final FileVisitorHwvs2Zml fleVisitorZwge = new FileVisitorHwvs2Zml( outputDir, props,
         ElbePolteConst.GML_H_PEGEL_COLL, "ganglinie_modellwerte", true, metaMap );
