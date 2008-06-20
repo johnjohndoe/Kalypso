@@ -572,7 +572,7 @@
                                 <sequence>
                                         <element name="widthUpstream" type="wspmSobekCommon:notNegDoubleType" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">W1
                                                                 <name>Breite stromaufwärts [m]</name>
                                                                 <label>Breite stromaufwärts [m]</label>
                                                                 <tooltip>Breite stromaufwärts [m]</tooltip>
@@ -588,7 +588,7 @@
                                         </element>
                                         <element name="widthStructureLeft" type="wspmSobekCommon:notNegDoubleType" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Wsdl
                                                                 <name>Einlassbreite [m]</name>
                                                                 <label>Einlassbreite [m]</label>
                                                                 <tooltip>Einlassbreite [m]</tooltip>
@@ -604,7 +604,7 @@
                                         </element>
                                         <element name="widthStructure" type="wspmSobekCommon:notNegDoubleType" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Ws
                                                                 <name>Durchlassbreite [m]</name>
                                                                 <label>Durchlassbreite [m]</label>
                                                                 <tooltip>Durchlassbreite [m]</tooltip>
@@ -620,7 +620,7 @@
                                         </element>
                                         <element name="widthStructureRight" type="wspmSobekCommon:notNegDoubleType" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Wsdr
                                                                 <name>Auslassbreite [m]</name>
                                                                 <label>Auslassbreite [m]</label>
                                                                 <tooltip>Auslassbreite [m]</tooltip>
@@ -636,7 +636,7 @@
                                         </element>
                                         <element name="widthDownstream" type="wspmSobekCommon:notNegDoubleType" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">W2
                                                                 <name>Breite stromabwärts [m]</name>
                                                                 <label>Breite stromabwärts [m]</label>
                                                                 <tooltip>Breite stromabwärts [m]</tooltip>
@@ -652,7 +652,7 @@
                                         </element>
                                         <element name="bedLevelUpstream" type="double" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Zb1
                                                                 <name>Sohlhöhe stromaufwärts [m NHN]</name>
                                                                 <label>Sohlhöhe stromaufwärts [m NHN]</label>
                                                                 <tooltip>Sohlhöhe stromaufwärts [m NHN]</tooltip>
@@ -668,7 +668,7 @@
                                         </element>
                                         <element name="bedLevelStructureLeft" type="double" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Zbsl
                                                                 <name>Sohlhöhe am Einlass [m NHN]</name>
                                                                 <label>Sohlhöhe am Einlass [m NHN]</label>
                                                                 <tooltip>Sohlhöhe am Einlass [m NHN]</tooltip>
@@ -684,7 +684,7 @@
                                         </element>
                                         <element name="bedLevelStructure" type="double" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Zbs
                                                                 <name>Sohlhöhe Durchlass [m NHN]</name>
                                                                 <label>Sohlhöhe Durchlass [m NHN]</label>
                                                                 <tooltip>Sohlhöhe Durchlass [m NHN]</tooltip>
@@ -700,7 +700,7 @@
                                         </element>
                                         <element name="bedLevelStructureRight" type="double" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Zbsr
                                                                 <name>Sohlhöhe Auslass [m NHN]</name>
                                                                 <label>Sohlhöhe Auslass [m NHN]</label>
                                                                 <tooltip>Sohlhöhe Auslass [m NHN]</tooltip>
@@ -716,7 +716,7 @@
                                         </element>
                                         <element name="bedLevelDownstream" type="double" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
+                                                        <documentation xml:lang="de">Zb2
                                                                 <name>Sohlhöhe stromabwärts [m NHN]</name>
                                                                 <label>Sohlhöhe stromabwärts [m NHN]</label>
                                                                 <tooltip>Sohlhöhe stromabwärts [m NHN]</tooltip>
@@ -730,19 +730,19 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="gateHeight" type="wspmSobekCommon:notNegDoubleType" nillable="false">
+                                        <element name="gateHeight" type="double" nillable="false">
                                                 <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <name>Durchlasshöhe [m]</name>
-                                                                <label>Durchlasshöhe [m]</label>
-                                                                <tooltip>Durchlasshöhe [m]</tooltip>
-                                                                <description>Durchlasshöhe [m]</description>
+                                                        <documentation xml:lang="de">Zgle
+                                                                <name>Durchlassoberkante [m NHN]</name>
+                                                                <label>Durchlassoberkante [m NHN]</label>
+                                                                <tooltip>Durchlassoberkante [m NHN]</tooltip>
+                                                                <description>Durchlassoberkante [m NHN]</description>
                                                         </documentation>
                                                         <documentation xml:lang="en">
-                                                                <name>Gate Height [m]</name>
-                                                                <label>Gate Height [m]</label>
-                                                                <tooltip>Gate Height [m]</tooltip>
-                                                                <description>Gate Height [m]</description>
+                                                                <name>Gate Upper Edge [m NHN]</name>
+                                                                <label>Gate Upper Edge [m NHN]</label>
+                                                                <tooltip>Gate Upper Edge [m NHN]</tooltip>
+                                                                <description>Gate Upper Edge [m NHN]</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
