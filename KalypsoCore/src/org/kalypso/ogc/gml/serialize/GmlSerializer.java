@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize;
 
@@ -173,7 +173,7 @@ public final class GmlSerializer
     }
     catch( final Exception e )
     {
-      throw new GmlSerializeException( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.4"), e ); //$NON-NLS-1$
+      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.4" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -218,7 +218,7 @@ public final class GmlSerializer
       if( isr.getEncoding() == null )
       {
         IOUtils.closeQuietly( isr );
-        throw new NullPointerException( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.5") ); //$NON-NLS-1$
+        throw new NullPointerException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.5" ) ); //$NON-NLS-1$
       }
 
       reader = new BufferedReader( isr );
@@ -251,14 +251,14 @@ public final class GmlSerializer
 
     TimeLogger perfLogger = null;
     if( doTrace )
-      perfLogger = new TimeLogger( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.7") ); //$NON-NLS-1$
+      perfLogger = new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.7" ) ); //$NON-NLS-1$
 
     final GMLWorkspace workspace = parseGml( inputSource, null, true, context, factory );
 
     if( perfLogger != null )
     {
       perfLogger.takeInterimTime();
-      perfLogger.printCurrentTotal( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.8") ); //$NON-NLS-1$
+      perfLogger.printCurrentTotal( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.8" ) ); //$NON-NLS-1$
     }
 
     return workspace;
@@ -315,7 +315,7 @@ public final class GmlSerializer
   {
     try
     {
-      monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.10"), 2 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.10" ), 2 ); //$NON-NLS-1$
       final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
       final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( rootFeatureType, ResourceUtilities.createURL( targetFile ), providerFactory );
       monitor.worked( 1 );
@@ -340,7 +340,7 @@ public final class GmlSerializer
 
   public static void createGmlFile( final QName rootFeatureQName, final String[] introduceNamespaces, final IFile targetFile, final IProgressMonitor monitor, final IFeatureProviderFactory factory ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.serialize.GmlSerializer.11"), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.11" ), 2 ); //$NON-NLS-1$
 
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
 
