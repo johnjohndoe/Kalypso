@@ -454,6 +454,7 @@ public class FileUtilities
    * 
    * 
    * 
+   * 
    * </pre>
    * 
    * @param fileName
@@ -652,6 +653,7 @@ public class FileUtilities
     // TODO: probably platform dependend.
     // Handle the following problems:
     // - file will be moved onto another file system (in that case copy/delete is probably better)
+    // - also a moving from one drive to another on the same platform is not possible.
 
     final File destFile = new File( destDir, source.getName() );
 
