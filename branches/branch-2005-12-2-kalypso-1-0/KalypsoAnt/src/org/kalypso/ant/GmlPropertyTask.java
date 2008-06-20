@@ -167,7 +167,7 @@ public class GmlPropertyTask extends Task
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
       final String dateTruncField = property.getDateTruncField();
-      final Date date;
+       Date date;
       if( dateoffset != null && dateoffsetfield != null )
       {
         final Calendar cal = Calendar.getInstance();
@@ -181,7 +181,7 @@ public class GmlPropertyTask extends Task
       if( dateTruncField != null )
         // TODO during upgrade to new KALYPSO replace usage of "trunc" with method from
         // org.apache.commons.lang.CalendarUtils
-        ApacheCalendarUtils.trunc( date, Integer.valueOf( dateTruncField ).intValue() );
+        date = ApacheCalendarUtils.trunc( date, Integer.valueOf( dateTruncField ).intValue() );
 
       m_propertyAdder.addProperty( name, "" + date.getTime(), null );
     }
