@@ -201,8 +201,11 @@
 		    <output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
 		    <output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>
 		    <output id="NATIVE_OUT_DIR"  path="Ergebnisse/.native/out" relativeToCalcCase="true"/>
-
-		    <clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
+			
+		    <clearAfterCalc path="Ergebnisse/**/*.zml" relativeToCalcCase="true"/>
+		    <clearAfterCalc path="Ergebnisse/.native" relativeToCalcCase="true"/>
+		    <clearAfterCalc path="Ergebnisse/*.gml" relativeToCalcCase="true"/>
+			<clearAfterCalc path="Ergebnisse/*.log" relativeToCalcCase="true"/>
 		</kalypso.runCalculation>
 		
 		<copy file="${calc.dir}/Ergebnisse/calcCase.gml" tofile="${calc.dir}/calcCase.gml" overwrite="true" failonerror="false"/>		
