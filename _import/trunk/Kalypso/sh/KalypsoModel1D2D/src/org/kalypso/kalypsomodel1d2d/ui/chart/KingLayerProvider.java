@@ -42,15 +42,14 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.net.URL;
 
-import org.kalypso.chart.factory.configuration.exception.LayerProviderException;
-import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
-import org.ksp.chart.factory.LayerType;
+
+import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Gernot Belger
@@ -62,31 +61,24 @@ public class KingLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @SuppressWarnings("unchecked")
-  public IChartLayer getLayer( final URL context ) throws LayerProviderException
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
 
     IParameterContainer pc = getParameterContainer();
-    LayerType lt = getLayerType();
+    // LayerType lt = getLayerType();
     IChartModel chartModel = getChartModel();
 
     final String featureKey = pc.getParameterValue( "featureKey", null );
     if( featureKey == null )
-      throw new LayerProviderException( "Missing parameter: featureKey" );
+      throw new ConfigurationException( "Missing parameter: featureKey" );
 
     final Feature kingFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
     if( kingFeature == null )
-      throw new LayerProviderException( "No feature found for key: " + featureKey );
-
-    final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
-    final String targetAxisId = lt.getMapper().getTargetAxisRef().getRef();
-
-    final IAxis<Number> domAxis = (IAxis<Number>) chartModel.getMapperRegistry().getAxis( domainAxisId );
-    final IAxis<Number> targetAxis = (IAxis<Number>) chartModel.getMapperRegistry().getAxis( targetAxisId );
+      throw new ConfigurationException( "No feature found for key: " + featureKey );
 
     KingDataContainer data = new KingDataContainer( kingFeature );
 
-    final KingLayer kingLayer = new KingLayer( data, domAxis, targetAxis );
-    kingLayer.setVisible( lt.getVisible() );
+    final KingLayer kingLayer = new KingLayer( data );
 
     return kingLayer;
   }

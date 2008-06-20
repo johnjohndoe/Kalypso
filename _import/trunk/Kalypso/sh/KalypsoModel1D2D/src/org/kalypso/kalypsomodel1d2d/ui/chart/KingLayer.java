@@ -42,27 +42,29 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.math.BigDecimal;
 
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Path;
-import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+
+import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * A layer which renders a King-Profile.
  * 
  * @author Gernot Belger
  */
-public class KingLayer extends AbstractChartLayer<Number, Number>
+public class KingLayer extends AbstractChartLayer
 {
 
-  public KingLayer( final KingDataContainer data, final IAxis<Number> domAxis, final IAxis<Number> valAxis )
+  private final KingDataContainer m_data;
+
+  public KingLayer( final KingDataContainer data )
   {
-    super( domAxis, valAxis );
-    setDataContainer( data );
+    m_data = data;
   }
 
   /**
@@ -77,10 +79,10 @@ public class KingLayer extends AbstractChartLayer<Number, Number>
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
-    final IAxis<Number> domainAxis = getDomainAxis();
-    final IAxis<Number> valueAxis = getTargetAxis();
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis valueAxis = getTargetAxis();
 
     final Path path = new Path( gc.getDevice() );
 
@@ -89,16 +91,15 @@ public class KingLayer extends AbstractChartLayer<Number, Number>
       /* Draw the bottom */
 
       /* Minimum requirement is the width */
-      final BigDecimal width = getDataContainer().getKingRelation().getWidth();
+      final BigDecimal width = m_data.getKingRelation().getWidth();
       if( width == null )
         return;
 
       final double widthDouble = width.doubleValue();
 
-
-      final int startBottom = domainAxis.logicalToScreen( -widthDouble / 2 );
-      final int stopBottom = domainAxis.logicalToScreen( widthDouble / 2 );
-      final int bottom = valueAxis.logicalToScreen( 0.0 );
+      final int startBottom = domainAxis.numericToScreen( -widthDouble / 2 );
+      final int stopBottom = domainAxis.numericToScreen( widthDouble / 2 );
+      final int bottom = valueAxis.numericToScreen( 0.0 );
       path.moveTo( startBottom, bottom );
       path.lineTo( stopBottom, bottom );
 
@@ -114,10 +115,10 @@ public class KingLayer extends AbstractChartLayer<Number, Number>
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
-  public IDataRange<Double> getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
-    final BigDecimal width = getDataContainer().getKingRelation().getWidth();
-    final BigDecimal widthStorage = getDataContainer().getKingRelation().getWidthStorage();
+    final BigDecimal width = m_data.getKingRelation().getWidth();
+    final BigDecimal widthStorage = m_data.getKingRelation().getWidthStorage();
 
     double widthProfile = 0.0;
     if( width != null )
@@ -127,24 +128,39 @@ public class KingLayer extends AbstractChartLayer<Number, Number>
 
     /* 10% insets */
     widthProfile *= 1.10;
-    
-    IDataRange<Double> dr=null;
-    try
-    {
-      dr = new DataRange<Double>( -widthProfile / 2, widthProfile / 2 );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return dr; 
-    
+
+    IDataRange<Number> dr = null;
+    dr = new DataRange<Number>( -widthProfile / 2, widthProfile / 2 );
+    return dr;
+
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
   @Override
-  public KingDataContainer getDataContainer()
+  protected ILegendEntry[] createLegendEntries( )
   {
-    return (KingDataContainer) super.getDataContainer();
+    // TODO Auto-generated method stub
+    return null;
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  public void dispose( )
+  {
+    // nothing to do
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  public IDataRange<Number> getTargetRange( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

@@ -46,12 +46,13 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.EditInfo;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.layer.ILayerManager;
-import org.kalypso.chart.framework.view.ChartComposite;
-import org.kalypso.chart.framework.view.IChartDragHandler;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author Gernot Belger
@@ -72,10 +73,10 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
    */
   public void mouseDoubleClick( final MouseEvent e )
   {
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
     final EditInfo info = layer.getEditInfo( new Point( e.x, e.y ) );
 
-    if( info.data != null )
+    if( info.m_data != null )
       layer.delete( info );
   }
 
@@ -84,9 +85,9 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
    */
   public void mouseDown( final MouseEvent e )
   {
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
     final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
-    if( editInfo != null && editInfo.data != null )
+    if( editInfo != null && editInfo.m_data != null )
       m_info = editInfo;
   }
 
@@ -99,16 +100,16 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     if( info == null )
     {
       // Klick on cross-point?
-      final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
+      final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
       final EditInfo editInfo = layer.getEditInfo( new Point( e.x, e.y ) );
-      if( editInfo != null && editInfo.data == null )
+      if( editInfo != null && editInfo.m_data == null )
       {
         final Rectangle bounds = m_chartComposite.getPlot().getBounds();
         final int zoomFactor = 3;
-        final Point point = editInfo.pos;
+        final Point point = editInfo.m_pos;
         final Point zoomMin = new Point( point.x - bounds.width / zoomFactor, point.y - bounds.height / zoomFactor );
         final Point zoomMax = new Point( point.x + bounds.width / zoomFactor, point.y + bounds.height / zoomFactor );
-        m_chartComposite.getModel().zoomIn( zoomMin, zoomMax );
+        m_chartComposite.getChartModel().zoomIn( zoomMin, zoomMax );
       }
 
       return;
@@ -117,7 +118,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     // prepare for exception
     m_info = null;
 
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
     layer.edit( new Point( e.x, e.y ), info );
   }
 
@@ -129,7 +130,7 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     final Point point = new Point( e.x, e.y );
 
     // Show tooltip
-    final BuildingParameterLayer layer = findLayer( m_chartComposite.getModel() );
+    final BuildingParameterLayer layer = findLayer( m_chartComposite.getChartModel() );
     final EditInfo info = layer.getEditInfo( point );
     // HACK/TODO: this is ugly and should not be necessary: there should be another mechanism, so that mouse handler can
     // draw tooltips (or other things) on the map.
@@ -143,18 +144,18 @@ public class EditBuildingParameterMouseHandler implements IChartDragHandler
     {
       m_chartComposite.getPlot().setCursor( e.display.getSystemCursor( SWT.CURSOR_HAND ) );
 
-      if( info.data == null )
-        layer.setTooltip( info.text + "\n\nKlicken zum heranzoomen", point );
+      if( info.m_data == null )
+        layer.setTooltip( info.m_text + "\n\nKlicken zum heranzoomen", point );
       else
-        layer.setTooltip( info.text + "\n\nZiehen zum verschieben, Doppelklick zum Löschen", point );
+        layer.setTooltip( info.m_text + "\n\nZiehen zum verschieben, Doppelklick zum Löschen", point );
     }
   }
 
   public static BuildingParameterLayer findLayer( final IChartModel model )
   {
     final ILayerManager layerManager = model.getLayerManager();
-    final IChartLayer< ? , ? >[] layers = layerManager.getLayers();
-    for( final IChartLayer< ? , ? > chartLayer : layers )
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer chartLayer : layers )
     {
       if( chartLayer instanceof BuildingParameterLayer )
         return (BuildingParameterLayer) chartLayer;

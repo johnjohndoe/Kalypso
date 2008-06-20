@@ -5,26 +5,19 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.ComparableDataRange;
-import org.kalypso.chart.framework.model.layer.EditInfo;
-import org.kalypso.chart.framework.model.layer.IEditableChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
-import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.observation.IObservation;
@@ -41,7 +34,23 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
-public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDecimal> implements IDataContainer<BigDecimal, BigDecimal>, IEditableChartLayer<BigDecimal, BigDecimal>
+import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
+import de.openali.odysseus.chart.framework.model.figure.impl.EmptyRectangleFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
+
+public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
 {
   private final static GeometryFactory GF = new GeometryFactory();
 
@@ -63,15 +72,24 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
 
   private Point m_tooltipPoint;
 
-  private EditInfo[] m_editInfos;
+  private Map<Rectangle, EditInfo> m_editInfos;
 
   private final Feature m_obsFeature;
 
   private final TupleResult m_result;
 
-  public BuildingParameterLayer( final IAxis<BigDecimal> domainAxis, final IAxis<BigDecimal> targetAxis, final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId )
+  private final IStyleSet m_styleSet;
+
+  private final PolylineFigure m_okLineFigure;
+
+  private final PointFigure m_okPointFigure;
+
+  private final PolylineFigure m_crossLineFigure;
+
+  private final PointFigure m_crossPointFigure;
+
+  public BuildingParameterLayer( final Feature obsFeature, final String domainComponentId, final String valueComponentId, final String classComponentId, final IStyleSet styleSet )
   {
-    super( domainAxis, targetAxis );
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( obsFeature );
     final TupleResult result = obs.getResult();
@@ -85,7 +103,15 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     m_obsFeature = obsFeature;
     m_result = result;
 
-    setDataContainer( this );
+    m_styleSet = styleSet;
+    m_okLineFigure = new PolylineFigure();
+    m_okLineFigure.setStyle( m_styleSet.getStyle( "okLine", ILineStyle.class ) );
+    m_okPointFigure = new PointFigure();
+    m_okPointFigure.setStyle( m_styleSet.getStyle( "okPoint", IPointStyle.class ) );
+    m_crossLineFigure = new PolylineFigure();
+    m_crossLineFigure.setStyle( m_styleSet.getStyle( "crossLine", ILineStyle.class ) );
+    m_crossPointFigure = new PointFigure();
+    m_crossPointFigure.setStyle( m_styleSet.getStyle( "crossPoint", IPointStyle.class ) );
 
     updatePaintData();
   }
@@ -95,46 +121,42 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     // we do not have an legend item (yet?)
   }
 
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
-    final IStyledElement okLineStyle = getStyle().getElement( SE_TYPE.LINE, 0 );
-    final IStyledElement okPointStyle = getStyle().getElement( SE_TYPE.POINT, 0 );
-    final IStyledElement crossLineStyle = getStyle().getElement( SE_TYPE.LINE, 1 );
-    final IStyledElement crossPointStyle = getStyle().getElement( SE_TYPE.POINT, 1 );
 
     for( final Coordinate[] okLine : m_paintOkLines )
     {
-      okLineStyle.setPath( toPointList( okLine ) );
-      okLineStyle.paint( gc );
+      m_okLineFigure.setPoints( toPointArray( okLine ) );
+      m_okLineFigure.paint( gc );
     }
 
     for( final Coordinate[] crossLine : m_paintCrossLines )
     {
-      crossLineStyle.setPath( toPointList( crossLine ) );
-      crossLineStyle.paint( gc );
+      m_crossLineFigure.setPoints( toPointArray( crossLine ) );
+      m_crossLineFigure.paint( gc );
     }
 
-    final List<Point> okPoints = toPointList( m_paintOkPoints );
-    okPointStyle.setPath( okPoints );
-    okPointStyle.paint( gc );
+    final Point[] okPoints = toPointArray( m_paintOkPoints );
+    m_okPointFigure.setPoints( okPoints );
+    m_okPointFigure.paint( gc );
 
-    crossPointStyle.setPath( toPointList( m_paintCrossPoints ) );
-    crossPointStyle.paint( gc );
+    m_crossPointFigure.setPoints( toPointArray( m_paintCrossPoints ) );
+    m_crossPointFigure.paint( gc );
 
     m_editInfos = updateEditInfos();
 
     if( m_tooltipPoint != null )
-      m_tooltipRenderer.paintTooltip( m_tooltipPoint, gc.m_gc, gc.getClipping() );
+      m_tooltipRenderer.paintTooltip( m_tooltipPoint, gc, gc.getClipping() );
   }
 
-  private EditInfo[] updateEditInfos( )
+  private Map<Rectangle, EditInfo> updateEditInfos( )
   {
     final String classLabel = m_result.getComponent( m_classComponent ).getName();
 
     // Create current edit infos from ok points
-    final List<EditInfo> editInfos = new ArrayList<EditInfo>( m_result.size() );
-    final IAxis<BigDecimal> xAxis = getDomainAxis();
-    final IAxis<BigDecimal> yAxis = getTargetAxis();
+    final Map<Rectangle, EditInfo> editInfos = new LinkedHashMap<Rectangle, EditInfo>( m_result.size() );
+    final IAxis xAxis = getDomainAxis();
+    final IAxis yAxis = getTargetAxis();
     for( final IRecord record : m_result )
     {
       final BigDecimal classValue = (BigDecimal) record.getValue( m_classComponent );
@@ -142,78 +164,64 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
       final BigDecimal targetValue = (BigDecimal) record.getValue( m_valueComponent );
 
       // convert to screen-point
-      final int x = xAxis.logicalToScreen( domainValue );
-      final int y = yAxis.logicalToScreen( targetValue );
+      final int x = xAxis.numericToScreen( domainValue );
+      final int y = yAxis.numericToScreen( targetValue );
       final Point pos = new Point( x, y );
 
       // Edit info
       final String msg = String.format( "%10.4f\t%s%n%10.4f\t%s%n%10.4f\t%s", domainValue, xAxis.getLabel(), targetValue, yAxis.getLabel(), classValue, classLabel );
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
-      final EditInfo info = new EditInfo( null, shape, record, msg, pos );
-      editInfos.add( info );
+      final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, record, msg, pos );
+      editInfos.put( shape, info );
     }
 
     for( final Coordinate crd : m_paintCrossPoints )
     {
       // convert to screen-point
-      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
-      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
+      final int x = xAxis.numericToScreen( new BigDecimal( crd.x ) );
+      final int y = yAxis.numericToScreen( new BigDecimal( crd.y ) );
       final Point pos = new Point( x, y );
 
       // Edit info
       final String msg = String.format( "Schnittpunkt" );
       final Rectangle shape = new Rectangle( x - 5, y - 5, 10, 10 );
-      final EditInfo info = new EditInfo( null, shape, null, msg, pos );
-      editInfos.add( info );
+      final EditInfo info = new EditInfo( null, createHoverPaintable( shape ), null, null, msg, pos );
+      editInfos.put( shape, info );
     }
 
-    return editInfos.toArray( new EditInfo[editInfos.size()] );
+    return editInfos;
   }
 
-  private List<Point> toPointList( final Coordinate[] crds )
+  private IPaintable createHoverPaintable( Rectangle shape )
   {
-    final IAxis<BigDecimal> xAxis = getDomainAxis();
-    final IAxis<BigDecimal> yAxis = getTargetAxis();
+    ILineStyle dls = StyleUtils.getDefaultLineStyle();
+    EmptyRectangleFigure r = new EmptyRectangleFigure();
+    r.setStyle( dls );
+    r.setRectangle( shape );
+    return r;
+  }
 
-    final List<Point> points = new ArrayList<Point>( crds.length );
+  private Point[] toPointArray( final Coordinate[] crds )
+  {
+    final IAxis xAxis = getDomainAxis();
+    final IAxis yAxis = getTargetAxis();
 
-    for( final Coordinate crd : crds )
+    final Point[] points = new Point[crds.length];
+    for( int i = 0; i < crds.length; i++ )
     {
-      final int x = xAxis.logicalToScreen( new BigDecimal( crd.x ) );
-      final int y = yAxis.logicalToScreen( new BigDecimal( crd.y ) );
+      final Coordinate crd = crds[i];
+      final int x = xAxis.numericToScreen( new BigDecimal( crd.x ) );
+      final int y = yAxis.numericToScreen( new BigDecimal( crd.y ) );
       final Point pos = new Point( x, y );
-      points.add( pos );
+      points[i] = pos;
     }
-
     return points;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.data.IDataContainer#close()
-   */
-  public void close( )
-  {
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.data.IDataContainer#isOpen()
-   */
-  public boolean isOpen( )
-  {
-    return true;
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.model.data.IDataContainer#open()
-   */
-  public void open( )
-  {
   }
 
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
-  public IDataRange<BigDecimal> getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return rangeForComponent( m_domainComponent );
   }
@@ -221,12 +229,12 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
-  public IDataRange<BigDecimal> getTargetRange( )
+  public IDataRange<Number> getTargetRange( )
   {
     return rangeForComponent( m_valueComponent );
   }
 
-  private IDataRange<BigDecimal> rangeForComponent( final int component )
+  private IDataRange<Number> rangeForComponent( final int component )
   {
     BigDecimal min = new BigDecimal( Double.MAX_VALUE );
     BigDecimal max = new BigDecimal( Double.MIN_VALUE );
@@ -238,7 +246,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
       min = min.min( value );
     }
 
-    return new ComparableDataRange<BigDecimal>( new BigDecimal[] { min, max } );
+    return new ComparableDataRange<Number>( new BigDecimal[] { min, max } );
   }
 
   public EditInfo getEditInfo( final Point p )
@@ -246,13 +254,11 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     if( m_editInfos == null )
       return null;
 
-    final EditInfo[] infos = m_editInfos;
-    for( final EditInfo editInfo : infos )
+    for( final Rectangle shape : m_editInfos.keySet() )
     {
-      if( editInfo.shape.contains( p ) )
-        return editInfo;
+      if( shape.contains( p ) )
+        return m_editInfos.get( shape );
     }
-
     return null;
   }
 
@@ -269,7 +275,7 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
     if( info == null )
       return;
 
-    final IRecord record = (IRecord) info.data;
+    final IRecord record = (IRecord) info.m_data;
     m_result.remove( record );
 
     updatePaintData();
@@ -399,13 +405,13 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
   public EditInfo edit( final Point point, final EditInfo info )
   {
     // find real point from point
-    final IAxis<BigDecimal> xAxis = getDomainAxis();
-    final IAxis<BigDecimal> yAxis = getTargetAxis();
+    final IAxis xAxis = getDomainAxis();
+    final IAxis yAxis = getTargetAxis();
 
-    final BigDecimal xValue = new BigDecimal( ((Number) xAxis.screenToLogical( point.x )).doubleValue() );
-    final BigDecimal yValue = new BigDecimal( ((Number) yAxis.screenToLogical( point.y )).doubleValue() );
+    final BigDecimal xValue = new BigDecimal( ((Number) xAxis.screenToNumeric( point.x )).doubleValue() );
+    final BigDecimal yValue = new BigDecimal( ((Number) yAxis.screenToNumeric( point.y )).doubleValue() );
 
-    final IRecord record = (IRecord) info.data;
+    final IRecord record = (IRecord) info.m_data;
 
     record.setValue( m_domainComponent, xValue );
     record.setValue( m_valueComponent, yValue );
@@ -422,6 +428,53 @@ public class BuildingParameterLayer extends AbstractChartLayer<BigDecimal, BigDe
   public void setActivePoint( final Object data )
   {
     throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  public void dispose( )
+  {
+    // nothing to do
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  public EditInfo commitDrag( Point point, EditInfo dragStartData )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  public EditInfo drag( Point newPos, EditInfo dragStartData )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
+  public EditInfo getHover( Point pos )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

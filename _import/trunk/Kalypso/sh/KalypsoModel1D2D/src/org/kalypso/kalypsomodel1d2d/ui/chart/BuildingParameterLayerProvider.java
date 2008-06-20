@@ -40,20 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.chart;
 
-import java.math.BigDecimal;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.model.wspm.ui.featureview.ChartDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.ksp.chart.factory.LayerType;
+
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * Layer provider which provides a {@link TupleResultLineChartLayer} on a feature based observation.
@@ -75,9 +74,8 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
   @SuppressWarnings("unchecked")
-  public IChartLayer<BigDecimal, BigDecimal> getLayer( final URL context )
+  public IChartLayer getLayer( final URL context )
   {
-    final LayerType lt = getLayerType();
     final IChartModel chartModel = getChartModel();
 
     final IParameterContainer pc = getParameterContainer();
@@ -96,20 +94,19 @@ public class BuildingParameterLayerProvider extends AbstractLayerProvider
     if( feature == null )
       return null;
 
-    final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
-    final String valueAxisId = lt.getMapper().getTargetAxisRef().getRef();
+    final String domainAxisId = getDomainAxisId();
+    final String valueAxisId = getTargetAxisId();
 
-    final IAxis<BigDecimal> domAxis = (IAxis<BigDecimal>) chartModel.getMapperRegistry().getAxis( domainAxisId );
+    final IAxis domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
 
     final String domainComponentId = pc.getParameterValue( "domainComponentId", "" );
     final String valueComponentId = pc.getParameterValue( "valueComponentId", "" );
     final String classComponentId = pc.getParameterValue( "classComponentId", "" );
 
-    final IAxis<BigDecimal> valAxis = (IAxis<BigDecimal>) chartModel.getMapperRegistry().getAxis( valueAxisId );
+    final IAxis valAxis = chartModel.getMapperRegistry().getAxis( valueAxisId );
 
-    final BuildingParameterLayer icl = new BuildingParameterLayer( domAxis, valAxis, feature, domainComponentId, valueComponentId, classComponentId );
+    final BuildingParameterLayer icl = new BuildingParameterLayer( feature, domainComponentId, valueComponentId, classComponentId, getStyleSet() );
 
-    icl.setVisible( lt.getVisible() );
     return icl;
   }
 }

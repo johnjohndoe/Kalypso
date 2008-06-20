@@ -11,7 +11,7 @@ Require-Bundle: de.renew.workflow.connector;visibility:=reexport,
  org.kalypso.ui,
  org.kalypso.ModelSimulationBase,
  org.eclipse.ui.intro;visibility:=reexport,
- org.kalypso.chart.ui,
+ de.openali.odysseus.chart.ui,
  org.kalypso.featureview,
  org.eclipse.ui.navigator,
  org.eclipse.ui.navigator.resources

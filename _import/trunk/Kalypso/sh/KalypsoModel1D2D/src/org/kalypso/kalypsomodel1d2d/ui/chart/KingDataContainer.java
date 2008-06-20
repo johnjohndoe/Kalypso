@@ -42,33 +42,33 @@ package org.kalypso.kalypsomodel1d2d.ui.chart;
 
 import java.math.BigDecimal;
 
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypsodeegree.model.feature.Feature;
 
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+
 /**
  * @author burtscher1
- *
+ * 
  */
 public class KingDataContainer implements IDataContainer<Number, Number>
 {
   private final IKingFlowRelation m_kingRelation;
 
-  public KingDataContainer(final Feature kingFeature)
+  public KingDataContainer( final Feature kingFeature )
   {
     m_kingRelation = (IKingFlowRelation) kingFeature.getAdapter( IKingFlowRelation.class );
   }
-  
+
   /**
    * @see org.kalypso.chart.framework.model.data.IDataContainer#close()
    */
   public void close( )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
@@ -87,18 +87,10 @@ public class KingDataContainer implements IDataContainer<Number, Number>
 
     /* 10% insets */
     widthProfile *= 1.10;
-    
-    IDataRange<Number> dr=null;
-    try
-    {
-      dr = new DataRange<Number>( -widthProfile / 2, widthProfile / 2 );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return dr; 
+
+    IDataRange<Number> dr = null;
+    dr = new DataRange<Number>( -widthProfile / 2, widthProfile / 2 );
+    return dr;
   }
 
   /**
@@ -116,18 +108,10 @@ public class KingDataContainer implements IDataContainer<Number, Number>
   public IDataRange<Number> getTargetRange( )
   {
     final double height = 10 * 1.10;
-    
-    IDataRange<Number> dr=null;
-    try
-    {
-      dr = new DataRange<Number>( -1.0, height );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-    return dr; 
+
+    IDataRange<Number> dr = null;
+    dr = new DataRange<Number>( -1.0, height );
+    return dr;
   }
 
   /**
@@ -154,13 +138,12 @@ public class KingDataContainer implements IDataContainer<Number, Number>
   public void open( )
   {
     // TODO Auto-generated method stub
-    
+
   }
-  
-  public IKingFlowRelation getKingRelation()
+
+  public IKingFlowRelation getKingRelation( )
   {
     return m_kingRelation;
   }
-  
 
 }

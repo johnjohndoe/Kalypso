@@ -155,6 +155,7 @@
               id="org.kalypso.kalypsomodel1d2d.ui.featurecontrols.ChooseExeControlFactory">
         </extensionControl>
      </extension>
+     <!--
      <extension
            point="org.kalypso.chart.factory.LayerProvider">
         <provider
@@ -166,6 +167,7 @@
               id="org.kalypso.kalypsomodel1d2d.ui.chart.BuildingParameterLayerProvider">
         </provider>
      </extension>
+     -->
      <extension
            point="org.eclipse.ui.handlers">
         <!--*** CreateElement handlers ***-->
