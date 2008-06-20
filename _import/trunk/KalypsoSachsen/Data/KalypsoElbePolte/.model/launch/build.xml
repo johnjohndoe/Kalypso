@@ -161,11 +161,13 @@
 			<input id="ZML_PEGEL" path="Zeitreihen/Pegel" relativeToCalcCase="true"/>
 			<input id="ZML_ZWGE" path="Zeitreihen/Zwischengebiete" relativeToCalcCase="true"/>
 			
+			<output id="LOG" path="Log-Dateien/elbePolte.log" relativeToCalcCase="true"/>
 			<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
 			<output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>
 			<output id="NATIVE_OUT_DIR"  path="Ergebnisse/.native/out" relativeToCalcCase="true"/>
 			
-			<clearAfterCalc path="Ergebnisse" relativeToCalcCase="true"/>
+			<clearAfterCalc path="Ergebnisse/**/*.zml" relativeToCalcCase="true"/>
+			<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true" />
 		</kalypso.runCalculation>
 	</target>
 	

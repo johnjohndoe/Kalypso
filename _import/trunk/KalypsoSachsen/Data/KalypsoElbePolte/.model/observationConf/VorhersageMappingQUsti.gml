@@ -2,6 +2,7 @@
 <MappingCollection fid="ID1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://org.kalypso.updateObservationMapping" xmlns:obslink="obslink.zml.kalypso.org" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="http://org.kalypso.updateObservationMapping ">
   <mappingMember>
     <MappingObservation fid="Usti">
+      <gml:description>2210</gml:description>
       <gml:name>Usti</gml:name>
       <inObservationLink/>
       <outObservationLink/>
