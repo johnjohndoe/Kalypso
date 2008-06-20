@@ -479,7 +479,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     final IFlowRelationship[] flowRelationships = m_flowModel.findFlowrelationships( nodePos, NODE_SEARCH_DIST );
 
-    // TODO: for some reason there are flow relations that are from type BoundaryCondition
+    // for some reason there are flow relations that are from type BoundaryCondition
     // go through the found array and get the first found teschke flow relation
     for( final IFlowRelationship element : flowRelationships )
     {
