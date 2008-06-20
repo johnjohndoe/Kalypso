@@ -4,7 +4,7 @@
    <extension
          point="org.kalypso.services.calculation.local.calcJob">
       <calcJob
-            typeID="org.kalypso.model.wavos"
+            typeID="org.kalypso.model.wavos.elbe.sachsen.v1"
             catalogClass="org.kalypso.model.wavos.WavosUrlCatalog"
             jobClass="org.kalypso.model.wavos.WavosCalcJob"/>
    </extension>
