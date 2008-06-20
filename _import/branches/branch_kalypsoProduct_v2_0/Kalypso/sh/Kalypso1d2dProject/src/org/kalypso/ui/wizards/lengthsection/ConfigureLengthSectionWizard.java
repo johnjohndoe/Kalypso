@@ -60,10 +60,10 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultMeta1d2dHelper;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler2d;
+import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionParameters;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.ICalcUnitResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IScenarioResultMeta;
@@ -78,6 +78,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.wizards.results.Result1d2dMetaComparator;
 import org.kalypso.ui.wizards.results.SelectResultWizardPage;
 import org.kalypso.ui.wizards.results.filters.DocumentResultViewerFilter;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
@@ -104,6 +105,8 @@ public class ConfigureLengthSectionWizard extends Wizard
 
   private final MapPanel m_mapPanel;
 
+  private ConfigureLengthSectionWizardPage m_lengthSectionPage;
+
   public ConfigureLengthSectionWizard( IFolder scenarioFolder, final IScenarioResultMeta resultModel, MapPanel mapPanel )
   {
     m_scenarioFolder = scenarioFolder;
@@ -120,10 +123,7 @@ public class ConfigureLengthSectionWizard extends Wizard
   @Override
   public void addPages( )
   {
-    // define properties page ((choose existing themes (lines) / river name field selection combo river name selection
-    // combo, delta station spinner, station field select combo)
-    final ConfigureLengthSectionWizardPage lengthSectionPage = new ConfigureLengthSectionWizardPage( PAGE_GENERATE_LENGTH_SECTION_NAME, "Längsschnitteinstellungen", null, m_mapPanel );
-
+    m_lengthSectionPage = new ConfigureLengthSectionWizardPage( PAGE_GENERATE_LENGTH_SECTION_NAME, "Längsschnitteinstellungen", null, m_mapPanel );
     // select time step page
     final DocumentResultViewerFilter resultFilter = new DocumentResultViewerFilter();
     final Result1d2dMetaComparator comparator = new Result1d2dMetaComparator();
@@ -132,7 +132,7 @@ public class ConfigureLengthSectionWizard extends Wizard
 
     selectResultWizardPage.setResultMeta( m_resultModel );
 
-    addPage( lengthSectionPage );
+    addPage( m_lengthSectionPage );
     addPage( selectResultWizardPage );
   }
 
@@ -167,12 +167,12 @@ public class ConfigureLengthSectionWizard extends Wizard
           BigDecimal[] stationList = lengthSectionParameters.getStationList();
 
           if( stationList == null )
-            return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Keine Stationseinträge vorhanden (falsche Gewässerlinie?)" );
+            return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Keine Stationseinträge vorhanden (evtl. falsche Gewässerlinie oder falsches Gewässer ausgewählt)" );
 
           monitor.worked( 3 );
 
           // get the Observation Template from the resources
-          final URL lsObsUrl = ConfigureLengthSectionWizard.class.getResource( "resources/lengthSectionTemplate.gml" );
+          final URL lsObsUrl = LengthSectionHandler2d.class.getResource( "resources/lengthSectionTemplate.gml" );
           final GMLWorkspace lsObsWorkspace = GmlSerializer.createGMLWorkspace( lsObsUrl, null );
           final IObservation<TupleResult> lsObs = ObservationFeatureFactory.toObservation( lsObsWorkspace.getRootFeature() );
 
@@ -201,17 +201,25 @@ public class ConfigureLengthSectionWizard extends Wizard
                   monitor.subTask( "...lese Wasserspiegel aus..." );
                   surface = getSurface( docResult );
                   if( surface != null )
-                  {
-                    LengthSectionHandler2d handler1 = new LengthSectionHandler2d( lsObs, surface, lengthSectionParameters.getRiverFeatures(), stationList, documentType );
-                  }
+                    LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lengthSectionParameters, stationList, documentType, m_lengthSectionPage.isKmValues(), monitor );
                   else
                     return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Wasserspiegellagen konnten nicht geladen werden." );
+                  monitor.worked( 4 );
+                }
+                else if( documentType == DOCUMENTTYPE.tinVelo )
+                {
+                  monitor.subTask( "...lese Geschwindigkeiten aus..." );
+                  surface = getSurface( docResult );
+                  if( surface != null )
+                    LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lengthSectionParameters, stationList, documentType, m_lengthSectionPage.isKmValues(), monitor );
+                  else
+                    return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Modelldaten konnten nicht geladen werden." );
+                  monitor.worked( 4 );
                 }
               }
             }
 
-            monitor.worked( 4 );
-
+            // for terrain values we have to ask the parent, because the terrain result is assigned to him
             IResultMeta parent = stepResult.getParent();
             if( parent instanceof ICalcUnitResultMeta )
             {
@@ -232,7 +240,7 @@ public class ConfigureLengthSectionWizard extends Wizard
                     surface = getSurface( docResult );
                     if( surface != null )
                     {
-                      LengthSectionHandler2d handler1 = new LengthSectionHandler2d( lsObs, surface, lengthSectionParameters.getRiverFeatures(), stationList, documentType );
+                      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lengthSectionParameters, stationList, documentType, m_lengthSectionPage.isKmValues(), monitor );
                     }
                     else
                       return StatusUtilities.createErrorStatus( "Längsschnitt konnte nicht erzeugt werden:  Modelldaten konnten nicht geladen werden." );
@@ -254,17 +262,15 @@ public class ConfigureLengthSectionWizard extends Wizard
 
               IFile lsFile = folder.getFile( "lengthSection.gml" );
 
-              /* delete the existing lengthsection file */
+              /* delete the existing length section file */
               if( lsFile.exists() )
-              {
                 lsFile.delete( true, true, new NullProgressMonitor() );
-              }
 
               File lsObsFile = lsFile.getLocation().toFile();
 
               GmlSerializer.serializeWorkspace( lsObsFile, lsObsWorkspace, "CP1252" );
 
-              // TODO: if there is already a length section document, delete it
+              // if there is already a length section document, delete it
               for( IResultMeta child : children )
               {
                 if( child instanceof IDocumentResultMeta )
@@ -280,6 +286,10 @@ public class ConfigureLengthSectionWizard extends Wizard
               BigDecimal min = new BigDecimal( 0 );
               BigDecimal max = new BigDecimal( 0 );
               ResultMeta1d2dHelper.addDocument( stepResult, "Längsschnitt", "2d-Längsschnitt", IDocumentResultMeta.DOCUMENTTYPE.lengthSection, new Path( "lengthSection.gml" ), Status.OK_STATUS, min, max );
+            }
+            else
+            {
+              return StatusUtilities.createWarningStatus( "Längsschnitt enthält keine Daten. Eventuell haben Sie einen falschen Gewässernamen oder eine falsche Gewässerlinie ausgewählt." );
             }
             monitor.worked( 1 );
           }
@@ -307,7 +317,10 @@ public class ConfigureLengthSectionWizard extends Wizard
       KalypsoModel1D2DPlugin.getDefault().getLog().log( status );
     ErrorDialog.openError( getShell(), getWindowTitle(), "Fehler bei Längsschnitterzeugung", status );
 
-    return !status.matches( IStatus.ERROR );
+    if( status.matches( IStatus.ERROR ) || status.matches( IStatus.WARNING ) )
+      return false;
+    else
+      return true;
 
   }
 
@@ -321,19 +334,19 @@ public class ConfigureLengthSectionWizard extends Wizard
   {
     GM_TriangulatedSurface surface = null;
 
-    IPath docPath = docResult.getFullPath();
-    IFolder folder = m_scenarioFolder.getFolder( docPath );
+    final IPath docPath = docResult.getFullPath();
+    final IFolder folder = m_scenarioFolder.getFolder( docPath );
 
     try
     {
       final URL surfaceURL = ResourceUtilities.createURL( folder );
       GMLWorkspace w = GmlSerializer.createGMLWorkspace( surfaceURL, null );
 
-      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
-      GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
+      final GM_Object geometryProperty = w.getRootFeature().getDefaultGeometryProperty();
 
       if( geometryProperty instanceof GM_TriangulatedSurface )
       {

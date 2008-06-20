@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizards.lengthsection;
+package org.kalypso.kalypsomodel1d2d.conv.results.lengthsection;
 
 import java.math.BigDecimal;
 import java.util.SortedSet;
@@ -75,12 +75,15 @@ public class LengthSectionParameters
 
   private final SortedSet<Object> m_toValueSet = new TreeSet<Object>();
 
-  public LengthSectionParameters( FeatureList riverFeatures, IPropertyType riverNamePropertyType, IPropertyType fromStationPropertyType, IPropertyType toStationPropertyType, final BigDecimal stationWidth )
+  private final String m_selectedRiverName;
+
+  public LengthSectionParameters( FeatureList riverFeatures, IPropertyType riverNamePropertyType, IPropertyType fromStationPropertyType, IPropertyType toStationPropertyType, final String selectedRiverName, final BigDecimal stationWidth )
   {
     m_riverFeatures = riverFeatures;
     m_riverNamePropertyType = riverNamePropertyType;
     m_fromStationPropertyType = fromStationPropertyType;
     m_toStationPropertyType = toStationPropertyType;
+    m_selectedRiverName = selectedRiverName;
     m_stationWidth = stationWidth;
 
     if( m_riverFeatures != null )
@@ -121,7 +124,9 @@ public class LengthSectionParameters
         IValuePropertyType vpt = (IValuePropertyType) m_fromStationPropertyType;
         if( vpt.getValueClass() == String.class || vpt.getValueClass() == Double.class || vpt.getValueClass() == Integer.class || vpt.getValueClass() == Long.class )
         {
-          m_fromValueSet.add( riverFeature.getProperty( m_fromStationPropertyType ) );
+          final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
+          if( riverName.equals( m_selectedRiverName ) )
+            m_fromValueSet.add( riverFeature.getProperty( m_fromStationPropertyType ) );
         }
       }
       if( m_toStationPropertyType instanceof IValuePropertyType )
@@ -129,10 +134,15 @@ public class LengthSectionParameters
         IValuePropertyType vpt = (IValuePropertyType) m_toStationPropertyType;
         if( vpt.getValueClass() == String.class || vpt.getValueClass() == Double.class || vpt.getValueClass() == Integer.class || vpt.getValueClass() == Long.class )
         {
-          m_toValueSet.add( riverFeature.getProperty( m_toStationPropertyType ) );
+          final String riverName = (String) riverFeature.getProperty( m_riverNamePropertyType );
+          if( riverName.equals( m_selectedRiverName ) )
+            m_toValueSet.add( riverFeature.getProperty( m_toStationPropertyType ) );
         }
       }
     }
+
+    if( m_fromValueSet.size() == 0 || m_toValueSet.size() == 0 )
+      return;
 
     BigDecimal min = null;
     BigDecimal max = null;
@@ -152,7 +162,10 @@ public class LengthSectionParameters
     // final BigDecimal minDecimal = min.setScale( 1, BigDecimal.ROUND_FLOOR );
     final BigDecimal maxDecimal = max.setScale( 1, BigDecimal.ROUND_CEILING );
 
-    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( m_stationWidth )).intValue() + 1;
+    final BigDecimal subtract = maxDecimal.subtract( minDecimal );
+    final Double divide = subtract.doubleValue() / m_stationWidth.doubleValue();
+    final BigDecimal value = new BigDecimal( divide ).setScale( 5, BigDecimal.ROUND_HALF_UP );
+    final int numOfClasses = (value).intValue() + 1;
 
     m_stationList = new BigDecimal[numOfClasses];
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
@@ -160,6 +173,7 @@ public class LengthSectionParameters
       final double currentValue = minDecimal.doubleValue() + currentClass * m_stationWidth.doubleValue();
 
       BigDecimal station = new BigDecimal( currentValue );
+
       m_stationList[currentClass] = station;
     }
   }
@@ -210,6 +224,11 @@ public class LengthSectionParameters
 
     }
     return null;
+  }
+
+  public String getSelectedRiverName( )
+  {
+    return m_selectedRiverName;
   }
 
 }

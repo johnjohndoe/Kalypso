@@ -43,13 +43,10 @@ package org.kalypso.kalypsomodel1d2d.conv.results.lengthsection;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.observation.IObservation;
@@ -59,6 +56,7 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -75,10 +73,8 @@ public class LengthSectionHandler2dTest extends TestCase
 {
   public void testSomething( )
   {
-    List<GM_TriangulatedSurface> surfaceList = new ArrayList<GM_TriangulatedSurface>();
     try
     {
-
       // Demo river line file (Stör)
       URL resourceShape = getClass().getResource( "resources/stoer_kompl2.shp" );
       GMLWorkspace shapeWorkspace = getShapeWorkspace( resourceShape );
@@ -121,7 +117,7 @@ public class LengthSectionHandler2dTest extends TestCase
       URL resource = getClass().getResource( "resources/tin_Terrain.gml" );
       GMLWorkspace w = GmlSerializer.createGMLWorkspace( resource, null );
 
-      final String targetCRS = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
       w.accept( new TransformVisitor( targetCRS ), w.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
 
@@ -131,7 +127,7 @@ public class LengthSectionHandler2dTest extends TestCase
       {
         surface = (GM_TriangulatedSurface) geometryProperty;
       }
-      LengthSectionHandler2d handler = new LengthSectionHandler2d( lsObs, surface, lstMembers, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain );
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinTerrain, false, new NullProgressMonitor() );
 
       URL resource2 = getClass().getResource( "resources/tin_WATERLEVEL.gml" );
       w = GmlSerializer.createGMLWorkspace( resource2, null );
@@ -146,7 +142,7 @@ public class LengthSectionHandler2dTest extends TestCase
 
       }
 
-      LengthSectionHandler2d handler2 = new LengthSectionHandler2d( lsObs, surface, lstMembers, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp );
+      LengthSectionHandler2d.handle2DLenghtsection( lsObs, surface, lstMembers, null, null, null, targetCRS, stationList, IDocumentResultMeta.DOCUMENTTYPE.tinWsp, false, new NullProgressMonitor() );
 
       if( lsObs.getResult().size() > 0 )
       {
@@ -195,7 +191,7 @@ public class LengthSectionHandler2dTest extends TestCase
     return ShapeSerializer.deserialize( shape, cSystem );
   }
 
-  public static GMLWorkspace getShapeWorkspace( final URL shpURL ) throws GmlSerializeException, LoaderException
+  public static GMLWorkspace getShapeWorkspace( final URL shpURL ) throws LoaderException
   {
     if( shpURL == null )
       throw new IllegalStateException();

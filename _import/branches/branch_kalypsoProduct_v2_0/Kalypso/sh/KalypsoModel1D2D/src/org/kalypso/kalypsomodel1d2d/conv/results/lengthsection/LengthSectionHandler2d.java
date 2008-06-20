@@ -44,8 +44,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.result.IDocumentResultMeta.DOCUMENTTYPE;
 import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
@@ -77,51 +77,76 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class LengthSectionHandler2d
 {
-
-  public LengthSectionHandler2d( IObservation<TupleResult> lsObs, final GM_TriangulatedSurface surface, final FeatureList riverFeatures, final BigDecimal[] stationList, DOCUMENTTYPE documenttype )
+  public static void handle2DLenghtsection( IObservation<TupleResult> lsObs, GM_TriangulatedSurface surface, final LengthSectionParameters lengthSectionParameters, BigDecimal[] stationList, DOCUMENTTYPE documentType, boolean isKmValues, IProgressMonitor monitor )
   {
-    final Map<BigDecimal, GM_Point> pointList = getPointList( riverFeatures, stationList );
+    final FeatureList riverFeatures = lengthSectionParameters.getRiverFeatures();
+    final IPropertyType riverNamePropertyType = lengthSectionParameters.getRiverNamePropertyType();
+    final String selectedRiverName = lengthSectionParameters.getSelectedRiverName();
 
-    generateLengthSection( pointList, surface, lsObs, documenttype );
+    final IPropertyType fromStationPropertyType = lengthSectionParameters.getFromStationPropertyType();
+    final IPropertyType toStationPropertyType = lengthSectionParameters.getToStationPropertyType();
 
+    handle2DLenghtsection( lsObs, surface, riverFeatures, riverNamePropertyType, fromStationPropertyType, toStationPropertyType, selectedRiverName, stationList, documentType, isKmValues, monitor );
   }
 
-  private static Map<BigDecimal, GM_Point> getPointList( FeatureList riverFeatures, final BigDecimal[] stationList )
+  public static void handle2DLenghtsection( IObservation<TupleResult> lsObs, final GM_TriangulatedSurface surface, final FeatureList riverFeatures, final IPropertyType riverNamePropertyType, final IPropertyType fromStationPropertyType, final IPropertyType toStationPropertyType, final String riverName, final BigDecimal[] stationList, DOCUMENTTYPE documenttype, final boolean iskmValue, final IProgressMonitor monitor )
   {
+    final Map<BigDecimal, GM_Point> pointList = getPointList( riverFeatures, stationList, riverNamePropertyType, fromStationPropertyType, toStationPropertyType, riverName, monitor );
+
+    generateLengthSection( pointList, surface, lsObs, documenttype, iskmValue, monitor );
+  }
+
+  private static Map<BigDecimal, GM_Point> getPointList( FeatureList riverFeatures, final BigDecimal[] stationList, final IPropertyType riverNamePropertyType, final IPropertyType fromStationPropertyType, final IPropertyType toStationPropertyType, final String riverName, IProgressMonitor monitor )
+  {
+    // TODO: better monitoring
+
     Map<BigDecimal, GM_Point> pointList = new HashMap<BigDecimal, GM_Point>();
 
     for( Object object : riverFeatures )
     {
       Feature feature = (Feature) object;
 
+      if( riverNamePropertyType != null )
+      {
+        final Object prop = feature.getProperty( riverNamePropertyType );
+
+        if( !(prop instanceof String) )
+          return pointList;
+
+        final String featureRiverName = (String) prop;
+        if( !featureRiverName.equals( riverName ) )
+          continue;
+      }
+
       // get "from" and "to" values for each segment
       final BigDecimal from;
       final BigDecimal to;
-      final String customNamespace = feature.getFeatureType().getGMLSchema().getTargetNamespace(); // TODO: shape api?
-      Object propertyFrom = feature.getProperty( new QName( customNamespace, "RIVER_A" ) );
-      if( propertyFrom instanceof Long )
-      {
-        from = new BigDecimal( (Long) propertyFrom );
-      }
-      else
-      {
-        throw new ClassCastException( "Fehler bei Stationswert. Falscher Typ." );
-      }
 
-      Object propertyTo = feature.getProperty( new QName( customNamespace, "RIVER_B" ) );
-      if( propertyTo instanceof Long )
-      {
-        to = new BigDecimal( (Long) propertyTo );
-      }
+      final Object propertyFrom = feature.getProperty( fromStationPropertyType );
+
+      if( propertyFrom instanceof Long )
+        from = new BigDecimal( (Long) propertyFrom );
       else
-      {
-        throw new ClassCastException( "Fehler bei Stationswert. Falscher Typ." );
-      }
+        throw new ClassCastException( "Fehler bei Stationswert. Falscher Datentyp gewählt." );
+
+      final Object propertyTo = feature.getProperty( toStationPropertyType );
+
+      if( propertyTo instanceof Long )
+        to = new BigDecimal( (Long) propertyTo );
+      else
+        throw new ClassCastException( "Fehler bei Stationswert. Falscher Datentyp gewählt." );
 
       GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
       GM_MultiCurve multiCurve = (GM_MultiCurve) defaultGeometryProperty;
 
+      if( multiCurve == null )
+        continue;
+
       GM_Curve[] allCurves = multiCurve.getAllCurves();
+
+      if( allCurves.length > 1 )
+        continue;
+
       GM_Curve curve = allCurves[0];
 
       // jetzt hamma d Kurv :-)
@@ -152,7 +177,6 @@ public class LengthSectionHandler2d
             GM_Point gmPoint = (GM_Point) JTSAdapter.wrap( point );
             if( gmPoint != null )
               pointList.put( stationList[i], gmPoint );
-
           }
           catch( GM_Exception e )
           {
@@ -164,7 +188,7 @@ public class LengthSectionHandler2d
     return pointList;
   }
 
-  private static void generateLengthSection( Map<BigDecimal, GM_Point> pointList, GM_TriangulatedSurface surface, IObservation<TupleResult> lsObs, DOCUMENTTYPE documenttype )
+  private static void generateLengthSection( Map<BigDecimal, GM_Point> pointList, GM_TriangulatedSurface surface, IObservation<TupleResult> lsObs, DOCUMENTTYPE documenttype, final boolean iskmValue, IProgressMonitor monitor )
   {
     /* generate length section point list */
 
@@ -180,16 +204,31 @@ public class LengthSectionHandler2d
     final IComponent thalComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_GROUND );
     final IComponent waterlevelComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_WATERLEVEL );
     final IComponent velocityComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_VELOCITY );
+    final IComponent dischargeComp = ComponentUtilities.findComponentByID( components, IWspmDictionaryConstants.LS_COMPONENT_RUNOFF );
+
+    final int stationIndex = tuples.indexOfComponent( stationComp );
+    final int thalwegIndex = tuples.indexOfComponent( thalComp );
+    final int waterlevelIndex = tuples.indexOfComponent( waterlevelComp );
+    final int velocityIndex = tuples.indexOfComponent( velocityComp );
+    final int dischargeIndex = tuples.indexOfComponent( dischargeComp );
 
     TupleResultIndex m_tupleIndex = new TupleResultIndex( tuples, stationComp );
 
     // for each point get the values of the surfaces in the list of TrinagulatedSurface
     for( Map.Entry<BigDecimal, GM_Point> entry : pointList.entrySet() )
     {
-      final BigDecimal station = entry.getKey();
+      BigDecimal station = entry.getKey();
+
+      // station values are in meter and have to be divided by 1000 in order to fit the chart view axis, which unit
+      // is km
+      if( !iskmValue )
+        station = station.divide( new BigDecimal( "1000.0" ), 4, BigDecimal.ROUND_HALF_UP );
+
+      // get the value from the TriangulatedSurface
       final Double v = surface.getValue( entry.getValue() );
       if( v.isNaN() )
         continue;
+
       final BigDecimal value = new BigDecimal( v ).setScale( 4, BigDecimal.ROUND_HALF_UP );
 
       // look for the record
@@ -199,24 +238,24 @@ public class LengthSectionHandler2d
       if( record == null )
       {
         record = tuples.createRecord();
-        record.setValue( stationComp, station );
-        // add it to the Indexer
+        record.setValue( stationIndex, station );
+
+        // REMARK: we have to add a dummy discharge values of 0.0 because the ChartView can not handle null
+        // entries in obs.
+        record.setValue( dischargeIndex, new BigDecimal( "0.00" ) );
 
         switch( documenttype )
         {
           case tinTerrain:
-            record.setValue( thalComp, value );
-
+            record.setValue( thalwegIndex, value );
             break;
 
           case tinWsp:
-
-            record.setValue( waterlevelComp, value );
+            record.setValue( waterlevelIndex, value );
             break;
 
           case tinVelo:
-            record.setValue( velocityComp, value );
-
+            record.setValue( velocityIndex, value );
             break;
 
           default:
@@ -229,27 +268,23 @@ public class LengthSectionHandler2d
       {
         switch( documenttype )
         {
-
           case tinTerrain:
-            record.setValue( thalComp, value );
-
+            record.setValue( thalwegIndex, value );
             break;
 
           case tinWsp:
-
-            record.setValue( waterlevelComp, value );
+            record.setValue( waterlevelIndex, value );
             break;
 
           case tinVelo:
-            record.setValue( velocityComp, value );
-
+            record.setValue( velocityIndex, value );
             break;
 
           default:
             break;
         }
-
       }
     }
   }
+
 }
