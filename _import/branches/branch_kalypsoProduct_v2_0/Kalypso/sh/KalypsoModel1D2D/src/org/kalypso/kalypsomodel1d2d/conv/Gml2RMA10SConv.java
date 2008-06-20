@@ -658,8 +658,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station ); //$NON-NLS-1$
 
-    if( !isMidside )
-      writeRestartLines( formatter, nodeID, x, y );
+    writeRestartLines( formatter, nodeID, x, y, isMidside );
   }
 
   private void writeSplittedPolynomials( final Formatter formatter, final String kind, final int nodeID, final int polynomialNo, final IPolynomial1D poly, final Double extraValue ) throws IOException
@@ -845,7 +844,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     throw new UnsupportedOperationException();
   }
 
-  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y ) throws IOException
+  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y, final boolean isMidside ) throws IOException
   {
     if( m_restartNodes == null )
       return;
@@ -856,11 +855,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
     final INodeResult node = m_restartNodes.getNodeResultAtPosition( x, y );
     if( node == null )
     {
-      // this could be the case for instance, if the user has created a short cut between two 1d nodes. At the
-      // calculated position exists no (midside node) restart node. what to do??
-
-      final GM_Point position = GeometryFactory.createGM_Point( x, y, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", position, null );
+      // we check only corner nodes, because in 1d it could be the case that there are midside nodes without restart
+      // data
+      if( !isMidside )
+      {
+        final GM_Point position = GeometryFactory.createGM_Point( x, y, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", position, null );
+      }
       return;
     }
 
