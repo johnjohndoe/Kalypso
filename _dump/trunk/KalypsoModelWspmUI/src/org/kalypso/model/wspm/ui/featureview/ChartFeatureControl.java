@@ -54,12 +54,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
-import org.kalypso.chart.factory.configuration.ChartFactory;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.layer.ILayerManager;
-import org.kalypso.chart.framework.util.ChartUtilities;
-import org.kalypso.chart.framework.view.ChartComposite;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.Messages;
@@ -67,7 +61,15 @@ import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypso.util.swt.StatusComposite;
 import org.kalypsodeegree.model.feature.Feature;
-import org.ksp.chart.factory.ChartType;
+
+import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
+import de.openali.odysseus.chart.factory.config.ChartFactory;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chartconfig.x020.ChartType;
 
 /**
  * @author Gernot Belger
@@ -204,14 +206,14 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       final ChartComposite chart = m_chartTabs[i].getChartComposite();
 
       // if the chart was previously loaded, it will contain layers - these have to be removed
-      ILayerManager lm = chart.getModel().getLayerManager();
-      IChartLayer< ? , ? >[] layers = lm.getLayers();
-      for( IChartLayer< ? , ? > chartLayer : layers )
+      ILayerManager lm = chart.getChartModel().getLayerManager();
+      IChartLayer[] layers = lm.getLayers();
+      for( IChartLayer chartLayer : layers )
       {
         lm.removeLayer( chartLayer );
       }
-      ChartFactory.doConfiguration( chart.getModel(), m_ccl, m_chartTypes[i], m_context );
-      ChartUtilities.maximize( chart.getModel() );
+      ChartFactory.doConfiguration( chart.getChartModel(), m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
+      ChartUtilities.maximize( chart.getChartModel() );
     }
   }
 

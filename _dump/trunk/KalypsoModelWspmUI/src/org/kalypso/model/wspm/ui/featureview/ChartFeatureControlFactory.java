@@ -47,7 +47,6 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
-import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -58,7 +57,9 @@ import org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory;
 import org.kalypso.util.swt.SWTUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.ksp.chart.factory.ChartType;
+
+import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chartconfig.x020.ChartType;
 
 /**
  * A feature control which shows a chart. The chart configuration comes from the parameters of the extension, its

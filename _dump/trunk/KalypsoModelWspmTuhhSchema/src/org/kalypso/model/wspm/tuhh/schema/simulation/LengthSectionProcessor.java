@@ -54,7 +54,6 @@ import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.chart.factory.configuration.ChartConfigurationLoader;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -70,10 +69,12 @@ import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.ksp.chart.factory.AxisType;
-import org.ksp.chart.factory.ChartConfigurationDocument;
-import org.ksp.chart.factory.ChartType;
-import org.ksp.chart.factory.AxisType.Direction;
+
+import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chartconfig.x020.AxisType;
+import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
+import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.AxisType.Direction;
 
 public class LengthSectionProcessor
 {
@@ -369,7 +370,7 @@ public class LengthSectionProcessor
       chart.setTitle( lsObs.getName() );
       chart.setDescription( lsObs.getDescription() );
 
-      final AxisType[] axes = ccl.getAxes();
+      final AxisType[] axes = chart.getMappers().getAxisArray();
       for( final AxisType axis : axes )
       {
         if( axis.getLabel().equals( "Station_Axis" ) )

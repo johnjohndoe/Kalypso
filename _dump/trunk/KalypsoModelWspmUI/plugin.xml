@@ -396,15 +396,6 @@
             id="org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory"/>
    </extension>
 
-      <extension
-         point="org.kalypso.chart.factory.LayerProvider">
-      <provider
-            class="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"
-            id="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"/>
-      <provider
-            class="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider"
-            id="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider"/>
-   </extension>
 
 
       <extension
@@ -483,6 +474,17 @@
                   style="push">
             </command>
          </menuContribution>
+      </extension>
+      <extension
+            point="de.openali.odysseus.chart.factory.LayerProvider">
+         <provider
+               class="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"
+               id="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider">
+         </provider>
+         <provider
+               class="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider"
+               id="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+         </provider>
       </extension>
 
 </plugin>

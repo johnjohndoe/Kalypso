@@ -11,10 +11,10 @@ Require-Bundle: org.kalypso.model.wspm.tuhh.core;visibility:=reexport,
  org.kalypso.core,
  org.kalypso.model.wspm.schema;visibility:=reexport,
  org.kalypso.gml.processes,
- org.kalypso.chart.factory,
- org.kalypso.chart.framework,
- org.kalypso.chart.ext.base,
- org.kalypso.chart.ext.observation
+ de.openali.odysseus.chart.ext.base,
+ de.openali.odysseus.chart.factory,
+ de.openali.odysseus.chart.framework,
+ de.openali.odysseus.chart.ext.observation
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.tuhh.schema,
  org.kalypso.model.wspm.tuhh.schema.gml,

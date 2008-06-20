@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
-import org.kalypso.chart.framework.exception.ZeroSizeDataRangeException;
-import org.kalypso.chart.framework.model.data.IDataContainer;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.data.impl.DataRange;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
+
+import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 /**
  * @author burtscher1
@@ -87,16 +87,8 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
         max = rangeNormMax;
     }
 
-    DataRange<Number> dataRange = null;
-    try
-    {
-      dataRange = new DataRange<Number>( min, max );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    IDataRange<Number> dataRange = null;
+    dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
     return dataRange;
   }
 
@@ -158,16 +150,7 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
       }
     }
 
-    DataRange<Number> dataRange = null;
-    try
-    {
-      dataRange = new DataRange<Number>( min, max );
-    }
-    catch( ZeroSizeDataRangeException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
     return dataRange;
   }
 

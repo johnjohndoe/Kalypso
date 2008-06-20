@@ -42,16 +42,18 @@ package org.kalypso.model.wspm.ui.featureview;
 
 import java.util.ArrayList;
 
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ext.base.layer.AbstractChartLayer;
-import org.kalypso.chart.framework.model.data.IDataRange;
-import org.kalypso.chart.framework.model.mapper.IAxis;
-import org.kalypso.chart.framework.model.styles.IStyledElement;
-import org.kalypso.chart.framework.model.styles.IStyleConstants.SE_TYPE;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
+
+import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * A chart layer which displays Polynomial1D's.
@@ -61,85 +63,90 @@ import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
  * 
  * @author Gernot Belger
  */
-public class PolynomeChartLayer extends AbstractChartLayer<Number, Number>
+public class PolynomeChartLayer extends AbstractLineLayer
 {
   private final int m_pixelsPerTick;
 
   private final boolean m_showPoints;
+
+  private final PolynomDataContainer m_data;
 
   /**
    * @param pixelsPerTick:
    *            Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a
    *            polynome value is calculated and rendered.
    */
-  public PolynomeChartLayer( final PolynomDataContainer data, final IAxis<Number> domainAxis, final IAxis<Number> valueAxis, final int pixelsPerTick, final boolean showPoints )
+  public PolynomeChartLayer( PolynomDataContainer dataContainer, final int pixelsPerTick, final ILineStyle lineStyle, final IPointStyle pointStyle, final boolean showPoints )
   {
-    super( domainAxis, valueAxis );
-    setDataContainer( data );
+    super( lineStyle, pointStyle );
     m_pixelsPerTick = pixelsPerTick;
     m_showPoints = showPoints;
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
-   */
-  public void drawIcon( final Image img )
-  {
-    // TODO Auto-generated method stub
+    m_data = dataContainer;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Device)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
-  public void paint( final GCWrapper gc )
+  @SuppressWarnings("unchecked")
+  public void paint( final GC gc )
   {
-    final IDataRange domainRange = getDataContainer().getDomainRange();
+    final IDataRange<Number> domainRange = m_data.getDomainRange();
     final double min = (Double) domainRange.getMin();
     final double max = (Double) domainRange.getMax();
 
-    final IStyledElement styledLine = getStyle().getElement( SE_TYPE.LINE, 0 );
-    final IStyledElement styledPoint = m_showPoints ? getStyle().getElement( SE_TYPE.POINT, 0 ) : null;
+    PolylineFigure plf = getPolylineFigure();
+    PointFigure pf = getPointFigure();
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
-    final IAxis<Number> domainAxis = getDomainAxis();
-    final IAxis<Number> targetAxis = getTargetAxis();
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis targetAxis = getTargetAxis();
 
-    final double logical0 = domainAxis.screenToLogical( 0 ).doubleValue();
-    final double logical1 = domainAxis.screenToLogical( 1 ).doubleValue();
+    final double logical0 = domainAxis.screenToNumeric( 0 ).doubleValue();
+    final double logical1 = domainAxis.screenToNumeric( 1 ).doubleValue();
     final double logicalPixelWidth = Math.abs( logical0 - logical1 );
 
     final double tick = logicalPixelWidth * m_pixelsPerTick;
 
     for( double pos = min; pos < max; pos += tick )
     {
-      final IPolynomial1D poly = PolynomialUtilities.getPoly( getDataContainer().getPolyArray(), pos );
+      final IPolynomial1D poly = PolynomialUtilities.getPoly( m_data.getPolyArray(), pos );
       if( poly == null )
         continue;
 
       final double value = poly.computeResult( pos );
 
-      final int x = domainAxis.logicalToScreen( pos );
-      final int y = targetAxis.logicalToScreen( value );
+      final int x = domainAxis.numericToScreen( pos );
+      final int y = targetAxis.numericToScreen( value );
       path.add( new Point( x, y ) );
     }
 
-    styledLine.setPath( path );
-    styledLine.paint( gc );
+    plf.setPoints( path.toArray( new Point[] {} ) );
+    plf.paint( gc );
 
-    if( styledPoint != null )
+    if( m_showPoints )
     {
-      styledPoint.setPath( path );
-      styledPoint.paint( gc );
+      pf.setPoints( path.toArray( new Point[] {} ) );
+      pf.paint( gc );
     }
+
   }
 
-  @Override
-  public PolynomDataContainer getDataContainer( )
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
+  public IDataRange<Number> getDomainRange( )
   {
-    return (PolynomDataContainer) super.getDataContainer();
+    return m_data.getDomainRange();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  public IDataRange<Number> getTargetRange( )
+  {
+    return m_data.getTargetRange();
   }
 
 }

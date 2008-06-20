@@ -46,17 +46,17 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
-import org.kalypso.chart.factory.configuration.parameters.IParameterContainer;
-import org.kalypso.chart.factory.provider.AbstractLayerProvider;
-import org.kalypso.chart.framework.model.IChartModel;
-import org.kalypso.chart.framework.model.layer.IChartLayer;
-import org.kalypso.chart.framework.model.mapper.IAxis;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.ksp.chart.factory.LayerType;
+
+import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * Layer provider which provides a {@link TupleResultLineChartLayer} on a feature based observation.
@@ -79,11 +79,17 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
    */
   public IChartLayer getLayer( final URL context )
   {
-    final LayerType lt = getLayerType();
-    final IChartModel chartModel = getChartModel();
+    final TupleResultLineLayer icl = new TupleResultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return icl;
+  }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getDataContainer()
+   */
+  @SuppressWarnings( { "unchecked" })
+  public TupleResultDomainValueData getDataContainer( )
+  {
     final IParameterContainer pc = getParameterContainer();
-
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
@@ -100,22 +106,9 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
 
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
     final TupleResult result = obs.getResult();
-
-    final String domainAxisId = lt.getMapper().getDomainAxisRef().getRef();
-    final String valueAxisId = lt.getMapper().getTargetAxisRef().getRef();
-
-    final IAxis domAxis = chartModel.getMapperRegistry().getAxis( domainAxisId );
-
     final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IAxis valAxis = chartModel.getMapperRegistry().getAxis( valueAxisId );
-
     final TupleResultDomainValueData data = new TupleResultDomainValueData( result, domainComponentId, valueComponentId );
-
-    final TupleResultLineLayer icl = new TupleResultLineLayer( data, domAxis, valAxis );
-
-    icl.setVisible( lt.getVisible() );
-    return icl;
+    return data;
   }
 }

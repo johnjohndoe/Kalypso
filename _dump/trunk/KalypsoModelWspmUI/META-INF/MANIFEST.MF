@@ -10,10 +10,12 @@ Require-Bundle: org.kalypso.ui,
  de.belger.swtchart.core;visibility:=reexport,
  org.kalypso.featureview,
  org.kalypso.model.wspm.schema,
- org.kalypso.chart.ui,
- org.kalypso.chart.ext.base,
- org.kalypso.chart.ext.observation,
- org.kalypso.model.wspm.core
+ de.openali.odysseus.chart.ui,
+ de.openali.odysseus.chart.ext.base,
+ org.kalypso.model.wspm.core,
+ org.eclipse.core.expressions,
+ org.eclipse.ui.views,
+ de.openali.odysseus.chart.ext.observation
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,
