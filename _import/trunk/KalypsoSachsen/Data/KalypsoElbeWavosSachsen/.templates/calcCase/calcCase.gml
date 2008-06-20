@@ -22,6 +22,10 @@
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Wittenberg.zml"/>
       </ganglinie_gesamt>
@@ -34,6 +38,15 @@
       <ganglinie_vorhersage_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Wittenberg_oben.zml"/>
       </ganglinie_vorhersage_oben>
+      <ganglinie_vorhersage_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Wittenberg.zml"/>
+      </ganglinie_vorhersage_original>
+      <ganglinie_vorhersage_unten_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Wittenberg_unten.zml"/>
+      </ganglinie_vorhersage_unten_original>
+      <ganglinie_vorhersage_oben_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Wittenberg_oben.zml"/>
+      </ganglinie_vorhersage_oben_original>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -55,9 +68,18 @@
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Vorhersage_Cz/Usti.zml"/>
+      </ganglinie_reserve_1>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti.zml"/>
       </ganglinie_gesamt>
+      <ganglinie_information>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti_Q.zml"/>
+      </ganglinie_information>
       <ganglinie_vorhersage>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti.zml"/>
       </ganglinie_vorhersage>
@@ -67,6 +89,15 @@
       <ganglinie_vorhersage_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti_oben.zml"/>
       </ganglinie_vorhersage_oben>
+      <ganglinie_vorhersage_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Usti.zml"/>
+      </ganglinie_vorhersage_original>
+      <ganglinie_vorhersage_unten_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Usti_unten.zml"/>
+      </ganglinie_vorhersage_unten_original>
+      <ganglinie_vorhersage_oben_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Usti_oben.zml"/>
+      </ganglinie_vorhersage_oben_original>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -88,6 +119,10 @@
       <projektionErlaubt>true</projektionErlaubt>
       <projektionEmpfohlen>W</projektionEmpfohlen>
       <projektionEingschaltet>W</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Torgau.zml"/>
       </ganglinie_gesamt>
@@ -100,6 +135,15 @@
       <ganglinie_vorhersage_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Torgau_oben.zml"/>
       </ganglinie_vorhersage_oben>
+      <ganglinie_vorhersage_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Torgau.zml"/>
+      </ganglinie_vorhersage_original>
+      <ganglinie_vorhersage_unten_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Torgau_unten.zml"/>
+      </ganglinie_vorhersage_unten_original>
+      <ganglinie_vorhersage_oben_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Torgau_oben.zml"/>
+      </ganglinie_vorhersage_oben_original>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -121,6 +165,10 @@
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Schöna.zml"/>
       </ganglinie_gesamt>
@@ -133,6 +181,15 @@
       <ganglinie_vorhersage_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Schöna_oben.zml"/>
       </ganglinie_vorhersage_oben>
+      <ganglinie_vorhersage_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Schöna.zml"/>
+      </ganglinie_vorhersage_original>
+      <ganglinie_vorhersage_unten_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel_ohneVerschiebung/Schöna_unten.zml"/>
+      </ganglinie_vorhersage_unten_original>
+      <ganglinie_vorhersage_oben_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel_ohneVerschiebung/Schöna_oben.zml"/>
+      </ganglinie_vorhersage_oben_original>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -154,6 +211,10 @@
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Riesa.zml"/>
       </ganglinie_gesamt>
@@ -166,6 +227,15 @@
       <ganglinie_vorhersage_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Riesa_oben.zml"/>
       </ganglinie_vorhersage_oben>
+      <ganglinie_vorhersage_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Riesa.zml"/>
+      </ganglinie_vorhersage_original>
+      <ganglinie_vorhersage_unten_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Riesa_unten.zml"/>
+      </ganglinie_vorhersage_unten_original>
+      <ganglinie_vorhersage_oben_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Riesa_oben.zml"/>
+      </ganglinie_vorhersage_oben_original>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -187,6 +257,10 @@
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zufluesse/Löben.zml"/>
       </ganglinie_gesamt>
@@ -211,6 +285,10 @@
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zufluesse/DresdenTorgau.zml"/>
       </ganglinie_gesamt>
@@ -235,6 +313,10 @@
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Zufluesse/UstiDresden.zml"/>
       </ganglinie_gesamt>
@@ -259,6 +341,10 @@
       <projektionErlaubt>true</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <ganglinie_reserve_1/>
+      <ganglinie_reserve_2/>
+      <ganglinie_reserve_3/>
+      <ganglinie_reserve_4/>
       <ganglinie_gesamt>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Dresden.zml"/>
       </ganglinie_gesamt>
@@ -271,13 +357,22 @@
       <ganglinie_vorhersage_oben>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Dresden_oben.zml"/>
       </ganglinie_vorhersage_oben>
+      <ganglinie_vorhersage_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Dresden.zml"/>
+      </ganglinie_vorhersage_original>
+      <ganglinie_vorhersage_unten_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Dresden_unten.zml"/>
+      </ganglinie_vorhersage_unten_original>
+      <ganglinie_vorhersage_oben_original>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Dresden_oben.zml"/>
+      </ganglinie_vorhersage_oben_original>
     </VorhersagePegel>
   </pegelMember>
   <bauwerkMember>
     <Polder fid="PolderAxien">
       <lage>
-        <gml:Point srsName="EPSG:31468">
-          <gml:coordinates cs="," decimal="." ts=" ">4558457.155947,5730722.217383</gml:coordinates>
+        <gml:Point srsName="EPSG:31469">
+          <gml:coordinates cs="," decimal="." ts=" ">5351124.078173919,5732580.631300012</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Axien</name>
@@ -293,8 +388,8 @@
   <bauwerkMember>
     <Polder fid="PolderDautzschen">
       <lage>
-        <gml:Point srsName="EPSG:31468">
-          <gml:coordinates cs="," decimal="." ts=" ">4570780.527732,5718544.608240</gml:coordinates>
+        <gml:Point srsName="EPSG:31469">
+          <gml:coordinates cs="," decimal="." ts=" ">5362939.426007724,5719904.785571729</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Dautzschen</name>
@@ -310,8 +405,8 @@
   <bauwerkMember>
     <Polder fid="PolderNünchritz">
       <lage>
-        <gml:Point srsName="EPSG:31468">
-          <gml:coordinates cs="," decimal="." ts=" ">4594316.656134,5686807.009240</gml:coordinates>
+        <gml:Point srsName="EPSG:31469">
+          <gml:coordinates cs="," decimal="." ts=" ">5385158.828550392,5687226.515325199</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Nünchritz</name>
@@ -327,8 +422,8 @@
   <bauwerkMember>
     <Polder fid="PolderAussig">
       <lage>
-        <gml:Point srsName="EPSG:31468">
-          <gml:coordinates cs="," decimal="." ts=" ">4584568.668240,5696525.202652 </gml:coordinates>
+        <gml:Point srsName="EPSG:31469">
+          <gml:coordinates cs="," decimal="." ts=" ">5375815.615112411,5697335.923713335</gml:coordinates>
         </gml:Point>
       </lage>
       <name>Aussig</name>

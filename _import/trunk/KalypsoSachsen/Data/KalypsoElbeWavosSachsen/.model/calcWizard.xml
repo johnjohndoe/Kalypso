@@ -76,6 +76,11 @@
 		<arg name="mapTemplate" value=".templates/calcCase/wiz03_projektion.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
+                                	 <!-- fix the selection problems -->
+                                	 <arg name="selectFeatureID" value="Dresden"/>
+                                	 <arg name="reselectFeatureview" value="true"/>
+                                	 <arg name="selectionFromFeatureview" value="false"/> 
+	        <!--  -->
 		<!--
 			TableView -->
 <!--		<arg name="tableTemplate" value=".templates/calcCase/wiz03_projektion.gtt"/>-->
