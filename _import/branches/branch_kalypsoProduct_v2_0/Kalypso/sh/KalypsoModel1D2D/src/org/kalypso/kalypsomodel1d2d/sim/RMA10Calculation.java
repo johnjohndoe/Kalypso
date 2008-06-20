@@ -76,8 +76,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
@@ -261,7 +259,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    */
   private IStatus startCalcCore( final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, getMaxNumberOfSteps() );
+    final SubMonitor progress = SubMonitor.convert( monitor, m_controlModel.getNCYC() );
     progress.subTask( "RMA10s wird ausgeführt..." );
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
@@ -358,13 +356,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
   }
 
-  private int getMaxNumberOfSteps( )
-  {
-    final IObservation<TupleResult> obs = m_controlModel.getTimeSteps();
-    final TupleResult timeSteps = obs.getResult();
-    return timeSteps.size(); // TODO: adjust by restart?!
-  }
-
   /**
    * Will be called while the rma10s process is running.<br>
    * Updates the calculation progress monitor and reads the Output.itr.
@@ -378,7 +369,11 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final int stepNr = m_iterationInfo.getStepNr();
     if( oldStepNr != stepNr )
     {
-      final String msg = String.format( "RMA10s wird ausgeführt - Schritt %d (%d)", stepNr, getMaxNumberOfSteps() );
+      String msg = "";
+      if( stepNr == 0 )
+        msg = String.format( "RMA10s wird ausgeführt - stationärer Schritt" );
+      else
+        msg = String.format( "RMA10s wird ausgeführt - instationärer Schritt %d (%d)", stepNr, m_controlModel.getNCYC() );
       monitor.subTask( msg );
       monitor.worked( stepNr - oldStepNr );
     }
