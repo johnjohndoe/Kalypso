@@ -455,6 +455,15 @@ public class FileUtilities
    * 
    * 
    * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
    * </pre>
    * 
    * @param fileName
@@ -630,14 +639,14 @@ public class FileUtilities
    * @throws IOException
    *             If the move failed.
    */
-  public static void moveContents( final File sourceDir, final File destDir, final boolean deleteExisting ) throws IOException
+  public static void moveContents( final File sourceDir, final File destDir, final boolean deleteExisting, final boolean alternateCopy ) throws IOException
   {
     final File[] children = sourceDir.listFiles();
     if( children == null )
       throw new IOException( "Invalid directory for move: " + sourceDir );
 
     for( final File child : children )
-      move( child, destDir, deleteExisting );
+      move( child, destDir, deleteExisting, alternateCopy );
   }
 
   /**
@@ -648,7 +657,7 @@ public class FileUtilities
    * @throws IOException
    *             If the move failed.
    */
-  public static void move( final File source, final File destDir, final boolean deleteExisting ) throws IOException
+  public static void move( final File source, final File destDir, final boolean deleteExisting, final boolean alternateCopy ) throws IOException
   {
     // TODO: probably platform dependend.
     // Handle the following problems:
@@ -671,8 +680,26 @@ public class FileUtilities
     final boolean success = source.renameTo( destFile );
     if( !success )
     {
-      final String message = String.format( "Unable move file %s into %s.", source, destDir );
-      throw new IOException( message );
+      // If the file cannot be moved, because its on a different drive, we try to copy it.
+      if( alternateCopy )
+      {
+        FileUtils.copyFile( source, destFile );
+        if( !destFile.exists() )
+        {
+          final String message = String.format( "Unable move file %s into %s.", source, destDir );
+          throw new IOException( message );
+        }
+        else
+        {
+          if( deleteExisting )
+            FileUtils.forceDelete( destFile );
+        }
+      }
+      else
+      {
+        final String message = String.format( "Unable move file %s into %s.", source, destDir );
+        throw new IOException( message );
+      }
     }
   }
 }
