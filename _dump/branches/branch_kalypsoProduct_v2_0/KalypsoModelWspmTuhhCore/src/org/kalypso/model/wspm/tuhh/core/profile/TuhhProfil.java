@@ -71,6 +71,7 @@ public class TuhhProfil extends AbstractProfil
   public TuhhProfil( final TupleResult result )
   {
     super( PROFIL_TYPE, result );
+    result.setInterpolationHandler( new TUHHInterpolationHandler() );
   }
 
   /**
