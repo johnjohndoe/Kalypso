@@ -77,6 +77,8 @@ public class TupleResult implements List<IRecord>
   /** Internal sort state. Initially <code>true</code> as the empty list is sorted. */
   private boolean m_isSorted = true;
 
+  private IInterpolationHandler m_interpolationHandler = null;
+
   private final Comparator<IRecord> m_sortComparator = new Comparator<IRecord>()
   {
     public int compare( final IRecord o1, final IRecord o2 )
@@ -171,7 +173,17 @@ public class TupleResult implements List<IRecord>
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.observation.result.TupleResult.0") + getComponents(); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.observation.result.TupleResult.0" ) + getComponents(); //$NON-NLS-1$
+  }
+
+  public void setInterpolationHandler( final IInterpolationHandler handler )
+  {
+    m_interpolationHandler = handler;
+  }
+
+  public boolean doInterpolation(  final TupleResult result, final IRecord record, final int index, final Double distance)
+  {
+    return m_interpolationHandler == null ? false : m_interpolationHandler.doInterpolation( result, record,index,distance );
   }
 
   /**
