@@ -97,6 +97,9 @@ public abstract class TimeserieConstants implements ObservationConstants
   /** Der Speicherinhalt des Interzeptionsspeichers in einem Nutzungszyklus [mm] */
   public static final String TYPE_LAI = "LAI";
 
+  /** Polder-Kontrolle: an/aus */
+  public static final String TYPE_POLDER_CONTROL = "POLDER_CONTROL";
+
   public static final String[] TYPES_ALL;
 
   /**

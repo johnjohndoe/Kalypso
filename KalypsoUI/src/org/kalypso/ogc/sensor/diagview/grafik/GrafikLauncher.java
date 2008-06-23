@@ -183,7 +183,7 @@ public class GrafikLauncher
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new SensorException( e );
+      throw new SensorException( e.getLocalizedMessage(), e );
     }
     finally
     {
@@ -438,8 +438,12 @@ public class GrafikLauncher
       // find out which axes to use
       final IAxis[] axes = obs.getAxisList();
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
-      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClass( axes, Number.class, true );
-
+      // REMARK: we use the version with many classes, so no exception is thrown if now number-axis was found.
+      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClasses( axes, new Class[] {Number.class}, true );
+      // Just ignore this obs, if it has no number axises
+      if( numberAxes.length == 0 )
+        continue;
+      
       final List displayedAxes = new ArrayList( numberAxes.length );
 
       final List curves = tobs[i].getCurve();

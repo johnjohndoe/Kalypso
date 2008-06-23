@@ -319,6 +319,9 @@ public class DiagViewUtils
     if( axisType.equals( TimeserieConstants.TYPE_NORM ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false );
 
+    if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
+      return new DiagramAxis( axisType, "boolean", label, unit, direction, position, false );
+    
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )

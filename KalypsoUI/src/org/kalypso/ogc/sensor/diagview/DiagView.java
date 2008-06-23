@@ -184,7 +184,10 @@ public class DiagView extends ObsView
     final IObservation obs = provider.getObservation();
     if( obs != null )
     {
-      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClass( obs.getAxisList(), Number.class, true );
+      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClasses( obs.getAxisList(), new Class[]
+      {
+          Number.class,
+          Boolean.class }, true );
       final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
 
       if( keyAxes.length == 0 )
@@ -243,9 +246,9 @@ public class DiagView extends ObsView
 
     if( found < axisColors.length )
       return axisColors[found];
-    
+
     return ColorUtilities.random();
-//    return ColorUtilities.addColor( axisColor, 0.0f, 0.4f, 0.0f, found );
+    //    return ColorUtilities.addColor( axisColor, 0.0f, 0.4f, 0.0f, found );
   }
 
   private int numberOfItemsWithType( final String valueAxisType )

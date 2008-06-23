@@ -49,17 +49,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.internal.Workbench;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
@@ -80,7 +80,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
-      protected void execute( IProgressMonitor monitor ) throws InvocationTargetException
+      protected void execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
       {
         IStatus status = Status.OK_STATUS;
 
@@ -107,11 +107,10 @@ public class GrafikEditorLauncher implements IEditorLauncher
         finally
         {
           monitor.done();
-
-          if( !status.isOK() )
-            ErrorDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(), "Grafik öffnen",
-                "Siehe Details", status );
         }
+
+        if( !status.isOK() )
+          throw new CoreException( status );
       }
     };
 
@@ -121,8 +120,12 @@ public class GrafikEditorLauncher implements IEditorLauncher
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
-          "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      ErrorDialog.openError( shell, "Grafik öffnen", "Grafik konnte nicht gestartet werden", status );
+
+      //      MessageDialog.openError( Workbench.getInstance().getActiveWorkbenchWindow().getShell(),
+      //          "Grafik konnte nicht gestartet werden", e.getLocalizedMessage() );
     }
   }
 }
