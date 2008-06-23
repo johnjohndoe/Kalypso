@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.handlers;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -54,6 +58,8 @@ import org.kalypso.observation.result.IRecord;
  */
 public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
 {
+  final NumberFormat m_nf = NumberFormat.getInstance( Locale.getDefault() );
+
   public ComponentUiDoubleHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnStyle, final int columnWidth, final int columnWidthPercent, final String displayFormat, final String nullFormat, final String parseFormat )
   {
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
@@ -96,7 +102,15 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
    */
   public Object parseValue( final String text )
   {
-    return new Double( text.replace( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    try
+    {
+      return m_nf.parse( text ).doubleValue();
+    }
+    catch( ParseException e )
+    {
+      throw new NumberFormatException( e.getLocalizedMessage() );
+    }
+
   }
 
   /**
