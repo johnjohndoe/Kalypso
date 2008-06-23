@@ -260,6 +260,7 @@ public class KalypsoObservationService implements IObservationService
         {
           m_logger.warning( "Could not create Repository " + fact.getRepositoryName() + " with configuration "
               + fact.getConfiguration() + ". Reason is:\n" + e.getLocalizedMessage() );
+          e.printStackTrace();
         }
       }
 

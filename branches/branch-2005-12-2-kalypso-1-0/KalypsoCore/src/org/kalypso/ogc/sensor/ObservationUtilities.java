@@ -501,6 +501,24 @@ public class ObservationUtilities
   }
 
   /**
+   * Hashes the values of one axis into a map.
+   * 
+   * @return Map <Object, Integer>: value to its index
+   */
+  public static Map hashValues( final ITuppleModel tuples, final IAxis axis ) throws SensorException
+  {
+    final Map result = new HashMap();
+
+    for( int i = 0; i < tuples.getCount(); i++ )
+    {
+      final Object value = tuples.getElement( i, axis );
+      result.put( value, new Integer( i ) );
+    }
+
+    return result;
+  }
+
+  /**
    * Sort an array of axes according to the Kalypso convention: axes are sorted based on their type information.
    * Example:
    * <p>
@@ -658,7 +676,7 @@ public class ObservationUtilities
   }
 
   /**
-   * Request value from an observation , but buffers (i.e enlarges  the request it by a given amount.
+   * Request value from an observation , but buffers (i.e enlarges the request it by a given amount.
    * 
    * @param dateRange
    *          If <code>null</code>, request the values from the baseObservation with a <code>null</code> request.
