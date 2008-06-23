@@ -64,12 +64,12 @@ public class TUHHInterpolationHandler implements IInterpolationHandler
    */
   public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final Double distance )
   {
-    if( result == null || record == null || index < 0 || index > result.size() - 2 )
+    if( result == null || record == null || index < 0 || result.size() < 1)
       return false;
     try
     {
       final IRecord previous = result.get( index );
-      final IRecord next = result.get( index + 1 );
+      final IRecord next = index == result.size() - 1 ? previous : result.get( index + 1 );
       for( final String id : m_interpolIDs )
       {
         final int i = result.indexOfComponent( id );
