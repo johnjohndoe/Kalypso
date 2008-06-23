@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gml.ui.map.CoverageManagmentHelper;
+import org.kalypso.gml.ui.map.CoverageManagementHelper;
 import org.kalypso.gml.ui.map.CoverageThemeInfo;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IRunoffEvent;
@@ -185,7 +185,7 @@ public class FloodModelHelper
       for( final ICoverage coverageToDelete : coverages )
       {
         /* Delete underlying grid grid file */
-        final IStatus status = CoverageManagmentHelper.deleteGridFile( coverageToDelete );
+        final IStatus status = CoverageManagementHelper.deleteGridFile( coverageToDelete );
         // ErrorDialog.openError( shell, "Löschen von Raster-Daten fehlgeschlagen", "Rasterdatei (" +
         // coverageToDelete.getName() + ") konnte nicht gelöscht werden.", status );
 
