@@ -77,6 +77,8 @@ public class TupleResult implements List<IRecord>
   /** Internal sort state. Initially <code>true</code> as the empty list is sorted. */
   private boolean m_isSorted = true;
 
+  private IInterpolationHandler m_interpolationHandler = null;
+
   private final Comparator<IRecord> m_sortComparator = new Comparator<IRecord>()
   {
     public int compare( final IRecord o1, final IRecord o2 )
@@ -171,7 +173,17 @@ public class TupleResult implements List<IRecord>
   @Override
   public String toString( )
   {
-    return Messages.getString("org.kalypso.observation.result.TupleResult.0") + getComponents(); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.observation.result.TupleResult.0" ) + getComponents(); //$NON-NLS-1$
+  }
+
+  public void setInterpolationHandler( final IInterpolationHandler handler )
+  {
+    m_interpolationHandler = handler;
+  }
+
+  public boolean doInterpolation(  final TupleResult result, final IRecord record, final int index, final Double distance)
+  {
+    return m_interpolationHandler == null ? false : m_interpolationHandler.doInterpolation( result, record,index,distance );
   }
 
   /**
@@ -437,7 +449,7 @@ public class TupleResult implements List<IRecord>
     final Record r = (Record) record;
 
 // Assert.isTrue( r.getCount() == m_components.size(), "Number of records values not equal to number of components" );
-    Assert.isTrue( r.getOwner() == this, Messages.getString("org.kalypso.observation.result.TupleResult.1") + record ); //$NON-NLS-1$
+    Assert.isTrue( r.getOwner() == this, Messages.getString( "org.kalypso.observation.result.TupleResult.1" ) + record ); //$NON-NLS-1$
   }
 
   private void checkRecords( final Collection< ? extends IRecord> c )
@@ -503,13 +515,13 @@ public class TupleResult implements List<IRecord>
     fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
     return added;
   }
-  
+
   /**
    * Adds a component to this tuple result. Does nothing if an equal component was already added.
    * <p>
    * Set the value for all records of this tupleResult, wrong type will raise an Exception later
    */
-  public final boolean addComponent( final IComponent comp, final Object defaultValue)
+  public final boolean addComponent( final IComponent comp, final Object defaultValue )
   {
     final boolean added = m_components.add( comp );
 
@@ -604,7 +616,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.observation.result.TupleResult.2") ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.observation.result.TupleResult.2" ) ); //$NON-NLS-1$
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
@@ -621,7 +633,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.observation.result.TupleResult.3") ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.observation.result.TupleResult.3" ) ); //$NON-NLS-1$
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
@@ -638,7 +650,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.observation.result.TupleResult.4") ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.observation.result.TupleResult.4" ) ); //$NON-NLS-1$
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }

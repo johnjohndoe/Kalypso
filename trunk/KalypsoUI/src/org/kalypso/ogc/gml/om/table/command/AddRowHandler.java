@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.om.table.command;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -52,9 +50,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.i18n.Messages;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -71,22 +67,21 @@ public class AddRowHandler extends AbstractHandler
   {
     final TableViewer viewer = TupleResultCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = TupleResultCommandUtils.findTupleResult( event );
-    if( viewer == null )
+    if( viewer == null || tupleResult==null)
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.AddRowHandler.0" ) ); //$NON-NLS-1$
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-    final Object target = selection.getFirstElement();
-    final int index = tupleResult == null ? -1 : tupleResult.indexOf( target );
-    final int size = tupleResult == null ? 0 : tupleResult.size();
-    final IRecord next = index < size - 2 ? tupleResult.get( index + 1 ) : null;
+    if( selection==null)
+      throw new ExecutionException(  "no selection in tuple result viewer available"  ); 
+
+    final Object obj = selection.getFirstElement();
+    final int index =  tupleResult.indexOf( obj );
+ 
     final IRecord row = tupleResult.createRecord();
-
-    // TODO: the createRecord Method should fill the row with default values recieved from the tupleResult components
-    // Big TODO: remove this code from here... we should find a central place (component handler?) that tells how to
-    // get default values or interpolate new values
-    fillRow( target, row, next );
-
-    if( next != null )
+    
+      final boolean success = tupleResult.doInterpolation( tupleResult, row, index ,0.5);
+   
+    if( success )
       tupleResult.add( index + 1, row );
     else
       tupleResult.add( row );
@@ -105,74 +100,4 @@ public class AddRowHandler extends AbstractHandler
     return null;
   }
 
-  private final void fillRow( final Object target, final IRecord row, final IRecord next )
-  {
-
-    final TupleResult tupleResult = row.getOwner();
-    if( target == null )
-    {
-      for( int i = 0; i < tupleResult.size(); i++ )
-      {
-        final IComponent component = tupleResult.getComponent( i );
-        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
-          row.setValue( i, 0.0 );
-      }
-    }
-    else
-    {
-
-      for( int i = 0; i < tupleResult.size(); i++ )
-
-      {
-        final IComponent component = tupleResult.getComponent( i );
-        if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) && (target instanceof IRecord) ) //$NON-NLS-1$
-        {
-          if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#BREITE".equals( component.getId() ) ) //$NON-NLS-1$
-          {
-            if( next != null )
-            {
-              final Object b1 = ((IRecord) target).getValue( i );
-              if( b1 == null )
-                continue;
-              final Object l = next.getValue( i );
-              if( l == null )
-                continue;
-              row.setValue( i, (Double) b1 - ((Double) b1 - (Double) l) / 2.0 );
-            }
-            else
-            {
-              final Object value = ((IRecord) target).getValue( i );
-              if( value != null )
-                row.setValue( i, (Double) value + 10 );
-              else
-                row.setValue( i, component.getDefaultValue() );
-            }
-          }
-          else if( "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#HOEHE".equals( component.getId() ) ) //$NON-NLS-1$
-          {
-            if( next != null )
-            {
-              final Object h1 = ((IRecord) target).getValue( i );
-              if( h1 == null )
-                continue;
-              final Object z = next.getValue( i );
-              if( z == null )
-                continue;
-              row.setValue( i, (Double) h1 - ((Double) h1 - (Double) z) / 2.0 );
-            }
-            else
-            {
-              final Object value = ((IRecord) target).getValue( i );
-              if( value != null )
-                row.setValue( i, value );
-              else
-                row.setValue( i, component.getDefaultValue() );
-            }
-          }
-          else
-            row.setValue( i, ((IRecord) target).getValue( i ) );
-        }
-      }
-    }
-  }
 }
