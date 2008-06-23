@@ -87,7 +87,6 @@ import org.kalypso.template.featureview.RadiobuttonType;
 import org.kalypso.template.featureview.SubcompositeType;
 import org.kalypso.template.featureview.TableType;
 import org.kalypso.template.featureview.TextType;
-import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.GistableviewType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.preferences.IKalypsoPreferences;
@@ -97,6 +96,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.FeatureTypeProperty;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.schema.GMLSchema;
+import org.kalypsodeegree_impl.gml.schema.GMLSchemaCatalog;
 
 /**
  * @author belger
@@ -116,12 +117,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager )
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature,
+      final IFeatureSelectionManager selectionManager )
   {
     this( workspace, feature, selectionManager, new URL[] {} );
   }
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager, final URL[] templateURL )
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature,
+      final IFeatureSelectionManager selectionManager, final URL[] templateURL )
   {
     super( workspace, feature, null );
     m_selectionManager = selectionManager;
@@ -130,12 +133,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       addView( templateURL[i] );
   }
 
-  public FeatureComposite( final GMLWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
+  public FeatureComposite( final GMLWorkspace workspace, final Feature feature,
+      final IFeatureSelectionManager selectionManager, final FeatureviewType[] views )
   {
     super( workspace, feature, null );
 
     m_selectionManager = selectionManager;
-    
+
     for( int i = 0; i < views.length; i++ )
       addView( views[i] );
   }
@@ -187,21 +191,72 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
    */
   public FeatureviewType getFeatureview( final FeatureType featureType )
   {
-    final String typename = featureType.getName();
-    final FeatureviewType view = (FeatureviewType)m_viewMap.get( typename );
+    return getFeatureview( featureType, false );
+  }
+
+  /**
+   * Gibt zu einem TypNamen eine FeatureView zurück. Existiert keine solche wird ein Default erzeugt.
+   * 
+   * @param featureType
+   * @param allowForSubstitution
+   *          If <code>true</code>: if no featureViw is found for this type, its substitutionGroup is checked..
+   * @return featureview
+   */
+  private FeatureviewType getFeatureview( final FeatureType featureType, final boolean allowForSubstitution )
+  {
+    final FeatureviewType view = getFeatureViewInternal( featureType, allowForSubstitution );
     if( view != null )
       return view;
 
     final FeatureviewType newView = FeatureviewHelper.createFeatureviewFromFeatureType( featureType );
 
-    m_viewMap.put( typename, newView );
+    m_viewMap.put( featureType.getName(), newView );
 
     return newView;
   }
 
+  /**
+   * Searches for a predefined feeatureView
+   * 
+   * @param featureType
+   * @param allowForSubstitution
+   *          If <code>true</code>: if no featureViw is found for this type, its substitutionGroup is checked..
+   * @return <code>null</code>, if no template exists for that type.
+   */
+  private FeatureviewType getFeatureViewInternal( final FeatureType featureType, boolean allowForSubstitution )
+  {
+    final String typename = featureType.getName();
+    final FeatureviewType view = (FeatureviewType)m_viewMap.get( typename );
+    if( view != null )
+      return view;
+
+    if( allowForSubstitution )
+    {
+      final String subTypename = featureType.getSubstitutionGroup();
+      if( subTypename == null || subTypename.indexOf( ':' ) == -1 )
+        return null;
+
+      final int index = subTypename.lastIndexOf( ':' );
+      final String subNamespace = subTypename.substring( 0, index );
+      final String subLocalPart = subTypename.substring( index + 1 );
+
+      final GMLSchema schema = GMLSchemaCatalog.getSchema( subNamespace );
+      if( schema == null )
+        return null;
+
+      final FeatureType subFeatureType = schema.getFeatureType( subLocalPart );
+      if( subFeatureType != null )
+        return getFeatureViewInternal( subFeatureType, allowForSubstitution );
+    }
+
+    return null;
+  }
+
   public Control createControl( final Composite parent, final int style, final FeatureType ft )
   {
-    final FeatureviewType view = getFeatureview( ft );
+    // REMARK: allow for substitution here. If this causes any problems, we should introduce a flag into
+    // the template
+    final FeatureviewType view = getFeatureview( ft, true );
 
     m_control = createControl( parent, style, view );
     return m_control;
@@ -316,7 +371,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
       final String propertyName = radioType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
-      
+
       final Object valueToSet = radioType.getValueToSet();
       final String text = radioType.getText();
       final RadioFeatureControl rfc = new RadioFeatureControl( workspace, feature, ftp, valueToSet, text );
@@ -335,8 +390,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final String propertyName = compoType.getProperty();
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
-      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, m_selectionManager, (FeatureviewType[])m_viewMap.values().toArray(
-          new FeatureviewType[0] ) );
+      final IFeatureControl fc = new SubFeatureControl( workspace, ftp, m_selectionManager,
+          (FeatureviewType[])m_viewMap.values().toArray( new FeatureviewType[0] ) );
       fc.setFeature( workspace, feature );
 
       final Control control = fc.createControl( parent, SWTUtilities.createStyleFromString( compoType.getStyle() ) );
@@ -353,12 +408,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final FeatureTypeProperty ftp = feature.getFeatureType().getProperty( propertyName );
 
       final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-      final TableFeatureContol fc = new TableFeatureContol( workspace, ftp, plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
+      final TableFeatureContol fc = new TableFeatureContol( workspace, ftp,
+          plugin.createFeatureTypeCellEditorFactory(), m_selectionManager, this );
 
       final GistableviewType gistableview = tableType.getGistableview();
       if( gistableview != null )
         fc.setTableTemplate( gistableview );
-      
+
       fc.setFeature( workspace, feature );
 
       addFeatureControl( fc );
@@ -561,7 +617,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.FeatureTypeProperty)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypsodeegree.model.feature.FeatureTypeProperty)
    */
   public void openFeatureRequested( final Feature feature, final FeatureTypeProperty ftp )
   {
