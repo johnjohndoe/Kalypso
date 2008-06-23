@@ -33,6 +33,12 @@
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
             name="nur Vorland rechts">
       </filter>
+      <filter
+            class="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
+            description="nur Profilpunkte welche in der Tabelle selektiert wurden"
+            id="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
+            name="aus Tabelle">
+      </filter>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profilPointMarkerProvider">
