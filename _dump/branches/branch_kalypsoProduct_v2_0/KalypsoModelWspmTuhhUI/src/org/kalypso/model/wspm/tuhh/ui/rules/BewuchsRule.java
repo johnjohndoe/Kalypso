@@ -125,7 +125,10 @@ public class BewuchsRule extends AbstractValidatorRule
           else
           {
             if( ax + ay + dp != 0 )
+            {
               collector.createProfilMarker( IMarker.SEVERITY_WARNING, "Bewuchsparameter im Fluﬂschlauch werden ignoriert", "km " + Double.toString( profil.getStation() ), i, IWspmConstants.POINT_PROPERTY_BEWUCHS_AX, pluginId, new DelBewuchsResolution() );
+              break;
+            }
           }
           i++;
         }
