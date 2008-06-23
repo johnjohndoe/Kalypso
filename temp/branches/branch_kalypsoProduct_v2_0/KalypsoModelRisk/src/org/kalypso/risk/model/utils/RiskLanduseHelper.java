@@ -56,13 +56,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -383,26 +377,6 @@ public class RiskLanduseHelper
           return linkedFeature_Impl;
         }
       }
-    return null;
-  }
-
-  public static IStatus isRightParameterUsed( final String shapeLandusePropertyName )
-  {
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    final UIJob runnable = new UIJob( display, "proba" ) //$NON-NLS-1$
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        if( MessageDialog.openQuestion( display.getActiveShell(), "Question", Messages.getString( "ImportLanduseWizard.60" ) + shapeLandusePropertyName //$NON-NLS-1$ //$NON-NLS-2$
-            + Messages.getString( "ImportLanduseWizard.61" ) ) ) //$NON-NLS-1$
-          return Status.OK_STATUS;
-        else
-          return Status.CANCEL_STATUS;
-      }
-    };
-    runnable.setUser( true );
-    runnable.schedule();
     return null;
   }
 

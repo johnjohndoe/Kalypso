@@ -30,9 +30,6 @@ import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
  */
 public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableWithProgress
 {
-
-  private final static int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
-
   private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
   private static final QName PROP_DATA_MEMBER = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "dataMember" ); //$NON-NLS-1$
@@ -86,22 +83,6 @@ public final class RiskImportPredefinedLanduseRunnable implements ICoreRunnableW
 
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
-
-      if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
-      {
-        IStatus status = null;
-        status = RiskLanduseHelper.isRightParameterUsed( m_landuseProperty );
-        synchronized( this )
-        {
-          // while( status == null )
-          // m_importLanduseWizard.wait( 100 );
-        }
-        if( Status.CANCEL_STATUS.equals( status ) )
-        {
-          landuseTypeSet.clear();
-          return status;
-        }
-      }
 
       monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 
