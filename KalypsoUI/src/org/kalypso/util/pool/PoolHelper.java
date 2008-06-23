@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.pool;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -52,6 +55,8 @@ public class PoolHelper
 
   public static CommandableWorkspace getCommandableWorkspace( final GMLWorkspace workspace )
   {
+    Assert.isNotNull( workspace );
+
     ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
     KeyInfo[] infos = pool.getInfos();
 
@@ -61,8 +66,11 @@ public class PoolHelper
       if( object instanceof CommandableWorkspace )
       {
         CommandableWorkspace cmd = (CommandableWorkspace) object;
+        URL context = cmd.getContext();
+        if( context == null )
+          continue;
 
-        if( cmd.getContext().equals( workspace.getContext() ) )
+        if( context.equals( workspace.getContext() ) )
           return cmd;
       }
     }
