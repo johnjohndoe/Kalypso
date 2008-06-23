@@ -33,6 +33,12 @@
             id="org.kalypso.model.wspm.tuhh.core.profile.VorlandrechtsProfilePointFilter"
             name="nur Vorland rechts">
       </filter>
+      <filter
+            class="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
+            description="nur Profilpunkte welche in der Tabelle selektiert wurden"
+            id="org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter"
+            name="aus Tabelle">
+      </filter>
    </extension>
    <extension
          point="org.kalypso.model.wspm.core.profilPointMarkerProvider">
@@ -41,14 +47,7 @@
             profiletype="org.kalypso.model.wspm.tuhh.profiletype"
             provider="org.kalypso.model.wspm.tuhh.core.profile.DeviderProvider"/>
    </extension>
-   <extension
-         point="org.kalypso.model.wspm.core.profileObjectProvider">
-      <objectProvider
-            id="KalypsoModelWspmTuhhCore.objectProviderTUHH"
-            profiletype="org.kalypso.model.wspm.tuhh.profiletype"
-            provider="org.kalypso.model.wspm.tuhh.core.profile.buildings.TuhhBuildingProvider"/>
-   </extension>
-   <extension
+    <extension
          point="org.kalypso.model.wspm.core.profiletype">
       <profiletype
             class="org.kalypso.model.wspm.tuhh.core.profile.PointPropertyProviderTUHH"

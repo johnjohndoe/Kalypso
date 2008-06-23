@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
 
 /**
  * @author Belger
+ * @author kimwerner
  */
 public class PropertyEditDelegate implements IViewActionDelegate
 {
@@ -81,9 +82,6 @@ public class PropertyEditDelegate implements IViewActionDelegate
     if( selectionProvider != null )
       m_selection = selectionProvider.getSelection();
 
-    // get profilpoints from selection and view
-    // TODO: this does not work any more
-    // final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
     final IProfil profile = (m_view instanceof TableView) ? ((TableView) m_view).getProfil() : null;
 
     if( profile == null )
@@ -93,7 +91,7 @@ public class PropertyEditDelegate implements IViewActionDelegate
       return;
     }
 
-    final IWizard propertyEditWizard = new PropertyEditWizard( profile );
+    final IWizard propertyEditWizard = new PropertyEditWizard( profile,((TableView)m_view).getTupleResultViewer().getSelection() );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( viewShell, propertyEditWizard );

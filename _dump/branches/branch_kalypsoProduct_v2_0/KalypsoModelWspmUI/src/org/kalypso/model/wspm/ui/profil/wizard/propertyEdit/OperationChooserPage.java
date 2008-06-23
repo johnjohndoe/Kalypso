@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -118,9 +119,12 @@ public class OperationChooserPage extends WizardPage
 
   private Double m_value = Double.NaN;
 
-  public OperationChooserPage( )
+  private final IStructuredSelection m_selectedpoints;
+
+  public OperationChooserPage( final IStructuredSelection selection )
   {
     super( "operationChooserPage", Messages.OperationChooserPage_4, null ); //$NON-NLS-1$
+    m_selectedpoints = selection;
   }
 
   /**
@@ -398,6 +402,19 @@ public class OperationChooserPage extends WizardPage
         selectedPoints.add( point );
       }
     }
+    if( m_selectedpoints != null && !m_selectedpoints.isEmpty() && filterSet.contains( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter" ) )
+      return calculator.calculate( m_value, propertyIds, addSelection( selectedPoints ) );
     return calculator.calculate( m_value, propertyIds, selectedPoints );
+
+  }
+
+  final List<IRecord> addSelection( final List<IRecord> selected )
+  {
+    for( final Object obj : m_selectedpoints.toList() )
+    {
+      if( obj instanceof IRecord && !selected.contains( obj ) )
+        selected.add( (IRecord) obj );
+    }
+    return selected;
   }
 }

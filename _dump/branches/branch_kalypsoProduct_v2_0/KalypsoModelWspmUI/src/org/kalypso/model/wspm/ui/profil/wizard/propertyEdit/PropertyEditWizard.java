@@ -45,6 +45,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
@@ -90,12 +92,15 @@ public class PropertyEditWizard extends Wizard
 
   final private CommandableWorkspace m_workspace;
 
+  final private IStructuredSelection m_selectedPoints;
+
   public PropertyEditWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
   {
     m_profile = null;
     m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
+    m_selectedPoints = null;
 
     m_profiletype = (String) profiles.get( 0 ).getProperty( ProfileFeatureFactory.QNAME_TYPE );
     setWindowTitle( Messages.PropertyEditWizard_1 );
@@ -106,14 +111,17 @@ public class PropertyEditWizard extends Wizard
     m_profileChooserPage.setMessage( Messages.PropertyEditWizard_4 );
   }
 
-  public PropertyEditWizard( final IProfil profile )
+  public PropertyEditWizard( final IProfil profile, final ISelection selection )
   {
+    m_selectedPoints = selection instanceof IStructuredSelection ? (IStructuredSelection) selection : null;
     m_profile = profile;
     m_workspace = null;
     m_profiles = null;
     m_selectedProfiles = null;
     m_profiletype = m_profile.getType();
-    m_profileChooserPage = null;
+    m_profileChooserPage = null;// new ArrayChooserPage( m_selectedPoints.toArray(), new Object[0],
+                                // m_selectedPoints.toArray(), 1, "profilesChooserPage", Messages.PropertyEditWizard_3,
+                                // null ); //$NON-NLS-1$;
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -130,10 +138,11 @@ public class PropertyEditWizard extends Wizard
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profiletype );
     final List<IComponent> properties = new ArrayList<IComponent>();
-    for( final String property : provider.getPointProperties() )
-      properties.add( provider.getPointProperty( property ) );
+    for( final IComponent property : m_profile.getPointProperties() )
+      if( !m_profile.isPointMarker( property.getId() ) )
+        properties.add( property );
 
-    m_propertyChooserPage = new ArrayChooserPage( properties.toArray( new IComponent[0] ), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", Messages.PropertyEditWizard_6, null ); //$NON-NLS-1$
+    m_propertyChooserPage = new ArrayChooserPage( m_profile.getPointProperties(), new Object[0], new Object[0], 1, "profilePropertiesChooserPage", Messages.PropertyEditWizard_6, null ); //$NON-NLS-1$
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
       /**
@@ -149,7 +158,7 @@ public class PropertyEditWizard extends Wizard
       }
     } );
     m_propertyChooserPage.setMessage( Messages.PropertyEditWizard_7 );
-    m_operationChooserPage = new OperationChooserPage();
+    m_operationChooserPage = new OperationChooserPage( m_selectedPoints );
     m_operationChooserPage.setPageComplete( false );
 
     addPage( m_propertyChooserPage );
