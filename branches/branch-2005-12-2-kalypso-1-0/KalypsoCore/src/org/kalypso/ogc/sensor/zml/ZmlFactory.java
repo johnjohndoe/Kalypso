@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -552,7 +553,7 @@ public class ZmlFactory
 
     if( java.util.Date.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringDateAxis( model, axis, sb, timezone );
-    else if( Number.class.isAssignableFrom( axis.getDataClass() ) )
+    else if( Number.class.isAssignableFrom( axis.getDataClass() ) || Boolean.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringNumberAxis( model, axis, sb );
     else if( String.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringAxis( model, axis, sb );
@@ -651,7 +652,7 @@ public class ZmlFactory
     {
       final ObservationType xml = createXML( obs, null );
 
-      outs = new FileOutputStream( file );
+      outs = new BufferedOutputStream( new FileOutputStream( file ) );
 
       getMarshaller().marshal( xml, outs );
 

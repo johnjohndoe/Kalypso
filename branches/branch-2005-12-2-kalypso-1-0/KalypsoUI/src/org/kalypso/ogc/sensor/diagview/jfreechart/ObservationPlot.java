@@ -704,8 +704,10 @@ public class ObservationPlot extends XYPlot
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new XYBarRenderer();
 
-    final XYCurveRenderer renderer = new XYCurveRenderer( StandardXYItemRenderer.LINES );
-    return renderer;
+    if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
+      return new XYBarRenderer();
+    
+    return new StandardXYItemRenderer( StandardXYItemRenderer.LINES );
   }
 
   /**
