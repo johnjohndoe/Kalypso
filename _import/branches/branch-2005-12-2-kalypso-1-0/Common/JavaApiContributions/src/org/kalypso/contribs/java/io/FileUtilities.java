@@ -41,10 +41,7 @@
 
 package org.kalypso.contribs.java.io;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 
 /**
  * @author schlienger
