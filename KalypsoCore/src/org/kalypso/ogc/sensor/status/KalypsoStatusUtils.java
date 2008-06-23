@@ -270,6 +270,31 @@ public class KalypsoStatusUtils
   }
 
   /**
+   * Same as {@link KalypsoStatusUtils#findAxesByClass(IAxis[], Class, boolean)}for several classes.
+   * 
+   * @see KalypsoStatusUtils#findAxesByClass(IAxis[], Class, boolean)
+   */
+  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class[] desired, final boolean excludeStatusAxes )
+      throws NoSuchElementException
+  {
+    final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
+
+    for( int j = 0; j < desired.length; j++ )
+    {
+      for( int i = 0; i < axes.length; i++ )
+      {
+        if( desired[j].isAssignableFrom( axes[i].getDataClass() ) )
+        {
+          if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+            list.add( axes[i] );
+        }
+      }
+    }
+
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
+  }
+
+  /**
    * Returns the first axis that is compatible with the desired Dataclass. You can specify if you want to exclude the
    * status axes from the result list or not.
    * <p>
