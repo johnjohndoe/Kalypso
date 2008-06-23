@@ -243,8 +243,7 @@ public class ResultManagerOperation implements ICoreRunnableWithProgress, ISimul
       final File unitWorkspaceDir = m_unitFolder.getLocation().toFile();
       FileUtils.forceMkdir( unitWorkspaceDir );
 
-      // TODO: seems not to work, when we have different drives
-      FileUtilities.moveContents( outputDir, unitWorkspaceDir, true );
+      FileUtilities.moveContents( outputDir, unitWorkspaceDir, true, true );
       ProgressUtilities.worked( progress, 70 );
 
       m_unitFolder.refreshLocal( IResource.DEPTH_INFINITE, progress.newChild( 20 ) );
