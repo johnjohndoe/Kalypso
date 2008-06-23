@@ -39,12 +39,15 @@ public class PSICompactItem implements IRepositoryItem
 
   private final PSICompactRepository m_repository;
 
+  private final boolean m_useAt;
+
   /**
    * @param objectMetaData The object metadata as, got from {@link PSICompact#getObjectMetaData(java.lang.String)} for the <code>identifier</code>
    * @param arcType One of the {@link PSICompact#ARC_DAY} constants.
+   * @param useAt
    */
   public PSICompactItem( final PSICompactRepository repository, final PSICompactItem parent, final String name, final String identifier,
-      final PSICompact.ObjectInfo info, final int valueType, final String obsName, final ObjectMetaData objectMetaData, final int arcType )
+      final PSICompact.ObjectInfo info, final int valueType, final String obsName, final ObjectMetaData objectMetaData, final int arcType, boolean useAt )
   {
     m_repository = repository;
     m_parent = parent;
@@ -55,6 +58,7 @@ public class PSICompactItem implements IRepositoryItem
     m_obsName = obsName;
     m_objectMetaData = objectMetaData;
     m_arcType = arcType;
+    m_useAt = useAt;
 
     m_children = new Vector();
   }
@@ -114,7 +118,7 @@ public class PSICompactItem implements IRepositoryItem
       final boolean adaptable = PSICompactFactory.getConnection().getMeasureType( m_objectInfo.getId() ) != PSICompact.TYPE_UNDEF;
 
       if( adaptable && anotherClass == IObservation.class )
-        return new PSICompactObservationItem( m_obsName, m_identifier, m_objectInfo, m_valueType, m_objectMetaData, m_arcType );
+        return new PSICompactObservationItem( m_obsName, m_identifier, m_objectInfo, m_valueType, m_objectMetaData, m_arcType, m_useAt );
     }
     catch( final Exception e )
     {

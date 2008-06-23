@@ -1,5 +1,6 @@
 package org.kalypso.psiadapter.repository;
 
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.SortedMap;
@@ -26,6 +27,8 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
+import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.psiadapter.PSICompactFactory;
 
 import de.psi.go.lhwz.ECommException;
@@ -71,6 +74,8 @@ public class PSICompactObservationItem implements IObservation
 
   private final int m_arcType;
 
+  private final boolean m_useAt;
+
   /**
    * Constructor
    * 
@@ -81,9 +86,12 @@ public class PSICompactObservationItem implements IObservation
    *          <code>identifier</code>
    * @param arcType
    *          One of the {@link PSICompact#ARC_DAY}constants.
+   * @param useAt
+   *          If true, an available at file will be used instead of wq-parameters from psi
    */
   public PSICompactObservationItem( final String name, final String id, final PSICompact.ObjectInfo info,
-      final int valueType, final ObjectMetaData metaData, final int arcType ) throws ECommException
+      final int valueType, final ObjectMetaData metaData, final int arcType, final boolean useAt )
+      throws ECommException
   {
     m_name = name;
     m_identifier = id;
@@ -91,6 +99,7 @@ public class PSICompactObservationItem implements IObservation
     m_valueType = valueType;
     m_objectMetaData = metaData;
     m_arcType = arcType;
+    m_useAt = useAt;
 
     final PSICompact.WQParamSet[] psiWQ = PSICompactFactory.getConnection().getWQParams( m_objectInfo.getId() );
 
@@ -154,10 +163,10 @@ public class PSICompactObservationItem implements IObservation
       // Bug 80: only waterlevel-timeseries should have alarmlevels
       if( TimeserieConstants.TYPE_WATERLEVEL.equals( measureTypeToString() ) )
       {
-        metadata.put( TimeserieConstants.MD_ALARM_1, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm1() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_2, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm2() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_3, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm3() ) ) );
-        metadata.put( TimeserieConstants.MD_ALARM_4, String.valueOf( m_vc.convert( m_objectMetaData.getAlarm4() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_1, printAlarmLevel( m_vc.convert( m_objectMetaData.getAlarm1() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_2, printAlarmLevel( m_vc.convert( m_objectMetaData.getAlarm2() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_3, printAlarmLevel( m_vc.convert( m_objectMetaData.getAlarm3() ) ) );
+        metadata.put( TimeserieConstants.MD_ALARM_4, printAlarmLevel( m_vc.convert( m_objectMetaData.getAlarm4() ) ) );
       }
 
       final String unitLabel = PSICompactUtilitites.getLabelForUnit( m_objectMetaData.getUnit() );
@@ -175,8 +184,19 @@ public class PSICompactObservationItem implements IObservation
 
     try
     {
-      if( psiWQ != null )
+      if( m_useAt )
       {
+        // If at was required try to find it
+        final WQTableSet tableSet = PSICompactFactory.getWQTable( m_objectInfo.getId() );
+        if( tableSet != null )
+        {
+          final String mdWQ = WQTableFactory.createXMLString( tableSet );
+          metadata.put( TimeserieConstants.MD_WQTABLE, mdWQ );
+        }
+      }
+      else if( psiWQ != null && psiWQ.length > 0 ) // do not add empty parameter set
+      {
+        // PSI provided us with wechmann parameters, use these
         final WechmannGroup group = PSICompactRepositoryFactory.readWQParams( psiWQ );
         final String xml = WechmannFactory.createXMLString( group );
 
@@ -191,6 +211,16 @@ public class PSICompactObservationItem implements IObservation
     }
 
     return metadata;
+  }
+
+  /**
+   * Prints the alarm level with the correct number of fraction digits. <br>
+   * Necessary, else we might get maaaannny digits.
+   */
+  private String printAlarmLevel( final double level )
+  {
+    final NumberFormat nf = TimeserieUtils.getNumberFormatFor( TimeserieConstants.TYPE_WATERLEVEL );
+    return nf.format( level );
   }
 
   /**
@@ -287,7 +317,7 @@ public class PSICompactObservationItem implements IObservation
 
     final Date drFrom = dr.getFrom();
     final Date drTo = dr.getTo();
-    
+
     if( m_values != null && drFrom.compareTo( m_from ) == 0 && drTo.compareTo( m_to ) == 0 )
       return m_values;
 

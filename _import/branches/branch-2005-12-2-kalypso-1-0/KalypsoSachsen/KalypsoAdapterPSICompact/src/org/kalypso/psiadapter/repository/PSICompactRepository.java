@@ -23,7 +23,7 @@ import de.psi.go.lhwz.PSICompact.ObjectMetaData;
 public class PSICompactRepository extends AbstractRepository
 {
   public static String IDENTIFIER = "psicompact://";
-  
+
   private PSICompactItem m_psiRoot = null;
 
   public PSICompactRepository( String name, boolean readOnly ) throws RepositoryException
@@ -63,7 +63,6 @@ public class PSICompactRepository extends AbstractRepository
           continue;
 
         final String nodeID = Arrays.implode( path, ".", 0, i ).trim();
-
         if( nodeID.length() == 0 )
           continue;
 
@@ -78,10 +77,15 @@ public class PSICompactRepository extends AbstractRepository
           if( archiveData == null || archiveData.length == 0 )
             defaultArcType = PSICompact.ARC_MIN15; // for backwards compability, if unknown use MIN15
           else
-            defaultArcType = archiveData[0]; // just take the one with the smallest resolution (the archivedata is considered to be sorted)
-          
-          PSICompactItem newNode = addNewItem( name, obsName, valueType, info, objectMetaData, parent, nodeID, defaultArcType );
+            defaultArcType = archiveData[0]; // just take the one with the smallest resolution (the archivedata is
+          // considered to be sorted)
+
+          final PSICompactItem newNode = addNewItem( name, obsName, valueType, info, objectMetaData, parent, nodeID,
+              defaultArcType, false );
           nodes.put( nodeID, newNode );
+
+          if( PSICompactFactory.hasWQTable( nodeID ) )
+            addAtNode( nodes, obsName, valueType, info, objectMetaData, newNode, nodeID, defaultArcType );
 
           /* Add archive sub-nodes: only if at the end of a real path */
           if( i == path.length - 1 && i > 4 )
@@ -96,12 +100,18 @@ public class PSICompactRepository extends AbstractRepository
                 final String arcObsName = obsName;
                 final String arcNodeID = nodeID + "#" + PSICompactUtilitites.getIdForArcType( arcType );
 
-                final PSICompactItem newArcNode = addNewItem( arcName, arcObsName, valueType, info, objectMetaData, newNode, arcNodeID, arcType );
-                nodes.put( arcNodeID, newArcNode  );
+                final PSICompactItem newArcNode = addNewItem( arcName, arcObsName, valueType, info, objectMetaData,
+                    newNode, arcNodeID, arcType, false );
+                nodes.put( arcNodeID, newArcNode );
+
+                // The archive types automaticallay gets this option, if the default has it; we do not need to configure
+                // an at-file for each archive
+                if( PSICompactFactory.hasWQTable( nodeID ) )
+                  addAtNode( nodes, arcObsName, valueType, info, objectMetaData, newArcNode, arcNodeID, defaultArcType );
               }
             }
           }
-          
+
           parent = newNode;
         }
       }
@@ -109,15 +119,30 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
+   * Adds an at-node to a node, if an at-entry in the config exists.
+   */
+  private void addAtNode( final Map nodes, final String obsName, int valueType, final ObjectInfo info,
+      final ObjectMetaData objectMetaData, final PSICompactItem parent, final String nodeID, final int defaultArcType )
+  {
+    final String atNodeId = nodeID + "#at";
+    final PSICompactItem atNode = addNewItem( "at", obsName, valueType, info, objectMetaData, parent, atNodeId,
+        defaultArcType, true );
+    nodes.put( atNodeId, atNode );
+  }
+
+  /**
    * Creates a new item and adds it as a child to the given parent.
+   * 
    * @param arcType
    * 
    * @return The newly created item.
    */
-  private PSICompactItem addNewItem( final String name, final String obsName, int valueType,
-      final ObjectInfo info, final ObjectMetaData objectMetaData, PSICompactItem parent, final String nodeID, int arcType )
+  private PSICompactItem addNewItem( final String name, final String obsName, int valueType, final ObjectInfo info,
+      final ObjectMetaData objectMetaData, PSICompactItem parent, final String nodeID, final int arcType,
+      final boolean useAt )
   {
-    final PSICompactItem newItem = new PSICompactItem( this, parent, name, nodeID, info, valueType, obsName, objectMetaData, arcType );
+    final PSICompactItem newItem = new PSICompactItem( this, parent, name, nodeID, info, valueType, obsName,
+        objectMetaData, arcType, useAt );
 
     // gleich parent item aktualisieren (wird nicht von der Child gemacht,
     // deswegen hier)
@@ -174,7 +199,8 @@ public class PSICompactRepository extends AbstractRepository
   {
     try
     {
-      final PSICompactItem rootItem = new PSICompactItem( this, null, "", "", null, -1, "", null, PSICompact.ARC_UNDEF );
+      final PSICompactItem rootItem = new PSICompactItem( this, null, "", "", null, -1, "", null, PSICompact.ARC_UNDEF,
+          false );
       final TreeMap nodes = new TreeMap();
 
       buildStructure( rootItem, nodes, PSICompact.TYPE_MEASUREMENT );
