@@ -155,7 +155,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * 
  * @author Thomas Jung
  */
-public class HydrographManagmentWidget extends AbstractWidget implements IWidgetWithOptions
+public class HydrographManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private IHydrographCollection m_hydrographs;
 
@@ -246,7 +246,7 @@ public class HydrographManagmentWidget extends AbstractWidget implements IWidget
 
   private IWidget m_delegateWidget;
 
-  public HydrographManagmentWidget( )
+  public HydrographManagementWidget( )
   {
     super( "Ganglinien erzeugen", "Hier können Sie für das jeweils ausgewählte Teilmodell einen Längsschnitt auf Basis der berechneten Ergebnisse erzeugen." );
   }
