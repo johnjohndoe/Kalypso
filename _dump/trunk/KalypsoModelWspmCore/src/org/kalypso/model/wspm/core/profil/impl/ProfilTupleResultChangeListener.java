@@ -55,6 +55,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
  * Listens on the tuple result and translates its changes into profile change events.
  * 
  * @author Gernot Belger
+ * @author kimwerner
  */
 public class ProfilTupleResultChangeListener implements ITupleResultChangedListener
 {
@@ -71,7 +72,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
    */
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    // TODO Auto-generated method stub
+    // do nothing
 
   }
 
@@ -81,7 +82,15 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
    */
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
-    // TODO Auto-generated method stub
+    if( type == TYPE.ADDED )
+    {
+      /*
+       * we only need a refresh here, so fire a "null-change"
+       */
+      final ProfilChangeHint hint = new ProfilChangeHint();
+      hint.setProfilPropertyChanged( true );
+      m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
+    }
 
   }
 
@@ -102,7 +111,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
       profChanges.add( pointPropertyEdit );
 
       hint.setPointValuesChanged();
-      if (m_profil.isPointMarker( component.getId() ))
+      if( m_profil.isPointMarker( component.getId() ) )
         hint.setMarkerMoved();
     }
 

@@ -129,9 +129,14 @@ public class GelaendePanel extends AbstractProfilView
       @Override
       public void focusLost( final FocusEvent e )
       {
+        final String comment = m_comment.getText();
+        if( comment != null && !comment.equals( getProfil().getComment() ) )
+        {
+          getProfil().setComment( m_comment.getText() );
 
-        final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
-        new ProfilOperationJob( operation ).schedule();
+          final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
+          new ProfilOperationJob( operation ).schedule();
+        }
       }
     } );
     m_comment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );

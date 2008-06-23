@@ -93,16 +93,14 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
   {
     final IRecord[] points = m_profile.getPoints();
     Rectangle2D bounds = null;
-    final int iBreite = m_profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int iRauheit = m_profile.indexOfProperty( m_rauheit );
 
     for( final IRecord p : points )
     {
-      final Object x = p.getValue( iBreite );
-      final Object rauheit = p.getValue( iRauheit );
-      if( x == null || rauheit == null )
+      final Double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );//p.getValue( iBreite );
+      final Double rauheit = ProfilUtil.getDoubleValueFor( m_rauheit, p );//p.getValue( iRauheit );
+      if( x.isNaN() || rauheit.isNaN() )
         continue;
-      final Rectangle2D area = new Rectangle2D.Double( (Double) x, (Double) rauheit, 0, 0 );
+      final Rectangle2D area = new Rectangle2D.Double(  x,  rauheit, 0, 0 );
 
       if( bounds == null )
         bounds = area;
@@ -131,21 +129,21 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
         return;
       final IRecord[] points = profil.getPoints();
       IRecord lastP = null;
-      final int iBreite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-      final int iRauheit = profil.indexOfProperty( m_rauheit );
-      if( iRauheit == -1 )
+
+      if( profil.hasPointProperty( m_rauheit )==null )
         return;
 
       for( final IRecord point : points )
       {
         if( lastP != null )
         {
-          final Object x1 = lastP.getValue( iBreite );
-          final Object x2 = point.getValue( iBreite );
-          final Object y2 = lastP.getValue( iRauheit );
-          if( x1 != null && x2 != null && y2 != null )
+          final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastP );
+          final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
+          final Double y2 = ProfilUtil.getDoubleValueFor( m_rauheit, lastP );
+
+          if( !x1.isNaN() && !x2.isNaN()&& !y2.isNaN() )
           {
-            final Rectangle box = logical2screen( new Rectangle2D.Double( (Double) x1, 0.0, (Double) x2 - (Double) x1, (Double) y2 ) );
+            final Rectangle box = logical2screen( new Rectangle2D.Double(  x1, 0.0,  x2 -  x1,  y2 ) );
             box.width += 1;
             fillRectangle( gc, box );
           }
