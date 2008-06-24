@@ -192,14 +192,12 @@ public class RauheitenPanel extends AbstractProfilView
     } );
 
     addLabel( panel, "Rauheitstyp", "Rauheitstyp" );
-    
+
     final Group auto = new Group( panel, SWT.None );
     auto.setText( "Rahheiten für Fliesszonen" );
     auto.setLayout( new GridLayout( 2, false ) );
     auto.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     ((GridData) auto.getLayoutData()).horizontalSpan = 2;
-    
-    
 
     // automatisches übernehmen wenn Marker geschoben werden
     final GridData checkData = new GridData( SWT.FILL, SWT.FILL, true, false );
@@ -240,9 +238,9 @@ public class RauheitenPanel extends AbstractProfilView
             return;
 
           final int i_left = 0;
-          final int i_rechts = profil.indexOfPoint( trennflaechen[0].getPoint() );
+          final int i_right = profil.indexOfPoint( trennflaechen[0].getPoint() );
           m_li = value;
-          setValues( i_left, i_rechts, value );
+          setValues( i_left, i_right > 0 ? i_right - 1 : 0, value );
         }
       }
     } );
@@ -277,9 +275,9 @@ public class RauheitenPanel extends AbstractProfilView
             return;
 
           final int i_left = profil.indexOfPoint( trennflaechen[0].getPoint() );
-          final int i_rechts = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
+          final int i_right = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
           m_hf = value;
-          setValues( i_left, i_rechts, value );
+          setValues( i_left, i_right > 0 ? i_right - 1 : 0, value );
         }
       }
     } );
@@ -326,7 +324,7 @@ public class RauheitenPanel extends AbstractProfilView
   {
     final IProfil profil = getProfil();
     final ProfilOperation operation = new ProfilOperation( "Rauheiten ändern", profil, true );
-    operation.addChange( new PointPropertyEdit( profil.getPoints( l, r), profil.hasPointProperty( m_rauheitTyp ), value ) );
+    operation.addChange( new PointPropertyEdit( profil.getPoints( l, r ), profil.hasPointProperty( m_rauheitTyp ), value ) );
     new ProfilOperationJob( operation ).schedule();
   }
 
