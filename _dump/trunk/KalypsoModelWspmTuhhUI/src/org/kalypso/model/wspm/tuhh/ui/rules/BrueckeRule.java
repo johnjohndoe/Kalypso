@@ -212,7 +212,7 @@ public class BrueckeRule extends AbstractValidatorRule
       }
 
       int minmax = 0;
-      boolean hatBewuchs = false;
+      int vegetation = Integer.MIN_VALUE;
       Double minOK = Double.MAX_VALUE;
       Double maxUK = Double.MIN_VALUE;
 
@@ -239,15 +239,15 @@ public class BrueckeRule extends AbstractValidatorRule
           continue;
         final Double bewuchs = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, points[i] );
         if( bewuchs != 0.0 )
-          hatBewuchs = true;
+          vegetation = i;
       }
       if( minmax > 0 )
       {
         collector.createProfilMarker( IMarker.SEVERITY_ERROR, "kleinste Höhe der Oberkante liegt unter größter Höhe der Unterkante", "km " + Double.toString( profil.getStation() ), minmax, IWspmConstants.POINT_PROPERTY_BREITE, pluginId );
       }
-      if( hatBewuchs )
+      if( vegetation>Integer.MIN_VALUE )
       {
-        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), outerLeft, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution( outerLeft, outerRight ) );
+        collector.createProfilMarker( IMarker.SEVERITY_ERROR, "Bewuchsparameter im Brückenbereich", "km " + Double.toString( profil.getStation() ), vegetation, IWspmConstants.POINT_PROPERTY_BREITE, pluginId, new DelBewuchsResolution( outerLeft, outerRight ) );
       }
     }
     catch( final Exception e )
