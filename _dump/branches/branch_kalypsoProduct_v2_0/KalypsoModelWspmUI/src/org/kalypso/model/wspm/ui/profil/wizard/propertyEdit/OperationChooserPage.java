@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -88,6 +89,8 @@ import org.kalypso.observation.result.IRecord;
 public class OperationChooserPage extends WizardPage
 {
 
+  
+
   private class PropertyCalculator
   {
     private final String m_label;
@@ -120,6 +123,8 @@ public class OperationChooserPage extends WizardPage
   private Double m_value = Double.NaN;
 
   private final IStructuredSelection m_selectedpoints;
+  
+  
 
   public OperationChooserPage( final IStructuredSelection selection )
   {
@@ -176,7 +181,7 @@ public class OperationChooserPage extends WizardPage
   @Override
   public boolean canFlipToNextPage( )
   {
-    return true;
+    return false;
   }
 
   /**
@@ -324,6 +329,8 @@ public class OperationChooserPage extends WizardPage
     final Button button = new Button( group, SWT.CHECK );
     button.setText( filter.getName() );
     button.setToolTipText( filter.getDescription() );
+    if( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter".equals( filter.getId() ) )
+      button.setEnabled( m_selectedpoints != null );
     button.setSelection( selected );
     button.addSelectionListener( new SelectionAdapter()
     {

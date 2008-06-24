@@ -94,12 +94,14 @@ public class PropertyEditWizard extends Wizard
 
   public PropertyEditWizard( final CommandableWorkspace workspace, final List<Feature> profiles, final List<Feature> selection )
   {
-    m_profile = null;
+
     m_workspace = workspace;
     m_profiles = profiles;
     m_selectedProfiles = selection;
     m_selectedPoints = null;
 
+    final WspmProfile wspmProfile = new WspmProfile( m_profiles.get( 0 ) );
+    m_profile = wspmProfile.getProfil();
     m_profiletype = (String) profiles.get( 0 ).getProperty( ProfileFeatureFactory.QNAME_TYPE );
     setWindowTitle( Messages.PropertyEditWizard_1 );
     setNeedsProgressMonitor( true );
@@ -117,9 +119,7 @@ public class PropertyEditWizard extends Wizard
     m_profiles = null;
     m_selectedProfiles = null;
     m_profiletype = m_profile.getType();
-    m_profileChooserPage = null;// new ArrayChooserPage( m_selectedPoints.toArray(), new Object[0],
-                                // m_selectedPoints.toArray(), 1, "profilesChooserPage", Messages.PropertyEditWizard_3,
-                                // null ); //$NON-NLS-1$;
+    m_profileChooserPage = null;
     setNeedsProgressMonitor( true );
     setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
@@ -131,21 +131,15 @@ public class PropertyEditWizard extends Wizard
   public void addPages( )
   {
     super.addPages();
-    if( m_profile == null )
-          addPage( m_profileChooserPage );
+    if( m_profiles != null )
+      addPage( m_profileChooserPage );
 
-    
     final List<IComponent> properties = new ArrayList<IComponent>();
-    
-    
-    final WspmProfile wspmProfile = new WspmProfile(m_profiles.get(0) );
-
-   final IProfil tmpProfil = m_profile== null?wspmProfile.getProfil():m_profile;
-    for( final IComponent property : tmpProfil.getPointProperties() )
-      if( !tmpProfil.isPointMarker( property.getId() ) )
+    for( final IComponent property : m_profile.getPointProperties() )
+      if( !m_profile.isPointMarker( property.getId() ) )
         properties.add( property );
 
-    m_propertyChooserPage = new ArrayChooserPage(properties, new Object[0], new Object[0], 1, "profilePropertiesChooserPage", Messages.PropertyEditWizard_6, null ); //$NON-NLS-1$
+    m_propertyChooserPage = new ArrayChooserPage( properties, new Object[0], new Object[0], 1, "profilePropertiesChooserPage", Messages.PropertyEditWizard_6, null ); //$NON-NLS-1$
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
       /**
@@ -197,7 +191,7 @@ public class PropertyEditWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final Object[] profilFeatures = m_profile == null ? m_profileChooserPage.getChoosen() : null;
+    final Object[] profilFeatures = m_profiles != null ? m_profileChooserPage.getChoosen() : null;
     final IProfil[] choosenProfiles = toProfiles( profilFeatures );
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final List<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
@@ -206,7 +200,7 @@ public class PropertyEditWizard extends Wizard
     for( int i = 0; i < choosenProfiles.length; i++ )
     {
       profilChanges = m_operationChooserPage.changeProfile( choosenProfiles[i], choosenProperties );
-      if( m_profile == null )
+      if( m_profiles != null )
       {
         try
         {
@@ -222,7 +216,7 @@ public class PropertyEditWizard extends Wizard
         featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( choosenProfiles[i], (Feature) profilFeatures[i] ) ) );
       }
     }
-    if( m_profile == null )
+    if( m_profiles != null )
     {
       final GMLWorkspace workspace = m_profiles.get( 0 ).getWorkspace();
       final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges.toArray( new FeatureChange[0] ) );
