@@ -132,12 +132,17 @@ public class PropertyEditWizard extends Wizard
   {
     super.addPages();
     if( m_profile == null )
-      addPage( m_profileChooserPage );
+          addPage( m_profileChooserPage );
 
     
     final List<IComponent> properties = new ArrayList<IComponent>();
-    for( final IComponent property : m_profile.getPointProperties() )
-      if( !m_profile.isPointMarker( property.getId() ) )
+    
+    
+    final WspmProfile wspmProfile = new WspmProfile(m_profiles.get(0) );
+
+   final IProfil tmpProfil = m_profile== null?wspmProfile.getProfil():m_profile;
+    for( final IComponent property : tmpProfil.getPointProperties() )
+      if( !tmpProfil.isPointMarker( property.getId() ) )
         properties.add( property );
 
     m_propertyChooserPage = new ArrayChooserPage(properties, new Object[0], new Object[0], 1, "profilePropertiesChooserPage", Messages.PropertyEditWizard_6, null ); //$NON-NLS-1$

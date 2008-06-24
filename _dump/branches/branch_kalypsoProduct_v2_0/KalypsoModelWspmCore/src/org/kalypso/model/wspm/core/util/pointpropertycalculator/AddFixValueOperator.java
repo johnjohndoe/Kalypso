@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -73,8 +74,8 @@ public class AddFixValueOperator implements IPointPropertyCalculator
 
         if( result.hasComponent( property ) )
         {
-          final Double oldValue = (Double) point.getValue( result.indexOf( property ));
-          final double newValue = oldValue + operand;
+          final Double oldValue = ProfilUtil.getDoubleValueFor( property.getId(), point );
+          final double newValue = oldValue.isNaN()?operand:oldValue + operand;
           changes.add( new PointPropertyEdit( point, property, newValue ) );
         }
         else
