@@ -18,7 +18,7 @@
             projectName="FloodDemo">
       </project>
       <project
-            category="org.kalypso.model.1d2d.demoProject"
+            category="org.kalypso.kalypso1d2d.pjt.demoProject"
             data="etc/demos/2DDemo.zip"
             description="Ein einfaches reines 2D-Beispielprojekt."
             label="1D2D Demo Projekt"
