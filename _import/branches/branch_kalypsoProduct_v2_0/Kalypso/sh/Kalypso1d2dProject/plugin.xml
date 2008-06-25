@@ -50,6 +50,18 @@
 		</description>
 		</wizard>
 		<wizard
+        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
+        class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
+        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+        icon="icons/kalypso1d2d.png"
+        id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
+        name="Kalypso 1D-2D gekoppeltes Demo-Modell"
+        project="true">
+		<description>
+				Erzeugt ein neues 1D2D-Demoprojekt.
+		</description>
+		</wizard>
+		<wizard
             class="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
             icon="icons/kalypso_gmt.gif"
             id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
