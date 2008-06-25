@@ -356,7 +356,7 @@ public class ElbePolteConverter
     try
     {
       intpolFlt = new InterpolationFilter( Calendar.HOUR_OF_DAY, Math.abs( ElbePolteConst.ELBEPOLTE_TIMESTEP ), false,
-          0.0, KalypsoStati.BIT_CHECK );
+          "0.0", KalypsoStati.BIT_CHECK );
 
       intpolFlt.initFilter( null, obsZml, null );
 

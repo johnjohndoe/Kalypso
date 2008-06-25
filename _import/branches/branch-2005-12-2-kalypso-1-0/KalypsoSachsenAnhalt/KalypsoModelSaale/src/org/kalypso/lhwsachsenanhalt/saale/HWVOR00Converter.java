@@ -127,7 +127,7 @@ public class HWVOR00Converter
   {
     try
     {
-      final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0 );
+      final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, "0", 0 );
       filter.initFilter( null, inObs, null );
 
       final ITuppleModel tplValues = filter.getValues( m_request );

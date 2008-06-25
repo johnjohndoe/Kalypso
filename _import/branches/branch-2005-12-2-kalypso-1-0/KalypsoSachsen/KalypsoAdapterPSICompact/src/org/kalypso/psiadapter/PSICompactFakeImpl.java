@@ -233,7 +233,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getArchiveData(int, int, java.util.Date, java.util.Date)
    */
-  public ArchiveData[] getArchiveData( int arg0, int arg1, Date arg2, Date arg3 ) throws ECommException
+  public ArchiveData[] getArchiveData( int arg0, int arg1, Date arg2, Date arg3 ) 
   {
     throw new UnsupportedOperationException();
   }
@@ -271,7 +271,7 @@ public class PSICompactFakeImpl implements PSICompact
 
       // TODO: use intervall filter for rainfall instead of InterpolationFilter
       
-      final InterpolationFilter filter = new InterpolationFilter( field, amount, false, Double.NaN, -1 );
+      final InterpolationFilter filter = new InterpolationFilter( field, amount, false, Double.toString( Double.NaN ), -1 );
       filter.initFilter( null, zmlObs, null );
       return filter;
     }
@@ -763,7 +763,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#Name2Tid(java.lang.String)
    */
-  public int Name2Tid( String arg0 ) throws ECommException
+  public int Name2Tid( String arg0 ) 
   {
     throw new UnsupportedOperationException();
   }
@@ -771,7 +771,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#PKZ2Kennzeichen(java.lang.String)
    */
-  public String PKZ2Kennzeichen( String arg0 ) throws ECommException
+  public String PKZ2Kennzeichen( String arg0 ) 
   {
     throw new UnsupportedOperationException();
   }
@@ -779,7 +779,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#setComment(java.lang.String, java.lang.String)
    */
-  public void setComment( String arg0, String arg1 ) throws ECommException
+  public void setComment( String arg0, String arg1 ) 
   {
     throw new UnsupportedOperationException();
   }
@@ -787,7 +787,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#quittiere(int, java.lang.String, long, long)
    */
-  public void quittiere( int arg0, String arg1, long arg2, long arg3 ) throws ECommException
+  public void quittiere( int arg0, String arg1, long arg2, long arg3 ) 
   {
     throw new UnsupportedOperationException();
   }
@@ -795,7 +795,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getLetztePegel(java.lang.String)
    */
-  public Pegelinfo[] getLetztePegel( String arg0 ) throws ECommException
+  public Pegelinfo[] getLetztePegel( String arg0 ) 
   {
     throw new UnsupportedOperationException();
   }

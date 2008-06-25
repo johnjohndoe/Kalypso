@@ -341,7 +341,7 @@ public class WiskiTimeserie implements IObservation
     // filter values in order to comply with the wiski specification
     final int timeUnit = WiskiUtils.getDistUnitCalendarField( m_tsinfo.getWiskiDistUnit() );
     final int timeStep = m_tsinfo.getWiskiDistValue();
-    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, "0",
         KalypsoStati.STATUS_USERMOD.intValue() );
     intfil.initFilter( null, obs, null );
 
