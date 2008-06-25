@@ -68,9 +68,9 @@ public class UpdateModell
 
   public final static String PSI_PROGNOSE_SUFFIX = ".P1_MW";
 
-  private static final double DEFAULT_Q = 0;
+  private static final String DEFAULT_Q = "0";
 
-  private static final double DEFAULT_W = 0;
+  private static final String DEFAULT_W = "0";
 
   public static void main( String[] args )
   {

@@ -65,7 +65,7 @@ public class UpdateHelper
   //      + "forceFill=\"true\" "
   //      + "defaultValue=\"0.0\"/></filter>";
 
-  public static String createInterpolationFilter( int amountHours, double defaultValue, boolean forceFill )
+  public static String createInterpolationFilter( int amountHours, String defaultValue, boolean forceFill )
       throws JAXBException
   {
     StringWriter writer = null;
