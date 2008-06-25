@@ -42,11 +42,11 @@ package org.kalypso.kalypsomodel1d2d.geom;
 
 import java.util.List;
 
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -76,6 +76,7 @@ public class ModelGeometryBuilder
    * @throws IllegalArgumentException
    *             if nodes is null
    */
+  @SuppressWarnings("unchecked")
   public static final GM_Surface createSurfaceFromNode( final List<IFE1D2DNode> nodes ) throws GM_Exception
   {
     Assert.throwIAEOnNullParam( nodes, "nodes" ); //$NON-NLS-1$
@@ -85,14 +86,11 @@ public class ModelGeometryBuilder
     final GM_Position[] poses = new GM_Position[SIZE];
 
     if( SIZE <= 3 )
-    {
-      // System.out.println( Messages.ModelGeometryBuilder_1 );
       return null;
-    }
 
     String crs = nodes.get( 0 ).getPoint().getCoordinateSystem();
     if( crs == null )
-      crs = KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     for( int i = 0; i < poses.length; i++ )
     {
@@ -103,24 +101,24 @@ public class ModelGeometryBuilder
     return GeometryFactory.createGM_Surface( poses, new GM_Position[0][], new GM_SurfaceInterpolation_Impl( GM_SurfaceInterpolation.PLANAR ), crs );
   }
 
+  @SuppressWarnings("unchecked")
   public static final GM_Curve computeEgdeGeometry( final IFE1D2DEdge<IFE1D2DElement, IFE1D2DNode> edge ) throws GM_Exception
   {
     // REMARK: we assume here, that all nodes live in the same coordinate
     // system.
     if( edge == null )
-    {
       return null;
-    }
 
     final List<IFE1D2DNode> nodes = edge.getNodes();
-
     final int SIZE = nodes.size();
+
     if( SIZE != 2 )
-    {
       return null;
-    }
 
     final IFE1D2DNode node0 = nodes.get( 0 );
+    if( node0 == null )
+      return null;
+
     final GM_Point point0 = node0.getPoint();
     final String crs = point0.getCoordinateSystem();
 
@@ -128,6 +126,9 @@ public class ModelGeometryBuilder
     for( int i = 0; i < SIZE; i++ )
     {
       final IFE1D2DNode nodei = nodes.get( i );
+      if( nodei == null )
+        return null;
+
       final GM_Point point = nodei.getPoint();
       positions[i] = point.getPosition();
     }

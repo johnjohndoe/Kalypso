@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,18 +55,15 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DPlugin;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DEdge;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
-import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.PointSnapper;
 import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.AbstractWidget;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -93,14 +92,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   private IKalypsoFeatureTheme m_nodeTheme;
 
-  private IKalypsoFeatureTheme m_polyElementTheme;
-
-  private IKalypsoFeatureTheme m_edgeTheme;
-
-  private IKalypsoFeatureTheme m_continuityLineTheme;
-
-  private IKalypsoFeatureTheme m_flowRelationsTheme;
-
   private IMapModell m_mapModell;
 
   private IFEDiscretisationModel1d2d m_discModel;
@@ -116,6 +107,12 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   private ElementGeometryEditor m_editor;
 
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
+  private final ToolTipRenderer m_warningRenderer = new ToolTipRenderer();
+
+  private boolean m_warning;
+
   public EditFEConceptGeometryWidget( )
   {
     super( "FE Model Geometrie Editieren", "FE Model Geometrie Editieren" );
@@ -128,19 +125,18 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   @Override
   public void activate( final ICommandTarget commandPoster, final MapPanel mapPanel )
   {
+    m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
+    m_warningRenderer.setBackgroundColor( new Color( 1f, 0.4f, 0.4f, 0.80f ) );
+
     super.activate( commandPoster, mapPanel );
     m_mapModell = mapPanel.getMapModell();
     m_nodeTheme = UtilMap.findEditableTheme( m_mapModell, Kalypso1D2DSchemaConstants.WB1D2D_F_NODE );
-    m_polyElementTheme = UtilMap.findEditableTheme( m_mapModell, IPolyElement.QNAME );
-    m_edgeTheme = UtilMap.findEditableTheme( m_mapModell, IFE1D2DEdge.QNAME );
-    m_continuityLineTheme = UtilMap.findEditableTheme( m_mapModell, IFELine.QNAME );
-    m_flowRelationsTheme = UtilMap.findEditableTheme( m_mapModell, IBoundaryCondition.QNAME );
-
     m_discModel = UtilMap.findFEModelTheme( m_mapModell );
     m_pointSnapper = new PointSnapper( m_discModel, mapPanel );
 
     reinit();
     m_snappingActive = true;
+
   }
 
   private void reinit( )
@@ -241,31 +237,49 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
-    GeoTransform projection = getMapPanel().getProjection();
-
-    /* always paint a small rectangle of current position */
-    if( m_currentMapPoint == null )
+    final MapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
       return;
 
-    final int[][] posPoints = getPointArrays( m_currentMapPoint );
+    GeoTransform projection = mapPanel.getProjection();
 
-    int[] arrayX = posPoints[0];
-    int[] arrayY = posPoints[1];
-
-    /* Paint as linestring. */
-    g.drawPolygon( arrayX, arrayY, arrayX.length );
-    drawHandles( g, arrayX, arrayY );
-
-    /* paint the snap */
-    if( m_pointSnapper != null )
-      m_pointSnapper.paint( g );
-
-    /* paint the preview */
-    if( m_editor != null )
+    /* always paint a small rectangle of current position */
+    if( m_currentMapPoint != null )
     {
-      m_editor.paint( g, projection, m_currentMapPoint );
+      final int[][] posPoints = getPointArrays( m_currentMapPoint );
+
+      int[] arrayX = posPoints[0];
+      int[] arrayY = posPoints[1];
+
+      /* Paint as linestring. */
+      g.drawPolygon( arrayX, arrayY, arrayX.length );
+      drawHandles( g, arrayX, arrayY );
+
+      /* paint the snap */
+      if( m_pointSnapper != null )
+        m_pointSnapper.paint( g );
+
+      /* paint the preview */
+      if( m_editor != null )
+        m_editor.paint( g, projection, m_currentMapPoint );
     }
+
     super.paint( g );
+
+    final Rectangle bounds = mapPanel.getBounds();
+
+    String tooltipMsg = "";
+    if( m_snappingActive == true )
+      tooltipMsg = "Editieren Sie FE-Elemente durch Klicken in die Karte.\n    'Esc':                                      abbrechen.\n    'Shift (gedrückt halten)':     Knotenfang ausschalten. \n                                                  <Knotenfang an> ";
+    else
+      tooltipMsg = "Editieren Sie FE-Elemente durch Klicken in die Karte.\n    'Esc':                                      abbrechen.\n    'Shift (gedrückt halten)':     Knotenfang ausschalten. \n                                                  <Knotenfang aus>";
+
+    m_toolTipRenderer.setTooltip( tooltipMsg );
+    m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
+
+    if( m_warning == true )
+      m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 80 ), g, bounds );
+
   }
 
   private static void drawHandles( final Graphics g, final int[] x, final int[] y )
@@ -345,13 +359,15 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     {
       final IStatus status = m_editor.checkNewNode( newNode );
       if( status.isOK() )
-        mapPanel.setMessage( "" );
+        m_warning = false;
       else
-        mapPanel.setMessage( status.getMessage() );
+      {
+        m_warning = true;
+        m_warningRenderer.setTooltip( status.getMessage() );
+      }
 
       if( status.isOK() )
         return newNode;
-
     }
     else
       return newNode;
