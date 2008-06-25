@@ -379,6 +379,234 @@
     <para>Wenn Prognose-Zeitreihen von KALYPSO nach PSICompact
     zurückgeschrieben werden, bekommen sie automatisch den Status
     PSICompact.STATUS_REKO.</para>
+
+    <para>Neben den eigentlichen Werten liefert die PSICompact-Schnittstelle
+    eine Reihe weiterer Informationen über die Zeitreihe bzw. über Ihre
+    Station, welche in Form von Metadaten in der KALYPSO-Zeitreihe abgelegt
+    werden (siehe <xref linkend="tbl_psiMetadata" />). </para>
+
+    <table id="tbl_psiMetadata">
+      <title>Metadaten</title>
+
+      <tgroup cols="3" colsep="1" rowsep="1">
+        <colspec align="left" colname="c1" colnum="" />
+
+        <colspec align="left" colname="c2" colwidth="1*" />
+
+        <colspec align="left" colname="c3" colwidth="1*" />
+
+        <thead>
+          <row>
+            <entry align="center">Metadatum</entry>
+
+            <entry align="center">Wert</entry>
+
+            <entry align="center">Entstehung</entry>
+          </row>
+        </thead>
+
+        <tbody>
+          <row>
+            <entry>Name</entry>
+
+            <entry>Bezeichnung des PSI-Containers</entry>
+
+            <entry>PSI-Adapter</entry>
+          </row>
+
+          <row>
+            <entry>Beschreibung</entry>
+
+            <entry>Beschreibung der Spur</entry>
+
+            <entry>Object-Info aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Entstehung</entry>
+
+            <entry>Immer 'PSICompact'</entry>
+
+            <entry>PSI-Adapter</entry>
+          </row>
+
+          <row>
+            <entry>Rechtswert</entry>
+
+            <entry>Lage der Station</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Hochwert</entry>
+
+            <entry>Lage der Station</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Koordinatensystem</entry>
+
+            <entry>EPSG-Code für Rechtswert-Hochwert als</entry>
+
+            <entry>PSI-Adapter</entry>
+          </row>
+
+          <row>
+            <entry>Höhenangabeart</entry>
+
+            <entry>NN oder HN</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Pegelnullpunkt</entry>
+
+            <entry>Pegelnullpunkt</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Messtischblattnummer</entry>
+
+            <entry>Messtischblattnummer</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Alarmstufe 1</entry>
+
+            <entry>Alarmstufe 1</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Alarmstufe 2</entry>
+
+            <entry>Alarmstufe 2</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Alarmstufe 3</entry>
+
+            <entry>Alarmstufe 3</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Alarmstufe 4</entry>
+
+            <entry>Alarmstufe 4</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Einheit in PSI-Compact</entry>
+
+            <entry>Einheit der Werte in PSICompact</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Archivtyp</entry>
+
+            <entry>Abgerufenes Archiv (MIN15, ...)</entry>
+
+            <entry>Abgefragter Wert (Request)</entry>
+          </row>
+
+          <row>
+            <entry>vorhandene Archivetypen</entry>
+
+            <entry>Für diese Spur vorhandene Archivtypen</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Gewässer</entry>
+
+            <entry>Gewässer</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>Flussgebiet</entry>
+
+            <entry>Flussgebiet</entry>
+
+            <entry>Metadata aus PSICompact</entry>
+          </row>
+
+          <row>
+            <entry>WQ-Parameter</entry>
+
+            <entry>W/Q-Beziehung in Form von Wechmann Parametern</entry>
+
+            <entry>PSICompact (siehe Unten)</entry>
+          </row>
+
+          <row>
+            <entry>WQ-Tabelle</entry>
+
+            <entry>W/Q-Beziehung in From einer W/Q-Tabelle</entry>
+
+            <entry>Kalypso Server (siehe Unten)</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <section>
+      <title>W/Q-Beziehung</title>
+
+      <para>Die W/Q-Beziehung wird für Zeitreihen, welche über die
+      PSI-Schnittstelle abgerufen werden, als Metadatum an die ZML-Datei
+      geschrieben. Es gibt hierbei zwei Möglichkeiten:</para>
+
+      <variablelist>
+        <varlistentry>
+          <term>Wechmann Parameter</term>
+
+          <listitem>
+            <para>Ohne weitere Angabe wird versucht, die W/Q-Beziehung in Form
+            von Wechmann-Parametern über die PSICompact-Schnittstelle zu
+            beziehen. Liegt in PSICompact keine W/Q-Beziehung vor, bleibt das
+            Feld leer, eine Umrechnung ist dann seitens Kalypso nicht
+            möglich.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>AbflussTafel</term>
+
+          <listitem>
+            <para>Alternativ kann auf dem Kalypso-Server über die
+            Konfigurationsdatei
+            \\lfug-kv-01\d\Programme\kalypso\Tomcat5.0\webapps\webdav\at_data\at.ini
+            für jede Spur eine zusätzliche AbflussTafel im .at-Format
+            definiert werden. Ist dies für eine Spur der Fall, erscheint im
+            Zeitreihen-Repository ein zusätzlicher Knoten 'at', über den die
+            gleiche Zeitreihe bezogen wird. Statt der in PSICompact
+            vorliegenden W/Q-Beziehung wird in diesem Fall aber die definierte
+            AbflussTafel übergeben. Die Umrechnung in Kalypso erfolgt über
+            diese AbflussTafel.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
   </section>
 
   <section>

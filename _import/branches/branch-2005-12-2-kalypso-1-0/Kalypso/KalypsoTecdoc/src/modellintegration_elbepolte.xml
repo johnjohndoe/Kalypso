@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="modell-spree" vendor="sachsen">
+<section id="modell-elbepolte" vendor="sachsen">
   <title>Modellintegration Elbe</title>
 
   <indexterm>
@@ -34,7 +34,7 @@
   Projekt dient als Modellprojekt unter dem Namen <quote>ElbePolte</quote> als
   Vorhersagemodell der eigentlichen Installation.</para>
 
-  <section id="sec_modelSpecSpree">
+  <section id="sec_modelSpecElbePolte">
     <title>Modellspezifikation und Grunddaten</title>
 
     <indexterm>
@@ -897,7 +897,7 @@
         <para>Es werden alle (Grund-)Daten der Rechenvariante erstellt
         (kopiert), d.h. alle Daten außer den Zeitreihendaten. Die Datei der
         Steuerparameter <filename>.calculation</filename> (siehe <xref
-        linkend="sec_modellintegration_spree_pktCalculation" />) wird mit
+        linkend="sec_modellintegration_elbePolte_pktCalculation" />) wird mit
         Standardwerten belegt. Die eigentlichen Modelldaten befinden sich in
         der Datei <filename>calcCase.gml</filename> und stellen eine reine
         Kopie der Grunddaten
@@ -994,12 +994,12 @@
       </section>
     </section>
 
-    <section id="sec_modellintegration_spree_pktCalculation">
+    <section id="sec_modellintegration_elbePolte_pktCalculation">
       <title>Die Datei <filename>.calculation</filename></title>
 
       <para>Die Steuerdatei <filename>.calculation</filename> wird durch das
       serverseitig abgelegte GML-Schema <filename>control.xsd</filename>
-      (Speicherort siehe <xref linkend="sec_modelSpecSpree" />) spezifiziert
+      (Speicherort siehe <xref linkend="sec_modelSpecElbePolte" />) spezifiziert
       und enthält neben dem Simulationszeitraum (Start der Simulation, Start
       der Vorhersage, Ende der Simulation) noch weitere Metadaten, um eine
       Rechenvariante ausführlich beschreiben zu können. Diese sind:</para>
