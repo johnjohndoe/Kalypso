@@ -883,17 +883,21 @@ public class Gml2RMA10SConv implements INativeIDProvider
   }
 
   @SuppressWarnings("unchecked")
-  private int getRoughnessID( final IFE1D2DElement element ) throws CoreException
+  private int getRoughnessID( final IFE1D2DElement element )
   {
     final String roughnessClsID = element.getRoughnessClsID();
     if( roughnessClsID != null && roughnessClsID.length() > 0 )
       return m_roughnessIDProvider.getOrAdd( roughnessClsID );
 
-    // TODO: use default zone instead
-    final String msg = String.format( "Unbekannte Rauheitszone '%s' bei Element '%s'", roughnessClsID, element );
-    final GM_Object location = element.getLocation();
-    final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
-    throw new CoreException( status );
+    // TODO: use default zone instead.
+    // Right now it is set to '0' which means the element is deactivated for the simulation
+    final String msg = String.format( "Element '%s' hat keine Rauheitszone zugewiesen und wird für die Rechnung deaktiviert.", element.getGmlID() );
+
+    final IFE1D2DNode node = (IFE1D2DNode) element.getNodes().get( 0 );
+    final GM_Point point = node.getPoint();
+    m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, msg, point, null );
+
+    return 0;
   }
 
   public BuildingIDProvider getBuildingProvider( )
