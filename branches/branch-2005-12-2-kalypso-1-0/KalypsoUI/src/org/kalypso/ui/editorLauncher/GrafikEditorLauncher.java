@@ -41,7 +41,6 @@
 
 package org.kalypso.ui.editorLauncher;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IContainer;
@@ -80,7 +79,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
 
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
-      protected void execute( final IProgressMonitor monitor ) throws InvocationTargetException, CoreException
+      protected void execute( final IProgressMonitor monitor ) throws CoreException
       {
         IStatus status = Status.OK_STATUS;
 

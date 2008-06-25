@@ -88,7 +88,7 @@ public class InterpolationFilterTest extends TestCase
 
   public void testGetValues() throws SensorException, ParseException
   {
-    final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0, true );
+    final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, "0", 0, true );
     filter.initFilter( null, m_obs, null );
 
     sdf.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
@@ -148,7 +148,7 @@ public class InterpolationFilterTest extends TestCase
     final int timeUnit = Calendar.HOUR_OF_DAY; //WiskiUtils.getDistUnitCalendarField( m_tsinfo.getWiskiDistUnit() );
     final int timeStep = 1;//m_tsinfo.getWiskiDistValue();
 
-    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, "0",
         KalypsoStati.STATUS_USERMOD.intValue() );
     intfil.initFilter( null, obs, null );
     final ITuppleModel intValues = intfil.getValues( null );
@@ -196,7 +196,7 @@ public class InterpolationFilterTest extends TestCase
     final int timeUnit = Calendar.HOUR_OF_DAY; //WiskiUtils.getDistUnitCalendarField( m_tsinfo.getWiskiDistUnit() );
     final int timeStep = 1;//m_tsinfo.getWiskiDistValue();
 
-    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, "0",
         KalypsoStati.STATUS_USERMOD.intValue() );
     intfil.initFilter( null, obs, null );
     final ITuppleModel intValues = intfil.getValues( null );
@@ -204,7 +204,7 @@ public class InterpolationFilterTest extends TestCase
     //    System.out.println( "Interpolated: " );
     //    System.out.println( ObservationUtilities.dump( intValues, "\t" ) );
 
-    final InterpolationFilter int2fil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+    final InterpolationFilter int2fil = new InterpolationFilter( timeUnit, timeStep, false, "0",
         KalypsoStati.STATUS_USERMOD.intValue() );
     int2fil.initFilter( null, intfil, null );
     final ITuppleModel int2Values = int2fil.getValues( null );

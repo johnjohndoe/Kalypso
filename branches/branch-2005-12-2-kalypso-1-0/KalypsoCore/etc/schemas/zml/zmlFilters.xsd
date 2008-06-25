@@ -106,7 +106,7 @@
 				<!-- when true, fills the model with defaultValue when no base value -->
 				<attribute type="boolean" name="forceFill"/>
 				<!-- default value to use when filling absent values -->
-				<attribute type="double" name="defaultValue"/>
+				<attribute type="string" name="defaultValue"/>
 				<!-- value of the default status when no base status -->
 				<attribute type="int" name="defaultStatus"/>
 				<!-- when true (only in conjunction with forceFill) fill the last tupples of the model with copies of the last valid tupple instead of using the default value -->
