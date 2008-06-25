@@ -219,6 +219,30 @@ public class ObservationUtilities
   }
 
   /**
+   * Returns the axes that are compatible with the desired Dataclass
+   * 
+   * @return all axes which are compatible with desired Classtype
+   */
+  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class[] desired )
+  {
+    final ArrayList list = new ArrayList( axes == null ? 0 : axes.length );
+
+    for( int i = 0; i < axes.length; i++ )
+    {
+      for( int j = 0; j < desired.length; j++ )
+      {
+        if( desired[j].isAssignableFrom( axes[i].getDataClass() ) )
+          list.add( axes[i] );
+      }
+    }
+
+    if( list.size() == 0 )
+      throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + desired );
+
+    return (IAxis[])list.toArray( new IAxis[list.size()] );
+  }
+
+  /**
    * Returns the first axis that is compatible with the desired Dataclass
    */
   public static IAxis findAxisByClass( final IAxis[] axes, final Class desired )

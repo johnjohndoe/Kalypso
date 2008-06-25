@@ -47,6 +47,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.TickUnitSource;
 import org.jfree.chart.axis.TickUnits;
+import org.jfree.data.Range;
 
 /**
  * A 'boolean' axis. IN reality this is still a number axis, but renders 'true' for value bigger than 0.5 and 'false'
@@ -58,10 +59,7 @@ public class PolderControlAxis extends NumberAxis
 {
   public PolderControlAxis()
   {
-    super();
-
-    final TickUnitSource tickUnits = createBooleanTickUnits();
-    setStandardTickUnits( tickUnits );
+    this( null );
   }
 
   public PolderControlAxis( final String label )
@@ -72,6 +70,11 @@ public class PolderControlAxis extends NumberAxis
     setStandardTickUnits( tickUnits );
   }
 
+  protected void autoAdjustRange()
+  {
+    setRange( new Range( 0.0, 3 ), true, true );
+  }
+  
   /**
    * Returns a collection of tick units for boolean values (i.e. only 0 and 1).
    * 
@@ -88,16 +91,18 @@ public class PolderControlAxis extends NumberAxis
        */
       public String valueToString( double value )
       {
+        if( value > 1.5 )
+          return "";
+        
         if( value < 0.5 )
-          return "Offen";
+          return "zu";
 
-        return "Geschlossen";
+        return "auf";
       }
     };
 
     units.add( unit );
 
     return units;
-
   }
 }
