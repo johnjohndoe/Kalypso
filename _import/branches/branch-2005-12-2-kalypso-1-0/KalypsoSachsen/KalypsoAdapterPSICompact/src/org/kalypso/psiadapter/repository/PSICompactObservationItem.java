@@ -30,6 +30,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannGroup;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.psiadapter.PSICompactFactory;
+import org.kalypso.psiadapter.util.IWQProvider;
 
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
@@ -187,7 +188,8 @@ public class PSICompactObservationItem implements IObservation
       if( m_useAt )
       {
         // If at was required try to find it
-        final WQTableSet tableSet = PSICompactFactory.getWQTable( m_objectInfo.getId() );
+        final IWQProvider wqProvider = PSICompactFactory.getWQProvider();
+        final WQTableSet tableSet = wqProvider.getWQTable( m_objectInfo.getId() );
         if( tableSet != null )
         {
           final String mdWQ = WQTableFactory.createXMLString( tableSet );

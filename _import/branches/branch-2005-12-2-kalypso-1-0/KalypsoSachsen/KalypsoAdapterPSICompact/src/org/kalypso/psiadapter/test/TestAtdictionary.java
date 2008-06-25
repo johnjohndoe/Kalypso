@@ -48,6 +48,8 @@ import junit.framework.TestCase;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.psiadapter.PSICompactFactory;
+import org.kalypso.psiadapter.util.AtWQProvider;
+import org.kalypso.psiadapter.util.IWQProvider;
 
 /**
  * Test getting a WQTableSet for a fixed PSI-ID
@@ -61,24 +63,27 @@ public class TestAtdictionary extends TestCase
     final URL atDictLocation = getClass().getResource( "resources/at.ini" );
     System.setProperty( PSICompactFactory.SYSPROP_AT_DICTIONARY, atDictLocation.toExternalForm() );
 
-    final WQTableSet tableSet = PSICompactFactory.getWQTable( "ID1" );
+    final IWQProvider wqProvider = PSICompactFactory.getWQProvider();
+    assertNotNull( wqProvider );
+    
+    final WQTableSet tableSet = wqProvider.getWQTable( "ID1" );
     assertNotNull( tableSet );
 
     final WQTable[] tables = tableSet.getTables();
     assertEquals( 2, tables.length );
 
-    final String firstDate = PSICompactFactory.DF_AT_DICT.format( tables[0].getValidity() );
-    final String secondDate = PSICompactFactory.DF_AT_DICT.format( tables[1].getValidity() );
+    final String firstDate = AtWQProvider.DF_AT_DICT.format( tables[0].getValidity() );
+    final String secondDate = AtWQProvider.DF_AT_DICT.format( tables[1].getValidity() );
 
     assertEquals( "24.10.1972", firstDate );
     assertEquals( "02.06.2008", secondDate );
 
-    final WQTableSet tableSet2 = PSICompactFactory.getWQTable( "ID1" );
+    final WQTableSet tableSet2 = wqProvider.getWQTable( "ID1" );
     assertSame( tableSet, tableSet2 ); // should be same, as tables get cached
 
     // several ids in same group
-    final WQTableSet tableSetId2 = PSICompactFactory.getWQTable( "ID2" );
-    final WQTableSet tableSetId3 = PSICompactFactory.getWQTable( "ID3" );
+    final WQTableSet tableSetId2 = wqProvider.getWQTable( "ID2" );
+    final WQTableSet tableSetId3 = wqProvider.getWQTable( "ID3" );
     assertNotNull( tableSetId2 );
     assertNotNull( tableSetId3 );
 
@@ -87,9 +92,9 @@ public class TestAtdictionary extends TestCase
     final WQTable[] tablesId3 = tableSetId3.getTables();
     assertEquals( 1, tablesId3.length );
 
-    final String dateId2 = PSICompactFactory.DF_AT_DICT.format( tablesId2[0].getValidity() );
+    final String dateId2 = AtWQProvider.DF_AT_DICT.format( tablesId2[0].getValidity() );
     assertEquals( "03.06.2008", dateId2 );
-    final String dateId3 = PSICompactFactory.DF_AT_DICT.format( tablesId3[0].getValidity() );
+    final String dateId3 = AtWQProvider.DF_AT_DICT.format( tablesId3[0].getValidity() );
     assertEquals( "03.06.2008", dateId3 );
   }
 

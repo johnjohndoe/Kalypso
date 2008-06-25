@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.psiadapter.PSICompactFactory;
+import org.kalypso.psiadapter.util.IWQProvider;
 import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -84,7 +85,8 @@ public class PSICompactRepository extends AbstractRepository
               defaultArcType, false );
           nodes.put( nodeID, newNode );
 
-          if( PSICompactFactory.hasWQTable( nodeID ) )
+          final IWQProvider wqProvider = PSICompactFactory.getWQProvider();
+          if( wqProvider.hasWQTable( nodeID ) )
             addAtNode( nodes, obsName, valueType, info, objectMetaData, newNode, nodeID, defaultArcType );
 
           /* Add archive sub-nodes: only if at the end of a real path */
@@ -106,7 +108,7 @@ public class PSICompactRepository extends AbstractRepository
 
                 // The archive types automaticallay gets this option, if the default has it; we do not need to configure
                 // an at-file for each archive
-                if( PSICompactFactory.hasWQTable( nodeID ) )
+                if( wqProvider.hasWQTable( nodeID ) )
                   addAtNode( nodes, arcObsName, valueType, info, objectMetaData, newArcNode, arcNodeID, defaultArcType );
               }
             }
