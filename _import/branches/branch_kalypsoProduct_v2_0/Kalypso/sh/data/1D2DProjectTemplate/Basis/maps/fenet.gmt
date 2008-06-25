@@ -28,6 +28,7 @@
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="1D-2D Kopplung" id="ID_8" featurePath="#fid#root/complexElement[TransitionElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:TransitionElement:rule:TransitionElement_1D2D</templ:legendicon>
             <templ:property name="deleteable">false</templ:property>
         </mapv:layer>
         <mapv:layer visible="true" name="Rauheiten" id="ID_9" featurePath="#fid#root/element[PolyElement]" linktype="gml" xlink:type="simple" xlink:href="../models/discretisation.gml" xlink:actuate="onRequest">

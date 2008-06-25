@@ -9,8 +9,8 @@
 	<FeatureTypeName>{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}TransitionElement</FeatureTypeName>
 	<Rule>
 		<Name>TransitionElement_1D2D</Name>
-		<Title>Transition element 1D to 2D</Title>
-		<Abstract>Transition element 1D to 2D</Abstract>
+		<Title>Kopplungselement 1D nach 2D</Title>
+		<Abstract>Kopplungselement 1D nach 2D</Abstract>
 		<ogc:Filter>
 			<ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
 				<ogc:PropertyName>transitionType</ogc:PropertyName>
@@ -38,8 +38,8 @@
 	</Rule>
 	<Rule>
 		<Name>TransitionElement_2D1D</Name>
-		<Title>Transition element 2D to 1D</Title>
-		<Abstract>Transition element 2D to 1D</Abstract>
+		<Title>Kopplungselement 2D nach 1D</Title>
+		<Abstract>Kopplungselement 2D nach 1D</Abstract>
 		<ogc:Filter>
 			<ogc:PropertyIsLike escape="/" singleChar="$" wildCard="*">
 				<ogc:PropertyName>transitionType</ogc:PropertyName>
