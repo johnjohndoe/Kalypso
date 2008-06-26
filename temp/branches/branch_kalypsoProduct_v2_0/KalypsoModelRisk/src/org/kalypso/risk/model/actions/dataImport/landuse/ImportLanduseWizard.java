@@ -71,6 +71,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskImportDBLanduseRunnable;
+import org.kalypso.risk.model.operation.RiskImportNewLanduseRunnable;
 import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -251,6 +252,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       switch( selectedDatabaseOption )
       {
         case DB_CREATE_NEW:
+          importLanduseRunnable = new RiskImportNewLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, landuseProperty, m_predefinedLanduseColorsCollection );
           break;
 
         case DB_IMPORT:
