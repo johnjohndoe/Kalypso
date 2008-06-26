@@ -46,26 +46,9 @@
   Ergebnisdarstellung können alle Arbeitsschritte im Zusammenhang mit dem
   Spiegelliniennachweis in einer Oberfläche bearbeitet werden.</para>
 
-  <itemizedlist>
-    <listitem>
-      <para>Triangulation</para>
-
-      <para>Quellcode (nicht die EXE!!) ist ein OpenSourceProduct: Copyright
-      1993, 1995, 1997, 1998, 2002 Jonathan Richard Shewchuk, 2360 Woolsey #H/
-      California 94705-1927, created as part of the Archimedes project (tools
-      for parallel FEM) Supported in part by NSF Grant CMS-9318163 and an
-      NSERC 1967 Scholarship. (...) In Kalypso-WSPM wird die EXE verwendet.
-      Sie darf nicht weiterverbreitet oder kopiert werden. Für eine weiter
-      Kopie ist der freiverfügbare Source Code neu zu kompilieren!</para>
-    </listitem>
-
-    <listitem>
-      <para>Überschwemmungsflächen</para>
-    </listitem>
-  </itemizedlist>
-
-  <para>Das vorliegende Kapitel beschreibt die Benutzeroberfläche Kalypso WSPM,
-  die auf den Rechenkern Kalypso1D von Prof. Pasche zugeschnitten ist.</para>
+  <para>Das vorliegende Kapitel beschreibt die Benutzeroberfläche Kalypso
+  WSPM, die auf den Rechenkern Kalypso1D von Prof. Pasche zugeschnitten
+  ist.</para>
 
   <para>Die theoretischen Grundlagen der Spiegellinienberechnung des
   Rechenkerns nach Prof. Pasche sind in einem separaten Handbuch „Theoretische
@@ -628,7 +611,8 @@
       1d-Spiegellinienberechnung &gt; Projekt</guimenuitem>.</para>
 
       <figure>
-        <title>Assistent zum Anlegen eines neuen Kalypso WSPM Projektes</title>
+        <title>Assistent zum Anlegen eines neuen Kalypso WSPM
+        Projektes</title>
 
         <mediaobject>
           <imageobject>

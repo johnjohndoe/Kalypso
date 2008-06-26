@@ -424,7 +424,8 @@
       <title>Arbeiten in der Profileditor-Tabelle</title>
 
       <indexterm>
-        <primary>Arbeiten in der Profileditor-Tabelle in Kalypso WSPM</primary>
+        <primary>Arbeiten in der Profileditor-Tabelle in Kalypso
+        WSPM</primary>
       </indexterm>
 
       <figure>
@@ -485,8 +486,8 @@
         <title>Löschen eines Profilpunktes</title>
 
         <indexterm>
-          <primary>Profilpunkt löschen in der Profileditor-Tabelle in
-          Kalypso WSPM</primary>
+          <primary>Profilpunkt löschen in der Profileditor-Tabelle in Kalypso
+          WSPM</primary>
         </indexterm>
 
         <para>Mit dem Löschen eines Punktes wird eine Datenzeile vollständig
@@ -510,8 +511,8 @@
         <title>Kopieren und Werte übertragen in der Profiltabelle</title>
 
         <indexterm>
-          <primary>Werte kopieren in der Profileditor-Tabelle in
-          Kalypso WSPM</primary>
+          <primary>Werte kopieren in der Profileditor-Tabelle in Kalypso
+          WSPM</primary>
         </indexterm>
 
         <para>Ein Übertragen von Werten erfolgt nur auf Basis eines
@@ -558,8 +559,8 @@
       <title>Profileditor Legende - Datensätze eines Profils</title>
 
       <indexterm>
-        <primary>Datensätze in der Profileditor Legende bearbeiten in
-        Kalypso WSPM</primary>
+        <primary>Datensätze in der Profileditor Legende bearbeiten in Kalypso
+        WSPM</primary>
       </indexterm>
 
       <para>Ein Datensatz wird, mit Ausnahme der Fließzonen und der
@@ -1654,10 +1655,13 @@
           <primary>Wehre in Kalypso WSPM</primary>
         </indexterm>
 
-        <para>Es können Wehre mit scharfer, breiter oder runder Wehrkrone, mit
-        einem oder mehreren Wehrfeldern angegeben werden. Neben der
-        Wehrgeometrie sind auch die hydraulischen Parameter am Wehr zu
-        definieren. Dies sind die:</para>
+        <para>Es können ein- und mehrfeldrige, senkrecht zur Gewässerachse
+        liegende Wehre mit scharfkantigem, breitkronigem oder rundkronigem
+        Wehrrücken angegeben werden. Dabei muss mindestens ein Profil im
+        Unterwasser des Wehres vorgegeben werden. Die Eingabe eines Profils im
+        Oberwasser ist nicht zwingend notwendig. Neben der Wehrgeometrie sind
+        auch die hydraulischen Parameter am Wehr zu definieren. Dies sind
+        die:</para>
 
         <itemizedlist>
           <listitem>
@@ -1740,36 +1744,69 @@
           </mediaobject>
         </figure>
 
-        <note>
-          <para><itemizedlist>
-              <listitem>
-                <para>Wehroberkante muss außerhalb des Wehrkörpers identisch
-                mit der Geländeoberkante sein</para>
-              </listitem>
+        <section>
+          <title>Hinweise zur Definition von Wehren und Berechnung an
+          Wehren</title>
 
-              <listitem>
-                <para>Alle Wehrparameter sind zu definieren, sonst treten
-                Fehler in der Berechnung auf</para>
-              </listitem>
+          <para>Bei der Berechnung des Wehrs wird angenommen, dass im Wehr
+          (Profil w) selbst und im unmittelbaren Oberwasser des Wehres (Profil
+          ow,w) keine Querströmung zwischen Vorland und Flussschlauch
+          stattfindet. Der Abflussanteil über das Wehr wird dem Anteil des
+          Abflusses im Flussschlauch des Oberwasserprofils gleichgesetzt.
+          Damit ist bei hohen Abflussleistungen über das Wehr und einer
+          entsprechenden Benetzung des Vorlandes im unmittelbaren Oberwasser
+          des Wehrs nur die Kontinuität zwischen Unterwasser und unmittelbarem
+          Oberwasser eingehalten. Als weitere Vereinfachung werden die
+          Fliessverluste infolge Sohl- und Böschungsreibung im Wehr
+          vernachlässigt.</para>
 
-              <listitem>
-                <para>Die Trennflächen müssen an einem Wehrprofil immer an den
-                zwei Schnittpunkten Wehroberkante = Geländeoberkante
-                liegen.</para>
-              </listitem>
+          <figure>
+            <title>Definitionsskizze der Benennungen und der
+            Bilanzachsen</title>
 
-              <listitem>
-                <para>Der durchströmte Bereich ist immer bis zum Profilrand zu
-                ziehen, da die Wehrgeometrie im Bereich des Geländes
-                (außerhalb des Bauwerks) auf der Geländeoberkante liegt</para>
-              </listitem>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Wehr_Definitionsskizze.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>
 
-              <listitem>
-                <para>Im Wehrkörper darf kein Bewuchs angeordnet werden, da er
-                dort nicht mitberechnet werden kann</para>
-              </listitem>
-            </itemizedlist></para>
-        </note>
+          <para>Bei der Abflussberechnung über das Wehr werden drei
+          verschiedene Abflusszustände unterschieden: Vollkommener Überfall,
+          unvollkommener Überfall, Überströmen.</para>
+
+          <note>
+            <para><itemizedlist>
+                <listitem>
+                  <para>Wehroberkante muss außerhalb des Wehrkörpers identisch
+                  mit der Geländeoberkante sein</para>
+                </listitem>
+
+                <listitem>
+                  <para>Alle Wehrparameter sind zu definieren, sonst treten
+                  Fehler in der Berechnung auf</para>
+                </listitem>
+
+                <listitem>
+                  <para>Die Trennflächen müssen an einem Wehrprofil immer an
+                  den zwei Schnittpunkten Wehroberkante = Geländeoberkante
+                  liegen.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Der durchströmte Bereich ist immer bis zum Profilrand
+                  zu ziehen, da die Wehrgeometrie im Bereich des Geländes
+                  (außerhalb des Bauwerks) auf der Geländeoberkante
+                  liegt</para>
+                </listitem>
+
+                <listitem>
+                  <para>Im Wehrkörper darf kein Bewuchs angeordnet werden, da
+                  er dort nicht mitberechnet werden kann.</para>
+                </listitem>
+              </itemizedlist></para>
+          </note>
+        </section>
       </section>
 
       <section id="kalypso_wspm_Profileditorlegende_Brücke">
@@ -1779,23 +1816,25 @@
           <primary>Brücken in Kalypso WSPM</primary>
         </indexterm>
 
-        <para>Es können beliebig komplexe Brückengeometrien angegeben werden.
+        <para>Mit WSPM können senkrecht zur Gewässerachse liegende Brücken mit
+        und ohne Pfeiler berechnet werden. Dabei muss mindestens ein Profil im
+        Unterwasser und ein Profil im Oberwasser der Brücke vorgegeben werden.
         Neben der Brückengeometrie, die über eine Oberkante und Unterkannte
-        der Brücke definieret wird, sind auch die hydraulischen Parameter an
+        der Brücke definiert wird, sind auch die hydraulischen Parameter an
         der Brücke zu definieren. Dies sind die Brückenbreite in
-        Fließrichtung, die Geländeoberkante im Unterwasser, der
-        Pfeilerformbeiwert und die Rauheit des Brückenmaterials.</para>
+        Fließrichtung, die GOK im Unterwasser, der Pfeilerformbeiwert und die
+        Ersatzrauheit in der Öffnung der Brücke.</para>
 
-        <figure>
-          <title>Definition der hydraulischen Parameter an der Brücke in der
-          Profileditor-Layeransicht</title>
+        <para><figure>
+            <title>Definition der hydraulischen Parameter an der Brücke in der
+            Profileditor-Layeransicht</title>
 
-          <mediaobject>
-            <imageobject>
-              <imagedata align="left" fileref="img/WSPM/Bruecke.png" />
-            </imageobject>
-          </mediaobject>
-        </figure>
+            <mediaobject>
+              <imageobject>
+                <imagedata align="left" fileref="img/WSPM/Bruecke_1.png" />
+              </imageobject>
+            </mediaobject>
+          </figure></para>
 
         <para>Eingabe der Brückengeometrie:</para>
 
@@ -1843,60 +1882,424 @@
             Öffnung zwischen Brückenunterkante und Geländeoberkante als
             geschlossenes Profil mit einem konstanten
             k<subscript>s</subscript>-Wert angesetzt. Hier ist jedoch NICHT
-            die Rauheit des Brückenmaterials einzutragen!</para>
+            die Rauheit des Brückenmaterials einzutragen.</para>
           </listitem>
         </itemizedlist>
+      </section>
 
-        <note>
-          <para><itemizedlist>
-              <listitem>
-                <para>Brückenober- und Unterkante muss außerhalb der Brücke
-                identisch mit der Geländeoberkante sein</para>
-              </listitem>
+      <section>
+        <title>Hinweise zur Definition von Brücken und Berechnung an
+        Brücken</title>
 
-              <listitem>
-                <para>Starke Vertiefungen der Geländeoberkante in
-                unmittelbarer Nähe links oder rechts der Brückenwiderlager
-                führt zu Problemen bei der Berechnung, daher sind derartige
-                Senken zu entfernen.</para>
-              </listitem>
+        <para>Bei der Brückenberechnung mit Kalypso1d werden bis zu 5
+        Abflusszustände an der Brücke inklusive Abflussaufteilung in Druck-
+        und Wehrabfluss abgebildet. Dabei dient die im Profil b definierte
+        Brücke der hydraulischen Berechnung und ist gegebenenfalls auf den
+        relevanten mittleren Anströmquerschnitt zu vereinfachen. Zusätzlich
+        sind alle Regeln (siehe unten) einzuhalten. Grundsätzlich bedient sich
+        die Brückenberechnung entweder der Impulsbilanz oder der
+        Arbeitsgleichung. Im Bereich der Brücke werden mehrfache Berechnungen
+        in den jeweiligen Profilen und Verschneidungen der Wasserspiegellagen
+        mit der Brückengeometrie vorgenommen.<figure>
+            <title>Definitionsskizze der Benennungen und der
+            Bilanzachsen</title>
 
-              <listitem>
-                <para>Brückenparameter sind zu definieren, sonst treten Fehler
-                in der Berechnung auf</para>
-              </listitem>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Bruecke_Definitionsskizze.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>Das Profil i am oberen Rand der Brücke ist das eigentliche
+        Brückenprofil. Es setzt sich im wesentlichen aus 3 Konturlinien
+        zusammen: Der Geländekontur unmittelbar oberhalb der Brücke, Kontur
+        der Brückenoberkante und Kontur der Brückenunterkante. Bei der
+        Definition von Brücken sind folgende Kriterien zu beachten und vor
+        Start der Berechnung zu prüfen:</para>
 
-              <listitem>
-                <para>Die Trennflächen müssen an einem Brückenprofil immer an
-                den Schnittpunkten Brückenunterkante = Geländeoberkante
-                liegen.</para>
-              </listitem>
+        <para><note>
+            <para><itemizedlist>
+                <listitem>
+                  <para>Brückenoberkante sollte mindestens einen Gelände-Punkt
+                  über die Brückenunterkante hinausgezogen werden.</para>
+                </listitem>
 
-              <listitem>
-                <para>Die Brückenoberkante und die Brückenunterkante dürfen
-                nicht in einem Punkt auf das Gelände treffen.</para>
-              </listitem>
+                <listitem>
+                  <para>Die Brückenoberkante und die Brückenunterkante dürfen
+                  nicht in einem Punkt auf das Gelände treffen.</para>
+                </listitem>
 
-              <listitem>
-                <para>Der durchströmte Bereich ist immer bis zum Profilrand zu
-                ziehen, da die Brückengeometrie im Bereich des Geländes
-                (außerhalb des Bauwerkes) auf der Geländeoberkante
-                liegt.</para>
-              </listitem>
+                <listitem>
+                  <para>Die Brückenunterkante und die Brückenoberkante muss in
+                  einem Geländepunkt das Gelände schneiden bzw. enden.</para>
+                </listitem>
 
-              <listitem>
-                <para>Im Brückenkörper darf kein Bewuchs angeordnet werden, da
-                er dort nicht mitberechnet werden kann.</para>
-              </listitem>
+                <listitem>
+                  <para>Die minimale Brückenoberkante muss immer über der
+                  maximalen Brückenunterkante liegen: Achtung bei Bogenbrücken
+                  und stark geneigten Brücken!! Zudem muss die Brückenober-
+                  und Unterkante außerhalb der Brücke identisch mit GOK
+                  sein.</para>
+                </listitem>
 
-              <listitem>
-                <para>Der anzugebende Sohlpunkt im unmittelbaren Unterwasser
-                der Brücke sollte (insbesondere für Niedrigwasserereignisse)
-                nicht unter dem tiefsten Sohlpunkt des Unterwassers
-                liegen.</para>
-              </listitem>
-            </itemizedlist></para>
-        </note>
+                <listitem>
+                  <para>Starke Vertiefungen/ Senken der GOK in unmittelbarer
+                  Nähe links oder rechts der Brückenwiderlager führen zu
+                  Problemen bei der Berechnung. Daher sind derartige Senken zu
+                  entfernen.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Brückenparameter sind zu definieren, sonst treten
+                  Fehler in der Berechnung auf.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Der anzugebende Sohlpunkt im unmittelbaren Unterwasser
+                  der Brücke sollte (insbesondere für Niedrigwasserereignisse)
+                  nicht unter dem tiefsten Sohlpunkt des Unterwassers liegen
+                  und möglichst ein Zwischenwert zwischen tiefstem Sohlpunkt
+                  der Brücke und tiefstem Sohlpunkt im Unterwasser
+                  sein.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Der Abstand zwischen Brückenprofil und
+                  Unterwasser-Profil muss größer sein als die angegebene
+                  Brückenbreite!</para>
+                </listitem>
+
+                <listitem>
+                  <para>Der Abstand zwischen Brückenprofil und
+                  Oberwasser-Profil muss größer 6 m (siehe unten)!</para>
+                </listitem>
+
+                <listitem>
+                  <para>In der Brückenberechnung sind Bordvollpunkte zu
+                  entfernen - auch im OW und UW!</para>
+                </listitem>
+
+                <listitem>
+                  <para>Bei aufeinanderfolgenden Brücken ist mindestens ein
+                  normales Profil zwischen den Brücken und ein Mindestabstand
+                  &gt; (maximale Brückenbreite der Brücke im OW + 6 m)
+                  einzuhalten!</para>
+                </listitem>
+
+                <listitem>
+                  <para>Die Trennflächen müssen an einem Brückenprofil immer
+                  an den Schnittpunkten Brückenunterkante = GOK liegen.</para>
+                </listitem>
+
+                <listitem>
+                  <para>In der Brückenöffnung und zwischen Brücken OK und UK
+                  darf niemals Bewuchs angeordnet werden, da er dort nicht
+                  mitberechnet werden kann. Hinweis: Bewuchs in der
+                  Brückenöffnung wird entfernt.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Der Durchströmte Bereich sollte immer bis zum
+                  Profilrand gezogen werden, da die Brückengeometrie im
+                  Bereich des Geländes (außerhalb des Bauwerkes) auf der GOK
+                  liegt. Er kann aber auch reduziert werden.</para>
+                </listitem>
+
+                <listitem>
+                  <para>Bei der Wahl eines kleineren Durchströmten Bereichs
+                  ist der Durchströmte Bereich im OW und UW zu prüfen. Extreme
+                  Aufweitungen und Einschnürungen bzgl. des Durchströmten
+                  Bereichs sind zu vermeiden.</para>
+
+                  <figure>
+                    <title>Lage der Trennflächen und Mindestabstand zwischen
+                    Brückenober- und Unterkante</title>
+
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata fileref="img/WSPM/Bruecke_Trennfl+OberUnterkante.png" />
+                      </imageobject>
+                    </mediaobject>
+                  </figure>
+                </listitem>
+              </itemizedlist></para>
+          </note>Im Bereich von Brücken kommt es aufgrund der vertikalen und
+        horizontalen Einschnürungen zu Fließverlusten, die mit der normalen
+        Arbeitsgleichung nicht berücksichtigt werden. Eine differenziertere
+        mathematische Beschreibung an Brückenbauwerken ist daher erforderlich.
+        Das Spiegellinienprogramm (Rechenkern: Kalypso-1d) unterscheidet dabei
+        folgende Abflusszustände: Freier Abfluss, Rückgestaute Brücke mit
+        freiem Abfluss unter der Brücke, Rückgestaute Brücke und Druckabfluss,
+        Vollkommener Überfall und Druckabfluss unter der Brücke und
+        Überströmen und Druckabfluss unter der Brücke.</para>
+      </section>
+
+      <section>
+        <title>Zwischenprofile an Brücken</title>
+
+        <para>Bei der Berechnung der Brücke werden mit Hilfe des echten
+        Unterwasserprofils i-1, des Brückenprofils am Oberwasserrand der
+        Brücke i und des echten Oberwasserprofils i+1 diverse Zwischenprofile
+        generiert um Impulsbilanzen bzw. Arbeitgleichungen zu lösen. Dabei ist
+        zu unterschieden zwischen realen Profilen (n = normales Profil, b =
+        Brückenprofil) und i = interpoliertes Profil (siehe 2.Spalte, Tabelle
+        4). Bei der Ergebnisausgabe in der Kontroll- bzw. LOG-Datei des
+        Rechenkerns werden meist die in der ersten Spalte der Tabelle 4
+        genannten Profil-Kennungen verwendet. Dabei werden Besonderheiten, wie
+        Abflussaufteilung, Pfeilerstau, Einschnürungsverluste und ähnliches
+        nur an den Brückenprofilen 1 bis 3 berücksichtigt. Dabei erfolgt am
+        Profil 3 zunächst eine Berechnung als normales Profil und anschließend
+        eine Verschneidung des so ermittelten Wasserstandes mit der
+        Brückengeometrie. Die verschnittenen Flächen und Höhen am
+        Unterwasserrand (Profil 3) der Brücke werden dann für die Lösung der
+        Arbeitsgleichung bzw. Impulsbilanz verwandt.</para>
+
+        <table>
+          <title>Benennung, Lage, Typ und Art der Profile</title>
+
+          <tgroup align="left" arch="" char="" charoff="" class="" cols="4">
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="1*" />
+
+            <colspec colwidth="2*" />
+
+            <colspec colwidth="2*" />
+
+            <tbody>
+              <row>
+                <entry><emphasis role="bold">Kennungen im Rechenkern und
+                Ergebnisausgabe</emphasis></entry>
+
+                <entry align="left" valign="middle"><emphasis
+                role="bold">Profiltypen (siehe
+                Längsschnitt)</emphasis></entry>
+
+                <entry align="left" valign="middle"><emphasis role="bold">Art
+                des Profils und Erzeugung</emphasis></entry>
+
+                <entry align="left" valign="middle"><emphasis role="bold">Lage
+                des Profils</emphasis></entry>
+              </row>
+
+              <row>
+                <entry><emphasis role="bold">Profil i+1</emphasis></entry>
+
+                <entry>Profiltyp: n</entry>
+
+                <entry>reales Profil ohne Brückengeometrie</entry>
+
+                <entry>Oberwasserprofil</entry>
+              </row>
+
+              <row>
+                <entry>Profil b</entry>
+
+                <entry>Profiltyp: i</entry>
+
+                <entry>geometrisch interpoliert, wird immer erzeugt und immer
+                ausgegeben, Interpoliertes Profil aus GOK des Brückenprofils
+                um Höhendifferenzen von 5 cm nach oben versetzt.</entry>
+
+                <entry>Oberwasser (5m oberhalb von Profil i)</entry>
+              </row>
+
+              <row>
+                <entry><emphasis role="bold">Profil i</emphasis></entry>
+
+                <entry>Profiltyp: b</entry>
+
+                <entry>Brückenprofil (Lage entspricht Profil 1), Profil wird
+                immer genutzt und anhand der Ergebnisse des Profils 1
+                berechnet. (WSPOW), Tatsächliche GOK des Brückenprofils aber
+                ohne Brückengeometrie</entry>
+
+                <entry>OW-Rand der Brücke, Lage identisch mit dem definierten
+                Brückenprofil und dem Profil 1.</entry>
+              </row>
+
+              <row>
+                <entry>Profil 1 = Profil i</entry>
+
+                <entry>keine Ausgabe</entry>
+
+                <entry>Ausgabe als Brückenprofil b, Profil wird immer genutzt
+                und berechnet, Interpoliertes Profil aus
+                Brückenprofil-Geometrie um Höhendifferenzen d1 der minimalen
+                Sohlhöhe der Brücke zur vorgegebenen Unterwassersohlhöhe (3)
+                nach unten versetzt.</entry>
+
+                <entry>OW-Rand der Brücke, hat die Geometrie des
+                Brückenprofils</entry>
+              </row>
+
+              <row>
+                <entry>Profil 2</entry>
+
+                <entry>keine Ausgabe</entry>
+
+                <entry>hydraulisch interpoliert, dient als „Stützprofil“ für
+                die Impulsbilanz, kein Einsatz bei Lösung der
+                Arbeitsgleichung, Interpoliertes Profil aus
+                Brückenprofil-Geometrie um Höhendifferenzen d1 der minimalen
+                Sohlhöhe der Brücke zur vorgegebenen Unterwassersohlhöhe (3)
+                nach unten versetzt.</entry>
+
+                <entry>Brücke (nur für Impulsbilanz), hat die Geometrie des
+                Brückenprofils, Lage mittig unter der Brücke</entry>
+              </row>
+
+              <row>
+                <entry>Profil 3</entry>
+
+                <entry>Profiltyp: i</entry>
+
+                <entry>geometrisch und hydraulisch interpoliert, Profil wird
+                immer genutzt und berechnet,Interpoliertes Profil aus
+                Geometrie des Brückenprofils um die Höhendifferenzen d1 der
+                minimalen Sohlhöhe der Brücke zur vorgegebenen
+                Unterwassersohlhöhe (3) nach unten versetzt.</entry>
+
+                <entry>UW-Rand der Brücke. Liegt um die Brückenbreite entfernt
+                vom Brückenprofil und hat die Geometrie des Brückenprofils,
+                abzüglich der Differenz zwischen tiefstem Sohlpunkt in der
+                Brücke und der vorgegebenen Sohllage im Unterwasser</entry>
+              </row>
+
+              <row>
+                <entry>Profil a</entry>
+
+                <entry>Profiltyp: i</entry>
+
+                <entry>geometrisch und hydraulisch interpoliertes Profil, wird
+                nur bei großen Entfernungen des Unterwasserprofils (i-1) von
+                der Brücke genutzt, Interpoliertes Profil aus Geometrie des
+                Brückenprofils um die Höhendifferenzen der minimalen Sohlhöhe
+                der Brücke zur minimalen Sohlhöhe im Unterwasser (i﷓1) nach
+                unten versetzt</entry>
+
+                <entry>Unterwasser, Lage des Profils in der Kilometrierung ist
+                abhängig vom Wasserstand im Unterwasser und ändert sich mit
+                steigendem bzw. fallendem Abfluss</entry>
+              </row>
+
+              <row>
+                <entry><emphasis role="bold">Profil i-1</emphasis></entry>
+
+                <entry>Profiltyp: n</entry>
+
+                <entry>reales Profil ohne Brückengeometrie</entry>
+
+                <entry>Unterwasserprofil</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para><figure>
+            <title>Definitionsskizze zur Lage und Benennung der Profile bei
+            der Brückenberechnung</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="img/WSPM/Bruecke_Defskizze_Benennung_Profile.png" />
+              </imageobject>
+            </mediaobject>
+          </figure>Die Profile a und b sorgen für den geometrischen Übergang
+        vom freien Abfluss- auf Brückenquerschnitt. Die Zwischenprofile an
+        Brücken sind „a“ und „b“ für geometrischen Übergang vom freien
+        Abfluss- auf Brückenquerschnitt. Die tatsächliche hydraulische
+        Brückenberechnung findet nur über die Profile 1, 2 und 3 statt.
+        Ausgegeben wird das Profil 1 als Brückenprofil und das Profil 3 als
+        brückennahes Unterwasserprofil.</para>
+
+        <para>Das <emphasis role="bold">Profil a</emphasis> wird interpoliert
+        aus Profilen i-1 und i (durchströmte Flussschlauchbreite) mit der
+        Bedingung:</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/Bruecke_formel.png" />
+          </imageobject>
+        </mediaobject>
+
+        <para>Das Profil a ist ein geometrisch und hydraulisch interpoliertes
+        Profil. Die Berechnung erfolgt nur, falls es zu einem nennenswerten
+        Aufweitungsverlust zwischen (i-1) und dem Brückenprofil b kommt. Es
+        wird aus der Geländegeometrie des Brückenprofils (i) interpoliert und
+        um die Höhendifferenzen d1 nach unten versetzt. Die Höhendifferenz d1
+        wird über die lineare Streckung der Differenz zwischen der minimalen
+        Sohlhöhe in der Brücke (hmin) zur minimalen Sohlhöhe im Unterwasser
+        (i﷓1) ermittelt. Über diese Höhendifferenz werden alle Geländepunkte
+        des Brückenprofils abgesenkt (siehe ). Die Kilometrierung des Profils
+        ist abhängig von der Wasserspiegelbreite im Unterwasser (i-1) und
+        ändert daher sich mit steigendem bzw. fallendem Abfluss. In Profil a
+        findet schließlich eine normale Wasserspiegellinienberechnung
+        statt.</para>
+
+        <para>Das <emphasis role="bold">Profil b</emphasis> wird interpoliert
+        aus Profilen i+1 und i und liegt allgemein 0,05 m über der Geländehöhe
+        des Brückenprofils mit der Bedingung:</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="img/WSPM/Bruecke_formel_2.png" />
+          </imageobject>
+        </mediaobject>
+
+        <para>Das Profil b wird immer erzeugt und ist ein rein geometrisch
+        interpoliertes Profil. Es wird aus der Geländegeometrie des
+        Brückenprofils (i) interpoliert und um die Höhendifferenzen d1 = 5cm
+        nach oben versetzt. Über diese Höhendifferenz werden alle
+        Geländepunkte des Brückenprofils angehoben (siehe Abbildung 44). Die
+        Kilometrierung des Profils liegt immer 5 m oberhalb des Brückenprofils
+        i und ist unabhängig von allen hydraulischen Ergebnissen. In Profil b
+        findet eine normale Wasserspiegellinienberechnung statt.</para>
+
+        <para>Das <emphasis role="bold">Profil 3</emphasis> wird immer erzeugt
+        und ist ebenfalls ein geometrisch interpoliertes Profil. Es wird aus
+        der Geländegeometrie des Brückenprofils (i) interpoliert und um die
+        Höhendifferenzen d1 nach unten versetzt. Die Höhendifferenz d1 wird
+        über die Differenz zwischen der minimalen Sohlhöhe in der Brücke
+        (hmin) zur vorgegebenen Sohlhöhe im Unterwasser der Brücke (siehe
+        Benutzeroberfläche) ermittelt. Über diese Höhendifferenz werden alle
+        Geländepunkte, die Brückenober- und Brückenunterkante des
+        Brückenprofils abgesenkt. Die Kilometrierung des Profils liegt immer
+        um die Brückenbreite in Fließrichtung (Abbildung 44) unterhalb des
+        Brückenprofils i und ist unabhängig von allen hydraulischen
+        Ergebnissen. In Profil 3 findet zunächst eine normale
+        Wasserspiegellinienberechnung statt. Dabei wird bereits die
+        Ersatzrauheit im Brückenbereich angesetzt. Sind die Ergebnisse
+        (Wasserspiegel, Fließgeschwindigkeiten usw.) im Profil 3 gekannt, so
+        wird es mit der Geometrie der Brücke (Fahrbahnplatte) verschnitten, um
+        Teilflächen und Abflusszustand zu ermitteln. Über diese Teilflächen
+        und das Verhältnis Unterwasserstand zur Brückenunterkante bzw.
+        Brückenoberkante kann zumindest zwischen den Abflusszuständen freier
+        Abfluss (1 oder 2), Druckabfluss (3 oder 4) und Überströmen inkl.
+        Druckabfluss (5) unterschieden werden. Die am Profil 3 ermittelte
+        Energiehöhe (he3) wird als Ausgangspunkt für Iterationen ins
+        Oberwasser genutzt.</para>
+
+        <para>Das <emphasis role="bold">Profil 2</emphasis> verfügt über die
+        gleichen Geländepunkte, die Brückenober- und Brückenunterkante wie die
+        des Profils 3. Nur die Lage dieses Profil ist mittig unter der Brücke.
+        Dabei wird im Profil 2 im Gegensatz zu den Profilen 1 und 3 der
+        hydraulische Radius für das geschlossene Durchlassprofil unter der
+        Brücke (also deutlich kleiner) angesetzt. Das Profil 2 wird
+        ausschließlich bei der Lösung der Impulsbilanz verwandt und nie bei
+        der Lösung über die Arbeitsgleichung eingesetzt. Die Ergebnisse des
+        Profils sind lediglich in den Kontrolldateien zu erkennen.</para>
+
+        <para>Das <emphasis role="bold">Profil 1</emphasis> wird immer erzeugt
+        und verfügt ebenfalls über die gleichen Geländepunkte, die
+        Brückenober- und Brückenunterkante wie die des Profils 3. Die
+        Kilometrierung des Profils stimmt mit der des tatsächlichen
+        Brückenprofils (i) überein. Die Lösung der hydraulischen Größen in
+        Profil 1 erfolgt über die Energie- oder die Impulsbilanz an der
+        Brücke. Dabei werden zusätzliche Verluste wie Einschnürungen,
+        Pfeilerstau und erhöhte Rauheiten berücksichtigt und schließlich die
+        Energiehöhe, Wasserspiegel und Fließgeschwindigkeit bestimmt.
+        Ausgehend von den Ergebnissen am Profil 1 werden wird als nächstens
+        das Profil b im Oberwasser berechnet.</para>
       </section>
 
       <section id="kalypso_wspm_Profileditorlegende_Durchlass">
@@ -2319,8 +2722,8 @@
       Karte</title>
 
       <indexterm>
-        <primary>Gewässerprofile und -stränge in die Karte einladen in
-        Kalypso WSPM</primary>
+        <primary>Gewässerprofile und -stränge in die Karte einladen in Kalypso
+        WSPM</primary>
       </indexterm>
 
       <para>In einer Karte können nur georeferenzierte Profile und Stränge in
