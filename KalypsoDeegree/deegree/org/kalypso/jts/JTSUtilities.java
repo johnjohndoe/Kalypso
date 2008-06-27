@@ -285,7 +285,7 @@ public class JTSUtilities
   public static LineString createLineSegment( final Geometry line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line (2d!). */
-    if( line.distance( start ) >= 10E-08 || line.distance( start ) >= 10E-08 )
+    if( line.distance( start ) >= 10E-08 || line.distance( end ) >= 10E-08 )
       return null;
 
     if( line instanceof LineString )
@@ -316,7 +316,7 @@ public class JTSUtilities
   public static boolean getLineOrientation( final LineString line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line. */
-    if( line.distance( start ) >= 10E-08 || line.distance( start ) >= 10E-08 )
+    if( line.distance( start ) >= 10E-08 || line.distance( end ) >= 10E-08 )
       throw new IllegalArgumentException( "One of the two points does not lie on the given line ..." );
 
     boolean first = false;
