@@ -185,9 +185,7 @@ public class HydrographUtils
       }
       final URL hydrographURL = ResourceUtilities.createURL( folder );
 
-      file.setCharset( "UTF-8", new NullProgressMonitor() );
-
-      GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
+      final GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
 
       final Feature hydroFeature = w.getRootFeature();
       return (IHydrographCollection) hydroFeature.getAdapter( IHydrographCollection.class );
@@ -212,17 +210,16 @@ public class HydrographUtils
     OutputStreamWriter writer = null;
     try
     {
+      final String charset = gmlResultFile.getCharset();
       final FileOutputStream stream = new FileOutputStream( gmlResultFile.getLocation().toFile() );
-      writer = new OutputStreamWriter( stream, "UTF-8" );
-      GmlSerializer.serializeWorkspace( writer, workspace, "UTF-8" );
+      writer = new OutputStreamWriter( stream, charset );
+      GmlSerializer.serializeWorkspace( writer, workspace, charset );
 
       writer.close();
       // refresh workspace
       /* update resource folder */
       gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
 
-      if( gmlResultFile.exists() )
-        gmlResultFile.setCharset( "UTF-8", new NullProgressMonitor() );
       return hydrographFeature;
     }
     finally
