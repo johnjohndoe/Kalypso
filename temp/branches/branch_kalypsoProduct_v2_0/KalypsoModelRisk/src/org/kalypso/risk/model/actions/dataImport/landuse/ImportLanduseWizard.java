@@ -236,6 +236,9 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
         if( !landuseTypeSet.contains( shpPropertyValue ) )
         {
           count++;
+
+          landuseTypeSet.add( shpPropertyValue );
+
           if( count > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
           {
             if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Landnutzung importieren", "Auswahl enthält mehr als " + WARNING_MAX_LANDUSE_CLASSES_NUMBER + " Klassen. Sind Sie sicher?" ) )
