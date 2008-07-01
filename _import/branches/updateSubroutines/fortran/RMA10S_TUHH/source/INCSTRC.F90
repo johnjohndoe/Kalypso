@@ -1,4 +1,4 @@
-!     Last change:  NIS  15 May 2008    9:12 pm
+!     Last change:  WP   12 Jun 2008    1:11 pm
 !C     Last change:  WP   14 Feb 2008    3:47 pm
 SUBROUTINE INCSTRC
 
@@ -212,11 +212,14 @@ ELSEIF (UseEnergyCstrc == 1) then
         call ErrorMessageAndStop (1207, TempWeir, 0.0d0, 0.0d0)
       end if
 
+      !set minimum, for range
+      cstrcRange (TempWeir, CountOuter, CountInner) = EUW
+      !generate function to connect data points
       if (countInner == 1) then
-        cstrcRange (TempWeir, CountOuter, CountInner) = EUW
+        !generate horizontal line on left side
         call CoefsOfLinFunct (EUW, EUW - 1.0d0, EOW, EOW, cstrcCoefs (TempWeir, CountOuter, CountInner, 0:1))
       else
-        cstrcRange (TempWeir, CountOuter, CountInner) = EUW
+        !generate linear connection between data points
         call CoefsOfLinFunct (EUW, EUW_old, EOW, EOW_old, cstrcCoefs (TempWeir, CountOuter, CountInner, 0:1))
       end if
 
