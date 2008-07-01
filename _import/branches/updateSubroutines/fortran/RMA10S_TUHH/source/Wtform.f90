@@ -1,6 +1,6 @@
-!Last change:  NIS  15 May 2008   10:54 pm
+!Last change:  WP   12 Jun 2008    2:06 pm
 !Last change:  WP    7 Feb 2008    3:42 pm
-SUBROUTINE WTFORM(Q, NCTR, HOW, HUW)
+SUBROUTINE WTFORM(Q, NCTR, HOWIN, HUWIN)
 USE CSVAR
 USE parakalyps
 
@@ -8,13 +8,14 @@ implicit none
 
 
 !dummys ins
-REAL (KIND = 8), INTENT (INout)  :: huw, how
-INTEGER, INTENT (IN)             :: NCTR
+REAL (KIND = 8), INTENT (IN) :: huwin, howin
+INTEGER, INTENT (IN)         :: NCTR
 !dummy outs
-REAL (KIND = 8), INTENT (OUT)    :: Q
+REAL (KIND = 8), INTENT (OUT) :: Q
 
 !general locals
 INTEGER         :: nrhi, nchi
+REAL (KIND = 8) :: how, huw
 INTEGER         :: i, j, k
 REAL (KIND = 8) :: Diff, dummy
 
@@ -37,6 +38,10 @@ REAL (KIND = 8) :: how_tab, huw_tab
 LOGICAL :: FileExists
 INTEGER :: searchRange
 INTEGER :: lowerBoundUW, upperBoundUW, lowerBoundOW, upperBoundOW
+
+
+how = howin
+huw = huwin
 
 !original method from RMA10S with usage of water stages at control structures
 if (UseEnergyCstrc == 0) then
@@ -184,7 +189,13 @@ ELSEIF (UseEnergyCstrc == 1) then
   !testing
   !WRITE(*,*) how, pos
   !do k = 1, noOfOutQs
-  !  WRITE(*,*) valuesOnLIne(k)
+  !  if (k >= 2) then
+  !    if (valuesonline (k) <= valuesonline (k-1)) then
+  !      WRITE(*,*) nctr, k
+  !      WRITE(*,*) valuesOnLIne(k)
+  !      WRITE(*,*) valuesOnLIne(k-1)
+  !    endif
+  !  endif
   !enddo
   !pause
   !testing-
@@ -241,6 +252,7 @@ ELSEIF (UseEnergyCstrc == 1) then
 
   !testing
   !if (qfact < 0.0) then
+  !  WRITE(*,*) nctr
   !  WRITE(*,*) huw, how
   !  WRITE(*,*) hlow, hupp
   !  WRITE(*,*) Q
