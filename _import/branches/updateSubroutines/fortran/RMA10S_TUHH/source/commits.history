@@ -70,7 +70,7 @@ Version 0.0.2 (laufende Änderungen)
 002.) rma10.for wurde nicht korrekt aus HEAD übernommen in Version 0.0.1. sie muss mit
       Datei-Version 1.32 von HEAD überschrieben werden für Version 0.0.1
 
---- Nico Schrage, 27.05.2008
+--- Nico Schrage, 27.05.2008 (0.0.2beta1)
 
 003.) Anpassung des rewettings an Marsh-Algorithmus. Dazu wird zunächst die "reale
       Fließtiefe" über der slot Tiefe des Marshbereiches bestimmt. Daraufhin wird der
@@ -104,7 +104,7 @@ Version 0.0.2 (laufende Änderungen)
 014.) Introduce ERROR output into file, if at stage flow boundary conditions, the water stage is out of the specified range.
       The ErrorMessageAndStop subroutine is called from stfltab.for. In ErrorMessageAndStop the errors 4002 and 4003 are introduced
 
---- Nico Schrage, 05.06.2008
+--- Nico Schrage, 05.06.2008 (0.0.2beta2
 
 015.) Correct derivative according to h of dh/dt was not considered. Hence the d^2a/dhdt was wrong. Now derivative is considered.
 016.) Correct implementation of flow coefficient on the GAUSS nodes. The flow coefficient was calculated by using the nodal values of the
@@ -112,4 +112,25 @@ Version 0.0.2 (laufende Änderungen)
       element's corner nodes. According to the linear weighting approximation. The two values should be interpolated between to obtain the
       particular GAUSS node's value.
       
---- Nico Schrage, 10.06.2008      
+--- Nico Schrage, 10.06.2008 (0.0.2beta5)
+
+017.) Cleaning code of coef1DPoly.subroutine by deleting calculations of values for corner nodes of 1D elements. These values are not necessary.
+      Deleted: d2ahdh, Intah, qh, dqhdh, d2qhdh, bei, dbeidh, d2beidh
+018.) Improve declaration section in FindPolynom.subroutine.
+
+--- Nico Schrage, 12.06.2008 (0.0.2beta6)
+
+019.) Correct water stage calculation for marsh nodes in 2D-subroutines at water stage - discharge boundary conditions. Calculation should consider
+      the 'real' water stage, i.e. coef25, coef25nt, coef2d, coef2dnt
+020.) Add missing declaration in control structure subroutine (cstrc) of ws1 and ws2
+021.) Remove output of object number for errors, with no object relation
+022.) comments (getinit)
+023.) Introduce local copy of upstream and downstream water stages at weirs. These values can be edited. This is necessary if flow direction is turning
+      around (wtform)
+024.) Move value assigning out of if-statement, when searching for the correct position in the data table of weirs. Comments. (incstrc)
+025.) Change the calculation of the average water stage at a certain continuity line. This is done for the calculation of the inner boundary condition
+      at 1D-2D-couplings to get the water stage at the 1D-node. Dry nodes of the 2D-line were considered. This is changed. Attention, because this 
+      might have an effect on 2D-boundaries with the option QKALYPS
+026.) comment concerning consideration of possibly rewetted nodes at 1D-2D-transitions; this has to be done
+
+--- Nico Schrage, 01.07.2008 (0.0.2beta7)
