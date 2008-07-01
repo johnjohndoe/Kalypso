@@ -1,4 +1,4 @@
-!     Last change:  NIS   5 Jun 2008    8:24 pm
+!     Last change:  WP   15 Jun 2008   12:55 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -178,12 +178,12 @@ elseif (ErrorID == 4001) then
   WRITE (        *, 4001) ObjectID
 
 elseif (ErrorID == 4002) then
-  WRITE (ErrorUnit, 4002) ObjectID
-  WRITE (        *, 4002) ObjectID
+  WRITE (ErrorUnit, 4002)
+  WRITE (        *, 4002)
 
 elseif (ErrorID == 4003) then
-  WRITE (ErrorUnit, 4003) ObjectID
-  WRITE (        *, 4003) ObjectID
+  WRITE (ErrorUnit, 4003)
+  WRITE (        *, 4003)
 
 elseif (ErrorID == 4101) then
   WRITE (ErrorUnit, 4101)
