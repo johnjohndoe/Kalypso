@@ -80,11 +80,13 @@ import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
  */
 public class MapScreenShotHandler extends AbstractHandler
 {
-  public static final String CONST_SHOULD_EXECUTE_BOOLEAN = "shouldExecute"; // ICommand.executionListener can stop //$NON-NLS-1$
+  public static final String CONST_SHOULD_EXECUTE_BOOLEAN = "shouldExecute"; // ICommand.executionListener can stop
+                                                                              // //$NON-NLS-1$
 
   // processing
 
-  public static final String CONST_TARGET_FILE = "targetFile"; // can be overwritten by an commandListener //$NON-NLS-1$
+  public static final String CONST_TARGET_FILE = "targetFile"; // can be overwritten by an commandListener
+                                                                // //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
@@ -143,7 +145,7 @@ public class MapScreenShotHandler extends AbstractHandler
     }
   }
 
-  private File getTargetImageFile( final File targetDir, final String format ) throws IOException
+  public static File getTargetImageFile( final File targetDir, final String format ) throws IOException
   {
     if( !targetDir.exists() )
       FileUtils.forceMkdir( targetDir );
