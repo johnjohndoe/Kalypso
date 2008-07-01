@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP    5 Jun 2008    4:53 pm
+C     Last change:  WP   15 Jun 2008    9:21 pm
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -907,6 +907,7 @@ cipk oct98 update to f90
             !first assumption: Node is not dry
             NodeIsDry (nd) = .false.
 
+            !TODO: Possibly rewetted nodes are not considered correctly
             !node is dry, if depth is below deactivating depth
             if (vel (3, nd) <= dset) then
               NodeIsDry(nd) = .true.
