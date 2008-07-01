@@ -48,6 +48,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -255,7 +256,7 @@ public class NAZMLGenerator
 
     final ITuppleModel values = observation.getValues( null );
     final SortedMap<Date, Double> valuesMap = new TreeMap<Date, Double>();
-    final long interpolationStep = (simulationEnd.getTime() - simulationStart.getTime()) / values.getCount();
+    final long interpolationStep = (simulationEnd.getTime() - simulationStart.getTime()) / (values.getCount() - 1);
     for( int i = 0; i < values.getCount(); i++ )
     {
       final Date date = new Date( simulationStart.getTime() + i * interpolationStep );
@@ -275,7 +276,7 @@ public class NAZMLGenerator
       if( value < 0.0 )
         writer.write( m_grapDateFormat.format( currentDate ) + " 0.0\n" );
       else
-        writer.write( m_grapDateFormat.format( currentDate ) + " " + String.format( "%5.3f", value ) + "\n" );
+        writer.write( m_grapDateFormat.format( currentDate ) + " " + String.format( Locale.US, "%5.3f", value ) + "\n" );
       currentDate = new Date( currentDate.getTime() + syntheticTimeseriesStep );
     }
     while( currentDate.before( simulationEnd ) );

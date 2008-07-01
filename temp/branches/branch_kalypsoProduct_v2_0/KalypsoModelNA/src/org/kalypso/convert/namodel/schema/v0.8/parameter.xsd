@@ -321,7 +321,7 @@
 (typchar,*)(1)_(typkap,*)(1)_(typwp,*)(1)_(typfk,*)(1)_(typbfm,*)(1)_(typkf,*)(1)_(typbf0,*)(1)
 -->
 					<!-- JH: wird in na-modell nicht verwendet -->
-					<element name="typkap" type="string">
+					<element name="typkap" type="string" minOccurs="0" maxOccurs="1">
 						<annotation>
 							<documentation xml:lang="de">
 								<label>Kurzzeichen kap. Aufstieg</label>
