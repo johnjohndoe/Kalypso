@@ -1,4 +1,4 @@
-!     Last change:  WP    5 Jun 2008    6:19 pm
+!     Last change:  WP   18 Jun 2008    4:23 pm
 !     Last change:  NIS   5 May 2008   11:42 pm
 !IPK  LAST UPDATE APRIL 05 2006 ADD MULTUPILE ENTRIES SO THAT SS INITIAL CONDITIONS CAN BE READ
 !ipk  last update FEB 11 2004  add IOV option
@@ -519,7 +519,8 @@ ENDDO
 
 !nis,may08: update transition line initial depths
 TransitionDepths: do j = 1, MaxLT
-  !get transitioning 1D-node
+
+  !get transitioning 1D-node; it shows whether transition is operative in this run
   TNode = TransLines (j, 3)
   if (TNode == 0) CYCLE TransitionDepths
 
