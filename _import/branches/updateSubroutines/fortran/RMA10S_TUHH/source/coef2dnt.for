@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   22 Apr 2008   12:54 pm
+C     Last change:  WP   15 Jun 2008   12:54 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2DNT(NN,NTX)
@@ -1799,7 +1799,14 @@ C-
           else
             adir = 1.
           end if
-          srfel = hel(m) + ao(m)
+
+          !calculate surface elevation
+          if (idnopt < 0) then
+            srfel = hel(m) + ado(m)
+          else
+            srfel = vel (3, m) + ao(m)
+          end if
+
           call stfltab(m,srfel,dfdh,ff,1)
           f(irw) = area(nn) * (af * adir * ff - vx * vel(3,m))
           estifm(irw,irw) = area(nn) * vel(3,m)

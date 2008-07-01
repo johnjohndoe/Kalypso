@@ -27,7 +27,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP    5 May 2008    3:05 pm
+C     Last change:  WP   15 Jun 2008   12:58 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -2031,9 +2031,13 @@ C-
                 else
                   adir = 1.
                 end if
-                !calculate surface elevation
-                srfel = hel(m) + ao(m)
 
+                !calculate surface elevation
+                if (idnopt < 0) then
+                  srfel = hel(m) + ado(m)
+                else
+                  srfel = vel (3, m) + ao(m)
+                end if
                 !calculate flow and derivative of flow over h from tabular data
                 call stfltab (m, srfel, dfdh, ff, 1)
 
