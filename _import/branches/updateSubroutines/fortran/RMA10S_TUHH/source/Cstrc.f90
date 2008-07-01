@@ -1,4 +1,4 @@
-!     Last change:  WP   10 Apr 2008    2:06 pm
+!     Last change:  WP   12 Jun 2008    2:05 pm
 !     Last change:  NIS  21 Feb 2008    8:15 am
 !ipk  last update nov 28 2006 allow for all 1-d control structure options
 SUBROUTINE CSTRC(NN)
@@ -19,7 +19,7 @@ COMMON F(80)
 DIMENSION U(8)
 
 !NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine
-REAL (KIND = 8) :: WH1, WH2
+REAL (KIND = 8) :: WH1, WH2, WS1, WS2
 REAL (KIND = 8) :: calcPolynomial, calcPolynomial1stDerivative
 REAL (KIND = 8) :: Q1t
 INTEGER :: PolyPos(1:2), findpolynom
