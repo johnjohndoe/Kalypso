@@ -58,6 +58,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -193,7 +194,7 @@ public class FeatureUtils
 
   /**
    * @param value
- *            xyz.gml#featureId
+   *            xyz.gml#featureId
    */
   public static void setExternalLinkedFeature( final CommandableWorkspace workspace, final Feature feature, final QName qname, final String value ) throws Exception
   {
@@ -258,5 +259,24 @@ public class FeatureUtils
     }
 
     return ""; //$NON-NLS-1$
+  }
+
+  public static GM_Envelope getMaxExtend( final Feature[] features )
+  {
+    GM_Envelope base = null;
+    for( Feature feature : features )
+    {
+      GM_Envelope envelope = feature.getEnvelope();
+
+      if( base == null )
+        base = envelope;
+      else
+      {
+        base = base.getMerged( envelope );
+      }
+    }
+
+    return base;
+
   }
 }
