@@ -112,6 +112,8 @@ public class EmptyNodeImplementation extends AbstractNode
    */
   public boolean isEmpty( )
   {
+    IBranch branch = getLinkToBranch();
+
     if( getLinkToBranch() == null )
       return true;
 

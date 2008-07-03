@@ -127,7 +127,7 @@ public class FNGmlUtils
 
   /**
    * removes all empty nodes
-   *
+   * 
    * @param branch
    *            the branch which will be removed from the model
    */
@@ -139,7 +139,7 @@ public class FNGmlUtils
       if( node instanceof LinkageNode )
       {
         final LinkageNode ln = (LinkageNode) node;
-        if( branch.equals( ln.getLinkToBranch() ) )
+        if( branch != null && branch.equals( ln.getLinkToBranch() ) )
           NodeUtils.convertLinkageNodeToConnectionNode( (LinkageNode) node );
       }
 
