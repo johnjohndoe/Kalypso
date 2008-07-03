@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.kalypso.commons,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ org.kalypso.jwsdp
 Export-Package: de.renew.workflow.base,
  de.renew.workflow.cases,
  de.renew.workflow.contexts
