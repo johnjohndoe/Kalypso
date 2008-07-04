@@ -807,7 +807,7 @@
 						<gft:gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false" />
 					</gft:validatorlabel>
 
-					<gft:label text="Dispersionskoefizient" visible="true" style="SWT.NONE">
+					<gft:label text="Dispersionskoeffizient" visible="true" style="SWT.NONE">
 						<gft:gridData verticalAlignment="GridData.CENTER" horizontalAlignment="GridData.BEGINNING"
 							grabExcessHorizontalSpace="false" />
 						<gft:enabledOperation>
