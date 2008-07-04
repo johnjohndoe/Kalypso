@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -503,7 +503,7 @@ public class SelectFeatureWidget extends AbstractWidget
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private List<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName geomQName, final boolean intersectMode )
   {
     final List<Feature> selectedFeatures = new ArrayList<Feature>();
@@ -547,26 +547,26 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public String getToolTip( )
   {
-    StringBuffer sb = new StringBuffer().append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1") ); //$NON-NLS-1$
+    StringBuffer sb = new StringBuffer().append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.1" ) ); //$NON-NLS-1$
 
     if( m_selectionTypeDelegate instanceof PolygonGeometryBuilder )
-      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.2") ); //$NON-NLS-1$
+      sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.2" ) ); //$NON-NLS-1$
     else if( m_selectionTypeDelegate instanceof RectangleGeometryBuilder )
-      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.3") ); //$NON-NLS-1$
+      sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.3" ) ); //$NON-NLS-1$
     else
-      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4") ); //$NON-NLS-1$
+      sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
 
     if( m_addMode == true )
-      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.5") ); //$NON-NLS-1$
+      sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.5" ) ); //$NON-NLS-1$
     if( m_toggleMode == true )
-      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.6") ); //$NON-NLS-1$
+      sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.6" ) ); //$NON-NLS-1$
     if( m_intersectMode == true )
-      sb.append( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.7") ); //$NON-NLS-1$
+      sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.7" ) ); //$NON-NLS-1$
 
     return sb.toString();
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public void setThemes( IKalypsoFeatureTheme[] themes )
   {
     m_themes = new IKalypsoFeatureTheme[themes.length];
