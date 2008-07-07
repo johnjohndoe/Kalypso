@@ -8,4 +8,8 @@ Require-Bundle: org.kalypso.simulation.core,
  org.kalypso.commons,
  org.junit4
 Eclipse-LazyStart: true
-Export-Package: org.kalypso.model.wspm.sobek.calculation.job
+Export-Package: org.kalypso.model.wspm.sobek.calculation.job;
+  uses:="org.kalypso.contribs.java.net,
+   org.kalypso.simulation.core,
+   org.osgi.framework,
+   org.eclipse.core.runtime"
