@@ -7,6 +7,6 @@ Require-Bundle: org.junit4,
  org.kalypso.ui,
  org.eclipse.core.expressions
 Export-Package: org.kalypso.google.earth.export.constants,
- org.kalypso.google.earth.export.interfaces
+ org.kalypso.google.earth.export.interfaces;uses:="org.kalypsodeegree.model.feature"
 Bundle-Localization: plugin
 Eclipse-LazyStart: true
