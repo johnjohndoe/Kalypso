@@ -21,30 +21,30 @@ public class SimulationUpdateDataWorker implements ISimulation
     return null;
   }
 
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     /* extract computation data */
     extractData( tmpdir, inputProvider );
   }
 
-  private void extractData( File tmpdir, ISimulationDataProvider inputProvider ) throws SimulationException
+  private void extractData( final File tmpdir, final ISimulationDataProvider inputProvider ) throws SimulationException
   {
     try
     {
-      URL urlCalcCase = (URL) inputProvider.getInputForID( ISobekCalculationJobConstants.CALC_CASE_PATH );
-      URL urlFlowNetwork = (URL) inputProvider.getInputForID( ISobekCalculationJobConstants.FLOW_NETWORK_PATH );
+      final URL urlCalcCase = (URL) inputProvider.getInputForID( ISobekCalculationJobConstants.CALC_CASE_PATH );
+      final URL urlFlowNetwork = (URL) inputProvider.getInputForID( ISobekCalculationJobConstants.FLOW_NETWORK_PATH );
 
       /* src directories */
-      File folderCalcCase = new File( urlCalcCase.getFile() );
+      final File folderCalcCase = new File( urlCalcCase.getFile() );
       if( !folderCalcCase.exists() )
         throw new SimulationException( String.format( "Missing data folder - %s", urlCalcCase.toExternalForm() ) );
 
-      File folderFlowNetwork = new File( urlFlowNetwork.getFile() );
+      final File folderFlowNetwork = new File( urlFlowNetwork.getFile() );
       if( !folderFlowNetwork.exists() )
         throw new SimulationException( String.format( "Missing data folder - %s", urlFlowNetwork.toExternalForm() ) );
 
       /* destination directory */
-      File destination = new File( tmpdir, "Sobek-IDSS" );
+      final File destination = new File( tmpdir, "Sobek-IDSS" );
       if( !folderFlowNetwork.exists() )
         throw new SimulationException( String.format( "Missing destination folder - %s", destination.getAbsolutePath() ) );
 
@@ -52,7 +52,7 @@ public class SimulationUpdateDataWorker implements ISimulation
       FileUtils.copyDirectory( folderFlowNetwork, destination );
       FileUtils.copyDirectory( folderCalcCase, destination );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       throw new SimulationException( String.format( "Overwriting data directories failed. cause: %s", e.getMessage() ) );
     }

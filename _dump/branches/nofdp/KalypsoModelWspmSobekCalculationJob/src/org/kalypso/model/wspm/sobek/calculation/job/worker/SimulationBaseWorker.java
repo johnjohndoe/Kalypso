@@ -24,14 +24,14 @@ public class SimulationBaseWorker implements ISimulation
   /**
    * extract basic result processing stuff to tempdir
    */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     try
     {
       /* extract computation base directories */
       extractCalculationCore( tmpdir );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
 
@@ -39,7 +39,7 @@ public class SimulationBaseWorker implements ISimulation
     }
   }
 
-  private void extractCalculationCore( File tmpdir ) throws IOException
+  private void extractCalculationCore( final File tmpdir ) throws IOException
   {
     InputStream zipStream = null;
     zipStream = getClass().getResourceAsStream( "/org/kalypso/model/wspm/sobek/calculation/job/resources/calculationCore.zip" ); //$NON-NLS-1$

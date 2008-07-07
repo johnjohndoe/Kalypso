@@ -214,22 +214,22 @@ public class SobekResultModelHandler implements ISobekResultModel
       if( m_branchesCommandableWorkspace == null )
       {
         /* parse gml workspace */
-        IFile file = getBranchHydrogrographWorkspaceFile();
+        final IFile file = getBranchHydrogrographWorkspaceFile();
         final URL url = file.getRawLocationURI().toURL();
 
         m_branchesWorkspace = GmlSerializer.createGMLWorkspace( url, null );
         m_branchesCommandableWorkspace = PoolHelper.getCommandableWorkspace( m_branchesWorkspace );
       }
 
-      Feature root = m_branchesCommandableWorkspace.getRootFeature();
-      Object property = root.getProperty( IBranchHydrographModel.QN_HYDROGRAPHS );
+      final Feature root = m_branchesCommandableWorkspace.getRootFeature();
+      final Object property = root.getProperty( IBranchHydrographModel.QN_HYDROGRAPHS );
 
       if( property instanceof FeatureList )
         return new BranchHydraphModelHandler( this, m_branchesCommandableWorkspace, (FeatureList) property );
 
       return null;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
     }

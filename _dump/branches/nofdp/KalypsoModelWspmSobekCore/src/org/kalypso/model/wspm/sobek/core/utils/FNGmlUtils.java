@@ -297,8 +297,8 @@ public class FNGmlUtils
     final INode node = FNGmlUtils.createNode( model, TYPE.eCrossSectionNode, pointOnBranch, new INode[] {} );
 
     /* link branch and profile */
-    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getFeature() ); //$NON-NLS-1$
-    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, profile ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_LN_LINKS_TO_BRANCH, branch.getFeature() );
+    FeatureUtils.setInternalLinkedFeature( model.getWorkspace(), node.getFeature(), ISobekConstants.QN_HYDRAULIC_CROSS_SECTION_NODE_LINKED_PROFILE, profile );
 
     node.getFeature().invalidEnvelope();
     return node;
@@ -314,9 +314,9 @@ public class FNGmlUtils
 
   public static INode[] getNodes( final Object[] objects )
   {
-    List<INode> nodes = new ArrayList<INode>();
+    final List<INode> nodes = new ArrayList<INode>();
 
-    for( Object obj : objects )
+    for( final Object obj : objects )
     {
       if( obj instanceof INode )
         nodes.add( (INode) obj );
@@ -327,7 +327,7 @@ public class FNGmlUtils
 
   public static IBranch getBranch( final Object[] objects )
   {
-    for( Object object : objects )
+    for( final Object object : objects )
     {
       if( object instanceof IBranch )
         return (IBranch) object;

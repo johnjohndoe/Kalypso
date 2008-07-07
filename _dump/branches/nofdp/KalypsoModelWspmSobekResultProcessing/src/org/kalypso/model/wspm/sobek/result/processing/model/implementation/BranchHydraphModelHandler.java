@@ -34,27 +34,27 @@ public class BranchHydraphModelHandler extends AbstractListWrapper implements IB
   {
     try
     {
-      IBranchHydrograph[] hydrographs = getHydrographs();
+      final IBranchHydrograph[] hydrographs = getHydrographs();
 
       /* hydrograph already exists? */
-      for( IBranchHydrograph hydrograph : hydrographs )
+      for( final IBranchHydrograph hydrograph : hydrographs )
       {
-        String id = hydrograph.getBranchId();
+        final String id = hydrograph.getBranchId();
 
         if( branch.getId().equals( id ) )
           return hydrograph;
       }
 
       /* create a new hydrograph */
-      IBranchHydrograph hydograph = BranchHydrographUtilities.createHydrograph( m_resultModelHandler, m_workspace, branch );
+      final IBranchHydrograph hydograph = BranchHydrographUtilities.createHydrograph( m_resultModelHandler, m_workspace, branch );
 
       // save changes
-      IFile iFile = m_resultModelHandler.getBranchHydrogrographWorkspaceFile();
+      final IFile iFile = m_resultModelHandler.getBranchHydrogrographWorkspaceFile();
       GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), m_workspace, "UTF-8" ); //$NON-NLS-1$
 
       return hydograph;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
     }
@@ -62,9 +62,9 @@ public class BranchHydraphModelHandler extends AbstractListWrapper implements IB
 
   public IBranchHydrograph[] getHydrographs( )
   {
-    List<IBranchHydrograph> myList = new ArrayList<IBranchHydrograph>();
+    final List<IBranchHydrograph> myList = new ArrayList<IBranchHydrograph>();
 
-    for( Object obj : this )
+    for( final Object obj : this )
     {
       if( !(obj instanceof Feature) )
         continue;

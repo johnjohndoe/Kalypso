@@ -223,7 +223,7 @@ public class ResultWorker
   private void addResultTableValue( final Double value )
   {
     // Normalise value to precision .4f
-    Double myValue = Double.valueOf( value * 10000 ).intValue() / 10000d;
+    final Double myValue = Double.valueOf( value * 10000 ).intValue() / 10000d;
 
     Integer integer = m_resultTable.get( myValue );
     if( integer == null )

@@ -13,7 +13,7 @@ public interface IBranchHydrographModel extends List
 // {org.kalypso.model.wspm.sobek.result.ls}ResultLsList
 // - {org.kalypso.model.wspm.sobek.result.ls}resultLsMember
 
-  public static final QName QN_HYDROGRAPHS = new QName( ISobekConstants.NS_SOBEK_RESULT_BRANCH_HYDROGRAPHS, "resultLsMember" );//$NON-NLS-N$
+  public static final QName QN_HYDROGRAPHS = new QName( ISobekConstants.NS_SOBEK_RESULT_BRANCH_HYDROGRAPHS, "resultLsMember" );
 
   IBranchHydrograph getHydrograph( IBranch branch ) throws CoreException;
 

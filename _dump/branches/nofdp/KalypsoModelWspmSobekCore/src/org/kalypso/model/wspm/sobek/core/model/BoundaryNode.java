@@ -84,8 +84,8 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
    */
   public IBoundaryNodeLastfallCondition getLastfallCondition( final ILastfall lastfall ) throws Exception
   {
-    IBoundaryNodeLastfallCondition[] conditions = getLastfallConditions();
-    for( IBoundaryNodeLastfallCondition condition : conditions )
+    final IBoundaryNodeLastfallCondition[] conditions = getLastfallConditions();
+    for( final IBoundaryNodeLastfallCondition condition : conditions )
     {
       if( condition.getLastfall().getFeature().equals( lastfall.getFeature() ) )
         return condition;
@@ -111,7 +111,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
     final IBranch[] inflowingBranches = getInflowingBranches();
     final IBranch[] outflowingBranches = getOutflowingBranches();
 
-    if( (inflowingBranches.length == 0) && (outflowingBranches.length == 0) )
+    if( inflowingBranches.length == 0 && outflowingBranches.length == 0 )
       return true;
 
     return false;
@@ -122,7 +122,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
    */
   public IBoundaryNodeLastfallCondition[] getLastfallConditions( ) throws Exception
   {
-    List<BoundaryNodeLastfallCondition> conditions = new ArrayList<BoundaryNodeLastfallCondition>();
+    final List<BoundaryNodeLastfallCondition> conditions = new ArrayList<BoundaryNodeLastfallCondition>();
 
     final List< ? > members = (List< ? >) getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_LASTFALL_DEFINITION_MEMBER );
     for( final Object object : members )
@@ -134,7 +134,7 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
 
       final Feature fLastfall = FeatureUtils.resolveFeature( member.getWorkspace(), member.getProperty( ISobekConstants.QN_HYDRAULIC_BOUNDARY_NODE_CONDITION_LINKED_LASTFALL ) );
       if( fLastfall == null ) // TODO lastfall doesn't exist - remove entry! - perhaps, system.out and continue
-                              // statement
+        // statement
         continue;
 
       conditions.add( new BoundaryNodeLastfallCondition( new Lastfall( getModelMember(), fLastfall ), this, member ) );

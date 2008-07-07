@@ -21,15 +21,15 @@ public class SimulationSobekWorker implements ISimulation
     return null;
   }
 
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     /*******************************************************************************************************************
      * PROCESSING
      ******************************************************************************************************************/
     /* The command for execution. */
-    File directory = new File( tmpdir, "Sobek-IDSS/batch" );
+    final File directory = new File( tmpdir, "Sobek-IDSS/batch" );
 
-    String[] command = new String[3];
+    final String[] command = new String[3];
     command[0] = "cmd.exe";
     command[1] = "/C";
     command[2] = "runOpenMI.cmd";
@@ -41,7 +41,7 @@ public class SimulationSobekWorker implements ISimulation
     {
       exec = Runtime.getRuntime().exec( command, null, directory );
     }
-    catch( IOException e1 )
+    catch( final IOException e1 )
     {
       e1.printStackTrace();
       throw new SimulationException( e1.getMessage() );
@@ -85,7 +85,7 @@ public class SimulationSobekWorker implements ISimulation
         Thread.sleep( 100 );
         timeRunning = timeRunning + 100;
       }
-      catch( InterruptedException e )
+      catch( final InterruptedException e )
       {
         e.printStackTrace();
       }

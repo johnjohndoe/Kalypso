@@ -94,8 +94,8 @@ public class SbkStructCompoundStructure extends SbkStructure implements ISbkStru
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ISbkStructCompundStructure#setLinkToBranch(org.kalypso.model.wspm.sobek.core.interfaces.IBranch)
    */
-  public void setLinkToBranch( IBranch branch ) throws Exception
+  public void setLinkToBranch( final IBranch branch ) throws Exception
   {
-    FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, branch.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, branch.getFeature() );
   }
 }

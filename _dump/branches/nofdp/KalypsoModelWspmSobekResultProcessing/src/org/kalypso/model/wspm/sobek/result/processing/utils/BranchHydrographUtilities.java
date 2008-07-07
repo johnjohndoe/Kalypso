@@ -35,15 +35,15 @@ public class BranchHydrographUtilities
   {
     try
     {
-      IGMLSchema schema = workspace.getGMLSchema();
+      final IGMLSchema schema = workspace.getGMLSchema();
 
-      IFeatureType featureType = schema.getFeatureType( IBranchHydrograph.QN_TYPE );
-      IRelationType relationType = (IRelationType) workspace.getRootFeature().getFeatureType().getProperty( IBranchHydrographModel.QN_HYDROGRAPHS );
+      final IFeatureType featureType = schema.getFeatureType( IBranchHydrograph.QN_TYPE );
+      final IRelationType relationType = (IRelationType) workspace.getRootFeature().getFeatureType().getProperty( IBranchHydrographModel.QN_HYDROGRAPHS );
 
       final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
       /* properties */
-      Map<IPropertyType, Object> properties = new HashMap<IPropertyType, Object>();
+      final Map<IPropertyType, Object> properties = new HashMap<IPropertyType, Object>();
       properties.put( featureType.getProperty( IBranchHydrograph.QN_BRANCH ), branch.getId() );
       properties.put( featureType.getProperty( IBranchHydrograph.QN_NAME ), branch.getName() );
       properties.put( featureType.getProperty( IBranchHydrograph.QN_PARAM_ID ), "W" );
@@ -52,11 +52,11 @@ public class BranchHydrographUtilities
       final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, featureType, workspace.getRootFeature(), relationType, -1, properties, selectionManager );
       workspace.postCommand( command );
 
-      Feature feature = command.getNewFeature();
-      BranchHydrographHandler handler = new BranchHydrographHandler( feature );
+      final Feature feature = command.getNewFeature();
+      final BranchHydrographHandler handler = new BranchHydrographHandler( feature );
 
-      IObservation<TupleResult> observation = handler.getObservation();
-      TupleResult result = observation.getResult();
+      final IObservation<TupleResult> observation = handler.getObservation();
+      final TupleResult result = observation.getResult();
 
       fillObservation( modelHandler, result, branch );
 
@@ -64,7 +64,7 @@ public class BranchHydrographUtilities
 
       return handler;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
     }
@@ -73,16 +73,16 @@ public class BranchHydrographUtilities
   private static void fillObservation( final ISobekResultModel modelHandler, final TupleResult result, final IBranch branch ) throws CoreException
   {
     // ordered in ascending direction
-    ICrossSectionNode[] nodes = branch.getCrossSectionNodes();
-    for( ICrossSectionNode csn : nodes )
+    final ICrossSectionNode[] nodes = branch.getCrossSectionNodes();
+    for( final ICrossSectionNode csn : nodes )
     {
-      IProfil profile = csn.getProfile();
-      double station = profile.getStation();
+      final IProfil profile = csn.getProfile();
+      final double station = profile.getStation();
 
-      IResultTimeSeries timeSeries = modelHandler.getCrossSectionTimeSeries( csn );
-      Double maxValueW = timeSeries.getMaxValue();
+      final IResultTimeSeries timeSeries = modelHandler.getCrossSectionTimeSeries( csn );
+      final Double maxValueW = timeSeries.getMaxValue();
 
-      IRecord record = result.createRecord();
+      final IRecord record = result.createRecord();
       record.setValue( 0, BigDecimal.valueOf( station ) ); // station
       record.setValue( 1, BigDecimal.valueOf( maxValueW ) ); // w
       record.setValue( 2, BigDecimal.valueOf( 0.0d ) ); // q

@@ -249,7 +249,7 @@ public class Branch implements IBranch
    */
   public void setLowerNode( final INode node ) throws Exception
   {
-    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_LOWER_CONNECTION_NODE, node.getFeature() );
   }
 
   /**
@@ -257,7 +257,7 @@ public class Branch implements IBranch
    */
   public void setUpperNode( final INode node ) throws Exception
   {
-    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, node.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( m_model.getWorkspace(), m_branch, ISobekConstants.QN_HYDRAULIC_BRANCH_UPPER_CONNECTION_NODE, node.getFeature() );
   }
 
   /**

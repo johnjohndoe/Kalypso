@@ -47,7 +47,7 @@ public interface ISbkStructCompundStructure extends ISbkStructure
 {
 
   public ISbkStructure[] getContainedStructures( );
-  
-  public void setLinkToBranch(IBranch branch) throws Exception;
+
+  public void setLinkToBranch( IBranch branch ) throws Exception;
 
 }

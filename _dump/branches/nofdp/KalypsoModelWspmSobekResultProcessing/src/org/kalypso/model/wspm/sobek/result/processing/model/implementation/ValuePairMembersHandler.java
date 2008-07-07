@@ -19,9 +19,9 @@ public class ValuePairMembersHandler extends AbstractListWrapper implements IVal
 
   public IValuePairMember[] getValuePairs( )
   {
-    Set<IValuePairMember> members = new LinkedHashSet<IValuePairMember>();
+    final Set<IValuePairMember> members = new LinkedHashSet<IValuePairMember>();
 
-    for( Object obj : this )
+    for( final Object obj : this )
     {
       if( !(obj instanceof Feature) )
         continue;

@@ -23,14 +23,14 @@ public class TestCalculationJob extends TestCase
   public void test( ) throws IOException, SimulationException
   {
     final File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) );
-    File sobekTmpDir = new File( tmpDir, "testSobekCalculationJob" );
+    final File sobekTmpDir = new File( tmpDir, "testSobekCalculationJob" );
 
     if( sobekTmpDir.exists() )
       FileUtils.deleteDirectory( sobekTmpDir );
 
     FileUtils.forceMkdir( sobekTmpDir );
 
-    WspmSobekCalcJob job = new WspmSobekCalcJob();
+    final WspmSobekCalcJob job = new WspmSobekCalcJob();
     job.run( sobekTmpDir, new TestCaseSimulationDataProvider(), new TestCaseResultEater(), new TestCaseSimulationMonitor() );
   }
 }

@@ -63,7 +63,7 @@ public class SbkStructDatabaseStructure extends SbkStructure implements ISbkStru
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_DATABASE_STRUCTURE_CREST_HEIGHT );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }

@@ -64,7 +64,7 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP_CAPACITY );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -96,7 +96,7 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP_REDUCTION_CONSTANT );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -118,7 +118,7 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP_SWITCH_OFF_PRESSURE );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -130,7 +130,7 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP_SWITCH_OFF_SUCTION );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -142,7 +142,7 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP_SWITCH_ON_PRESSURE );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -154,7 +154,7 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_PUMP_SWITCH_ON_SUCTION );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -173,6 +173,6 @@ public class SbkStructPump extends SbkStructure implements ISbkStructPump
    */
   public void setLinkToBranch( final IBranch branch ) throws Exception
   {
-    FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, branch.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, branch.getFeature() );
   }
 }

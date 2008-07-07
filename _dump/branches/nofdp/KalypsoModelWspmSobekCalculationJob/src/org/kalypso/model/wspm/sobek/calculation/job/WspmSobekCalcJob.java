@@ -77,18 +77,18 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    SimulationBaseWorker baseWorker = new SimulationBaseWorker();
+    final SimulationBaseWorker baseWorker = new SimulationBaseWorker();
     baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker();
+    final SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker();
     dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker();
+    final SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker();
     pi2SobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
     dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    SimulationSobekWorker sobekWorker = new SimulationSobekWorker();
+    final SimulationSobekWorker sobekWorker = new SimulationSobekWorker();
     sobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
     /* extract fake folder to tmpdir */
@@ -106,7 +106,7 @@ public class WspmSobekCalcJob implements ISimulation
         resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }

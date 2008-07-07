@@ -119,7 +119,7 @@ public class ResultTimeSeriesHandler extends AbstractFeatureWrapper implements I
 
   public IValuePairMembers getValuePairs( )
   {
-    Object property = getProperty( QN_VALUE_PAIRS );
+    final Object property = getProperty( QN_VALUE_PAIRS );
     if( property instanceof FeatureList )
       return new ValuePairMembersHandler( (FeatureList) property );
 

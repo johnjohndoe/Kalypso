@@ -13,12 +13,12 @@ public class TestCaseSimulationDataProvider implements ISimulationDataProvider
     throw new NotImplementedException();
   }
 
-  public Object getInputForID( String id ) throws SimulationException
+  public Object getInputForID( final String id ) throws SimulationException
   {
     throw new NotImplementedException();
   }
 
-  public boolean hasID( String id )
+  public boolean hasID( final String id )
   {
     throw new NotImplementedException();
   }

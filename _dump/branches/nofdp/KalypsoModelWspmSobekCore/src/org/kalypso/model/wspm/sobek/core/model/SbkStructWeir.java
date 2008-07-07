@@ -65,7 +65,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_HEIGHT );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -77,7 +77,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_CREST_WIDTH );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -89,7 +89,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_DISCHARGE_COEFF );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -110,7 +110,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
   {
     final Object property = getFeature().getProperty( ISobekConstants.QN_HYDRAULIC_SBK_STRUCTURE_WEIR_LATERAL_CONTRACTION_COEFF );
     if( property instanceof Double )
-      return (((Double) property).doubleValue());
+      return ((Double) property).doubleValue();
 
     return Double.NaN;
   }
@@ -129,7 +129,7 @@ public class SbkStructWeir extends SbkStructure implements ISbkStructWeir
    */
   public void setLinkToBranch( final IBranch branch ) throws Exception
   {
-    FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, branch.getFeature() ); //$NON-NLS-1$
+    FeatureUtils.setInternalLinkedFeature( getModel().getWorkspace(), getFeature(), ISobekConstants.QN_SBK_STRUCT_LINKS_TO_BRANCH, branch.getFeature() );
   }
 
 }

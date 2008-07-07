@@ -73,7 +73,7 @@ public class BranchMaker implements IBranchMaker
   public void connectBranches( final IBranch[] branches, final GM_Curve curve ) throws Exception
   {
     if( branches.length != 2 )
-      throw (new IllegalStateException( Messages.BranchMaker_0 ));
+      throw new IllegalStateException( Messages.BranchMaker_0 );
 
     FNGmlUtils.connectBranches( m_model, branches, curve );
   }

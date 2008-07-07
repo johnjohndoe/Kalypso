@@ -6,7 +6,7 @@ import org.kalypso.simulation.core.SimulationException;
 public class TestCaseResultEater implements ISimulationResultEater
 {
 
-  public void addResult( String id, Object result ) throws SimulationException
+  public void addResult( final String id, final Object result ) throws SimulationException
   {
     System.out.println( String.format( "Adding result %s, type of %s", id, result.getClass().toString() ) );
   }

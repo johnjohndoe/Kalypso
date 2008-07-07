@@ -144,7 +144,7 @@ public class SobekModelMember implements ISobekModelMember
     final IBoundaryNode[] allNodes = getBoundaryNodeMembers();
     final List<IBoundaryNode> boundaryCondNodes = new ArrayList<IBoundaryNode>();
     for( final IBoundaryNode node : allNodes )
-      if( !(node.getBoundaryType().equals( BOUNDARY_TYPE.eWQ )) )
+      if( !node.getBoundaryType().equals( BOUNDARY_TYPE.eWQ ) )
         boundaryCondNodes.add( node );
     return boundaryCondNodes.toArray( new IBoundaryNode[] {} );
   }
@@ -292,7 +292,7 @@ public class SobekModelMember implements ISobekModelMember
    */
   public MultiStatus deleteSbkStructs( )
   {
-    MultiStatus returnStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmSobekCorePlugin.getDefault() ), IStatus.OK, "", null );//$NON-NLS-1$
+    final MultiStatus returnStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmSobekCorePlugin.getDefault() ), IStatus.OK, "", null );//$NON-NLS-1$
 
     final ISbkStructure[] nodes = getSbkStructureTypeNodeMembers();
     for( final ISbkStructure node : nodes )
@@ -300,7 +300,7 @@ public class SobekModelMember implements ISobekModelMember
       {
         node.delete();
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         returnStatus.add( StatusUtilities.createErrorStatus( String.format( "Sobek Structure Node %s (%s) couldn't be deleted.", node.getName(), node.getId() ) ) );
