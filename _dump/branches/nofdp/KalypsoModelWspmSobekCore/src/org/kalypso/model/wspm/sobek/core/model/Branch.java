@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;

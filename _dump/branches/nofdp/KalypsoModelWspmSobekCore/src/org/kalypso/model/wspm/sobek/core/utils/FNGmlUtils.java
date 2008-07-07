@@ -54,7 +54,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILinkageNode;

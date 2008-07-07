@@ -41,11 +41,9 @@
 package org.kalypso.model.wspm.sobek.calculation.job;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationBaseWorker;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -57,7 +55,7 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public class WspmSobekCalcJob implements ISimulation
 {
-  private static final String CALCJOB_SPEC = "model_spec.xml"; //$NON-NLS-1$
+  private static final String CALCJOB_SPEC = "resources/model_spec.xml"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
@@ -73,22 +71,11 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    InputStream zipStream = null;
-    zipStream = getClass().getResourceAsStream( "/org/kalypso/model/wspm/sobek/calculation/job/fake/sobek.zip" ); //$NON-NLS-1$
-    if( zipStream != null )
-    {
-      try
-      {
-        ZipUtilities.unzipApache( zipStream, tmpdir, true, "IBM850" ); //$NON-NLS-1$
-        zipStream.close();
+    SimulationBaseWorker baseWorker = new SimulationBaseWorker();
+    baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-        resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
+// resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
   }
 
 }

@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.kalypso.model.wspm.sobek.calculation.job;singleton:=tru
 Bundle-Version: 1.0.0
 Bundle-Activator: org.kalypso.model.wspm.sobek.calculation.job.KalypsoModelWspmSobekCalculationJobPlugin
 Require-Bundle: org.kalypso.simulation.core,
- org.kalypso.commons
+ org.kalypso.commons,
+ org.junit4
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.sobek.calculation.job

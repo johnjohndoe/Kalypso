@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.sobek.core.interfaces;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.model.BoundaryNode;
 
 /**

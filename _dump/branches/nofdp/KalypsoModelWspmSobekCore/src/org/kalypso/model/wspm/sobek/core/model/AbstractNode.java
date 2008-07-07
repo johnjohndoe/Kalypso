@@ -45,7 +45,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;

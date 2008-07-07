@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.sobek.core.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kalypso.model.wspm.sobek.core.Messages;
 import org.kalypso.model.wspm.sobek.core.SobekModelMember;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranchMaker;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;

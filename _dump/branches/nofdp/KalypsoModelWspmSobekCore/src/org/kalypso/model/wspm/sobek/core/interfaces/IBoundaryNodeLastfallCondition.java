@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.sobek.core.interfaces;
 import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.kalypso.model.wspm.sobek.core.Messages;
+import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
