@@ -7,7 +7,6 @@ import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -31,9 +30,6 @@ public class SimulationBaseWorker implements ISimulation
     {
       /* extract computation base directories */
       extractCalculationCore( tmpdir );
-
-      /* extract computation data */
-      extractData( tmpdir, inputProvider );
     }
     catch( IOException e )
     {
@@ -41,14 +37,6 @@ public class SimulationBaseWorker implements ISimulation
 
       throw new SimulationException( e.getMessage() );
     }
-  }
-
-  private void extractData( File tmpdir, ISimulationDataProvider inputProvider ) throws SimulationException
-  {
-    URL urlCalcCase = (URL) inputProvider.getInputForID( ISobekCalculationJobConstants.CALC_CASE_PATH );
-    URL urlFlowNetwork = (URL) inputProvider.getInputForID( ISobekCalculationJobConstants.FLOW_NETWORK_PATH );
-
-    throw new NotImplementedException();
   }
 
   private void extractCalculationCore( File tmpdir ) throws IOException
@@ -59,7 +47,6 @@ public class SimulationBaseWorker implements ISimulation
     {
       ZipUtilities.unzipApache( zipStream, tmpdir, true, "IBM850" ); //$NON-NLS-1$
       zipStream.close();
-
     }
   }
 

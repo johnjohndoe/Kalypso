@@ -44,6 +44,9 @@ import java.io.File;
 import java.net.URL;
 
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationBaseWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationPi2SobekWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobekWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationUpdateDataWorker;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -74,8 +77,20 @@ public class WspmSobekCalcJob implements ISimulation
     SimulationBaseWorker baseWorker = new SimulationBaseWorker();
     baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-// resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker();
+    dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
+    SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker();
+    pi2SobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    SimulationSobekWorker sobekWorker = new SimulationSobekWorker();
+    sobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    // TODO
+    /* add results */
+// resultEater.addResult( "TEST_OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 }
