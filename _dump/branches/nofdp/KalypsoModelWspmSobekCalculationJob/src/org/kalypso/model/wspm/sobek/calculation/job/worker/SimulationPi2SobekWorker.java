@@ -90,7 +90,10 @@ public class SimulationPi2SobekWorker implements ISimulation
         e.printStackTrace();
       }
 
-      // TODO check return value
+      /* add log pi2sobek log file */
+// resultEater.addResult( ISobekCalculationJobConstants.LOG_PI2SOBEK, new File( tmpdir,
+// "Sobek-IDSS/data/sobek_river/CMTWORK/conv_sbk.log" ) );
+      // TODO check log file
     }
   }
 }
