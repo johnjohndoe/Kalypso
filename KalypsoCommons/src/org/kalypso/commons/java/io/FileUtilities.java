@@ -56,6 +56,7 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IFolder;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
@@ -672,5 +673,27 @@ public class FileUtilities
       final String message = String.format( "Unable move file %s into %s.", source, destDir );
       throw new IOException( message );
     }
+  }
+
+  /**
+   * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
+   * and looks if file already exists in baseFolder
+   * 
+   * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
+   *         replaced by the given replacement-string
+   */
+  public static String validateName( IFolder baseFolder, String name, String replacement )
+  {
+    String myBaseName = validateName( name, replacement );
+    String myName = myBaseName;
+
+    int count = 0;
+    while( baseFolder.getFile( myName ).exists() )
+    {
+      myName = String.format( "%s%d", myBaseName, count );
+      count++;
+    }
+
+    return myName;
   }
 }
