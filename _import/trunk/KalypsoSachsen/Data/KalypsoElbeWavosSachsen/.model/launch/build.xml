@@ -15,6 +15,7 @@
 			<echo message="Rechenvariante anlegen: ${calc.dir}" />
 
 			<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml"/>
+		   	<copy file="${project.dir}/.templates/.calculation.template" tofile="${calc.dir}/.calculation"/>
 			<copy todir="${calc.dir}">
 				<fileset dir="${project.dir}/.templates">
 					<include name="*.gtt"/>
@@ -31,6 +32,29 @@
 					<include name="Ergebnisse/Zeitreihen_ohneVerschiebung/*.odt"/>
 				</fileset>
 			</copy>
+		
+		<property name="isMergeCase" value="false"/>
+		<condition property="isMergeCase" value="true">
+			<not>
+				<equals trim="true" arg1="" arg2="${calc.merge.relpath}"/>
+			</not>
+		</condition>
+
+		<kalypso.changeGml gmlURL="${calc.url}/.calculation">
+			<property featurepath="" featureProperty="scenarioId" value="${kalypso.currentScenarioId}"/>
+			<property featurepath="" featureProperty="scenarioName" value="${kalypso.currentScenarioName}"/>
+			<property featurepath="" featureProperty="scenarioDescription" value="${kalypso.currentScenarioDescription}"/>
+			<property featurepath="" featureProperty="startforecast" value="${kalypso.startforecast}"/>
+			<property featurepath="" featureProperty="simulationDuration" value="6"/>
+			<property featurepath="" featureProperty="forecastDuration" value="72"/>
+			<property featurepath="" featureProperty="editor" value="${kalypso.currentUser}"/>
+			<property featurepath="" featureProperty="description" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="comment" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="calctime" value="${kalypso.currentTime}"/>
+			<property featurepath="" featureProperty="mergeCasePath" value="${calc.merge.relpath}"/>
+			<property featurepath="" featureProperty="intervalAmount" value="1"/>
+			<property featurepath="" featureProperty="useAWerte" value="${isMergeCase}"/>
+		</kalypso.changeGml>
 		</target>
 	
 	
@@ -48,6 +72,7 @@
 			<property name="forecastDuration" featurepath="" featureProperty="forecastDuration"/>
 			<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
 			<property name="interval.amount" featurepath="" featureProperty="intervalAmount" defaultValue=""/>
+			<property name="calc.merge.path" featurepath="" featureProperty="mergeCasePath" defaultValue=""/>
 		</kalypso.gmlProperty>
     	
 		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
@@ -56,6 +81,18 @@
 			<!-- stopsim = startforecast + forecastDuration h -->
 			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="${forecastDuration}" dateoffsetfield="${HOUR_OF_DAY}"/>
 		</kalypso.gmlProperty>
+    	
+    	<!-- Construct the url of the calc case to merge and set the flag if merge is allowed.
+        		 REMARK: add trailing '/', else url resolution does not work properly for
+        		 the merge task
+        	-->
+        	<property name="calc.merge.dir" value="${project.dir}/${calc.merge.path}/"/>
+        	<property name="calc.merge.url" value="${project.url}${calc.merge.path}/"/>
+        	<condition property="doMergeCase">
+        		<not>
+        			<equals trim="true" arg1="" arg2="${calc.merge.path}"/>
+        		</not>
+        	</condition>
     	
     	<!-- Zeitschritt der Berechnung [h] aus .calculation-->
     			<property name="interval.field" value="HOUR_OF_DAY"/>
@@ -137,7 +174,7 @@
 		</copy>
 
 		<!-- 
-			Pegel
+			Pegel und Polder
 		-->
 		<!-- Usti (Q): Messung kombiniert mit tschechischen Vorhersagen -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Messwerte und Kombination mit tschechischen Vorhersagen (Usti)">
@@ -180,6 +217,44 @@
 			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterPolder}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
+		
+		<antcall target="mergeCase"/>
+	</target>
+	
+	<!-- 
+		 ================================= 
+          target: mergeCase			
+         ================================= 
+    -->
+	<target name="mergeCase" if="doMergeCase">
+		<!-- <kalypso.mergeObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/> -->
+		<!-- Usti (Q): Messung kombiniert mit tschechischen Vorhersagen -->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Usti.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Messwerte und Kombination mit tschechischen Vorhersagen (Usti)"/>
+		
+		<!-- Elbepegel (W): nur Messung + Fortsetzung zur Eingabe der Vorgabewerte-->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Elbepegel.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Messwerte der Elbepegel"/>
+
+		<!-- Usti: zusätzlich "Messung" W, zur Information -->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Usti_Cz_WMessung.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Q-Messwerte für Usti (zur Information)"/>
+		
+		<!-- 
+			Zwischengebiete (Q)(Vergangenheit und Prognose aus einem PSI-Container) 
+		-->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Zwischengebiete.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Zwischengebietszuflüsse"/>
+		<!-- 
+			Löben (W) (wie Zwischengebiete - Vergangenheit und Prognose aus einem PSI-Container) 
+		-->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Loeben.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der W-Zeitreihe für Löben"/>
+		
+		<!-- 
+			Polder (Zustand = POLDER_CONTROL)
+		-->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Polder.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Polder-Steuerung"/>
+		
+		
+		<!-- Anfangswerte übernehmen -->
+		<copy file="${calc.merge.dir}/Ergebnisse/Anfangswerte/awerte.zip" tofile="${calc.dir}/Anfangswerte/awerte.zip" overwrite="true" failonerror="false" />
+	
 	</target>
 
 	<!-- 
