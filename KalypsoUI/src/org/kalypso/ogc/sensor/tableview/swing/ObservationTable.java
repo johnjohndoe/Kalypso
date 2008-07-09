@@ -62,8 +62,6 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
@@ -77,7 +75,6 @@ import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.java.swing.jtable.PopupMenu;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.java.lang.CatchRunnable;
-import org.kalypso.contribs.java.swing.table.ColumnHeaderToolTips;
 import org.kalypso.contribs.java.swing.table.ExcelClipboardAdapter;
 import org.kalypso.contribs.java.swing.table.SelectAllCellEditor;
 import org.kalypso.ogc.sensor.DateRange;
@@ -89,6 +86,8 @@ import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 import org.kalypso.ogc.sensor.tableview.swing.editor.DoubleCellEditor;
 import org.kalypso.ogc.sensor.tableview.swing.marker.ForecastLabelMarker;
+import org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderListener;
+import org.kalypso.ogc.sensor.tableview.swing.renderer.ColumnHeaderRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.DateTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.renderer.MaskedNumberTableCellRenderer;
 import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
@@ -145,13 +144,15 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
 
-    final ColumnHeaderToolTips tips = new ColumnHeaderToolTips( true );
     final TableColumnModel cm = new MainColumnModel( m_model );
 
     m_table = new MainTable( useContextMenu, nf, m_model, cm );
 
     final JTableHeader header = m_table.getTableHeader();
-    header.addMouseMotionListener( tips );
+    final ColumnHeaderListener columnHeaderListener = new ColumnHeaderListener();
+    header.addMouseListener( columnHeaderListener );
+    header.setReorderingAllowed( false );
+    header.setEnabled( true );
 
     final TableCellRenderer nbRenderer = new MaskedNumberTableCellRenderer( m_model );
     m_table.setDefaultRenderer( Date.class, m_dateRenderer );
@@ -162,7 +163,6 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     m_table
         .setDefaultEditor( Double.class, new SelectAllCellEditor( new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
     m_table.setCellSelectionEnabled( true );
-    m_table.getTableHeader().setReorderingAllowed( false );
     m_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
     final JTable rowHeader = new JTable( m_model, new RowHeaderColumnModel() );
@@ -173,6 +173,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     rowHeader.setColumnSelectionAllowed( false );
     rowHeader.setCellSelectionEnabled( false );
     rowHeader.getTableHeader().setReorderingAllowed( false );
+    rowHeader.getTableHeader().setDefaultRenderer( new ColumnHeaderRenderer( ) );
     rowHeader.setAutoCreateColumnsFromModel( true );
 
     // make sure that selections between the main table and the header stay in sync
@@ -216,6 +217,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     // for runnable
     final ObservationTableModel model = m_model;
     final DateTableCellRenderer dateRenderer = m_dateRenderer;
+    final MainTable table = m_table;
 
     final CatchRunnable runnable = new CatchRunnable()
     {
@@ -230,6 +232,9 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
           model.refreshColumn( column, evt.getSource() );
 
           analyseObservation( column.getObservation(), true );
+
+          // also repaint header, status may have changed
+          table.getTableHeader().repaint();
         }
 
         // REFRESH COLUMN ACCORDING TO ITS STATE
@@ -433,8 +438,6 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
 
   private static class MainColumnModel extends DefaultTableColumnModel
   {
-    private int m_colWidth = 0;
-
     private final ObservationTableModel m_obsModel;
 
     public MainColumnModel( final ObservationTableModel model )
@@ -449,54 +452,21 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
       if( sharedAxis != null && sharedAxis.getName().equals( aColumn.getHeaderValue() ) )
         return;
 
-      final DefaultTableCellRenderer label = new MainTableCellRenderer();
-      label.setHorizontalAlignment( SwingConstants.CENTER );
-      aColumn.setHeaderRenderer( label );
+      final TableCellRenderer headerRenderer = new ColumnHeaderRenderer();
+      aColumn.setHeaderRenderer( headerRenderer );
+      // Overwrite header value: normally its just 'getColumnName'; but we need more information
+      final Object headerValue = m_obsModel.getColumnValue( aColumn.getModelIndex() );
+      aColumn.setHeaderValue( headerValue );
 
-      final TableCellRenderer headerRenderer = aColumn.getHeaderRenderer();
-      if( headerRenderer != null )
-      {
-        final Component c = headerRenderer.getTableCellRendererComponent( null, aColumn.getHeaderValue(), false, false,
-            0, 0 );
-
-        final int colWidth = c.getPreferredSize().width + 5;
-        m_colWidth = colWidth/* Math.max( m_colWidth, colWidth ) */;
-
-        aColumn.setPreferredWidth( m_colWidth );
-
-        aColumn.setWidth( m_colWidth );
-        //        for( final Enumeration columns = getColumns(); columns.hasMoreElements(); )
-        //        {
-        //          final TableColumn col = (TableColumn)columns.nextElement();
-        //          col.setWidth( m_colWidth );
-        //        }
-      }
-
+      // Auto-resize column
+      final Component c = headerRenderer.getTableCellRendererComponent( null, aColumn.getHeaderValue(), false, false,
+          0, 0 );
+      final int colWidth = c.getPreferredSize().width + 5;
+      aColumn.setPreferredWidth( colWidth );
+      aColumn.setWidth( colWidth );
       aColumn.setMinWidth( 50 );
 
       super.addColumn( aColumn );
-    }
-  }
-
-  private static class MainTableCellRenderer extends DefaultTableCellRenderer
-  {
-    public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected,
-        final boolean hasFocus, int row, int column )
-    {
-      if( table != null )
-      {
-        JTableHeader header = table.getTableHeader();
-        if( header != null )
-        {
-          setForeground( header.getForeground() );
-          setBackground( header.getBackground() );
-          setFont( header.getFont() );
-        }
-      }
-
-      setText( ( value == null ) ? "" : value.toString() );
-      setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
-      return this;
     }
   }
 
