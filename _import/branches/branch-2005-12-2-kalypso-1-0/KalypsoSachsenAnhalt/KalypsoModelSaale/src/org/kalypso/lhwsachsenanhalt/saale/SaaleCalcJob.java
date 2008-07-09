@@ -172,7 +172,7 @@ public class SaaleCalcJob implements ICalcJob
       ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, 5 * 60 * 1000, logStream, errStream );
 
       System.out.println( logStream.toString() );
-      System.out.println( logStream.toString() );
+      System.out.println( errStream.toString() );
     }
     finally
     {
