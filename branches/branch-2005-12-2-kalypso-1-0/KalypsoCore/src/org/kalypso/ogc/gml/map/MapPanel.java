@@ -707,4 +707,9 @@ public class MapPanel extends Canvas implements IMapModellView, ComponentListene
     }
   }
 
+  public IFeatureSelectionManager getSelectionManager()
+  {
+    return m_selectionManager;
+  }
+  
 }
