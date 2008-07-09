@@ -338,7 +338,12 @@ public class WizardView extends ViewPart implements IWizardContainer3
     } );
 
     m_pageAndButtonArea = new Composite( m_mainSash, SWT.NONE );
-    m_pageAndButtonArea.setLayout( new GridLayout() );
+    final GridLayout pageAndButtonLayout = new GridLayout();
+    pageAndButtonLayout.marginHeight = 0;
+    pageAndButtonLayout.marginWidth = 0;
+    pageAndButtonLayout.horizontalSpacing = 0;
+    pageAndButtonLayout.verticalSpacing = 0;
+    m_pageAndButtonArea.setLayout( pageAndButtonLayout );
     m_pageAndButtonArea.setFont( m_mainSash.getFont() );
 
     setWizard( m_wizard );
