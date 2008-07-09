@@ -7,6 +7,7 @@
 	<input id="ZML_PEGEL" description="Pegel-Zeitreihen"/>
 	<input id="ZML_ZUFLUESSE" description="Zufluss-Zeitreihen"/>
 	<input id="ZML_POLDER" description="Polder-Zeitreihen"/>
+	<input id="AWERTE" description="Anfangswerte"/>
 	
 
 	<!-- Ergebnis-Dateien/Verzeichnisse -->

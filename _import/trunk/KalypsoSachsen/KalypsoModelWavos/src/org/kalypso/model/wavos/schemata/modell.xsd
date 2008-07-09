@@ -318,12 +318,21 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="datenUebergabe" type="commons:dataDeliveryType" default="Q" nillable="false">
+                                        <element name="datenUebergabe" type="commons:dataDeliveryType" default="W" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de"> Typ, in dem Zeitreihendaten an den Rechenkern übergeben werden (W/Q) <name>Typ der Datenübergabe</name>
-                                                                <label>Typ der Datenübergabet</label>
+                                                                <label>Typ der Datenübergabe</label>
                                                                 <tooltip>Typ der Datenübergabe</tooltip>
                                                                 <description>Typ der Datenübergabe</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="createAT" type="boolean" default="false" nillable="false">
+                                                <annotation>
+                                                        <documentation xml:lang="de"> soll / muss AT-Datei aus ZML erzeugt werden? iIm Rechenkern stecken alle schon mit drin<name>AT-Datei zu erzeugen</name>
+                                                                <label>AT-Datei erzeugen</label>
+                                                                <tooltip>AT-Datei erzeugen</tooltip>
+                                                                <description>AT-Datei erzeugen</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>
@@ -353,6 +362,16 @@
                                                                 <label>Projektion</label>
                                                                 <tooltip>Projektion</tooltip>
                                                                 <description>Projektion</description>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
+                                        <element name="zuflussVorhersage" type="boolean" default="false" nillable="false">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <name>Zuflussvorhersage vorhanden</name>
+                                                                <label>Zuflussvorhersage vorhanden</label>
+                                                                <tooltip>Zuflussvorhersage vorhanden</tooltip>
+                                                                <description>Zuflussvorhersage vorhanden</description>
                                                         </documentation>
                                                 </annotation>
                                         </element>

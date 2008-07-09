@@ -40,12 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wavos;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.StringWriter;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.java.io.FileCopyVisitor;
+import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.ProcessHelper;
+import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.services.calculation.common.ICalcServiceConstants;
 import org.kalypso.services.calculation.job.ICalcDataProvider;
 import org.kalypso.services.calculation.job.ICalcJob;
 import org.kalypso.services.calculation.job.ICalcMonitor;
@@ -53,8 +70,6 @@ import org.kalypso.services.calculation.job.ICalcResultEater;
 import org.kalypso.services.calculation.service.CalcJobServiceException;
 
 /**
- * 
- * TODO: insert type comment here
  * 
  * @author thuel2
  */
@@ -70,132 +85,95 @@ public class WavosCalcJob implements ICalcJob
   public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
       throws CalcJobServiceException
   {
-    //    modelSpec
-    //    <input id="GML" description="Modelldaten"/>
-    //    <input id="CONTROL_GML" description="Steuerdaten"/>
-    //    
-    //    <input id="ZML_PEGEL" description="Pegel-Zeitreihen"/>
-    //    <input id="ZML_ZUFLUESSE" description="Zufluss-Zeitreihen"/>
-    //    <input id="ZML_POLDER" description="Polder-Zeitreihen"/>
-    //    
-    //
-    //    <!-- Ergebnis-Dateien/Verzeichnisse -->
-    //    <output id="LOG" description="Log-Dateien"/>
-    //    <output id="ERGEBNISSE" description="Ergebniszeitreihen"/>
-    //    <output id="NATIVE_IN_DIR" description="Eingabedaten (natives Format)"/>
-    //    <output id="NATIVE_OUT_DIR" description="Ausgabedaten (natives Format)"/>
- 
-    // Logger wie bei der Saale
-    // Eingabedateien erzeugen
-    // Zeitreihen
-    // AT-Dateien
-    // Steuerdateien?
-
-    // dr_wavos starten
-
-    // LOG-Dateien
-    // Ergebnisse holen
-
-    //    ElbePolte
-    //    final File outputDir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
-    //    outputDir.mkdirs();
-    //
-    //    final File logfile = new File( outputDir, "elbePolte.log" );
-    //
-    //    PrintWriter pw = null;
-    //    FileWriter fw = null;
-    //    final Map metaMap = new HashMap();
-    //    try
-    //    {
-
-    //###SAALE-Logger
-    final File loggerFile = new File( tmpdir, "elbeWavosSachsen.log" );
+    final File loggerFile = new File( tmpdir, WavosConst.LOG_FILE );
     resultEater.addResult( "LOG", loggerFile );
     StreamHandler streamHandler = null;
+    final Map metaMap = new HashMap();
     try
     {
       final FileOutputStream loggerStream = new FileOutputStream( loggerFile );
       final Logger packageLogger = Logger.getLogger( getClass().getPackage().getName() );
       streamHandler = new StreamHandler( loggerStream, new SimplisticFormatter() );
-      // TODO: besser als info vom client holen? oder andersrum, das encoding weitergeben an den client?
       streamHandler.setEncoding( WavosConst.WAVOS_CODEPAGE );
       packageLogger.addHandler( streamHandler );
 
+      m_logger.info( WavosConst.CALC_START + " (" + WavosUtils.getAktuelleUhrzeit() + ")" );
+      if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        m_logger.info( WavosConst.CALC_CANCELLED );
+        return;
+      }
+
+      monitor.setMessage( WavosConst.CALC_FILE_CREATION );
+      m_logger.info( WavosConst.CALC_FILE_CREATION );
+
+      final File nativedir = new File( tmpdir, ".native" );
+      final File nativeInDir = new File( nativedir, "in" );
+      final File nativeOutDir = new File( nativedir, "out" );
+      final File outputDir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+      nativedir.mkdirs();
+      nativeInDir.mkdirs();
+      nativeOutDir.mkdirs();
+      outputDir.mkdirs();
+
+      resultEater.addResult( "NATIVE_IN_DIR", nativeInDir );
+      resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
+      //      final File outputResultDir = new File( outputDir, ICalcServiceConstants.RESULT_DIR_NAME );
+      //      resultEater.addResult( "ERGEBNISSE", outputResultDir );
+      resultEater.addResult( "ERGEBNISSE", outputDir );
+
+      // Eingabedateien erzeugen
+      final Properties props = new Properties();
+      final File exeDir = WavosInputWorker.createNativeInput( tmpdir, inputProvider, props, nativeInDir,
+          WavosConst.FLUSS, metaMap );
+
+      monitor.setProgress( 33 );
+      if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        m_logger.info( WavosConst.CALC_CANCELLED );
+        return;
+      }
+
+      monitor.setMessage( WavosConst.CALC_CALL );
+      m_logger.info( WavosConst.CALC_CALL );
+      // dr_wavos starten
+      startCalculation( exeDir, monitor, nativeOutDir );
+
+      monitor.setProgress( 33 );
+      if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        m_logger.info( WavosConst.CALC_CANCELLED );
+        return;
+      }
+      //
+      monitor.setMessage( WavosConst.CALC_RESULT_READ );
+      m_logger.info( WavosConst.CALC_RESULT_READ );
+      // Ergebnisse holen
+      try
+      {
+        writeResultsToFolder( nativeOutDir, outputDir, props, metaMap );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
+      }
+
+      monitor.setProgress( 34 );
+      if( monitor.isCanceled() )
+      {
+        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        m_logger.info( WavosConst.CALC_CANCELLED );
+        return;
+      }
+
+      monitor.setMessage( WavosConst.CALC_FINISHED );
+      m_logger.info( WavosConst.CALC_FINISHED );
+
     }
-    //      fw = new FileWriter( logfile );
-    //      pw = new PrintWriter( fw );
-    //
-    //      pw.println( "Modell Berechnung wird gestartet (" + ElbePolteUtils.getAktuelleUhrzeit() + ")" );
-    //      pw.println();
-    //
-    //      if( monitor.isCanceled() )
-    //      {
-    //        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
-    //        pw.println( ElbePolteConst.CALC_CANCELLED );
-    //        return;
-    //      }
-    //      final Properties props = new Properties();
-    //      monitor.setMessage( "Dateien für Rechenkern werden erzeugt" );
-    //      pw.println( "Dateien für Rechenkern werden erzeugt" );
-    //
-    //      final File nativedir = new File( tmpdir, ".native" );
-    //      final File nativeInDir = new File( nativedir, "in" );
-    //      final File nativeOutDir = new File( nativedir, "out" );
-    //      nativedir.mkdirs();
-    //      nativeInDir.mkdirs();
-    //      nativeOutDir.mkdirs();
-    //
-    //      final File exeDir = ElbePolteInputWorker.createNativeInput( tmpdir, inputProvider, pw, props, nativeInDir,
-    //          metaMap );
-    //
-    //      resultEater.addResult( "NATIVE_IN_DIR", nativeInDir );
-    //
-    //      monitor.setProgress( 33 );
-    //      if( monitor.isCanceled() )
-    //      {
-    //        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
-    //        pw.println( ElbePolteConst.CALC_CANCELLED );
-    //        return;
-    //      }
-    //
-    //      monitor.setMessage( ElbePolteConst.CALC_CALL );
-    //      pw.println( ElbePolteConst.CALC_CALL );
-    //      startCalculation( exeDir, pw, monitor, nativeOutDir );
-    //
-    //      resultEater.addResult( "NATIVE_OUT_DIR", nativeOutDir );
-    //
-    //      monitor.setProgress( 33 );
-    //      if( monitor.isCanceled() )
-    //      {
-    //        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
-    //        pw.println( ElbePolteConst.CALC_CANCELLED );
-    //        return;
-    //      }
-    //
-    //      monitor.setMessage( "Ergebnisse werden zurückgelesen" );
-    //      pw.println( "Ergebnisse werden zurückgelesen" );
-    //      try
-    //      {
-    //        writeResultsToFolder( nativeOutDir, outputDir, props, metaMap );
-    //      }
-    //      catch( final Exception e )
-    //      {
-    //        e.printStackTrace();
-    //        throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
-    //      }
-    //
-    //      monitor.setProgress( 34 );
-    //      if( monitor.isCanceled() )
-    //      {
-    //        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
-    //        pw.println( ElbePolteConst.CALC_CANCELLED );
-    //        return;
-    //      }
-    //
-    //      monitor.setMessage( ElbePolteConst.CALC_FINISHED );
-    //      pw.println( ElbePolteConst.CALC_FINISHED );
-    //
-    //    }
     catch( final Exception e )
     {
       e.printStackTrace();
@@ -204,13 +182,249 @@ public class WavosCalcJob implements ICalcJob
     }
     finally
     {
-      //      IOUtils.closeQuietly( pw );
-      //      IOUtils.closeQuietly( fw );
-      //      resultEater.addResult( "LOG", logfile );
-      //      resultEater.addResult( "ERGEBNISSE", new File( outputDir, ICalcServiceConstants.RESULT_DIR_NAME ) );
-      //      monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_FINISHED );
+      monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_FINISHED );
+      if( streamHandler != null )
+        streamHandler.close();
     }
 
+  }
+
+  private void writeResultsToFolder( final File nativeOutDir, final File outputDir, final Properties props,
+      final Map metaMap ) throws Exception
+  {
+    final File nativeOutWavosDir = new File( nativeOutDir, WavosConst.DIR_WAVOS );
+    final File nativeOutWavosFlussDir = new File( nativeOutWavosDir, WavosConst.FLUSS );
+    final File nativeOutAwerteDir = new File( nativeOutWavosFlussDir, WavosConst.DIR_AWERTE );
+    // Anfangswerte zippen (zip to new destiny)
+    final File outputAwerteDir = new File( outputDir, WavosConst.DIR_ANFANGSWERTE );
+    outputAwerteDir.mkdirs();
+    final File outputAwerteFile = new File( outputAwerteDir, WavosConst.FILE_AWERTE_ZIP );
+    ZipUtilities.zip( outputAwerteFile, nativeOutAwerteDir );
+
+    // Zeitreihen zurücklesen
+    // --- "normale" Ergebnisse
+    final File outputTSDir = new File( outputDir, WavosConst.DIR_ZEITREIHEN );
+    outputTSDir.mkdirs();
+    final File outputZmlDir = new File( outputTSDir, "Pegel" );
+    outputZmlDir.mkdirs();
+    final File nativeOutVorherDir = new File( new File( new File( nativeOutDir, WavosConst.DIR_WAVOS ),
+        WavosConst.FLUSS ), WavosConst.DIR_VORHER );
+    WavosConverter.convertVorher2Zml( nativeOutVorherDir, outputZmlDir, props, metaMap, true );
+
+    // --- ohne Anbiegung (Ergebnis wird vor shiftvor zwischengespeichert)
+    final File outputTSOhneShiftvorDir = new File( outputDir, WavosConst.DIR_ZEITREIHEN_OHNE_SHIFTVOR );
+    outputTSOhneShiftvorDir.mkdirs();
+    final File outputZmlOhneShiftvorDir = new File( outputTSOhneShiftvorDir, "Pegel" );
+    outputZmlOhneShiftvorDir.mkdirs();
+
+        final File nativeOutVorherSaveDir = new File( new File( new File( nativeOutDir, WavosConst.DIR_WAVOS ),
+            WavosConst.FLUSS ), WavosConst.DIR_VORHER_SAVE );
+        WavosConverter.convertVorher2Zml( nativeOutVorherSaveDir, outputZmlOhneShiftvorDir, props, metaMap, false );
+  }
+
+  private void startCalculation( final File exeDir, final ICalcMonitor monitor, final File nativeOutDir )
+      throws IOException
+  {
+
+    final String commandString = exeDir + File.separator + WavosConst.FILE_START_BAT;
+    m_logger.info( "\t" + commandString );
+
+    final StringWriter logStream = new StringWriter();
+    final StringWriter errStream = new StringWriter();
+    try
+    {
+      // timeout after 5 min
+      ProcessHelper.startProcess( commandString, null, exeDir, monitor, 1000 * 60 * 5, logStream, errStream );
+
+      m_logger.info( "Ausgaben des Rechenkerns" );
+      m_logger.info( "========================" );
+      m_logger.info( "= Standard-Ausgabe (Konsole) =" );
+      m_logger.info( "========================" );
+      m_logger.info( logStream.toString() );
+      m_logger.info( "========================" );
+      m_logger.info( "" );
+
+      final String errString = errStream.toString();
+      if( errString.length() > 0 )
+      {
+        m_logger.info( "========================" );
+        m_logger.info( "= Fehler-Ausgabe (Konsole) =" );
+        m_logger.info( "========================" );
+        m_logger.info( errString );
+        m_logger.info( "========================" );
+        m_logger.info( "" );
+      }
+    }
+
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "Fehler beim Ausführen von WAVOS", e );
+    }
+    catch( final ProcessTimeoutException e )
+    {
+      e.printStackTrace();
+      throw new CalcJobServiceException( "Fehler beim Ausführen von WAVOS", e );
+    }
+    finally
+    {
+      logStream.close();
+      errStream.close();
+
+      // LOG-Dateien (output.log, shiftvor.log) lesen und analysieren
+      final File fleWavosLog = new File( exeDir, WavosConst.FILE_WAVOS_LOG );
+      final File fleShiftvorLog = new File( exeDir, WavosConst.FILE_SHIFTVOR_LOG );
+      boolean wavosSuccess = false;
+      boolean shiftvorSuccess = false;
+      InputStreamReader isrWavos = null;
+      BufferedReader readerWavos = null;
+      InputStreamReader isrShiftvor = null;
+      BufferedReader readerShiftvor = null;
+      try
+      {
+        isrWavos = new InputStreamReader( new FileInputStream( fleWavosLog ) );
+        readerWavos = new BufferedReader( isrWavos );
+
+        m_logger.info( "Ausgaben des Rechenkerns" );
+        m_logger.info( "========================" );
+        m_logger.info( "= LOG-Datei WAVOS (" + WavosConst.FILE_WAVOS_LOG + ") =" );
+        m_logger.info( "========================" );
+        final LineNumberReader lneNumRead = new LineNumberReader( readerWavos );
+        String processOut = lneNumRead.readLine();
+        String processOut2 = "";
+        String processOut3 = "";
+
+        while( processOut != null )
+        {
+          m_logger.info( processOut );
+          processOut3 = processOut2;
+          processOut2 = processOut;
+          processOut = lneNumRead.readLine();
+        }
+        m_logger.info( "========================" );
+        m_logger.info( "" );
+
+        if( processOut2.startsWith( "Ende: call_rodasp: 1" ) )
+        {
+          m_logger.info( "Rechnung erfolgreich beendet." );
+          wavosSuccess = true;
+        }
+        else if( processOut3.startsWith( "Ende: call_rodasp: -4" ) )
+        {
+          // für Fehler -4 spezielle Fehlermedlung von Frau Rademacher (BfG) bekommen
+          m_logger.info( WavosConst.ERROR_MINUS_4 );
+          throw new Exception( processOut3 + ": " + WavosConst.ERROR_MINUS_4, new Exception() );
+        }
+        else if( processOut3.startsWith( "Ende: call_rodasp: -" ) )
+        {
+          // call_rodasp <0 bedeutet Fehler
+          m_logger.info( WavosConst.ERROR_MINUS );
+          throw new Exception( processOut3 + ": " + WavosConst.ERROR_MINUS, new Exception() );
+        }
+        else
+        {
+          // call_rodasp =0 oder >1 sollten eigentlich nicht auftreten
+          m_logger.info( WavosConst.ERROR_PLUS );
+          throw new Exception( processOut3 + ": " + WavosConst.ERROR_PLUS, new Exception() );
+        }
+
+        // Shiftvor
+        isrShiftvor = new InputStreamReader( new FileInputStream( fleShiftvorLog ) );
+        readerShiftvor = new BufferedReader( isrShiftvor );
+
+        m_logger.info( "Ausgaben des Rechenkerns" );
+        m_logger.info( "========================" );
+        m_logger.info( "= LOG-Datei SHIFTVOR (" + WavosConst.FILE_SHIFTVOR_LOG + ") =" );
+        m_logger.info( "========================" );
+        final LineNumberReader lneNumReadShift = new LineNumberReader( readerShiftvor );
+        processOut = lneNumReadShift.readLine();
+        processOut2 = "";
+        processOut3 = "";
+
+        while( processOut != null )
+        {
+          m_logger.info( processOut );
+          processOut3 = processOut2;
+          processOut2 = processOut;
+          processOut = lneNumReadShift.readLine();
+        }
+        m_logger.info( "========================" );
+        m_logger.info( "" );
+
+        // TODO return value von shiftvor noch wirklich analysieren
+        //        if( processOut2.startsWith( "" ) )
+        //        {
+        m_logger.info( "Shiftvor erfolgreich beendet." );
+        shiftvorSuccess = true;
+        //        }
+        //        else
+        //        {
+        //          m_logger.info( WavosConst.ERROR_SHIFTVOR );
+        //          throw new Exception( processOut2 + ": " + WavosConst.ERROR_SHIFTVOR, new Exception() );
+        //        }
+        if( wavosSuccess && shiftvorSuccess && nativeOutDir.exists() )
+        {
+          //  Daten zurückholen ins .native/out
+
+          // vorher
+          final File flussExeDir = new File( exeDir, WavosConst.FLUSS );
+          final File nativeOutWavosDir = new File( nativeOutDir, WavosConst.DIR_WAVOS );
+          final File nativeOutWavosFlussDir = new File( nativeOutWavosDir, WavosConst.FLUSS );
+          final File nativeOutVorherDir = new File( nativeOutWavosFlussDir, WavosConst.DIR_VORHER );
+          nativeOutVorherDir.mkdirs();
+          final File exeVorherDir = new File( flussExeDir, WavosConst.DIR_VORHER );
+          if( nativeOutVorherDir.exists() && exeVorherDir.exists() )
+          {
+            final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeVorherDir, nativeOutVorherDir, true );
+            FileUtilities.accept( exeVorherDir, copyVisitor, true );
+          }
+          
+          // vorher_save
+          final File nativeOutVorherSaveDir = new File( nativeOutWavosFlussDir, WavosConst.DIR_VORHER_SAVE );
+          nativeOutVorherSaveDir.mkdirs();
+          final File exeVorherSaveDir = new File( flussExeDir, WavosConst.DIR_VORHER_SAVE );
+          if( nativeOutVorherSaveDir.exists() && exeVorherSaveDir.exists() )
+          {
+            final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeVorherSaveDir, nativeOutVorherSaveDir, true );
+            FileUtilities.accept( exeVorherSaveDir, copyVisitor, true );
+          }
+          // bin (vor allem wegen der SIM-Dateien)
+          final File nativeOutBinDir = new File( nativeOutWavosFlussDir, WavosConst.DIR_BIN );
+          nativeOutBinDir.mkdirs();
+          final File exeBinDir = new File( flussExeDir, WavosConst.DIR_BIN );
+          if( nativeOutBinDir.exists() && exeBinDir.exists() )
+          {
+            final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeBinDir, nativeOutBinDir, true );
+            FileUtilities.accept( exeBinDir, copyVisitor, true );
+          }
+          // awerte (ggf. nicht alle zurückübertragen...)
+          final File nativeOutAwerteDir = new File( nativeOutWavosFlussDir, WavosConst.DIR_AWERTE );
+          nativeOutAwerteDir.mkdirs();
+          final File exeAwerteDir = new File( flussExeDir, WavosConst.DIR_AWERTE );
+          if( nativeOutAwerteDir.exists() && exeAwerteDir.exists() )
+          {
+            final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeAwerteDir, nativeOutAwerteDir, true );
+            FileUtilities.accept( exeAwerteDir, copyVisitor, true );
+          }
+
+          // logs (output.log, shiftvor.log)
+          FileUtils.copyFile( fleWavosLog, new File( nativeOutWavosFlussDir, WavosConst.FILE_WAVOS_LOG ) );
+          FileUtils.copyFile( fleShiftvorLog, new File( nativeOutWavosFlussDir, WavosConst.FILE_SHIFTVOR_LOG ) );
+        }
+
+      }
+      catch( Exception e )
+      {
+        throw new CalcJobServiceException( e.getLocalizedMessage(), e );
+      }
+      finally
+      {
+        IOUtils.closeQuietly( readerWavos );
+        IOUtils.closeQuietly( isrWavos );
+        IOUtils.closeQuietly( readerShiftvor );
+        IOUtils.closeQuietly( isrShiftvor );
+      }
+    }
   }
 
   /**
