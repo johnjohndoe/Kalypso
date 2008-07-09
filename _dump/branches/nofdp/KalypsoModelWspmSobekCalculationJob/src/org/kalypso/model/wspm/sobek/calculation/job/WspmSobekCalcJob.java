@@ -48,7 +48,8 @@ import java.net.URL;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationBaseWorker;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationPi2SobekWorker;
-import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobekWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobek2PIWorker;
+import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobekOpenMIWorker;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationUpdateDataWorker;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -88,8 +89,11 @@ public class WspmSobekCalcJob implements ISimulation
 
     dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationSobekWorker sobekWorker = new SimulationSobekWorker();
+    final SimulationSobekOpenMIWorker sobekWorker = new SimulationSobekOpenMIWorker();
     sobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
+
+    final SimulationSobek2PIWorker sobek2Pi = new SimulationSobek2PIWorker();
+    sobek2Pi.run( tmpdir, inputProvider, resultEater, monitor );
 
     /* extract fake folder to tmpdir */
     // TODO remove

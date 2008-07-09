@@ -12,7 +12,7 @@ import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationException;
 
-public class SimulationPi2SobekWorker implements ISimulation
+public class SimulationSobekOpenMIWorker implements ISimulation
 {
 
   public URL getSpezifikation( )
@@ -32,7 +32,7 @@ public class SimulationPi2SobekWorker implements ISimulation
     final String[] command = new String[3];
     command[0] = "cmd.exe";
     command[1] = "/C";
-    command[2] = "3_sobek2PI.bat";
+    command[2] = "2_runOpenMI.cmd";
 
     /* Execute the process. */
 
@@ -90,10 +90,7 @@ public class SimulationPi2SobekWorker implements ISimulation
         e.printStackTrace();
       }
 
-      /* add log pi2sobek log file */
-// resultEater.addResult( ISobekCalculationJobConstants.LOG_PI2SOBEK, new File( tmpdir,
-// "Sobek-IDSS/data/sobek_river/CMTWORK/conv_sbk.log" ) );
-      // TODO check log file
+      // TODO check return value
     }
   }
 }
