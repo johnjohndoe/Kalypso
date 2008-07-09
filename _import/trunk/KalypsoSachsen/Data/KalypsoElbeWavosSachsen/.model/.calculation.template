@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WavosControl fid="foo" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.wavos.control" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<scenarioId>:scenarioId:</scenarioId>
-	<scenarioName>:scenarioName:</scenarioName>
-	<scenarioDescription>:scenarioDescription:</scenarioDescription>
-	<startforecast>:startforecast:</startforecast>
-	<simulationDuration>6</simulationDuration>
-	<forecastDuration>72</forecastDuration>
-	<editor>:user:</editor>
-	<description>- bitte ausfüllen -</description>
-	<comment>- bitte ausfüllen -</comment>
-	<calctime>:time:</calctime>
+        <scenarioId>:scenarioId:</scenarioId>
+        <scenarioName>:scenarioName:</scenarioName>
+        <scenarioDescription>:scenarioDescription:</scenarioDescription>
+        <startforecast>:startforecast:</startforecast>
+        <simulationDuration>6</simulationDuration>
+        <forecastDuration>72</forecastDuration>
+        <editor>:user:</editor>
+        <description>- bitte ausfüllen -</description>
+        <comment>- bitte ausfüllen -</comment>
+        <calctime>:time:</calctime>
+        <calcCaseContinued>false</calcCaseContinued>
+        <intervalAmount>1</intervalAmount>
 </WavosControl>

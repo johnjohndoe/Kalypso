@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WavosControl fid="foo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.wavos.control" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.wavos.control ">
+  <scenarioName>-unbekannt-</scenarioName>
+  <startsimulation/>
+  <startforecast>2008-06-20T13:00:00</startforecast>
+  <simulationDuration>6</simulationDuration>
+  <forecastDuration>72</forecastDuration>
+  <editor>Administrator</editor>
+  <description>- bitte ausfüllen -</description>
+  <comment>- bitte ausfüllen -</comment>
+  <calctime>2008-06-20T13:38:56</calctime>
+  <calcCaseContinued>false</calcCaseContinued>
+  <intervalAmount>1</intervalAmount>
+  <useAWerte/>
+</WavosControl>

@@ -1,47 +1,6 @@
 <project default="fake">
 
-	<!-- Zeitschritt der Berechnung: 1h-->
-		<property name="interval.field" value="HOUR_OF_DAY"/>
-		<property name="interval.amount" value="1"/>
-	
-    <!-- define the requests -->
-	<property name="requestQ"
-		value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;" />
-	<property name="requestW"
-		value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W&lt;/axes&gt;&lt;statusAxes&gt;W&lt;/statusAxes&gt;&lt;/request&gt;" />
 		
-	<property name="requestPolder"
-		value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,POLDER_CONTROL&lt;/axes&gt;&lt;statusAxes&gt;POLDER_CONTROL&lt;/statusAxes&gt;&lt;/request&gt;" />
-
-	<!-- Vordefinierte Filter -->
-    <!-- Q: interpolation-filter -->
-	<property name="filterQ"
-		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
-	<property name="filterW"
-		value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
-	
-    <property name="filterQOhneFortsetzung"
-		value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;false&quot; /&gt;&lt;/filter&gt;" />
-	
-	<!-- POLDER_CONTROL: ??? filter -->
-	<property name="filterPolder"
-		value="${requestPolder}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;false&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
-
- 	
-	<!-- Ablage W: mit Rundung auf +/- 5cm -->
-	<property name="filterCommitPrognoseWDown" 
-		value="&lt;filter&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_DOWN&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
-	<property name="filterCommitPrognoseWUp" 
-		value="&lt;filter&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_UP&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
-
-	<!-- Ablage W, ohne Rundung (Filter für W und Q gleich?) -->
-		<property name="filterCommitPrognoseW"
-				value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
-		
-	<!-- Ablage Q, ohne Rundung -->
-	<property name="filterCommitPrognoseQ"
-			value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
-	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: fake                      nur damit das Projekt nicht schreit
          - - - - - - - - - - - - - - - - - -->
@@ -65,6 +24,7 @@
 					<include name="*.odt"/>
 					<include name="Zeitreihen/*.ott"/>
 					<include name="Zeitreihen/*.odt"/>
+					<include name="Anfangswerte/doNotRemoveThisDir.txt"/>
 					<include name="Ergebnisse/Zeitreihen/*.ott"/>
 					<include name="Ergebnisse/Zeitreihen/*.odt"/>
 					<include name="Ergebnisse/Zeitreihen_ohneVerschiebung/*.ott"/>
@@ -81,12 +41,13 @@
     	<property name="HOUR_OF_DAY" value="11"/>
     	<property name="DAY_OF_MONTH" value="5"/>
 
-    	<!-- TRICK :-) Berechnen von startsim und stopsim in zweitem gmlpropertyTask, da dann die Ergebnisse des ersten auch zu Verfügung stehen...-->
+    	<!-- TRICK :-) Berechnen von startsim und stopsim in zweitem gmlPropertyTask, da dann die Ergebnisse des ersten auch zu Verfügung stehen...-->
 		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
 			<property name="startforecast" featurepath="" featureProperty="startforecast"/>
 			<property name="simulationDuration" featurepath="" featureProperty="simulationDuration"/>
 			<property name="forecastDuration" featurepath="" featureProperty="forecastDuration"/>
 			<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
+			<property name="interval.amount" featurepath="" featureProperty="intervalAmount" defaultValue=""/>
 		</kalypso.gmlProperty>
     	
 		<kalypso.gmlProperty gmlURL="${calc.url}/.calculation">
@@ -95,6 +56,50 @@
 			<!-- stopsim = startforecast + forecastDuration h -->
 			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="${forecastDuration}" dateoffsetfield="${HOUR_OF_DAY}"/>
 		</kalypso.gmlProperty>
+    	
+    	<!-- Zeitschritt der Berechnung [h] aus .calculation-->
+    			<property name="interval.field" value="HOUR_OF_DAY"/>
+
+    		
+    	    <!-- define the requests -->
+    		<property name="requestQ"
+    			value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;" />
+
+    		<property name="requestW"
+    			value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,W&lt;/axes&gt;&lt;statusAxes&gt;W&lt;/statusAxes&gt;&lt;/request&gt;" />
+    			
+    		<property name="requestPolder"
+    			value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,POLDER_CONTROL&lt;/axes&gt;&lt;statusAxes&gt;POLDER_CONTROL&lt;/statusAxes&gt;&lt;/request&gt;" />
+
+    		<!-- Vordefinierte Filter -->
+    	    <!-- Q: interpolation-filter -->
+    		<property name="filterQ"
+    			value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    		<property name="filterW"
+    			value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    		
+    	    <property name="filterQOhneFortsetzung"
+    			value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;false&quot; /&gt;&lt;/filter&gt;" />
+    		
+    		<!-- POLDER_CONTROL: ??? filter -->
+    		<property name="filterPolder"
+    			value="${requestPolder}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;false&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+
+    	 	
+    		<!-- Ablage W: mit Rundung auf +/- 5cm -->
+    		<property name="filterCommitPrognoseWDown" 
+    			value="&lt;filter&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_DOWN&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
+    		<property name="filterCommitPrognoseWUp" 
+    			value="&lt;filter&gt;&lt;roundFilter factor=&quot;5&quot; mode=&quot;ROUND_UP&quot; axisType=&quot;W&quot; xmlns=&quot;filters.zml.kalypso.org&quot;/&gt;&lt;/filter&gt;"/>
+
+    		<!-- Ablage W, ohne Rundung (Filter für W und Q gleich?) -->
+    			<property name="filterCommitPrognoseW"
+    					value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+    			
+    		<!-- Ablage Q, ohne Rundung -->
+    		<property name="filterCommitPrognoseQ"
+    				value="&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;4&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
+
     	
     	<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
     	
@@ -134,22 +139,22 @@
 		<!-- 
 			Pegel
 		-->
-		<!-- Usti (W): Messung kombiniert mit tschechischen Vorhersagen -->
+		<!-- Usti (Q): Messung kombiniert mit tschechischen Vorhersagen -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Messwerte und Kombination mit tschechischen Vorhersagen (Usti)">
-			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterW}"/>
-			<source property="${pegelCzVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="${filterW}"/>
+			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
+			<source property="${pegelCzVorhersageLink}" from="${startforecast}" to="${stopsim}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
-		<!-- Elbepegel (W): nur Messung -->
+		<!-- Elbepegel (W): nur Messung + Fortsetzung zur Eingabe der Vorgabewerte-->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Elbepegel.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Messwerte der Elbepegel">
-			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterW}"/>
+			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterW}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
-		<!-- Usti: zusätzlich "Messung" Q, zur Information -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_QMessung.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Q-Messwerte für Usti (zur Information)">
-			<source property="${pegelMessungWInfoLink}" from="${startsim}" to="${startforecast}" filter="${filterQ}"/>
+		<!-- Usti: zusätzlich "Messung" W, zur Information -->
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_WMessung.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Q-Messwerte für Usti (zur Information)">
+			<source property="${pegelMessungWInfoLink}" from="${startsim}" to="${startforecast}" filter="${filterW}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
@@ -189,17 +194,20 @@
 			<input id="GML" path="calcCase.gml" relativeToCalcCase="true"/>
 			
 			<input id="ZML_PEGEL" path="Zeitreihen/Pegel" relativeToCalcCase="true"/>
-			<input id="ZML_POLDER" path="Zeitreihen/Polder" relativeToCalcCase="true"/>
 			<input id="ZML_ZUFLUESSE" path="Zeitreihen/Zufluesse" relativeToCalcCase="true"/>
+			<input id="ZML_POLDER" path="Zeitreihen/Polder" relativeToCalcCase="true"/>
+			<input id="AWERTE" path="Anfangswerte" relativeToCalcCase="true"/>
 			
-			<output id="LOG" path="Log-Dateien/elbeWavosSachsen.log" relativeToCalcCase="true"/>
+			<output id="LOG" path="Ergebnisse/Log-Datei/elbeWavosSachsen.log" relativeToCalcCase="true"/>
 			<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
 			<output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>
 			<output id="NATIVE_OUT_DIR"  path="Ergebnisse/.native/out" relativeToCalcCase="true"/>
 			
 			<clearAfterCalc path="Ergebnisse/Anfangswerte" relativeToCalcCase="true"/>
-			<clearAfterCalc path="Ergebnisse/**/*.zml" relativeToCalcCase="true"/>
-			<clearAfterCalc path="Log-Dateien" relativeToCalcCase="true" />
+			<clearAfterCalc path="Ergebnisse/.native" relativeToCalcCase="true"/>
+			<clearAfterCalc path="Ergebnisse/Zeitreihen/Pegel" relativeToCalcCase="true"/>
+			<clearAfterCalc path="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel" relativeToCalcCase="true"/>
+			<clearAfterCalc path="Ergebnisse/Log-Datei" relativeToCalcCase="true" />
 		</kalypso.runCalculation>
 	</target>
 	

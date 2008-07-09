@@ -19,9 +19,11 @@
       <lfdNum>150</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage/>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -47,6 +49,7 @@
       <ganglinie_vorhersage_oben_original>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Wittenberg_oben.zml"/>
       </ganglinie_vorhersage_oben_original>
+      <accuracyPrediction>5.0</accuracyPrediction>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -65,9 +68,11 @@
       <lfdNum>20</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage>true</zuflussVorhersage>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -76,7 +81,7 @@
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti.zml"/>
       </ganglinie_gesamt>
       <ganglinie_information>
-        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti_Q.zml"/>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti_W.zml"/>
       </ganglinie_information>
       <ganglinie_vorhersage>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel/Usti.zml"/>
@@ -96,6 +101,7 @@
       <ganglinie_vorhersage_oben_original>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Usti_oben.zml"/>
       </ganglinie_vorhersage_oben_original>
+      <accuracyPrediction>5.0</accuracyPrediction>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -114,9 +120,11 @@
       <lfdNum>120</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>true</projektionErlaubt>
       <projektionEmpfohlen>W</projektionEmpfohlen>
       <projektionEingschaltet>W</projektionEingschaltet>
+      <zuflussVorhersage/>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -142,6 +150,7 @@
       <ganglinie_vorhersage_oben_original>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Torgau_oben.zml"/>
       </ganglinie_vorhersage_oben_original>
+      <accuracyPrediction>5.0</accuracyPrediction>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -160,9 +169,11 @@
       <lfdNum>40</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage/>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -188,6 +199,7 @@
       <ganglinie_vorhersage_oben_original>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen/Pegel_ohneVerschiebung/Schöna_oben.zml"/>
       </ganglinie_vorhersage_oben_original>
+      <accuracyPrediction>5.0</accuracyPrediction>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -206,9 +218,11 @@
       <lfdNum>100</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage/>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -234,6 +248,7 @@
       <ganglinie_vorhersage_oben_original>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Riesa_oben.zml"/>
       </ganglinie_vorhersage_oben_original>
+      <accuracyPrediction>5.0</accuracyPrediction>
     </VorhersagePegel>
   </pegelMember>
   <pegelMember>
@@ -252,9 +267,11 @@
       <lfdNum>140</lfdNum>
       <river>Schwarze Elster</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage>true</zuflussVorhersage>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -276,13 +293,15 @@
       <id/>
       <lageAmGewaesser>95.0</lageAmGewaesser>
       <pegelNullPunkt/>
-      <kenn>ZG_II</kenn>
+      <kenn>ZG_2</kenn>
       <lfdNum>80</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
+      <createAT/>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage>true</zuflussVorhersage>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -304,13 +323,15 @@
       <id/>
       <lageAmGewaesser>40.0</lageAmGewaesser>
       <pegelNullPunkt/>
-      <kenn>ZG_I</kenn>
+      <kenn>ZG_1</kenn>
       <lfdNum>60</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
+      <createAT/>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage>true</zuflussVorhersage>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -336,9 +357,11 @@
       <lfdNum>70</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>true</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
+      <zuflussVorhersage/>
       <ganglinie_reserve_1/>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
@@ -364,6 +387,7 @@
       <ganglinie_vorhersage_oben_original>
         <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel/Dresden_oben.zml"/>
       </ganglinie_vorhersage_oben_original>
+      <accuracyPrediction>5.0</accuracyPrediction>
     </VorhersagePegel>
   </pegelMember>
   <bauwerkMember>

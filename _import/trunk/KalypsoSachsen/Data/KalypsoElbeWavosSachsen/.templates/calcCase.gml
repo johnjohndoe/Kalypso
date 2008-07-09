@@ -19,6 +19,7 @@
       <lfdNum>150</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -65,6 +66,7 @@
       <lfdNum>20</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -114,6 +116,7 @@
       <lfdNum>120</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>true</projektionErlaubt>
       <projektionEmpfohlen>W</projektionEmpfohlen>
       <projektionEingschaltet>W</projektionEingschaltet>
@@ -160,6 +163,7 @@
       <lfdNum>40</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -206,6 +210,7 @@
       <lfdNum>100</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -252,6 +257,7 @@
       <lfdNum>140</lfdNum>
       <river>Schwarze Elster</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -280,6 +286,7 @@
       <lfdNum>80</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
+      <createAT/>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -308,6 +315,7 @@
       <lfdNum>60</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>Q</datenUebergabe>
+      <createAT/>
       <projektionErlaubt>false</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
@@ -336,6 +344,7 @@
       <lfdNum>70</lfdNum>
       <river>Elbe</river>
       <datenUebergabe>W</datenUebergabe>
+      <createAT>true</createAT>
       <projektionErlaubt>true</projektionErlaubt>
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
