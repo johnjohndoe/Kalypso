@@ -40,17 +40,25 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
@@ -62,6 +70,8 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
@@ -82,6 +92,9 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class CopyObservationFeatureVisitor implements FeatureVisitor
 {
+  /** Used to search/replace metadata content with properties of the visited feature */
+  private static Pattern PATTERN_FEATURE_PROPERTY = Pattern.compile( "\\Q${property;\\E([^;]*)\\Q;\\E([^}]*)\\Q}\\E" );
+
   private final Source[] m_sources;
 
   private final URL m_context;
@@ -202,7 +215,18 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       TimeserieUtils.setForecast( resultObs, m_forecastFrom, m_forecastTo );
 
       // put additional metadata that we got from outside
-      resultObs.getMetadataList().putAll( m_metadata );
+      final MetadataList resultMetadata = resultObs.getMetadataList();
+      String metaName = null;
+      for( final Iterator it = m_metadata.entrySet().iterator(); it.hasNext(); )
+      {
+        final Map.Entry entry = (Entry)it.next();
+        final String metaValue = replaceMetadata( f, (String)entry.getValue() );
+        final String metaKey = (String)entry.getKey();
+        resultMetadata.put( metaKey, metaValue );
+
+        if( ObservationConstants.MD_NAME.equals( metaKey ) )
+          metaName = metaValue;
+      }
 
       // protocol the observations here and inform the user
       KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logger );
@@ -214,13 +238,16 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       final IPath location = targetfile.getLocation();
       final File file = location.toFile();
-      FileOutputStream stream = null;
+      OutputStream stream = null;
       try
       {
         if( !file.getParentFile().exists() )
           file.getParentFile().mkdirs();
-        stream = new FileOutputStream( file );
+        stream = new BufferedOutputStream( new FileOutputStream( file ) );
         final ObservationType type = ZmlFactory.createXML( resultObs, null );
+        // Overwrite name of obs if metadata name was changed.
+        if( metaName != null )
+          type.setName( metaName );
         ZmlFactory.getMarshaller().marshal( type, stream );
       }
       finally
@@ -232,11 +259,60 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Fehler beim Kopieren der Zeitreihen für Feature: "
-          + f.getId() + "\t" + e.getLocalizedMessage() );
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS,
+          "Fehler beim Kopieren der Zeitreihen für Feature: " + f.getId() + "\t" + e.getLocalizedMessage() );
     }
 
     return true;
+  }
+
+  /**
+   * Search/replace metadata values with properties from the current feature. <br>
+   * REMARK: The search/replace mechanism is similar to the one used in Kalypso 2.0 and this code should be replaced as
+   * soon as we change to the new version of Kalypso.
+   */
+  private String replaceMetadata( final Feature feature, final String metaValue )
+  {
+    if( metaValue == null )
+      return null;
+
+    final Matcher matcher = PATTERN_FEATURE_PROPERTY.matcher( metaValue );
+    if( matcher.matches() )
+    {
+      final String propertyName = matcher.group( 1 );
+      final String defaultValue = matcher.group( 2 );
+      final QName propertyQName = createQName( propertyName );
+
+      final Object property = feature.getProperty( propertyQName.getLocalPart() );
+      if( property == null )
+        return defaultValue;
+
+      return property.toString();
+    }
+
+    return metaValue;
+  }
+
+  /**
+   * REMARK: this is another backport from Kalypso 2.0 (QNameUtilities) remove as soon as we go to thsat version. syntax
+   * of fragmentedFullQName :
+   * 
+   * <pre>
+   *         &lt;namespace&gt;#&lt;localpart&gt;
+   * </pre>
+   * 
+   * example: fragmentedFullQName = www.w3c.org#index.html <br/>If no '#' is given, a qname with only a localPart is
+   * created.
+   * 
+   * @return qname from fragmentedFullQName
+   */
+  public static QName createQName( final String fragmentedFullQName )
+  {
+    final String[] parts = fragmentedFullQName.split( "#" );
+    if( parts.length == 2 )
+      return new QName( parts[0], parts[1] );
+
+    return QName.valueOf( fragmentedFullQName );
   }
 
   /**
@@ -324,7 +400,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     if( sourcelink == null )
       return null;
     // keine Zeitreihe verlink, z.B. kein Pegel am
-    // Knoten in KalypsoNA 
+    // Knoten in KalypsoNA
     final String href;
     if( filter == null )
       href = sourcelink.getHref();
