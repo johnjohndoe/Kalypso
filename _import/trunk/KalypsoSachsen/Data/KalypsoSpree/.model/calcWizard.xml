@@ -15,6 +15,11 @@
         <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitation"/>
         <arg name="maximizeMap" value="true"/>
         <arg name="mapWidgetID" value="SELECT"/>
+       	<arg name="selectFeatureID" value="Ombrometer-Sohland"/>
+        <arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
     </page>
 
 	<!-- Kontrolle Niederschlag -->
