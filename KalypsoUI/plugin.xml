@@ -761,6 +761,16 @@
            headless="true"
            library="lib/kalypsoAnt.jar"
            name="kalypso.thiessenWeightTask"/>
+     <antTask
+           eclipseRuntime="true"
+           class="org.kalypso.ant.MergeObservationTask"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.mergeObservation"/>
+     <antTask
+           eclipseRuntime="true"
+           class="org.kalypso.ant.ChangeGmlTask"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.changeGml"/>
    </extension>
    
    <extension
@@ -795,4 +805,29 @@
             class="org.kalypso.services.proxy.Kalypso_ObservationService_Impl"
             interfacename="IObservationService"/>
    </extension>
+      <extension
+            point="org.eclipse.ui.commands">
+         <command
+               description="Selects the next available feature"
+               name="Select Next Feature"
+               id="org.kalypso.ui.map.selectNextFeatureCommand"/>
+         <command
+               description="Selects the previous available feature"
+               name="Select Previous Feature"
+               id="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+  		<handlerSubmission commandId="org.kalypso.ui.map.selectNextFeatureCommand">
+  			<handler class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
+  				 <parameter name="forward" value="true"/>
+				 <parameter name="rotate"  value="false"/>
+				 <parameter name="image"  value="icons/util/forward_nav.gif"/>
+			</handler>
+  		</handlerSubmission>
+  		<handlerSubmission commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" >
+  			<handler class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
+  				 <parameter name="forward" value="false"/>
+				 <parameter name="rotate"  value="false"/>
+				 <parameter name="image"  value="icons/util/backward_nav.gif"/>
+			</handler>
+  		</handlerSubmission>
+      </extension>
  </plugin>
