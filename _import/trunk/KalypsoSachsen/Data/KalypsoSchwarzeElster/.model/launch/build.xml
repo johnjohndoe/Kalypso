@@ -10,7 +10,6 @@
     <property name="szenario_EchtDwdUrl1" value="http://lfug-kv-01:8080/webdav/dwd/lm_normal.txt" />
     <property name="szenario_EchtDwdUrl2" value="http://lfug-kv-02:8080/webdav/dwd/lm_normal.txt" />
 
-	
     <!-- define the requests -->
     <property name="requestN"
               value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,N&lt;/axes&gt;&lt;statusAxes&gt;N&lt;/statusAxes&gt;&lt;/request&gt;" />
@@ -67,6 +66,7 @@
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 
 		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml"/>
+		<copy file="${project.dir}/.templates/.calculation.template" tofile="${calc.dir}/.calculation"/>
 		<copy todir="${calc.dir}">
 			<fileset dir="${project.dir}/.templates">
 				<include name="*.gtt"/>
@@ -78,8 +78,20 @@
 				<include name="Ergebnisse/Zeitreihen/*.ott"/>
 			</fileset>
 		</copy>
+
+		<kalypso.changeGml gmlURL="${calc.url}/.calculation">
+			<property featurepath="" featureProperty="scenarioId" value="${kalypso.currentScenarioId}"/>
+			<property featurepath="" featureProperty="scenarioName" value="${kalypso.currentScenarioName}"/>
+			<property featurepath="" featureProperty="scenarioDescription" value="${kalypso.currentScenarioDescription}"/>
+			<property featurepath="" featureProperty="startsimulation" value="${kalypso.startsim}"/>
+			<property featurepath="" featureProperty="startforecast" value="${kalypso.startforecast}"/>
+			<property featurepath="" featureProperty="editor" value="${kalypso.currentUser}"/>
+			<property featurepath="" featureProperty="description" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="comment" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="calctime" value="${kalypso.currentTime}"/>
+			<property featurepath="" featureProperty="mergeCasePath" value="${calc.merge.relpath}"/>
+		</kalypso.changeGml>
 	</target>
-	
 	
     <!-- - - - - - - - - - - - - - - - - - 
           target: calculationProperties                      Initializes properties from .calculation
@@ -93,8 +105,20 @@
 			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="48" dateoffsetfield="11"/>
 
 			<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
+			<property name="calc.merge.path" featurepath="" featureProperty="mergeCasePath" defaultValue=""/>
 		</kalypso.gmlProperty>
-		
+
+    	<!-- Construct the url of the calc case to merge and set the flag if merge is allowed.
+    		 REMARK: add trailing '/', else url resolution does not work properly for
+    		 the merge task
+    	-->
+    	<property name="calc.merge.url" value="${project.url}${calc.merge.path}/"/>
+    	<condition property="doMergeCase">
+    		<not>
+    			<equals trim="true" arg1="" arg2="${calc.merge.path}"/>
+    		</not>
+    	</condition>
+
 		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
 		
 		<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
@@ -139,7 +163,7 @@
 		</copy>
 		
 		<!-- TODO: überall mit requests arbeiten -->
-		<!-- Omrbometer -->
+		<!-- Ombrometer -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="${ombrometerLink}" from="${startsimN}" to="${startforecast}" filter="${filterN}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
@@ -161,9 +185,9 @@
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
 			<source property="${vorgabeLink}" from="${startsimQ}" to="${stopsim}" filter="${filterQZufluss}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
+			<metadata name="Name" value="$${property;org.kalypso.spree.modell#name;Unbekannt}"/>
 		</kalypso.copyObservation>
 		
-
         <!-- Definition der Quellen, der DWD-Raster (Vorhersage) -->
         <!-- Scenario TEST -->
         <property name="szenario_TestDwdUrl1"
@@ -179,9 +203,33 @@
                               src="${dwdRasterRemoteURLs}"
                               listseparator=","
                               dest="${calc.dir}/dwd/lm_aktuell.txt" />
-		
+
 		<!-- Gebietsniederschlag neu berechnen -->
 		<antcall target="gebietsniederschlag"/>
+		<antcall target="mergeCase"/>
+	</target>
+
+	<!-- 
+		 ================================= 
+          target: mergeCase			
+         ================================= 
+    -->
+	<target name="mergeCase" if="doMergeCase">
+		<!-- Ombrometer -->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/>
+		
+		<!-- Pegel -->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/>
+		
+		<!-- Talsperren -->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/TalsperreMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/>
+
+		<!-- Vorgaben: Zufluss und Abfluss -->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/>
+	
+		<!-- TODO: was wachen wir mit dem Gebietsniederschlag?-->
+		
+		<!-- Andere Parameter übernehmen ? -->
 	</target>
 
 	<!-- 
@@ -201,7 +249,7 @@
 		    <output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
 		    <output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>
 		    <output id="NATIVE_OUT_DIR"  path="Ergebnisse/.native/out" relativeToCalcCase="true"/>
-			
+
 		    <clearAfterCalc path="Ergebnisse/**/*.zml" relativeToCalcCase="true"/>
 		    <clearAfterCalc path="Ergebnisse/.native" relativeToCalcCase="true"/>
 		    <clearAfterCalc path="Ergebnisse/*.gml" relativeToCalcCase="true"/>
@@ -226,6 +274,7 @@
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMapping.gml" localobs="local1" remoteobs="${vorhersageLinkNormal}" runasync="false" IgnoreIllegalFeaturePath="true"/>
     	-->
     	
+    	<!-- TODO: W und Q vertauscht, OK? siehe #TODO.txt -->
     	<echo message="Ablage der oberen Umhüllenden W"/>
     	<kalypso.commitPrognoses context="${calc.url}" featurepath="${exportPrognosenFeaturePath}" gml="${project.url}/.model/observationConf/VorhersageMappingW.gml" sourcefilter="${filterCommitPrognoseQ}" localobs="local3" remoteobs="${vorhersageLinkOben}" runasync="false" IgnoreIllegalFeaturePath="true"/>
     	<echo message="Ablage der unteren Umhüllenden W"/>
@@ -263,7 +312,7 @@
         <kalypso.dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConf.xml"
                          obsrasterurl="${dwdRasterLocalURL}"
                          targetcontext="${calc.dir}"
-                         description="Berechnung Gebietsniederschlagsmodell"
+			             description="Berechnung Gebietsniederschlagsmodell"
                          from="${startsimN}"
                          forecastfrom="${startforecast}"
                          to="${stopsim}"

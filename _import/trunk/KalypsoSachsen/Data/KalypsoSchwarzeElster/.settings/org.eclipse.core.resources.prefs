@@ -1,4 +1,4 @@
-#Wed Apr 30 17:53:02 CEST 2008
+#Tue Jul 08 16:15:00 CEST 2008
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Flusslaufparameter.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_16h41/Zeitreihen/W_SAERI.zml=UTF-8
@@ -128,8 +128,8 @@ encoding//.prognose/Vorhersage-2005-01-04_11h12/Zeitreihen/QV_BWALDE.zml=UTF-8
 encoding//.templates/calcCase/berichtDiagQ.odt=UTF-8
 encoding//Rechenf\u00E4lle/test/zeitreihen/W_SPREY.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_09h58/Flusslaufparameter.gtt=UTF-8
-encoding//.prognose/Vorhersage-2005-01-04_11h17/Zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//Rechenvarianten/april/Zeitreihen/QV_SPWIESE.zml=UTF-8
+encoding//.prognose/Vorhersage-2005-01-04_11h17/Zeitreihen/W_SCHIRG.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h05/Zeitreihen/QV_TSBAUTZ.zml=UTF-8
 encoding//Rechenvarianten/20040104_test2/calcCase.gml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/zeitreihen/QV_LOHSA.zml=UTF-8
@@ -277,6 +277,7 @@ encoding//Rechenvarianten/20040104_test2/Zeitreihen/QV_RLKETTE.zml=UTF-8
 encoding//Rechenvarianten/20040104_test2/Steuerparameter.gft=UTF-8
 encoding//Rechenvarianten/april/Zeitreihen/W_LIESKE.zml=UTF-8
 encoding//Rechenl\u00E4ufe/test/zeitreihen/PA_GROEDI.zml=UTF-8
+encoding//.prognose/Vorhersage-2008-07-08_16h11/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_10h33/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_21h12/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/prognose7/results.gml=UTF-8
@@ -479,6 +480,7 @@ encoding//.prognose/Vorhersage-2005-01-04_09h49/Zeitreihen/W_JAENKD.zml=UTF-8
 encoding//Rechenl\u00E4ufe/040427/steuerparameter.gft=UTF-8
 encoding//Rechenf\u00E4lle/test/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h38/Anfangsvolumen.gtt=UTF-8
+encoding//.prognose/Vorhersage-2008-07-08_16h11/.calculation=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_20h50/calcCase.gml=UTF-8
 encoding//.Rechenvarianten_test/Ereignis95/Zeitreihen/W_TRADO.zml=UTF-8
 encoding//.prognose/Vorhersage-2005-01-04_11h12/Zeitreihen/QV_LOHSA.zml=UTF-8
