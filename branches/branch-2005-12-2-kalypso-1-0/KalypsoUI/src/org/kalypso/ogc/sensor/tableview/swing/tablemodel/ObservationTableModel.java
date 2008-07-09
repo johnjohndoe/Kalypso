@@ -227,6 +227,23 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   }
 
   /**
+   * Return the TableViewColumn for the given index
+   */
+  public Object getColumnValue( final int columnIndex )
+  {
+    synchronized( m_columns )
+    {
+      if( m_columns.size() == 0 )
+        return null;
+
+      if( columnIndex == 0 )
+        return m_sharedAxis;
+
+      return ( (TableViewColumn)m_columns.get( columnIndex - 1 ) );
+    }
+  }
+
+  /**
    * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
    */
   public Class getColumnClass( int columnIndex )
@@ -405,12 +422,12 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     /* Special case: if they are numbers, compare by a (very small) margin */
     if( newValue instanceof Number && oldValue instanceof Number )
     {
-      final double oldDouble = ((Number)oldValue).doubleValue();
-      final double newDouble = ((Number)newValue).doubleValue();
+      final double oldDouble = ( (Number)oldValue ).doubleValue();
+      final double newDouble = ( (Number)newValue ).doubleValue();
       // REAMRK: we are using a fixed epsilon here, but this should be small enough for all cases...
-      return Math.abs( oldDouble - newDouble ) < 0.0000001 ; 
+      return Math.abs( oldDouble - newDouble ) < 0.0000001;
     }
-    
+
     return ObjectUtils.equals( oldValue, newValue );
   }
 
