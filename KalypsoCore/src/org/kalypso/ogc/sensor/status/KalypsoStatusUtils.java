@@ -49,6 +49,8 @@ import java.util.NoSuchElementException;
 import javax.swing.ImageIcon;
 
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
 /**
@@ -198,6 +200,20 @@ public class KalypsoStatusUtils
     }
 
     throw new NoSuchElementException( "No Status-Axis found for: " + axis );
+  }
+
+  /**
+   * Returns the status axis for the given axis if found in the axes-list.
+   */
+  public static IAxis findStatusAxisForNoEx( final IAxis[] axes, final IAxis axis ) throws NoSuchElementException
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( isStatusAxisFor( axis, axes[i] ) )
+        return axes[i];
+    }
+
+    return null;
   }
 
   /**
@@ -476,5 +492,28 @@ public class KalypsoStatusUtils
   public static int performArithmetic( final int status1, final int status2 )
   {
     return ( status1 | status2 ) & KalypsoStati.MASK_ARITHMETIC;
+  }
+  
+  /**
+   * Get the combined status for the given axis.<br>
+   * If the axis has no corresponding status axis, BIT_OK is returned.<br>
+   * Else, the or'ed value of all stati is returned.
+   * @throws SensorException
+   */
+  public static int getStatus( final ITuppleModel values, final IAxis axis ) throws SensorException
+  {
+    int mergedStatus = KalypsoStati.BIT_OK;
+    
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( values.getAxisList(), axis );
+    if( statusAxis == null )
+      return mergedStatus;
+    
+    for( int i = 0; i < values.getCount(); i++ )
+    {
+      final int status = ( (Number)values.getElement( i, statusAxis ) ).intValue();
+      mergedStatus |= status;
+    }
+    
+    return mergedStatus;
   }
 }
