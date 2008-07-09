@@ -109,20 +109,11 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="calcMergePath" type="string" nillable="true">
+                                        <element name="mergeCasePath" type="string">
                                                 <annotation>
                                                         <documentation xml:lang="de">
-                                                                <label>Anfangswerte verwenden</label>
-                                                                <tooltip>Anfangswerte verwenden</tooltip>
-                                                                <description/>
-                                                        </documentation>
-                                                </annotation>
-                                        </element>
-                                        <element name="calcCaseContinued" type="boolean" default="false" nillable="false">
-                                                <annotation>
-                                                        <documentation xml:lang="de">
-                                                                <label>Rechenvariante fortsetzen</label>
-                                                                <tooltip>Rechenvariante fortsetzen</tooltip>
+                                                                <label>Fortgesetzte Rechenvariante</label>
+                                                                <tooltip>Pfad auf fortgesetzte Rechenvariante</tooltip>
                                                                 <description/>
                                                         </documentation>
                                                 </annotation>
