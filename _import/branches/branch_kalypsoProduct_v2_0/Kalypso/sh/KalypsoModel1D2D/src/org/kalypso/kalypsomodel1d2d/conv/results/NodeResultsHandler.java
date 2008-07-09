@@ -1705,7 +1705,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "1D2D-RESULT: Result for non-existing node: ", id );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "1D2D-RESULT: Result for non-existing node: \n", id );
       return;
     }
 
