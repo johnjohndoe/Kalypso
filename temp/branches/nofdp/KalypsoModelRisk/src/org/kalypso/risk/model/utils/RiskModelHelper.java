@@ -48,6 +48,7 @@ import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.transformation.CachedTransformationFactory;
 import org.kalypso.transformation.TransformUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -128,6 +129,8 @@ public class RiskModelHelper
       final ICoverage inputCoverage = sourceCoverageCollection.get( i );
 
       final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
+      final String sourceCRS = inputGrid.getSourceCRS();
+
       final double cellSize = Math.abs( inputGrid.getOffsetX().x - inputGrid.getOffsetY().x ) * Math.abs( inputGrid.getOffsetX().y - inputGrid.getOffsetY().y );
 
       final IGeoGrid outputGrid = new AbstractDelegatingGeoGrid( inputGrid )
@@ -155,11 +158,14 @@ public class RiskModelHelper
                 return Double.NaN;
 
               final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
-              final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+              String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+              if( coordinateSystem == null )
+                coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
               final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
               /* Transform query position into the cs of the polygons. */
-              final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( inputGrid.getSourceCRS(), coordinateSystem );
+              final CRSTransformation transformation = CachedTransformationFactory.getInstance().createFromCoordinateSystems( sourceCRS, coordinateSystem );
               final GM_Position position = TransformUtilities.transform( positionAt, transformation );
 
               /* This list has some unknown cs. */
@@ -364,7 +370,10 @@ public class RiskModelHelper
                   return Double.NaN;
 
                 final ILandusePolygon landusePolygon = polygonCollection.get( 0 );
-                final String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+                String coordinateSystem = landusePolygon.getGeometry().getCoordinateSystem();
+                if( coordinateSystem == null )
+                  coordinateSystem = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
                 final GM_Position positionAt = JTSAdapter.wrap( coordinate );
 
                 /* Transform query position into the cs of the polygons. */
