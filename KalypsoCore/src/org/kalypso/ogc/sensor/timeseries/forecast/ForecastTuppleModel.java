@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * TODO: die Reihenfolge der models[] sollte von auﬂerhalb der Klasse entschieden werden. Somit kann der "client"
@@ -138,12 +139,15 @@ public class ForecastTuppleModel extends AbstractTuppleModel
         final Date date = (Date)models[i].getElement( rowIx, modelDateAxis );
         if( date.after( lastDate ) )
         {
-          final Object[] targetTupple = new Object[modelAxes.length];
+          final Object[] targetTupple = new Object[targetAxes.length];
 
           for( int colIx = 0; colIx < targetAxes.length; colIx++ )
           {
+            if( targetAxes[colIx].isPersistable() )
+            {
             if( map[colIx] > -1 )
               targetTupple[colIx] = models[i].getElement( rowIx, modelAxes[map[colIx]] );
+            }
           }
           //            tupple[m_model.getPositionFor( axes[colIx] )] = models[i].getElement( rowIx, axes[colIx] );
           m_model.addTupple( targetTupple );
