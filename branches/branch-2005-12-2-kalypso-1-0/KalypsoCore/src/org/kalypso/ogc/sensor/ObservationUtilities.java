@@ -599,7 +599,7 @@ public class ObservationUtilities
     {
       int hits = 0;
       if( !testAxes[i].getType().equals( compareAxis.getType() )
-          && !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
+          || !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
         continue;
       hits++;
       if( testAxes[i].getUnit().equals( compareAxis.getUnit() ) )
