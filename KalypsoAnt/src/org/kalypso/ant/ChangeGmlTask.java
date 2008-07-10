@@ -212,6 +212,9 @@ public class ChangeGmlTask extends Task
     if( "java.util.Date".equals( type ) )
       return DatatypeConverter.parseDateTime( value ).getTime();
 
+    if( "java.lang.Boolean".equals( type ) )
+      return new Boolean( DatatypeConverter.parseBoolean( value ) );
+
     throw new UnsupportedOperationException( "Unsupported type: " + type );
   }
 
