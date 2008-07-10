@@ -29,12 +29,28 @@
         <copy file="${project.dir}/rcm.gml" tofile="${calc.dir}/rcm.gml" />
         <copy file="${project.dir}/.model/observationConf/ObsTMapping.gml"
               tofile="${calc.dir}/.obsT.gml" />
+		<copy file="${project.dir}/.templates/.calculation.template" tofile="${calc.dir}/.calculation"/>
+
         <!-- copy others -->
         <copy todir="${calc.dir}">
             <fileset dir="${project.dir}/.templates/calcCase/copy"
                      includes="*/**"
                      excludes="**/CVS/**" />
         </copy>
+    	
+		<kalypso.changeGml gmlURL="${calc.url}/.calculation">
+			<property featurepath="" featureProperty="scenarioId" value="${kalypso.currentScenarioId}"/>
+			<property featurepath="" featureProperty="startsimulation" value="${kalypso.startsim}"/>
+			<property featurepath="" featureProperty="startforecast" value="${kalypso.startforecast}"/>
+			<property featurepath="" featureProperty="hoursforecast" value="78"/>
+			<property featurepath="" featureProperty="minutesTimestep" value="60"/>
+			<property featurepath="" featureProperty="versionKalypsoNA" value="lfug"/>
+			<property featurepath="" featureProperty="editor" value="${kalypso.currentUser}"/>
+			<property featurepath="" featureProperty="description" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="comment" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="calctime" value="${kalypso.currentTime}"/>
+			<property featurepath="" featureProperty="mergeCasePath" value="${calc.merge.relpath}"/>
+		</kalypso.changeGml>
     </target>
 
     <target name="setProperties" depends="info">
@@ -48,8 +64,20 @@
             <property name="startforecast" featurepath="/" featureProperty="startforecast" />
             <property name="hoursofforecast" featurepath="/" featureProperty="hoursforecast" />
             <property name="interval.amount" featurepath="/" featureProperty="minutesTimestep" />
+            <property name="calc.merge.url" featurepath="/" featureProperty="mergeCasePath" defaultValue="" />
         </kalypso.gmlProperty>
 
+    	<!-- Construct the url of the calc case to merge and set the flag if merge is allowed.
+    		 REMARK: add trailing '/', else url resolution does not work properly for
+    		 the merge task
+    	-->
+    	<property name="calc.merge.url" value="${project.url}${calc.merge.path}/"/>
+    	<condition property="doMergeCase">
+    		<not>
+    			<equals trim="true" arg1="" arg2="${calc.merge.path}"/>
+    		</not>
+    	</condition>
+    	
         <!-- Definition der Quellen, der DWD-Raster (Vorhersage) -->
         <!-- Scenario TEST -->
         <property name="szenario_TestDwdUrl1"
@@ -408,8 +436,22 @@
 
     <target name="update" depends="updateAll" description="Aktualisiert eine Rechenvariante">
         <echo message="aktualisiere Zeitreihen: ${calc.dir}" />
+
+		<antcall target="mergeCase"/>    	
     </target>
     
+	<!-- 
+		 ================================= 
+          target: mergeCase			
+         ================================= 
+    -->
+	<target name="mergeCase" if="doMergeCase">
+		<!-- TODO: tu es! -->
+		
+		<!-- Andere Parameter übernehmen ? -->
+	</target>
+
+	
     <target name="exportVorhersagen" depends="setProperties" description="Exportiert die Prognosen nach PSICompact">
         <echo message="Vorhersagezeitreihen werden nach PSICompact geschrieben..."/>
  		<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
