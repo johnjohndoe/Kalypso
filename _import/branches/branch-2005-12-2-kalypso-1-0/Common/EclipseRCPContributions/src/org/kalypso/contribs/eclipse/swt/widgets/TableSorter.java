@@ -80,10 +80,30 @@ public class TableSorter
   }
   
   /** For each Tablecolumn you want to sort, call this method wenn TableColumn is selected. */
-  public void onColumenSelected( final StructuredViewer viewer, final TableColumn columnToSort )
+  public void onColumnSelected( final StructuredViewer viewer, final TableColumn columnToSort )
   {
     final Boolean oldstate = (Boolean)columnToSort.getData( SORT_KEY );
 
+    // Determine newstate depending on oldState ( none -> down -> up )
+    final Boolean newstate;
+    if( oldstate == null )
+      newstate = Boolean.FALSE;
+    else if( !oldstate.booleanValue() )
+      newstate = Boolean.TRUE;
+    else
+      newstate = null;
+
+    sortColumn( viewer, columnToSort, newstate );
+  }
+  
+  /**
+   * Set the sorting state of a column.
+   * @param viewer The (table-)viewer the column is part of
+   * @param columnToSort The column to sort by
+   * @param sortState The sort state: <code>null</code>: do not sort; <code>true</code>: sort forwards; <code>false</code> sort backwards
+   */
+  public void sortColumn( final StructuredViewer viewer, final TableColumn columnToSort, final Boolean sortState )
+  {
     // clear columns
     final Table table = columnToSort.getParent();
     final TableColumn[] columns = table.getColumns();
@@ -97,30 +117,25 @@ public class TableSorter
     final int sortIndex = table.indexOf( columnToSort );
 
     final ViewerSorter sorter;
-    final Boolean newstate;
     final Image img;
-    if( oldstate == null )
-    {
-      sorter = m_sorterFactory.createSorter( sortIndex, false );
-      img = m_downImage;
-      newstate = Boolean.FALSE;
-    }
-    else if( !oldstate.booleanValue() )
-    {
-      sorter = m_sorterFactory.createSorter( sortIndex, true );
-      img = m_upImage;
-      newstate = Boolean.TRUE;
-    }
-    else
+    if( sortState == null )
     {
       sorter = null;
       img = m_emptyImage;
-      newstate = null;
+    }
+    else if( sortState.booleanValue() )
+    {
+      sorter = m_sorterFactory.createSorter( sortIndex, true );
+      img = m_upImage;
+    }
+    else /* if( !sortState.booleanValue() ) */
+    {
+      sorter = m_sorterFactory.createSorter( sortIndex, false );
+      img = m_downImage;
     }
 
-    columnToSort.setData( SORT_KEY, newstate );
+    columnToSort.setData( SORT_KEY, sortState );
     columnToSort.setImage( img );
-
     viewer.setSorter( sorter );
   }
   
@@ -135,7 +150,7 @@ public class TableSorter
        */
       public void widgetSelected( SelectionEvent e )
       {
-        onColumenSelected( viewer, column );
+        onColumnSelected( viewer, column );
       }
     } );
     return column;
