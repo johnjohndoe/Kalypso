@@ -113,8 +113,8 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       final TimeseriesLink obsLink = (TimeseriesLink)f.getProperty( m_observationProperty );
       if( obsLink == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX,
-            "Keine Verknüpfung gefunden für Feature mit ID: " + featureId );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS,
+            "Keine Verknüpfung gefunden für Feature mit ID: " + featureId + " und property: " + m_observationProperty );
         return true;
       }
 
