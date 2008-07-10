@@ -227,7 +227,8 @@
 		<!-- Vorgaben: Zufluss und Abfluss -->
 		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/>
 	
-		<!-- TODO: was wachen wir mit dem Gebietsniederschlag?-->
+		<!-- TODO: was machen wir mit dem Gebietsniederschlag?-->
+		<kalypso.mergeObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="Niederschlag_rechnung"/>
 		
 		<!-- Andere Parameter übernehmen ? -->
 	</target>

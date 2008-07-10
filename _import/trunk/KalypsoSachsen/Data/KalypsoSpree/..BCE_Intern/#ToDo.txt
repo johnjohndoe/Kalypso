@@ -34,3 +34,4 @@ TODO
 ----
 - Lage DWD Daten prüfen
 - Ablage Prognose W und Q geht auf die gleiche Spur. Mit Fr. Barchmann diskutieren.
+- Für die Pegel wird Q benötigt, wir holen aber W; dies kann ggfs. zu Problemen führen, Modell sollte umkonfiguriert werden.
