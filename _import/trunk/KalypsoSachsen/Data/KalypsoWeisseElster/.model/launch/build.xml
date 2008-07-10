@@ -64,7 +64,7 @@
             <property name="startforecast" featurepath="/" featureProperty="startforecast" />
             <property name="hoursofforecast" featurepath="/" featureProperty="hoursforecast" />
             <property name="interval.amount" featurepath="/" featureProperty="minutesTimestep" />
-            <property name="calc.merge.url" featurepath="/" featureProperty="mergeCasePath" defaultValue="" />
+            <property name="calc.merge.path" featurepath="/" featureProperty="mergeCasePath" defaultValue="" />
         </kalypso.gmlProperty>
 
     	<!-- Construct the url of the calc case to merge and set the flag if merge is allowed.
@@ -215,7 +215,7 @@
                                  context="${calc.url}"
                                  targetObservation="N"
                                  forecastFrom="${startforecast}"
-                                 forecastTo="${stopsim}">
+                                 forecastTo="${stopsim}" description="Abruf Ombrometer">
             <source property="${linkInOmbrometer}"
                     from="${startsim}"
                     to="${startforecast}"
@@ -245,18 +245,8 @@
     				targetTo="${stopsim}" 
     				forecastfrom="${startforecast}" 
     				forecastto="${stopsim}" 
+		    		description="Anwenden Gebietsniederschlagsmodell Vergangenheit"
     	/>
-    	
-        <!--kalypso.copyObservation gml="${project.url}/.model/kriging/mapping.gml"
-                                 featurePath="mappingMember"
-                                 context="${calc.url}"
-                                 targetObservation="outObservationLink"
-                                 forecastFrom="${startforecast}"
-                                 forecastTo="${stopsim}">
-            <source property="inObservationLink" from="${startsim}" to="${startforecast}" />
-            <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
-            <metadata name="Szenario" value="${scenarioId}" />
-        </kalypso.copyObservation-->
     </target>
 
     <target name="fetchRaster" depends="setProperties">
@@ -277,7 +267,7 @@
         <kalypso.dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConfN.xml"
                          obsrasterurl="${dwdRasterLocalURL}"
                          targetcontext="${calc.dir}"
-                         description="raster zu zml"
+                         description="Anwendung Gebietsniederschlagsmodell Vorhersage"
                          from="${startsim}"
                          forecastfrom="${startforecast}"
                          to="${stopsim}"
@@ -293,7 +283,8 @@
                                  context="${calc.url}"
                                  targetObservation="outObservationLink"
                                  forecastFrom="${startforecast}"
-                                 forecastTo="${stopsim}">
+                                 forecastTo="${stopsim}"
+        						 description="Abruf Zuflüsse">
             <source property="${linkInObservation}"
                     from="${startsim}"
                     to="${stopsim}"
@@ -333,28 +324,14 @@
                                  context="${calc.url}"
                                  targetObservation="${pegelLocalMessungLink}"
                                  forecastFrom="${startforecast}"
-                                 forecastTo="${stopsim}">
+                                 forecastTo="${stopsim}"
+        						 description="Abruf Pegel">
             <source property="${pegelRemoteMessungLink}"
                     from="${startsim}"
                     to="${startforecast}"
                     filter="${filterQ}" />
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.copyObservation>
-        <!--        <kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml"
-                                 featurePath="mappingMember"
-                                 context="${calc.url}"
-                                 targetObservation="outObservationLink"
-                                 forecastFrom="${startforecast}"
-                                 forecastTo="${stopsim}">
-            <source property="${linkInObservation}"
-                    from="${startsim}"
-                    to="${startforecast}"
-                    filter="${filterW}" />
-			 Vorhersage übernehmen 
-            <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
-            <metadata name="Szenario" value="${scenarioId}" />
-        </kalypso.copyObservation>
-  -->
     </target>
 
     <target name="updateObsT" depends="setProperties">
@@ -364,7 +341,8 @@
                                  context="${calc.url}"
                                  targetObservation="outObservationLink"
                                  forecastFrom="${startforecast}"
-                                 forecastTo="${stopsim}">
+                                 forecastTo="${stopsim}"
+        						 description="Abruf Temperatur">
             <source property="${linkInObservation}"
                     from="${startsim}"
                     to="${startforecast}"
@@ -382,7 +360,8 @@
                                  context="${calc.url}"
                                  targetObservation="outObservationLink"
                                  forecastFrom="${startforecast}"
-                                 forecastTo="${stopsim}">
+                                 forecastTo="${stopsim}"
+        						 description="Anwendung Gebietstemperaturmodell Vergangenheit">
             <source property="inObservationLink" from="${startsim}" to="${startforecast}" />
             <!-- Vorhersage übernehmen -->
             <source property="outObservationLink" from="${startforecast}" to="${stopsim}" />
@@ -398,7 +377,7 @@
         <kalypso.dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConfT.xml"
                          obsrasterurl="${dwdRasterLocalURL}"
                          targetcontext="${calc.dir}"
-                         description="raster zu zml"
+						 description="Anwendung Gebietstemperaturmodell Vergangenheit"
                          from="${startsim}"
                          forecastfrom="${startforecast}"
                          to="${stopsim}"
@@ -445,10 +424,58 @@
           target: mergeCase			
          ================================= 
     -->
-	<target name="mergeCase" if="doMergeCase">
-		<!-- TODO: tu es! -->
+	<target name="mergeCase" if="doMergeCase" depends="setProperties">
+        <!-- Niederschläge - Messung -->
+        <kalypso.mergeObservation gml="${calc.url}/ombrometer.gml"
+                                 featurePath="ombrometerMember"
+                                 context="${calc.url}"
+        						 sourcecontext="${calc.merge.url}"
+        						 observationproperty="N"/>
+
+        <!-- Niederschläge - Gebiete -->
+        <kalypso.mergeObservation gml="${calc.url}/rcm.gml"
+                                 featurePath="catchmentCollectionMember/catchmentMember"
+        						 depth="zero"
+                                 context="${calc.url}"
+        						 sourcecontext="${calc.merge.url}"
+        						 observationproperty="rainfall"/>
+
+        <!-- Zuflüsse -->
+        <kalypso.mergeObservation gml="${project.url}/.model/observationConf/ZuflussMessungMapping.gml"
+                                 featurePath="mappingMember"
+                                 context="${calc.url}"
+        						 sourcecontext="${calc.merge.url}"
+        						 observationproperty="outObservationLink"/>
+
+        <!-- Pegel -->
+        <kalypso.mergeObservation gml="${pegelMappingURL}"
+                                 featurePath="mappingMember"
+                                 context="${calc.url}"
+        						 sourcecontext="${calc.merge.url}"
+        						 observationproperty="${pegelLocalMessungLink}"/>
+
+        <!-- Temperatur Messung -->
+		<!-- TODO: momentan auskommentiert, funktioniert nicht, da die Temperatur-Zeitreihen
+				keinen Status haben. Vermutlich fällt Temperatur bei
+				Einführung des Snow3 Modells eh weg.
+        <kalypso.mergeObservation gml="${project.url}/.model/observationConf/ObsTMapping.gml"
+                                 featurePath="mappingMember"
+                                 context="${calc.url}"
+        						 sourcecontext="${calc.merge.url}"
+        						 observationproperty="outObservationLink"/>
+		-->
 		
-		<!-- Andere Parameter übernehmen ? -->
+        <!-- Temperatur - Gebiete -->
+		<!-- TODO: momentan auskommentiert, funktioniert nicht, da die Temperatur-Zeitreihen
+				keinen Status haben. Vermutlich fällt Temperatur bei
+				Einführung des Snow3 Modells eh weg.
+        <kalypso.mergeObservation gml="${project.url}/.model/observationConf/ObsTGebMapping.gml"
+                                 featurePath="mappingMember"
+                                 context="${calc.url}"
+        						 sourcecontext="${calc.merge.url}"
+        						 observationproperty="outObservationLink"/>
+		-->
+		
 	</target>
 
 	
