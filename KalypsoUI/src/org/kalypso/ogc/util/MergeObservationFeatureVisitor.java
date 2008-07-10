@@ -218,12 +218,12 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
         final IAxis sourceStatusAxis = sources[1];
 
         // is the target a warned value?
-        final Long targetStatus = (Long)targetTuples.getElement( i, targetStatusAxis );
+        final Number targetStatus = (Number)targetTuples.getElement( i, targetStatusAxis );
         if( !KalypsoStatusUtils.checkMask( targetStatus.intValue(), KalypsoStati.BIT_CHECK ) )
           continue;
 
         // is the source value user edited?
-        final Long sourceStatus = (Long)sourceTuples.getElement( sourceIndex, sourceStatusAxis );
+        final Number sourceStatus = (Number)sourceTuples.getElement( sourceIndex, sourceStatusAxis );
         if( !KalypsoStatusUtils.checkMask( sourceStatus.intValue(), KalypsoStati.BIT_USER_MODIFIED ) )
           continue;
 
