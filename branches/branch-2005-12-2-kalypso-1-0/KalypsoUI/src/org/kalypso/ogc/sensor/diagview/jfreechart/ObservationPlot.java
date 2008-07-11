@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -673,6 +674,8 @@ public class ObservationPlot extends XYPlot
       {
         final double yy = axis.valueToJava2D( vac.alarm.value, dataArea, RectangleEdge.LEFT );
         final Line2D line = new Line2D.Double( dataArea.getMinX(), yy, dataArea.getMaxX(), yy );
+        // always set stroke, else we got the stroke from the last drawn line
+        g2.setStroke( AlarmLevelPlotElement.STROKE_ALARM ); 
         g2.setPaint( vac.alarm.color );
         g2.draw( line );
 
@@ -844,6 +847,9 @@ public class ObservationPlot extends XYPlot
    */
   private final static class AlarmLevelPlotElement
   {
+    /** Stroke, with wich the alarm-levels get drawn */
+    public static final Stroke STROKE_ALARM = new BasicStroke( 1.0f );
+
     final AlarmLevel alarm;
     final String label;
     final DiagramAxis axis;
