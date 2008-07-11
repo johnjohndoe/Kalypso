@@ -273,9 +273,11 @@ public class IntervallTupplemodel extends AbstractTuppleModel
               break;
             default:
               // (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value
-              // TODO solve: for witch intervall is the first value valid ?
+              // TODO solve: for whitch intervall is the first value valid ?
               // there is no definition :-(
-              if( srcRow > 0 )
+              // Bugfix: we use it nevertheless, as it works ok if intervalls are equal;
+              // also, always no warning produces problems elsewhere
+//              if( srcRow > 0 )
                 srcIntervall = new Intervall( srcCal_last, srcCal, srcStati, srcValues );
               break;
             }
