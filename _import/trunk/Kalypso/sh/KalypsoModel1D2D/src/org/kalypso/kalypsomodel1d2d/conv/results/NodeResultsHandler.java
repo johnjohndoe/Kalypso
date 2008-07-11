@@ -75,11 +75,9 @@ import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHand
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit1D;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
-import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFELine;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IFlowRelation1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
@@ -479,7 +477,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
 
     final IFlowRelationship[] flowRelationships = m_flowModel.findFlowrelationships( nodePos, NODE_SEARCH_DIST );
 
-    // TODO: for some reason there are flow relations that are from type BoundaryCondition
+    // for some reason there are flow relations that are from type BoundaryCondition
     // go through the found array and get the first found teschke flow relation
     for( final IFlowRelationship element : flowRelationships )
     {
@@ -565,7 +563,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       /* check, if node was already handled for lengthsection */
       if( !m_lengthsection1dNodes.contains( nodes[i].getGmlID() ) )
       {
-        final IStatus status = handleLengthSectionData( nodes[i], flowRelation1d, calcUnit );
+        handleLengthSectionData( nodes[i], flowRelation1d, calcUnit );
         // TODO: right now, no consequences of the returned status
         m_lengthsection1dNodes.add( nodes[i].getGmlID() );
       }
@@ -1707,7 +1705,7 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     final INodeResult result = m_nodeIndex.get( id );
     if( result == null )
     {
-      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "1D2D-RESULT: Result for non-existing node: ", id );
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "1D2D-RESULT: Result for non-existing node: \n", id );
       return;
     }
 
@@ -1757,17 +1755,24 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
       final IFlowRelation1D teschkeRelation = getFlowRelation( nodeResult1d );
       final GM_Curve nodeCurve1d = NodeResultHelper.getProfileCurveFor1dNode( teschkeRelation.getProfile() );
 
-      final List<IFELine> continuityLine2Ds = m_controlModel.getCalculationUnit().getContinuityLines();
-      IContinuityLine2D selectedBoundaryLine = null;
-      for( final IFELine continuityLine2D : continuityLine2Ds )
-      {
-        if( continuityLine2D.getGmlID().equals( Integer.toString( boundaryLine2dID ) ) )
-        {
-          selectedBoundaryLine = (IContinuityLine2D) continuityLine2D;
-          break;
-        }
-      }
-      final GM_Point[] linePoints = NodeResultHelper.getLinePoints( selectedBoundaryLine );
+      // TODO: this cannot work: we need the IdProvider for the lines in order to find the right line by its number
+      // TODO: better: change rma10s in order to write boundary-line definition into the .2d file
+      // final List<IFELine> continuityLine2Ds = m_controlModel.getCalculationUnit().getContinuityLines();
+      // IContinuityLine2D selectedBoundaryLine = null;
+      // for( final IFELine continuityLine2D : continuityLine2Ds )
+      // {
+      // if( continuityLine2D.getGmlID().equals( Integer.toString( boundaryLine2dID ) ) )
+      // {
+      // selectedBoundaryLine = (IContinuityLine2D) continuityLine2D;
+      // break;
+      // }
+      // }
+      // final GM_Point[] linePoints = NodeResultHelper.getLinePoints( selectedBoundaryLine );
+
+      final GM_Point[] linePoints = null; // TODO: get from .2d file
+
+      if( linePoints == null )
+        return;
 
       // here, we just use the corner nodes of the mesh. mid-side nodes are not used.
       // get the node results of that points and add it to the Featurelist
