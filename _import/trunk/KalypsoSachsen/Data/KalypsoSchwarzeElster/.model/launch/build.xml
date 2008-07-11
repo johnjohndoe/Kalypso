@@ -164,25 +164,25 @@
 		
 		<!-- TODO: überall mit requests arbeiten -->
 		<!-- Ombrometer -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abruf Ombrometer">
 			<source property="${ombrometerLink}" from="${startsimN}" to="${startforecast}" filter="${filterN}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<!-- Pegel -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/PegelMessungMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abruf Pegel">
 			<source property="${pegelMessungLink}" from="${startsimQ}" to="${startforecast}" filter="${filterQ}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
 		<!-- Talsperren -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/TalsperreMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/TalsperreMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abruf Talsperren">
 			<source property="${talsperreLink}" from="${startsimQ}" to="${stopsim}" filter="${filterQTalsperren}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
 		<!-- Vorgaben: Zufluss und Abfluss -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}">
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abruf Zuflüsse/Abflüsse (kein Fehler)">
 			<source property="${vorgabeLink}" from="${startsimQ}" to="${stopsim}" filter="${filterQZufluss}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 			<metadata name="Name" value="$${property;org.kalypso.spree.modell#name;Unbekannt}"/>
@@ -227,9 +227,8 @@
 		<!-- Vorgaben: Zufluss und Abfluss -->
 		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/VorgabeMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/>
 	
-		<!-- TODO: was wachen wir mit dem Gebietsniederschlag?-->
-		
-		<!-- Andere Parameter übernehmen ? -->
+		<!-- Gebietsniederschlag -->
+		<kalypso.mergeObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="Niederschlag_rechnung"/>
 	</target>
 
 	<!-- 
