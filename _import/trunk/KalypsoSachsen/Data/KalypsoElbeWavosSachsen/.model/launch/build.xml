@@ -33,7 +33,6 @@
 				</fileset>
 			</copy>
 		
-		<property name="isMergeCase" value="false"/>
 		<condition property="isMergeCase" value="true">
 			<not>
 				<equals trim="true" arg1="" arg2="${calc.merge.relpath}"/>
@@ -53,10 +52,24 @@
 			<property featurepath="" featureProperty="calctime" value="${kalypso.currentTime}"/>
 			<property featurepath="" featureProperty="mergeCasePath" value="${calc.merge.relpath}"/>
 			<property featurepath="" featureProperty="intervalAmount" value="1"/>
+		</kalypso.changeGml>
+		
+		<antcall target="createIsMergeCase"/>
+	</target>
+	
+	
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: createIsMergeCase                      
+          This target is only needed, as the condition-task does not yet support 'else'
+          So useAWerte is set to false (default); only if isMergeCase=true, we set if to true
+         - - - - - - - - - - - - - - - - - -->
+    <target name="createIsMergeCase" if="isMergeCase">
+		<kalypso.changeGml gmlURL="${calc.url}/.calculation">
 			<property featurepath="" featureProperty="useAWerte" value="${isMergeCase}"/>
 		</kalypso.changeGml>
-		</target>
-	
+    </target>
+
+
 	
     <!-- - - - - - - - - - - - - - - - - - 
           target: calculationProperties                      Initializes properties from .calculation

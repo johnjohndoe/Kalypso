@@ -1,4 +1,4 @@
-#Wed Jul 02 17:33:32 CEST 2008
+#Fri Jul 11 15:24:32 CEST 2008
 encoding//.prognose/Vorhersage-2008-06-20_13h38/Zeitreihen/Pegel/Sch\u00F6na.zml=UTF-8
 encoding//.prognose/Vorhersage-2008-06-25_14h17/Zeitreihen/Polder/Aussig.zml=UTF-8
 encoding//.model/observationConf/Elbepegel.gml=UTF-8
@@ -17,10 +17,12 @@ encoding//.prognose/Vorhersage-2008-06-20_13h38/Zeitreihen/Polder/Axien.zml=UTF-
 encoding//.prognose/Vorhersage-2008-06-20_13h38/.calculation=UTF-8
 encoding//.prognose/Feinkonzept/Zeitreihen/Polder/Dautzschen.zml=UTF-8
 encoding//.prognose/Kopie\ von\ Feinkonzept/Zeitreihen/Pegel/Dresden.zml=UTF-8
+encoding//.prognose/TestCreate/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2008-06-20_13h38/Zeitreihen/Zufluesse/L\u00F6ben.zml=UTF-8
 encoding//.prognose/Vorhersage-2008-06-20_13h38/Zeitreihen/Zufluesse/DresdenTorgau.zml=UTF-8
 encoding/modell.gml=UTF-8
 encoding//.prognose/Vorhersage-2008-06-20_11h56/.calculation=UTF-8
+encoding//.prognose/Vorhersage-2008-07-11_15h21/.calculation=UTF-8
 encoding//.prognose/Feinkonzept/Zeitreihen/Polder/Aussig.zml=UTF-8
 encoding//.model/observationConf/Zwischengebiete.gml=UTF-8
 encoding//.prognose/Feinkonzept/Zeitreihen/Pegel/Sch\u00F6na.zml=UTF-8
@@ -30,6 +32,7 @@ encoding//.prognose/Vorhersage-2008-06-20_13h38/Zeitreihen/Pegel/Riesa.zml=UTF-8
 encoding//.prognose/Vorhersage-2008-06-25_14h17/Zeitreihen/Polder/Dautzschen.zml=UTF-8
 encoding//.prognose/Vorhersage-2008-06-20_13h38/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2008-06-25_14h17/.calculation=UTF-8
+encoding//.prognose/Vorhersage-2008-07-11_15h24/.calculation=UTF-8
 eclipse.preferences.version=1
 encoding//.prognose/Vorhersage-2008-06-25_14h17/Zeitreihen/Polder/Axien.zml=UTF-8
 encoding//.prognose/Feinkonzept/Zeitreihen/Pegel/Usti.zml=UTF-8
