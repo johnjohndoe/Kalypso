@@ -35,6 +35,7 @@
   		<echo message="Rechenvariante anlegen: ${calc.dir}"/>
 
 		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml"/>
+		<copy file="${project.dir}/.templates/.calculation.template" tofile="${calc.dir}/.calculation"/>
 		<copy todir="${calc.dir}">
 			<fileset dir="${project.dir}/.templates">
 				<include name="*.gtt"/>
@@ -45,6 +46,18 @@
 				<include name="Zeitreihen/*.ott"/>
 			</fileset>
 		</copy>
+ 		
+		<kalypso.changeGml gmlURL="${calc.url}/.calculation">
+			<property featurepath="" featureProperty="scenarioId" value="${kalypso.currentScenarioId}"/>
+			<property featurepath="" featureProperty="scenarioName" value="${kalypso.currentScenarioName}"/>
+			<property featurepath="" featureProperty="scenarioDescription" value="${kalypso.currentScenarioDescription}"/>
+			<property featurepath="" featureProperty="startforecast" value="${kalypso.startforecast}"/>
+			<property featurepath="" featureProperty="editor" value="${kalypso.currentUser}"/>
+			<property featurepath="" featureProperty="description" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="comment" value="- bitte ausfüllen -"/>
+			<property featurepath="" featureProperty="calctime" value="${kalypso.currentTime}"/>
+			<property featurepath="" featureProperty="mergeCasePath" value="${calc.merge.relpath}"/>
+		</kalypso.changeGml>
  	</target>
 	
  	<!-- - - - - - - - - - - - - - - - - - 
@@ -60,9 +73,21 @@
 				<!-- stopsim = startforecast + 72h -->
 				<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="72" dateoffsetfield="${HOURS_OF_DAY}"/>
 				<property name="scenarioId" featurepath="" featureProperty="scenarioId" defaultValue=""/>
+				<property name="calc.merge.path" featurepath="" featureProperty="mergeCasePath" defaultValue=""/>
 			</kalypso.gmlProperty>
 	    	<echo message="Szenario der Rechenvariante ist: ${scenarioId}" />
-	    	
+
+	    	<!-- Construct the url of the calc case to merge and set the flag if merge is allowed.
+	    		 REMARK: add trailing '/', else url resolution does not work properly for
+	    		 the merge task
+	    	-->
+	    	<property name="calc.merge.url" value="${project.url}${calc.merge.path}/"/>
+	    	<condition property="doMergeCase">
+	    		<not>
+	    			<equals trim="true" arg1="" arg2="${calc.merge.path}"/>
+	    		</not>
+	    	</condition>
+	 	
 	    	<!-- Unterscheide zwischen Katastrophentest und normalem Szenario -->
 			<kalypso.multiequals arg1="${scenarioId}" arg2="test">
 				<!-- Links fürs Abholen der Zeitreihen -->
@@ -109,9 +134,27 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 	 	
-	 <!-- nach update immer Zwischengebietszuflüsse berechnen -->
-			<antcall target="zwischengebietszufluesse" />
+		 <!-- nach update immer Zwischengebietszuflüsse berechnen -->
+		<antcall target="zwischengebietszufluesse" />
+	 	
+		<antcall target="mergeCase"/>
 	 </target>
+	
+	
+	<!-- 
+		 ================================= 
+          target: mergeCase			
+         ================================= 
+    -->
+	<target name="mergeCase" if="doMergeCase">
+	 	<!-- Zwischengebietspegel: nur Messung -->
+	 	<kalypso.mergeObservation gml="${project.url}/.model/observationConf/ZwischengebietspegelMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink" description="Zusammenführen der Messwerte der Zwischengebietspegel"/>
+	 	
+		<!-- Leere Zwischengebiete -->
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/ZwischengebieteMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink" description="Zusammenführen der Zwischengebietsabflüsse"/>
+	</target>
+	
+	
 	 <!-- ================================= 
 		          target: exportVorhersagen              
 		  ================================= -->

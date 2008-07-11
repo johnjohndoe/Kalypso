@@ -97,6 +97,15 @@
                             </documentation>
                         </annotation>
                     </element>
+                    <element name="mergeCasePath" type="string">
+                       	<annotation>
+							<documentation xml:lang="de">
+								<label>Fortgesetzte Rechenvariante</label>
+								<tooltip>Pfad auf fortgesetzte Rechenvariante</tooltip>
+								<description></description>
+							</documentation>
+						</annotation>
+                    </element>
                 </sequence>
             </extension>
         </complexContent>
