@@ -229,8 +229,6 @@
 	
 		<!-- TODO: was machen wir mit dem Gebietsniederschlag?-->
 		<kalypso.mergeObservation gml="${calc.url}/calcCase.gml" featurePath="PegelCollectionAssociation/PegelMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="Niederschlag_rechnung"/>
-		
-		<!-- Andere Parameter übernehmen ? -->
 	</target>
 
 	<!-- 
