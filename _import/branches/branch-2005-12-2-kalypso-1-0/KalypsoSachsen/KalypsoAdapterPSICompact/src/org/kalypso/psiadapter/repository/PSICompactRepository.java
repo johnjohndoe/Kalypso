@@ -109,7 +109,7 @@ public class PSICompactRepository extends AbstractRepository
                 // The archive types automaticallay gets this option, if the default has it; we do not need to configure
                 // an at-file for each archive
                 if( wqProvider.hasWQTable( nodeID ) )
-                  addAtNode( nodes, arcObsName, valueType, info, objectMetaData, newArcNode, arcNodeID, defaultArcType );
+                  addAtNode( nodes, arcObsName, valueType, info, objectMetaData, newArcNode, arcNodeID, arcType );
               }
             }
           }
