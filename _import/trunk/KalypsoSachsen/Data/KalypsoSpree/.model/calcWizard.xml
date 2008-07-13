@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <calcwizard xmlns="xml.model.kalypso.org" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<!-- Allgemeine Argumente -->
@@ -16,10 +16,10 @@
         <arg name="maximizeMap" value="true"/>
         <arg name="mapWidgetID" value="SELECT"/>
        	<arg name="selectFeatureID" value="Ombrometer-Sohland"/>
-        <arg name="mapToolbar">
+        <!--arg name="mapToolbar">
         	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
         	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
-        </arg>
+        </arg-->
     </page>
 
 	<!-- Kontrolle Niederschlag -->
