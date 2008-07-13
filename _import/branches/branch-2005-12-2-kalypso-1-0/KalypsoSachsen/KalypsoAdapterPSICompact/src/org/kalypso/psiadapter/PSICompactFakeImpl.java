@@ -337,6 +337,8 @@ public class PSICompactFakeImpl implements PSICompact
       final RequestObservationProxy obs = new RequestObservationProxy(
           new ObservationRequest( new DateRange( from, to ) ), zmlObs );
 
+      // TODO: probably we should use use a request here! Else we get always everything which is inside the zml
+//      final ITuppleModel values = obs.getValues( new ObservationRequest( new DateRange( from, to ) ) );
       final ITuppleModel values = obs.getValues( null );
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class );
       final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( obs.getAxisList(), Number.class, true );
