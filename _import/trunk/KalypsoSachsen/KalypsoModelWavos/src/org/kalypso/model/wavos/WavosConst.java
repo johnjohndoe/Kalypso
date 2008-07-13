@@ -73,8 +73,8 @@ public class WavosConst
   public static final String DATA_GML = "data_gml";
   public static final String DATA_GML_CONTEXT = "data_gml_context";
 
-  public static final String DATA_CALC_CASE_CONTINUED = "bool_cc_continued";
   public static final String DATA_FORECAST_DURATION = "forecast_duration";
+  public static final String DATA_MERGE_CASE_PATH = "mergeCasePath";
   public static final String DATA_SIMULATION_DURATION = "simulation_duration";
   public static final String DATA_INTERVAL_AMOUNT = "interval_amount";
   public static final String DATA_USE_AWERTE = "use_awerte";

@@ -203,7 +203,8 @@ public class WavosInputWorker
     final PrintWriter pWrtrInputPar = new PrintWriter( wrtrInputPar );
     pWrtrInputPar.println( "1" ); // Vorhersagemodus
     pWrtrInputPar.println( WavosUtils.createWavosDateShort( forecastDate ) ); // Start der Vorhersage
-    if( useAWerte )// Verwendung von Anfangswerten
+    final String mergeCasePath = (String)props.get( WavosConst.DATA_MERGE_CASE_PATH );
+    if( useAWerte && !"".equals( mergeCasePath ) )// Verwendung von Anfangswerten
       pWrtrInputPar.println( "j" );
     else
       pWrtrInputPar.println( "n" );
@@ -609,11 +610,15 @@ public class WavosInputWorker
       final Date startForecastTime = (Date)controlFeature.getProperty( "startforecast" );
       dataMap.put( WavosConst.DATA_STARTFORECAST_DATE, startForecastTime );
 
-      // boolean
-      // TODO wird (noch) nicht verwendet und ist ggf. zu ersetzen durch calcMergePath
-      final Object ccContinuedProp = controlFeature.getProperty( "calcCaseContinued" );
-      final Boolean calcCaseContinued = ccContinuedProp == null ? Boolean.FALSE : ( (Boolean)ccContinuedProp );
-      dataMap.put( WavosConst.DATA_CALC_CASE_CONTINUED, calcCaseContinued );
+      //String
+      final Object objMergeCasePath = controlFeature.getProperty( "mergeCasePath" );
+      if( objMergeCasePath != null )
+      {
+        final String mergeCasePath = ( (String)objMergeCasePath );
+        dataMap.put( WavosConst.DATA_MERGE_CASE_PATH, mergeCasePath );
+      }
+      else
+        dataMap.put( WavosConst.DATA_MERGE_CASE_PATH, "" );
 
       // int [h]
       final Integer forecastDur = (Integer)controlFeature.getProperty( "forecastDuration" );

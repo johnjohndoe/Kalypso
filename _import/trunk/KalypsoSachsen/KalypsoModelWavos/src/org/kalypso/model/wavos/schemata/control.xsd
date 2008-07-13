@@ -136,6 +136,15 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
+                                        <element name="useAWerteText" type="string" default="Es sind keine Anfangswerte vorhanden." nillable="false">
+                                                <annotation>
+                                                        <documentation xml:lang="de">
+                                                                <label>Status der Anfangswerte</label>
+                                                                <tooltip>Status der Anfangswerte</tooltip>
+                                                                <description/>
+                                                        </documentation>
+                                                </annotation>
+                                        </element>
                                 </sequence>
                         </extension>
                 </complexContent>

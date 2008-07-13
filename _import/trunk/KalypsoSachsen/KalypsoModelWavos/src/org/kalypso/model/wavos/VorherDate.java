@@ -47,8 +47,6 @@ import java.util.Date;
 
 /**
  * 
- * TODO: insert type comment here
- * 
  * @author thuel2
  */
 public class VorherDate
