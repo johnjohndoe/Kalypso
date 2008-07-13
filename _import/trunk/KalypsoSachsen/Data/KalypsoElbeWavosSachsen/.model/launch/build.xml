@@ -25,7 +25,7 @@
 					<include name="*.odt"/>
 					<include name="Zeitreihen/*.ott"/>
 					<include name="Zeitreihen/*.odt"/>
-					<include name="Anfangswerte/doNotRemoveThisDir.txt"/>
+					<include name="Anfangswerte/*.zip"/>
 					<include name="Ergebnisse/Zeitreihen/*.ott"/>
 					<include name="Ergebnisse/Zeitreihen/*.odt"/>
 					<include name="Ergebnisse/Zeitreihen_ohneVerschiebung/*.ott"/>
@@ -66,6 +66,7 @@
     <target name="createIsMergeCase" if="isMergeCase">
 		<kalypso.changeGml gmlURL="${calc.url}/.calculation">
 			<property featurepath="" featureProperty="useAWerte" value="${isMergeCase}"/>
+			<property featurePath="" featureProperty="useAWerteText" value="Es sind Anfangswerte vorhanden."/>
 		</kalypso.changeGml>
     </target>
 
@@ -128,9 +129,12 @@
     		<property name="filterW"
     			value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
     		
-    	    <property name="filterQOhneFortsetzung"
-    			value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;false&quot; /&gt;&lt;/filter&gt;" />
-    		
+	    <property name="filterQOhneFortsetzung"
+			value="${requestQ}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;false&quot; /&gt;&lt;/filter&gt;" />
+
+	    <property name="filterWOhneFortsetzung"
+			value="${requestW}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;0.0&quot; forceFill=&quot;false&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;false&quot; /&gt;&lt;/filter&gt;" />
+
     		<!-- POLDER_CONTROL: ??? filter -->
     		<property name="filterPolder"
     			value="${requestPolder}&lt;filter&gt;&lt;interpolationFilter amount=&quot;${interval.amount}&quot; calendarField=&quot;${interval.field}&quot; defaultStatus=&quot;2&quot; defaultValue=&quot;false&quot; forceFill=&quot;true&quot; xmlns=&quot;filters.zml.kalypso.org&quot; fillLastWithValid=&quot;true&quot; /&gt;&lt;/filter&gt;" />
@@ -203,11 +207,19 @@
 		</kalypso.copyObservation>
 
 		<!-- Usti: zusätzlich "Messung" W, zur Information -->
-		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_WMessung.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Q-Messwerte für Usti (zur Information)">
-			<source property="${pegelMessungWInfoLink}" from="${startsim}" to="${startforecast}" filter="${filterW}"/>
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_WMessung.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der W-Messwerte für Usti (zur Information)">
+			<source property="${pegelMessungWInfoLink}" from="${startsim}" to="${startforecast}" filter="${filterWOhneFortsetzung}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
-		
+
+		<!-- Usti: zusätzlich "Vorhersage" W, zur Information -->
+		<!--
+		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Usti_Cz_WVorhersage.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der W-Prognosen für Usti (zur Information)">
+			<source property="${pegelMessungWInfoLink}" from="${startforecast}" to="${stopsim}" filter="${filterWOhneFortsetzung}"/>
+			<metadata name="Szenario" value="${scenarioId}"/>
+		</kalypso.copyObservation>
+		-->
+
 		<!-- 
 			Zwischengebiete (Q)(Vergangenheit und Prognose aus einem PSI-Container) 
 		-->
@@ -248,7 +260,7 @@
 		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Elbepegel.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Messwerte der Elbepegel"/>
 
 		<!-- Usti: zusätzlich "Messung" W, zur Information -->
-		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Usti_Cz_WMessung.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Q-Messwerte für Usti (zur Information)"/>
+		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Usti_Cz_WMessung.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der W-Messwerte für Usti (zur Information)"/>
 		
 		<!-- 
 			Zwischengebiete (Q)(Vergangenheit und Prognose aus einem PSI-Container) 
@@ -291,7 +303,8 @@
 			<output id="NATIVE_IN_DIR" path="Ergebnisse/.native/in" relativeToCalcCase="true"/>
 			<output id="NATIVE_OUT_DIR"  path="Ergebnisse/.native/out" relativeToCalcCase="true"/>
 			
-			<clearAfterCalc path="Ergebnisse/Anfangswerte" relativeToCalcCase="true"/>
+			<!-- Anfangswerte lieber nicht löschen, sonst sind sie beim Wiederaufnehmen nicht mehr da...-->
+			<!--<clearAfterCalc path="Ergebnisse/Anfangswerte" relativeToCalcCase="true"/>-->
 			<clearAfterCalc path="Ergebnisse/.native" relativeToCalcCase="true"/>
 			<clearAfterCalc path="Ergebnisse/Zeitreihen/Pegel" relativeToCalcCase="true"/>
 			<clearAfterCalc path="Ergebnisse/Zeitreihen_ohneVerschiebung/Pegel" relativeToCalcCase="true"/>

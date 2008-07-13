@@ -4,13 +4,35 @@
         <view typename="WavosControl" style="SWT.NONE">
                 <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
                 <gridLayout numColumns="1"/>
-                <group text="Anfangswerte" style="SWT.NONE">
+                <!--   <group text="Anfangswerte" style="SWT.NONE">
                         <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
                         <gridLayout numColumns="3"/>
                         <label style="SWT.NONE" visible="false">
                                 <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
                         </label>
                         <label text="Anfangswerte verwenden" style="SWT.NONE" tooltip="Anfangswerte verwenden" visible="true">
+                                <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+                        </label>
+                        <checkbox editable="true" property="useAWerte" style="SWT.NONE" tooltip="Anfangswerte verwenden">
+                                <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
+                        </checkbox>
+                        <label style="SWT.NONE" visible="false">
+                                <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+                        </label>
+                        </group>-->
+                <group text="Anfangswerte" style="SWT.NONE">
+                        <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+                        <gridLayout numColumns="3"/>
+                        <text property="useAWerteText" style="SWT.NONE" enabled="true" editable="false">
+                                <gridData horizontalAlignment="GridData.BEGINNING" grabExcessHorizontalSpace="false"/>
+                        </text>
+                        <label style="SWT.NONE" visible="false">
+                                <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+                        </label>
+                        <label style="SWT.NONE" visible="false">
+                                <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
+                        </label>
+                        <label text="Anfangswerte verwenden" style="SWT.NONE" tooltip=" Anfangswerte verwenden" visible="true">
                                 <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
                         </label>
                         <checkbox editable="true" property="useAWerte" style="SWT.NONE" tooltip="Anfangswerte verwenden">

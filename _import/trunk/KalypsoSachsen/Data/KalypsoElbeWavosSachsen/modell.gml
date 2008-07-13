@@ -73,7 +73,9 @@
       <projektionEmpfohlen>0</projektionEmpfohlen>
       <projektionEingschaltet>0</projektionEingschaltet>
       <zuflussVorhersage>true</zuflussVorhersage>
-      <ganglinie_reserve_1/>
+      <ganglinie_reserve_1>
+        <TimeseriesLink xmlns:ns1="http://www.w3.org/1999/xlink" xmlns="obslink.zml.kalypso.org" ns1:href="Zeitreihen/Pegel/Usti_W_CZ.zml"/>
+      </ganglinie_reserve_1>
       <ganglinie_reserve_2/>
       <ganglinie_reserve_3/>
       <ganglinie_reserve_4/>

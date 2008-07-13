@@ -13,4 +13,5 @@
         <mergeCasePath/>
         <intervalAmount/>
         <useAWerte/>
+        <useAWerteText>Es sind keine Anfangswerte vorhanden.</useAWerteText>
 </WavosControl>

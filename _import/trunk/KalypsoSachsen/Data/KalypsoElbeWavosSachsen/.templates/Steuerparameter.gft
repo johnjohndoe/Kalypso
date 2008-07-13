@@ -65,16 +65,16 @@ D:\Kalypso\KalypsoCore\etc\schemas\template\featureview.xsd">
                                 <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
                         </label>
                 </group>
-                <group text="Fortsetzung der Rechnvariante (Übernahme von Handeingaben)" style="SWT.NONE">
+                <group text="Fortgesetzte Rechenvariante (Übernahme von Handeingaben)" style="SWT.NONE">
                         <gridData grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
                         <gridLayout numColumns="3"/>
                         <label style="SWT.NONE" visible="false">
                                 <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
                         </label>
-                        <label text="Pfad" style="SWT.NONE" tooltip="Pfad" visible="true">
+                        <label text="Pfad auf fortgesetzte Rechenvariante" style="SWT.NONE" tooltip="Pfad" visible="true">
                                 <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
                         </label>
-                        <text property="calcMergePath" style="2048">
+                        <text property="mergeCasePath" style="2048">
                                 <gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
                         </text>
                         <label style="SWT.NONE" visible="false">

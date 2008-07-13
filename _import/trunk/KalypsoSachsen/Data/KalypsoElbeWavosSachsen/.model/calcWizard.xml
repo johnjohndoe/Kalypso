@@ -152,11 +152,11 @@
 		<!-- 
 			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=Beobachtung und Vorgabe#linkColumn=ganglinie_gesamt#color=0x0000ff"/>
-                                                           <arg name="timeserie3" value="nameColumn=name#nameString=Vorhersage CZ#linkColumn=ganglinie_information#color=0xff8040"/>
+                                                           <arg name="timeserie3" value="nameColumn=name#nameString=Vorhersage CZ#linkColumn=ganglinie_reserve_1#color=0xff8040"/>
                                                            <arg name="timeserie4" value="nameString=Rechnung#linkColumn=ganglinie_vorhersage#color=0x008040"/>
 		<arg name="timeserie5" value="nameString=untere Umhüllende#linkColumn=ganglinie_vorhersage_unten#lineDash=4f#color=0x008040"/>
-	    <arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=ganglinie_vorhersage_oben#lineDash=4f#color=0x008040"/>
-	    <arg name="timeserie7" value="nameString=ohne Verschiebung#linkColumn=ganglinie_vorhersage_original#color=0x9413be"/>
+	                             <arg name="timeserie6" value="nameString=obere Umhüllende#linkColumn=ganglinie_vorhersage_oben#lineDash=4f#color=0x008040"/>
+	                              <arg name="timeserie7" value="nameString=ohne Verschiebung#linkColumn=ganglinie_vorhersage_original#color=0x9413be"/>
 	    <!--  -->
 		<arg name="ignoreType1" value="Q"/>
 		<arg name="ignoreType2" value="W"/>
@@ -246,12 +246,10 @@
 				<arg name="axisType" value="W"/>
 				<arg name="timeUnit" value="HOUR"/>
 				<arg name="timeStep" value="6"/>
-				<!-- Usti hat keine W/Q-Beziehung
 				<arg name="obs1">
 					<arg name="label" value="Usti"/>
 					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Usti.zml"/>
 				</arg>
-				-->
 				<arg name="obs2">
 					<arg name="label" value="Schöna"/>
 					<arg name="href" value="./Ergebnisse/Zeitreihen/Pegel/Schöna.zml"/>
