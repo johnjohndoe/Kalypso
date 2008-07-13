@@ -3,8 +3,4 @@
 	<repository
 		factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"
 		name="psicompact" />
-	<repository
-		factory="org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory"
-		conf="D:/Programme/Kalypso/Tomcat5.0/webapps/webdav/data/Spree#*.zml"
-		name="Spree" /> 
 </repconf>
