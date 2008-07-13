@@ -107,6 +107,7 @@ public class KalypsoApplication implements IPlatformRunnable
       final Shell shell = new Shell( display, SWT.ON_TOP );
       try
       {
+        // TODO!: better error message if no worksdpace location is given!
         if( !checkInstanceLocation( shell ) )
         {
           Platform.endSplash();
