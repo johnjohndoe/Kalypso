@@ -200,9 +200,7 @@
     <para>Auf dieser Seite (<xref linkend="elbeWavos_berechnung" />) des
     Assistenten wird oben rechts - wenn möglich - die Möglichkeit geboten, die
     Berechnung unter Verwendung von Anfangswerten durchzuführen. Die
-    Zeitreihen an den Elbepegeln stehen informativ zur Verfügung. Für den
-    Pegel Usti wird zusätzlich noch die tschechische Vorhersage mit
-    eingeblendet.</para>
+    Zeitreihen an den Elbepegeln stehen informativ zur Verfügung.</para>
 
     <figure id="elbeWavos_berechnung">
       <title>Vorhersagerechnung</title>
