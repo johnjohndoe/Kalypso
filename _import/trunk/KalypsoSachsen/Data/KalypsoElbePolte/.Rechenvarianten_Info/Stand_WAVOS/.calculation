@@ -2,10 +2,12 @@
 <ElbePolteControl fid="foo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="org.kalypso.elbepolte.control" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="org.kalypso.elbepolte.control ">
   <scenarioName>Normalbetrieb</scenarioName>
   <startsimulation/>
-  <startforecast>2008-03-04T13:00:00</startforecast>
-  <editor>sm9</editor>
-  <description>- bitte ausfüllen -</description>
-  <comment>Daten bei Usti-W fehlen, da zuerst falsche ID konfiguriert war (vor Ort repariert)</comment>
-  <calctime>2008-03-04T14:58:19</calctime>
+  <startforecast>2008-07-15T12:00:00</startforecast>
+  <editor>Belger/Thül</editor>
+  <description>Stand Installation WAVOS</description>
+  <comment>Abgerufen und gerechnet vor Ort.&#13;
+&#13;
+Geeignet als Testvariante.</comment>
+  <calctime>2008-07-15T15:20:35</calctime>
   <mergeCasePath/>
 </ElbePolteControl>
