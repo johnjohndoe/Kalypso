@@ -42,6 +42,7 @@ package org.kalypso.transformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.deegree.model.crs.CoordinateSystem;
@@ -102,10 +103,12 @@ public class CRSHelper
   public static List<String> getAllNames( )
   {
     Preferences preferences = KalypsoDeegreePlugin.getDefault().getPluginPreferences();
+
     String preferenceNames = preferences.getString( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING );
+    if( preferenceNames == null || preferenceNames.length() == 0 )
+      return new ArrayList<String>();
 
     String[] availableNames = preferenceNames.split( ";" );
-
     return Arrays.asList( availableNames );
   }
 
@@ -190,5 +193,26 @@ public class CRSHelper
       /* Leave the tooltip empty. */
       return "";
     }
+  }
+
+  /**
+   * This function hashes the given coordinate systems with its EPSG code as key.
+   * 
+   * @return The hash of the given coordinate systems.
+   */
+  public static HashMap<String, CoordinateSystem> getCoordHash( List<String> names ) throws UnknownCRSException
+  {
+    /* Get all coordinate systems. */
+    List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
+
+    /* Cache the coordinate systems. */
+    HashMap<String, CoordinateSystem> coordHash = new HashMap<String, CoordinateSystem>();
+    for( int i = 0; i < coordinateSystems.size(); i++ )
+    {
+      CoordinateSystem coordinateSystem = coordinateSystems.get( i );
+      coordHash.put( coordinateSystem.getIdentifier(), coordinateSystem );
+    }
+
+    return coordHash;
   }
 }

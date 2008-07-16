@@ -56,4 +56,5 @@ public class KalypsoCoreDebug
 
   public static Debug SPATIAL_INDEX_PAINT = new Debug( KalypsoCorePlugin.getDefault(), "/debug/spatialIndex/paint" ); //$NON-NLS-1$
 
+  public static Debug MAP_PANEL = new Debug( KalypsoCorePlugin.getDefault(), "/debug/mapPanel" ); //$NON-NLS-1$
 }
