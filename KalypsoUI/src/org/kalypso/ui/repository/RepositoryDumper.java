@@ -52,8 +52,11 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.view.ObservationCache;
+import org.kalypso.ogc.sensor.view.ObservationViewHelper;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -164,6 +167,8 @@ public class RepositoryDumper
           throw new RepositoryException( "Could not create the directory '" + newDirectory.getAbsolutePath() + "' ..." );
       }
 
+      item.getRepository().getProperties();
+      
       final IObservation observation = ObservationCache.getInstance().getObservationFor( item );
       if( observation != null )
       {
@@ -174,11 +179,11 @@ public class RepositoryDumper
         structureWriter.write( observation.getName() );
 
         /* Dump if neccessary. */
-        // DateRange dra = ObservationViewHelper.makeDateRange( item );
+         final DateRange dra = ObservationViewHelper.makeDateRange( item );
         // PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dra ) );
         // IObservation scaledObservation = provider.getObservation();
         writer = new FileOutputStream( zmlFile );
-        ObservationType observationType = ZmlFactory.createXML( observation, null );
+        ObservationType observationType = ZmlFactory.createXML( observation, new ObservationRequest( dra ) );
         ZmlFactory.getMarshaller().marshal( observationType, writer );
         writer.close();
       }
