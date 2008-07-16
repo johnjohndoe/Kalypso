@@ -19,6 +19,12 @@
 		<arg name="mapTemplate" value=".templates/calcCase/wiz01_elbepegel.gmt"/>
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
+       	<arg name="selectFeatureID" value="Usti"/>
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
+		
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
@@ -45,6 +51,11 @@
 		<arg name="mapTemplate" value=".templates/calcCase/wiz02_zufluesse.gmt"/>
 		<arg name="maximizeMap" value="true"/>
 		<arg name="mapWidgetID" value="SELECT"/>
+       	<arg name="selectFeatureID" value="Usti-Dresden"/>
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
 		<!--  -->
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="50"/>
@@ -78,10 +89,11 @@
 		<arg name="mapTemplate" value=".templates/calcCase/wiz03_projektion.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-                                	 <!-- fix the selection problems -->
-                                	 <arg name="selectFeatureID" value="Dresden"/>
-                                	 <arg name="reselectFeatureview" value="true"/>
-                                	 <arg name="selectionFromFeatureview" value="false"/> 
+		
+    	 <!-- fix the selection problems -->
+    	 <arg name="selectFeatureID" value="Dresden"/>
+    	 <arg name="reselectFeatureview" value="true"/>
+    	 <arg name="selectionFromFeatureview" value="false"/> 
 	        <!--  -->
 		<!--
 			TableView -->
@@ -116,6 +128,12 @@
 		<arg name="mapTemplate" value=".templates/calcCase/wiz04_polder.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
+       	<arg name="selectFeatureID" value="PolderNünchritz"/>
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
+		
 		<!-- sortierte Polder-Tabelle  -->
 		<arg name="zmlTableShow" value="template"/>
 		<arg name="zmlTableAlphaSort" value="false"/>
@@ -142,12 +160,18 @@
 		<arg name="mapTemplate" value=".templates/calcCase/wiz05_berechnung.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
-	        <!--
-	                FeatureView -->
-	        <arg name="featureTemplate" value=".templates/calcCase/wiz05_anfangswerte.gft"/>
-	        <arg name="reselectFeatureview" value="false"/>
-	        <arg name="selectionFromFeatureview" value="false"/>
-	        <arg name="featureControlStyle" value="SWT.NONE"/>
+       	<arg name="selectFeatureID" value="Usti"/>
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
+		
+        <!--
+                FeatureView -->
+        <arg name="featureTemplate" value=".templates/calcCase/wiz05_anfangswerte.gft"/>
+        <arg name="reselectFeatureview" value="false"/>
+        <arg name="selectionFromFeatureview" value="false"/>
+        <arg name="featureControlStyle" value="SWT.NONE"/>
 		
 		<!-- 
 			Diagramm -->
@@ -183,6 +207,11 @@
 		<arg name="mapTemplate" value=".templates/calcCase/wiz06_berichtsablage.gmt"/>
 		<arg name="mapTemplateContextIsCalcCase" value="true"/>
 		<arg name="maximizeMap" value="true"/>
+       	<arg name="selectFeatureID" value="Usti"/>
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
 		<!-- 
 			Diagramm -->
 		<!--  -->
@@ -199,7 +228,7 @@
 		<arg name="resultProperty" value="ganglinie_vorhersage"/>
 		<!-- Exporter fangen hier an... -->
 		<arg name="exporter1">
-			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="id" value="featureWithTemplateExporterTree"/>
 			<arg name="name" value="Vorhersagepegel"/>
 			<arg name="nameproperty" value="Name"/>
 			<arg name="width" value="1024"/>
