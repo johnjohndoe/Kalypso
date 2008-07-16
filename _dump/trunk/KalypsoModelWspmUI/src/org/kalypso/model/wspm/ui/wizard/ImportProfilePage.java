@@ -61,7 +61,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -154,10 +153,9 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     // TODO: some nice text...
     createFileGroup( m_topComposite );
 
-    m_crsPanel = new CRSSelectionPanel();
-    Control crsControl = m_crsPanel.createControl( m_topComposite );
-    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    crsControl.setToolTipText( Messages.ImportProfilePage_3 );
+    m_crsPanel = new CRSSelectionPanel( m_topComposite, SWT.NONE );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_crsPanel.setToolTipText( Messages.ImportProfilePage_3 );
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
