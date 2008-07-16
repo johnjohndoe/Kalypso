@@ -383,7 +383,7 @@
     <para>Neben den eigentlichen Werten liefert die PSICompact-Schnittstelle
     eine Reihe weiterer Informationen über die Zeitreihe bzw. über Ihre
     Station, welche in Form von Metadaten in der KALYPSO-Zeitreihe abgelegt
-    werden (siehe <xref linkend="tbl_psiMetadata" />). </para>
+    werden (siehe <xref linkend="tbl_psiMetadata" />).</para>
 
     <table id="tbl_psiMetadata">
       <title>Metadaten</title>
@@ -602,7 +602,15 @@
             gleiche Zeitreihe bezogen wird. Statt der in PSICompact
             vorliegenden W/Q-Beziehung wird in diesem Fall aber die definierte
             AbflussTafel übergeben. Die Umrechnung in Kalypso erfolgt über
-            diese AbflussTafel.</para>
+            diese AbflussTafel. Für Spuren mit mehreren Archivtypen (Min15,
+            Hour) gilt die AbflussTafel gleichzeitig für alle Archivtypen (im
+            Zeitreihenbrowser erhält jede Archivspur eine Unterspur 'at').
+            </para>
+
+            <para>Soll ein Modell auf AT-Zeitreihen zugreifen, muss für den
+            Zeitreihenabruf die entsprechende at-Spur konfiguriert werden. Der
+            Link auf diese Spur kann über den Zeitreihenbrowser ermittelt
+            werden.</para>
           </listitem>
         </varlistentry>
       </variablelist>
