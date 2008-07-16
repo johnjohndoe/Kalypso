@@ -13,13 +13,36 @@
 
 c       NOTE THAT 3 VERSION OF THE MODELS CAN  BE FORMED FROM THE SOURCE
 c       CODE
-c       (A)  THE SUPPLIED SOURCE OPERATES WITH COMPAQ FORTRAN
+c       (A)  THE SUPPLIED SOURCE OPERATES WITH INTEL FORTRAN
 C       (B)  REPLACING THE 4 ROUTINES *.LAH INTO THE CODE AND REMOVING THE 
 C       EQUIVALENT MS ROUTINES AND PAL.F90 WILL PERMIT COMPILATION WUTH
 C       LAHEY FORTRAN.  AUTOMAKE.FIG WILL COMPILE THE ROUTINES.
 C       (C)  A SIMILAR OPERATION WITH THE UNX ROUTINES WILL PERMIT COMPILATION
 C       ON STANDARD UNIX COMPILERS.
 C
+
+
+			Version 3.5d of RMA-10S
+
+•	A series of corrections to the cohesive section of the model have been added
+	to refine the process of erosion/deposition so that mass consistency is 
+	achieved.  In addition an option (currently only operative for cohesive 
+	trasport) has been added that allows output to an ASCII file of the total
+	suspended and deposited sediment  (see AMASSOUT in input instructions).
+	Correct bugs associated with input from RM1 files and analysis with 1-D 
+	elements and the no transform option.
+
+
+
+
+			Version 3.5c of RMA-10S
+
+•	The treatment of erosion for cohesive layers has been modified.  An erosion
+	rate may be specified for all layers.  The same erosion rules and rates are 
+	then applied as for the bottom layer.  If the erosion rates are set equal to
+	zero then the old formulation is applied.  Note that this means that the 
+	erosion rate for the bottom layer may then be supplied at two locations. 
+
 
 			Version 3.5b of RMA-10S
 
@@ -28,6 +51,8 @@ C
 	In addition a TEST option has been created so that test cases may have a input value 
 	of velocities for shear stress computation.
 	Rewind output file option added to the C6 line.
+	An option has been added that allows direct input of layer thicknesses for cohesive
+	sediment.
 
 
 			Version 3.5a of RMA-10S
