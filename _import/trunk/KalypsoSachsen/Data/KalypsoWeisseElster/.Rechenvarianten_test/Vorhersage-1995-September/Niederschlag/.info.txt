@@ -1,2 +1,0 @@
-Dieses Verzeichnis ist fuer Zeitreihen (*.zml) vorgesehen.
- 
