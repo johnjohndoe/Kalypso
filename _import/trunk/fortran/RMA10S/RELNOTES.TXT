@@ -21,6 +21,26 @@ C       (C)  A SIMILAR OPERATION WITH THE UNX ROUTINES WILL PERMIT COMPILATION
 C       ON STANDARD UNIX COMPILERS.
 C
 
+			Version 3.5e of RMA-10S  Oct 2006
+
+	In the Intel Fortran version the model will now terminate completely
+	when the run completes.  This thus enables batch running of the model
+	although RMA-10S generated error messages will also cause a normal end.
+	A further series of corrections to the model have been made to improve
+	mass consistency when wetting and drying occurs.  In earlier versions of
+	the model erosion/deposition was terminated when any node of an element
+	had a water surface below the bed (marshing active).  This corrected version
+	allows processes to continue until all corners have a water surface 
+	below the bed.  These changes have been made for both sand and cohesive
+	transport.  
+	The mass computation algorithm has also been modified to correctly account 
+	for mass moving into suspension.
+	An option has been added that permits averaging of resuspension rates over
+	element, if activated (with a data line) thus option serves to smooth the
+	impact of high resuspension at a single node.
+	A bug in the definition of the AMASSOUT option has been fixed.
+	New shear and wave shear routines have been implemented. 
+
 
 			Version 3.5d of RMA-10S
 
