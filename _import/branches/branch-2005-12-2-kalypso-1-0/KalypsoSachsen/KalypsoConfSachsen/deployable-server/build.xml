@@ -74,6 +74,9 @@
         <ant antfile="${workspace}/KalypsoModelElbePolte/etc/ant/build.xml"
              target="clean"
              inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelWavos/etc/ant/build.xml"
+             target="clean"
+             inheritAll="false" />
              
 <!--TODO: clean other models -->             
              
@@ -255,10 +258,16 @@
         <ant antfile="${workspace}/KalypsoModelElbePolte/etc/ant/build.xml"
              target="deploy"
              inheritAll="false" />
+        <ant antfile="${workspace}/KalypsoModelWavos/etc/ant/build.xml"
+             target="deploy"
+             inheritAll="false" />
 
         <!-- Copy plugins in CalcService -->
         <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoModelElbePolte/build/deploy" includes="**/*.jar" />
+        </copy>
+        <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
+            <fileset dir="${workspace}/KalypsoModelWavos/build/deploy" includes="**/*.jar" />
         </copy>
         <copy todir="${workspace}/KalypsoServiceCalc/build/build-war/WEB-INF/lib">
             <fileset dir="${workspace}/KalypsoModelSpree/build/deploy" includes="**/*.jar" />
