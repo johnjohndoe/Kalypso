@@ -64,6 +64,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -890,31 +891,46 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     }
   }
 
-  public synchronized void setBoundingBox( final GM_Envelope wishBBox )
+  /**
+   * This function sets the bounding box to this map panel and all its themes.
+   * 
+   * @param wishBBox
+   *            The new extent.
+   */
+  public synchronized void setBoundingBox( GM_Envelope wishBBox )
   {
+    /* The wished bounding box. */
     m_wishBBox = wishBBox;
 
-    final GM_Envelope oldExtent = m_boundingBox;
+    /* Store the old extend. */
+    GM_Envelope oldExtent = m_boundingBox;
+
+    /* Adjust the new extent (using the wish bounding box). */
     m_boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, getRatio() );
 
     if( m_boundingBox != null )
     {
-      // TODO: introduce a trace option for this
-      // final StringBuffer dump = new StringBuffer();
-      // dump.append( "MinX:" + m_boundingBox.getMin().getX() );
-      // dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
-      // dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
-      // dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
-      // dump.append( "\n" );
-      // System.out.println( dump.toString() );
+      /* Debug-Information. */
+      if( KalypsoCoreDebug.MAP_PANEL.isEnabled() )
+      {
+        StringBuffer dump = new StringBuffer();
+        dump.append( "MinX:" + m_boundingBox.getMin().getX() );
+        dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
+        dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
+        dump.append( "\nMaxY:" + m_boundingBox.getMax().getY() );
+        dump.append( "\n" );
 
+        System.out.println( dump.toString() );
+      }
+
+      /* Alter the source rect of the projection. */
       m_projection.setSourceRect( m_boundingBox );
 
       // don't call onModellChange and inform the listeners
       // this is dangerous (dead lock!) inside a synchronized method
       // onModellChange( null );
 
-      // instead invalidate the map yourself
+      /* Instead invalidate the map yourself. */
       m_shouldPaint = false;
       xOffset = 0;
       yOffset = 0;
@@ -924,8 +940,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     /* Tell the themes , that the extent has changed. */
     if( m_model != null )
     {
-      final int height = getHeight();
-      final int width = getWidth();
+      int height = getHeight();
+      int width = getWidth();
 
       /* Update dimension. */
       if( (height != m_height) || (width != m_width) )
@@ -934,9 +950,11 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         m_width = width;
       }
 
+      /* Change the extent for all themes. */
       m_model.accept( new KalypsoThemeChangeExtentVisitor( m_width, m_height, m_boundingBox ), IKalypsoThemeVisitor.DEPTH_INFINITE );
     }
 
+    /* Tell everyone, that the extent has changed. */
     fireExtentChanged( oldExtent, m_boundingBox );
   }
 

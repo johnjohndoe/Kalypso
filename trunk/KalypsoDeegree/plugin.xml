@@ -166,5 +166,14 @@
             value="{http://www.opengis.net/gml}PolygonPropertyType">
       </virtualProperty>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+            class="org.kalypso.preferences.KalypsoDeegreePreferencePage"
+            id="org.kalypso.deegree.preferences.KalypsoDeegreePreferencePage"
+            name="Koordinaten-Systeme">
+      </page>
+   </extension>
 
 </plugin>

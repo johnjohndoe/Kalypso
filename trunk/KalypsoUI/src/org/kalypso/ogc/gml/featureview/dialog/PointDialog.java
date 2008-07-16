@@ -154,9 +154,8 @@ public class PointDialog extends Dialog
     combo_composite.setLayout( gridLayout );
 
     /* The coordinate system panel. */
-    CRSSelectionPanel crsPanel = new CRSSelectionPanel();
-    Control crsControl = crsPanel.createControl( combo_composite );
-    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    CRSSelectionPanel crsPanel = new CRSSelectionPanel( combo_composite, SWT.NONE );
+    crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     if( getCS_CoordinateSystem() != null )
       crsPanel.setSelectedCRS( getCS_CoordinateSystem() );

@@ -45,7 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.deegree.model.crs.CoordinateSystem;
-import org.deegree.model.crs.UnknownCRSException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -60,9 +59,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.kalypso.transformation.CRSHelper;
 
 /**
@@ -70,8 +69,14 @@ import org.kalypso.transformation.CRSHelper;
  * 
  * @author Holger Albert
  */
-public class CRSSelectionPanel
+public class CRSSelectionPanel extends Composite
 {
+  /**
+   * The list of selection changed listener. This listeners will be added to the combo viewer, too. The list is only
+   * maintained here for a special case. It should not be used otherwise.
+   */
+  private List<ISelectionChangedListener> m_listener;
+
   /**
    * The combo viewer of the coordinate systems. Null, if no controls has been created.
    */
@@ -82,94 +87,156 @@ public class CRSSelectionPanel
    */
   protected HashMap<String, CoordinateSystem> m_coordHash;
 
-  private final List<Image> m_imageList = new ArrayList<Image>();
+  /**
+   * List of all images.
+   */
+  private List<Image> m_imageList;
+
+  /**
+   * Some extra text for displaying after the group title.
+   */
+  private String m_extText;
 
   /**
    * The constructor.
+   * 
+   * @param parent
+   * @param style
    */
-  public CRSSelectionPanel( )
+  public CRSSelectionPanel( Composite parent, int style )
   {
+    this( parent, style, null );
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   * @param style
+   * @param extText
+   *            Some extra text for displaying after the group title.
+   */
+  public CRSSelectionPanel( Composite parent, int style, String extText )
+  {
+    super( parent, style );
+
+    m_extText = extText;
+
+    m_listener = new ArrayList<ISelectionChangedListener>();
     m_viewer = null;
-    m_coordHash = null;
+    m_coordHash = new HashMap<String, CoordinateSystem>();
+    m_imageList = new ArrayList<Image>();
+
+    /* Create the controls. */
+    createControls();
+
   }
 
   /**
    * This function creates the controls.
-   * 
-   * @param parent
-   *            The parent.
    */
-  public Control createControl( Composite parent )
+  private void createControls( )
   {
+    /* Set the layout data. */
+    GridLayout gridLayout = new GridLayout( 1, false );
+    gridLayout.horizontalSpacing = 0;
+    gridLayout.verticalSpacing = 0;
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    super.setLayout( gridLayout );
+
     /* Create the main group for the panel. */
-    Group m_main = new Group( parent, SWT.NONE );
-    m_main.setLayout( new GridLayout( 2, false ) );
-    m_main.setText( "Koordinaten-System" );
+    Group main = new Group( this, SWT.NONE );
+    main.setLayout( new GridLayout( 2, false ) );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    try
+    String title = "Koordinaten-System";
+    if( m_extText != null && m_extText.length() > 0 )
+      title = title + " " + m_extText;
+
+    main.setText( title );
+
+    /* Create the combo. */
+    m_viewer = new ComboViewer( main, SWT.READ_ONLY | SWT.DROP_DOWN );
+    m_viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_viewer.setContentProvider( new ArrayContentProvider() );
+    m_viewer.setLabelProvider( new CRSLabelProvider( false ) );
+    m_viewer.setSorter( new ViewerSorter() );
+
+    /* Get all coordinate system names from the settings. */
+    List<String> names = CRSHelper.getAllNames();
+
+    /* Set the input. */
+    updateCoordinateSystemsCombo( names );
+
+    /* Create the info image. */
+    final Label imageLabel = new Label( main, SWT.NONE );
+    imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+
+    /* Set the image. */
+    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) );
+    Image infoImage = imgDesc.createImage();
+    m_imageList.add( infoImage );
+
+    imageLabel.setImage( infoImage );
+
+    /* Refresh the tooltip. */
+    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
-      /* Create the combo. */
-      m_viewer = new ComboViewer( m_main, SWT.READ_ONLY | SWT.DROP_DOWN );
-      m_viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      m_viewer.setContentProvider( new ArrayContentProvider() );
-      m_viewer.setLabelProvider( new CRSLabelProvider() );
-      m_viewer.setSorter( new ViewerSorter() );
-
-      /* Get all coordinate system names. */
-      List<String> names = CRSHelper.getAllNames();
-
-      /* Get all coordinate systems. */
-      List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
-
-      /* Cache the coordinate systems. */
-      m_coordHash = new HashMap<String, CoordinateSystem>();
-      for( int i = 0; i < coordinateSystems.size(); i++ )
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      public void selectionChanged( SelectionChangedEvent event )
       {
-        CoordinateSystem coordinateSystem = coordinateSystems.get( i );
-        m_coordHash.put( coordinateSystem.getIdentifier(), coordinateSystem );
-      }
-
-      /* Set the input. */
-      m_viewer.setInput( coordinateSystems );
-
-      /* Create the info image. */
-      final Label imageLabel = new Label( m_main, SWT.NONE );
-      imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-
-      /* Set the image. */
-      final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) );
-      final Image infoImage = imgDesc.createImage();
-      m_imageList.add( infoImage );
-
-      imageLabel.setImage( infoImage );
-
-      /* Refresh the tooltip. */
-      m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
-      {
-        /**
-         * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-         */
-        public void selectionChanged( SelectionChangedEvent event )
+        /* Get the name of the selected coordinate system. */
+        String selectedCRS = getSelectedCRS();
+        if( selectedCRS == null )
         {
-          /* Get the name of the selected coordinate system. */
-          String selectedCRS = getSelectedCRS();
-          if( selectedCRS == null )
-          {
-            imageLabel.setToolTipText( "" );
-            return;
-          }
-
-          /* Get the hashed coordinate system. */
-          imageLabel.setToolTipText( CRSHelper.getTooltipText( selectedCRS ) );
+          imageLabel.setToolTipText( "" );
+          return;
         }
-      } );
-    }
-    catch( UnknownCRSException e )
-    {
-      e.printStackTrace();
-    }
 
-    return m_main;
+        /* Get the hashed coordinate system. */
+        imageLabel.setToolTipText( CRSHelper.getTooltipText( selectedCRS ) );
+      }
+    } );
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
+   */
+  @Override
+  public void setLayout( Layout layout )
+  {
+    /* Ignore user set layouts, only layout datas are permitted. */
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Control#setEnabled(boolean)
+   */
+  @Override
+  public void setEnabled( boolean enabled )
+  {
+    super.setEnabled( enabled );
+
+    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
+      m_viewer.getControl().setEnabled( enabled );
+  }
+
+  /**
+   * This function disposes the images.
+   */
+  @Override
+  public void dispose( )
+  {
+    super.dispose();
+
+    /* Dispose all images and colors. */
+    for( Image image : m_imageList )
+    {
+      if( !image.isDisposed() )
+        image.dispose();
+    }
   }
 
   /**
@@ -180,17 +247,12 @@ public class CRSSelectionPanel
    */
   public void setSelectedCRS( String selectedCRS )
   {
-    if( m_viewer != null )
+    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
     {
       CoordinateSystem coordinateSystem = m_coordHash.get( selectedCRS );
       if( coordinateSystem != null )
         m_viewer.setSelection( new StructuredSelection( coordinateSystem ) );
     }
-  }
-
-  public void setEnabled( final boolean enabled )
-  {
-    m_viewer.getControl().setEnabled( enabled );
   }
 
   /**
@@ -200,10 +262,13 @@ public class CRSSelectionPanel
    */
   public String getSelectedCRS( )
   {
+    if( m_viewer == null || m_viewer.getControl().isDisposed() )
+      return null;
+
     /* Get the selection. */
     ISelection selection = m_viewer.getSelection();
 
-    /* The name of the crs, which will be told to the listeners. */
+    /* The name of the selected coordinate system. */
     String selectedCRS = null;
 
     /* If not empty and the right type, the name is set. */
@@ -222,7 +287,7 @@ public class CRSSelectionPanel
         CoordinateSystem coordinateSystem = (CoordinateSystem) selectedElement;
 
         /* Set the name of the selected coordinate system. */
-        selectedCRS = coordinateSystem.getCRS().getIdentifier();
+        selectedCRS = coordinateSystem.getIdentifier();
       }
     }
 
@@ -237,8 +302,11 @@ public class CRSSelectionPanel
    */
   public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
-    if( m_viewer != null )
+    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
+    {
       m_viewer.addSelectionChangedListener( listener );
+      m_listener.add( listener );
+    }
   }
 
   /**
@@ -249,14 +317,59 @@ public class CRSSelectionPanel
    */
   public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
-    if( m_viewer != null )
+    if( m_viewer != null && !m_viewer.getControl().isDisposed() )
+    {
       m_viewer.removeSelectionChangedListener( listener );
+      m_listener.remove( listener );
+    }
   }
 
-  public void dispose( )
+  /**
+   * This function updates the combobox, displaying the coordinate systems.
+   */
+  public void updateCoordinateSystemsCombo( List<String> names )
   {
-    // dispose all images and colors
-    for( Image image : m_imageList )
-      image.dispose();
+    try
+    {
+      if( m_viewer == null || m_viewer.getControl().isDisposed() )
+        return;
+
+      if( names == null || names.size() == 0 )
+      {
+        m_coordHash.clear();
+        m_viewer.setInput( null );
+        return;
+      }
+
+      /* The name of the coordinate system, which was set before. */
+      String selectedCRS = getSelectedCRS();
+
+      /* Create a hash of it. */
+      m_coordHash = CRSHelper.getCoordHash( names );
+
+      /* Get all coordinate systems. */
+      List<CoordinateSystem> coordinateSystems = CRSHelper.getCRSListByNames( names );
+
+      /* Set the input (also resets the selection). */
+      m_viewer.setInput( coordinateSystems );
+
+      /* If the name of the old coordinate system is also among the new ones, select it again. */
+      if( selectedCRS != null && names.contains( selectedCRS ) )
+        setSelectedCRS( selectedCRS );
+
+      /* There was a coordinate system selected, but it does not exist any more. So the selection changes. */
+      if( selectedCRS != null && !names.contains( selectedCRS ) )
+      {
+        for( int i = 0; i < m_listener.size(); i++ )
+        {
+          ISelectionChangedListener listener = m_listener.get( i );
+          listener.selectionChanged( new SelectionChangedEvent( m_viewer, m_viewer.getSelection() ) );
+        }
+      }
+    }
+    catch( Exception ex )
+    {
+      ex.printStackTrace();
+    }
   }
 }
