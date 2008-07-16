@@ -3,7 +3,7 @@
 - in .templates/calcCase/berichtTabelle.ott auch "Spur oben", "Spur unten" durch "obere" bzw. "untere umh�llende" ersetzen (wie bei Schwarze Elster)
   (ggf. für alle Modelle auch Spaltenreihenfolge erzwingen)
   
-Folgende Vorlagen werden nicht mehr benutzt und k�nnten somit entfernt werden (bei Spree aber noch mal pr�fen, diese Vorlagen nur bei Schwarze Elster gepr�ft):
+Folgende Vorlagen werden nicht mehr benutzt und könnten somit entfernt werden (bei Spree aber noch mal prüfen, diese Vorlagen nur bei Schwarze Elster geprüft):
 -.templates/calcCase/diag1.odt
 -.templates/calcCase/results.odt
 -.templates/calcCase/flutungen.odt
@@ -35,3 +35,7 @@ TODO
 - Lage DWD Daten prüfen
 - Ablage Prognose W und Q geht auf die gleiche Spur. Mit Fr. Barchmann diskutieren.
 - Für die Pegel wird Q benötigt, wir holen aber W; dies kann ggfs. zu Problemen führen, Modell sollte umkonfiguriert werden.
+
+2008 07: Kontrolle Talsperrenabgabe: keine Umschaltung W/Q, nur abgeleitetes Q kann eidtiert werden...?
+2008 07: Erster Vorhersagewert der Teilgebietsniederschläge ist NaN; letzter ist gewarnt.
+2008 07: Kein Ergebnis für Spreewitz (RV 'Stand WAVOS')
