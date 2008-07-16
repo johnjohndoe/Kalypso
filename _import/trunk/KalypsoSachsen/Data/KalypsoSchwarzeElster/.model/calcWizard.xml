@@ -254,7 +254,7 @@ ToDo: Help-Ids setzen!!! -->
 		<arg name="rightSash" value="25"/>
 
 		<arg name="exporter1">
-			<arg name="id" value="featureWithTemplateExporter"/>
+			<arg name="id" value="featureWithTemplateExporterTree"/>
 			<arg name="name" value="Vorhersagepegel"/>
 			<arg name="nameproperty" value="Name"/>
 			<arg name="width" value="1024"/>
