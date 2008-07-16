@@ -27,7 +27,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -137,11 +136,10 @@ public class ImportLanduseWizardPage extends WizardPage implements SelectionList
     crsGridData.horizontalSpan = 3;
     crsContainer.setLayoutData( crsGridData );
 
-    m_crsPanel = new CRSSelectionPanel();
-    final Control crsControl = m_crsPanel.createControl( crsContainer );
-    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    crsControl.setToolTipText( Messages.getString( "ImportLanduseWizardPage.21" ) ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "ImportLanduseWizardPage.21" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );

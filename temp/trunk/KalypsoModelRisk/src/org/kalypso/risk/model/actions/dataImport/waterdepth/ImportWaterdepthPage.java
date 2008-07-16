@@ -16,7 +16,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -290,11 +289,10 @@ public class ImportWaterdepthPage extends WizardPage
     crsGridData.horizontalSpan = 2;
     crsContainer.setLayoutData( crsGridData );
 
-    m_crsPanel = new CRSSelectionPanel();
-    final Control crsControl = m_crsPanel.createControl( crsContainer );
-    crsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    m_crsPanel = new CRSSelectionPanel( crsContainer, SWT.NONE );
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    crsControl.setToolTipText( Messages.getString( "ImportWaterdepthPage.30" ) ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString( "ImportWaterdepthPage.30" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
