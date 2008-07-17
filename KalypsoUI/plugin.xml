@@ -2660,5 +2660,20 @@
             </commandParameter>
          </command>
       </extension>
+      <extension
+            point="org.kalypso.core.poolLoader">
+         <loader
+               class="org.kalypso.ogc.sensor.loaders.ZmlLoader"
+               type="zml">
+         </loader>
+         <loader
+               class="org.kalypso.ogc.gml.loader.SldLoader"
+               type="sld">
+         </loader>
+         <loader
+               class="org.kalypso.ogc.gml.loader.WfsLoader"
+               type="wfs">
+         </loader>
+      </extension>
  
 </plugin>
