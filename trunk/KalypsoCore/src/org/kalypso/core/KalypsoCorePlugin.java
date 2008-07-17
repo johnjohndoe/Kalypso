@@ -49,8 +49,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.loader.DefaultLoaderFactory;
+import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.osgi.framework.BundleContext;
 
@@ -71,6 +74,10 @@ public class KalypsoCorePlugin extends Plugin
   private CatalogManager m_catalogManager = null;
 
   private CatalogSLD m_sldCatalog = null;
+
+  private ResourcePool m_pool;
+
+  private ILoaderFactory m_loaderFactory;
 
   public static String getID( )
   {
@@ -178,11 +185,36 @@ public class KalypsoCorePlugin extends Plugin
    */
   public IPreferenceStore getPreferenceStore( )
   {
-    // Create the preference store lazily.
+    /* Create the preference store lazily. */
     if( m_preferenceStore == null )
-    {
       m_preferenceStore = new ScopedPreferenceStore( new InstanceScope(), getBundle().getSymbolicName() );
-    }
+
     return m_preferenceStore;
+  }
+
+  /**
+   * This function returns the pool.
+   * 
+   * @return The pool.
+   */
+  public ResourcePool getPool( )
+  {
+    if( m_pool == null )
+      m_pool = new ResourcePool( getLoaderFactory() );
+
+    return m_pool;
+  }
+
+  /**
+   * This function returns the loader factory.
+   * 
+   * @return The loader factory.
+   */
+  private ILoaderFactory getLoaderFactory( )
+  {
+    if( m_loaderFactory == null )
+      m_loaderFactory = new DefaultLoaderFactory();
+
+    return m_loaderFactory;
   }
 }

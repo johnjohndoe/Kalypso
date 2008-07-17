@@ -65,10 +65,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.i18n.Messages;
-import org.kalypso.loader.DefaultLoaderFactory;
-import org.kalypso.loader.ILoaderFactory;
 import org.kalypso.ogc.gml.dict.DictionaryCatalog;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -94,9 +93,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   private static final String BUNDLE_NAME = KalypsoGisPlugin.class.getPackage().getName() + ".resources.KalypsoGisPluginResources"; //$NON-NLS-1$
 
-  /** location of the pool properties file */
-  private static final String POOL_PROPERTIES = "resources/pools.properties"; //$NON-NLS-1$
-
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
   private ResourceBundle m_resourceBundle = null;
@@ -113,12 +109,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   private final Properties m_mainConf = new Properties();
 
-  private ResourcePool m_pool;
-
-  private final Properties m_poolproperties = new Properties();
-
-  private ILoaderFactory m_loaderFactory;
-
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
 
   private DictionaryCatalog m_dictionaryCatalog;
@@ -134,8 +124,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     try
     {
-      // for AWT and Swing stuff used with SWT_AWT so that they look like OS
-      // controls
+      // for AWT and Swing stuff used with SWT_AWT so that they look like OS controls
       UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
     }
     catch( final Exception e1 )
@@ -157,7 +146,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
     if( confUrls.length() == 0 )
     {
-      final IStatus warningStatus = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.KalypsoGisPlugin.6") ); //$NON-NLS-1$
+      final IStatus warningStatus = StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.6" ) ); //$NON-NLS-1$
       getLog().log( warningStatus );
     }
 
@@ -223,15 +212,15 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         // do nothing, try with next location
         // e.printStackTrace();
 
-        String msg = Messages.getString("org.kalypso.ui.KalypsoGisPlugin.9") + location + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+        String msg = Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.9" ) + location + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
 
         if( i == locs.length - 1 )
         {
-          msg += Messages.getString("org.kalypso.ui.KalypsoGisPlugin.11"); //$NON-NLS-1$
+          msg += Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.11" ); //$NON-NLS-1$
         }
         else
         {
-          msg += Messages.getString("org.kalypso.ui.KalypsoGisPlugin.12") + locs[i + 1]; //$NON-NLS-1$
+          msg += Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.12" ) + locs[i + 1]; //$NON-NLS-1$
         }
 
         KalypsoGisPlugin.LOGGER.warning( msg );
@@ -241,16 +230,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
         IOUtils.closeQuietly( stream );
       }
     }
-  }
-
-  /**
-   * Loads the pool configuration
-   * 
-   * @throws IOException
-   */
-  private void configurePool( ) throws IOException
-  {
-    m_poolproperties.load( this.getClass().getResourceAsStream( KalypsoGisPlugin.POOL_PROPERTIES ) );
   }
 
   /**
@@ -307,16 +286,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
-  public ILoaderFactory getLoaderFactory( )
-  {
-    if( m_loaderFactory == null )
-    {
-      m_loaderFactory = new DefaultLoaderFactory( m_poolproperties, getClass().getClassLoader() );
-    }
-
-    return m_loaderFactory;
-  }
-
   /**
    * use {@link KalypsoDeegreePlugin#getDefaultStyleFactory()} instead
    */
@@ -326,14 +295,13 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return KalypsoDeegreePlugin.getDefaultStyleFactory();
   }
 
+  /**
+   * @deprecated use {@link KalypsoCorePlugin#getPool()} instead.
+   */
+  @Deprecated
   public ResourcePool getPool( )
   {
-    if( m_pool == null )
-    {
-      m_pool = new ResourcePool( getLoaderFactory() );
-    }
-
-    return m_pool;
+    return KalypsoCorePlugin.getDefault().getPool();
   }
 
   /**
@@ -359,27 +327,19 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       ex.printStackTrace();
     }
 
-    try
-    {
-      reconfigure();
+    reconfigure();
 
-      getPreferenceStore().addPropertyChangeListener( this );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
+    getPreferenceStore().addPropertyChangeListener( this );
   }
 
   /**
    * Reconfigure the plugin according to server properties and more.
    */
-  private void reconfigure( ) throws IOException
+  private void reconfigure( )
   {
     m_mainConf.clear();
 
     configure( m_mainConf );
-    configurePool();
     configureServiceProxyFactory( m_mainConf );
 
     // muss NACH dem streamHandler konfiguriert werden!
@@ -399,7 +359,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
       catalogLocation = m_mainConf.getProperty( KalypsoGisPlugin.SCHEMA_CATALOG );
       if( catalogLocation != null )
       {
-        KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString("org.kalypso.ui.KalypsoGisPlugin.18") ); //$NON-NLS-1$
+        KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.18" ) ); //$NON-NLS-1$
         url = new URL( catalogLocation );
         is = new BufferedInputStream( url.openStream() );
 
@@ -412,7 +372,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final IOException e )
     {
       // exceptions ignorieren: nicht schlimm, Eintrag ist optional
-      KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString("org.kalypso.ui.KalypsoGisPlugin.19") ); //$NON-NLS-1$
+      KalypsoGisPlugin.LOGGER.info( KalypsoGisPlugin.SCHEMA_CATALOG + Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.19" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -470,7 +430,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     // m_plugin should be set in the constructor
     if( KalypsoGisPlugin.THE_PLUGIN == null )
     {
-      throw new NullPointerException( Messages.getString("org.kalypso.ui.KalypsoGisPlugin.20") ); //$NON-NLS-1$
+      throw new NullPointerException( Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.20" ) ); //$NON-NLS-1$
     }
 
     return KalypsoGisPlugin.THE_PLUGIN;
@@ -517,7 +477,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     catch( final Exception e )
     {
       KalypsoGisPlugin.LOGGER.warning( e.getLocalizedMessage() );
-      KalypsoGisPlugin.LOGGER.warning( Messages.getString("org.kalypso.ui.KalypsoGisPlugin.21") ); //$NON-NLS-1$
+      KalypsoGisPlugin.LOGGER.warning( Messages.getString( "org.kalypso.ui.KalypsoGisPlugin.21" ) ); //$NON-NLS-1$
 
       return TimeZone.getDefault();
     }

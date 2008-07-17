@@ -40,26 +40,53 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
-import java.util.Properties;
-
-import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.factory.FactoryException;
 
 /**
- * Die Standardimplementation der {@link ILoaderFactory}
+ * The default implementation of {@link ILoaderFactory}.
  * 
- * @author Schlienger
- *  
+ * @author Holger Albert
  */
-public class DefaultLoaderFactory extends ConfigurableCachableObjectFactory implements ILoaderFactory
+public class DefaultLoaderFactory implements ILoaderFactory
 {
-  public DefaultLoaderFactory( final Properties props, final ClassLoader cl )
+  /**
+   * The constructor.
+   */
+  public DefaultLoaderFactory( )
   {
-    super( props, false, cl );
   }
 
-  public ILoader getLoaderInstance( final String type ) throws FactoryException
+  /**
+   * @see org.kalypso.loader.ILoaderFactory#getLoaderInstance(java.lang.String)
+   */
+  public ILoader getLoaderInstance( String type ) throws FactoryException
   {
-    return (ILoader)getObjectInstance( type, ILoader.class );
+    /* Memory for the loader. */
+    ILoader loader = null;
+
+    try
+    {
+      IExtensionRegistry registry = Platform.getExtensionRegistry();
+      IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.poolLoader" );
+      for( IConfigurationElement element : elements )
+      {
+        String elementType = element.getAttribute( "type" );
+        if( type.equals( elementType ) )
+          loader = (ILoader) element.createExecutableExtension( "class" );
+      }
+
+      /* If there is no loader, this is an error. */
+      if( loader == null )
+        throw new Exception( "Unknown type: " + type );
+
+      return loader;
+    }
+    catch( Exception ex )
+    {
+      throw new FactoryException( "Could not instantiate the loader type: " + type, ex );
+    }
   }
 }

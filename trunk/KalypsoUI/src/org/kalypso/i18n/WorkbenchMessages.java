@@ -44,8 +44,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public class WorkbenchMessages
 {

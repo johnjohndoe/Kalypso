@@ -13,3 +13,6 @@ org.kalypso.core/debug/spatialIndex/paint = false
 
 # MapPanel output
 org.kalypso.core/debug/mapPanel = false
+
+# ResourcePool output
+org.kalypso.core/debug/resourcepool/keys = false
