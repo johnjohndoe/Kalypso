@@ -48,22 +48,26 @@ import java.util.List;
 
 import org.deegree.model.crs.CoordinateSystem;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.CachedCRSFactory;
@@ -120,20 +124,49 @@ public class AvailableCRSPanel extends Composite
 
     /* Create the main group for the panel. */
     Group main = new Group( this, SWT.NONE );
-    main.setLayout( new GridLayout( 2, false ) );
+    main.setLayout( new GridLayout( 3, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     main.setText( "Verfügbare Koordinaten-Systeme" );
 
     /* Create the combo. */
     m_viewer = new ListViewer( main, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_viewer.getList().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 0 ) );
+    m_viewer.getList().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 0 ) );
     m_viewer.setContentProvider( new ArrayContentProvider() );
-    m_viewer.setLabelProvider( new CRSLabelProvider( true ) );
+    m_viewer.setLabelProvider( new CRSLabelProvider( false ) );
     m_viewer.setSorter( new ViewerSorter() );
+
+    /* Create the info image. */
+    final Label imageLabel = new Label( main, SWT.NONE );
+    imageLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
+
+    /* Set the image. */
+    ImageDescriptor imgDesc = ImageDescriptor.createFromURL( getClass().getResource( "resources/info.gif" ) );
+    Image infoImage = imgDesc.createImage();
+    imageLabel.setImage( infoImage );
+
+    m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      public void selectionChanged( SelectionChangedEvent event )
+      {
+        /* Get the name of the selected coordinate system. */
+        String selectedCRS = getSelectedCRS();
+        if( selectedCRS == null )
+        {
+          imageLabel.setToolTipText( "" );
+          return;
+        }
+
+        /* Get the hashed coordinate system. */
+        imageLabel.setToolTipText( CRSHelper.getTooltipText( selectedCRS ) );
+      }
+    } );
 
     /* Create the button. */
     Button removeButton = new Button( main, SWT.PUSH );
-    removeButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
+    removeButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
     removeButton.setText( "Entfernen" );
 
     /* Add a listener. */
@@ -443,7 +476,7 @@ public class AvailableCRSPanel extends Composite
     try
     {
       /* Create the dialog for entering the EPSG code coordinate system. */
-      InputDialog dialog = new InputDialog( display.getActiveShell(), "Koordinaten-System hinzufügen", "Bitte geben Sie den EPSG-Code eines Koordinaten-Systems ein:", "", new CRSInputValidator() );
+      InputDialog dialog = new InputDialog( display.getActiveShell(), "Koordinaten-System hinzufügen", "Bitte geben Sie den EPSG-Code eines Koordinaten-Systems ein:", "EPSG:", new CRSInputValidator() );
       int open = dialog.open();
       if( open == InputDialog.CANCEL )
         return;
