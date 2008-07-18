@@ -1,9 +1,12 @@
 package test;
 
+import java.io.File;
+
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -62,6 +65,10 @@ public class WriteShapeTest extends TestCase
       workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    ShapeSerializer.serialize( workspace, "C:\\tmp\\shapetest", null ); //$NON-NLS-1$
+    final File shapeFile = FileUtilities.createNewUniqueFile( "shapetest", FileUtilities.TMP_DIR );
+
+    ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null ); //$NON-NLS-1$
+
+    System.out.println( "Wrote shapeFile to:" + shapeFile.getAbsolutePath() );
   }
 }

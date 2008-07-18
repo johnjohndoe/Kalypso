@@ -393,7 +393,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
 
         try
         {
-          awtColor = Color.decode( s );
+          awtColor = s == null || s.length() == 0 ? Color.BLACK : Color.decode( s );
         }
         catch( final NumberFormatException e )
         {
