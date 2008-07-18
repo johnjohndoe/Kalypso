@@ -336,7 +336,7 @@ public class ShapeSerializer
     final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
     final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
     final QName fcQName = new QName("http://www.opengis.net/gml", "_FeatureCollection");
-    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps, (GMLSchema) childFeatureType.getGMLSchema(), fcQName );
+    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps, childFeatureType.getGMLSchema(), fcQName );
     return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
 
