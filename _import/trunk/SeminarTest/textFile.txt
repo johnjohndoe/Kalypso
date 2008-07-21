@@ -1,5 +1,0 @@
-This is out example text file.
-Stefan changed the second line
-and the third one.
-
-A new line.
