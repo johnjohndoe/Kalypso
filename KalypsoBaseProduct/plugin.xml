@@ -6,7 +6,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.ui.ide.workbench"
-            name="Kalypso Simulation Platform">
+            name="KalypsoBase">
          <property
                name="windowImages"
                value="etc/applicationicons/icon_16.gif,etc/applicationicons/icon_32.gif,etc/applicationicons/icon_48.gif,etc/applicationicons/icon_64.gif,etc/applicationicons/icon_128.gif">
@@ -33,7 +33,7 @@
          </property>
          <property
                name="appName"
-               value="Kalypso Simulation Platform">
+               value="KalypsoBase">
          </property>
          <property
                name="preferenceCustomization"
