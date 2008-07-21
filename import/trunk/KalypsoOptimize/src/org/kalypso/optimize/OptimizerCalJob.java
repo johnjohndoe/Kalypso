@@ -99,8 +99,7 @@ public class OptimizerCalJob implements ISimulation
       if( monitor.isCanceled() )
         return;
       sceJob.optimize( sceIO, monitor );
-      //      if( monitor.isCanceled() )
-      //        return;
+
       m_optimizingJob.publishResults( resultEater );
     }
     catch( Exception e )
