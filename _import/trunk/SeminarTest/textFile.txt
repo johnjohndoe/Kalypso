@@ -1,4 +1,4 @@
-This is line 1.
+Stefan changed line 1. 
 
 This is line 2.
 
