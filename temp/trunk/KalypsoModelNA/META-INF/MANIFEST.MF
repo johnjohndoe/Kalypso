@@ -25,7 +25,6 @@ Export-Package: org.kalypso.convert.namodel,
  org.kalypso.convert.update,
  org.kalypso.convert.update.resources
 Require-Bundle: org.kalypso.deegree;visibility:=reexport,
- org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.commons;visibility:=reexport,
  org.kalypso.core;visibility:=reexport,
  org.kalypso.optimize;visibility:=reexport,

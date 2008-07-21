@@ -15,7 +15,6 @@ Export-Package: javax.servlet,
  org.kalypso.dwd.servlet.dwdfilecopy
 Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.commons;visibility:=reexport,
- org.kalypso.jwsdp;visibility:=reexport,
  org.kalypso.core,
  org.eclipse.ant.core
 Eclipse-LazyStart: true

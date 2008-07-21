@@ -44,8 +44,8 @@ package org.kalypso.convert.namodel.schema;
 import java.net.URL;
 import java.util.Map;
 
-import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypso.convert.namodel.NaModelConstants;
 
 /**
  * class UrlCatalogNA

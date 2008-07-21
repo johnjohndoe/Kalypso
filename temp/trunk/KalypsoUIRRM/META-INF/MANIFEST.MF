@@ -9,7 +9,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.kalypso.core,
- org.kalypso.jwsdp,
  org.kalypso.rrm.kalininmiljukov,
  org.kalypso.ui,
  org.eclipse.ui.intro,
