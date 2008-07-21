@@ -3,16 +3,19 @@
       id="org.kalypso.base"
       label="KalypsoBase Feature"
       version="1.0.0"
+      provider-name="kalypsobase.sourceforge.net"
       os="win32"
       ws="win32"
       nl="de"
       arch="x86">
 
    <description url="http://kalypso.bjoernsen.de/">
-      The Kalypso Simulation Platform is a framework for application development. It provides implementations of open standards for geospatial information systems.
+      KalypsoBase is a framework for application
+development. It provides implementations of open standards for
+geospatial information systems.
    </description>
 
-   <copyright url="http://kalypso.bjoernsen.de/">
+   <copyright url="http://kalypsobase.sourceforge.net/">
       Copyright (C) 2008 by:
 Technical University of Hamburg-Harburg (TUHH)
 Institute of River and Coastal Engineering
@@ -43,13 +46,12 @@ USA
    </license>
 
    <url>
-      <discovery label="The Kalypso web page" url="http://kalypso.bjoernsen.de/"/>
+      <discovery label="The Kalypso web page" url="http://kalypsobase.sourceforge.net/"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.platform" version="3.3.2.R33x_v20071022-_19UEksF-G8Yc6bUv3Dz"/>
-      <import feature="org.eclipse.cvs" version="1.0.1.R33x_r20070802-7C79_9_KKG-mDM9e3H5D"/>
-   </requires>
+   <includes
+         id="org.eclipse.platform"
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.ui"
@@ -118,51 +120,18 @@ USA
          id="org.kalypso.bsf.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.bsf.groovy"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.bsf.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.chart.ext.base"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.chart.ext.observation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.chart.factory"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.chart.framework"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.chart.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -176,29 +145,18 @@ USA
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.debug"
+         id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.debug.servlet"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.kalypso.deegree"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.kalypso.deegree2"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.featureview"
@@ -229,13 +187,6 @@ USA
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.jwsdp"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
@@ -250,34 +201,7 @@ USA
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.service.ogc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.service.wps"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.services.core.client"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.kalypso.simulation.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.simulation.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -294,7 +218,8 @@ USA
          id="de.renew.libs"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="de.renew.workflow.connector"
@@ -361,6 +286,41 @@ USA
 
    <plugin
          id="org.eclipse.wst.common.uriresolver"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.openali.odysseus.chart.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.openali.odysseus.chart.factory"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.openali.odysseus.chart.framework"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.openali.odysseus.chart.ext.base"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.openali.odysseus.chart.ext.observation"
          download-size="0"
          install-size="0"
          version="0.0.0"
