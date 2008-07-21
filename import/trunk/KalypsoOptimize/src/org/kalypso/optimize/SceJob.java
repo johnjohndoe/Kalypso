@@ -64,11 +64,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessControlThread;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.contribs.java.io.StreamUtilities;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.ObjectFactory;
 import org.kalypso.simulation.core.ISimulationMonitor;
