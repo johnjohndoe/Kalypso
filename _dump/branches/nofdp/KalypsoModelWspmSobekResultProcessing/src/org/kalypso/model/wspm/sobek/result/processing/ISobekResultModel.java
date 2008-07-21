@@ -1,6 +1,6 @@
 package org.kalypso.model.wspm.sobek.result.processing;
 
-import nl.wldelft.fews.pi.TimeSeriesComplexType;
+import nl.wldelft.fews.pi.TimeSerieComplexType;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
@@ -14,7 +14,7 @@ public interface ISobekResultModel
    *            id of cross section node
    * @return
    */
-  TimeSeriesComplexType getCrossSectionBinding( ICrossSectionNode node ) throws CoreException;
+  TimeSerieComplexType getCrossSectionBinding( ICrossSectionNode node ) throws CoreException;
 
   IResultTimeSeries getCrossSectionTimeSeries( ICrossSectionNode node ) throws CoreException;
 

@@ -80,6 +80,10 @@ public class BranchHydrographUtilities
       final double station = profile.getStation();
 
       final IResultTimeSeries timeSeries = modelHandler.getCrossSectionTimeSeries( csn );
+      // TODO FIXME no null handling
+      if( timeSeries == null )
+        continue;
+
       final Double maxValueW = timeSeries.getMaxValue();
 
       final IRecord record = result.createRecord();

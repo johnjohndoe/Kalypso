@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
@@ -13,6 +14,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import nl.wldelft.fews.pi.HeaderComplexType;
+import nl.wldelft.fews.pi.TimeSerieComplexType;
 import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
 import org.eclipse.core.resources.IFile;
@@ -48,6 +51,8 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   private CommandableWorkspace m_branchesCommandableWorkspace;
 
+  private JAXBElement<TimeSeriesComplexType> m_jaxRoot = null;
+
   private SobekResultModelHandler( final IFolder resultFolder ) throws JAXBException
   {
     m_resultFolder = resultFolder;
@@ -73,47 +78,76 @@ public class SobekResultModelHandler implements ISobekResultModel
     return new SobekResultModelHandler( resultFolder );
   }
 
-  private IFile getCrossSectionNodeResultFile( final ICrossSectionNode node, final String extension ) throws CoreException
+  private IFile getCrossSectionNodeResultFile( final ICrossSectionNode node ) throws CoreException
   {
 
-    final IFolder folder = m_resultFolder.getFolder( "output/nodes/csn/" ); //$NON-NLS-1$
+    final IFolder folder = m_resultFolder.getFolder( "output/nodes/results/" ); //$NON-NLS-1$
     if( !folder.exists() )
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_2 ) );
 
-    final IFile iFile = folder.getFile( node.getId() + extension );
+    final IFile iFile = folder.getFile( node.getId() + ".gml" ); //$NON-NLS-1$
     if( !iFile.exists() )
       return null;
 
     return iFile;
   }
 
-  public TimeSeriesComplexType getCrossSectionBinding( final ICrossSectionNode node ) throws CoreException
+  private IFile getResultFile( ) throws CoreException
   {
-    final IFile iFile = getCrossSectionNodeResultFile( node, ".xml" ); //$NON-NLS-1$
+    final IFolder folder = m_resultFolder.getFolder( "output/nodes/results/" ); //$NON-NLS-1$
+    if( !folder.exists() )
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_2 ) );
 
-    final InputStream is = new BufferedInputStream( iFile.getContents() );
-    try
-    {
-      final Unmarshaller u = JC.createUnmarshaller();
-      final JAXBElement<TimeSeriesComplexType> jaxRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
+    final IFile iFile = folder.getFile( "calcpnt.xml" ); //$NON-NLS-1$
+    if( !iFile.exists() )
+      return null;
 
-      return jaxRoot.getValue();
-    }
-    catch( final Exception e )
+    return iFile;
+  }
+
+  @SuppressWarnings("unchecked")
+  public TimeSerieComplexType getCrossSectionBinding( final ICrossSectionNode node ) throws CoreException
+  {
+    if( m_jaxRoot == null )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_4 ) );
-    }
-    finally
-    {
+      final IFile iFile = getResultFile(); //$NON-NLS-1$
+
+      final InputStream is = new BufferedInputStream( iFile.getContents() );
+
       try
       {
-        is.close();
+        final Unmarshaller u = JC.createUnmarshaller();
+        m_jaxRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
       }
-      catch( final IOException e )
+      catch( final Exception e )
       {
-        throw new CoreException( StatusUtilities.createWarningStatus( Messages.SobekResultModelHandler_5 ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_4 ) );
+      }
+      finally
+      {
+        try
+        {
+          is.close();
+        }
+        catch( final IOException e )
+        {
+          throw new CoreException( StatusUtilities.createWarningStatus( Messages.SobekResultModelHandler_5 ) );
+        }
       }
     }
+
+    TimeSeriesComplexType values = m_jaxRoot.getValue();
+    List<TimeSerieComplexType> series = values.getSeries();
+    for( TimeSerieComplexType complex : series )
+    {
+      HeaderComplexType header = complex.getHeader();
+      String locationId = header.getLocationId();
+
+      if( locationId.equals( String.format( "C%s", node.getId() ) ) ) //$NON-NLS-1$
+        return complex;
+    }
+
+    return null;
   }
 
   public IResultTimeSeries getCrossSectionTimeSeries( final ICrossSectionNode node ) throws CoreException
@@ -125,14 +159,14 @@ public class SobekResultModelHandler implements ISobekResultModel
         return new ResultTimeSeriesHandler( cmd.getRootFeature() );
 
       /* get cross section node result file */
-      IFile iFile = getCrossSectionNodeResultFile( node, ".gml" ); //$NON-NLS-1$
+      IFile iFile = getCrossSectionNodeResultFile( node ); //$NON-NLS-1$
 
       boolean empty = false;
 
       /* gml file doesn't exists - create a new empty gml (workspace) file */
       if( iFile == null )
       {
-        final IFile iCSN = getCrossSectionNodeResultFile( node, ".xml" ); //$NON-NLS-1$
+        final IFile iCSN = getResultFile(); //$NON-NLS-1$
 
         final IFolder parent = (IFolder) iCSN.getParent();
         iFile = parent.getFile( node.getId() + ".gml" ); //$NON-NLS-1$
@@ -155,7 +189,9 @@ public class SobekResultModelHandler implements ISobekResultModel
       /* fill empty workspace with results */
       if( empty )
       {
-        final TimeSeriesComplexType binding = getCrossSectionBinding( node );
+        final TimeSerieComplexType binding = getCrossSectionBinding( node );
+        if( binding == null )
+          return null;
 
         final ResultWorker worker = new ResultWorker( workspace, binding, node );
         worker.process();
@@ -181,6 +217,8 @@ public class SobekResultModelHandler implements ISobekResultModel
   /* dispose existing result workspaces */
   public void dispose( )
   {
+    m_jaxRoot = null;
+
     final Collection<CommandableWorkspace> commandables = m_commandables.values();
     for( final CommandableWorkspace workspace : commandables )
     {
