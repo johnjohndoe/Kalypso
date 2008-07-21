@@ -1,4 +1,5 @@
 A new file.
+I add one line.
 
 Block 1
 
