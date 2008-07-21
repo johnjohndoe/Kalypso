@@ -48,7 +48,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.internal.services.IEvaluationService;
+import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -216,7 +216,6 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     return m_instance;
   }
 
-  @SuppressWarnings("restriction")
   private void registerSourceProviders( )
   {
     if( PlatformUI.isWorkbenchRunning() )
@@ -229,14 +228,9 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
       final IContextService contextService = (IContextService) workbench.getService( IContextService.class );
       if( contextService != null )
         contextService.addSourceProvider( this );
-
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      if( handlerService != null )
-        handlerService.addSourceProvider( this );
     }
   }
 
-  @SuppressWarnings("restriction")
   private void unregisterSourceProviders( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();

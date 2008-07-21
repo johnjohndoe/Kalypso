@@ -45,6 +45,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.types.BindingUnmarshalingContentHandler;
@@ -53,7 +54,6 @@ import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.UnmarshalResultProvider;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;

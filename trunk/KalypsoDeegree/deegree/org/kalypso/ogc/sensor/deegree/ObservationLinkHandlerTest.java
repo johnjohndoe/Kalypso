@@ -47,7 +47,7 @@ import javax.xml.bind.Marshaller;
 
 import junit.framework.TestCase;
 
-import org.kalypso.jwsdp.JaxbUtilities;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 

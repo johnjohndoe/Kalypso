@@ -45,20 +45,12 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
-import javax.xml.rpc.ServiceException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor;
-import org.kalypso.services.observation.client.KalypsoServiceObsClientPlugin;
-import org.kalypso.services.sensor.impl.KalypsoObservationService;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -95,16 +87,17 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
       final IProgressMonitor monitor ) throws InvocationTargetException
   {
-    try
-    {
-      final KalypsoObservationService srv = KalypsoServiceObsClientPlugin.getDefault().getObservationServiceProxy();
-
-      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, monitor );
-    }
-    catch( final ServiceException e )
-    {
-      throw new InvocationTargetException( e );
-    }
+    throw new UnsupportedOperationException();
+//    try
+//    {
+//      final KalypsoObservationService srv = KalypsoServiceObsClientPlugin.getDefault().getObservationServiceProxy();
+//
+//      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, monitor );
+//    }
+//    catch( final ServiceException e )
+//    {
+//      throw new InvocationTargetException( e );
+//    }
   }
 
   /**
@@ -113,11 +106,12 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   @Override
   protected IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
-    final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor)visitor;
-    if( v.getStati().length > 0 )
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
-    
-    return Status.OK_STATUS;
+    throw new UnsupportedOperationException();
+//    final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor)visitor;
+//    if( v.getStati().length > 0 )
+//      return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
+//    
+//    return Status.OK_STATUS;
   }
 
   /**

@@ -8,7 +8,6 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.commons,
  org.kalypso.core,
- org.kalypso.services.core,
- org.kalypso.jwsdp
+ org.kalypso.services.core
 Export-Package: org.kalypso.services.sensor,
  org.kalypso.services.sensor.impl

@@ -50,7 +50,6 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.Marshallable;
 

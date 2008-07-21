@@ -19,9 +19,9 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.serializer.ISerializer;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.xml.sax.InputSource;
 

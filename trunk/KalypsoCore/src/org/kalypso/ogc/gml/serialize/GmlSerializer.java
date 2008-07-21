@@ -268,15 +268,14 @@ public final class GmlSerializer
   {
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
 
-    final SAXParserFactory saxFac = SAXParserFactory.newInstance();
+    final SAXParserFactory saxFac = SAXParserFactory.newInstance(  );
     saxFac.setNamespaceAware( true );
 
     final SAXParser saxParser = saxFac.newSAXParser();
     // make namespace-prefxes visible to content handler
     // used to allow necessary schemas from gml document
-    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE ); //$NON-NLS-1$
-
     final XMLReader xmlReader = saxParser.getXMLReader();
+    xmlReader.setFeature( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE ); //$NON-NLS-1$
 
     // TODO: also set an error handler here
     // TODO: use progress-monitors to show progress and let the user cancel parsing

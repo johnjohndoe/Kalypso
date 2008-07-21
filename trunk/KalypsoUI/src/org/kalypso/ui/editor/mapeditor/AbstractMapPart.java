@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
@@ -76,7 +77,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.internal.util.StatusLineContributionItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -417,11 +417,12 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
    * Loads a map (i.e. a .gmt file) from a storage inside a {@link Job}.
    * <p>
    * The method starts a (user-)job, which loads the map.
-   * </p>.
+   * </p>
+   * .
    * 
    * @param waitFor
-   *            <code>true</code> if this method should return when the job has finished, if <code>false</code>
-   *            returns immediately
+   *          <code>true</code> if this method should return when the job has finished, if <code>false</code> returns
+   *          immediately
    */
   public void startLoadJob( final IStorage storage )
   {

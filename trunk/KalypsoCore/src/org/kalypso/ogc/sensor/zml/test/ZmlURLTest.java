@@ -41,9 +41,9 @@
 
 package org.kalypso.ogc.sensor.zml.test;
 
-import org.kalypso.ogc.sensor.zml.ZmlURL;
-
 import junit.framework.TestCase;
+
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 
 /**
  * @author schlienger

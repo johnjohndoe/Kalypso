@@ -66,7 +66,6 @@ import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.contribs.java.net.PropertyUrlCatalog;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.dict.DictionaryCatalog;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
@@ -232,16 +231,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     }
   }
 
-  /**
-   * Sets service proxy factory specific properties and creates the proxy factory object.
-   * 
-   * @param mainConf
-   */
-  private void configureServiceProxyFactory( final Properties mainConf )
-  {
-    KalypsoServiceCoreClientPlugin.getDefault().configureProxies( mainConf );
-  }
-
   private void configureLogger( )
   {
     // TODO:REMOVE THIS: we should always use the eclipse logging mechanisms
@@ -340,7 +329,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     m_mainConf.clear();
 
     configure( m_mainConf );
-    configureServiceProxyFactory( m_mainConf );
 
     // muss NACH dem streamHandler konfiguriert werden!
     // configureDefaultStyleFactory();

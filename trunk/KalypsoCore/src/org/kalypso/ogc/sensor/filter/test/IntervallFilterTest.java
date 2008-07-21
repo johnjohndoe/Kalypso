@@ -51,9 +51,9 @@ import javax.xml.bind.Marshaller;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.zml.filters.IntervallFilterType;
 import org.kalypso.zml.filters.ObjectFactory;

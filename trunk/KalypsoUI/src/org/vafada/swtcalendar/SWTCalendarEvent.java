@@ -21,10 +21,10 @@
  */
 package org.vafada.swtcalendar;
 
+import java.util.Calendar;
+
 import org.eclipse.swt.events.TypedEvent;
 import org.eclipse.swt.widgets.Event;
-
-import java.util.Calendar;
 
 public class SWTCalendarEvent extends TypedEvent {
     static final long serialVersionUID = -4525931268845275613L;

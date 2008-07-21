@@ -39,7 +39,6 @@ import java.util.ArrayList;
 
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
-import org.kalypsodeegree.graphics.sld.NamedLayer;
 import org.kalypsodeegree.graphics.sld.Style;
 
 /**
