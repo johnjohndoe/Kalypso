@@ -2,4 +2,4 @@ A new file.
 
 Block 1
 
-Block 2
+Block 2 changed.
