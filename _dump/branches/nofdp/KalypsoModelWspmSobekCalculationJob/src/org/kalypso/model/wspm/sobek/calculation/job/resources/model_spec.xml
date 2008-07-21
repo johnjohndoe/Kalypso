@@ -7,7 +7,7 @@
 
 
 	<!-- Results -->
-	<output id="TEST_OUTPUT" description="Test result." />
+	<output id="OUTPUT" description="result." />
 
 	<!--<output id="LOG_PI2SOBEK" description="Log file of pi2sobek conversion." />
 		<output id="LOG_SOBEK" description="Sobek log file." />

@@ -57,7 +57,6 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     input.start();
 
     int exitValue = 0;
-    int timeRunning = 0;
 
     /* It is running until the job has finished or the timeout of 5 minutes is reached. */
     while( true )
@@ -72,25 +71,15 @@ public class SimulationSobekOpenMIWorker implements ISimulation
         /* The process has not finished. */
       }
 
-      // TODO adjust timeout
-      if( timeRunning >= 300000 )
-      {
-        exec.destroy();
-        throw new SimulationException( "timeout" );
-      }
-
       /* Wait a few millisec, before continuing. */
       try
       {
         Thread.sleep( 100 );
-        timeRunning = timeRunning + 100;
       }
       catch( final InterruptedException e )
       {
         e.printStackTrace();
       }
-
-      // TODO check return value
     }
   }
 }
