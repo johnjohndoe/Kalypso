@@ -85,6 +85,7 @@ import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.io.filter.MultipleWildCardFileFilter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -102,14 +103,18 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.MetadataList;
 import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
@@ -162,6 +167,10 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private String m_dateString;
 
+  private static final String WE_RESOURCE_HYDROTOP_GML = "resources/WE/hydrotop.gml";
+
+  private static final String WE_PARAMETER_GML = "resources/WE/parameter.gml";
+
   public NaModelInnerCalcJob( )
   {
     m_urlUtilities = new UrlUtilities();
@@ -182,27 +191,27 @@ public class NaModelInnerCalcJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
     final File resultDir = new File( tmpdir, NaModelConstants.OUTPUT_DIR_NAME );
     final Logger logger = Logger.getAnonymousLogger();
-    Formatter f = new XMLFormatter();
+    final Formatter f = new XMLFormatter();
     Handler h = null;
     try
     {
-      File loggerFile = new File( resultDir, "Ergebnisse/Aktuell/Log/infoLog.txt" );
+      final File loggerFile = new File( resultDir, "Ergebnisse/Aktuell/Log/infoLog.txt" );
       loggerFile.getParentFile().mkdirs();
 
       h = new StreamHandler( new FileOutputStream( loggerFile ), f );
       logger.addHandler( h );
       h.flush();
     }
-    catch( FileNotFoundException e1 )
+    catch( final FileNotFoundException e1 )
     {
       e1.printStackTrace();
       logger.fine( e1.getLocalizedMessage() );
     }
-    Date startRunDate = new Date( Calendar.getInstance().getTimeInMillis() );
+    final Date startRunDate = new Date( Calendar.getInstance().getTimeInMillis() );
     final DateFormat format = new SimpleDateFormat( "yyyy-MM-dd(HH-mm-ss)" );
     m_dateString = format.format( startRunDate );
     logger.log( Level.INFO, "Zeitpunkt Start Berechnung: " + m_dateString + " (Serverzeit)\n" );
@@ -240,6 +249,14 @@ public class NaModelInnerCalcJob implements ISimulation
         {
           final FileCopyVisitor copyVisitor = new FileCopyVisitor( from2, to2, true );
           FileUtilities.accept( from2, copyVisitor, true );
+        }
+
+        final File from3 = new File( url.getFile(), "hydro.top" );
+        final File to3 = new File( tmpdir, "hydro.top" );
+        if( from3.exists() && to3.exists() )
+        {
+          final FileCopyVisitor copyVisitor = new FileCopyVisitor( from3, to3, true );
+          FileUtilities.accept( from3, copyVisitor, true );
         }
       }
 
@@ -305,17 +322,17 @@ public class NaModelInnerCalcJob implements ISimulation
       final File[] files = resultDir.listFiles();
       if( files != null )
       {
-        for( int i = 0; i < files.length; i++ )
+        for( final File element : files )
         {
-          if( files[i].isDirectory() ) // Ergebnisse
+          if( element.isDirectory() ) // Ergebnisse
           {
-            resultEater.addResult( NaModelConstants.OUT_ZML, files[i] );
+            resultEater.addResult( NaModelConstants.OUT_ZML, element );
             return;
           }
         }
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new SimulationException( "Simulation konnte nicht durchgefuehrt werden", e );
@@ -332,80 +349,57 @@ public class NaModelInnerCalcJob implements ISimulation
    */
   private void loadTesultTSPredictionIntervals( final GMLWorkspace naControlWorkspace, final Logger logger, final File resultDir, final NAConfiguration conf ) throws Exception
   {
+    // Load the calculated prediction
     final Feature rootFeature = naControlWorkspace.getRootFeature();
-    // final TimeseriesLink pegelLink = (TimeseriesLink)rootFeature.getProperty( "pegelZR" );
-    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
-    double accuracyPrediction = 5d;
-    try
-    {
-      accuracyPrediction = ((Double) rootFeature.getProperty( NaModelConstants.NACONTROL_ACCPRED_PROP )).doubleValue();
-    }
-    catch( Exception e )
-    {
-      logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction + " [cm/Tag] als Vorhersagegenauigkeit angenommen." );
-    }
-    // Object accuracyProp = rootFeature.getProperty( "accuracyPrediction" );
-    // if(accuracyProp==null)
-    // return;
-    // accuracyPrediction = ( (Double)accuracyProp ).doubleValue();
+    final IObservation resultObservation = loadPredictedResult( resultDir, rootFeature );
+    final IAxis[] axisList = resultObservation.getAxisList();
+    final String axisType = determineTranpolinAxis( resultObservation );
 
-    final Date startPrediction = conf.getSimulationForecastStart();
-    final Date endPrediction = conf.getSimulationEnd();
+    final File fileMitte = getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" );
+    final File fileUnten = getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" );
+    final File fileOben = getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" );
 
-    final UrlResolver urlResolver = new UrlResolver();
-    // TODO if measured does not exists
-
-    // find values at startPrediction
-    final String axisType = TimeserieConstants.TYPE_WATERLEVEL;
-
-    // from predicted timeseries
-    final URL resultURL = urlResolver.resolveURL( resultDir.toURL(), resultLink.getHref() );
-    final IObservation resultObservation = ZmlFactory.parseXML( resultURL, "vorhersage" );
+    // Initalize some commen variables
     final ITuppleModel resultValues = resultObservation.getValues( null );
-    final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( resultObservation.getAxisList(), Date.class );
+    final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
+    final IAxis resultValueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
 
-    final IAxis resultValueAxis;
-    try
-    {
-      resultValueAxis = ObservationUtilities.findAxisByType( resultObservation.getAxisList(), axisType );
-    }
-    catch( Exception e )
-    {
-      logger.info( "Umhüllende kann nicht berechnet werden: Ursache: das Ergenis (" + resultObservation.getName()
-          + ") kann nicht als Wasserstand berechnet werden. Möglicherweise ungültige WQ-Beziehung am Messpegel." );
-      throw e;
-    }
+    final Date startForecast = conf.getSimulationForecastStart();
+    final Date endForecast = conf.getSimulationEnd();
 
-    double calcValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis, startPrediction );
+    final IAxisRange rangeFor = resultValues.getRangeFor( resultDateAxis );
+    final Date endPrediction = (Date) rangeFor.getUpper();
+
+    final NATimeSettings timeSettings = NATimeSettings.getInstance();
+    final Calendar calBegin = timeSettings.getCalendar( startForecast );
+    // REMARK: using endPrediction instead of endForecast, as they are not equals (but they should...)
+    final Calendar calEnd = timeSettings.getCalendar( endPrediction );
+
+    final double calcStartValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis, startForecast );
+    final double calcEndValue = ObservationUtilities.getInterpolatedValueAt( resultValues, resultDateAxis, resultValueAxis, endForecast );
+
+    //
+    // First, we adapt the result: correction at start and/or end of the calculated timeserie
+    //
 
     double deltaMeasureCalculation;
     try
     {
       final NaNodeResultProvider nodeResultProvider = conf.getNodeResultProvider();
       final URL pegelURL = nodeResultProvider.getMeasuredURL( rootFeature );
-      // from measuered timeseries
 
+      // from measuered timeseries
       final IObservation pegelObservation = ZmlFactory.parseXML( pegelURL, "pegelmessung" );
       final ITuppleModel pegelValues = pegelObservation.getValues( null );
       final IAxis pegelDateAxis = ObservationUtilities.findAxisByClass( pegelObservation.getAxisList(), Date.class );
       final IAxis pegelValueAxis = ObservationUtilities.findAxisByType( pegelObservation.getAxisList(), axisType );
-      double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis, startPrediction );
-      deltaMeasureCalculation = measureValue - calcValue;
+      final double measureValue = ObservationUtilities.getInterpolatedValueAt( pegelValues, pegelDateAxis, pegelValueAxis, startForecast );
+      deltaMeasureCalculation = measureValue - calcStartValue;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       deltaMeasureCalculation = 0;
     }
-
-    final NATimeSettings timeSettings = NATimeSettings.getInstance();
-    final Calendar calBegin = timeSettings.getCalendar( startPrediction );
-    final Calendar calEnd = timeSettings.getCalendar( endPrediction );
-
-    final File[] result = new File[] { getResultFileFor( resultDir, rootFeature, "qAblageSpurMittlerer" ), getResultFileFor( resultDir, rootFeature, "qAblageSpurUnterer" ),
-        getResultFileFor( resultDir, rootFeature, "qAblageSpurOberer" ) };
-    // accuracyPrediction // cm/day
-    final long dayOfMillis = 1000 * 60 * 60 * 24;
-    final double endOffest = accuracyPrediction * (((double) (endPrediction.getTime() - startPrediction.getTime())) / ((double) dayOfMillis));
 
     final double offsetStartPrediction;
     final double offsetEndPrediction;
@@ -418,13 +412,70 @@ public class NaModelInnerCalcJob implements ISimulation
     else
       offsetEndPrediction = 0;
 
-    final double[] operandStart = new double[] { offsetStartPrediction, offsetStartPrediction, offsetStartPrediction };
-    final double[] operandEnd = new double[] { offsetEndPrediction, offsetEndPrediction - endOffest, offsetEndPrediction + endOffest };
-    final String[] sufix = new String[] { " - Spur Mitte", " - spur Unten", " - spur Oben" };
-    for( int i = 0; i < 3; i++ )
-    {
-      TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, calEnd, operandStart[i], operandEnd[i], "+", axisType, KalypsoStati.BIT_DERIVATED, result[i], sufix[i] );
-    }
+    final Calendar tranpolinEnd = timeSettings.getCalendar( startForecast );
+    tranpolinEnd.add( Calendar.HOUR, 24 );
+
+    final IRequest request = new ObservationRequest( calBegin.getTime(), calEnd.getTime() );
+    // TODO: as soon as TranProLinFilter is merged with branch, uncomment request
+    TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction, offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte"/*
+                                                                                                                                                                                                               * ,
+                                                                                                                                                                                                               * request
+                                                                                                                                                                                                               */);
+
+    // read the freshly created file into a new observation, we are going to umhüll it
+    final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURL(), "adaptedVorhersage" );
+
+    //
+    // Second, we build the umhüllenden for the adapted result
+    //
+    double accuracyPrediction = LhwzHelper.getDefaultUmhuellendeAccuracy();
+    final Double featureAccuracy = (Double) rootFeature.getProperty( NaModelConstants.NACONTROL_ACCPRED_PROP );
+    if( featureAccuracy == null )
+      logger.info( "Genauigkeit für Umhüllende ist nicht angegeben. Für die Vorhersage wird " + accuracyPrediction + " [%/60h] als Vorhersagegenauigkeit angenommen." );
+    else
+      accuracyPrediction = featureAccuracy.doubleValue();
+
+    // accuracyPrediction // %/60h
+    final long millisOf60hours = 1000 * 60 * 60 * 60;
+    // endAccuracy: %/simulationRange
+    final double endAccuracy = accuracyPrediction * (((double) (endForecast.getTime() - startForecast.getTime())) / ((double) millisOf60hours));
+
+    final double endOffset = calcEndValue * (endAccuracy / 100);
+
+    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "-", axisType, KalypsoStati.BIT_DERIVATED, fileUnten, " - spur Unten"/*
+                                                                                                                                                                                 * ,
+                                                                                                                                                                                 * request
+                                                                                                                                                                                 */);
+    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, fileOben, " - spur Oben"/*
+                                                                                                                                                                               * ,
+                                                                                                                                                                               * request
+                                                                                                                                                                               */);
+  }
+
+  /**
+   * Return with which axis we are going to transform the umhüllenden. Q or W, depending on what is present)
+   */
+  private String determineTranpolinAxis( final IObservation observation ) throws SimulationException
+  {
+    final IAxis[] axisList = observation.getAxisList();
+
+    if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_RUNOFF ) )
+      return TimeserieConstants.TYPE_RUNOFF;
+
+    if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_WATERLEVEL ) )
+      return TimeserieConstants.TYPE_WATERLEVEL;
+
+    throw new SimulationException( "Ergebniszeitreihe enthält weder Abfluss noch Waserstand, Umhüllendenberechnung nicht möglich.", null );
+  }
+
+  private IObservation loadPredictedResult( final File resultDir, final Feature rootFeature ) throws MalformedURLException, SensorException
+  {
+    final TimeseriesLinkType resultLink = (TimeseriesLinkType) rootFeature.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
+
+    // from predicted timeseries
+    final UrlResolver urlResolver = new UrlResolver();
+    final URL resultURL = urlResolver.resolveURL( resultDir.toURL(), resultLink.getHref() );
+    return ZmlFactory.parseXML( resultURL, "vorhersage" );
   }
 
   /**
@@ -443,7 +494,7 @@ public class NaModelInnerCalcJob implements ISimulation
       resultFile.getParentFile().mkdirs();
       return resultFile;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null; // no track available
     }
@@ -467,7 +518,7 @@ public class NaModelInnerCalcJob implements ISimulation
           m_succeeded = true;
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -478,7 +529,7 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private GMLWorkspace generateASCII( NAConfiguration conf, File tmpDir, ISimulationDataProvider dataProvider, final File newModellFile ) throws Exception
+  private GMLWorkspace generateASCII( final NAConfiguration conf, final File tmpDir, final ISimulationDataProvider dataProvider, final File newModellFile ) throws Exception
   {
     final GMLWorkspace metaWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_META_ID ), null );
     final Feature metaFE = metaWorkspace.getRootFeature();
@@ -489,7 +540,7 @@ public class NaModelInnerCalcJob implements ISimulation
     if( dataProvider.hasID( NaModelConstants.IN_PARAMETER_ID ) )
       parameterWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_PARAMETER_ID ), null );
     else
-      parameterWorkspace = null;
+      parameterWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_PARAMETER_GML ), null );
 
     // initialize model with values of control file
     initializeModell( controlWorkspace.getRootFeature(), (URL) dataProvider.getInputForID( NaModelConstants.IN_MODELL_ID ), newModellFile );
@@ -517,22 +568,26 @@ public class NaModelInnerCalcJob implements ISimulation
     if( dataProvider.hasID( NaModelConstants.IN_HYDROTOP_ID ) )
     {
       hydrotopWorkspace = GmlSerializer.createGMLWorkspace( (URL) dataProvider.getInputForID( NaModelConstants.IN_HYDROTOP_ID ), null );
-      final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT ) );
-      String targetCS = null;
-      for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
-      {
-        final GM_Object geom = (GM_Object) hydroFES[i].getProperty( NaModelConstants.HYDRO_PROP_GEOM );
-        if( geom != null && geom.getCoordinateSystem() != null )
-          targetCS = geom.getCoordinateSystem();
-      }
-      if( targetCS != null )
-      {
-        final TransformVisitor visitor = new TransformVisitor( targetCS );
-        modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
-      }
     }
     else
-      hydrotopWorkspace = null;
+    {
+      // TODO: remove this special case: move hydrotop.gml into WE model
+      hydrotopWorkspace = GmlSerializer.createGMLWorkspace( getClass().getResource( WE_RESOURCE_HYDROTOP_GML ), null );
+    }
+
+    final Feature[] hydroFES = hydrotopWorkspace.getFeatures( hydrotopWorkspace.getGMLSchema().getFeatureType( NaModelConstants.HYDRO_ELEMENT_FT ) );
+    String targetCS = null;
+    for( int i = 0; i < hydroFES.length && targetCS == null; i++ )
+    {
+      final GM_Object geom = (GM_Object) hydroFES[i].getProperty( NaModelConstants.HYDRO_PROP_GEOM );
+      if( geom != null && geom.getCoordinateSystem() != null )
+        targetCS = geom.getCoordinateSystem();
+    }
+    if( targetCS != null )
+    {
+      final TransformVisitor visitor = new TransformVisitor( targetCS );
+      modellWorkspace.accept( visitor, "/", FeatureVisitor.DEPTH_INFINITE );
+    }
 
     // setting duration of simulation...
     // start
@@ -571,8 +626,8 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       // the GUI asks for return period [a] - the fortran kernal needs annuality [1/a]
       conf.setAnnuality( 1d / (Double) metaFE.getProperty( NaModelConstants.CONTROL_XJAH_PROP ) );
-      Double durationMinutes = (Double) metaFE.getProperty( NaModelConstants.CONTROL_XWAHL2_PROP );
-      Double durationHours = durationMinutes / 60d;
+      final Double durationMinutes = (Double) metaFE.getProperty( NaModelConstants.CONTROL_XWAHL2_PROP );
+      final Double durationHours = durationMinutes / 60d;
       conf.setDuration( durationHours );
       conf.setForm( (String) metaFE.getProperty( NaModelConstants.CONTROL_IPVER_PROP ) );
     }
@@ -587,7 +642,7 @@ public class NaModelInnerCalcJob implements ISimulation
     updateFactorParameter( modellWorkspace );
 
     // generate modell files
-    NAModellConverter main = new NAModellConverter( conf );
+    final NAModellConverter main = new NAModellConverter( conf );
     main.write( modellWorkspace, parameterWorkspace, hydrotopWorkspace, synthNWorkspace, nodeResultProvider );
 
     // dump idmapping to file
@@ -646,9 +701,8 @@ public class NaModelInnerCalcJob implements ISimulation
     final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( nodeFT );
     final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature nodeFE : features )
     {
-      final Feature nodeFE = features[i];
       final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
       if( branchingFE != null )
       {
@@ -677,19 +731,18 @@ public class NaModelInnerCalcJob implements ISimulation
     final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final IFeatureType abstractChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.CHANNEL_ABSTRACT_FT );
     final Feature[] features = workspace.getFeatures( nodeFT );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature nodeFE : features )
     {
-      final Feature nodeFE = features[i];
       if( nodeResultprovider.resultExists( nodeFE ) )
       {
         final Object resultValue = nodeFE.getProperty( NaModelConstants.NODE_RESULT_TIMESERIESLINK_PROP );
         // disconnect everything upstream (channel -> node)
         final IRelationType downStreamNodeMemberRT = (IRelationType) abstractChannelFT.getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
         final Feature[] channelFEs = workspace.resolveWhoLinksTo( nodeFE, abstractChannelFT, downStreamNodeMemberRT );
-        for( int j = 0; j < channelFEs.length; j++ )
+        for( final Feature element : channelFEs )
         {
-          final Feature newEndNodeFE = workspace.createFeature( channelFEs[j], downStreamNodeMemberRT, nodeFT );
-          workspace.setFeatureAsComposition( channelFEs[j], downStreamNodeMemberRT, newEndNodeFE, true );
+          final Feature newEndNodeFE = workspace.createFeature( element, downStreamNodeMemberRT, nodeFT );
+          workspace.setFeatureAsComposition( element, downStreamNodeMemberRT, newEndNodeFE, true );
         }
         // add as zufluss
         final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
@@ -731,14 +784,13 @@ public class NaModelInnerCalcJob implements ISimulation
     final IFeatureType nodeFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( nodeFT );
     final IRelationType branchingMemberRT = (IRelationType) nodeFT.getProperty( NaModelConstants.NODE_BRANCHING_MEMBER_PROP );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature nodeFE : features )
     {
-      final Feature nodeFE = features[i];
       final Object zuflussValue = nodeFE.getProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP );
       if( zuflussValue != null )
       {
         // update zufluss
-        Feature newNode = buildVChannelNet( workspace, nodeFE );
+        final Feature newNode = buildVChannelNet( workspace, nodeFE );
         // nove zufluss-property to new node
         // nodeFE.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", null ) );
         // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
@@ -749,7 +801,7 @@ public class NaModelInnerCalcJob implements ISimulation
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
       {
         // update zufluss
-        Feature newNode = buildVChannelNet( workspace, nodeFE );
+        final Feature newNode = buildVChannelNet( workspace, nodeFE );
         // nove constant-inflow to new node
         workspace.setFeatureAsComposition( nodeFE, branchingMemberRT, null, true );
         workspace.setFeatureAsComposition( newNode, branchingMemberRT, branchingFE, true );
@@ -822,10 +874,8 @@ public class NaModelInnerCalcJob implements ISimulation
     final IFeatureType vChannelFT = workspace.getGMLSchema().getFeatureType( NaModelConstants.V_CHANNEL_ELEMENT_FT );
     final Feature[] features = workspace.getFeatures( catchmentFT );
     final IRelationType entwaesserungsStrangMemberRT = (IRelationType) catchmentFT.getProperty( NaModelConstants.LINK_CATCHMENT_CHANNEL );
-    for( int i = 0; i < features.length; i++ )
+    for( final Feature catchmentFE : features )
     {
-      final Feature catchmentFE = features[i];
-
       final Feature orgChannelFE = workspace.resolveLink( catchmentFE, entwaesserungsStrangMemberRT );
       if( orgChannelFE == null )
         continue;
@@ -837,7 +887,7 @@ public class NaModelInnerCalcJob implements ISimulation
       {
         workspace.setFeatureAsComposition( catchmentFE, entwaesserungsStrangMemberRT, newChannelFE, true );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -847,7 +897,7 @@ public class NaModelInnerCalcJob implements ISimulation
         final IRelationType downStreamNodeMemberRT2 = (IRelationType) newChannelFE.getFeatureType().getProperty( NaModelConstants.LINK_CHANNEL_DOWNSTREAMNODE );
         workspace.addFeatureAsAggregation( newChannelFE, downStreamNodeMemberRT2, 1, nodeFE.getId() );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -881,9 +931,9 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void initializeModell( Feature controlFeature, URL inputModellURL, File outputModelFile ) throws Exception
+  private void initializeModell( final Feature controlFeature, final URL inputModellURL, final File outputModelFile ) throws Exception
   {
-    CalibarationConfig config = new CalibarationConfig();
+    final CalibarationConfig config = new CalibarationConfig();
     config.addFromNAControl( controlFeature );
 
     Document modelDoc = null;
@@ -892,13 +942,13 @@ public class NaModelInnerCalcJob implements ISimulation
       modelDoc = XMLHelper.getAsDOM( new InputSource( inputModellURL.openStream() ), true );
     }
 
-    catch( SAXParseException e )
+    catch( final SAXParseException e )
     {
       e.printStackTrace();
-      int lineNumber = e.getLineNumber();
+      final int lineNumber = e.getLineNumber();
       System.out.println( e.getLocalizedMessage() + " #" + lineNumber );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -931,7 +981,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * 
    * @param modellWorkspace
    */
-  private void updateFactorParameter( GMLWorkspace modellWorkspace )
+  private void updateFactorParameter( final GMLWorkspace modellWorkspace )
   {
     // Catchments
     final Feature[] catchmentFEs = modellWorkspace.getFeatures( modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ) );
@@ -939,13 +989,12 @@ public class NaModelInnerCalcJob implements ISimulation
 
     // KMChannels
     final Feature[] kmChanneFEs = modellWorkspace.getFeatures( modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.KM_CHANNEL_ELEMENT_FT ) );
-    for( int i = 0; i < kmChanneFEs.length; i++ )
+    for( final Feature feature : kmChanneFEs )
     {
-      Feature feature = kmChanneFEs[i];
-      double rkfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RKF_PROP, 1.0 );
-      double rnfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RNF_PROP, 1.0 );
-      List kmParameter = (List) feature.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
-      Iterator iterator = kmParameter.iterator();
+      final double rkfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RKF_PROP, 1.0 );
+      final double rnfFactor = FeatureHelper.getAsDouble( feature, NaModelConstants.KM_CHANNEL_FAKTOR_RNF_PROP, 1.0 );
+      final List kmParameter = (List) feature.getProperty( NaModelConstants.KM_CHANNEL_PARAMETER_MEMBER );
+      final Iterator iterator = kmParameter.iterator();
       while( iterator.hasNext() )
       {
         final Feature kmParameterFE = (Feature) iterator.next();
@@ -961,18 +1010,17 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void update( Feature[] features, String[] targetPropNames, String[][] factorPropNames )
+  private void update( final Feature[] features, final String[] targetPropNames, final String[][] factorPropNames )
   {
-    for( int i = 0; i < features.length; i++ ) // iterate features
+    for( final Feature feature : features )
     {
-      final Feature feature = features[i];
       for( int _p = 0; _p < targetPropNames.length; _p++ ) // iterate parameters
       {
         final String[] factors = factorPropNames[_p];
         double value = 1.0; // initial value
-        for( int _f = 0; _f < factors.length; _f++ )
+        for( final String element : factors )
           // iterate factors
-          value *= FeatureHelper.getAsDouble( feature, factors[_f], 1.0 );
+          value *= FeatureHelper.getAsDouble( feature, element, 1.0 );
         // set parameter
         final String targetPropName = targetPropNames[_p];
         // FeatureProperty valueProp = FeatureFactory.createFeatureProperty( targetPropName, new Double( value ) );
@@ -988,7 +1036,7 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       loadTesultTSPredictionIntervals( naControlWorkspace, logger, resultDir, conf );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       logger.info( "konnte Umhüllende nicht generieren, evt. keine WQ-Informationen vorhanden , Fehler: " + e.getLocalizedMessage() );
     }
@@ -1083,9 +1131,8 @@ public class NaModelInnerCalcJob implements ISimulation
       // iterate model nodes/Catchments/rhbChannels and generate zml
 
       final Feature[] nodeFEs = modellWorkspace.getFeatures( resultFT );
-      for( int i = 0; i < nodeFEs.length; i++ )
+      for( final Feature feature : nodeFEs )
       {
-        final Feature feature = nodeFEs[i];
         if( resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.NODE_ELEMENT_FT ))
             || resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.CATCHMENT_ELEMENT_FT ))
             || resultFT == (modellWorkspace.getGMLSchema().getFeatureType( NaModelConstants.STORAGE_CHANNEL_ELEMENT_FT )) )
@@ -1109,7 +1156,7 @@ public class NaModelInnerCalcJob implements ISimulation
         int pos = 0;
         while( iter.hasNext() )
         {
-          Map.Entry entry = (Map.Entry) iter.next();
+          final Map.Entry entry = (Map.Entry) iter.next();
           tupelData[pos][0] = entry.getKey();
           tupelData[pos][1] = new Double( Double.parseDouble( entry.getValue().toString() ) * resultFactor );
           tupelData[pos][2] = new Integer( KalypsoStati.BIT_OK );
@@ -1138,7 +1185,7 @@ public class NaModelInnerCalcJob implements ISimulation
             pegelURL.openStream();
             itExists = true;
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             itExists = false;
           }
@@ -1158,15 +1205,15 @@ public class NaModelInnerCalcJob implements ISimulation
         String resultPathRelative;
         try
         {
-          TimeseriesLinkType resultLink = (TimeseriesLinkType) feature.getProperty( targetTSLink );
+          final TimeseriesLinkType resultLink = (TimeseriesLinkType) feature.getProperty( targetTSLink );
           if( resultLink == null )
           {
             logger.info( "kein ergebnislink gesetzt für FID=#" + feature.getId() + " ." );
           }
-          String href = resultLink.getHref();
+          final String href = resultLink.getHref();
           resultPathRelative = href.substring( 19 );
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           // if there is target defined or there are some problems with that
           // we generate one
@@ -1224,7 +1271,7 @@ public class NaModelInnerCalcJob implements ISimulation
    * @param suffix
    * @return AxisTitle
    */
-  private String getAxisTitleForSuffix( String suffix )
+  private String getAxisTitleForSuffix( final String suffix )
   {
     // j Temperatur .tmp
     if( suffix.equalsIgnoreCase( "tmp" ) )
@@ -1282,7 +1329,7 @@ public class NaModelInnerCalcJob implements ISimulation
     return suffix;
   }
 
-  private void loadTextFileResults( File inputDir, Logger logger, File outputDir )
+  private void loadTextFileResults( final File inputDir, final Logger logger, final File outputDir )
   {
     // ASCII-Files
     // kopiere statistische Ergebnis-Dateien
@@ -1290,27 +1337,27 @@ public class NaModelInnerCalcJob implements ISimulation
     // final String[] wildcards = new String[] { "*" + "bil" + "*", "*" + "txt" + "*", "*" + "nmq" + "*", "*" + "bsp" +
     // "*" };
     final File ascciResultDir = new File( inputDir, "out_we.nat" );
-    MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
+    final MultipleWildCardFileFilter filter = new MultipleWildCardFileFilter( wildcards, false, false, true );
 
-    File[] qgsFiles = ascciResultDir.listFiles( filter );
+    final File[] qgsFiles = ascciResultDir.listFiles( filter );
     if( qgsFiles.length != 0 )
 
     {
-      for( int i = 0; i < qgsFiles.length; i++ )
+      for( final File element : qgsFiles )
       {
         // read ascii result file
-        logger.info( "kopiere Ergebnissdatei " + qgsFiles[i].getName() + "\n" );
+        logger.info( "kopiere Ergebnissdatei " + element.getName() + "\n" );
 
-        String resultPathRelative = "Ergebnisse/Aktuell/Bilanz/Bilanz.txt";
-        final String inputPath = inputDir.getName() + qgsFiles[i].getName();
+        final String resultPathRelative = "Ergebnisse/Aktuell/Bilanz/Bilanz.txt";
+        final String inputPath = inputDir.getName() + element.getName();
         final File resultFile = new File( outputDir, resultPathRelative );
         resultFile.getParentFile().mkdirs();
         FileInputStream FileIS = null;
         try
         {
-          FileIS = new FileInputStream( qgsFiles[i] );
+          FileIS = new FileInputStream( element );
         }
-        catch( FileNotFoundException e1 )
+        catch( final FileNotFoundException e1 )
         {
           e1.printStackTrace();
         }
@@ -1318,7 +1365,7 @@ public class NaModelInnerCalcJob implements ISimulation
         {
           FileUtilities.makeFileFromStream( false, resultFile, FileIS );
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           e.printStackTrace();
           System.out.println( "ERR: " + inputPath + " may not exist" );
@@ -1331,31 +1378,30 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private static void copyMetaData( MetadataList srcMeta, MetadataList destMeta, String[] mdKeys )
+  private static void copyMetaData( final MetadataList srcMeta, final MetadataList destMeta, final String[] mdKeys )
   {
-    for( int i = 0; i < mdKeys.length; i++ )
+    for( final String key : mdKeys )
     {
-      final String key = mdKeys[i];
       final String property = srcMeta.getProperty( key );
       if( property != null )
         destMeta.put( key, property );
     }
   }
 
-  private void loadLogs( final File tmpDir, final Logger logger, final GMLWorkspace modellWorkspace, final NAConfiguration conf, File resultDir )
+  private void loadLogs( final File tmpDir, final Logger logger, final GMLWorkspace modellWorkspace, final NAConfiguration conf, final File resultDir )
   {
-    File logFile = new File( tmpDir, "start/error.gml" );
+    final File logFile = new File( tmpDir, "start/error.gml" );
     GMLWorkspace naFortranLogWorkspace = null;
     try
     {
       naFortranLogWorkspace = GmlSerializer.createGMLWorkspace( logFile.toURL(), null );
     }
-    catch( MalformedURLException e1 )
+    catch( final MalformedURLException e1 )
     {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-    catch( Exception e1 )
+    catch( final Exception e1 )
     {
       // TODO Auto-generated catch block
       e1.printStackTrace();
@@ -1364,23 +1410,23 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       if( naFortranLogWorkspace != null )
       {
-        GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, modellWorkspace, conf );
+        final GMLWorkspace changedNAFortranLogWorkspace = readLog( naFortranLogWorkspace, modellWorkspace, conf );
         GmlSerializer.serializeWorkspace( logFile, changedNAFortranLogWorkspace, "UTF-8" );
       }
     }
-    catch( IOException e1 )
+    catch( final IOException e1 )
     {
       e1.printStackTrace();
     }
-    catch( GmlSerializeException e1 )
+    catch( final GmlSerializeException e1 )
     {
       e1.printStackTrace();
     }
-    catch( ParseException e )
+    catch( final ParseException e )
     {
       e.printStackTrace();
     }
-    String resultPathRelative = "Ergebnisse/Aktuell/Log/error.gml";
+    final String resultPathRelative = "Ergebnisse/Aktuell/Log/error.gml";
     final String inputPath = logFile.getPath();
     final File resultFile = new File( resultDir, resultPathRelative );
     resultFile.getParentFile().mkdirs();
@@ -1389,7 +1435,7 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       fortranLogFileIS = new FileInputStream( logFile );
     }
-    catch( FileNotFoundException e1 )
+    catch( final FileNotFoundException e1 )
     {
       e1.printStackTrace();
     }
@@ -1397,7 +1443,7 @@ public class NaModelInnerCalcJob implements ISimulation
     {
       FileUtilities.makeFileFromStream( false, resultFile, fortranLogFileIS );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       System.out.println( "ERR: " + inputPath + " may not exist" );
@@ -1407,26 +1453,25 @@ public class NaModelInnerCalcJob implements ISimulation
       IOUtils.closeQuietly( fortranLogFileIS );
     }
 
-    Handler[] handlers = logger.getHandlers();
-    for( int i = 0; i < handlers.length; i++ )
+    final Handler[] handlers = logger.getHandlers();
+    for( final Handler h : handlers )
     {
-      Handler h = handlers[i];
       h.flush();
       h.close();
     }
   }
 
-  private GMLWorkspace readLog( GMLWorkspace naFortranLogWorkspace, GMLWorkspace modellWorkspace, final NAConfiguration conf ) throws ParseException
+  private GMLWorkspace readLog( final GMLWorkspace naFortranLogWorkspace, final GMLWorkspace modellWorkspace, final NAConfiguration conf ) throws ParseException
   {
     final IDManager idManager = conf.getIdManager();
     final IFeatureType recordFT = naFortranLogWorkspace.getGMLSchema().getFeatureType( new QName( NaModelConstants.NS_NAFORTRANLOG, "record" ) );
     final Feature[] recordFEs = naFortranLogWorkspace.getFeatures( recordFT );
     for( final Feature feature : recordFEs )
     {
-      String elementString = (String) feature.getProperty( new QName( NaModelConstants.NS_NAFORTRANLOG, "element" ) );
-      int i = elementString.indexOf( "       " );
-      String element = elementString.substring( 0, i );
-      String fortranID = elementString.substring( i ).trim();
+      final String elementString = (String) feature.getProperty( new QName( NaModelConstants.NS_NAFORTRANLOG, "element" ) );
+      final int i = elementString.indexOf( "       " );
+      final String element = elementString.substring( 0, i );
+      final String fortranID = elementString.substring( i ).trim();
       Integer asciiID = 0;
       String asciiType = null;
       int type = 0;
@@ -1449,13 +1494,13 @@ public class NaModelInnerCalcJob implements ISimulation
       }
       try
       {
-        String gmlName = (String) (idManager.getFeature( asciiID, type )).getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
+        final String gmlName = (String) (idManager.getFeature( asciiID, type )).getProperty( NaModelConstants.GML_FEATURE_NAME_PROP );
 
         // String FeatureID = idManager.getFeature( asciiID, type ).getId();
         feature.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, asciiType + " " + gmlName.trim() );
         feature.setProperty( NaModelConstants.GML_FEATURE_DESCRIPTION_PROP, ("FeatureID: " + gmlName.trim()) );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         System.out.println( "Fortran Element in model.gml nicht vorhanden: " + element + " " + fortranID );
       }
@@ -1463,7 +1508,7 @@ public class NaModelInnerCalcJob implements ISimulation
     return naFortranLogWorkspace;
   }
 
-  private void copyExecutable( File basedir ) throws Exception
+  private void copyExecutable( final File basedir ) throws Exception
   {
     final String exeResource = m_resourceBase + m_kalypsoKernelPath;
     final File destFile = new File( basedir, m_kalypsoKernelPath );
@@ -1475,7 +1520,7 @@ public class NaModelInnerCalcJob implements ISimulation
         FileUtilities.makeFileFromStream( false, destFile, inputStream );
         System.out.println( " ...copied" );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
 
@@ -1484,15 +1529,15 @@ public class NaModelInnerCalcJob implements ISimulation
     }
   }
 
-  private void unzipInput( URL asciiZipURL, File exeDir )
+  private void unzipInput( final URL asciiZipURL, final File exeDir )
   {
     try
     {
-      InputStream openStream = asciiZipURL.openStream();
+      final InputStream openStream = asciiZipURL.openStream();
       ZipUtilities.unzip( openStream, exeDir );
       IOUtils.closeQuietly( openStream );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
@@ -1503,7 +1548,7 @@ public class NaModelInnerCalcJob implements ISimulation
     final File exeFile = new File( basedir, m_kalypsoKernelPath );
     final File exeDir = exeFile.getParentFile();
     final String commandString = exeFile.getAbsolutePath();
-    long timeOut = 1000l * 60l * 60l; // max 60 minutes
+    final long timeOut = 1000l * 60l * 60l; // max 60 minutes
     FileOutputStream logOS = null;
     FileOutputStream errorOS = null;
     try
@@ -1529,5 +1574,4 @@ public class NaModelInnerCalcJob implements ISimulation
   {
     return m_succeeded;
   }
-
 }
