@@ -133,6 +133,10 @@ public class FlowRelCalcSimulationPage extends WizardPage implements IWizardPage
       super.createControl( parentControl, styles | SWT.BORDER );
     }
 
+    /**
+     * Overwritten in order to make public.
+     * @see org.eclipse.ui.console.TextConsoleViewer#revealEndOfDocument()
+     */
     @Override
     public void revealEndOfDocument( )
     {
