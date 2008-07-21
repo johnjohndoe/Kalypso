@@ -1,5 +1,5 @@
 Stefan changed line 1. 
 
-This is line 2.
+This is line is changed by Dejan :)
 
 This is line 3.
