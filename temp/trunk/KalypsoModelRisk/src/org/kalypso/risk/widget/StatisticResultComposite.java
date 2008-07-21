@@ -50,8 +50,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -109,7 +109,7 @@ public class StatisticResultComposite extends Composite
             final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.1") + compNameStrings[1] + " [€]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
+            if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
               myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%.00f", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
@@ -120,7 +120,7 @@ public class StatisticResultComposite extends Composite
             final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.2") + compNameStrings[1] + " [m²]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
+            if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
               myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%.00f", "", "%.00f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
@@ -131,7 +131,7 @@ public class StatisticResultComposite extends Composite
             final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.3") + compNameStrings[1] + " [€/m²]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( IWspmConstants.Q_DECIMAL ) )
+            if( valueTypeName.equals( XmlTypes.XS_DECIMAL ) )
               myMap.put( count, new ComponentUiDecimalHandler( count, false, true, false, headerName, SWT.RIGHT, 170, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
@@ -141,7 +141,7 @@ public class StatisticResultComposite extends Composite
             final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.4") + " [€/m²/a]"; //$NON-NLS-1$//$NON-NLS-2$
 
             final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( IWspmConstants.Q_DOUBLE ) )
+            if( valueTypeName.equals( XmlTypes.XS_DOUBLE ) )
               myMap.put( count, new ComponentUiDoubleHandler( count, false, true, false, headerName, SWT.RIGHT, 190, 10, "%.02f", "", "%.02f" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
@@ -151,7 +151,7 @@ public class StatisticResultComposite extends Composite
             final String headerName = Messages.getString("org.kalypso.risk.widget.StatisticResultComposite.5"); //$NON-NLS-1$
 
             final QName valueTypeName = component.getValueTypeName();
-            if( valueTypeName.equals( IWspmConstants.Q_STRING ) )
+            if( valueTypeName.equals( XmlTypes.XS_STRING ) )
               myMap.put( count, new ComponentUiStringHandler( count, false, true, false, headerName, SWT.NONE, 120, 10, "%s", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             count++;
           }
