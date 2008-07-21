@@ -22,16 +22,16 @@
  */
 package org.vafada.swtcalendar;
 
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+import java.util.Locale;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-
-import java.text.DateFormatSymbols;
-import java.util.Calendar;
-import java.util.Locale;
 
 public class SWTMonthChooser extends Composite {
     private SWTDayChooser dayChooser;

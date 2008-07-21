@@ -59,8 +59,8 @@ import ogc2.www.opengis.net.sld.ColorMap;
 import ogc2.www.opengis.net.sld.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;

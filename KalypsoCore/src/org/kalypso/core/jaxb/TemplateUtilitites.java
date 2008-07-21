@@ -55,10 +55,10 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.eclipse.core.runtime.Platform;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.xml.sax.SAXException;
 

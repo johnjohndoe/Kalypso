@@ -403,6 +403,7 @@ public class KalypsoScreenshotPreferencePage extends PreferencePage implements I
       final PreferenceStore mystore = new PreferenceStore( KalypsoScreenshotPreferencePage.KALYPSO_MAP_SCREENSHOT_SETTINGS );
       try
       {
+        // TODO: file gets created on the desktop, somethings wrong; probably get pref-store from plug-in instead!
         mystore.load();
       }
       catch( final IOException e )

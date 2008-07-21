@@ -61,9 +61,9 @@ import oasis.names.tc.entity.xmlns.xml.catalog.Public;
 import oasis.names.tc.entity.xmlns.xml.catalog.System;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.jwsdp.JaxbUtilities;
 
 /**
  * @author doemming

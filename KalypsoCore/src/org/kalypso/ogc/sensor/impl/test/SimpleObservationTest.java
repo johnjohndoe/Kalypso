@@ -41,6 +41,8 @@
 
 package org.kalypso.ogc.sensor.impl.test;
 
+import junit.framework.TestCase;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -49,8 +51,6 @@ import org.kalypso.ogc.sensor.impl.SimpleAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @author schlienger

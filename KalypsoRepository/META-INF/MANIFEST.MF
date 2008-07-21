@@ -11,5 +11,5 @@ Export-Package: org.kalypso.repository,
  org.kalypso.repository.factory,
  org.kalypso.repository.file,
  org.kalypso.repository.service
-Require-Bundle: org.kalypso.jwsdp,
- org.junit;resolution:=optional
+Require-Bundle: org.junit;resolution:=optional,
+ org.kalypso.commons;bundle-version="0.0.1"
