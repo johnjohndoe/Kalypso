@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.1"?>
+<?pde version="3.4"?>
 
-<product name="Kalypso Simulation Platform" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" useFeatures="true">
+<product name="KalypsoBase" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" useFeatures="true">
 
    <aboutInfo>
       <image path="/KalypsoBaseProduct/etc/aboutKalypso.gif"/>
@@ -10,10 +10,10 @@
       </text>
    </aboutInfo>
 
-   <configIni use="default" path="/KalypsoBaseProduct/etc/config.ini"/>
+   <configIni use="default" path="/KalypsoBaseProduct/etc/config.ini">
+   </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog -debug</programArgs>
       <vmArgs>-Xmx512m</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
@@ -38,9 +38,11 @@
       </win>
    </launcher>
 
-
    <vm>
-      <windows type="ee">J2SE-1.5</windows>
+      <linux>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</linux>
+      <macos>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</macos>
+      <solaris>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</solaris>
+      <windows>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6</windows>
    </vm>
 
    <plugins>
@@ -48,7 +50,6 @@
 
    <features>
       <feature id="org.kalypso.base" version="1.0.0"/>
-      <feature id="org.eclipse.cvs" version="1.0.1.R33x_r20070802-7C79_9_KKG-mDM9e3H5D"/>
       <feature id="org.eclipse.platform" version="3.3.2.R33x_v20071022-_19UEksF-G8Yc6bUv3Dz"/>
    </features>
 
