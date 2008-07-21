@@ -70,20 +70,6 @@ public interface IWspmConstants
 
   public static String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary"; //$NON-NLS-1$
 
-  public static final QName Q_DATE_TIME = new QName( NS.XSD_SCHEMA, "dateTime" ); //$NON-NLS-1$
-
-  public static final QName Q_STRING = new QName( NS.XSD_SCHEMA, "string" ); //$NON-NLS-1$
-
-  public static final QName Q_INTEGER = new QName( NS.XSD_SCHEMA, "integer" ); //$NON-NLS-1$
-
-  public static final QName Q_DECIMAL = new QName( NS.XSD_SCHEMA, "decimal" ); //$NON-NLS-1$
-
-  public static final QName Q_DOUBLE = new QName( NS.XSD_SCHEMA, "double" ); //$NON-NLS-1$
-
-  public static final QName Q_BOOLEAN = new QName( NS.XSD_SCHEMA, "boolean" ); //$NON-NLS-1$
-
-  public static final QName Q_TYPE = new QName( NS_WSPMPROF, "type" ); //$NON-NLS-1$
-
   public static final String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 
   public static final String POINT_PROPERTY_BEWUCHS_AX = POINT_PROPERTY + "BEWUCHS_AX"; //$NON-NLS-1$
