@@ -57,38 +57,39 @@ public final class XmlTypes
 {
   private XmlTypes( )
   {
-    // do not instanciate
+    // do not instantiate
   }
 
-  public final static QName XS_BOOLEAN = new QName( NS.XSD_SCHEMA, "boolean" );
+  // TODO: move these into an interface, so they can be better included (via implements) for heavy use
+  public final static QName XS_BOOLEAN = new QName( NS.XSD_SCHEMA, "boolean" );//$NON-NLS-1$
 
-  public final static QName XS_BYTE = new QName( NS.XSD_SCHEMA, "byte" );
+  public final static QName XS_BYTE = new QName( NS.XSD_SCHEMA, "byte" );//$NON-NLS-1$
 
-  public final static QName XS_DATE = new QName( NS.XSD_SCHEMA, "date" );
+  public final static QName XS_DATE = new QName( NS.XSD_SCHEMA, "date" );//$NON-NLS-1$
 
-  public final static QName XS_DATETIME = new QName( NS.XSD_SCHEMA, "dateTime" );
+  public final static QName XS_DATETIME = new QName( NS.XSD_SCHEMA, "dateTime" );//$NON-NLS-1$
 
-  public final static QName XS_DECIMAL = new QName( NS.XSD_SCHEMA, "decimal" );
+  public final static QName XS_DECIMAL = new QName( NS.XSD_SCHEMA, "decimal" );//$NON-NLS-1$
 
-  public final static QName XS_DOUBLE = new QName( NS.XSD_SCHEMA, "double" );
+  public final static QName XS_DOUBLE = new QName( NS.XSD_SCHEMA, "double" );//$NON-NLS-1$
 
-  public final static QName XS_DURATION = new QName( NS.XSD_SCHEMA, "duration" );
+  public final static QName XS_DURATION = new QName( NS.XSD_SCHEMA, "duration" );//$NON-NLS-1$
 
-  public final static QName XS_FLOAT = new QName( NS.XSD_SCHEMA, "float" );
+  public final static QName XS_FLOAT = new QName( NS.XSD_SCHEMA, "float" );//$NON-NLS-1$
 
-  public final static QName XS_INT = new QName( NS.XSD_SCHEMA, "int" );
+  public final static QName XS_INT = new QName( NS.XSD_SCHEMA, "int" );//$NON-NLS-1$
 
-  public final static QName XS_INTEGER = new QName( NS.XSD_SCHEMA, "integer" );
+  public final static QName XS_INTEGER = new QName( NS.XSD_SCHEMA, "integer" );//$NON-NLS-1$
 
-  public final static QName XS_LONG = new QName( NS.XSD_SCHEMA, "long" );
+  public final static QName XS_LONG = new QName( NS.XSD_SCHEMA, "long" );//$NON-NLS-1$
 
-  public final static QName XS_SHORT = new QName( NS.XSD_SCHEMA, "short" );
+  public final static QName XS_SHORT = new QName( NS.XSD_SCHEMA, "short" );//$NON-NLS-1$
 
-  public final static QName XS_STRING = new QName( NS.XSD_SCHEMA, "string" );
+  public final static QName XS_STRING = new QName( NS.XSD_SCHEMA, "string" );//$NON-NLS-1$
 
-  public final static QName XS_TIME = new QName( NS.XSD_SCHEMA, "time" );
+  public final static QName XS_TIME = new QName( NS.XSD_SCHEMA, "time" );//$NON-NLS-1$
 
-  public final static String XML_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  public final static String XML_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";//$NON-NLS-1$
 
   /**
    * Parser for the type <code>double</code>. It uses the default behaviour of the java.lang.Double class.
@@ -134,31 +135,31 @@ public final class XmlTypes
   {
     if( XS_BOOLEAN.equals( typeName ) )
       return Boolean.class;
-    
+
     if( XS_BYTE.equals( typeName ) )
       return Byte.class;
-    
+
     if( isDate( typeName ) )
       return Date.class;
-      
+
     if( XS_DECIMAL.equals( typeName ) || XS_DOUBLE.equals( typeName ) )
       return Double.class;
-    
+
     if( XS_FLOAT.equals( typeName ) )
       return Float.class;
-    
+
     if( XS_INT.equals( typeName ) || XS_INTEGER.equals( typeName ) )
       return Integer.class;
-    
+
     if( XS_LONG.equals( typeName ) )
       return Long.class;
-    
+
     if( XS_SHORT.equals( typeName ) )
       return Short.class;
-    
+
     if( XS_STRING.equals( typeName ) )
       return String.class;
-    
+
     return Object.class;
   }
 }
