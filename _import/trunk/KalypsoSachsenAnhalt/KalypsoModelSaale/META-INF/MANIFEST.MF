@@ -14,7 +14,6 @@ Export-Package: org.kalypso.lhwsachsenanhalt.saale,
  org.kalypso.lhwsachsenanhalt.saale.schemata,
  org.kalypso.lhwsachsenanhalt.saale.utils
 Require-Bundle: org.kalypso.core,
- org.kalypso.jwsdp,
  org.kalypso.ui,
  org.kalypso.dwd,
  org.junit,

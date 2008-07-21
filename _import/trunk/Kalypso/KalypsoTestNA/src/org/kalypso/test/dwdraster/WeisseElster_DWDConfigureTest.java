@@ -41,6 +41,7 @@ import javax.xml.bind.Marshaller;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.dwd.DWDRaster;
 import org.kalypso.dwd.DWDRasterGeoLayer;
@@ -52,7 +53,6 @@ import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypsodeegree.model.feature.Feature;

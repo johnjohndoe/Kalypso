@@ -58,8 +58,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.lhwsachsenanhalt.saale.HWVOR00Converter;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;

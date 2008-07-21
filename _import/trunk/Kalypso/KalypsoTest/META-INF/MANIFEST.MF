@@ -7,7 +7,6 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.eclipseplatform,
  org.kalypso.contribs.eclipsercp,
  org.kalypso.contribs.java,
- org.kalypso.jwsdp,
  org.kalypso.commons,
  org.kalypso.deegree,
  org.kalypso.NACalcJob,

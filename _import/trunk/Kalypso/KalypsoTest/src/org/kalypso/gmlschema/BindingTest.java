@@ -44,9 +44,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.kalypso.jwsdp.JaxbUtilities;
-
 import junit.framework.TestCase;
+
+import org.kalypso.commons.bind.JaxbUtilities;
 
 /**
  * @author schlienger

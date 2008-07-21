@@ -137,6 +137,5 @@ Export-Package: .,
  org.globus.test.otherTypes,
  org.kalypso.robotronadapter
 Require-Bundle: org.kalypso.metadoc,
- org.kalypso.jwsdp,
  org.kalypso.hwv.services,
  org.kalypso.auth

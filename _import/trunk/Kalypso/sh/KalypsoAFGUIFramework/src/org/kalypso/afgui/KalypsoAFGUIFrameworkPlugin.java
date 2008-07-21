@@ -14,6 +14,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -143,8 +144,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       if( PlatformUI.isWorkbenchRunning() )
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
-        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-        handlerService.addSourceProvider( m_szenarioSourceProvider );
+        final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
+        evalService.addSourceProvider( m_szenarioSourceProvider );
       }
     }
   }

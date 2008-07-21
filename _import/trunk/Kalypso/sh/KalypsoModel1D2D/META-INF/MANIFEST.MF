@@ -7,7 +7,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.junit;resolution:=optional,
  org.eclipse.ui.intro,
  org.kalypso.deegree,
- org.kalypso.jwsdp,
  org.kalypso.commons,
  org.kalypso.core,
  org.kalypso.optimize,

@@ -38,7 +38,6 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.deegree.ogcwebservices.wfs.capabilities.WFSCapabilities;
 import org.kalypso.gmlschema.GMLSchemaTest;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFService;

@@ -8,7 +8,6 @@ Bundle-Vendor: kalypso.org
 Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons,
  org.kalypso.core,
- org.kalypso.jwsdp,
  org.kalypso.simulation.core,
  org.junit;resolution:=optional
 Eclipse-AutoStart: true

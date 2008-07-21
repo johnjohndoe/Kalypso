@@ -43,10 +43,10 @@ import javax.xml.bind.JAXBException;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jwsdp.JaxbUtilities;
 import org.kalypso.ogc.gml.serialize.CloneUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.zml.obslink.ObjectFactory;

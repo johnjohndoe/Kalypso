@@ -85,7 +85,6 @@ Require-Bundle: org.kalypso.core,
  org.kalypso.repository,
  org.kalypso.commons,
  org.kalypso.metadoc,
- org.kalypso.jwsdp,
  org.eclipse.ui,
  org.junit,
  org.kalypso.hwv.services
