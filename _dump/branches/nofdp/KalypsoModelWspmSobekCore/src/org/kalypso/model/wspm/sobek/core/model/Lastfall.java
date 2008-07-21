@@ -44,6 +44,7 @@ import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -158,5 +159,13 @@ public class Lastfall implements ILastfall
   public Integer getTimeStepMultiplier( )
   {
     return Integer.valueOf( getFeature().getProperty( QN_SIMULATION_TIMESTEP_MULTIPLIER ).toString() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getValidatedLastfallDir()
+   */
+  public String getValidatedLastfallDir( )
+  {
+    return FileUtilities.validateName( "cCase_" + getName() + getFeature().getId(), "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

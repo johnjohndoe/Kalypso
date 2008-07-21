@@ -53,7 +53,6 @@ public interface ISobekModelMember extends IModelMember
     eCrossSections,
     eStructures,
     eBoundaryConditions,
-    eConfigXML,
     eConfigOPR,
     eRuntimeDat
   }

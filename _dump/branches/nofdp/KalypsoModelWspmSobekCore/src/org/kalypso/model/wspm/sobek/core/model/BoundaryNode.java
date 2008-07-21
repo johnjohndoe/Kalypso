@@ -87,7 +87,10 @@ public class BoundaryNode extends AbstractConnectionNode implements IBoundaryNod
     final IBoundaryNodeLastfallCondition[] conditions = getLastfallConditions();
     for( final IBoundaryNodeLastfallCondition condition : conditions )
     {
-      if( condition.getLastfall().getFeature().equals( lastfall.getFeature() ) )
+      // TODO check, why features aren't equal during calculation: maybe concurrent versions of GML files are loaded
+      // into the pool?
+      // if( condition.getLastfall().getFeature().equals( lastfall.getFeature() ) )
+      if( condition.getLastfall().getFeature().getId().equals( lastfall.getFeature().getId() ) )
         return condition;
     }
 
