@@ -1,4 +1,4 @@
-!     Last change:  MD   23 Jan 2008   11:41 am
+!     Last change:  MD    9 Jul 2008   11:07 am
 !--------------------------------------------------------------------------
 ! This code, station.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -43,7 +43,7 @@
 !-----------------------------------------------------------------------
 SUBROUTINE station (sgef, nprof, hgrenz, q, hr, hv, rg, indmax,   &
          & hvst, hrst, psiein, psiort, hi, xi, s, ikenn, froud, str,    &
-         & ifehl, nblatt, nz, idr1)
+         & ifehl, nblatt, nz, idr1, Q_Abfrage)
 !
 ! Beschreibung
 ! ------------
@@ -202,7 +202,7 @@ COMMON / vort / hborda, heins, horts
 ! -----------------------------------------------------------------------------
 
 INTEGER :: rdruck
-
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     ! Abfrage fuer Ende der Inneren Q-Schleife
 
 ! ------------------------------------------------------------------
 ! BERECHNUNGEN
@@ -331,7 +331,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
  
   CALL verluste (str, q, q1, nprof, hrb, hv, rg, hvstb, hrstb,    &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
-   & itere1)
+   & itere1, Q_Abfrage)
 
   ! write (UNIT_OUT_LOG, 2002)
   ! 2002 format (1X, 'In STATION. Werte nach Aufruf von VERLUSTE:')
@@ -347,7 +347,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   CALL verluste (str, q, q1, nprof, hra, hv, rg, hvsta, hrsta,    &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
-   & itere1)
+   & itere1, Q_Abfrage)
 
   !write (UNIT_OUT_LOG, 2002)
   !write (UNIT_OUT_LOG, 2003) str, q, q1, nprof, hra, hv, rg, hvsta, hrsta,    &
@@ -399,7 +399,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         ! ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
            & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-           & ifehlg, itere1)
+           & ifehlg, itere1, Q_Abfrage)
 
       ELSE IF (froud .ge. 1. .and. jdruck .eq. 0) then
 
@@ -416,7 +416,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         ! ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
            & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-           & ifehlg, itere1)
+           & ifehlg, itere1, Q_Abfrage)
 
       ELSE
         ikenn = 3
@@ -461,7 +461,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         !   ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
            & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-           & ifehlg, itere1)
+           & ifehlg, itere1, Q_Abfrage)
 
       ELSEIF (froud .ge. 1. .and. jdruck .eq. 0) then
 
@@ -477,7 +477,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         !      ermitteln der verlustwerte
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
            & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-           & ifehlg, itere1)
+           & ifehlg, itere1, Q_Abfrage)
 
       ELSE
         ikenn = 3
@@ -535,7 +535,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
             ! ermitteln der verlustwerte
             CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,   &
                & hrst, indmax, psiein, psiort, hi, xi, s, istat,  &
-               & froud, ifehlg, itere1)
+               & froud, ifehlg, itere1, Q_Abfrage)
 
           ELSE IF (froud.ge.1.and.jdruck.eq.0) then
             ikenn = 1
@@ -550,7 +550,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
             !  ermitteln der verlustwerte
             CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,   &
                & hrst, indmax, psiein, psiort, hi, xi, s, istat,  &
-               & froud, ifehlg, itere1)
+               & froud, ifehlg, itere1, Q_Abfrage)
 
           ELSE
             ikenn = 3
@@ -585,7 +585,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
         CALL verluste (str, q, q1, nprof, hra, hv, rg, hvsta,     &
            & hrsta, indmax, psiein, psiort, hi, xi, s, istat,     &
-           & froud, ifehlg, itere1)
+           & froud, ifehlg, itere1, Q_Abfrage)
 
         sista = hrsta / str
 
@@ -654,7 +654,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
         IF (hrb.le. (hmin + 0.02) ) hrb = hr
         CALL verluste (str, q, q1, nprof, hra, hv, rg, hvst,      &
            & hrsta, indmax, psiein, psiort, hi, xi, s, istat,     &
-           & froud, ifehlg, itere1)
+           & froud, ifehlg, itere1, Q_Abfrage)
 
         sista = hrsta / str
 
@@ -700,7 +700,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
-   & itere1)
+   & itere1, Q_Abfrage)
 
   IF (nprof.eq.1) then   ! 1.profil
     hvst = 0.
@@ -755,7 +755,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
     CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,     &
        & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, &
-       & itere1)
+       & itere1, Q_Abfrage)
 
     hvst = 0.
     !  /* gleichfoermig
@@ -826,7 +826,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
     CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,     &
        & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, &
-       & itere1)
+       & itere1, Q_Abfrage)
 
     hvst = 0.
     !  /* gleichfoermig
@@ -844,7 +844,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
           hr = hra
           CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,     &
              & hrst, indmax, psiein, psiort, hi, xi, s, istat,    &
-             & froud, ifehlg, itere1)
+             & froud, ifehlg, itere1, Q_Abfrage)
 
           GOTO 9999
         ELSE
@@ -869,7 +869,7 @@ ELSE
   !write (*,*) 'In STATION. stat.-gl. Bordvoll.'
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
    & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg,   &
-   & itere1)
+   & itere1, Q_Abfrage)
 
 ENDIF
 
