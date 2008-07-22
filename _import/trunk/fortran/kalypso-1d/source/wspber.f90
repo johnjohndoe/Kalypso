@@ -1,4 +1,4 @@
-!     Last change:  MD   10 Mar 2008    2:03 pm
+!     Last change:  MD    9 Jul 2008   12:30 pm
 !--------------------------------------------------------------------------
 ! This code, wspber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -340,44 +340,34 @@ COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw, htrw, nwfd, iendw
 
 
 
-
 ! Local variables ---------------------------------------------------------------------------------
 INTEGER :: istat, lnum
 LOGICAL :: is_open
-
 INTEGER :: izz, ilen, ilen2, iflen, jlen, ifehl, iint, ichar, ianz
 INTEGER :: iwehrb, ifroud, mark
 INTEGER :: npl
-
 INTEGER :: np (ipro)
 INTEGER :: int (merg)
-
 INTEGER :: nblatt       ! Blattnr. bei der Ausgabe der Textdatei in Tabellenform
 INTEGER :: nz
-
 INTEGER :: ikenn        ! Zustandskennung (= 0 fuer Normalberechnung, = 1 fuer Schiessen mit Grenztiefe)
 INTEGER :: indmax       ! Anzahl der Rauhigkeitzonen im aktiven Profil
-
 INTEGER :: ih, i, j, k, i1, i2, i6, i7, ii1     ! Schleifenzaehler
-
 INTEGER :: ju0gfu       ! Funktion zum Holen einer freien UNIT
 
 CHARACTER(LEN=26) :: prof_nr
-
 CHARACTER(LEN=nch80) :: char (merg)
 CHARACTER(LEN=nch80) :: unit4, dummy, text
 CHARACTER(LEN=nch80) :: unit5, unit7
 CHARACTER(LEN=nch80) :: pfad2   	! Dateipfad wird Zeichenkette zugewiesen
 CHARACTER(LEN=nch80) :: nr          	! Beinhaltet den Namen der Profildatei (z.b. St000150.prf)
-!ST 29.03.2005
-!Variable für Laengschnitt.txt
-CHARACTER(LEN=nch80) :: file_laengs
+CHARACTER(LEN=nch80) :: file_laengs     ! Variable für Laengschnitt.txt
 
 REAL :: psieins, psiorts        	! Zur Beruecksichtigung oertlicher Verluste
 REAL :: hgrenz, strbr
-REAL :: hrst, rg                        ! Reibungsverlusthoehe
-REAL :: hvst, hv                        ! Geschwindigkeitsverlusthoehe
-REAL :: hr                              ! Wasserspiegelhoehe
+REAL :: hrst, rg                        ! Reibungsverlusthoehe m
+REAL :: hvst, hv                        ! Geschwindigkeitsverlusthoehe m
+REAL :: hr                              ! Wasserspiegelhoehe m
 REAL :: statgem                         ! Station gemerkt ( = stat(nprof) )
 REAL :: stat1                           ! Station des letzten Profils ( = stat(nprof-1) )
 REAL :: strecke                         ! Distanz zwischen zwei Profilen
@@ -387,18 +377,17 @@ REAL :: delta1                          ! Abstand des moeglichen Profils 'a' vom
 REAL :: str1
 REAL :: statles
 REAL :: staso
-REAL :: q, q1                           ! Abfluesse
+REAL :: q, q1                           ! Abfluesse [m^3/s]
 REAL :: dif1, dif2, str                 ! Abstand zwischen zwei Profilen
 REAL :: dif, d1, d2, x1wr
 REAL :: froud                           ! Froudzahl am Profil
-REAL :: hsohl, hminn
-REAL :: wsanf1
-REAL :: henow, henw
-REAL :: statneu, statgrz
+REAL :: hsohl, hminn                    ! Sohlehoehe, und minimale Sohlhoehe [mNN]
+REAL :: wsanf1                          ! Anfangswasserspiegel einer Iteration, kann auch Gefaelle sein
+REAL :: henow, henw                     ! Energiehoehe im Oberwasser [m]
+REAL :: statneu, statgrz                !
 REAL :: difs, difstat
 REAL :: hmin2, hdiff, hh1, hh2
 REAL :: hbv_gl, vmbv
-
 REAL :: feldr (merg)
 REAL :: xl (maxkla), hl (maxkla), raul (maxkla)
 
@@ -407,12 +396,11 @@ REAL :: x11 (maxkla), h11 (maxkla), ax1 (maxkla), ay1 (maxkla), dp1 (maxkla), ra
 
 
 !**   Lokale Variablen fuer die Sicherung der Zahlschleifen-Parameter aus der Routine qbordv
-!     als sogenannte aeußere Abflussschleife
-INTEGER :: isch_out
-INTEGER :: nr_q_out
+!     als sogenannte aeussere Abflussschleife --------------------------------------------
+INTEGER :: isch_out           ! Zaehler des aeusseren Abflusses
+INTEGER :: nr_q_out           ! Nummer der aeusseren Abflusses
 INTEGER :: in_count
-INTEGER :: nprof_save
-! INTEGER :: i_OW_Br          ! Zaheler fuer das n-Profil im OW der Bruecke
+INTEGER :: nprof_save         ! Nummer des UW-Profils an Bruecke
 
 REAL:: wsp_save (maxger)      ! Wasserspiegel wsp(m+nn) = hr
 REAL:: fgesp_save (maxger)    ! Insgesamt durchflossene Flaeche (m**2)
@@ -427,25 +415,39 @@ REAL:: k_kp_save (maxger)     ! mittlere Rauhigkeit: akges
 REAL:: igrenz_save (maxger)   ! Hinweis auf grenztiefe
 REAL:: rg_save (maxger)       ! hydraulischer Radius (?)
 REAL:: tm
-REAL :: q_out       ! aktueller Abflusswert der aeusseren Q-Schleife
-REAL :: qvar_in     ! Abflusswert in der inneren Q-Schleife
+REAL :: q_out                 ! aktueller Abflusswert der aeusseren Q-Schleife
+REAL :: qvar_in               ! Abflusswert in der inneren Q-Schleife
 
-CHARACTER(LEN=11):: Q_Abfrage !Abfrage fuer Ende der Inneren Q-Schleife
-
+CHARACTER(LEN=11):: Q_Abfrage ! Abfrage fuer Ende der Inneren Q-Schleife
 
 
 ! ------------------------------------------------------------------
 ! VORBELEGUNGEN
 ! ------------------------------------------------------------------
 
+!MD  "Q_Abfrage" lieferte fuer die Berechnung mit konstantem Reibungsgefaelle
+!MD  die Auskunft, ob die Berechnung in einer Inneren Abflussschleife einer
+!MD  Bruecke oder eines Bauwerkes befindet, wo oertlich und echte Reibungsverluste
+!MD  zu beruecksichtigen sind oder in Berechnung eines Normalprofils, bei der
+!MD  das vorgegebene Reibungsgefaelle genutzt werden soll.
+!MD  Die Kennung wird auch verwendetet, um in der inneren Abflussschleife an
+!MD  Bruecken, Wehren und Bauwerken die Ausgaben schlank zuhalten.
+
 Q_Abfrage = 'IN_SCHLEIFE'
+
+!MD  Q_Abfrage = 'BR_SCHLEIFE'  : Innere Abflussschleife an der Bruecke (alle Verluste)
+!MD  Q_Abfrage = 'IN_SCHLEIFE'  : Aueßere Abflussschleife am Bauwerke bzw. Berechnung
+!                                 mit vorgebenem Reibungsgefaelle am normalen Profil
+!MD  Q_Abfrage = 'WE_SCHLEIFE'  : Innere Abflussschleife am Wehr (alle Verluste)
+!MD  Q_Abfrage = 'GR_SCHLEIFE'  : Grenztiefe im UW des Wehres erreicht (aus w_ber)
+
+
 !WP 10.05.2005
 !WP Bei der normalen Spiegellinienberechnung wird der Dateiname
 !WP PFAD2 nicht verwendet. MARK wird zu 1 gesetzt und dann ganz
 !WP am Ende LAPRO1 aufgerufen. Trotzdem muss die CHARACTER-Variable
 !WP PFAD2 einen gueltgen Wert bekommen
 pfad2 = ' '
-
 akges = 0.0
 
 ! izz = Zaehler fuer die mit q-wert belegten Stationen (q-werte aus
@@ -914,7 +916,7 @@ Hauptschleife: DO i = 1, maxger
 
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
         & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
-        & nz, idr1)
+        & nz, idr1, Q_Abfrage)
 
     !**   ABFRAGE ZUR BRUECKENBERECHNUNG
 
@@ -943,6 +945,12 @@ Hauptschleife: DO i = 1, maxger
       stat1 = stat (nprof - 1)
       strecke = (statgem - stat1) * 1000. !WP Distanz zwischen Bruecke und Unterwasser
 
+
+     !MD - NOCH in Arbeit ------------------------------------------------------------
+     !!  CALL Bruecke (......)
+     !
+     !  Wenn fertig, kann ab hier alles bis zeile 2064 (Wehrberechnung) alles raus
+     !MD - NOCH in Arbeit ----------------------------------------------------------
 
 
       !--------------------------------------------------------------------------------------
@@ -1134,7 +1142,7 @@ Hauptschleife: DO i = 1, maxger
             htrli = htrli - d1
 
             CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-             & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
+             & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz, Q_Abfrage)
 
             write (UNIT_OUT_LOG, 266) hmin, hr
             266 format (/1X, 'Sohlhoehe HMIN: ', F12.4,/, &
@@ -1418,11 +1426,11 @@ Hauptschleife: DO i = 1, maxger
           ! iwehrb kommt aus BR_KONV, ist 0 oder 1
           IF (iwehrb.eq.0) then
             CALL wspanf (wsanf1, strbr, q, q1, hr, hv, rg, indmax,    &
-             & hvst, hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+             & hvst, hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
           ELSE
             henow = hr
             CALL wspow (henow, strbr, q, q1, hr, hv, rg, indmax, hvst,&
-             & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+             & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
 
           ENDIF
 
@@ -1516,7 +1524,7 @@ Hauptschleife: DO i = 1, maxger
             str = (stat (nprof) - stat (nprof - 1) ) * 1000.
 
             CALL normber (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
-             & indmax, psieins, psiorts, hgrenz, ikenn, froud,  nblatt, nz)
+             & indmax, psieins, psiorts, hgrenz, ikenn, froud,  nblatt, nz, Q_Abfrage)
 
             CALL speicher (nprof, hr, hv, hvst, hrst, q, stat(nprof), indmax, ikenn)
 
@@ -1741,7 +1749,7 @@ Hauptschleife: DO i = 1, maxger
 
         CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, &
          & indmax, psieins, psiorts, hgrenz, ikenn, froud,      &
-         & nblatt, nz)
+         & nblatt, nz, Q_Abfrage)
 
         write (UNIT_OUT_LOG, 26) hmin, hr
         26 format (/1X, 'Sohlhoehe HMIN: ', F12.4,/, &
@@ -2040,7 +2048,7 @@ Hauptschleife: DO i = 1, maxger
 
         CALL wspanf (wsanf1, strbr, q, q1, hr, hv, rg, indmax,    &
          & hvst, hrst, psieins, psiorts, nprof, hgrenz, ikenn,  &
-         & nblatt, nz, idr1)
+         & nblatt, nz, idr1, Q_Abfrage)
 
       ELSE
 
@@ -2048,7 +2056,7 @@ Hauptschleife: DO i = 1, maxger
 
         CALL wspow (henow, strbr, q, q1, hr, hv, rg, indmax, hvst,&
          & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,&
-         & nz, idr1)
+         & nz, idr1, Q_Abfrage)
 
       ENDIF
 
@@ -2080,7 +2088,7 @@ Hauptschleife: DO i = 1, maxger
         !MD  Belegung der neuen Werte für die innere Abflussschleife
         qvar_in = MIN_Q
         isch = 1
-        Q_Abfrage = 'NO_SCHLEIFE'
+        Q_Abfrage = 'WE_SCHLEIFE'
 
 
         WRITE (UNIT_OUT_WEHR, '(/5x,'' Wehrberechnung an Station km'',f8.4)') stat (nprof)
@@ -2126,7 +2134,7 @@ Hauptschleife: DO i = 1, maxger
           ! -----------------------------------------------------
           IF (Q_Abfrage == 'GR_SCHLEIFE') THEN
             WRITE (UNIT_OUT_TAB, '('' Grenztiefe im UW erreicht!! '')')
-            Q_Abfrage = 'NO_SCHLEIFE'
+            Q_Abfrage = 'WE_SCHLEIFE'
             CYCLE
           END IF
 
@@ -2172,7 +2180,7 @@ Hauptschleife: DO i = 1, maxger
 
         CALL wspow (henw, strbr, q, q1, hr, hv, rg, indmax, hvst,   &
           & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
-          & nz, idr1)
+          & nz, idr1, Q_Abfrage)
 
         out_PROF(nprof,nr_q)%WehrOK   = hokwmin   !WP Speichern der Wehroberkante dieses Profils
         out_PROF(nprof,nr_q)%chr_kenn = 'w'
@@ -2197,7 +2205,7 @@ Hauptschleife: DO i = 1, maxger
 
       CALL normber (str, q, q1, nprof, hr, hv, rg, hvst, hrst,    &
        & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt,&
-       & nz)
+       & nz, Q_Abfrage)
 
     ! MD  Neue Berechenungsvariante mit konstantem Reibungsgefaelle
     ! MD  --> auch fuer alle anderen Profile n+1 wird die wspanf. aufgerufen!!
@@ -2220,7 +2228,7 @@ Hauptschleife: DO i = 1, maxger
       !write (*,*) ' WSANF = ', wsanf
 
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
-        & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+        & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
 
     !**   ENDIF ZU (nprof.eq.1)
     ENDIF
@@ -2329,7 +2337,7 @@ Hauptschleife: DO i = 1, maxger
 
           CALL normber (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
            & indmax, psieins, psiorts, hgrenz, ikenn, froud,  &
-           & nblatt, nz)
+           & nblatt, nz, Q_Abfrage)
 
           ! ------------------------------------------------------------------
           ! Abspeichern der Ergebnisse
@@ -2454,7 +2462,7 @@ Hauptschleife: DO i = 1, maxger
 
               CALL normber (str, q, q1, nprof, hr, hv, rg, hvst,     &
                & hrst, indmax, psieins, psiorts, hgrenz, ikenn, &
-               & froud, nblatt, nz)
+               & froud, nblatt, nz, Q_Abfrage)
 
               ! --------------------------------------------------------------
               ! Abspeichern der Ergebnisse
@@ -2611,7 +2619,7 @@ Hauptschleife: DO i = 1, maxger
 
       CALL normber (str, q, vmbv, nprof, hbv_gl, hv, rg, hvst,    &
        & hrst, indmax, psieins, psiorts, hgrenz, ikenn, froud,  &
-       & nblatt, nz)
+       & nblatt, nz, Q_Abfrage)
 
       IF (i_km.eq.4) then
 
@@ -2630,7 +2638,7 @@ Hauptschleife: DO i = 1, maxger
 
       CALL normber (str, q, vmbv, nprof, hbv_gl, hv, rg, hvst,    &
       & hrst, indmax, psieins, psiorts, hgrenz, ikenn, froud,  &
-      & nblatt, nz)
+      & nblatt, nz, Q_Abfrage)
 
       !**      SETZE DIE ERHALTENEN WERTE DEN FELDERN GLEICH
       qbord (nprof) = q
