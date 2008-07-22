@@ -66,15 +66,16 @@
       Ein Assistent öffnet sich und führt den Benutzer durch die Möglichkeiten
       der Dateneinbindung. Hierbei ist zunächst die Art der einzubindenden
       Daten auszuwählen. Wenn der Benutzer sich für eine Option entschieden
-      hat, soll er anschließend auf den Knopf <guibutton>Weiter
-      </guibutton>klicken.</para>
+      hat, soll er anschließend auf den Knopf <guibutton>Weiter</guibutton>
+      klicken.</para>
 
       <figure>
         <title>Assistent zum Import von Hintergrunddaten</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_1.png" />
+            <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_1.png"
+                       width="15cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -99,7 +100,7 @@
         <guibutton>Durchsuchen...</guibutton> geklickt und das entsprechende
         Bild mit zugehörigem Ursprungkoordinatensystem (z.B. EPSG: 31467)
         ausgewählt werden.Danach kann der Benutzer auf <guibutton>Fertig
-        stellen </guibutton>klicken.</para>
+        stellen</guibutton> klicken.</para>
 
         <para>Der Vorgang kann wiederholt werden, wenn die Hintergrundkarte
         aus mehreren Bildern besteht.</para>
@@ -107,7 +108,7 @@
         <para>Diese Art des Datenimports emfpiehlt sich nicht für das Anzeigen
         großer Mengen an Hintergrundkarten und -dateien. Bei flächendeckender
         Kartendarstellung sollte ein MAP-Service (siehe <xref
-        linkend="KalypsoRisikoImport_Hintergrunddaten_WMS" />) verwendet
+        linkend="KalypsoRisikoImport_Hintergrunddaten_WMS" /> ) verwendet
         werden.</para>
 
         <figure>
@@ -116,7 +117,8 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_tifjpg.png" />
+              <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_tifjpg.png"
+                         width="15cm" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -137,7 +139,7 @@
 
         <para>Im folgenden Schritt müssen die Hintergrunddaten ausgewählt
         werden. Hierfür muss zuerst auf den Knopf
-        <guibutton>Durchsuchen...</guibutton>geklickt, die entsprechende
+        <guibutton>Durchsuchen...</guibutton> geklickt, die entsprechende
         Shapedatei mit zugehörigem Ursprungkoordinatensystem (z.B. EPSG:
         31467) ausgewählt und dann anschließend auf <guibutton>Fertig
         stellen</guibutton> geklickt werden.</para>
@@ -148,7 +150,8 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_shp.png" />
+              <imagedata fileref="img/Risk/Datenladen_Hintergr_ass_shp.png"
+                         width="15cm" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -177,7 +180,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/Risk/Datenladen_WMS.png" />
+              <imagedata fileref="img/Risk/Datenladen_WMS.png" width="15cm" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -202,7 +205,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Datenladen_Landn_ass.png" />
+            <imagedata fileref="img/Risk/Datenladen_Landn_ass.png"
+                       width="14cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -300,10 +304,10 @@
       </indexterm>
 
       <para>Um Wassertiefendaten zu importieren, muss in der Ansicht
-      "Aktivitäten" der Baum <guimenu>Preprocessing &gt; Daten laden
-      </guimenu>geöffnet werden. <guibutton>Import von
-      Wassertiefendaten</guibutton> muss danach mit einem Doppelklick
-      aktiviert werden. Es öffnet sich der folgende Assistent:</para>
+      "Aktivitäten" der Baum <guimenu>Preprocessing &gt; Daten laden</guimenu>
+      geöffnet werden. <guibutton>Import von Wassertiefendaten</guibutton>
+      muss danach mit einem Doppelklick aktiviert werden. Es öffnet sich der
+      folgende Assistent:</para>
 
       <figure>
         <title>Assistent zum Import von Wassertiefendaten im ASCII-Raster
@@ -311,7 +315,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Import_HQs.png" />
+            <imagedata fileref="img/Risk/Import_HQs.png" width="12cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -332,8 +336,7 @@
               <entry><mediaobject>
                   <imageobject>
                     <imagedata align="center"
-                               fileref="img/Risk/Icon_ImportHQ_hinzufuegen.png"
-                               width="" />
+                               fileref="img/Risk/Icon_ImportHQ_hinzufuegen.png" />
                   </imageobject>
                 </mediaobject></entry>
 
@@ -357,8 +360,8 @@
 
               <entry align="left" valign="middle">Ereignis löschen</entry>
 
-              <entry align="left" valign="middle"> Zunächst das Ereignis das
-              zu entfernen ist, in der Tabelle markieren. Beim anschließenden
+              <entry align="left" valign="middle">Zunächst das Ereignis das zu
+              entfernen ist, in der Tabelle markieren. Beim anschließenden
               Drücken auf den Knopf , wird das Ereignis aus der Tabelle
               gelöscht.</entry>
             </row>
@@ -382,7 +385,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata align="left" fileref="img/Risk/HQ_Kartenansicht.png" />
+            <imagedata align="left" fileref="img/Risk/HQ_Kartenansicht.png"
+                       scalefit="1" width="17cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -417,7 +421,8 @@
         <mediaobject>
           <imageobject>
             <imagedata align="right"
-                       fileref="img/Risk/KaWzAnsicht_Bearbeiten_HQi.png" />
+                       fileref="img/Risk/KaWzAnsicht_Bearbeiten_HQi.png"
+                       width="17cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -486,7 +491,7 @@
                   <imageobject>
                     <imagedata fileref="img/Risk/Icon_HQbearbeiten_Pfeil_hoch.png" />
                   </imageobject>
-                </mediaobject><mediaobject>
+                </mediaobject> <mediaobject>
                   <imageobject>
                     <imagedata fileref="img/Risk/Icon_HQbearbeiten_Pfeil_runter.png" />
                   </imageobject>
@@ -509,7 +514,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/HQbearbeiten_ass_ereignneu.png" />
+            <imagedata fileref="img/Risk/HQbearbeiten_ass_ereignneu.png"
+                       width="10cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -552,7 +558,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/KaWzAnsicht_Bearbeiten_Rasterdaten.png" />
+            <imagedata fileref="img/Risk/KaWzAnsicht_Bearbeiten_Rasterdaten.png"
+                       width="17cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -620,7 +627,7 @@
                   <imageobject>
                     <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_Pfeil_hoch.png" />
                   </imageobject>
-                </mediaobject><mediaobject>
+                </mediaobject> <mediaobject>
                   <imageobject>
                     <imagedata fileref="img/Risk/Icon_RDatenbearbeiten_Pfeil_runter.png" />
                   </imageobject>
@@ -676,7 +683,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/RDatenbearbeiten_Import.png" />
+            <imagedata fileref="img/Risk/RDatenbearbeiten_Import.png"
+                       width="12cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -686,7 +694,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/RDatenbearbeiten_Export.png" />
+            <imagedata fileref="img/Risk/RDatenbearbeiten_Export.png"
+                       width="12cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -696,7 +705,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/RDatenbearbeiten_Farbverlauf.png" />
+            <imagedata fileref="img/Risk/RDatenbearbeiten_Farbverlauf.png"
+                       width="12cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -721,9 +731,9 @@
       </indexterm>
 
       <para>Um Berechnungsparameter festzulegen, muss in der Ansicht
-      "Aktivitäten" der Baum <guimenu>Preprocessing &gt; Berechnungsparameter
-      </guimenu>geöffnet werden. Wenn <guibutton>Festlegen der
-      Berechnungsparameter</guibutton> mit einem Doppelklick aktiviert wird,
+      "Aktivitäten" der Baum <guimenu> Preprocessing &gt; Berechnungsparameter
+      </guimenu> geöffnet werden. Wenn <guibutton> Festlegen der
+      Berechnungsparameter </guibutton> mit einem Doppelklick aktiviert wird,
       öffnet sich die Feature View mit den zugehörigen drei Tabellen:</para>
 
       <itemizedlist>
@@ -745,7 +755,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Berpara_Landnutzkl.png" />
+            <imagedata fileref="img/Risk/Berpara_Landnutzkl.png" width="17cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -766,7 +776,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Berpara_Landnutzkl_einstellung.png" />
+            <imagedata fileref="img/Risk/Berpara_Landnutzkl_einstellung.png"
+                       width="16cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -776,16 +787,16 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Berpara_Schadensf.png" />
+            <imagedata fileref="img/Risk/Berpara_Schadensf.png" width="14cm" />
           </imageobject>
         </mediaobject>
       </figure>
 
       <para>Dieser Tabelle können ie Schadensfunktionen entnommen werden. Beim
       Import von Landnutzungsdaten (siehe <xref
-      linkend="KalypsoRisikoImport_Landnutzungsdaten" />) wurden diese bereits
-      festgelegt. Die Namen der einzelnen Schadensfunktionen erscheinen im
-      Pulldownmenü der Landnutzungsklassen in der Spalte
+      linkend="KalypsoRisikoImport_Landnutzungsdaten" /> ) wurden diese
+      bereits festgelegt. Die Namen der einzelnen Schadensfunktionen
+      erscheinen im Pulldownmenü der Landnutzungsklassen in der Spalte
       Schadensfunktion.</para>
 
       <para>Die Funktion liefert den prozentualen Anteil vom maximalen
@@ -800,7 +811,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Berpara_assetvalues.png" />
+            <imagedata fileref="img/Risk/Berpara_assetvalues.png" width="7cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -809,8 +820,8 @@
       Landnutzungsklassen entnommen werden (Verlinkung ist durch den Namen
       bereits gesetzt), d.h. der maximale Schaden in [€/m²] der bei Hochwasser
       entstehen kann. Beim Import von Landnutzungsdaten (siehe <xref
-      linkend="KalypsoRisikoImport_Landnutzungsdaten" />) wurden diese bereits
-      festgelegt.</para>
+      linkend="KalypsoRisikoImport_Landnutzungsdaten" /> ) wurden diese
+      bereits festgelegt.</para>
 
       <para>Z. B. würde durch die Überflutung der Verkehrsflächen ein Schaden
       von 0,1*54,32 [€/m²] entstehen.</para>
@@ -824,18 +835,17 @@
       </indexterm>
 
       <para>Um die Risikozonierung zu bearbeiten, muss in der Ansicht
-      "Aktivitäten" der Baum <guimenu>Preprocessing &gt;
-      Berechnungsparameter</guimenu> geöffnet werden. Die
-      <guibutton>Risikozonierung</guibutton> kann mit einem Doppelklick
-      aktiviert werden und es öffnet sich die Feature View mit der zugehörigen
-      Tabelle.</para>
+      "Aktivitäten" der Baum <guimenu> Preprocessing &gt; Berechnungsparameter
+      </guimenu> geöffnet werden. Die <guibutton>Risikozonierung</guibutton>
+      kann mit einem Doppelklick aktiviert werden und es öffnet sich die
+      Feature View mit der zugehörigen Tabelle.</para>
 
       <figure>
         <title>Tabelle zur Risikozonierung</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Risikozonierung.png" />
+            <imagedata fileref="img/Risk/Risikozonierung.png" width="17cm" />
           </imageobject>
         </mediaobject>
       </figure>

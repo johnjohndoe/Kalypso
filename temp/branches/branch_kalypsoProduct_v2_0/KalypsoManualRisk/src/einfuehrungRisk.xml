@@ -64,7 +64,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Welcome.png" />
+          <imagedata fileref="img/Risk/Welcome.png" width="17cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -91,7 +91,8 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata align="left" fileref="img/Risk/Risiko_Perspektive.png" />
+            <imagedata align="left" fileref="img/Risk/Risiko_Perspektive.png"
+                       width="17cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -181,7 +182,7 @@
 
           <mediaobject>
             <imageobject>
-              <imagedata fileref="img/Risk/Szenarienansicht.png" />
+              <imagedata fileref="img/Risk/Szenarienansicht.png" width="8cm" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -274,7 +275,7 @@
           <mediaobject>
             <imageobject>
               <imagedata fileref="img/Risk/Szenario_ass_abgelSz.png"
-                         scale="95" />
+                         scale="95" width="17cm" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -301,12 +302,12 @@
       linkend="KalypsoRisikoPerspektive" />) geöffnet.</para>
 
       <figure>
-        <title>Assistent um ein neues Projekt zu erstellen in
-        Kalypso Risk</title>
+        <title>Assistent um ein neues Projekt zu erstellen in Kalypso
+        Risk</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Projekt_neu_ass_2.png" />
+            <imagedata fileref="img/Risk/Projekt_neu_ass_2.png" width="13cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -324,7 +325,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Projekt_neu_ass_1.png" />
+            <imagedata fileref="img/Risk/Projekt_neu_ass_1.png" width="13cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -363,7 +364,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/Risk/Projekt_loeschen.png" />
+            <imagedata fileref="img/Risk/Projekt_loeschen.png" width="11.5cm" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -459,7 +460,7 @@
               <entry align="left" valign="middle">Verkleinert den
               Kartenausschnitt, herauszoomen</entry>
 
-              <entry align="left" valign="middle"> Durch Betätigung dieses
+              <entry align="left" valign="middle">Durch Betätigung dieses
               Knopfes, wird aus der Mitte des Kartenausschnitts herausgezoomt
               in vordefinierten Schritten.</entry>
             </row>
