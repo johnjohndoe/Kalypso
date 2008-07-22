@@ -1,4 +1,4 @@
-!     Last change:  MD    4 May 2007   11:08 am
+!     Last change:  MD    9 Jul 2008    9:45 am
 !--------------------------------------------------------------------------
 ! This code, read_kalypso_config_file.f90, contains the following
 ! subroutines and functions of the hydrodynamic modell for
@@ -189,7 +189,9 @@ else if (INDEX(part1,'VERZOEGERUNGSVERLUST')/=0) then
   else if (INDEX(part2,'BJOERNSEN')/=0) then
     VERZOEGERUNGSVERLUST = 'BJOE'
   else if (INDEX(part2,'DFG')/=0) then
-    VERZOEGERUNGSVERLUST = 'DFG '
+  !MD  VERZOEGERUNGSVERLUST = 'DFG '
+  !MD  Berechnung nach Dfg wurde durch Berechnung nach BWK ersetzt, siehe SubR verluste
+    VERZOEGERUNGSVERLUST = 'BWK '
   else if (INDEX(part2,'BWK')/=0) then
     VERZOEGERUNGSVERLUST = 'BWK '
   !MD  neue Berechnungsvarainte mit konstanten Reibungsgefaelle
