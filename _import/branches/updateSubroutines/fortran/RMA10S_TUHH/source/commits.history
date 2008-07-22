@@ -145,8 +145,10 @@ Version 0.0.2/ Version 1.0.0 (laufende Änderungen)
       is updated, too. Furthermore, the assignment in getbc was not the same as in inputd. It is also changed.
 030.) Activate second derivative term over velocity in momentum equation (Term A2)
 031.) Adding some comments in the 1D-junction subroutine (coef1DJunction.sub)
+032.) Correct same format descriptor for data in output file in bedsur.sub and bedlbed.sub
 
 --- Nico Schrage, 22.07.2008 (release 1.0.0)
 
 Version 1.0.1 (laufende Änderungen)
 -----------------------------------
+
