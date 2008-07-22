@@ -1,4 +1,4 @@
-!     Last change:  MD   12 Mar 2008    4:03 pm
+!     Last change:  MD    9 Jul 2008   12:26 pm
 !--------------------------------------------------------------------------
 ! This code, ebksn.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -40,7 +40,7 @@
 
 
 
-SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot)
+SUBROUTINE eb2ks (iprof, hv, rg, rg_alt, q, q_alt, itere1, nstat, hr, nknot, Q_Abfrage)
 
 !***********************************************************************
 !**                                                                     
@@ -283,7 +283,6 @@ REAL 	:: also (maxkla), anl (maxkla), anb (maxkla)
 REAL  	:: vnvv (maxkla), cwn (maxkla)
 REAL 	:: bf (2), vt_l (2), anl_l (2), anb_l (2), om_l (2), ct_l (2)
 REAL 	:: bm_l (2), alt_l (2), h_t (2), v1_hg, vt_n (2)
-
 REAL 	:: cm                           !JK   ZUSATZ FUER ERWEITERUNG VON JANA KIEKBUSCH, 23.06.00
 
 !HB   26.11.2001 - H.Broeker
@@ -291,6 +290,8 @@ REAL 	:: cm                           !JK   ZUSATZ FUER ERWEITERUNG VON JANA KIE
 REAL 	:: phi_o_li, phi_u_li, phi_o_re, phi_u_re, phi_o_fl, phi_u_fl
 REAL 	:: psi_o_li, psi_o_re, psi_o_fl, psion
 REAL 	:: a_vor_li, a_vor_re, alpha_E, alpha_I
+CHARACTER(LEN=11), INTENT(IN) :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q-Schleife
+
                                                                         
 !WP 10.05.2004                                                          
 ibed = 0
@@ -318,12 +319,13 @@ ELSE IF (itere1 .le. 1 .and. nstat .le. 1) then
   isenen = 0.001
 ELSE IF (nstat .eq. 1) then
   isenen = q * q / rg / rg
-ELSEIF (nstat.gt.1 .and. BERECHNUNGSMODUS=='REIB_KONST') then   !MD neu**
+ELSEIF (nstat.gt.1 .and. BERECHNUNGSMODUS=='REIB_KONST'.and. Q_Abfrage=='IN_SCHLEIFE') then
+  !MD  Nur unter 'REIB_KONST' nutzen, wenn nicht in einer Inneren Abflussschleife an Bruecke oder Wehr
   isenen = q * q / rg / rg
 ELSEIF (itere1.gt.1) then
   IF (REIBUNGSVERLUST == 'GEOMET') THEN
     isenen = (q + q_alt) * (q + q_alt) / (rg + rg_alt) / (rg + rg_alt)
-  ELSE
+  ELSE  ! REIBUNGSVERLUST=='TRAPEZ'
     isenen = q * q / rg / rg
   ENDIF
 ENDIF
