@@ -6,7 +6,7 @@ cipk  last update Mar 23 1998
 cipk  last update Nov 26 1997
 cipk  last update Oct 29 1996
 CIPK  LAST UPDATE OCT 16 1996
-C     Last change:  WP   15 Dec 2007    5:33 pm
+C     Last change:  WP    2 Jul 2008    6:00 pm
 cipk  last updated April 25 1996
 CIPK  LAST UPDATED SEP7 1995
       SUBROUTINE GETBC(IBIN)
@@ -330,19 +330,26 @@ cipk jul04
 C
 C...... Set ITEQV based on input
 C-
-        DO 2201 I=1,NITA
-          IF(ITEQS(I) .GT. 0) THEN
-            IF(ITEQV(I) .EQ. 0) THEN
-              ITEQV(I)=ITEQS(I)+5
+        SetCalcType: DO I = 1, NITA
+          IF (ITEQS (I) > 0) THEN
+            IF (ITEQV (I) == 0) THEN
+              ITEQV (I) = ITEQS (I) + 5
             ENDIF
-            IF(ITEQV(I) .EQ. 2) THEN
-              ITEQV(I)=ITEQS(I)+7
+            IF(ITEQV (I) == 2) THEN
+              ITEQV (I) = ITEQS (I) + 7
             ENDIF
-            IF(ITEQV(I) .EQ. 3) THEN
-              ITEQV(I)=ITEQS(I)+9
+            IF (ITEQV(I) == 3) THEN
+!nis,jul08: in the unsteady reading subroutine inputd +9 is replaced by +10. This leads to the values 11 and 12 for calculations
+!           of velocities and concentrations (11: temperature; 12: sediment)
+!
+!           The numbering gap ITEQV = 10 is open for 3D-calculations (it seems; referencing to update subroutine!)
+!
+!              ITEQV (I) = ITEQS (I) + 9
+              ITEQV (I) = ITEQS (I) + 10
+!-
             ENDIF
           ENDIF
- 2201 CONTINUE
+        ENDDO SetCalcType
 
 
 cipk dec00   test for gate structure

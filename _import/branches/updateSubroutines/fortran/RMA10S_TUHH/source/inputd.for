@@ -1,4 +1,4 @@
-C     Last change:  WP   14 Dec 2007   10:37 am
+C     Last change:  WP    2 Jul 2008    5:40 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 cipk  last update Aug 06 2002 expand dlin to 80 char
@@ -219,20 +219,20 @@ cipk sep04
 C
 C...... Set ITEQV based on input
 C-
-	DO  651 I=1,NITN
-	  IF(ITEQS(I) .GT. 0) THEN
-	    IF(ITEQV(I) .EQ. 0) THEN
-	      ITEQV(I)=ITEQS(I)+5
-	    ENDIF
-	    IF(ITEQV(I) .EQ. 2) THEN
-	      ITEQV(I)=ITEQS(I)+7
-	    ENDIF
-	    IF(ITEQV(I) .EQ. 3) THEN
-	      ITEQV(I)=ITEQS(I)+10
+      SetCalcType: DO I=1,NITN
+        IF (ITEQS (I) > 0) THEN
+          IF (ITEQV (I) == 0) THEN
+            ITEQV (I) = ITEQS (I) + 5
+          ENDIF
+          IF (ITEQV (I) == 2) THEN
+            ITEQV (I) = ITEQS (I) + 7
+          ENDIF
+          IF (ITEQV (I) == 3) THEN
+            ITEQV (I) = ITEQS (I) + 10
 cipk may02	      ITEQV(I)=ITEQS(I)+9
-	    ENDIF
-	  ENDIF
-  651   CONTINUE
+          ENDIF
+        ENDIF
+      ENDDO SetCalcType
 C-
 C-..... READ BOUNDARY VALUES
 C-
