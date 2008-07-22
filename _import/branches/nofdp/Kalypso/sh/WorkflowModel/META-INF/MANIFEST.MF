@@ -14,11 +14,5 @@ Require-Bundle: org.eclipse.core.expressions,
 Export-Package: de.renew.workflow.base,
  de.renew.workflow.cases,
  de.renew.workflow.contexts
-Import-Package: javax.xml.bind;version="2.0.0",
- javax.xml.bind.annotation;version="2.0.0",
- javax.xml.bind.annotation.adapters;version="2.0.0",
- javax.xml.bind.attachment;version="2.0.0",
- javax.xml.bind.helpers;version="2.0.0",
- javax.xml.bind.util;version="2.0.0"
 Bundle-Activator: de.renew.workflow.base.WorkflowModelPlugin
 Bundle-Vendor: kalypso.sourceforge.net
