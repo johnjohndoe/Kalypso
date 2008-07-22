@@ -1544,6 +1544,55 @@ Noch bestehende Schwächen:
 
 
 
+Kalypso 2.1.3.0      09. Juli 2008
+-------------------------------------    
+1) Korrektur fuer Bauwerks-Berechnung fuer Berechnungsvariante "konstantes Reibungsgefälle". 
+   Hierbei wurde bislang in der inneren Abflussschleife nicht die tatsächliche Rauheit, sondern 
+   weiterhin das vorgegebene Reibungsgefälle verwendet. --> Bug
+   Dies führte zu einer gerinfügigen Abweichung (cm-Bereich) beim Vergleich zwischen einer normalen
+   Wasserspiegellinien-Berechnung an einer Brücke (oder an einem Wehr) und den Ergebnissen aus der
+   Huw-Q-How oder Euw-Q-Eow. Diese Abweichung zeigte sich inbesondere bei niedrigen Abflüssen und sehr 
+   kleinen vorgegebenen Reibungsgefällen.
+
+   Grundsätzlich sollen jedoch in der inneren Abflussschleife alle Verluste (Einschnürungs-, Aufweitungs- 
+   und auch der echte Sohlrauheitsverlust) berücksichtigt werden. Dementsprechend wurde zur
+   Abfrage des BERECHNUNGSMODUS (hier nur für BERECHNUNGSMODUS == 'REIB_KONST') eine Abfrage nach der
+   Kennung "Q_ABFRAGE" ergänzt. Diese Kennung "Q_Abfrage" lieferte fuer die Berechnung mit
+   konstantem Reibungsgefaelle die Auskunft, ob die Berechnung in einer inneren Abflussschleife 
+   einer Bruecke oder eines Bauwerkes befindet, wo örtlich und echte Reibungsverluste zu
+   berücksichtigen sind oder in Berechnung eines Normalprofils bzw. der äußeren Abflussschleife, 
+   bei der das vorgegebene Reibungsgefaelle genutzt werden soll. Die Kennung wird auch verwendetet,
+   um in der inneren Abflussschleife an Bruecken und Wehren die Ausgaben schlank zuhalten.
+
+   Folgende Werte kann diese Kennung annehmen:
+   ------------------------------------------------------
+   Default Wert (SubR wspber) :  Q_Abfrage = 'IN_SCHLEIFE'
+   Q_Abfrage = 'BR_SCHLEIFE'  :  Innere Abflussschleife an der Bruecke (alle Verluste)
+   Q_Abfrage = 'IN_SCHLEIFE'  :  Aueßere Abflussschleife am Bauwerke bzw. Berechnung
+                                  mit vorgebenem Reibungsgefaelle am normalen Profil
+   Q_Abfrage = 'WE_SCHLEIFE'  :  Innere Abflussschleife am Wehr (alle Verluste)
+   Q_Abfrage = 'GR_SCHLEIFE'  :  Grenztiefe im UW des Wehres erreicht (aus w_ber)
+
+
+   Die Korrektur des Rauheitsverlustes bewirkt eine leichte Veränderung der Ergebnisse fuer Berechnungsvariante 
+   "konstantes Reibungsgefälle" an Brücken- und Wehr-Bauwerken (instationäre Bauwerkstabellen). 
+   Keine Auswirkungen gibt es fuer alle anderen Berechnungsvarianten und normal Profile.
+
+
+   Direkt betroffene Routinen (mit Korrekturen):
+     - eb2ks, verluste 
+
+   Indirekt betroffene Routinen durch Weiterleitung der Kennung Q_ABFRAGE:
+     - wspber, anf, normber, netwon, grnzh, rohre, station, pegasus, wspow, wspanf
+
+
+2) In Vorbereitung: 
+   Ausgliederung der Brückenberechnung aus der wspber in eine eigene Subr Bruecke.
+   Noch nicht aktiv!!
+
+
+							                Monika Donner, 09.07.2008 
+
 
 
 
