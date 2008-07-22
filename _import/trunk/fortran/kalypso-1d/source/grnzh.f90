@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:08 pm
+!     Last change:  MD    9 Jul 2008   12:15 pm
 !--------------------------------------------------------------------------
 ! This code, grnzh.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,7 @@
 
 
 !-----------------------------------------------------------------------
-SUBROUTINE grnzh (q, indmax, hgrenz, xi, hi, s)
+SUBROUTINE grnzh (q, indmax, hgrenz, xi, hi, s, Q_Abfrage)
 !
 ! Beschreibung
 ! ------------
@@ -155,6 +155,7 @@ INTEGER         :: idruck
 COMMON / rohr / idruck
 ! -----------------------------------------------------------------------------
 
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q-Schleife
 
 
 ! ------------------------------------------------------------------
@@ -292,7 +293,7 @@ grenztiefe: do
       nstat = 1
       itere1 = i
       !** BERECHNUNG NACH DARCY
-      CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot)
+      CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot, Q_Abfrage)
     ELSE
       !** BERECHNUNG NACH STRICKLER
       CALL eb2kst (indmax, hr, hv, rg, q)
@@ -337,7 +338,7 @@ grenztiefe: do
         itere1 = i
                                                                         
         !**  BERECHNUNG NACH DARCY
-        CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hra, nknot)
+        CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hra, nknot, Q_Abfrage)
 
       ELSE
 
@@ -366,7 +367,7 @@ grenztiefe: do
         itere1 = i
                                                                         
         !** BERECHNUNG NACH DARCY
-        CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hrb, nknot)
+        CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hrb, nknot, Q_Abfrage)
 
       ELSE
 
@@ -552,7 +553,7 @@ grenztiefe: do
     itere1 = ieb
 
     !**       BERECHNUNG NACH DARCY
-    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot)
+    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot, Q_Abfrage)
 
   ELSE
 
@@ -712,7 +713,7 @@ grenztiefe: do
       itere1 = i
 
       !**              BERECHNUNG NACH STRICKLER
-      CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hrb, nknot)
+      CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hrb, nknot, Q_Abfrage)
 
     ELSE
 
@@ -814,7 +815,7 @@ DO i = 1, 100
     itere1 = i
 
     !**            BERECHNUNG NACH DARCY
-    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hrb, nknot)
+    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hrb, nknot, Q_Abfrage)
 
   ELSE
 
