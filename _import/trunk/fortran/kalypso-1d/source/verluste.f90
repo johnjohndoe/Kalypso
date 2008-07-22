@@ -1,4 +1,4 @@
-!     Last change:  EN   19 Feb 2008    4:02 pm
+!     Last change:  MD    9 Jul 2008    1:12 pm
 !--------------------------------------------------------------------------
 ! This code, verluste.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,7 @@
 !***********************************************************************
 
 SUBROUTINE verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
-         & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
+         & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
 !***********************************************************************
 !**                                                                     
@@ -218,12 +218,11 @@ REAL :: fges_ow         ! Gesamter Fließquerschnitt im Oberwasser (aktuell zu be
 REAL :: fges_uw         ! Gesamter Fließquerschnitt im Unterwasser (altes Profil)
 REAL :: bges_ow         ! Gesamte Fließbreite im Oberwasser (aktuell zu berechnendes Profil)
 REAL :: bges_uw         ! Gesamte Fließbreite im Unterwasser (altes Profil)
-
 REAL :: alpha_RAD
 REAL :: alpha_GRAD
-
 REAL :: zeta            ! Verlustbeiwert bei seitlicher Verzeihung (Aufweitung oder Einschnuerung)
 
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q-Schleife
 ! istat=0      --> stationaer ungleichfoermig
 ! istat=1      --> stationaer gleichfoermig
                                                                         
@@ -264,7 +263,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   ! EN Bei der Rohrberechnung bei konstantem Reibungsgefaelle soll der vorgegebene Wasserstand
   ! EN sowie zugehoerige der Fliessquerschnitt nicht veraendert werden
-  IF ((iprof .eq. 'k' .or. iprof .eq. 't' .or. iprof .eq. 'm' .or. iprof .eq. 'e') .AND. BERECHNUNGSMODUS == 'REIB_KONST' ) THEN
+  IF ((iprof.eq.'k' .or. iprof.eq.'t' .or. iprof.eq.'m' .or. iprof.eq.'e') .AND. BERECHNUNGSMODUS=='REIB_KONST') THEN
     !nichts
   ELSE
     ! -----------------------------------------------------------------
@@ -311,7 +310,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !1000 format(1X, 'In VERLUSTE. Vor eb2ks')
     !write (UNIT_OUT_LOG,1002) iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot
     
-    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot)
+    CALL eb2ks (iprof, hv, rg, rg1, q, q1, itere1, nstat, hr, nknot, Q_Abfrage)
 
     !write (UNIT_OUT_LOG,1001)
     !1001 format(1X, 'In VERLUSTE. Nach eb2ks')
@@ -516,14 +515,15 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       rgm = 0.001
     ENDIF
 
-  ELSEIF (nprof.gt.1.and. BERECHNUNGSMODUS == 'REIB_KONST') then  !MD neu**
+  ELSEIF (nprof.gt.1 .and. BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='IN_SCHLEIFE') then
+  !MD  Nur unter 'REIB_KONST' nutzen, wenn nicht in einer Inneren Abflussschleife an Bruecke oder Wehr
     IF (rg.gt.1.e-06) then
       rgm = q / rg * q / rg
     ELSE
       rgm = 0.001
     ENDIF
 
-  ELSE IF (REIBUNGSVERLUST == 'GEOMET') THEN
+  ELSE IF (REIBUNGSVERLUST=='GEOMET') THEN
 
     IF (rg1 .gt. 1.e-06 .and. rg .gt. 0) then
       wurzrg = (q + q1) / (rg1 + rg)
@@ -539,7 +539,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       rgm = wurzrg**2
     ENDIF
 
-  ELSE
+  ELSE   ! REIBUNGSVERLUST=='TRAPEZ'
 
     IF (rg1 .gt. 1.e-06 .and. rg .gt. 0) then
       rgm = 0.5 * ( (q / rg) **2 + (q1 / rg1) **2)
@@ -566,7 +566,7 @@ IF (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       heins = psiein * (vu - vo) * (vu - vo) / (2 * 9.81)
     ENDIF
 
-  else  ! MD  fuer Reibungsgefaelle = konstant
+  else  ! MD  fuer Reibungsgefaelle = konstant bzw. VERZOEGERUNGSVERLUST= 'NON '
     horts = 0.0
    ! IF (nprof.gt.1) then   !MD neu**
       !vu = sqrt (hv1 * 2 * 9.81)
