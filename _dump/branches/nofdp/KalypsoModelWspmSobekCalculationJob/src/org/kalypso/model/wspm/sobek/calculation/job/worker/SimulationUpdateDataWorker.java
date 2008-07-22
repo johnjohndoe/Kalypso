@@ -32,12 +32,12 @@ public class SimulationUpdateDataWorker implements ISimulation
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
 
-    ConsoleHelper.writeLine( m_outputStream, String.format( "Perparing calculation core model input data..." ) );
+    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Perparing calculation core model input data..." ) );
 
     /* extract computation data */
     extractData( tmpdir, inputProvider );
 
-    ConsoleHelper.writeLine( m_outputStream, String.format( "Model input data prepared." ) );
+    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Model input data prepared." ) );
     ConsoleHelper.writeLine( m_outputStream, "" );
   }
 

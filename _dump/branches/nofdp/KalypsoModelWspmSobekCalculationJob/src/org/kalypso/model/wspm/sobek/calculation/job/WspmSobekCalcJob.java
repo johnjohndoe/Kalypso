@@ -92,7 +92,7 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    ConsoleHelper.writeLine( m_nofdpStream, "---> Starting calculation job <---" );
+    ConsoleHelper.writeLine( m_nofdpStream, "--> Starting calculation job" );
 
     final SimulationBaseWorker baseWorker = new SimulationBaseWorker( m_nofdpStream );
     baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
@@ -113,7 +113,7 @@ public class WspmSobekCalcJob implements ISimulation
 
     resultEater.addResult( "OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    ConsoleHelper.writeLine( m_nofdpStream, "Calculation job finished..." );
+    ConsoleHelper.writeLine( m_nofdpStream, "--> Calculation job finished..." );
     ConsoleHelper.writeLine( m_nofdpStream, "" );
   }
 

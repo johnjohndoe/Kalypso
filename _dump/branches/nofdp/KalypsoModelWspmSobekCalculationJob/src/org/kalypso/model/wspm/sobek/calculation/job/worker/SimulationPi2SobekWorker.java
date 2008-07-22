@@ -35,7 +35,7 @@ public class SimulationPi2SobekWorker implements ISimulation
 
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    ConsoleHelper.writeLine( m_outputStream, String.format( "Converting PI Model to Sobek Model..." ) );
+    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Converting PI Model to Sobek Model..." ) );
 
     /*******************************************************************************************************************
      * PROCESSING
@@ -97,7 +97,7 @@ public class SimulationPi2SobekWorker implements ISimulation
       }
     }
 
-    ConsoleHelper.writeLine( m_outputStream, String.format( "PI Model converted into Sobek Model." ) );
+    ConsoleHelper.writeLine( m_outputStream, String.format( "---> PI Model converted into Sobek Model." ) );
     ConsoleHelper.writeLine( m_outputStream, "" );
   }
 }

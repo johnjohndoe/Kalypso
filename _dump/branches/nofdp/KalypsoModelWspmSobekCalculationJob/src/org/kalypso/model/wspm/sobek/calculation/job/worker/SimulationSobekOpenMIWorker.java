@@ -35,7 +35,7 @@ public class SimulationSobekOpenMIWorker implements ISimulation
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
 
-    ConsoleHelper.writeLine( m_nofdpStream, String.format( "Starting OpenMI for processing model..." ) );
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Starting OpenMI for processing model..." ) );
 
     /*******************************************************************************************************************
      * PROCESSING
@@ -96,7 +96,7 @@ public class SimulationSobekOpenMIWorker implements ISimulation
       }
     }
 
-    ConsoleHelper.writeLine( m_nofdpStream, String.format( "Model processed." ) );
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Model processed." ) );
     ConsoleHelper.writeLine( m_nofdpStream, "" );
 
   }

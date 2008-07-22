@@ -37,12 +37,12 @@ public class SimulationBaseWorker implements ISimulation
   {
     try
     {
-      ConsoleHelper.writeLine( m_outputStream, String.format( "Preparing Sobek Calculation Core..." ) );
+      ConsoleHelper.writeLine( m_outputStream, String.format( "---> Preparing Sobek Calculation Core..." ) );
 
       /* extract computation base directories */
       extractCalculationCore( tmpdir );
 
-      ConsoleHelper.writeLine( m_outputStream, String.format( "Sobek Calculation Core prepared." ) );
+      ConsoleHelper.writeLine( m_outputStream, String.format( "---> Sobek Calculation Core prepared." ) );
       ConsoleHelper.writeLine( m_outputStream, "" );
     }
     catch( final IOException e )
