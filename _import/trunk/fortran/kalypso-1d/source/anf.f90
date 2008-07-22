@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:00 pm
+!     Last change:  MD    9 Jul 2008   10:55 am
 !--------------------------------------------------------------------------
 ! This code, anf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -39,7 +39,7 @@
 !***********************************************************************
 SUBROUTINE anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,    &
               & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, &
-              & nblatt, nz, istat)
+              & nblatt, nz, istat, Q_Abfrage)
 
 !***********************************************************************
 !**                                                                     
@@ -159,7 +159,7 @@ COMMON / alt / ws1, rg1, vmp1, fges1, hv1, ikenn1
 COMMON / peg / h1x, h2x, f1, f2
 COMMON / rohr / idruck                                                 
                                                                         
-                                                                        
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     ! Abfrage fuer Ende der Inneren Q-Schleife
 !     werte vom vorhergehenden profil umspeichern                       
                                                                         
                                                                         
@@ -217,8 +217,8 @@ COMMON / rohr / idruck
         hborda = 0. 
                                                                         
   102   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-        psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch)
-                                                                        
+        psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch, Q_Abfrage)
+
         hrneu = ws1 + hrst + hvst + hborda + heins + horts 
                                                                         
 !         if (hv.lt.0.or.hv.gt.ws1.or.hv.gt.10.0) then                  
