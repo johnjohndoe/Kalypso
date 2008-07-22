@@ -1,4 +1,4 @@
-!Last change:  WP   10 Jun 2008    7:11 pm
+!Last change:  WP    3 Jul 2008    6:05 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -45,7 +45,7 @@ REAL (KIND = 8) :: sbot
 REAL (KIND = 8) :: CalcPolynomial, CalcPolynomialIntegral, CalcPolynomial1stDerivative, CalcPolynomial2ndDerivative
 REAL (KIND = 8) :: speclocal
 
-INTEGER :: i, j, k, Pos, TrID
+INTEGER :: i, j, k, Pos, TrID, TrNo
 INTEGER :: PPA(1:2), findpolynom, PP(1:2)
 
 !new variables
@@ -1217,11 +1217,11 @@ Gaussloop: DO I = 1, NGP
   if (icyc > 0) then
     FEEAN = FEEAN    &
           !Term A1
-    &   + daintdt(i)
+    &   + daintdt(i) &
 
 !nis,jun08: This should be activated, but it doesn't work fine then!
 !         !Term A2
-!       + areaint(i) * altm
+    &   + areaint(i) * altm
 !-
 
   end if
