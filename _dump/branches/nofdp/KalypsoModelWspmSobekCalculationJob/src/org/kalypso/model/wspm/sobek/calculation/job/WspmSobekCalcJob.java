@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
 
+import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationBaseWorker;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationPi2SobekWorker;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobek2PIWorker;
@@ -62,16 +63,19 @@ public class WspmSobekCalcJob implements ISimulation
 {
   private static final String CALCJOB_SPEC = "resources/model_spec.xml"; //$NON-NLS-1$
 
-  private final PrintStream m_outputStream;
+  private final PrintStream m_nofdpStream;
+
+  private final PrintStream m_sobekStream;
 
   public WspmSobekCalcJob( )
   {
-    this( null );
+    this( null, null );
   }
 
-  public WspmSobekCalcJob( PrintStream outputStream )
+  public WspmSobekCalcJob( PrintStream nofdpStream, PrintStream sobekStream )
   {
-    m_outputStream = outputStream;
+    m_nofdpStream = nofdpStream;
+    m_sobekStream = sobekStream;
   }
 
   /**
@@ -88,25 +92,28 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final SimulationBaseWorker baseWorker = new SimulationBaseWorker();
+    ConsoleHelper.writeLine( m_nofdpStream, "Starting calculation job..." );
+
+    final SimulationBaseWorker baseWorker = new SimulationBaseWorker( m_nofdpStream );
     baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker();
+    final SimulationUpdateDataWorker dataWorker = new SimulationUpdateDataWorker( m_nofdpStream );
     dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker();
+    final SimulationPi2SobekWorker pi2SobekWorker = new SimulationPi2SobekWorker( m_nofdpStream, m_sobekStream );
     pi2SobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
     dataWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationSobekOpenMIWorker sobekWorker = new SimulationSobekOpenMIWorker();
+    final SimulationSobekOpenMIWorker sobekWorker = new SimulationSobekOpenMIWorker( m_nofdpStream, m_sobekStream );
     sobekWorker.run( tmpdir, inputProvider, resultEater, monitor );
 
-    final SimulationSobek2PIWorker sobek2Pi = new SimulationSobek2PIWorker();
+    final SimulationSobek2PIWorker sobek2Pi = new SimulationSobek2PIWorker( m_nofdpStream, m_sobekStream );
     sobek2Pi.run( tmpdir, inputProvider, resultEater, monitor );
 
     resultEater.addResult( "OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
+    ConsoleHelper.writeLine( m_nofdpStream, "Calculation job finished..." );
   }
 
 }

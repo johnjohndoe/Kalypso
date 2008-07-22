@@ -3,8 +3,10 @@ package org.kalypso.model.wspm.sobek.calculation.job.worker;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URL;
 
+import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -15,6 +17,16 @@ import org.kalypso.simulation.core.SimulationException;
 public class SimulationSobek2PIWorker implements ISimulation
 {
 
+  private final PrintStream m_nofdpStream;
+
+  private final PrintStream m_sobekStream;
+
+  public SimulationSobek2PIWorker( PrintStream nofdpStream, PrintStream sobekStream )
+  {
+    m_nofdpStream = nofdpStream;
+    m_sobekStream = sobekStream;
+  }
+
   public URL getSpezifikation( )
   {
     // TODO Auto-generated method stub
@@ -23,6 +35,8 @@ public class SimulationSobek2PIWorker implements ISimulation
 
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( "Converting Sobek model into PI Model..." ) );
+
     /*******************************************************************************************************************
      * PROCESSING
      ******************************************************************************************************************/
@@ -50,8 +64,8 @@ public class SimulationSobek2PIWorker implements ISimulation
     final InputStream errorStream = exec.getErrorStream();
     final InputStream inputStream = exec.getInputStream();
 
-    final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true ); //$NON-NLS-1$
-    final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true ); //$NON-NLS-1$
+    final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true, m_sobekStream ); //$NON-NLS-1$
+    final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true, m_sobekStream ); //$NON-NLS-1$
 
     error.start();
     input.start();
@@ -72,13 +86,6 @@ public class SimulationSobek2PIWorker implements ISimulation
         /* The process has not finished. */
       }
 
-      // TODO adjust timeout
-      if( timeRunning >= 300000 )
-      {
-        exec.destroy();
-        throw new SimulationException( "timeout" );
-      }
-
       /* Wait a few millisec, before continuing. */
       try
       {
@@ -89,11 +96,8 @@ public class SimulationSobek2PIWorker implements ISimulation
       {
         e.printStackTrace();
       }
-
-      /* add log pi2sobek log file */
-// resultEater.addResult( ISobekCalculationJobConstants.LOG_PI2SOBEK, new File( tmpdir,
-// "Sobek-IDSS/data/sobek_river/CMTWORK/conv_sbk.log" ) );
-      // TODO check log file
     }
+
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( "Sobek model converted." ) );
   }
 }

@@ -3,8 +3,10 @@ package org.kalypso.model.wspm.sobek.calculation.job.worker;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URL;
 
+import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -15,14 +17,26 @@ import org.kalypso.simulation.core.SimulationException;
 public class SimulationSobekOpenMIWorker implements ISimulation
 {
 
+  private final PrintStream m_nofdpStream;
+
+  private final PrintStream m_sobekStream;
+
+  public SimulationSobekOpenMIWorker( PrintStream nofdpStream, PrintStream sobekStream )
+  {
+    m_nofdpStream = nofdpStream;
+    m_sobekStream = sobekStream;
+  }
+
   public URL getSpezifikation( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
+
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( "Starting OpenMI for processing model..." ) );
+
     /*******************************************************************************************************************
      * PROCESSING
      ******************************************************************************************************************/
@@ -50,8 +64,8 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     final InputStream errorStream = exec.getErrorStream();
     final InputStream inputStream = exec.getInputStream();
 
-    final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true ); //$NON-NLS-1$
-    final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true ); //$NON-NLS-1$
+    final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true, m_sobekStream ); //$NON-NLS-1$
+    final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true, m_sobekStream ); //$NON-NLS-1$
 
     error.start();
     input.start();
@@ -81,5 +95,8 @@ public class SimulationSobekOpenMIWorker implements ISimulation
         e.printStackTrace();
       }
     }
+
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( "Model processed." ) );
+
   }
 }
