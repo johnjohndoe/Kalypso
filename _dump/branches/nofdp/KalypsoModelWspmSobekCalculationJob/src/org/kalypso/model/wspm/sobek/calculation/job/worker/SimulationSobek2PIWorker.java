@@ -64,8 +64,8 @@ public class SimulationSobek2PIWorker implements ISimulation
     final InputStream errorStream = exec.getErrorStream();
     final InputStream inputStream = exec.getInputStream();
 
-    final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true, m_sobekStream ); //$NON-NLS-1$
-    final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true, m_sobekStream ); //$NON-NLS-1$
+    final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", false, m_sobekStream ); //$NON-NLS-1$
+    final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", false, m_sobekStream ); //$NON-NLS-1$
 
     error.start();
     input.start();
