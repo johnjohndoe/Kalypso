@@ -1,4 +1,4 @@
-C     Last change:  WP    4 Jun 2008    4:46 pm
+C     Last change:  WP   11 Jul 2008    8:40 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -129,7 +129,8 @@ C      CALL FILE(1)
       !thetcn = reciproc value of ALPHA for usage in time derivative formula
 CIPK AUG95 MAKE ALPHA 1.8
 !nis,may08: Use 1.6 again
-      ALPHA = 1.6
+      !TODO: Make Alpha a parameter for the user
+      ALPHA = 1.8
 CIPK JUN05      ALPHA=2.0
 cipk feb01 add thetcn
       thetcn = 1./ alpha
@@ -802,7 +803,8 @@ CIPK AUG95 USE ALPHA=1.8
 cipk dec99 test for delta = 0
         if(delt .gt. 0.) then
 
-          ALTM=1.6/DELT
+           !TODO: This was already done in the inputd.subroutine. It shouldn't occur twice!
+          	ALTM = ALPHA/ DELT
 CIPK          ALTM=2.0/DELT
 CIPK MAY02
           ALPHASN=1.8
