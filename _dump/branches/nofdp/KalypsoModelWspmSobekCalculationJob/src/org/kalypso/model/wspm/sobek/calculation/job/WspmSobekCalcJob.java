@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.sobek.calculation.job;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.net.URL;
 
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationBaseWorker;
@@ -60,6 +61,18 @@ import org.kalypso.simulation.core.SimulationException;
 public class WspmSobekCalcJob implements ISimulation
 {
   private static final String CALCJOB_SPEC = "resources/model_spec.xml"; //$NON-NLS-1$
+
+  private final PrintStream m_outputStream;
+
+  public WspmSobekCalcJob( )
+  {
+    this( null );
+  }
+
+  public WspmSobekCalcJob( PrintStream outputStream )
+  {
+    m_outputStream = outputStream;
+  }
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
