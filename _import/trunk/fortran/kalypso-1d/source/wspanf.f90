@@ -1,4 +1,4 @@
-!     Last change:  MD   19 Feb 2008    6:43 pm
+!     Last change:  MD    9 Jul 2008   12:15 pm
 !--------------------------------------------------------------------------
 ! This code, wspanf.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,7 +42,7 @@
 
 !--------------------------------------------------------------------------------
 SUBROUTINE wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
-         & hrst, psiein, psiort, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+         & hrst, psiein, psiort, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
 !
 ! BESCHREIBUNG
 ! ------------
@@ -170,7 +170,7 @@ INTEGER :: igrnz, ifehl, itere1, ifehlg, istat
 REAL :: str
 REAL :: froud
 REAL :: xi (maxkla), hi (maxkla), s (maxkla)
-
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     ! Abfrage fuer Ende der Inneren Q-Schleife
 
 ! EN ++++++++++++++
 REAL :: qsi, qvarsi   ! Sicherung der Abflussdaten aus qbordv
@@ -225,7 +225,7 @@ ELSE
       1000 format (/1X, 'Aufruf von GRNZH in WSPANF mit   hmin = ', F8.3)
     ENDIF
                                                                         
-  CALL grnzh (q, indmax, hgrenz, xi, hi, s)
+  CALL grnzh (q, indmax, hgrenz, xi, hi, s, Q_Abfrage)
 
   ENDIF
 
@@ -274,7 +274,7 @@ IF (wsanf.lt.0.) then
     ! Kennung, dass Sonderprofil durchlaufen wurde
     rohrkenn = 1
 
-    CALL rohre (wsanf, nprof, q, hr, indmax, hvst, hrst, froud, str)
+    CALL rohre (wsanf, nprof, q, hr, indmax, hvst, hrst, froud, str, Q_Abfrage)
 
     !WRITE (UNIT_OUT_LOG, '(''hrst nach ROHRE = '',f12.5, /)') hrst
 
@@ -290,7 +290,7 @@ IF (wsanf.lt.0.) then
 
     CALL station (wsanf, nprof, hgrenz, q, hr, hv, rg, indmax, hvst, &
         & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
-        & nblatt, nz, idr1)
+        & nblatt, nz, idr1, Q_Abfrage)
 
   END IF
 !EN Ende Erweiterung zur Rohrberechnung bei konstantem Reibungsgefaelle
@@ -343,7 +343,7 @@ ELSE IF (wsanf.eq.0.) then
                                                                         
 
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
-     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
 ELSE 
   ! (wsanf.gt.0.)
@@ -375,7 +375,7 @@ ELSE
   itere1 = 1
                                                                         
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,       &
-     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
   IF (froud.ge.1.) ikenn = 1
                                                                         
