@@ -50,17 +50,16 @@
         <primary>Ergebniskarte konfigurieren in Kalypso 1D2D</primary>
       </indexterm>
 
-      <para>In der Ansicht 'Aktivitäten' muss der Baum
-      <guimenuitem>Postprocessing &gt; Kartenansicht </guimenuitem>geöffnet
-      werden und <guilabel>Ergebniskarte konfigurieren </guilabel>mit einem
-      Doppelklick aktiviert werden, um den zugehörigen Assistenten zu öffnen.
-      Der Assistent ermöglicht es Ergebnisse in die Kartenansicht
-      hinzuzufügen. Im Allgemeinen stehen folgende Ergebnisse zu
-      Verfügung</para>
+      <para>In der Ansicht 'Aktivitäten' muss der Baum <guimenuitem>
+      Postprocessing &gt; Kartenansicht </guimenuitem> geöffnet werden und
+      <guilabel>Ergebniskarte konfigurieren</guilabel> mit einem Doppelklick
+      aktiviert werden, um den zugehörigen Assistenten zu öffnen. Der
+      Assistent ermöglicht es Ergebnisse in die Kartenansicht hinzuzufügen. Im
+      Allgemeinen stehen folgende Ergebnisse zu Verfügung</para>
 
       <itemizedlist>
         <listitem>
-          <para>Stationäre/ instationäre Ergebnisse<itemizedlist>
+          <para>Stationäre/ instationäre Ergebnisse <itemizedlist>
               <listitem>
                 <para>Geschwindigkeiten (als skalare Größe,
                 richtungsabhängig)</para>
@@ -223,8 +222,8 @@
       </indexterm>
 
       <para>Um die Ergebnisse in einer Karte zu visualisieren, muss in der
-      Ansicht 'Aktivitäten' der Baum <guimenuitem>Postprocessing &gt;
-      Kartenansicht</guimenuitem> geöffnet werden. Die Karte wird geöffnet,
+      Ansicht 'Aktivitäten' der Baum <guimenuitem> Postprocessing &gt;
+      Kartenansicht </guimenuitem> geöffnet werden. Die Karte wird geöffnet,
       wenn <guimenuitem>Ergebniskarte anzeigen</guimenuitem> mit einem
       Doppelklick aktiviert wird. In der Ansicht 'Gliederung' kann ausgewählt
       werden, welche Werte beziehungsweise Objekte angezeigt werden
@@ -257,7 +256,7 @@
         </mediaobject>
       </figure>
 
-      <para>In <guilabel>Ergebniskarte anzeigen </guilabel>können Werte aus
+      <para>In <guilabel>Ergebniskarte anzeigen</guilabel> können Werte aus
       den TINs abgefragt werden.</para>
 
       <table>
@@ -330,8 +329,8 @@
 
       <para>Sowohl für eindimensionale als auch für zweidimensionale Modelle
       (bzw. Berechnungseinheiten) können Ganglinien erstellt werden. In der
-      Ansicht 'Aktivitäten' muss der Baum <guimenuitem>Postprocessing &gt;
-      Kartenansicht</guimenuitem> geöffnet werden und <guimenuitem>Ganglinien
+      Ansicht 'Aktivitäten' muss der Baum <guimenuitem> Postprocessing &gt;
+      Kartenansicht </guimenuitem> geöffnet werden und <guimenuitem>Ganglinien
       erstellen</guimenuitem> mit einem Doppelklick aktiviert werden. Es
       öffnet sich die zugehörige Karten Werkzeugansicht.</para>
 
@@ -362,7 +361,7 @@
                   <imageobject>
                     <imagedata align="center"
                                fileref="img/1D2D/Icon_Gangl_hinzufg.png"
-                               scale="110" valign="middle" />
+                               valign="middle" />
                   </imageobject>
                 </mediaobject></entry>
 
@@ -373,7 +372,7 @@
               hinzuzufügen, für das Ganglinien erstellt werden sollen, muss
               der Knopf betätigt werden. Es öffnet sich ein Assistent, aus dem
               zunächst ein Teilmodell ausgewählt werden muss. (Siehe <xref
-              linkend="Kalypso1D2DGanglinien_hinzufuegen" />)</entry>
+              linkend="Kalypso1D2DGanglinien_hinzufuegen" /> )</entry>
             </row>
 
             <row>
@@ -381,7 +380,7 @@
                   <imageobject>
                     <imagedata align="center"
                                fileref="img/1D2D/Icon_Gangl_loeschen.png"
-                               scale="110" valign="middle" />
+                               valign="middle" />
                   </imageobject>
                 </mediaobject></entry>
 
@@ -397,8 +396,7 @@
               <entry><mediaobject>
                   <imageobject>
                     <imagedata align="center"
-                               fileref="img/1D2D/Icon_Gangl_berechn.png"
-                               scale="110" />
+                               fileref="img/1D2D/Icon_Gangl_berechn.png" />
                   </imageobject>
                 </mediaobject></entry>
 
@@ -415,7 +413,7 @@
                   <imageobject>
                     <imagedata align="center"
                                fileref="img/1D2D/Icon_Gangl_Ort+.png"
-                               scale="110" valign="middle" />
+                               valign="middle" />
                   </imageobject>
                 </mediaobject></entry>
 
@@ -438,8 +436,7 @@
               <entry><mediaobject>
                   <imageobject>
                     <imagedata align="center"
-                               fileref="img/1D2D/Icon_Gangl_Ort_selek.png"
-                               scale="110" />
+                               fileref="img/1D2D/Icon_Gangl_Ort_selek.png" />
                   </imageobject>
                 </mediaobject></entry>
 
@@ -456,8 +453,7 @@
               <entry><mediaobject>
                   <imageobject>
                     <imagedata align="center"
-                               fileref="img/1D2D/Icon_Gangl_Ort-.png"
-                               scale="110" />
+                               fileref="img/1D2D/Icon_Gangl_Ort-.png" />
                   </imageobject>
                 </mediaobject></entry>
 
@@ -475,17 +471,16 @@
               <entry><mediaobject>
                   <imageobject>
                     <imagedata align="center"
-                               fileref="img/1D2D/Icon_Gangl_export.png"
-                               scale="110" />
+                               fileref="img/1D2D/Icon_Gangl_export.png" />
                   </imageobject>
                 </mediaobject></entry>
 
               <entry align="left" valign="middle">Ganglinie
               exportieren</entry>
 
-              <entry align="left" valign="middle"><emphasis>Diese
-              Funktionalität ist zur Zeit noch nicht
-              implementiert</emphasis></entry>
+              <entry align="left" valign="middle"><emphasis> Diese
+              Funktionalität ist zur Zeit noch nicht implementiert
+              </emphasis></entry>
             </row>
 
             <row>
@@ -499,8 +494,8 @@
               Kartenausschnitt auf den selektierten Ganglinienort.</entry>
 
               <entry align="left" valign="middle">Diese Funktionalität ist
-              sozusagen das Gegenstück zu "Ganglinienort auswählen". Wenn der
-              Knopf betätigt wird, wird der Kartenausschnitt auf den
+              sozusagen das Gegenstück zu ''Ganglinienort auswählen''. Wenn
+              der Knopf betätigt wird, wird der Kartenausschnitt auf den
               Ganglinienort verschoben, der in der Tabelle markiert
               ist.</entry>
             </row>
@@ -546,22 +541,22 @@
           </mediaobject>
         </figure>
 
-        <para><emphasis role="bold">Ganglinien für ein Teilmodell
-        berechnen</emphasis></para>
+        <para><emphasis role="bold"> Ganglinien für ein Teilmodell berechnen
+        </emphasis></para>
 
         <para>Das Teilmodell ist nun zunächst leer. Im nächsten Schritt müssen
         dem Modell Ganglinienorte hinzugefügt werden (siehe <xref
-        linkend="Kalypso1D2DGanglinien_editieren" />). Sobald alle gewünschten
-        Ganglinienorte in der Tabelle erscheinen, muss der Knopf
+        linkend="Kalypso1D2DGanglinien_editieren" /> ). Sobald alle
+        gewünschten Ganglinienorte in der Tabelle erscheinen, muss der Knopf
         <inlinemediaobject>
             <imageobject>
               <imagedata fileref="img/1D2D/Icon_Gangl_berechn.png" />
             </imageobject>
           </inlinemediaobject> betätigt werden, damit die Berechnung der
-        Ganglinie gestartet wird. Mit einem Doppelklick auf den Reiter "Karten
-        Werkzeugansicht" wird dieser maximiert und das erstellte Diagramm kann
-        somit detaillierter betrachtet werden (siehe <xref
-        linkend="Kalypso1D2DGanglinien_Diagramm" />).</para>
+        Ganglinie gestartet wird. Mit einem Doppelklick auf den Reiter
+        ''Karten Werkzeugansicht'' wird dieser maximiert und das erstellte
+        Diagramm kann somit detaillierter betrachtet werden (siehe <xref
+        linkend="Kalypso1D2DGanglinien_Diagramm" /> ).</para>
 
         <para><emphasis role="bold">Teilmodelle löschen</emphasis></para>
 
@@ -582,7 +577,8 @@
           <primary>Ganglinien editieren in Kalypso 1D2D</primary>
         </indexterm>
 
-        <para><emphasis role="bold">Ganglinienort hinzufügen</emphasis></para>
+        <para><emphasis role="bold"> Ganglinienort hinzufügen
+        </emphasis></para>
 
         <para>Nachdem ein neues Teilmodell erstellt worden ist, müssen als
         erstes Ganglinienorte ausgewählt werden, für die später eine Ganglinie
@@ -620,13 +616,14 @@
           </mediaobject>
         </figure>
 
-        <para><emphasis role="bold">Ganglinienort wählen/ Springe zu
-        Ganglinie</emphasis></para>
+        <para><emphasis role="bold"> Ganglinienort wählen/ Springe zu
+        Ganglinie </emphasis></para>
 
         <para>Wie oben schon erwähnt wurde, werden zunächst alle erstellten
         Ganglinienorte mit dem selben Namen erstellt. Die beiden Funktionen
-        "Ganglinienort wählen" und "Springe zu Ganglinie" stellen sozusagen
-        eine Verbindung zwischen der Tabelle und der Karte her.</para>
+        ''Ganglinienort wählen'' und ''Springe zu Ganglinie'' stellen
+        sozusagen eine Verbindung zwischen der Tabelle und der Karte
+        her.</para>
 
         <itemizedlist>
           <listitem>
@@ -651,7 +648,7 @@
           </listitem>
         </itemizedlist>
 
-        <para><emphasis role="bold">Ganglinie exportieren</emphasis></para>
+        <para><emphasis role="bold"> Ganglinie exportieren </emphasis></para>
 
         <note>
           <para>Diese Funktionalität ist zur Zeit noch nicht
@@ -675,7 +672,7 @@
 
         <para>Zum Umgang mit dem Diagramm befindet sich eine ausführliche
         Erläuterung in der <emphasis role="bold">Einführung</emphasis> des
-        Manuals <emphasis role="bold">Kalypso1D2D</emphasis>.</para>
+        Manuals <emphasis role="bold">Kalypso1D2D</emphasis> .</para>
       </section>
     </section>
   </section>
@@ -704,10 +701,10 @@
       </indexterm>
 
       <para>Um einen Längsschnitt für ein zweidimensionales Modell zu
-      konfigurieren, muss in der Ansicht 'Aktivitäten' der Baum
-      <guimenuitem>Postprocessing &gt; Längsschnittansicht</guimenuitem>
-      geöffnet werden und<guilabel> Längsschnitt konfigurieren</guilabel> mit
-      einem Doppelklick aktiviert werden.</para>
+      konfigurieren, muss in der Ansicht 'Aktivitäten' der Baum <guimenuitem>
+      Postprocessing &gt; Längsschnittansicht </guimenuitem> geöffnet werden
+      und <guilabel>Längsschnitt konfigurieren</guilabel> mit einem
+      Doppelklick aktiviert werden.</para>
 
       <para>Im anschließenden Assistenten ist unter 'Gewässerachse' zunächst
       die entsprechende Shape-Datei auszuwählen, welche die zu verwendende
@@ -764,8 +761,8 @@
       </indexterm>
 
       <para>Damit ein Längsschnitt angezeigt wird muss in der Ansicht
-      'Aktivitäten' der Baum <guimenuitem>Postprocessing &gt;
-      Längsschnittansicht</guimenuitem> geöffnet und<guilabel> Längsschnitt
+      'Aktivitäten' der Baum <guimenuitem> Postprocessing &gt;
+      Längsschnittansicht </guimenuitem> geöffnet und <guilabel>Längsschnitt
       anzeigen</guilabel> mit einem Doppelklick aktiviert werden.</para>
 
       <para>Wenn es sich um ein zweidimensionales Modell handelt und im
@@ -794,7 +791,7 @@
       <para>Zum Umgang mit dem Diagramm und der Tabelle befindet sich eine
       ausführliche Erläuterung in der <emphasis
       role="bold">Einführung</emphasis> des Manuals <emphasis
-      role="bold">Kalypso1D2D</emphasis>.</para>
+      role="bold">Kalypso1D2D</emphasis> .</para>
 
       <para>Wenn die Längsschnitte für einzelne Abschnitte erstellt worden
       sind, können diese auch über die Tabelle zusammengesetzt werden. Dafür
@@ -837,8 +834,8 @@
       </indexterm>
 
       <para>Um eine Differenz bilden zu können, muss in der Ansicht
-      'Aktivitäten' der Baum <guimenuitem>Postprocessing
-      &gt;Differenzenbildung </guimenuitem>geöffnet werden. Wenn
+      'Aktivitäten' der Baum <guimenuitem> Postprocessing
+      &gt;Differenzenbildung </guimenuitem> geöffnet werden. Wenn
       <guilabel>Differenzen erzeugen</guilabel> mit einem Doppelklick
       aktiviert wird, öffnet sich der zugehörige Assistent für die
       Differenzenbildung. Als erstes wird der Minuend ausgewählt. Anschließend
@@ -884,7 +881,7 @@
       <para>Die Differenz wird als zusätzliches Ergebnis abgelegt und kann
       über die Funktion <guilabel>Ergebniskarte konfigurieren</guilabel> in
       die Karte geladen werden. Wenn nun in der Ansicht 'Aktivitäten' der Baum
-      <guimenuitem>Postprocessing &gt; Kartenansicht </guimenuitem>geöffnet
+      <guimenuitem> Postprocessing &gt; Kartenansicht </guimenuitem> geöffnet
       wird und <guimenuitem>Ergebniskarte konfigurieren</guimenuitem> mit
       einem Doppelklick aktiviert wird, ist in dem Assistenten die neu
       erzeugte Differenz zu sehen.</para>

@@ -68,8 +68,8 @@
       mehrmals angesteuert werden.</para>
 
       <para>Um Hintergrundinformationen bereitzustellen, muss in der Ansicht
-      'Aktivitäten' der Baum <guimenu>Preprocessing &gt; Daten laden</guimenu>
-      geöffnet werden. Wenn <guibutton>Import von
+      ''Aktivitäten'' der Baum <guimenu>Preprocessing &gt; Daten
+      laden</guimenu> geöffnet werden. Wenn <guibutton>Import von
       Hintergrundkarten</guibutton> mit einem Doppelklick aktiviert wird,
       öffnet sich ein Assistent, der den Benutzer durch die Möglichkeiten der
       Dateneinbindung führt. Hierbei ist zunächst die Art der einzubindenden
@@ -230,7 +230,7 @@
       ) aus einem bestehenden TIN erstellt werden.</para>
 
       <para>Um Höhendaten zu importieren, muss zunächst in der Ansicht
-      'Aktivitäten' der Baum <guimenuitem>Preprocessing &gt; Daten
+      ''Aktivitäten'' der Baum <guimenuitem>Preprocessing &gt; Daten
       laden</guimenuitem> geöffnet werden. Wenn <guimenu>Import von
       Höhendaten</guimenu> mit einem Doppelklick aktiviert worden ist, öffnet
       sich der Assistent zur Einbindung von Höhendaten. Dieser erfordert
@@ -283,7 +283,7 @@
       Attribute zugewiesen werden.</para>
 
       <para>Um Rauheitsshapes zu importieren, muss zunächst in der Ansicht
-      'Aktivitäten' der Baum <guimenuitem>Preprocessing &gt; Daten
+      ''Aktivitäten'' der Baum <guimenuitem>Preprocessing &gt; Daten
       laden</guimenuitem> geöffnet werden. Wenn <guimenu>Import von
       Rauheitsshapes</guimenu> mit einem Doppelklick aktiviert wird, öffnet
       sich der zugehörige Assistent. Zuerst müssen die Rauheitsdaten im
@@ -322,7 +322,7 @@
       müssen einer in der Rauheitsdatenbank (siehe <xref
       linkend="Kalypso1D2DRauheitsmodellierung" />) vorhandenen Klasse
       zugeordnet werden (z.B. im Fluss ist eine Sohlschüttung vorhanden und
-      auf dem Vorland findet man 'Gras mit lockerem Baumbewuchs', etc.).
+      auf dem Vorland findet man ''Gras mit lockerem Baumbewuchs'', etc.).
       Sollten sich in der Rauheitsdatenbank nicht alle notwendigen Klassen
       befinden, so sind diese zunächst anzulegen und der Import der
       Rauheitspolygone muss abgebrochen werden (über den Knopf
@@ -372,12 +372,12 @@
       gespeichert. Anschließend muss das Programm einmal neu gestartet werden,
       damit der Import fehlerfrei durchgeführt werden kann.</para>
 
-      <para>Um Zeitreihen zu importieren muss in der Ansicht 'Aktivitäten' der
-      Baum <guimenuitem>Preprocessing &gt; Daten laden</guimenuitem> geöffnet
-      werden. Wenn <guimenuitem>Import von Zeitreihen</guimenuitem> mit einem
-      Doppelklick aktiviert wird, öffnet sich der zugehörige Assistent. Zuerst
-      müssen die Zeitreihendaten ausgewählt werden. Über den Knopf
-      <guibutton>Durchsuchen...</guibutton> kann die entsprechende
+      <para>Um Zeitreihen zu importieren muss in der Ansicht ''Aktivitäten''
+      der Baum <guimenuitem>Preprocessing &gt; Daten laden</guimenuitem>
+      geöffnet werden. Wenn <guimenuitem>Import von Zeitreihen</guimenuitem>
+      mit einem Doppelklick aktiviert wird, öffnet sich der zugehörige
+      Assistent. Zuerst müssen die Zeitreihendaten ausgewählt werden. Über den
+      Knopf <guibutton>Durchsuchen...</guibutton> kann die entsprechende
       <filename>*.zrx</filename>, <filename>*.csv</filename>,
       <filename>*.grap</filename> oder <filename>*.dat</filename> Datei
       ausgewählt werden. In dem Pull Down Menü muss das zugehörige Format
@@ -406,7 +406,7 @@
         </mediaobject>
       </figure>
 
-      <para>Die Ansicht 'Zeitreihen Repositories' wird der Kalypso1D2D
+      <para>Die Ansicht ''Zeitreihen Repositories'' wird der Kalypso1D2D
       Oberfläche hinzugefügt:</para>
 
       <figure>
@@ -446,7 +446,7 @@
       <para>Fluss-Km, x-Koordinate, y-Koordinate, z-Koordinate</para>
 
       <para>Im Import-Dialog kann zwischen verschiedenen Trennzeichen gewählt
-      werden (",", ";", Tabulator).</para>
+      werden ('','', '';'', Tabulator).</para>
 
       <para>Beispiel für Strichpunkt-Trennung:</para>
 
@@ -466,13 +466,13 @@
       in sortierter Reihenfolge (in Fließrichtung von links nach rechts)
       vorliegen. Während des Imports werden für jeden Punkt die dazugehörige
       Profil-Breiten-Koordinate berechnet. Diese ist für den ersten Punkt
-      stehts '0'. Für alle folgenden Punkte des Profils wird die
+      stehts ''0''. Für alle folgenden Punkte des Profils wird die
       Breiten-Koordinate anhand des Abstandes zum vorherigen importierten
       Punkt ermittelt. Die Breiten-Koordinate des aktuellen Punktes ergibt
       sich somit aus der Breiten-Koordinate des vorherigen Punktes addiert mit
       dem Abstand zu diesem.</para>
 
-      <para>Um Profildaten zu importieren muss in der Ansicht 'Aktivitäten'
+      <para>Um Profildaten zu importieren muss in der Ansicht ''Aktivitäten''
       der Baum <guimenuitem>Preprocessing &gt; Daten laden</guimenuitem>
       geöffnet werden. Der zugehörige Assistent öffnet sich, wenn
       <guimenu>Import von Profildaten</guimenu> mit einem Doppelklick
@@ -495,8 +495,8 @@
 
       <para>Das Laden der Daten ist nun abgeschlossen. Es kann ausgewählt
       werden welche Daten in der Karte angezeigt werden sollen. Dies geschieht
-      in der Ansicht 'Gliederung (Map)'. Die Punkte die dort mittels des
-      grünen Häkchens ausgewählt sind werden in der Ansicht 'FE-Netz'
+      in der Ansicht ''Gliederung (Map)''. Die Punkte die dort mittels des
+      grünen Häkchens ausgewählt sind werden in der Ansicht ''FE-Netz''
       dargestellt.</para>
 
       <figure>
@@ -549,7 +549,7 @@
         WSPM-Projektes können dann in ein 1D2D Projekt importiert
         werden.</para>
 
-        <para>Hierfür muss in der Ansicht 'Aktivitäten' der Baum <emphasis
+        <para>Hierfür muss in der Ansicht ''Aktivitäten'' der Baum <emphasis
         role="bold"><guimenuitem>Preprocessing &gt; Netzaufbau &gt;
         1D-Gewässernetz &gt; Fremddaten importieren</guimenuitem></emphasis>
         geöffnet werden und <guimenuitem>WSPM Modell</guimenuitem> mit einem
@@ -605,7 +605,7 @@
           selektieren und in Karte anzeigen </guimenuitem>auch die Anzeige
           eines selektierten Profils in einer Profilansicht erfolgen.</para>
 
-          <para>Hierfür muss in der Ansicht 'Aktivitäten' der Baum
+          <para>Hierfür muss in der Ansicht ''Aktivitäten'' der Baum
           <guimenuitem>Preprocessing &gt; Netzaufbau &gt; 1D-Gewässernetz &gt;
           Fremddaten importieren</guimenuitem> geöffnet werden. Der zugehörige
           Assistent wird geöffnet, wenn <guimenuitem>Profile in Karte
@@ -659,7 +659,7 @@
           <primary>Netz Kalypso 1D2D</primary>
         </indexterm>
 
-        <para>Um ein 1D Netz zu bearbeiten muss in der Ansicht 'Aktivitäten'
+        <para>Um ein 1D Netz zu bearbeiten muss in der Ansicht ''Aktivitäten''
         der Baum <guimenuitem>Preprocessing &gt; Netzaufbau &gt;
         1D-Gewässernetz</guimenuitem> geöffnet werden. Die zugehörigen
         Kartenfunktionen werden angezeigt, wenn <guimenuitem>Netz
@@ -785,7 +785,7 @@
         </orderedlist>
 
         <note>
-          <para>Die Funktion 'Kanalprofilparameter' ist derzeit noch nicht
+          <para>Die Funktion ''Kanalprofilparameter'' ist derzeit noch nicht
           implementiert.</para>
         </note>
 
@@ -1092,8 +1092,8 @@
         geöffneten FE-Netz Karte wird das importierte Netz angezeigt.</para>
 
         <para>Um ein BCE-2D-Netz zu importieren muss in der Ansicht
-        'Aktivitäten' der Baum <guimenuitem>Preprocessing &gt; Netzaufbau &gt;
-        2D-Netz</guimenuitem> geöffnet werden und <guimenuitem>2D-Netz
+        ''Aktivitäten'' der Baum <guimenuitem>Preprocessing &gt; Netzaufbau
+        &gt; 2D-Netz</guimenuitem> geöffnet werden und <guimenuitem>2D-Netz
         importieren</guimenuitem> mit einem Doppelklick aktiviert werden. Es
         öffnet sich der zugehörige Assistent. Über den Knopf
         <guibutton>Durchsuchen...</guibutton> kann die entsprechende
@@ -1120,7 +1120,7 @@
           <primary>Netz bearbeiten Kalypso 1D2D</primary>
         </indexterm>
 
-        <para>Um das 2D-Netz zu bearbeiten muss in der Ansicht 'Aktivitäten'
+        <para>Um das 2D-Netz zu bearbeiten muss in der Ansicht ''Aktivitäten''
         der Baum <guimenuitem>Preprocessing &gt; Netzaufbau &gt;
         2D-Netz</guimenuitem> geöffnet werden und <guimenuitem>Netz
         bearbeiten</guimenuitem> mit einem Doppelklick aktiviert
@@ -1202,7 +1202,7 @@
         </table>
 
         <para>Achtung! - Wenn das Element markiert ist und man dann über die
-        rechte Maustaste 'Feature Löschen' betätigt. Wird nicht das ganze
+        rechte Maustaste ''Feature Löschen'' betätigt. Wird nicht das ganze
         Element gelöscht! Das Kontextmenü sollte hier generell nicht betätigt
         werden.<mediaobject>
             <imageobject>
@@ -1244,8 +1244,8 @@
         </itemizedlist>
 
         <para>Um den Flussschlauchgenerator zu benutzen, muss in der Ansicht
-        'Aktivitäten' der Baum <guimenuitem>Preprocessing &gt; Netzaufbau &gt;
-        2D-Netz</guimenuitem>. geöffnet werden und der
+        ''Aktivitäten'' der Baum <guimenuitem>Preprocessing &gt; Netzaufbau
+        &gt; 2D-Netz</guimenuitem>. geöffnet werden und der
         <guimenuitem>Flussschlauchgenerator </guimenuitem>mit einem
         Doppelklick aktiviert werden. Es öffnet sich der
         Flussschlauchgenerator und die dazugehörige Karten Werkzeugansicht,
@@ -1508,8 +1508,8 @@
         </indexterm>
 
         <para>Um den Bandgenerator zu benutzen, muss in der Ansicht
-        'Aktivitäten' der Baum <guimenuitem>Preprocessing &gt; Netzaufbau &gt;
-        2D-Netz</guimenuitem> geöffnet werden und der
+        ''Aktivitäten'' der Baum <guimenuitem>Preprocessing &gt; Netzaufbau
+        &gt; 2D-Netz</guimenuitem> geöffnet werden und der
         <guimenuitem>Bandgenerator</guimenuitem> mit einem Doppelklick
         aktiviert werden. Es öffnet sich der Bandgenerator mit der zugehörigen
         Karten Werkzeugansicht.</para>
@@ -1904,7 +1904,7 @@
           <primary>Ränder und Übergänge</primary>
         </indexterm>
 
-        <para>Kontinuitätslinien sind Linien, mit denen "aktive" Fließränder
+        <para>Kontinuitätslinien sind Linien, mit denen ''aktive'' Fließränder
         definiert werden. Hier ist es bei Vorhandensein von Randbedingungen
         erlaubt über den Rand zu strömen. Wenn zwei Berechnungseinheiten
         zusammen kommen, müssen sie eine Kontinuitätslinie teilen.</para>
@@ -2836,7 +2836,7 @@
       Rauheitsklasse gehört ein k<subscript>S</subscript>-Wert. Die
       standardmäßig voreingestellten Werte setzen sich aus den Werten aus der
       Literatur (BWK- und DVWK-Merkblatt) und aus Erfahrung an der Stör
-      zusammen. Die Quelle ist zum Teil der Spalte 'Beschreibung' zu
+      zusammen. Die Quelle ist zum Teil der Spalte ''Beschreibung'' zu
       entnehmen. Die voreingestellte Rauheitsklassenzuordnung stammt aus der
       importierten Shape-Datei. Der Name für die einzelnen Elemente kann also
       vom Anwender frei gewählt werden.</para>
@@ -3253,7 +3253,7 @@
         <primary>Export von FE-Netzen</primary>
       </indexterm>
 
-      <para>Um ein FE-Netz zu exportieren, muss in der Ansicht 'Aktivitäten'
+      <para>Um ein FE-Netz zu exportieren, muss in der Ansicht ''Aktivitäten''
       der Baum <guimenuitem>Preprocessing &gt; Daten exportieren</guimenuitem>
       geöffnet werden und <guimenuitem>Exportieren von FE-Netzen</guimenuitem>
       mit einem Doppelklick aktiviert werden. Es öffnet sich der zugehörige
