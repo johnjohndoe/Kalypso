@@ -1,4 +1,4 @@
-!     Last change:  MD    7 May 2008    9:12 pm
+!     Last change:  MD    9 Jul 2008   12:14 pm
 !--------------------------------------------------------------------------
 ! This code, br_konv.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -532,7 +532,7 @@ ENDIF
 !MD  ohne Druckanfluss oder aehnliches
 ! ----------------------------------------------------------------------
 CALL normber (str1, q, q1, nprof, hr, hv, rg, hvst, hrst, indmax, &
-            & psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
+            & psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz, Q_Abfrage)
 
 !WP Die urspruengliche Profilgeometrie wird wiederhergestellt.
 !do i = 1, maxkla
@@ -1379,7 +1379,7 @@ IF ( (hr3 - hsohl) .le.0.0001) then
 
   CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
   !write (*,*) 'In BR_KONV. Aufruf von GRNZH.'
-  CALL grnzh (q, indmax, hgrenz, xi, hi, s)
+  CALL grnzh (q, indmax, hgrenz, xi, hi, s, Q_Abfrage)
 
   CALL abskst (nknot, x1, xi, h1, hi, s, maxkla)
 
@@ -1780,7 +1780,7 @@ IF (iartt.eq.2) then
   strbr = breite / 2.
 
   CALL normber (strbr, q, q1, nprof, hr, hv, rg, hvst, hrst,      &
-   & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
+   & indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz, Q_Abfrage)
 
   stat (nprof) = stat (nprof) - strbr / 1000.
 
@@ -1845,7 +1845,7 @@ IF (iartt.eq.2) then
   hming = hsohl
 
   CALL normber (strbr, q, q1, nprof, hr, hv, rg, hvst, hrst,   &
-   &  indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz)
+   &  indmax, psieins, psiorts, hgrenz, ikenn, froud, nblatt, nz, Q_Abfrage)
 
 
   ikenn = ikenn + ifkonv
