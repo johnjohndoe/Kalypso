@@ -581,9 +581,36 @@ Folgen der Aenderung:
      Zwischen Version 2.1.1.1r und 2.1.2.1 treten weder in der Energiehöhe im Oberwasser 
      noch im Wasserstand Abweichungen auf. Getestet wurde 3 einzelne Brücken und an der Kollau mit 
      20 Brücken ueber verschiedene Abflussintervalle. Abfluesse die zum Abbruch der Berechnung
-     führten koennen mit der neuen Version 2.1.2.1 berechnet werden.
+     führten, koennen mit der neuen Version 2.1.2.1 berechnet werden.
 
 							                Monika Donner, 07.05.2008 
 
+
+
+Kalypso 2.1.3.0      09. Juli 2008
+-------------------------------------    
+1) Korrektur fuer Bauwerks-Berechnung fuer Berechnungsvariante "konstantes Reibungsgefälle". 
+   Hierbei wurde bislang in der inneren Abflussschleife nicht die tatsächliche Rauheit, sondern 
+   weiterhin das vorgegebene Reibungsgefälle verwendet. --> Bug
+   Dies führte zu einer gerinfügigen Abweichung (cm-Bereich) beim Vergleich zwischen einer normalen
+   Wasserspiegellinien-Berechnung an einer Brücke (oder an einem Wehr) und den Ergebnissen aus der
+   Huw-Q-How oder Euw-Q-Eow. Diese Abweichung zeigte sich inbesondere bei niedrigen Abflüssen und sehr 
+   kleinen vorgegebenen Reibungsgefällen.
+
+   Grundsätzlich sollen in der inneren Abflussschleife alle Verluste (auch der echte Sohlrauheitsverlust)
+   berücksichtigt werden. Dementsprechend wurde zur Abfrage der BERECHNUNGSMODUS eine Abfrage nach der 
+   Kennung "Q_ABFRAGE" ergänzt. Diese Kennung "Q_Abfrage" lieferte fuer die Berechnung mit
+   konstantem Reibungsgefaelle die Auskunft, ob die Berechnung in einer inneren Abflussschleife 
+   einer Bruecke oder eines Bauwerkes befindet, wo örtlich und echte Reibungsverluste zu
+   berücksichtigen sind oder in Berechnung eines Normalprofils bzw. der äußeren Abflussschleife, 
+   bei der das vorgegebene Reibungsgefaelle genutzt werden soll. Die Kennung wird auch verwendetet,
+   um in der inneren Abflussschleife an Bruecken und Wehren die Ausgaben schlank zuhalten.
+
+   Die Korrektur des Rauheitsverlustes bewirkt eine leichte Veränderung der Ergebnisse fuer Berechnungsvariante 
+   "konstantes Reibungsgefälle" an Brücken- und Wehr-Bauwerken (instationäre Bauwerkstabellen). 
+   Keine Auswirkungen gibt es fuer alle anderen Berechnungsvarianten und normal Profile.
+
+
+							                Monika Donner, 09.07.2008 
 
  
