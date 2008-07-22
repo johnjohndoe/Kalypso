@@ -1,4 +1,4 @@
-!     Last change:  MD    9 Jul 2007    7:02 pm
+!     Last change:  MD    9 Jul 2008   12:14 pm
 !--------------------------------------------------------------------------
 ! This code, normb.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,7 +42,7 @@
 
 !-----------------------------------------------------------------------
 SUBROUTINE normber (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
-                 & psiein, psiort, hgrenz, ikenn, froud, nblatt, nz)
+                 & psiein, psiort, hgrenz, ikenn, froud, nblatt, nz, Q_Abfrage)
 
 ! geschrieben: P. Koch, 	Maerz 1990
 ! geaendert:   W. Ploeger, 	Juni 2006
@@ -211,7 +211,7 @@ COMMON / vort / hborda, heins, horts
 
 ! Local variables
 REAL :: xi (maxkla), hi (maxkla), s (maxkla)
-
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     !Abfrage fuer Ende der Inneren Q-Schleife
 
 ! ------------------------------------------------------------------
 ! werte vom vorhergehenden profil umspeichern
@@ -266,7 +266,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   ! ------------------------------------------------------------------
   ! Berechnung der Grenztiefe hgrenz
   ! ------------------------------------------------------------------
-  CALL grnzh (q, indmax, hgrenz, xi, hi, s)
+  CALL grnzh (q, indmax, hgrenz, xi, hi, s, Q_Abfrage)
 
   irdruck = idruck
 
@@ -283,7 +283,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
   if (ITERATIONSART=='EXACT ') then
     CALL anf (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
            & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, nblatt,  &
-           & nz, istat)
+           & nz, istat, Q_Abfrage)
   ELSE
     hr = hgrenz + 0.2
   end if
@@ -302,7 +302,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     hr = hgrenz
 
     CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
-                 & psiein, psiort, hi, xi, s, istat, froud, ifehlg, 1)
+                 & psiein, psiort, hi, xi, s, istat, froud, ifehlg, 1, Q_Abfrage)
     !JK     ZU DATENUEBERGABE, DA SCHIESSENDER BEREICH ABGESCHLOSSEN
     GOTO 9999
 
@@ -348,7 +348,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
     !JK  BERECHNUNG WSP NACH NEWTON
     !JK  ----------------------------------------------------------
     CALL newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-               & psiein, psiort, froud, xi, hi, s, ifehl, istat)
+               & psiein, psiort, froud, xi, hi, s, ifehl, istat, Q_Abfrage)
 
     IF (ifehl.eq.0) then
 
@@ -368,7 +368,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
         CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst, &
           & indmax, psiein, psiort, hi, xi, s, istat, froud, &
-          & ifehlg, itere1)
+          & ifehlg, itere1, Q_Abfrage)
 
       ENDIF
 
@@ -387,7 +387,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
       !JK  BERECHNUNG WSP NACH PEGASUS
       !JK  ---------------------------
       CALL pegasus (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
-      psiein, psiort, ikenn, froud, xi, hi, s, ifehl, istat)
+      psiein, psiort, ikenn, froud, xi, hi, s, ifehl, istat, Q_Abfrage)
 
       IF (ifehl.ne.0) then
         ! weiter mit stationaer gleichfoermig
@@ -418,7 +418,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
           CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst,      &
             & hrst, indmax, psiein, psiort, hi, xi, s, istat, &
-            & froud, ifehlg, itere1)
+            & froud, ifehlg, itere1, Q_Abfrage)
 
         !**  ENDIF (froud.ge.1.0.and.irdruck.ne.0)
         ENDIF
@@ -592,7 +592,7 @@ if (BERECHNUNGSMODUS /= 'BF_UNIFORM') then
 
   CALL station (sgef, i, hgrenz, q, hr, hv, rg, indmax, hvst,     &
     & hrst, psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl, &
-    & nblatt, nz, idr1)
+    & nblatt, nz, idr1, Q_Abfrage)
 
   hrst = 0.
   hvst = 0.
@@ -610,7 +610,7 @@ ELSE
 
   CALL station (sgef, i, hr, q, hr, hv, rg, indmax, hvst, hrst,   &
     & psiein, psiort, hi, xi, s, ikenn, froud, str, ifehl,   &
-    & nblatt, nz, idr1)
+    & nblatt, nz, idr1, Q_Abfrage)
 
   q1 = hvst
   hvst = 0.
