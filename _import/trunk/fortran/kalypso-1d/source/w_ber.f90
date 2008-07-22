@@ -1,4 +1,4 @@
-!     Last change:  MD    1 Feb 2008    3:01 pm
+!     Last change:  MD    9 Jul 2008   11:14 am
 !--------------------------------------------------------------------------
 ! This code, w_ber.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -292,7 +292,7 @@ hen1 = hen (np - 1)                     !MD  Energiehoehe im Unterwasser
 v_uw = SQRT (2. * g * (hen1 - h_uw))    !MD  Fließgeschwindigkeit im Unterwasser
 f_uw = fgesp (np - 1)                   !MD  gesamte Durchströmte Fläche im UW
 
-IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='NO_SCHLEIFE') then
+IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='WE_SCHLEIFE') then
   h_uw = wsp (np - 1)                    !MD  Wasserspiegel im Unterwasser
   v_uw = qw / f_uw                       !MD  Fließgeschwindigkeit im Unterwasser
   hen1 = h_uw + ((v_uw**2.)/(2. * g))    !MD  Energiehoehe im Unterwasser
@@ -424,7 +424,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   !MD   Start der Oberwasseriteration: auf Basis einer ggbn Energiehoehe
   !HW   Aufruf der Subroutine wspow ------------------------------------------------
   CALL wspow (he, strbr, qw, q1, hrow, hv, rg, indmax, hvst, hrst,  &
-              psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+              psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
   !MD   Sammeln der neuen Groeßen aus dem OW: Abfluss q, v, he und h_ow (=WSP)
 
   !HW    SCHREIBEN IN KONTROLLFILE
@@ -461,7 +461,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
 
   !HW    SCHREIBEN IN KONTROLLFILE
-  IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+  IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
     WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach DW/GMS'')')
     WRITE (UNIT_OUT_LOG, '(''q_wehr = '',f8.4)') q_wehr
     WRITE (UNIT_OUT_LOG, '(''v_ow   = '',f8.4)') v_ow
@@ -483,7 +483,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   he_q = he                 !MD  Neue Belegung der Energiehoehe am Wehr
 
   !HW    SCHREIBEN IN KONTROLLFILE
-  IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+  IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
     WRITE (UNIT_OUT_LOG, '(''h_v    = '',f8.4)') h_v
     WRITE (UNIT_OUT_LOG, '(''dif_ok = '',f8.4)') dif_ok
     WRITE (UNIT_OUT_LOG, '(''dif_hv = '',f8.4)') dif_hv
@@ -495,7 +495,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   ENDIF
 
   !JK   SCHREIBEN IN KONTROLLFILE
-  IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+  IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
     WRITE (UNIT_OUT_LOG, '(/,''it1000='',i4,'' he='',f8.4,   &
       &  '' q_wehr='',f8.4,'' h_v='',f8.4)') it1000, he, q_wehr, h_v
     WRITE (UNIT_OUT_LOG, '(/,''Ende der Energiehoehen-Iteration'')')
@@ -522,13 +522,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   DO 2000 WHILE(abs (dif_q) .gt.0.0001)
 
     !HW    SCHREIBEN IN KONTROLLFILE
-    IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+    IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
       WRITE (UNIT_OUT_LOG, '(''dif_q = '',f8.4)') dif_q
     endif
 
     it2000 = it2000 + 1
 
-    IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='NO_SCHLEIFE') then
+    IF (BERECHNUNGSMODUS=='REIB_KONST' .and. Q_Abfrage=='WE_SCHLEIFE') then
       IF (it2000.GT.itmax) THEN
         write (UNIT_OUT_LOG,' ('' WARNUNG: !!!!!!!!!!!!!!!!!!!!!'')')
         WRITE (UNIT_OUT_LOG, '('' -------------------------------------'')')
@@ -561,7 +561,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     IF (it2000.eq.1) he_q = he
 
     !JK  SCHREIBEN IN KONTROLLFILE
-    IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+    IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
       WRITE (UNIT_OUT_LOG, '(/,''---------------------------------'')')
       WRITE (UNIT_OUT_LOG, '(/,'' it2000='',i4,'' he_q='',f8.4, '' nwfd='',i3)') it2000, he_q, nwfd
     ENDIF
@@ -603,7 +603,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         CALL beiwert (huew (j), j, wh, h_v, h_uw_w, iueart(j), cq (j), cm)
 
         !HW    SCHREIBEN IN KONTROLLFILE
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
           WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
           WRITE (UNIT_OUT_LOG, '(''--------------------------'')')
@@ -624,14 +624,14 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
       q_ue = q_ue+q_w (j)   ! Wehr-Abflussaddition uber alle Felder
 
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(''Summation des Wehrabflusses bis hier:q_ue='',f8.4)') q_ue
       ENDIF
     2010 END DO  ! ------------------------------------------------------------------------
     
 
     !HW    SCHREIBEN IN KONTROLLFILE
-    IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+    IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
       WRITE (UNIT_OUT_LOG, '(/,''Endergebnisse fuer alle Felder:'')')
       WRITE (UNIT_OUT_LOG, '(''q_ue   = '',f8.4)') q_ue
       WRITE (UNIT_OUT_LOG, '(''i      = '',10i8)')  (i, i = 1, nwfd)
@@ -664,7 +664,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         tauo = 1.725 - (0.525 * tauu)        !MD  Grenzgerade f(tauu) vollk - unvollk
         ! tauo = 3.286 - (1.905 * taoo)
 
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4,'' taoo='',f8.4)') j, tauu, taoo
         ENDIF
 
@@ -674,7 +674,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         !------------------------------------------------------------------------------------------
         IF (wart.eq.'bk') then
           !HW    SCHREIBEN IN KONTROLLFILE
-          IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+          IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
             WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
           ENDIF
@@ -719,7 +719,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
         ! Grenze zwischen vollkommen und unvollkommenen Ueberfallen:
         !-----------------------------------------------------------
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(''tauo='',f8.4)') tauo
           WRITE (UNIT_OUT_LOG, '(''tauu_grenz='',f8.4)') tauu_grenz
         ENDIF
@@ -737,19 +737,19 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         ELSEIF (tauu.lt.2.0 .and. taoo.lt.2) then
           iueart(j) = 1   !    UNVOLLKOMMENER UEBERFALL
 
-          IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+          IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(/,''Unvollkommener Ueberfall'')')
           ENDIF
 
           !MD CALL beiwert (huew (j), j, wh, h_uw (j), iueart, cq (j), cm)
           CALL beiwert (huew (j), j, wh, h_v, h_uw_w, iueart(j), cq (j), cm)
-          IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+          IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w (Wehrueberfall)'')')
           ENDIF
        !   q_b = (2. / 3.) * g2 * cq (j) * ((huew (j) + h_v - h_uw_w) **1.5)
        !   q_w (j) = q_b * wl (j) * cm
           q_w (j) = q_w(j) * cm
-          IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+          IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4,'' cm='',f8.4)') q_w (j), cm
           ENDIF
 
@@ -770,7 +770,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         2040   iueart(j) = 2
 
         !HW    SCHREIBEN IN KONTROLLFILE
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''Ueberstroemen'')')
           WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w nach Knapp S.304'')')
         ENDIF
@@ -810,7 +810,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
  !        end if
  !        q_w (j) = huew(j) * wb(j) * v_uew(j)
  !
- !         IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+ !         IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
  !            WRITE (UNIT_OUT_LOG, '(''huew(j)='',f8.4, '' aus Impulsbilanz'')')  (huew(j))
  !            WRITE (UNIT_OUT_LOG, '(''v_uew(j)='',f8.4, '' aus Impulsbilanz'')')  (v_uew(j))
  !         ENDIF
@@ -840,12 +840,12 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     ! IF (h_uw.le.hokwmin) then   ! Unterwasserstand =< minimale Wehrhoehe
     IF (abs (q_ue-q_wehr) .le.eps_q) then  ! Abfluss uebers Wehr - Zufluss aus OW =< 0.0001
       dif_q = 0.0
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Abspeichern guenstiger Werte'')')
       ENDIF
       GOTO 2400               ! --> Weiter zur Auswertung
     ELSE                      ! Abfluss uebers Wehr - Zufluss aus OW > 0.0001
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Schaetzen neuer Energiehoehe'')')
       ENDIF
       !JK    Weiter mit SCHAETZEN NEUER ENERGIEHOEHE
@@ -865,7 +865,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     endif
 
     !HW  SCHREIBEN IN KONTROLLFILE
-    IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+    IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
       WRITE (UNIT_OUT_LOG, '(/,''--------------------------------------------'')')
       WRITE (UNIT_OUT_LOG, '(''Schaetzen neuer Energiehoehen und'')')
       WRITE (UNIT_OUT_LOG, '(''neue Berechnung mit diesen Werten'')')
@@ -913,7 +913,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         CALL beiwert (huew (j), j, wh, h_v, h_uw_w, iueart(j), cq (j), cm)
 
         !HW  SCHREIBEN IN KONTROLLFILE
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
           WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
           WRITE (UNIT_OUT_LOG, '(''g2    = '',f8.4)') g2
@@ -930,7 +930,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
       q_uea = q_uea + q_w (j)
 
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(''Summation des Wehrabflusses bis hier:q_uea='',f8.4)') q_uea
       ENDIF
     2110 END DO
@@ -952,7 +952,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         tauo = 1.725 - (0.525 * tauu)         !MD  Grenzgerade f(tauu) vollk - unvollk
         ! tauo = 3.286 - (1.905 * taoo)       !MD  Grenzgerade f(taoo) vollk - unvollk
 
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''Berechnung der dimensionlosen Hoehen'')')
           WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4,'' taoo='',f8.4)') j, tauu, taoo
         ENDIF
@@ -976,7 +976,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
           end if
 
           !HW    SCHREIBEN IN KONTROLLFILE
-          IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+          IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(/,''Breitkroniges Wehr'')')
             WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Ueberfallart'')')
             WRITE (UNIT_OUT_LOG, '(/,''Grenzwert für überströmen nach Imp.bilanz'')')
@@ -1003,7 +1003,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
         ! Grenze zwischen vollkommen und unvollkommenen Ueberfallen:
         !-----------------------------------------------------------
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(''tauo='',f8.4)') tauo
           WRITE (UNIT_OUT_LOG, '(''tauu_grenz='',f8.4)') tauu_grenz
         ENDIF
@@ -1029,7 +1029,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
        !  q_w (j) = q_b * wl (j) * cm
           q_w (j) = q_w (j) * cm
 
-          IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+          IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w (Wehrueberfall)'')')
             WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4,'' cm='',f8.4)') q_w (j), cm
           ENDIF
@@ -1090,13 +1090,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   !       end if
   !       q_w (j) = huew(j) * wb(j) * v_uew(j)
   !
-  !        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+  !        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
   !          WRITE (UNIT_OUT_LOG, '(''huew(j)='',f8.4, '' aus Impulsbilanz'')')  (huew(j))
   !          WRITE (UNIT_OUT_LOG, '(''v_uew(j)='',f8.4, '' aus Impulsbilanz'')')  (v_uew(j))
   !        ENDIF
   !     end if
 
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4, '' Ueberstroemen'')')  (q_w (j) )
         ENDIF
         ! --------------------------------------------------------------------------
@@ -1104,7 +1104,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
         ! -----------------------------------------------------------------------------
         2031  IF (ABFRAGE == 'FALL 0') THEN
           q_ue = q_ue+q_w (j)
-          IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+          IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
             WRITE (UNIT_OUT_LOG, '(''Summation q_ue bis hier: q_ue ='',f8.4)') q_ue
           ENDIF
         ELSEIF (ABFRAGE == 'FALL A') THEN
@@ -1142,7 +1142,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     !MD  Steigung der Geraden aus dq / dhe
     !MD  dhe = 0.2
     !HW  Schreiben in Kontrollfile
-    IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+    IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
       WRITE (UNIT_OUT_LOG, '(/,''q_uea  ='',f8.4)') q_uea
       WRITE (UNIT_OUT_LOG, '(''hea_q  ='',f8.4)') hea_q
       WRITE (UNIT_OUT_LOG, '(''df     ='',f8.4)') df
@@ -1164,7 +1164,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
 
     !HW    Schreiben in Kontrollfile
-    IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+    IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
       WRITE (UNIT_OUT_LOG, '(/,''Ende eines Iterationsschrittes '')')
       WRITE (UNIT_OUT_LOG, '(''Festlegen neuer Eingangswerte '')')
       WRITE (UNIT_OUT_LOG, '(''alt: he_q ='',f8.4)') hra
@@ -1182,7 +1182,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     !  IF (he_q .le. hen1) then      ! neue Energiehoehe =< Energiehoehe UW
     !    he_q = (hen1 + he_q)/2.
     !  endif
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Korrektur1 der neuen Energiehoehe'')')
         WRITE (UNIT_OUT_LOG, '('' mit he_q = (he_q,alt + he,UW) / 2 '')')
         WRITE (UNIT_OUT_LOG, '(''he_q  = '',f8.4)') he_q
@@ -1193,7 +1193,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
     !  IF (he_q .le. hen1) then      ! neue Energiehoehe =< Energiehoehe UW
     !    he_q = (hen1 + he_q)/2.
     !  endif
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Korrektur2 der neuen Energiehoehe '')')
         WRITE (UNIT_OUT_LOG, '('' mit he_q = (he_q,alt + hokwmin) / 2 '')')
         WRITE (UNIT_OUT_LOG, '(''he_q  = '',f8.4)') he_q
@@ -1228,7 +1228,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       h_v_opt = h_v
       q_wehr_opt = q_wehr
 
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Kontrolle der Energiehoehe'')')
         WRITE (UNIT_OUT_LOG, '(''he_q  = '',f8.4)') he_q
         WRITE (UNIT_OUT_LOG, '(''he    = '',f8.4)') he
@@ -1281,7 +1281,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       CALL beiwert (huew (j), j, wh, h_v, h_uw_w, iueart(j), cq (j), cm)
 
       !HW SCHREIBEN IN KONTROLLFILE
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Berechnung nach Du Buat'')')
         WRITE (UNIT_OUT_LOG, '(''Ausgabe der Eingangswerte:'')')
         WRITE (UNIT_OUT_LOG, '(''g2   = '',f8.4)') g2
@@ -1301,7 +1301,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
 
   !HW  SCHREIBEN IN KONTROLLFILE
-  IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+  IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
     WRITE (UNIT_OUT_LOG, '(/,''q_ue   ='',f8.4)') q_ue
     WRITE (UNIT_OUT_LOG, '(''i      ='',10i8)')  (i, i = 1, nwfd)
     WRITE (UNIT_OUT_LOG, '(''q_w(i) ='',10f8.4)') (q_w (i) , i = 1, nwfd)
@@ -1323,7 +1323,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       tauo = 1.725 - (0.525 * tauu)
     ! tauo = 3.286 - (1.905 * taoo)
 
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Berechnung der dimensionlosen Hoehen'')')
         WRITE (UNIT_OUT_LOG, '(/,''j='',i3,'' tauu='',f8.4,'' taoo='',f8.4)') j, tauu, taoo
       ENDIF
@@ -1373,7 +1373,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
 
       ! Grenze zwischen vollkommen und unvollkommenen Ueberfallen:
       !-----------------------------------------------------------
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(''tauo='',f8.4)') tauo
         WRITE (UNIT_OUT_LOG, '(''tauu_grenz='',f8.4)') tauu_grenz
       ENDIF
@@ -1400,7 +1400,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
      !   q_w (j) = q_b * wl (j) * cm
         q_w (j) = q_w (j) * cm
 
-        IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+        IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
           WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w (Wehrueberfall)'')')
           WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4,'' cm='',f8.4)') q_w (j), cm
         ENDIF
@@ -1422,7 +1422,7 @@ DO 1000 WHILE(dif_e.gt.0.0001)
       ! -----------------------------------------------------------------------------
       2043    iueart(j) = 2
       !HW    SCHREIBEN IN KONTROLLFILE
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(/,''Ueberstroemen'')')
         WRITE (UNIT_OUT_LOG, '(/,''Berechnung q_w nach Knapp S.304'')')
       ENDIF
@@ -1462,13 +1462,13 @@ DO 1000 WHILE(dif_e.gt.0.0001)
   !        end if
   !        q_w (j) = huew(j) * wb(j) * v_uew(j)
   !
-  !      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+  !      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
   !        WRITE (UNIT_OUT_LOG, '(''huew(j)='',f8.4, '' aus Impulsbilanz'')')  (huew(j))
   !        WRITE (UNIT_OUT_LOG, '(''v_uew(j)='',f8.4, '' aus Impulsbilanz'')')  (v_uew(j))
   !      ENDIF
   !    end if
 
-      IF (Q_Abfrage.ne.'NO_SCHLEIFE') then
+      IF (Q_Abfrage.ne.'WE_SCHLEIFE') then
         WRITE (UNIT_OUT_LOG, '(''q_w(j)='',f8.4, '' Ueberstroemen'')')  (q_w (j) )
       ENDIF
       ! --------------------------------------------------------------------------
@@ -1521,7 +1521,7 @@ DO 5000 j = 1, nwfd
    &') j, cq (j) , q_w (j) , huew (j) , auew (j) , uearttxt
 
   !MD  NEUER BERECHNUNGSMODUS
-  IF (BERECHNUNGSMODUS == 'REIB_KONST' .and. Q_Abfrage == 'NO_SCHLEIFE') then
+  IF (BERECHNUNGSMODUS == 'REIB_KONST' .and. Q_Abfrage == 'WE_SCHLEIFE') then
     WRITE (UNIT_OUT_WEHR, '(4x,f7.3,1x,f10.3,1x,f8.3,1x,f10.3,2x,f6.4,2x,f7.3,2x,f6.3,2x,f7.3, &
        & 3x,a,1x,f10.3,1x,f10.3,1x,f8.3,1x,f10.3,1x,f8.3)')  &
        & qw, h_ow, v_ow, he, cq (j), q_w (j), huew (j), auew (j), uearttxt, he_q, h_uw, v_uw, hen1, K_verlust
