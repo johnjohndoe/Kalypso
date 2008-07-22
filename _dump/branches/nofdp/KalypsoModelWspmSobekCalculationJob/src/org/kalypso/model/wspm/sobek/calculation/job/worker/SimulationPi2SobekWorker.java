@@ -98,5 +98,6 @@ public class SimulationPi2SobekWorker implements ISimulation
     }
 
     ConsoleHelper.writeLine( m_outputStream, String.format( "PI Model converted into Sobek Model." ) );
+    ConsoleHelper.writeLine( m_outputStream, "" );
   }
 }

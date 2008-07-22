@@ -97,6 +97,7 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     }
 
     ConsoleHelper.writeLine( m_nofdpStream, String.format( "Model processed." ) );
+    ConsoleHelper.writeLine( m_nofdpStream, "" );
 
   }
 }

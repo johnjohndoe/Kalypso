@@ -38,6 +38,7 @@ public class SimulationUpdateDataWorker implements ISimulation
     extractData( tmpdir, inputProvider );
 
     ConsoleHelper.writeLine( m_outputStream, String.format( "Model input data prepared." ) );
+    ConsoleHelper.writeLine( m_outputStream, "" );
   }
 
   private void extractData( final File tmpdir, final ISimulationDataProvider inputProvider ) throws SimulationException
