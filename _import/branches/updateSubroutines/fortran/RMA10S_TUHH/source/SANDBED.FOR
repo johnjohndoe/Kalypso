@@ -1,4 +1,4 @@
-C     Last change:  NIS  14 May 2008    6:48 pm
+C     Last change:  WP   22 Jul 2008    3:10 pm
 CIPK LAST UPDATE June 06 2006 add mass output and refine compuatation of mass laid down
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  last update MAY 02 2003 turn off bed activity for selected element types
@@ -36,16 +36,16 @@ C
 C      WRITE (LOUT,1040)
 C 1040 FORMAT(' ****SUBROUTINE BEDSUR...')
       IF(MOD(IT,NPRTF) .EQ. 0) THEN
-        WRITE(LOUT,6000)
-        WRITE(LOUT,6004) TITLE
-        WRITE(LOUT,6003) DAYOFY,TET
- 6000 FORMAT( '1'  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRA
-     +M RMA-10S'/ 10X, 'SAND TRANSPORT '
-     +      /,10X,'VERSION 3.5D MAY 2006 '///)
+        WRITE (LOUT, 6000)
+        WRITE (LOUT, 6004) TITLE
+        WRITE (LOUT, 6003) DAYOFY, TET
+ 6000 FORMAT ( '1'  / 10X,
+     +  'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRAM RMA-10S'/ 10X,
+     +  'SAND TRANSPORT '/, 10X,'VERSION 3.5D MAY 2006 '///)
 C 6003 FORMAT( / 5X,'...RESULTS AFTER',F9.2,' HOURS OF DYNAMIC SIMULATION
 C     1...' /)
- 6003 FORMAT( / 5X,'...RESULTS AT DAY',F7.0,'  HOUR', F9.2,'...')
- 6004 FORMAT(5X,A80)
+ 6003 FORMAT ( / 5X,'...RESULTS AT DAY',I7,'  HOUR', F9.2,'...')
+ 6004 FORMAT (5X,A80)
         WRITE(LOUT,1060)
  1060   FORMAT('    N    E/D(OLD)    ',
      * 'E/D(NEW)      DELBED     ELEVB       THICK      USTAR')
