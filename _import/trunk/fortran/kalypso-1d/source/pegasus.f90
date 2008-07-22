@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:14 pm
+!     Last change:  MD    9 Jul 2008   11:02 am
 !--------------------------------------------------------------------------
 ! This code, pegasus.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,7 +38,7 @@
 ! Research Associate
 !***********************************************************************
 SUBROUTINE pegasus (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,&
-      & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, istat)
+      & psiein, psiort, ikenn, froud, xi, hi, s, ifehl, istat, Q_Abfrage)
 
 !     ------------------------------------------------------------------
                                                                         
@@ -156,7 +156,7 @@ COMMON / rohr / idruck
 
 ! Local variables
 REAL xi (maxkla), hi (maxkla), s (maxkla)
-
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     ! Abfrage fuer Ende der Inneren Q-Schleife
 
 
 ! ------------------------------------------------------------------
@@ -197,7 +197,7 @@ DO 100 jsch = 1, 50
   hborda = 0.
 
   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-   & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen)
+   & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen, Q_Abfrage)
 
   hrneu = ws1 + hrst + hvst + hborda + heins + horts
 
@@ -235,7 +235,7 @@ DO 100 jsch = 1, 50
 
         CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst,     &
          & indmax, psiein, psiort, hi, xi, s, istat, froud,     &
-         & ifehlg, jen)
+         & ifehlg, jen, Q_Abfrage)
       ENDIF
 
     ENDIF
@@ -267,7 +267,7 @@ ifehl = 1
 IF (ifehl.eq.0) then
   !       stroemender bereich
   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-   & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch)
+   & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch, Q_Abfrage)
 
   !JK      SCHREIBEN IN KONTROLLFILE
   WRITE (UNIT_OUT_LOG, '('' wsp in pegasus zu '',f15.3,'' ermittelt'',       &
