@@ -1,4 +1,4 @@
-!     Last change:  MD   19 Feb 2008    6:46 pm
+!     Last change:  MD    9 Jul 2008   11:04 am
 !--------------------------------------------------------------------------
 ! This code, rohre.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -41,7 +41,7 @@
 
 
 !-----------------------------------------------------------------------
-SUBROUTINE Rohre (sgef, nprof, q, hr, indmax, hvst, hrst, froud, str)
+SUBROUTINE Rohre (sgef, nprof, q, hr, indmax, hvst, hrst, froud, str, Q_Abfrage)
 
 !
 ! Beschreibung
@@ -166,6 +166,7 @@ INTEGER :: n
 REAL :: delthr(1:maxger)
 REAL :: erstd(1:maxger)
 REAL :: qr
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     ! Abfrage fuer Ende der Inneren Q-Schleife
 
 
 ! ------------------------------------------------------------------
@@ -194,7 +195,7 @@ IF (erstd(nprof) .ne. 1) THEN
   hr=hmax
 
   CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,    &
-     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
   erstd(nprof) = 1
 
@@ -223,7 +224,7 @@ WRITE (UNIT_OUT_LOG, '(''       wsp        abfluss      flaeche      froud '')')
 
 
 CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,    &
-   & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
+   & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
 
 qr = sqrt( ABS(sgef)*8*9.81*fges**3/(uges*l_hg))
@@ -234,7 +235,7 @@ q = qr
 
 
 CALL verluste (str, q, q1, nprof, hr, hv, rg, hvst, hrst,    &
-   & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1)
+   & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, itere1, Q_Abfrage)
 
 
 !EN   SCHREIBEN IN KONTROLLFILE
