@@ -31,9 +31,7 @@ C      WRITE (LOUT,1040)
 C 1040 FORMAT(' ****SUBROUTINE BEDSUR...')
       IF(MOD(IT,NPRTF) .EQ. 0) THEN
         WRITE (LOUT, 6000)
-        call FLUSH (lout)
         WRITE (LOUT, 6004) TITLE
-        call FLUSH (lout)
         WRITE (LOUT, 6003) DAYOFY,TET
  6000 FORMAT ( '1'  / 10X,
      +  'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRAM RMA-11'/ 10X,
