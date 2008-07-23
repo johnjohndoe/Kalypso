@@ -1,4 +1,4 @@
-!     Last change:  MD   27 Apr 2007   10:04 am
+!     Last change:  MD   23 Jul 2008   11:53 am
 !--------------------------------------------------------------------------
 ! This code, wspow.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -38,9 +38,9 @@
 ! Research Associate
 !***********************************************************************
 
-SUBROUTINE wspow (henow, strbr, q, q1, hr, hv, rg, indmax, hvst,&
+SUBROUTINE wspow (henow, strbr, q, q1, hrow, hv, rg, indmax, hvst,&
      & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz,    &
-     & idr1)
+     & idr1, Q_Abfrage)
 
 !***********************************************************************
 !**                                                                     
@@ -128,8 +128,6 @@ INTEGER 	:: iendw (maxw), ianfw (maxw)
 COMMON / wehr / xokw, hokw, nokw, iwmin, hokwmin, iwehr, xtrw, htrw, nwfd, iendw, ianfw
 ! -----------------------------------------------------------------------------
 
-
-
 ! Local variables
 INTEGER :: i
 CHARACTER(LEN=2) :: wart
@@ -141,7 +139,7 @@ REAL :: he1, hea
 REAL :: hva
 REAL :: dif, df
 REAL :: wsanf
-
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     ! Abfrage fuer Ende der Inneren Q-Schleife
 
 ! ------------------------------------------------------------------
 ! PROGRAMMBEGINN
@@ -150,12 +148,16 @@ REAL :: wsanf
 !write (*,*) 'In WSPOW. Start Subroutine.'
 
 !MD  IF (iwehr.eq.'w') hukmax = 0.0
-IF (iwehr.eq.'w') hukmax = hokwmin
+!MD  IF (iwehr.eq.'w') hukmax = hokwmin
+
+!MD  Nur fuer echte Wehre, keine Breucken
+IF (iwehr.eq.'w') then
+  hukmax = hokwmin
+  hr = hrow
+endif
                                                                         
 dx = 0.05
 itmax_ow = 20
-
-
 hranf = henow - 0.05
 ! hranf = henow
 
@@ -176,10 +178,16 @@ DO 10 i = 1, itmax_ow
 
 
   CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, hrst,&
-   & psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+   & psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
 
-  !MD  he1 = hrow + hv
-  he1 = hr + hv
+  !MD !MD !MD  he1 = hr + hv
+  !MD he1 = hrow + hv
+  IF (iwehr.eq.'w') then  !MD: Nur fuer echte Wehre, keine Breucken
+    he1 = hr + hv
+  else !MD: Nur fuer Breucken
+    he1 = hrow + hv
+  Endif
+
   dif = henow - he1
 
   !JK      SCHREIBEN IN KONTROLLFILE
@@ -205,7 +213,7 @@ DO 10 i = 1, itmax_ow
 
       CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, &
       hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt,  &
-      nz, idr1)
+      nz, idr1, Q_Abfrage)
 
       RETURN
 
@@ -213,20 +221,37 @@ DO 10 i = 1, itmax_ow
 
   ENDIF
 
-  hrowa = hr + dx
- ! if (hrowa.gt.henow) then
- !   hrowa = henow - dx
- ! end if
-  !MD  hrowa = hrow - dx
+  ! if (hrowa.gt.henow) then
+  !   hrowa = henow - dx
+  ! end if
+
+  !MD!MD!MD  hrowa = hr + dx
+  !MD hrowa = hrow - dx
+  IF (iwehr.eq.'w') then  !MD: Nur fuer echte Wehre, keine Breucken
+    hrowa = hr + dx
+  else !MD: Nur fuer Breucken
+    hrowa = hrow - dx
+  Endif
+
 
   CALL wspanf (hrowa, strbr, q, q1, hra, hva, rg, indmax, hvst,   &
-   & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+   & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
 
-  hea = hra + hva
-  !MD  hea = hrowa + hva
+  !MD!MD!MD hea = hra + hva
+  !MD hea = hrowa + hva
+  IF (iwehr.eq.'w') then  !MD: Nur fuer echte Wehre, keine Breucken
+    hea = hra + hva
+  else !MD: Nur fuer Breucken
+    hea = hrowa + hva
+  Endif
 
-  df = (hea - he1) / (hra - hr)
-  !MD  df = (hea - he1) / (hrowa - hrow)
+  !MD!MD!MD df = (hea - he1) / (hra - hr)
+  !MD df = (hea - he1) / (hrowa - hrow)
+  IF (iwehr.eq.'w') then  !MD: Nur fuer echte Wehre, keine Breucken
+    df = (hea - he1) / (hra - hr)
+  else !MD: Nur fuer Breucken
+    df = (hea - he1) / (hrowa - hrow)
+  Endif
 
   hrow = hr + (henow - he1) / df
 
@@ -265,12 +290,11 @@ DO 10 i = 1, itmax_ow
 
     hrow = henow
     CALL wspanf (hrow, strbr, q, q1, hr, hv, rg, indmax, hvst, &
-     & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+     & hrst, psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
 
     RETURN
 
   ENDIF
-
 
 
   !JK      SCHREIBEN IN KONTROLLFILE
@@ -287,7 +311,7 @@ wsanf = henow
 hrow = henow
 
 CALL wspanf (wsanf, strbr, q, q1, hr, hv, rg, indmax, hvst, hrst, &
- & psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1)
+ & psieins, psiorts, nprof, hgrenz, ikenn, nblatt, nz, idr1, Q_Abfrage)
 
 9999 RETURN
 
