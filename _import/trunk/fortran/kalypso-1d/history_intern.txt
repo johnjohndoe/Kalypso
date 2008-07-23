@@ -1522,10 +1522,8 @@ Verbesserung der Brückenberechnung fuer Probleme bei reinem Druckabfluss
      mehr in diesen Fall "Nullstelle" sonst vollständiges Prüfen der neuen Energiehöhen und 
      ihrer zugehörigen Abflüsse.
 
-
 Details & Erläuterungen zur Brückenberechnung: 
      siehe --> CVS: ....\kalypso-1d\doc\handbuch\Bruecken-Berechnung.doc
-
 
 Folgen der Aenderung:
      Zwischen Version 2.1.1.1r und 2.1.2.1 treten weder in der Energiehöhe im Oberwasser 
@@ -1533,12 +1531,23 @@ Folgen der Aenderung:
      20 Brücken ueber verschiedene Abflussintervalle. Abfluesse die zum Abbruch der Berechnung
      führten koennen mit der neuen Version 2.1.2.1 berechnet werden.
 
-
 Noch bestehende Schwächen:
      - Inkonsistenz in den Verlustbeiwerten zwischen Impuls- und Energiebilanz an der Brücke
      - Impulsbilanz fängt nicht Energierückgang im Oberwasser ab
      - Pauschale Sohlerhöhung im Profil b zwischen Brücke und Oberwasserprofil um 5cm 
        etwas willkürlich.
+
+
+5)  Zulassen der Steuerung fuer Extreme Rauheiten:
+    Bislang wurden immer die Einstellungen in der SubR wsp zu:
+    CALC_KM_INTERN = .true.
+    USE_EXTREM_ROUGH = .false.
+    Nun gilt diese Belegung nur noch, wenn der aufruf NICHT aus 'KALYPSO'(also WSPM oder Manueller Aufruf) erfolgt.
+
+    --> Achtung: Wenn vorher die Einstellung in der INI mit "USE_EXTREM_ROUGH = true" gesetzt war, kommen nun
+             andere Ergebnisse raus, da die extremen Rauheiten ab Version 2.1.2.1 wirklich mit berücksichtigt
+             werden. 
+    --> Bug: "USE_EXTREM_ROUGH = true" führte an der Bille zum plötzlichen Absacken des Wasserspiegels!!
 
 							                Monika Donner, 07.05.2008 
 
