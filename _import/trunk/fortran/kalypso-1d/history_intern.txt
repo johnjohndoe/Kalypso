@@ -1604,6 +1604,58 @@ Kalypso 2.1.3.0      09. Juli 2008
 
 
 
+Kalypso 2.1.4.0      23. Juli 2008
+-------------------------------------    
+1) BUGFIX fuer Oberwasser-Berechnung fuer Bauwerke fuer alle Berechnungsvarianten
+
+   Probleme/ Fehler an steile Gewässer und/ oder sehr hohen Fließgeschwindigkeiten: 
+   WSP-Änderungen im Oberwasser der Brücken lagen zwischen Version 1.2RC vom 11.12.2006
+   und Version 1.3.1.2 vom 27.04.2007 bei +80 cm. Diese Ergebnisse der Versionen 
+   ab 1.3.1.2 bis heute sind identisch.
+
+   Ursache: Korrektur der Übergabe des Wasserspiegels hr bzw. hrow in und aus der wspow.
+
+   Hintergrund: Für den Zustand "Wehrüberfall & Druckabfluss" (nicht Überströmen!) an Brücken 
+   war ein Fehler seit 27.04.2007 im Code. Dabei wurde der Wasserspiegelanstieg seit dem 27.04.2007
+   überschätzt und kann bis zu 1m über dem WSP der Versionen vor dem 27.04.2007 liegen. 
+   Mit zunehmendem Überströmen der Brücke gleichen sich die Wasserspiegel wieder an. 
+   So waren die Wasserspiegellagen für Q < 300 m³/s und Q > 550 m³/s an der Weißeritz wieder gleich.
+   Ab 350 m³/s tritt die größte Abweichung (1m) zwischen der Version vor dem 27.04.2007 und nach
+   dem 27.04.2007 auf. Mit zunehmendem Abfluss nähern sich die Wasserspiegellagen wieder an.
+
+   Die wspow wird für Wehre und für Brücken jeweils zur ersten Berechnung des Oberwasserstandes
+   verwendet. Dabei wurde bis zum 27.04.2007 der berechnete Oberwasserstand nicht richtig übergeben.
+   Dies führte zum Absacken des Wasserstandes im Oberwasser des Wehres. Daher wurde die Übergabe 
+   des Parameters hr (Wasserstand) in der Version vom 27.04.2007 in der Routine wspow zur 
+   Verbesserung der Wehrberechnung korrigiert. An dem Beispielgewässer Stör zeigten sich damals
+   (wie heute) jedoch keine Veränderungen an der Brücke. 
+
+   Für die Wehre war diese Korrektur richtig, für die Brücken jedoch nicht. Somit wurde nun die wspow
+   soweit angepasst, dass und für Wehre die korrigierte Oberwasserberechnung (wie seit 27.04.2007)
+   stattfindet und für Brücken die ursprüngliche Oberwasserberechnung zurückgeholt.
+
+   Folgende Gewässer wurden in der Version 2.1.4.0 und 2.1.3.0 bzw. 2.1.2.0 untersucht:
+    * Kollau (20 Brücken) Keine Änderung bei Q = 1, 2, 4, 5 m³/s ; bei Q = 3 m³/s an einer Brücke im 
+      OW stellt sich eine maximale WSP-Änderung von -9 cm ein.
+    * Krückau: Keine Änderung für HQ2002, HQ 1998 und NQ  (identische Ergebnisse)
+    * Stör: Keine Änderung an der Brücke und keine an den Wehren  (Q = 10, 15, 20,...,50 m³/s)
+    * Bille: (x Brücken) Keine Änderung bei Q = 5, 10, 15, 20, 30, 40, 50, 60, 70, ...., 150  m³/s
+      (nur eine Abweichung von -2 cm bei Q = 90m³/s. Sie tritt an 2 aufeinander folgenden Brücken auf.
+       Diese Modellierung (b auf b) ist jedoch nicht zulässig. Alle anderen Abweichungen < 0,001 m.
+    * Weißeritz: Änderungen zwischen 1.2RC und 2.1.4.0 liegen bei Null bzw. eine Abweichung mit -1mm.
+
+   Achtung:
+   Der Wasserspiegelanstieg trat nur für steile Gewässer und/ oder sehr hohen Fließgeschwindigkeiten auf.
+   Da unsere Testmodelle (Stör, Kollau, Krückau, Bille) aus Regionen mit geringem Sohlgefälle stammen, 
+   ist daher beim Testen diese Divergenz nie eingetreten.
+
+   Betroffene Routinen:
+     - wspow
+
+
+							                Monika Donner, 23.07.2008 
+
+
 
 
 
