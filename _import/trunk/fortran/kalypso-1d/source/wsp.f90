@@ -1,4 +1,4 @@
-!     Last change:  MD   26 Feb 2008    1:43 pm
+!     Last change:  MD   12 Jun 2008   12:34 pm
 !--------------------------------------------------------------------------
 ! This code, wsp.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -1775,10 +1775,12 @@ end if
 !WP der Datei Kalypso_add.cfg festegelgt werden, werden jetzt aber
 !WP mit Werten vorbelegt.
 
-CALC_KM_INTERN = .true.
-USE_EXTREM_ROUGH = .false.
-!VERZOEGERUNGSVERLUST = 'NON '
-!BERECHNUNGSMODUS = 'REIB_KONST'
+if (RUN_MODUS /= 'KALYPSO') then
+  CALC_KM_INTERN = .true.
+  USE_EXTREM_ROUGH = .false.
+  !VERZOEGERUNGSVERLUST = 'NON '
+  !BERECHNUNGSMODUS = 'REIB_KONST'
+Endif
 
 
 IF (RUN_MODUS /= 'KALYPSO') THEN
