@@ -576,12 +576,21 @@ Verbesserung der Brückenberechnung fuer Probleme bei reinem Druckabfluss
            und WSP in Profil 3 (UW-Brücke) ist NEGATIV
            --> Programmabbruch in ABFLUSS bei Brueckenberechnung
 
-
 Folgen der Aenderung:
      Zwischen Version 2.1.1.1r und 2.1.2.1 treten weder in der Energiehöhe im Oberwasser 
      noch im Wasserstand Abweichungen auf. Getestet wurde 3 einzelne Brücken und an der Kollau mit 
      20 Brücken ueber verschiedene Abflussintervalle. Abfluesse die zum Abbruch der Berechnung
      führten, koennen mit der neuen Version 2.1.2.1 berechnet werden.
+
+5)  Zulassen der Steuerung fuer Extreme Rauheiten:
+    Bislang wurden immer die Einstellungen CALC_KM_INTERN =true und  USE_EXTREM_ROUGH =false gesetzt
+    Nun gilt diese Belegung nur noch, wenn der aufruf NICHT aus 'KALYPSO'(also WSPM oder Manueller Aufruf) erfolgt.
+
+    --> Achtung: Wenn vorher die Einstellung in der INI mit "USE_EXTREM_ROUGH = true" gesetzt war, kommen nun
+             andere Ergebnisse raus, da die extremen Rauheiten ab Version 2.1.2.1 wirklich mit berücksichtigt
+             werden. 
+    --> Bug: "USE_EXTREM_ROUGH = true" führt evt zum plötzlichen Absacken des Wasserspiegels
+
 
 							                Monika Donner, 07.05.2008 
 
