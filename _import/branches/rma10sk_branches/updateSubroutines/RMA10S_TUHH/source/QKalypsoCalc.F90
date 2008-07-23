@@ -21,7 +21,7 @@ INTEGER               :: na, lump
 INTEGER               :: k
 !geometric waterdepth, Marsh-waterdepth
 REAL (KIND=8)         :: fliesstiefe, d3
-real (KIND=4)         :: d2
+real (KIND=8)         :: d2
 !new variables
 REAL                  :: amec (350)
 

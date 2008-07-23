@@ -59,8 +59,8 @@ INTEGER, INTENT(IN)                            :: morph, nn, mel
 REAL, INTENT(IN)                               :: vecq
 real (kind = 8), INTENT(IN)                    :: ks, a, dp
 REAL(KIND=8)                                   :: h
-REAL(KIND=4), DIMENSION(1:mel,1:4), INTENT(IN) :: bedform
-REAL(KIND=4), INTENT(INOUT)                    :: c_wr
+REAL (KIND = 8), DIMENSION(1:mel,1:4), INTENT(IN) :: bedform
+REAL (KIND = 8), INTENT(INOUT)                    :: c_wr
 
 !Add switch for approximation decision
 INTEGER                                        :: approxdim
@@ -287,12 +287,12 @@ INTEGER, INTENT(IN) 				:: nn, mel
 !NiS,jul06: Consistent variable types!
 REAL (KIND=8), INTENT(IN)                       :: h
 !-
-REAL (kind = 8), INTENT(OUT)   				             :: lambdasohle
-REAL(KIND=4), DIMENSION(1:mel,1:4), INTENT(IN) 	:: bedform
+REAL (kind = 8), INTENT(OUT)                      :: lambdasohle
+REAL (kind = 8), DIMENSION(1:mel,1:4), INTENT(IN) :: bedform
 
 ! Local variables
-REAL                :: lambda_s_r = 0.0
-real 		    :: lambda_s_d = 0.0
+REAL (kind = 8) :: lambda_s_r = 0.0
+real (kind = 8) :: lambda_s_d = 0.0
 
 ! Formrauhigkeit Riffel
 if (bedform(nn,4) <= 0.0001) then

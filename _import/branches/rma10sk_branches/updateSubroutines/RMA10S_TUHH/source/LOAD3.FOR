@@ -14,12 +14,13 @@ cipk  last update Dec 16 1997
 cipk  last update April 28 1997 add equation dropout
 cipk  last update Oct 31 1996 save nfixh when using optim
 cipk  last update Sep 4 1996  change logic for type 2 spec's of constits
-      SUBROUTINE LOAD (dset)
+      SUBROUTINE LOAD
       USE BLK10MOD
       USE BLK11MOD
       USE BLK10
       USE BLKSUBMOD
       USE BLKSANMOD
+      use BLKDRMOD
 CIPK DEC06      
       USE PARAMMOD
       USE BLKSBG
@@ -29,7 +30,6 @@ CIPK DEC06
 !      implicit none
 
 !nis,feb08: for line transitions
-      REAL (KIND = 8) :: dset
       LOGICAL :: NodeIsDry (1:350)
       integer :: dea_stat
 !-
@@ -905,27 +905,31 @@ cipk oct98 update to f90
             nd = line (LiNo, k)
 
             !first assumption: Node is not dry
-            NodeIsDry (nd) = .false.
+            NodeIsDry (k) = .false.
 
             !TODO: Possibly rewetted nodes are not considered correctly
             !node is dry, if depth is below deactivating depth
             if (vel (3, nd) <= dset) then
-              NodeIsDry(nd) = .true.
+              NodeIsDry(k) = .true.
 
             !node is dry, if it is a midside node and the element is deactivated
-            ELSEIF (MOD (k, 2) == 0 .AND. imat (lineelement (i, k)) < 0)
-     +                                                              then
-              NodeIsDry (nd) = .true.
+            ELSEIF (MOD (k, 2) == 0) then
+              if (imat (lineelement (i, k)) < 0) then
+                NodeIsDry (k) = .true.
+              endif
 
             !node is dry, if it is a corner node and the two neighbouring (at the boundary the related one) elements are deactivated
             elseif (mod (k, 2) /= 0) then
-              if ((k == 1    .and. imat (lineelement (i, k+1)) < 0)
-     +            .Or.
-     +            (k == LiLe .and. imat (lineelement (i, k-1)) < 0)
-     +            .or.
-     +  (imat (lineelement(i,k-1))<0 .AND. imat(lineelement(i,k+1)) < 0)
-     +                                                            ) then
-                NodeIsDry (nd) = .true.
+              if (k == 1) then
+                if (imat (lineelement (i, k+1)) < 0) 
+     +            NodeIsDry (k) = .true.
+              elseif (k == LiLe) then
+                if (imat (lineelement (i, k-1)) < 0)
+     +            NodeIsDry (k) = .true.
+              else
+                if (imat (lineelement (i, k-1)) < 0 
+     +              .AND. imat(lineelement(i,k+1)) < 0)
+     +            NodeIsDry (k) = .true.
               endif
             end if
           end do
@@ -934,7 +938,7 @@ cipk oct98 update to f90
           NLN = 9999999999
           !Get the smallest node number to reference equations to; 1st was already processed in lines before
           DO K = 1, LiLe
-            IF (NLN > Line(LiNo,K) .and. (.NOT.NodeIsDry(Line(LiNo,k))))
+            IF (NLN > Line(LiNo,K) .and. (.NOT.NodeIsDry(K)))
      +        NLN = Line(LiNo,K)
           ENDDO
 
@@ -948,7 +952,7 @@ cipk oct98 update to f90
             nd = line (LiNo, k)
 
             !deactivating nodes that are dry
-            if (NodeIsDry (nd)) then
+            if (NodeIsDry (k)) then
               do eqdof = 1, 6
                 nbc(nd,eqdof) = 0
               end do

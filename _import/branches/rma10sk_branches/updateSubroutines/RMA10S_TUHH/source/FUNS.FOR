@@ -1,6 +1,12 @@
 
       FUNCTION DRODS(SAL,I)
-      REAL*8 SAL
+      !function type declaration
+      real (kind = 8) :: drods
+      !input parameter declaration
+      REAL (kind = 8) :: SAL
+      integer         :: i
+      !local variable declaration
+      real (kind = 8) :: gf
 C
       DIMENSION GF(2)
       DATA GF/1.0,516./
@@ -8,9 +14,17 @@ C-
       DRODS=61932.8/(6511.7-1.906*SAL)**2*GF(I)
       RETURN
       END
+
+!**********************************************************
 C
       FUNCTION FDSED(SED,I)
-      REAL*8 SED
+      !function type declaration
+      real (kind = 8) :: fdsed
+      !input parameter declaration
+      REAL (kind = 8) :: SED
+      integer         :: i
+      !local variable declaration
+      real (kind = 8) :: gf
 C
       DIMENSION GF(2)
       DATA GF/1.0,516./
@@ -20,9 +34,18 @@ C**************** SEDIMENT FUNCTION
 C****************** 
       RETURN
       END
+
+!**********************************************************
+
 C
       FUNCTION FDN(TEM,I)
-      REAL*8 TEM
+      !function type declaration
+      real (kind = 8) :: fdn
+      !input parameter declaration
+      REAL (kind = 8) ::  TEM
+      integer         :: i
+      !local variable declaration
+      real (kind = 8) :: gf
 C
       DIMENSION GF(2)
       DATA GF/1.0,516./
@@ -32,9 +55,18 @@ C**************** TEMPERATURE FUNCTION
 C****************
       RETURN
       END
+
+!**********************************************************
+
 C
       FUNCTION DRODTM(TEM,I)
-      REAL*8 TEM
+      !function type declaration
+      real (kind = 8) :: drodtm
+      !input parameter declaration
+      REAL (kind = 8) ::  TEM
+      integer         :: i
+      !local variable declaration
+      real (kind = 8) :: gf
 C
       DIMENSION GF(2)
       DATA GF/1.0,516./
@@ -42,9 +74,18 @@ C-
       DRODTM=(5.588599E-5-2.217078E-5*TEM)*GF(I)
       RETURN
       END
+
+!**********************************************************
+
 C
       FUNCTION FDEN(SAL,I)
-      REAL*8 SAL
+      !function type declaration
+      real (kind = 8) :: fden
+      !input parameter declaration
+      REAL (kind = 8) ::  SAL
+      integer         :: i
+      !local variable declaration
+      real (kind = 8) :: gf
 C
       DIMENSION GF(2)
       DATA GF/1.0,516./
@@ -54,9 +95,17 @@ C**************** SALINITY FUNCTION
 C****************
       RETURN
       END
+
+!**********************************************************
 C
       FUNCTION DRODSD(SED,I)
-      REAL*8 SED
+      !function type declaration
+      real (kind = 8) :: drodsd
+      !input parameter declaration
+      REAL (kind = 8) ::  SED
+      integer         :: i
+      !local variable declaration
+      real (kind = 8) :: gf
 C
       DIMENSION GF(2)
       DATA GF/1.0,516./

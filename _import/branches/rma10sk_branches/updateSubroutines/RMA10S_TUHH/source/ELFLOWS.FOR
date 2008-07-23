@@ -82,7 +82,8 @@ cipk mar01  go to LNFLO with NEST increased by 2 (for recognition)
 CIPK JAN03  ADD MOMENTUM TERMS
               ELINX=EINX(J)
               ELINY=EINY(J)
-              CALL LNFLO(J,QF,QQAL,NEST+2,LN,ELINX,ELINY)
+              NEST_Copy = Nest + 2
+              CALL LNFLO(J,QF,QQAL,NestCopy,LN,ELINX,ELINY)
 cipk mar01              CALL LNFLO(J,QF,QQAL,NEST,LN)
 CIPK NOV97 END CHANGES
             ENDDO
@@ -94,7 +95,8 @@ cipk mar01  go to LNFLO with NEST increased by 2 (for recognition)
 CIPK JAN03  ADD MOMENTUM TERMS
                 ELINX=EINX(JJ)
                 ELINY=EINY(JJ)
-                CALL LNFLO(JJ,QF,QQAL,NEST+2,LN,ELINX,ELINY)
+                Nest_Copy = Nest + 2
+                CALL LNFLO(JJ,QF,QQAL,NEST_Copy,LN,ELINX,ELINY)
 cipk mar01              CALL LNFLO(JJ,QF,QQAL,NEST,LN)
 CIPK NOV97 END CHANGES
               ENDIF
@@ -149,7 +151,8 @@ C
 CIPK LOGIC FOR LAYERS MOVED TO LNFLO
 cipk mar01  go to LNFLO with NEST increased by 2 (for recognition)
 CIPK JAN03            CALL LNFLO(N,SF,QQAL,NEST+2,LN)
-            CALL LNFLO (N, SF, QQAL, NEST + 2, LN, ELINX, ELINY)
+            NEST_Copy = Nest + 2
+            CALL LNFLO (N, SF, QQAL, NEST_Copy, LN, ELINX, ELINY)
 CIPK NOV97 END CHANGES
           ENDDO
           IF(LABL .EQ. 1) THEN

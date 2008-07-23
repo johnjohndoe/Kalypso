@@ -19,12 +19,13 @@
 
 
 
-subroutine statistic(dimn,var,R,nita_stat,extra)         ! dimn : dimension of the matrix _ input
-                                               		 ! var : variable storing the raw data _ input
-                                               		 ! R : regression correlation coefficient _output
-                                                         ! linear : type of fitted curve either exponential or linear
-                                                         ! nita_stat: number of iteration steps ('CV')
-                                                         ! extra: added number of iteration steps (defined in rma10.for)
+subroutine statistic(dimn,var,R,nita_stat,extra)
+! dimn     : dimension of the matrix _ input
+! var      : variable storing the raw data _ input
+! R        : regression correlation coefficient _output
+! linear   : type of fitted curve either exponential or linear
+! nita_stat: number of iteration steps ('CV')
+! extra    : added number of iteration steps (defined in rma10.for)
 
 ! Data block
 
@@ -33,7 +34,7 @@ REAL, DIMENSION(dimn),INTENT(IN):: var
 REAL, INTENT (out):: R
 INTEGER  :: linear
 
-REAL,DIMENSION (dimn) :: y,xy,y2,dummy
+REAL,DIMENSION (dimn) :: y,xy,y2
 INTEGER , DIMENSION (dimn) :: x, x2
 
 REAL :: sigmay,sigmaxy,sigmay2,numerator,denominator

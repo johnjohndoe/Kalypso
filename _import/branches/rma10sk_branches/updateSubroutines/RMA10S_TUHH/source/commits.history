@@ -164,3 +164,19 @@ Version 1.0.1 (laufende Änderungen)
 007.) Update subroutine structure of reply.sub. Get rid of jump marks.
 008.) restore a comment from IPK in update.f90
 009.) Deactivate some test output code in wavecmdjw2IPK.for
+---
+010.) Change parameter mel to MaxE to overgive to the Darcy.sub, called from coef2 in coef25.for. mel doesn't have the correct value, which is supposed to be the maximum number of element
+011.) Change question for midside node processing, when calculating the inner boundary condition value at transitions. There, the mod-function must be used to identify a midside node. (Affects: coef25.for)
+012.) Declaration of variables and of function type updated in DNX.fun (dnx.for) and all functions in funs.for
+013.) Changing argument calling lnflo in elflows.for, because, lnflo expects a variable (intent (out)-Attribute) and gets a directly calculated value in the calling line (what is corresponding
+      to a constant, that can't take a value from a subroutine). Extracting this to a local copy and passing the copy. Question is generally whether it makes sense, because the changed value is not used anywhere.
+014.) Rework dried-out notification for nodes on 2D-side of 1D-2D-line transitions. Don't overgive parameter dset anymore, but make drying section module blkdrmod available in load.sub (Affects: load3.for, rma10.for)
+015.) Adapt data type from (not used) global array gl_bedform, used in call of darcy.sub from the coef-subroutines (Affects: ParaKalyps.mod, roughness.f90)
+016.) Replace all real (kind = 4) declarations with real (kind = 8) declarations in pasche_trees.f90
+017.) In getLineAverageWaterLevel.sub, the parameter d2 is changed to be kind=8, to be consistent with the dummy declaration of amf.sub
+018.) Deactivate none working part, i.e. autoconverge. THIS HAS TO BE REVISED!!! (Affects: rma10.for); Additionally small format changes and one not used variable deactivation in statistic.f90
+019.) Change wrong format output descriptor in sandbed.for
+020.) Format changes and loop update in threed.for
+
+
+--- Nico Schrage, 23.07.2008 (1.0.1alpha1)

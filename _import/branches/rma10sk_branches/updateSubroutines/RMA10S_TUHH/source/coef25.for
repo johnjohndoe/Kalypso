@@ -1025,11 +1025,12 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 
         !calculate lambda
         !nis,aug07: Introducing correction factor for roughness parameters, if Darcy-Weisbach is used
+
         call darcy(lambdaTot(nn), vecq, h,
      +             cniku(nn)      * correctionKS(nn),
      +             abst(nn)       * correctionAxAy(nn),
      +             durchbaum(nn)  * correctionDp(nn),
-     +             nn, morph, gl_bedform, mel, c_wr(nn), 2,
+     +             nn, morph, gl_bedform, MaxE, c_wr(nn), 2,
                    !store values for output
      +             lambdaKS(nn),
      +             lambdaP(nn),
@@ -1955,7 +1956,7 @@ C-
         if (TransitionMember (M) .and. transtype == 2) then
 
           !for midside nodes
-          if (n == 2) then
+          if (mod(n,2) == 0) then
             !get neighbouring node
             N1 = NCON (N - 1)
             N2 = MOD (N + 1, NCN)
@@ -1985,8 +1986,10 @@ C-
           F (IRW)           = spec(M, 1) - vx * hm
           ESTIFM (IRW, IRW) = hm  ! - dspecdv(M)
 
-          if (n == 2) then
+          !for corner nodes
+          if (mod(n,2) /= 0) then
             ESTIFM (IRW, IRH) = vx  ! - dspecdh(M)
+          !for midside nodes
           else
             ESTIFM (irw, IRH - ndf) = 0.5 * vx
             ESTIFM (irw, iri)       = ESTIFM (irw, IRH - ndf)
