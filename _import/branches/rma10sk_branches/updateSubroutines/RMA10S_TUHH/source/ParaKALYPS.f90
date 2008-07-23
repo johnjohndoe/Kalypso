@@ -13,7 +13,7 @@ INTEGER   :: UseEnergyCSTRC
 !               programming activities might change this. A better way for global access might be to allocate them after the call of getgeo1
 !               from the main program RMA10, because the arrays are dependent on the network size.
 INTEGER 		  :: iauslp, iausnpm
-REAL(KIND=4), allocatable :: rausv(:,:), zeigma(:)
+REAL(KIND=8), allocatable :: rausv(:,:), zeigma(:)
 REAL (KIND = 8), ALLOCATABLE :: minvel (:,:), maxvel (:,:), minrausv(:), maxrausv(:)
 !-
 

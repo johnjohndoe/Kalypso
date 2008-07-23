@@ -1,4 +1,4 @@
-!     Last change:  WP   22 Jul 2008    6:45 pm
+!     Last change:  WP   22 Jul 2008    9:40 am
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -34,202 +34,9 @@
 !
 
 
-
-
-!-----------------------------------------------------------------------
-!NiS,mar06: Name-Conflict in RMA10S, so this specific Kalypso-2D subroutine is renamed
-!      SUBROUTINE check
-SUBROUTINE check_Kalypso
-!
-! This Subroutine is checking the lines of continuity and
-! adding the mid-side nodes in the first run.
-! In all the additional runs (at the end of a converged time
-! step) the discharge over the different continuity lines
-! is calculated.
-
-
-!NiS,mar06: change the module-access for global variables to the RMA10S-construction
-!INCLUDE "common.cfg"
-USE BLK10MOD
-USE BLKDRMOD
-
-!NiS,mar06: missing - lineimat, ndry
-
-
-! Local variables:
-INTEGER, DIMENSION (0:60) :: itemp
-DATA ncall / 0 /
-
-! If there are no lines of continuity defined
-IF (ncl .le. 0) return
-
-! If this subroutine is NOT called for the first time
-first_call: IF (ncall.le.0) THEN
-
-  ncall = 1
-
-  !-.....augment continuity lists.....
-  !  Es wird davon Ausgegangen, dass bei den Kontinuitaetslinien nur
-  !  die Eckknoten eingegeben wurden. Daher werden hier beim ersten Aufruf
-  !  dieser Subroutine die Mittseitenknoten ergaenzt.
-
-  lines: DO j = 1, ncl
-
-    ! LMT(j) = Number of nodes in line of continuity
-    m = lmt (j)
-
-    ! Eckknotennummern der Linie (line) in itemp umspeichern:
-    ! line = Knotennummern der Kontinuitaetslinien (l : Liniennummer , h: Knotenzaehler)
-    DO k = 1, m
-      itemp (k) = line (j, k)
-    END DO
-
-    ! Knotenanzahl der Linie (lmt) mit Mittseitenknoten errechnen:
-    lmt (j) = 2 * lmt (j) - 1
-    nn = lmt (j)
-    n = 0
-
-    IF (m .eq. 1) CYCLE lines
-
-    !Initialize line array (nodes of continuity lines; first just corner nodes, later midsides are filled in!)
-    DO l = 1, nn
-      line (j, l) = 0
-    END DO
-
-    !  Nun werden alle Eckknoten der Linie bis zum Vorletzten durgegangen:
-    nodes: DO l = 1, nn - 2, 2
-
-      n = n + 1
-      ! l ist die stelle in der vollstaendigen linie
-      ! und n in der unvollstaendigen.
-      na = itemp (n)
-      nc = itemp (n + 1)
-      line (j, l) = na
-      line (j, l + 2) = nc
-      !  na und nc sind die Eckknotennummern zwischen denen ein
-      !  Mittseitenknoten gefunden werden soll:
-      !  Dazu werden alle Elemente ne durchsucht, ab ein Rand die
-      !  Eckknoten na/nc besitzt:
-
-      elements: DO jj = 1, ne
-
-        IF (imat (jj) .eq. 0) CYCLE elements
-        ncn = ncorn (jj)
-
-        DO 117 kk = 1, ncn, 2
-          kkk = mod (kk + 2, ncn)
-          IF (kkk.eq.0) kkk = 3
-          n1 = iabs (nop (jj, kk) )
-          n2 = iabs (nop (jj, kkk) )
-          IF (na.eq.n1.and.nc.eq.n2) goto 115
-          IF (nc.eq.n1.and.na.eq.n2) goto 115
-          GOTO 117
-
-          115  CONTINUE
-          ! ein passendes Element (jj) wurde gefunden:
-          ! der Mittseitenknoten wird in die linie eingefuegt:
-          line (j, l + 1) = iabs (nop (jj, kk + 1) )
-          !NiS,mar06: roughness assignments to continuity lines is deactivated:
-          ! die Rauhigkeitsklasse des Elementes wird notiert:
-          !lineimat (j, l + 1) = ABS( imat (jj) )
-          !-
-
-          CYCLE nodes
-
-        117 END DO
-
-      END DO elements
-
-    END DO nodes
-
-    !checking continuity line assignments
-    DO l = 1, nn
-      !ERROR - zero entry in continuity line
-      IF (line (j, l) == 0) call ErrorMessageAndStop (1401, j, cord (line (j, 1), 1), cord (line (j, 1), 2))
-
-    END DO
-                                                                        
-  END DO lines
-
-  RETURN
-
-
-! ab dem 2. Aufruf dieser Subroutine wird der vorangegangene Teil       
-! der Subroutine uebergangen                                            
-END if first_call
-
-
-!NiS,mar06: unit name changed; changed iout to Lout
-WRITE (Lout, 6030)
-write (*,6030)
-6030 FORMAT( // 10x, 'Durchfluss-Berechnung',  &
-           & // 10x, 'Liniennummer  Durchfluss [m^3/s]  Prozent von Linie 1' )
-
-nd = nb
-
-DO 180 j = 1, ncl
-
-  ! ntl=1
-  sumx = 0.0
-  sumy = 0.0
-  IF (lmt (j) .eq.1) then
-    ! Linie hat nur einen Knoten:
-    na = line (j, 1)
-    sumx = sqrt (vel (1, na) **2 + vel (2, na) **2) * vel (3, na) &
-            & * (2. * width (na) + (ss1 (na) + ss2 (na) ) * vel (3, na) ) / 2.
-  ELSE
-    ! Linie mit mehreren Knoten
-    max = lmt (j) - 2
-
-    DO 159 k = 1, max, 2
-      na = line (j, k)
-      nbb = line (j, k + 1)
-      IF (ndry (nbb) .ne.1) goto 159
-      IF (nbb.le.0) goto 159
-      nc = line (j, k + 2)
-      dx = (cord (nc, 1) - cord (na, 1) ) / 6.
-      dy = (cord (nc, 2) - cord (na, 2) ) / 6.
-      d1 = vel (3, na)
-      d3 = vel (3, nc)
-      d2 = (d1 + d3) / 2.
-      ! Simpsonformel integriert Parabeln exakt
-      sumx = sumx + dy * (vel (1, na) * d1 + 4.0 * vel (1, nbb)   &
-       & * d2 + vel (1, nc) * d3)
-      sumy = sumy + dx * (vel (2, na) * d1 + 4.0 * vel (2, nbb)   &
-       & * d2 + vel (2, nc) * d3)
-      ! Bestimmung der Durchfluszkomponenten bei linearer Verteilung
-      ! der Fliesztiefe, geradem Elementrand und mittigem
-      ! Mittseitenknoten o.k.
-    159 END DO
-
-  ENDIF
-
-  ! korrekte Summation der Durchflusskomponenten auch fuer
-  ! nicht gerade (polygon) Raender:
-  total = sumx - sumy
-  IF (j.eq.1) ref = total
-  IF (abs (ref) .lt.0.0001) ref = 1.
-  pct = 100.0 * total / ref
-  ! mx = lmt(j)
-  !NiS,mar06: unit name changed; changed iout to Lout
-  WRITE (Lout, 6035) j, total, pct
-  WRITE (*, 6035) j, total, pct
-
-180 END DO
-
-nb = nd
-
-6035 FORMAT( 13x, i4, 3x, e15.4, 7x, f10.2 )
-
-!NiS,apr06: changed name of subroutine because of global conflict
-END SUBROUTINE check_Kalypso
-
-
-
-
 !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !                                                                       
-      SUBROUTINE reord_Kalyps (knot, elem, qlist)
+SUBROUTINE reord_Kalyps (qlist)
 !
 !     Der reordering-Algorithmus von rma1                               
 !
@@ -237,17 +44,21 @@ END SUBROUTINE check_Kalypso
 USE BLK10MOD
 USE BLK2
 USE BLKASTEPH
-USE BLK10MOD
 
-parameter (maxcn = 60)
+implicit none
 
-!NiS,mar06: variable names changed; changed mel to MaxE and mnd to MaxP
-!array kntimel must be allocatable, because the size is vacant while calling the reordering sequence
-INTEGER, ALLOCATABLE ::  kntimel (:,:)
-integer :: qlist (2, 160), knot, elem
-INTEGER :: icon (MaxP, maxcn)
 !maxsize shows the maximum size of the kntimel allocation, so the largest element
 INTEGER :: maxsize, JunctionSize
+integer :: maxc, maxcn
+integer :: qlist (2, 160)
+INTEGER, allocatable :: icon (:, :), kntimel (:, :)
+parameter (maxcn = 60)
+!NiS,mar06: variable names changed; changed mel to MaxE and mnd to MaxP
+!array kntimel must be allocatable, because the size is vacant while calling the reordering sequence
+
+!locals
+integer :: i, j, k, l, n, m
+integer :: mp, mpp, idxx, is
 
 !nis,dec06: Allocating the kntimel-array for storage of connected nodes to one element. The background is the new number nodes, that might be
 !           connected to a Transition line
@@ -265,8 +76,8 @@ else
   maxsize = 8
 endif
 
-!allocate it, the size must be two slots bigger, because the two cornder nodes of the connecting 1D-element must be included
-ALLOCATE (kntimel (MaxE, MaxSize))
+allocate (icon (1: MaxP, 1: 60), kntimel (1: MaxE, 1: maxsize))
+
 !nis,jun07: Initializing the kntimel-array
 do i = 1, MaxE
   do j = 1, maxsize
@@ -295,11 +106,8 @@ ALLOCATE (ihold(5000))
 ALLOCATE (paxis(MaxE))
 !-
 
-ne = elem
-np = knot
-
 !nis,jun07: Initializing the allocated variables
-do i = 1, maxp
+do i = 1, MaxP
   list(i) = 0
   msn(i) = 0
 end do
@@ -309,7 +117,7 @@ end do
 !-
 
 !get the node numbers into temporary memory
-StoreConnectivity: DO i = 1, ne
+StoreConnectivity: DO i = 1, MaxE
 
   IF (nop (i, 1) == 0) CYCLE StoreConnectivity
 
@@ -379,14 +187,14 @@ end if
 !SR                                                                     
 
 !Initialize array which shows nodes connected to others
-DO n = 1, np
+DO n = 1, MaxP
   DO m = 1, maxc
     icon (n, m) = 0
   enddo
 enddo
 
 !This loop fills in all nodes, that have direct connection to others into icon array.
-ConnectsOuter: DO n = 1, ne
+ConnectsOuter: DO n = 1, MaxE
 
   DO m = 1, ncn
     !Get the reference node
@@ -420,13 +228,13 @@ ConnectsOuter: DO n = 1, ne
 END DO ConnectsOuter
 
 nepem = 0
-DO n = 1, np
+DO n = 1, MaxP
   IF (icon (n, 1) > 0) nepem = nepem + 1
 END DO
 mpq = 0
 list (1) = 1
 mp = 1
-allnodes: DO n = 1, np
+allnodes: DO n = 1, MaxP
   IF (icon (n, 1) == 0) CYCLE allnodes
   is = 0
   DO m = 1, mp
@@ -473,7 +281,7 @@ mpp = mpq
                                                                         
 orderloop: DO
 
-  DO i = 1, np
+  DO i = 1, MaxP
     DO j = 1, maxc
       icon (i, j) = iabs (icon (i, j) )
     ENDDO
@@ -500,12 +308,12 @@ END DO
 !-                                                                      
 !......zero arrarys                                                     
 !-                                                                      
-      DO n = 1, ne
+      DO n = 1, MaxE
         nfixh (n) = 0 
         list (n) = 0
       enddo
 
-      DO n = 1, np 
+      DO n = 1, MaxP 
         DO m = 1, maxc
           icon (n, m) = 0
         ENDDO
@@ -513,7 +321,7 @@ END DO
 !-                                                                      
 !......form nodes connected to elements array                           
 !-                                                                      
-      Nodes2ConnElts: DO n = 1, ne
+      Nodes2ConnElts: DO n = 1, MaxE
         N2CEltsOuter: DO m = 1, ncn
 
           i = kntimel (n, m) 
@@ -548,14 +356,14 @@ END DO
         END DO FormListInner
       END DO FormList
 
-      AssignNfixh: DO n = 1, ne
+      AssignNfixh: DO n = 1, MaxE
         IF (list (n) /= 0) cycle AssignNfixh
         k = k + 1 
         nfixh (k) = n 
       END DO AssignNfixh
 
 !NiS,mar06: unit name changed; changed iout to Lout
-!      write(Lout,98) (nfixh(k),k=1,ne)
+!      write(Lout,98) (nfixh(k),k=1,elem)
 !   98 FORMAT(//10x,'selected element order is listed below'//(5x,10i10))
 
 !NiS,mar06: Deallocating the arrays of module blkasteph
@@ -572,6 +380,7 @@ END DO
       DEALLOCATE (ihold)
       DEALLOCATE (paxis)
 !-
+      deallocate (icon, kntimel)
 
       RETURN
       END SUBROUTINE reord_Kalyps
@@ -587,16 +396,17 @@ USE BLK10MOD
 USE BLK2
 USE BLKASTEPH
 
-parameter (maxcn = 60)
-
 INTEGER :: ia
 INTEGER :: maxsize
 INTEGER :: counter
 
-INTEGER :: kntimel (MaxE, maxsize), qlist (2, 160)
-INTEGER :: icon (MaxP, maxcn)
+INTEGER :: qlist (2, 160)
+!INTEGER :: icon (:,:), kntimel (:,:)
+INTEGER :: icon (1:MaxP, 1:60), kntimel (1:MaxE, 1:maxsize)
+integer :: maxcn
 DIMENSION nlist (160)
 
+parameter (maxcn = 60)
 
 !initializing
 ia = 0
@@ -789,11 +599,13 @@ USE BLK10MOD
 USE BLK2
 USE BLKASTEPH
 
+INTEGER :: maxsize
+INTEGER :: kntimel (1:MaxE, 1:maxsize)
+INTEGER :: icon (1:MaxP, 1:60)
+integer :: maxcn
+
 parameter (maxcn = 60)
 
-INTEGER :: maxsize
-INTEGER :: kntimel (MaxE, maxsize)
-INTEGER :: icon (MaxP, maxcn)
 
 maxc = maxcn
 nad  = 0
@@ -1459,13 +1271,13 @@ reading: do
       read (linie, '(a2, i10, 3(f10.6))') id_local, i, correctionKS(i), correctionAxAy(i), correctionDp(i)
     end if
 
-    !ROUGHNESS CLASS INFORMATIONS ---
-    IF (linie (1:2) .eq.'RK') THEN
-      !not interesting for dimension reading
-      if (KSWIT == 1) CYCLE reading
-      irk = irk + 1
-      rk_zeile (irk) = linie (1:)
-    ENDIF
+!    !ROUGHNESS CLASS INFORMATIONS ---
+!    IF (linie (1:2) .eq.'RK') THEN
+!      !not interesting for dimension reading
+!      if (KSWIT == 1) CYCLE reading
+!      irk = irk + 1
+!      rk_zeile (irk) = linie (1:)
+!    ENDIF
 
     !NiS,may06: cross section reading for 1D-ELEMENTS
     !CROSS SECTIONAL INFORMATIONS FOR 1D-NODES ---
@@ -2139,7 +1951,8 @@ WRITE (*   ,106) mittzaehl
 ! CHECKING/INTERPOLATION OF CROSS SECTION INFORMATIONS -----------------------------------------------------------------------------------
 
 DO i = 1, arccnt
-  IF (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0 .and. imat(arc(i,3)) < 900) THEN
+  IF (arc(i,3) == arc(i,4) .and. arc(i,3) /= 0) then
+    if (imat(arc(i,3)) < 900) THEN
 
     if (imat (arc (i,3)) /= 89) then
       checkwidths: do j = 1, 3, 2
@@ -2156,15 +1969,17 @@ DO i = 1, arccnt
         widbs  (nop (arc (i, 3), 2)) = 0.5 * (widbs (nop (arc (i, 3), 1)) + widbs (nop (arc (i, 3), 3)))
         wss    (nop (arc (i, 3), 2)) = 0.5 * (wss   (nop (arc (i, 3), 1)) + wss   (nop (arc (i, 3), 3)))
       ENDIF
-
+      endif
     ENDIF
   ENDIF
 ENDDO
 
 
+!TODO: This should call either with alphapoly or betapoly depending on what is used!
 call InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, NeighProf, ncorn, nop, &
                     & cord, ao, kmx, kmWeight, IntPolProf, IntPolElts, qgef, imat, TransitionElement, &
                     & MaxLT, TransLines, IsPolynomNode)
+
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !NiS,mar06: COMMENTS
@@ -2283,8 +2098,7 @@ WRITE ( * , 105)
 
 !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
 CALL start_node (qlist, k, MaxP)
-CALL reord_Kalyps (MaxP, MaxE, qlist)
-
+call reord_Kalyps (qlist)
 
 4004 CONTINUE
 
@@ -2698,7 +2512,7 @@ SUBROUTINE start_node (qlist, k, n)
 !INCLUDE "common.cfg"
 USE BLK10MOD
 
-INTEGER qlist (2, 160)
+INTEGER :: qlist (2, 160)
 
 
 IF (lmt (1) .gt.0) then
