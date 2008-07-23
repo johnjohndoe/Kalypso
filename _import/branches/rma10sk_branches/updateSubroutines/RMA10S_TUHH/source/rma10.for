@@ -407,7 +407,20 @@ c  250 CONTINUE
       !-
 
 
-      CALL FRONT(1)
+cipk aug07
+      call SECOND(ATIM(2))
+      ISOLCT=ISOLCT+1
+      IF(ICPU .EQ. 0) THEN
+        CALL FRONT(1)
+      ELSE
+        !CALL FRONT_PARDISO(1)
+      ENDIF
+      IF(ITIMFL .GT. 0) THEN
+        CALL SECOND(ATIM(3))
+        WRITE(ITIMFL,6100) MAXN,ATIM(3)-ATIM(2),ATIM(3)-ATIM(1)
+ 6100   FORMAT('ITERATION',I5,'  TIME IN FRONT-HORZ',F12.2,
+     +     ' TOTAL TIME TO DATE FOR RUN =', F12.2)
+      ENDIF        
 
       !close testfile
       !close (9919, status = 'keep')
@@ -1160,7 +1173,20 @@ CIPK JAN97 END CHANGES
         !endif
         !-
 
-        CALL FRONT(1)
+cipk aug07
+        call SECOND(ATIM(2))
+        ISOLCT=ISOLCT+1
+        IF(ICPU .EQ. 0) THEN
+          CALL FRONT(1)
+        ELSE
+!          CALL FRONT_PARDISO(1)
+        ENDIF
+        IF(ITIMFL .GT. 0) THEN
+          CALL SECOND(ATIM(3))
+          WRITE(ITIMFL,6101) N,MAXN,ATIM(3)-ATIM(2),ATIM(3)-ATIM(1)
+ 6101     FORMAT('STEP',I5,' ITERATION',I5,'  TIME IN FRONT-HORZ',F12.2,
+     +     ' TOTAL TIME TO DATE FOR RUN =', F12.2)        
+        ENDIF        
         IDRYC=IDRYC-1
         !close testfile
         !close (9919, status = 'keep')

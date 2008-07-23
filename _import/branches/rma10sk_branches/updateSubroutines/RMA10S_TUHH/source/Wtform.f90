@@ -50,7 +50,7 @@ if (UseEnergyCstrc == 0) then
   FileExists = .false.
   inquire (FILE='bauwerkstest.txt', EXIST= FileExists)
   if (.not.FileExists) then
-   OPEN (123321, 'bauwerkstest.txt')
+   OPEN (123321, file='bauwerkstest.txt')
    WRITE (123321, *) 0.0d0, (hcl (nctr, j), j=1, 160)
    do i = 1, 1000
      WRITE (123321, *) hrw (nctr, i), (flwcs(nctr, i, j), j=1, 160)

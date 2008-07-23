@@ -146,7 +146,11 @@ c  207         HF=1./(VEL(3,KK)-DSET)*ALOG(VEL(3,KK)/DSET)
               VDOTO (3, K) = 0.
               IL = IL + 1
               LISTEL (IL) = N
-              IF (IL > 1 .AND. LISTEL (IL) == LISTEL (IL - 1)) IL = IL-1
+              !nis,jul08: Error, il - 1 == 0, because, that is not defined
+              if (il /= 1) then
+                IF (IL > 1 .AND. LISTEL (IL) == LISTEL (IL - 1))
+     +            IL = IL-1
+              endif
 
             ENDDO ForWetNodes
           ENDDO ForDryNodes

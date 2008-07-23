@@ -177,6 +177,15 @@ Version 1.0.1 (laufende Änderungen)
 018.) Deactivate none working part, i.e. autoconverge. THIS HAS TO BE REVISED!!! (Affects: rma10.for); Additionally small format changes and one not used variable deactivation in statistic.f90
 019.) Change wrong format output descriptor in sandbed.for
 020.) Format changes and loop update in threed.for
-
+---
+021.) Introducing preperation of usage of MathKernelLibrary. That has different changes as consequence.
+      - Reading subroutine ginpt must now deal with 88 digits long characters (Affects: inmet.for, input. for)
+      - BLK10MOD includes further switch-parameters for the usage of MKL settings in control file
+      - Include File Param.com holds some variable changes according to module changes with BLK10MOD (regarding version 8.0 from 8.0)
+      - until now, calling of mkl-subroutine is deactivated (only one line in rma10.for); the control flow for calling it, is implemented, referring to version 8.0 from IPK (Affects rma10.for)
+      - BLK10 includes now some new arrays, used for MKL. They are initialized in initl.sub
+      - file.sub contains now another unit. This collides with a unit, that was introduced here for the usage of stage flow boundary conditions for 1D
+022.) For compilation with Intel Fortran Compiler, the 'File=<filename>' command has to be introduced in open statements instead of just giving <filename> on the correct place. (Affects: wtform.f90, input.for)
+023.) Change if-statement, because something is possibly be checked for an array entry, that might not exist; just made the if-statement cascading, so that no runtime error can occur (Affects: rewet.for)
 
 --- Nico Schrage, 23.07.2008 (1.0.1alpha1)

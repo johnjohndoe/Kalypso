@@ -1,4 +1,4 @@
-C     Last change:  NIS  15 May 2008    8:03 pm
+C     Last change:  WP   22 Jul 2008   10:05 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -686,6 +686,12 @@ cipk jan02
         SIDFF(J)=0.0
 
       ENDDO
+
+      !nis,jul08: Since Version 8.0, what is the meaning
+      isolct = 0
+      !-
+
+
 
       !nis,jan08: nctref is for the material types, especially for the weir structures
       !nis,jan08: ort-variable is according to the material types
