@@ -23,6 +23,7 @@ INTEGER            :: PolyPos, findpolynom
 real               :: TransVel, CSArea, Discharge, localVel
 REAL (KIND = 8)    :: calcPolynomial
 REAL (KIND = 8)    :: TransDep, waspi
+real (kind = 8)    :: TDepV
 CHARACTER (LEN=26) :: filename_out
 
 !TransLi   :: number of Transition Line
@@ -130,7 +131,7 @@ transitionloop: do i = 1, MaxLT
       !polynom-approach
       else
         PolyPos = findPolynom (PolyRangeA (TransNo, :), TransDep, PolySplitsA (TransNo))
-        CSArea  = calcPolynomial (apoly (PolyPos, TransNo, 0:12), TransDep)
+        CSArea  = calcPolynomial (apoly (PolyPos, TransNo, 0:12), TransDep, ubound (apoly, 3))
       end if
       !Calculate discharge-value
       Discharge = ABS(CSArea * TransVel)

@@ -265,7 +265,7 @@ cipk feb01  skip out for zero lines
               PolyPos = findPolynom (polyRangeA (NA, :), vel(3, NA),
      +                               PolySplitsA (na))
               TempArea = calcPolynomial (apoly(PolyPos, NA, 0:12),
-     +                                         vel(3, NA))
+     +                                   vel(3, NA), ubound (apoly, 3))
 
               SUMX = SQRT(vel(1,na)**2 + vel(2,NA)**2) * TempArea
 

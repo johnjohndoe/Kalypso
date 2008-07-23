@@ -1,4 +1,4 @@
-!Last change:  WP   22 Jul 2008    5:04 pm
+!Last change:  WP    3 Jul 2008    3:02 pm
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -115,11 +115,11 @@ checknodes: DO KK = 1, NCN
     !get position in polynomial for current node with present water stage
     PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1), PolySplitsA (n1))
     !calculate the cross sectional area
-    ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1))
+    ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1), ubound (apoly, 3))
     !install derivative of discharge over velocity at current node into local equation 1
     ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
     !calculate the derivative of the cross sectional area of current node over depth
-    dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:12), vel(3, n1))
+    dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:12), vel(3, n1), ubound (apoly, 3))
     !install derivative of discharge over depth at current node into local equation 1
     ESTIFM(1, NA+2) = DIR(N1) * dahdh (n1) * R * XHT
 
@@ -157,7 +157,6 @@ if (imat (NN) == 901) then
   !    WSEL1=AO(N1)+VEL(3,N1)
   !    WSELX=AO(NRX)+VEL(3,NRX)
   !  ENDIF
-
     !for polynomial approach no marsh-option for the moment!
     WSEL1=AO(N1)+VEL(3,N1)
     WSELX=AO(NRX)+VEL(3,NRX)
@@ -190,12 +189,12 @@ ELSEIF (imat (nn) == 903) then
   nry = nop (nn, 2)
 
   PolyPos = findPolynom (PolyRangeA (nrx, :), vel(3, nrx), PolySplitsA (nrx))
-  acx = calcPolynomial (apoly (PolyPos, nrx, 0:12), vel (3, nrx))
-  wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:12), vel(3, nrx))
+  acx = calcPolynomial (apoly (PolyPos, nrx, 0:12), vel (3, nrx), ubound (apoly, 3))
+  wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:12), vel(3, nrx), ubound (apoly, 3))
 
   PolyPos = findPolynom (PolyRangeA (nry, :), vel(3, nry), PolySplitsA (nry))
-  acy = calcPolynomial (apoly (PolyPos, nry, 0:12), vel (3, nry))
-  wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:12), vel(3, nry))
+  acy = calcPolynomial (apoly (PolyPos, nry, 0:12), vel (3, nry), ubound (apoly, 3))
+  wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:12), vel(3, nry), ubound (apoly, 3))
 
   rx = vel (1, nrx) * COS (ALFA (nrx)) + vel (2, nrx) * SIN (ALFA (nrx))
   ry = vel (1, nry) * COS (ALFA (nry)) + vel (2, nry) * SIN (ALFA (nry))

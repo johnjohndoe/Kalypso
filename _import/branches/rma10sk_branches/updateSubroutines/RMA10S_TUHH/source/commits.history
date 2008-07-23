@@ -155,3 +155,12 @@ Version 1.0.1 (laufende Änderungen)
 001.) Introduce "use BLKECOM" module in subroutines and get rid of shared include blke.com file. That module contains residual vector f(80), element stiffnes matrix estifm (80, 80) and node connector ncon
       Affected subroutines/ files are: twodsw, surcof, rdkalypso, front, cstrc2d, cstrc, coefv, coef3d, coef37, coef2dnt, coef25,
       coef1DPolynomials, coef1DJunction, coef11nt, coef11, bslop, blkecom. From the file content blke.com is deleted.
+002.) Delete the function CalcPolynomial2 (in PolynomialFunctions.f90). Additionally add another parameter to be given to the polynomial functions, that shows the maximum grade
+      of the polynomial to be calculated. (Affects: check.for, coef11.for, coef11nt.for, coef1DJunction, coef1DPolynomials.f90, cstrc.f90, LineTransitionCalc.f90, wtform.f90)
+003.) Deactivation of some control output subroutine calls in coef1DPoly.sub
+004.) deactivating rm1-file output (Affects: getgeoms.for)
+005.) Remove tab characters in insand.for
+006.) Add declaration of TDepV in LineTransitionCalc.f90
+007.) Update subroutine structure of reply.sub. Get rid of jump marks.
+008.) restore a comment from IPK in update.f90
+009.) Deactivate some test output code in wavecmdjw2IPK.for

@@ -26,7 +26,7 @@ REAL (KIND = 8) :: WTC, WTR
 !locals for energy method with linear functions
 REAL (KIND = 8), ALLOCATABLE :: valuesOnLine (:)
 REAL (KIND = 8) :: qfact, huw_tmp
-REAL (KIND = 8) :: CalcPolynomial2, HUPP, HLOW
+REAL (KIND = 8) :: CalcPolynomial, HUPP, HLOW
 REAL (KIND = 8) :: A(0:1)
 INTEGER         :: noOfOutQs
 INTEGER         :: Pos, FindPolynom
@@ -175,7 +175,7 @@ ELSEIF (UseEnergyCstrc == 1) then
     !WRITE(*,*) 'vor :', valuesOnLine (i)
     !WRITE(*,*) (cstrcCoefs (nctr, i, Pos, j), j= 0, 1)
     !testing-
-    valuesOnLine (i) = CalcPolynomial2 (cstrcCoefs (nctr, i, Pos, 0:1), huw)
+    valuesOnLine (i) = CalcPolynomial (cstrcCoefs (nctr, i, Pos, 0:1), huw, 1)
     !testing
     !WRITE(*,*) Pos, huw
     !WRITE(*,*) 'nach:', valuesOnLine(i)
@@ -227,7 +227,7 @@ ELSEIF (UseEnergyCstrc == 1) then
     HLOW = valuesOnLine (pos - 2)
     A(1) = (cstrcdisch (nctr, pos - 1) - cstrcdisch (nctr, pos - 2)) / (valuesOnLine (pos - 1) - valuesOnLine (pos - 2))
     A(0) = cstrcdisch (nctr, pos - 1) - A(1) * valuesOnLine (pos - 1)
-    Q = CalcPolynomial2 (A, how)
+    Q = CalcPolynomial (A, how, 1)
 
   !normal interpolation between functions
   else
