@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Jun 2006   11:13 pm
+!     Last change:  MD   22 Jul 2008    1:18 pm
 !--------------------------------------------------------------------------
 ! This code, newton.f90, contains the following subroutines
 ! and functions of the hydrodynamic modell for
@@ -42,7 +42,7 @@
 
 !-----------------------------------------------------------------------
 SUBROUTINE newton (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax, &
-     & psiein, psiort, froud, xi, hi, s, ifehl, istat)
+     & psiein, psiort, froud, xi, hi, s, ifehl, istat, Q_Abfrage)
 
 ! geschrieben: p. Koch      Maerz 1990
 ! geaendert  : w. Ploeger   Mai 2005
@@ -156,8 +156,9 @@ COMMON / vort / hborda, heins, horts
 
 ! Local variables
 INTEGER, PARAMETER  :: itmax_newton = 25        ! Max. Anzahl der iterationsschritte
+CHARACTER(LEN=11), INTENT(IN)  :: Q_Abfrage     ! Abfrage fuer Ende der Inneren Q-Schleife
 
-INTEGER :: jsch, jen       ! Schleifenzaehler
+INTEGER :: jsch, jen            ! Schleifenzaehler
 INTEGER :: ifehlg               ! Fehlervariable
 REAL :: hrneu, hra, hrb         ! Wasserspiegelhöhe
 REAL :: delt                    ! Grenzbedingung
@@ -176,7 +177,6 @@ REAL :: hvsta, hvstb		! Geschwindigkeitsverlust
 
 ifehl = 0
 dx = 0.05
-
 !WP
 hrsta = 0.0
 hvsta = 0.0
@@ -236,7 +236,7 @@ DO 100 jsch = 1, itmax_newton
   ifehlg = 0
 
   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-               & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen)
+          & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen, Q_Abfrage)
 
   hrneu = ws1 + hrst + hvst + hborda + heins + horts
 
@@ -294,13 +294,13 @@ DO 100 jsch = 1, itmax_newton
 
     !WP Aufruf fuer Parameterset A
     CALL verluste (str, q, q1, i, hra, hv, rg, hvsta, hrsta,      &
-     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen, Q_Abfrage)
 
     fa = ws1 + hrsta + hvsta + hborda + heins + horts
 
     !WP Aufruf fuer Parameterset B
     CALL verluste (str, q, q1, i, hrb, hv, rg, hvstb, hrstb,      &
-     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen)
+     & indmax, psiein, psiort, hi, xi, s, istat, froud, ifehlg, jen, Q_Abfrage)
 
     fb = ws1 + hrstb + hvstb + hborda + heins + horts
 
@@ -366,7 +366,7 @@ IF (ifehl.eq.0) then
 
   ! stroemender bereich
   CALL verluste (str, q, q1, i, hr, hv, rg, hvst, hrst, indmax,   &
-   & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch)
+   & psiein, psiort, hi, xi, s, istat, froud, ifehlg, jsch, Q_Abfrage)
 
   !JK  SCHREIBEN IN KONTROLLFILE
   IF (idruck.eq.0) then
