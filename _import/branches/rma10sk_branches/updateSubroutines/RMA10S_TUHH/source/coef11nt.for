@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 cipk  last update feb 26 2006 add logic for loads from 1-d structures
 cipk  last update nov 28 2006 allow for 1-d control structures
 cipk  last update jul 05 2006 use perim for hydraulic radius in friction
@@ -32,6 +33,8 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKSSTMOD
       USE BLKSANMOD
       USE BLKSUBMOD
+CIPK AUG07
+      USE BLKECOM
 !NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
       USE Para1DPoly
@@ -49,25 +52,26 @@ C
       INTEGER :: PolyPos, findpolynom
       REAL (KIND = 8) :: calcpolynomial
       REAL (KIND = 8) :: h, rhy
-      REAL (KIND = 8) :: F
       REAL (KIND = 8) :: lamP, lamKS, lamDunes, lamTot
 
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
-      INCLUDE 'BLKE.COM'
+CIPK AUG07      INCLUDE 'BLKE.COM'
       INCLUDE 'BLKH.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
 CIPK AUG05      INCLUDE 'BLKSST.COM'
 C-
 C-
-      COMMON F(80),
+CIPK AUG07
+C      COMMON F(80),
+      COMMON 
      1 XN(3),DNX(3),DNY(3),XM(2),DMX(2),DMY(2),XL(3),YL(3),
      4 VX(3),VY(3),VDX(3),VDY(3),QFACT(3),QQFACT(3),ST(3),SDT(3)
      5,UBFC(3),XO(3),DOX(3),Q1(3)
 cipk dec00 add Q1
 C-
-      DIMENSION NCON(20)
+CIPK AUG07      DIMENSION NCON(20)
 CIPK oct02
       COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 

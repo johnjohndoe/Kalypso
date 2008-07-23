@@ -1,18 +1,17 @@
-C     Last change:  WP   29 Aug 2007    3:16 pm
+C     Last change:  WP   22 Jul 2008    5:01 pm
 
       SUBROUTINE BSLOP(NN)
       USE BLK10MOD
+      USE blkecom
       SAVE
 C-
 CIPK AUG05      INCLUDE 'BLK10.COM'
       INCLUDE 'BLKH.COM'
-      INCLUDE 'BLKE.COM'
       INCLUDE 'BLKS.COM'
       REAL (KIND = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
-      REAL (KIND = 8) :: F
       COMMON/WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
 C-
-      COMMON F(60),
+      COMMON
      1 XN(8),DNX(8),DNY(8),XM(4),DMX(4),DMY(4),XL(8),YL(8),
      1  WAITX(16)
 C-

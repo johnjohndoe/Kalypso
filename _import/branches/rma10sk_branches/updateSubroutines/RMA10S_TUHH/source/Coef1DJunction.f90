@@ -1,4 +1,4 @@
-!Last change:  WP    3 Jul 2008    3:02 pm
+!Last change:  WP   22 Jul 2008    5:04 pm
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -10,14 +10,13 @@ USE BLKSSTMOD
 USE BLKSANMOD
 USE PARAKalyps
 USE Para1DPoly
+USE blkecom
 
 SAVE
 
-INCLUDE 'BLKE.COM'
-
 
 INTEGER :: NTX, NN, ncnx, mc, iswt, nef
-INTEGER :: N1, MR, KK, NA, IMMT, NRX, NCON
+INTEGER :: N1, MR, KK, NA, IMMT, NRX
 INTEGER :: i, j, k, n, m
 INTEGER :: IA, JA
 INTEGER :: PolyPos, findPolynom
@@ -31,8 +30,6 @@ REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 
 REAL (KIND=8) :: h
 
-COMMON F(80)
-DIMENSION NCON(20)
 
 IF(ITEQV(MAXN) .EQ. 5) THEN
   DO N=1,8

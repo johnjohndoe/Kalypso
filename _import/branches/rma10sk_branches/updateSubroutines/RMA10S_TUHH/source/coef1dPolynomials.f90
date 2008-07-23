@@ -1,4 +1,4 @@
-!Last change:  WP    3 Jul 2008    6:05 pm
+!Last change:  WP   22 Jul 2008    4:59 pm
 
 !****************************************************************
 !1D subroutine for calculation of elements, whose corner nodes are described with
@@ -17,6 +17,7 @@
 
 SUBROUTINE COEF1dPoly (NN,NTX)
 USE BLK10
+use BLKECOM
 USE BLK10MOD
 USE BLK11MOD
 USE BLKDRMOD
@@ -28,7 +29,6 @@ SAVE
 
 !nis,aug07: for refactoring purposes
 REAL (KIND = 8) :: hs1, hd1, hsx, hdx, hs, hd, h
-REAL (KIND = 8) :: F
 !nis,jan08: Weighting for interpolated profiles
 REAL (KIND = 8) :: LocalWeight
 
@@ -136,15 +136,14 @@ INTEGER :: PolyTest
 
 INTEGER :: byparts
 !estifm block-definition
-INCLUDE 'BLKE.COM'
+!INCLUDE 'BLKE.COM'
 !weighting function etc. block-definition
 !INCLUDE 'BLKH.COM'
 COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2), AX(3,3),DNAL(3,4),XNAL(3,4)
 
-COMMON F(80), XN(3),DNX(3),DNY(3),XM(2),DMX(2),DMY(2),XL(3),YL(3), &
+COMMON XN(3),DNX(3),DNY(3),XM(2),DMX(2),DMY(2),XL(3),YL(3), &
 & VX(3),VY(3),VDX(3),VDY(3),QFACT(3),QQFACT(3),ST(3),SDT(3),UBFC(3),XO(3),DOX(3),Q1(3)
 
-DIMENSION NCON(20)
 !CIPK oct02
 COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 

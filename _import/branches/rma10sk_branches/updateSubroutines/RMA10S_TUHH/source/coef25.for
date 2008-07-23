@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE AUG 30 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNiS  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
 CIPK  LAST UPDATE DEC 22 2005 MAKE INITIAL EXTL CALCILATION ONLY FOR ICK=6
@@ -27,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   15 Jun 2008   12:58 pm
+C     Last change:  WP   22 Jul 2008   10:05 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -42,6 +43,7 @@ CIPK  LAST UPDATED SEP 7 1995
       USE BLKSSTMOD
       USE BLKSEDMOD
       USE BLKSANMOD
+      USE BLKECOM
 !NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
 !-
@@ -67,7 +69,7 @@ CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK SEP02
 CIPK AUG05      INCLUDE 'BLK11.COM'
       INCLUDE 'BLKH.COM'
-      INCLUDE 'BLKE.COM'
+CIPK AUG07      INCLUDE 'BLKE.COM'
       INCLUDE 'BLKS.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
@@ -80,7 +82,7 @@ c      INCLUDE 'RKEP.COM'
       REAL (kind = 8) :: WAITX,WAITT,WAITR,WAITTH,WAITRH
 
       REAL (kind = 8) :: DHDX,DHDZ,DAODX,DAODZ,H,AZER,XHT
-      REAL (kind = 8) :: GHC,F,FRN,FRNX,FRNZ
+      REAL (kind = 8) :: GHC,FRN,FRNX,FRNZ
 
       REAL (kind = 8) :: TEMP,HP,HP1,DERR
 
@@ -94,7 +96,9 @@ CIPK JUN03
 C	COMMON /STR/
 C     +  STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
 
-      COMMON F(80),
+CIPK AUG07
+C      COMMON F(80),
+      COMMON 
      1 XN(8),DNX(8),DNY(8),XM(4),DMX(4),DMY(4),XL(8),YL(8)
      2,XO(8),DOX(8),DOY(8),
      3  WAITX(16),DL(2,2)
@@ -102,7 +106,8 @@ C     +  STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
      5,efpornn(4)
 cipk apr05 add line above
 C-
-      DIMENSION NCON(20),FTF(2),PROJL(8)
+CIPK AUG07
+      DIMENSION FTF(2),PROJL(8)
 CIPK SEP96 ADD PROJL
 C-
 CIPK sep02

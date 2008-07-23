@@ -152,3 +152,6 @@ Version 0.0.2/ Version 1.0.0 (laufende Änderungen)
 Version 1.0.1 (laufende Änderungen)
 -----------------------------------
 
+001.) Introduce "use BLKECOM" module in subroutines and get rid of shared include blke.com file. That module contains residual vector f(80), element stiffnes matrix estifm (80, 80) and node connector ncon
+      Affected subroutines/ files are: twodsw, surcof, rdkalypso, front, cstrc2d, cstrc, coefv, coef3d, coef37, coef2dnt, coef25,
+      coef1DPolynomials, coef1DJunction, coef11nt, coef11, bslop, blkecom. From the file content blke.com is deleted.

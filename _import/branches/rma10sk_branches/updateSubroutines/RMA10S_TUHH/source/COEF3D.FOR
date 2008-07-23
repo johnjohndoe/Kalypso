@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPFDTE fEB 22 2002 REDCUE PECLET TEST
 CIPK  LAST UPDATE MAR 5 2001 ADD DRAG
 C     Last change:  WP   29 Aug 2007    3:07 pm
@@ -11,6 +12,7 @@ cipk  last update Aug27 1996  Modify horizontal diffusion formulation
       USE BLK10
       USE BLK10MOD
       USE BLK11MOD
+      USE BLKECOM
       SAVE
 C-
 cycw aug94 add double precision salt
@@ -19,10 +21,9 @@ cycw aug94 add double precision salt
 C-
 !NiS,jul06: Consistent data types for passing parameters
       REAL (KIND = 8) :: h
-      REAL (KIND = 8) :: F
 !-
 CIPK AUG05      INCLUDE 'BLK10.COM'
-      INCLUDE 'BLKE.COM'
+CIPK AUG07      INCLUDE 'BLKE.COM'
 C-
       COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2)
      1     ,AX(3,3),DNAL(3,4),XNAL(3,4)
@@ -32,7 +33,8 @@ cipk jan95 add double precision for basis function values
 c     DOUBLE PRECISION DA,DB,DC
       COMMON /WTPR/ WAITPH(64)
 C-
-      COMMON F(80),XM(20),DMX(20),DMY(20),DMZ(20),FEEA(20)
+CIPK AUG07
+      COMMON XM(20),DMX(20),DMY(20),DMZ(20),FEEA(20)
      1      ,FEEB(20),FEEC(20),FEED(20),FEEE(20)
      2      ,XN(20),DNX(20),DNY(20),DNZ(20)
      3      ,XL(20),YL(20),ZL(20),ESTIFL(20,20),G(20)
