@@ -80,12 +80,7 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   private IFile getCrossSectionNodeResultFile( final ICrossSectionNode node ) throws CoreException
   {
-
-    final IFolder folder = m_resultFolder.getFolder( "output/nodes/results/" ); //$NON-NLS-1$
-    if( !folder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_2 ) );
-
-    final IFile iFile = folder.getFile( node.getId() + ".gml" ); //$NON-NLS-1$
+    final IFile iFile = m_resultFolder.getFile( node.getId() + ".gml" ); //$NON-NLS-1$
     if( !iFile.exists() )
       return null;
 
@@ -94,11 +89,7 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   private IFile getResultFile( ) throws CoreException
   {
-    final IFolder folder = m_resultFolder.getFolder( "output/nodes/results/" ); //$NON-NLS-1$
-    if( !folder.exists() )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_2 ) );
-
-    final IFile iFile = folder.getFile( "calcpnt.xml" ); //$NON-NLS-1$
+    final IFile iFile = m_resultFolder.getFile( "calcpnt.xml" ); //$NON-NLS-1$
     if( !iFile.exists() )
       return null;
 
@@ -275,20 +266,12 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   public IFile getBranchHydrogrographWorkspaceFile( ) throws CoreException
   {
-    final IFolder folder = m_resultFolder.getFolder( "output/branches/" ); //$NON-NLS-1$
-    IFile iBase;
-    if( !folder.exists() )
+    IFile iBase = m_resultFolder.getFile( "hydrograhps.gml" ); //$NON-NLS-1$
+
+    if( !iBase.exists() )
     {
-      folder.create( true, false, new NullProgressMonitor() );
-
-      iBase = folder.getFile( "hydrograhps.gml" ); //$NON-NLS-1$
-
       final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekBranchHydrograph.gml" ); //$NON-NLS-1$
       iBase.create( stream, true, new NullProgressMonitor() );
-    }
-    else
-    {
-      iBase = folder.getFile( "hydrograhps.gml" ); //$NON-NLS-1$
     }
 
     return iBase;
