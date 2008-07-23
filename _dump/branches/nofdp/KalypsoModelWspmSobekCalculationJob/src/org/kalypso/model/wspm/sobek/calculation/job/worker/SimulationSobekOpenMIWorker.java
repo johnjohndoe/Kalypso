@@ -1,11 +1,18 @@
 package org.kalypso.model.wspm.sobek.calculation.job.worker;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
@@ -105,14 +112,100 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     if( !logOpenMi.exists() )
       throw new SimulationException( "OpenMI control log file doesn't exists..." );
 
-    resultEater.addResult( ISobekCalculationJobConstants.LOG_OPENMI_CONTROL, logOpenMi );
-
     /* add sobek computation log file */
     File logSobek = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK_PATH );
     if( !logSobek.exists() )
       throw new SimulationException( "Sobek Calculation Core computation log file doesn't exists..." );
 
+    resultEater.addResult( ISobekCalculationJobConstants.LOG_OPENMI_CONTROL, logOpenMi );
     resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK, logSobek );
 
+    if( !checkLogFiles( logOpenMi, logSobek ) )
+      throw new SimulationException( "Calculation failed..." );
+  }
+
+  /**
+   * @param logOpenMi
+   *            if calculation was successful file contains phrase "Simulation finished successfuly" (typo is correct!)
+   * @param logSobek
+   *            if calculation was successful file contains phrase "Normal end of Sobeksim"
+   * @return
+   * @throws SimulationException
+   */
+  private boolean checkLogFiles( File logOpenMi, File logSobek ) throws SimulationException
+  {
+    boolean openmi = false;
+    boolean sobek = false;
+
+    FileInputStream inputStream = null;
+    BufferedReader reader = null;
+    try
+    {
+      inputStream = new FileInputStream( logOpenMi );
+      reader = new BufferedReader( new InputStreamReader( inputStream, "UTF-16" ) );
+      String line = null;
+
+      Pattern p = Pattern.compile( ".*Simulation finished successfuly.*" );
+
+      while( (line = reader.readLine()) != null )
+      {
+        Matcher m = p.matcher( line );
+        if( m.matches() )
+        {
+          openmi = true;
+          break;
+        }
+
+      }
+
+    }
+    catch( FileNotFoundException e )
+    {
+      throw new SimulationException( "OpenMi Control log file not found." );
+    }
+    catch( IOException e )
+    {
+      throw new SimulationException( "Error reading OpenMi Control log file." );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+      IOUtils.closeQuietly( reader );
+    }
+
+    try
+    {
+      inputStream = new FileInputStream( logSobek );
+      reader = new BufferedReader( new InputStreamReader( inputStream ) );
+      String line = null;
+
+      while( (line = reader.readLine()) != null )
+      {
+        if( line.contains( "Normal end of Sobeksim" ) )
+        {
+          sobek = true;
+          break;
+        }
+
+      }
+    }
+    catch( FileNotFoundException e )
+    {
+      throw new SimulationException( "Sobek calculation core log file not found." );
+    }
+    catch( IOException e )
+    {
+      throw new SimulationException( "Error reading Sobek calculation core log file." );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+      IOUtils.closeQuietly( reader );
+    }
+
+    if( openmi == false || sobek == false )
+      return false;
+
+    return true;
   }
 }

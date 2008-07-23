@@ -1,11 +1,16 @@
 package org.kalypso.model.wspm.sobek.calculation.job.worker;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
@@ -107,5 +112,46 @@ public class SimulationPi2SobekWorker implements ISimulation
       throw new SimulationException( "Pi2Sobek conversion log file doesn't exists..." );
 
     resultEater.addResult( ISobekCalculationJobConstants.LOG_PI2SOBEK, logFile );
+
+    if( !checkLogFile( logFile ) )
+      throw new SimulationException( "Pi2Sobek conversion failed..." );
+  }
+
+  /**
+   * In case of a valid conversion, the log file contains the following phrase: "The conversion was successfull" (typo
+   * is correct!)
+   */
+  private boolean checkLogFile( File logFile ) throws SimulationException
+  {
+    FileInputStream inputStream = null;
+    BufferedReader reader = null;
+    try
+    {
+      inputStream = new FileInputStream( logFile );
+      reader = new BufferedReader( new InputStreamReader( inputStream ) );
+      String line = null;
+
+      while( (line = reader.readLine()) != null )
+      {
+        if( line.contains( "The conversion was successfull" ) )
+          return true;
+      }
+
+    }
+    catch( FileNotFoundException e )
+    {
+      throw new SimulationException( "Pi2Sobek Conversion log file not found." );
+    }
+    catch( IOException e )
+    {
+      throw new SimulationException( "Error reading Pi2Sobek Conversion log file." );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inputStream );
+      IOUtils.closeQuietly( reader );
+    }
+
+    return false;
   }
 }
