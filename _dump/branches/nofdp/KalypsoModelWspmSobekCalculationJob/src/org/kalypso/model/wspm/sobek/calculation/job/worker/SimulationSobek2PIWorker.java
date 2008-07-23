@@ -8,6 +8,7 @@ import java.net.URL;
 
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.StreamGobbler;
+import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -100,6 +101,20 @@ public class SimulationSobek2PIWorker implements ISimulation
 
     ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Sobek model converted." ) );
     ConsoleHelper.writeLine( m_nofdpStream, "" );
+
+    /* add calculation points conversion log file */
+    File logCalculationPoints = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_POINTS_PATH );
+    if( !logCalculationPoints.exists() )
+      throw new SimulationException( "Sobek2Pi Calculation Points log file doesn't exists..." );
+
+    resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK2PI_POINTS, logCalculationPoints );
+
+    /* add structure nodes conversion log file */
+    File logStructureNodes = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_STRUCTURES_PATH );
+    if( !logStructureNodes.exists() )
+      throw new SimulationException( "Sobek2Pi Structure Nodes log file doesn't exists..." );
+
+    resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK2PI_STRUCTURES, logStructureNodes );
 
   }
 }

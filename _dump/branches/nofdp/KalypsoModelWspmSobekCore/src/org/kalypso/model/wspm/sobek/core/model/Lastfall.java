@@ -44,6 +44,7 @@ import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
@@ -61,9 +62,12 @@ public class Lastfall implements ILastfall
 
   private final Feature m_lastfall;
 
-  public Lastfall( final IModelMember sobekModelMember, final Feature lastfall )
+  public Lastfall( final IModelMember model, final Feature lastfall )
   {
-    m_sobekModelMember = sobekModelMember;
+    Assert.isNotNull( model );
+    Assert.isNotNull( lastfall );
+
+    m_sobekModelMember = model;
     m_lastfall = lastfall;
   }
 

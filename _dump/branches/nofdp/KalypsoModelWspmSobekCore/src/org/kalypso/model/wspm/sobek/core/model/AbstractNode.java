@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.sobek.core.model;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.model.wspm.sobek.core.i18n.Messages;
@@ -104,6 +105,9 @@ public abstract class AbstractNode implements INode
 
   public AbstractNode( final IModelMember model, final Feature node )
   {
+    Assert.isNotNull( model );
+    Assert.isNotNull( node );
+
     m_model = model;
     m_node = node;
   }

@@ -8,6 +8,7 @@ import java.net.URL;
 
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.StreamGobbler;
+import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -35,7 +36,7 @@ public class SimulationSobekOpenMIWorker implements ISimulation
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
 
-    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Starting OpenMI for processing model..." ) );
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Starting OpenMI to process model..." ) );
 
     /*******************************************************************************************************************
      * PROCESSING
@@ -98,6 +99,20 @@ public class SimulationSobekOpenMIWorker implements ISimulation
 
     ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Model processed." ) );
     ConsoleHelper.writeLine( m_nofdpStream, "" );
+
+    /* add openmi control log file */
+    File logOpenMi = new File( tmpdir, ISobekCalculationJobConstants.LOG_OPENMI_CONTROL_PATH );
+    if( !logOpenMi.exists() )
+      throw new SimulationException( "OpenMI control log file doesn't exists..." );
+
+    resultEater.addResult( ISobekCalculationJobConstants.LOG_OPENMI_CONTROL, logOpenMi );
+
+    /* add sobek computation log file */
+    File logSobek = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK_PATH );
+    if( !logSobek.exists() )
+      throw new SimulationException( "Sobek Calculation Core computation log file doesn't exists..." );
+
+    resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK, logSobek );
 
   }
 }

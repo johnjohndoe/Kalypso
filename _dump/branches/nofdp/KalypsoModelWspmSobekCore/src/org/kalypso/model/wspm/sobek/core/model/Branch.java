@@ -50,6 +50,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -110,6 +111,9 @@ public class Branch implements IBranch
 
   public Branch( final IModelMember model, final Feature branch )
   {
+    Assert.isNotNull( model );
+    Assert.isNotNull( branch );
+
     m_model = model;
     m_branch = branch;
   }

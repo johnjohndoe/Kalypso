@@ -111,10 +111,19 @@ public class WspmSobekCalcJob implements ISimulation
     final SimulationSobek2PIWorker sobek2Pi = new SimulationSobek2PIWorker( m_nofdpStream, m_sobekStream );
     sobek2Pi.run( tmpdir, inputProvider, resultEater, monitor );
 
-    resultEater.addResult( "OUTPUT", new File( tmpdir, "sobek" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    /* add results of calculation */
+    File points = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS_PATH );
+    File structures = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES_PATH );
+
+    if( !points.exists() )
+      throw new SimulationException( "Calculation Points result file doesn't exists." );
+    if( !structures.exists() )
+      throw new SimulationException( "Structure Nodes result file doesn't exists." );
+
+    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, points );
+    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, structures );
 
     ConsoleHelper.writeLine( m_nofdpStream, "--> Calculation job finished..." );
     ConsoleHelper.writeLine( m_nofdpStream, "" );
   }
-
 }

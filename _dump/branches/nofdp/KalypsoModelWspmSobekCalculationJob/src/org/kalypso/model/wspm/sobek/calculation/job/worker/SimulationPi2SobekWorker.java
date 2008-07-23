@@ -8,6 +8,7 @@ import java.net.URL;
 
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.StreamGobbler;
+import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -35,13 +36,13 @@ public class SimulationPi2SobekWorker implements ISimulation
 
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Converting PI Model to Sobek Model..." ) );
+    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Converting PI Model into Sobek Model..." ) );
 
     /*******************************************************************************************************************
      * PROCESSING
      ******************************************************************************************************************/
     /* The command for execution. */
-    final File directory = new File( tmpdir, "Sobek-IDSS/batch" );
+    final File directory = new File( tmpdir, ISobekCalculationJobConstants.PATH_SOBEK_BATCH_DIR );
 
     final String[] command = new String[3];
     command[0] = "cmd.exe";
@@ -85,7 +86,7 @@ public class SimulationPi2SobekWorker implements ISimulation
         /* The process has not finished. */
       }
 
-      /* Wait a few millisec, before continuing. */
+      /* Wait a few milliseconds, before continuing. */
       try
       {
         Thread.sleep( 100 );
@@ -99,5 +100,12 @@ public class SimulationPi2SobekWorker implements ISimulation
 
     ConsoleHelper.writeLine( m_outputStream, String.format( "---> PI Model converted into Sobek Model." ) );
     ConsoleHelper.writeLine( m_outputStream, "" );
+
+    /* add pi conversion log to result eater */
+    File logFile = new File( tmpdir, ISobekCalculationJobConstants.LOG_PI2SOBEK_PATH );
+    if( !logFile.exists() )
+      throw new SimulationException( "Pi2Sobek conversion log file doesn't exists..." );
+
+    resultEater.addResult( ISobekCalculationJobConstants.LOG_PI2SOBEK, logFile );
   }
 }
