@@ -121,7 +121,7 @@ public class WspmSobekCalcJob implements ISimulation
       throw new SimulationException( "Structure Nodes result file doesn't exists." );
 
     resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, points );
-    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, structures );
+    resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES, structures );
 
     ConsoleHelper.writeLine( m_nofdpStream, "--> Calculation job finished..." );
     ConsoleHelper.writeLine( m_nofdpStream, "" );
