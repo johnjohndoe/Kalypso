@@ -1,3 +1,4 @@
+C     Last change:  WP   22 Jul 2008    5:05 pm
 cipk  last update sep 19 2003 switch units for col.dat
 CIPK  LAST UPDATE JAN 15 2002 ALLOW FOR FLOWS INTO COLLAPSING ELEMENTS
 C     New routine November 12 1999
@@ -5,12 +6,12 @@ C     New routine November 12 1999
       SUBROUTINE TWODSW
       USE BLK10MOD
       USE BLKDRMOD
+      !USE blkecom
      
 C
 C     Routine to detect threed elements below threshold for wetting/drying
 C
 CIPK AUG05      INCLUDE 'BLK10.COM'
-      INCLUDE 'BLKE.COM'
       INCLUDE 'BLKH.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 C-

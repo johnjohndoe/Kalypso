@@ -26,7 +26,9 @@ C-
      +          ,INWGT,INSTR,INBNWGT,INBNSTR,IGEO,IOWGT,IOBNWGT,ICORDIN
      +          ,IOV,IYKK,IDTM,TTEM,LNNAM,IWVIN,IWVFC,INOTR,INCSTR
      +          ,INTIMS,INEWBED,IDEBUG,IMESHOUT,IOUTRWD,IMASSOUT
-     +          ,ICNSV,IAVEL 
+     +          ,ICNSV,IAVEL,ICPU,IREALLCT,MR1
+     +          ,ITIMFL,ISOLCT
+CIPK AUG07  ADD ICPU to ISOLCT
 cipk aug06  add input options    
 !NiS,mar06      add MAXA as dimensioner for arc-array, MaxT for number of 1D-2D-TRANSITION ELEMENTS
      +          ,MaxA, MaxT, MaxPolyA, MaxPolyQ, MaxPolyB
@@ -76,7 +78,7 @@ CIPK MAR06 ADD IOUTRWD
      9          ,alpha,alphasn,drfact,prcnt,dmix
      +          ,tbfact,tbmin,TRANSIT
      +          ,ELEV1,TRELEV,TRFACT
-     +          ,ZSTDEP
+     +          ,ZSTDEP,ATIM(10)
 !NiS,apr06: adding tett as global variable because it is used in different subroutines
      +          ,tett
 !EFa may07, dispersion-coefficient for turbulence modell

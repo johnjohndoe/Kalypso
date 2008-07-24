@@ -1,4 +1,5 @@
-C     Last change:  NIS  15 May 2008    8:54 pm
+CIPK  LAST UPDATE AUG 22 2007  ADD ICPU
+CIPK  LAST UPDATE FEB 26 2007  REVISE TEST TO AVOID ACCIDENTALLY GOING TO COEFV
 CIPK  LAST UPDATE AUGUST 30 2006 ADD CONSV AND AVEL OPTIONS
 CIPK  LAST UPDATE APRIL 05 2006 MODIFY CALL TO GETINIT
 CIPK  LAST UPDATE MARCH 25 2006 ADD TESTMODE
@@ -53,6 +54,7 @@ CIPK  LAST UPDATED SEP 19 1995
       USE BLKSEDMOD
       USE BLKSANMOD
       USE BLKTSMOD
+      USE BLK10
 !NiS,mar06: Making Kalypso-2D specific arrays accessable
       USE ParaKalyps
 !NiS,mar06: add the module Parammod because the occuring error while compiling is caused by a variable
@@ -388,11 +390,17 @@ cipk sep04
         STOP 'LOOKING FOR C5'
       ENDIF 
       READ(DLIN,5011) NITI,NITN,TSTART,NCYC,IPRT,NPRTI,NPRTF,IRSAV,IDSWT
+      !check for maximum values
+      if (NITI > 90) call ErrorMessageAndStop (1008, 0, 0.0d0, 0.0d0)
+      if (ncyc > 0 .and. nitn > 90)
+     +  call ErrorMessageAndStop (1009, 0, 0.0d0, 0.0d0)
+
 !NiS,may06: In the case of Kalypso-2D format input file for geometry, it is among other things predetermined, from which time step to start.
 !           This timestep is saved in the global variable iaccyc. If the value is (iaccyc > 1), it means, that the beginning time step is not
 !           the over all beginning. For that reason, no steady calculation can be started. This means, that the user has to be informed about
 !           the occuring error, if  (iaccyc > 1) .and. (NITI /= 0)
       !EFa jun07, necessary for autoconverge
+
       nitizero = niti
       nitnzero = nitn
       if (niti.ne.0.) then
@@ -435,11 +443,14 @@ CIPK NOV97      READ(LIN,7000) ID,DLIN
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 cipk MAR03 add FREQUCY FOR OUTPUT OF RESULTS FILES AND RESTART FILES
 
+CIPK AUG07  ADD ICPU
+      ICPU=0
       IF(ID(1:2) .EQ. 'C6') THEN
 cipk mar06 allow for output file rewind      
-        READ(DLIN,'(3I8)') IOUTFREQ,IOUTRST,IOUTRWD
+CIPK AUG07  ADD ICPU
+        READ(DLIN,'(4I8)') IOUTFREQ,IOUTRST,IOUTRWD,ICPU
         call ginpt(lin,id,dlin)
-        WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD
+	    WRITE(LOUT,6024) IOUTFREQ,IOUTRST,IOUTRWD,ICPU
         IF(IOUTRWD .EQ. 0) IOUTRWD=NCYC+1
         IF(IOUTFREQ .EQ. 0) IOUTFREQ=1
         IF(IOUTRST .EQ. 0) IOUTRST=10
@@ -457,6 +468,7 @@ cipk mar06 allow for output file rewind
       !Set the standard values
       else
         WriteNodeBlock = 0
+        testoutput = 0
       end if
 
 CIPK ADD ICNSV AND IAVEL AND MAKE ORDER OPTIONAL
@@ -1012,7 +1024,7 @@ C-
 
               IF (ID /= 'CC1') then
                 close (75)
-                OPEN(75,'ERROR.dat')
+                OPEN(75,File='ERROR.dat')
                 WRITE ( *, 6801) k
                 WRITE (75, 6801) k
                 stop
@@ -1024,7 +1036,7 @@ C-
 
               IF (LINE(I,1) == 0) THEN
                 close (75)
-                OPEN (75,'ERROR.dat')
+                OPEN (75,File='ERROR.dat')
                 WRITE( *,6802)
                 WRITE(75,6802)
                 stop
@@ -1053,7 +1065,7 @@ C-
               CALL GINPT(lin,ID,DLIN)
             ELSE
               CLOSE(75)
-              OPEN(75,'ERROR.dat')
+              OPEN(75,File='ERROR.dat')
               write ( *,6803)
               write (75,6803)
               stop
@@ -1081,7 +1093,7 @@ C-
             READ(lin,'(A3)',iostat = istat_temp)ID
             if (istat_temp /= 0) then
               close (75)
-              OPEN(75,'ERROR.dat')
+              OPEN(75,File='ERROR.dat')
               WRITE( *,6804)
               WRITE(75,6804)
               stop
@@ -1111,7 +1123,7 @@ C-
      +       5x,'Control-output:',/
      +       5x,'max ID-No. ',I3,/
      +       5x,'continuity lines.')
- 6904 FORMAT(5x,'ID: ',I4,', 1.: ',I4,', last: ',I4,)
+ 6904 FORMAT(5x,'ID: ',I4,', 1.: ',I4,', last: ',I4)
  6905 FORMAT(5x,'-----------------------------------')
  6906 FORMAT(5x,'---------------------------------',/
      +       5x,'Continuity line definition in',/
@@ -2255,10 +2267,12 @@ CIPK NOV98 ADD FORMAT ABOVE
      +5X, 'WET/DRY FREQ.   ',I13/5X,'BINARY SAVE FREQUENCY',I8/
      +5X,'MIN DEPTH -DRYING    ',F8.2/
      +5X, 'MIN DEPTH -WETTING',F11.2)
+CIPK AUG07 ADD ICPU
  6024 FORMAT(
      +5X, 'FREQUENCY FOR BINARY OUTPUT',I5/
      +5X, 'FREQUENCY FOR RESTART FILES',I5/
-     +5X, 'FREQUENCY FOR RESTARTING OUTPUT FILE',I5)
+     +5X, 'FREQUENCY FOR RESTARTING OUTPUT FILE',I5/
+     +5X, 'SOLUTION OPTION                     ',I5)
 CIPK MAR06 ADD OUTPUT FILE REWIND     
 cipk mar98 add to format for additional parameter
  6030 FORMAT( /// 5X, 'ELEMENT CHARACTERISTICS' //
@@ -2461,10 +2475,7 @@ cipk sep04
 CIPK AUG03 EXPAND TO ADD 11TH ITEM
       SUBROUTINE GINPT10(IIN,ID,DLIN)
 CIPK AUG03 EXPAND TO ADD 11TH ITEM
-!NiS,jul06: Length of variable does not fit the calling length
-!      CHARACTER ID*8,DLIN*88
-      CHARACTER ID*8,DLIN*80
-!-
+      CHARACTER ID*8,DLIN*88
   100 CONTINUE
       READ(IIN,7000) ID,DLIN
       write(75,7000) id,dlin

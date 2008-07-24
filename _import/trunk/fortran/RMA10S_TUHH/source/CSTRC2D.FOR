@@ -18,16 +18,19 @@ cipk  last update nov 10 1995
       USE BLK11MOD
       USE BLKDRMOD
       USE BLKSUBMOD
+      USE BLKECOM
 C
 
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
-      INCLUDE 'BLKE.COM'
+CIPK AUG07	INCLUDE 'BLKE.COM'
 C-
-      REAL (KIND = 8) :: F, waitx
-      COMMON F(80),
+!      REAL (KIND = 8) :: F
+      REAL (KIND = 8) :: waitx
+!      COMMON F(80),
+      COMMON
      1 XN(8),DNX(8),DNY(8),XM(4),DMX(4),DMY(4),XL(8),YL(8)
      2,XO(8),DOX(8),DOY(8),
      3  WAITX(16),DL(2,2)

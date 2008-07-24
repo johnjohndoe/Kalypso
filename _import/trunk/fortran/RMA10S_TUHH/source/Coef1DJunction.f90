@@ -1,4 +1,4 @@
-!Last change:  NIS   3 Feb 2008    0:09 am
+!Last change:  WP    3 Jul 2008    3:02 pm
 SUBROUTINE COEF1DJunction (NN,NTX)
 
 
@@ -10,14 +10,13 @@ USE BLKSSTMOD
 USE BLKSANMOD
 USE PARAKalyps
 USE Para1DPoly
+USE blkecom
 
 SAVE
 
-INCLUDE 'BLKE.COM'
-
 
 INTEGER :: NTX, NN, ncnx, mc, iswt, nef
-INTEGER :: N1, MR, KK, NA, IMMT, NRX, NCON
+INTEGER :: N1, MR, KK, NA, IMMT, NRX
 INTEGER :: i, j, k, n, m
 INTEGER :: IA, JA
 INTEGER :: PolyPos, findPolynom
@@ -31,8 +30,6 @@ REAL(KIND=8) :: HS, HD, HD1, HDX, DUM1, HS1, HSX
 
 REAL (KIND=8) :: h
 
-COMMON F(80)
-DIMENSION NCON(20)
 
 IF(ITEQV(MAXN) .EQ. 5) THEN
   DO N=1,8
@@ -91,13 +88,19 @@ XHT  = 1.0
 
 
 
+!1st condition is continuity at the junction; time dependency is neglected here!
 checknodes: DO KK = 1, NCN
 
-  N1 = NCON(KK)
+  !get current node
+  N1 = NCON (KK)
+  !cycle for zero-nodes
   IF (N1 == 0) CYCLE checknodes
+  !get local equation number of current node
   NA = (KK - 1) * NDF + 1
+  !calculate global angle relations
   CX = COS (ALFA(N1))
   SA = SIN (ALFA(N1))
+  !calculate resulting 1D-velocity of current node
   R  = VEL(1, N1) * CX + VEL(2, N1) * SA
 
   !using geometry-approach (means trapezoidal channel)
@@ -106,19 +109,22 @@ checknodes: DO KK = 1, NCN
     ESTIFM(1, NA) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) / 2. * VEL(3, N1)) * VEL(3,N1) * XHT
     !derivative over depth
     ESTIFM(1, NA+2) = DIR(N1) * (WIDTH(N1) + (SS1(N1) + SS2(N1)) * VEL(3,N1)) * R * XHT
+
   !using polynom approach
   ELSE
+    !get position in polynomial for current node with present water stage
     PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1), PolySplitsA (n1))
-    ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1))
-    !derivative over velocity
+    !calculate the cross sectional area
+    ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1), ubound (apoly, 3))
+    !install derivative of discharge over velocity at current node into local equation 1
     ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
-
-    !derivative over depth
-    dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:12), vel(3, n1))
+    !calculate the derivative of the cross sectional area of current node over depth
+    dahdh (n1) = calcPolynomial1stDerivative (apoly (PolyPos, n1, 0:12), vel(3, n1), ubound (apoly, 3))
+    !install derivative of discharge over depth at current node into local equation 1
     ESTIFM(1, NA+2) = DIR(N1) * dahdh (n1) * R * XHT
 
   ENDIF
-  !residual error
+  !install direction dependent discharge of current node into residual error vector; the sum of the in-/outflows must be zero!
   F(1) = F(1) - ESTIFM(1, NA) * R
 
 ENDDO checknodes
@@ -126,11 +132,17 @@ ENDDO checknodes
 
 if (imat (NN) == 901) then
 
-NRX=NCON(1)
-  checkNodes901: DO KK=2,NCN
-    N1=NCON(KK)
-    IF (N1 .EQ. 0) CYCLE checkNodes901
-    NA=(KK-1)*NDF+1
+  !1st node (definition by accident)
+  NRX = NCON (1)
+  !run through rest of nodes of junction
+  checkNodes901: DO KK = 2, NCN
+    !get node number
+    N1 = NCON (KK)
+    !check for zero-node number
+    IF (N1 == 0) CYCLE checkNodes901
+    !get local equation number
+    NA = (KK - 1) * NDF + 1
+    !instal derivatives with respect to (WRT) water depth of reference node and
     ESTIFM(NA,3)=XHT
     ESTIFM(NA,NA+2)=-XHT
     !CIPK NOV97        F(NA)=XHT*((VEL(3,N1)-VEL(3,NRX))+(AO(N1)-AO(NRX)))
@@ -177,12 +189,12 @@ ELSEIF (imat (nn) == 903) then
   nry = nop (nn, 2)
 
   PolyPos = findPolynom (PolyRangeA (nrx, :), vel(3, nrx), PolySplitsA (nrx))
-  acx = calcPolynomial (apoly (PolyPos, nrx, 0:12), vel (3, nrx))
-  wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:12), vel(3, nrx))
+  acx = calcPolynomial (apoly (PolyPos, nrx, 0:12), vel (3, nrx), ubound (apoly, 3))
+  wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:12), vel(3, nrx), ubound (apoly, 3))
 
   PolyPos = findPolynom (PolyRangeA (nry, :), vel(3, nry), PolySplitsA (nry))
-  acy = calcPolynomial (apoly (PolyPos, nry, 0:12), vel (3, nry))
-  wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:12), vel(3, nry))
+  acy = calcPolynomial (apoly (PolyPos, nry, 0:12), vel (3, nry), ubound (apoly, 3))
+  wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:12), vel(3, nry), ubound (apoly, 3))
 
   rx = vel (1, nrx) * COS (ALFA (nrx)) + vel (2, nrx) * SIN (ALFA (nrx))
   ry = vel (1, nry) * COS (ALFA (nry)) + vel (2, nry) * SIN (ALFA (nry))

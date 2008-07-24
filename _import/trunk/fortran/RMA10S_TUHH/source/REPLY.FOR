@@ -1,16 +1,19 @@
-      SUBROUTINE REPLY(ANAM,ISWT)
-      CHARACTER*32 ANAM
-      ISWT=0
-      IF(ANAM .EQ. 'NO') GO TO 200
-      IF(ANAM .EQ. 'no') GO TO 200
-      IF(ANAM .EQ. 'NONE') GO TO 200
-      IF(ANAM .EQ. 'none') GO TO 200
-      IF(ANAM .EQ. 'NOMORE') GO TO 220
-      IF(ANAM .EQ. 'nomore') GO TO 220
-      IF(ANAM .EQ. ' ') GO TO 220
-      RETURN
-  200 ISWT=1
-      RETURN
-  220 ISWT=2
+      SUBROUTINE REPLY (ANAM, ISWT)
+      
+      !Declarations
+      CHARACTER (len = 32) :: ANAM
+      !Switch to be as reply from anam
+      integer :: iswt
+
+      ISWT = 0
+
+      IF(ANAM == 'NO' .or. anam == 'no' .or.
+     +   anam == 'NONE' .or. anam == 'none') then
+        ISWT = 1
+      elseif (ANAM == 'NOMORE' .or. ANAM == 'nomore' .or.
+     +        ANAM == ' ') then
+        ISWT=2
+      endif 
+      
       RETURN
       END

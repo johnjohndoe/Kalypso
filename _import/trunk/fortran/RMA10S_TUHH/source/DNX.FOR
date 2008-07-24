@@ -1,8 +1,18 @@
 
-      REAL*8 FUNCTION DNX(IT,K,X,Y)
+      FUNCTION DNX (IT, K, X, Y)
       SAVE
 C-
-      REAL*8 X,Y
+      !Declarations
+      !Function type defintion
+      real (kind = 8) :: dnx
+      
+      !variables
+      REAL(kind = 8) ::X, Y
+      integer :: it, k
+     
+
+
+
 C......FUNCTION TO DETERMINE X-DERIVATIVE OF SHAPE FUNCTION
 C-
       IF(IT.EQ.1) GO TO 500

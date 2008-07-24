@@ -1,4 +1,4 @@
-!     Last change:  WP   11 Mar 2008   12:08 pm
+!     Last change:  WP   15 Jun 2008   12:55 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -46,6 +46,14 @@ elseif (ErrorID == 1006) then
 elseif (ErrorID == 1007) then
   WRITE (ErrorUnit, 1007)
   WRITE (        *, 1007)
+
+elseif (ErrorID == 1008) then
+  WRITE (ErrorUnit, 1008)
+  WRITE (        *, 1008)
+
+elseif (ErrorID == 1009) then
+  WRITE (ErrorUnit, 1009)
+  WRITE (        *, 1009)
 
 elseif (ErrorID == 1101) then
   WRITE (ErrorUnit, 1101) ObjectID
@@ -169,6 +177,14 @@ elseif (ErrorID == 4001) then
   WRITE (ErrorUnit, 4001) ObjectID
   WRITE (        *, 4001) ObjectID
 
+elseif (ErrorID == 4002) then
+  WRITE (ErrorUnit, 4002)
+  WRITE (        *, 4002)
+
+elseif (ErrorID == 4003) then
+  WRITE (ErrorUnit, 4003)
+  WRITE (        *, 4003)
+
 elseif (ErrorID == 4101) then
   WRITE (ErrorUnit, 4101)
   WRITE (        *, 4101)
@@ -190,7 +206,7 @@ end if
 
 !999    Position of Error
 !***
-  998 FORMAT (1x, 'No coordinates of ERROR available')
+  998 FORMAT (1x, 'No coordinates for ERROR available')
   999 FORMAT (1x, 'Error occurs at or near to position: ' / &
             & 1x, 'Rechtswert: ', f13.4, '; Hochwert: ', f13.4 / &
             & 1x, 'EXECUTION TERMINATED')
@@ -209,6 +225,11 @@ end if
  !elflows
  1007 format (1x, 'ERROR - TOO MANY ELEMENT INFLOWS.' / &
             & 1x, 'Reduce the number of element inflows! Program will be stopped')
+ !input
+ 1008 format (1x, 'ERROR - too many possible iterations for steady step defined. '/ &
+            & 1x, 'maximum number is 90')
+ 1009 format (1x, 'ERROR - too many possible iterations for unsteady steps defined. '/ &
+            & 1x, 'maximum number is 90')
 
 !1100  Errors with nodes
 !****
@@ -313,6 +334,15 @@ end if
             & 1x, 'at node ', I6, '. Please increase' / &
             & 1x, 'URFC, change time step or boundary condition' / &
             & 1x, 'values in general')
+ !stfltab: stage flow boundaries are problematic
+ 4002 format (1x, 'ERROR - SURFACE ELEVATION BELOW LOWEST TABLE ENTRY' / &
+!            & 1x, 'ILINTB,SRFEL,ELEVTBL(ILINTB,1)', ILINTB, SRFEL
+!     +                 ,ELEVTBL(ILINTB,1)
+            & 1x, 'EXECUTION TERMINATED')
+ 4003 format (1x, 'ERROR - WATER SURFACE ELEVATION ABOVE HIGHEST TABLE ENTRY' / &
+!      WRITE(75,*)'ILINTB,SRFEL,ELEVTBL(ILINTB,1)',ILINTB,SRFEL
+!     +                 ,ELEVTBL(ILINTB,1)
+            & 1x, 'EXECUTION TERMINATED')
 
 !4100   Autoconverge Errors
  4101 format (1x, 'ERROR - Autoconverge not successful')

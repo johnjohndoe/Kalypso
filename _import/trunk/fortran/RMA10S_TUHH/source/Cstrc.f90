@@ -1,25 +1,25 @@
-!     Last change:  WP   10 Apr 2008    2:06 pm
+!     Last change:  WP   12 Jun 2008    2:05 pm
 !     Last change:  NIS  21 Feb 2008    8:15 am
 !ipk  last update nov 28 2006 allow for all 1-d control structure options
 SUBROUTINE CSTRC(NN)
 USE BLK10MOD
 USE BLKSUBMOD
 USE BLK11MOD
+USE BLKECOM      
 USE Para1DPoly
 USE parakalyps
 
 !
 !IPK AUG05      INCLUDE 'BLK10.COM'
 !-
-INCLUDE 'BLKE.COM'
+!IPK AUG07      INCLUDE 'BLKE.COM'
 
-REAL (KIND = 8) :: F
-COMMON F(80)
+!IPK AUG07      COMMON F(80)
 
 DIMENSION U(8)
 
 !NiS,jul06: Declaring waterlevel H for proper call of amf-subroutine
-REAL (KIND = 8) :: WH1, WH2
+REAL (KIND = 8) :: WH1, WH2, WS1, WS2
 REAL (KIND = 8) :: calcPolynomial, calcPolynomial1stDerivative
 REAL (KIND = 8) :: Q1t
 INTEGER :: PolyPos(1:2), findpolynom
@@ -50,12 +50,12 @@ if (width(nop(nn,1)) == 0.0) then
   PolyPos(2) = findPolynom (PolyRangeA (nop (nn, 3), :), vel (3, nop(nn, 3)), PolySplitsA (nop (nn, 3)))
 
   !A(h)
-  ah (nop (nn, 1)) = calcPolynomial (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)))
-  ah (nop (nn, 3)) = calcPolynomial (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)))
+  ah (nop (nn, 1)) = calcPolynomial (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)), ubound (apoly, 3))
+  ah (nop (nn, 3)) = calcPolynomial (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)), ubound (apoly, 3))
 
   !dA(h)/dh
-  dahdh (nop (nn, 1)) = calcPolynomial1stDerivative (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)))
-  dahdh (nop (nn, 3)) = calcPolynomial1stDerivative (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)))
+  dahdh (nop (nn, 1)) = calcPolynomial1stDerivative (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)), ubound (apoly, 3))
+  dahdh (nop (nn, 3)) = calcPolynomial1stDerivative (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)), ubound (apoly, 3))
 endif
 
 !form ave velocity

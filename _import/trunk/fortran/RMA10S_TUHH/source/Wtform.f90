@@ -1,6 +1,6 @@
-!Last change:  NIS  15 May 2008   10:54 pm
+!Last change:  WP   12 Jun 2008    2:06 pm
 !Last change:  WP    7 Feb 2008    3:42 pm
-SUBROUTINE WTFORM(Q, NCTR, HOW, HUW)
+SUBROUTINE WTFORM(Q, NCTR, HOWIN, HUWIN)
 USE CSVAR
 USE parakalyps
 
@@ -8,13 +8,14 @@ implicit none
 
 
 !dummys ins
-REAL (KIND = 8), INTENT (INout)  :: huw, how
-INTEGER, INTENT (IN)             :: NCTR
+REAL (KIND = 8), INTENT (IN) :: huwin, howin
+INTEGER, INTENT (IN)         :: NCTR
 !dummy outs
-REAL (KIND = 8), INTENT (OUT)    :: Q
+REAL (KIND = 8), INTENT (OUT) :: Q
 
 !general locals
 INTEGER         :: nrhi, nchi
+REAL (KIND = 8) :: how, huw
 INTEGER         :: i, j, k
 REAL (KIND = 8) :: Diff, dummy
 
@@ -25,7 +26,7 @@ REAL (KIND = 8) :: WTC, WTR
 !locals for energy method with linear functions
 REAL (KIND = 8), ALLOCATABLE :: valuesOnLine (:)
 REAL (KIND = 8) :: qfact, huw_tmp
-REAL (KIND = 8) :: CalcPolynomial2, HUPP, HLOW
+REAL (KIND = 8) :: CalcPolynomial, HUPP, HLOW
 REAL (KIND = 8) :: A(0:1)
 INTEGER         :: noOfOutQs
 INTEGER         :: Pos, FindPolynom
@@ -38,6 +39,10 @@ LOGICAL :: FileExists
 INTEGER :: searchRange
 INTEGER :: lowerBoundUW, upperBoundUW, lowerBoundOW, upperBoundOW
 
+
+how = howin
+huw = huwin
+
 !original method from RMA10S with usage of water stages at control structures
 if (UseEnergyCstrc == 0) then
 
@@ -45,7 +50,7 @@ if (UseEnergyCstrc == 0) then
   FileExists = .false.
   inquire (FILE='bauwerkstest.txt', EXIST= FileExists)
   if (.not.FileExists) then
-   OPEN (123321, 'bauwerkstest.txt')
+   OPEN (123321, file='bauwerkstest.txt')
    WRITE (123321, *) 0.0d0, (hcl (nctr, j), j=1, 160)
    do i = 1, 1000
      WRITE (123321, *) hrw (nctr, i), (flwcs(nctr, i, j), j=1, 160)
@@ -170,7 +175,7 @@ ELSEIF (UseEnergyCstrc == 1) then
     !WRITE(*,*) 'vor :', valuesOnLine (i)
     !WRITE(*,*) (cstrcCoefs (nctr, i, Pos, j), j= 0, 1)
     !testing-
-    valuesOnLine (i) = CalcPolynomial2 (cstrcCoefs (nctr, i, Pos, 0:1), huw)
+    valuesOnLine (i) = CalcPolynomial (cstrcCoefs (nctr, i, Pos, 0:1), huw, 1)
     !testing
     !WRITE(*,*) Pos, huw
     !WRITE(*,*) 'nach:', valuesOnLine(i)
@@ -184,7 +189,13 @@ ELSEIF (UseEnergyCstrc == 1) then
   !testing
   !WRITE(*,*) how, pos
   !do k = 1, noOfOutQs
-  !  WRITE(*,*) valuesOnLIne(k)
+  !  if (k >= 2) then
+  !    if (valuesonline (k) <= valuesonline (k-1)) then
+  !      WRITE(*,*) nctr, k
+  !      WRITE(*,*) valuesOnLIne(k)
+  !      WRITE(*,*) valuesOnLIne(k-1)
+  !    endif
+  !  endif
   !enddo
   !pause
   !testing-
@@ -216,7 +227,7 @@ ELSEIF (UseEnergyCstrc == 1) then
     HLOW = valuesOnLine (pos - 2)
     A(1) = (cstrcdisch (nctr, pos - 1) - cstrcdisch (nctr, pos - 2)) / (valuesOnLine (pos - 1) - valuesOnLine (pos - 2))
     A(0) = cstrcdisch (nctr, pos - 1) - A(1) * valuesOnLine (pos - 1)
-    Q = CalcPolynomial2 (A, how)
+    Q = CalcPolynomial (A, how, 1)
 
   !normal interpolation between functions
   else
@@ -241,6 +252,7 @@ ELSEIF (UseEnergyCstrc == 1) then
 
   !testing
   !if (qfact < 0.0) then
+  !  WRITE(*,*) nctr
   !  WRITE(*,*) huw, how
   !  WRITE(*,*) hlow, hupp
   !  WRITE(*,*) Q

@@ -13,7 +13,7 @@ INTEGER   :: UseEnergyCSTRC
 !               programming activities might change this. A better way for global access might be to allocate them after the call of getgeo1
 !               from the main program RMA10, because the arrays are dependent on the network size.
 INTEGER 		  :: iauslp, iausnpm
-REAL(KIND=4), allocatable :: rausv(:,:), zeigma(:)
+REAL(KIND=8), allocatable :: rausv(:,:), zeigma(:)
 REAL (KIND = 8), ALLOCATABLE :: minvel (:,:), maxvel (:,:), minrausv(:), maxrausv(:)
 !-
 
@@ -39,7 +39,7 @@ INTEGER            :: itefreq
 
 !NiS,jul06: At the moment as a dummy argument, the bedform-array in a global version. It is passed to the subroutine
 !           formrauheit in the file roughness.f90
-real (KIND=4),allocatable :: gl_bedform(:,:)
+real (KIND=8),allocatable :: gl_bedform(:,:)
 
 !nis,jun07: Adding specific discharge and difference quotients of that over h and v for alle transition nodes
 !           Add pointer for all nodes to be part of a transition or not

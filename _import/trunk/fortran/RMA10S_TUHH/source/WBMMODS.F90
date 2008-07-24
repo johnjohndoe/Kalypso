@@ -24,13 +24,13 @@ LOGICAL(4)                 :: wbm_InitCons = .FALSE.
 LOGICAL(4)                 :: wbm_ScourLim
 Character(500)             :: wbm_InitConsFile
 Character(500)             :: wbm_ScourLimFile
-REAL (4), ALLOCATABLE      :: wbm_MANNTRANS(:)
-REAL (4), ALLOCATABLE      :: wbm_MANNTRANSOLD(:)
-REAL (4), ALLOCATABLE      :: wbm_BedHeight(:)
-REAL (4), ALLOCATABLE      :: wbm_NewConditions(:,:)
-REAL (4), ALLOCATABLE      :: wbm_ScourLims(:)
-INTEGER (4)                :: wbm_NodeCounter
-INTEGER (4)                :: wbm_IT
+real(8), ALLOCATABLE      :: wbm_MANNTRANS(:)
+real(8), ALLOCATABLE      :: wbm_MANNTRANSOLD(:)
+real(8), ALLOCATABLE      :: wbm_BedHeight(:)
+real(8), ALLOCATABLE      :: wbm_NewConditions(:,:)
+real(8), ALLOCATABLE      :: wbm_ScourLims(:)
+integer(8)                :: wbm_NodeCounter
+integer(8)                :: wbm_IT
 !*************************************************************************************************
 !
 !  Module Procedures
@@ -60,37 +60,37 @@ IMPLICIT NONE
 !     VARIABLE DECLARATIONS - INPUTS
 !
 !*************************************************************************************************
-REAL(4), INTENT(INOUT), ALLOCATABLE   ::  wbm_MANNTRANS(:)   !Nodal Roughnesses
-REAL(4), INTENT(INOUT), ALLOCATABLE   ::  TMANN(:)           !Elemental Roughnesses
-INTEGER(4), INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           !Element Nodal Connections
-INTEGER(4), INTENT(IN)                ::  NE                 !Number of Elements
-INTEGER(4), INTENT(IN)                ::  TSNO               !Time Step Number
-INTEGER(4), INTENT(IN)                ::  ITNNO              !Iteration Number
-INTEGER(4), INTENT(INOUT)             ::  wbm_IT             !Number of Elements
-INTEGER(4), INTENT(IN)                ::  IT                 !CurrentIteration
-INTEGER(4), INTENT(IN)                ::  NNOD               !NumberofNodes
+real(8), INTENT(INOUT), ALLOCATABLE   ::  wbm_MANNTRANS(:)   !Nodal Roughnesses
+real(8), INTENT(INOUT), ALLOCATABLE   ::  TMANN(:)           !Elemental Roughnesses
+integer(8), INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           !Element Nodal Connections
+integer(8), INTENT(IN)                ::  NE                 !Number of Elements
+integer(8), INTENT(IN)                ::  TSNO               !Time Step Number
+integer(8), INTENT(IN)                ::  ITNNO              !Iteration Number
+integer(8), INTENT(INOUT)             ::  wbm_IT             !Number of Elements
+integer(8), INTENT(IN)                ::  IT                 !CurrentIteration
+integer(8), INTENT(IN)                ::  NNOD               !NumberofNodes
 !*************************************************************************************************
 !
 !     VARIABLE DECLARATIONS - INTERIM
 !
 !*************************************************************************************************
-INTEGER(4)                             :: Divider
-INTEGER(4)                             :: I
-INTEGER(4)                             :: J
-INTEGER(4)                             :: NODE1
-INTEGER(4)                             :: NODE2
-INTEGER(4)                             :: NODE3
-INTEGER(4)                             :: NODE4
-INTEGER(4)							         :: COUNT
-INTEGER(4)                             :: UPPERBOUND
-REAL(4)                                :: NODE1N
-REAL(4)                                :: NODE2N
-REAL(4)                                :: NODE3N
-REAL(4)                                :: NODE4N
-REAL(4)                                :: CHECK
+integer(8)                             :: Divider
+integer(8)                             :: I
+integer(8)                             :: J
+integer(8)                             :: NODE1
+integer(8)                             :: NODE2
+integer(8)                             :: NODE3
+integer(8)                             :: NODE4
+integer(8)							         :: COUNT
+integer(8)                             :: UPPERBOUND
+real(8)                                :: NODE1N
+real(8)                                :: NODE2N
+real(8)                                :: NODE3N
+real(8)                                :: NODE4N
+real(8)                                :: CHECK
 LOGICAL(4)                             :: MYLOG
 LOGICAL(4)                             :: EXT
-REAL(4), ALLOCATABLE				   :: TMANNB(:)
+real(8), ALLOCATABLE				   :: TMANNB(:)
 Character(500)						   :: FILENAME
 !*************************************************************************************************
 !
@@ -252,28 +252,28 @@ IMPLICIT NONE
 !     VARIABLE DECLARATIONS - INPUTS
 !
 !*************************************************************************************************
-REAL(4), INTENT(IN)                   ::  TAUCR          ! Critical Bed Shear Stress
-REAL(4), INTENT(IN)                   ::  hd             ! Depth
-REAL(4), INTENT(IN)                   ::  d90mm          ! 90 percentile Grain Size
-REAL(4), INTENT(IN)                   ::  d50mm          ! Median Grain Size
-REAL(4), INTENT(IN)                   ::  ugv            ! Median Grain Size
+real(8), INTENT(IN)                   ::  TAUCR          ! Critical Bed Shear Stress
+real(8), INTENT(IN)                   ::  hd             ! Depth
+real(8), INTENT(IN)                   ::  d90mm          ! 90 percentile Grain Size
+real(8), INTENT(IN)                   ::  d50mm          ! Median Grain Size
+real(8), INTENT(IN)                   ::  ugv            ! Median Grain Size
 INTEGER, INTENT(IN)                   ::  NodeNo         ! Current Node for which roughness is being calculated
-REAL(4), INTENT(INOUT)                ::  NodeRough      !Nodal Roughnesses
-REAL(4), INTENT(INOUT)                ::  KSC            ! Ripple Height
+real(8), INTENT(INOUT)                ::  NodeRough      !Nodal Roughnesses
+real(8), INTENT(INOUT)                ::  KSC            ! Ripple Height
 !*************************************************************************************************
 !
 !     VARIABLE DECLARATIONS - INTERIM
 !
 !*************************************************************************************************
-REAL(4)                               ::  TAUGR          ! Grain Related Shear Stress?
-REAL(4)                               ::  CHEZYGR        ! Grain Related Chezy Constant
-REAL(4)                               ::  T              ! Bed Shear Stress Parameter
-REAL(4)                               ::  DD             ! Dune Height
-REAL(4)                               ::  RD             ! Ripple Height
-REAL(4)                               ::  CC             ! Chezy Coefficient
-REAL(4)                               ::  LMANN          ! Local Mannings Coefficient
-REAL(4)                               ::  D90M           ! D90 in m
-REAL(4)                               ::  D50M           ! D50 in m
+real(8)                               ::  TAUGR          ! Grain Related Shear Stress?
+real(8)                               ::  CHEZYGR        ! Grain Related Chezy Constant
+real(8)                               ::  T              ! Bed Shear Stress Parameter
+real(8)                               ::  DD             ! Dune Height
+real(8)                               ::  RD             ! Ripple Height
+real(8)                               ::  CC             ! Chezy Coefficient
+real(8)                               ::  LMANN          ! Local Mannings Coefficient
+real(8)                               ::  D90M           ! D90 in m
+real(8)                               ::  D50M           ! D50 in m
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -338,12 +338,12 @@ IMPLICIT NONE
 !
 !*************************************************************************************************
 LOGICAL(4), INTENT(INOUT)               :: wbm_Initiated       
-REAL (4), ALLOCATABLE, INTENT(INOUT)    :: wbm_MANNTRANS(:)
-REAL (4), ALLOCATABLE, INTENT(INOUT)    :: wbm_MANNTRANSOLD(:)
-REAL (4), ALLOCATABLE, INTENT(INOUT)    :: wbm_BedHeight(:)
-INTEGER (4), INTENT(INOUT)              :: wbm_NodeCounter
-INTEGER (4)                             :: NumNodes
-INTEGER (4), INTENT(INOUT)              :: wbm_IT
+real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_MANNTRANS(:)
+real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_MANNTRANSOLD(:)
+real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_BedHeight(:)
+integer(8), INTENT(INOUT)              :: wbm_NodeCounter
+integer(8)                             :: NumNodes
+integer(8), INTENT(INOUT)              :: wbm_IT
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -397,10 +397,10 @@ IMPLICIT NONE
 !Character(500)          :: Line
 Character(500)          :: Line, temp_line
 !-
-Integer(4)              :: CurrentNode
-Integer (4)             :: i
-Integer (4)             :: StartPos
-Integer (4)             :: EndPos
+integer(8)              :: CurrentNode
+integer(8)             :: i
+integer(8)             :: StartPos
+integer(8)             :: EndPos
 Character(50)           :: LineParts(10)
 !NiS,jun06: Changes for usage with Lahey
 INTEGER :: istat
@@ -487,8 +487,8 @@ IMPLICIT NONE
 !     VARIABLE DECLARATIONS - INPUTS
 !
 !*************************************************************************************************
-REAL (4), ALLOCATABLE, INTENT(INOUT)    :: wbm_ScourLims(:)
-INTEGER (4)                             :: NumNodes
+real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_ScourLims(:)
+integer(8)                             :: NumNodes
 
 !*************************************************************************************************
 !
@@ -499,12 +499,12 @@ INTEGER (4)                             :: NumNodes
 !Character(500)          :: Line
 Character(500)          :: Line, temp_line
 !-
-Integer(4)              :: CurrentNode
-Integer (4)             :: i
-Integer (4)             :: StartPos
-Integer (4)             :: EndPos
+integer(8)              :: CurrentNode
+integer(8)             :: i
+integer(8)             :: StartPos
+integer(8)             :: EndPos
 Character(50)           :: LineParts(10)
-Real (4)                :: CurrentBedLevel
+real(8)                :: CurrentBedLevel
 !NiS,jun06: Changes for usage with Lahey
 INTEGER :: istat
 !-

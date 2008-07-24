@@ -1,4 +1,4 @@
-C     Last change:  WP    8 Jan 2008   11:11 am
+C     Last change:  WP   22 Jul 2008    9:59 am
 cipk  last update SEP 05 2006 FIX AMASSOUT BUG
 cipk  last update MAY 30 2006 add MASS OUTPUT OPTION
 cipk  last update june 28 2005 add time series option
@@ -49,9 +49,9 @@ CIPK SEP04 REMOVE FNAM ADDD FNAMMES
      +            ,FNAM14,FNAM15,FNAM16,FNAM17,FNAMIN,fnam18,FNAM19
      +            ,FNAM20,FNAM24,FNAM25,FNAM23,FNAM26,FNAM27,FNAM28
      +            ,FNAM29,FNAM30,FNAM31,FNAM32,FNAM21,FNAM22,FNAM33
-     +            ,FNAM34,FNAM35,FNAM36,FNAM37, FNAM38,
-      !EFa jul07, added FNAM39 for input data file for stage-flow boundaries
-     + FNAM39
+     +            ,FNAM34,FNAM35,FNAM36,FNAM37, FNAM38, FNAM39,
+      !EFa jul07, added FNAM40 for input data file for stage-flow boundaries
+     + FNAM40
       !-
 
 !NiS,may06:
@@ -165,6 +165,8 @@ CIPK JUN05
       INTIMS=0
 CIPK MAY06
         IMASSOUT=0
+CIPK AUG07
+	  ITIMFL=0
 C-
 *...... Open input and output files
 C-
@@ -786,9 +788,9 @@ CIPK AUG02 ADD SMS FORMAT OUTPUT
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !EFa jul07, ADD STAGE FLOW TABLE INPUT
         ELSEIF(ID .eq. 'STFLFIL ') THEN
-          INSFL=39
+          INSFL=40
           OPEN(INSFL,FILE=FNAME,STATUS='OLD',FORM='FORMATTED')
-          FNAM39=FNAME
+          FNAM40=FNAME
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CIPK JUN03 ADD WEIGHTING ASCII  FILE
         ELSEIF(ID .eq. 'INWGT   ') THEN
@@ -880,6 +882,12 @@ CIPK MAY06
           IMASSOUT=24
           OPEN(IMASSOUT,FILE=FNAME,STATUS='UNKNOWN',FORM='FORMATTED')
           FNAM38=FNAME
+CIPK MAR07 ADD INTIMS input file
+        ELSEIF(ID(1:7) .eq. 'TIMFIL') THEN
+          ITIMFL=25
+          OPEN(ITIMFL,FILE=FNAME,STATUS='UNKNOWN',FORM='FORMATTED')
+          FNAM39=FNAME
+          CALL SECOND(ATIM(1))
       ELSEIF(ID .EQ. 'ENDFIL  ') THEN
         GO TO 210
       ENDIF
@@ -1047,6 +1055,9 @@ CIPK MAY06
 CIPK SEP06 CHANGE IMASSOUT
       IF(IMASSOUT .GT. 0) WRITE(LOUT,6055) FNAM38
  6055 FORMAT(' OUTPUT MASS BALANCE FILE NAME   ',A96)
+
+      IF(ITIMFL .EQ. 25) WRITE(LOUT,6057) FNAM39
+ 6057 FORMAT(' TIMING OUTPUT DATA FILE NAME     ',T40,A96)
 C-
         NSCR=9
 C       IVS=8

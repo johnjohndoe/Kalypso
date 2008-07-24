@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 CIPK  LAST UPDATE APR 20 2001 MOVE INITIALIZATION OF VOLS TO LATER ON 
 CIPK  LAST UPDATE MAR 5 2001 ADD DRAG
 cipk  last change Aug 2 2000 initialize epsxz etc.
@@ -14,18 +15,15 @@ cipk  last update Aug27 1996  Modify horizontal diffusion formulation
       USE BLK10
       USE BLK11MOD
       USE BLK10MOD
+      USE BLKECOM
       SAVE
 C-
 cycw aug94 add double precision salt
       REAL*8 S
       REAL J11,J12,J13,J21,J22,J23,J31,J32,J33
-      REAL (KIND = 8) :: F
 C-
-!NiS,jul06: Consistent data types for passing parameters
-      REAL(KIND=8) :: h
-!-
 CIPK AUG05      INCLUDE 'BLK10.COM'
-      INCLUDE 'BLKE.COM'
+CIPK AUG07      INCLUDE 'BLKE.COM'
 C      INCLUDE 'RKEP.COM'
 C-
       COMMON/BLKC/ ATEMP(7,3),WAIT(7),AFACT(4),HFACT(4),SLOAD(2)
@@ -36,7 +34,8 @@ cipk jan95 add double precision for basis function values
 c     DOUBLE PRECISION DA,DB,DC
       COMMON /WTPR/ WAITPH(64)
 C-
-      COMMON F(80),XM(20),DMX(20),DMY(20),DMZ(20),FEEA(20)
+CIPK AUG07
+      COMMON XM(20),DMX(20),DMY(20),DMZ(20),FEEA(20)
      1      ,FEEB(20),FEEC(20),FEED(20),FEEE(20)
      2      ,XN(20),DNX(20),DNY(20),DNZ(20)
      3      ,XL(20),YL(20),ZL(20),ESTIFL(20,20),G(20)

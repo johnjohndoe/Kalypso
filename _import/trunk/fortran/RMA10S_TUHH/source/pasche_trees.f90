@@ -54,18 +54,18 @@ USE Blk10mod
 !-
 
 ! Local variables
-REAL(KIND=4), DIMENSION(1:MaxP) :: slope        ! Slope of watersurface at node
-REAL(KIND=4), DIMENSION(1:MaxP) :: eslope       ! Slope of energy level at node
+REAL(kind=8), DIMENSION(1:MaxP) :: slope        ! Slope of watersurface at node
+REAL(kind=8), DIMENSION(1:MaxP) :: eslope       ! Slope of energy level at node
 REAL(KIND=8)                    :: lambda_s     ! Mean roughness coefficient at element
 
 REAL(KIND=8) :: sumvx = 0.0
 REAL(KIND=8) :: sumvy = 0.0
 REAL(KIND=8) :: sumh = 0.0
-REAL(KIND=4) :: sumslope = 0.0
-REAL(KIND=4) :: sumeslope = 0.0
+REAL(kind=8) :: sumslope = 0.0
+REAL(kind=8) :: sumeslope = 0.0
 REAL (KIND = 8) :: NikuradseRoughness
-REAL(KIND=4), DIMENSION(1:MaxE) :: mslope        ! Mean slope of water surface at element
-REAL(KIND=4), DIMENSION(1:MaxE) :: meslope       ! Mean slope of energy level at element
+REAL(kind=8), DIMENSION(1:MaxE) :: mslope        ! Mean slope of water surface at element
+REAL(kind=8), DIMENSION(1:MaxE) :: meslope       ! Mean slope of energy level at element
 INTEGER :: i, cycle_number
 
 ! Main procedure to calculate the slope of the watersurface
@@ -231,10 +231,10 @@ USE Blk10mod
 
 ! Calling variables
 !NiS,apr06: changing mnd to MaxP
-!REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT) :: slope    ! Calculated slope of water surface
-!REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT) :: eslope   ! Calculated slope of energy curve/surface
-REAL (KIND = 4), DIMENSION (1: MaxP), INTENT (OUT) :: slope    ! Calculated slope of water surface
-REAL (KIND = 4), DIMENSION (1: MaxP), INTENT (OUT) :: eslope   ! Calculated slope of energy curve/surface
+!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT) :: slope    ! Calculated slope of water surface
+!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT) :: eslope   ! Calculated slope of energy curve/surface
+REAL (kind=8), DIMENSION (1: MaxP), INTENT (OUT) :: slope    ! Calculated slope of water surface
+REAL (kind=8), DIMENSION (1: MaxP), INTENT (OUT) :: eslope   ! Calculated slope of energy curve/surface
 !-
 
 ! Local variables
@@ -246,11 +246,11 @@ INTEGER                         :: nodecnt
 INTEGER                         :: elcnt
 !-
 
-REAL(KIND=4), DIMENSION(1:2)    :: angle_v              ! direction of the actual flow vector
-REAL(KIND=4), DIMENSION(1:2)    :: vector_to_point      ! direction from actual point to the neighbour points
-REAL(KIND=4), DIMENSION(1:100)  :: angle_delt = 0.0     ! angle between the flow vector and the vector to the
+REAL(kind=8), DIMENSION(1:2)    :: angle_v              ! direction of the actual flow vector
+REAL(kind=8), DIMENSION(1:2)    :: vector_to_point      ! direction from actual point to the neighbour points
+REAL(kind=8), DIMENSION(1:100)  :: angle_delt = 0.0     ! angle between the flow vector and the vector to the
                                                         ! neighbour points
-REAL(KIND=4)                    :: vecq                 ! absolut value of velocity
+REAL(kind=8)                    :: vecq                 ! absolut value of velocity
 
 !NiS,apr06: changing mnd to MaxP
 !LOGICAL, DIMENSION(1:mnd)       :: marker_slope
@@ -393,8 +393,8 @@ subroutine GET_1D_SLOPE(node1,node2,node3,slope_temp, eslope_temp)
 
   USE blk10mod
 
-  REAL(KIND=4)                :: dx1, dy1, dl1, dx2, dy2, dl2
-  REAL(KIND=4), intent(inout) :: slope_temp, eslope_temp
+  REAL(kind=8)                :: dx1, dy1, dl1, dx2, dy2, dl2
+  REAL(kind=8), intent(inout) :: slope_temp, eslope_temp
   INTEGER, INTENT (IN)        :: node1, node2, node3
 
   dx1 = cord(node1,1) - cord(node2,1)
@@ -453,7 +453,7 @@ subroutine GET_MIN_ANGLE_POINTS(angle_delt, anz, nr, first, second)
 implicit none
 
 ! Calling variables
-REAL(KIND=4), DIMENSION(1:100), INTENT(IN)      :: angle_delt
+REAL(kind=8), DIMENSION(1:100), INTENT(IN)      :: angle_delt
 INTEGER, INTENT(IN)                             :: anz          ! no. of neighbours (nconnect(i)
 INTEGER, INTENT(IN)                             :: nr           ! no. of actual element
 INTEGER, INTENT(OUT)                            :: first        ! node no. of nearest neighbour
@@ -461,7 +461,7 @@ INTEGER, INTENT(OUT)                            :: second       ! node no. of se
 
 ! Local variables
 INTEGER 	:: i
-REAL(KIND=4) 	:: min_angle_pos, min_angle_neg
+REAL(kind=8) 	:: min_angle_pos, min_angle_neg
 INTEGER         :: min_nr_pos, min_nr_neg
 
 min_nr_pos = 0
@@ -532,8 +532,8 @@ implicit none
 
 ! Calling variables
 INTEGER, INTENT(IN)                           :: nodecnt
-REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT) :: slope
-REAL(KIND=4), DIMENSION(1:mnd), INTENT(INOUT) :: eslope
+REAL(kind=8), DIMENSION(1:mnd), INTENT(INOUT) :: slope
+REAL(kind=8), DIMENSION(1:mnd), INTENT(INOUT) :: eslope
 INTEGER, DIMENSION (1: mnd), INTENT(IN)         :: nconnect
 INTEGER, DIMENSION (1: mnd, 0: 100), INTENT (IN)    :: neighb
 LOGICAL, DIMENSION (1: mnd), INTENT(INOUT)      :: marker_slope
@@ -543,7 +543,7 @@ INTEGER, INTENT(IN)                           :: mnd
 
 ! Local variables
 INTEGER      :: i, j, anz, temp_anz
-REAL(KIND=4) :: temp_slope, temp_eslope
+REAL(kind=8) :: temp_slope, temp_eslope
 
 anz = 0
 
@@ -665,16 +665,16 @@ USE Blk10mod
 !-
 
 ! Calling variables
-REAL(KIND=4), DIMENSION(1:2), INTENT(IN) 	:: angle_v	! Velocity vector
+REAL(kind=8), DIMENSION(1:2), INTENT(IN) 	:: angle_v	! Velocity vector
 INTEGER, INTENT(IN)                             :: pn      	! Point of velocity vector
 INTEGER, INTENT(IN)                             :: first_neighb	! First neighbour to calculated cross-point.
 INTEGER, INTENT(IN)                             :: second_neighb! Second neighbour to calculated cross-point.
 !NiS,apr06: changing mnd to MaxP
-!REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT)     :: slope
-!REAL(KIND=4), DIMENSION(1:mnd), INTENT(OUT)     :: eslope
+!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT)     :: slope
+!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT)     :: eslope
 !LOGICAL, DIMENSION(1:mnd), INTENT(OUT)       	:: marker_slope
-REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT)    :: slope        ! Slope to be calculated
-REAL(KIND=4), DIMENSION(1:MaxP), INTENT(OUT)    :: eslope       ! Energy-Slope to be calculated
+REAL(kind=8), DIMENSION(1:MaxP), INTENT(OUT)    :: slope        ! Slope to be calculated
+REAL(kind=8), DIMENSION(1:MaxP), INTENT(OUT)    :: eslope       ! Energy-Slope to be calculated
 !nis,dec06, just one value is needed here
 !LOGICAL, DIMENSION(1:MaxP), INTENT(OUT)       	:: marker_slope
 LOGICAL,INTENT(OUT)       	                :: marker_slope_pn ! Marker if slope could be determined
@@ -881,13 +881,13 @@ subroutine GET_ANGLE(vec1, vec2, delt_angle)
 implicit none
 
 ! Calling variables
-REAL(KIND=4), DIMENSION(1:2), INTENT(IN) 	:: vec1 	! Flow direction
-REAL(KIND=4), DIMENSION(1:2), INTENT(IN)	:: vec2 	! Direction between points
-REAL(KIND=4), INTENT(OUT)       		:: delt_angle 	! angle difference
+REAL(kind=8), DIMENSION(1:2), INTENT(IN) 	:: vec1 	! Flow direction
+REAL(kind=8), DIMENSION(1:2), INTENT(IN)	:: vec2 	! Direction between points
+REAL(kind=8), INTENT(OUT)       		:: delt_angle 	! angle difference
 
 ! Local variables
-REAL(KIND=4)                    :: alpha1, alpha2
-REAL(KIND=4), parameter         :: pi = 3.14159265359
+REAL(kind=8)                    :: alpha1, alpha2
+REAL(kind=8), parameter         :: pi = 3.14159265359
 
 
 ! Based on the vector of the flow direction VEC1 the angle to the
@@ -1268,14 +1268,14 @@ CHARACTER(LEN=32), INTENT(IN) 			:: name_cwr
 INTEGER, INTENT(IN) 				:: ne
 INTEGER, INTENT(IN)                             :: mel
 REAL(KIND=8), DIMENSION(1:mel,1:2), INTENT(IN) 	:: mcord
-REAL(KIND=4), DIMENSION(1:mel), INTENT(IN) 	:: c_wr
-REAL(KIND=4), DIMENSION(1:mel), INTENT(IN) 	:: mslope
-REAL(KIND=4), DIMENSION(1:mel), INTENT(IN) 	:: meslope
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: c_wr
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: mslope
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: meslope
 !NiS,jul06: Consistent data type for passing parameters
-!REAL(KIND=4), DIMENSION(1:mel), INTENT(IN) 	:: mh
+!REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: mh
 REAL(KIND=8), DIMENSION(1:mel), INTENT(IN) 	:: mh
 !-
-REAL(KIND=4), DIMENSION(1:mel), INTENT(IN) 	:: mvxvy
+REAL(kind=8), DIMENSION(1:mel), INTENT(IN) 	:: mvxvy
 
 
 ! Local variables
@@ -1433,14 +1433,14 @@ implicit none
 ! Calling variables
 CHARACTER(LEN=32), INTENT(IN)               :: name_cwr  !name of cwr initial input data file
 INTEGER, INTENT(IN)                         :: mel       !local copy of variable for maximum number of elements
-REAL(KIND=4), DIMENSION(1:mel), INTENT(OUT) :: c_wr      !array for saving all the initial c_wr-values for every element
+REAL(KIND=8), DIMENSION(1:mel), INTENT(OUT) :: c_wr      !array for saving all the initial c_wr-values for every element
 
 ! Local variables
 INTEGER :: istat
 INTEGER :: temp_nr
 INTEGER :: i
 CHARACTER(LEN=80) :: zeile
-REAL(KIND=4) :: temp_y, temp_x, temp_cwr
+REAL(kind=8) :: temp_y, temp_x, temp_cwr
 
 OPEN(13, FILE=name_cwr, STATUS='OLD', IOSTAT=istat)
 if (istat /= 0) then

@@ -1,13 +1,16 @@
       MODULE BLK10 
 
+      INCLUDE 'PARAM.COM'
       REAL*8 R1,RKEEP
       INTEGER*2 IPOINT,LCS,LPS
       
       ALLOCATABLE   LCS(:),LPS(:),IPOINT(:)
       ALLOCATABLE   R1(:),NLSTEL(:),RKEEP(:),
-     +              EKEEP(:),RKEEPEQ(:)
+     +              EKEEP(:),RKEEPEQ(:),LCPOINT(:,:),EQQ(:,:)
 
 	ALLOCATABLE   LHS(:),QS(:),LDEST(:),QR(:)
+	
+	ALLOCATABLE   RR(:),QS1(:),IRWEPT(:)
             
       ALLOCATABLE   EQ(:,:),LHED(:),QQ(:),PVKOL(:)
 

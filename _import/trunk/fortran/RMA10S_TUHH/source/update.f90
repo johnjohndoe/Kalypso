@@ -1,5 +1,4 @@
-!     Last change:  WP   21 May 2008    6:36 pm
-!     Last change:  NIS  22 Apr 2008   11:02 pm
+!IPK  LAST UPDATE feb 26 2007  reduce permissible sal level
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -13,6 +12,7 @@ USE BLK10MOD
 USE BLK11MOD
 USE BLKDRMOD
 !EFa jun07, autoconverge
+USE PARA1DPoly
 USE parakalyps
 !-
 SAVE
@@ -133,6 +133,8 @@ IF (MAXN == 1) THEN
       NCNV (6) = 1
 
 !IPK MAY02
+    !TOASK
+    !nis,com: Is this 3D?
     ELSEIF (ITEQV (I) == 10) THEN
       NCNV (7) = 1
 
@@ -440,9 +442,22 @@ if (beiauto > 0.) rss (maxn) = SQRT (eavg (1)**2 + eavg (2)**2)
 WriteDOFOutputs: DO J = 1, 7
   !write first line including informations about time step and iteration cycle
   IF (J == 1) THEN
-    WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J), IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
+    !Write out kilometer of problematic node, if it is a 1D node with kilometer
+    IF (NMX (j) == 0) THEN
+      WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
+    ELSEIF (kmx (nmx (j)) /= 0.0) THEN
+      WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J), kmx (nmx (j)), IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
+    ELSE
+      WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
+    ENDIF
   ELSE
-    WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J), IVAR (J, 1), IVAR (J, 2)
+    IF (nmx (j) == 0) THEN
+      WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2)
+    ELSEIF (kmx (nmx (j)) /= 0.0) THEN
+      WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J), kmx (nmx (J)), IVAR (J, 1), IVAR (J, 2)
+    ELSE
+      WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2)
+    ENDIF
   ENDIF
 ENDDO WriteDOFOutputs
 
@@ -654,9 +669,9 @@ ENDIF
 
  6005 FORMAT (// 10X, 'CONVERGENCE PARAMETERS'  // 8X, 'DF        AVG CHG        MAX CHG     LOCATION')
 
- 6010 FORMAT (I10, 2F15.9, I10, 4X, 2A4)
+ 6010 FORMAT (I3, 2F15.9, I10, 1x, f9.4, 2X, 2A4)
 
- 6011 FORMAT(I10,2F15.9,I10,4X,2A4,'STEP',I4,' ITER',I3)
+ 6011 FORMAT (I3, 2F15.9, I10, 1x, f9.4, 2X, 2A4, 'STEP', I4, ' ITER', I3)
 
 !EFa jun07, testing
  6111 FORMAT(i4,' rss :',F10.5)

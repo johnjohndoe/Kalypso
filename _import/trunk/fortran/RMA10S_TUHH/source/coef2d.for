@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 cipk  last update feb 26 2006 correst logic for loads from 2-d structures
 CIPK  LAST UPDATE SEP 05 2006 ADD QIN FOR CONSV AND AVEL LOADING FOR CLAY OPTION
 CNis  LAST UPDATE APR XX 2006 Adding flow equation of Darcy-Weisbach
@@ -29,7 +30,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   22 Apr 2008   12:54 pm
+C     Last change:  WP   15 Jun 2008   12:54 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  New routine for Smagorinsky closure Jan 1997
       SUBROUTINE COEF2D(NN,NTX)
@@ -41,6 +42,7 @@ cipk  New routine for Smagorinsky closure Jan 1997
       USE BLKSSTMOD
       USE BLKSEDMOD
       USE BLKSANMOD
+      USE BLKECOM
 !NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
 !-
@@ -72,7 +74,7 @@ CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK SEP02
 CIPK AUG05      INCLUDE 'BLK11.COM'
       INCLUDE 'BLKH.COM'
-      INCLUDE 'BLKE.COM'
+CIPK AUG07      INCLUDE 'BLKE.COM'
       INCLUDE 'BLKS.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
@@ -82,7 +84,7 @@ cipk jun05
 CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
       REAL*8 WAITX,WAITT,WAITR,WAITTH,WAITRH
-      REAL*8 DHDX,DHDZ,DAODX,DAODY,H,AZER,XHT,F,GHC,FRN,FRNX,FRNZ
+      REAL*8 DHDX,DHDZ,DAODX,DAODY,H,AZER,XHT,GHC,FRN,FRNX,FRNZ
       REAL*8 TEMP,HP,HP1,DERR
 
       COMMON /WATP/ WAITT(7),WAITR(9),WAITTH(16),WAITRH(16)
@@ -90,14 +92,16 @@ C-
 CIPK JUN03
 C	COMMON /STR/
 C     +  STRESS(MNP,2),STR11(MNP),STR21(MNP),STR10(MNP),STR20(MNP)
-
-      COMMON F(80),
+CIPK AUG07
+C      COMMON F(80),
+      COMMON 
      1 XN(8),DNX(8),DNY(8),XM(4),DMX(4),DMY(4),XL(8),YL(8)
      2,XO(8),DOX(8),DOY(8),
      3  WAITX(16),DL(2,2)
      4 ,VXX(8),VY(8),VDX(8),VDY(8),ST(8),SDT(8),UBFC(8),VBFC(8)
 C-
-      DIMENSION NCON(20),FTF(2)
+CIPK AUG07
+      DIMENSION FTF(2)
 CIPK OCT98      PROJL(8)
 C-
 CIPK sep02
@@ -1772,7 +1776,14 @@ C-
           else
             adir = 1.
           end if
-          srfel = hel(m) + ao(m)
+
+          !calculate surface elevation
+          if (idnopt < 0) then
+            srfel = hel(m) + ado(m)
+          else
+            srfel = vel (3, m) + ao(m)
+          end if
+
           call stfltab(m,srfel,dfdh,ff,1)
           f(irw) = area(nn) * (af * adir * ff - vx * vel(3,m))
           estifm(irw,irw) = area(nn) * vel(3,m)

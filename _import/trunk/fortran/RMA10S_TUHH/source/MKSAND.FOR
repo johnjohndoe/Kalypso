@@ -13,7 +13,7 @@ C-
      +           1,2,0,0,4,3,0,3,0,0,
      +           4,4,4,4/
 
-      INTEGER*2 NETT
+      INTEGER (kind = 8) :: NETT
 !NiS,jul06: For calling compatibility D must also be real, kind=8
       REAL(KIND=8) :: D
 !-

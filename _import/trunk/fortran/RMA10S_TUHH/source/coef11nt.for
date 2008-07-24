@@ -1,3 +1,4 @@
+CIPK  LAST UPDATE AUG 22 2007 UPDATE TO BLKECOM
 cipk  last update feb 26 2006 add logic for loads from 1-d structures
 cipk  last update nov 28 2006 allow for 1-d control structures
 cipk  last update jul 05 2006 use perim for hydraulic radius in friction
@@ -20,7 +21,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   24 Apr 2008   10:11 am
+C     Last change:  WP    2 Jun 2008    9:55 am
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -32,6 +33,8 @@ CIPK LAST UPDATED SEP 7 1995
       USE BLKSSTMOD
       USE BLKSANMOD
       USE BLKSUBMOD
+CIPK AUG07
+      USE BLKECOM
 !NiS,apr06: adding block for DARCY-WEISBACH friction
       USE PARAKalyps
       USE Para1DPoly
@@ -49,25 +52,26 @@ C
       INTEGER :: PolyPos, findpolynom
       REAL (KIND = 8) :: calcpolynomial
       REAL (KIND = 8) :: h, rhy
-      REAL (KIND = 8) :: F
       REAL (KIND = 8) :: lamP, lamKS, lamDunes, lamTot
 
 CIPK AUG05      INCLUDE 'BLK10.COM'
 CIPK AUG05      INCLUDE 'BLK11.COM'
-      INCLUDE 'BLKE.COM'
+CIPK AUG07      INCLUDE 'BLKE.COM'
       INCLUDE 'BLKH.COM'
 CIPK AUG05      INCLUDE 'BLKDR.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
 CIPK AUG05      INCLUDE 'BLKSST.COM'
 C-
 C-
-      COMMON F(80),
+CIPK AUG07
+C      COMMON F(80),
+      COMMON 
      1 XN(3),DNX(3),DNY(3),XM(2),DMX(2),DMY(2),XL(3),YL(3),
      4 VX(3),VY(3),VDX(3),VDY(3),QFACT(3),QQFACT(3),ST(3),SDT(3)
      5,UBFC(3),XO(3),DOX(3),Q1(3)
 cipk dec00 add Q1
 C-
-      DIMENSION NCON(20)
+CIPK AUG07      DIMENSION NCON(20)
 CIPK oct02
       COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 
@@ -541,7 +545,7 @@ cipk APR99 add for more flexible width term
         MR=NCON(MC)
         AKE=AKE+XM(M)*UUDST(MR)
         UBF=UBF+XM(M)*UBFC(MC)
-        BETA3=BETA3+XM(M)*VDOT(3,MR)
+        BETA3 = BETA3 + XM (M) * VDOT (3, MR)
         DHDX = DHDX + DMX(M)*VEL(3,MR)
 cipk nov97      DAODX = DAODX + DMX(M)*AO(MR)
         IF (IDNOPT.GE.0) THEN
@@ -877,14 +881,17 @@ C
 C.....CONTINUITY EQUATION.....
 C
 C IPK MAR01 REPLACE SIDF(NN) WITH SIDFT
-      FRNC=ACR*DRDX+DACR*R-SIDFT
-      IF(ICYC.GT.0) FRNC=FRNC+BETA3*WTOT
-      DO 290 M=1,NCNX
-        IA = 3 + 2*NDF*(M-1)
+      FRNC = ACR * DRDX + DACR * R - SIDFT
+      IF (ICYC > 0) FRNC = FRNC + BETA3 * WTOT
+      DO M = 1, NCNX
+        IA = 3 + 2 * NDF * (M - 1)
         !nis,oct,com: continuity equation, just for the corner nodes
         !             IA becomes: 3, 3+2NDF
-        F(IA) = F(IA) - AMW*XM(M)*FRNC
-  290 CONTINUE
+        F (IA) = F(IA) - AMW * XM (M) * FRNC
+      ENDDO
+
+
+
 C-
 C......THE SALINITY EQUATION
 C-
@@ -1038,30 +1045,35 @@ C-
 C
 C.....FORM THE CONTINUITY EQUATIONS.....
 C
-      TA=AMW*ACR
-      TX=AMW*DACR
-      TB=AMW*(DRDX*WSRF+R*DACRH)
-      TC=AMW*R*DACRI
-      IF(ICYC .NE. 0) TB=TB+AMW*(ALTM*WSRF+BETA3*SSLOP)
-     .                   +AMW*ALTM*WIDSTR                               APR86
-      IA=3-2*NDF
-      DO 365 M=1,NCNX
-      IA=IA+2*NDF
-      IB=1-NDF
-      EA=XM(M)*TA
-      EB=XM(M)*TX
-      DO 360 N = 1, NCN
-      IB=IB+NDF
-      ESTIFM(IA,IB)=ESTIFM(IA,IB)+(EA*DNX(N)+EB*XN(N))*QFACT(N)
-  360 CONTINUE
-      EA=XM(M)*TB
-      EB=XM(M)*TC
-      IB=3-2*NDF
-      DO 363 N=1,NCNX
-      IB=IB+2*NDF
-      ESTIFM(IA,IB)=ESTIFM(IA,IB)+XM(N)*EA+DMX(N)*EB
-  363 CONTINUE
-  365 CONTINUE
+      TA = AMW * ACR
+      TX = AMW * DACR
+      TB = AMW * (DRDX * WSRF + R * DACRH)
+      TC = AMW * R * DACRI
+      IF (ICYC /= 0) TB = TB + AMW * (ALTM * WSRF + BETA3 * SSLOP)
+     +                   + AMW * ALTM * WIDSTR                               APR86
+      IA = 3 - 2 * NDF
+
+      DO M = 1, NCNX
+        IA = IA + 2 * NDF
+        IB = 1 - NDF
+        EA = XM (M) * TA
+        EB = XM (M) * TX
+        !continuity over velocity
+        DO N = 1, NCN
+          IB=IB+NDF
+          ESTIFM (IA, IB) = ESTIFM (IA, IB)
+     +                    + (EA * DNX (N) + EB * XN (N)) * QFACT(N)
+        ENDDO
+
+        EA = XM (M) * TB
+        EB = XM (M) * TC
+        IB = 3 - 2 * NDF
+        !continuity over depth
+        DO N = 1, NCNX
+          IB = IB + 2 * NDF
+          ESTIFM (IA, IB) = ESTIFM (IA, IB) + XM (N) * EA + DMX (N) * EB
+        ENDDO
+      ENDDO
 C-
 C......FORM THE SALINITY EQUATION
 C-
@@ -1400,7 +1412,7 @@ c     WRITE(*,*) NN,NCN
           PolyPos = findPolynom (PolyRangeA (n1,:), vel(3, n1),
      +                           PolySplitsA (n1))
           ah(n1) = calcPolynomial (apoly (PolyPos, n1, 0: 12),
-     +                                    vel(3, n1))
+     +                             vel(3, n1), ubound (apoly, 3))
           !derivative over velocity
           ESTIFM(1, NA) = DIR(N1) * ah(n1) * xht
           !derivative over depth

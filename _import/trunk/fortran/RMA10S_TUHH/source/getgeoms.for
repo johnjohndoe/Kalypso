@@ -17,7 +17,7 @@ CIPK  LAST UPDATE JAN 25 1999 REFINE TESTING WHEN LARGE NUMBER OF LAYERS INPUT
 CIPK  LAST UPDATE JAN 19 1999 ADD MARSH PARAMETERS FOR 2DV TRANSITIONS REVISE
 C                   JUNCTION PROPERTIES
 cipk  last update Jan 3 1999 add for 2dv junctions
-C     Last change:  WP   17 Apr 2008   11:57 am
+C     Last change:  NIS   5 Jun 2008    9:44 am
 cipk  last update Aug 27 1998 fix marsh option
 cipk  last update Aug 22 1997 fix problem with alfak
 CIPK  LAST UPDATE OCT 1 1996
@@ -314,57 +314,53 @@ CIPK JUN03
 
 !NiS,mar06: Write control output in RM1 format, so it is readable again with for example RMAGEN
 !-CONTROL OUTPUT FILE IN RM1 FORMAT------------------------------------------------------------
-      OPEN(5555,'testRm1.rm1')
-      do i = 1, maxe
-        if (nop(i,1) /= 0) then
-          WRITE(5555,*)i,(nop(i,j),j=1,8),imat(i),imato(i),nfixh(i)
-        end if
-      ENDDO
-      do i = 1, maxp
-        write (5555,*)i,(cord(i,j),j=1,2), ao(i)
-      end do
-      do i = 1, ncl
-        write (5555,*) (line(i,j),j = 1, lmt(i))
-      end do
-      CLOSE(5555, STATUS='keep')
+!      OPEN(5555,'testRm1.rm1')
+!      do i = 1, maxe
+!        if (nop(i,1) /= 0) then
+!          WRITE(5555,*)i,(nop(i,j),j=1,8),imat(i),imato(i),nfixh(i)
+!        end if
+!      ENDDO
+!      do i = 1, maxp
+!        write (5555,*)i,(cord(i,j),j=1,2), ao(i)
+!      end do
+!      do i = 1, ncl
+!        write (5555,*) (line(i,j),j = 1, lmt(i))
+!      end do
+!      CLOSE(5555, STATUS='keep')
 !-
 
 !NiS,mar06: new option in if-block to enable the program to read 2D-geometry in Kalypso-2D-Format
        ELSEIF (IGEO ==2) then
          call rdkalyps (n, m, a, lt, dummy1, dummy2, dummy3, 0)
 
-!         do i = 1, maxp
-!           WRITE(*,*) i, PolySplitsA(i)
-!         end do
-!         pause
 
   !NiS,apr06: adding this transformation like it is called after RDRM1 (see above)
          NCLL = NCL
   !-
 !NiS,mar06: Write control output in RM1 format, so it is readable again with for example RMAGEN
 !-CONTROL OUTPUT FILE IN RM1 FORMAT------------------------------------------------------------
-         OPEN(5555,'testKalypso.rm1')
-         do i = 1, maxe
-           if (nop(i,1) /= 0) then
-             istat = 0
-             WRITE(5555,FMT=2001,IOSTAT=istat)i,(nop(i,j),j=1,8),imat(i)
-     +        ,0.0,nfixh(i)
-             if (istat /= 0) then
-               write (*,*) 'Fehler beim Schreiben'
-             end if
- 2001        FORMAT(10I5,F10.3,I5)
-           end if
-         ENDDO
-         WRITE(5555,'(i5)')9999
-         WRITE(*,*)'justinfo: ',maxe
-         do i = 1, (maxp-1)
-           write (5555,2002)i,(cord(i,j),j=1,2), ao(i),0,0.0
- 2002      format (I10, 2(F16.6,'    '),F10.3,
-     +  '                                                            ',
-     +  I10,F10.4)
-         end do
-         WRITE(5555,'(i5)')9999
-         CLOSE(5555, STATUS='keep')
+!         OPEN(5555,'testKalypso.rm1')
+!         do i = 1, maxe
+!           if (nop(i,1) /= 0) then
+!             istat = 0
+!             WRITE(5555,FMT=2001,IOSTAT=istat)i,(nop(i,j),j=1,8),imat(i)
+!     +        ,0.0,nfixh(i)
+!             if (istat /= 0) then
+!               write (*,*) 'Fehler beim Schreiben'
+!             end if
+! 2001        FORMAT(10I5,F10.3,I5)
+!           end if
+!         ENDDO
+!         WRITE(5555,'(i5)')9999
+!         WRITE(*,*)'justinfo: ',maxe
+!         do i = 1, (maxp-1)
+!           write (5555,2002)i,(cord(i,j),j=1,2), ao(i),0,0.0
+! 2002      format (I10, 2(F16.6,'    '),F10.3,
+!     +  '                                                            ',
+!     +  I10,F10.4)
+!         end do
+!         WRITE(5555,'(i5)')9999
+!         CLOSE(5555, STATUS='keep')
 !-
 
        ENDIF

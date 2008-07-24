@@ -309,17 +309,17 @@ C      END IF
 
       !******************************************************djw 15/02/05
       !
-	!  Override of TTHICK values if scour limits are read in with SCOURLIM line in 
-	!  files section of input file.
-	!
-	!******************************************************
+      !  Override of TTHICK values if scour limits are read in with SCOURLIM line in
+      !  files section of input file.
+      !
+      !******************************************************
       If (wbm_ScourLim) Then
       	Call wbm_InitScourLims(NP,wbm_ScourLims)
          MT = 0
-	   Do N=1,NP
+         Do N=1,NP
            TTHICK(N)=wbm_ScourLims(N)
          End Do
-	End If
+      End If
       !******************************************************end djw 15/02/05
 
 

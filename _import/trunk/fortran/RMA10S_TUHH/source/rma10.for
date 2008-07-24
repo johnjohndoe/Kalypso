@@ -1,4 +1,4 @@
-C     Last change:  WP   20 May 2008   10:56 am
+C     Last change:  WP   11 Jul 2008    8:40 am
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -74,12 +74,12 @@ cipk aug98 add character statement
 
 
 !EFa jun07, necessary for autoconverge
-      extranita = 50.
-      temp_iteqv = 0.
-      temp_iteqs = 0.
-      temp_itlvl = 0.
-      temp_iurvl = 0.
-      temp_iurvl1 = 0.
+!      extranita = 50.
+!      temp_iteqv = 0.
+!      temp_iteqs = 0.
+!      temp_itlvl = 0.
+!      temp_iurvl = 0.
+!      temp_iurvl1 = 0.
       temp_maxnn = 0.
 !-
       CALL SECOND(TA)
@@ -129,7 +129,7 @@ C      CALL FILE(1)
       !thetcn = reciproc value of ALPHA for usage in time derivative formula
 CIPK AUG95 MAKE ALPHA 1.8
 !nis,may08: Use 1.6 again
-      ALPHA = 1.6
+      ALPHA = 1.8
 CIPK JUN05      ALPHA=2.0
 cipk feb01 add thetcn
       thetcn = 1./ alpha
@@ -149,7 +149,7 @@ CIPK JUN05  Input time series data
 
       !beiauto = switch for autoconverge usage; Why is it a type real switch and not integer?
       !EFa jun07, output for autoconverge
-      if (beiauto /= 0.) call autoconverge (-1.0)
+!      if (beiauto /= 0.) call autoconverge (-1.0)
 
       !nis,Apr08: Write File header outputs in external subroutine
       !call FileHeaders ()
@@ -300,7 +300,7 @@ C-
 C......PROCESS STEADY VALUES
 C-
       !EFa jul07, necessary for autoconverge
-      if (beiauto /= 0.) call autoconverge (1.)
+!      if (beiauto /= 0.) call autoconverge (1.)
 
       !reinitialize the current iteration cycle variable at the beginning of the steady state calculation
       MAXN = 0
@@ -311,7 +311,7 @@ C-
 200   MAXN = MAXN + 1
 
       !EFa jun07, autoconverge
-      if (beiauto /= 0.) call autoconverge (2.)
+!      if (beiauto /= 0.) call autoconverge (2.)
 
 C     REWIND IVS
 
@@ -321,7 +321,13 @@ C     REWIND IVS
 !-
 
 !nis,jun07: Moving distribution calculation to this place because of dry node handling
+      !testing
+      WRITE(*,*) 'vor transveldistribution'
+      !testing-
       if (MaxLT /= 0) call TransVelDistribution
+      !testing
+      WRITE(*,*) 'vor transveldistribution'
+      !testing-
 !-
 
 C-
@@ -332,8 +338,14 @@ C-
           IF(IDRYC .EQ. 0) THEN
             WRITE(*,*) 'ENTERING REWET'
             CALL REWET
+            !testing
+            WRITE(*,*) 'nach rewet und vor del'
+            !testing-
             WRITE(*,*) 'ENTERING DRY'
             CALL DEL
+            !testing
+            WRITE(*,*) 'nach del'
+            !testing-
             IDRYC=IDSWT
           ENDIF
         ENDIF
@@ -373,7 +385,7 @@ cipk aug00 experimental
       IF(ITRANSIT .EQ. 1  .and. maxn .lt. 4) CALL TWODSW
 
       WRITE (*,*) 'ENTERING LOAD.subroutine'
-      CALL LOAD (dset)
+      CALL LOAD
 
 C-
 C......  Compute areas of continuity lines for stage flow input
@@ -394,7 +406,21 @@ c  250 CONTINUE
       !WRITE(9919,*) 'maxn', maxn
       !-
 
-      CALL FRONT(1)
+
+cipk aug07
+      call SECOND(ATIM(2))
+      ISOLCT=ISOLCT+1
+      IF(ICPU .EQ. 0) THEN
+        CALL FRONT(1)
+      ELSE
+        !CALL FRONT_PARDISO(1)
+      ENDIF
+      IF(ITIMFL .GT. 0) THEN
+        CALL SECOND(ATIM(3))
+        WRITE(ITIMFL,6100) MAXN,ATIM(3)-ATIM(2),ATIM(3)-ATIM(1)
+ 6100   FORMAT('ITERATION',I5,'  TIME IN FRONT-HORZ',F12.2,
+     +     ' TOTAL TIME TO DATE FOR RUN =', F12.2)
+      ENDIF        
 
       !close testfile
       !close (9919, status = 'keep')
@@ -410,14 +436,14 @@ CIPK JAN97 END CHANGES
 
       CALL UPDATE
 
-      !EFa jul07, necessary for autoconverge
-      if (exterr.eq.1.0) then
-
-        call autoconverge(3.)
-
-        GOTO 200
-
-      end if
+!      !EFa jul07, necessary for autoconverge
+!      if (exterr.eq.1.0) then
+!
+!        call autoconverge(3.)
+!
+!        GOTO 200
+!
+!      end if
       !-
 
 C      CALL CHECK
@@ -437,7 +463,13 @@ CIPK AUG04      IPRTF=IABS(NPRTF)
      +             .OR. NCONV .EQ. 1) THEN
          CALL OUTPUT(2)
 
+      !testing
+      WRITE(*,*) 'vor check'
+      !testing-
          CALL CHECK
+      !testing
+      WRITE(*,*) 'nach check'
+      !testing-
 CIPK MAR00
 CIPK DEC00      ELSE
 CIPK DEC00
@@ -514,7 +546,13 @@ CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
 !NiS,apr06: calculating the cwr-values for trees WITHIN THE ITERATION.
 !           Calculation of actualized tree-parameters; file is only written in dependency of itefreq
         IF (IVEGETATION /= 0) THEN
+          !testing
+          WRITE(*,*) 'vor get_element_cwr'
+          !testing-
           CALL get_element_cwr
+          !testing
+          WRITE(*,*) 'nach get_element_cwr'
+          !testing-
         END IF
 !-
       IF(MAXN .LT. NITA) GO TO 200
@@ -566,21 +604,21 @@ cipk mar95 add a line to save dhdt
         VSING(7,J)=VDOT(3,J)
   320 CONTINUE
 
-        !EFa jun07, autoconverge
-        if (beiauto.ne.0.) then
-
-          call autoconverge(4.)
-
-          if (autoindex.eq.1.) then
-
-            autoindex = 0.
-
-            GOTO 200
-
-          end if
-
-        endif
-        !-
+!        !EFa jun07, autoconverge
+!        if (beiauto.ne.0.) then
+!
+!          call autoconverge(4.)
+!
+!          if (autoindex.eq.1.) then
+!
+!            autoindex = 0.
+!
+!            GOTO 200
+!
+!          end if
+!
+!        endif
+!        !-
 
 
 !-
@@ -647,17 +685,17 @@ CIPK DEC97 MOVE SKIP TO DYNAMIC SOLUTION
       IF(NCYC .GT. 0) GO TO 400
       CALL ZVRS(1)
 
-      !EFa jul07, necessary for autoconverge
-      do i=1,ncl
-
-        do k=1,3
-
-          specccold(i,k)=specccfut(i,k)
-
-        end do
-
-      end do
-      !-
+!      !EFa jul07, necessary for autoconverge
+!      do i=1,ncl
+!
+!        do k=1,3
+!
+!          specccold(i,k)=specccfut(i,k)
+!
+!        end do
+!
+!      end do
+!      !-
 
 
 CIPK JUL01      STOP
@@ -671,13 +709,13 @@ C-
 C 400 NCYC=TMAX*3600./DELT+0.5
   400 CONTINUE
 
-      !EFa jun07, autoconverge
-      if (beiauto.ne.0.) then
-
-        call autoconverge(5.)
-
-      end if
-      !-
+!      !EFa jun07, autoconverge
+!      if (beiauto.ne.0.) then
+!
+!        call autoconverge(5.)
+!
+!      end if
+!      !-
 
       IDRYC=0
 CIPK JUN02
@@ -777,7 +815,8 @@ CIPK AUG95 USE ALPHA=1.8
 cipk dec99 test for delta = 0
         if(delt .gt. 0.) then
 
-          ALTM=1.6/DELT
+           !TODO: This was already done in the inputd.subroutine. It shouldn't occur twice!
+          	ALTM = ALPHA/ DELT
 CIPK          ALTM=2.0/DELT
 CIPK MAY02
           ALPHASN=1.8
@@ -1016,20 +1055,20 @@ C-
         MAXN=0
         ITPAS=0
 
-        !EFa jun07, necessary for autoconverge
-        if (beiauto.ne.0.0) then
-          call autoconverge(6.)
-        end if
-        !-
+!        !EFa jun07, necessary for autoconverge
+!        if (beiauto.ne.0.0) then
+!          call autoconverge(6.)
+!        end if
+!        !-
 
         !MAXN = actual iteration number; first initialized, then incremented
   465   MAXN=MAXN+1
 
-       !EFa jun07, autoconverge
-       if (beiauto.ne.0.) then
-         call autoconverge(7.)
-       end if
-       !-
+!       !EFa jun07, autoconverge
+!       if (beiauto.ne.0.) then
+!         call autoconverge(7.)
+!       end if
+!       !-
 
 cipk oct02
         IF(MAXN .EQ. 1) THEN
@@ -1125,7 +1164,8 @@ CIPK JAN97 END CHANGES
 
         !nis,feb07,testing: Write whole matrix
         !if (maxn > -1) then
-        !  write (matrixname, '(a6,i3.3,a4)') 'matrix',maxn,'.txt'
+        !  write
+        !+      (matrixname,'(a3,i3.3,a1,i3.3a4)')'mat',maxn,'_',icyc,'.txt'
         !  teststat = 0
         !  open (9919, matrixname, iostat = teststat)
         !  if (teststat /= 0) STOP 'ERROR - while opening matrix file'
@@ -1133,7 +1173,20 @@ CIPK JAN97 END CHANGES
         !endif
         !-
 
-        CALL FRONT(1)
+cipk aug07
+        call SECOND(ATIM(2))
+        ISOLCT=ISOLCT+1
+        IF(ICPU .EQ. 0) THEN
+          CALL FRONT(1)
+        ELSE
+!          CALL FRONT_PARDISO(1)
+        ENDIF
+        IF(ITIMFL .GT. 0) THEN
+          CALL SECOND(ATIM(3))
+          WRITE(ITIMFL,6101) N,MAXN,ATIM(3)-ATIM(2),ATIM(3)-ATIM(1)
+ 6101     FORMAT('STEP',I5,' ITERATION',I5,'  TIME IN FRONT-HORZ',F12.2,
+     +     ' TOTAL TIME TO DATE FOR RUN =', F12.2)        
+        ENDIF        
         IDRYC=IDRYC-1
         !close testfile
         !close (9919, status = 'keep')
@@ -1145,15 +1198,15 @@ CIPK JAN97 END CHANGES
 
 
 
-      !EFa jul07, necessary for autoconverge
-      if (exterr.eq.1.0) then
-
-        call autoconverge(8.)
-
-        GOTO 465
-
-      end if
-      !-
+!      !EFa jul07, necessary for autoconverge
+!      if (exterr.eq.1.0) then
+!
+!        call autoconverge(8.)
+!
+!        GOTO 465
+!
+!      end if
+!      !-
 
 C      CALL CHECK
 C     REWIND IVS
@@ -1338,15 +1391,15 @@ CIPK SEP02 ADD RESTART DATA FOR BED
 cipk aug98 add line above for consistent restart
   600   CONTINUE
 
-        !EFa jun07, autoconverge
-        if (beiauto.ne.0.) then
-          call autoconverge(9.)
-          if (autoindex.eq.2.) then
-            autoindex = 0.
-            GOTO 465
-          end if
-        endif
-        !-
+!        !EFa jun07, autoconverge
+!        if (beiauto.ne.0.) then
+!          call autoconverge(9.)
+!          if (autoindex.eq.2.) then
+!            autoindex = 0.
+!            GOTO 465
+!          end if
+!        endif
+!        !-
 
 C-
 C......SAVE ON RESULTS FILE
