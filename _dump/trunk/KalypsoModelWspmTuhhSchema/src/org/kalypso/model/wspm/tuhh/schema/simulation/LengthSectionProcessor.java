@@ -71,6 +71,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -349,12 +350,14 @@ public class LengthSectionProcessor
     return m_result;
   }
 
-  @SuppressWarnings("unchecked")
   public static void createDiagram( final File diagFile, final IObservation<TupleResult> lsObs, final boolean isDirectionUpstreams ) throws IOException, XmlException
   {
     // Check if optional bundle is installed
-    if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" ) == null )
-      return;
+    // They are no more optional... however the id has changed and this does not work any more...
+    // TODO: probably its better to check per reflection if a certain class is present...
+    // Or even beteer: catch the ClassNotFoundExcpetion (check if this is the right exception) and ignore it (or give a warning message)
+//    if( Platform.getBundle( "org.kalypso.chart.factory" ) == null || Platform.getBundle( "org.kalypso.chart.framework" ) == null )
+//      return;
 
     /* We just load the template and tweak the direction of the station-axis */
     final URL kodResource = LengthSectionProcessor.class.getResource( "resources/lengthSection.kod" );
