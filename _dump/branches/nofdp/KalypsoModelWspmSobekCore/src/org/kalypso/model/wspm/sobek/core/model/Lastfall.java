@@ -170,6 +170,6 @@ public class Lastfall implements ILastfall
    */
   public String getValidatedLastfallDir( )
   {
-    return FileUtilities.validateName( "cCase_" + getName() + getFeature().getId(), "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return FileUtilities.validateName( getFeature().getId().replaceAll( "[a-zA-Z]", "" ), "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }
