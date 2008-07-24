@@ -582,14 +582,14 @@ Folgen der Aenderung:
      20 Brücken ueber verschiedene Abflussintervalle. Abfluesse die zum Abbruch der Berechnung
      führten, koennen mit der neuen Version 2.1.2.1 berechnet werden.
 
-5)  Zulassen der Steuerung fuer Extreme Rauheiten:
+5)  Zulassen der Steuerung fuer extreme Rauheiten:
     Bislang wurden immer die Einstellungen CALC_KM_INTERN =true und  USE_EXTREM_ROUGH =false gesetzt
-    Nun gilt diese Belegung nur noch, wenn der aufruf NICHT aus 'KALYPSO'(also WSPM oder Manueller Aufruf) erfolgt.
+    Nun gilt diese Belegung nur noch, wenn der aufruf NICHT aus 'KALYPSO'(also WSPM oder Manueller Aufruf) 
+    erfolgt.
 
     --> Achtung: Wenn vorher die Einstellung in der INI mit "USE_EXTREM_ROUGH = true" gesetzt war, kommen nun
-             andere Ergebnisse raus, da die extremen Rauheiten ab Version 2.1.2.1 wirklich mit berücksichtigt
-             werden. 
-    --> Bug: "USE_EXTREM_ROUGH = true" führt evt zum plötzlichen Absacken des Wasserspiegels
+        andere Ergebnisse raus, da die extremen Rauheiten ab Version 2.1.2.1 wirklich mit berücksichtigt
+        werden. 
 
 
 							                Monika Donner, 07.05.2008 
@@ -604,7 +604,7 @@ Kalypso 2.1.3.0      09. Juli 2008
    weiterhin das vorgegebene Reibungsgefälle verwendet. --> Bug
    Dies führte zu einer gerinfügigen Abweichung (cm-Bereich) beim Vergleich zwischen einer normalen
    Wasserspiegellinien-Berechnung an einer Brücke (oder an einem Wehr) und den Ergebnissen aus der
-   Huw-Q-How oder Euw-Q-Eow. Diese Abweichung zeigte sich inbesondere bei niedrigen Abflüssen und sehr 
+   Huw-Q-How oder Euw-Q-Eow. Diese Abweichung zeigte sich insbesondere bei niedrigen Abflüssen und sehr 
    kleinen vorgegebenen Reibungsgefällen.
 
    Grundsätzlich sollen in der inneren Abflussschleife alle Verluste (auch der echte Sohlrauheitsverlust)
@@ -619,7 +619,7 @@ Kalypso 2.1.3.0      09. Juli 2008
    Die Korrektur des Rauheitsverlustes bewirkt eine leichte Veränderung der Ergebnisse fuer Berechnungsvariante 
    "konstantes Reibungsgefälle" an Brücken- und Wehr-Bauwerken (instationäre Bauwerkstabellen). 
 
-   Keine Auswirkungen gibt es fuer alle anderen Berechnungsvarianten und normal Profile.
+   Keine Auswirkungen gibt es fuer alle anderen Berechnungsvarianten und normale Profile.
 
 
 							                Monika Donner, 09.07.2008 
@@ -628,24 +628,24 @@ Kalypso 2.1.3.0      09. Juli 2008
 
 Kalypso 2.1.4.0      23. Juli 2008
 -------------------------------------    
-1) BUGFIX fuer Oberwasser-Berechnung fuer Bauwerke fuer alle Berechnungsvarianten
+1) BUGFIX in der Oberwasser-Berechnung der Bauwerke fuer alle Berechnungsvarianten
 
-   Probleme/ Fehler an steile Gewässer und/ oder sehr hohen Fließgeschwindigkeiten: 
-   WSP-Änderungen im Oberwasser der Brücken lagen zwischen Version 1.2RC vom 11.12.2006
-   und Version 1.3.1.2 vom 27.04.2007 bei +80 cm. Diese Ergebnisse der Versionen 
+   Probleme an steile Gewässer und/ oder sehr hohen Fließgeschwindigkeiten: 
+   WSP-Anstieg im Oberwasser der Brücken lagen zwischen Version 1.2RC vom 11.12.2006
+   und Version 1.3.1.2 vom 27.04.2007. Diese Ergebnisse der Versionen 
    ab 1.3.1.2 bis heute sind identisch.
 
    Ursache: Korrektur der Übergabe des Wasserspiegels hr bzw. hrow in und aus der wspow.
 
    Hintergrund: Für den Zustand "Wehrüberfall & Druckabfluss" (nicht Überströmen!) an Brücken 
-   war ein Fehler seit 27.04.2007 im Code. Dabei wurde der Wasserspiegelanstieg seit dem 27.04.2007
-   überschätzt und kann bis zu 1m über dem WSP der Versionen vor dem 27.04.2007 liegen. 
+   wurde OW-Wasserstand nicht korrekt uebergeben. Dabei wurde der Wasserspiegelanstieg
+   überschätzt und kann über dem WSP der Versionen vor dem 27.04.2007 liegen. 
    Mit zunehmendem Überströmen der Brücke gleichen sich die Wasserspiegel wieder an. 
 
    Die wspow wird für Wehre und für Brücken jeweils zur ersten Berechnung des Oberwasserstandes
-   verwendet. Dabei wurde bis zum 27.04.2007 der berechnete Oberwasserstand nicht richtig übergeben.
-   Dies führte zum Absacken des Wasserstandes im Oberwasser des Wehres. Daher wurde die Übergabe 
-   des Parameters hr (Wasserstand) in der Version vom 27.04.2007 in der Routine wspow zur 
+   verwendet. Dabei wurde bis zum 27.04.2007 der berechnete Oberwasserstand fuer Wehre nicht richtig
+   übergeben. Dies führte zum Absacken des Wasserstandes im Oberwasser des Wehres. Daher wurde die
+   Übergabe des Parameters hr (Wasserstand) in der Version vom 27.04.2007 in der Routine wspow zur 
    Verbesserung der Wehrberechnung korrigiert. An Beispielgewässern zeigten sich damals
    (wie heute) keine Veränderungen an Brücken. 
 
@@ -659,9 +659,8 @@ Kalypso 2.1.4.0      23. Juli 2008
       von Brücken lokale (<2 Profile), maximale Abweichung -9 bzw. -2 cm. 
       Alle anderen Abweichungen < 1mm bis hin zu Null. 
     * Änderung bzw. Absinken des Wasserspiegels für steile Gewässer und/ oder sehr
-      hohen Fließgeschwindigkeiten (ca. > 3 m/s). Abweichungem Im OW der Brücken, wenn Zustand
+      hohen Fließgeschwindigkeiten (ca. > 3 m/s). Abweichungem im OW der Brücken, wenn Zustand
       "Wehrüberfall & Druckabfluss" vorlag, sonst nicht!!
-
 
 							                Monika Donner, 23.07.2008 
 
