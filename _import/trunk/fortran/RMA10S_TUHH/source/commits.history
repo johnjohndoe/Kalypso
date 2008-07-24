@@ -195,6 +195,15 @@ Version 1.0.1 (laufende Änderungen)
 025.) Upload fileIntel.for, which allows developers to compile with Lahey and Intel compiler
 --- committed
 
+--- Nico Schrage, 24.07.2008 (release 1.0.1)
 
+-----------------------------------------------------------------------------------------------------
+24.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
+-----------------------------------------------------------------------------------------------------
 
---- Nico Schrage, 24.07.2008 (1.0.1alpha2)
+Version 1.1.0 (laufende Änderungen)
+-----------------------------------
+
+001.) update automake.fig file; makefile for IntelCompiler doesn't exist yet.
+002.) Add commits.future file as roadmap
+003.) Add some initial document for guidelines, how to deal with SVN and with rma10sk development
