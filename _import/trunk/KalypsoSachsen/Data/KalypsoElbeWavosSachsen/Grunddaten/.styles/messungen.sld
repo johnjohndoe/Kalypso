@@ -3,7 +3,7 @@
         <NamedLayer>
                 <Name>deegree style definition</Name>
                 <UserStyle>
-                        <Name>zufluesse</Name>
+                        <Name>messungen</Name>
                         <Title>Zwischengebietszuflüsse</Title>
                         <IsDefault>1</IsDefault>
                         <FeatureTypeStyle>
@@ -11,10 +11,12 @@
                                 <Rule>
                                         <Name>Zwischengebietszuflüsse</Name>
                                         <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-                                                <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\">
-                                                        <ogc:PropertyName>zuflussVorhersage</ogc:PropertyName>
-                                                        <ogc:Literal>true</ogc:Literal>
-                                                </ogc:PropertyIsLike>
+                                                <ogc:Not>
+                                                        <ogc:PropertyIsLike wildCard="*" singleChar="?" escape="\">
+                                                                <ogc:PropertyName>zuflussVorhersage</ogc:PropertyName>
+                                                                <ogc:Literal>true</ogc:Literal>
+                                                        </ogc:PropertyIsLike>
+                                                </ogc:Not>
                                         </ogc:Filter>
                                         <MinScaleDenominator>0.0</MinScaleDenominator>
                                         <MaxScaleDenominator>9.0E99</MaxScaleDenominator>
@@ -62,7 +64,7 @@
                                                         <Mark>
                                                                 <WellKnownName>triangle</WellKnownName>
                                                                 <Fill>
-                                                                        <CssParameter name="fill">#00abab</CssParameter>
+                                                                        <CssParameter name="fill">#00ab00</CssParameter>
                                                                 </Fill>
                                                                 <Stroke>
                                                                         <CssParameter name="stroke">#111111</CssParameter>

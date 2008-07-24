@@ -5,11 +5,11 @@
                 <fillColor alpha="100" blue="0" green="255" red="255"/>
         </highlightColors>
         <layers>
-                <layer name="Elbepegel" visible="true" featurePath="pegelMember[VorhersagePegel]" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-                        <ns2:style linktype="sld" style="elbe" ns1:actuate="onRequest" ns1:href="project:/Grunddaten/.styles/elbe.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
-                </layer>
-                <layer name="Zuflüsse" visible="true" featurePath="pegelMember[ZuflussPegel]" id="ID_2" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+                <layer name="Vorgaben" visible="true" featurePath="pegelMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
                         <ns2:style linktype="sld" style="zufluesse" ns1:actuate="onRequest" ns1:href="project:/Grunddaten/.styles/zufluesse.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
+                </layer>
+                <layer name="Messwerte" visible="true" featurePath="pegelMember" id="ID_2" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
+                        <ns2:style linktype="sld" style="messungen" ns1:actuate="onRequest" ns1:href="project:/Grunddaten/.styles/messungen.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
                 </layer>
                 <layer name="Projektionspegel" visible="true" featurePath="pegelMember[AbstractPegel]" id="ID_3" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
                         <ns2:style linktype="sld" style="projektion" ns1:actuate="onRequest" ns1:href="project:/Grunddaten/.styles/projektion.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>

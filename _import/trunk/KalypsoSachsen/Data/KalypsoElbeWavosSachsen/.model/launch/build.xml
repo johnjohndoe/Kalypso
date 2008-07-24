@@ -200,9 +200,9 @@
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 		
-		<!-- Elbepegel (W): nur Messung + Fortsetzung zur Eingabe der Vorgabewerte-->
+		<!-- Elbepegel (W): nur Messung -->
 		<kalypso.copyObservation gml="${project.url}/.model/observationConf/Elbepegel.gml" featurePath="mappingMember" context="${calc.url}" targetObservation="outObservationLink" forecastFrom="${startforecast}" forecastTo="${stopsim}" description="Abholen der Messwerte der Elbepegel">
-			<source property="${pegelMessungLink}" from="${startsim}" to="${stopsim}" filter="${filterW}"/>
+			<source property="${pegelMessungLink}" from="${startsim}" to="${startforecast}" filter="${filterW}"/>
 			<metadata name="Szenario" value="${scenarioId}"/>
 		</kalypso.copyObservation>
 
@@ -252,11 +252,10 @@
          ================================= 
     -->
 	<target name="mergeCase" if="doMergeCase">
-		<!-- <kalypso.mergeObservation gml="${project.url}/.model/observationConf/OmbrometerMapping.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"/> -->
 		<!-- Usti (Q): Messung kombiniert mit tschechischen Vorhersagen -->
 		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Usti.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Messwerte und Kombination mit tschechischen Vorhersagen (Usti)"/>
 		
-		<!-- Elbepegel (W): nur Messung + Fortsetzung zur Eingabe der Vorgabewerte-->
+		<!-- Elbepegel (W): nur Messung -->
 		<kalypso.mergeObservation gml="${project.url}/.model/observationConf/Elbepegel.gml" featurePath="mappingMember" context="${calc.url}" sourceContext="${calc.merge.url}" observationProperty="outObservationLink"  description="Zusammenführen der Messwerte der Elbepegel"/>
 
 		<!-- Usti: zusätzlich "Messung" W, zur Information -->
