@@ -1,0 +1,6 @@
+      MODULE CSVAR
+
+      ALLOCATABLE NROWCS(:),NCOLCS(:),HRW(:,:),HCL(:,:),FLWCS(:,:,:)
+
+      INTEGER NSETS,NROWM,NCOLM
+      END MODULE
