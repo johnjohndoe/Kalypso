@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="kalypso-manual-common" default="valid" basedir="..">
 	<!--
-		Dieses Skript liefert allgemeine Funktionen zum generieren der Kalypso Handbücher
+		Dieses Skript liefert allgemeine Funktionen zum generieren der Kalypso HandbÃ¼cher
 		und ist dazu gedacht, von den speziellen build-skripten aufgerufen zu werden.
 		
-		Die von den einzelnen Funktionen benötigten properties sind jeweils dort aufgelistet.
+		Die von den einzelnen Funktionen benÃ¶tigten properties sind jeweils dort aufgelistet.
 	-->
 
 	<!-- manual.project muss von aussen gesetzt werden. 
@@ -53,7 +53,7 @@
 
 	<!-- TODO: remove cleanup dependency and only clean if necessary -->
 	<target name="init" depends="cleanup-build" description="Baut die Verzeichnisstruktur der Ausgabe und Merged die Spezialdaten mit den allgemeinen.">
-		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.merged.dir}" />
 		<mkdir dir="${build.profiling.dir}" />
 
@@ -64,27 +64,27 @@
 
 		<echo message="${src.other.dir}" />
 		<copy todir="${build.merged.dir}">
-			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" excludes="**/CVS/**"/>
+			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" excludes="**/.svn/**" />
 		</copy>
-		
+
 		<copy todir="${build.merged.dir}" overwrite="true">
-			<fileset dir="${src.other.dir}" includes="**/*" excludes="**/CVS/**"/>
+			<fileset dir="${src.other.dir}" includes="**/*" excludes="**/CVS/**" />
 		</copy>
 	</target>
 
-	<target name="cleanup" description="Löscht alles erzeugte" depends="cleanup-build,cleanup-dist">
+	<target name="cleanup" description="LÃ¶scht alles erzeugte" depends="cleanup-build,cleanup-dist">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${build.dir}" includes="*/**" />
 			<fileset dir="${dist.dir}" includes="*/**" />
 		</delete>
 	</target>
 
-  <target name="cleanup-build" description="Löscht alles unterhalb des ${build.dir}">
+	<target name="cleanup-build" description="LÃ¶scht alles unterhalb des ${build.dir}">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${build.dir}" includes="*/**" />
 		</delete>
 	</target>
-  <target name="cleanup-dist" description="Löscht alles unterhalb des ${dist.dir}">
+	<target name="cleanup-dist" description="LÃ¶scht alles unterhalb des ${dist.dir}">
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${dist.dir}" includes="*/**" />
 		</delete>
@@ -101,18 +101,18 @@
 		<xslt basedir="${build.merged.dir}" in="${doc.path}" out="${doc.profiled.path}" style="${build.merged.xsl.dir}/common-profile.xsl">
 			<xmlcatalog refid="docbookCatalog" />
 		</xslt>
-		
+
 		<!-- Then we resolve the xincludes -->
-<!--		WÄRE SCHÖN WENNS GINGE
+		<!--		WÃ„RE SCHÃ–N WENNS GINGE
 		<java classname="com.elharo.xml.xinclude.SAXXIncluder" fork="false" args="${doc.profiled.path}" logerror="true"> 
 			<classpath location="${workspace}/KalypsoManual1D2D/lib/xincluder/xincluder.jar"></classpath>
 		</java>
--->		
+-->
 
-<!--		    -cp "../XInclude/xincluder.jar:../xerces-2_0_2/xercesImpl.jar"
+		<!--		    -cp "../XInclude/xincluder.jar:../xerces-2_0_2/xercesImpl.jar"
 		      bookfile.xml  >  resolved.xml
--->		
-		
+-->
+
 	</target>
 
 	<target name="html" depends="profiling" description="Erzeugt das Benutzerhandbuch - HTML-Version">
@@ -131,11 +131,11 @@
 		</copy>
 	</target>
 
-	<target name="eclipse-help" depends="profiling" description="Erzeugt das Benutzerhandbuch - Online-Help für Eclipse">
+	<target name="eclipse-help" depends="profiling" description="Erzeugt das Benutzerhandbuch - Online-Help fÃ¼r Eclipse">
 		<xslt basedir="${build.merged.dir}" in="${doc.profiled.path}" out="${dist.eclipse.dir}/dummy.html" style="${build.merged.xsl.dir}/common-eclipse.xsl">
-			<outputproperty name="encoding" value="ISO-8859-1" />
+			<outputproperty name="encoding" value="UTF-8" />
 			<outputproperty name="indent" value="yes" />
-			<!-- Wichtig: Methode 'xml' bewirkt, dass die Ausgabe nicht mit den XMl-Entitäten stattfindet
+			<!-- Wichtig: Methode 'xml' bewirkt, dass die Ausgabe nicht mit den XMl-EntitÃ¤ten stattfindet
 			das schluckt eclipse aber nicht -->
 			<outputproperty name="method" value="xml" />
 			<xmlcatalog refid="docbookCatalog" />
@@ -180,7 +180,7 @@
 	<target name="pdf-fo" depends="init,profiling" description="Erzeugt das Benutzerhandbuch - PDF-Version mit FO">
 
 		<xslt basedir="${build.merged.dir}" in="${doc.profiled.path}" out="${dist.fo.dir}/manual.fo" style="${build.merged.xsl.dir}/common-fo.xsl">
-			<outputproperty name="encoding" value="ISO-8859-1" />
+			<outputproperty name="encoding" value="UTF-8" />
 			<outputproperty name="indent" value="yes" />
 			<xmlcatalog refid="docbookCatalog" />
 		</xslt>
@@ -194,34 +194,35 @@
 	<!-- hier beginnen die internen targets -->
 
 	<target name="pdfproc" description="Hilfsfunktion zum generiern von PDF aus DocBook">
-		<!-- Benötigte Parameter: 
+		<!-- BenÃ¶tigte Parameter: 
   					'pdfproc.out.name'  Name der Ausgabedatei
   					'pdfproc.out.dir'   Ausgabeverzeichnis
   					'pdfproc.xsl		DocBook XSL
   					'pdfproc.xml'		DocBook XML
   					'tex.dir'			Temporary Dir vor tex processing
    	     -->
-
 		<xslt basedir="${build.merged.dir}" in="${pdfproc.xml}" out="${tex.dir}/${pdfproc.out.name}.tex" style="${pdfproc.xsl}">
-			<outputproperty name="encoding" value="ISO-8859-1" />
+			<outputproperty name="encoding" value="UTF-8" />
 			<outputproperty name="indent" value="yes" />
 			<xmlcatalog refid="docbookCatalog" />
 		</xslt>
-
-		<exec executable="pdflatex.exe" dir="${tex.dir}">
+		<exec executable="texify.exe" dir="${tex.dir}">
+			<arg value="-q" />
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
-
+		<!--
 		<exec executable="makeindex.exe" dir="${tex.dir}">
 			<arg value="${pdfproc.out.name}" />
 		</exec>
-
-		<exec executable="pdflatex.exe" dir="${tex.dir}">
+-->
+		<exec executable="texify.exe" dir="${tex.dir}">
+			<arg value="-q" />
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
-    
-		  <!-- three times! needed for correct toc numbering -->
-		<exec executable="pdflatex.exe" dir="${tex.dir}">
+
+		<!-- three times! needed for correct toc numbering -->
+		<exec executable="texify.exe" dir="${tex.dir}">
+			<arg value="-q" />
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
 
@@ -229,14 +230,14 @@
 	</target>
 
 	<target name="xmlvalid" description="Hilfsfunktion zum Validieren von XML">
-		<!-- Benötigte Parameter: 'xmlvalid.xml'  -->
+		<!-- BenÃ¶tigte Parameter: 'xmlvalid.xml'  -->
 		<xmlvalidate file="${xmlvalid.xml}">
 			<xmlcatalog refid="docbookCatalog" />
 		</xmlvalidate>
 	</target>
 
 	<target name="fop" description="Hilfsfunktion zum generieren von PDF aus FOP">
-		<!-- Benötigte Parameter: 
+		<!-- BenÃ¶tigte Parameter: 
     					'fop.fo'  Name der FO-Eingangsdatei
     					'fop.pdf' Name der PDF-Ausgangsdatei
     	-->

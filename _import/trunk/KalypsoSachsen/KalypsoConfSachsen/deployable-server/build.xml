@@ -88,7 +88,7 @@
     <target name="copy-data" depends="prepare">
         <echo message="Copy the data files to the local deploy dir" />
         <copy todir="${dist.webdav}/data">
-            <fileset dir="${src.path}/data" excludes="**/CVS/**" />
+            <fileset dir="${src.path}/data" excludes="**/.svn/**" />
         </copy>
     </target>
 
@@ -99,7 +99,7 @@
 	         please update this target
 	    -->
         <copy todir="${dist.webdav}">
-            <fileset dir="${src.path}" excludes="**/CVS/**" />
+            <fileset dir="${src.path}" excludes="**/.svn/**" />
         </copy>
     </target>
 
@@ -149,7 +149,7 @@
             <!-- remove all CVS files -->
             <fileset dir="${dist.webdav}/prognose/${pName}" defaultexcludes="false">
                 <include name="**/CVS/*" />
-                <include name="**/CVS/**" />
+                <include name="**/.svn/**" />
             </fileset>
 
         </delete>
@@ -277,10 +277,10 @@
         <echo message="Deploying all conf stuff to ${tomcat.server}" />
 
         <copy todir="${deploy.webdav}\\srvconf" overwrite="true">
-            <fileset dir="${dist.webdav}/srvconf" includes="**/*" excludes="**/CVS/**" />
+            <fileset dir="${dist.webdav}/srvconf" includes="**/*" excludes="**/.svn/**" />
         </copy>
         <copy todir="${deploy.webdav}\\vorhersageconf" overwrite="true">
-            <fileset dir="${dist.webdav}/vorhersageconf" includes="**/*" excludes="**/CVS/**" />
+            <fileset dir="${dist.webdav}/vorhersageconf" includes="**/*" excludes="**/.svn/**" />
         </copy>
         <copy todir="${deploy.webdav}" overwrite="true">
             <fileset file="${dist.webdav}/*.ini" includes="**/*" />
@@ -293,7 +293,7 @@
         <echo message="Deploy the data files to ${tomcat.server}" />
 
         <copy todir="${deploy.webdav}\\data" overwrite="true">
-            <fileset dir="${dist.webdav}/data" includes="**/*" excludes="**/CVS/**" />
+            <fileset dir="${dist.webdav}/data" includes="**/*" excludes="**/.svn/**" />
         </copy>
     </target>
 
@@ -303,7 +303,7 @@
         <echo message="Deploy the spree-model on ${tomcat.server}" />
 
         <copy todir="${deploy.webdav}\\prognose" overwrite="true">
-            <fileset dir="${dist.webdav}/prognose" includes="**/*" excludes="**/CVS/**" />
+            <fileset dir="${dist.webdav}/prognose" includes="**/*" excludes="**/.svn/**" />
         </copy>
     </target>
 
@@ -311,7 +311,7 @@
         <echo message="Deploy the models on ${tomcat.server}" />
 
         <copy todir="${deploy.webdav}\\prognose" overwrite="true">
-            <fileset dir="${dist.webdav}/prognose" includes="**/*" excludes="**/CVS/**" />
+            <fileset dir="${dist.webdav}/prognose" includes="**/*" excludes="**/.svn/**" />
         </copy>
     </target>
 

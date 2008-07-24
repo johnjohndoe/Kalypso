@@ -53,7 +53,7 @@
     <target name="copy-data" depends="prepare">
         <echo message="Copy the data files to the local deploy dir" />
         <!--copy todir="${dist.webdav}/data">
-            <fileset dir="${src.path}/data" excludes="**/CVS/**" />
+            <fileset dir="${src.path}/data" excludes="**/.svn/**" />
         </copy-->
     </target>
 
@@ -64,7 +64,7 @@
 	         please update this target
 	    -->
         <copy todir="${dist.webdav}">
-            <fileset dir="${src.path}" excludes="**/CVS/**" />
+            <fileset dir="${src.path}" excludes="**/.svn/**" />
         </copy>
     </target>
 
@@ -113,7 +113,7 @@
             <!-- remove all CVS files -->
             <fileset dir="${dist.webdav}/prognose/${pName}" defaultexcludes="false">
                 <include name="**/CVS/*" />
-                <include name="**/CVS/**" />
+                <include name="**/.svn/**" />
             </fileset>
 
         </delete>

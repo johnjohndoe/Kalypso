@@ -64,11 +64,11 @@
 
 		<echo message="${src.other.dir}" />
 		<copy todir="${build.merged.dir}">
-			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" excludes="**/CVS/**"/>
+			<fileset dir="${src.dir}/" includes="**/*" defaultexcludes="false" excludes="**/.svn/**"/>
 		</copy>
 		
 		<copy todir="${build.merged.dir}" overwrite="true">
-			<fileset dir="${src.other.dir}" includes="**/*" excludes="**/CVS/**"/>
+			<fileset dir="${src.other.dir}" includes="**/*" excludes="**/.svn/**"/>
 		</copy>
 	</target>
 
@@ -163,7 +163,7 @@
 		<mkdir dir="${tex.tmp.dir}" />
 
 		<copy todir="${tex.tmp.dir}/${image.name}">
-			<fileset dir="${image.dir}" casesensitive="no" includes="**/*.*" excludes="**/CVS/**" />
+			<fileset dir="${image.dir}" casesensitive="no" includes="**/*.*" excludes="**/.svn/**" />
 		</copy>
 
 		<antcall target="pdfproc">
