@@ -164,7 +164,7 @@ Version 1.0.1 (laufende Änderungen)
 007.) Update subroutine structure of reply.sub. Get rid of jump marks.
 008.) restore a comment from IPK in update.f90
 009.) Deactivate some test output code in wavecmdjw2IPK.for
----
+--- committed
 010.) Change parameter mel to MaxE to overgive to the Darcy.sub, called from coef2 in coef25.for. mel doesn't have the correct value, which is supposed to be the maximum number of element
 011.) Change question for midside node processing, when calculating the inner boundary condition value at transitions. There, the mod-function must be used to identify a midside node. (Affects: coef25.for)
 012.) Declaration of variables and of function type updated in DNX.fun (dnx.for) and all functions in funs.for
@@ -177,7 +177,7 @@ Version 1.0.1 (laufende Änderungen)
 018.) Deactivate none working part, i.e. autoconverge. THIS HAS TO BE REVISED!!! (Affects: rma10.for); Additionally small format changes and one not used variable deactivation in statistic.f90
 019.) Change wrong format output descriptor in sandbed.for
 020.) Format changes and loop update in threed.for
----
+--- committed
 021.) Introducing preperation of usage of MathKernelLibrary. That has different changes as consequence.
       - Reading subroutine ginpt must now deal with 88 digits long characters (Affects: inmet.for, input. for)
       - BLK10MOD includes further switch-parameters for the usage of MKL settings in control file
@@ -187,5 +187,14 @@ Version 1.0.1 (laufende Änderungen)
       - file.sub contains now another unit. This collides with a unit, that was introduced here for the usage of stage flow boundary conditions for 1D
 022.) For compilation with Intel Fortran Compiler, the 'File=<filename>' command has to be introduced in open statements instead of just giving <filename> on the correct place. (Affects: wtform.f90, input.for)
 023.) Change if-statement, because something is possibly be checked for an array entry, that might not exist; just made the if-statement cascading, so that no runtime error can occur (Affects: rewet.for)
+--- committed
 
 --- Nico Schrage, 23.07.2008 (1.0.1alpha1)
+
+024.) Change all definitions in wbmmods from kind=4 to kind=8
+025.) Upload fileIntel.for, which allows developers to compile with Lahey and Intel compiler
+--- committed
+
+
+
+--- Nico Schrage, 24.07.2008 (1.0.1alpha2)
