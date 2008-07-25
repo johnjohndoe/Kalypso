@@ -224,5 +224,16 @@ Version 1.1.0 (laufende Änderungen)
       
 --- Monika Donner, 25.07.2008
 
+008.) (ref. 005. of this release)Remove splitting of loop to speed up execution of code as it was before. (Affects: MKSAND.for, MKTEMP.for, WBMMODS.for)
+009.) remove some declarations as it was ment for Intel Compiler, because compiler setting can make it. (Affects QGEN.sub)
+010.) Add some more definite declarations in order to have consistent variable passing and errorless debug compilation (BLK10.for, BLK10MOD.for)
+010.) deactivate writing of matrix to unit 9919 in coef25.for
+011.) Bring TF.for up to date
+012.) for usage of pardiso solver:
+      - enable front_mkl.sub to use coef1DPoly and coef1DJunction. 
+      - at the moment deactivate call of front_pardiso from rma10.for, because it is not available in working way
+      - deactivate call of pardiso (twice) in mkl_solver.sub, because if package is not available, it will lead to compilation errors.
+013.) consistent variable setting and value assigning in load.sub of integer(kind=4) varialbe nln.
+014.) consistency variable adaptation of c_wr in roughness.f90
 
-        
+--- Nico Schrage, 25.07.2008
