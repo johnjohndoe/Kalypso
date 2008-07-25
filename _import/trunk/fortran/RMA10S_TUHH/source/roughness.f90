@@ -231,11 +231,11 @@ implicit none
 ! Calling variables
 !NiS,jul06: Consistent variable types!
 !REAL, INTENT(IN) 	:: h, a, dp, cwr
-REAL (kind = 8), INTENT(IN) 	 :: a, dp
-REAL, INTENT(IN) 	            :: cwr
-REAL(KIND=8), INTENT(IN)      :: h
+REAL (kind = 8), INTENT(IN) :: a, dp
+REAL (kind = 8), INTENT(IN) :: cwr
+REAL (KIND = 8), INTENT(IN) :: h
 !-
-REAL (kind = 8), INTENT(OUT) 	:: lambda
+REAL (kind = 8), INTENT(OUT) :: lambda
 
 ! Local variables
 REAL :: ax, ay, dur
