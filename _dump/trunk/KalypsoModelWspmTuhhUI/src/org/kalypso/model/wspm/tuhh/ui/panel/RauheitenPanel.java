@@ -238,9 +238,9 @@ public class RauheitenPanel extends AbstractProfilView
             return;
 
           final int i_left = 0;
-          final int i_rechts = profil.indexOfPoint( trennflaechen[0].getPoint() );
+          final int i_right = profil.indexOfPoint( trennflaechen[0].getPoint() );
           m_li = value;
-          setValues( i_left, i_rechts, value );
+          setValues( i_left, i_right > 0 ? i_right - 1 : 0, value );
         }
       }
     } );
@@ -275,9 +275,9 @@ public class RauheitenPanel extends AbstractProfilView
             return;
 
           final int i_left = profil.indexOfPoint( trennflaechen[0].getPoint() );
-          final int i_rechts = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
+          final int i_right = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
           m_hf = value;
-          setValues( i_left, i_rechts, value );
+          setValues( i_left, i_right > 0 ? i_right - 1 : 0, value );
         }
       }
     } );

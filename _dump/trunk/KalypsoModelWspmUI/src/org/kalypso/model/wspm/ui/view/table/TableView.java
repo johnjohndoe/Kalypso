@@ -126,8 +126,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-
-      m_view.update( m_profile.getPoints(), new String[] { "" } );
+      final IRecord[] points = m_profile.getPoints();
+      if( points.length > 0 )
+        m_view.update( points, new String[] { "" } );
       m_problemView.updateSections( m_profile );
 
       return Status.OK_STATUS;

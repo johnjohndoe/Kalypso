@@ -87,11 +87,8 @@ import org.kalypso.observation.result.IRecord;
  */
 public class OperationChooserPage extends WizardPage
 {
-
   private class PropertyCalculator
   {
-    private final String m_label;
-
     private final String m_id;
 
     private final String m_tooltip;
@@ -100,7 +97,6 @@ public class OperationChooserPage extends WizardPage
 
     private PropertyCalculator( final String id, final String label, final String tooltip, final IPointPropertyCalculator calculator )
     {
-      m_label = label;
       m_tooltip = tooltip;
       m_id = id;
       m_calculator = calculator;
@@ -120,7 +116,7 @@ public class OperationChooserPage extends WizardPage
   private Double m_value = Double.NaN;
 
   private final IStructuredSelection m_selectedpoints;
-
+  
   public OperationChooserPage( final IStructuredSelection selection )
   {
     super( "operationChooserPage", Messages.OperationChooserPage_4, null ); //$NON-NLS-1$
@@ -176,7 +172,7 @@ public class OperationChooserPage extends WizardPage
   @Override
   public boolean canFlipToNextPage( )
   {
-    return true;
+    return false;
   }
 
   /**
@@ -324,6 +320,8 @@ public class OperationChooserPage extends WizardPage
     final Button button = new Button( group, SWT.CHECK );
     button.setText( filter.getName() );
     button.setToolTipText( filter.getDescription() );
+    if( "org.kalypso.model.wspm.tuhh.core.profile.SelectedProfilePointFilter".equals( filter.getId() ) )
+      button.setEnabled( m_selectedpoints != null );
     button.setSelection( selected );
     button.addSelectionListener( new SelectionAdapter()
     {
