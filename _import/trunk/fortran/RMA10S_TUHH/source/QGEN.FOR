@@ -579,11 +579,7 @@ CIPK OCT01
               IF (spec (na, 1) .eq.0.) spec (na, 1) = 0.0001
               nfix (na) = 31000
             ENDIF
-          END DO
 
-          !NiS,sep06,com: This is just for water-quality calculation
-          DO  K=1,maxL
-            NA=LINE(J,K)
             !NiS,sep06,com: This is just for water-quality calculation
             !NiS,sep06,com: salinity
             IF(QQAL(1) .GE. 0.) THEN
