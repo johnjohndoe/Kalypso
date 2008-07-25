@@ -413,6 +413,7 @@ cipk aug07
       IF(ICPU .EQ. 0) THEN
         CALL FRONT(1)
       ELSE
+        stop 'option not stable, please use frontal scheme'
         !CALL FRONT_PARDISO(1)
       ENDIF
       IF(ITIMFL .GT. 0) THEN
@@ -1179,7 +1180,8 @@ cipk aug07
         IF(ICPU .EQ. 0) THEN
           CALL FRONT(1)
         ELSE
-!          CALL FRONT_PARDISO(1)
+                  stop 'option not stable, please use frontal scheme'
+                  !CALL FRONT_PARDISO(1)
         ENDIF
         IF(ITIMFL .GT. 0) THEN
           CALL SECOND(ATIM(3))
