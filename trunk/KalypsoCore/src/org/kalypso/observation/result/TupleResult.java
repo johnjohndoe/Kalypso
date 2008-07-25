@@ -515,7 +515,7 @@ public class TupleResult implements List<IRecord>
     fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
     return added;
   }
-
+  
   /**
    * Adds a component to this tuple result. Does nothing if an equal component was already added.
    * <p>

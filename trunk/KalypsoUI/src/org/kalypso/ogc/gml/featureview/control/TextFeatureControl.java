@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -84,8 +85,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
   public TextFeatureControl( final Feature feature, final IValuePropertyType ftp, final String format, final IFeatureModifierFactory factory, final IFeatureChangeListener fcl, final IFeatureSelectionManager manager )
   {
     super( feature, ftp );
-    
-    m_modifier = new StringModifier(ftp, format);
+
+    m_modifier = new StringModifier( ftp, format );
   }
 
   /**
@@ -213,7 +214,8 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     }
 
     // nur ändern, wenn sich wirklich was geändert hat
-    if( (newData == null && oldData != null) || (newData != null && !m_modifier.equals( newData, oldData )) )
+    if( !ObjectUtils.equals( newData, oldData ) )
+// if( (newData == null && oldData != null) || (newData != null && !m_modifier.equals( newData, oldData )) )
       return new ChangeFeatureCommand( feature, pt, newData );
 
     return null;
