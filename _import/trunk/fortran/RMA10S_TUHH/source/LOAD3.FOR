@@ -32,6 +32,7 @@ CIPK DEC06
 !nis,feb08: for line transitions
       LOGICAL :: NodeIsDry (1:350)
       integer :: dea_stat
+      integer :: nln
 !-
 C-
 cipk aug05      INCLUDE 'BLK10.COM'
@@ -935,7 +936,7 @@ cipk oct98 update to f90
           end do
 
           !initializing NLN; connectivity starts with first node of transitioning line
-          NLN = 9999999999
+          NLN = 999999999
           !Get the smallest node number to reference equations to; 1st was already processed in lines before
           DO K = 1, LiLe
             IF (NLN > Line(LiNo,K) .and. (.NOT.NodeIsDry(K)))
