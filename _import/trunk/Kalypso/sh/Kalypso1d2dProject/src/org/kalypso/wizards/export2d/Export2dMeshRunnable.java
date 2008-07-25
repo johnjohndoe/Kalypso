@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2RMA10SConv;
 import org.kalypso.kalypsomodel1d2d.conv.Gml2SMSConv;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.GeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 
@@ -92,7 +93,7 @@ public final class Export2dMeshRunnable implements ICoreRunnableWithProgress
 
     if( m_selectedExtension == "*.2d" )
     {
-      final Gml2RMA10SConv converter = new Gml2RMA10SConv( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes );
+      final Gml2RMA10SConv converter = new Gml2RMA10SConv( discretisationModel, flowRelationshipModel, null, roughnessModel, null, true, m_exportMiddleNodes, new GeoLog( null ) );
 
       try
       {

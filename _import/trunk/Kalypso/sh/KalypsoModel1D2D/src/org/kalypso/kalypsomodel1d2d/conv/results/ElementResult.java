@@ -286,10 +286,10 @@ public class ElementResult
       // System.out.println( "Wasserspiegel zugewiesen (" + node.getNodeID() + "): " );
       // System.out.println( "alt: " + node.getWaterlevel() );
 
-      final List<Double> velocity = new LinkedList<Double>();
-      velocity.add( 0.0 );
-      velocity.add( 0.0 );
-      node.setVelocity( velocity );
+      // final List<Double> velocity = new LinkedList<Double>();
+      // velocity.add( 0.0 );
+      // velocity.add( 0.0 );
+      // node.setVelocity( velocity );
       node.setDepth( depth );
       node.setWaterlevel( waterlevel );
 
@@ -299,10 +299,10 @@ public class ElementResult
     }
     else
     {
-      final List<Double> velocity = new LinkedList<Double>();
-      velocity.add( 0.0 );
-      velocity.add( 0.0 );
-      node.setVelocity( velocity );
+      // final List<Double> velocity = new LinkedList<Double>();
+      // velocity.add( 0.0 );
+      // velocity.add( 0.0 );
+      // node.setVelocity( velocity );
       node.setDepth( 0.0 );
       node.setWaterlevel( waterlevel );
       // node.setResultValues( 0, 0, 0, water level );

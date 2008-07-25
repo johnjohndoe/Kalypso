@@ -93,6 +93,9 @@ public class ImportWSPMHandler extends AbstractHandler
       final IFEDiscretisationModel1d2d discModel = modelProvider.getModel( IFEDiscretisationModel1d2d.class );
       final IFlowRelationshipModel flowRelationModel = modelProvider.getModel( IFlowRelationshipModel.class );
 
+      if( discModel == null )
+        return Status.CANCEL_STATUS;
+
       /* Import Reach into Terrain-Model */
       final IRiverProfileNetworkCollection networkModel = terrainModel.getRiverProfileNetworkCollection();
 

@@ -16,7 +16,7 @@
             id="de.renew.workflow.connector.WorkflowProjectNature">
       </requires-nature>
    </extension>
-   
+
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
@@ -50,6 +50,18 @@
 		</description>
 		</wizard>
 		<wizard
+        category="org.kalypso.ui.newwizards.kalypso/org.kalypso.wizard.Create1d2dpjt"
+        class="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
+        finalPerspective="org.kalypso.kalypso1d2d.pjt.perspective.Perspective"
+        icon="icons/kalypso1d2d.png"
+        id="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DDemoProjectWizard"
+        name="Kalypso 1D-2D gekoppeltes Demo-Modell"
+        project="true">
+		<description>
+				Erzeugt ein neues 1D2D-Demoprojekt.
+		</description>
+		</wizard>
+		<wizard
             class="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
             icon="icons/kalypso_gmt.gif"
             id="org.kalypso.ui.wizards.imports.baseMap.ImportBaseMapWizard"
@@ -73,7 +85,7 @@
       	<wizard
             class="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
             id="org.kalypso.ui.wizards.imports.observation.ImportObservationWizard"
-            name="Observation load"/>            
+            name="Observation load"/>
         <wizard
               class="org.kalypso.wizards.import1d2d.Import2dWizard"
               icon="icons/elcl16/1d2d_edit_protocol_view.gif"
@@ -85,14 +97,14 @@
               id="org.kalypso.wizards.export2d.ExportWizard"
               name="Export 2D"
               project="false"/>
-	</extension>	
+	</extension>
      <extension
            point="org.kalypso.ui.featureViewExtensionControl">
         <extensionControl
               class="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"
               id="org.kalypso.kalypso1d2d.pjt.wizards.RestartSelectorControlFactory"/>
      </extension>
-   
+
    <extension
          name="Workflow Views"
          point="org.eclipse.ui.views">
@@ -102,12 +114,12 @@
              icon="icons/obj16/repository.gif"
              id="org.kalypso.kalypso1d2d.pjt.views.TimeseriesRepositoryView"
              name="Zeitreihen Repositories">
-       </view>               
+       </view>
    </extension>
-   
-   	     
+
+
      <extension point="org.eclipse.ui.handlers">
-			 		 		 		 		  			
+
         <handler
               class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
               commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#SelectOneProfile">
@@ -123,8 +135,8 @@
               </with>
            </activeWhen>
         </handler>
-		 
-     <!--*** _FlowRelationship (Parameters1D) context handler ***-->		 
+
+     <!--*** _FlowRelationship (Parameters1D) context handler ***-->
 		 <handler
 	           class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler"
 	           commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#Parameters1D">
@@ -136,30 +148,30 @@
 		         </with>
 		     </activeWhen>
 		 </handler>
-	
-	 <!--*** BoundaryCondition context handler ***-->	 
 
- 	 <!--*** handlers for scenario management ***-->			   
+	 <!--*** BoundaryCondition context handler ***-->
+
+ 	 <!--*** handlers for scenario management ***-->
 
  	 <!--*** import handlers ***-->
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportElevationHandler"
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad"/>			   	           
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ElevLoad"/>
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportProfileHandler"
-	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport"/>	
-	           
- 	 <!--*** general net editing handler ***-->	     
-	     
- 	 <!--*** 1D-editing handlers ***-->	     
+	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ProfileImport"/>
+
+ 	 <!--*** general net editing handler ***-->
+
+ 	 <!--*** 1D-editing handlers ***-->
 	     <handler
 	           class="org.kalypso.kalypso1d2d.pjt.actions.ImportWSPMHandler"
 	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Net1DImportWspm"/>
 	     <handler
                class="org.kalypso.kalypso1d2d.pjt.actions.AddProfileToMapHandler"
-               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap"/>	           	           
-	     
- 	 <!--*** 2D-editing handlers ***-->	     
+               commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddProfileNetworkToMap"/>
+
+ 	 <!--*** 2D-editing handlers ***-->
 	     <handler
 	           commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__Chan2DGen">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -182,7 +194,7 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
-	     
+
 	     <handler
 	     	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AssignElevs">
            <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -194,8 +206,8 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
-	     
-		<!-- // Handler for "Berechnungseinheiten Modellieren"--> 
+
+		<!-- // Handler for "Berechnungseinheiten Modellieren"-->
 	     <handler
 	       	   commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__CalculationUnit">
                <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
@@ -207,10 +219,10 @@
 	                 value="org.kalypso.model1d2d"/>
            </class>
 	     </handler>
-	     
-	     <!-- // Handler for "Start Calculation Widget"--> 
+
+	     <!-- // Handler for "Start Calculation Widget"-->
 	     <handler
-	       	  commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">	       	  
+	       	  commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculationWithProblemsView">
                <class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 	           <parameter
 	                 name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
@@ -222,7 +234,7 @@
 	     </handler>
        <handler
             class="org.kalypso.kalypso1d2d.pjt.actions.StartCalculationHandler"
-            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation"/> 
+            commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__StartCalculation"/>
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.ResultProcessHydrographsHandler"
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ResultProcessHydropgrahs">
@@ -246,23 +258,23 @@
        <handler
              class="org.kalypso.kalypso1d2d.pjt.actions.GenerateResultDifferenceViewHandler"
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__GenerateDifferenceResultView">
-       </handler>  	     	     	     	     	     	     
+       </handler>
        <handler
              commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ManageResultHydrograph">
           <class
                 class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
              <parameter
                    name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                   value="org.kalypso.kalypso1d2d.pjt.map.HydrographManagmentWidget">
+                   value="org.kalypso.kalypso1d2d.pjt.map.HydrographManagementWidget">
              </parameter>
              <parameter
                    name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
                    value="org.kalypso.kalypso1d2d.pjt">
              </parameter>
           </class>
-       </handler>  	     	     	     	     	     	     
+       </handler>
 	</extension>
-    
+
    <extension
            point="org.eclipse.ui.intro.configExtension">
         <configExtension
@@ -277,13 +289,13 @@
             	<!-- Hide the "Link with Editor" action from the toolbar of the viewer -->
 				<property name="org.eclipse.ui.navigator.hideLinkWithEditorAction"
 						  value="true"/>
-				<!-- Hide the "Available Extensions" tab in the "Available Customizations" 
+				<!-- Hide the "Available Extensions" tab in the "Available Customizations"
 					dialog (available from the "Filters" action -->
 				<!--<property name="org.eclipse.ui.navigator.hideAvailableExtensionsTab"
 						  value="true"/>-->
 			</options>
       </viewer>
-   </extension>   
+   </extension>
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <commonFilter
@@ -294,11 +306,11 @@
          <filterExpression>
     	    <and>
 				<instanceof value="org.eclipse.core.resources.IProject"/>
-				<not>				
+				<not>
 					<test
                 	    property="org.eclipse.core.resources.projectNature"
                     	value="org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature"/>
-                </not>                
+                </not>
 	        </and>
          </filterExpression>
       </commonFilter>
@@ -373,7 +385,7 @@
                id="org.kalypso.core.tin.waterlevel">
          </category>
       </provider>
-   </extension>   
+   </extension>
    <extension
          point="org.eclipse.ui.decorators">
       <decorator

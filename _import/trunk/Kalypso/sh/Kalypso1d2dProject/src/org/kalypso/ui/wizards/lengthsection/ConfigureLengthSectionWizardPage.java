@@ -41,10 +41,10 @@
 package org.kalypso.ui.wizards.lengthsection;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
@@ -64,6 +64,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -72,6 +73,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
+import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionParameters;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -116,11 +118,9 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
 
   private String m_riverNameField;
 
-  private String m_toStationField;
+  protected boolean m_kmValues = false;
 
-  private String m_fromStationField;
-
-  private final Set<Object> m_riverNameSet = new HashSet<Object>();
+  private final Set<Object> m_riverNameSet = new TreeSet<Object>();
 
   protected int m_stationWidth;
 
@@ -147,17 +147,7 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     final int comboWidth1 = 75;
     final int comboWidth2 = 50;
 
-    /* set a fixed size to the Wizard */
-    // final Object layoutData = parent.getLayoutData();
-    // if( layoutData instanceof GridData )
-    // {
-    // final GridData pLayout = (GridData) layoutData;
-    // pLayout.widthHint = 400;
-    // pLayout.heightHint = 300;
-    // parent.layout();
-    // }
     final Composite composite = new Composite( parent, SWT.NONE );
-    // composite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     composite.setLayout( new GridLayout() );
 
     /* river line selection group */
@@ -297,6 +287,22 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
       }
     } );
 
+    final Label dummy1 = new Label( propertyGroup, SWT.NONE );
+    dummy1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    final Button buttonKmValues = new Button( propertyGroup, SWT.CHECK );
+    buttonKmValues.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    buttonKmValues.setText( "Stationswert in km angegeben" );
+    buttonKmValues.addSelectionListener( new SelectionAdapter()
+    {
+      @SuppressWarnings("synthetic-access")
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        m_kmValues = buttonKmValues.getEnabled();
+      }
+    } );
+
     final Label stationSpinnerText = new Label( propertyGroup, SWT.NONE );
     stationSpinnerText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     stationSpinnerText.setText( "Stützpunktweite des Längsschnitts [m]" );
@@ -403,28 +409,16 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     m_comboStationFromField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
     if( feature.getFeatureType().getProperty( new QName( customNamespace, FROM_STATION_FIELD ) ) != null )
-    {
       m_comboStationFromField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, FROM_STATION_FIELD ) ) ) );
-      m_fromStationField = FROM_STATION_FIELD;
-    }
     else
-    {
       m_comboStationFromField.setSelection( new StructuredSelection( m_comboStationFromField.getElementAt( 1 ) ) );
-      m_fromStationField = properties[0].getQName().getLocalPart();
-    }
 
     m_comboStationToField.setInput( properties );
     // set river name field to "NAME". If it does not exist, set it to the first field
     if( feature.getFeatureType().getProperty( new QName( customNamespace, TO_STATION_FIELD ) ) != null )
-    {
       m_comboStationToField.setSelection( new StructuredSelection( feature.getFeatureType().getProperty( new QName( customNamespace, TO_STATION_FIELD ) ) ) );
-      m_toStationField = TO_STATION_FIELD;
-    }
     else
-    {
       m_comboStationToField.setSelection( new StructuredSelection( m_comboStationToField.getElementAt( 1 ) ) );
-      m_toStationField = properties[0].getQName().getLocalPart();
-    }
 
     // get all river names
 
@@ -488,12 +482,6 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     }
     m_comboRiverLineName.setInput( m_riverNameSet );
     final Object element = m_comboRiverLineName.getElementAt( 0 );
-    // if( element == null )
-    // {
-    // MessageDialog.openInformation( getShell(), "Gewässerfeld auswählen", "Ausgewähltes Feld enthält keine geeigneten
-    // Informationen." );
-    // return;
-    // }
     m_comboRiverLineName.setSelection( new StructuredSelection( element ) );
   }
 
@@ -507,7 +495,15 @@ public class ConfigureLengthSectionWizardPage extends WizardPage implements IWiz
     final IPropertyType fromStationPropertyType = (IPropertyType) selFrom.getFirstElement();
     final IPropertyType toStationPropertyType = (IPropertyType) selTo.getFirstElement();
 
-    return new LengthSectionParameters( m_riverFeatures, riverNamePropertyType, fromStationPropertyType, toStationPropertyType, new BigDecimal( m_stationWidth ) );
+    StructuredSelection selection = (StructuredSelection) m_comboRiverLineName.getSelection();
+    String selectedRiverName = (String) selection.getFirstElement();
+
+    return new LengthSectionParameters( m_riverFeatures, riverNamePropertyType, fromStationPropertyType, toStationPropertyType, selectedRiverName, new BigDecimal( m_stationWidth ) );
+  }
+
+  public boolean isKmValues( )
+  {
+    return m_kmValues;
   }
 
 }

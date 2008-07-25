@@ -146,8 +146,8 @@
       werden oder auch beide Rechenarten miteinander verbunden werden (die
       stationäre Rechnung ist die Generierung einer Anfangslösung für die
       instationäre Rechnung), indem in das entsprechende Kästchen ein Häkchen
-      gesetzt wird. Der Einstellungsblock "Anfangswerte" wird im Unterkapitel
-      genauer erläutert.</para>
+      gesetzt wird. Der Einstellungsblock ''Anfangswerte'' wird im
+      Unterkapitel genauer erläutert.</para>
 
       <para>Es ist die Anzahl der maximal durchzuführenden Iterationen pro
       Rechenschritt anzugeben und für die stationäre Berechnung zusätzlich der
@@ -224,7 +224,7 @@
         </itemizedlist>
 
         <figure>
-          <title>Einstellungsblock "Anfangswerte"</title>
+          <title>Einstellungsblock Anfangswerte</title>
 
           <mediaobject>
             <imageobject>
@@ -314,7 +314,7 @@
           </inlinemediaobject></para>
 
         <figure>
-          <title>Einstellungsblock "Konvergenz"</title>
+          <title>Einstellungsblock Konvergenz</title>
 
           <mediaobject>
             <imageobject>
@@ -381,7 +381,7 @@
         erscheint das Kästchen grau und es ist keine Eingabe möglich.</para>
 
         <figure>
-          <title>Einstellungsblock "Turbulenzmodell"</title>
+          <title>Einstellungsblock Turbulenzmodell</title>
 
           <mediaobject>
             <imageobject>
@@ -406,7 +406,7 @@
         Corioliskraft benötigt.</para>
 
         <figure>
-          <title>Einstellungsblock "Rechenkernparameter"</title>
+          <title>Einstellungsblock Rechenkernparameter</title>
 
           <mediaobject>
             <imageobject>
@@ -464,7 +464,7 @@
         </itemizedlist>
 
         <figure>
-          <title>Einstellungsblock "Marsh Parameter"</title>
+          <title>Einstellungsblock Marsh Parameter</title>
 
           <mediaobject>
             <imageobject>

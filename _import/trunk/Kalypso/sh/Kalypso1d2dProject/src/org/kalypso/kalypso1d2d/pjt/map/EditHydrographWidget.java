@@ -55,9 +55,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class EditHydrographWidget extends AbstractEditHydrographWidget
 {
 
-  private final HydrographManagmentWidget m_widget;
+  private final HydrographManagementWidget m_widget;
 
-  public EditHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, QName geomQName, final IKalypsoFeatureTheme theme, final HydrographManagmentWidget hydrographWidget )
+  public EditHydrographWidget( final String name, final String toolTip, final boolean allowMultipleSelection, QName geomQName, final IKalypsoFeatureTheme theme, final HydrographManagementWidget hydrographWidget )
   {
     super( name, toolTip, allowMultipleSelection, geomQName, theme );
     m_widget = hydrographWidget;

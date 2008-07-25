@@ -43,7 +43,7 @@ package org.kalypso.ui.wizards.results.editor;
 import org.kalypsodeegree.graphics.sld.Graphic;
 
 /**
- * @author Thomas
+ * @author Thomas Jung
  * 
  */
 public interface IVectorModifyListener

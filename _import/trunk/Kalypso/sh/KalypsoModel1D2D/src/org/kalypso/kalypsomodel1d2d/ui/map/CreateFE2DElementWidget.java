@@ -267,9 +267,7 @@ public class CreateFE2DElementWidget extends AbstractWidget
 
     IStatus status;
     if( newNode instanceof GM_Point )
-    {
       status = m_builder.checkNewNode( (GM_Point) newNode );
-    }
     else
       status = m_builder.checkNewNode( ((IFE1D2DNode) newNode).getPoint() );
 

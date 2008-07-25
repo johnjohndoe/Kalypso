@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypso1d2d.pjt.map;
 
@@ -185,7 +185,7 @@ public class HydrographUtils
       }
       final URL hydrographURL = ResourceUtilities.createURL( folder );
 
-      GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
+      final GMLWorkspace w = GmlSerializer.createGMLWorkspace( hydrographURL, null );
 
       final Feature hydroFeature = w.getRootFeature();
       return (IHydrographCollection) hydroFeature.getAdapter( IHydrographCollection.class );
@@ -210,10 +210,12 @@ public class HydrographUtils
     OutputStreamWriter writer = null;
     try
     {
-      writer = new OutputStreamWriter( new FileOutputStream( gmlResultFile.getLocation().toFile() ) );
-      GmlSerializer.serializeWorkspace( writer, workspace, "UTF-8" );
-      writer.close();
+      final String charset = gmlResultFile.getCharset();
+      final FileOutputStream stream = new FileOutputStream( gmlResultFile.getLocation().toFile() );
+      writer = new OutputStreamWriter( stream, charset );
+      GmlSerializer.serializeWorkspace( writer, workspace, charset );
 
+      writer.close();
       // refresh workspace
       /* update resource folder */
       gmlResultFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );

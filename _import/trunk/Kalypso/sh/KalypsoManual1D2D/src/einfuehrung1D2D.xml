@@ -175,14 +175,14 @@
           <primary>Szenarien Ansicht</primary>
         </indexterm>
 
-        <para>Die Ansicht "Szenarien" ermöglicht den Wechsel der zu
+        <para>Die Ansicht ''Szenarien'' ermöglicht den Wechsel der zu
         bearbeitenden Szenarien sowie das Ableiten und Löschen erweiterter
         Szenarien eines Modells.</para>
 
         <para>Das aktivierte Basisszenario (blaue Kugel) wird in
         Fettbuchstaben dargestellt. Dieses ist das ausgewählte Projekt, das
         nun im Navigator geöffnet ist. Um die Funktionen der Ansicht
-        "Szenarien" sichtbar zu machen, muss ein Basisszenario markiert
+        ''Szenarien'' sichtbar zu machen, muss ein Basisszenario markiert
         werden, indem es mit dem linken Mauszeiger angeklickt wird. Es
         erscheinen Symbole, die in der folgenden Tabelle vorgestellt
         werden.</para>
@@ -563,12 +563,12 @@
         </listitem>
 
         <listitem>
-          <para>Strg + "+" (sowohl Tastatur als auch Nummernblock möglich):
+          <para>Strg + ''+'' (sowohl Tastatur als auch Nummernblock möglich):
           Hereinzoomen (statisch)</para>
         </listitem>
 
         <listitem>
-          <para>Strg + "-" : Herauszoomen (statisch)</para>
+          <para>Strg + ''-'' : Herauszoomen (statisch)</para>
         </listitem>
       </itemizedlist>
 
@@ -684,7 +684,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata align="left" fileref="img/1D2D/Diagramm_Ansicht.png" />
+            <imagedata align="center" fileref="img/1D2D/Diagramm_Ansicht.png" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -771,7 +771,7 @@
           gedrückt halten, bis gewünschter Ausschnitt violett markiert ist,
           dann Maustaste loslassen). Auf diese Weise werden <emphasis
           role="bold">alle Achsen</emphasis> hereingezoomt und der Ausschnitt
-          wird nicht "verzerrt".</para>
+          wird nicht ''verzerrt''.</para>
 
           <figure>
             <title>Im Diagramm alle Achsen hereinzoomen</title>

@@ -130,7 +130,7 @@ public class Building1D2DConverter
       final BigDecimal huw = (BigDecimal) record.getValue( huwComp );
       final BigDecimal how = (BigDecimal) record.getValue( howComp );
 
-      formatter.format( "CST     %.3f %.3f %.3f%n", q, huw, how );
+      formatter.format( "CST     %.3f %.5f %.5f%n", q, huw, how );
     }
 
     formatter.format( "ENDBLOC  %8d%n", buildingID );

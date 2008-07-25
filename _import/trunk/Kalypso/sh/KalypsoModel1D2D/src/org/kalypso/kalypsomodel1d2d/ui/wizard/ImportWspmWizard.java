@@ -622,6 +622,9 @@ public class ImportWspmWizard extends Wizard implements IWizard
     for( final TuhhReachProfileSegment segment : segments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
+      if( profileMember == null )
+        continue;
+
       final String crs = profileMember.getSrsName();
       final double station = profileMember.getStation();
 
@@ -744,6 +747,10 @@ public class ImportWspmWizard extends Wizard implements IWizard
     for( final TuhhReachProfileSegment segment : segments )
     {
       final WspmProfile profileMember = segment.getProfileMember();
+
+      if( profileMember == null )
+        continue;
+
       final BigDecimal station = segment.getStation();
 
       final IRelationType wspmRelation = (IRelationType) networkFeature.getFeatureType().getProperty( IRiverProfileNetwork.QNAME_PROP_RIVER_PROFILE );

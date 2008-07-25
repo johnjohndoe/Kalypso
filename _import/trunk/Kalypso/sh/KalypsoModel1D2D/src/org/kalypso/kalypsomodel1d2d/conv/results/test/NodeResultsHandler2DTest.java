@@ -77,7 +77,7 @@ public class NodeResultsHandler2DTest extends TestCase
 
     // run model
     final IFolder folder = project.getFolder( "2d" );
-    final IFile ergFile = folder.getFile( "erg.2d" );
+    final IFile ergFile = folder.getFile( "steady.2d" );
 
     // get 2d-file from resources
     final File result2dFile = ergFile.getLocation().toFile();

@@ -45,12 +45,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine1D;
+import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IElement2D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DComplexElement;
@@ -243,6 +248,7 @@ public class DeleteFeElementsHelper
       }
       final CompositeCommand compositeCommand = new CompositeCommand( "Objekte löschen" );
 
+      // check for boundary conditions on the continuity lines
       final FeatureList wrappedList = flowRelationshipModel.getWrappedList();
       for( final Object object : wrappedList )
       {
@@ -257,16 +263,21 @@ public class DeleteFeElementsHelper
               selectionManager.clear();
               return Status.OK_STATUS;
             }
-            else
-            {
-              final Feature feature = element.getFeature();
-              selectionManager.changeSelection( new Feature[] { feature }, new EasyFeatureWrapper[] {} );
-
-              final DeleteFeatureCommand command = new DeleteFeatureCommand( feature );
-              compositeCommand.addCommand( command );
-            }
         }
       }
+
+      // if this code is reached you can delete the features.
+      for( final EasyFeatureWrapper element : selected )
+      {
+        final Feature feature = element.getFeature();
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), new QName[] { IContinuityLine1D.QNAME, IContinuityLine2D.QNAME } ) )
+        {
+          selectionManager.changeSelection( new Feature[] { feature }, new EasyFeatureWrapper[] {} );
+          final DeleteFeatureCommand command = new DeleteFeatureCommand( feature );
+          compositeCommand.addCommand( command );
+        }
+      }
+
       final CommandableWorkspace workspace = selected[0].getWorkspace();
       workspace.postCommand( compositeCommand );
     }

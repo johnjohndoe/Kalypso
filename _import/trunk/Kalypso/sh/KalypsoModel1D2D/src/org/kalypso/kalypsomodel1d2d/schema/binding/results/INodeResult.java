@@ -83,7 +83,15 @@ public interface INodeResult extends IFeatureWrapper2
 
   public abstract void setVelocity( List<Double> velocity );
 
+  /**
+   * returns a velocity value even if depth > 0, else (0.0,0.0)
+   */
   public abstract List<Double> getVelocity( );
+
+  /**
+   * could return a velocity value even if depth < 0
+   */
+  public abstract List<Double> getVirtualVelocity( );
 
   public abstract double getAbsoluteVelocity( );
 

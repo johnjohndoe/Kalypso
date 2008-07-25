@@ -55,7 +55,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.results.RestartNodes;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
@@ -82,16 +81,22 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IKingFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.ITeschkeFlowRelation;
 import org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult;
+import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Converts discretisation model to RMA10s model
@@ -131,8 +136,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
   private final boolean m_exportMiddleNode;
 
+  private final IGeoLog m_log;
+
   // TODO: check: calculation?
-  public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode )
+  public Gml2RMA10SConv( final IFEDiscretisationModel1d2d discretisationModel1d2d, final IFlowRelationshipModel flowrelationModel, final ICalculationUnit calcUnit, final IRoughnessClsCollection roughnessModel, final RestartNodes restartNodes, final boolean exportRequested, final boolean exportMiddleNode, final IGeoLog log )
   {
     m_discretisationModel1d2d = discretisationModel1d2d;
     m_flowrelationModel = flowrelationModel;
@@ -141,6 +148,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     m_exportMiddleNode = exportMiddleNode;
 
     m_calculationUnit = calcUnit;
+    m_log = log;
     m_calcUnitBBox = calcUnit == null ? null : CalcUnitOps.getBoundingBox( m_calculationUnit );
 
     m_restartNodes = restartNodes;
@@ -235,6 +243,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void writeRMA10sModel( final Formatter formatter ) throws CoreException, IOException
   {
     final IFeatureWrapperCollection<IFE1D2DElement> elements = m_discretisationModel1d2d.getElements();
@@ -246,7 +255,6 @@ public class Gml2RMA10SConv implements INativeIDProvider
     // write transition elements
     if( m_calculationUnit instanceof ICalculationUnit1D2D )
     {
-      final List continuityLines = m_calculationUnit.getContinuityLines();
       for( final IFE1D2DComplexElement complexElement : complexElements )
       {
         if( complexElement instanceof ITransitionElement )
@@ -285,6 +293,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     FormatterUtils.checkIoException( formatter );
   }
 
+  @SuppressWarnings("unchecked")
   private void writeTransitionLine( final Formatter formatter, final ITransitionElement transitionElement ) throws CoreException, IOException
   {
     final int transitionElementID = getConversionID( transitionElement );
@@ -324,8 +333,20 @@ public class Gml2RMA10SConv implements INativeIDProvider
         }
       }
     }
-    if( element1D_ID == -1 )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Transition line cannot be exported: cannot find 1D element." ) );
+    if( element1D_ID == -1 || node1D_ID == -1 )
+    {
+      final GM_Object location = transitionElement.getLocation();
+      final String message = "Fehler beim Schreiben einer 1D-2D Kopplung: kein 1D-Element gefunden.";
+      final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
+      throw new CoreException( status );
+    }
+    if( line2D_ID == -1 )
+    {
+      final GM_Object location = transitionElement.getLocation();
+      final String message = "Fehler beim Schreiben einer 1D-2D Kopplung: keine 2D-Linie gefunden.";
+      final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, message, location, null );
+      throw new CoreException( status );
+    }
 
     final int transitionElementType;
     switch( transitionElement.getTransitionType() )
@@ -343,6 +364,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     FormatterUtils.checkIoException( formatter );
   }
 
+  @SuppressWarnings("unchecked")
   private void writeEdgeSet( final Formatter formatter, final Collection<IFE1D2DEdge> edges ) throws IOException
   {
     int cnt = 1;
@@ -369,14 +391,13 @@ public class Gml2RMA10SConv implements INativeIDProvider
           middleNodeID = m_nodesIDProvider.getOrAdd( gmlID );
 
           /* Write it: Station is not needed, because the element length is taken from real nodes. */
-          formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null );
+          formatNode( formatter, middleNodeID, edge.getMiddleNodePoint(), null, true );
         }
         else
           middleNodeID = getConversionID( edge.getMiddleNode() );
       }
 
       /* Directly format into the string, this is quickest! */
-      // System.out.println( edge.getGmlID() + " --> " + getID( edge ) );
       if( TypeInfo.is1DEdge( edge ) )
       {
         int leftRightID = 0;
@@ -466,12 +487,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
     FormatterUtils.checkIoException( formatter );
   }
 
+  @SuppressWarnings("unchecked")
   private void writeNodes( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DNode> nodes ) throws CoreException, IOException
   {
     final List<IFE1D2DNode> nodesInBBox = m_exportRequest ? nodes : nodes.query( m_calcUnitBBox );
     writeNodes( formatter, nodesInBBox );
   }
 
+  @SuppressWarnings("unchecked")
   private void writeNodes( final Formatter formatter, final List<IFE1D2DNode> nodes ) throws CoreException, IOException
   {
     for( final IFE1D2DNode node : nodes )
@@ -494,12 +517,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
       }
       if( Double.isNaN( z ) )
       {
-        final double x = node.getPoint().getX();
-        final double y = node.getPoint().getY();
-
-        final String msg = String.format( "Keine Höhendaten: [%.3f, %.3f]", x, y ); //$NON-NLS-1$
-        // TODO: georefed error msg
-        throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+        final GM_Point position = node.getPoint();
+        final String msg = "Modellknoten ohne Höhe.";
+        IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
+        throw new CoreException( status );
       }
 
       m_writtenNodesIDs.add( node.getGmlID() );
@@ -514,9 +535,15 @@ public class Gml2RMA10SConv implements INativeIDProvider
         /* Node parameters */
         final Class<IFlowRelationshipModel>[] flowRelationTypes = new Class[] { IKingFlowRelation.class, ITeschkeFlowRelation.class };
 
-        final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), 0.1, flowRelationTypes );
+        final double searchDistance = 0.1;
+        final IFlowRelationship relationship = m_flowrelationModel.findFlowrelationship( point.getPosition(), searchDistance, flowRelationTypes );
         if( relationship == null )
-          throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "Gml2RMA10SConv.11" ) + node.getGmlID() ) ); //$NON-NLS-1$
+        {
+          final String msg = "Keine Knotenparameter für 1D-Knoten vorhanden";
+          GM_Object location = node.getPoint();
+          IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+          throw new CoreException( status );
+        }
 
         if( relationship instanceof IKingFlowRelation )
         {
@@ -545,7 +572,12 @@ public class Gml2RMA10SConv implements INativeIDProvider
 
           final IPolynomial1D[] polyArea = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_AREA );
           if( polyArea == null )
-            continue; // TODO: only for debug purpose, throw exception instead
+          {
+            final String msg = "Knotenparameter enthält kein Flächenpolynom.";
+            GM_Object location = node.getPoint();
+            IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+            throw new CoreException( status );
+          }
           writePolynomialRanges( formatter, "PRA", nodeID, min, polyArea );
           for( int j = 0; j < polyArea.length; j++ )
           {
@@ -553,6 +585,14 @@ public class Gml2RMA10SConv implements INativeIDProvider
           }
 
           final IPolynomial1D[] polyRunoff = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_RUNOFF );
+          if( polyRunoff == null )
+          {
+            final String msg = "Knotenparameter enthält kein Abflusspolynom.";
+            GM_Object location = node.getPoint();
+            IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+            throw new CoreException( status );
+          }
+
           writePolynomialRanges( formatter, "PRQ", nodeID, min, polyRunoff );
           for( int j = 0; j < polyRunoff.length; j++ )
           {
@@ -562,8 +602,10 @@ public class Gml2RMA10SConv implements INativeIDProvider
           final IPolynomial1D[] polyAlpha = teschkeConv.getPolynomialsByType( IWspmTuhhQIntervallConstants.DICT_PHENOMENON_ALPHA );
           if( polyAlpha == null )
           {
-            final String msg = Messages.getString( "Gml2RMA10SConv.20" ) + station;
-            throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+            final String msg = "Knotenparameter enthält kein Alphapolynom.";
+            GM_Object location = node.getPoint();
+            IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+            throw new CoreException( status );
           }
 
           writePolynomialRanges( formatter, "PRB", nodeID, min, polyAlpha );
@@ -576,15 +618,28 @@ public class Gml2RMA10SConv implements INativeIDProvider
         else
         {
           final String msg = Messages.getString( "Gml2RMA10SConv.26" ) + relationship;
-          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+          GM_Object location = node.getLocation();
+          IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, location, null );
+          throw new CoreException( status );
         }
       }
-      formatNode( formatter, nodeID, point, station );
+      formatNode( formatter, nodeID, point, station, false );
       FormatterUtils.checkIoException( formatter );
     }
   }
 
-  private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station ) throws IOException
+  /**
+   * @param formatter
+   * @param nodeID
+   *            the id of the node
+   * @param point
+   *            the geo point of the node
+   * @param station
+   *            the station of the node (only for 1d nodes, else null)
+   * @param isMidside
+   *            flag, if the node is a midside node (for writing the restart file)
+   */
+  private void formatNode( final Formatter formatter, final int nodeID, final GM_Point point, final BigDecimal station, final boolean isMidside ) throws IOException
   {
     /* Now really write the nodes */
     final double x = point.getX();
@@ -603,7 +658,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
     else
       formatter.format( "FP%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, x, y, z, station ); //$NON-NLS-1$
 
-    writeRestartLines( formatter, nodeID, x, y );
+    writeRestartLines( formatter, nodeID, x, y, isMidside );
   }
 
   private void writeSplittedPolynomials( final Formatter formatter, final String kind, final int nodeID, final int polynomialNo, final IPolynomial1D poly, final Double extraValue ) throws IOException
@@ -639,13 +694,18 @@ public class Gml2RMA10SConv implements INativeIDProvider
   /**
    * write elements nodes and edges in a way which avoids the filtering of edges and nodes
    */
+  @SuppressWarnings("unchecked")
   private void writeElementsNodesAndEdges( final Formatter formatter, final IFeatureWrapperCollection<IFE1D2DElement> elements ) throws CoreException, IOException
   {
     final List<IFE1D2DElement> elementsInBBox = m_exportRequest ? elements : elements.query( m_calcUnitBBox );
     final Set<IFE1D2DEdge> edgeSet = new LinkedHashSet<IFE1D2DEdge>( elementsInBBox.size() * 2 );
 
     if( elementsInBBox.size() == 0 )
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Das Modell enthält keine Elemente. Berechnung nicht möglich.", null ) );
+    {
+      final String msg = "Das Modell enthält keine Elemente. Berechnung nicht möglich.";
+      IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
+      throw new CoreException( status );
+    }
 
     for( final IFE1D2DElement element : elementsInBBox )
     {
@@ -685,7 +745,8 @@ public class Gml2RMA10SConv implements INativeIDProvider
         {
           // TODO: give hint what 1D-element is was?
           final String msg = Messages.getString( "Gml2RMA10SConv.43" ) + element1D.getGmlID();
-          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+          IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, null, null );
+          throw new CoreException( status );
         }
 
         // TODO: find 1D-calc unit in which this element resides
@@ -747,6 +808,7 @@ public class Gml2RMA10SConv implements INativeIDProvider
    * Finds the first 1D-Calculation unit which contains the given element.<br>
    * Recursively searches within sub-units of 1d2d units.
    */
+  @SuppressWarnings("unchecked")
   private static ICalculationUnit1D find1dCalcUnit( final ICalculationUnit calcUnit, final IElement1D element1D )
   {
     if( calcUnit == null )
@@ -782,17 +844,30 @@ public class Gml2RMA10SConv implements INativeIDProvider
     throw new UnsupportedOperationException();
   }
 
-  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y ) throws IOException
+  private void writeRestartLines( final Formatter formatter, final int nodeID, final double x, final double y, final boolean isMidside ) throws IOException
   {
     if( m_restartNodes == null )
       return;
 
+    if( m_restartNodes.getSize() == 0 )
+      return;
+
     final INodeResult node = m_restartNodes.getNodeResultAtPosition( x, y );
     if( node == null )
+    {
+      // we check only corner nodes, because in 1d it could be the case that there are midside nodes without restart
+      // data
+      if( !isMidside )
+      {
+        final GM_Point position = GeometryFactory.createGM_Point( x, y, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, "Keine Restartwerte für Modellknoten gefunden.", position, null );
+      }
       return;
+    }
+
     final double vx;
     final double vy;
-    final List<Double> velocity = node.getVelocity();
+    final List<Double> velocity = node.getVirtualVelocity();
     if( velocity != null )
     {
       vx = velocity.get( 0 );
@@ -807,16 +882,22 @@ public class Gml2RMA10SConv implements INativeIDProvider
     FormatterUtils.checkIoException( formatter );
   }
 
-  private int getRoughnessID( final IFE1D2DElement element ) throws CoreException
+  @SuppressWarnings("unchecked")
+  private int getRoughnessID( final IFE1D2DElement element )
   {
     final String roughnessClsID = element.getRoughnessClsID();
     if( roughnessClsID != null && roughnessClsID.length() > 0 )
       return m_roughnessIDProvider.getOrAdd( roughnessClsID );
 
-    // TODO: georefed, core exception!
-    final String msg = String.format( "Unbekannte Rauheitszone '%s' bei Element '%s'", roughnessClsID, element );
-    // TODO: use default zone instead
-    throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+    // TODO: use default zone instead.
+    // Right now it is set to '0' which means the element is deactivated for the simulation
+    final String msg = String.format( "Element '%s' hat keine Rauheitszone zugewiesen und wird für die Rechnung deaktiviert.", element.getGmlID() );
+
+    final IFE1D2DNode node = (IFE1D2DNode) element.getNodes().get( 0 );
+    final GM_Point point = node.getPoint();
+    m_log.log( IStatus.WARNING, ISimulation1D2DConstants.CODE_PRE, msg, point, null );
+
+    return 0;
   }
 
   public BuildingIDProvider getBuildingProvider( )

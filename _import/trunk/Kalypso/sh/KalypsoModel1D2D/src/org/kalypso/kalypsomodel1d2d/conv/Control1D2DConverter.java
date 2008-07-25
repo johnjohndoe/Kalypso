@@ -59,6 +59,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.FormatterUtils;
@@ -70,6 +71,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBuildingFlowRelation
 import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.schema.dict.Kalypso1D2DDictConstants;
 import org.kalypso.kalypsomodel1d2d.sim.ISimulation1D2DConstants;
+import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationship;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessCls;
@@ -82,6 +84,8 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.observation.util.TupleResultIndex;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus;
 
 /**
  * @author huebsch <a href="mailto:j.huebsch@tuhh.de">Jessica Huebsch</a>
@@ -112,12 +116,15 @@ public class Control1D2DConverter
 
   private boolean m_isBCTupleResultIndexCached = false;
 
-  public Control1D2DConverter( final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider )
+  private final IGeoLog m_log;
+
+  public Control1D2DConverter( final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IRoughnessClsCollection roughnessMmodel, final INativeIDProvider idProvider, final BuildingIDProvider buildingProvider, final IGeoLog log )
   {
     m_controlModel = controlModel;
     m_roughnessModel = roughnessMmodel;
     m_nativeIDProvider = idProvider;
     m_buildingProvider = buildingProvider;
+    m_log = log;
 
     /* Initialize boundary conditions */
     final String calculationUnit = controlModel.getCalculationUnit().getGmlID();
@@ -290,6 +297,7 @@ public class Control1D2DConverter
    * writes the Continuity Lines Data Block of the RMA10 controlFile (*.R10) into the PrintWriter
    */
 
+  @SuppressWarnings("unchecked")
   private void writeR10ContinuityLineDataBlock( final Formatter formatter ) throws CoreException, IOException
   {
     final List<IFELine> continuityLines = m_controlModel.getCalculationUnit().getContinuityLines();
@@ -304,8 +312,10 @@ public class Control1D2DConverter
         final int nodeID = m_nativeIDProvider.getConversionID( node );
         if( nodeID == 0 )
         {
+          final GM_Point position = node.getPoint();
           final String msg = "At least one node contained by boundary line is not included in this calculation unit.";
-          throw new CoreException( StatusUtilities.createErrorStatus( msg ) );
+          final IGeoStatus status = m_log.log( IStatus.ERROR, ISimulation1D2DConstants.CODE_PRE, msg, position, null );
+          throw new CoreException( status );
         }
 
         if( i == 0 )
@@ -314,8 +324,10 @@ public class Control1D2DConverter
           formatter.format( "%nCC2     " ); //$NON-NLS-1$
         formatter.format( "%8d", nodeID ); //$NON-NLS-1$
       }
-      if( nodes.length % 9 != 0 )
-        formatter.format( "%n" ); //$NON-NLS-1$
+
+      // Why this "if" was here?
+      // if( nodes.length % 9 != 0 )
+      formatter.format( "%n" ); //$NON-NLS-1$
 
       FormatterUtils.checkIoException( formatter );
     }
@@ -384,15 +396,20 @@ public class Control1D2DConverter
         // TODO: check for right time zone
         // // As we are using UTC for all our timeseries, this is the timezone that should be used here
         // final TimeZone DEFAULT_TIMEZONE = TimeZone.getTimeZone( "UTC" );
-        XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( componentTime );
+        final TupleResult owner = firstRecord.getOwner();
+        final int indexTime = owner.indexOfComponent( componentTime );
+        final int indexRelaxationsFaktor = owner.indexOfComponent( componentRelaxationsFaktor );
+
+        XMLGregorianCalendar cal = (XMLGregorianCalendar) firstRecord.getValue( indexTime );
         Calendar lastStepCal = cal.toGregorianCalendar();
         // lastStepCal.setTimeZone( DEFAULT_TIMEZONE );
         int stepCount = 1;
         for( ; iterator.hasNext(); stepCount++ )
         {
           final IRecord record = iterator.next();
-          final float uRVal = ((BigDecimal) record.getValue( componentRelaxationsFaktor )).floatValue();
-          final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( componentTime )).toGregorianCalendar();
+
+          final float uRVal = ((BigDecimal) record.getValue( indexRelaxationsFaktor )).floatValue();
+          final Calendar stepCal = ((XMLGregorianCalendar) record.getValue( indexTime )).toGregorianCalendar();
           // stepCal.setTimeZone( DEFAULT_TIMEZONE );
           final String unsteadyMsg = String.format( Messages.getString( "Control1D2DConverter.36" ), stepCount ); //$NON-NLS-1$
           writeTimeStep( formatter, unsteadyMsg, stepCal, lastStepCal, uRVal, nitn );
@@ -414,7 +431,6 @@ public class Control1D2DConverter
    */
   private void writeTimeStep( final Formatter formatter, final String message, final Calendar calculationStep, final Calendar lastStepCal, final float uRVal, final int niti ) throws CoreException, IOException
   {
-
     final String dashes = StringUtils.repeat( "-", message.length() ); //$NON-NLS-1$
     formatter.format( "com %s%n", dashes ); //$NON-NLS-1$
     formatter.format( "com %s%n", message ); //$NON-NLS-1$
@@ -473,7 +489,7 @@ public class Control1D2DConverter
     // order is important, first QC than HC, SQC and EFE
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
-     formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
+    formatBoundCondLines( formatter, kalypsoCalendarStep, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
 
     FormatterUtils.checkIoException( formatter );
 
@@ -586,21 +602,23 @@ public class Control1D2DConverter
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) )
           {
-            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 0.000, 20.000 );
+            formatter.format( "HC%14d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, 0.0, 20.000, 0.0 );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D )
               && boundaryCondition.getParentElementID().startsWith( "Element1D" ) )
           {
+            // 1D Element
             final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
-            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 0.0, 20.000 );
+            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )
               && !boundaryCondition.getParentElementID().startsWith( "Element1D" ) )
           {
+            // 2D Element
             final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
-            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 0.0, 20.000 );
+            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
           }
         }
       }
@@ -663,7 +681,10 @@ public class Control1D2DConverter
     }
 
     final IRecord firstRecord = iterator.next();
-    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( compTime ) );
+
+    final TupleResult owner = firstRecord.getOwner();
+    final int indexTime = owner.indexOfComponent( compTime );
+    return DateUtilities.toDate( (XMLGregorianCalendar) firstRecord.getValue( indexTime ) );
   }
 
   public LinkedHashMap<Integer, IBoundaryCondition> getBoundaryConditionsIDProvider( )

@@ -76,10 +76,9 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.model.IControlModel1D2D;
 import org.kalypso.kalypsomodel1d2d.ui.geolog.IGeoLog;
 import org.kalypso.kalypsosimulationmodel.core.flowrel.IFlowRelationshipModel;
 import org.kalypso.kalypsosimulationmodel.core.roughness.IRoughnessClsCollection;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -147,7 +146,10 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final IStatus simulationStatus = doRunCalculation( monitor );
     m_simulationStatus = evaluateSimulationResult( simulationStatus );
 
-    m_log.log( m_simulationStatus );
+    // check if status is allready in collection
+    final IStatusCollection statusCollection = m_log.getStatusCollection();
+    if( !statusCollection.contains( simulationStatus ) )
+      m_log.log( m_simulationStatus );
 
     return m_simulationStatus;
   }
@@ -212,7 +214,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       monitor.subTask( "Schreibe ASCII-Daten: Finite Elemente Netz..." );
       final File modelFile = new File( m_tmpDir, MODEL_2D );
       final ICalculationUnit calculationUnit = m_controlModel.getCalculationUnit();
-      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( m_discretisationModel, m_flowRelationshipModel, calculationUnit, m_roughnessModel, m_restartNodes, false, true );
+      final Gml2RMA10SConv converter2D = new Gml2RMA10SConv( m_discretisationModel, m_flowRelationshipModel, calculationUnit, m_roughnessModel, m_restartNodes, false, true, m_log );
       converter2D.writeRMA10sModel( modelFile );
       ProgressUtilities.worked( progress, 20 );
 
@@ -221,7 +223,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
       progress.subTask( "Schreibe ASCII-Daten: Randbedingungen und Berechnungssteuerung..." );
       final File r10file = new File( m_tmpDir, ISimulation1D2DConstants.R10_File );
       final BuildingIDProvider buildingProvider = converter2D.getBuildingProvider();
-      final Control1D2DConverter controlConverter = new Control1D2DConverter( m_controlModel, m_flowRelationshipModel, m_roughnessModel, converter2D, buildingProvider );
+      final Control1D2DConverter controlConverter = new Control1D2DConverter( m_controlModel, m_flowRelationshipModel, m_roughnessModel, converter2D, buildingProvider, m_log );
       controlConverter.writeR10File( r10file );
       ProgressUtilities.worked( progress, 20 );
 
@@ -257,7 +259,7 @@ public class RMA10Calculation implements ISimulation1D2DConstants
    */
   private IStatus startCalcCore( final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor progress = SubMonitor.convert( monitor, getMaxNumberOfSteps() );
+    final SubMonitor progress = SubMonitor.convert( monitor, m_controlModel.getNCYC() );
     progress.subTask( "RMA10s wird ausgeführt..." );
 
     /* Create the result folder for the .exe file, must be same as in Control-Converter */
@@ -354,13 +356,6 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     throw new CoreException( StatusUtilities.createErrorStatus( exeMissingMsg ) );
   }
 
-  private int getMaxNumberOfSteps( )
-  {
-    final IObservation<TupleResult> obs = m_controlModel.getTimeSteps();
-    final TupleResult timeSteps = obs.getResult();
-    return timeSteps.size(); // TODO: adjust by restart?!
-  }
-
   /**
    * Will be called while the rma10s process is running.<br>
    * Updates the calculation progress monitor and reads the Output.itr.
@@ -374,7 +369,11 @@ public class RMA10Calculation implements ISimulation1D2DConstants
     final int stepNr = m_iterationInfo.getStepNr();
     if( oldStepNr != stepNr )
     {
-      final String msg = String.format( "RMA10s wird ausgeführt - Schritt %d (%d)", stepNr, getMaxNumberOfSteps() );
+      String msg = "";
+      if( stepNr == 0 )
+        msg = String.format( "RMA10s wird ausgeführt - stationärer Schritt" );
+      else
+        msg = String.format( "RMA10s wird ausgeführt - instationärer Schritt %d (%d)", stepNr, m_controlModel.getNCYC() );
       monitor.subTask( msg );
       monitor.worked( stepNr - oldStepNr );
     }

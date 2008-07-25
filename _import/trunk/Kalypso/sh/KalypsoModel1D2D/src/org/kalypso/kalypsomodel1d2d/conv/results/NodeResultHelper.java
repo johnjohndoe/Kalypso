@@ -44,7 +44,6 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.TeschkeRelationConverter;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IContinuityLine2D;
@@ -62,6 +61,7 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.schema.schemata.IWspmTuhhQIntervallConstants;
 import org.kalypso.observation.result.IRecord;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -106,6 +106,7 @@ public class NodeResultHelper
       assignMidsideNodeData( nodeDown, midsideNode ); // assignment leads into extrapolation of the water level!!
       return;
     }
+
     if( nodeDown.getDepth() <= 0 && nodeUp.getDepth() > 0 )
     {
       assignMidsideNodeData( nodeUp, midsideNode ); // assignment leads into extrapolation of the water level!!
@@ -143,7 +144,7 @@ public class NodeResultHelper
     if( depth < 0 )
     {
       midsideNode.setDepth( 0.0 );
-      setVelocity( midsideNode, 0.0 );
+      // setVelocity( midsideNode, 0.0 );
     }
     else
     {
@@ -183,16 +184,26 @@ public class NodeResultHelper
     if( depth < 0 )
     {
       midsideNode.setDepth( 0.0 );
-      setVelocity( midsideNode, 0.0 );
+      // setVelocity( midsideNode, 0.0 );
     }
     else
     {
       midsideNode.setDepth( depth );
 
-      final List<Double> velocities = new LinkedList<Double>();
-      velocities.add( node.getAbsoluteVelocity() );
-      velocities.add( 0.0 );
-      setVelocity( midsideNode, getMeanValue( velocities ) );
+      // set the velocity of the midside node to a dummy value derived from the corner node, if the midside node itself
+      // has no velocity value.
+      // REMARK: This is dangerous, because we don't have any vector data anymore!
+      // TODO: check if this is really necessary
+
+      // final List<Double> velocity = midsideNode.getVelocity();
+      // if( velocity.get( 0 ) == 0.0 && velocity.get( 1 ) == 0.0 )
+      // {
+      // final List<Double> velocities = new LinkedList<Double>();
+      // velocities.add( node.getAbsoluteVelocity() );
+      // velocities.add( 0.0 );
+      //
+      // setVelocity( midsideNode, getMeanValue( velocities ) );
+      // }
     }
   }
 
@@ -219,7 +230,7 @@ public class NodeResultHelper
     // get the intersection points
     // get the crs from the profile-gml
     final String srsName = profile.getSrsName();
-    final String crs = srsName == null ? KalypsoCorePlugin.getDefault().getCoordinatesSystem() : srsName;
+    final String crs = srsName == null ? KalypsoDeegreePlugin.getDefault().getCoordinateSystem() : srsName;
 
     // final double waterlevel = nodeResult.getWaterlevel();
 
@@ -230,7 +241,7 @@ public class NodeResultHelper
     final GM_Curve curve = ProfilUtil.getLine( profil, crs );
 
     /* simplify the profile */
-    final double epsThinning = 0.10;
+    final double epsThinning = 1.0;
     final GM_Curve thinnedCurve = GeometryUtilities.getThinnedCurve( curve, epsThinning );
     thinnedCurve.setCoordinateSystem( crs );
 

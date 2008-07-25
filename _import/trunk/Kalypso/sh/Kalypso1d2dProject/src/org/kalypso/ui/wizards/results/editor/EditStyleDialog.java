@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -124,7 +125,7 @@ public class EditStyleDialog extends TitleAreaDialog
 
   private final String m_fileName;
 
-  private Symbolizer m_symbolizer;
+  private Symbolizer[] m_symbolizer;
 
   private final IFolder m_sldFolder;
 
@@ -228,9 +229,9 @@ public class EditStyleDialog extends TitleAreaDialog
   {
     m_symbolizer = parseStyle();
     /* choose the composite, depending on the style */
-    if( m_symbolizer instanceof SurfaceLineSymbolizer )
+    if( m_symbolizer[0] instanceof SurfaceLineSymbolizer )
     {
-      SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) m_symbolizer;
+      SurfaceLineSymbolizer symb = (SurfaceLineSymbolizer) m_symbolizer[0];
       final LineColorMap colorMap = symb.getColorMap();
       if( colorMap.getColorMap().length > 0 )
       {
@@ -246,9 +247,9 @@ public class EditStyleDialog extends TitleAreaDialog
         errorText.setBackground( commonComposite.getBackground() );
       }
     }
-    else if( m_symbolizer instanceof SurfacePolygonSymbolizer )
+    else if( m_symbolizer[0] instanceof SurfacePolygonSymbolizer )
     {
-      SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) m_symbolizer;
+      SurfacePolygonSymbolizer symb = (SurfacePolygonSymbolizer) m_symbolizer[0];
       final PolygonColorMap colorMap = symb.getColorMap();
       final PolygonColorMapEntry[] colorMapEntries = colorMap.getColorMap();
       if( colorMapEntries.length > 0 )
@@ -277,9 +278,9 @@ public class EditStyleDialog extends TitleAreaDialog
         errorText.setBackground( commonComposite.getBackground() );
       }
     }
-    else if( m_symbolizer instanceof PointSymbolizer )
+    else if( m_symbolizer[0] instanceof PointSymbolizer )
     {
-      PointSymbolizer symb = (PointSymbolizer) m_symbolizer;
+      PointSymbolizer symb = (PointSymbolizer) m_symbolizer[0];
       VectorEditorComposite comp = new VectorEditorComposite( commonComposite, SWT.NONE, symb, m_minValue, m_maxValue );
       GridData gridDataComp = new GridData( SWT.FILL, SWT.FILL, true, true );
       gridDataComp.horizontalSpan = 2;
@@ -335,7 +336,7 @@ public class EditStyleDialog extends TitleAreaDialog
     super.okPressed();
   }
 
-  private Symbolizer parseStyle( )
+  private Symbolizer[] parseStyle( )
   {
     InputStream inputStream = null;
     try
@@ -369,13 +370,18 @@ public class EditStyleDialog extends TitleAreaDialog
 
         // we assume, that there is only one rule and take the first we can get.
         final Rule[] rules = featureTypeStyle.getRules();
-        final Rule rule = rules[0];
 
-        // and the first and only symbolizer is taken
-        final Symbolizer[] symbolizers = rule.getSymbolizers();
-        final Symbolizer symb = symbolizers[0];
+        final List<Symbolizer> symbList = new ArrayList<Symbolizer>();
 
-        return symb;
+        for( Rule rule : rules )
+        {
+          final Symbolizer[] symbolizers = rule.getSymbolizers();
+          // and the first and only symbolizer is taken
+          final Symbolizer symb = symbolizers[0];
+          symbList.add( symb );
+        }
+
+        return symbList.toArray( new Symbolizer[symbList.size()] );
       }
     }
     catch( CoreException e )
