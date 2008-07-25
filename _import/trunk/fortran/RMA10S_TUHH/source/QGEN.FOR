@@ -1,4 +1,4 @@
-C     Last change:  WP   17 Apr 2008    1:02 pm
+C     Last change:  MD   25 Jul 2008    2:03 pm
 cipk  last update feb 09 2001 allow for zero length cc lines
 
       SUBROUTINE QGEN(J,QREQ,THET,QQAL)
@@ -572,36 +572,6 @@ CIPK OCT01
 
           ENDDO AssginSpecificDischarge
 
-          !NiS,sep06,com: This is just for water-quality calculation
-          !NiS,sep06,com: salinity
-          IF(QQAL(1) .GE. 0.) THEN
-            NFIX(NA)=NFIX(NA)+10
-            SPEC(NA,4)=QQAL(1)
-            VEL(4,NA)=QQAL(1)
-          ELSE
-            NFIX(NA)=NFIX(NA)+20
-            SPEC(NA,4)=-QQAL(1)
-          ENDIF
-          !NiS,sep06,com: temperature
-          IF(QQAL(2) .GE. 0.) THEN
-            NFIX(NA)=NFIX(NA)+1
-            SPEC(NA,5)=QQAL(2)
-            VEL(5,NA)=QQAL(2)
-          ELSE
-            NFIX(NA)=NFIX(NA)+2
-            SPEC(NA,5)=-QQAL(2)
-          ENDIF
-          !NiS,sep06,com: sediment-concentration
-          IF(QQAL(3) .GE. 0.) THEN
-            NFIX1(NA)=1
-            SPEC(NA,6)=QQAL(3)
-            VEL(6,NA)=QQAL(3)
-          ELSE
-            NFIX1(NA)=2
-            SPEC(NA,6)=-QQAL(3)
-          ENDIF
-          !-
-
           !nis,sep06,com: Give every node the controlling specifier nfix and set the value of inflow to minimum 0.0001, if nothing is assigned
           DO k = 1, maxL
             na = line (j, k)
@@ -610,6 +580,40 @@ CIPK OCT01
               nfix (na) = 31000
             ENDIF
           END DO
+
+          !NiS,sep06,com: This is just for water-quality calculation
+          DO  K=1,maxL
+            NA=LINE(J,K)
+            !NiS,sep06,com: This is just for water-quality calculation
+            !NiS,sep06,com: salinity
+            IF(QQAL(1) .GE. 0.) THEN
+              NFIX(NA)=NFIX(NA)+10
+              SPEC(NA,4)=QQAL(1)
+              VEL(4,NA)=QQAL(1)
+            ELSE
+              NFIX(NA)=NFIX(NA)+20
+              SPEC(NA,4)=-QQAL(1)
+            ENDIF
+            !NiS,sep06,com: temperature
+            IF(QQAL(2) .GE. 0.) THEN
+              NFIX(NA)=NFIX(NA)+1
+              SPEC(NA,5)=QQAL(2)
+              VEL(5,NA)=QQAL(2)
+            ELSE
+              NFIX(NA)=NFIX(NA)+2
+              SPEC(NA,5)=-QQAL(2)
+            ENDIF
+
+            !NiS,sep06,com: sediment-concentration
+            IF(QQAL(3) .GE. 0.) THEN
+              NFIX1(NA)=1
+              SPEC(NA,6)=QQAL(3)
+              VEL(6,NA)=QQAL(3)
+            ELSE
+              NFIX1(NA)=2
+              SPEC(NA,6)=-QQAL(3)
+            ENDIF
+          Enddo
 
         !NiS,sep06: Ending BSWIT
         ENDIF
