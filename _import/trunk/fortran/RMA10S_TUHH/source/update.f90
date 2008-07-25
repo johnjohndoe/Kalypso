@@ -1,4 +1,4 @@
-!IPK  LAST UPDATE feb 26 2007  reduce permissible sal level
+!     Last change:  MD   25 Jul 2008    1:00 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -556,6 +556,12 @@ IF (NCONV /= 1) THEN
       !Enable debugging
       Vel (4, J) = SalHighPerm
     ENDIF
+
+    !MD neu:  Abfangen von Konzentration kleiner Null
+    IF (Vel (6, J) < SalLowPerm) THEN
+      Vel (6, J) = SalLowPerm
+    ENDIF
+
   ENDDO
 ENDIF
 !*************************************************************************END DJW 04/08/04
