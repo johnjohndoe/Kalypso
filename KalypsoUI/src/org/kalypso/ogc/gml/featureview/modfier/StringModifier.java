@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
@@ -263,10 +263,13 @@ public class StringModifier implements IFeatureModifier
   }
 
   /**
-   * Zwei Objekte sind gleich, wenn ihre String-Representation gleich sind.
+   * Zwei Objekte sind gleich, wenn ihre String-Representation gleich sind.<br>
+   * TODO: remove, not used any more.
    * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
+   * @deprecated Do not use.
    */
+  @Deprecated
   public boolean equals( final Object newData, final Object oldData )
   {
     return toText( newData ).equals( toText( oldData ) );
