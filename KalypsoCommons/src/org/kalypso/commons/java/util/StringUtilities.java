@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.java.util;
 
@@ -131,16 +131,32 @@ public final class StringUtilities
    * 
    * <pre>
    * 
-   *  
-   *   
-   *    
-   *     
+   * 
+   * 
+   * 
+   * 
    *         FontName;FontStyle;FontSize
-   *      
-   *     
-   *    
-   *   
-   *  
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
    * </pre>
    * 
    * @param s
@@ -284,11 +300,15 @@ public final class StringUtilities
   }
 
   /**
-   * removes all whitespaces at beginning and end of an string (see perl, ruby, etc)
+   * removes all whitespace at beginning and end of an string (see perl, ruby, etc)
    */
   public static String chop( final String s )
   {
-    // s.replaceAll("\\s\$", "")
-    return s.trim();
+    String trim = s.trim();
+
+    if( trim.endsWith( "\n" ) )
+      return chomp( trim );
+
+    return trim;
   }
 }
