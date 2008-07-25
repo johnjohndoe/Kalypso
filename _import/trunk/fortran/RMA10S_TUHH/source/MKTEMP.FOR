@@ -21,7 +21,7 @@ CIPK sep02
 
       COMMON /ICE2/ GSICE,GSQLW,QWLI(8),THKI(8)
 
-      INTEGER (kind = 8) :: NETT
+      INTEGER :: NETT
 !NiS,jul06: For calling compatibility D must also be real, kind=8
       REAL(KIND=8) :: D
 !-

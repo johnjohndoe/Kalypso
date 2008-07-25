@@ -29,8 +29,8 @@ real(8), ALLOCATABLE      :: wbm_MANNTRANSOLD(:)
 real(8), ALLOCATABLE      :: wbm_BedHeight(:)
 real(8), ALLOCATABLE      :: wbm_NewConditions(:,:)
 real(8), ALLOCATABLE      :: wbm_ScourLims(:)
-integer(8)                :: wbm_NodeCounter
-integer(8)                :: wbm_IT
+integer                :: wbm_NodeCounter
+integer                :: wbm_IT
 !*************************************************************************************************
 !
 !  Module Procedures
@@ -62,27 +62,27 @@ IMPLICIT NONE
 !*************************************************************************************************
 real(8), INTENT(INOUT), ALLOCATABLE   ::  wbm_MANNTRANS(:)   !Nodal Roughnesses
 real(8), INTENT(INOUT), ALLOCATABLE   ::  TMANN(:)           !Elemental Roughnesses
-integer(8), INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           !Element Nodal Connections
-integer(8), INTENT(IN)                ::  NE                 !Number of Elements
-integer(8), INTENT(IN)                ::  TSNO               !Time Step Number
-integer(8), INTENT(IN)                ::  ITNNO              !Iteration Number
-integer(8), INTENT(INOUT)             ::  wbm_IT             !Number of Elements
-integer(8), INTENT(IN)                ::  IT                 !CurrentIteration
-integer(8), INTENT(IN)                ::  NNOD               !NumberofNodes
+integer, INTENT(IN), ALLOCATABLE   ::  NOP(:,:)           !Element Nodal Connections
+integer, INTENT(IN)                ::  NE                 !Number of Elements
+integer, INTENT(IN)                ::  TSNO               !Time Step Number
+integer, INTENT(IN)                ::  ITNNO              !Iteration Number
+integer, INTENT(INOUT)             ::  wbm_IT             !Number of Elements
+integer, INTENT(IN)                ::  IT                 !CurrentIteration
+integer, INTENT(IN)                ::  NNOD               !NumberofNodes
 !*************************************************************************************************
 !
 !     VARIABLE DECLARATIONS - INTERIM
 !
 !*************************************************************************************************
-integer(8)                             :: Divider
-integer(8)                             :: I
-integer(8)                             :: J
-integer(8)                             :: NODE1
-integer(8)                             :: NODE2
-integer(8)                             :: NODE3
-integer(8)                             :: NODE4
-integer(8)							         :: COUNT
-integer(8)                             :: UPPERBOUND
+integer                             :: Divider
+integer                             :: I
+integer                             :: J
+integer                             :: NODE1
+integer                             :: NODE2
+integer                             :: NODE3
+integer                             :: NODE4
+integer							         :: COUNT
+integer                             :: UPPERBOUND
 real(8)                                :: NODE1N
 real(8)                                :: NODE2N
 real(8)                                :: NODE3N
@@ -341,9 +341,9 @@ LOGICAL(4), INTENT(INOUT)               :: wbm_Initiated
 real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_MANNTRANS(:)
 real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_MANNTRANSOLD(:)
 real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_BedHeight(:)
-integer(8), INTENT(INOUT)              :: wbm_NodeCounter
-integer(8)                             :: NumNodes
-integer(8), INTENT(INOUT)              :: wbm_IT
+integer, INTENT(INOUT)              :: wbm_NodeCounter
+integer                             :: NumNodes
+integer, INTENT(INOUT)              :: wbm_IT
 !*************************************************************************************************
 !
 !     Body of Routine
@@ -397,10 +397,10 @@ IMPLICIT NONE
 !Character(500)          :: Line
 Character(500)          :: Line, temp_line
 !-
-integer(8)              :: CurrentNode
-integer(8)             :: i
-integer(8)             :: StartPos
-integer(8)             :: EndPos
+integer              :: CurrentNode
+integer             :: i
+integer             :: StartPos
+integer             :: EndPos
 Character(50)           :: LineParts(10)
 !NiS,jun06: Changes for usage with Lahey
 INTEGER :: istat
@@ -488,7 +488,7 @@ IMPLICIT NONE
 !
 !*************************************************************************************************
 real(8), ALLOCATABLE, INTENT(INOUT)    :: wbm_ScourLims(:)
-integer(8)                             :: NumNodes
+integer                             :: NumNodes
 
 !*************************************************************************************************
 !
@@ -499,10 +499,10 @@ integer(8)                             :: NumNodes
 !Character(500)          :: Line
 Character(500)          :: Line, temp_line
 !-
-integer(8)              :: CurrentNode
-integer(8)             :: i
-integer(8)             :: StartPos
-integer(8)             :: EndPos
+integer              :: CurrentNode
+integer             :: i
+integer             :: StartPos
+integer             :: EndPos
 Character(50)           :: LineParts(10)
 real(8)                :: CurrentBedLevel
 !NiS,jun06: Changes for usage with Lahey
