@@ -48,6 +48,7 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -69,7 +70,10 @@ import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
@@ -186,7 +190,10 @@ public class NetFileManager extends AbstractManager
         // create timeserieslink
 
         String zmlPath = "Zufluss/Zufluss_" + fe.getId() + ".zml";
+
+        // Was!?
         String correctedPath = nzufPfad.replaceAll( "P:\\\\vwe04121\\\\modell\\\\hydrologie\\\\namod\\\\zufluss\\\\", m_conf.getAsciiBaseDir().toString() + "/Zufluss/" );
+
         File tsFile = new File( correctedPath );
         final TimeseriesLinkType link1 = NAZMLGenerator.copyToTimeseriesLink( tsFile.toURL(), TimeserieConstants.TYPE_DATE, TimeserieConstants.TYPE_WATERLEVEL, m_conf.getGmlBaseDir(), zmlPath, false, false );
 
@@ -308,9 +315,9 @@ public class NetFileManager extends AbstractManager
    * generate NetElements for rrm model
    * 
    * @param workspace
-   *          the rrm workspace
+   *            the rrm workspace
    * @param synthNWorkspace
-   *          the synth precipitation workspace
+   *            the synth precipitation workspace
    * @return a HashMap containing Channel-FeatureID (key) and NetElements (value)
    */
   public HashMap<String, NetElement> generateNetElements( final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
@@ -465,11 +472,11 @@ public class NetFileManager extends AbstractManager
    * writes netfile (ascii)
    * 
    * @param asciiBuffer
-   *          buffer for output buffering
+   *            buffer for output buffering
    * @param workspace
-   *          rrm workspace
+   *            rrm workspace
    * @param synthNWorkspace
-   *          workspace for synthetic precipitation
+   *            workspace for synthetic precipitation
    */
   public void writeFile( final AsciiBuffer asciiBuffer, final GMLWorkspace workspace, final GMLWorkspace synthNWorkspace ) throws Exception
   {
@@ -612,9 +619,26 @@ public class NetFileManager extends AbstractManager
         final URL linkURL = m_urlUtilities.resolveURL( workspace.getContext(), zuflussFile );
         if( !targetFile.exists() )
         {
-          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
           final FileWriter writer = new FileWriter( targetFile );
-          NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
+          final IObservation observation = ZmlFactory.parseXML( linkURL, "ID" );
+          if( Boolean.TRUE.equals( nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) ) )
+          {
+            if( m_conf.isUsePrecipitationForm() )
+            {
+              final ITuppleModel values = observation.getValues( null );
+              final IAxis[] axis = observation.getAxisList();
+              final IAxis dateAxis = ObservationUtilities.findAxisByType( axis, TimeserieConstants.TYPE_DATE );
+              final long simulationStartDateMillis = ((Date) values.getElement( 0, dateAxis )).getTime();
+              final long simulationEndDateMillis = ((Date) values.getElement( values.getCount() - 1, dateAxis )).getTime();
+              final Date simulationStartDate = new Date( 100, 0, 1 );
+              final Date simulationEndDate = new Date( simulationStartDate.getTime() + simulationEndDateMillis - simulationStartDateMillis );
+              NAZMLGenerator.createSyntheticFile( writer, TimeserieConstants.TYPE_RUNOFF, observation, simulationStartDate, simulationEndDate, m_conf.getMinutesOfTimeStep() );
+            }
+            else
+              NAZMLGenerator.createSyntheticFile( writer, TimeserieConstants.TYPE_RUNOFF, observation, m_conf.getSimulationStart(), m_conf.getSimulationEnd(), m_conf.getMinutesOfTimeStep() );
+          }
+          else
+            NAZMLGenerator.createFile( writer, TimeserieConstants.TYPE_RUNOFF, observation );
           IOUtils.closeQuietly( writer );
         }
         specialBuffer.append( "    1234\n" ); // dummyLine

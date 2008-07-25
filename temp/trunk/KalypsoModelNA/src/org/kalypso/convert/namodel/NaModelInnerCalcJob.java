@@ -80,6 +80,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -418,9 +419,9 @@ public class NaModelInnerCalcJob implements ISimulation
     final IRequest request = new ObservationRequest( calBegin.getTime(), calEnd.getTime() );
     // TODO: as soon as TranProLinFilter is merged with branch, uncomment request
     TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction, offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte"/*
-                                                                                                                                                                                                               * ,
-                                                                                                                                                                                                               * request
-                                                                                                                                                                                                               */);
+                                                                                                                                                                                                              * ,
+                                                                                                                                                                                                              * request
+                                                                                                                                                                                                              */);
 
     // read the freshly created file into a new observation, we are going to umhüll it
     final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURL(), "adaptedVorhersage" );
@@ -748,6 +749,7 @@ public class NaModelInnerCalcJob implements ISimulation
         final Feature newNodeFE = buildVChannelNet( workspace, nodeFE );
         // final FeatureProperty zuflussProp = FeatureFactory.createFeatureProperty( "zuflussZR", resultValue );
         newNodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, resultValue );
+        newNodeFE.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
     }
   }
@@ -796,6 +798,7 @@ public class NaModelInnerCalcJob implements ISimulation
         // newNode.setProperty( FeatureFactory.createFeatureProperty( "zuflussZR", zuflussValue ) );
         nodeFE.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
         newNode.setProperty( NaModelConstants.NODE_ZUFLUSS_ZR_PROP, zuflussValue );
+        newNode.setProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP, nodeFE.getProperty( NaModelConstants.NODE_SYNTHETIC_ZUFLUSS_ZR_PROP ) );
       }
       final Feature branchingFE = workspace.resolveLink( nodeFE, branchingMemberRT );
       if( branchingFE != null && branchingFE.getFeatureType() == kontZuflussFT )
@@ -907,7 +910,7 @@ public class NaModelInnerCalcJob implements ISimulation
 
   /**
    * @param kalypsoNAVersion
-   *            name/version of simulation kernel
+   *          name/version of simulation kernel
    */
   private void chooseSimulationExe( final String kalypsoNAVersion )
   {
@@ -1527,6 +1530,17 @@ public class NaModelInnerCalcJob implements ISimulation
         System.out.println( "ERR: " + exeResource + " may not exist" );
       }
     }
+
+    // TODO: do not commit...
+//    URL defaultZfl = getClass().getResource( m_resourceBase + "inp.dat/we999-weisseelster.zfl" );
+//    FileUtils.copyURLToFile( defaultZfl, new File( basedir, "inp.dat/we999.zfl" ) );
+//
+//    URL defaultVer = getClass().getResource( m_resourceBase + "klima.dat/std.ver" );
+//    FileUtils.copyURLToFile( defaultVer, new File( basedir, "klima.dat/std.ver" ) );
+//
+//    URL defaultTmp = getClass().getResource( m_resourceBase + "klima.dat/std.tmp" );
+//    FileUtils.copyURLToFile( defaultTmp, new File( basedir, "klima.dat/std.tmp" ) );
+    
   }
 
   private void unzipInput( final URL asciiZipURL, final File exeDir )

@@ -45,6 +45,8 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.convert.namodel.NaModelConstants;
 import org.kalypso.convert.namodel.timeseries.NAZMLGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -323,13 +325,18 @@ public class UpdateModell
       TimeseriesLinkType linkBerechnet = NAZMLGenerator.generateobsLink( WeisseElsterConstants.PREFIX_LINK_WQ_BERECHNET_LOKAL + fe.getId() + ".zml" );
       setTSLink( fe, "qberechnetZR", linkBerechnet );
       setTSLink( fe, "pegelBerechnetZRRepository", null );
-      setTSLink( fe, "zuflussZR", null );
+      setTSLink( fe, NaModelConstants.NODE_ZUFLUSS_ZR_PROP, null );
       setTSLink( fe, "pegelZRRepository", null );
       setTSLink( fe, "zuflussZRRepository", null );
       setTSLink( fe, "zuflussZRRepositoryVorhersage", null );
       // FeatureProperty nameProp = FeatureFactory.createFeatureProperty( "name", null );
       fe.setProperty( NaModelConstants.GML_FEATURE_NAME_PROP, null );
     }
+  }
+
+  private static void setTSLink( final Feature fe, final QName propName, final TimeseriesLinkType tsLink )
+  {
+    fe.setProperty( propName, tsLink );
   }
 
   private static void setTSLink( Feature fe, String propName, TimeseriesLinkType tsLink )

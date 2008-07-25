@@ -300,6 +300,9 @@ public class CatchmentManager extends AbstractManager
     {
       System.out.println( "Teilgebiet " + asciiID + " wird Standard-Zeitflächenfunktion zugeordnet (im Modell ist dem Teilgebiet keine Zeitflächenfunktion zugeordnet)" );
       asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
+      
+      // BUG: this cannot work, as the we999 file is not available
+      // TODO: copy the we999 into the inp.dat folder!
     }
     asciiBuffer.getCatchmentBuffer().append( "we.hyd\n" );
 
@@ -557,7 +560,7 @@ public class CatchmentManager extends AbstractManager
           while( iter1.hasNext() )
           {
             final Feature fe = (Feature) iter1.next();
-            String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.CATCHMENT_PROP_XJAH ) );
+            String annuality = Double.toString( 1d / (Double) fe.getProperty( NaModelConstants.STATN_PROP_XJAH ) );
             if( annuality.equals( annualityKey.toString() ) )
             {
               Object tnProp = fe.getProperty( NaModelConstants.CATCHMENT_PROP_STATN_DIAG );

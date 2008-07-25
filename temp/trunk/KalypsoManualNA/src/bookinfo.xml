@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- 
+<!--
 	ANMERKUNG: das bookinfo wird nicht direkt in etwas anzeigbares umgesetzt, sondern
-	lediglich Daten heruasgenommen und an verschiedenen Stellen angezeigt. Deshalb bringt es z.B. 
+	lediglich Daten heruasgenommen und an verschiedenen Stellen angezeigt. Deshalb bringt es z.B.
 	nichts, Bilder direkt unter bookinfo einzubauen. Diese müssen wie z.b. im subtitle geschehen in elemente
 	wandern, welche tatächlich angezeigt werden.
 -->
@@ -18,7 +18,7 @@
 						format="PNG" scale="85"/>
 				</imageobject>
 			</mediaobject>
-			
+
   	&bookinfo.subtitle;
   </subtitle>
 
@@ -29,7 +29,7 @@
   </author>
 
   <!-- Als Version wird immer die korrespondierende Version des Programms verwendet -->
-  <pubdate>Version 2.0.0, Mai 2008</pubdate>
+  <pubdate>Version 2.0.0, Juni 2008</pubdate>
 
   <!-- Bei den beiden folgenden Tags funktioniert das Profiling nicht
   		deshalb müsste man hier eigene bookinfos pro deploy machen, wenns benötigt wird.

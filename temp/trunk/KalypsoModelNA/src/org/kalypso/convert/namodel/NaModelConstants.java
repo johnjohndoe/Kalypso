@@ -238,6 +238,8 @@ public interface NaModelConstants
 
   public static final QName NODE_ZUFLUSS_ZR_PROP = new QName( NS_NAMODELL, "zuflussZR" );
 
+  public static final QName NODE_SYNTHETIC_ZUFLUSS_ZR_PROP = new QName( NS_NAMODELL, "syntheticZuflussZR" );
+
   public static final QName NODE_PEGEL_ZR_PROP = new QName( NS_NAMODELL, "pegelZR" );
 
   // catchments
@@ -253,7 +255,9 @@ public interface NaModelConstants
 
   public static final QName GRUNDWASSERABFLUSS_MEMBER = new QName( NS_NAMODELL, "grundwasserabflussMember" );
 
-  public static final QName STATNPARA_MEMBER = new QName( NS_NAMODELL, "statNParameterMember" );
+  public static final QName STATNPARA_MEMBER = new QName( NS_SYNTHN, "statNParameterMember" );
+
+  public static final QName STATN_PROP_XJAH = new QName( NS_SYNTHN, "xjah" );
 
   public static final QName CATCHMENT_PROP_NGWZU = new QName( NS_NAMODELL, "ngwzu" );
 
@@ -261,7 +265,7 @@ public interface NaModelConstants
 
   public static final QName CATCHMENT_PROP_ZFT = new QName( NS_NAMODELL, "zft" );
 
-  public static final QName CATCHMENT_PROP_STATN_DIAG = new QName( NS_NAMODELL, "statNDiag" );
+  public static final QName CATCHMENT_PROP_STATN_DIAG = new QName( NS_SYNTHN, "statNDiag" );
 
   public static final QName CATCHMENT_PROP_RETBAS = new QName( NS_NAMODELL, "retbas" );
 
