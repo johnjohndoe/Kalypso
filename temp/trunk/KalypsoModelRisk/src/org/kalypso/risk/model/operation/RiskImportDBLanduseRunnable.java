@@ -79,22 +79,6 @@ public final class RiskImportDBLanduseRunnable implements ICoreRunnableWithProgr
       /* create entries for landuse database */
       final HashSet<String> landuseTypeSet = RiskLanduseHelper.getLanduseTypeSet( m_shapeFeatureList, m_landuseProperty );
 
-      if( landuseTypeSet.size() > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
-      {
-        IStatus status = null;
-        status = RiskLanduseHelper.isRightParameterUsed( m_landuseProperty );
-        synchronized( this )
-        {
-          while( status == null )
-            Thread.sleep( 100 );
-        }
-        if( Status.CANCEL_STATUS.equals( status ) )
-        {
-          landuseTypeSet.clear();
-          return status;
-        }
-      }
-
       monitor.subTask( Messages.getString( "ImportLanduseWizard.10" ) ); //$NON-NLS-1$
 
       landusePolygonCollection.clear();

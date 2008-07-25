@@ -21,7 +21,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:KalypsoManualRisk/etc}"/>
 <mapAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES">
 <mapEntry key="eclipse.running" value="true"/>
-<mapEntry key="eclipse.home" value="c:\Programme\eclipse3.0"/>
 <mapEntry key="workspace" value="${workspace_loc}"/>
 <mapEntry key="manual.project" value="${workspace_loc:/KalypsoManualRisk}"/>
 </mapAttribute>

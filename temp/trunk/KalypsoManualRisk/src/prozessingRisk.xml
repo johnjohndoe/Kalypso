@@ -37,7 +37,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Proc_Landnutzung_ass.png" />
+          <imagedata fileref="img/Risk/Proc_Landnutzung_ass.png" width="12cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -55,7 +55,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Proc_Landnutzung.png" />
+          <imagedata fileref="img/Risk/Proc_Landnutzung.png" width="17cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -82,7 +82,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Proc_Schaden_ass.png" />
+          <imagedata fileref="img/Risk/Proc_Schaden_ass.png" width="12cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -103,7 +103,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Proc_Schaden.png" />
+          <imagedata fileref="img/Risk/Proc_Schaden.png" width="17cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -131,7 +131,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Proc_Risikozonen_ass.png" />
+          <imagedata fileref="img/Risk/Proc_Risikozonen_ass.png" width="12cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -147,7 +147,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Proc_Risikozonen.png" />
+          <imagedata fileref="img/Risk/Proc_Risikozonen.png" width="17cm" />
         </imageobject>
       </mediaobject>
     </figure>

@@ -2,46 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.risk.model.actions.dataImport.landuse;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -63,12 +64,14 @@ import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.kalypsosimulationmodel.utils.SLDHelper;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.risk.Messages;
 import org.kalypso.risk.model.operation.RiskImportDBLanduseRunnable;
+import org.kalypso.risk.model.operation.RiskImportNewLanduseRunnable;
 import org.kalypso.risk.model.operation.RiskImportPredefinedLanduseRunnable;
 import org.kalypso.risk.model.schema.KalypsoRiskSchemaCatalog;
 import org.kalypso.risk.model.schema.binding.ILanduseClass;
@@ -100,6 +103,8 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
   private static final String PREDEFINED_DATASET_PATH = "models/PredefinedDataset.gml"; //$NON-NLS-1$
 
+  private static final int WARNING_MAX_LANDUSE_CLASSES_NUMBER = 50;
+
   private static final QName PROP_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
   private static final QName PROP_LANDUSE_COLORS_COLLECTION = new QName( KalypsoRiskSchemaCatalog.NS_PREDEFINED_DATASET, "landuseClassesDefaultColorsCollection" ); //$NON-NLS-1$
@@ -119,8 +124,6 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
   private List<Feature> m_predefinedDamageFunctionsCollection;
 
   private List<Feature> m_predefinedAssetValueClassesCollection;
-
-  private final boolean m_wrongLanduseSelectedStatus = false;
 
   public ImportLanduseWizard( )
   {
@@ -221,12 +224,38 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
 
       final List shapeFeatureList = (List) shapeRootFeature.getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
 
+      /* check for right user selection */
+      final HashSet<String> landuseTypeSet = new HashSet<String>();
+
+      int count = 0;
+      for( int i = 0; i < shapeFeatureList.size(); i++ )
+      {
+        final Feature shpFeature = (Feature) shapeFeatureList.get( i );
+        final QName shapeLandusePropertyName = new QName( shpFeature.getFeatureType().getQName().getNamespaceURI(), landuseProperty );
+        final String shpPropertyValue = shpFeature.getProperty( shapeLandusePropertyName ).toString();
+        if( !landuseTypeSet.contains( shpPropertyValue ) )
+        {
+          count++;
+
+          landuseTypeSet.add( shpPropertyValue );
+
+          if( count > WARNING_MAX_LANDUSE_CLASSES_NUMBER )
+          {
+            if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( "Landnutzung importieren", "Auswahl enthält mehr als " + WARNING_MAX_LANDUSE_CLASSES_NUMBER + " Klassen. Sind Sie sicher?" ) )
+              return false;
+            else
+              break;
+          }
+        }
+      }
+
       ICoreRunnableWithProgress importLanduseRunnable = null;
 
       /* implement the importing of the existing database or predefined values */
       switch( selectedDatabaseOption )
       {
         case DB_CREATE_NEW:
+          importLanduseRunnable = new RiskImportNewLanduseRunnable( controlModel, vectorDataModel, shapeFeatureList, landuseProperty, m_predefinedLanduseColorsCollection );
           break;
 
         case DB_IMPORT:
@@ -277,7 +306,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
       e.printStackTrace();
     }
 
-    return !m_wrongLanduseSelectedStatus;
+    return true;
   }
 
 }

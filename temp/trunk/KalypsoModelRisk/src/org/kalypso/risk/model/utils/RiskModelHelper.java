@@ -65,7 +65,7 @@ public class RiskModelHelper
 
   /**
    * updates the style for the specific annual damage value layers according to the overall min and max values.
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param sldFile
@@ -105,7 +105,7 @@ public class RiskModelHelper
   /**
    * Creates the specific damage coverage collection. <br>
    * The damage value for each grid cell is taken from the underlying polygon.
-   * 
+   *
    * @param scenarioFolder
    *            scenario folder
    * @param polygonCollection
@@ -134,7 +134,7 @@ public class RiskModelHelper
       {
         /**
          * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
-         * 
+         *
          * gets the damage value for each grid cell from the underlying polygon.
          */
         @Override
@@ -240,7 +240,7 @@ public class RiskModelHelper
 
   /**
    * creates a map layer for the grid collection
-   * 
+   *
    * @param parentKalypsoTheme
    *            {@link AbstractCascadingLayerTheme} in which we add the new theme layer
    * @param coverageCollection
@@ -292,7 +292,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for one raster cell <br>
    * further informations: DVWK-Mitteilung 10
-   * 
+   *
    * @param damages
    *            damage values for all annualities
    * @param probabilities
@@ -314,7 +314,7 @@ public class RiskModelHelper
 
   /**
    * creates the land use raster files. The grid cells get the ordinal number of the the land use class.
-   * 
+   *
    * @param scenarioFolder
    *            relative path needed for the output file path to append on
    * @param inputCoverages
@@ -332,7 +332,7 @@ public class RiskModelHelper
       for( int i = 0; i < inputCoverages.size(); i++ )
       {
         final ICoverage inputCoverage = inputCoverages.get( i );
-        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "RiskModelHelper.14" ) + i + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "RiskModelHelper.14" ) + (i+1) + "/" + inputCoverages.size() + "]...", 100 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
         final int sizeY = inputGrid.getSizeY();
@@ -342,7 +342,7 @@ public class RiskModelHelper
         {
           /**
            * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
-           * 
+           *
            * gets the ordinal number of the landuse class
            */
           @Override
@@ -411,7 +411,7 @@ public class RiskModelHelper
 
   /**
    * get the water depth raster with the greatest annuality
-   * 
+   *
    * @param waterDepthCoverageCollection
    *            raster collection
    * @return {@link IAnnualCoverageCollection} with greatest return period value
@@ -433,7 +433,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layer, add the new one and modifies the style according to the max values
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -465,7 +465,7 @@ public class RiskModelHelper
 
   /**
    * deletes the old layers and adds the new ones
-   * 
+   *
    * @param scenarioFolder
    * @param model
    * @param mapModell
@@ -574,7 +574,7 @@ public class RiskModelHelper
   /**
    * calculates the average annual damage value for each landuse class<br>
    * The value is calculated by integrating the specific damage values.<br>
-   * 
+   *
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static void calcLanduseAnnualAverageDamage( final IRasterizationControlModel rasterizationControlModel )

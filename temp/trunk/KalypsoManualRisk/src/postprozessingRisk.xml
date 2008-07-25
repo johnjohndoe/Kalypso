@@ -58,7 +58,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Statistische_Auswertung.png" />
+          <imagedata fileref="img/Risk/Statistische_Auswertung.png"
+                     width="17cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -85,7 +86,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Export_Schadensp_Ansicht.png" />
+          <imagedata fileref="img/Risk/Export_Schadensp_Ansicht.png"
+                     width="17cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -165,7 +167,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Export_Schadensp_Ass.png" />
+          <imagedata fileref="img/Risk/Export_Schadensp_Ass.png" width="12cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -191,7 +193,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Export_Risikozonen_Ansicht.png" />
+          <imagedata fileref="img/Risk/Export_Risikozonen_Ansicht.png"
+                     width="17cm" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -269,7 +272,8 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="img/Risk/Export_Risikozonen_Ass.png" />
+          <imagedata fileref="img/Risk/Export_Risikozonen_Ass.png"
+                     width="12cm" />
         </imageobject>
       </mediaobject>
     </figure>

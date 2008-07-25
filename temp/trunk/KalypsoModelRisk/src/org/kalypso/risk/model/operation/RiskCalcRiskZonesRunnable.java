@@ -56,6 +56,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgress
 {
+
   private static final String DICT_URN = "urn:ogc:gml:dict:kalypso:risk:model:riskresultstat"; //$NON-NLS-1$
 
   private static final String DICT_ANNUAL = DICT_URN + "#ANNUAL"; //$NON-NLS-1$
@@ -365,7 +366,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
       {
         final String eventName = split[1];
 
-        final RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
+        RiskStatisticTableValues statisticTableValues = eventMap.get( eventName );
         if( statisticTableValues == null )
           System.out.println( "error while comupting risk statistic table" );
 
@@ -379,7 +380,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     }
 
     // at last we calculate the average annual damage value
-    final int index = columnSize - 1;
+    int index = columnSize - 1;
 
     final IComponent rowComp = result.getComponent( index );
     final String phenName = rowComp.getPhenomenon().getName();
@@ -390,7 +391,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
       final Map<Double, RiskStatisticTableValues> periodSortedMap = getPeriods( columnSize, result, eventMap );
 
       /* calculate the average annual damage by integrating the specific average damage values */
-      final double averageSum = calculateAverageDamageValue( periodSortedMap );
+      double averageSum = calculateAverageDamageValue( periodSortedMap );
 
       // calculate the sum for average annual damage
       lastRecord.setValue( index, averageSum );
@@ -439,7 +440,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
     return averageSum;
   }
 
-  private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, final Map<String, RiskStatisticTableValues> eventMap )
+  private static final Map<Double, RiskStatisticTableValues> getPeriods( final int columnSize, final TupleResult result, Map<String, RiskStatisticTableValues> eventMap )
   {
     final Map<Double, RiskStatisticTableValues> periodSortedMap = new TreeMap<Double, RiskStatisticTableValues>();
 
@@ -471,7 +472,7 @@ public final class RiskCalcRiskZonesRunnable implements ICoreRunnableWithProgres
 
   }
 
-  private static BigDecimal calculateColumnSum( final TupleResult result, final int index )
+  private static BigDecimal calculateColumnSum( final TupleResult result, int index )
   {
     BigDecimal sum = new BigDecimal( 0.0 );
     for( int rowIndex = 0; rowIndex < result.size(); rowIndex++ )
