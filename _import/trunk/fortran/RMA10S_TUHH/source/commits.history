@@ -207,3 +207,22 @@ Version 1.1.0 (laufende Änderungen)
 001.) update automake.fig file; makefile for IntelCompiler doesn't exist yet.
 002.) Add commits.future file as roadmap
 003.) Add some initial document for guidelines, how to deal with SVN and with rma10sk development
+--- Nico Schrage, 24.07.2008
+
+
+004.) Providing and reading water constituents (Salinity, Temperatur, Sediment and VEL(7,N))from a
+       RESTART solution in Kalypso.2d -Files: Reading Values in the 'DF'-Line (degree of Freedom)
+       >> SubR RDKALYPSO (--> VEL(4 till 7))
+005.) Supporting water constituents at discharge-boundarys(QC) for Kalypso-Boundarys (BSWIT=2 bzw. "KAL_BC")
+       >> SubR QGEN (--> QVAL(4 till 6))     
+006.) Avoiding the calculation of kinematic Viscosity in SubR KINVIS with Temperature=0 if Heatflux is not activ.
+      If Temperature is 0 at a node, the default value TDC = 20°C is used.
+      >> SubR KINVIS (TDC and VEL(5,n))
+007.) Avoiding the calculation and iteration with negative concentration of sediment in SubR UPDATE. IF concentration
+      of sediment is negative at a one its setted to 0.
+      >> SubR UPDATE (VEL(6,N))
+      
+--- Monika Donner, 25.07.2008
+
+
+        
