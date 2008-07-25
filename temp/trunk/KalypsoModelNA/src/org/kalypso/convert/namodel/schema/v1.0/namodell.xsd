@@ -248,6 +248,21 @@
 							</documentation>
 						</annotation>
 					</element>
+					<element name="syntheticZuflussZR" type="boolean"
+						default="false" >
+						<annotation>
+							<documentation xml:lang="de">
+								<label>synthetischer zufluss?</label>
+								<tooltip>haken setzen falls synthetisch</tooltip>
+								<description>haken setzen falls synthetisch</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>synthetic inflow?</label>
+								<tooltip>check for synthetic inflow values (ignore date column)</tooltip>
+								<description>check for synthetic inflow values (ignore date column)</description>
+							</documentation>
+						</annotation>
+					</element>
 					<!-- branching ab hier aktivieren-->
 					<element name="branchingMember" type="na:BranchingAssociationType" minOccurs="0">
 						<annotation>
