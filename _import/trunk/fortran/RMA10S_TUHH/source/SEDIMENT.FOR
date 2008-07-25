@@ -1,3 +1,4 @@
+C     Last change:  MD   25 Jul 2008    2:16 pm
 CIPK LAST UPDATE MAR 07 2006 fix gpmax setup
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE AUG 09 2005 ADD bshear
@@ -834,7 +835,11 @@ C
       C3=3.24*D
       TDC=20.0
       DO I=1,NP
-        TDC=VEL(5,I)
+        !MD neu: Vermeide Temperatur = 0 fuer Sedimentberechnung
+        IF (VEL(5,I).gt.0) THEN
+          TDC=VEL(5,I)
+        END IF
+        !MD TDC=VEL(5,I)
         XNU(I)=A/(C1+C2*TDC+C3*TDC*TDC)
 	ENDDO
       RETURN
