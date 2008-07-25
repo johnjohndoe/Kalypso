@@ -1,13 +1,19 @@
-
       FUNCTION TF(A)
-      S=SIN(A)
-      C=COS(A)
-      IF(C .NE. 0.) THEN
-        TF=S/C
-      ELSEIF(S .LT. 0.) THEN
-        TF=-1.E20
+      implicit none
+      !Declarations
+      real (kind = 8) :: TF
+      real (kind = 8) :: A, S, C
+      
+      S = SIN (A)
+      C = COS (A)
+      
+      IF(C /= 0.) THEN
+        TF = S/ C
+      ELSEIF(S < 0.) THEN
+        TF = -1.E20
       ELSE
-        TF=1.E20
+        TF = 1.E20
       ENDIF
+      
       RETURN
       END
