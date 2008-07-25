@@ -11,6 +11,10 @@
         <arg name="htmlFilePath" value=".model/wizardhtml/01_Ombrometer.html"/>
 		
 		<arg name="mapTemplate" value="project:.templates/calcCase/Ombrometer.gmt" />
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
 		<arg name="mainSash" value="50" />
 		<arg name="rightSash" value="50" />
 		<arg name="timeserie1" value="diagDateAxis=d#diagValueAxis=n#nameColumn=name#linkColumn=N" />
@@ -26,6 +30,10 @@
         <arg name="htmlFilePath" value=".model/wizardhtml/02_Gebietsniederschlag.html"/>
 
 		<arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt" />
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
 		<arg name="mainSash" value="35" />
 		<arg name="rightSash" value="50" />
 		<arg name="timeserie1"
@@ -58,6 +66,10 @@
         <arg name="htmlFilePath" value=".model/wizardhtml/04_Gebietstemperatur.html"/>
 
 		<arg name="mapTemplate" value="project:.templates/calcCase/ezg.gmt" />
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
 		<arg name="mainSash" value="35" />
 		<arg name="rightSash" value="50" />
 		<arg name="timeserie1"
@@ -763,7 +775,12 @@
         <arg name="pageID" value="Berichtsablage"/>
         <arg name="htmlFilePath" value=".model/wizardhtml/11_Berichtsablage.html"/>
 
+		<arg name="selectFeatureID" value="Pegel_1" />
 		<arg name="mapTemplate" value=".templates/calcCase/PegelAnsicht.gmt" />
+		<arg name="mapToolbar">
+        	<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
+        	<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
+        </arg>
 		<arg name="maximizeMap" value="true" />
 
 		<!-- Messung -->
