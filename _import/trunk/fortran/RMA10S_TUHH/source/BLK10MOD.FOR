@@ -118,7 +118,7 @@ cipk may02
       real*8 vel,ao,cord,AORIG
 
 !Nis,mar06      specialized declaration of ALFA and wss, so that the input-reading with binary files don't cause an error
-      REAL(KIND=4) :: ALFA,wss
+      REAL(KIND=8) :: ALFA,wss
 !-
 
       ALLOCATABLE CORD(:,:),VEL(:,:),AO(:),AORIG(:)
