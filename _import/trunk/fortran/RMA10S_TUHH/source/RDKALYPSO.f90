@@ -1,4 +1,4 @@
-!     Last change:  WP   22 Jul 2008    9:40 am
+!     Last change:  MD   25 Jul 2008    3:05 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1399,12 +1399,14 @@ reading: do
       if (.not. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
     ENDIF
 
-!    !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
-!    !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
-!    IF (linie(1:2) .eq. 'DF') THEN
-!      READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
-!    END IF
-!    !-
+    !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
+    !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
+    IF (linie(1:2) .eq. 'DF') THEN
+      READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
+      !ERROR - restart values can't be applied to node out of zero-maxp-Range
+      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
+    END IF
+    !-
 !
 !    !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
 !    IF (linie (1:2) .eq.'GA') then
