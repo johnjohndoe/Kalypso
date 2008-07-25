@@ -343,15 +343,25 @@ END DO
 !......form list of elements to be formed                               
 !-                                                                      
       k = 0 
+      !through element list
       FormList: DO n = 1, nepem
+        !get element number of list entry in iel
         i = iel (n) 
+        !if zero-entry is reached, list is at the end
         IF (i.eq.0) EXIT FormList
+        !go through list of elements, that are of current list
         FormListInner: DO j = 1, maxc
+          !get connected element
           m = icon (i, j) 
+          !first zero-entry in list of connected elements means list ends
           IF (m.eq.0) CYCLE FormList
+          !list(m) entry means, element m was already referenced somewhere an is already processable for the software, that means, don't process it any longer
           IF (list (m) .gt.0) cycle FormListInner
+          !increase the counter of element elimination order
           k = k + 1 
+          !nfixh stores the real element numbers according to the elimination order
           nfixh (k) = m 
+          !list shows, whether an element already is listed in the elimination error.
           list (m) = k 
         END DO FormListInner
       END DO FormList
@@ -690,11 +700,11 @@ SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt, PolySplitCountA, PolySplitCountQ, Poly
 !COMMON / raus / rausv (4, mnd), iauslp, iausnpm, zeigma (mnd)
 
 !"new modules"
-      USE BLK10MOD    	!cord(i,1), cord(i,2), ao(i), tett, MaxE, MaxP, irk, rk_zeile
-      USE BLKDRMOD
-      USE ParaKalyps    !new module for KALYPSO-specific globals and neighbourhood relations
-      USE BLKSUBMOD     !for weir structures
-      USE Para1DPoly  !Modul für Teschke-1D-Elemente
+USE BLK10MOD    !cord(i,1), cord(i,2), ao(i), tett, MaxE, MaxP, irk, rk_zeile
+USE BLKDRMOD
+USE ParaKalyps  !new module for KALYPSO-specific globals and neighbourhood relations
+USE BLKSUBMOD   !for weir structures
+USE Para1DPoly  !Modul für Teschke-1D-Elemente
 !-
 
 !NiS,may06: Former variable declaration is sorted and the variables are described; new entered variables are EXPLICITLY pointed out
@@ -708,7 +718,7 @@ REAL                   :: wsp                          !???
 INTEGER                :: i, j, k, l		       !loop-counters with different meanings
 INTEGER                :: m, n                         !copy of nodecount and elementcount at the end of the subroutine; the need is not clear!
 INTEGER                :: elzaehl, mittzaehl           !real element and midside counters
-INTEGER,ALLOCATABLE    :: arc(:,:)  	               !local array for saving the arc-informations and passing them to the sorting process
+INTEGER, ALLOCATABLE   :: arc(:,:)  	               !local array for saving the arc-informations and passing them to the sorting process
 !nis,dec06: for neighbourhood relations at line couplings
 INTEGER, ALLOCATABLE   :: nop_temp (:)
 INTEGER                :: ncorn_temp
