@@ -16,7 +16,6 @@ import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -132,7 +131,7 @@ public class KalypsoMetaDocService implements IMetaDocService
     try
     {
       // fix: delete the whitespace from the preferredFilename
-      final File docFile = File.createTempFile( "document", StringUtils.deleteWhitespace( docBean.getPreferredFilename() ), m_tmpDir );
+      final File docFile = File.createTempFile( "document", FileUtilities.validateName( docBean.getPreferredFilename(), "_" ), m_tmpDir );
       FileUtilities.makeFileFromStream( false, docFile, data.getInputStream() );
 
       final Configuration mdConf;
