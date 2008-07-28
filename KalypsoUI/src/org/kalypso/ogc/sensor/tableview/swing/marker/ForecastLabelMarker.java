@@ -61,19 +61,14 @@ public class ForecastLabelMarker implements ILabelMarker
 
   private final static String FORECAST_TT = TimeserieConstants.MD_VORHERSAGE;
 
-  //  private final static Icon FORECAST_ICON = new ImageIcon(
-  //      ObservationTable.class.getResource( "resource/warning_small.gif" ) );
-
   private final DateRange m_dra;
 
-  /**
-   * Constructor
-   * 
-   * @param dra
-   */
-  public ForecastLabelMarker( DateRange dra )
+  private final Color m_defaultBackground;
+
+  public ForecastLabelMarker( DateRange dra, Color defaultBackground )
   {
     m_dra = dra;
+    m_defaultBackground = defaultBackground;
   }
 
   /**
@@ -84,7 +79,9 @@ public class ForecastLabelMarker implements ILabelMarker
     if( !( value instanceof Date ) )
       return false;
 
-    return m_dra.contains( (Date)value );
+    final Date date = (Date)value;
+    // Check if date lies within ]from, to]
+    return m_dra.getFrom().compareTo( date ) < 0 && m_dra.getTo().compareTo( date ) >= 0;
   }
 
   /**
@@ -102,7 +99,7 @@ public class ForecastLabelMarker implements ILabelMarker
    */
   public void reset( JLabel label )
   {
-    label.setBackground( null );
+    label.setBackground( m_defaultBackground );
     label.setToolTipText( "" ); //$NON-NLS-1$
     label.setIcon( null );
   }
@@ -133,6 +130,6 @@ public class ForecastLabelMarker implements ILabelMarker
   @Override
   public int hashCode()
   {
-    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).hashCode();
+    return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).toHashCode();
   }
 }
