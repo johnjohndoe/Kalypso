@@ -107,4 +107,11 @@ public class OptimizerCalJob implements ISimulation
       e.printStackTrace();
     }
   }
+
+  /**
+   */
+  public boolean isSucceeded()
+  {
+    return m_optimizingJob.isSucceeded();
+  }
 }

@@ -95,4 +95,9 @@ public interface IOptimizingJob
 
   public void publishResults( ISimulationResultEater resultEater ) throws SimulationException;
 
+  /**
+   * @return
+   */
+  public boolean isSucceeded();
+
 }
