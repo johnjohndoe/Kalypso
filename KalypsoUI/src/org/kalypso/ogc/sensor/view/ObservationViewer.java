@@ -56,13 +56,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControlStuct;
 import org.kalypso.contribs.eclipse.ui.controls.ButtonControl;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -467,14 +465,6 @@ public class ObservationViewer extends Composite
     {
       m_mdViewer.setInput( new ObservationPropertySource( obs ) );
     }
-  }
-
-  protected static DateRange createFrom( final DateRangeInputControlStuct struct )
-  {
-    if( struct.useRange )
-      return new DateRange( struct.from, struct.to );
-
-    return DateRange.createFromPastDays( struct.days );
   }
 
   /**
