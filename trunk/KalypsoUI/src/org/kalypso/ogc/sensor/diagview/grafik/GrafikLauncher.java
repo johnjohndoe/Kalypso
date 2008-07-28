@@ -126,6 +126,7 @@ public class GrafikLauncher
 
   static
   {
+    GRAFIK_NF_W.setGroupingUsed( false ); // set to false, else we got '.' in 1000ers, causing the grafik exe to read it as 1.0
     GRAFIK_NF_W.setMaximumFractionDigits( 0 );
   }
 
@@ -180,6 +181,10 @@ public class GrafikLauncher
     {
       e.printStackTrace();
       throw new SensorException( e );
+    }
+    finally
+    {
+      diag.dispose();
     }
   }
 
@@ -425,7 +430,11 @@ public class GrafikLauncher
       // find out which axes to use
       final IAxis[] axes = obs.getAxisList();
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
-      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClass( axes, Number.class, true );
+      // REMARK: we use the version with many classes, so no exception is thrown if now number-axis was found.
+      final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClasses( axes, new Class[] {Number.class}, true );
+      // Just ignore this obs, if it has no number axises
+      if( numberAxes.length == 0 )
+        continue;
 
       final List<IAxis> displayedAxes = new ArrayList<IAxis>( numberAxes.length );
 
@@ -435,7 +444,11 @@ public class GrafikLauncher
         final TypeCurve tc = (TypeCurve) itc.next();
 
         // create a corresponding dat-File for the current observation file
-        final IFile datFile = dest.getFile( FileUtilities.nameWithoutExtension( zmlFile.getName() ) + "-" + cc + ".dat" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String datFileProtoName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( zmlFile
+            .getName() )
+            + "-" + cc + ".dat";
+        final String datFileName = datFileProtoName.replace( ' ', '_' );
+        final IFile datFile = dest.getFile( datFileName );
 
         final IAxis axis = gKurven.addCurve( datFile, tc, numberAxes );
 
@@ -514,6 +527,7 @@ public class GrafikLauncher
       }
 
       // is this obs a forecast?
+      // TODO: check if odt wants forecast to be shown
       final DateRange fr = TimeserieUtils.isForecast( obs );
       if( fr != null )
       {

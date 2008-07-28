@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
+import java.awt.BasicStroke;
+import java.awt.Stroke;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -50,7 +52,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -67,7 +68,9 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.template.obsdiagview.ObjectFactory;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.TypeAxis;
@@ -224,11 +227,11 @@ public class DiagViewUtils
     int ixCurve = 1;
 
     final List<TypeObservation> xmlThemes = xmlTemplate.getObservation();
-    final Map map = ObsView.mapItems( view.getItems() );
-    for( final Iterator itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
+    final Map<IObservation, ArrayList<ObsViewItem>> map = ObsView.mapItems( view.getItems() );
+    for( final Iterator<Map.Entry<IObservation, ArrayList<ObsViewItem>>> itThemes = map.entrySet().iterator(); itThemes.hasNext(); )
     {
-      final Map.Entry entry = (Entry) itThemes.next();
-      final IObservation obs = (IObservation) entry.getKey();
+      final Map.Entry<IObservation, ArrayList<ObsViewItem>> entry = itThemes.next();
+      final IObservation obs = entry.getKey();
       if( obs == null )
         continue;
 
@@ -238,7 +241,7 @@ public class DiagViewUtils
 
       final List<TypeCurve> xmlCurves = xmlTheme.getCurve();
 
-      final Iterator itCurves = ((List) entry.getValue()).iterator();
+      final Iterator<ObsViewItem> itCurves = ((List<ObsViewItem>) entry.getValue()).iterator();
       while( itCurves.hasNext() )
       {
         final DiagViewCurve curve = (DiagViewCurve) itCurves.next();
@@ -248,6 +251,21 @@ public class DiagViewUtils
         xmlCurve.setName( curve.getName() );
         xmlCurve.setColor( StringUtilities.colorToString( curve.getColor() ) );
         xmlCurve.setShown( curve.isShown() );
+        Stroke stroke = curve.getStroke();
+        if( stroke instanceof BasicStroke )
+        {
+          final BasicStroke bs = (BasicStroke)stroke;
+          final TypeCurve.Stroke strokeType = ODT_OF.createTypeCurveStroke();
+          xmlCurve.setStroke( strokeType );
+          strokeType.setWidth( bs.getLineWidth() );
+          final float[] dashArray = bs.getDashArray();
+          if( dashArray != null )
+          {
+            final List<Float> dashList = strokeType.getDash();
+            for( int i = 0; i < dashArray.length; i++ )
+              dashList.add( new Float( dashArray[i] ) );
+          }
+        }
 
         final List<TypeAxisMapping> xmlMappings = xmlCurve.getMapping();
 
@@ -313,10 +331,14 @@ public class DiagViewUtils
     if( axisType.equals( TimeserieConstants.TYPE_NORM ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
 
+    if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
+      return new DiagramAxis( axisType, "boolean", label, unit, direction, position, false );
+    
     position = isKey == true ? DiagramAxis.POSITION_BOTTOM : DiagramAxis.POSITION_RIGHT;
 
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
-      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, new Double( 0.8 ) ); //$NON-NLS-1$
+      return new DiagramAxis( axisType, "double", label, unit, direction, position, true, null, TimeserieUtils
+          .getTopMargin( axisType ) ); //$NON-NLS-1$
 
     if( axisType.equals( TimeserieConstants.TYPE_TEMPERATURE ) )
       return new DiagramAxis( axisType, "double", label, unit, direction, position, false ); //$NON-NLS-1$
@@ -368,20 +390,19 @@ public class DiagViewUtils
     // axes spec is optional
     if( xml.getAxis() != null )
     {
-      for( final Iterator it = xml.getAxis().iterator(); it.hasNext(); )
+      for( final Iterator<TypeAxis> it = xml.getAxis().iterator(); it.hasNext(); )
       {
-        final TypeAxis baseAxis = (TypeAxis) it.next();
-
+        final TypeAxis baseAxis = it.next();
         view.addAxis( new DiagramAxis( baseAxis ) );
       }
     }
 
     final List<IStatus> stati = new ArrayList<IStatus>();
 
-    final List list = xml.getObservation();
-    for( final Iterator it = list.iterator(); it.hasNext(); )
+    final List<TypeObservation> list = xml.getObservation();
+    for( final Iterator<TypeObservation> it = list.iterator(); it.hasNext(); )
     {
-      final TypeObservation tobs = (TypeObservation) it.next();
+      final TypeObservation tobs = it.next();
 
       // check, if href is ok
       final String href = tobs.getHref();
