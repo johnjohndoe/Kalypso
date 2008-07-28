@@ -186,7 +186,7 @@ public class Branch implements IBranch
   /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.IBranch#getGeometryProperty()
    */
-  public GM_Curve getGeometryProperty( )
+  public GM_Curve getCurve( )
   {
     return (GM_Curve) m_branch.getDefaultGeometryProperty();
   }
@@ -273,7 +273,7 @@ public class Branch implements IBranch
     try
     {
       /* sort nodes by their position on line */
-      final GM_Curve branch = getGeometryProperty();
+      final GM_Curve branch = getCurve();
       final LineString jtsBranch = (LineString) JTSAdapter.export( branch );
 
       myNodes = new TreeMap<Double, ICrossSectionNode>();

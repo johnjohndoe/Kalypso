@@ -140,7 +140,7 @@ public class LinkageNode extends AbstractConnectionNode implements ILinkageNode
         continue;
 
       /* linkage node lays on branch?!? */
-      final GM_Curve curve = branch.getGeometryProperty();
+      final GM_Curve curve = branch.getCurve();
       final GM_Point point = getLocation();
 
       if( point.equals( curve.getStartPoint() ) )

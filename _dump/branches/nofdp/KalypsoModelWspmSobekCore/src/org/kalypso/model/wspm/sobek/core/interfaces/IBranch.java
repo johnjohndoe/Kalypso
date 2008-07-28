@@ -58,7 +58,7 @@ public interface IBranch
 
   public Feature getFeature( );
 
-  public GM_Curve getGeometryProperty( );
+  public GM_Curve getCurve( );
 
   public String getId( );
 

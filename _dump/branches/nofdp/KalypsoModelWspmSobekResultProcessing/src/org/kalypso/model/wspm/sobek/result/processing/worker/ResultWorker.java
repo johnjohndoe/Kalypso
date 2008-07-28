@@ -140,7 +140,7 @@ public class ResultWorker
 
       // distance on branch
       final IBranch branch = m_node.getLinkToBranch();
-      final GM_Curve curve = branch.getGeometryProperty();
+      final GM_Curve curve = branch.getCurve();
 
       final GM_Point location = m_node.getLocation();
 
