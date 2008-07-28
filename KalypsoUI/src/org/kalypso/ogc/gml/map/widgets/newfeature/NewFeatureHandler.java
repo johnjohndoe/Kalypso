@@ -33,7 +33,6 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
 
   private static final QName GML_LOCATION = new QName( "http://www.opengis.net/gml", "location" );
 
-  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
 
