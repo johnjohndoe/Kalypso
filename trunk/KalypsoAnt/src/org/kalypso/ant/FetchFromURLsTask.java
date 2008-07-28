@@ -43,6 +43,7 @@ package org.kalypso.ant;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
@@ -145,14 +146,17 @@ public class FetchFromURLsTask extends Task
     {
       URL url = null;
       FileOutputStream outputStream = null;
+      InputStream urlStream = null;
       try
       {
         url = resolver.resolveURL( m_context, src[i] );
         final File parentFile = destination.getParentFile();
         if( !parentFile.exists() )
           parentFile.mkdirs();
+        /* First open url stream, so no empty file is generated if access is not possible. */
+        urlStream = url.openStream();
         outputStream = new FileOutputStream( destination );
-        IOUtils.copy( url.openStream(), outputStream );
+        IOUtils.copy( urlStream, outputStream );
         if( project2 != null )
         {
           project2.log( "copied from url : " + url.toExternalForm(), Project.MSG_INFO );
@@ -172,6 +176,7 @@ public class FetchFromURLsTask extends Task
       finally
       {
         IOUtils.closeQuietly( outputStream );
+        IOUtils.closeQuietly( urlStream );
       }
       i++;
     }

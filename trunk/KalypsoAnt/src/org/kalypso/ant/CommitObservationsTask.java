@@ -41,8 +41,6 @@
 
 package org.kalypso.ant;
 
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,6 +49,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -62,6 +61,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
 {
   private String m_localObs;
   private String m_remoteObs;
+  private String m_sourceFilter;
 
   public void setLocalObs( String localObs )
   {
@@ -73,26 +73,29 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
     m_remoteObs = remoteObs;
   }
 
+  public void setSourceFilter( String sourceFilter )
+  {
+    m_sourceFilter = sourceFilter;
+  }
+
   public CommitObservationsTask()
   {
     super( false );
   }
   
   /**
-   * @throws InvocationTargetException
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
-   *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
-      final IProgressMonitor monitor ) throws InvocationTargetException
+  protected FeatureVisitor createVisitor( URL context, IUrlResolver resolver, ILogger logger, IProgressMonitor monitor ) 
   {
+    // TODO: reimplement
     throw new UnsupportedOperationException();
 //    try
 //    {
-//      final KalypsoObservationService srv = KalypsoServiceObsClientPlugin.getDefault().getObservationServiceProxy();
+//      final IObservationService srv = KalypsoGisPlugin.getDefault().getObservationServiceProxy();
 //
-//      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, monitor );
+//      return new CommitPrognoseFeatureVisitor( srv, resolver, context, m_localObs, m_remoteObs, m_sourceFilter, monitor );
 //    }
 //    catch( final ServiceException e )
 //    {
