@@ -30,6 +30,8 @@ import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
 import org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction;
 import org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand;
 import org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand;
+import org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor;
+import org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction;
 
 /**
  * AbstractObsOutlinePage
@@ -42,6 +44,8 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   protected ObsView m_view;
 
   private final AbstractObservationEditor m_editor;
+
+  private IAction m_editThemeAction;
 
   private IAction m_removeThemeAction;
 
@@ -73,6 +77,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     tv.addCheckStateListener( this );
 
+    m_editThemeAction = new EditDiagCurveAction( this );
     m_removeThemeAction = new RemoveThemeAction( this );
     m_setIgnoreTypesAction = new SetIgnoreTypesAction( this );
   }
@@ -214,12 +219,15 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
    * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
    */
   @Override
-  public void setActionBars( IActionBars actionBars )
+  public void setActionBars( final IActionBars actionBars )
   {
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     toolBarManager.add( m_removeThemeAction );
     toolBarManager.add( m_setIgnoreTypesAction );
     
+    if( m_editor instanceof ObservationDiagramEditor )
+      toolBarManager.add( m_editThemeAction );
+
     actionBars.updateActionBars();
   }
 

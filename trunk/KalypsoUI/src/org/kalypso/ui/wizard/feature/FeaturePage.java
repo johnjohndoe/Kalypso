@@ -143,7 +143,7 @@ public class FeaturePage extends WizardPage
   @Override
   public boolean isPageComplete( )
   {
-    return m_featureComposite.isValid();
+    return m_featureComposite != null && m_featureComposite.isValid();
   }
 
   /**

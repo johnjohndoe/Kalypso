@@ -50,6 +50,7 @@ import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -83,7 +84,7 @@ public class ExportableMap implements IExportableObject
   public String getPreferredDocumentName( )
   {
     // TODO besserer Name?
-    return Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.0") + m_format; //$NON-NLS-1$
+    return FileUtilities.validateName( Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.0") + m_format, "_" ); //$NON-NLS-1$
   }
 
   /**

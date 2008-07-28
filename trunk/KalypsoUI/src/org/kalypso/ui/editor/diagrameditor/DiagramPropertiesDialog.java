@@ -85,6 +85,17 @@ public class DiagramPropertiesDialog extends TitleAreaDialog
   }
 
   /**
+   * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+   */
+  @Override
+  protected void configureShell( Shell newShell )
+  {
+    super.configureShell( newShell );
+    
+    newShell.setText( "Diagramm Eigenschaften" );
+  }
+  
+  /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override

@@ -58,6 +58,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.LayerTypeUtilities;
@@ -115,7 +116,8 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final String string = w.toString();
 
       // als StorageInput zurückgeben
-      final StorageEditorInput input = new StorageEditorInput( new StringStorage( "<unbekannt>.gmv", string, file.getFullPath() ) ); //$NON-NLS-1$
+      final String name = FileUtilities.nameWithoutExtension( file.getName() ) + ".gmv";
+      final StorageEditorInput input = new StorageEditorInput( new StringStorage( name, string, file.getFullPath() ) ); //$NON-NLS-1$
 
       return input;
     }
