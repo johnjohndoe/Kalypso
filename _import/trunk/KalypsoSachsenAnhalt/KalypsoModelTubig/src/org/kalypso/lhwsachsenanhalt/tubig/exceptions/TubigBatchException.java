@@ -29,7 +29,6 @@
  */
 package org.kalypso.lhwsachsenanhalt.tubig.exceptions;
 
-import org.kalypso.simulation.core.ISimulationMonitor;
 
 /**
  * @author Thül
@@ -48,48 +47,40 @@ public class TubigBatchException extends Exception
 
   public static final int STATUS_CANCEL = 0x08;
 
-  public TubigBatchException( ISimulationMonitor monitor, final int iStatus, final String sFinishText )
+  private final int m_status;
+
+  private final String m_finishText;
+
+  public TubigBatchException( final int iStatus, final String sFinishText )
   {
-    super();
-    monitor.setFinishInfo( iStatus, sFinishText );
+    this( null, null, iStatus, sFinishText );
   }
 
-  public TubigBatchException( final String message, final ISimulationMonitor monitor, final int iStatus, final String sFinishText )
+  public TubigBatchException( final String message, final int iStatus, final String sFinishText )
   {
-    super( message );
-    monitor.setFinishInfo( iStatus, sFinishText );
+    this( message, null, iStatus, sFinishText );
   }
 
-  public TubigBatchException( final Throwable cause, final ISimulationMonitor monitor, final int iStatus, final String sFinishText )
+  public TubigBatchException( final Throwable cause, final int iStatus, final String sFinishText )
   {
-    super( cause );
-    monitor.setFinishInfo( iStatus, sFinishText );
+    this( null, cause, iStatus, sFinishText );
   }
 
-  public TubigBatchException( final String message, final Throwable cause, final ISimulationMonitor monitor, final int iStatus, final String sFinishText )
-  {
-    super( message, cause );
-    monitor.setFinishInfo( iStatus, sFinishText );
-  }
-
-  public TubigBatchException( )
-  {
-    super();
-  }
-
-  public TubigBatchException( final String message )
-  {
-    super( message );
-  }
-
-  public TubigBatchException( final Throwable cause )
-  {
-    super( cause );
-  }
-
-  public TubigBatchException( final String message, final Throwable cause )
+  public TubigBatchException( final String message, final Throwable cause, final int iStatus, final String sFinishText )
   {
     super( message, cause );
+
+    m_status = iStatus;
+    m_finishText = sFinishText;
   }
 
+  public int getStatus()
+  {
+    return m_status;
+  }
+
+  public String getFinishText()
+  {
+    return m_finishText;
+  }
 }

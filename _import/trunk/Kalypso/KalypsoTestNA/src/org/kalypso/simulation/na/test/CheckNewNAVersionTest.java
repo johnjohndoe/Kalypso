@@ -49,6 +49,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 
 import junit.framework.TestCase;
 
@@ -89,9 +90,9 @@ public class CheckNewNAVersionTest extends TestCase
   final ILogger logger = new ILogger()
   {
     /**
-     * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
+     * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, boolean, java.lang.String)
      */
-    public void log( String message )
+    public void log( final Level level, final int code, final String message )
     {
       System.out.println( message );
       buffer.append( message );

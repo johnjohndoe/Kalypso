@@ -61,12 +61,12 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.model.wavos.deleteDuringUpgrade.ApacheCalendarUtils;
 import org.kalypso.model.wavos.visitors.FeatureVisitorZml2WavosAT;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -75,43 +75,47 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import com.braju.format.Format;
-
 /**
- * 
- * 
- * 
  * @author thuel2
  */
 public class WavosInputWorker
 {
   private final static Logger m_logger = Logger.getLogger( WavosInputWorker.class.getName() );
+
   private final static String m_propZmlLink = "ganglinie_gesamt";
+
   private final static String m_propZmlLinkPolder = "ganglinie_zustand";
+
   private final static String m_kenn = "kenn";
+
   private final static String m_lfdNum = "lfdNum";
+
   private final static String m_projektionAllowed = "projektionErlaubt";
+
   private final static String m_projektionType = "projektionEingschaltet";
+
   private final static String m_axisToBeWritten = "datenUebergabe";
+
   private final static String m_zuflussVorhersage = "zuflussVorhersage";
+
   private final static UrlUtilities m_urlresolver = new UrlUtilities();
 
-  public static File createNativeInput( final File tmpDir, final ICalcDataProvider inputProvider, Properties props,
-      final File nativeInDir, final String flussName, final Map metaMap ) throws Exception
+  public static File createNativeInput( final File tmpDir, final ISimulationDataProvider inputProvider, Properties props, final File nativeInDir, final String flussName, final Map metaMap ) throws Exception
   {
     try
     {
       final File exeDir = new File( tmpDir, "exe" );
       exeDir.mkdirs();
 
-      // unzip (Data) Rechenkern, bevor AT-Dateien ggf. über die Dateien in Verzeichnis tafel geschrieben werden
+      // unzip (Data) Rechenkern, bevor AT-Dateien ggf. über die Dateien
+      // in Verzeichnis tafel geschrieben werden
       m_logger.info( "\tKopiere Rechenkern (Daten)" );
       copyAndUnzipRechenkern( exeDir, WavosConst.ZIP_TYPE_DATA );
       // Binaries müssten nicht immer mit an den Benutzer gegeben werden
@@ -119,12 +123,12 @@ public class WavosInputWorker
       copyAndUnzipRechenkern( exeDir, WavosConst.ZIP_TYPE_BIN );
 
       // Steuerparams lesen
-      final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
+      final URL controlGmlURL = (URL) inputProvider.getInputForID( "CONTROL_GML" );
 
       m_logger.info( "\tLese Steuerparameter: " + controlGmlURL.toString() );
       final HashMap map = parseControlFile( controlGmlURL );
-      final URL urlForGmlId = inputProvider.getURLForID( "GML" );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( urlForGmlId );
+      final URL urlForGmlId = (URL) inputProvider.getInputForID( "GML" );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( urlForGmlId, null );
       map.put( WavosConst.DATA_GML, workspace );
       map.put( WavosConst.DATA_GML_CONTEXT, urlForGmlId );
 
@@ -155,7 +159,7 @@ public class WavosInputWorker
       m_logger.info( "\tKopiere Anfangswerte" );
       final File awerteTargetDir = new File( flussDir, WavosConst.DIR_AWERTE );
       awerteTargetDir.mkdirs();
-      final URL awerteURL = inputProvider.getURLForID( "AWERTE" );
+      final URL awerteURL = (URL) inputProvider.getInputForID( "AWERTE" );
 
       final String awerteURLstr = awerteURL.toExternalForm();
       final URL awerteURLDir = new URL( awerteURLstr + "/" );
@@ -171,7 +175,8 @@ public class WavosInputWorker
       m_logger.info( "\tErzeuge Zeitreihen und AT-Dateien" );
       writeTimeseriesAndAtFiles( props, flussDir, metaMap );
 
-      // save input data to native dir before it is changed by the kernel (awerte)
+      // save input data to native dir before it is changed by the kernel
+      // (awerte)
       if( exeDir.exists() && nativeInDir.exists() )
       {
         final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeDir, nativeInDir, true );
@@ -179,10 +184,10 @@ public class WavosInputWorker
       }
       return wavosDir;
     }
-    catch( final CalcJobServiceException e )
+    catch( final SimulationException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Erzeugen der Eingabedateien", e );
+      throw new SimulationException( "Fehler beim Erzeugen der Eingabedateien", e );
     }
   }
 
@@ -193,15 +198,18 @@ public class WavosInputWorker
   private static void writeParFiles( final File exeDir, final Properties props ) throws Exception
   {
     // Schreibe input.par und shiftvor.par
-    final Date forecastDate = (Date)props.get( WavosConst.DATA_STARTFORECAST_DATE );
-    final boolean useAWerte = ( (Boolean)props.get( WavosConst.DATA_USE_AWERTE ) ).booleanValue();
+    final Date forecastDate = (Date) props.get( WavosConst.DATA_STARTFORECAST_DATE );
+    final boolean useAWerte = ((Boolean) props.get( WavosConst.DATA_USE_AWERTE )).booleanValue();
     final File fleInputPar = new File( exeDir, WavosConst.FILE_WAVOS_PAR );
     final Writer wrtrInputPar = new OutputStreamWriter( new FileOutputStream( fleInputPar ), WavosConst.WAVOS_CODEPAGE );
     final PrintWriter pWrtrInputPar = new PrintWriter( wrtrInputPar );
     pWrtrInputPar.println( "1" ); // Vorhersagemodus
-    pWrtrInputPar.println( WavosUtils.createWavosDateShort( forecastDate ) ); // Start der Vorhersage
-    final String mergeCasePath = (String)props.get( WavosConst.DATA_MERGE_CASE_PATH );
-    if( useAWerte && !"".equals( mergeCasePath ) )// Verwendung von Anfangswerten
+    pWrtrInputPar.println( WavosUtils.createWavosDateShort( forecastDate ) ); // Start
+    // der
+    // Vorhersage
+    final String mergeCasePath = (String) props.get( WavosConst.DATA_MERGE_CASE_PATH );
+    if( useAWerte && !"".equals( mergeCasePath ) )// Verwendung von
+      // Anfangswerten
       pWrtrInputPar.println( "j" );
     else
       pWrtrInputPar.println( "n" );
@@ -209,10 +217,12 @@ public class WavosInputWorker
     IOUtils.closeQuietly( wrtrInputPar );
 
     final File fleShiftvorPar = new File( exeDir, WavosConst.FILE_SHIFTVOR_PAR );
-    final Writer wrtrShiftvorPar = new OutputStreamWriter( new FileOutputStream( fleShiftvorPar ),
-        WavosConst.WAVOS_CODEPAGE );
+    final Writer wrtrShiftvorPar = new OutputStreamWriter( new FileOutputStream( fleShiftvorPar ), WavosConst.WAVOS_CODEPAGE );
     final PrintWriter pWrtrShiftvorPar = new PrintWriter( wrtrShiftvorPar );
-    pWrtrShiftvorPar.println( WavosUtils.createWavosDateShort( forecastDate ) ); // Start der Vorhersage?
+    pWrtrShiftvorPar.println( WavosUtils.createWavosDateShort( forecastDate ) ); // Start
+    // der
+    // Vorhersage
+    // ?
     IOUtils.closeQuietly( pWrtrShiftvorPar );
     IOUtils.closeQuietly( wrtrShiftvorPar );
   }
@@ -225,32 +235,31 @@ public class WavosInputWorker
     final PrintWriter pWrtrInputPar = new PrintWriter( wrtrInputPar );
 
     pWrtrInputPar.println( "REM dr_wavos starten" );
-    // bin\dr_wavos_kalypso.exe elbe\bin\objekte_elbe.dat < input.par > output.log
-    pWrtrInputPar.println( "bin\\dr_wavos_kalypso.exe " + flussName + "\\bin\\objekte_" + flussName + ".dat < "
-        + WavosConst.FILE_WAVOS_PAR + " > " + WavosConst.FILE_WAVOS_LOG );
+    // bin\dr_wavos_kalypso.exe elbe\bin\objekte_elbe.dat < input.par >
+    // output.log
+    pWrtrInputPar.println( "bin\\dr_wavos_kalypso.exe " + flussName + "\\bin\\objekte_" + flussName + ".dat < " + WavosConst.FILE_WAVOS_PAR + " > " + WavosConst.FILE_WAVOS_LOG );
 
     pWrtrInputPar.println();
     pWrtrInputPar.println( "REM Ergebnisse zwischenspeichern" );
     // xcopy "<SOURCE>" "<TARGET>" /e/s/c/h/y
     // xcopy "<SOURCE>" "<TARGET>" /c/y/i
-    pWrtrInputPar.println( "xcopy " + "\"" + flussName + File.separator + WavosConst.DIR_VORHER + "\"" + " " + "\""
-        + flussName + File.separator + WavosConst.DIR_VORHER_SAVE + "\" /y/i" ); ///c
+    pWrtrInputPar.println( "xcopy " + "\"" + flussName + File.separator + WavosConst.DIR_VORHER + "\"" + " " + "\"" + flussName + File.separator + WavosConst.DIR_VORHER_SAVE + "\" /y/i" ); // /
+                                                                                                                                                                                             // c
 
     pWrtrInputPar.println();
     pWrtrInputPar.println( "REM shiftvor starten" );
-    // bin\shiftvor.exe elbe\bin\objekte_shiftvor.dat < shiftvor.par > shiftvor.log
-    pWrtrInputPar.println( "bin\\shiftvor.exe " + flussName + "\\bin\\objekte_shiftvor.dat < "
-        + WavosConst.FILE_SHIFTVOR_PAR + " > " + WavosConst.FILE_SHIFTVOR_LOG );
+    // bin\shiftvor.exe elbe\bin\objekte_shiftvor.dat < shiftvor.par >
+    // shiftvor.log
+    pWrtrInputPar.println( "bin\\shiftvor.exe " + flussName + "\\bin\\objekte_shiftvor.dat < " + WavosConst.FILE_SHIFTVOR_PAR + " > " + WavosConst.FILE_SHIFTVOR_LOG );
 
     IOUtils.closeQuietly( pWrtrInputPar );
     IOUtils.closeQuietly( wrtrInputPar );
   }
 
-  private static void writeTimeseriesAndAtFiles( final Properties props, final File flussDir, final Map metaMap )
-      throws Exception
+  private static void writeTimeseriesAndAtFiles( final Properties props, final File flussDir, final Map metaMap ) throws Exception
   {
     // workspace holen
-    final GMLWorkspace wks = (GMLWorkspace)props.get( WavosConst.DATA_GML );
+    final GMLWorkspace wks = (GMLWorkspace) props.get( WavosConst.DATA_GML );
 
     // input file
     final File inputDir = new File( flussDir, WavosConst.DIR_INPUT );
@@ -260,7 +269,7 @@ public class WavosInputWorker
     // AT-Dateien an allen Pegeln
     final File tafelDir = new File( flussDir, WavosConst.DIR_TAFEL );
     tafelDir.mkdirs();
-    FeatureVisitorZml2WavosAT.writeAT( wks, tafelDir, (URL)props.get( WavosConst.DATA_GML_CONTEXT ) );
+    FeatureVisitorZml2WavosAT.writeAT( wks, tafelDir, (URL) props.get( WavosConst.DATA_GML_CONTEXT ) );
 
   }
 
@@ -269,27 +278,26 @@ public class WavosInputWorker
    * @param flussBinDir
    * @param props
    */
-  private static void writeBauwerkeOffen( final GMLWorkspace wks, final File flussBinDir, final Properties props )
-      throws Exception
+  private static void writeBauwerkeOffen( final GMLWorkspace wks, final File flussBinDir, final Properties props ) throws Exception
   {
     final File fleOffen = new File( flussBinDir, "bauwerke.offen" );
     final Writer wrtrOffen = new OutputStreamWriter( new FileOutputStream( fleOffen ), WavosConst.WAVOS_CODEPAGE );
     final PrintWriter pWrtrOffen = new PrintWriter( wrtrOffen );
 
-    final FeatureList bauwerkeList = (FeatureList)wks.getFeatureFromPath( "bauwerkMember" );
+    final FeatureList bauwerkeList = (FeatureList) wks.getFeatureFromPath( "bauwerkMember" );
 
     pWrtrOffen.println( "# Wann sind welche Bauwerke offen? Ein Bauwerk kann auch in mehreren Zeilen vorkommen" );
     pWrtrOffen.println( "#" );
     ITuppleModel tplValues = null;
-    final URL url = (URL)props.get( WavosConst.DATA_GML_CONTEXT );
-    final int intervalAmount = ( (Integer)props.get( WavosConst.DATA_INTERVAL_AMOUNT ) ).intValue();
+    final URL url = (URL) props.get( WavosConst.DATA_GML_CONTEXT );
+    final int intervalAmount = ((Integer) props.get( WavosConst.DATA_INTERVAL_AMOUNT )).intValue();
     for( final Iterator iter = bauwerkeList.iterator(); iter.hasNext(); )
     {
-      final Feature bauwerk = (Feature)iter.next();
+      final Feature bauwerk = (Feature) iter.next();
       // Kennung finden (m_kenn)
-      final String kenn = (String)bauwerk.getProperty( m_kenn );
+      final String kenn = (String) bauwerk.getProperty( m_kenn );
       // Zeitreihe holen (m_propZmlLinkPolder)
-      final TimeseriesLinkType tsLink = (TimeseriesLinkType)bauwerk.getProperty( m_propZmlLinkPolder );
+      final TimeseriesLinkType tsLink = (TimeseriesLinkType) bauwerk.getProperty( m_propZmlLinkPolder );
       final String href = tsLink.getHref();
       final URL zmlUrl = m_urlresolver.resolveURL( url, href );
       final URLConnection urlConTest = UrlUtilities.connectQuietly( zmlUrl );
@@ -298,30 +306,30 @@ public class WavosInputWorker
       {
         final IObservation obsZml = ZmlFactory.parseXML( zmlUrl, kenn );
         tplValues = obsZml.getValues( null );
-        final IAxis axDatum = ObservationUtilities.findAxisByType( tplValues.getAxisList(),
-            TimeserieConstants.TYPE_DATE );
-        final IAxis axWerte = ObservationUtilities.findAxisByType( tplValues.getAxisList(),
-            TimeserieConstants.TYPE_POLDER_CONTROL );
+        final IAxis axDatum = ObservationUtilities.findAxisByType( tplValues.getAxisList(), TimeserieConstants.TYPE_DATE );
+        final IAxis axWerte = ObservationUtilities.findAxisByType( tplValues.getAxisList(), TimeserieConstants.TYPE_POLDER_CONTROL );
         boolean zustand = false;
-        String zeile = Format.sprintf( "%-14s", new Object[]
-        { kenn + "_aus" } );
+        // String zeile = Format.sprintf( "%-14s", new Object[]
+        // { kenn + "_aus" } );
+        // TODO: check if format ok
+        String zeile = String.format( "%-14s", new Object[] { kenn + "_aus" } );
         String suffix;
         for( int ii = 0; ii < tplValues.getCount(); ii++ )
         {
-          boolean polderOffen = ( (Boolean)tplValues.getElement( ii, axWerte ) ).booleanValue();
-          Date datum = (Date)tplValues.getElement( ii, axDatum );
+          boolean polderOffen = ((Boolean) tplValues.getElement( ii, axWerte )).booleanValue();
+          Date datum = (Date) tplValues.getElement( ii, axDatum );
           if( ii == 0 )
           {
-            // wenn direkt am Anfang offen, dann eine Stunde vor Anfang schon offen
+            // wenn direkt am Anfang offen, dann eine Stunde vor
+            // Anfang schon offen
             final Date newDate = WavosUtils.addHour( datum, -intervalAmount );
-            zeile = zeile + Format.sprintf( " %s", new Object[]
-            { WavosUtils.createWavosDate( newDate ) } );
+            zeile = zeile + String.format( " %s", WavosUtils.createWavosDate( newDate ) );
           }
-          if( !( zustand == polderOffen ) )
+          if( !(zustand == polderOffen) )
           {
             if( polderOffen )
             {
-              //Polder-Öffnung
+              // Polder-Öffnung
               suffix = "_ein";
             }
             else
@@ -329,15 +337,12 @@ public class WavosInputWorker
               // Polder-Schließung
               suffix = "_aus";
             }
-            zeile = zeile + Format.sprintf( "%28s", new Object[]
-            { WavosUtils.createWavosDate( datum ) } );
+            zeile = zeile + String.format( "%28s", WavosUtils.createWavosDate( datum ) );
 
             pWrtrOffen.println( zeile );
             final Date newDate = WavosUtils.addHour( datum, intervalAmount );
-            zeile = Format.sprintf( "%-14s%s", new Object[]
-            {
-                kenn + suffix,
-                WavosUtils.createWavosDate( newDate ) } );
+            // TODO: check format
+            zeile = String.format( "%-14s%s", new Object[] { kenn + suffix, WavosUtils.createWavosDate( newDate ) } );
             zustand = polderOffen;
           }
         }
@@ -354,28 +359,24 @@ public class WavosInputWorker
    * @param flussBinDir
    * @param flussName
    */
-  private static void writeProFile( final GMLWorkspace wks, final File flussBinDir, final String flussName )
-      throws Exception
+  private static void writeProFile( final GMLWorkspace wks, final File flussBinDir, final String flussName ) throws Exception
   {
     final File flePro = new File( flussBinDir, flussName + ".pro" );
     final Writer wrtrPro = new OutputStreamWriter( new FileOutputStream( flePro ), WavosConst.WAVOS_CODEPAGE );
     final PrintWriter pWrtrPro = new PrintWriter( wrtrPro );
 
-    final FeatureList pegelList = (FeatureList)wks.getFeatureFromPath( "pegelMember" );
+    final FeatureList pegelList = (FeatureList) wks.getFeatureFromPath( "pegelMember" );
     pWrtrPro.println( "# Elbe.pro: Projektion: 0=nein, 1 oder W = auf W, Q= auf Q " );
     // TODO? nach lfdNummer sortiert schreiben?
     for( final Iterator iter = pegelList.iterator(); iter.hasNext(); )
     {
-      final Feature pegel = (Feature)iter.next();
+      final Feature pegel = (Feature) iter.next();
       final Object propAllowed = pegel.getProperty( m_projektionAllowed );
-      final boolean allowed = propAllowed == null ? false : ( (Boolean)propAllowed ).booleanValue();
+      final boolean allowed = propAllowed == null ? false : ((Boolean) propAllowed).booleanValue();
 
       if( allowed )
       {
-        pWrtrPro.println( Format.sprintf( "%4s%3s", new Object[]
-        {
-            pegel.getProperty( m_kenn ),
-            pegel.getProperty( m_projektionType ) } ) );
+        pWrtrPro.println( String.format( "%4s%3s", pegel.getProperty( m_kenn ), pegel.getProperty( m_projektionType ) ) );
       }
     }
     IOUtils.closeQuietly( pWrtrPro );
@@ -389,12 +390,11 @@ public class WavosInputWorker
    * @param metaMap
    */
 
-  private static void writeInput( final GMLWorkspace wks, final File inputDir, final Properties props, final Map metaMap )
-      throws Exception
+  private static void writeInput( final GMLWorkspace wks, final File inputDir, final Properties props, final Map metaMap ) throws Exception
   {
-    final URL url = (URL)props.get( WavosConst.DATA_GML_CONTEXT );
+    final URL url = (URL) props.get( WavosConst.DATA_GML_CONTEXT );
     // eine Datei (Endung aus Datum des letzten Messwerts)
-    final Date startForecast = (Date)props.get( WavosConst.DATA_STARTFORECAST_DATE );
+    final Date startForecast = (Date) props.get( WavosConst.DATA_STARTFORECAST_DATE );
     final int intervalAmount = Integer.parseInt( props.get( WavosConst.DATA_INTERVAL_AMOUNT ).toString() );
 
     final String nmeInput = WavosUtils.createInputFleName( startForecast );
@@ -403,31 +403,29 @@ public class WavosInputWorker
     final PrintWriter pWrtrInput = new PrintWriter( wrtrInput );
 
     // Header schreiben
-    //    ##### allgemeine Eingaben
-    //    6 tzurueck
-    //    72.00000000000000 Vorhersagezeit
-    //    0 USTI
-    //    0 ZG_1
-    //    0 ZG_2
-    //    0 LOEB
-    //    0 nvorweiter
+    // ##### allgemeine Eingaben
+    // 6 tzurueck
+    // 72.00000000000000 Vorhersagezeit
+    // 0 USTI
+    // 0 ZG_1
+    // 0 ZG_2
+    // 0 LOEB
+    // 0 nvorweiter
     pWrtrInput.println( " ##### allgemeine Eingaben" );
     pWrtrInput.println( " " + props.get( WavosConst.DATA_SIMULATION_DURATION ).toString() + "  tszurueck" );
-    pWrtrInput.println( " " + props.get( WavosConst.DATA_FORECAST_DURATION ).toString()
-        + ".00000000000000  Vorhersagezeit" );
+    pWrtrInput.println( " " + props.get( WavosConst.DATA_FORECAST_DURATION ).toString() + ".00000000000000  Vorhersagezeit" );
     // Liste der Pegel mit ZuflussVorhersage
-    final FeatureList pegelList = (FeatureList)wks.getFeatureFromPath( "pegelMember" );
+    final FeatureList pegelList = (FeatureList) wks.getFeatureFromPath( "pegelMember" );
     final Map pegelMap = new HashMap();
     final Map tuppleMap = new HashMap();
     ITuppleModel tplValues = null;
     for( final Iterator iter = pegelList.iterator(); iter.hasNext(); )
     {
-      final Feature pegel = (Feature)iter.next();
-      final String lfdNum = Format.sprintf( "%05d", new Object[]
-      { pegel.getProperty( m_lfdNum ) } );
+      final Feature pegel = (Feature) iter.next();
+      final String lfdNum = String.format( "%05d", pegel.getProperty( m_lfdNum ) );
       pegelMap.put( lfdNum, pegel );
 
-      final TimeseriesLinkType tsLink = (TimeseriesLinkType)pegel.getProperty( m_propZmlLink );
+      final TimeseriesLinkType tsLink = (TimeseriesLinkType) pegel.getProperty( m_propZmlLink );
       final String href = tsLink.getHref();
       final URL zmlUrl = m_urlresolver.resolveURL( url, href );
       final URLConnection urlConTest = UrlUtilities.connectQuietly( zmlUrl );
@@ -442,9 +440,8 @@ public class WavosInputWorker
           final String kenn = pegel.getProperty( m_kenn ).toString();
           metaMap.put( kenn, info );
         }
-        final String axisToBeWritten = (String)pegel.getProperty( m_axisToBeWritten );
-        final String axisType = "Q".equals( axisToBeWritten ) ? TimeserieConstants.TYPE_RUNOFF
-            : TimeserieConstants.TYPE_WATERLEVEL;
+        final String axisToBeWritten = (String) pegel.getProperty( m_axisToBeWritten );
+        final String axisType = "Q".equals( axisToBeWritten ) ? TimeserieConstants.TYPE_RUNOFF : TimeserieConstants.TYPE_WATERLEVEL;
         final IAxis axWerte = ObservationUtilities.findAxisByType( tplValues.getAxisList(), axisType );
 
         final List lstWerte = new ArrayList();
@@ -456,35 +453,29 @@ public class WavosInputWorker
       }
 
     }
-    String kennZeile = Format.sprintf( "%17s", new Object[]
-    { "" } );
-    String stundenZeile = Format.sprintf( "%18s", new Object[]
-    { "" } );
-    String projektionsZeile = Format.sprintf( "%17s", new Object[]
-    { "" } );
+    String kennZeile = String.format( "%17s", ""  );
+    String stundenZeile = String.format( "%18s", ""  );
+    String projektionsZeile = String.format( "%17s", ""  );
     // TreeMap zur Sortierung...
     final TreeMap pegelTreeMap = new TreeMap( pegelMap );
     final Iterator iter = pegelTreeMap.entrySet().iterator();
     while( iter.hasNext() )
     {
-      final Map.Entry mapEntry = (Map.Entry)iter.next();
-      final Feature pegel = (Feature)mapEntry.getValue();
+      final Map.Entry mapEntry = (Map.Entry) iter.next();
+      final Feature pegel = (Feature) mapEntry.getValue();
       final Object property = pegel.getProperty( m_zuflussVorhersage );
-      final boolean zuflussVorhersage = property == null ? false : ( (Boolean)property ).booleanValue();
+      final boolean zuflussVorhersage = property == null ? false : ((Boolean) property).booleanValue();
 
       final String kenn = pegel.getProperty( m_kenn ).toString();
       if( zuflussVorhersage )
         pWrtrInput.println( " 0  " + kenn );
 
-      kennZeile = kennZeile + Format.sprintf( "%6s", new Object[]
-      { kenn } );
-      stundenZeile = stundenZeile + Format.sprintf( "%6s", new Object[]
-      { "0" } );
+      kennZeile = kennZeile + String.format( "%6s", kenn  );
+      stundenZeile = stundenZeile + String.format( "%6s", "0" );
       final Object propAllowed = pegel.getProperty( m_projektionAllowed );
-      final boolean allowed = propAllowed == null ? false : ( (Boolean)propAllowed ).booleanValue();
+      final boolean allowed = propAllowed == null ? false : ((Boolean) propAllowed).booleanValue();
 
-      projektionsZeile = projektionsZeile + Format.sprintf( "%6s", new Object[]
-      { allowed ? pegel.getProperty( m_projektionType ).toString() : "0" } );
+      projektionsZeile = projektionsZeile + String.format( "%6s", allowed ? pegel.getProperty( m_projektionType ).toString() : "0" );
     }
     pWrtrInput.println( " 0  nvorweiter" );
     pWrtrInput.println( " ##### Anzahl Stunden bekannt: Werte hier nicht aendern" );
@@ -496,59 +487,56 @@ public class WavosInputWorker
     pWrtrInput.println( " ##### Wasserstaende: Werte koennen geaendert werden" );
     pWrtrInput.println( kennZeile );
 
-    //TODO? Zeitversatz (Sommer/Winter)
+    // TODO? Zeitversatz (Sommer/Winter)
     final Calendar c = Calendar.getInstance();
     c.setTime( startForecast );
-    final int countMeasValues = ( (Integer)props.get( WavosConst.DATA_COUNT_MEASURED_VALUES ) ).intValue();
+    final int countMeasValues = ((Integer) props.get( WavosConst.DATA_COUNT_MEASURED_VALUES )).intValue();
     // Zeitreihe steckt jeweils in m_propZmlLink
     final TreeMap obsTreeMap = new TreeMap( tuppleMap );
     Iterator iterObs;
 
     // für alle Zeiten
     // für alle Pegel
-    // Kennzeichen, Datum, Werte (je nach Weitergabe-Achse m_AxisToBeWritten)
-    final Date simStart = (Date)( props.get( WavosConst.DATA_SIMULATION_START ) );
+    // Kennzeichen, Datum, Werte (je nach Weitergabe-Achse
+    // m_AxisToBeWritten)
+    final Date simStart = (Date) (props.get( WavosConst.DATA_SIMULATION_START ));
     c.setTime( simStart );
 
     for( int i = 0; i < countMeasValues; i++ )
     {
       iterObs = obsTreeMap.entrySet().iterator();
       // Datum verhackstücken
-      //TODO? Zeitversatz (Sommer/Winter)
+      // TODO? Zeitversatz (Sommer/Winter)
       final Date dateS = c.getTime();
       String zeile = "S " + WavosUtils.createWavosDate( dateS );
       // Werte formatiert schreiben
       while( iterObs.hasNext() )
       {
-        final Map.Entry mapEntry = (Map.Entry)iterObs.next();
-        final ArrayList valList = (ArrayList)mapEntry.getValue();
-        zeile = zeile + Format.sprintf( "%6d", new Object[]
-        { valList.get( i ) } );
+        final Map.Entry mapEntry = (Map.Entry) iterObs.next();
+        final ArrayList valList = (ArrayList) mapEntry.getValue();
+        zeile = zeile + String.format( "%6d", valList.get( i ) );
       }
       pWrtrInput.println( zeile );
       c.add( Calendar.HOUR_OF_DAY, intervalAmount );
     }
     pWrtrInput.println( kennZeile );
-    final int countForecastValues = ( (Integer)props.get( WavosConst.DATA_COUNT_FORECAST_VALUES ) ).intValue();
+    final int countForecastValues = ((Integer) props.get( WavosConst.DATA_COUNT_FORECAST_VALUES )).intValue();
     for( int i = countMeasValues; i < countForecastValues + countMeasValues; i++ )
     {
       iterObs = obsTreeMap.entrySet().iterator();
-      //TODO? Zeitversatz (Sommer/Winter)
+      // TODO? Zeitversatz (Sommer/Winter)
       final Date dateV = c.getTime();
       String zeile = "V " + WavosUtils.createWavosDate( dateV );
 
       // Werte formatiert schreiben
       while( iterObs.hasNext() )
       {
-        final Map.Entry mapEntry = (Map.Entry)iterObs.next();
-        final ArrayList valList = (ArrayList)mapEntry.getValue();
+        final Map.Entry mapEntry = (Map.Entry) iterObs.next();
+        final ArrayList valList = (ArrayList) mapEntry.getValue();
         if( valList.size() > i )
-          zeile = zeile + Format.sprintf( "%6d", new Object[]
-          { valList.get( i ) } );
+          zeile = zeile + String.format( "%6d", valList.get( i ) );
         else
-          zeile = zeile + Format.sprintf( "%6d", new Object[]
-          //          { valList.get( countMeasValues - 1 ) } );
-              { new Integer( -1 ) } );
+          zeile = zeile + String.format( "%6d", new Integer( -1 ) );
       }
       pWrtrInput.println( zeile );
       c.add( Calendar.HOUR_OF_DAY, intervalAmount );
@@ -557,7 +545,7 @@ public class WavosInputWorker
     IOUtils.closeQuietly( wrtrInput );
   }
 
-  private static void copyAndUnzipRechenkern( final File targetDir, final int zipType ) throws CalcJobServiceException
+  private static void copyAndUnzipRechenkern( final File targetDir, final int zipType ) throws SimulationException
   {
     URL urlZip = null;
     InputStream zipStream = null;
@@ -567,16 +555,16 @@ public class WavosInputWorker
     {
       switch( zipType )
       {
-      case WavosConst.ZIP_TYPE_BIN:
-      {
-        urlZip = WavosInputWorker.class.getResource( WavosConst.RECHENKERN_BIN_ZIP );
-        break;
-      }
-      case WavosConst.ZIP_TYPE_DATA:
-      {
-        urlZip = WavosInputWorker.class.getResource( WavosConst.RECHENKERN_DATA_ZIP );
-        break;
-      }
+        case WavosConst.ZIP_TYPE_BIN:
+        {
+          urlZip = WavosInputWorker.class.getResource( WavosConst.RECHENKERN_BIN_ZIP );
+          break;
+        }
+        case WavosConst.ZIP_TYPE_DATA:
+        {
+          urlZip = WavosInputWorker.class.getResource( WavosConst.RECHENKERN_DATA_ZIP );
+          break;
+        }
       }
 
       zipStream = urlZip.openStream();
@@ -586,7 +574,7 @@ public class WavosInputWorker
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Entpacken des Rechenkerns", e );
+      throw new SimulationException( "Fehler beim Entpacken des Rechenkerns", e );
     }
     finally
     {
@@ -594,60 +582,63 @@ public class WavosInputWorker
     }
   }
 
-  public static HashMap parseControlFile( final URL gmlURL ) throws CalcJobServiceException
+  public static HashMap parseControlFile( final URL gmlURL ) throws SimulationException
   {
     try
     {
-      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL ).getRootFeature();
+      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL, null ).getRootFeature();
 
       final HashMap dataMap = new HashMap();
 
-      final Date startForecastTime = (Date)controlFeature.getProperty( "startforecast" );
+      final Date startForecastTime = (Date) controlFeature.getProperty( "startforecast" );
       dataMap.put( WavosConst.DATA_STARTFORECAST_DATE, startForecastTime );
 
-      //String
+      // String
       final Object objMergeCasePath = controlFeature.getProperty( "mergeCasePath" );
       if( objMergeCasePath != null )
       {
-        final String mergeCasePath = ( (String)objMergeCasePath );
+        final String mergeCasePath = ((String) objMergeCasePath);
         dataMap.put( WavosConst.DATA_MERGE_CASE_PATH, mergeCasePath );
       }
       else
         dataMap.put( WavosConst.DATA_MERGE_CASE_PATH, "" );
 
       // int [h]
-      final Integer forecastDur = (Integer)controlFeature.getProperty( "forecastDuration" );
+      final Integer forecastDur = (Integer) controlFeature.getProperty( "forecastDuration" );
       dataMap.put( WavosConst.DATA_FORECAST_DURATION, forecastDur );
 
       // int [d]
-      final Integer simulationDur = (Integer)controlFeature.getProperty( "simulationDuration" );
+      final Integer simulationDur = (Integer) controlFeature.getProperty( "simulationDuration" );
       dataMap.put( WavosConst.DATA_SIMULATION_DURATION, simulationDur );
 
       // int [h]
-      final Integer intervalAmount = (Integer)controlFeature.getProperty( "intervalAmount" );
+      final Integer intervalAmount = (Integer) controlFeature.getProperty( "intervalAmount" );
       dataMap.put( WavosConst.DATA_INTERVAL_AMOUNT, intervalAmount );
 
       // boolean
       final Object useAWerteProp = controlFeature.getProperty( "useAWerte" );
-      final Boolean useAWerte = useAWerteProp == null ? Boolean.FALSE : ( (Boolean)useAWerteProp );
+      final Boolean useAWerte = useAWerteProp == null ? Boolean.FALSE : ((Boolean) useAWerteProp);
       dataMap.put( WavosConst.DATA_USE_AWERTE, useAWerte );
 
-      // calculate simulationStart = Tagesanfang(startForecast - simulationDuration)
+      // calculate simulationStart = Tagesanfang(startForecast -
+      // simulationDuration)
       final Calendar cal = Calendar.getInstance();
       cal.setTime( startForecastTime );
       cal.add( CalendarUtilities.getCalendarField( "DAY_OF_MONTH" ), simulationDur.intValue() );
       Date simulationStart = cal.getTime();
-      // TODO during upgrade to new KALYPSO replace usage of "trunc" with method from
+      // TODO during upgrade to new KALYPSO replace usage of "trunc" with
+      // method from
       // org.apache.commons.lang.CalendarUtils
-      simulationStart = ApacheCalendarUtils.trunc( simulationStart, Calendar.DAY_OF_MONTH );
+      simulationStart = DateUtils.truncate( simulationStart, Calendar.DAY_OF_MONTH );
       dataMap.put( WavosConst.DATA_SIMULATION_START, simulationStart );
 
       // calculate count of measured values
-      // TODO (interval.amount <> 1) überdenken: aufrunden oder abrunden oder so...
+      // TODO (interval.amount <> 1) überdenken: aufrunden oder abrunden
+      // oder so...
       cal.setTime( startForecastTime );
-      // TODO wird "1+" benötigt oder hat das was mit Winter und Sommer zu tun?
-      final Integer cntMeasVals = new Integer( ( 1 + simulationDur.intValue() * 24 + cal.get( Calendar.HOUR_OF_DAY ) )
-          / intervalAmount.intValue() );
+      // TODO wird "1+" benötigt oder hat das was mit Winter und Sommer zu
+      // tun?
+      final Integer cntMeasVals = new Integer( (1 + simulationDur.intValue() * 24 + cal.get( Calendar.HOUR_OF_DAY )) / intervalAmount.intValue() );
       dataMap.put( WavosConst.DATA_COUNT_MEASURED_VALUES, cntMeasVals );
 
       // calculate count of vorgabe values
@@ -659,7 +650,7 @@ public class WavosInputWorker
     }
     catch( final Exception e )
     {
-      throw new CalcJobServiceException( "Fehler beim Einlesen der Berechnungsparameter", e );
+      throw new SimulationException( "Fehler beim Einlesen der Berechnungsparameter", e );
     }
   }
 }

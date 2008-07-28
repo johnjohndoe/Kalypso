@@ -1,5 +1,6 @@
 package org.kalypso.wiskiadapter;
 
+import java.io.File;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.RepositoryUtils;
+import org.kalypso.wiskiadapter.debug.WDPDebuger;
 import org.kalypso.wiskiadapter.wiskicall.GetSuperGroupList;
 import org.kalypso.wiskiadapter.wiskicall.IWiskiCall;
 
@@ -21,7 +23,8 @@ import de.kisters.wiski.webdataprovider.common.util.KiWWException;
 import de.kisters.wiski.webdataprovider.server.KiWWDataProviderRMIf;
 
 /**
- * WiskiRepository over the Wiski Data Provider (WDP).
+ * WiskiRepository over the Wiski Data Provider (WDP). 20060120 - schlienger - userData must now be set from the
+ * return-value of the call to getUserAuthorisation
  * 
  * @author schlienger
  */
@@ -31,7 +34,7 @@ public class WiskiRepository extends AbstractRepository
 
   private KiWWDataProviderRMIf m_wiski = null;
 
-  private final HashMap<String, String> m_userData;
+  private HashMap<?,?> m_userData = null;
 
   private final String m_url;
 
@@ -40,6 +43,12 @@ public class WiskiRepository extends AbstractRepository
   private final String m_logonName;
 
   private final String m_password;
+
+  private boolean m_debugMode;
+
+  private String m_debugDir;
+
+  private boolean m_simulate;
 
   private Map<String, IRepositoryItem> m_children = null;
 
@@ -60,17 +69,13 @@ public class WiskiRepository extends AbstractRepository
     m_domain = validator.getDomain();
     m_logonName = validator.getLogonName();
     m_password = validator.getPassword();
-    final String language = validator.getLanguage();
-
-    m_userData = new HashMap<String, String>();
-    m_userData.put( "domain", m_domain );
-    m_userData.put( "logonName", m_logonName );
-    m_userData.put( "password", m_password );
-    m_userData.put( "language", language );
+    m_debugMode = validator.isDebugMode();
+    m_debugDir = validator.getDebugDir();
+    m_simulate = validator.isSimulateMode();
 
     try
     {
-      m_wiski = wiskiInit();
+      wiskiInit();
     }
     catch( final RepositoryException ignored )
     {
@@ -83,29 +88,55 @@ public class WiskiRepository extends AbstractRepository
    * 
    * @throws RepositoryException
    */
-  private final KiWWDataProviderRMIf wiskiInit() throws RepositoryException
+  private final void wiskiInit( ) throws RepositoryException
   {
+    m_userData = null;
+    m_wiski = null;
+
     try
     {
-      //create a server object
-      final KiWWDataProviderRMIf myServerObject = (KiWWDataProviderRMIf)Naming.lookup( m_url );
+      final KiWWDataProviderRMIf myServerObject;
+
+      if( m_debugMode )
+      {
+        KiWWDataProviderRMIf wraped = null;
+        if( !m_simulate )
+        {
+          try
+          {
+            wraped = (KiWWDataProviderRMIf) Naming.lookup( m_url );
+          }
+          catch( final Exception e )
+          {
+            LOG.warning( "Could not wrap wiski, cause: " + e.getLocalizedMessage() );
+          }
+        }
+
+        LOG.info( "Using WDP-Debuger" + (m_simulate ? " simulate mode activated!" : "") );
+
+        myServerObject = new WDPDebuger( new File( m_debugDir ), m_simulate, wraped );
+      }
+      else
+      {
+        myServerObject = (KiWWDataProviderRMIf) Naming.lookup( m_url );
+      }
+
       LOG.info( "Wiski About()=" + myServerObject.about() );
 
       // optional params (used for timeout, entry in seconds)
       // 28800 = 8 hours
       // 604800 = 1 week
       // 125798400 = 1 year
-      final HashMap optParam = new HashMap();
+      final HashMap<String, String> optParam = new HashMap<String, String>();
       optParam.put( KiWWDataProviderInterface.OPT_GETUSERAUTHORISATION_MAXINACTIVE, Integer.toString( 28800 ) );
 
-      final HashMap auth = myServerObject.getUserAuthorisation( m_domain, m_logonName, m_password, "myhost.kisters.de",
-          optParam );
-      LOG.info( "Wiski login=" + auth );
+      m_userData = myServerObject.getUserAuthorisation( m_domain, m_logonName, m_password, "myhost.kisters.de", optParam );
+      LOG.info( "Wiski login=" + m_userData );
 
-      if( auth == null || !"1".equals( auth.get( KiWWDataProviderInterface.AUTHKEY_ALLOWED ) ) )
+      if( m_userData == null || !"1".equals( m_userData.get( KiWWDataProviderInterface.AUTHKEY_ALLOWED ) ) )
         throw new RepositoryException( "Login not allowed" );
 
-      return myServerObject;
+      m_wiski = myServerObject;
     }
     catch( final Exception e )
     {
@@ -117,7 +148,7 @@ public class WiskiRepository extends AbstractRepository
    * @see org.kalypso.repository.IRepository#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     super.dispose();
 
@@ -126,11 +157,11 @@ public class WiskiRepository extends AbstractRepository
     wiskiLogout();
   }
 
-  private final void wiskiLogout()
+  private final void wiskiLogout( )
   {
     if( m_wiski == null )
       return;
-    
+
     try
     {
       LOG.info( "Logging out from WISKI-WDP" );
@@ -158,7 +189,7 @@ public class WiskiRepository extends AbstractRepository
     final String groupName = parts[1];
     final String stationNo = parts[2];
 
-    final SuperGroupItem superGroup = (SuperGroupItem)getChildrenMap().get( supergroupName );
+    final SuperGroupItem superGroup = (SuperGroupItem) getChildrenMap().get( supergroupName );
     if( superGroup == null )
       return null;
 
@@ -172,15 +203,20 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepository#reload()
    */
-  public void reload()
+  public void reload( ) throws RepositoryException
   {
     WiskiUtils.forcePropertiesReload();
+
+    // Properties reload is not enough! also read strukture again and logout!
+    m_children = null;
+    wiskiLogout();
+    wiskiInit();
   }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return "wiski://";
   }
@@ -188,7 +224,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#hasChildren()
    */
-  public boolean hasChildren()
+  public boolean hasChildren( )
   {
     return true;
   }
@@ -196,7 +232,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
-  public IRepositoryItem[] getChildren() throws RepositoryException
+  public IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     final Map<String, IRepositoryItem> map = getChildrenMap();
 
@@ -206,7 +242,7 @@ public class WiskiRepository extends AbstractRepository
   /**
    * Only used internally, lazy loading
    */
-  private Map<String, IRepositoryItem> getChildrenMap() throws RepositoryException
+  private Map<String, IRepositoryItem> getChildrenMap( ) throws RepositoryException
   {
     if( m_children == null )
     {
@@ -224,18 +260,18 @@ public class WiskiRepository extends AbstractRepository
       catch( final Exception e )
       {
         if( e instanceof RepositoryException )
-          throw (RepositoryException)e;
+          throw (RepositoryException) e;
 
         throw new RepositoryException( "Gruppenarten konnte nicht ermittelt werden", e );
       }
 
-      final List list = call.getResultList();
+      final List<?> list = call.getResultList();
 
       m_children = new LinkedHashMap<String, IRepositoryItem>( list.size() );
-      for( final Iterator it = list.iterator(); it.hasNext(); )
+      for( final Iterator<?> it = list.iterator(); it.hasNext(); )
       {
-        final Map map = (Map)it.next();
-        final String name = (String)map.get( "supergroup_name" );
+        final Map<?,?> map = (Map<?,?>) it.next();
+        final String name = (String) map.get( "supergroup_name" );
         m_children.put( name, new SuperGroupItem( this, name ) );
       }
     }
@@ -243,7 +279,7 @@ public class WiskiRepository extends AbstractRepository
     return m_children;
   }
 
-  public HashMap getUserData()
+  public HashMap<?,?> getUserData( )
   {
     return m_userData;
   }
@@ -256,15 +292,18 @@ public class WiskiRepository extends AbstractRepository
   {
     try
     {
+      if( m_wiski == null )
+      {
+        // If wiski not initialized, do it now
+        reload();
+      }
+
       call.execute( m_wiski, m_userData );
     }
     catch( final Exception e )
     {
-      // normally, if we get this exception, that means wiski has logged us
-      // out. So we try here to reconnect and to perform the call again.
-      wiskiLogout();
-
-      m_wiski = wiskiInit();
+      // at least, try it twice
+      reload();
 
       call.execute( m_wiski, m_userData );
     }

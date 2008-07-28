@@ -44,10 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import com.braju.format.Format;
-
 /**
- * 
  * @author thuel2
  */
 public class WavosUtils
@@ -57,16 +54,14 @@ public class WavosUtils
    * 
    * @author Thül
    */
-  public static String getAktuelleUhrzeit()
+  public static String getAktuelleUhrzeit( )
   {
     final GregorianCalendar gregCal;
     String sUhrzeit;
 
     gregCal = new GregorianCalendar();
-    sUhrzeit = String.valueOf( gregCal.get( Calendar.DAY_OF_MONTH ) ) + "."
-        + String.valueOf( gregCal.get( Calendar.MONTH ) + 1 ) + "." + String.valueOf( gregCal.get( Calendar.YEAR ) )
-        + " " + String.valueOf( gregCal.get( Calendar.HOUR_OF_DAY ) ) + ":"
-        + String.valueOf( gregCal.get( Calendar.MINUTE ) ) + ":" + String.valueOf( gregCal.get( Calendar.SECOND ) );
+    sUhrzeit = String.valueOf( gregCal.get( Calendar.DAY_OF_MONTH ) ) + "." + String.valueOf( gregCal.get( Calendar.MONTH ) + 1 ) + "." + String.valueOf( gregCal.get( Calendar.YEAR ) ) + " "
+        + String.valueOf( gregCal.get( Calendar.HOUR_OF_DAY ) ) + ":" + String.valueOf( gregCal.get( Calendar.MINUTE ) ) + ":" + String.valueOf( gregCal.get( Calendar.SECOND ) );
 
     return sUhrzeit;
   }
@@ -88,15 +83,9 @@ public class WavosUtils
     final Calendar c = Calendar.getInstance();
     c.setTime( date );
 
-    //TODO? Zeitversatz (Sommer/Winter)
+    // TODO? Zeitversatz (Sommer/Winter)
     // TODO? nicht heute null Uhr, sondern gestern 24 Uhr schreiben...
-    return Format.sprintf( WavosConst.FLUSS_INPUT + ".%04d%02d%02d%02d", new Object[]
-    {
-        Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ) } );
-
+    return String.format( WavosConst.FLUSS_INPUT + ".%04d%02d%02d%02d", Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ) );
   }
 
   /**
@@ -105,17 +94,11 @@ public class WavosUtils
    */
   public static String createWavosDate( final Date date ) throws NumberFormatException
   {
-    //TODO? Zeitversatz (Sommer/Winter)
+    // TODO? Zeitversatz (Sommer/Winter)
     // TODO? nicht heute null Uhr, sondern gestern 24 Uhr schreiben...
     final Calendar c = Calendar.getInstance();
     c.setTime( date );
-    return Format.sprintf( "%4d %02d %02d %02d %02d", new Object[]
-    {
-        Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.MINUTE ) ) ) } );
+    return String.format( "%4d %02d %02d %02d %02d", Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MINUTE ) ) ) );
   }
 
   /**
@@ -126,12 +109,9 @@ public class WavosUtils
   {
     final Calendar c = Calendar.getInstance();
     c.setTime( date );
-    return Format.sprintf( "%4d %02d %02d %02d", new Object[]
-    {
-        Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ),
-        Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ) } );
+    return String.format( "%4d %02d %02d %02d",
+
+    Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ) );
   }
 
 }

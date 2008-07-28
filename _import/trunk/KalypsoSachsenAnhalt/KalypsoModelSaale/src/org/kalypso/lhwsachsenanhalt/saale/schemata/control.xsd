@@ -107,8 +107,8 @@
 					<element name="startforecast" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Start der Vorhersage</label>
-								<tooltip>Startzeitpunkt der Vorhersagerechnung</tooltip>
+								<label>Start der Vorhersage (GMT)</label>
+								<tooltip>Startzeitpunkt der Vorhersagerechnung (GMT Greenwich Mean Time)</tooltip>
 								<description/>
 							</documentation>
 						</annotation>
@@ -162,8 +162,8 @@
 					<element name="calctime" type="dateTime">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>Erstellungszeitpunkt</label>
-								<tooltip>Zeitpunkt der Erstellung des Rechenfalls</tooltip>
+								<label>Erstellungszeitpunkt (GMT)</label>
+								<tooltip>Zeitpunkt der Erstellung des Rechenfalls (GMT Greenwich Mean Time)</tooltip>
 								<description/>
 							</documentation>
 						</annotation>

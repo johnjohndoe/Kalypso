@@ -1,6 +1,6 @@
 package org.kalypso.wiskiadapter;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -8,6 +8,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.wiskiadapter.wiskicall.GetGroupEntryList;
 
 /**
  * This item is adaptable into a wiski timeserie. It represens a station.
@@ -28,31 +29,34 @@ public class TsInfoItem implements IRepositoryItem
 
   private WiskiTimeserie m_ts = null;
 
+  private final GetGroupEntryList m_groupEntryList;
+
   /**
    * Constructor with group and map. The repository to which this item belongs is delivered by the group.
    */
-  public TsInfoItem( final GroupItem item, final Map<Object, Object> map )
+  public TsInfoItem( final GroupItem item, final Map<Object, Object> map, final GetGroupEntryList groupEntryList )
   {
     m_group = item;
+    m_groupEntryList = groupEntryList;
     m_map = new Properties();
     m_map.putAll( map );
 
     m_rep = (WiskiRepository) m_group.getRepository();
   }
 
-  /**
-   * Constructor without group. Be aware that the group is null here. This constructor is provided for simplifying the
-   * process of retrieving items using WiskiRepository.findItem(). The group in that case is not relevant.
-   */
-  public TsInfoItem( final WiskiRepository rep, final Map<Object, Object> map )
-  {
-    m_group = null;
-
-    m_map = new Properties();
-    m_map.putAll( map );
-
-    m_rep = rep;
-  }
+ // /**
+ //  * Constructor without group. Be aware that the group is null here. This constructor is provided for simplifying the
+ //  * process of retrieving items using WiskiRepository.findItem(). The group in that case is not relevant.
+ //  */
+ // public TsInfoItem( final WiskiRepository rep, final Map<Object, Object> map )
+ // {
+ //   m_group = null;
+//
+ //   m_map = new Properties();
+ //   m_map.putAll( map );
+ //
+ //   m_rep = rep;
+ // }
 
   /**
    * @see org.kalypso.repository.IRepositoryItem#getName()
@@ -80,8 +84,6 @@ public class TsInfoItem implements IRepositoryItem
    */
   public String getIdentifier( )
   {
-    // return m_rep.getIdentifier() + getName();
-
     return m_rep.getIdentifier() + getWiskiSuperGroupName() + "." + getWiskiGroupName() + "." + getWiskiStationNo();
   }
 
@@ -138,9 +140,62 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "tsinfo_unitname", "<?>" );
   }
 
-  String getWiskiType( )
+  String getWiskiParameterType()
   {
     return m_map.getProperty( "parametertype_name", "<?>" );
+  }
+
+  /**
+   * tsinfo_timelevel: time series time step type <br>
+   * 0: high resolution <br>
+   * 1: daily <br>
+   * 2: monthly <br>
+   * 3: year <br>
+   * 4: week <br>
+   * 5: half year <br>
+   * 255: other
+   */
+  int getWiskiTimeLevel()
+  {
+    return Integer.valueOf( m_map.getProperty( "tsinfo_timelevel", "255" ) ).intValue();
+  }
+
+  /**
+   * tsinfo_valuetype: type of data values: <br>
+   * 0: instantaneous <br>
+   * 1: mean <br>
+   * 2: sum <br>
+   * 3: min <br>
+   * 4: max <br>
+   * 255: other
+   */
+  int getWiskiValueType()
+  {
+    return Integer.valueOf( m_map.getProperty( "tsinfo_valuetype", "255" ) ).intValue();
+  }
+
+  /**
+   * @return tsinfo_begin_of als Date, dessen Time-Anteil den Beginn der Integrationszeit des Tageswertes Beschreibt
+   *         (z.B. 07:30 oder ähnlich). Can be null.
+   */
+  Date getWiskiBegin()
+  {
+    final String strDate = m_map.getProperty( "tsinfo_begin_of" );
+    if( strDate == null )
+      return null;
+
+    return new Date( Long.valueOf( strDate ).longValue() );
+  }
+
+  /**
+   * @return tsinfo_offset_of als Long, welcher beschreibt, ob die Quellwerte eines Tageswertes zum Datum x vom Tag x
+   *         bis x+1 einfliessen (offset 0) oder z.B. vom Tag x-1 bis zum Tag x (offset -1). Can be null.
+   */
+  Long getWiskiOffset()
+  {
+    final String strOffset = m_map.getProperty( "tsinfo_offset_of", "-1" );
+
+    return Long.valueOf( strOffset );
   }
 
   /**
@@ -171,7 +226,8 @@ public class TsInfoItem implements IRepositoryItem
     final StringBuffer bf = new StringBuffer();
     bf.append( m_map.getProperty( "parametertype_longname", noValue + "parametertype_longname>" ) ).append( " - " );
     bf.append( m_map.getProperty( "stationparameter_name", noValue + "stationparameter_name>" ) ).append( " - " );
-    bf.append( m_map.getProperty( "stationparameter_longname", noValue + "stationparameter_longname>" ) ).append( " - " );
+    bf.append( m_map.getProperty( "stationparameter_longname", noValue + "stationparameter_longname>" ) )
+        .append( " - " );
     bf.append( m_map.getProperty( "station_name", noValue + "station_name>" ) );
 
     return bf.toString();
@@ -185,6 +241,11 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "station_id", "<?>" );
   }
 
+  public boolean isActive()
+  {
+    return m_groupEntryList.isActive( getWiskiIdAsString() ); 
+  }
+  
   /**
    * Return the station number (in german: Messstellennummer) in the Wiski sense.
    * <p>
@@ -195,6 +256,11 @@ public class TsInfoItem implements IRepositoryItem
     return m_map.getProperty( "station_no", "<?>" );
   }
 
+  String getStationParameterName()
+  {
+    return m_map.getProperty( "stationparameter_name", "" );
+  }
+  
   /**
    * Return the name of the group/parameter. The group of a TsInfoItem is actually the Parameter in the Wiski sense.
    * <p>
@@ -220,26 +286,13 @@ public class TsInfoItem implements IRepositoryItem
     return m_group.getParent().getName();
   }
 
-  int getWiskiDistUnitAsCalendarField( )
+  int getWiskiDistUnit()
   {
     final String strWiskiUnit = m_map.getProperty( "tsinfo_distunit" );
     if( strWiskiUnit == null )
       throw new IllegalStateException( "Wiski does not deliver which time-unit to use (Property: tsinfo_distunit)" );
 
-    final int wiskiUnit = Integer.valueOf( strWiskiUnit ).intValue();
-    switch( wiskiUnit )
-    {
-      case 1:
-        return Calendar.SECOND;
-      case 2:
-        return Calendar.MINUTE;
-      case 3:
-        return Calendar.HOUR_OF_DAY;
-      case 4:
-        return Calendar.DAY_OF_YEAR;
-      default:
-        throw new IllegalStateException( "Cannot translate Wiski property tsinfo_distunit into Calendar-Field" );
-    }
+   return Integer.valueOf( strWiskiUnit ).intValue();
   }
 
   int getWiskiDistValue( )
@@ -259,6 +312,10 @@ public class TsInfoItem implements IRepositoryItem
     final SuperGroupItem supergroup = (SuperGroupItem) m_group.getParent();
     final GroupItem group = supergroup.findGroup( parameterName );
 
+    if( group == null )
+      throw new RepositoryException( "Could not find a sibling, parameter name is: " + parameterName
+          + ", supergroup is: " + supergroup.getName() );
+
     return group.findTsInfo( "station_no", getWiskiStationNo() );
   }
 
@@ -268,5 +325,13 @@ public class TsInfoItem implements IRepositoryItem
   boolean isForecast( )
   {
     return getWiskiSuperGroupName().indexOf( WiskiUtils.getProperty( "FORECAST_SUPERGROUP" ) ) != -1;
+  }
+
+  /**
+   * @return the underlying map that holds the wiski properties
+   */
+  protected Map getWiskiPropertyMap()
+  {
+    return m_map;
   }
 }

@@ -64,7 +64,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -163,7 +163,7 @@ public class FileVisitorHwvs2Zml implements FileVisitor
                 else if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_WATERLEVEL ) )
                   axisType = TimeserieConstants.TYPE_WATERLEVEL;
                 else
-                  throw new CalcJobServiceException(
+                  throw new SimulationException(
                       "Ergebniszeitreihe enthält weder Abfluss noch Wasserstand, Umhüllendenberechnung nicht möglich.",
                       null );
 

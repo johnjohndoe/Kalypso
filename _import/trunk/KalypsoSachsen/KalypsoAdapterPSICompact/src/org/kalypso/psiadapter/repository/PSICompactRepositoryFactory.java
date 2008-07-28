@@ -20,13 +20,14 @@ import de.psi.go.lhwz.PSICompact.WQData;
 import de.psi.go.lhwz.PSICompact.WQParamSet;
 
 /**
+ * NTH: the configuration (as in resources/config.ini) should come from "outside", for instance localised using an url,
+ * so that this adpater can be configured more dynamically
+ * 
  * @author schlienger
  */
 public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 {
-  private static PSICompactRepository m_psiCompactRep = null;
-
-  private final static Integer m_zero = new Integer( 0 );
+  private final static Integer ZERO = new Integer( 0 );
 
   /**
    * Does nothing.
@@ -43,25 +44,7 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
    */
   public IRepository createRepository() throws RepositoryException
   {
-    return getRepository();
-  }
-
-  /**
-   * Liefert den PSICompactRepository
-   * 
-   * @return repository
-   * 
-   * @throws RepositoryException
-   */
-  public final static PSICompactRepository getRepository() throws RepositoryException
-  {
-    if( m_psiCompactRep == null )
-    {
-      // PSICompact Repository is always in read/write mode
-      m_psiCompactRep = new PSICompactRepository( "PSICompact", false );
-    }
-
-    return m_psiCompactRep;
+    return new PSICompactRepository( "PSICompact", false );
   }
 
   /**
@@ -77,27 +60,27 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( status )
     {
-    case PSICompact.STATUS_AUTO:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_AUTO" ) );
-    case PSICompact.STATUS_ERSALLG:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_ERSALLG" ) );
-    case PSICompact.STATUS_MANKOR:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_MANKOR" ) );
-    case PSICompact.STATUS_NACH:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NACH" ) );
-    case PSICompact.STATUS_NORM:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORM" ) );
-    case PSICompact.STATUS_NORMALLG:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORMALLG" ) );
-    case PSICompact.STATUS_OK:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_OK" ) );
-    case PSICompact.STATUS_REKO:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_REKO" ) );
-    case PSICompact.STATUS_UNDEF:
-      return Integer.valueOf( props.getProperty( "BM_" + "STATUS_UNDEF" ) );
+      case PSICompact.STATUS_AUTO:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_AUTO" ) );
+      case PSICompact.STATUS_ERSALLG:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_ERSALLG" ) );
+      case PSICompact.STATUS_MANKOR:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_MANKOR" ) );
+      case PSICompact.STATUS_NACH:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NACH" ) );
+      case PSICompact.STATUS_NORM:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORM" ) );
+      case PSICompact.STATUS_NORMALLG:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_NORMALLG" ) );
+      case PSICompact.STATUS_OK:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_OK" ) );
+      case PSICompact.STATUS_REKO:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_REKO" ) );
+      case PSICompact.STATUS_UNDEF:
+        return Integer.valueOf( props.getProperty( "BM_" + "STATUS_UNDEF" ) );
 
-    default:
-      return m_zero;
+      default:
+        return ZERO;
     }
   }
 
@@ -113,44 +96,23 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( measType )
     {
-    case PSICompact.MEAS_FLOW:
-      return props.getProperty( "MEAS_FLOW" );
-    case PSICompact.MEAS_LEVEL:
-      return props.getProperty( "MEAS_LEVEL" );
-    case PSICompact.MEAS_RAINFALL:
-      return props.getProperty( "MEAS_RAINFALL" );
-    case PSICompact.MEAS_TEMPERATUR:
-      return props.getProperty( "MEAS_TEMPERATUR" );
-    case PSICompact.MEAS_UNDEF:
-      return props.getProperty( "MEAS_UNDEF" );
-    default:
-      return props.getProperty( "UNKNOWN" );
-    }
-  }
-
-  /**
-   * Helper that returns the appropriate archive type depending on the measure type.
-   * 
-   * @param measType
-   * @return archive type
-   */
-  public final static int measureTypeToArchiveType( int measType )
-  {
-    switch( measType )
-    {
-    case PSICompact.MEAS_RAINFALL:
-      return PSICompact.ARC_MIN15;
-    //      PSICompact.ARC_HOUR;
-    default:
-      return PSICompact.ARC_MIN15;
+      case PSICompact.MEAS_FLOW:
+        return props.getProperty( "MEAS_FLOW" );
+      case PSICompact.MEAS_LEVEL:
+        return props.getProperty( "MEAS_LEVEL" );
+      case PSICompact.MEAS_RAINFALL:
+        return props.getProperty( "MEAS_RAINFALL" );
+      case PSICompact.MEAS_TEMPERATUR:
+        return props.getProperty( "MEAS_TEMPERATUR" );
+      case PSICompact.MEAS_UNDEF:
+        return props.getProperty( "MEAS_UNDEF" );
+      default:
+        return props.getProperty( "UNKNOWN" );
     }
   }
 
   /**
    * Helper für die Übersetzung des valueType in eine leesbare String
-   * 
-   * @param valueType
-   * @return string
    */
   public final static String valueTypeToString( int valueType )
   {
@@ -158,22 +120,19 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( valueType )
     {
-    case PSICompact.TYPE_MEASUREMENT:
-      return props.getProperty( "TYPE_MEASUREMENT" );
-    case PSICompact.TYPE_VALUE:
-      return props.getProperty( "TYPE_VALUE" );
-    case PSICompact.TYPE_UNDEF:
-      return props.getProperty( "TYPE_UNDEF" );
-    default:
-      return props.getProperty( "UNKNOWN" );
+      case PSICompact.TYPE_MEASUREMENT:
+        return props.getProperty( "TYPE_MEASUREMENT" );
+      case PSICompact.TYPE_VALUE:
+        return props.getProperty( "TYPE_VALUE" );
+      case PSICompact.TYPE_UNDEF:
+        return props.getProperty( "TYPE_UNDEF" );
+      default:
+        return props.getProperty( "UNKNOWN" );
     }
   }
 
   /**
    * Helper für die Übersetzung des 'Unit' (ObjectMetaData) in eine leesbare String
-   * 
-   * @param unit
-   * @return string
    */
   private final static String unitToString( final int unit )
   {
@@ -181,53 +140,51 @@ public class PSICompactRepositoryFactory extends AbstractRepositoryFactory
 
     switch( unit )
     {
-    case PSICompact.SI_CUBIC_METER_PER_SECOND:
-      return props.getProperty( "SI_CUBIC_METER_PER_SECOND" );
-    case PSICompact.SI_KELVIN:
-      return props.getProperty( "SI_KELVIN" );
-    case PSICompact.SI_METER:
-      return props.getProperty( "SI_METER" );
-    case PSICompact.SI_QUBIC_METER:
-      return props.getProperty( "SI_QUBIC_METER" );
-    case PSICompact.SI_NO_UNIT:
-      return props.getProperty( "SI_NO_UNIT" );
-    case PSICompact.SI_UNDEF:
-      return props.getProperty( "SI_UNDEF" );
-    default:
-      return props.getProperty( "UNKNOWN" );
+      case PSICompact.SI_CUBIC_METER_PER_SECOND:
+        return props.getProperty( "SI_CUBIC_METER_PER_SECOND" );
+      case PSICompact.SI_KELVIN:
+        return props.getProperty( "SI_KELVIN" );
+      case PSICompact.SI_METER:
+        return props.getProperty( "SI_METER" );
+      case PSICompact.SI_QUBIC_METER:
+        return props.getProperty( "SI_QUBIC_METER" );
+      case PSICompact.SI_NO_UNIT:
+        return props.getProperty( "SI_NO_UNIT" );
+      case PSICompact.SI_UNDEF:
+        return props.getProperty( "SI_UNDEF" );
+      default:
+        return props.getProperty( "UNKNOWN" );
     }
   }
 
   /**
    * Creates the adequate converter between psi and kalypso units
    * 
-   * @param psiUnit
-   * @param kalypsoUnit
    * @return adequate converter
    */
   public final static IValueConverter getConverter( final int psiUnit, final String kalypsoUnit )
   {
     switch( psiUnit )
     {
-    case PSICompact.SI_KELVIN:
-      return KelvinCelsiusConverter.getInstance();
+      case PSICompact.SI_KELVIN:
+        return KelvinCelsiusConverter.getInstance();
 
-    case PSICompact.SI_CUBIC_METER_PER_SECOND:
-    case PSICompact.SI_METER:
-    case PSICompact.SI_QUBIC_METER:
-    {
-      final String strPsiUnit = unitToString( psiUnit );
+      case PSICompact.SI_CUBIC_METER_PER_SECOND:
+      case PSICompact.SI_METER:
+      case PSICompact.SI_QUBIC_METER:
+      {
+        final String strPsiUnit = unitToString( psiUnit );
 
-      if( !strPsiUnit.equals( kalypsoUnit ) )
-        return new SIConverter( strPsiUnit, kalypsoUnit );
-    }
+        if( !strPsiUnit.equals( kalypsoUnit ) )
+          return new SIConverter( strPsiUnit, kalypsoUnit );
+      }
 
-    case PSICompact.SI_NO_UNIT:
-    case PSICompact.SI_UNDEF:
-    default:
-    {
-      // empty
-    }
+      case PSICompact.SI_NO_UNIT:
+      case PSICompact.SI_UNDEF:
+      default:
+      {
+        // empty
+      }
     }
 
     return NoConverter.getInstance();

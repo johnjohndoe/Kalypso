@@ -44,7 +44,17 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 
 /**
- * WiskiObservationManipulator is able to extend the metadata information of an IObservation
+ * WiskiObservationManipulator is able to extend the metadata information of an IObservation with a WQ-Table found in
+ * the cache. The processing is as follows:
+ * <ul>
+ * <li>if the observation has no axes of type W, Q, or V, then it does nothing
+ * <li>if the observation already has a WQ-Table, then it does nothing
+ * <li>it tries to find a WQ-Table in the cache for the corresponding wiski-id
+ * <li>if a table is found, it is added to the metadata of the observation
+ * </ul>
+ * <p>
+ * Wichtig: Wenn ein Redeploy auf dem Server statt findet und die WQ-Fetching Vorgehensweise sich geändert hat, sollte
+ * der Wiski WQ-Cache gelöscht werden.
  * 
  * @author schlienger (31.05.2005)
  */
@@ -69,9 +79,9 @@ public class WiskiObservationManipulator implements IObservationManipulator
     // check if this timeserie is designed to have a WQ-Relation (it must
     // either has a W, Q, or V axis)
     final IAxis[] axes = obs.getAxisList();
-    if( !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_WATERLEVEL ) &&
-        !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_RUNOFF ) &&
-        !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_VOLUME ) )
+    if( !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_WATERLEVEL )
+        && !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_RUNOFF )
+        && !ObservationUtilities.hasAxisOfType( axes, TimeserieConstants.TYPE_VOLUME ) )
       return;
     
     // does nothing if WQ-Stuff already here
@@ -107,9 +117,10 @@ public class WiskiObservationManipulator implements IObservationManipulator
   }
 
   /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
    */
-  public void setInitializationData( IConfigurationElement config, String propertyName, Object data )
+  public void setInitializationData( IConfigurationElement config, String propertyName, Object data ) 
   {
     // empty
   }

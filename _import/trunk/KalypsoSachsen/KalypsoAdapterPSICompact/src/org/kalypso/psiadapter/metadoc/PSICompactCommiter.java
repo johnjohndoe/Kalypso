@@ -9,7 +9,6 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.metadoc.IMetaDocCommiter;
 import org.kalypso.metadoc.impl.MetaDocException;
 import org.kalypso.psiadapter.PSICompactFactory;
@@ -57,7 +56,7 @@ public class PSICompactCommiter implements IMetaDocCommiter
     final File goodDocFile = new File( goodDocFilePath );
     docFile.renameTo( goodDocFile );
 
-    final File xmlFile = new File( FileUtilities.nameWithoutExtension( goodDocFilePath ) + ".xml" );
+    final File xmlFile = new File( org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( goodDocFilePath ) + ".xml" );
 
     try
     {

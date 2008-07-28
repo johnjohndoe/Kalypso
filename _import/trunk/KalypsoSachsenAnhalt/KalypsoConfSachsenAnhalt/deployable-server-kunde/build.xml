@@ -115,8 +115,11 @@
                 <include name="**/CVS/*" />
                 <include name="**/.svn/**" />
             </fileset>
-
         </delete>
+            
+        <!-- remove BCE_Intern Directory -->
+        <delete dir="${dist.webdav}/prognose/${pName}/..BCE_intern"/>
+        
     </target>
 
     <target name="build-basic" depends="prepare">

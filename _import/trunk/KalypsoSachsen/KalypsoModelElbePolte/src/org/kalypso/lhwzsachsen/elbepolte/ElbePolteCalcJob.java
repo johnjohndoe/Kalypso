@@ -43,17 +43,18 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.lhwzsachsen.elbepolte.visitors.FileVisitorHwvs2Zml;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationConstants;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * 
@@ -63,7 +64,7 @@ import org.kalypso.services.calculation.service.CalcJobServiceException;
  * 
  * @author thuel2
  */
-public class ElbePolteCalcJob implements ICalcJob
+public class ElbePolteCalcJob implements ISimulation
 {
 
   /**
@@ -71,10 +72,10 @@ public class ElbePolteCalcJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
+      throws SimulationException
   {
-    final File outputDir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+    final File outputDir = new File( tmpdir, ISimulationConstants.OUTPUT_DIR_NAME );
     outputDir.mkdirs();
 
     final File logfile = new File( outputDir, "elbePolte.log" );
@@ -92,7 +93,7 @@ public class ElbePolteCalcJob implements ICalcJob
 
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
         pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
       }
@@ -115,7 +116,7 @@ public class ElbePolteCalcJob implements ICalcJob
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
         pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
       }
@@ -129,7 +130,7 @@ public class ElbePolteCalcJob implements ICalcJob
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
         pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
       }
@@ -143,13 +144,13 @@ public class ElbePolteCalcJob implements ICalcJob
       catch( final Exception e )
       {
         e.printStackTrace();
-        throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
+        throw new SimulationException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
       }
 
       monitor.setProgress( 34 );
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, ElbePolteConst.CALC_CANCELLED );
         pw.println( ElbePolteConst.CALC_CANCELLED );
         return;
       }
@@ -162,15 +163,15 @@ public class ElbePolteCalcJob implements ICalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
+      throw new SimulationException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
     }
     finally
     {
       IOUtils.closeQuietly( pw );
       IOUtils.closeQuietly( fw );
       resultEater.addResult( "LOG", logfile );
-      resultEater.addResult( "ERGEBNISSE", new File( outputDir, ICalcServiceConstants.RESULT_DIR_NAME ) );
-      monitor.setFinishInfo( ICalcServiceConstants.FINISHED, ElbePolteConst.CALC_FINISHED );
+      resultEater.addResult( "ERGEBNISSE", new File( outputDir, ISimulationConstants.RESULT_DIR_NAME ) );
+      monitor.setFinishInfo( IStatus.INFO, ElbePolteConst.CALC_FINISHED );
     }
   }
 
@@ -207,8 +208,8 @@ public class ElbePolteCalcJob implements ICalcJob
    * @param monitor
    * @param nativeOutDir
    */
-  private void startCalculation( File exeDir, PrintWriter pw, ICalcMonitor monitor, File nativeOutDir )
-      throws CalcJobServiceException
+  private void startCalculation( File exeDir, PrintWriter pw, ISimulationMonitor monitor, File nativeOutDir )
+      throws SimulationException
   {
     final String commandString = exeDir + File.separator + "HWObereElbe.exe";
 
@@ -222,12 +223,12 @@ public class ElbePolteCalcJob implements ICalcJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausführen der HWObereElbe.exe", e );
+      throw new SimulationException( "Fehler beim Ausführen der HWObereElbe.exe", e );
     }
     catch( final ProcessTimeoutException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausführen der HWObereElbe.exe", e );
+      throw new SimulationException( "Fehler beim Ausführen der HWObereElbe.exe", e );
     }
     finally
     {
@@ -274,7 +275,7 @@ public class ElbePolteCalcJob implements ICalcJob
       }
       catch( Exception e )
       {
-        throw new CalcJobServiceException( e.getLocalizedMessage(), e );
+        throw new SimulationException( e.getLocalizedMessage(), e );
       }
     }
   }

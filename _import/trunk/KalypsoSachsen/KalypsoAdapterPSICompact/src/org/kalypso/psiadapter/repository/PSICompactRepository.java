@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.psiadapter.PSICompactFactory;
+import org.kalypso.psiadapter.util.IWQProvider;
 import org.kalypso.psiadapter.util.ObjectInfoLengthComparator;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -13,6 +14,7 @@ import org.kalypso.repository.RepositoryException;
 import de.psi.go.lhwz.ECommException;
 import de.psi.go.lhwz.PSICompact;
 import de.psi.go.lhwz.PSICompact.ObjectInfo;
+import de.psi.go.lhwz.PSICompact.ObjectMetaData;
 
 /**
  * Spezifisches Repository für die PSICompact Struktur.
@@ -21,6 +23,8 @@ import de.psi.go.lhwz.PSICompact.ObjectInfo;
  */
 public class PSICompactRepository extends AbstractRepository
 {
+  public static String IDENTIFIER = "psicompact://";
+
   private PSICompactItem m_psiRoot = null;
 
   public PSICompactRepository( String name, boolean readOnly ) throws RepositoryException
@@ -35,15 +39,18 @@ public class PSICompactRepository extends AbstractRepository
    */
   private final void buildStructure( final PSICompactItem rootItem, final Map<String, PSICompactItem> nodes, int valueType ) throws ECommException
   {
-    final ObjectInfo[] objInfos = PSICompactFactory.getConnection().getInfo( valueType );
+    final PSICompact psiCompact = PSICompactFactory.getConnection();
+    final ObjectInfo[] objInfos = psiCompact.getInfo( valueType );
 
     java.util.Arrays.sort( objInfos, new ObjectInfoLengthComparator() );
-
 
     for( int k = 0; k < objInfos.length; k++ )
     {
       final ObjectInfo info = objInfos[k];
       final String infoID = info.getId().trim();
+
+      final ObjectMetaData objectMetaData = psiCompact.getObjectMetaData( infoID );
+      final int[] archiveData = objectMetaData.getArchiveData();
 
       final String[] path = infoID.split( "\\." );
 
@@ -51,11 +58,11 @@ public class PSICompactRepository extends AbstractRepository
       PSICompactItem parent = rootItem;
       for( int i = 0; i < path.length; i++ )
       {
-        if( path[i].length() == 0 )
+        final String pathSegment = path[i];
+        if( pathSegment.length() == 0 )
           continue;
 
         final String nodeID = Arrays.implode( path, ".", 0, i ).trim();
-
         if( nodeID.length() == 0 )
           continue;
 
@@ -63,30 +70,96 @@ public class PSICompactRepository extends AbstractRepository
           parent = nodes.get( nodeID );
         else
         {
-          final PSICompactItem n = new PSICompactItem( parent, path[i], nodeID, info, valueType );
+          final String name = pathSegment;
+          final String obsName = constructName( path, i );
 
-          // gleich parent item aktualisieren (wird nicht von der Child gemacht,
-          // deswegen hier)
-          if( parent != null )
-            parent.addChild( n );
+          final int defaultArcType;
+          if( archiveData == null || archiveData.length == 0 )
+            defaultArcType = PSICompact.ARC_MIN15; // for backwards compability, if unknown use MIN15
+          else
+            defaultArcType = archiveData[0]; // just take the one with the smallest resolution (the archivedata is
+          // considered to be sorted)
 
-          nodes.put( nodeID, n );
+          final PSICompactItem newNode = addNewItem( name, obsName, valueType, info, objectMetaData, parent, nodeID,
+              defaultArcType, false );
+          nodes.put( nodeID, newNode );
 
-          parent = n;
+          final IWQProvider wqProvider = PSICompactFactory.getWQProvider();
+          if( wqProvider.hasWQTable( nodeID ) )
+            addAtNode( nodes, obsName, valueType, info, objectMetaData, newNode, nodeID, defaultArcType );
+
+          /* Add archive sub-nodes: only if at the end of a real path */
+          if( i == path.length - 1 && i > 4 )
+          {
+            if( archiveData != null )
+            {
+              for( int j = 0; j < archiveData.length; j++ )
+              {
+                final int arcType = archiveData[j];
+
+                final String arcName = PSICompactUtilitites.getLabelForArcType( arcType );
+                final String arcObsName = obsName;
+                final String arcNodeID = nodeID + "#" + PSICompactUtilitites.getIdForArcType( arcType );
+
+                final PSICompactItem newArcNode = addNewItem( arcName, arcObsName, valueType, info, objectMetaData,
+                    newNode, arcNodeID, arcType, false );
+                nodes.put( arcNodeID, newArcNode );
+
+                // The archive types automaticallay gets this option, if the default has it; we do not need to configure
+                // an at-file for each archive
+                if( wqProvider.hasWQTable( nodeID ) )
+                  addAtNode( nodes, arcObsName, valueType, info, objectMetaData, newArcNode, arcNodeID, arcType );
+              }
+            }
+          }
+
+          parent = newNode;
         }
       }
     }
+  }
 
-    // should never happen
-//    // abnormal case...
-//    if( parent == null )
-//      return new PSICompactItem( null, "Keine Struktur in PSICompact...", "<Kein ID>", new PSICompact.ObjectInfo(), 0 );
+  /**
+   * Adds an at-node to a node, if an at-entry in the config exists.
+   */
+  private void addAtNode( final Map nodes, final String obsName, int valueType, final ObjectInfo info,
+      final ObjectMetaData objectMetaData, final PSICompactItem parent, final String nodeID, final int defaultArcType )
+  {
+    final String atNodeId = nodeID + "#at";
+    final PSICompactItem atNode = addNewItem( "at", obsName, valueType, info, objectMetaData, parent, atNodeId,
+        defaultArcType, true );
+    nodes.put( atNodeId, atNode );
+  }
 
-    // create the root parent
-//    while( parent.getParent() != null )
-//      parent = (PSICompactItem)parent.getParent();
+  /**
+   * Creates a new item and adds it as a child to the given parent.
+   * 
+   * @param arcType
+   * 
+   * @return The newly created item.
+   */
+  private PSICompactItem addNewItem( final String name, final String obsName, int valueType, final ObjectInfo info,
+      final ObjectMetaData objectMetaData, PSICompactItem parent, final String nodeID, final int arcType,
+      final boolean useAt )
+  {
+    final PSICompactItem newItem = new PSICompactItem( this, parent, name, nodeID, info, valueType, obsName,
+        objectMetaData, arcType, useAt );
 
-//    return parent;
+    // gleich parent item aktualisieren (wird nicht von der Child gemacht,
+    // deswegen hier)
+    if( parent != null )
+      parent.addChild( newItem );
+
+    return newItem;
+  }
+
+  private String constructName( final String[] path, final int i )
+  {
+    // HACK: use path-segment of parent instead of own, if we are a leaf...
+    if( i == 6 )
+      return path[5];
+
+    return path[i];
   }
 
   /**
@@ -98,6 +171,7 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
+   * 
    * @see org.kalypso.repository.IRepositoryItem#getChildren()
    */
   public IRepositoryItem[] getChildren()
@@ -116,7 +190,7 @@ public class PSICompactRepository extends AbstractRepository
    */
   public String getIdentifier()
   {
-    return "psicompact://";
+    return IDENTIFIER;
   }
 
   /**
@@ -126,7 +200,8 @@ public class PSICompactRepository extends AbstractRepository
   {
     try
     {
-      final PSICompactItem rootItem = new PSICompactItem( null, "", "", null, -1 );
+      final PSICompactItem rootItem = new PSICompactItem( this, null, "", "", null, -1, "", null, PSICompact.ARC_UNDEF,
+          false );
       final Map<String, PSICompactItem> nodes = new TreeMap<String, PSICompactItem>();
       
 //      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
@@ -134,16 +209,6 @@ public class PSICompactRepository extends AbstractRepository
       buildStructure( rootItem, nodes, PSICompact.TYPE_MEASUREMENT );
       buildStructure( rootItem, nodes, PSICompact.TYPE_VALUE );
 
-      // this should never happen any more?
-//      if( nodeMeasurements != nodeForecasts )
-//      {
-//        Logger.getLogger( getClass().getName() ).info(
-//            "PSICompactRepository - Achtung: ungleiche Nodes bei Gemessene und Vorhergesagte." );
-//
-//        m_psiRoot = new PSICompactItem( null, "Fehler...", "Fehler", null, 0 );
-//      }
-//      else
-//        m_psiRoot = nodeMeasurements;
       m_psiRoot = rootItem;
 
       fireRepositoryStructureChanged();

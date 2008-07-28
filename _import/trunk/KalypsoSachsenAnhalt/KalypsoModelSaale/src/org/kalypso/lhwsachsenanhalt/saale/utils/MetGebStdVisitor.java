@@ -50,7 +50,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -58,7 +57,6 @@ import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Validator;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -116,7 +114,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 
   private final Map<String, List<MetGebGewichtung>> m_metGebHash = new HashMap<String, List<MetGebGewichtung>>();
 
-  private Map<String, Target> m_dwdTargetMap = new HashMap<String, Target>();
+  private final Map<String, Target> m_dwdTargetMap = new HashMap<String, Target>();
 
   private String m_link;
 
@@ -152,10 +150,9 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     try
     {
       m_dwdConf = OF.createDwdzmlConf();
-      // TODO: check these values
       m_dwdConf.setDefaultStatusValue( 1 );
       m_dwdConf.setDwdKey( 424 );
-      m_dwdConf.setNumberOfCells( 3886 );
+      m_dwdConf.setNumberOfCells( 676 );
 
       final URL contextUrl = new URL( context );
       final URL metGebUrl = new URL( contextUrl, metGebPath );
@@ -177,10 +174,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
         // DWD Rasterzellen sammeln
         final Target target = OF.createDwdzmlConfTarget();
         final List<Target.Map> mapList = target.getMap();
-        createMapType( mapList, csv.getItem( i, 17 ) );
-        createMapType( mapList, csv.getItem( i, 18 ) );
-        createMapType( mapList, csv.getItem( i, 19 ) );
-        createMapType( mapList, csv.getItem( i, 20 ) );
+        createMapTypes( mapList, csv, i );
         m_dwdTargetMap.put( id, target );
       }
     }
@@ -190,18 +184,28 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     }
   }
 
-  private void createMapType( final List<Target.Map> mapList, final String cellPostStr )
+  private void createMapTypes( final List<Target.Map> mapList, final CSV csv, final int index )
   {
-    final int cellPos = Integer.parseInt( cellPostStr );
-    if( cellPos == 0 )
-      return;
+    final List<Integer> cellPoses = new ArrayList<Integer>();
+    for( int i = 0; i < 4; i++ )
+    {
+      final String cellPosStr = csv.getItem( index, i + 17 );
+      final Integer cellPos = Integer.valueOf( cellPosStr );
+      if( cellPos.intValue() != 0 )
+        cellPoses.add( cellPos );
+    }
 
-    final Target.Map mapType = OF.createDwdzmlConfTargetMap();
-    // immer Faktor 1.0 im Saale-Modell
-    mapType.setFactor( 1 );
-    mapType.setCellPos( cellPos );
+    final double factor = 1.0 / cellPoses.size();
+    for( final Object element : cellPoses )
+    {
+      final Integer cellPos = (Integer) element;
 
-    mapList.add( mapType );
+      final Target.Map mapType = OF.createDwdzmlConfTargetMap();
+      mapType.setFactor( factor );
+      mapType.setCellPos( cellPos.intValue() - 1 );
+
+      mapList.add( mapType );
+    }
   }
 
   /**
@@ -214,7 +218,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     addGewichtung( f, pnr );
     addDwd2Zml( f, pnr );
 
-    // dont recurse, if not we may descent into the gewichtung-elements
+    // do not recurse, if not we may descent into the gewichtung-elements
     return false;
   }
 
@@ -222,14 +226,22 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
   {
     final TimeseriesLinkType targetLink = (TimeseriesLinkType) f.getProperty( m_dwd2ZmlTargetLink );
     if( targetLink == null )
+    {
       System.out.println( "Kein DWD-Target-Link (" + m_dwd2ZmlTargetLink + ") für Feature mit ID: " + f.getId() );
+      return;
+    }
 
     // target types are already created, just set the target link and add it into the dwdConf
     final Target target = m_dwdTargetMap.get( pnr );
-    target.setTargetZR( targetLink.getHref() );
+    if( target == null )
+      System.out.println( "Kein DWD-Target für Feature mit ID: " + f.getId() );
+    else
+    {
+      target.setTargetZR( targetLink.getHref() );
 
-    final List<Target> targetList = m_dwdConf.getTarget();
-    targetList.add( target );
+      final List<Target> targetList = m_dwdConf.getTarget();
+      targetList.add( target );
+    }
   }
 
   private void addGewichtung( final Feature f, final String pnr )
@@ -239,7 +251,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     final IFeatureType elementType = ftp.getTargetFeatureType();
 
     // put values into gml
-    final List metGebList = m_metGebHash.get( pnr );
+    final List<MetGebGewichtung> metGebList = m_metGebHash.get( pnr );
     if( metGebList == null )
     {
       System.out.println( "Keine Faktoren für PNR: " + pnr );
@@ -250,9 +262,8 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     list.clear();
 
     int count = 0;
-    for( final Iterator iter = metGebList.iterator(); iter.hasNext(); )
+    for( final MetGebGewichtung mgg : metGebList )
     {
-      final MetGebGewichtung mgg = (MetGebGewichtung) iter.next();
       final double weight = mgg.getWeight();
       final String targetId = mgg.getTargetId();
 
@@ -284,7 +295,7 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
 
       reader.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
 
@@ -305,9 +316,6 @@ public class MetGebStdVisitor implements IPropertiesFeatureVisitor
     OutputStreamWriter writer = null;
     try
     {
-      final Validator validator = JC.createValidator();
-      validator.validate( m_dwdConf );
-
       final Marshaller marshaller = JC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 

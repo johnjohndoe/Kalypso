@@ -43,6 +43,7 @@ package org.kalypso.lhwzsachsen.spree;
 
 import java.io.File;
 import java.net.URL;
+import java.util.logging.Level;
 
 import junit.framework.TestCase;
 
@@ -122,7 +123,7 @@ public class SpreeCalcJobTest extends TestCase
 
     final ILogger logger = new ILogger()
     {
-      public void log( String message )
+      public void log( final Level level, final int code, final String message )
       {
         System.out.println( message );
       }

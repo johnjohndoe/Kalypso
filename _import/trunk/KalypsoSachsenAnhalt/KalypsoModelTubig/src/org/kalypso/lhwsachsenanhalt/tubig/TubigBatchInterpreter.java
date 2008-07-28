@@ -92,12 +92,12 @@ public class TubigBatchInterpreter
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -120,7 +120,7 @@ public class TubigBatchInterpreter
     catch( final FileNotFoundException e )
     {
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {
@@ -231,6 +231,10 @@ public class TubigBatchInterpreter
                         }
                         else if( sZeileUpper.startsWith( "BODESTEU" ) )
                         {
+                          // in diesen Zweig sollte das Modell gar nicht mehr kommen...
+                          // hierfür Eintrag in CATALINA.POLICY notwendig
+                          // BodeModell (eigentlich nur: bodesteu.exe ist eine 16 BIT-Applikation)
+                          //permission java.io.FilePermission "<<ALL FILES>>", "execute";
                           sCmd = TubigConst.START_IN_CMD + absolutePath + File.separator + sZeile;
                         }
                         else
@@ -257,8 +261,8 @@ public class TubigBatchInterpreter
                             pwLog.println( TubigConst.MESS_BERECHNUNG_ABGEBROCHEN );
                           }
 
-                          // TODO Monika Ende-Token **ende** noch weiterverabeiten
-                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr, cancelable );
+                          // TODO Monika Ende-Token **ende** noch weiterverabeiten (BODESTEU liefert aber noch keine Ausgabe)
+                          bExeEnde = TubigCopyUtils.copyAndAnalyzeStreams( swInStream, pwLog, pwErr );
                         }
                       }
                     }
@@ -282,14 +286,14 @@ public class TubigBatchInterpreter
       pwErr.println( "Fehlergrund (IOException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     catch( final ProcessTimeoutException e )
     {
       pwErr.println( "Fehlergrund (ProcessTimeoutException): " + e.getCause() );
       pwErr.println( "Fehlermeldung: " + e.getLocalizedMessage() );
       e.printStackTrace();
-      throw new TubigBatchException( cancelable, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     finally
     {

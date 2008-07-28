@@ -47,21 +47,20 @@ public class TSMap
   }
 
   /** Zeitreihenname (z.B. W_SCHIRG) -> [date->value] */
-  final Map m_map = new HashMap();
+  final Map<String, Map<Date, Double>> m_map = new HashMap<String, Map<Date, Double>>();
 
   /** sortiert die Daten nach der Zeit */
-  final Set m_dateSet = new TreeSet();
+  final Set<Date> m_dateSet = new TreeSet<Date>();
 
   /** name (String) -> IObservation */
-  private Map m_obsMap = new HashMap();
+  private Map<String, IObservation> m_obsMap = new HashMap<String, IObservation>();
 
   /** name (String) -> accuracy (Double) */
-  private Map m_accuracyMap = new HashMap();
+  private Map<String, Double> m_accuracyMap = new HashMap<String, Double>();
 
   private double m_defaultAccuracy = LhwzHelper.getDefaultUmhuellendeAccuracy();
 
-  public void addObservation( final IObservation obs, final String name ) throws SensorException,
-      NoSuchElementException
+  public void addObservation( final IObservation obs, final String name ) throws SensorException, NoSuchElementException
   {
     final IAxis[] axisList = obs.getAxisList();
 
@@ -73,8 +72,8 @@ public class TSMap
 
     for( int j = 0; j < model.getCount(); j++ )
     {
-      final Date date = (Date)model.getElement( j, dateAxis );
-      final Number val = valueAxis == null ? null : (Number)model.getElement( j, valueAxis );
+      final Date date = (Date) model.getElement( j, dateAxis );
+      final Number val = valueAxis == null ? null : (Number) model.getElement( j, valueAxis );
       final Double value = val == null ? null : new Double( val.doubleValue() );
 
       putValue( name, date, value );
@@ -85,36 +84,36 @@ public class TSMap
 
   public void putValue( final String name, final Date date, final Double value )
   {
-    final Map dateToValueMap = getMap( name );
+    final Map<Date, Double> dateToValueMap = getMap( name );
 
     m_dateSet.add( date );
     dateToValueMap.put( date, value );
   }
 
-  private Map getMap( final String name )
+  private Map<Date, Double> getMap( final String name )
   {
-    final Map map = (Map)m_map.get( name );
+    final Map<Date, Double> map = m_map.get( name );
     if( map != null )
       return map;
 
-    final HashMap newMap = new HashMap();
+    final Map<Date, Double> newMap = new HashMap<Date, Double>();
     m_map.put( name, newMap );
     return newMap;
   }
 
-  public Date[] getDates()
+  public Date[] getDates( )
   {
-    return (Date[])m_dateSet.toArray( new Date[m_dateSet.size()] );
+    return m_dateSet.toArray( new Date[m_dateSet.size()] );
   }
 
-  public Map getTimeserie( final String id )
+  public Map<Date,Double> getTimeserie( final String id )
   {
-    return (Map)m_map.get( id );
+    return m_map.get( id );
   }
 
   public MetadataList getMetadataFor( final String name )
   {
-    final IObservation oldObs = (IObservation)m_obsMap.get( name );
+    final IObservation oldObs = m_obsMap.get( name );
     return oldObs == null ? null : oldObs.getMetadataList();
   }
 
@@ -125,7 +124,7 @@ public class TSMap
 
   public double getAccuracy( final String name )
   {
-    final Double accuracy = (Double)m_accuracyMap.get( name );
+    final Double accuracy = m_accuracyMap.get( name );
     if( accuracy == null )
       return m_defaultAccuracy;
 

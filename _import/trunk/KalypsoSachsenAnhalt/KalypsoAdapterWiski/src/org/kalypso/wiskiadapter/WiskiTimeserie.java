@@ -2,6 +2,7 @@ package org.kalypso.wiskiadapter;
 
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,9 +73,7 @@ public class WiskiTimeserie implements IObservation
 
   private DateRange m_cachedDr = null;
 
-  private final TimeZone m_tzDest;
-
-  private final static Logger LOG = Logger.getLogger( WiskiTimeserie.class.getName() );
+  private final Logger LOG = Logger.getLogger( WiskiTimeserie.class.getName() );
 
   public WiskiTimeserie( final TsInfoItem tsinfo )
   {
@@ -87,7 +86,7 @@ public class WiskiTimeserie implements IObservation
     m_axes[0] = new DefaultAxis( TimeserieUtils.getName( TimeserieConstants.TYPE_DATE ), TimeserieConstants.TYPE_DATE,
         TimeserieUtils.getUnit( TimeserieConstants.TYPE_DATE ), Date.class, true );
 
-    final String wiskiType = tsinfo.getWiskiType();
+    final String wiskiType = tsinfo.getWiskiParameterType();
     final String kalypsoType = WiskiUtils.wiskiType2Kalypso( wiskiType );
     final String wiskiUnit = tsinfo.getWiskiUnit();
     final String kalypsoUnit = TimeserieUtils.getUnit( kalypsoType );
@@ -97,12 +96,6 @@ public class WiskiTimeserie implements IObservation
     m_axes[1] = new DefaultAxis( TimeserieUtils.getName( kalypsoType ), kalypsoType, kalypsoUnit, Double.class, false );
 
     m_axes[2] = KalypsoStatusUtils.createStatusAxisFor( m_axes[1], true );
-
-    final String tzName = tsinfo.getRepository().getProperty( TimeZone.class.getName() );
-    if( tzName != null )
-      m_tzDest = TimeZone.getTimeZone( tzName );
-    else
-      m_tzDest = TimeZone.getDefault();
   }
 
   /**
@@ -221,6 +214,11 @@ public class WiskiTimeserie implements IObservation
    */
   public ITuppleModel getValues( final IRequest req ) throws SensorException
   {
+    // if true, incomming and outgoing values are dumped to System.out
+    // should be false normally
+    /* We would like to fetch true/false from the config files, but this is not easily made.... */
+    final boolean bDump = false;
+
     final DateRange dr;
 
     final WiskiRepository rep = (WiskiRepository)m_tsinfo.getRepository();
@@ -234,12 +232,28 @@ public class WiskiTimeserie implements IObservation
             WiskiUtils.getProperty( WiskiUtils.PROP_NUMBER_OF_DAYS, "7" ) ).intValue() );
       }
       else
-        dr = req.getDateRange();
+      {
+        final DateRange dateRange = req.getDateRange();
+        final WiskiTimeConverter timeConverter = new WiskiTimeConverter( TimeZone.getDefault(), m_tsinfo );
+
+        final Date from = timeConverter.kalypsoToWiski( dateRange.getFrom() );
+        final Date to = timeConverter.kalypsoToWiski( dateRange.getTo() );
+
+        final DateRange wiskiDr = new DateRange( from, to );
+        dr = wiskiDr;
+      }
 
       if( dr.equals( m_cachedDr ) )
         return m_cachedValues;
 
       m_cachedDr = dr;
+
+      if( bDump )
+      {
+        System.out.println( "" );
+        System.out.println( "Fetching timeserie: " + getName() );
+        System.out.println( "DateRange: " + dr );
+      }
 
       try
       {
@@ -253,6 +267,9 @@ public class WiskiTimeserie implements IObservation
 
         // fetch WQTable now since we know the time-range
         fetchWQTable( getMetadataList(), dr.getFrom(), dr.getTo(), useType );
+
+        if( bDump )
+          System.out.println( "useType: " + useType );
       }
       catch( final Exception e )
       {
@@ -262,10 +279,36 @@ public class WiskiTimeserie implements IObservation
       final GetTsData call = new GetTsData( m_tsinfo.getWiskiId(), dr );
       rep.executeWiskiCall( call );
 
-      if( call.getData() == null )
+      final LinkedList data = call.getData();
+      if( data == null )
         m_cachedValues = new SimpleTuppleModel( getAxisList() );
       else
-        m_cachedValues = new WiskiTuppleModel( getAxisList(), call.getData(), m_cv, call.getTimeZone(), m_tzDest );
+      {
+        final WiskiTimeConverter timeConverter = new WiskiTimeConverter( call.getTimeZone(), m_tsinfo );
+        m_cachedValues = new WiskiTuppleModel( getAxisList(), data, m_cv, timeConverter );
+
+        if( bDump )
+          System.out.println( "timeConverter: " + timeConverter );
+      }
+
+      if( bDump )
+      {
+        if( data != null )
+        {
+          System.out.println( "Data retrieved from WDP: " );
+          for( final Iterator iter = data.iterator(); iter.hasNext(); )
+          {
+            final Object elt = iter.next();
+            System.out.println( elt );
+          }
+        }
+      
+        System.out.println();
+        System.out.println( "Generated observation tuple:" );
+        System.out.println( ObservationUtilities.dump( m_cachedValues, "\t" ) );
+        System.out.println();
+        System.out.println();
+      }
 
       return m_cachedValues;
     }
@@ -281,6 +324,13 @@ public class WiskiTimeserie implements IObservation
    */
   public void setValues( final ITuppleModel values ) throws SensorException
   {
+    // if true, incomming and outgoing values are dumped to System.out
+    // should be false normally
+    final boolean bDump = false;
+
+    if( bDump )
+      System.out.println( ObservationUtilities.dump( values, "\t" ) );
+
     if( !isEditable() )
       throw new SensorException( toString() + " ist nicht editierbar! Werte. "
           + "Werte dürfen nicht geschrieben werden." );
@@ -290,9 +340,9 @@ public class WiskiTimeserie implements IObservation
     obs.setValues( values );
 
     // filter values in order to comply with the wiski specification
-    final int timeUnit = m_tsinfo.getWiskiDistUnitAsCalendarField();
+    final int timeUnit = WiskiUtils.getDistUnitCalendarField( m_tsinfo.getWiskiDistUnit() );
     final int timeStep = m_tsinfo.getWiskiDistValue();
-    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, 0,
+    final InterpolationFilter intfil = new InterpolationFilter( timeUnit, timeStep, false, "0",
         KalypsoStati.STATUS_USERMOD.intValue() );
     intfil.initFilter( null, obs, null );
 
@@ -308,7 +358,7 @@ public class WiskiTimeserie implements IObservation
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
 
     // find corresponding axis type
-    final String wiskiType = m_tsinfo.getWiskiType();
+    final String wiskiType = m_tsinfo.getWiskiParameterType();
     final String kalypsoType = WiskiUtils.wiskiType2Kalypso( wiskiType );
     final IAxis valueAxis;
     try
@@ -321,8 +371,8 @@ public class WiskiTimeserie implements IObservation
           + ". Keine Achse vom Typ " + kalypsoType + " wurde gefunden." );
     }
 
-    //DateFormat df = DateFormat.getInstance();
-    //df.setTimeZone( m_tzDest );
+    final DateFormat dfDump = DateFormat.getInstance();
+    dfDump.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
 
     final ITuppleModel filteredValues = intfil.getValues( null );
     for( int ix = 0; ix < filteredValues.getCount(); ix++ )
@@ -332,7 +382,8 @@ public class WiskiTimeserie implements IObservation
       final Date date = (Date)filteredValues.getElement( ix, dateAxis );
       final Number value = (Number)filteredValues.getElement( ix, valueAxis );
 
-      //System.out.println( "writing wiski: " + date.getTime() + " " + df.format( date ) + " " + value );
+      if( bDump )
+        System.out.println( "writing wiski: " + date.getTime() + " " + dfDump.format( date ) + " " + value );
 
       row.put( "timestamp", new Timestamp( date.getTime() ) );
       row.put( "tsc_value0", new Double( value.doubleValue() ) );
@@ -344,13 +395,8 @@ public class WiskiTimeserie implements IObservation
     // compose setTsData HashMap
 
     // utc offset in seconds
-    final Date firstDate;
-    if( filteredValues.getCount() > 0 )
-      firstDate = (Date)filteredValues.getElement( 0, dateAxis );
-    else
-      firstDate = new Date();
-
-    final int utcOffset = m_tzDest.getOffset( firstDate.getTime() ) / 1000;
+    // always use offset 0
+    final int utcOffset = 0; //m_tzDest.getOffset( firstDate.getTime() ) / 1000;
     value_tsinfo_map.put( "utcoffset", new Integer( utcOffset ) );
 
     //System.out.println( "utcoffset: " + utcOffset );
@@ -425,11 +471,41 @@ public class WiskiTimeserie implements IObservation
   }
 
   /**
-   * Helper for translating Wiski Rating-Tables into Kalypso Metadata
+   * Helper for translating Wiski rating-table into a Kalypso WQ-Table as Metadata
+   * <p>
+   * The rating table performs conversion from a "sourceType" to a "destType". The sourceType is given from the value
+   * axis found in this observation. If the sourceType is:
+   * <ul>
+   * <li>Q, then the destType is W
+   * <li>V, then the destType is W
+   * <li>W, then the destType is derived from the requestType
+   * </ul>
+   * <p>
+   * The search for a rating table is performed the following way
+   * <nl>
+   * <li>the current wiski parameter is asked if it has a rating table
+   * <li>if that's not the case, depending on the destType, the sibling wiski group (which can be Wasserstand,
+   * Durchfluss or Inhalt, see config.ini in the resources) is asked for the same station and a rating table is searched
+   * there
+   * <li>if neither here a table is found, the rating table cache of kalypso is asked
+   * <li>if a table is found in wiski, it is first cached.
+   * <li>the table (if any) is then converted into WQTable metadata.
+   * </nl>
+   * <p>
+   * The rating table cache is only asked if nothing is found in the live system, thus as a last mean.
    */
   private void fetchWQTable( final MetadataList metadata, final Date dateFrom, final Date dateTo,
       final String requestType )
   {
+    // HACK: Q-Förderstrom (Speicherabgabe Bode/Ilse) darf eigentlich keine WQ-Beziehung haben
+    final String paramName = m_tsinfo.getStationParameterName();
+    if( paramName != null && paramName.startsWith( "QF" ) )
+    {
+      LOG.info( "Type QF detected, will not search a Rating Table for: " + getName() );
+
+      return;
+    }
+
     final String sourceType = m_axes[1].getType();
     final String destType;
     if( sourceType.equals( TimeserieConstants.TYPE_RUNOFF ) )
@@ -446,36 +522,32 @@ public class WiskiTimeserie implements IObservation
     WQTableSet wqTableSet = null;
 
     // 1. first try: using the normal way (our tsinfo)
-    WQTable wqt = internFetchTable( m_tsinfo, rep, dateFrom, dateTo );
+    WQTable wqt = fetchWQTableIntern( m_tsinfo, rep, dateFrom, dateTo );
     if( wqt == null )
     {
-      LOG.info( "Trying to find WQ-Table with siblings for " + getName() );
+      // TODO: das macht keinen Sinn, weil fetchWQTableIntern nur noch über die Station sucht
+      // wenn aber die Station keine Schlüsselkurve hat, wird man hier auch nichts mehr finden
+      LOG.info( "Trying to find WQ-Table with sibling for " + getName() );
       
       // 2. this failed, so next try is using sibling of other type
       // which might also contain a usable rating table
 
       // try with sibling of other parameter
-      final String prop = WiskiUtils.getProperty( "WQSEARCH_" + m_tsinfo.getWiskiGroupName() );
+      final String prop = WiskiUtils.getProperty( "WQSEARCH_" + destType );
       if( prop != null )
       {
-        // step through the parameters that are possible siblings of the current one
-        final String[] parameters = prop.split( ";" );
-        for( int i = 0; i < parameters.length; i++ )
-        {
-          LOG.info( "Sibling " + parameters[i] + " is being asked for WQ-Table" );
+        LOG.info( "Sibling " + prop + " is being asked for WQ-Table" );
           
           try
           {
-            final TsInfoItem tsi = m_tsinfo.findSibling( parameters[i] );
+          final TsInfoItem tsi = m_tsinfo.findSibling( prop );
             if( tsi != null )
             {
-              wqt = internFetchTable( tsi, rep, dateFrom, dateTo );
+            wqt = fetchWQTableIntern( tsi, rep, dateFrom, dateTo );
               if( wqt != null )
-              {
-                LOG.info( "Found WQ-Table in sibling!" );
-                
-                break;
-              }
+              LOG.info( "Found WQ-Table in sibling: " + prop );
+            else
+              LOG.info( "Did not find WQ-Table in sibling: " + prop );
             }
           }
           catch( final RepositoryException e )
@@ -485,7 +557,6 @@ public class WiskiTimeserie implements IObservation
           }
         }
       }
-    }
 
     if( wqt != null )
     {
@@ -536,14 +607,25 @@ public class WiskiTimeserie implements IObservation
   /**
    * Helper: tries to load the wq table from wiski. If fails or if no table found, null is returned
    */
-  private WQTable internFetchTable( final TsInfoItem tsinfo, final WiskiRepository rep, final Date from, final Date to )
+  private WQTable fetchWQTableIntern( final TsInfoItem tsinfo, final WiskiRepository rep, final Date from, final Date to )
   {
-    final String type = KiWWDataProviderInterface.OBJECT_PARAMETER;
+    //    final String type = KiWWDataProviderInterface.OBJECT_PARAMETER;
+    //
+    //    LOG.info( "Calling getRatingTables() with param-id= " + tsinfo.getWiskiParameterId() + " validity= " + to + "
+    // type= "
+    //        + type + " station-id= " + tsinfo.getWiskiStationId() + " tsinfo-id= " + tsinfo.getWiskiIdAsString() );
+    //
+    //    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiParameterId(), to, type );
 
-    LOG.info( "Calling getRatingTables() with id= " + tsinfo.getWiskiParameterId() + " validity= " + to + " type= "
-        + type );
+    // TODO: suche über station ist schlecht, weil diese mehrere Schlüsselkurven unterschliedlicher typen haben kann
+    // Also besser den parameter auch berücksichtigen!
+    final String type = KiWWDataProviderInterface.OBJECT_STATION;
 
-    final GetRatingTables call = new GetRatingTables( tsinfo.getWiskiParameterId(), to, type );
+    LOG.info( "Calling getRatingTables() with param-id= " + tsinfo.getWiskiParameterId() + " validity= " + to
+        + " type= " + type + " station-id= " + tsinfo.getWiskiStationId() + " tsinfo-id= "
+        + tsinfo.getWiskiIdAsString() );
+
+    final GetRatingTables call = new GetRatingTables( Long.valueOf( tsinfo.getWiskiStationId() ), to, type, from );
     try
     {
       rep.executeWiskiCall( call );
@@ -555,14 +637,7 @@ public class WiskiTimeserie implements IObservation
       return null;
     }
 
-    if( call.hasTable() )
-    {
-      final WQTable wqt = new WQTable( from, call.getStage(), call.getFlow() );
-
-      return wqt;
-    }
-
-    return null;
+    return call.getTable();
   }
 
   /**

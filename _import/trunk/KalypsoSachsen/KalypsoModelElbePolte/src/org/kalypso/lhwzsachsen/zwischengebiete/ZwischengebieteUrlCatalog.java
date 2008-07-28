@@ -40,23 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.lhwzsachsen.zwischengebiete;
 
+import java.net.URL;
 import java.util.Map;
 
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
- * 
- * TODO: insert type comment here
- * 
  * @author thuel2
  */
 public class ZwischengebieteUrlCatalog extends AbstractUrlCatalog
 {
-
   /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
    */
-  protected void fillCatalog( Class myClass, Map catalog )
+  @Override
+  protected void fillCatalog( Class< ? > myClass, Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( "org.kalypso.zwg.modell", myClass.getResource( "schemata/modell.xsd" ) );
     catalog.put( "org.kalypso.zwg.commons", myClass.getResource( "schemata/commons.xsd" ) );

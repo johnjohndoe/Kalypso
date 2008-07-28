@@ -45,6 +45,7 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 import org.kalypso.ogc.sensor.IAxis;
@@ -80,13 +82,23 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
  */
 public class HWVOR00Converter
 {
+  public static final SimpleDateFormat HWVOR00_DATE = new SimpleDateFormat( "dd.M.yyyy H:mm" );
+
+  static
+  {
+    // REMARK: we are parsing/writing the dates in the UTC-Timezone
+    // So what we see in Kalypso (Timezone set to UTC for SachsenAnhalt) is what 
+    // we get in the HWVOR00 files.
+    // This corresponds also to what we see in the HWVOR00 programm directly (TODO: verify)
+    HWVOR00_DATE.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+  }
+
   /** datum -> Map(obsName -> value) */
   private final TreeMap m_obsMap = new TreeMap();
 
   private final ArrayList m_obsNames = new ArrayList();
 
-  public static final SimpleDateFormat HWVOR00_DATE = new SimpleDateFormat( "dd.M.yyyy H:mm" );
-
+  
   private final IRequest m_request;
 
   /**
@@ -115,7 +127,7 @@ public class HWVOR00Converter
   {
     try
     {
-      final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, 0, 0 );
+      final InterpolationFilter filter = new InterpolationFilter( Calendar.HOUR_OF_DAY, 1, true, "0", 0 );
       filter.initFilter( null, inObs, null );
 
       final ITuppleModel tplValues = filter.getValues( m_request );
@@ -125,26 +137,58 @@ public class HWVOR00Converter
       for( int i = 0; i < tplValues.getCount(); i++ )
       {
         final Number value = (Number)tplValues.getElement( i, axData );
+
+        /* Here rounding occurs */
+        final BigDecimal adjustedValue = adjustValue( value, dataAxis );
+
         final Date date = (Date)tplValues.getElement( i, axTime );
 
         if( !m_obsMap.containsKey( date ) )
           m_obsMap.put( date, new HashMap() );
 
-        ( (Map)m_obsMap.get( date ) ).put( obsName, value );
+        ( (Map)m_obsMap.get( date ) ).put( obsName, adjustedValue );
       }
     }
     catch( final NoSuchElementException nse )
     {
       System.out.println( "Keine W/Q Beziehung für: " + obsName );
-//      nse.printStackTrace();
+      //      nse.printStackTrace();
     }
     catch( final SensorException exp )
     {
       // TODO Exception handling verbessern
       //exp;
     }
-    
+
     m_obsNames.add( obsName );
+  }
+
+  /**
+   * Adjusts the value that will later be written out.
+   * <p>
+   * Mainly, rounding occurs here, depending on the unit of the value.
+   * 
+   */
+  private static BigDecimal adjustValue( final Number number, final String type )
+  {
+    if( number == null )
+      return null;
+
+    final BigDecimal value = new BigDecimal( number.doubleValue() );
+
+    if( type == TimeserieConstants.TYPE_RUNOFF )
+      return value.setScale( 3, BigDecimal.ROUND_HALF_UP );
+
+    if( type == TimeserieConstants.TYPE_VOLUME )
+      return value.setScale( 2, BigDecimal.ROUND_HALF_UP );
+
+    if( type == TimeserieConstants.TYPE_WATERLEVEL )
+      return value.setScale( 0, BigDecimal.ROUND_HALF_UP );
+
+    if( type == TimeserieConstants.TYPE_RAINFALL )
+      return value.setScale( 2, BigDecimal.ROUND_HALF_UP );
+
+    return value.setScale( 1, BigDecimal.ROUND_HALF_UP );
   }
 
   public void toHWVOR00( final Writer file )
@@ -168,13 +212,20 @@ public class HWVOR00Converter
       final Map valueMap = (Map)m_obsMap.get( currDate );
 
       pWriter.print( HWVOR00_DATE.format( currDate ) );
+      
       for( final Iterator i = m_obsNames.iterator(); i.hasNext(); )
       {
+
         final String obsName = (String)i.next();
         final Number value = (Number)valueMap.get( obsName );
 
+        final String valueStr = value == null ? "0.0" : value.toString();
+        
+        /* Write commata instead of points. HWVOR0 is able to read both, but , is better read by excel. */
+        final String outStr = valueStr.replace( '.', ',' );
+        
         pWriter.print( "\t" );
-        pWriter.print( value == null ? "0.0" : value.toString() );
+        pWriter.print( outStr );
       }
 
       pWriter.println();

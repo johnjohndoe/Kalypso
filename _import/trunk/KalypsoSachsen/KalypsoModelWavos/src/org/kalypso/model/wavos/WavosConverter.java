@@ -61,10 +61,12 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.lhwz.LhwzHelper;
 import org.kalypso.contribs.java.net.UrlUtilities;
@@ -89,23 +91,24 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.zml.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.InputSource;
 
-import com.braju.format.Format;
 
 /**
- * 
  * @author thuel2
  */
 public class WavosConverter
 {
+  private static final ObjectFactory OF = new ObjectFactory();
+
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( OF.getClass() );
+
   private final static Logger m_logger = Logger.getLogger( WavosInputWorker.class.getName() );
-  private static Marshaller m_marshaller;
 
   /**
    * @param obsZml
@@ -143,8 +146,8 @@ public class WavosConverter
         final IAxis resultDateAxis = ObservationUtilities.findAxisByClass( axisList, Date.class );
         final IAxisRange rangeFor = resultValues.getRangeFor( resultDateAxis );
 
-        final WQTable tbleBegin = tableSet.getFor( (Date)rangeFor.getLower() );
-        final WQTable table = tableSet.getFor( (Date)rangeFor.getUpper() );
+        final WQTable tbleBegin = tableSet.getFor( (Date) rangeFor.getLower() );
+        final WQTable table = tableSet.getFor( (Date) rangeFor.getUpper() );
         if( !tbleBegin.equals( table ) )
           m_logger.info( "" );
 
@@ -152,24 +155,17 @@ public class WavosConverter
         final Date validity = table.getValidity();
         final WQPair[] wqPairs = table.getPairs();
         int count = wqPairs.length;
-        pWrtr.println( header + "\tWmin: " + wqPairs[0].getW() + " Wmax: " + wqPairs[count - 1].getW() + " gültig ab: "
-            + validity.toLocaleString() );
+        pWrtr.println( header + "\tWmin: " + wqPairs[0].getW() + " Wmax: " + wqPairs[count - 1].getW() + " gültig ab: " + validity.toLocaleString() );
 
         // 2nd line of header
-        Format.fprintf( pWrtr, WavosConst.WAVOS_COUNT_WQ_PAIRS_FORMAT, new Object[]
-        { Integer.valueOf( Integer.toString( count ) ) } );
-        pWrtr.println();
+        // TODO: check if ok
+        pWrtr.println( String.format( WavosConst.WAVOS_COUNT_WQ_PAIRS_FORMAT, Integer.valueOf( Integer.toString( count ) ) ) );
 
         for( int ii = 0; ii < count; ii++ )
         {
           final WQPair pair = wqPairs[ii];
 
-          Format.fprintf( pWrtr, WavosConst.WAVOS_COUNT_WQ_FORMAT, new Object[]
-          {
-              Double.valueOf( Double.toString( pair.getW() ) ),
-              Double.valueOf( Double.toString( pair.getQ() ) ) } );
-          pWrtr.println();
-
+          pWrtr.println( String.format( WavosConst.WAVOS_COUNT_WQ_FORMAT, Double.valueOf( Double.toString( pair.getW() ) ), Double.valueOf( Double.toString( pair.getQ() ) ) ) );
         }
 
         IOUtils.closeQuietly( pWrtr );
@@ -185,8 +181,7 @@ public class WavosConverter
    * @param zmlId
    * @param overWrite
    */
-  public static void zml2At( final URL zmlUrl, final File tafelDir, final String fileNme, final String zmlId,
-      final boolean overWrite ) throws Exception
+  public static void zml2At( final URL zmlUrl, final File tafelDir, final String fileNme, final String zmlId, final boolean overWrite ) throws Exception
   {
     final IObservation obsZml = ZmlFactory.parseXML( zmlUrl, zmlId );
     final URLConnection urlConTest = UrlUtilities.connectQuietly( zmlUrl );
@@ -203,15 +198,13 @@ public class WavosConverter
       }
       else
       {
-        m_logger.info( "\t\tFür die Zeitreihe " + zmlId
-            + " konnte keine aktuelle AT-Datei geschrieben werden. Es wird die Standard-Datei verwendet." );
+        m_logger.info( "\t\tFür die Zeitreihe " + zmlId + " konnte keine aktuelle AT-Datei geschrieben werden. Es wird die Standard-Datei verwendet." );
       }
 
       return;
     }
     m_logger.info( "Zeitreihe " + zmlUrl.toString() + " kann nicht geöffnet werden (da vielleicht nicht vorhanden)." );
-    throw new Exception( "Zeitreihe " + zmlUrl.toString()
-        + " kann nicht geöffnet werden (da vielleicht nicht vorhanden)." );
+    throw new Exception( "Zeitreihe " + zmlUrl.toString() + " kann nicht geöffnet werden (da vielleicht nicht vorhanden)." );
   }
 
   /**
@@ -224,14 +217,12 @@ public class WavosConverter
    * @throws JAXBException
    * @throws FactoryException
    */
-  public static void convertVorher2Zml( final File nativeOutVorherDir, final File outputZmlDir, final Properties props,
-      final Map metaMap, final boolean writeUmhuellende ) throws SensorException, IOException, JAXBException,
-      FactoryException
+  public static void convertVorher2Zml( final File nativeOutVorherDir, final File outputZmlDir, final Properties props, final Map metaMap, final boolean writeUmhuellende ) throws SensorException, IOException, JAXBException, FactoryException, SimulationException
   {
     final Map mapKennObs = new HashMap();
     // GML: alle Pegel holen
-    final GMLWorkspace wks = (GMLWorkspace)props.get( WavosConst.DATA_GML );
-    final Date startForecast = (Date)props.get( WavosConst.DATA_STARTFORECAST_DATE );
+    final GMLWorkspace wks = (GMLWorkspace) props.get( WavosConst.DATA_GML );
+    final Date startForecast = (Date) props.get( WavosConst.DATA_STARTFORECAST_DATE );
 
     String sFleVorher = WavosUtils.createInputFleName( startForecast );
     // und füllen...
@@ -272,22 +263,21 @@ public class WavosConverter
         zeilen.add( new StringTokenizer( inputline, " " ) );
       }
       final int cntZeilen = zeilen.size();
-      final FeatureList pegelList = (FeatureList)wks.getFeatureFromPath( "pegelMember[VorhersagePegel]" );
+      final FeatureList pegelList = (FeatureList) wks.getFeatureFromPath( "pegelMember[VorhersagePegel]" );
       for( final Iterator iter = pegelList.iterator(); iter.hasNext(); )
       {
-        final Feature pegel = (Feature)iter.next();
+        final Feature pegel = (Feature) iter.next();
 
-        final String kenn = Format.sprintf( "%s", new Object[]
-        { pegel.getProperty( "kenn" ) } );
+        final String kenn = String.format( "%s", pegel.getProperty( "kenn" ) );
 
         // ZMLs dazu erzeugen (Metadaten nicht vergessen...)
-        final ZmlInfo info = (ZmlInfo)metaMap.get( kenn );
+        final ZmlInfo info = (ZmlInfo) metaMap.get( kenn );
         final IObservation zmlObs = createResultObsForPegel( pegel, info, cntZeilen );
         mapKennObs.put( kenn, zmlObs );
       }
       for( int ii = 0; ii < cntZeilen; ii++ )
       {
-        final StringTokenizer tokZeile = (StringTokenizer)zeilen.get( ii );
+        final StringTokenizer tokZeile = (StringTokenizer) zeilen.get( ii );
         cntToks = 0;
         VorherDate vDte = new VorherDate();
 
@@ -307,8 +297,8 @@ public class WavosConverter
             // werden...
             final Date date = vDte.getDate();
             final Double value = Double.valueOf( nextToken );
-            final String kenn = (String)mapKennPos.get( Integer.toString( cntToks ) );
-            final ITuppleModel values = ( (IObservation)mapKennObs.get( kenn ) ).getValues( null );
+            final String kenn = (String) mapKennPos.get( Integer.toString( cntToks ) );
+            final ITuppleModel values = ((IObservation) mapKennObs.get( kenn )).getValues( null );
             final IAxis[] axisList = values.getAxisList();
 
             values.setElement( ii, date, axisList[0] );
@@ -319,19 +309,17 @@ public class WavosConverter
       // ZMLs serialisieren
       for( final Iterator iter = pegelList.iterator(); iter.hasNext(); )
       {
-        final Feature pegel = (Feature)iter.next();
+        final Feature pegel = (Feature) iter.next();
 
-        final String kenn = Format.sprintf( "%s", new Object[]
-        { pegel.getProperty( "kenn" ) } );
-        final String name = Format.sprintf( "%s", new Object[]
-        { pegel.getProperty( "name" ) } );
+        final String kenn = String.format( "%s", pegel.getProperty( "kenn" )  );
+        final String name = String.format( "%s", pegel.getProperty( "name" ) );
 
         final File fleZml = new File( outputZmlDir, name + ".zml" );
-        final IObservation zmlObs = (IObservation)mapKennObs.get( kenn );
+        final IObservation zmlObs = (IObservation) mapKennObs.get( kenn );
         stream = new FileOutputStream( fleZml );
         final OutputStreamWriter writer = new OutputStreamWriter( stream, WavosConst.WAVOS_CODEPAGE );
-
-        final Marshaller marshaller = getMarshaller();
+        // TODO: eventually add some prefixes via overloaded createMarshaller method
+        final Marshaller marshaller = JaxbUtilities.createMarshaller( JC, true );
         marshaller.marshal( ZmlFactory.createXML( zmlObs, null ), writer );
         writer.close();
 
@@ -342,7 +330,7 @@ public class WavosConverter
           final Object objAccuracy = pegel.getProperty( "accuracyPrediction" );
           double accuracy = LhwzHelper.getDefaultUmhuellendeAccuracy();
           if( objAccuracy instanceof Double )
-            accuracy = ( (Double)objAccuracy ).doubleValue();
+            accuracy = ((Double) objAccuracy).doubleValue();
 
           // und Umhüllende "_unten", "_oben"
           final URL is = fleZml.toURL();
@@ -354,8 +342,7 @@ public class WavosConverter
           else if( ObservationUtilities.hasAxisOfType( axisList, TimeserieConstants.TYPE_WATERLEVEL ) )
             axisType = TimeserieConstants.TYPE_WATERLEVEL;
           else
-            throw new CalcJobServiceException(
-                "Ergebniszeitreihe enthält weder Abfluss noch Wasserstand, Umhüllendenberechnung nicht möglich.", null );
+            throw new SimulationException( "Ergebniszeitreihe enthält weder Abfluss noch Wasserstand, Umhüllendenberechnung nicht möglich.", null );
           // get first and last date of observation
           final IAxis dateAxis = ObservationUtilities.findAxisByType( axisList, TimeserieConstants.TYPE_DATE );
           final IAxis valueAxis = ObservationUtilities.findAxisByType( axisList, axisType );
@@ -370,8 +357,8 @@ public class WavosConverter
 
               // final Date endPrediction = forecastRange.getTo();
               // sicher ist sicher...
-              final Date endPrediction = (Date)values.getElement( valueCount - 1, dateAxis );
-              final Double endValue = (Double)values.getElement( valueCount - 1, valueAxis );
+              final Date endPrediction = (Date) values.getElement( valueCount - 1, dateAxis );
+              final Double endValue = (Double) values.getElement( valueCount - 1, valueAxis );
 
               final Calendar calBegin = Calendar.getInstance();
               calBegin.setTime( startPrediction );
@@ -381,19 +368,16 @@ public class WavosConverter
 
               final long millisOf60hours = 1000 * 60 * 60 * 60;
 
-              final double endAccuracy = accuracy
-                  * ( ( (double)( endPrediction.getTime() - startPrediction.getTime() ) ) / ( (double)millisOf60hours ) );
+              final double endAccuracy = accuracy * (((double) (endPrediction.getTime() - startPrediction.getTime())) / ((double) millisOf60hours));
 
               final double endOffset = Math.abs( endValue.doubleValue() * endAccuracy / 100 );
 
               final IRequest request = new ObservationRequest( calBegin.getTime(), calEnd.getTime() );
 
-              TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "-", axisType,
-                  KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(), sZmlFileBaseName + "_unten.zml" ),
-                  "- Spur Unten", request );
-              TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "+", axisType,
-                  KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(), sZmlFileBaseName + "_oben.zml" ),
-                  "- Spur Oben", request );
+              TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "-", axisType, KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(), sZmlFileBaseName
+                  + "_unten.zml" ), "- Spur Unten", request );
+              TranProLinFilterUtilities.transformAndWrite( obsZml, calBegin, calEnd, 0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, new File( fleZml.getParentFile(), sZmlFileBaseName
+                  + "_oben.zml" ), "- Spur Oben", request );
 
             }
           }
@@ -412,8 +396,7 @@ public class WavosConverter
    * @param pegel
    * @param info
    */
-  private static IObservation createResultObsForPegel( final Feature pegel, final ZmlInfo info,
-      final int vorhersageCount )
+  private static IObservation createResultObsForPegel( final Feature pegel, final ZmlInfo info, final int vorhersageCount )
   {
 
     final String forecastAxis = TimeserieConstants.TYPE_WATERLEVEL;
@@ -425,10 +408,9 @@ public class WavosConverter
     Object[][] tuppleData = new Object[vorhersageCount][2];
     ITuppleModel tplWerte = new SimpleTuppleModel( axis, tuppleData );
 
-    final String kenn = (String)pegel.getProperty( "kenn" );
-    final String name = (String)pegel.getProperty( "name" );
-    obsOut = new SimpleObservation( "href", kenn, name, false, null, metaDataList, axis,
-        tplWerte );
+    final String kenn = (String) pegel.getProperty( "kenn" );
+    final String name = (String) pegel.getProperty( "name" );
+    obsOut = new SimpleObservation( "href", kenn, name, false, null, metaDataList, axis, tplWerte );
 
     return obsOut;
   }
@@ -437,30 +419,8 @@ public class WavosConverter
   {
     final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
     TimeserieUtils.getUnit( sValueType );
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( sValueType ), sValueType, TimeserieUtils
-        .getUnit( sValueType ), Double.class, false );
-    final IAxis[] axis = new IAxis[]
-    {
-        dateAxis,
-        valueAxis };
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( sValueType ), sValueType, TimeserieUtils.getUnit( sValueType ), Double.class, false );
+    final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;
-  }
-
-  /**
-   * Lazy get marshaller
-   * 
-   * @throws JAXBException
-   */
-  private static Marshaller getMarshaller() throws JAXBException
-  {
-    if( m_marshaller == null )
-    {
-      final ObjectFactory zmlFac = new ObjectFactory();
-
-      m_marshaller = zmlFac.createMarshaller();
-      m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    }
-
-    return m_marshaller;
   }
 }

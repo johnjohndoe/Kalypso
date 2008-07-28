@@ -2,11 +2,10 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         point="org.kalypso.services.calculation.local.calcJob">
-      <calcJob
+         point="org.kalypso.simulation.core.simulation">
+      <simulation
             typeID="org.kalypso.model.wavos.elbe.sachsen.v1"
             catalogClass="org.kalypso.model.wavos.WavosUrlCatalog"
-            jobClass="org.kalypso.model.wavos.WavosCalcJob"/>
+            simulationClass="org.kalypso.model.wavos.WavosCalcJob"/>
    </extension>
-
 </plugin>

@@ -35,7 +35,6 @@ import java.util.StringTokenizer;
 
 import org.kalypso.lhwsachsenanhalt.tubig.TubigConst;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigBatchException;
-import org.kalypso.simulation.core.ISimulationMonitor;
 
 /**
  * <p>
@@ -76,7 +75,7 @@ public class TubigCopyUtils
    * @return true if ENDE token fond in input, else false
    * @throws TubigBatchException
    */
-  public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog, final PrintWriter pwErr, final ISimulationMonitor monitor ) throws TubigBatchException
+  public static boolean copyAndAnalyzeStreams( final StringWriter input, final PrintWriter pwLog, final PrintWriter pwErr ) throws TubigBatchException
   {
     boolean bExeEnde = false;
     String sMess = "";
@@ -126,7 +125,7 @@ public class TubigCopyUtils
     }
     if( "pwErr".equals( sLastWrtr ) )
     {
-      throw new TubigBatchException( monitor, TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
+      throw new TubigBatchException( TubigBatchException.STATUS_ERROR, TubigConst.FINISH_ERROR_TEXT );
     }
     return bExeEnde;
   }

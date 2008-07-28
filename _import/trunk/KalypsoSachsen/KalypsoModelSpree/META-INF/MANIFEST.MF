@@ -5,9 +5,10 @@ Bundle-SymbolicName: org.kalypso.model.spree; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: kalypsoModelSpree.jar
 Bundle-Vendor: kalypso.org
-Bundle-Localization: plugin
 Require-Bundle: org.kalypso.commons,
  org.kalypso.core,
  org.kalypso.simulation.core,
- org.junit;resolution:=optional
-Eclipse-AutoStart: true
+ org.junit;resolution:=optional,
+ org.kalypso.dwd;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.activation.DataHandler;
 import javax.xml.bind.JAXBContext;
@@ -126,9 +127,9 @@ public class ModelNACalcTest extends TestCase
 
   /**
    * @param folder
-   *            name of test folder
+   *          name of test folder
    * @param spec
-   *            numer of modelspec.xml (e.g. "3")
+   *          numer of modelspec.xml (e.g. "3")
    * @throws JAXBException
    * @throws IOException
    */
@@ -225,9 +226,9 @@ public class ModelNACalcTest extends TestCase
         final ILogger logger = new ILogger()
         {
           /**
-           * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.lang.String)
+           * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
            */
-          public void log( String message )
+          public void log( final Level level, final int code, final String message )
           {
             System.out.println( message );
           }

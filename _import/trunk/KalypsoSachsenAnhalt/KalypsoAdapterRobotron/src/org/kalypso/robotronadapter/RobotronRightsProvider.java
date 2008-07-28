@@ -29,9 +29,13 @@
  */
 package org.kalypso.robotronadapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.naming.Context;
@@ -45,6 +49,30 @@ import org.kalypso.auth.user.UserRights;
 import org.kalypso.hwv.services.user.UserServiceSimulation;
 
 /**
+ * Es gibt folgenden Möglichkeiten:
+ * <dl>
+ * <dt>Benutzer im LDAP unbekannt</dt>
+ * <dd>Der Benutzer darf Kalypso nicht benutzen</dd>
+ * <dt>Benutzer gehört einer Gruppe ohne die hier aufgelistete Rechte</dt>
+ * <dd>Der Benutzer darf Kalypso nicht benutzen</dd>
+ * <dt>Benutzer gehört einer Gruppe mit Modellierung-Vorhersage-Recht</dt>
+ * <dd>Der Benutzer darf Kalypso im Vorhersage-Assistent benutzen</dd>
+ * <dt>Benutzer gehört einer Gruppe mit Modellierung-Experte-Recht</dt>
+ * <dd>Der Benutzer hat alle Rechte und darf alles machen</dd>
+ * <dt>dem Benutzer wurde das simulation-Flag gesetzt (Verweigerungsrecht)</dt>
+ * <dd>Der Benutzer darf Kalypso nur dann starten, wenn das aktuelle Szenario das Simulationsbetrieb ist</dd>
+ * </dl>
+ * 
+ * <dl>
+ * <dt>20.06.2006</dt>
+ * <dd>Ergänzung auf Kundenwunsch der Rechteverwaltung: jetzt mit Unterscheidung zwischen nix, Vorhersage, Experte
+ * </dd>
+ * <dt>03.02.2006</dt>
+ * <dd>Einführung eines separaten Flag 'Simulationsbetrieb', welcher das Einrichten von (Test-)Benutzern erlaubt, die
+ * ausschließlich diesen Betriebsmodus benutzen dürfen (Absprache zwischen RDS, KAG und BCE vom 21.12.2005)</dd>
+ * </dl>
+ * 
+ *
  * TODO: cannot work at the moment: init method is never called... TODO: implement IExecutableExtension and initalize
  * like they do
  * 
@@ -63,6 +91,9 @@ public class RobotronRightsProvider extends UserServiceSimulation
   /** Example "geheim" */
   private String m_crendentials;
 
+  /** the id of the simulation scenario */
+  private String m_simulationScenarioId;
+
   /**
    * The properties should contain following information:
    * <p>
@@ -80,6 +111,8 @@ public class RobotronRightsProvider extends UserServiceSimulation
     m_url = props.getProperty( "LDAP_CONNECTION" );
     m_principal = props.getProperty( "LDAP_PRINCIPAL" );
     m_crendentials = props.getProperty( "LDAP_CREDENTIALS" );
+
+    m_simulationScenarioId = props.getProperty( "SIMULATION_SCENARIO_ID", "" );
 
     LOG.info( "RobotronRightsProvider initialised" );
   }
@@ -115,7 +148,7 @@ public class RobotronRightsProvider extends UserServiceSimulation
     {
       dirCtxt = getDirContext();
 
-      final Attributes userAtts = dirCtxt.getAttributes( "cn=" + username + ",ou=benutzer", new String[] { "gidNumber", "userPassword" } );
+      final Attributes userAtts = dirCtxt.getAttributes( "cn=" + username + ",ou=benutzer", new String[] { "gidNumber", "userPassword", "simulation" } );
 
       final byte[] pw1 = (byte[]) userAtts.get( "userPassword" ).get();
       final byte[] pw2 = password.getBytes();
@@ -126,23 +159,60 @@ public class RobotronRightsProvider extends UserServiceSimulation
       }
 
       final String groupName = (String) userAtts.get( "gidNumber" ).get();
-      LOG.info( "User " + username + " found in group: " + groupName );
+      final String simulationFlag = (String)userAtts.get( "simulation" ).get();
 
+      LOG.info( "User " + username + " found in group: " + groupName + ". Simulationflag is: " + simulationFlag );
+
+      // prüfen ob der Benutzer sich nur im Simulationsmodus anmelden darf
+      if( "1".equalsIgnoreCase( simulationFlag ) && !m_simulationScenarioId.equalsIgnoreCase( scenarioId ) )
+      {
+        LOG.info( "User " + username + " is only allowed to connect in simulation-mode." );
+        return UserRights.NO_RIGHTS;
+      }
+
+      final Set rights = new HashSet();
+
+      LOG.info( "Checking rights from associated group..." );
+
+      // jetzt checken ob der Modellierungsrecht in die entsprechende Gruppe gesetzt ist
       final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
 
       final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
+      final List debugRights = new ArrayList( );
       while( rightsEnum.hasMore() )
       {
         final String right = rightsEnum.next().toString();
 
-        // in Kalypso Sachsen-Anhalt the "Modellierung"-Right specifies whether
-        // a user is allowed to use Kalypso or not
+        debugRights.add( right );
+
+        if( "Modellierung-Vorhersage".equalsIgnoreCase( right ) )
+          rights.add( UserRights.RIGHT_PROGNOSE );
+
+        if( "Modellierung-Experte".equalsIgnoreCase( right ) )
+        {
+          rights.add( UserRights.RIGHT_ADMIN );
+          rights.add( UserRights.RIGHT_EXPERT );
+          rights.add( UserRights.RIGHT_PROGNOSE );
+        }
+
+        /**
+         * @deprecated nur solange LDAP nicht aktualisiert wurde
+         */
         if( "Modellierung".equalsIgnoreCase( right ) )
-          return UserRights.FULL_RIGHTS;
+        {
+          rights.add( UserRights.RIGHT_ADMIN );
+          rights.add( UserRights.RIGHT_EXPERT );
+          rights.add( UserRights.RIGHT_PROGNOSE );
+        }
       }
 
       // Benutzer existiert, aber darf nicht Modellieren: Vorhersage
-      return new String[] { UserRights.RIGHT_PROGNOSE };
+//      return new String[] { UserRights.RIGHT_PROGNOSE };
+
+      LOG.info( "Retrieved following LDAP rights: " + debugRights );
+      debugRights.clear();
+      
+      return (String[])rights.toArray( new String[rights.size()] );
     }
     catch( final NamingException e )
     {

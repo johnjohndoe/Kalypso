@@ -81,8 +81,8 @@
     </target>
 
     <target name="co-sachsen-anhalt-models" depends="prepare">
+        
         <echo message="Checkout the models for Sachsen-Anhalt" />
-
         <antcall target="co-model">
             <param name="pPackage" value="KalypsoSachsenAnhalt/Data/KalypsoBode" />
             <param name="pName" value="Bode" />

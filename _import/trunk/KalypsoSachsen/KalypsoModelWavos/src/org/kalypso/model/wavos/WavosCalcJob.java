@@ -57,23 +57,24 @@ import java.util.logging.StreamHandler;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.java.lang.ProcessHelper.ProcessTimeoutException;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.services.calculation.common.ICalcServiceConstants;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.job.ICalcJob;
-import org.kalypso.services.calculation.job.ICalcMonitor;
-import org.kalypso.services.calculation.job.ICalcResultEater;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.ISimulationConstants;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.ISimulationResultEater;
+import org.kalypso.simulation.core.SimulationException;
 
 /**
  * 
  * @author thuel2
  */
-public class WavosCalcJob implements ICalcJob
+public class WavosCalcJob implements ISimulation
 {
   private final Logger m_logger = Logger.getLogger( getClass().getName() );
 
@@ -82,8 +83,8 @@ public class WavosCalcJob implements ICalcJob
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ICalcDataProvider inputProvider, ICalcResultEater resultEater, ICalcMonitor monitor )
-      throws CalcJobServiceException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
+      throws SimulationException
   {
     final File loggerFile = new File( tmpdir, WavosConst.LOG_FILE );
     resultEater.addResult( "LOG", loggerFile );
@@ -100,7 +101,7 @@ public class WavosCalcJob implements ICalcJob
       m_logger.info( WavosConst.CALC_START + " (" + WavosUtils.getAktuelleUhrzeit() + ")" );
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, WavosConst.CALC_CANCELLED );
         m_logger.info( WavosConst.CALC_CANCELLED );
         return;
       }
@@ -111,7 +112,7 @@ public class WavosCalcJob implements ICalcJob
       final File nativedir = new File( tmpdir, ".native" );
       final File nativeInDir = new File( nativedir, "in" );
       final File nativeOutDir = new File( nativedir, "out" );
-      final File outputDir = new File( tmpdir, ICalcServiceConstants.OUTPUT_DIR_NAME );
+      final File outputDir = new File( tmpdir, ISimulationConstants.OUTPUT_DIR_NAME );
       nativedir.mkdirs();
       nativeInDir.mkdirs();
       nativeOutDir.mkdirs();
@@ -131,7 +132,7 @@ public class WavosCalcJob implements ICalcJob
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, WavosConst.CALC_CANCELLED );
         m_logger.info( WavosConst.CALC_CANCELLED );
         return;
       }
@@ -144,7 +145,7 @@ public class WavosCalcJob implements ICalcJob
       monitor.setProgress( 33 );
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, WavosConst.CALC_CANCELLED );
         m_logger.info( WavosConst.CALC_CANCELLED );
         return;
       }
@@ -159,13 +160,13 @@ public class WavosCalcJob implements ICalcJob
       catch( final Exception e )
       {
         e.printStackTrace();
-        throw new CalcJobServiceException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
+        throw new SimulationException( "Fehler beim Schreiben der Ergebnis-Zeitreihen", e );
       }
 
       monitor.setProgress( 34 );
       if( monitor.isCanceled() )
       {
-        monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_CANCELLED );
+        monitor.setFinishInfo( IStatus.CANCEL, WavosConst.CALC_CANCELLED );
         m_logger.info( WavosConst.CALC_CANCELLED );
         return;
       }
@@ -178,11 +179,11 @@ public class WavosCalcJob implements ICalcJob
     {
       e.printStackTrace();
 
-      throw new CalcJobServiceException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
+      throw new SimulationException( "Fehler bei der Berechnung:\n" + e.getLocalizedMessage(), e );
     }
     finally
     {
-      monitor.setFinishInfo( ICalcServiceConstants.FINISHED, WavosConst.CALC_FINISHED );
+      monitor.setFinishInfo( IStatus.OK, WavosConst.CALC_FINISHED );
       if( streamHandler != null )
         streamHandler.close();
     }
@@ -222,8 +223,8 @@ public class WavosCalcJob implements ICalcJob
         WavosConverter.convertVorher2Zml( nativeOutVorherSaveDir, outputZmlOhneShiftvorDir, props, metaMap, false );
   }
 
-  private void startCalculation( final File exeDir, final ICalcMonitor monitor, final File nativeOutDir )
-      throws IOException
+  private void startCalculation( final File exeDir, final ISimulationMonitor monitor, final File nativeOutDir )
+      throws IOException, SimulationException
   {
 
     final String commandString = exeDir + File.separator + WavosConst.FILE_START_BAT;
@@ -259,12 +260,12 @@ public class WavosCalcJob implements ICalcJob
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausführen von WAVOS", e );
+      throw new SimulationException( "Fehler beim Ausführen von WAVOS", e );
     }
     catch( final ProcessTimeoutException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Ausführen von WAVOS", e );
+      throw new SimulationException( "Fehler beim Ausführen von WAVOS", e );
     }
     finally
     {
@@ -415,7 +416,7 @@ public class WavosCalcJob implements ICalcJob
       }
       catch( Exception e )
       {
-        throw new CalcJobServiceException( e.getLocalizedMessage(), e );
+        throw new SimulationException( e.getLocalizedMessage(), e );
       }
       finally
       {

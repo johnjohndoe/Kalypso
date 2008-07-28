@@ -70,7 +70,7 @@ import org.kalypso.metadoc.impl.MetaDocException;
  &lt;doktyp&gt;Prognose&lt;/doktyp&gt;
  &lt;dokument&gt;Vorhersage-20.05.2005&lt;/dokument&gt;
  &lt;description&gt;blablabla Beschreibung&lt;/description&gt;
- &lt;schluessel&gt;eindeutige Schlüssel-foobarscript&lt;/schluessel&gt;
+ &lt;schluessel&gt;eindeutiger Schlüssel-foobarscript&lt;/schluessel&gt;
  &lt;klasse&gt;Scheitelwerttabelle&lt;/klasse&gt;
  &lt;ersteller&gt;HVZ&lt;/ersteller&gt;
  &lt;erstelldat&gt;2005-08-26&lt;/erstelldat&gt;
@@ -97,6 +97,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   private final static String LT = "<";
   private final static String CLT = "</";
   private final static String GT = ">";
+//  private final static String CGT = "/>";
 
   private static final String TAG_META = "meta";
 
@@ -112,6 +113,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   private static final String TAG_STATION = "station_id";
   private static final String TAG_SIMULATION = "simulation";
   private static final String TAG_SCHLUESSEL = "schluessel";
+  private static final String TAG_TYP = "typ";
   private static final String TAG_KLASSE = "klasse";
 
   private static final String TAG_FILES = "files";
@@ -133,7 +135,9 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
     final String strd = DFDATE.format( new Date() );
     metadata.put( TAG_ERSTELLUNGSDATUM, "date;" + strd );
-    metadata.put( TAG_GUELTIGKEITSDATUM, "date;" + strd );
+
+    // Put empty gültigkeit: docs are endlessly valid
+    metadata.put( TAG_GUELTIGKEITSDATUM, "date;" + "" );
   }
 
   /**
@@ -143,7 +147,6 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
   public void commitDocument( final Properties serviceProps, final Map<Object, Object> metadata, final File doc,
       final String identifier, final String category, final Configuration metadataExtensions ) throws MetaDocException
   {
-    //String endpoint = "http://localhost:8080/eXForms/KalypsoConnectorWS.jws";
     final String endpoint = serviceProps.getProperty( "robotron.ws.endpoint" );
 
     if( endpoint == null )
@@ -173,7 +176,9 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
       LOG.info( "Calling IMS.commitDocument()" );
       final long dBegin = System.currentTimeMillis();
       final String ret = (String)call.invoke( new Object[]
-      { docs, metadataXml } );
+      {
+          docs,
+          metadataXml } );
 
       final String msg = ret.length() > 0 ? " \"" + ret + "\"" : "";
       LOG.info( "IMS.commitDocument returned" + msg + ". Duration (ms)= " + ( System.currentTimeMillis() - dBegin ) );
@@ -222,8 +227,8 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
         + GT );
     bf.append( LT + TAG_ERSTELLUNGSDATUM + GT + valueOfProperty( mdProps.getProperty( TAG_ERSTELLUNGSDATUM ) ) + CLT
         + TAG_ERSTELLUNGSDATUM + GT );
-    bf.append( LT + TAG_GUELTIGKEITSDATUM + GT + valueOfProperty( mdProps.getProperty( TAG_GUELTIGKEITSDATUM ) ) + CLT
-        + TAG_GUELTIGKEITSDATUM + GT );
+    final String valueGueltdat = valueOfProperty( mdProps.getProperty( TAG_GUELTIGKEITSDATUM ) );
+    bf.append( LT + TAG_GUELTIGKEITSDATUM + GT + valueGueltdat + CLT + TAG_GUELTIGKEITSDATUM + GT );
 
     final String dokumentTyp = serviceProps.getProperty( "robotron.preset." + TAG_DOKUMENTTYP );
     bf.append( LT + TAG_DOKUMENTTYP + GT + dokumentTyp + CLT + TAG_DOKUMENTTYP + GT );
@@ -236,7 +241,22 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
 
     bf.append( LT + TAG_SCHLUESSEL + GT + identifier + CLT + TAG_SCHLUESSEL + GT );
 
-    bf.append( LT + TAG_KLASSE + GT + category + CLT + TAG_KLASSE + GT );
+    String klasse = "";
+    String typ = "";
+    if( category != null )
+    {
+      final String[] splits = category.split( ";", 2 );
+      if( splits.length == 2 )
+      {
+        typ = splits[0];
+        klasse = splits[1];
+      }
+      else if( splits.length == 1 )
+        klasse = splits[0];
+    }
+
+    bf.append( LT + TAG_TYP + GT + typ + CLT + TAG_TYP + GT );
+    bf.append( LT + TAG_KLASSE + GT + klasse + CLT + TAG_KLASSE + GT );
 
     bf.append( LT + TAG_DESCRIPTION + GT + valueOfProperty( mdProps.getProperty( TAG_DESCRIPTION ) ) + CLT
         + TAG_DESCRIPTION + GT );
@@ -285,7 +305,7 @@ public class RobotronMetaDocCommiter implements IMetaDocCommiter
     if( prop == null )
       return "";
 
-    final String[] splits = prop.split( ";" );
+    final String[] splits = prop.split( ";", 2 );
 
     if( splits.length > 1 )
       return splits[1];

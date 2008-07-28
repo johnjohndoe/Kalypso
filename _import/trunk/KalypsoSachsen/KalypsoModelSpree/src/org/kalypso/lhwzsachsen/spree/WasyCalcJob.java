@@ -1,12 +1,13 @@
 package org.kalypso.lhwzsachsen.spree;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -106,7 +107,7 @@ public abstract class WasyCalcJob implements ISimulation
 
   public static final String FLP_GEOM = "Ort";
 
-  public static final Map FLP_MAP = new LinkedHashMap();
+  public static final Map<String, String> FLP_MAP = new LinkedHashMap<String, String>();
   static
   {
     FLP_MAP.put( "PEGEL", "Name" );
@@ -118,41 +119,41 @@ public abstract class WasyCalcJob implements ISimulation
 
   public static final String NAP_NAME = "Einzugsgebiet";
 
-  public static final Object DATA_STARTFORECAST_STRING = "startDate";
+  public static final String DATA_STARTFORECAST_STRING = "startDate";
 
-  public static final Object DATA_STARTSIM_DATE = "startSimulation";
+  public static final String DATA_STARTSIM_DATE = "startSimulation";
 
-  public static final Object DATA_STARTFORECAST_DATE = "startForecast";
+  public static final String DATA_STARTFORECAST_DATE = "startForecast";
 
-  public static final Object DATA_STARTDATESTRING = "startDateString";
+  public static final String DATA_STARTDATESTRING = "startDateString";
 
-  public static final Object DATA_BASEFILENAME = "baseFileName";
+  public static final String DATA_BASEFILENAME = "baseFileName";
 
-  public static final Object DATA_GML = "gmlWorkspace";
+  public static final String DATA_GML = "gmlWorkspace";
 
-  public static final Object DATA_WQMAP = "wqMap";
+  public static final String DATA_WQMAP = "wqMap";
 
-  public static final Object DATA_WQPARAMCOUNT = "wqParamCount";
+  public static final String DATA_WQPARAMCOUNT = "wqParamCount";
 
-  public static final Object DATA_FLPFILE = "flpFile";
+  public static final String DATA_FLPFILE = "flpFile";
 
-  public static final Object DATA_VHSFILE = "vhsFile";
+  public static final String DATA_VHSFILE = "vhsFile";
 
-  public static final Object DATA_NAPFILE = "napFile";
+  public static final String DATA_NAPFILE = "napFile";
 
-  public static final Object DATA_NAPFILENAME = "napFilename";
+  public static final String DATA_NAPFILENAME = "napFilename";
 
-  public static final Object DATA_FLPFILENAME = "flpFilename";
+  public static final String DATA_FLPFILENAME = "flpFilename";
 
-  public static final Object DATA_TSFILENAME = "tsFilename";
+  public static final String DATA_TSFILENAME = "tsFilename";
 
-  public static final Object DATA_TSFILE = "tsFile";
+  public static final String DATA_TSFILE = "tsFile";
 
-  public static final Object DATA_WQFILE = "wqFile";
+  public static final String DATA_WQFILE = "wqFile";
 
-  public static final Object DATA_LABEL = "label";
+  public static final String DATA_LABEL = "label";
 
-  public static final Object DATA_STARTVOLUMEMAP = "anfangsstauvolumen";
+  public static final String DATA_STARTVOLUMEMAP = "anfangsstauvolumen";
 
   /**
    * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
@@ -321,21 +322,21 @@ public abstract class WasyCalcJob implements ISimulation
    */
   private void fetchNativeIntoGml( final Feature[] gmlFeatures, final String dbfFileName, final String gmlProperty, final String dbfProperty )
   {
-    final Collection dbfFeatures = ShapeSerializer.readFeaturesFromDbf( dbfFileName );
+    final Collection<Feature> dbfFeatures = ShapeSerializer.readFeaturesFromDbf( dbfFileName );
 
     if( gmlFeatures.length != dbfFeatures.size() )
       return;
 
-    final Iterator iter = dbfFeatures.iterator();
+    final Iterator<Feature> iter = dbfFeatures.iterator();
     for( final Feature gmlFeature : gmlFeatures )
     {
-      final Feature dbfFeature = (Feature) iter.next();
+      final Feature dbfFeature = iter.next();
       final double optimalValue = ((Double) dbfFeature.getProperty( dbfProperty )).doubleValue();
       gmlFeature.setProperty( gmlProperty, new Double( optimalValue ) );
     }
   }
 
-  private void startCalculation( final File exedir, final Map m_data, final PrintWriter logwriter, final ISimulationMonitor monitor ) throws SimulationException
+  private void startCalculation( final File exedir, final Map<Object,Object> m_data, final PrintWriter logwriter, final ISimulationMonitor monitor ) throws SimulationException
   {
     final Date startTime = (Date) m_data.get( DATA_STARTFORECAST_DATE );
     final String timeString = new SimpleDateFormat( "yyyy,MM,dd,HH,mm,ss" ).format( startTime );
@@ -348,13 +349,14 @@ public abstract class WasyCalcJob implements ISimulation
 
     logwriter.println( commandString );
 
-    final StringWriter outWriter = new StringWriter();
-    final StringWriter errWriter = new StringWriter();
+    final ByteArrayOutputStream processOutS = new ByteArrayOutputStream();
+    final ByteArrayOutputStream processErrS = new ByteArrayOutputStream();
+    final ByteArrayInputStream processInS = new ByteArrayInputStream( new byte[0] );
 
     try
     {
       // timeout after 10 sec
-      ProcessHelper.startProcess( commandString, null, exedir, monitor, 10000, outWriter, errWriter );
+      ProcessHelper.startProcess( commandString, null, exedir, monitor, 10000, processOutS, processErrS, processInS );
     }
     catch( final IOException e )
     {
@@ -368,7 +370,7 @@ public abstract class WasyCalcJob implements ISimulation
     }
     finally
     {
-      final String processOut = outWriter.toString();
+      final String processOut = processOutS.toString();
       logwriter.println( "Ausgaben des Rechenkerns" );
       logwriter.println( "========================" );
       logwriter.println( "=   Standard-Ausgabe   =" );
@@ -407,8 +409,8 @@ public abstract class WasyCalcJob implements ISimulation
 
       final String[] otherFiles = getOtherFiles();
       final String resourceBase = getResourceBase();
-      for( final String element : otherFiles )
-        copyFileToTmp( exedir, element, resourceBase );
+      for( final String otherFile : otherFiles )
+        copyFileToTmp( exedir, otherFile, resourceBase );
     }
     catch( final IOException e )
     {
@@ -446,21 +448,19 @@ public abstract class WasyCalcJob implements ISimulation
     // /////////////////
     // TS-File lesen //
     // /////////////////
-    final Collection features = ShapeSerializer.readFeaturesFromDbf( tsFilename );
+    final Collection<Feature> features = ShapeSerializer.readFeaturesFromDbf( tsFilename );
 
     final Calendar calendar = new GregorianCalendar();
 
     // Die erzeugten Daten sammeln
-    final Map valuesMap = new HashMap();
-    final Collection dates = new ArrayList();
+    final Map<String, Collection<Double>> valuesMap = new HashMap<String, Collection<Double>>();
+    final Collection<Date> dates = new ArrayList<Date>();
 
     final boolean isSpreeFormat = isSpreeFormat();
 
     final TSDesc[] TS_DESCRIPTOR = TS_DESCRIPTOR();
-    for( final Iterator iter = features.iterator(); iter.hasNext(); )
+    for( final Feature feature : features )
     {
-      final Feature feature = (Feature) iter.next();
-
       final Date date;
       if( isSpreeFormat )
       {
@@ -488,10 +488,10 @@ public abstract class WasyCalcJob implements ISimulation
         if( !desc.output )
           continue;
 
-        Collection values = (Collection) valuesMap.get( column );
+        Collection<Double> values = valuesMap.get( column );
         if( values == null )
         {
-          values = new ArrayList();
+          values = new ArrayList<Double>();
           valuesMap.put( column, values );
         }
 
@@ -512,7 +512,7 @@ public abstract class WasyCalcJob implements ISimulation
     final String dateType = TimeserieConstants.TYPE_DATE;
     final DefaultAxis dateAxis = new DefaultAxis( "Datum", dateType, TimeserieUtils.getUnit( dateType ), Date.class, true );
 
-    final Date[] dateArray = (Date[]) dates.toArray( new Date[dates.size()] );
+    final Date[] dateArray = dates.toArray( new Date[dates.size()] );
 
     // /////////////////////////////////
     // create ZML for each timeserie //
@@ -533,7 +533,7 @@ public abstract class WasyCalcJob implements ISimulation
       final File outFile = new File( outputDir, outfilename );
       final File outFileRelative = FileUtilities.getRelativeFileTo( outdir, outFile );
 
-      final Collection values = (Collection) valuesMap.get( column );
+      final Collection<Double> values = valuesMap.get( column );
       if( values == null )
       {
         FileUtilities.makeFileFromStream( false, outFile, getClass().getResourceAsStream( "resources/empty.zml" ) );
@@ -541,9 +541,9 @@ public abstract class WasyCalcJob implements ISimulation
       }
 
       final int size = values.size();
-      final Double[] valueArray = (Double[]) values.toArray( new Double[size] );
+      final Double[] valueArray = values.toArray( new Double[size] );
 
-      final Collection tuples = new ArrayList( dateArray.length );
+      final Collection<Object[]> tuples = new ArrayList<Object[]>( dateArray.length );
 
       for( int j = 0; j < size; j++ )
       {
@@ -563,7 +563,7 @@ public abstract class WasyCalcJob implements ISimulation
         final IAxis valueAxis = new DefaultAxis( name, valueType, unit, Double.class, false );
         final IAxis[] achsen = new IAxis[] { dateAxis, valueAxis };
 
-        final Object[][] tupleArray = (Object[][]) tuples.toArray( new Object[tuples.size()][] );
+        final Object[][] tupleArray = tuples.toArray( new Object[tuples.size()][] );
         final SimpleTuppleModel model = new SimpleTuppleModel( achsen, tupleArray );
 
         // jetzt die Metadaten entsprechend der Kennung aus den Eingangsdaten
@@ -593,7 +593,7 @@ public abstract class WasyCalcJob implements ISimulation
    * Schreibt eine Vorhersagezeitreihe und ihre umhüllenden
    * 
    * @param accuracy
-   *            In Prozent per 60h
+   *          In Prozent per 60h
    */
   private void writeVorhersageZml( final IObservation obs, final File outFile, final double accuracy, final boolean writeUmhuellende ) throws Exception
   {
@@ -639,12 +639,12 @@ public abstract class WasyCalcJob implements ISimulation
 
     final double endOffset = Math.abs( endValue.doubleValue() * endAccuracy / 100 );
 
-    final String baseName = FileUtilities.nameWithoutExtension( outFile.getName() );
+    final String baseName = org.kalypso.contribs.java.io.FileUtilities.nameWithoutExtension( outFile.getName() );
 
     final IRequest request = new ObservationRequest( calBegin.getTime(), calEnd.getTime() );
-    // TODO: backport: add request to TranProLinFilter call
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0.0, endOffset, "-", axisType, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_unten.zml" ), "- Spur Unten" );
-    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0.0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_oben.zml" ), "- Spur Oben" );
+
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "-", axisType, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_unten.zml" ), "- Spur Unten", request );
+    TranProLinFilterUtilities.transformAndWrite( observation, calBegin, calEnd, 0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, new File( outFile.getParentFile(), baseName + "_oben.zml" ), "- Spur Oben", request );
   }
 
   protected abstract TSDesc[] TS_DESCRIPTOR( );
@@ -664,7 +664,7 @@ public abstract class WasyCalcJob implements ISimulation
   protected abstract Integer getWQParamCount( );
 
   /** Map zml-name -> feature id, in order to set the start volumes */
-  protected abstract Map getStartVolumeMap( );
+  protected abstract Map<String,String> getStartVolumeMap( );
 
   public abstract String makeNapFilename( final File nativedir, final String tsFilename );
 

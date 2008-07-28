@@ -42,6 +42,7 @@ package org.kalypso.lhwzsachsen.elbepolte;
 
 import java.io.File;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.kalypso.ogc.sensor.IAxis;
@@ -52,7 +53,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 
 /**
- * 
  * helpers to create ZML files
  * 
  * @author thuel2
@@ -64,31 +64,33 @@ public class NativeObservationAdapterElbePolte implements INativeObservationAdap
   private String m_axisTypeValue;
 
   /**
-   *  
-   */
-
-
-  /**
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File)
    */
+  @Override
   public IObservation createObservationFromSource( File file ) throws Exception
   {
     return null;
   }
-
+  
+  /**
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File,
+   *      java.util.TimeZone, boolean)
+   */
+  @Override
+  public IObservation createObservationFromSource( File file, TimeZone timeZone, boolean continueWithErrors ) throws Exception
+  {
+    return null;
+  }
+  
   /**
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createAxis()
    */
-  public IAxis[] createAxis()
+  public IAxis[] createAxis( )
   {
     final IAxis dateAxis = new DefaultAxis( "Datum", TimeserieConstants.TYPE_DATE, "", Date.class, true );
     TimeserieUtils.getUnit( m_axisTypeValue );
-    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils
-        .getUnit( m_axisTypeValue ), Double.class, false );
-    final IAxis[] axis = new IAxis[]
-    {
-        dateAxis,
-        valueAxis };
+    final IAxis valueAxis = new DefaultAxis( TimeserieUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeserieUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
     return axis;
   }
 
@@ -102,7 +104,8 @@ public class NativeObservationAdapterElbePolte implements INativeObservationAdap
     m_axisTypeValue = config.getAttribute( "axisType" );
   }
 
-  public String toString()
+  @Override
+  public String toString( )
   {
     return m_title;
   }

@@ -1,5 +1,6 @@
 package org.kalypso.wiskiadapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -7,12 +8,13 @@ import java.util.List;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.wiskiadapter.wiskicall.GetGroupEntryList;
 import org.kalypso.wiskiadapter.wiskicall.GetTsInfoList;
 
 /**
  * GroupItem
  * 
- * @author schlienger
+ * @author Schlienger
  */
 public class GroupItem implements IRepositoryItem
 {
@@ -88,15 +90,22 @@ public class GroupItem implements IRepositoryItem
       {
         final GetTsInfoList call = new GetTsInfoList( m_id );
         m_rep.executeWiskiCall( call );
-        m_children = new TsInfoItem[call.getResultList().size()];
 
-        int i = 0;
+        final GetGroupEntryList call2 = new GetGroupEntryList( m_id );
+        m_rep.executeWiskiCall( call2 );
+
+        final List children = new ArrayList( call.getResultList().size() );
         for( final Iterator<HashMap<Object, Object>> it = call.getResultList().iterator(); it.hasNext(); )
         {
           final HashMap<Object, Object> map = it.next();
 
-          m_children[i++] = new TsInfoItem( this, map );
+          final TsInfoItem tsInfoItem = new TsInfoItem( this, map, call2 );
+          // Only add active items
+          if( tsInfoItem.isActive() )
+            children.add( tsInfoItem );
         }
+
+        m_children = (IRepositoryItem[])children.toArray( new IRepositoryItem[children.size()] );
       }
       catch( final Exception e ) // KiWWException and RemoteException
       {
@@ -124,6 +133,9 @@ public class GroupItem implements IRepositoryItem
   /**
    * Find a TsInfoItem (child of this group) using a filter with the given property and value
    * 
+   * <p>
+   * TODO: why not search insider our children?
+   * 
    * @return null if not found
    */
   public TsInfoItem findTsInfo( final String property, final String value ) throws RepositoryException
@@ -133,12 +145,21 @@ public class GroupItem implements IRepositoryItem
       final GetTsInfoList call = new GetTsInfoList( m_id, property, value );
       m_rep.executeWiskiCall( call );
 
+      final GetGroupEntryList call2 = new GetGroupEntryList( m_id );
+      m_rep.executeWiskiCall( call2 );
+
       final List list = call.getResultList();
       if( list.size() == 0 )
         return null;
 
       final HashMap map = (HashMap)list.get( 0 );
-      return new TsInfoItem( this, map );
+
+      /* Only return active ts-info-items */
+      final TsInfoItem tsInfoItem = new TsInfoItem( this, map, call2 );
+      if( tsInfoItem.isActive() )
+        return tsInfoItem;
+
+      return null;
     }
     catch( final Exception e ) // KiWWException and RemoteException
     {

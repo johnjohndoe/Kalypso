@@ -33,6 +33,7 @@ import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -56,13 +57,13 @@ public class SaaleCalcJob implements ISimulation
 {
   public static final String HWDIR_DATEN = "Daten";
 
-  public static final String HWDIR_STAMMDAT = "stammdat";
+  public static final String HWDIR_STAMMDAT = "Stammdat";
 
-  public static final String HWDIR_WQ = "wq";
+  public static final String HWDIR_WQ = "WQ";
 
-  public static final String HWDIR_AUSGABE = "ausgabe";
+  public static final String HWDIR_AUSGABE = "Ausgabe";
 
-  public static final String HWDIR_ARCHIV = "archiv";
+  public static final String HWDIR_ARCHIV = "Archiv";
 
   public static final String HWEXE = "hwvor00.exe";
 
@@ -167,7 +168,7 @@ public class SaaleCalcJob implements ISimulation
       ProcessHelper.startProcess( cmdLine, null, exeFile.getParentFile(), monitor, 5 * 60 * 1000, logStream, errStream );
 
       System.out.println( logStream.toString() );
-      System.out.println( logStream.toString() );
+      System.out.println( errStream.toString() );
     }
     finally
     {
@@ -337,7 +338,13 @@ public class SaaleCalcJob implements ISimulation
       final String identifier = observation.getName();
       final MetadataList oldMeta = (MetadataList) m_metadataMap.get( type + "#" + identifier );
       if( oldMeta != null )
+      {
         obsMeta.putAll( oldMeta );
+        final Object obsName = obsMeta.get( ObservationConstants.MD_NAME );
+        // Also set the name explicitely, else it just gets the number...
+        if( obsName != null )
+          obsMeta.put( ObservationConstants.MD_NAME, obsName );
+      }
 
       obsMeta.put( "Datei", vorFile.getAbsolutePath() );
     }

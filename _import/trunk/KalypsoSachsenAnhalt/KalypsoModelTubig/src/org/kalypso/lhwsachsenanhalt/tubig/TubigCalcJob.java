@@ -33,6 +33,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -40,6 +41,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigBatchException;
 import org.kalypso.lhwsachsenanhalt.tubig.exceptions.TubigException;
@@ -86,7 +88,7 @@ public class TubigCalcJob implements ISimulation
     String sBatNme;
     File fleBat;
     File fleBatLog;
-    File fleBatErr;
+    File fleBatErr = null;
     int ii;
     int iCntBat;
 
@@ -231,6 +233,23 @@ public class TubigCalcJob implements ISimulation
       // abgearbeitet: kontrollierter Abbruch
       e.printStackTrace();
       pwCalcLog.println( TubigConst.FINISH_ERROR_TEXT );
+
+      String finishText = e.getFinishText();
+      try
+      {
+        if( fleBatErr != null )
+        {
+          final String strBatErr = FileUtils.readFileToString( fleBatErr, "CP1252" );
+          finishText += "\n" + strBatErr;
+        }
+      }
+      catch( final IOException e1 )
+      {
+        // einfach ignorieren
+        e1.printStackTrace();
+      }
+
+      monitor.setFinishInfo( e.getStatus(), finishText );
     }
     catch( final TubigException e )
     {

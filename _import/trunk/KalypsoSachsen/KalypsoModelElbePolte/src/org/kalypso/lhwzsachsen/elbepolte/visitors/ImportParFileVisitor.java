@@ -53,16 +53,15 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.lhwzsachsen.elbepolte.ElbePolteConst;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureType;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
- * 
  * visitor to import native PAR file into modell.gml (used in *.gmc)
  * 
  * @author thuel2
@@ -76,8 +75,11 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
   private static final class Strecke
   {
     private final String m_streckeNr;
+
     private final String m_streckeName;
+
     private final String m_streckeInfo;
+
     private List m_streckeParams = new ArrayList( 3 );
 
     public Strecke( final String nr, final String name, final String info, final List params )
@@ -88,22 +90,22 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       m_streckeParams = params;
     }
 
-    public String getStreckeNr()
+    public String getStreckeNr( )
     {
       return m_streckeNr;
     }
 
-    public String getStreckeName()
+    public String getStreckeName( )
     {
       return m_streckeName;
     }
 
-    public String getStreckeInfo()
+    public String getStreckeInfo( )
     {
       return m_streckeInfo;
     }
 
-    public List getStreckeParams()
+    public List getStreckeParams( )
     {
       return m_streckeParams;
     }
@@ -112,6 +114,7 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
   private static final class StreckeParams
   {
     private final String m_hwTypeInfo;
+
     private List m_hwTypeParams = new ArrayList( 3 );
 
     public StreckeParams( final String hwInfo, final List hwParams )
@@ -120,12 +123,12 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       m_hwTypeParams = hwParams;
     }
 
-    public String getHwTypeInfo()
+    public String getHwTypeInfo( )
     {
       return m_hwTypeInfo;
     }
 
-    public List getHwTypeParams()
+    public List getHwTypeParams( )
     {
       return m_hwTypeParams;
     }
@@ -135,17 +138,24 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
   private final Map m_streckeHash = new HashMap();
 
   private String m_paramPath;
+
   private String m_context;
+
   private Collection m_exceptions = new ArrayList();
 
   /**
    * @see org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor#init(java.util.Properties)
    */
-  public void init( Properties properties ) 
+  public void init( Properties properties )
   {
     m_paramPath = properties.getProperty( "paramPath", null );
 
-    m_context = properties.getProperty( "context", null ); // property "context" is set automatically when creating the
+    m_context = properties.getProperty( "context", null ); // property
+    // "context" is
+    // set
+    // automatically
+    // when creating
+    // the
     // visitor
 
     URL contextUrl = null;
@@ -155,11 +165,11 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       contextUrl = new URL( m_context );
       final URL paramUrl = new URL( contextUrl, m_paramPath );
 
-      //    ObereElbe.PAR öffnen (zum Lesen)
-      rdrParams = new LineNumberReader(
-          new InputStreamReader( paramUrl.openStream(), ElbePolteConst.ELBEPOLTE_CODEPAGE ) );
-      //    allgemeine Modellparams lesen (erste Zeile)
-      //    erste Zeile igonorieren, enthält Modellparams (könnten doch auch gesetzt werden...)
+      // ObereElbe.PAR öffnen (zum Lesen)
+      rdrParams = new LineNumberReader( new InputStreamReader( paramUrl.openStream(), ElbePolteConst.ELBEPOLTE_CODEPAGE ) );
+      // allgemeine Modellparams lesen (erste Zeile)
+      // erste Zeile igonorieren, enthält Modellparams (könnten doch auch
+      // gesetzt werden...)
       String sZeile = rdrParams.readLine();
 
       sZeile = rdrParams.readLine();
@@ -213,7 +223,7 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
   public boolean visit( Feature f )
   {
     // find nr of strecke
-    final String nr = (String)f.getProperty( "nr" );
+    final String nr = (String) f.getProperty( "nr" );
     // add params for strecke
     addParams( f, nr );
 
@@ -222,7 +232,6 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
 
   private void addParams( final Feature f, final String nr )
   {
-
     // put strecke into gml
     final Object objStrecke = m_streckeHash.get( nr );
     if( objStrecke == null )
@@ -230,7 +239,7 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       System.out.println( "Keine Strecke für NR: " + nr );
       return;
     }
-    final Strecke strecke = (Strecke)objStrecke;
+    final Strecke strecke = (Strecke) objStrecke;
     f.setProperty( "name", strecke.getStreckeName() );
 
     // DB, LT, ZZG, EFM, nrFEKO setzen (StreckeInfo) werden überschrieben
@@ -245,10 +254,9 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
     f.setProperty( "nr_feko", sInfoTok.nextToken() );
 
     final String sParamSetMem = "paramSetMember";
-    final FeatureList list = (FeatureList)f.getProperty( sParamSetMem );
-    final FeatureAssociationTypeProperty ftp = (FeatureAssociationTypeProperty)f.getFeatureType().getProperty(
-        sParamSetMem );
-    final FeatureType elementType = ftp.getAssociationFeatureType();
+    final FeatureList list = (FeatureList) f.getProperty( sParamSetMem );
+    final IRelationType ftp = (IRelationType) f.getFeatureType().getProperty( sParamSetMem );
+    final IFeatureType elementType = ftp.getTargetFeatureType();
 
     final String sStufenParamSetMem = "stufenParamSetMember";
 
@@ -261,30 +269,23 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
     {
 
       // neues element StreckeParams
-      final StreckeParams sParams = (StreckeParams)iter.next();
+      final StreckeParams sParams = (StreckeParams) iter.next();
       final StringTokenizer hwTypInfoTok = new StringTokenizer( sParams.getHwTypeInfo() );
       final String elementId = f.getId() + "-params-" + count++;
 
       // neues Feature: 'paramSetMember'
-      final Feature element = FeatureFactory.createFeature( elementId, elementType, new Object[]
-      {
-          //          hw_Typ, QL1, QL2, km, ce, is, stufenParamSetMember
+      final Feature element = FeatureFactory.createFeature( list.getParentFeature(), list.getParentFeatureTypeProperty(), elementId, elementType, new Object[] {
+      // hw_Typ, QL1, QL2, km, ce, is,
+          // stufenParamSetMember
 
-          Integer.toString( count ),
-          hwTypInfoTok.nextToken(),
-          hwTypInfoTok.nextToken(),
-          hwTypInfoTok.nextToken(),
-          hwTypInfoTok.nextToken(),
-          hwTypInfoTok.nextToken(),
-          null
+          Integer.toString( count ), hwTypInfoTok.nextToken(), hwTypInfoTok.nextToken(), hwTypInfoTok.nextToken(), hwTypInfoTok.nextToken(), hwTypInfoTok.nextToken(), null
 
       } );
 
-      final FeatureAssociationTypeProperty ftpSet = (FeatureAssociationTypeProperty)element.getFeatureType()
-          .getProperty( sStufenParamSetMem );
-      final FeatureType elementTypeSet = ftpSet.getAssociationFeatureType();
+      final IRelationType ftpSet = (IRelationType) element.getFeatureType().getProperty( sStufenParamSetMem );
+      final IFeatureType elementTypeSet = ftpSet.getTargetFeatureType();
 
-      FeatureList listSet = (FeatureList)element.getProperty( sStufenParamSetMem );
+      FeatureList listSet = (FeatureList) element.getProperty( sStufenParamSetMem );
       if( listSet != null )
       {
         listSet.clear();
@@ -300,7 +301,7 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
       for( final Iterator iter2 = hwTypeParams.iterator(); iter2.hasNext(); )
       {
         // neues element stufenParamSet
-        final String hwTypeParamSet = (String)iter2.next();
+        final String hwTypeParamSet = (String) iter2.next();
         final StringTokenizer paramSetTok = new StringTokenizer( hwTypeParamSet );
 
         final String elementSetId = element.getId() + "-paramSet-" + countSet++;
@@ -320,31 +321,19 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
           Feature elementSet;
           if( paramSetTok.hasMoreTokens() )
           {
-            elementSet = FeatureFactory.createFeature( elementSetId, elementTypeSet, new Object[]
-            {
-                tl,
-                a1,
-                a2,
-                null,
+            elementSet = FeatureFactory.createFeature( listSet.getParentFeature(), listSet.getParentFeatureTypeProperty(), elementSetId, elementTypeSet, new Object[] { tl, a1, a2, null,
                 paramSetTok.nextToken() } );
           }
           else
           {
-            elementSet = FeatureFactory.createFeature( elementSetId, elementTypeSet, new Object[]
-            {
-                tl,
-                a1,
-                a2,
-                null,
-                null } );
+            elementSet = FeatureFactory.createFeature( listSet.getParentFeature(), listSet.getParentFeatureTypeProperty(), elementSetId, elementTypeSet, new Object[] { tl, a1, a2, null, null } );
           }
 
           final String sBMem = "bMember";
-          final FeatureAssociationTypeProperty ftpBMem = (FeatureAssociationTypeProperty)elementSet.getFeatureType()
-              .getProperty( sBMem );
-          final FeatureType ftBMem = ftpBMem.getAssociationFeatureType();
+          final IRelationType ftpBMem = (IRelationType) elementSet.getFeatureType().getProperty( sBMem );
+          final IFeatureType ftBMem = ftpBMem.getTargetFeatureType();
 
-          FeatureList bList = (FeatureList)elementSet.getProperty( sBMem );
+          FeatureList bList = (FeatureList) elementSet.getProperty( sBMem );
           if( bList != null )
           {
             bList.clear();
@@ -358,8 +347,7 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
           for( int ii = 0; ii < bCount; ii++ )
           {
             final String bMemberId = elementSetId + "-bMember-" + ii;
-            final Feature b = FeatureFactory.createFeature( bMemberId, ftBMem, new Object[]
-            { bWerte[ii] } );
+            final Feature b = FeatureFactory.createFeature( bList.getParentFeature(), bList.getParentFeatureTypeProperty(), bMemberId, ftBMem, new Object[] { bWerte[ii] } );
 
             bList.add( b );
           }
@@ -370,14 +358,14 @@ public class ImportParFileVisitor implements IPropertiesFeatureVisitor
     }
   }
 
-  public boolean hasException()
+  public boolean hasException( )
   {
     return !m_exceptions.isEmpty();
   }
 
-  public Exception[] getExceptions()
+  public Exception[] getExceptions( )
   {
-    return (Exception[])m_exceptions.toArray( new Exception[m_exceptions.size()] );
+    return (Exception[]) m_exceptions.toArray( new Exception[m_exceptions.size()] );
   }
 
 }

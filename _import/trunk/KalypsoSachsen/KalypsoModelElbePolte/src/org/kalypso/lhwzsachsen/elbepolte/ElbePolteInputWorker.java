@@ -60,16 +60,13 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.lhwzsachsen.elbepolte.visitors.FeatureVisitorZml2Hwvs;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.services.calculation.job.ICalcDataProvider;
-import org.kalypso.services.calculation.service.CalcJobServiceException;
+import org.kalypso.simulation.core.ISimulationDataProvider;
+import org.kalypso.simulation.core.SimulationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import com.braju.format.Format;
-
 /**
- * 
  * methods for creating native input files
  * 
  * @author thuel2
@@ -87,22 +84,21 @@ public class ElbePolteInputWorker
    * @return directory (File)
    * @throws Exception
    */
-  public static File createNativeInput( File tmpDir, ICalcDataProvider inputProvider, PrintWriter logWriter,
-      Properties props, File nativeInDir, Map metaMap ) throws Exception
+  public static File createNativeInput( File tmpDir, ISimulationDataProvider inputProvider, PrintWriter logWriter, Properties props, File nativeInDir, Map metaMap ) throws Exception
   {
     try
     {
       final File exeDir = new File( tmpDir, "exe" );
       exeDir.mkdirs();
 
-      final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
+      final URL controlGmlURL = (URL) inputProvider.getInputForID( "CONTROL_GML" );
 
       logWriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
 
       final Map map = parseControlFile( controlGmlURL );
       props.putAll( map );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputProvider.getURLForID( "GML" ) );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "GML" ), null );
 
       props.put( ElbePolteConst.DATA_GML, workspace );
 
@@ -112,7 +108,7 @@ public class ElbePolteInputWorker
       writeParFile( workspace, paramDir, logWriter );
 
       logWriter.println( "Erzeuge Zeitreihen" );
-      writeTimeseries( props, exeDir, inputProvider.getURLForID( "GML" ), metaMap );
+      writeTimeseries( props, exeDir, (URL) inputProvider.getInputForID( "GML" ), metaMap );
 
       if( exeDir.exists() && nativeInDir.exists() )
       {
@@ -125,10 +121,10 @@ public class ElbePolteInputWorker
 
       return exeDir;
     }
-    catch( final CalcJobServiceException e )
+    catch( final SimulationException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Erzeugen der Inputdateien", e );
+      throw new SimulationException( "Fehler beim Erzeugen der Inputdateien", e );
     }
   }
 
@@ -141,7 +137,7 @@ public class ElbePolteInputWorker
   private static void writeTimeseries( Properties props, File nativeDir, URL context, Map metaMap ) throws Exception
   {
     // workspace holen
-    final GMLWorkspace wks = (GMLWorkspace)props.get( ElbePolteConst.DATA_GML );
+    final GMLWorkspace wks = (GMLWorkspace) props.get( ElbePolteConst.DATA_GML );
     // für die einzelnen Pegeltypen Zeitreihen schreiben
     final File modellDir = new File( nativeDir, "Modell" );
     modellDir.mkdirs();
@@ -149,16 +145,13 @@ public class ElbePolteInputWorker
     datenDir.mkdirs();
 
     // Zeitreihen an Startpegeln (Data UND Modell)
-    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_START_PEGEL_COLL, "ganglinie_gesamt", "nr",
-        "Modell", modellDir, context, metaMap );
+    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_START_PEGEL_COLL, "ganglinie_gesamt", "nr", "Modell", modellDir, context, metaMap );
 
     // Zeitreihen der Zwischengebietszuflüsse (Data UND Modell)
-    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ZWG_ZUFLUSS_COLL, "ganglinie_gesamt", "nr",
-        "Modell", modellDir, context, metaMap );
+    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ZWG_ZUFLUSS_COLL, "ganglinie_gesamt", "nr", "Modell", modellDir, context, metaMap );
 
     // Zeitreihen an Elbepegeln
-    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_messwerte", "nr",
-        "Daten", datenDir, context, metaMap );
+    FeatureVisitorZml2Hwvs.writeTimeseries( wks, ElbePolteConst.GML_ELBE_PEGEL_COLL, "ganglinie_messwerte", "nr", "Daten", datenDir, context, metaMap );
 
   }
 
@@ -166,7 +159,7 @@ public class ElbePolteInputWorker
    * @param nativedir
    * @throws CalcJobServiceException
    */
-  private static void copyAndUnzipRechenkern( File nativedir ) throws CalcJobServiceException
+  private static void copyAndUnzipRechenkern( File nativedir ) throws SimulationException
   {
     final URL urlRk;
     InputStream zipStream = null;
@@ -183,7 +176,7 @@ public class ElbePolteInputWorker
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CalcJobServiceException( "Fehler beim Entpacken des Rechenkerns", e );
+      throw new SimulationException( "Fehler beim Entpacken des Rechenkerns", e );
     }
     finally
     {
@@ -212,7 +205,7 @@ public class ElbePolteInputWorker
       final Feature modell = workspace.getRootFeature();
       writeGeneralModelParams( modell, pWrtr, logwriter );
       // Streckenparams
-      final FeatureList streckeList = (FeatureList)workspace.getFeatureFromPath( ElbePolteConst.GML_STRECKE_COLL );
+      final FeatureList streckeList = (FeatureList) workspace.getFeatureFromPath( ElbePolteConst.GML_STRECKE_COLL );
       writeStreckeParams( streckeList, pWrtr, logwriter );
     }
     catch( final IOException e )
@@ -233,30 +226,29 @@ public class ElbePolteInputWorker
    * @param logwriter
    * @throws IOException
    */
-  private static void writeStreckeParams( FeatureList streckeList, PrintWriter wrtr, PrintWriter logwriter )
-      throws IOException
+  private static void writeStreckeParams( FeatureList streckeList, PrintWriter wrtr, PrintWriter logwriter ) throws IOException
   {
     logwriter.println( "- Streckenparameter" );
 
     for( final Iterator itStrecke = streckeList.iterator(); itStrecke.hasNext(); )
     {
-      final Feature featStrecke = (Feature)itStrecke.next();
+      final Feature featStrecke = (Feature) itStrecke.next();
       // eigentlich nach Strecke zu sortieren
       // allgmeine Info zur Strecke (Nr., DB, LT, Zwg-Zuschlag, Messwerte ersetzen?, nrFEKO) + Name
-      final String nr = (String)featStrecke.getProperty( "nr" );
-      final int db = ( (Integer)featStrecke.getProperty( "db" ) ).intValue();
-      final int lt = ( (Integer)featStrecke.getProperty( "lt" ) ).intValue();
-      final double zwgZuschlag = ( (Double)featStrecke.getProperty( "zwg_zuschlag" ) ).doubleValue();
-      final String replaceVals = ( (Boolean)featStrecke.getProperty( "replaceValues" ) ).booleanValue() ? "1" : "0";
-      final int nrFeko = ( (Integer)featStrecke.getProperty( "nr_feko" ) ).intValue();
+      final String nr = (String) featStrecke.getProperty( "nr" );
+      final int db = ((Integer) featStrecke.getProperty( "db" )).intValue();
+      final int lt = ((Integer) featStrecke.getProperty( "lt" )).intValue();
+      final double zwgZuschlag = ((Double) featStrecke.getProperty( "zwg_zuschlag" )).doubleValue();
+      final String replaceVals = ((Boolean) featStrecke.getProperty( "replaceValues" )).booleanValue() ? "1" : "0";
+      final int nrFeko = ((Integer) featStrecke.getProperty( "nr_feko" )).intValue();
 
       final String sep = ElbePolteConst.PAR_FILE_SEP;
       final String lneEnd = ElbePolteConst.PAR_LINE_END;
       wrtr.println( nr + sep + db + sep + lt + sep + zwgZuschlag + sep + replaceVals + sep + nrFeko + lneEnd );
-      wrtr.println( (String)featStrecke.getProperty( "name" ) );
+      wrtr.println( (String) featStrecke.getProperty( "name" ) );
 
       // ParamSets
-      final FeatureList paramSetList = (FeatureList)featStrecke.getProperty( "paramSetMember" );
+      final FeatureList paramSetList = (FeatureList) featStrecke.getProperty( "paramSetMember" );
       writeStreckeParamSets( paramSetList, wrtr );
     }
 
@@ -272,21 +264,21 @@ public class ElbePolteInputWorker
 
     for( final Iterator itParamSet = paramSetList.iterator(); itParamSet.hasNext(); )
     {
-      final Feature featParamSet = (Feature)itParamSet.next();
+      final Feature featParamSet = (Feature) itParamSet.next();
       // eigentlich nach hw_type zu sortieren...
       // QL1, QL2, km, ce, is
-      final int ql1 = ( (Integer)featParamSet.getProperty( "QL1" ) ).intValue();
-      final int ql2 = ( (Integer)featParamSet.getProperty( "QL2" ) ).intValue();
-      final double km = ( (Double)featParamSet.getProperty( "km" ) ).doubleValue();
-      final double ce = ( (Double)featParamSet.getProperty( "ce" ) ).doubleValue();
-      final double is = ( (Double)featParamSet.getProperty( "is" ) ).doubleValue();
+      final int ql1 = ((Integer) featParamSet.getProperty( "QL1" )).intValue();
+      final int ql2 = ((Integer) featParamSet.getProperty( "QL2" )).intValue();
+      final double km = ((Double) featParamSet.getProperty( "km" )).doubleValue();
+      final double ce = ((Double) featParamSet.getProperty( "ce" )).doubleValue();
+      final double is = ((Double) featParamSet.getProperty( "is" )).doubleValue();
 
       final String sep = ElbePolteConst.PAR_FILE_SEP;
       final String lneEnd = ElbePolteConst.PAR_LINE_END;
       wrtr.println( ql1 + sep + ql2 + sep + km + sep + ce + sep + is + lneEnd );
 
       // StufenParamSets
-      final FeatureList stufenParamSetList = (FeatureList)featParamSet.getProperty( "stufenParamSetMember" );
+      final FeatureList stufenParamSetList = (FeatureList) featParamSet.getProperty( "stufenParamSetMember" );
       writeStreckeStufenParamSets( stufenParamSetList, wrtr );
     }
   }
@@ -296,8 +288,7 @@ public class ElbePolteInputWorker
    * @param wrtr
    * @throws IOException
    */
-  private static void writeStreckeStufenParamSets( FeatureList stufenParamSetList, PrintWriter wrtr )
-      throws IOException
+  private static void writeStreckeStufenParamSets( FeatureList stufenParamSetList, PrintWriter wrtr ) throws IOException
   {
 
     final String sep = ElbePolteConst.PAR_FILE_SEP;
@@ -305,32 +296,29 @@ public class ElbePolteInputWorker
     final int cntSPS = stufenParamSetList.size();
     for( final Iterator itStufenParamSet = stufenParamSetList.iterator(); itStufenParamSet.hasNext(); )
     {
-      final Feature featStufenParamSet = (Feature)itStufenParamSet.next();
+      final Feature featStufenParamSet = (Feature) itStufenParamSet.next();
       // müssen die auch sortiert werden?
       // tl, Anzahl b, a1, a2, b1, ..., bn, f
-      final int tl = ( (Integer)featStufenParamSet.getProperty( "tl" ) ).intValue();
+      final int tl = ((Integer) featStufenParamSet.getProperty( "tl" )).intValue();
 
       // bMembers
-      final FeatureList bList = (FeatureList)featStufenParamSet.getProperty( "bMember" );
+      final FeatureList bList = (FeatureList) featStufenParamSet.getProperty( "bMember" );
       final int cntB = bList.size();
 
       wrtr.print( tl + sep + cntB + sep );
 
-      final double a1 = ( (Double)featStufenParamSet.getProperty( "a1" ) ).doubleValue();
-      Format.fprintf( wrtr, ElbePolteConst.PAR_NUMBER_FORMAT_LONG, new Object[]
-      { new Double( a1 ) } );
+      final double a1 = ((Double) featStufenParamSet.getProperty( "a1" )).doubleValue();
+      wrtr.print( String.format( ElbePolteConst.PAR_NUMBER_FORMAT_LONG, new Double( a1 ) ) );
       wrtr.print( sep );
 
-      final double a2 = ( (Double)featStufenParamSet.getProperty( "a2" ) ).doubleValue();
-      Format.fprintf( wrtr, ElbePolteConst.PAR_NUMBER_FORMAT_LONG, new Object[]
-      { new Double( a2 ) } );
+      final double a2 = ((Double) featStufenParamSet.getProperty( "a2" )).doubleValue();
+      wrtr.print( String.format( ElbePolteConst.PAR_NUMBER_FORMAT_LONG, new Double( a2 ) ) );
       wrtr.print( sep );
 
       for( final Iterator itB = bList.iterator(); itB.hasNext(); )
       {
-        final Feature featB = (Feature)itB.next();
-        Format.fprintf( wrtr, ElbePolteConst.PAR_NUMBER_FORMAT_LONG, new Object[]
-        { (Double)featB.getProperty( "b" ) } );
+        final Feature featB = (Feature) itB.next();
+        wrtr.print( String.format( ElbePolteConst.PAR_NUMBER_FORMAT_LONG, (Double) featB.getProperty( "b" ) ) );
         wrtr.print( sep );
       }
 
@@ -338,8 +326,7 @@ public class ElbePolteInputWorker
 
       if( fProp != null )
       {
-        Format.fprintf( wrtr, ElbePolteConst.PAR_NUMBER_FORMAT_LONG, new Object[]
-        { fProp } );
+        wrtr.print( String.format( ElbePolteConst.PAR_NUMBER_FORMAT_LONG, fProp ) );
       }
       wrtr.println( lneEnd );
     }
@@ -358,18 +345,18 @@ public class ElbePolteInputWorker
   private static void writeGeneralModelParams( Feature modell, PrintWriter wrtr, PrintWriter logwriter )
   {
     logwriter.println( "- allg. Modellparamter" );
-    final String hwTyp = ( modell.getProperty( "hw_type" ) ).toString();
-    final String nachfRIDO = ( (Boolean)modell.getProperty( "rido" ) ).booleanValue() ? "1" : "0";
+    final String hwTyp = (modell.getProperty( "hw_type" )).toString();
+    final String nachfRIDO = ((Boolean) modell.getProperty( "rido" )).booleanValue() ? "1" : "0";
     wrtr.println( hwTyp + ElbePolteConst.PAR_FILE_SEP + nachfRIDO + ElbePolteConst.PAR_LINE_END );
   }
 
-  public static Map parseControlFile( final URL gmlURL ) throws CalcJobServiceException
+  public static Map parseControlFile( final URL gmlURL ) throws SimulationException
   {
     try
     {
-      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL ).getRootFeature();
+      final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL, null ).getRootFeature();
 
-      final Date startForecastTime = (Date)controlFeature.getProperty( "startforecast" );
+      final Date startForecastTime = (Date) controlFeature.getProperty( "startforecast" );
 
       final Map dataMap = new HashMap();
       dataMap.put( ElbePolteConst.DATA_STARTFORECAST_DATE, startForecastTime );
@@ -378,7 +365,7 @@ public class ElbePolteInputWorker
     }
     catch( final Exception e )
     {
-      throw new CalcJobServiceException( "Fehler beim Einlesen der Berechnungsparameter", e );
+      throw new SimulationException( "Fehler beim Einlesen der Berechnungsparameter", e );
     }
   }
 }

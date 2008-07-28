@@ -107,7 +107,7 @@ public class WasyInputWorker
 
       logwriter.println( "Lese Steuerparameter: " + controlGmlURL.toString() );
 
-      final Map map = parseControlFile( controlGmlURL, nativedir, wasyJob );
+      final Map<String, Object> map = parseControlFile( controlGmlURL, nativedir, wasyJob );
       props.putAll( map );
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( (URL) inputProvider.getInputForID( "GML" ), null );
@@ -122,12 +122,11 @@ public class WasyInputWorker
       calendar.add( Calendar.HOUR_OF_DAY, -3 );
       final Date volDate = calendar.getTime();
 
-      final Map startVolumeMap = (Map) props.get( WasyCalcJob.DATA_STARTVOLUMEMAP );
-      for( final Iterator iter = startVolumeMap.entrySet().iterator(); iter.hasNext(); )
+      final Map<String, String> startVolumeMap = (Map<String, String>) props.get( WasyCalcJob.DATA_STARTVOLUMEMAP );
+      for( final Entry<String, String> entry : startVolumeMap.entrySet() )
       {
-        final Map.Entry entry = (Entry) iter.next();
-        final String name = (String) entry.getKey();
-        final String fid = (String) entry.getValue();
+        final String name = entry.getKey();
+        final String fid = entry.getValue();
         setAnfangsstauvolumen( name, volDate, fid, tsmap, workspace, logwriter );
       }
 
@@ -159,7 +158,7 @@ public class WasyInputWorker
     final WasyCalcJob.WQInfo[] wqinfos = (WasyCalcJob.WQInfo[]) props.get( WasyCalcJob.DATA_WQMAP );
     final int wechmanParamCount = ((Integer) props.get( WasyCalcJob.DATA_WQPARAMCOUNT )).intValue();
 
-    final Map paramMap = new LinkedHashMap();
+    final Map<WQInfo, WechmannParams[]> paramMap = new LinkedHashMap<WQInfo, WechmannParams[]>();
     for( final WQInfo info : wqinfos )
     {
       try
@@ -179,9 +178,9 @@ public class WasyInputWorker
         final WechmannSet wechmannSet = group.getFor( startSim );
         final WechmannParams[] paramArray = new WechmannParams[wechmanParamCount];
         int count = 0;
-        for( final Iterator wechIt = wechmannSet.iterator(); wechIt.hasNext(); )
+        for( final Iterator<WechmannParams> wechIt = wechmannSet.iterator(); wechIt.hasNext(); )
         {
-          final WechmannParams params = (WechmannParams) wechIt.next();
+          final WechmannParams params = wechIt.next();
           paramArray[count++] = params;
 
           if( count == wechmanParamCount )
@@ -232,13 +231,13 @@ public class WasyInputWorker
       // TODO: as soon as DBFile was merged, reintroduce encoding here, its crucial for the wasy exe
       final DBaseFile dbf = new DBaseFile( wqFilename, fds /* , "CP850" */);
 
-      for( final Iterator iter = paramMap.entrySet().iterator(); iter.hasNext(); )
+      for( final Iterator<Entry<WQInfo, WechmannParams[]>> iter = paramMap.entrySet().iterator(); iter.hasNext(); )
       {
-        final Map.Entry entry = (Entry) iter.next();
-        final WasyCalcJob.WQInfo info = (WQInfo) entry.getKey();
-        final WechmannParams[] paramArray = (WechmannParams[]) entry.getValue();
+        final Map.Entry<WQInfo, WechmannParams[]> entry = iter.next();
+        final WasyCalcJob.WQInfo info = entry.getKey();
+        final WechmannParams[] paramArray = entry.getValue();
 
-        final ArrayList record = new ArrayList();
+        final ArrayList<Object> record = new ArrayList<Object>();
         record.add( info.getName() );
 
         for( int i = 0; i < paramArray.length; i++ )
@@ -366,7 +365,7 @@ public class WasyInputWorker
         final String pgid = "PG" + id.substring( 2 );
         final String ppid = "PP" + id.substring( 2 );
 
-        final Map datesToValuesMap = tsmap.getTimeserie( id );
+        final Map<Date, Double> datesToValuesMap = tsmap.getTimeserie( id );
 
         Double lastValue = null;
         for( int j = 0; j < dates.length; j++ )
@@ -466,7 +465,7 @@ public class WasyInputWorker
       final Feature[] features = workspace.getFeatures( featureType );
       for( final Feature feature : features )
       {
-        final ArrayList record = new ArrayList( 4 );
+        final ArrayList<Object> record = new ArrayList<Object>( 4 );
 
         final String name = (String) feature.getProperty( "Name" );
         final String nameOut = name.length() > 15 ? name.substring( 0, 14 ) : name;
@@ -497,7 +496,7 @@ public class WasyInputWorker
   {
     try
     {
-      final Map fdList = new LinkedHashMap();
+      final Map<String, FieldDescriptor> fdList = new LinkedHashMap<String, FieldDescriptor>();
 
       if( isSpreeFormat )
         fdList.put( "DZAHL", new FieldDescriptor( "DZAHL", "N", (byte) 7, (byte) 2 ) );
@@ -549,7 +548,7 @@ public class WasyInputWorker
         fdList.put( name, fd );
       }
 
-      final DBaseFile dbf = new DBaseFile( tsFilename, (FieldDescriptor[]) fdList.values().toArray( new FieldDescriptor[fdList.size()] ) );
+      final DBaseFile dbf = new DBaseFile( tsFilename, fdList.values().toArray( new FieldDescriptor[fdList.size()] ) );
 
       // Werte schreiben
       final Calendar calendar = Calendar.getInstance();
@@ -562,7 +561,7 @@ public class WasyInputWorker
       {
         final Date date = dateArray[i];
 
-        final ArrayList record = new ArrayList();
+        final ArrayList<Object> record = new ArrayList<Object>();
 
         calendar.setTime( date );
         record.add( new Double( WasyCalcJob.DF_DZAHL.format( date ) ) );
@@ -580,18 +579,18 @@ public class WasyInputWorker
         for( final TSDesc element : TS_DESCRIPTOR )
         {
           final String id = element.id;
-          final Map datesToValuesMap = valuesMap.getTimeserie( id );
+          final Map<Date, Double> datesToValuesMap = valuesMap.getTimeserie( id );
 
           Double outVal = null;
 
           if( datesToValuesMap != null )
           {
-            final Double value = ((Double) datesToValuesMap.get( date ));
+            final Double value = datesToValuesMap.get( date );
 
             // HACK: THE DBF Writer does not round double, when
             // written without decimals, it just prints out the integer part
             // so we round ourselfs
-            final FieldDescriptor fd = (FieldDescriptor) fdList.get( id );
+            final FieldDescriptor fd = fdList.get( id );
             final byte[] fddata = fd.getFieldDescriptor();
             final char type = (char) fddata[11];
             final int decimalcount = fddata[17];
@@ -681,7 +680,7 @@ public class WasyInputWorker
     return tsmap;
   }
 
-  public static void findAndWriteLayer( final GMLWorkspace workspace, final String layerName, final Map mapping, final String geoName, final String filenameBase ) throws SimulationException
+  public static void findAndWriteLayer( final GMLWorkspace workspace, final String layerName, final Map<String, String> mapping, final String geoName, final String filenameBase ) throws SimulationException
   {
     try
     {
@@ -701,14 +700,14 @@ public class WasyInputWorker
     }
   }
 
-  public static Map parseControlFile( final URL gmlURL, final File nativedir, final WasyCalcJob wasyJob ) throws SimulationException
+  public static Map<String, Object> parseControlFile( final URL gmlURL, final File nativedir, final WasyCalcJob wasyJob ) throws SimulationException
   {
     try
     {
       final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL, null ).getRootFeature();
 
-      final Date startSimTime = (Date) DateUtilities.toDate( (XMLGregorianCalendar) controlFeature.getProperty( "startsimulation" ) );
-      final Date startForecastTime = (Date) DateUtilities.toDate( (XMLGregorianCalendar) controlFeature.getProperty( "startforecast" ) );
+      final Date startSimTime = DateUtilities.toDate( (XMLGregorianCalendar) controlFeature.getProperty( "startsimulation" ) );
+      final Date startForecastTime = DateUtilities.toDate( (XMLGregorianCalendar) controlFeature.getProperty( "startforecast" ) );
 
       final String startTimeString = new SimpleDateFormat( "yyMMdd" ).format( startForecastTime );
       final String baseFileName = "HW" + startTimeString;
@@ -726,7 +725,7 @@ public class WasyInputWorker
 
       final File wqFile = new File( nativedir, "HW_WQ.dbf" );
 
-      final Map dataMap = new HashMap();
+      final Map<String, Object> dataMap = new HashMap<String, Object>();
       dataMap.put( WasyCalcJob.DATA_STARTSIM_DATE, startSimTime );
       dataMap.put( WasyCalcJob.DATA_STARTFORECAST_DATE, startForecastTime );
       dataMap.put( WasyCalcJob.DATA_STARTDATESTRING, startTimeString );
@@ -757,9 +756,9 @@ public class WasyInputWorker
    * @return file
    * @throws CalcJobServiceException
    */
-  public static File checkInput( final String id, final Map input, final File basedir ) throws SimulationException
+  public static File checkInput( final String id, final Map<String, SimulationDataPath> input, final File basedir ) throws SimulationException
   {
-    final SimulationDataPath bean = (SimulationDataPath) input.get( id );
+    final SimulationDataPath bean = input.get( id );
     if( bean == null )
       throw new SimulationException( "Eingabedatei für Index <" + id + "> fehlt", null );
 

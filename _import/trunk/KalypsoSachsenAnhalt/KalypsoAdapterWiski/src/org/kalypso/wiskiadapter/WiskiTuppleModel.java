@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.kalypso.commons.conversion.units.IValueConverter;
 import org.kalypso.ogc.sensor.IAxis;
@@ -27,25 +26,47 @@ public class WiskiTuppleModel extends AbstractTuppleModel
 
   private final IValueConverter m_vc;
 
-  private final TimeZone m_tzWiski;
+  private final WiskiTimeConverter m_timeConverter;
 
-  private final TimeZone m_tzKalypso;
-
-  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv, final TimeZone tzSrc, final TimeZone tzDest )
+  /**
+   * @param axes
+   * @param data
+   *          the underlying wiski data
+   * @param conv
+   *          a value converter (for instance when having different units)
+   */
+  public WiskiTuppleModel( final IAxis[] axes, final LinkedList data, final IValueConverter conv,
+      final WiskiTimeConverter timeConverter )
   {
     super( axes );
 
     m_vc = conv;
 
-    m_tzWiski = tzSrc;
-    m_tzKalypso = tzDest;
-
-    m_data = data;
+    m_data = filter777( data );
+    m_timeConverter = timeConverter;
     m_values = new Double[m_data.size()];
     m_kalypsoStati = new Integer[m_data.size()];
 
     for( int i = 0; i < axes.length; i++ )
       mapAxisToPos( axes[i], i );
+  }
+
+  /**
+   * Filters the -777 Values from the given list of data values
+   */
+  private static List filter777( final LinkedList data )
+  {
+    final LinkedList filteredData = new LinkedList();
+    for( final Iterator dataIter = data.iterator(); dataIter.hasNext(); )
+    {
+      final HashMap map = (HashMap)dataIter.next();
+
+      final String status = (String)map.get( "QUALITY" );
+      if( !"M".equals( status ) )
+        filteredData.add( map );
+    }
+
+    return filteredData;
   }
 
   /**
@@ -64,9 +85,7 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     switch( getPositionFor( axis ) )
     {
       case 0:
-        final Date dWiski = (Date) ((HashMap) m_data.get( index )).get( "timestamp" );
-        final Date dKalypso = WiskiUtils.convert( dWiski, m_tzWiski, m_tzKalypso );
-        return dKalypso;
+	    return m_timeConverter.wiskiToKalypso( (Date)( (HashMap)m_data.get( index ) ).get( "timestamp" ) );
       case 1:
         return getValue( index );
       case 2:
@@ -96,10 +115,6 @@ public class WiskiTuppleModel extends AbstractTuppleModel
     if( m_kalypsoStati[index] == null )
     {
       final String status = (String) ((HashMap) m_data.get( index )).get( "QUALITY" );
-
-      // if( !status.equals("U") )
-      // System.out.println(status);
-
       m_kalypsoStati[index] = WiskiUtils.wiskiStatus2Kalypso( status );
 
     }
@@ -149,7 +164,9 @@ public class WiskiTuppleModel extends AbstractTuppleModel
       for( final Iterator it = m_data.iterator(); it.hasNext(); )
       {
         final HashMap map = (HashMap) it.next();
-        if( date.equals( map.get( "timestamp" ) ) )
+
+        final Date wiskiDate = m_timeConverter.wiskiToKalypso( (Date)map.get( "timestamp" ) );
+        if( date.equals( wiskiDate ) )
           return m_data.indexOf( map );
       }
     }

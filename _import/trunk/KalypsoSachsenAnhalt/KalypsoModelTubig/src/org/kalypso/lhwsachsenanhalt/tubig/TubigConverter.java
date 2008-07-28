@@ -127,7 +127,7 @@ public class TubigConverter
 
     try
     {
-      intpolFlt = new InterpolationFilter( Calendar.HOUR_OF_DAY, Math.abs( step ), false, 0.0, KalypsoStati.BIT_CHECK );
+      intpolFlt = new InterpolationFilter( Calendar.HOUR_OF_DAY, Math.abs( step ), false, "0.0", KalypsoStati.BIT_CHECK );
       intpolFlt.initFilter( null, obsZml, null );
 
       // Kommentar aus ZML-Datei lesen und in TUBIG-Datei schreiben

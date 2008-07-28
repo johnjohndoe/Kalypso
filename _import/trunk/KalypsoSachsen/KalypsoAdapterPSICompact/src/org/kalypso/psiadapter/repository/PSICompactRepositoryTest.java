@@ -18,7 +18,7 @@ public class PSICompactRepositoryTest extends TestCase
   {
     System.out.println( "Start listing for getChildren" );
 
-    final IRepository rep = PSICompactRepositoryFactory.getRepository();
+    final IRepository rep = new PSICompactRepositoryFactory().createRepository();
 
     recursiveGetChildren( rep.getChildren() );
 

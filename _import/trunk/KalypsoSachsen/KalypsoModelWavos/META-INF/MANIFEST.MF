@@ -1,11 +1,11 @@
 Manifest-Version: 1.0
 Bundle-Name: KalypsoModelWavos
-Bundle-SymbolicName: org.kalypso.model.wavos
+Bundle-SymbolicName: org.kalypso.model.wavos;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: kalypsoModelWavos.jar
 Bundle-Vendor: kalypso.org
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.core,
- org.kalypso.services.calculation.local
-Eclipse-AutoStart: true
+ org.kalypso.simulation.core;bundle-version="1.0.0",
+ org.kalypso.core;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
