@@ -1,4 +1,4 @@
-!     Last change:  MD   25 Jul 2008    3:05 pm
+!     Last change:  MD   28 Jul 2008    6:33 pm
 !-----------------------------------------------------------------------
 ! This code, data_in.f90, performs reading and validation of model
 ! inputa data in the library 'Kalypso-2D'.
@@ -1417,6 +1417,14 @@ reading: do
       IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     END IF
     !-
+
+    !MD: read flow resistance for Sediment-Transport
+    IF (linie(1:2) .eq. 'FR') THEN
+      READ(linie,'(a2,i10,4f15.7)') i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
+      !MD: read flow resistance results for elements
+      !ERROR - restart values can't be applied to element out of zero-maxe-Range
+      IF (i > MaxE .or. i <= 0) call ErrorMessageAndStop (1603, i)
+    end if
 
     !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
     IF (linie (1:2) .eq.'GA') then
