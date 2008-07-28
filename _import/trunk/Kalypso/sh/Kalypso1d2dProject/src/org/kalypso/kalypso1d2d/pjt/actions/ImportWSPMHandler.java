@@ -79,7 +79,6 @@ public class ImportWSPMHandler extends AbstractHandler
    * @see org.kalypso.ui.command.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
    */
   @SuppressWarnings("unchecked")
-  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

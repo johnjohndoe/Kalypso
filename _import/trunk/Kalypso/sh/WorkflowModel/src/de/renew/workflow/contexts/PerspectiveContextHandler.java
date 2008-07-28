@@ -39,8 +39,6 @@ public class PerspectiveContextHandler extends AbstractHandler implements IExecu
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-
-  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
