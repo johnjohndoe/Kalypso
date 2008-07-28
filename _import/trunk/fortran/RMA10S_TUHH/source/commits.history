@@ -249,3 +249,17 @@ Version 1.1.0 (laufende Änderungen)
 --- Nico Schrage, 25.07.2008
 
 015.) Get the bugfixes from V_1.0.0 maintenance branch: updates for (V1.0.2alpha1, 28.07.2008)
+
+--- Nico Schrage, 25.07.2008
+
+
+016.) Providing the friction factor FFACT as a variable over all elements (FFACT(1:maxe)) in order
+      to claculate the friction factor per node FFACT_KN for Sediment transport later. Therefore
+      FFACT is defined in ParaKalyps and saved as a matrix in all COEF-Routines:
+      >> SubR COEF11, COEF11NT, COEF25, COEF25NT, COEF2d, COEF2dNT
+      >> SubR ParaKalyps and SubR INITL     
+017.) Reading the lambda-Values for each element in the RESTART solution in Kalypso.2d -Files: 
+      Reading Values in the 'FR'-Line (Flow resistance)
+       >> SubR RDKALYPSO (--> lambda...)  
+       >> SubR ErrorMessagesAndStop    
+--- Monika Donner, 28.07.2008
