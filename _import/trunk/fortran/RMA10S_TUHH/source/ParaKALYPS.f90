@@ -1,4 +1,4 @@
-!     Last change:  NIS  14 May 2008    6:22 pm
+!     Last change:  MD   28 Jul 2008    5:15 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -81,6 +81,8 @@ REAL (KIND = 8), DIMENSION (1:50, 1:350) :: LineCorrectionKS, LineCorrectionAxAy
 INTEGER, allocatable:: IsNodeOfElement(:,:)
 
 REAL (KIND = 8), ALLOCATABLE, dimension (:):: lambdaKS, lambdaP, lambdaDunes, lambdaTot
+REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT       !Friction Factor for each element
+REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_KN    !Friction Factor for each node
 
 !nis,jan08: New output control paramters
 INTEGER :: WriteNodeBlock     ! (==1: Writes the nodal values into output.out file; ==0: Writes no nodal values into output.out)
