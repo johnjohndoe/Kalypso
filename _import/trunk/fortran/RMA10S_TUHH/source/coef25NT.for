@@ -2034,8 +2034,8 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 
 
 !write matrix into file as control output
-      if (TransitionElement (nn))
-     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      if (TransitionElement (nn))
+!      call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
 !-
 
 !      WRITE(196,*) 'ELEMENT',NN,' F'

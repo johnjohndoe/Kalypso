@@ -1396,18 +1396,18 @@ reading: do
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
       IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     ENDIF
-    !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP; ONLY FOR INTERPOLATED PROFILES/ NODES ---
-    IF (linie (1:2) .eq.'IR') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !wsp = 0.0
-      !cvva = 1
-      !-
-      READ(linie,'(a2, i10, 4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
-      !ERROR - restart values can't be applied to node out of zero-maxp-Range
-      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
-      !ERROR - TRYING TO APPLY RESULT OF INTERPOLATED PROFILE/ NODE TO A REAL NODE
-      if (.not. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
-    ENDIF
+!    !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP; ONLY FOR INTERPOLATED PROFILES/ NODES ---
+!    IF (linie (1:2) .eq.'IR') then
+!      !NiS,apr06: variables deactivated for RMA10S
+!      !wsp = 0.0
+!      !cvva = 1
+!      !-
+!      READ(linie,'(a2, i10, 4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
+!      !ERROR - restart values can't be applied to node out of zero-maxp-Range
+!      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
+!      !ERROR - TRYING TO APPLY RESULT OF INTERPOLATED PROFILE/ NODE TO A REAL NODE
+!      if (.not. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
+!    ENDIF
 
     !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
     !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
@@ -1417,44 +1417,44 @@ reading: do
       IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     END IF
     !-
-!
-!    !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
-!    IF (linie (1:2) .eq.'GA') then
-!      !NiS,apr06: variables deactivated for RMA10S
-!      !cvga = 1
-!      !-
-!      READ (linie, '(a2,i10,3f20.7)') id_local, i, (vdot(j,i),j=1,3)
-!      !NiS,mar06: name of variable changed; changed mnd to MaxP
-!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-!      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-!      !Stop program execution on negative NODE number
-!      IF (i.le.0) stop 'Knotennummer.le.0'
-!    ENDIF
-!
-!    !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-!    IF (linie (1:2) .eq.'VO') then
-!      !NiS,apr06: variables deactivated for RMA10S
-!      !cvvo = 1
-!      READ (linie, '(a2,i10,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
-!      !NiS,mar06: name of variable changed; changed mnd to MaxP
-!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-!      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-!      !Stop program execution on negative NODE number
-!      IF (i.le.0) stop 'Knotennummer.le.0'
-!    ENDIF
-!
-!    !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-!    IF (linie (1:2) .eq.'GO') then
-!      !NiS,apr06: variables deactivated for RMA10S
-!      !cvvo = 1
-!      READ (linie, '(a2,i10,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
-!      !NiS,mar06: name of variable changed; changed mnd to MaxP
-!      !Stop program execution on nodenumber higher than MaxP; could normally not happen
-!      IF (i.gt.MaxP) stop 'i.gt.MaxP'
-!      !Stop program execution on negative NODE number
-!      IF (i.le.0) stop 'Knotennummer.le.0'
-!    ENDIF
-!
+
+    !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
+    IF (linie (1:2) .eq.'GA') then
+      !NiS,apr06: variables deactivated for RMA10S
+      !cvga = 1
+      !-
+      READ (linie, '(a2,i10,3f20.7)') id_local, i, (vdot(j,i),j=1,3)
+      !NiS,mar06: name of variable changed; changed mnd to MaxP
+      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+      !Stop program execution on negative NODE number
+      IF (i.le.0) stop 'Knotennummer.le.0'
+    ENDIF
+
+    !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+    IF (linie (1:2) .eq.'VO') then
+      !NiS,apr06: variables deactivated for RMA10S
+      !cvvo = 1
+      READ (linie, '(a2,i10,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
+      !NiS,mar06: name of variable changed; changed mnd to MaxP
+      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+      !Stop program execution on negative NODE number
+      IF (i.le.0) stop 'Knotennummer.le.0'
+    ENDIF
+
+    !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
+    IF (linie (1:2) .eq.'GO') then
+      !NiS,apr06: variables deactivated for RMA10S
+      !cvvo = 1
+      READ (linie, '(a2,i10,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
+      !NiS,mar06: name of variable changed; changed mnd to MaxP
+      !Stop program execution on nodenumber higher than MaxP; could normally not happen
+      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+      !Stop program execution on negative NODE number
+      IF (i.le.0) stop 'Knotennummer.le.0'
+    ENDIF
+
 !    !ADDITIONAL INFORMATIONS FOR EVERY NODE ---
 !    IF (linie (1:2) .eq.'ZU') then
 !      !NiS,apr06: variables deactivated for RMA10S

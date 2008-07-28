@@ -132,12 +132,6 @@ C
 CIPK MAR03  REPLACE TH(NN) WITH THNN
 
       THNN=TH(NN)
-!NiS,jun06:testing
-!IF(nn.eq.4207) WRITE(*,*)th(nn),nn, 'richtung th'
-!IF(nn.eq.4207) WRITE(*,*) (nop(nn,knotenn),knotenn=1,8)
-!IF(nn.eq.2500) WRITE(*,*)th(nn),nn, 'richtung th'
-!IF(nn.eq.2500) WRITE(*,*) (nop(nn,knotenn),knotenn=1,8)
-!-
 
       IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
 C
@@ -619,23 +613,39 @@ CIPK SEP02 ADD WAVE DATA INTERPOLATION
 C-
 C......ESTABLISH VELOCITIES
 C-
-      DO 250 M=1,NCN
-      MR=NCON(M)
-      VXX(M)=VEL(1,MR)/UDST(MR)
-      VY(M)=VEL(2,MR)/VDST(MR)
-      ST(M)=VEL(ICK,MR)/SDST(MR)
-      VDX(M)=VDOT(1,MR)/UDST(MR)
-      VDY(M)=VDOT(2,MR)/VDST(MR)
-      SDT(M)=VDOT(ICK,MR)/SDST(MR)
-      IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
-        NBOT=NREF(MR)+NDEP(MR)-1
-        UBFC(M)=UDST(NBOT)
-        VBFC(M)=VDST(NBOT)
-      ELSE
-        UBFC(M)=1.0
-        VBFC(M)=1.0
-      ENDIF
-  250 CONTINUE
+      EstabVelos: DO M=1,NCN
+        MR=NCON(M)
+        VXX(M)=VEL(1,MR)/UDST(MR)
+        VY(M)=VEL(2,MR)/VDST(MR)
+        ST(M)=VEL(ICK,MR)/SDST(MR)
+        VDX(M)=VDOT(1,MR)/UDST(MR)
+        VDY(M)=VDOT(2,MR)/VDST(MR)
+        SDT(M)=VDOT(ICK,MR)/SDST(MR)
+        IF(ITEQV(MAXN) .EQ. 5  .AND.  NDEP(MR) .GT. 1) THEN
+          NBOT=NREF(MR)+NDEP(MR)-1
+          UBFC(M)=UDST(NBOT)
+          VBFC(M)=VDST(NBOT)
+        ELSE
+          UBFC(M)=1.0
+          VBFC(M)=1.0
+        ENDIF
+        
+        !testing
+        !if (icyc == 9 .and. maxn == 1 .and. nn < 5) then
+        !  write(*,*) 'Element: ', nn
+        !  write(*,*) '   node: ', m, ', i.e.', mr
+        !  write(*,*) ' vx: ', vel(1,mr), ' vy: ', vel(2,mr)
+        !  write(*,*) 'dvx: ', vdot(1,mr), ', dvy: ', vdot(2,mr)
+        !  pause
+        !endif
+        !testing-
+        
+
+      enddo EstabVelos
+
+
+
+
       DO 270 M=1,NCN
       MR=NCON(M)
 CIPK SEP02 INTERPOLATE WAVE DATA
@@ -2197,6 +2207,7 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 !write matrix into file
 !      if (TransitionElement (nn))
 !     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
 !-
 
       RETURN

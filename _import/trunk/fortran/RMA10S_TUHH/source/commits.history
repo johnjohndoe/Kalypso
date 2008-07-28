@@ -197,6 +197,16 @@ Version 1.0.1 (laufende Änderungen)
 
 --- Nico Schrage, 24.07.2008 (release 1.0.1)
 
+Version 1.0.2 (laufende Änderungen)
+-----------------------------------
+
+001.) Delete some testing code in coef25.sub and coef25NT.sub
+002.) Manage writing of PRA, PRQ and PRB lines in result file for 2D-nodes. There was a bad check, which is now modernized. Problem was the restart with such a result file.
+003.) Activate VO, GA, GO lines for restart and leave inputd.sub earlier, when searching for proper time step to get BCs from. Problem was that restart conditions for H-boundary nodes were changed. (Affects: inputd.for, rdkalypso.f90).
+      Now restart is in 2D full functional.
+
+--- Nico Schrage, 28.07.2008 (1.0.2alpha1)
+
 -----------------------------------------------------------------------------------------------------
 24.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
 -----------------------------------------------------------------------------------------------------
@@ -237,3 +247,5 @@ Version 1.1.0 (laufende Änderungen)
 014.) consistency variable adaptation of c_wr in roughness.f90
 
 --- Nico Schrage, 25.07.2008
+
+015.) Get the bugfixes from V_1.0.0 maintenance branch: updates for (V1.0.2alpha1, 28.07.2008)

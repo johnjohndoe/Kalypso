@@ -268,6 +268,8 @@ C
           call ginpt(ibin, id, dlin)
           if (ID(1:7) == 'ENDSTEP') EXIT findEndStep
         end do findEndStep
+        !nis,jul08: leave subroutine, if time step is found and don't transform restart values!
+        return
 
       end if
 
@@ -312,6 +314,7 @@ C
 C-
 C-..... INITIALIZE FOR BOUNDARY CONDITIONS.....
 C-
+      
       DO 800 N=1,NP
         IF(NSPL(N) .EQ. 1) THEN
           IF(NDEP(N) .GT. 1) THEN
