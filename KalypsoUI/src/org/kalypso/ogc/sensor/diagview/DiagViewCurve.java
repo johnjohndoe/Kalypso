@@ -57,9 +57,9 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  */
 public class DiagViewCurve extends ObsViewItem
 {
-  private final Color m_color;
+  private Color m_color;
 
-  private final Stroke m_stroke;
+  private Stroke m_stroke;
 
   private final AxisMapping[] m_mappings;
 
@@ -82,11 +82,21 @@ public class DiagViewCurve extends ObsViewItem
     return m_color;
   }
 
+  public void setColor( final Color color )
+  {
+    m_color = color;
+  }
+
   public Stroke getStroke( )
   {
     return m_stroke;
   }
 
+  public void setStroke( final Stroke stroke )
+  {
+    m_stroke = stroke;
+  }
+  
   /**
    * @return true when this curve represents a Water-Level and the Water-Level-Feature is activated in the view
    */

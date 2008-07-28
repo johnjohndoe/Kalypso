@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -50,6 +51,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -60,10 +62,13 @@ import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
-import org.jfree.chart.annotations.XYTextAnnotation;
+import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickUnit;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.TickUnitSource;
+import org.jfree.chart.axis.TickUnits;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.Marker;
@@ -83,6 +88,7 @@ import org.kalypso.auth.scenario.IScenario;
 import org.kalypso.auth.scenario.ScenarioUtilities;
 import org.kalypso.commons.factory.ConfigurableCachableObjectFactory;
 import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -161,7 +167,7 @@ public class ObservationPlot extends XYPlot
     final DiagramAxis[] diagAxes = view.getDiagramAxes();
     for( final DiagramAxis diagAxis : diagAxes )
     {
-      addDiagramAxis( diagAxis );
+      addDiagramAxis( diagAxis, null );
     }
 
     final ObsViewItem[] curves = view.getItems();
@@ -180,15 +186,54 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Adds a diagram axis and configures it for the use in this plot.
+   * 
+   * @param axis
+   *          can be null, if present it is used to define a best suited formater for the chart axis
    */
-  private synchronized final void addDiagramAxis( final DiagramAxis diagAxis ) throws SensorException
+  private synchronized final void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
   {
-    final ValueAxis vAxis;
+    if( diagAxis == null )
+      throw new IllegalArgumentException( "DiagramAxis is null" );
+
+    ValueAxis vAxis;
 
     try
     {
-      vAxis = (ValueAxis) OF.getObjectInstance( diagAxis.getDataType(), ValueAxis.class, new Object[] { diagAxis.toFullString() } );
-    }
+      final String dataType = diagAxis.getDataType();
+      final TimeZone timezone = KalypsoCorePlugin.getDefault().getTimeZone();
+
+      if( "date".equals( dataType ) )
+      {
+        // HACK: instantiation is not possible via factroy, as the search for the constructor is buggy there...
+        vAxis = new DateAxis( diagAxis.toFullString(), timezone );
+        final DateAxis da = (DateAxis)vAxis;
+
+        //      REMARK: the next line is necessary, as the constructor with timezone does
+        // not initalize the timeline (freechart bug!)
+        da.setTimeline( new DefaultTimeline() );
+        // Create standard source with correct timezone
+        final TickUnitSource source = createStandardDateTickUnits( timezone );
+        da.setStandardTickUnits( source );
+        //        da.setDateFormatOverride( TimeserieUtils.getDateFormat() );
+      }
+      else
+        vAxis = (ValueAxis)OF.getObjectInstance( dataType, ValueAxis.class, new Object[]
+        { diagAxis.toFullString() } );
+
+      // HACK: damit immer zu mindest [0,1] als range gesetzt wird
+      // z.Zt. nur für Niederschlag.
+      if( vAxis instanceof NumberAxis && TimeserieConstants.TYPE_RAINFALL.equals( axis == null ? null : axis.getType() ) )
+      {
+        final NumberAxis na = (NumberAxis)vAxis;
+        na.setAutoRangeMinimumSize( 1 );
+
+        if( na instanceof NumberAxis2 )
+        {
+          final NumberAxis2 na2 = (NumberAxis2)na;
+          na2.setMin( new Double( 0 ) );
+          na2.setMax( new Double( 1 ) );
+        }
+      }    }
     catch( final FactoryException e )
     {
       throw new SensorException( e );
@@ -324,9 +369,12 @@ public class ObservationPlot extends XYPlot
       {
         final DiagramAxis diagAxis = element.getDiagramAxis();
 
+        if( diagAxis == null )
+          continue;
+
         // check if this axis is already present in this plot
         if( !m_diag2chartAxis.containsKey( diagAxis ) )
-          addDiagramAxis( diagAxis );
+          addDiagramAxis( diagAxis, element.getObservationAxis() );
 
         if( diagAxis.getDirection().equals( DiagramAxis.DIRECTION_HORIZONTAL ) )
         {
@@ -366,6 +414,13 @@ public class ObservationPlot extends XYPlot
 
       mapDatasetToDomainAxis( pos, m_chartAxes2Pos.get( m_diag2chartAxis.get( xDiagAxis ) ).intValue() );
       mapDatasetToRangeAxis( pos, m_chartAxes2Pos.get( m_diag2chartAxis.get( yDiagAxis ) ).intValue() );
+    }
+
+    // UGLY TRICK: if it's a rainfall axis, set the range of the diagram axis to [0 - 1]
+    if( yAxis.getType().equals( TimeserieConstants.TYPE_RAINFALL ) )
+    {
+      final ValueAxis nAxis = m_diag2chartAxis.get( yDiagAxis );
+      nAxis.setAutoRangeMinimumSize( 1 );
     }
 
     // if a curve gets removed meanwhile, the mapping seriespos -> curvecolor
@@ -517,10 +572,10 @@ public class ObservationPlot extends XYPlot
 
           // step though axes and remove the one that is associated to
           // the dataset we want to remove
-          final Iterator it = m_diagAxis2ds.keySet().iterator();
+          final Iterator<DiagramAxis> it = m_diagAxis2ds.keySet().iterator();
           while( it.hasNext() )
           {
-            final DiagramAxis dAxis = (DiagramAxis) it.next();
+            final DiagramAxis dAxis = it.next();
             if( m_diagAxis2ds.get( dAxis ) == ds )
             {
               final ValueAxis cAxis = m_diag2chartAxis.get( dAxis );
@@ -623,6 +678,8 @@ public class ObservationPlot extends XYPlot
       {
         final double yy = axis.valueToJava2D( vac.alarm.value, dataArea, RectangleEdge.LEFT );
         final Line2D line = new Line2D.Double( dataArea.getMinX(), yy, dataArea.getMaxX(), yy );
+        // always set stroke, else we got the stroke from the last drawn line
+        g2.setStroke( AlarmLevelPlotElement.STROKE_ALARM ); 
         g2.setPaint( vac.alarm.color );
         g2.draw( line );
 
@@ -654,8 +711,10 @@ public class ObservationPlot extends XYPlot
     if( axisType.equals( TimeserieConstants.TYPE_RAINFALL ) )
       return new XYBarRenderer();
 
-    final XYCurveRenderer renderer = new XYCurveRenderer( StandardXYItemRenderer.LINES );
-    return renderer;
+    if( axisType.equals( TimeserieConstants.TYPE_POLDER_CONTROL ) )
+      return new XYBarRenderer();
+    
+    return new StandardXYItemRenderer( StandardXYItemRenderer.LINES );
   }
 
   /**
@@ -666,35 +725,123 @@ public class ObservationPlot extends XYPlot
   {
     if( diagAxis.getPosition().equals( DiagramAxis.POSITION_BOTTOM ) )
     {
-      // if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
       return AxisLocation.BOTTOM_OR_LEFT;
-      // else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
-      // return AxisLocation.BOTTOM_OR_RIGHT;
     }
     else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_TOP ) )
     {
-      // if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_LEFT ) )
       return AxisLocation.TOP_OR_LEFT;
-      // else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_RIGHT ) )
-      // return AxisLocation.TOP_OR_RIGHT;
     }
     else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_LEFT ) )
     {
-      // if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
-      // return AxisLocation.BOTTOM_OR_LEFT;
-      // else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
       return AxisLocation.TOP_OR_LEFT;
     }
     else if( diagAxis.getPosition().equals( DiagramAxis.POSITION_RIGHT ) )
     {
-      // if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_BOTTOM ) )
-      // return AxisLocation.BOTTOM_OR_RIGHT;
-      // else if( diagAxis.getPosition().equals( IDiagramAxis.POSITION_TOP ) )
       return AxisLocation.TOP_OR_RIGHT;
     }
 
     // default
     return AxisLocation.BOTTOM_OR_LEFT;
+  }
+
+  /**
+   * Special tick units for kalypso
+   */
+  public static TickUnitSource createStandardDateTickUnits( TimeZone zone )
+  {
+
+    if( zone == null )
+    {
+      throw new IllegalArgumentException( "Null 'zone' argument." );
+    }
+    TickUnits units = new TickUnits();
+
+    // date formatters
+    //      DateFormat f1 = new SimpleDateFormat("HH:mm:ss.SSS");
+    //      DateFormat f2 = new SimpleDateFormat("HH:mm:ss");
+    //      DateFormat f3 = new SimpleDateFormat("HH:mm");
+    //      DateFormat f4 = new SimpleDateFormat("d-MMM, HH:mm");
+    //      DateFormat f5 = new SimpleDateFormat("d-MMM");
+    //      DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
+    //      DateFormat f7 = new SimpleDateFormat("yyyy");
+
+    DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" );
+    DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" );
+    DateFormat f3 = new SimpleDateFormat( "dd.MM HH:mm" );
+    DateFormat f4 = new SimpleDateFormat( "dd.MM HH:mm" );
+    DateFormat f5 = new SimpleDateFormat( "dd.MM" );
+    DateFormat f6 = new SimpleDateFormat( "dd.MM.yy" );
+    DateFormat f7 = new SimpleDateFormat( "yyyy" );
+
+    f1.setTimeZone( zone );
+    f2.setTimeZone( zone );
+    f3.setTimeZone( zone );
+    f4.setTimeZone( zone );
+    f5.setTimeZone( zone );
+    f6.setTimeZone( zone );
+    f7.setTimeZone( zone );
+
+    // milliseconds
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 1, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 5, DateTickUnit.MILLISECOND, 1, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 10, DateTickUnit.MILLISECOND, 1, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 25, DateTickUnit.MILLISECOND, 5, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 50, DateTickUnit.MILLISECOND, 10, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 100, DateTickUnit.MILLISECOND, 10, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 250, DateTickUnit.MILLISECOND, 10, f1 ) );
+    units.add( new DateTickUnit( DateTickUnit.MILLISECOND, 500, DateTickUnit.MILLISECOND, 50, f1 ) );
+
+    // seconds
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 1, DateTickUnit.MILLISECOND, 50, f2 ) );
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 5, DateTickUnit.SECOND, 1, f2 ) );
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 10, DateTickUnit.SECOND, 1, f2 ) );
+    units.add( new DateTickUnit( DateTickUnit.SECOND, 30, DateTickUnit.SECOND, 5, f2 ) );
+
+    // minutes
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 1, DateTickUnit.SECOND, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 2, DateTickUnit.SECOND, 10, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 5, DateTickUnit.MINUTE, 1, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 10, DateTickUnit.MINUTE, 1, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 15, DateTickUnit.MINUTE, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 20, DateTickUnit.MINUTE, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.MINUTE, 30, DateTickUnit.MINUTE, 5, f3 ) );
+
+    // hours
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 1, DateTickUnit.MINUTE, 5, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 2, DateTickUnit.MINUTE, 10, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 4, DateTickUnit.MINUTE, 30, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 6, DateTickUnit.HOUR, 1, f3 ) );
+    units.add( new DateTickUnit( DateTickUnit.HOUR, 12, DateTickUnit.HOUR, 1, f4 ) );
+
+    // days
+    units.add( new DateTickUnit( DateTickUnit.DAY, 1, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 2, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 3, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 4, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 5, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 6, DateTickUnit.HOUR, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 7, DateTickUnit.DAY, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 10, DateTickUnit.DAY, 1, f5 ) );
+    units.add( new DateTickUnit( DateTickUnit.DAY, 15, DateTickUnit.DAY, 1, f5 ) );
+
+    // months
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 1, DateTickUnit.DAY, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 2, DateTickUnit.DAY, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 3, DateTickUnit.MONTH, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 4, DateTickUnit.MONTH, 1, f6 ) );
+    units.add( new DateTickUnit( DateTickUnit.MONTH, 6, DateTickUnit.MONTH, 1, f6 ) );
+
+    // years
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 1, DateTickUnit.MONTH, 1, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 2, DateTickUnit.MONTH, 3, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 5, DateTickUnit.YEAR, 1, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 10, DateTickUnit.YEAR, 1, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 25, DateTickUnit.YEAR, 5, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 50, DateTickUnit.YEAR, 10, f7 ) );
+    units.add( new DateTickUnit( DateTickUnit.YEAR, 100, DateTickUnit.YEAR, 20, f7 ) );
+
+    return units;
+
   }
 
   /**
@@ -704,21 +851,30 @@ public class ObservationPlot extends XYPlot
    */
   private final static class AlarmLevelPlotElement
   {
+    /** Stroke, with wich the alarm-levels get drawn */
+    public static final Stroke STROKE_ALARM = new BasicStroke( 1.0f );
+
     final AlarmLevel alarm;
 
     final String label;
 
     final DiagramAxis axis;
 
-    final XYTextAnnotation annotation;
+    final XYPointerAnnotation annotation;
 
     public AlarmLevelPlotElement( final AlarmLevel al, final double xCoord, final DiagramAxis diagAxis )
     {
       this.alarm = al;
       this.label = al.label + " (" + al.value + ")"; //$NON-NLS-1$ //$NON-NLS-2$
       this.axis = diagAxis;
-      this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
-      this.annotation.setPaint( al.color );
+      //      this.annotation = new XYTextAnnotation( al.label, xCoord, al.value );
+      annotation = new XYPointerAnnotation( al.label, xCoord, al.value, 0 );
+      annotation.setAngle( Math.toRadians( 340 ) );
+      annotation.setArrowLength( 10.0 );
+      annotation.setLabelOffset( 30 );
+      //      annotation.setArrowPaint( new Color( 0, 0, 0, 0 ) ); // invisible
+      annotation.setArrowPaint( al.color );
+      annotation.setPaint( al.color );
     }
 
     @Override

@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -94,20 +96,20 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
     final TypeObservation xmlObs = (TypeObservation)m_data[1];
     final DiagView view = (DiagView)m_data[0];
 
-    final List ignoreTypes = view.getIgnoreTypesAsList();
+    final List<String> ignoreTypes = view.getIgnoreTypesAsList();
 
-    for( final Iterator it = xmlObs.getCurve().iterator(); it.hasNext(); )
+    for( final Iterator<TypeCurve> it = xmlObs.getCurve().iterator(); it.hasNext(); )
     {
-      final TypeCurve tcurve = (TypeCurve)it.next();
+      final TypeCurve tcurve = it.next();
 
-      final List tmaps = tcurve.getMapping();
+      final List<TypeAxisMapping> tmaps = tcurve.getMapping();
       final List<AxisMapping> mappings = new ArrayList<AxisMapping>( tmaps.size() );
 
       boolean useThisCurve = true;
 
-      for( final Iterator itm = tmaps.iterator(); itm.hasNext(); )
+      for( final Iterator<TypeAxisMapping> itm = tmaps.iterator(); itm.hasNext(); )
       {
-        final TypeAxisMapping tmap = (TypeAxisMapping)itm.next();
+        final TypeAxisMapping tmap = itm.next();
 
         try
         {
@@ -154,19 +156,39 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         {
           final IAxis axis = DiagViewUtils.getValueAxis( mappings.toArray( new AxisMapping[mappings
               .size()] ) );
-          if( axis != null )
-            color = TimeserieUtils.getColorFor( axis.getType() );
-          else
+      if( axis == null )
             color = ColorUtilities.random();
+          else
+            color = TimeserieUtils.getColorsFor( axis.getType() )[0];
         }
 
         final String curveName = ObsViewUtils.replaceTokens( tcurve.getName(), obs, null );
+
+        final Stroke stroke;
+        final TypeCurve.Stroke xmlStroke = tcurve.getStroke();
+        if( xmlStroke == null )
+          stroke = null;
+        else
+        {
+          final List<Float> dashList = xmlStroke.getDash();
+          if( dashList == null || dashList.size() == 0 )
+            stroke = new BasicStroke( xmlStroke.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f );
+          else
+          {
+            final float[] dashArray = new float[dashList.size()];
+            for( int i = 0; i < dashList.size(); i++ )
+              dashArray[i] = dashList.get( i ).floatValue();
+
+            stroke = new BasicStroke( xmlStroke.getWidth(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.0f,
+                dashArray, 0.0f );
+          }
+        }
 
         // each curve gets its own provider since the curve disposes its provider, when it get disposed
         final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null )
             : new PooledObsProvider( key, null );
 
-        final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, null, mappings.toArray( new AxisMapping[0] ) );
+        final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, stroke, mappings.toArray( new AxisMapping[0] ) );
         curve.setShown( tcurve.isShown() );
 
         view.addItem( curve );
@@ -177,6 +199,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
   /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
+  @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Auto-generated method stub
