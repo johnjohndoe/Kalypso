@@ -61,8 +61,6 @@ import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTableModel;
-import org.kalypso.ogc.sensor.tableview.swing.ObservationTablePanel;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
@@ -91,14 +89,6 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   }
 
   /**
-   * @return Returns the observation table model
-   */
-  public ObservationTableModel getModel()
-  {
-    return (ObservationTableModel)m_table.getModel();
-  }
-
-  /**
    * @return Returns the table.
    */
   public ObservationTable getTable()
@@ -117,7 +107,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
     m_swingContainer = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( m_swingContainer );
 
-    vFrame.add( new ObservationTablePanel( m_table ) );
+    vFrame.add( m_table );
 
     vFrame.setVisible( true );
   }

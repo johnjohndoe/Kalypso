@@ -48,13 +48,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorLauncher;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -80,16 +81,16 @@ public class GrafikEditorLauncher implements IEditorLauncher
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
       @Override
-      protected void execute( IProgressMonitor monitor )
+      protected void execute( IProgressMonitor monitor ) throws CoreException
       {
         IStatus status = Status.OK_STATUS;
 
-        monitor.beginTask( Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.0"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
         try
         {
           final IContainer parent = file.getParent();
 
-          final IFolder folder = parent.getFolder( new Path( Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.1") ) ); //$NON-NLS-1$
+          final IFolder folder = parent.getFolder( new Path( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.1" ) ) ); //$NON-NLS-1$
 
           if( path.getFileExtension().equalsIgnoreCase( DiagViewUtils.ODT_FILE_EXTENSION ) )
             status = GrafikLauncher.startGrafikODT( file, folder, monitor );
@@ -98,19 +99,18 @@ public class GrafikEditorLauncher implements IEditorLauncher
           else if( file.getFileExtension().equalsIgnoreCase( "zml" ) ) //$NON-NLS-1$
             status = GrafikLauncher.startGrafikZML( file, folder, monitor );
           else
-            status = StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.3") ); //$NON-NLS-1$
+            status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.3" ) ); //$NON-NLS-1$
         }
         catch( final SensorException e )
         {
-          status = StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.4") ); //$NON-NLS-1$
+          status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.4" ) ); //$NON-NLS-1$
         }
         finally
         {
           monitor.done();
 
           if( !status.isOK() )
-            ErrorDialog.openError( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.5"), //$NON-NLS-1$
-                Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.6"), status ); //$NON-NLS-1$
+            throw new CoreException( status );
         }
       }
     };
@@ -121,8 +121,10 @@ public class GrafikEditorLauncher implements IEditorLauncher
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-          Messages.getString("org.kalypso.ui.editorLauncher.GrafikEditorLauncher.7"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.5" ), Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.7" ), status );
     }
   }
 }

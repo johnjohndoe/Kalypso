@@ -294,7 +294,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   public void appendSpaltenActions( final IMenuManager manager )
   {
     final IKalypsoFeatureTheme theme = m_layerTable.getTheme();
-    if( theme == null )
+    if( theme == null || theme.getFeatureType() == null )
       return;
 
     final IPropertyType[] ftps = theme.getFeatureType().getProperties();

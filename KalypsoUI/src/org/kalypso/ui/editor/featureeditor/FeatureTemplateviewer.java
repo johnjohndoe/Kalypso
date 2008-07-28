@@ -414,6 +414,17 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
   }
 
   /**
+   * @return true, if this template own an data object. This is the case, if in
+   *         {@link #loadInput(Reader, URL, IProgressMonitor, Properties)}the properties parameter has an entry 'href'.
+   *         This Option was needed to fix the annoying bug concerning display of FeatureView in Sachsen/Sachsen-Anhalt
+   *         Wizards.
+   */
+  public boolean hasAdditionalDataObject()
+  {
+    return m_key != null;
+  }
+
+  /**
    * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
    */
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
