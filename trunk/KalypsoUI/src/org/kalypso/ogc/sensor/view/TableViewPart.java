@@ -42,9 +42,6 @@ package org.kalypso.ogc.sensor.view;
 
 import java.awt.Frame;
 
-import javax.swing.BorderFactory;
-import javax.swing.JScrollPane;
-
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -92,9 +89,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     vFrame.setVisible( true );
     m_table.setVisible( true );
 
-    final JScrollPane pane = new JScrollPane( m_table );
-    pane.setBorder( BorderFactory.createEmptyBorder() );
-    vFrame.add( pane );
+    vFrame.add( m_table );
 
     getSite().getPage().addPartListener( this );
   }

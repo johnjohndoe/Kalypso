@@ -46,6 +46,7 @@ import java.util.Date;
 
 import org.kalypso.contribs.eclipse.swt.widgets.DateRangeInputControl;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
 import org.kalypso.repository.IRepositoryItem;
 
 /**
@@ -69,7 +70,9 @@ public final class ObservationViewHelper
    */
   public static DateRange makeDateRange( final IRepositoryItem item )
   {
-    final DateFormat df = DateFormat.getDateTimeInstance();
+    // REMARK: make sure that this DateFormat instance is the same with which the
+    // repository properties where formatted (look at DateRangeInputControlStruct) 
+    final DateFormat df = TimeserieUtils.getDateFormat();
 
     if( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) != null )
     {
