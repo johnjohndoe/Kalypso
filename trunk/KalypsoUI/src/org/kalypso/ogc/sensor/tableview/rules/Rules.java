@@ -98,7 +98,7 @@ public class Rules implements ITableViewRules
   public RenderingRule[] findRules( final Number mask ) throws NoSuchElementException
   {
     RenderingRule[] r = m_map.get( mask );
-
+    // TODO: the map is never reset, this smells buggy...
     if( r != null )
       return r;
 
@@ -149,5 +149,21 @@ public class Rules implements ITableViewRules
   public String toString( )
   {
     return "Rules (Amount= " + m_rules.size() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#cloneRules()
+   */
+  public ITableViewRules cloneRules()
+  {
+    final Rules rules = new Rules();
+
+    for( Iterator iter = m_rules.iterator(); iter.hasNext(); )
+    {
+      final RenderingRule rule = (RenderingRule)iter.next();
+      rules.addRule( rule.cloneRule() );
+    }
+
+    return rules;
   }
 }

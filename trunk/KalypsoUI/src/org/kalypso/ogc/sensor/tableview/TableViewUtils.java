@@ -274,6 +274,8 @@ public final class TableViewUtils
     // features-list is optional
     if( xml.getFeatures() != null )
     {
+      view.clearFeatures();
+
       final String[] featureNames = xml.getFeatures().split( ";" ); //$NON-NLS-1$
       for( final String element : featureNames )
         view.setFeatureEnabled( element, true );
