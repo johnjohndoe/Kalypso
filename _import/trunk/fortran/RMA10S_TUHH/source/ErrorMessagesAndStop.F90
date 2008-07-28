@@ -1,4 +1,4 @@
-!     Last change:  WP   15 Jun 2008   12:55 pm
+!     Last change:  MD   28 Jul 2008    5:29 pm
 subroutine ErrorMessageAndStop (ErrorID, ObjectID, coorx, coory)
 
 implicit none
@@ -317,6 +317,9 @@ end if
             & 1x, 'TO A REAL PROFILE/ NODE. THERE MUST BE A MODEL FILE ERROR' / &
             & 1x, 'PLEASE CHECK YOUR MESH, THE CURRENT ERROR OCCURS AT NODE', I5 / &
             & 1x, 'EXECUTION TERMINATED!')
+ 1603 FORMAT (1x, "ERROR - Restart values for lambda can't be applied to element,", i5, ',' / &
+            & 1x, 'because it is less or equal zero or it is higher than the' / &
+            & 1x, 'maximum element number')
 
 !2000   Output Errors
 !3000   Mesh Errors
