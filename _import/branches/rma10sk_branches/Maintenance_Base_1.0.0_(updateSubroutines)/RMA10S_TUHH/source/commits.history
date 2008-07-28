@@ -195,12 +195,14 @@ Version 1.0.1 (laufende Änderungen)
 025.) Upload fileIntel.for, which allows developers to compile with Lahey and Intel compiler
 --- committed
 
---- Nico Schrage, 24.07.2008 (1.0.1alpha2)
+--- Nico Schrage, 24.07.2008 (release 1.0.1)
 
-026.) Delete some testing code in coef25.sub and coef25NT.sub
-027.) Manage writing of PRA, PRQ and PRB lines in result file for 2D-nodes. There was a bad check, which is now modernized. Problem was the restart with such a result file.
-028.) Activate VO, GA, GO lines for restart and leave inputd.sub earlier, when searching for proper time step to get BCs from. Problem was that restart conditions for H-boundary nodes were changed. (Affects: inputd.for, rdkalypso.f90).
+Version 1.0.2 (laufende Änderungen)
+-----------------------------------
+
+001.) Delete some testing code in coef25.sub and coef25NT.sub
+002.) Manage writing of PRA, PRQ and PRB lines in result file for 2D-nodes. There was a bad check, which is now modernized. Problem was the restart with such a result file.
+003.) Activate VO, GA, GO lines for restart and leave inputd.sub earlier, when searching for proper time step to get BCs from. Problem was that restart conditions for H-boundary nodes were changed. (Affects: inputd.for, rdkalypso.f90).
       Now restart is in 2D full functional.
 
---- Nico Schrage, 28.07.2008 (1.0.1alpha3)
-      
+--- Nico Schrage, 28.07.2008 (1.0.2alpha1)
