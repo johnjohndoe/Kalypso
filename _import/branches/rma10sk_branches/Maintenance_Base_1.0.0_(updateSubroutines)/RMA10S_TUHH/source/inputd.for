@@ -1,4 +1,4 @@
-C     Last change:  WP    2 Jul 2008    5:40 pm
+C     Last change:  WP   28 Jul 2008    5:16 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE SEP 6 2004   add error file
 cipk  last update Aug 06 2002 expand dlin to 80 char
@@ -268,6 +268,8 @@ C
           call ginpt(ibin, id, dlin)
           if (ID(1:7) == 'ENDSTEP') EXIT findEndStep
         end do findEndStep
+        !nis,jul08: leave subroutine, if time step is found and don't transform restart values!
+        return
 
       end if
 

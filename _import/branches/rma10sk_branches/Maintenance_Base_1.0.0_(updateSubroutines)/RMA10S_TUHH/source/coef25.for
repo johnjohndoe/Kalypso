@@ -28,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   22 Jul 2008   10:05 am
+C     Last change:  WP   28 Jul 2008    5:15 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -132,12 +132,6 @@ C
 CIPK MAR03  REPLACE TH(NN) WITH THNN
 
       THNN=TH(NN)
-!NiS,jun06:testing
-!IF(nn.eq.4207) WRITE(*,*)th(nn),nn, 'richtung th'
-!IF(nn.eq.4207) WRITE(*,*) (nop(nn,knotenn),knotenn=1,8)
-!IF(nn.eq.2500) WRITE(*,*)th(nn),nn, 'richtung th'
-!IF(nn.eq.2500) WRITE(*,*) (nop(nn,knotenn),knotenn=1,8)
-!-
 
       IF (GRAV .LT. 32.)  ROAVG = 516. * 1.935
 C

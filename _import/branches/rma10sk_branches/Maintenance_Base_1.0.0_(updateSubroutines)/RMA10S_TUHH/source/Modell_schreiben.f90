@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2008    2:52 pm
+!     Last change:  WP   28 Jul 2008    5:19 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -73,7 +73,6 @@ INTEGER              :: i, j                           !counters for loops
 INTEGER              :: k                              !node while preparing arc array for writing
 INTEGER              :: nbot, ntop                     !the two nodes of an element
 INTEGER              :: nelem                          !number of element counter for LOOP
-INTEGER              :: PolyApproach
 INTEGER              :: DefLine                        !Number of lines, that need to be written for a continuity line definition
 INTEGER              :: lile, Rest, Startnode, NoLines
 
@@ -344,11 +343,7 @@ write_nodes: DO i = 1, np
   !end if
 
 
-    !EFa Dec06, weitere Daten einlesen für 1d-Teschke-Elemente
-    PolyApproach = 1
-    !if (MINVAL (apoly(1, i, :) /= 0.0 .or. MAXVAL (apoly(1, i, :) /= 0.0) PolyApproach = 1
-
-    if (PolyApproach == 1) then
+    if (IsPolynomNode (i) .and. (.not. IntPolProf (i))) then
       !WRITE (IKALYPSOFM, 7020) i, hhmin(i),hhmax(i)
       !WRITE (IKALYPSOFM, 7021) i, hbordv(i)
 

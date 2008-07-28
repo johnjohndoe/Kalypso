@@ -28,7 +28,7 @@ cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
-C     Last change:  WP   15 Jun 2008   12:53 pm
+C     Last change:  WP   28 Jul 2008    5:15 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -2034,8 +2034,8 @@ C            rkeepeq(ja)=rkeepeq(ja)+f(ia)
 
 
 !write matrix into file as control output
-      if (TransitionElement (nn))
-     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
+!      if (TransitionElement (nn))
+!     +  call Write2DMatrix(nbc, nop, estifm, f, maxp, maxe, nn, ncn)
 !-
 
 !      WRITE(196,*) 'ELEMENT',NN,' F'
