@@ -77,7 +77,6 @@ public class SaveThemeHandler extends AbstractHandler
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @SuppressWarnings("unused") //$NON-NLS-1$
-  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

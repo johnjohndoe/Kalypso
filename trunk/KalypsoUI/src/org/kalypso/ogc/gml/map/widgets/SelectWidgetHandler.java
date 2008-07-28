@@ -59,7 +59,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
   private String m_widgetTooltipFromExtension;
 
-  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
