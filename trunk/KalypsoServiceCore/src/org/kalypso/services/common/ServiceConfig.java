@@ -62,7 +62,10 @@ public class ServiceConfig
 
   public static URL getConfLocation() throws MalformedURLException
   {
-    return new URL( System.getProperty( CONF_DIR ) );
+    final String confDir = System.getProperty( CONF_DIR, null );
+    if( confDir == null )
+      throw new IllegalArgumentException( "Server configuration not set. Set system property : " + CONF_DIR );
+    return new URL( confDir );
   }
 
   public static File getTempDir()
