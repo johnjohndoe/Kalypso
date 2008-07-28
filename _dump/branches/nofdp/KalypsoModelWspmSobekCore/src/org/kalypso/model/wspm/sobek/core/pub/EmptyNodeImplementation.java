@@ -104,6 +104,9 @@ public class EmptyNodeImplementation extends AbstractNode
     final Object objBranch = getFeature().getProperty( myProperty );
     final Feature feature = FeatureUtils.resolveFeature( getModel().getWorkspace(), objBranch );
 
+    if( feature == null )
+      return null;
+
     return new Branch( getModel(), feature );
   }
 
