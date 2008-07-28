@@ -40,14 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ant;
 
-import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
@@ -71,6 +69,8 @@ import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -105,6 +105,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
    * <ul>
    * <li>zero</li>
    * <li>infinite</li>
+   * x
    * <li>infinite_links</li>
    * </ul>
    * </p>
@@ -201,7 +202,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
   }
 
   protected abstract FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver,
-      final PrintWriter logWriter, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
+      final ILogger logger, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException,
       InterruptedException;
 
   protected abstract void validateInput();
@@ -211,13 +212,32 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
    */
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    PrintWriter logPW = null;
+    final Project antProject = getProject();
+    // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
+    // else we get an LinkageError when accessing the Project class.
+    final ILogger logger = new ILogger()
+    {
+      /**
+       * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
+       */
+      public void log( final Level level, final int msgCode, final String message )
+      {
+        final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
+        if( antProject == null )
+          System.out.println( outString );
+        else
+          antProject.log( outString );
+      }
+    };
+
     try
     {
-      monitor.beginTask( ClassUtilities.getOnlyClassName( getClass() ), m_featurePath.length );
+      final String myClassName = ClassUtilities.getOnlyClassName( getClass() );
+      monitor.beginTask( myClassName, m_featurePath.length );
 
-      final StringWriter logwriter = new StringWriter();
-      logPW = new PrintWriter( new BufferedWriter( logwriter ) );
+      final String taskDesk = getDescription();
+      if( taskDesk != null )
+        logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
 
       validateInput();
 
@@ -245,7 +265,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
         final SubProgressMonitor subProgressMonitor = new SubProgressMonitor( monitor, 1 );
         try
         {
-          final FeatureVisitor visitor = createVisitor( m_context, resolver, logPW, subProgressMonitor );
+          final FeatureVisitor visitor = createVisitor( m_context, resolver, logger, subProgressMonitor );
 
           final String fp = m_featurePath[i];
           workspace.accept( visitor, fp, depth );
@@ -259,18 +279,18 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
           final IStatus status = StatusUtilities.statusFromThrowable( e );
           if( m_ignoreIllegalFeaturePath )
           {
-            logPW.println( "Feature wird ignoriert (" + status.getMessage() + ")" );
+            logger.log( Level.WARNING, -1, "Feature wird ignoriert (" + status.getMessage() + ")" );
           }
           else
           {
-            logPW.println( status.getMessage() );
+            logger.log( Level.WARNING, -1, status.getMessage() );
             stati.add( status );
           }
         }
         catch( final Throwable t )
         {
           final IStatus status = StatusUtilities.statusFromThrowable( t );
-          logPW.println( status.getMessage() );
+          logger.log( Level.SEVERE, -1, status.getMessage() );
           stati.add( status );
         }
         finally
@@ -294,14 +314,6 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
         }
       }
 
-      logPW.close();
-      final Project antProject = getProject();
-      final String logString = logwriter.toString();
-      if( antProject == null )
-        System.out.print( logString );
-      else
-        antProject.log( logString );
-
       return new MultiStatus( KalypsoGisPlugin.getId(), 0, stati.toArray( new IStatus[stati.size()] ), "",
           null );
     }
@@ -314,8 +326,6 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
     }
     finally
     {
-      IOUtils.closeQuietly( logPW );
-
       monitor.done();
     }
   }
@@ -327,7 +337,7 @@ public abstract class AbstractFeatureVisitorTask extends Task implements ICoreRu
    * </p>
    * 
    * @param visitor
-   *          The visitor previously create by {@link #createVisitor(URL, IUrlResolver, PrintWriter, IProgressMonitor)}.
+   *          The visitor previously create by {@link #createVisitor(URL, IUrlResolver, ILogger, IProgressMonitor)}.
    */
   protected IStatus statusFromVisitor( final FeatureVisitor visitor )
   {

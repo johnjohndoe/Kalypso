@@ -48,6 +48,7 @@ import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -170,7 +171,8 @@ public class GmlPropertyTask extends Task
       final Date dateValue = DateUtilities.toDate( (XMLGregorianCalendar) value );
       final Integer dateoffset = property.getDateoffset();
       final String dateoffsetfield = property.getDateoffsetfield();
-      final Date date;
+      final String dateTruncField = property.getDateTruncField();
+      Date date;
       if( dateoffset != null && dateoffsetfield != null )
       {
         final Calendar cal = Calendar.getInstance();
@@ -180,6 +182,9 @@ public class GmlPropertyTask extends Task
       }
       else
         date = dateValue;
+
+      if( dateTruncField != null )
+        date = DateUtils.truncate( date, Integer.valueOf( dateTruncField ).intValue() );
 
       m_propertyAdder.addProperty( name, "" + date.getTime(), null );
     }
@@ -225,6 +230,11 @@ public class GmlPropertyTask extends Task
     /** HACK: if the property is a date, the offset to this field. Must be One of Calendar.HOUR_OF_DAY, etc. */
     private String m_dateoffsetfield;
 
+    /**
+     * HACK: if the property is a date, truncation manipulation to this field. Must be One of Calendar.HOUR_OF_DAY, etc.
+     */
+    private String m_dateTruncField;
+
     public final Integer getDateoffset( )
     {
       return m_dateoffset;
@@ -243,6 +253,16 @@ public class GmlPropertyTask extends Task
     public final void setDateoffsetfield( final String dateoffsetfield )
     {
       m_dateoffsetfield = dateoffsetfield;
+    }
+
+    public final String getDateTruncField( )
+    {
+      return m_dateTruncField;
+    }
+
+    public final void setDateTruncField( final String dateTruncfield )
+    {
+      m_dateTruncField = dateTruncfield;
     }
 
     public final String getFeatureID( )

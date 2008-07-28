@@ -41,7 +41,6 @@
 
 package org.kalypso.ant;
 
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.util.MapZmlMeta2FeatureVisitor;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -85,11 +85,10 @@ public class MapZmlMeta2FeatureTask extends AbstractFeatureVisitorTask
   }
   
   /**
-   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL,
-   *      org.kalypso.contribs.java.net.IUrlResolver, java.io.PrintWriter, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ant.AbstractFeatureVisitorTask#createVisitor(java.net.URL, org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.contribs.java.util.logging.ILogger, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver, final PrintWriter logWriter,
+  protected FeatureVisitor createVisitor( final URL context, final IUrlResolver resolver,  final ILogger logger,
       final IProgressMonitor monitor )
   {
     return new MapZmlMeta2FeatureVisitor( context, resolver, m_zmlLink, m_mappings.toArray( new MapZmlMeta2FeatureVisitor.Mapping[m_mappings.size()] ) );

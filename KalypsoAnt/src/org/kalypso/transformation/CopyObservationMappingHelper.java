@@ -29,13 +29,11 @@
  */
 package org.kalypso.transformation;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 
-import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
@@ -43,6 +41,7 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.ogc.util.CopyObservationFeatureVisitor;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -77,7 +76,7 @@ public class CopyObservationMappingHelper
   public static GMLWorkspace createMappingWorkspace( final URL context ) throws Exception
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS, (String)null );
+    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS, (String) null );
     if( schema == null )
       throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
     final IFeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
@@ -88,13 +87,14 @@ public class CopyObservationMappingHelper
   /**
    * @param workspace
    *          the mapping will be added to the given workspace, usually a workspace created by this class
-   * @param inHref
-   *          reference to the ZML-input (also a filter),usually used as source by a CopyObservationTask
+   * @param filterInline
+   *          an inline Filter reference to the ZML-input (also a filter),usually used as source by a
+   *          CopyObservationTask
    * @param outHref
    *          reference to the ZML-output, usually used as target by a CopyObservationTask
    * @throws Exception
    */
-  public static void addMapping( GMLWorkspace workspace, String inHref, String outHref ) throws Exception
+  public static void addMapping( GMLWorkspace workspace, String filterInline, String outHref ) throws Exception
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
@@ -105,7 +105,8 @@ public class CopyObservationMappingHelper
     final IRelationType parentRelation = (IRelationType) mapFT.getProperty( CopyObservationMappingHelper.RESULT_TS_IN_PROP );
     final Feature mapFE = workspace.createFeature( rootFeature, parentRelation, mapFT );
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
-    inLink.setHref( inHref );
+    final String finalHref = "#" + ZmlURLConstants.FRAGMENT_USEASCONTEXT + "?" + filterInline;
+    inLink.setHref( finalHref );
     mapFE.setProperty( parentRelation, inLink );
 
     // out
@@ -120,41 +121,27 @@ public class CopyObservationMappingHelper
   /**
    * this mapping updates only the measured time periode, the forecast periode will be taken from the target before
    * overwriting it. So only measured periode will update.
-   * 
-   * @param workspace
-   *          the workspace to process, usually a workspace created by this class
-   * @param resolver
-   *          resolver
-   * @param srcContext
-   *          context
-   * @param logger
-   *          logger
-   * @param from
-   *          begin of measure periode
-   * @param forecastStart
-   *          begin of forecast periode (end of measure periode)
-   * @param end
-   *          end of forecast periode
    */
-  public static void runMapping( final GMLWorkspace workspace, final UrlResolver resolver, final URL srcContext, final ILogger logger, Date from, Date forecastStart, Date end, boolean keepForecast )
+  public static void runMapping( final GMLWorkspace workspace, final IUrlResolver resolver, final URL srcContext, final ILogger logger, boolean keepForecast, final Date sourceFrom, final Date sourceTo, final Date targetFrom, final Date targetTo, final Date forecastFrom, final Date forecastTo )
   {
-    final StringWriter stringWriter = new StringWriter();
-    final PrintWriter writer = new PrintWriter( stringWriter );
     final CopyObservationFeatureVisitor.Source[] sources;
     if( keepForecast )
     {
       // Note: the order is important for the ForecastFilter!
       // so we put the target-obs in the first place since it is
       // the first element that will be backed by the forecast-filter
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, forecastStart, end, null ), // forecast
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ) // measured
-      };
+      // forecast and measured
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, targetFrom, targetTo, null ),
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, sourceFrom, sourceTo, null ) };
     }
     else
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, from, forecastStart, null ), // measured
-      };
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP, sources, new Properties(), null, null, writer, null );
+      // measured
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, sourceFrom, sourceTo, null ), };
+    // REMARK: forecastFrom and forecastTo where formerly not set which resultet in
+    // strange behaviour: run from the runtime workspace, the forecast range
+    // was set, from the deployed application it was not, however both used
+    // exactly the same plugins. Setting it here succeeded however.
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP, sources, new Properties(), forecastFrom, forecastTo, logger, null );
     workspace.accept( visitor, RESULT_LIST_PROP, 1 );
-    logger.log( stringWriter.toString() );
   }
 }
