@@ -99,7 +99,7 @@ public class URLActionStartCalculation extends AbstractURLAction
       final Job calcJob = new CalcCaseJob( folder );
 
       // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( getShell(), "Berechnung durchführen: " + folder.getName(), "Berechnung beendet: ", false ) );
+      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( getShell(), "Berechnung durchführen: " + folder.getName(), "Berechnung beendet: ", false, false ) );
       calcJob.schedule();
     }
     return true;
