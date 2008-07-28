@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-
      <extension
             point="org.kalypso.metadoc.exportTarget">
          <target
@@ -11,11 +10,5 @@
                name="%metadocServiceTarget.name"
                modes="wizard"
                id="metadocServiceTarget"/>
-      </extension>
-      <extension
-            point="org.kalypso.services.core.client.serviceproxy">
-         <serviceproxy
-               class="org.kalypso.services.proxy.Kalypso_MetaDocService_Impl"
-               interfacename="IMetaDocService"/>
       </extension>
 </plugin>

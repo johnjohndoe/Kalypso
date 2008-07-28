@@ -55,7 +55,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -73,8 +72,6 @@ import org.kalypso.auth.KalypsoAuthPlugin;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.client.KalypsoServiceCoreClientPlugin;
-import org.kalypso.core.client.ProxyFactory;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -198,7 +195,13 @@ public class MetaDocServiceExportTarget extends AbstractExportTarget
     {
       throw e;
     }
-    catch( final Exception e )
+    catch( final RemoteException re )
+    {
+      // Unpack true exception from remote exception
+      // TODO: maybe further unpacking is necessary?
+      throw new InvocationTargetException( re.getCause() );
+    }
+    catch( final Throwable e )
     {
       throw new InvocationTargetException( e );
     }
