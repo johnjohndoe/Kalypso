@@ -105,7 +105,7 @@ public final class ZmlFilter extends AbstractObservationFilter
 
             if( item != null )
             {
-              m_obs = (IObservation) item.getAdapter( IObservation.class );
+              setObservation( (IObservation)item.getAdapter( IObservation.class ) );
 
               return;
             }
@@ -124,7 +124,7 @@ public final class ZmlFilter extends AbstractObservationFilter
         final IObservation observation = ZmlFactory.parseXML( sourceUrl, href );
 
         // override observation from abstract filter (super type)
-        m_obs = observation;
+        setObservation( observation );
       }
       catch( MalformedURLException e )
       {

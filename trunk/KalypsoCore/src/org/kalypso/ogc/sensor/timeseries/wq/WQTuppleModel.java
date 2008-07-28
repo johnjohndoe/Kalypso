@@ -52,7 +52,6 @@ import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
 /**
  * The WQTuppleModel computes W, Q, V, etc. on the fly, depending on the underlying axis type. It also manages the
@@ -88,6 +87,10 @@ public class WQTuppleModel extends AbstractTuppleModel
 
   private final IWQConverter m_converter;
 
+  private final int m_destAxisPos;
+
+  private final int m_destStatusAxisPos;
+
   /**
    * Creates a <code>WQTuppleModel</code> that can generate either W or Q on the fly. It needs an existing model from
    * whitch the values of the given type are fetched.
@@ -106,13 +109,22 @@ public class WQTuppleModel extends AbstractTuppleModel
    *          destination axis for which values are computed
    * @param destStatusAxis
    *          status axis for the destAxis (destination axis)
+   * @param destStatusAxisPos
+   *          position of the axis in the array
+   * @param destAxisPos
+   *          position of the axis in the array
    */
-  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter )
+  public WQTuppleModel( final ITuppleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter, int destAxisPos, int destStatusAxisPos )
   {
     super( axes );
 
     if( converter == null )
       throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel.0") ); //$NON-NLS-1$
+
+    m_destAxisPos = destAxisPos;
+    m_destStatusAxisPos = destStatusAxisPos;
+    mapAxisToPos( destAxis, destAxisPos );
+    mapAxisToPos( destStatusAxis, destStatusAxisPos );
 
     m_model = model;
     m_converter = converter;
@@ -172,20 +184,42 @@ public class WQTuppleModel extends AbstractTuppleModel
     {
       try
       {
-        if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        final String type = axis.getType();
+        if( type.equals( m_converter.getFromType() ) )
         {
           final double q = number.doubleValue();
           value = new Double( m_converter.computeW( d, q ) );
+          status = KalypsoStati.STATUS_DERIVATED;
         }
-        else
+        else if( type.equals( m_converter.getToType() ) )
         {
           final double w = number.doubleValue();
           double q = m_converter.computeQ( d, w );
 
           value = new Double( q );
+          status = KalypsoStati.STATUS_DERIVATED;
+        }
+        else
+        {
+          value = ZERO;
+          status = KalypsoStati.STATUS_DERIVATION_ERROR;
         }
 
-        status = KalypsoStati.STATUS_DERIVATED;
+        //        // TODO: remove if still everything works fine
+        //        if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        //        {
+        //          final double q = number.doubleValue();
+        //          value = new Double( m_converter.computeW( d, q ) );
+        //        }
+        //        else
+        //        {
+        //          final double w = number.doubleValue();
+        //          double q = m_converter.computeQ( d, w );
+        //
+        //          value = new Double( q );
+        //        }
+        //
+        //        status = KalypsoStati.STATUS_DERIVATED;
       }
       catch( final WQException e )
       {
@@ -215,18 +249,37 @@ public class WQTuppleModel extends AbstractTuppleModel
       Integer status = null;
       try
       {
-        if( axis.getType().equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        final String type = axis.getType();
+        if( type.equals( m_converter.getFromType() ) )
         {
           final double w = ((Number) element).doubleValue();
           value = new Double( m_converter.computeQ( d, w ) );
+          status = KalypsoStati.STATUS_USERMOD;
         }
-        else
+        else if( type.equals( m_converter.getToType() ) )
         {
           final double q = ((Number) element).doubleValue();
           value = new Double( m_converter.computeW( d, q ) );
+          status = KalypsoStati.STATUS_USERMOD;
+        }
+        else
+        {
+          value = ZERO;
+          status = KalypsoStati.STATUS_CHECK;
         }
 
-        status = KalypsoStati.STATUS_USERMOD;
+        //        if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
+        //        {
+        //          final double w = ( (Number)element ).doubleValue();
+        //          value = new Double( m_converter.computeQ( d, w ) );
+        //        }
+        //        else
+        //        {
+        //          final double q = ( (Number)element ).doubleValue();
+        //          value = new Double( m_converter.computeW( d, q ) );
+        //        }
+        //
+        //        status = KalypsoStati.STATUS_USERMOD;
       }
       catch( final WQException e )
       {
@@ -240,10 +293,14 @@ public class WQTuppleModel extends AbstractTuppleModel
       if( m_srcStatusAxis != null )
         m_model.setElement( index, status, m_srcStatusAxis );
     }
-    // TODO: besser wäre eigentlich equals, aber das klappt bei status achsen nicht
-    else if( axis == m_destStatusAxis )
+    // TODO: ich glaube Gernot hatte geschrieben:
+    // "besser wäre eigentlich equals, aber das klappt bei status achsen nicht" und hatte == statt equals() benutzt. Ich
+    // bin der Meinung es sollte doch mit equals() klappen.
+    else if( axis.equals( m_destStatusAxis ) )
     {
-      // maybe just ignore??
+      // einfach ignorieren
+
+      // Alte Kommentare:
       // TODO: Marc: dieser Fall hat noch gefehlt. Bisher gabs einfach ne exception, wenn
       // man versucht, die destStatusAxis zu beschreiben
       // Was soll man tun?
@@ -328,4 +385,13 @@ public class WQTuppleModel extends AbstractTuppleModel
     return m_model;
   }
 
+  public int getDestAxisPos()
+  {
+    return m_destAxisPos;
+  }
+
+  public int getDestStatusAxisPos()
+  {
+    return m_destStatusAxisPos;
+  }
 }

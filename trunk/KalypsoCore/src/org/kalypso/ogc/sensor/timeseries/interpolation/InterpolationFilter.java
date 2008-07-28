@@ -45,6 +45,7 @@ import java.util.Date;
 
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.commons.parser.IParser;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITuppleModel;
@@ -54,6 +55,7 @@ import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * InterpolationFilter. This is a simple yet tricky interpolation filter. It steps through the time and eventually
@@ -73,7 +75,7 @@ public class InterpolationFilter extends AbstractObservationFilter
 
   private final boolean m_fill;
 
-  private final Double m_defValue;
+  private final String m_defValue;
 
   private final Integer m_defaultStatus;
 
@@ -96,18 +98,18 @@ public class InterpolationFilter extends AbstractObservationFilter
    *          when true, the last tupples of the model get the last valid tupple from the original, not the default one
    */
   public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill,
-      final double defaultValue, final int defaultStatus, final boolean fillLastWithValid )
+      final String defaultValue, final int defaultStatus, final boolean fillLastWithValid )
   {
     m_calField = calendarField;
     m_amount = amount;
     m_fill = forceFill;
     m_fillLastWithValid = fillLastWithValid;
     m_defaultStatus = new Integer( defaultStatus );
-    m_defValue = new Double( defaultValue );
+    m_defValue = defaultValue;
   }
 
   public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill,
-      final double defaultValue, final int defaultStatus )
+      final String defaultValue, final int defaultStatus )
   {
     this( calendarField, amount, forceFill, defaultValue, defaultStatus, false );
   }
@@ -118,14 +120,22 @@ public class InterpolationFilter extends AbstractObservationFilter
   @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
-    final ITuppleModel values = super.getValues( request );
+    final DateRange dr = request == null ? null : request.getDateRange();
 
-    DateRange dr = null;
-    if( request != null )
-      dr = request.getDateRange();
+    // BUGIFX: fixes the problem with the first value:
+    // the first value was always ignored, because the intervall
+    // filter cannot handle the first value of the source observation
+    // FIX: we just make the request a big bigger in order to get a new first value
+    // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
+    // Maybe there should be one day a mean to determine, which is the right amount.
+    final ITuppleModel values = ObservationUtilities.requestBuffered( getObservation(), dr, Calendar.DAY_OF_MONTH, 2 );
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClass( values.getAxisList(), Date.class );
-    final IAxis[] valueAxes = ObservationUtilities.findAxesByClass( values.getAxisList(), Number.class );
+    final IAxis[] valueAxes = ObservationUtilities.findAxesByClasses( values.getAxisList(), new Class[]
+    {
+        Number.class,
+        Boolean.class } );
+    final Object[] defaultValues = parseDefaultValues( valueAxes );
 
     final SimpleTuppleModel intModel = new SimpleTuppleModel( values.getAxisList() );
 
@@ -143,7 +153,7 @@ public class InterpolationFilter extends AbstractObservationFilter
         cal.setTime( dr.getFrom() );
 
         while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
-          fillWithDefault( dateAxis, valueAxes, intModel, cal );
+          fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal );
 
         return intModel;
       }
@@ -175,7 +185,7 @@ public class InterpolationFilter extends AbstractObservationFilter
         while( cal.getTime().compareTo( begin ) < 0 )
         {
           d1 = cal.getTime();
-          fillWithDefault( dateAxis, valueAxes, intModel, cal );
+          fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal );
         }
       }
       else
@@ -196,11 +206,11 @@ public class InterpolationFilter extends AbstractObservationFilter
 
         intModel.addTupple( tupple );
 
+        d1 = cal.getTime();
+
         cal.add( m_calField, m_amount );
 
         startIx++;
-
-        d1 = cal.getTime();
       }
 
       final LinearEquation eq = new LinearEquation();
@@ -217,31 +227,51 @@ public class InterpolationFilter extends AbstractObservationFilter
 
         while( cal.getTime().compareTo( d2 ) <= 0 )
         {
-          long ms = cal.getTimeInMillis();
+          final long ms = cal.getTimeInMillis();
 
-          Object[] tupple = new Object[valueAxes.length + 1];
+          final Object[] tupple = new Object[valueAxes.length + 1];
           tupple[intModel.getPositionFor( dateAxis )] = cal.getTime();
 
           for( int ia = 0; ia < valueAxes.length; ia++ )
           {
             final int pos = intModel.getPositionFor( valueAxes[ia] );
 
+            final double valStart = v1[pos];
+            final double valStop = v2[pos];
+
+            final long linearStart = d1.getTime();
+            final long linearStop = d2.getTime();
+
             if( KalypsoStatusUtils.isStatusAxis( valueAxes[ia] ) )
             {
-              // this is the status axis: no interpolation
-              tupple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int)v1[pos], (int)v2[pos] ) );
+              // BUGFIX: do not interpolate, if we have the exact date
+              if( linearStart == ms )
+                tupple[pos] = new Integer( (int)valStart );
+              else if( linearStop == ms )
+                tupple[pos] = new Integer( (int)valStop );
+              else
+                // this is the status axis: no interpolation
+                tupple[pos] = new Integer( KalypsoStatusUtils.performInterpolation( (int)valStart, (int)valStop ) );
             }
             else
             {
               // normal case: perform the interpolation
               try
               {
-                eq.setPoints( d1.getTime(), v1[pos], d2.getTime(), v2[pos] );
-                tupple[pos] = new Double( eq.computeY( ms ) );
+                // BUGFIX: do not interpolate, if we have the exact date
+                if( linearStart == ms )
+                  tupple[pos] = new Double( valStart );
+                else if( linearStop == ms )
+                  tupple[pos] = new Double( valStop );
+                else
+                {
+                  eq.setPoints( linearStart, valStart, linearStop, valStop );
+                  tupple[pos] = new Double( eq.computeY( ms ) );
+                }
               }
               catch( SameXValuesException e )
               {
-                tupple[pos] = new Double( v1[pos] );
+                tupple[pos] = new Double( valStart );
               }
             }
           }
@@ -262,7 +292,7 @@ public class InterpolationFilter extends AbstractObservationFilter
       // optionally remember the last interpolated values in order
       // to fill them till the end of the new model
       Object[] lastValidTupple = null;
-      if( m_fillLastWithValid )
+      if( m_fillLastWithValid && intModel.getCount() > 0 )
       {
         final int pos = intModel.getCount() - 1;
 
@@ -276,21 +306,44 @@ public class InterpolationFilter extends AbstractObservationFilter
             lastValidTupple[intModel.getPositionFor( valueAxes[i] )] = intModel.getElement( pos, valueAxes[i] );
         }
       }
-      
+
       while( cal.getTime().compareTo( dr.getTo() ) <= 0 )
-        fillWithDefault( dateAxis, valueAxes, intModel, cal, lastValidTupple );
+        fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal, lastValidTupple );
     }
 
     return intModel;
   }
 
+  private Object[] parseDefaultValues( final IAxis[] valueAxes ) throws SensorException
+  {
+    final Object[] defaultValues = new Object[valueAxes.length];
+    for( int i = 0; i < defaultValues.length; i++ )
+    {
+      try
+      {
+        if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
+          defaultValues[i] = m_defaultStatus;
+        else
+        {
+          final IParser parser = ZmlFactory.createParser(valueAxes[i]);
+          defaultValues[i] = parser.parse( m_defValue );
+        }
+      }
+      catch( final Exception e )
+      {
+        throw new SensorException( e );
+      }
+    }
+    return defaultValues;
+  }
+
   /**
    * Fill the model with default values
    */
-  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final SimpleTuppleModel intModel,
-      final Calendar cal ) throws SensorException
+  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues,
+      final SimpleTuppleModel intModel, final Calendar cal ) throws SensorException
   {
-    fillWithDefault( dateAxis, valueAxes, intModel, cal, null );
+    fillWithDefault( dateAxis, valueAxes, defaultValues, intModel, cal, null );
   }
 
   /**
@@ -299,8 +352,8 @@ public class InterpolationFilter extends AbstractObservationFilter
    * @param masterTupple
    *          if not null, the values from this tupple are used instead of the default one
    */
-  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final SimpleTuppleModel intModel,
-      final Calendar cal, Object[] masterTupple ) throws SensorException
+  private void fillWithDefault( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues,
+      final SimpleTuppleModel intModel, final Calendar cal, Object[] masterTupple ) throws SensorException
   {
     final Object[] tupple;
 
@@ -311,12 +364,9 @@ public class InterpolationFilter extends AbstractObservationFilter
 
       for( int i = 0; i < valueAxes.length; i++ )
       {
-        final int pos = intModel.getPositionFor( valueAxes[i] );
-
-        if( KalypsoStatusUtils.isStatusAxis( valueAxes[i] ) )
-          tupple[pos] = m_defaultStatus;
-        else
-          tupple[pos] = m_defValue;
+        final IAxis axis = valueAxes[i];
+        final int pos = intModel.getPositionFor( axis );
+        tupple[pos] = defaultValues[i];
       }
     }
     else

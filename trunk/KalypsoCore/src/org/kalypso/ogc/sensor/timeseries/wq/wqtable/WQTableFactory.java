@@ -83,8 +83,11 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         final Date validity = ratingTable.getValidity().getTime();
         final Integer offset = ratingTable.getOffset();
 
-        final String[] strX = ratingTable.getX().split( "," ); //$NON-NLS-1$
-        final String[] strY = ratingTable.getY().split( "," ); //$NON-NLS-1$
+        final String xses = ratingTable.getX().trim();
+        final String yses = ratingTable.getY().trim();
+
+        final String[] strX = xses.length() == 0 ? new String[0] : xses.split( "," ); //$NON-NLS-1$
+        final String[] strY = yses.length() == 0 ? new String[0] : yses.split( "," ); //$NON-NLS-1$
 
         if( strX.length != strY.length )
           throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory.2") ); //$NON-NLS-1$

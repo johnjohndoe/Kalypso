@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.dwd.rcm" version="0.1" xmlns:rcm="org.kalypso.dwd.rcm" xmlns:gml="http://www.opengis.net/gml" xmlns:obslink="obslink.zml.kalypso.org" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<annotation>
+		<documentation xml:lang="de"><![CDATA[Rainfall Runoff Model. 
+			Has not so much to do with DWD stuff, but is of course related (maybe the omrbometer-stations are maintained by the DWD.) ]]>
+		</documentation>
+	</annotation>
+
+	<import namespace="http://www.opengis.net/gml" schemaLocation="../../gml2_2002/feature.xsd"/>
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="../../obslink/obslink.xsd"/>
+
+	<!-- The Model -->
+	<!-- Catchments -->
+	<element name="RainfallCatchmentModel" type="rcm:RainfallCatchmentModelType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RainfallCatchmentModelType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="catchmentCollectionMember" type="rcm:CatchmentCollectionPropertyType" minOccurs="1" maxOccurs="1"/>
+					<element name="ombrometerCollectionMember" type="rcm:OmbrometerCollectionPropertyType" minOccurs="1" maxOccurs="1"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<!-- Catchments -->
+	
+	<complexType name="CatchmentCollectionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rcm:CatchmentCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<element name="CatchmentCollection" type="rcm:CatchmentCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="CatchmentCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="catchmentMember" type="rcm:CatchmentPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="CatchmentPropertyType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rcm:Catchment"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<element name="Catchment" type="rcm:CatchmentType" substitutionGroup="gml:_Feature" />
+	<complexType name="CatchmentType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="area" type="gml:PolygonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Einzugsgebietgrenzen</label>
+								<tooltip>Geometrie des Einzugsgebietes</tooltip>
+								<description>Geometrische Begrenzung des Einzugsgebietes</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="rainfall" type="obslink:TimeseriesLinkFeatureProperty"/>
+					<element name="rainfallWeightMember" type="rcm:RainfallWeightPropertyType" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung Ombrometer</label>
+								<tooltip>Zuordnung der Ombrometerstationen zu diesem Einzugsgebiet</tooltip>
+								<description>Gewichtungsfaktoren zur Zuordnung von Ombrrometern zu diesem Einzugsgebiet</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="RainfallWeightPropertyType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rcm:RainfallWeight"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<element name="RainfallWeight" type="rcm:RainfallWeightType" substitutionGroup="gml:_Feature"/>
+	<complexType name="RainfallWeightType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="weight" type="double">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Gewichtung</label>
+								<tooltip>Gewichtungsfaktor</tooltip>
+								<description>Gewichtungsfaktor mit welchem der Zugeordnete Omrometer zu diesem Einzugsgebiet veranschlagt wird.</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="ombrometerAssociation" type="rcm:OmbrometerPropertyType">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Niederschlagsstation</label>
+								<tooltip>Niederschlagsstation</tooltip>
+								<description>Niederschlagsstation</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	
+	<!-- Omrbometer-Stations -->
+	<complexType name="OmbrometerCollectionPropertyType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rcm:OmbrometerCollection"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<element name="OmbrometerCollection" type="rcm:OmbrometerCollectionType" substitutionGroup="gml:_Feature"/>
+	<complexType name="OmbrometerCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="ombrometerMember" type="rcm:OmbrometerPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="OmbrometerPropertyType">
+		<complexContent>
+			<restriction base="gml:FeatureAssociationType">
+				<sequence>
+					<element ref="rcm:Ombrometer"/>
+				</sequence>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<element name="Ombrometer" type="rcm:OmbrometerType" substitutionGroup="gml:_Feature" />
+	<complexType name="OmbrometerType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="stationLocation" type="gml:PointPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Lage</label>
+								<tooltip>Lage der Messstation</tooltip>
+								<description>Geografische Lage der Messstation</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="thiessenPolygone" type="gml:PolygonPropertyType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Thiessen-Polygon</label>
+								<tooltip>Von 'Lage' abgeleitetes Thiessen-Polygon</tooltip>
+								<description>Thiessen-Polygon abgeleitet von 'Lage'</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="timeserie" type="obslink:TimeseriesLinkFeatureProperty">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Zeitreihe</label>
+								<tooltip>Die zugeordnete Zeitreihe</tooltip>
+								<description>Die zugeordnete Zeitreihe</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+</schema>

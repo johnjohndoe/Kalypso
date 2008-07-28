@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.zml;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -296,11 +297,10 @@ public class ZmlFactory
     TimeZone timeZone = null;
     if( obs.getMetadataList() != null )
     {
-      final List mdList = obs.getMetadataList().getMetadata();
-
-      for( final Iterator it = mdList.iterator(); it.hasNext(); )
+      final List<MetadataType> mdList = obs.getMetadataList().getMetadata();
+      for( final Iterator<MetadataType> it = mdList.iterator(); it.hasNext(); )
       {
-        final MetadataType md = (MetadataType) it.next();
+        final MetadataType md = it.next();
 
         final String value;
         if( md.getValue() != null )
@@ -316,14 +316,14 @@ public class ZmlFactory
     }
 
     // axes and values
-    final List tmpList = obs.getAxis();
+    final List<AxisType> tmpList = obs.getAxis();
     final Map<IAxis, IZmlValues> valuesMap = new HashMap<IAxis, IZmlValues>( tmpList.size() );
 
     final String data = obs.getData(); // data is optional and can be null
 
     for( int i = 0; i < tmpList.size(); i++ )
     {
-      final AxisType tmpAxis = (AxisType) tmpList.get( i );
+      final AxisType tmpAxis = tmpList.get( i );
 
       final Properties props = PropertiesHelper.parseFromString( tmpAxis.getDatatype(), '#' );
       final String type = props.getProperty( "TYPE" ); //$NON-NLS-1$
@@ -343,6 +343,13 @@ public class ZmlFactory
         parser = getParserFactory().createParser( type, format );
         if( parser instanceof DateParser && timeZone != null )
           ((DateParser) parser).setTimezone( timeZone );
+
+        // if we have a date parser, set the right timezone to read the values
+        if( parser instanceof DateParser )
+        {
+          final String tzString = metadata.getProperty( TimeserieConstants.MD_TIMEZONE, "UTC" );
+          ((DateParser)parser).setTimezone( TimeZone.getTimeZone( tzString ) );
+        }
 
         values = createValues( context, tmpAxis, parser, data );
       }
@@ -457,9 +464,6 @@ public class ZmlFactory
   {
     try
     {
-      if( timezone == null )
-        timezone = TimeZone.getTimeZone( "UTC" ); // in year 1928 GMT has been replaced by UTC //$NON-NLS-1$
-
       // first of all fetch values
       final ITuppleModel values = obs.getValues( args );
 
@@ -467,27 +471,18 @@ public class ZmlFactory
       obsType.setName( obs.getName() );
       obsType.setEditable( obs.isEditable() );
 
-      boolean timeZonePresent = false;
-
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List<MetadataType> metadataList = metadataListType.getMetadata();
-      for( final Iterator it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
+      for( final Iterator<Entry<Object, Object>> it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
       {
-        final Map.Entry entry = (Entry) it.next();
+        final Map.Entry<Object, Object> entry = it.next();
 
         final String mdKey = (String) entry.getKey();
         String mdValue = (String) entry.getValue();
 
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
-
-        // HACK: check if timezone already present
-        if( mdKey.equals( TimeserieConstants.MD_TIMEZONE ) )
-        {
-          timeZonePresent = true;
-// mdValue = timezone.getID(); // override with our timezone
-        }
 
         // TRICKY: if this looks like an xml-string then pack it
         // into a CDATA section and use the 'data'-Element instead
@@ -499,14 +494,20 @@ public class ZmlFactory
         metadataList.add( mdType );
       }
 
-      // HACK: only add timezone if not already there
-      if( !timeZonePresent )
+      if( timezone == null )
+        timezone = TimeZone.getDefault();
+
+      // write timezone info into metadata
+      final MetadataType mdType = OF.createMetadataType();
+      mdType.setName( TimeserieConstants.MD_TIMEZONE );
+      mdType.setValue( timezone.getID() );
+	  // Check, if value already exists and remove first
+      for( final Iterator<MetadataType> iterator = metadataList.iterator(); iterator.hasNext(); )
       {
-        final MetadataType mdType = OF.createMetadataType();
-        mdType.setName( TimeserieConstants.MD_TIMEZONE );
-        mdType.setValue( timezone.getID() );
-        metadataList.add( mdType );
+        if( iterator.next().getName().equals( TimeserieConstants.MD_TIMEZONE ))
+          iterator.remove();
       }
+      metadataList.add( mdType );
 
       final List<AxisType> axisList = obsType.getAxis();
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
@@ -582,7 +583,7 @@ public class ZmlFactory
 
     if( java.util.Date.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringDateAxis( model, axis, sb, timezone );
-    else if( Number.class.isAssignableFrom( axis.getDataClass() ) )
+    else if( Number.class.isAssignableFrom( axis.getDataClass() ) || Boolean.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringNumberAxis( model, axis, sb );
     else if( String.class.isAssignableFrom( axis.getDataClass() ) )
       buildStringAxis( model, axis, sb );
@@ -678,7 +679,7 @@ public class ZmlFactory
     {
       final Observation xml = createXML( obs, null );
 
-      outs = new FileOutputStream( file );
+      outs = new BufferedOutputStream( new FileOutputStream( file ) );
 
       getMarshaller().marshal( xml, outs );
 
@@ -719,7 +720,7 @@ public class ZmlFactory
           try
           {
             final String stringValue = cells[ax];
-            final Class dataClass = axis[ax].getDataClass();
+            final Class<?> dataClass = axis[ax].getDataClass();
             Object keyValue;
             if( Number.class.isAssignableFrom( dataClass ) )
               keyValue = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
@@ -745,7 +746,7 @@ public class ZmlFactory
             if( cells.length > ax )
             {
               final String stringValue = cells[ax];
-              final Class dataClass = axis[ax].getDataClass();
+              final Class<?> dataClass = axis[ax].getDataClass();
               if( Number.class.isAssignableFrom( dataClass ) )
                 rowValues[ax] = TimeserieUtils.getNumberFormatFor( axis[ax].getType() ).parseObject( stringValue );
               else
@@ -766,9 +767,9 @@ public class ZmlFactory
     // copy from list to array
     final Object[][] values = new Object[collector.size()][axis.length];
     int r = 0;
-    for( Iterator iter = collector.iterator(); iter.hasNext(); )
+    for( final Iterator<Object[]> iter = collector.iterator(); iter.hasNext(); )
     {
-      values[r] = (Object[]) iter.next();
+      values[r] = iter.next();
       r++;
     }
     final ITuppleModel model = new SimpleTuppleModel( axis, values );

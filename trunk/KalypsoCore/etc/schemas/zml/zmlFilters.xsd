@@ -106,7 +106,7 @@
 				<!-- when true, fills the model with defaultValue when no base value -->
 				<attribute type="boolean" name="forceFill"/>
 				<!-- default value to use when filling absent values -->
-				<attribute type="double" name="defaultValue"/>
+				<attribute type="string" name="defaultValue"/>
 				<!-- value of the default status when no base status -->
 				<attribute type="int" name="defaultStatus"/>
 				<!-- when true (only in conjunction with forceFill) fill the last tupples of the model with copies of the last valid tupple instead of using the default value -->
@@ -192,5 +192,37 @@
 		</complexContent>
 	</complexType>
 	<element name="tranProLinFilter" type="filters:tranProLinFilterType" substitutionGroup="filters:filter" />
+	
+	<!-- Rounding filter -->
+    <!-- Filter: intervall building filter 
+    	applies to every value of a given type of the target observation the followin operations:
+    	
+    	- divide by the given factor
+    	- BigDecimal.setScale( 0, roundMode )
+    	- multiply by the given factor
+    	
+        restrictions:
+        value-axis must be of type Double
+        
+        Example: round to the first digit: use factor 10
+     -->
+	<complexType name="roundFilterType">
+		<complexContent>
+			<extension base="filters:abstractFilterType">
+				<sequence>
+					<element ref="filters:filter" minOccurs="0"/>
+				</sequence>
+
+                <!-- Factor which will be applied before and after rounding --> 
+            	<attribute type="int" name="factor"/>
+            	
+            	<!-- One of the BigDecimal.ROUND_ constants -->
+            	<attribute type="string" name="mode"/>
+
+            	<attribute type="string" name="axisType"/>
+			</extension>		
+		</complexContent>
+	</complexType>
+	<element name="roundFilter" type="filters:roundFilterType" substitutionGroup="filters:filter"/>
 	
 </schema>

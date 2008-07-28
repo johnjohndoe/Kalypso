@@ -83,6 +83,9 @@ public class FilterFactory
 
   );
 
+  /** jaxb object factory for filter stuff */
+  public static final ObjectFactory OF_FILTER = new ObjectFactory();
+
   /**
    * Constructor. Reads the properties and creates the factory.
    */

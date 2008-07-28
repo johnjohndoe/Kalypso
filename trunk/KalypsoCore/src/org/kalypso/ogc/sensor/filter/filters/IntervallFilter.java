@@ -41,12 +41,15 @@
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.IntervallFilterType;
@@ -88,7 +91,7 @@ public class IntervallFilter extends AbstractObservationFilter
     m_defaultStatus = filter.getDefaultStatus();
     m_defaultValue = filter.getDefaultValue();
     m_calendarField = CalendarUtilities.getCalendarField( filter.getCalendarField() );
-    
+
     m_amount = filter.getAmount();
     m_startCalendarField = filter.getStartCalendarfield();
     m_startCalendarValue = filter.getStartCalendarvalue();
@@ -104,22 +107,21 @@ public class IntervallFilter extends AbstractObservationFilter
   @Override
   public ITuppleModel getValues( final IRequest request ) throws SensorException
   {
-    final Date from;
-    final Date to;
-    if( request != null && request.getDateRange() != null )
-    {
-      from = request.getDateRange().getFrom();
-      to = request.getDateRange().getTo();
-    }
-    else
-    {
-      from = null;
-      to = null;
-    }
+    final DateRange dateRange = request == null ? null : request.getDateRange();
+
+    final Date from = dateRange == null ? null : dateRange.getFrom();
+    final Date to = dateRange == null ? null : dateRange.getTo();
+
+    // BUGIFX: fixes the problem with the first value:
+    // the first value was always ignored, because the intervall
+    // filter cannot handle the first value of the source observation
+    // FIX: we just make the request a big bigger in order to get a new first value
+    // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
+    // Maybe there should be one day a mean to determine, which is the right amount.
+    final ITuppleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
 
     return new IntervallTupplemodel( m_mode, m_calendarField, m_amount, m_startCalendarValue, m_startCalendarField,
-        m_baseobservation.getValues( request ), from, to, m_defaultValue, m_defaultStatus );
-
+        values, from, to, m_defaultValue, m_defaultStatus );
   }
 
   @Override

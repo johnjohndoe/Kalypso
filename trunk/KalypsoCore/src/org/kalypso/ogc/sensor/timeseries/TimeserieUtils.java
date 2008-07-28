@@ -41,20 +41,30 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -70,6 +80,7 @@ import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Utilities when dealing with Observations which are Kalypso Timeseries.
@@ -78,7 +89,9 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
  */
 public class TimeserieUtils
 {
-  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/config.properties" ); //$NON-NLS-1$
+  private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties";
+
+  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource" ); //$NON-NLS-1$
 
   private static String m_basename = "config"; //$NON-NLS-1$
 
@@ -87,6 +100,25 @@ public class TimeserieUtils
   private static HashMap<String, NumberFormat> m_formatMap = new HashMap<String, NumberFormat>();
 
   private static NumberFormat m_defaultFormat = null;
+
+  /**
+   * Used by the ObservationTable and the observationDiagram
+   */
+  private static DateFormat DF = new SimpleDateFormat( "dd.MM.yy HH:mm" );
+
+  static
+  {
+    final TimeZone timeZone;
+    // if the platform is runnning, use its time zone
+    if( Platform.isRunning() )
+    {
+      // Set the time zone according to the global settings
+      timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+      DF.setTimeZone( timeZone );
+    }
+    else
+      timeZone = TimeZone.getTimeZone( "UTC" );
+  }
 
   private TimeserieUtils( )
   {
@@ -127,15 +159,16 @@ public class TimeserieUtils
 
     final ArrayList<String> mds = new ArrayList<String>();
 
-    final Iterator it = mdl.keySet().iterator();
-    while( it.hasNext() )
+    
+    final Set<Object> keySet = mdl.keySet();
+    for( Object object : keySet )
     {
-      final String md = it.next().toString();
+      final String md = object.toString();
 
       if( md.startsWith( mdPrefix ) )
         mds.add( md );
     }
-
+    
     return mds.toArray( new String[mds.size()] );
   }
 
@@ -173,7 +206,50 @@ public class TimeserieUtils
     if( m_config == null )
     {
       m_config = new Properties();
-      PropertiesUtilities.loadI18nProperties( m_config, m_configBaseUrl, m_basename );
+      
+      final Properties defaultConfig = new Properties();
+      m_config = new Properties( defaultConfig );
+
+      // The config file in the sources is used as defaults
+      PropertiesUtilities.loadI18nProperties( defaultConfig, m_configBaseUrl, m_basename );
+	
+	// TODO: also load configured properties via i18n mechanism
+      InputStream configIs = null;
+      try
+      {
+        // If we have a configured config file, use it as standard
+        final URL configUrl = Platform.isRunning() ? Platform.getConfigurationLocation().getURL() : null;
+        final String timeseriesConfigLocation = System.getProperty( PROP_TIMESERIES_CONFIG );
+        final URL timeseriesConfigUrl = timeseriesConfigLocation == null ? null : new URL( configUrl,
+            timeseriesConfigLocation );
+
+        try
+        {
+          if( timeseriesConfigUrl != null )
+            configIs = timeseriesConfigUrl.openStream();
+        }
+        catch( final FileNotFoundException ioe )
+        {
+          // ignore: there is no config file; we are using standard instead
+          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at "
+              + timeseriesConfigUrl.toExternalForm() + " does not exist. Using default settings.", null );
+          KalypsoCorePlugin.getDefault().getLog().log( status );
+        }
+
+        if( configIs != null )
+        {
+          m_config.load( configIs );
+          configIs.close();
+        }
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+      finally
+      {
+        IOUtils.closeQuietly( configIs );
+      }      
     }
     return m_config;
   }
@@ -264,15 +340,24 @@ public class TimeserieUtils
    * 
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
-  public static Color getColorFor( final String type )
+  public static Color[] getColorsFor( final String type )
   {
     final String strColor = getProperties().getProperty( "AXISCOLOR_" + type ); //$NON-NLS-1$
 
-    if( strColor != null )
-      return StringUtilities.stringToColor( strColor );
+    if( strColor == null )
+      return new Color[]
+      { ColorUtilities.random() };
 
-    // no color found? so return random one
-    return ColorUtilities.random();
+    final String[] strings = strColor.split( "#" );
+    if( strings.length == 0 )
+      return new Color[]
+      { ColorUtilities.random() };
+
+    final Color[] colors = new Color[strings.length];
+    for( int i = 0; i < colors.length; i++ )
+      colors[i] = StringUtilities.stringToColor( strings[i] );
+
+    return colors;
   }
 
   /**
@@ -388,7 +473,17 @@ public class TimeserieUtils
     return m_defaultFormat;
   }
 
-  public static Class getDataClass( final String type )
+  /**
+   * It is currently fix and is: "dd.MM.yy HH:mm"
+   * 
+   * @return the date format to use when displaying dates for observations/timeseries
+   */
+  public static DateFormat getDateFormat()
+  {
+    return DF;
+  }
+
+  public static Class<?> getDataClass( final String type )
   {
     try
     {
@@ -413,11 +508,23 @@ public class TimeserieUtils
   }
 
   /**
-   * Returns the default format string for the given type
+   * @return the default format string for the given type
    */
   public static String getDefaultFormatString( final String type )
   {
     return getProperties().getProperty( "FORMAT_" + type ); //$NON-NLS-1$
+  }
+
+  /**
+   * @return the default top margin defined for the given type or null if none
+   */
+  public static Double getTopMargin( final String type )
+  {
+    final String margin = getProperties().getProperty( "TOP_MARGIN_" + type );
+    if( margin == null )
+      return null;
+
+    return Double.valueOf( margin );
   }
 
   /**
@@ -473,7 +580,7 @@ public class TimeserieUtils
   {
     final String crsName = getProperties().getProperty( "GK_" + gkr.substring( 0, 1 ), null ); //$NON-NLS-1$
     if( crsName == null )
-      KalypsoCorePlugin.getDefault().getCoordinatesSystem();
+      KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     return crsName;
   }

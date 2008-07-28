@@ -42,6 +42,7 @@
 package org.kalypso.core;
 
 import java.io.File;
+import java.util.TimeZone;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -151,6 +152,30 @@ public class KalypsoCorePlugin extends Plugin
       m_selectionManager = new FeatureSelectionManager2();
 
     return m_selectionManager;
+  }
+
+  /**
+   * Returns the default timezone which shall be used to display date's in kalypso.
+   * 
+   * <p>
+   * This is a bit special, we also could have used {@link TimeZone#setDefault(java.util.TimeZone)}. We do this in
+   * order not to disturb other plugins. But every Kalypso Plugins should use this time zone to display and parse date
+   * information.
+   */
+  public TimeZone getTimeZone()
+  {
+    // TODO: let the user edit the time-zone via user preferences
+    // REMARK: if the above todo is fixed, please also support setting timezone
+    // via system properties (aka config.ini file).
+    // In this case, the user preferences may overwrite the global settings. 
+
+    // get the time zone from a global place, i.e. the sstem properties
+    // System properties can easily set in the eclipse config.ini file 
+    final String tzString = System.getProperty( "kalypso.timezone", "UTC" );
+    if( tzString != null && tzString.length() > 0 )
+      return TimeZone.getTimeZone( tzString );
+
+    return TimeZone.getDefault();
   }
 
   /**

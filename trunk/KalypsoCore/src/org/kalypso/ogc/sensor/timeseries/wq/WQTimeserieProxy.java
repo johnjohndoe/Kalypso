@@ -67,21 +67,19 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
   private IAxis m_dateAxis;
 
   private IAxis m_srcAxis;
-
   private IAxis m_srcStatusAxis;
 
   private IAxis m_destAxis;
-
   private IAxis m_destStatusAxis;
+  private int m_destAxisPos;
+  private int m_destStatusAxisPos;
 
   private final String m_proxyAxisType;
-
   private final String m_realAxisType;
 
   private IWQConverter m_conv = null;
 
   private IRequest m_cachedArgs = null;
-
   private ITuppleModel m_cachedModel = null;
 
   /**
@@ -127,10 +125,12 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     }
 
     m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
-    m_axes[m_axes.length - 2] = m_destAxis;
+    m_destAxisPos = m_axes.length - 2;
+    m_axes[m_destAxisPos] = m_destAxis;
 
     m_destStatusAxis = KalypsoStatusUtils.createStatusAxisFor( m_destAxis, false );
-    m_axes[m_axes.length - 1] = m_destStatusAxis;
+    m_destStatusAxisPos = m_axes.length - 1;
+    m_axes[m_destStatusAxisPos] = m_destStatusAxis;
 
     if( name.length() == 0 )
       throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy.0") + m_proxyAxisType ); //$NON-NLS-1$
@@ -154,7 +154,8 @@ public class WQTimeserieProxy extends AbstractObservationDecorator
     if( m_cachedModel != null && (m_cachedArgs == null && args == null || (m_cachedArgs != null && m_cachedArgs.equals( args ))) )
       return m_cachedModel;
 
-    m_cachedModel = new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter() );
+    m_cachedModel = new WQTuppleModel( super.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis,
+        m_destAxis, m_destStatusAxis, getWQConverter(), m_destAxisPos, m_destStatusAxisPos );
 
     m_cachedArgs = args;
 

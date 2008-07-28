@@ -79,12 +79,13 @@ public final class ExportWizard extends Wizard
   private final IExportTarget m_target;
 
   public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell,
-      final ImageDescriptor defaultImage ) throws CoreException
+      final ImageDescriptor defaultImage, final String windowTitle ) throws CoreException
   {
     m_target = target;
     m_shell = shell;
 
     setNeedsProgressMonitor( true );
+    setWindowTitle( windowTitle );
 
     final IPublishingConfiguration configuration = new PublishingConfiguration( new BaseConfiguration() );
 
@@ -176,7 +177,7 @@ public final class ExportWizard extends Wizard
   @Override
   public boolean performFinish( )
   {
-    final IStatus status = RunnableContextHelper.execute( getContainer(), false, true, m_operation );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, m_operation );
     final Throwable exception = status.getException();
     if( exception != null && !status.isOK() )
       exception.printStackTrace();

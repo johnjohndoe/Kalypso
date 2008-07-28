@@ -44,9 +44,11 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -58,6 +60,7 @@ import org.kalypso.commons.parser.ParserException;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.impl.SimpleTuppleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
@@ -152,13 +155,11 @@ public class ObservationUtilities
    */
   public static IAxis findAxisByType( final IAxis[] axes, final String axisType ) throws NoSuchElementException
   {
-    for( int i = 0; i < axes.length; i++ )
-    {
-      if( axes[i].getType().equalsIgnoreCase( axisType ) )
-        return axes[i];
-    }
+    final IAxis axis = findAxisByTypeNoEx( axes, axisType );
+    if( axis == null )
+      throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisType );
 
-    throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + axisType );
+    return axis;
   }
 
   /**
@@ -208,6 +209,30 @@ public class ObservationUtilities
     {
       if( desired.isAssignableFrom( axes[i].getDataClass() ) )
         list.add( axes[i] );
+    }
+
+    if( list.size() == 0 )
+      throw new NoSuchElementException( MSG_ERROR_NOAXISTYPE + desired );
+
+    return list.toArray( new IAxis[list.size()] );
+  }
+
+  /**
+   * Returns the axes that are compatible with the desired Dataclasses
+   * 
+   * @return all axes which are compatible with desired Classtype
+   */
+  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class<?>[] desired )
+  {
+    final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
+
+    for( int i = 0; i < axes.length; i++ )
+    {
+      for( int j = 0; j < desired.length; j++ )
+      {
+        if( desired[j].isAssignableFrom( axes[i].getDataClass() ) )
+          list.add( axes[i] );
+      }
     }
 
     if( list.size() == 0 )
@@ -495,6 +520,24 @@ public class ObservationUtilities
   }
 
   /**
+   * Hashes the values of one axis into a map.
+   * 
+   * @return Map <Object, Integer>: value to its index
+   */
+  public static Map<Object, Integer> hashValues( final ITuppleModel tuples, final IAxis axis ) throws SensorException
+  {
+    final Map<Object, Integer> result = new HashMap<Object, Integer>();
+
+    for( int i = 0; i < tuples.getCount(); i++ )
+    {
+      final Object value = tuples.getElement( i, axis );
+      result.put( value, new Integer( i ) );
+    }
+
+    return result;
+  }
+
+  /**
    * Sort an array of axes according to the Kalypso convention: axes are sorted based on their type information.
    * Example:
    * <p>
@@ -546,7 +589,7 @@ public class ObservationUtilities
     for( int i = 0; i < testAxes.length; i++ )
     {
       int hits = 0;
-      if( !testAxes[i].getType().equals( compareAxis.getType() ) && !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
+      if( !testAxes[i].getType().equals( compareAxis.getType() ) || !testAxes[i].getDataClass().equals( compareAxis.getDataClass() ) )
         continue;
       hits++;
       if( testAxes[i].getUnit().equals( compareAxis.getUnit() ) )
@@ -639,6 +682,35 @@ public class ObservationUtilities
     final double v1 = ((Double) tuppelModel.getElement( index, valueAxis )).doubleValue();
     final double v2 = ((Double) tuppelModel.getElement( index + 1, valueAxis )).doubleValue();
     return MathUtils.interpolate( d1.getTime(), d2.getTime(), v1, v2, date.getTime() );
+  }
+
+  /**
+   * Request value from an observation , but buffers (i.e enlarges the request it by a given amount.
+   * 
+   * @param dateRange
+   *          If <code>null</code>, request the values from the baseObservation with a <code>null</code> request.
+   * @throws SensorException
+   */
+  public static ITuppleModel requestBuffered( final IObservation baseObservation, final DateRange dateRange,
+      final int bufferField, final int bufferAmount ) throws SensorException
+  {
+
+    if( dateRange == null )
+      return baseObservation.getValues( null );
+
+    final Date from = dateRange.getFrom();
+    final Date to = dateRange.getTo();
+
+    final Calendar bufferedFrom = Calendar.getInstance();
+    bufferedFrom.setTime( from );
+    bufferedFrom.add( bufferField, -bufferAmount );
+
+    final Calendar bufferedTo = Calendar.getInstance();
+    bufferedTo.setTime( to );
+    bufferedTo.add( bufferField, bufferAmount );
+
+    final IRequest bufferedRequest = new ObservationRequest( bufferedFrom.getTime(), bufferedTo.getTime() );
+    return baseObservation.getValues( bufferedRequest );
   }
 
 }

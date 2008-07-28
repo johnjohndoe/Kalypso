@@ -59,12 +59,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public abstract class AbstractObservationFilter implements IObservationFilter
 {
-  protected IObservation m_obs = null;
-
-  /** Never used? */
-  protected Object m_conf = null;
-
-  protected URL m_context = null;
+  private IObservation m_obs = null;
 
   /**
    * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
@@ -72,9 +67,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
    */
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
-    m_conf = conf;
     m_obs = obs;
-    m_context = context;
   }
 
   @Override
@@ -207,4 +200,16 @@ public abstract class AbstractObservationFilter implements IObservationFilter
 
     return m_obs.getHref();
   }
+  
+  protected IObservation getObservation()
+  {
+    return m_obs;
+  }
+  
+  protected void setObservation( final IObservation observation )
+  {
+    m_obs = observation;
+  }
+  
+  
 }
