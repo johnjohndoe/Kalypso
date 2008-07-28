@@ -109,16 +109,18 @@ public class SimulationSobekOpenMIWorker implements ISimulation
 
     /* add openmi control log file */
     File logOpenMi = new File( tmpdir, ISobekCalculationJobConstants.LOG_OPENMI_CONTROL_PATH );
-    if( !logOpenMi.exists() )
-      throw new SimulationException( "OpenMI control log file doesn't exists..." );
+    if( logOpenMi.exists() )
+      resultEater.addResult( ISobekCalculationJobConstants.LOG_OPENMI_CONTROL, logOpenMi );
 
     /* add sobek computation log file */
     File logSobek = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK_PATH );
+    if( logSobek.exists() )
+      resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK, logSobek );
+
+    if( !logOpenMi.exists() )
+      throw new SimulationException( "OpenMI control log file doesn't exists..." );
     if( !logSobek.exists() )
       throw new SimulationException( "Sobek Calculation Core computation log file doesn't exists..." );
-
-    resultEater.addResult( ISobekCalculationJobConstants.LOG_OPENMI_CONTROL, logOpenMi );
-    resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK, logSobek );
 
     if( !checkLogFiles( logOpenMi, logSobek ) )
       throw new SimulationException( "Calculation failed..." );
