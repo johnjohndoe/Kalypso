@@ -35,7 +35,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class SpecificDamageCalculationHandler extends AbstractHandler
 {
-  @Override
   public Object execute( final ExecutionEvent arg0 )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();

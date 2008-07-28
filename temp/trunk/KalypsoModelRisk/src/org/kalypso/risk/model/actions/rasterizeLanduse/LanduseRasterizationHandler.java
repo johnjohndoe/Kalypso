@@ -34,7 +34,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 public class LanduseRasterizationHandler extends AbstractHandler
 {
-  @Override
   public Object execute( final ExecutionEvent arg0 )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
