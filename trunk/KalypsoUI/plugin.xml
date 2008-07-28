@@ -709,6 +709,27 @@
 		<antTask class="org.kalypso.ant.PropertyReplaceTask"
 			headless="true" library="lib/kalypsoAnt.jar"
 			name="kalypso.propertyReplace" />
+     <antTask
+           eclipseRuntime="false"
+           class="org.kalypso.ant.GetFileTask"
+           headless="false"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.getFileTask"/>
+     <antTask
+           class="org.kalypso.ant.ThiessenWeightTask"
+           headless="true"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.thiessenWeightTask"/>
+     <antTask
+           eclipseRuntime="true"
+           class="org.kalypso.ant.MergeObservationTask"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.mergeObservation"/>
+     <antTask
+           eclipseRuntime="true"
+           class="org.kalypso.ant.ChangeGmlTask"
+           library="lib/kalypsoAnt.jar"
+           name="kalypso.changeGml"/>			
 	</extension>
 
 	<extension point="org.eclipse.compare.contentMergeViewers">
@@ -1038,6 +1059,16 @@
             id="org.kalypso.ogc.gml.map.OpenOutlineCommand"
             name="%command.name.14">
       </command>
+	  <command
+            categoryId="org.kalypso.ogc.gml.map.widgets.category"
+           	description="Selects the next available feature"
+           	name="Select Next Feature"
+           	id="org.kalypso.ui.map.selectNextFeatureCommand"/>
+      <command
+           categoryId="org.kalypso.ogc.gml.map.widgets.category"
+           description="Selects the previous available feature"
+           name="Select Previous Feature"
+           id="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
       <command
             categoryId="org.kalypso.ui.views.outline.category"
             defaultHandler="org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler"
@@ -1948,6 +1979,20 @@
           </reference>
        </enabledWhen>
     </handler>
+	<handler commandId="org.kalypso.ui.map.selectNextFeatureCommand">
+		<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
+			 <parameter name="forward" value="true"/>
+			 <parameter name="rotate"  value="false"/>
+			 <parameter name="image"  value="icons/util/forward_nav.gif"/>
+		</class>
+	</handler>
+	<handler commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" >
+		<class class="org.kalypso.ui.editor.mapeditor.commands.SelectNextFeatureHandler">
+			 <parameter name="forward" value="false"/>
+			 <parameter name="rotate"  value="false"/>
+			 <parameter name="image"  value="icons/util/backward_nav.gif"/>
+		</class>
+	</handler>
     <handler
           class="org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler"
           commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand">

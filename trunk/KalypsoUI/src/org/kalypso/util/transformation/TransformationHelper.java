@@ -55,16 +55,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.resources.FileUtilities;
-import org.kalypso.commons.runtime.LogStatusWrapper;
+import org.kalypso.commons.runtime.LogAnalyzer;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.i18n.Messages;
 import org.kalypso.model.xml.TransformationList;
 import org.kalypso.model.xml.TransformationType;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Static Helper class for transformations
@@ -72,6 +74,7 @@ import org.kalypso.model.xml.TransformationType;
  * @deprecated use ant task instead in your model-configuration
  * @author belger
  */
+@Deprecated
 public class TransformationHelper
 {
   /**
@@ -85,14 +88,13 @@ public class TransformationHelper
   {
     try
     {
-      final ITransformation transformation = (ITransformation)ClassUtilities.newInstance( trans.getClassName(),
-          ITransformation.class, TransformationHelper.class.getClassLoader() );
+      final ITransformation transformation = (ITransformation) ClassUtilities.newInstance( trans.getClassName(), ITransformation.class, TransformationHelper.class.getClassLoader() );
 
       final Properties props = new Properties();
       final List arguments = trans.getArgument();
-      for( Iterator argIter = arguments.iterator(); argIter.hasNext(); )
+      for( final Iterator argIter = arguments.iterator(); argIter.hasNext(); )
       {
-        final TransformationType.Argument argument = (TransformationType.Argument)argIter.next();
+        final TransformationType.Argument argument = (TransformationType.Argument) argIter.next();
         props.setProperty( argument.getName(), argument.getValue() );
       }
 
@@ -102,7 +104,7 @@ public class TransformationHelper
     }
     catch( final ClassUtilityException e )
     {
-      throw new TransformationException( Messages.getString("org.kalypso.util.transformation.TransformationHelper.0") + trans.getClassName(), e ); //$NON-NLS-1$
+      throw new TransformationException( Messages.getString( "org.kalypso.util.transformation.TransformationHelper.0" ) + trans.getClassName(), e ); //$NON-NLS-1$
     }
   }
 
@@ -111,8 +113,7 @@ public class TransformationHelper
    * 
    * @return result of transformation
    */
-  public static IStatus doTranformations( final IFolder folder, final TransformationList trans,
-      final IProgressMonitor monitor ) throws TransformationException
+  public static IStatus doTranformations( final IFolder folder, final TransformationList trans, final IProgressMonitor monitor ) throws TransformationException
   {
     final List transList = trans.getTransformation();
 
@@ -125,7 +126,7 @@ public class TransformationHelper
     {
       charset = logFile.getCharset( true );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       // ignored
     }
@@ -146,11 +147,11 @@ public class TransformationHelper
 
       logWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( tmpFile ), charset ) );
 
-      monitor.beginTask( Messages.getString("org.kalypso.util.transformation.TransformationHelper.3"), transList.size() + 1 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.util.transformation.TransformationHelper.3" ), transList.size() + 1 ); //$NON-NLS-1$
 
       for( final Iterator iter = transList.iterator(); iter.hasNext(); )
       {
-        final TransformationType element = (TransformationType)iter.next();
+        final TransformationType element = (TransformationType) iter.next();
         final ITransformation ccTrans = TransformationHelper.createTransformation( element );
 
         // perform transformation using:
@@ -161,7 +162,7 @@ public class TransformationHelper
         monitor.worked( 1 );
       }
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
 
@@ -180,7 +181,7 @@ public class TransformationHelper
     {
       FileUtilities.copyFile( charset, tmpFile, logFile, new SubProgressMonitor( monitor, 1 ) );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }
@@ -195,8 +196,9 @@ public class TransformationHelper
     {
       try
       {
-        return new LogStatusWrapper( msg, ResourceUtilities.makeFileFromPath( logFile.getFullPath() ), logFile
-            .getCharset() ).toStatus();
+        final IStatus[] logStati = LogAnalyzer.logfileToStatus( ResourceUtilities.makeFileFromPath( logFile.getFullPath() ), logFile.getCharset() );
+        final IStatus[] groupedStati = LogAnalyzer.groupStati( logStati );
+        return new MultiStatus( KalypsoGisPlugin.getId(), -1, groupedStati, "Log-File was analyzed: " + logFile, null );
       }
       catch( final CoreException e )
       {
