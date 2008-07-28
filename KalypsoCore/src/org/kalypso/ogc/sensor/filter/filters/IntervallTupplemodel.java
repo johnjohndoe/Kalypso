@@ -192,8 +192,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     Calendar targetCal_last = (Calendar)iterator.next(); // TODO hasnext ?
     int targetRow = 0;
     Intervall targetIntervall = null;
-    // initialize source
-    Calendar srcCal_last = targetCal_last;
+
     int srcRow = 0;
     Intervall srcIntervall = null;
 
@@ -203,8 +202,18 @@ public class IntervallTupplemodel extends AbstractTuppleModel
     int srcMaxRows = m_srcModel.getCount();
     if( srcMaxRows != 0 ) // not empty
       firstSrcCal = getDefaultCalendar( (Date)m_srcModel.getElement( 0, m_dateAxis ) );
-    else // if empty, we pretend that it begins at requested range
+    else
+      // if empty, we pretend that it begins at requested range
       firstSrcCal = m_from;
+
+    // initialize source
+    Calendar srcCal_last = targetCal_last;
+    
+    // BUGFIX: handle case when source start before from
+    // Before this fix, this lead to a endless loop
+    if( firstSrcCal.before( srcCal_last ) )
+      srcCal_last = firstSrcCal;
+
     // fill initial row
     //        final Intervall initialIntervall = new Intervall( m_from, m_from, defaultStatus, defaultValues );
     //        updateModelfromintervall( m_intervallModel, targetRow, initialIntervall );
@@ -245,8 +254,7 @@ public class IntervallTupplemodel extends AbstractTuppleModel
           srcValues[i] = (Double)srcValuesObjects[i];
         srcIntervall = null;
 
-
-        if(! srcCal_last.after( srcCal ) )
+        if( !srcCal_last.after( srcCal ) )
         {
           // we need next source intervall
 
@@ -266,9 +274,11 @@ public class IntervallTupplemodel extends AbstractTuppleModel
               break;
             default:
               // (IntervallFilter.MODE_SUM) as length of first interval is undefined, we ignore first value
-              // TODO solve: for witch intervall is the first value valid ?
+              // TODO solve: for whitch intervall is the first value valid ?
               // there is no definition :-(
-              if( srcRow > 0 )
+              // Bugfix: we use it nevertheless, as it works ok if intervalls are equal;
+              // also, always no warning produces problems elsewhere
+//              if( srcRow > 0 )
                 srcIntervall = new Intervall( srcCal_last, srcCal, srcStati, srcValues );
               break;
             }

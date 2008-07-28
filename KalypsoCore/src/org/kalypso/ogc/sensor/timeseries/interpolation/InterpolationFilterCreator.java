@@ -69,8 +69,10 @@ public class InterpolationFilterCreator implements IFilterCreator
 
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( ft.getFilter().getValue(), baseObs, context );
 
+    final String defaultValue = ft.getDefaultValue();
+    
     final InterpolationFilter filter = new InterpolationFilter( CalendarUtilities.getCalendarField( ft
-        .getCalendarField() ), ft.getAmount(), ft.isForceFill(), ft.getDefaultValue(), ft.getDefaultStatus(), ft.isFillLastWithValid() );
+        .getCalendarField() ), ft.getAmount(), ft.isForceFill(), defaultValue, ft.getDefaultStatus(), ft.isFillLastWithValid() );
     filter.initFilter( null, filteredObs, context );
 
     return filter;

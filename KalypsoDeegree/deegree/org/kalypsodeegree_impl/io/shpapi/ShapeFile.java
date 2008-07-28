@@ -717,6 +717,10 @@ public class ShapeFile
       {
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 0 ) );
       }
+      else if( clazz == Boolean.class )
+      {
+        fieldList.add( new FieldDescriptor( s, "L", (byte)1, (byte)0 ) );
+      }
       else
       {
         // System.out.println("no db-type:" + ftp[i].getType());
@@ -870,7 +874,6 @@ public class ShapeFile
 
   }
 
-  @SuppressWarnings("unchecked")
   private ISHPGeometry getShapeGeometry( GM_Object geom, byte outputShapeConstant )
   {
     if( geom == null )

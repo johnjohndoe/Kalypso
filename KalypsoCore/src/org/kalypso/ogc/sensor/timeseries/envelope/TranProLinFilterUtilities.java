@@ -48,7 +48,6 @@ import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.Observation;
 import org.kalypso.zml.filters.ObjectFactory;
@@ -59,7 +58,7 @@ import org.kalypso.zml.filters.TranProLinFilterType;
  */
 public class TranProLinFilterUtilities
 {
-  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, int statusToMerge, final File resultFile, String sufix ) throws SensorException, JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
+  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, int statusToMerge, final File resultFile, String sufix, final IRequest request ) throws SensorException, JAXBException, FactoryException, UnsupportedEncodingException, FileNotFoundException
   {
     if( resultFile == null )
       return; // nothing to do
@@ -82,7 +81,7 @@ public class TranProLinFilterUtilities
     final String filterInline = XMLUtilities.prepareInLine( string );
     final IObservation resultObservation = ZmlFactory.decorateObservation( baseObservation, filterInline, null );
     // write ZML
-    final IRequest request = new ObservationRequest( dateBegin.getTime(), dateEnd.getTime() );
+//    final IRequest request = new ObservationRequest( dateBegin.getTime(), dateEnd.getTime() );
     final Observation observationType = ZmlFactory.createXML( resultObservation, request );
     String name = observationType.getName();
     if( name == null )

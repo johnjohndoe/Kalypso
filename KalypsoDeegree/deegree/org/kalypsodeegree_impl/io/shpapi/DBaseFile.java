@@ -186,6 +186,16 @@ public class DBaseFile
    */
   public DBaseFile( final String url, final FieldDescriptor[] fieldDesc )
   {
+    this(url, fieldDesc, null);
+  }
+
+  /**
+   * constructor <BR>
+   * only for writing a dBase file <BR>
+   * name of the charset string value will be encoded with. If null, the default charset will be used.
+   */
+  public DBaseFile( final String url, final FieldDescriptor[] fieldDesc, final String charset )
+  {
     m_defaultFileShapeType = -1;
     fname = url;
 
@@ -196,7 +206,7 @@ public class DBaseFile
     header = new DBFHeader( fieldDesc );
 
     // create data section
-    dataSection = new DBFDataSection( fieldDesc );
+    dataSection = new DBFDataSection( fieldDesc, charset );
 
     filemode = 1;
   }
@@ -380,6 +390,8 @@ public class DBaseFile
       }
       else if( column.type.equalsIgnoreCase( "L" ) )
       {
+        // TODO: This is wrong: L should be parsed as boolean; is there already some code which depends on this
+        // wrong implementation?
         th = stringTH;
       }
       else if( column.type.equalsIgnoreCase( "D" ) )

@@ -65,7 +65,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.java.io.FileUtilities;
 import org.kalypso.metadoc.configuration.IConfigurationListener;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.impl.FileExportTarget;
@@ -148,7 +148,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     if( key == null || key.equals( FileExportTarget.CONF_FILEEXPORT_EXTENSION ) )
     {
       String filename = m_destinationNameField.getText();
-      filename = FileUtilities.nameWithoutExtension( filename ) + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION );
+      filename = FileUtilities.nameWithoutExtension( filename ) + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION, "" );
 
       m_destinationNameField.setText( filename );
     }

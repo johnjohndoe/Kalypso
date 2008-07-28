@@ -44,12 +44,15 @@ import java.awt.Color;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.swing.ImageIcon;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITuppleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
 /**
@@ -63,7 +66,7 @@ public class KalypsoStatusUtils
 
   public final static String STATUS_AXIS_TYPE = "kalypso-status"; //$NON-NLS-1$
 
-  public final static Class STATUS_AXIS_DATACLASS = Integer.class;
+  public final static Class<?> STATUS_AXIS_DATACLASS = Integer.class;
 
   public final static String STATUS_AXIS_UNIT = ""; //$NON-NLS-1$
 
@@ -196,6 +199,20 @@ public class KalypsoStatusUtils
   }
 
   /**
+   * Returns the status axis for the given axis if found in the axes-list.
+   */
+  public static IAxis findStatusAxisForNoEx( final IAxis[] axes, final IAxis axis ) throws NoSuchElementException
+  {
+    for( int i = 0; i < axes.length; i++ )
+    {
+      if( isStatusAxisFor( axis, axes[i] ) )
+        return axes[i];
+    }
+
+    return null;
+  }
+  
+  /**
    * Finds the list of status axis among the given axes
    * 
    * @return status axes
@@ -259,6 +276,31 @@ public class KalypsoStatusUtils
 
     if( list.size() == 0 )
       throw new NoSuchElementException( Messages.getString("org.kalypso.ogc.sensor.status.KalypsoStatusUtils.15") + desired ); //$NON-NLS-1$
+
+    return list.toArray( new IAxis[list.size()] );
+  }
+
+  /**
+   * Same as {@link KalypsoStatusUtils#findAxesByClass(IAxis[], Class, boolean)}for several classes.
+   * 
+   * @see KalypsoStatusUtils#findAxesByClass(IAxis[], Class, boolean)
+   */
+  public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class<?>[] desired, final boolean excludeStatusAxes )
+      throws NoSuchElementException
+  {
+    final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
+
+    for( int j = 0; j < desired.length; j++ )
+    {
+      for( int i = 0; i < axes.length; i++ )
+      {
+        if( desired[j].isAssignableFrom( axes[i].getDataClass() ) )
+        {
+          if( !excludeStatusAxes || excludeStatusAxes && !KalypsoStatusUtils.isStatusAxis( axes[i] ) )
+            list.add( axes[i] );
+        }
+      }
+    }
 
     return list.toArray( new IAxis[list.size()] );
   }
@@ -444,5 +486,28 @@ public class KalypsoStatusUtils
   public static int performArithmetic( final int status1, final int status2 )
   {
     return (status1 | status2) & KalypsoStati.MASK_ARITHMETIC;
+  }
+  
+  /**
+   * Get the combined status for the given axis.<br>
+   * If the axis has no corresponding status axis, BIT_OK is returned.<br>
+   * Else, the or'ed value of all stati is returned.
+   * @throws SensorException
+   */
+  public static int getStatus( final ITuppleModel values, final IAxis axis ) throws SensorException
+  {
+    int mergedStatus = KalypsoStati.BIT_OK;
+    
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( values.getAxisList(), axis );
+    if( statusAxis == null )
+      return mergedStatus;
+    
+    for( int i = 0; i < values.getCount(); i++ )
+    {
+      final int status = ( (Number)values.getElement( i, statusAxis ) ).intValue();
+      mergedStatus |= status;
+    }
+    
+    return mergedStatus;
   }
 }

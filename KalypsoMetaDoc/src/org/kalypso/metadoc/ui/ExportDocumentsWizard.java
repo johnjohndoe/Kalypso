@@ -73,15 +73,19 @@ public class ExportDocumentsWizard extends Wizard
   private final Shell m_shell;
   private final DisposeHelper m_disposer;
   private final IExportTarget m_target;
+  private final String m_windowTitle;
 
-  public ExportDocumentsWizard( final Shell shell, final IExporter[] exporter, final IExportTarget target )
+  public ExportDocumentsWizard( final Shell shell, final IExporter[] exporter, final IExportTarget target,
+      final String windowTitle )
   {
     m_shell = shell;
     m_exporter = exporter;
     m_target = target;
+    m_windowTitle = windowTitle;
     m_disposer = new DisposeHelper();
 
     setForcePreviousAndNextButtons( true );
+    setWindowTitle( windowTitle );
   }
 
   /**
@@ -108,7 +112,7 @@ public class ExportDocumentsWizard extends Wizard
     for( int i = 0; i < nodes.length; i++ )
     {
       final IExporter exporter = m_exporter[i];
-      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell, imageDescriptor );
+      nodes[i] = new ExportWizardNode( m_target, exporter, m_shell, imageDescriptor, m_windowTitle );
       m_disposer.addDisposeCandidate( nodes[i] );
     }
 

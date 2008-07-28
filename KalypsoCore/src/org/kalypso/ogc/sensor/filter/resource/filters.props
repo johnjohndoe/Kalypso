@@ -10,3 +10,4 @@ DataholeFilterType=org.kalypso.ogc.sensor.filter.creators.DataHoleFilterCreator
 ForecastFilterType=org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilterCreator
 InterpolationFilterType=org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator
 TranProLinFilterType=org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilterCreator
+RoundFilterType=org.kalypso.ogc.sensor.filter.creators.RoundFilterCreator
