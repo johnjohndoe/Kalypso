@@ -40,24 +40,36 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.MetadataList;
+import org.kalypso.ogc.sensor.ObservationConstants;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoProtocolWriter;
@@ -78,6 +90,11 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class CopyObservationFeatureVisitor implements FeatureVisitor
 {
+  /** Used to search/replace metadata content with properties of the visited feature */
+  private static Pattern PATTERN_FEATURE_PROPERTY = Pattern.compile( "\\Q${property;\\E([^;]*)\\Q;\\E([^}]*)\\Q}\\E" );
+
+  private static final ObjectFactory OF = new ObjectFactory();
+
   private final Source[] m_sources;
 
   private final URL m_context;
@@ -86,9 +103,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
   private final IUrlResolver m_urlResolver;
 
-  private final PrintWriter m_logWriter;
-
-  private static final String SUMM_INFO = "*** "; //$NON-NLS-1$
+  private final ILogger m_logger;
 
   private final Date m_forecastFrom;
 
@@ -101,30 +116,23 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    * <p>
    * tokenName-featurePropertyName;tokenName-featurePropertyName;...
    * <p>
-   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als Request-Name zu setzen)
+   * Die werden benutzt um token-replace im Zml-Href durchzuführen (z.B. um automatisch der Name der Feature als
+   * Request-Name zu setzen)
    */
   private final String m_tokens;
 
   private final File m_targetobservationDir;
-
-  private static final ObjectFactory OF = new ObjectFactory();
 
   /**
    * @param context
    *          context to resolve relative url
    * @param urlResolver
    *          resolver for urls
-   * @param forecastFrom
-   * @param forecastTo
-   * @param logWriter
-   * @param sources
    * @param metadata
    *          All entries will be added to the target observation
    * @param targetobservation
    */
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
-      final String targetobservation, final Source[] sources, final Properties metadata, final Date forecastFrom,
-      final Date forecastTo, final PrintWriter logWriter, final String tokens )
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final String targetobservation, final Source[] sources, final Properties metadata, final Date forecastFrom, final Date forecastTo, final ILogger logger, final String tokens )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -134,7 +142,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     m_metadata = metadata;
     m_forecastFrom = forecastFrom;
     m_forecastTo = forecastTo;
-    m_logWriter = logWriter;
+    m_logger = logger;
     m_tokens = tokens;
   }
 
@@ -143,17 +151,10 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
    *          context to resolve relative url
    * @param urlResolver
    *          resolver for urls
-   * @param forecastFrom
-   * @param forecastTo
-   * @param logWriter
-   * @param sources
    * @param metadata
    *          All entries will be added to the target observation
-   * @param targetobservationDir
    */
-  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver,
-      final File targetobservationDir, final Source[] sources, final Properties metadata, final Date forecastFrom,
-      final Date forecastTo, final PrintWriter logWriter, final String tokens )
+  public CopyObservationFeatureVisitor( final URL context, final IUrlResolver urlResolver, final File targetobservationDir, final Source[] sources, final Properties metadata, final Date forecastFrom, final Date forecastTo, final ILogger logger, final String tokens )
   {
     m_context = context;
     m_urlResolver = urlResolver;
@@ -163,7 +164,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     m_metadata = metadata;
     m_forecastFrom = forecastFrom;
     m_forecastTo = forecastTo;
-    m_logWriter = logWriter;
+    m_logger = logger;
     m_tokens = tokens;
   }
 
@@ -180,13 +181,13 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
 
       if( targetlink == null )
       {
-        m_logWriter.println( SUMM_INFO + Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.1") + f.getId() ); //$NON-NLS-1$
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() );//$NON-NLS-1$
         return true;
       }
 
       if( sourceObses.length == 0 || sourceObses[0] == null )
       {
-        m_logWriter.println( SUMM_INFO + Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.2") + f.getId() ); //$NON-NLS-1$
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.2" ) + f.getId() );//$NON-NLS-1$
         return true;
       }
 
@@ -208,25 +209,39 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       TimeserieUtils.setForecast( resultObs, m_forecastFrom, m_forecastTo );
 
       // put additional metadata that we got from outside
-      resultObs.getMetadataList().putAll( m_metadata );
+      final MetadataList resultMetadata = resultObs.getMetadataList();
+      String metaName = null;
+      for( final Entry<Object,Object> element : m_metadata.entrySet() )
+      {
+        final Entry<Object,Object> entry = element;
+        final String metaValue = replaceMetadata( f, (String) entry.getValue() );
+        final String metaKey = (String) entry.getKey();
+        resultMetadata.put( metaKey, metaValue );
+
+        if( ObservationConstants.MD_NAME.equals( metaKey ) )
+          metaName = metaValue;
+      }
 
       // protocol the observations here and inform the user
-      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logWriter, SUMM_INFO );
+      KalypsoProtocolWriter.analyseValues( resultObs, resultObs.getValues( null ), m_logger );
 
       // remove query part if present, href is also used as file name here!
       final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
 
       final IFile targetfile = ResourceUtilities.findFileFromURL( m_urlResolver.resolveURL( m_context, href ) );
 
-      final File file = targetfile.getLocation().toFile();
-      FileOutputStream stream = null;
+      final IPath location = targetfile.getLocation();
+      final File file = location.toFile();
+      OutputStream stream = null;
       try
       {
         if( !file.getParentFile().exists() )
           file.getParentFile().mkdirs();
-        stream = new FileOutputStream( file );
+        stream = new BufferedOutputStream( new FileOutputStream( file ) );
         final Observation type = ZmlFactory.createXML( resultObs, null );
-//        final Observation type = ZmlFactory.createXML( resultObs, new ObservationRequest(m_forecastFrom, m_forecastTo) );
+        // Overwrite name of obs if metadata name was changed.
+        if( metaName != null )
+          type.setName( metaName );
         ZmlFactory.getMarshaller().marshal( type, stream );
       }
       finally
@@ -238,49 +253,88 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     {
       e.printStackTrace();
 
-      m_logWriter.println( Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.3") + f.getId() ); //$NON-NLS-1$
-      m_logWriter.println( e.getLocalizedMessage() );
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + f.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ $NON-NLS-2$
     }
 
     return true;
   }
 
   /**
-   * @param f
+   * Search/replace metadata values with properties from the current feature. <br>
+   * REMARK: The search/replace mechanism is similar to the one used in Kalypso 2.0 and this code should be replaced as
+   * soon as we change to the new version of Kalypso.
    */
+  private String replaceMetadata( final Feature feature, final String metaValue )
+  {
+    if( metaValue == null )
+      return null;
+
+    final Matcher matcher = PATTERN_FEATURE_PROPERTY.matcher( metaValue );
+    if( matcher.matches() )
+    {
+      final String propertyName = matcher.group( 1 );
+      final String defaultValue = matcher.group( 2 );
+      final QName propertyQName = createQName( propertyName );
+
+      final Object property = feature.getProperty( propertyQName.getLocalPart() );
+      if( property == null )
+        return defaultValue;
+
+      return property.toString();
+    }
+
+    return metaValue;
+  }
+
+  /**
+   * REMARK: this is another backport from Kalypso 2.0 (QNameUtilities) remove as soon as we go to thsat version. syntax
+   * of fragmentedFullQName :
+   * 
+   * <pre>
+   *         &lt;namespace&gt;#&lt;localpart&gt;
+   * </pre>
+   * 
+   * example: fragmentedFullQName = www.w3c.org#index.html <br/>If no '#' is given, a qname with only a localPart is
+   * created.
+   * 
+   * @return qname from fragmentedFullQName
+   */
+  public static QName createQName( final String fragmentedFullQName )
+  {
+    final String[] parts = fragmentedFullQName.split( "#" );
+    if( parts.length == 2 )
+      return new QName( parts[0], parts[1] );
+
+    return QName.valueOf( fragmentedFullQName );
+  }
+
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
     if( m_targetobservationDir != null )
     {
-      String name = (String)f.getProperty( "name" ); //$NON-NLS-1$
+      String name = (String) f.getProperty( "name" );
       if( name == null || name.length() < 1 )
         name = f.getId();
       if( name == null || name.length() < 1 )
-        name = "generated"; //$NON-NLS-1$
+        name = "generated";
       final File file = getValidFile( name, 0 );
-      final TimeseriesLinkType link;
-      link = OF.createTimeseriesLinkType();
+      final TimeseriesLinkType link = OF.createTimeseriesLinkType();
       final IFile contextIFile = ResourceUtilities.findFileFromURL( m_context );
       final File contextFile = contextIFile.getLocation().toFile();
       final String relativePathTo = FileUtilities.getRelativePathTo( contextFile, file );
       link.setHref( relativePathTo );
       return link;
     }
-    return (TimeseriesLinkType)f.getProperty( m_targetobservation );
+    return (TimeseriesLinkType) f.getProperty( m_targetobservation );
   }
 
-  /**
-   * 
-   * @param name
-   * @param index
-   */
   private File getValidFile( final String name, int index )
   {
     String newName = name;
     if( index > 0 )
-      newName = newName + "_" + Integer.toString( index ); //$NON-NLS-1$
-    final String newName2 = FileUtilities.validateName( newName, "_" ); //$NON-NLS-1$
-    final File file = new File( m_targetobservationDir, newName2 + ".zml" ); //$NON-NLS-1$
+      newName = newName + "_" + Integer.toString( index );
+    final String newName2 = org.kalypso.contribs.java.io.FileUtilities.validateName( newName, "_" );
+    final File file = new File( m_targetobservationDir, newName2 + ".zml" );
     if( file.exists() )
     {
       index++;
@@ -292,21 +346,18 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
   private IObservation[] getObservations( final Feature f ) throws SensorException
   {
     final List<IObservation> result = new ArrayList<IObservation>();
-    //    final IObservation[] obses = new IObservation[m_sources.length];
-    for( int i = 0; i < m_sources.length; i++ )
+    for( final Source source : m_sources )
     {
-      final Source source = m_sources[i];
       try
       {
         result.add( getObservation( f, source.getProperty(), source.getFrom(), source.getTo(), source.getFilter() ) );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         // it is possible to use the target also as input, e.g. if you want to update just a part of the zml.
         // if this source==target is unreachable it should be ignored, if it is not the target throw an exception
         if( m_targetobservation.equals( source.getProperty() ) )
-          m_logWriter
-              .println( Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.9") ); //$NON-NLS-1$
+          m_logger.log( Level.WARNING, LoggerUtilities.CODE_NONE, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.9" ) );//$NON-NLS-1$
         else
           throw new SensorException( e );
       }
@@ -315,13 +366,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     return result.toArray( new IObservation[result.size()] );
   }
 
-  private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from,
-      final Date to, String filter ) throws MalformedURLException, SensorException
+  private IObservation getObservation( final Feature feature, final String sourceProperty, final Date from, final Date to, final String filter ) throws MalformedURLException, SensorException
   {
     if( sourceProperty == null )
       return null;
 
-    final TimeseriesLinkType sourcelink = (TimeseriesLinkType)feature.getProperty( sourceProperty );
+    final TimeseriesLinkType sourcelink = (TimeseriesLinkType) feature.getProperty( sourceProperty );
     if( sourcelink == null )
       return null;
     // keine Zeitreihe verlink, z.B. kein Pegel am
@@ -333,12 +383,12 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter ); // use insertQueryPart, not insertFilter, because
     // filter variable might also contain request spec
     String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
-    
+
     // token replacement
     if( m_tokens != null && m_tokens.length() > 0 )
     {
       final Properties properties = FeatureHelper.createReplaceTokens( feature, m_tokens );
-      
+
       sourceref = ObsViewUtils.replaceTokens( sourceref, properties );
     }
 
@@ -351,7 +401,7 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
     catch( final SensorException e )
     {
       // tricky: wrap the exception with timeserie-link as text to have a better error message
-      throw new SensorException( Messages.getString("org.kalypso.ogc.util.CopyObservationFeatureVisitor.10") + sourceref, e ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + sourceref, e );//$NON-NLS-1$
     }
   }
 
@@ -373,22 +423,22 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       this.filter = filt;
     }
 
-    public final Date getFrom()
+    public final Date getFrom( )
     {
       return from;
     }
 
-    public final String getProperty()
+    public final String getProperty( )
     {
       return property;
     }
 
-    public final Date getTo()
+    public final Date getTo( )
     {
       return to;
     }
 
-    public String getFilter()
+    public String getFilter( )
     {
       return filter;
     }

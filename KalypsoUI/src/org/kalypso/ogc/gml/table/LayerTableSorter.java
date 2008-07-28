@@ -129,6 +129,12 @@ public class LayerTableSorter extends ViewerSorter
       return sign * ((Float) o1).compareTo( (Float) o2 );
     else if( o1 instanceof Date && o2 instanceof Date )
       return sign * ((Date) o1).compareTo( (Date) o2 );
+    else if (o1 instanceof Boolean )
+    {
+      final String s1 = String.valueOf( o1 );
+      final String s2 = String.valueOf( o2 );
+      return sign * s1.compareTo( s2 );
+    }      
 
     return 0;
   }
