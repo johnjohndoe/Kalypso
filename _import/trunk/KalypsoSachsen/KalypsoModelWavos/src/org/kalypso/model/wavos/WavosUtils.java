@@ -89,6 +89,7 @@ public class WavosUtils
     c.setTime( date );
 
     //TODO? Zeitversatz (Sommer/Winter)
+    // TODO? nicht heute null Uhr, sondern gestern 24 Uhr schreiben...
     return Format.sprintf( WavosConst.FLUSS_INPUT + ".%04d%02d%02d%02d", new Object[]
     {
         Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ),
@@ -104,6 +105,8 @@ public class WavosUtils
    */
   public static String createWavosDate( final Date date ) throws NumberFormatException
   {
+    //TODO? Zeitversatz (Sommer/Winter)
+    // TODO? nicht heute null Uhr, sondern gestern 24 Uhr schreiben...
     final Calendar c = Calendar.getInstance();
     c.setTime( date );
     return Format.sprintf( "%4d %02d %02d %02d %02d", new Object[]

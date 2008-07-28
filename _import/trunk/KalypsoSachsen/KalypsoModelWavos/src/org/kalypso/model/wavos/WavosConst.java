@@ -76,8 +76,12 @@ public class WavosConst
   public static final String DATA_FORECAST_DURATION = "forecast_duration";
   public static final String DATA_MERGE_CASE_PATH = "mergeCasePath";
   public static final String DATA_SIMULATION_DURATION = "simulation_duration";
+  public static final String DATA_SIMULATION_START = "simulation_start";
   public static final String DATA_INTERVAL_AMOUNT = "interval_amount";
   public static final String DATA_USE_AWERTE = "use_awerte";
+
+  public static final String DATA_COUNT_MEASURED_VALUES = "count_meas_vals";
+  public static final String DATA_COUNT_FORECAST_VALUES = "count_forecast_vals";
 
   public static final int ZIP_TYPE_DATA = 1;
   public static final int ZIP_TYPE_BIN = 2;

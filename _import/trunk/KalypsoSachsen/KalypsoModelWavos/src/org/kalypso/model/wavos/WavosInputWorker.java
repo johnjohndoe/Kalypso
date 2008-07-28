@@ -65,6 +65,8 @@ import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
+import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.model.wavos.deleteDuringUpgrade.ApacheCalendarUtils;
 import org.kalypso.model.wavos.visitors.FeatureVisitorZml2WavosAT;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IAxis;
@@ -104,13 +106,8 @@ public class WavosInputWorker
   public static File createNativeInput( final File tmpDir, final ICalcDataProvider inputProvider, Properties props,
       final File nativeInDir, final String flussName, final Map metaMap ) throws Exception
   {
-
     try
     {
-      //    <input id="ZML_PEGEL" path="Zeitreihen/Pegel" relativeToCalcCase="true"/>
-      //    <input id="ZML_POLDER" path="Zeitreihen/Polder" relativeToCalcCase="true"/>
-      //    <input id="ZML_ZUFLUESSE" path="Zeitreihen/Zufluesse" relativeToCalcCase="true"/>
-      //    <input id="AWERTE" path="Anfangswerte" relativeToCalcCase="true"/>
       final File exeDir = new File( tmpDir, "exe" );
       exeDir.mkdirs();
 
@@ -125,12 +122,13 @@ public class WavosInputWorker
       final URL controlGmlURL = inputProvider.getURLForID( "CONTROL_GML" );
 
       m_logger.info( "\tLese Steuerparameter: " + controlGmlURL.toString() );
-      final Map map = parseControlFile( controlGmlURL );
-      props.putAll( map );
+      final HashMap map = parseControlFile( controlGmlURL );
       final URL urlForGmlId = inputProvider.getURLForID( "GML" );
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( urlForGmlId );
-      props.put( WavosConst.DATA_GML, workspace );
-      props.put( WavosConst.DATA_GML_CONTEXT, urlForGmlId );
+      map.put( WavosConst.DATA_GML, workspace );
+      map.put( WavosConst.DATA_GML_CONTEXT, urlForGmlId );
+
+      props.putAll( map );
 
       final File wavosDir = new File( exeDir, WavosConst.DIR_WAVOS );
       // .../input.par
@@ -179,7 +177,6 @@ public class WavosInputWorker
         final FileCopyVisitor copyVisitor = new FileCopyVisitor( exeDir, nativeInDir, true );
         FileUtilities.accept( exeDir, copyVisitor, true );
       }
-
       return wavosDir;
     }
     catch( final CalcJobServiceException e )
@@ -459,14 +456,6 @@ public class WavosInputWorker
       }
 
     }
-    // assumes that all date axis are equal...
-    final List lstDatum = new ArrayList();
-    final IAxis axDatum = ObservationUtilities.findAxisByType( tplValues.getAxisList(), TimeserieConstants.TYPE_DATE );
-    for( int ii = 0; ii < tplValues.getCount(); ii++ )
-    {
-      Date element = (Date)tplValues.getElement( ii, axDatum );
-      lstDatum.add( element );
-    }
     String kennZeile = Format.sprintf( "%17s", new Object[]
     { "" } );
     String stundenZeile = Format.sprintf( "%18s", new Object[]
@@ -507,12 +496,10 @@ public class WavosInputWorker
     pWrtrInput.println( " ##### Wasserstaende: Werte koennen geaendert werden" );
     pWrtrInput.println( kennZeile );
 
-    final int durationSimulation = ( (Integer)props.get( WavosConst.DATA_SIMULATION_DURATION ) ).intValue();
-    final int forecastDuration = ( (Integer)props.get( WavosConst.DATA_FORECAST_DURATION ) ).intValue();
     //TODO? Zeitversatz (Sommer/Winter)
     final Calendar c = Calendar.getInstance();
     c.setTime( startForecast );
-    final int countMeasValues = ( durationSimulation * 24 + c.get( Calendar.HOUR_OF_DAY ) + 1 ) / intervalAmount;
+    final int countMeasValues = ( (Integer)props.get( WavosConst.DATA_COUNT_MEASURED_VALUES ) ).intValue();
     // Zeitreihe steckt jeweils in m_propZmlLink
     final TreeMap obsTreeMap = new TreeMap( tuppleMap );
     Iterator iterObs;
@@ -520,13 +507,15 @@ public class WavosInputWorker
     // für alle Zeiten
     // für alle Pegel
     // Kennzeichen, Datum, Werte (je nach Weitergabe-Achse m_AxisToBeWritten)
+    final Date simStart = (Date)( props.get( WavosConst.DATA_SIMULATION_START ) );
+    c.setTime( simStart );
 
     for( int i = 0; i < countMeasValues; i++ )
     {
       iterObs = obsTreeMap.entrySet().iterator();
       // Datum verhackstücken
       //TODO? Zeitversatz (Sommer/Winter)
-      final Date dateS = (Date)lstDatum.get( i );
+      final Date dateS = c.getTime();
       String zeile = "S " + WavosUtils.createWavosDate( dateS );
       // Werte formatiert schreiben
       while( iterObs.hasNext() )
@@ -537,14 +526,15 @@ public class WavosInputWorker
         { valList.get( i ) } );
       }
       pWrtrInput.println( zeile );
+      c.add( Calendar.HOUR_OF_DAY, intervalAmount );
     }
     pWrtrInput.println( kennZeile );
-    final int countForecastValues = forecastDuration / intervalAmount;
+    final int countForecastValues = ( (Integer)props.get( WavosConst.DATA_COUNT_FORECAST_VALUES ) ).intValue();
     for( int i = countMeasValues; i < countForecastValues + countMeasValues; i++ )
     {
       iterObs = obsTreeMap.entrySet().iterator();
       //TODO? Zeitversatz (Sommer/Winter)
-      final Date dateV = (Date)lstDatum.get( i );
+      final Date dateV = c.getTime();
       String zeile = "V " + WavosUtils.createWavosDate( dateV );
 
       // Werte formatiert schreiben
@@ -552,12 +542,17 @@ public class WavosInputWorker
       {
         final Map.Entry mapEntry = (Map.Entry)iterObs.next();
         final ArrayList valList = (ArrayList)mapEntry.getValue();
-        zeile = zeile + Format.sprintf( "%6d", new Object[]
-        { valList.get( i ) } );
+        if( valList.size() > i )
+          zeile = zeile + Format.sprintf( "%6d", new Object[]
+          { valList.get( i ) } );
+        else
+          zeile = zeile + Format.sprintf( "%6d", new Object[]
+          //          { valList.get( countMeasValues - 1 ) } );
+              { new Integer( -1 ) } );
       }
       pWrtrInput.println( zeile );
+      c.add( Calendar.HOUR_OF_DAY, intervalAmount );
     }
-
     IOUtils.closeQuietly( pWrtrInput );
     IOUtils.closeQuietly( wrtrInput );
   }
@@ -599,13 +594,13 @@ public class WavosInputWorker
     }
   }
 
-  public static Map parseControlFile( final URL gmlURL ) throws CalcJobServiceException
+  public static HashMap parseControlFile( final URL gmlURL ) throws CalcJobServiceException
   {
     try
     {
       final Feature controlFeature = GmlSerializer.createGMLWorkspace( gmlURL ).getRootFeature();
 
-      final Map dataMap = new HashMap();
+      final HashMap dataMap = new HashMap();
 
       final Date startForecastTime = (Date)controlFeature.getProperty( "startforecast" );
       dataMap.put( WavosConst.DATA_STARTFORECAST_DATE, startForecastTime );
@@ -636,6 +631,29 @@ public class WavosInputWorker
       final Object useAWerteProp = controlFeature.getProperty( "useAWerte" );
       final Boolean useAWerte = useAWerteProp == null ? Boolean.FALSE : ( (Boolean)useAWerteProp );
       dataMap.put( WavosConst.DATA_USE_AWERTE, useAWerte );
+
+      // calculate simulationStart = Tagesanfang(startForecast - simulationDuration)
+      final Calendar cal = Calendar.getInstance();
+      cal.setTime( startForecastTime );
+      cal.add( CalendarUtilities.getCalendarField( "DAY_OF_MONTH" ), simulationDur.intValue() );
+      Date simulationStart = cal.getTime();
+      // TODO during upgrade to new KALYPSO replace usage of "trunc" with method from
+      // org.apache.commons.lang.CalendarUtils
+      simulationStart = ApacheCalendarUtils.trunc( simulationStart, Calendar.DAY_OF_MONTH );
+      dataMap.put( WavosConst.DATA_SIMULATION_START, simulationStart );
+
+      // calculate count of measured values
+      // TODO (interval.amount <> 1) überdenken: aufrunden oder abrunden oder so...
+      cal.setTime( startForecastTime );
+      // TODO wird "1+" benötigt oder hat das was mit Winter und Sommer zu tun?
+      final Integer cntMeasVals = new Integer( ( 1 + simulationDur.intValue() * 24 + cal.get( Calendar.HOUR_OF_DAY ) )
+          / intervalAmount.intValue() );
+      dataMap.put( WavosConst.DATA_COUNT_MEASURED_VALUES, cntMeasVals );
+
+      // calculate count of vorgabe values
+      // TODO (interval.amount <> 1) überdenken...
+      final Integer cntForecastVals = new Integer( forecastDur.intValue() / intervalAmount.intValue() );
+      dataMap.put( WavosConst.DATA_COUNT_FORECAST_VALUES, cntForecastVals );
 
       return dataMap;
     }
