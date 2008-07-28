@@ -124,7 +124,8 @@ public class BooleanModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
-    return ""; //$NON-NLS-1$
+    final Boolean b = (Boolean)getValue( f );
+    return String.valueOf( b );
   }
 
   /**

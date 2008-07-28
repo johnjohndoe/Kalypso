@@ -80,7 +80,9 @@ public class CalendarFeatureDialog implements IFeatureDialog
    */
   public int open( final Shell shell )
   {
-    final SWTCalendarDialog dialog = new SWTCalendarDialog( shell, getDate() );
+    final Date date = getDate();
+    final Date dialogDate = date == null ?  new Date() : date;
+    final SWTCalendarDialog dialog = new SWTCalendarDialog( shell, dialogDate );
 
     final int open = dialog.open();
     if( open == Window.OK )
@@ -125,11 +127,6 @@ public class CalendarFeatureDialog implements IFeatureDialog
    */
   public String getLabel( )
   {
-    // final Date date = getDate();
-    // if( date == null )
-    // return "";
-    //    
-    // return m_dateFormat.format( date );
     return "..."; //$NON-NLS-1$
   }
 }

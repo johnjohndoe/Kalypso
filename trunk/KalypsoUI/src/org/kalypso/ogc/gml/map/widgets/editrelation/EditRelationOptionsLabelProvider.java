@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map.widgets.editrelation;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -49,6 +50,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public class EditRelationOptionsLabelProvider extends LabelProvider
@@ -89,6 +91,7 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
   {
     if( element == null )
       return "null"; //$NON-NLS-1$
+      
     if( element instanceof GMLWorkspace )
     {
       final URL context = ((GMLWorkspace) element).getContext();
@@ -96,12 +99,12 @@ public class EditRelationOptionsLabelProvider extends LabelProvider
     }
     if( element instanceof IFeatureType )
     {
-      final IAnnotation annotation = ((IFeatureType) element).getAnnotation();
+      final IAnnotation annotation = ((IFeatureType) element).getAnnotation(  );
       return annotation.getTooltip();
     }
     if( element instanceof IPropertyType )
     {
-      final IAnnotation annotation = ((IPropertyType) element).getAnnotation();
+      final IAnnotation annotation = ((IPropertyType) element).getAnnotation(  );
       return annotation.getLabel();
     }
     if( element instanceof HeavyRelationType )
