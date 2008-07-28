@@ -100,6 +100,23 @@ public class FileUtilities
     helper.setFileContents( dest, false, false, monitor );
   }
 
+  public static String toString( final IFile file ) throws IOException, CoreException
+  {
+    InputStream is = null;
+    try
+    {
+      is = file.getContents();
+      final String content = IOUtils.toString( is, file.getCharset() );
+      is.close();
+      return content;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
+
+
   /**
    * Returns the content of the given file as string object. The charset of the file object is used.
    * <p>

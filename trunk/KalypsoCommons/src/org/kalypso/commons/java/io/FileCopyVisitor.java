@@ -57,30 +57,29 @@ public class FileCopyVisitor implements FileVisitor
 
   private final File m_fromDir;
 
-  private final boolean m_overwriteIfNewer;
+  /** if true, target file is always replaced by source file */
+  private final boolean m_overwrite;
 
   private final String m_excludeDirWithFile;
 
-  /**
-   * @param overwriteIfNewer
-   *          Die Zieldatei selbst dann überschreiben, wenn sie neuer ist
-   */
-  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwriteIfNewer )
+  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwrite )
   {
-    this( fromDir, toDir, overwriteIfNewer, null );
+    this( fromDir, toDir, overwrite, null );
   }
 
-  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwriteIfNewer,
+  /**
+   * @param overwrite Zieldatei immer überschreiben, auch wenn sie schon existiert
+   */
+  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwrite,
       final String excludeDirWithFile )
   {
     m_fromDir = fromDir;
     m_toDir = toDir;
-    m_overwriteIfNewer = overwriteIfNewer;
+    m_overwrite = overwrite;
     m_excludeDirWithFile = excludeDirWithFile;
   }
 
   /**
-   * @throws IOException
    * @see org.kalypso.contribs.java.io.FileVisitor#visit(java.io.File)
    */
   public boolean visit( final File file ) throws IOException
@@ -90,31 +89,33 @@ public class FileCopyVisitor implements FileVisitor
     {
       final File targetFile = new File( m_toDir, relativePathTo );
 
+      final boolean isDir = file.isDirectory();
+      
       // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
-      if( m_excludeDirWithFile != null && file.isDirectory() )
+      if( m_excludeDirWithFile != null && isDir )
       {
         final File excludeFile = new File( file, m_excludeDirWithFile );
         if( excludeFile.exists() )
           return false;
       }
 
-      if( file.isDirectory() )
+      if( isDir )
         targetFile.mkdir();
-
-      if( file.isFile() )
+      else
       {
         // falls die Zieldatei neuer ist und das überschreiben neuerer verboten wurde
         // einfach abbrechen
+//        if( !m_overwrite && targetFile.exists() )
         if( targetFile.exists() )
         {
           // falls neuer überschreiben oder nicht?
           final long targetLastModified = targetFile.lastModified();
           final long lastModified = file.lastModified();
-          if( !m_overwriteIfNewer && targetLastModified > lastModified )
+          if( !m_overwrite && targetLastModified > lastModified )
             return false;
 
           // falls die Dateien wirklich gleich sind, nichts tun
-          if( targetLastModified == lastModified && targetFile.length() == file.length() )
+          if( targetLastModified == lastModified /*&& targetFile.length() == file.length()*/ )
             return false;
         }
 
@@ -127,5 +128,4 @@ public class FileCopyVisitor implements FileVisitor
 
     return true;
   }
-
 }

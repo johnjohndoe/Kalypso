@@ -179,8 +179,8 @@ Export-Package: com.sun.xml.bind.marshaller,
  org.kalypso.commons.i18n,
  org.kalypso.commons.io,
  org.kalypso.commons.java.io,
- org.kalypso.commons.java.io.test,
  org.kalypso.commons.java.lang,
+ org.kalypso.commons.java.swing.jtable,
  org.kalypso.commons.java.util,
  org.kalypso.commons.java.util.zip,
  org.kalypso.commons.java.xml,
@@ -209,4 +209,4 @@ Require-Bundle: org.junit;resolution:=optional,
  org.eclipse.core.runtime,
  org.kalypso.contribs.eclipseplatform;visibility:=reexport,
  org.apache.commons.vfs;visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
