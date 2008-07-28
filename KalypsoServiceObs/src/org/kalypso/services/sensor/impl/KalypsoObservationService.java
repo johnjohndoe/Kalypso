@@ -52,8 +52,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
@@ -96,19 +96,10 @@ import org.xml.sax.InputSource;
 /**
  * Kalypso Observation Service.
  * <p>
- * This service is configured by a properties-file which has following syntax:
- * 
- * <pre>
- *  # Set the timezone into which the kalypso-clients are used. Data that is 
- *  # transferred to and from the clients will be located in this timezone.
- *  # 
- *  # This property is optional and if omitted, kalypso makes no conversion 
- *  # internally (null is used as timezone name in that case).
- *  # 
- *  # The name of the timezone should be compatible with the specification of
- *  # TimeZone.getTimeZone( String ) 
- *  TIMEZONE_NAME=Europe/Berlin
- * </pre>
+ * When a observation is delivered to the client, the IObservationManipulator mechanism is always used to possibly
+ * manipulate the observation before it is delivered. ObservationManipulators are configured within the
+ * IObservationService configuration file. All entries that begin with "MANIPULATOR_" are defining such manipulators.
+ * The syntax of the configuration is as follows: MANIPULATOR_&lt;repository_id&gt;=&lt;manipulator_class_name&gt;.
  * 
  * @author schlienger
  */
@@ -120,26 +111,23 @@ public class KalypsoObservationService implements IObservationService
   private ItemBean[] m_repositoryBeans = null;
 
   /** Bean-ID(String) --> IRepositoryItem */
-  private final Map<String,IRepositoryItem> m_mapBeanId2Item;
+  private final Map<String, IRepositoryItem> m_mapBeanId2Item;
 
   /** IRepositoryItem --> ItemBean */
-  private final Map<IRepositoryItem,ItemBean[]> m_mapItem2Bean;
+  private final Map<IRepositoryItem, ItemBean[]> m_mapItem2Bean;
 
   /** Repository-ID(String) --> IRepository */
-  private final Map<String,IRepository> m_mapRepId2Rep;
+  private final Map<String, IRepository> m_mapRepId2Rep;
 
   /** Repository-ID(String) --> IObservationManipulator */
-  private final Map<String,IObservationManipulator> m_mapRepId2Manip;
+  private final Map<String, IObservationManipulator> m_mapRepId2Manip;
 
   /** Data-ID(String) --> File */
-  private final Map<String,File> m_mapDataId2File;
+  private final Map<String, File> m_mapDataId2File;
 
   private final File m_tmpDir;
 
   private final Logger m_logger;
-
-  /** Timezone is used to convert dates between repositories and clients */
-  private TimeZone m_timezone = null;
 
   /**
    * Constructs the service by reading the configuration.
@@ -147,11 +135,11 @@ public class KalypsoObservationService implements IObservationService
   public KalypsoObservationService( ) throws RepositoryException
   {
     m_repositories = new Vector<IRepository>();
-    m_mapBeanId2Item = new Hashtable<String,IRepositoryItem>( 512 );
-    m_mapItem2Bean = new Hashtable<IRepositoryItem,ItemBean[]>( 512 );
-    m_mapRepId2Rep = new Hashtable<String,IRepository>();
-    m_mapRepId2Manip = new Hashtable<String,IObservationManipulator>();
-    m_mapDataId2File = new Hashtable<String,File>( 128 );
+    m_mapBeanId2Item = new Hashtable<String, IRepositoryItem>( 512 );
+    m_mapItem2Bean = new Hashtable<IRepositoryItem, ItemBean[]>( 512 );
+    m_mapRepId2Rep = new Hashtable<String, IRepository>();
+    m_mapRepId2Manip = new Hashtable<String, IObservationManipulator>();
+    m_mapDataId2File = new Hashtable<String, File>( 128 );
 
     m_logger = Logger.getLogger( KalypsoObservationService.class.getName() );
 
@@ -179,13 +167,13 @@ public class KalypsoObservationService implements IObservationService
     m_repositoryBeans = null;
 
     // dispose repositories
-    for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
-      ((IRepository) it.next()).dispose();
+    for( final Object element : m_repositories )
+      ((IRepository) element).dispose();
     m_repositories.clear();
 
     // clear temp files
-    for( final Iterator it = m_mapDataId2File.values().iterator(); it.hasNext(); )
-      ((File) it.next()).delete();
+    for( final Object element : m_mapDataId2File.values() )
+      ((File) element).delete();
     m_mapDataId2File.clear();
 
     ZmlFilter.configureFor( null );
@@ -208,7 +196,7 @@ public class KalypsoObservationService implements IObservationService
       final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "IObservationService/repconf_server.xml" );
       final InputStream stream = confUrl.openStream();
       // this call also closes the stream
-      final List facConfs = RepositoryConfigUtils.loadConfig( stream );
+      final List<?> facConfs = RepositoryConfigUtils.loadConfig( stream );
 
       // load the service properties
       final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "IObservationService/service.properties" );
@@ -228,20 +216,21 @@ public class KalypsoObservationService implements IObservationService
         IOUtils.closeQuietly( ins );
       }
 
-      // set the timezone according to the properties
-      final String tzName = props.getProperty( "TIMEZONE_NAME" );
-      if( tzName != null )
+      /* Configure logging according to configuration */
+      try
       {
-        m_timezone = TimeZone.getTimeZone( tzName );
-        m_logger.info( "TimeZone set on " + m_timezone );
+        final String logLevelString = props.getProperty( "LOG_LEVEL", Level.INFO.getName() );
+        final Level logLevel = Level.parse( logLevelString );
+        Logger.getLogger( "" ).setLevel( logLevel );
       }
-      else
+      catch( final Throwable t )
       {
-        m_timezone = null;
-        m_logger.info( "Reset TimeZone. Name not found: " + tzName );
+        // Catch everything, changeing the log level should not prohibit this service to run
+        t.printStackTrace();
       }
 
-      for( final Iterator it = facConfs.iterator(); it.hasNext(); )
+      /* Load Repositories */
+      for( final Iterator<?> it = facConfs.iterator(); it.hasNext(); )
       {
         final RepositoryFactoryConfig item = (RepositoryFactoryConfig) it.next();
         final IRepositoryFactory fact = item.createFactory( getClass().getClassLoader() );
@@ -262,14 +251,11 @@ public class KalypsoObservationService implements IObservationService
             final IObservationManipulator man = (IObservationManipulator) ClassUtilities.newInstance( cnManip, IObservationManipulator.class, getClass().getClassLoader() );
             m_mapRepId2Manip.put( rep.getIdentifier(), man );
           }
-
-          // adjust properties of repository
-          if( tzName != null )
-            rep.setProperty( TimeZone.class.getName(), tzName );
         }
         catch( final Exception e )
         {
           m_logger.warning( "Could not create Repository " + fact.getRepositoryName() + " with configuration " + fact.getConfiguration() + ". Reason is:\n" + e.getLocalizedMessage() );
+          e.printStackTrace();
         }
       }
 
@@ -348,13 +334,14 @@ public class KalypsoObservationService implements IObservationService
       // tricky: maybe make a filtered observation out of this one
       obs = FilterFactory.createFilterFrom( hereHref, obs, null );
 
-      final Observation obsType = ZmlFactory.createXML( obs, request, m_timezone );
+      final Observation obsType = ZmlFactory.createXML( obs, request, null );
 
       // name of the temp file must be valid against OS-rules for naming files
       // so remove any special characters
       final String tempFileName = FileUtilities.validateName( "___" + obs.getName(), "-" );
 
       // create temp file
+      m_tmpDir.mkdirs(); // additionally create the parent dir if not already exists
       final File f = File.createTempFile( tempFileName, ".zml", m_tmpDir );
 
       // we say delete on exit even if we allow the client to delete the file
@@ -383,7 +370,7 @@ public class KalypsoObservationService implements IObservationService
         {
           fos.close();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           m_logger.severe( e.getLocalizedMessage() );
           throw new SensorException( "Error closing the output stream", e );
@@ -464,9 +451,9 @@ public class KalypsoObservationService implements IObservationService
     }
 
     // last chance: go through repositories and use findItem()
-    for( final Iterator it = m_repositories.iterator(); it.hasNext(); )
+    for( final Object element : m_repositories )
     {
-      final IRepository rep = (IRepository) it.next();
+      final IRepository rep = (IRepository) element;
 
       final IRepositoryItem item = rep.findItem( id );
 
@@ -566,7 +553,7 @@ public class KalypsoObservationService implements IObservationService
     {
       item = itemFromBean( ib );
     }
-    catch( RepositoryException e )
+    catch( final RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "adaptItem", e );
       throw new SensorException( e.getLocalizedMessage(), e );
@@ -641,9 +628,9 @@ public class KalypsoObservationService implements IObservationService
    */
   public ItemBean findItem( final String id ) throws RepositoryException
   {
-    for( Iterator it = m_repositories.iterator(); it.hasNext(); )
+    for( final Object element : m_repositories )
     {
-      final IRepository rep = (IRepository) it.next();
+      final IRepository rep = (IRepository) element;
 
       final IRepositoryItem item;
 
@@ -656,7 +643,7 @@ public class KalypsoObservationService implements IObservationService
         {
           item = rep.findItem( id );
         }
-        catch( RepositoryException e )
+        catch( final RepositoryException e )
         {
           m_logger.throwing( getClass().getName(), "findItem", e );
           throw e;
