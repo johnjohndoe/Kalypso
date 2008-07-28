@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  WP   10 Apr 2008    1:08 pm
+C     Last change:  MD   28 Jul 2008    5:06 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -235,12 +235,12 @@ C  70 CONTINUE
 C     ROAVG=ROAVG/FLOAT(ICT)
 c        EPSX = ORT(MR,1)/ROAVG
         EPSX = EEXXYY(1,NN)/ROAVG
-        FFACT=0.
+        FFACT(NN)=0.
 
 cipk nov98 adjust for top friction
 cipk apr999 fix nr to MAT
       IF(ORT(MAT,5) .GT. 1.  .or.  ort(MAT,13) .gt. 1.) then
-        FFACT = GRAV/(CHEZ(NN)+ort(MAT,13))**2
+        FFACT(NN) = GRAV/(CHEZ(NN)+ort(MAT,13))**2
       endif
 
 CIPK        DIFX=ORT(MR,8)
@@ -633,12 +633,12 @@ CIPK APR99 ADJUST NR TO MAT
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(MAT) .GT. 0.) THEN
 	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
-              FFACT=(MANMIN(MAT))**2*FCOEF/(H**0.333)
-	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
-              FFACT=(MANMAX(MAT))**2*FCOEF/(H**0.333)
+              FFACT(NN)=(MANMIN(MAT))**2*FCOEF/(H**0.333)
+	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN
+              FFACT(NN)=(MANMAX(MAT))**2*FCOEF/(H**0.333)
 	      ELSE
 	        FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
-              FFACT=(MANMIN(MAT)+FSCL*(MANMAX(MAT)-MANMIN(MAT)))**2
+              FFACT(NN)=(MANMIN(MAT)+FSCL*(MANMAX(MAT)-MANMIN(MAT)))**2
      +     	       *FCOEF/(H**0.333)
 	      ENDIF
 CIPK SEP04  ADD MAH OPTION
@@ -648,7 +648,7 @@ CIPK SEP04  ADD MAH OPTION
 	        TEMAN=HMAN(MAT,3)*EXP(-H/HMAN(MAT,2))
 	      ENDIF
 	      TEMAN=TEMAN+HMAN(MAT,1)/H**HMAN(MAT,4)
-            FFACT=TEMAN**2*FCOEF/(H**0.333)
+            FFACT(NN)=TEMAN**2*FCOEF/(H**0.333)
           ELSEIF(MANTAB(MAT,1,2) .GT. 0.) THEN
 	      DO K=1,4
 	        IF(H .LT. MANTAB(MAT,K,1)) THEN
@@ -665,7 +665,7 @@ CIPK SEP04  ADD MAH OPTION
 	      ENDDO
 	      TEMAN=MANTAB(MAT,4,2)
   280       CONTINUE
-            FFACT=TEMAN**2*FCOEF/(H**0.333)
+            FFACT(NN)=TEMAN**2*FCOEF/(H**0.333)
           ELSE
 !**************************************************************
 !
@@ -673,10 +673,10 @@ CIPK SEP04  ADD MAH OPTION
 !
 !**************************************************************
 !
-!           FFACT=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
+!           FFACT(NN)=(ORT(MAT,5)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 
 CIPK MAY06  MOVE NR TO MAT
-            FFACT=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/(H**0.333)
+            FFACT(NN)=(ZMANN(NN)+ORT(MAT,13))**2*FCOEF/(H**0.333)
 !
 !**************************************************************
 !
@@ -706,7 +706,7 @@ CIPK MAY06  MOVE NR TO MAT
      +             lamDunes)
 
         !calculation of friction factor for roughness term in differential equation
-        FFACT = lamTot / 8.0
+        FFACT(NN) = lamTot / 8.0
 
         !initialize in new run
         if (i == 1) then
@@ -729,11 +729,11 @@ CIPK MAY06  MOVE NR TO MAT
 cipk dec00 modify friction for high flow gates
 
 CIPK MAR01      IF(IGTP(NN) .GT. 0.) THEN
-CIPK MAR01        FFACT=FFACT*CJ(NGT)
+CIPK MAR01        FFACT(NN)=FFACT(NN)*CJ(NGT)
 CIPK MAR01      ENDIF
 
       TFRIC = 0.0
-      IF( VECQ .GT. 1.0E-6 ) TFRIC = FFACT
+      IF( VECQ .GT. 1.0E-6 ) TFRIC = FFACT(NN)
 cipk oct98 update to f90
       IF(MOD(IMMT,100) .GT. 90) GO TO 291
 cipk mar01 Clean logic abd modify to set side flows zero for dry locations
@@ -774,7 +774,7 @@ C
 C
 C.....BOTTOM FRICTION TERMS.....
 C
-      FRN = FRN + FFACT*VECQ*R*(WID+SSLOP/2.*H)*UBF**2
+      FRN = FRN + FFACT(NN)*VECQ*R*(WID+SSLOP/2.*H)*UBF**2
 
 cipk mar01   add drag force terms
       FRN = FRN + DRAGX(MAT)*GRAV*ACR*VECQ*R*UBF**2
