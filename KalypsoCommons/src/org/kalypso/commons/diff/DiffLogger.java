@@ -30,6 +30,7 @@
 package org.kalypso.commons.diff;
 
 import java.util.Stack;
+import java.util.logging.Level;
 
 import org.kalypso.contribs.java.util.logging.ILogger;
 
@@ -85,16 +86,16 @@ public class DiffLogger implements IDiffLogger
     StringBuffer tab = new StringBuffer();
     for( int i = 0; i < offset; i++ )
       tab.append( " " );
-    innerLog( tab.toString() + diff + message );
+    innerLog( Level.INFO, tab.toString() + diff + message );
   }
 
-  public void innerLog( final String message )
+  public void innerLog( final Level level, final String message )
   {
     if( m_buffers.isEmpty() )
-      m_logger.log( message );
+      m_logger.log( level, -1, message );
     else
     {
-      StringBuffer buffer = m_buffers.peek();
+      final StringBuffer buffer = m_buffers.peek();
       if( buffer.length() > 0 )
         buffer.append( "\n" );
       buffer.append( message );
@@ -117,6 +118,6 @@ public class DiffLogger implements IDiffLogger
   {
     final StringBuffer buffer = m_buffers.pop();
     if( keepLastLog )
-      innerLog( buffer.toString() );
+      innerLog( Level.INFO, buffer.toString() );
   }
 }
