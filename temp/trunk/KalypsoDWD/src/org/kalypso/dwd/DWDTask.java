@@ -44,16 +44,16 @@ import java.io.File;
 import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 
 /**
- * this task generates zml-files from
- * <li>lm-file (dwd-raster forecast), and</li>
- * <li>dwd2zmlconf.xml (mapping)</li>
+ * this task generates zml-files from <li>lm-file (dwd-raster forecast), and</li> <li>dwd2zmlconf.xml (mapping)</li>
  * <p>
  * TODO: add property for default filterstring <br>
  * TODO: add properties for timeintervalls (startsim,startforecast,stopsim) <br>
@@ -133,21 +133,34 @@ public class DWDTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute() throws BuildException
+  public void execute( ) throws BuildException
   {
     try
     {
+      final Project antProject = getProject();
+      // REMARK: It is NOT possible to put this inner class into an own .class file (at least not inside the plugin code)
+      // else we get an LinkageError when accessing the Project class.
       final ILogger logger = new ILogger()
       {
-        public void log( String message )
+        /**
+         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
+         */
+        public void log( final Level level, final int msgCode, final String message )
         {
-          System.out.println( message );
+          final String outString = LoggerUtilities.formatLogStylish( level, msgCode, message );
+          if( antProject == null )
+            System.out.println( outString );
+          else
+            antProject.log( outString );
         }
       };
 
+      final String taskDesk = getDescription();
+      if( taskDesk != null )
+        logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, taskDesk );
+
       final DWDTaskDelegate delegate = new DWDTaskDelegate();
-      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date(
-          m_forecastFrom ), new Date( m_to ), m_filter, m_metadata );
+      delegate.execute( logger, m_obsRasterURL, m_dwd2zmlConfUrl, m_targetContext, new Date( m_from ), new Date( m_forecastFrom ), new Date( m_to ), m_filter, m_metadata );
     }
     catch( final Exception e )
     {
@@ -167,8 +180,7 @@ public class DWDTask extends Task
 
     if( metadata.getValue() == null )
     {
-      getProject().log( "Cannot add Metadata since property value is null. Property name: " + metadata.getName(),
-          Project.MSG_WARN );
+      getProject().log( "Cannot add Metadata since property value is null. Property name: " + metadata.getName(), Project.MSG_WARN );
       return;
     }
 
@@ -181,7 +193,7 @@ public class DWDTask extends Task
 
     private String m_value;
 
-    public String getName()
+    public String getName( )
     {
       return m_name;
     }
@@ -191,7 +203,7 @@ public class DWDTask extends Task
       m_name = name;
     }
 
-    public String getValue()
+    public String getValue( )
     {
       return m_value;
     }

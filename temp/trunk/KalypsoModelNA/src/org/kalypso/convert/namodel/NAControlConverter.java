@@ -220,7 +220,7 @@ public class NAControlConverter
     String system = "we";// "sys";
     String zustand = "nat";
     final DateFormat format = NATimeSettings.getInstance().getTimeZonedDateFormat( new SimpleDateFormat( "yyyy MM dd HH" ) );
-
+    
     String startDate = format.format( conf.getSimulationStart() );
     String endDate = format.format( conf.getSimulationEnd() );
 

@@ -80,7 +80,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileCopyVisitor;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -417,11 +416,7 @@ public class NaModelInnerCalcJob implements ISimulation
     tranpolinEnd.add( Calendar.HOUR, 24 );
 
     final IRequest request = new ObservationRequest( calBegin.getTime(), calEnd.getTime() );
-    // TODO: as soon as TranProLinFilter is merged with branch, uncomment request
-    TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction, offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte"/*
-                                                                                                                                                                                                              * ,
-                                                                                                                                                                                                              * request
-                                                                                                                                                                                                              */);
+    TranProLinFilterUtilities.transformAndWrite( resultObservation, calBegin, tranpolinEnd, offsetStartPrediction, offsetEndPrediction, "+", axisType, KalypsoStati.BIT_DERIVATED, fileMitte, " - Spur Mitte", request );
 
     // read the freshly created file into a new observation, we are going to umhüll it
     final IObservation adaptedResultObservation = ZmlFactory.parseXML( fileMitte.toURL(), "adaptedVorhersage" );
@@ -443,14 +438,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
     final double endOffset = calcEndValue * (endAccuracy / 100);
 
-    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "-", axisType, KalypsoStati.BIT_DERIVATED, fileUnten, " - spur Unten"/*
-                                                                                                                                                                                 * ,
-                                                                                                                                                                                 * request
-                                                                                                                                                                                 */);
-    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, fileOben, " - spur Oben"/*
-                                                                                                                                                                               * ,
-                                                                                                                                                                               * request
-                                                                                                                                                                               */);
+    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "-", axisType, KalypsoStati.BIT_DERIVATED, fileUnten, " - spur Unten", request );
+    TranProLinFilterUtilities.transformAndWrite( adaptedResultObservation, calBegin, calEnd, 0, endOffset, "+", axisType, KalypsoStati.BIT_DERIVATED, fileOben, " - spur Oben", request );
   }
 
   /**
@@ -1532,15 +1521,15 @@ public class NaModelInnerCalcJob implements ISimulation
     }
 
     // TODO: do not commit...
-//    URL defaultZfl = getClass().getResource( m_resourceBase + "inp.dat/we999-weisseelster.zfl" );
-//    FileUtils.copyURLToFile( defaultZfl, new File( basedir, "inp.dat/we999.zfl" ) );
+// URL defaultZfl = getClass().getResource( m_resourceBase + "inp.dat/we999-weisseelster.zfl" );
+// FileUtils.copyURLToFile( defaultZfl, new File( basedir, "inp.dat/we999.zfl" ) );
 //
-//    URL defaultVer = getClass().getResource( m_resourceBase + "klima.dat/std.ver" );
-//    FileUtils.copyURLToFile( defaultVer, new File( basedir, "klima.dat/std.ver" ) );
+// URL defaultVer = getClass().getResource( m_resourceBase + "klima.dat/std.ver" );
+// FileUtils.copyURLToFile( defaultVer, new File( basedir, "klima.dat/std.ver" ) );
 //
-//    URL defaultTmp = getClass().getResource( m_resourceBase + "klima.dat/std.tmp" );
-//    FileUtils.copyURLToFile( defaultTmp, new File( basedir, "klima.dat/std.tmp" ) );
-    
+// URL defaultTmp = getClass().getResource( m_resourceBase + "klima.dat/std.tmp" );
+// FileUtils.copyURLToFile( defaultTmp, new File( basedir, "klima.dat/std.tmp" ) );
+
   }
 
   private void unzipInput( final URL asciiZipURL, final File exeDir )

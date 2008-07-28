@@ -70,7 +70,7 @@ public class UpdateHelper
   private static final ObjectFactory OF = new ObjectFactory();
   private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class ); 
 
-  public static String createInterpolationFilter( int amountHours, double defaultValue, boolean forceFill )
+  public static String createInterpolationFilter( int amountHours, String defaultValue, boolean forceFill )
       throws JAXBException
   {
     StringWriter writer = null;

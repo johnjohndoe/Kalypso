@@ -53,6 +53,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,6 +82,16 @@ public class DWDRasterHelper
   private final static Pattern HEADER_DYNAMIC = Pattern.compile( " " + DATUM + " +" + KEY + " +" + STUNDE );
 
   private final static SimpleDateFormat DATEFORMAT_RASTER = new SimpleDateFormat( "yyMMddHHmm" );
+
+  static
+  {
+    // REMARK: Wir setzen hier explizit die Zeitzone für die Datümer der LM Datei
+    // Die Zeitzone ist Momentan uf 'GMT-1:0' gesetzt, da so die Daten identisch zum HWVOR00 (Saale) Modell interpretiert werden.
+    // Dies ist vermutlich nicht richtig (TODO: verifizieren)
+    // TODO: noch besser wäre es, die Zeitzone 'von aussen' konfigurierbar zu machen
+    DATEFORMAT_RASTER.setTimeZone( TimeZone.getTimeZone( "GMT-1:00" ) );
+  }
+
 
   /**
    * Return the most recent DWD file from the given folder, or null if nothing found.
@@ -199,9 +210,10 @@ public class DWDRasterHelper
       DWDRaster xRaster = null;
       DWDRaster yRaster = null;
       final double factor = DWDRasterHelper.getFactorForDwdKey( DWDRaster.KEY_100000_LAT );
+      final double offset = DWDRasterHelper.getOffsetForDwdKey( DWDRaster.KEY_100000_LAT );
       while( (line = reader.readLine()) != null )
       {
-        Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
+        final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() )
         {
           if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LAT )
@@ -212,28 +224,22 @@ public class DWDRasterHelper
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
           raster = new DWDRaster( date, key );
           continue;
-
         }
+
         final String[] values = (line.trim()).split( " +", 13 );
 
         if( raster != null )
         {
           for( int i = 0; i < values.length; i++ )
-          {
-            raster.addValue( Double.parseDouble( values[i] ) * factor );
+            raster.addValue( ( Double.parseDouble( values[i] ) + offset ) * factor );
           }
 
         }
-      }
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LAT )
         yRaster = raster;
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LON )
         xRaster = raster;
       return new DWDRasterGeoLayer( targetEpsg, xRaster, yRaster );
-    }
-    catch( Exception e )
-    {
-      throw e;
     }
     finally
     {
@@ -241,6 +247,7 @@ public class DWDRasterHelper
     }
   }
 
+  /** Each value read from the raster is multiplied with this factor (applied AFTER the offset) */
   private static double getFactorForDwdKey( final int dwdKey )
   {
     switch( dwdKey )
@@ -249,8 +256,8 @@ public class DWDRasterHelper
       case DWDRaster.KEY_BEDECKUNG: // [%]
         return 1;
       case DWDRaster.KEY_TAU: // [GradC]
+    case DWDRaster.KEY_TEMP: // [Kelvin]
         return 1d / 10d;
-      case DWDRaster.KEY_TEMP: // [GradC]
       case DWDRaster.KEY_RAIN: // [mm]
       case DWDRaster.KEY_SNOW: // [mm]
       case DWDRaster.KEY_WINDM: // [m/s]
@@ -263,10 +270,25 @@ public class DWDRasterHelper
     return 1; // unknown
   }
 
+  /** This offset is added to each value read from the raster (applied BEFORE the factor) */
+  private static double getOffsetForDwdKey( final int dwdKey )
+  {
+    switch( dwdKey )
+    {
+    case DWDRaster.KEY_TEMP: // [Kelvin]
+      return -2731.5;
+
+    default:
+      return 0; // unknown
+    }
+  }
+
   public static DWDObservationRaster loadObservationRaster( final URL url, final int dwdKey, final int maxCells ) throws Exception
   {
-    LineNumberReader reader = null;
     final double factor = getFactorForDwdKey( dwdKey );
+    final double offset = getOffsetForDwdKey( dwdKey );
+    
+    LineNumberReader reader = null;
     try
     {
       reader = new LineNumberReader( new InputStreamReader( url.openStream() ) );
@@ -280,10 +302,10 @@ public class DWDRasterHelper
         final Matcher dynamicHeaderMatcher = HEADER_DYNAMIC.matcher( line );
         if( dynamicHeaderMatcher.matches() ) // lm1
         {
-          System.out.println( line );
           final Date startDate = DATEFORMAT_RASTER.parse( dynamicHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( dynamicHeaderMatcher.group( 2 ) );
           final long hour = Long.parseLong( dynamicHeaderMatcher.group( 3 ) );
+          // ARG: use calendar to add hours to date
           date = new Date( startDate.getTime() + 60 * 60 * 1000 * hour );
           if( key == dwdKey )
           {
@@ -299,7 +321,6 @@ public class DWDRasterHelper
         final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() ) // lm2 ??
         {
-          System.out.println( line );
           date = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
           if( key == dwdKey )
@@ -319,8 +340,8 @@ public class DWDRasterHelper
             values = (line.trim()).split( " +", 13 );
             for( int i = 0; i < values.length; i++ )
             {
-              double value = Double.parseDouble( values[i] );
-              raster.setValueFor( date, cellpos, value * factor );
+            final double value = Double.parseDouble( values[i] );
+            raster.setValueFor( date, cellpos, ( value + offset ) * factor );
               cellpos++;
             }
             break;
@@ -328,8 +349,8 @@ public class DWDRasterHelper
             values = (line.trim()).split( " +" );
             for( int i = 0; i < values.length; i++ )
             {
-              double value = Double.parseDouble( values[i] );
-              raster.setValueFor( date, cellpos, value * factor );
+            final double value = Double.parseDouble( values[i] );
+            raster.setValueFor( date, cellpos, ( value + offset ) * factor );
               cellpos++;
               if( cellpos >= maxCells )
               {
@@ -342,10 +363,6 @@ public class DWDRasterHelper
         }
       }
       return raster;
-    }
-    catch( final Exception e )
-    {
-      throw e;
     }
     finally
     {
@@ -402,6 +419,58 @@ public class DWDRasterHelper
     {
       IOUtils.closeQuietly( reader );
       IOUtils.closeQuietly( writer );
+    }
+  }
+  
+    /**
+   * Parses the date from the first line of a lm file.
+   */
+  public static Date dateFromFirstLine( final String line )
+  {
+    final Matcher staticHeaderMatcher = HEADER_DYNAMIC.matcher( line );
+    if( staticHeaderMatcher.matches() )
+    {
+      try
+      {
+        final String dateString = staticHeaderMatcher.group( 1 );
+        System.out.println( "Parsing date string: " + dateString );
+        return DATEFORMAT_RASTER.parse( dateString );
+      }
+      catch( final ParseException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Read the first line from a file.
+   * <p>
+   * Remark: we put this method here instead of one of the FileUtility classes, so we may deploy the DWDServlet without
+   * too many dependencies.
+   * 
+   * @return null, f the file is empty or could not be read.
+   */
+  public static String readFirstLine( final File file )
+  {
+    BufferedReader r = null;
+    try
+    {
+      r = new BufferedReader( new FileReader( file ) );
+      final String result = r.readLine();
+      r.close();
+      return result;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( r );
     }
   }
 }

@@ -76,7 +76,7 @@ import java.util.Vector;
 public class DWDRaster
 {
   /**
-   * Temperatur in 2m Hoehe [GradC*100]
+   * Temperatur in 2m Hoehe [GradKelvin*10]
    */
   public static final int KEY_TEMP = 11;
 

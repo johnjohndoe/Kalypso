@@ -49,6 +49,11 @@
             <param-value>false;true</param-value>
 			<description>whether contents of the dest file should be updated or not, with the date of the DWD forecast file (semicolon separated if more than one instance)</description>
         </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>false</param-value>
+			<description>Whether more debug output should be produced. Can be 'true' or 'false'. Only ONE parameter is supported.</description>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

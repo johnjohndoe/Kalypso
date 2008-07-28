@@ -33,10 +33,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -46,6 +48,8 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.dwd.dwdzml.DwdzmlConf;
 import org.kalypso.dwd.dwdzml.ObjectFactory;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
@@ -73,6 +77,13 @@ import org.kalypso.zml.Observation;
  */
 public class DWDTaskDelegate
 {
+  private static final DateFormat DWD_DATEFORMAT = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.SHORT );
+
+  static
+  {
+    DWD_DATEFORMAT.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+  }
+
   private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private Properties m_metadata = null;
@@ -80,42 +91,80 @@ public class DWDTaskDelegate
   public void execute( final ILogger logger, final URL obsRasterURL, final URL dwd2zmlConfUrl, final File targetContext, final Date startSim, final Date startForecast, final Date stopSim, String filter, final Properties metadata ) throws Exception
   {
     m_metadata = metadata;
-    logger.log( "DWD-task: generates ZML files from DWD-forecast" );
-    logger.log( " inputRaster: " + obsRasterURL );
-    logger.log( " raster to zml mapping: " + dwd2zmlConfUrl );
-    logger.log( " context for targets (zml-files): " + targetContext );
-    logger.log( " unmarshall dwd2zml configuration ..." );
+
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " inputRaster: " + obsRasterURL );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " raster to zml mapping: " + dwd2zmlConfUrl );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " context for targets (zml-files): " + targetContext );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " unmarshall dwd2zml configuration ..." );
 
     final Unmarshaller unmarshaller = JC.createUnmarshaller();
     final DwdzmlConf conf = (DwdzmlConf) unmarshaller.unmarshal( dwd2zmlConfUrl );
     final String axisType = DWDRasterHelper.getAxisTypeForDWDKey( conf.getDwdKey() );
-    logger.log( " type of ZML to generate" + axisType );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " type of ZML to generate" + axisType );
 
-    logger.log( " read inputraster..." );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " read inputraster..." );
     DWDObservationRaster obsRaster = null;
     try
     {
       obsRaster = DWDRasterHelper.loadObservationRaster( obsRasterURL, conf.getDwdKey(), conf.getNumberOfCells() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      logger.log( "konnte Raster nicht laden, DWD-Vorhersage kann nicht verwendet werden" );
-      logger.log( e.getLocalizedMessage() );
+      logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Konnte Raster nicht laden, DWD-Vorhersage kann nicht verwendet werden: " + e.getLocalizedMessage() );
     }
-    final List targetList = conf.getTarget();
+
+    if( obsRaster != null )
+    {
+      final Calendar baseDateCal = Calendar.getInstance();
+      baseDateCal.setTime( obsRaster.getBaseDate() );
+
+      // REMARK: as the DWD Date wa previously read with UTC-1 (probably wrongly), because of the Saale-Model (HWVOR00),
+      // we now delete that hour from the date in order to have a nice message with even dates 0/12 hours.
+      // This has to be corrected as sson as we know what timeszone the DWD-LM-Data is truly in.
+      baseDateCal.add( Calendar.HOUR, -1 );
+
+      final Date firstRasterDate = baseDateCal.getTime();
+
+      /* Produce warning, if rasterDate is much before startForecast */
+      if( firstRasterDate == null || startForecast == null )
+        logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Startdatum der DWD-Rasterdaten konnte nicht ermittelt werden oder Vorhersagezeitpunkt ist nicht gesetzt. Prüfen Sie den Dateneingang." );
+      else
+      {
+        final long distance = startForecast.getTime() - firstRasterDate.getTime();
+        final Double distanceInHours = new Double( (double) distance / (1000 * 60 * 60) );
+
+        final String msg = String.format( "DWD-Lokalmodell vom %s", new Object[] { DWD_DATEFORMAT.format( firstRasterDate ) } );
+
+        if( distanceInHours.doubleValue() > 12 )
+        {
+          logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "DWD Daten veraltet, bitte prüfen Sie den Dateneingang." );
+          logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, msg );
+        }
+        else if( distanceInHours.doubleValue() < -12 )
+        {
+          logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_MSGBOX, "Vorhersagezeitraum liegt deutlich (>12h) vor dem Datum der DWD Daten. Bitte prüfen Sie den Dateneingang." );
+          logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_DETAILS, msg );
+        }
+        else
+          // in order to always have a message, if nothing else happens make this mesage a main message
+          logger.log( Level.INFO, LoggerUtilities.CODE_SHOW_MSGBOX, msg );
+      }
+    }
+    final List<Target> targetList = conf.getTarget();
     if( filter == null )
       filter = "";
     else
-      logger.log( "benutze Filter: " + filter );
-    logger.log( "Zeitraum " );
-    logger.log( " von " + startSim + " (Messung" );
-    logger.log( " von " + startForecast + " (Vorhersage)" );
-    logger.log( " bis " + stopSim );
-    logger.log( " generate zml..." );
+      logger.log( Level.FINE, LoggerUtilities.CODE_NONE, "benutze Filter: " + filter );
+
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, "Zeitraum " );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " von " + startSim + " (Messung" );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " von " + startForecast + " (Vorhersage)" );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " bis " + stopSim );
+    logger.log( Level.FINE, LoggerUtilities.CODE_NONE, " generate zml..." );
     // iterate zml to generate
-    for( Iterator iter = targetList.iterator(); iter.hasNext(); )
+    
+    for( final Target targetZML : targetList )
     {
-      final Target targetZML = (Target) iter.next();
       final String targetZMLref = targetZML.getTargetZR();
       final File resultFile = new File( targetContext, targetZMLref );
 
@@ -131,11 +180,11 @@ public class DWDTaskDelegate
       {
         final Date date = dates[i];
         // iterate rastercells
-        final List map = targetZML.getMap();
+        final List<Map> map = targetZML.getMap();
         double value = 0;
-        for( Iterator iterator = map.iterator(); iterator.hasNext(); )
+        
+        for( final Map mapping : map )
         {
-          final Map mapping = (Map) iterator.next();
           final int cellPos = mapping.getCellPos();
           final double factor = mapping.getFactor();
           value += factor * obsRaster.getValueFor( date, cellPos );
@@ -212,10 +261,6 @@ public class DWDTaskDelegate
         try
         {
           marshaller.marshal( observationType, streamWriter );
-        }
-        catch( Exception e )
-        {
-          // nothing
         }
         finally
         {

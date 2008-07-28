@@ -29,31 +29,27 @@
  */
 package org.kalypso.dwd;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
- * 
  * this represents a observation that is read from DWD-rasterformat (LM or LM2)
  * 
  * @author doemming
  */
 public class DWDObservationRaster
 {
+  private final SortedMap<Date, double[]> m_valueHash = new TreeMap<Date, double[]>();
 
   private final int m_dwdKey;
-
-  private final SortedMap<Date, double[]> m_valueHash = new TreeMap<Date, double[]>();
 
   private final int m_maxCells;
 
   /**
    * @param dwdKey
    *          type of observation
-   *  
    */
   public DWDObservationRaster( int dwdKey, int maxCells )
   {
@@ -62,10 +58,9 @@ public class DWDObservationRaster
   }
 
   /**
-   * 
    * @return type of observation
    */
-  public int getDwdKey()
+  public int getDwdKey( )
   {
     return m_dwdKey;
   }
@@ -86,20 +81,34 @@ public class DWDObservationRaster
     return values[cellPos];
   }
 
-  public Date[] getDates()
+  /** Returns all known dates by this raster. The dates are sorted in ascending order. */
+  public Date[] getDates( )
   {
-    final SortedSet<Date> sort = new TreeSet<Date>( m_valueHash.keySet() );
-    return sort.toArray( new Date[sort.size()] );
+    return m_valueHash.keySet().toArray( new Date[m_valueHash.size()] );
   }
 
   public Date[] getDates( Date min, Date max )
   {
-    final SortedSet<Date> sort = new TreeSet<Date>( m_valueHash.keySet() );
     if( min == null )
-      min = sort.first();
+      min = m_valueHash.firstKey();
     if( max == null )
-      max = sort.last();
-    final SortedSet<Date> result = sort.subSet( min, max );
-    return result.toArray( new Date[result.size()] );
+      max = m_valueHash.lastKey();
+    final SortedMap<Date, double[]> result = m_valueHash.subMap( min, max );
+    return result.keySet().toArray( new Date[result.size()] );
+  }
+
+  public Date getBaseDate( )
+  {
+    final Date[] dates = getDates();
+    final Date firstRasterDate = dates == null || dates.length == 0 ? null : dates[0];
+    if( firstRasterDate == null )
+      return null;
+
+    // REMARK: we assume that the first date is always BaseDate + 1
+    final Calendar instance = Calendar.getInstance();
+    instance.setTime( firstRasterDate );
+    instance.add( Calendar.HOUR, -1 );
+
+    return instance.getTime();
   }
 }
