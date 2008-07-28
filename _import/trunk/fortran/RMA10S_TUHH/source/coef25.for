@@ -29,6 +29,7 @@ cipk  last update Aug 6 1998 complete division by xht for transport eqn
 cipk  last update Jan 21 1998
 cipk  last update Dec 16 1997
 C     Last change:  WP   22 Jul 2008   10:05 am
+C     Last change:  MD   28 Jul 2008    5:53 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 cipk  last update Jan 22 1997
 cipk  last update Oct 1 1996 add new formulations for EXX and EYY
@@ -220,11 +221,11 @@ c     a  normal element
       NR = MOD(IMMT,100)
 cipkjun05
       if(immt .gt. 900) nr=immt
-      FFACT=0.
+      FFACT(NN)=0.
 
 cipk nov98 adjust for top friction
       IF(ORT(NR,5) .GT. 1.  .or.  ort(nr,13) .gt. 1.) then
-        FFACT = GRAV/(CHEZ(NN)+ort(nr,13))**2
+        FFACT(NN) = GRAV/(CHEZ(NN)+ort(nr,13))**2
       endif
 
 CIPK MAR0 setup switch that says salinity is active
@@ -969,16 +970,16 @@ CIPK SEP02
 CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(NR) .GT. 0.) THEN
 	      IF(H+AZER .LT. ELMMIN(NR) ) THEN 
-              FFACT=(MANMIN(NR))**2*FCOEF/(H**0.333)
+              FFACT(NN)=(MANMIN(NR))**2*FCOEF/(H**0.333)
 CIPK SEP02
 	        EFMAN=MANMIN(NR)
           ELSEIF(H+AZER .GT. ELMMAX(NR) ) THEN 
-              FFACT=(MANMAX(NR))**2*FCOEF/(H**0.333)
+              FFACT(NN)=(MANMAX(NR))**2*FCOEF/(H**0.333)
 CIPK SEP02
 	        EFMAN=MANMAX(NR)
           ELSE
 	        FSCL=(H+AZER-ELMMIN(NR))/(ELMMAX(NR)-ELMMIN(NR))
-              FFACT=(MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR)))**2
+              FFACT(NN)=(MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR)))**2
      +     	       *FCOEF/(H**0.333)
 CIPK SEP02
 	        EFMAN=MANMIN(NR)+FSCL*(MANMAX(NR)-MANMIN(NR))
@@ -990,7 +991,7 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 	        TEMAN=HMAN(NR,3)*EXP(-H/HMAN(NR,2))
 	      ENDIF
 	      TEMAN=TEMAN+HMAN(NR,1)/H**HMAN(NR,4)
-            FFACT=TEMAN**2*FCOEF/(H**0.333)
+            FFACT(NN)=TEMAN**2*FCOEF/(H**0.333)
           ELSEIF(MANTAB(NR,1,2) .GT. 0.) THEN
 	      DO K=1,4
 	        IF(H .LT. MANTAB(NR,K,1)) THEN
@@ -1007,7 +1008,7 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 	      ENDDO
 	      TEMAN=MANTAB(NR,4,2)
   280       CONTINUE
-            FFACT=TEMAN**2*FCOEF/(H**0.333)
+            FFACT(NN)=TEMAN**2*FCOEF/(H**0.333)
           ELSE
 !**************************************************************
 !
@@ -1015,11 +1016,11 @@ CIPK SEP04  ADD MAH AND MAT OPTION
 !
 !**************************************************************
 !
-!            FFACT=(ORT(NR,5)+ORT(NR,13))**2*FCOEF/(H**0.333)
+!            FFACT(NN)=(ORT(NR,5)+ORT(NR,13))**2*FCOEF/(H**0.333)
 !CIPK SEP02
 !	      EFMAN=ORT(NR,5)
 !
-            FFACT=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
+            FFACT(NN)=(ZMANN(NN)+ORT(NR,13))**2*FCOEF/(H**0.333)
             EFMAN=ZMANN(NN)
 !
 !**************************************************************
@@ -1047,7 +1048,7 @@ CIPK SEP04  ADD MAH AND MAT OPTION
      +             lambdaDunes(nn))
 
         !calculation of friction factor for roughness term in differential equation
-        FFACT = lambdaTot(nn)/8.0
+        FFACT(NN) = lambdaTot(nn)/8.0
         !-
 
       ENDIF
@@ -1060,7 +1061,7 @@ CIPK MAR03 APPLY ELDER EQUATION IF SELECTED AND ADD MINIMUM TEST
           AAAA=0
         ENDIF
 
-        SHEARVEL=VECQ*SQRT(FFACT)
+        SHEARVEL=VECQ*SQRT(FFACT(NN))
         DIFX=SHEARVEL*H*ABS(ORT(NR,8))
         DIFY=DIFX*ABS(ORT(NR,9))
 c	  peclet=vecq*abs((xl(3)+xl(5)))/2/difx
@@ -1130,7 +1131,7 @@ CIPK SEP02  ADD LOGIC FOR WAVE SENSITIVE FRICTION
         FACTO=FENH*FCT
         EFCHEZA=18.*LOG10(12.*H/FACTO)
         FRICCR=EFCHEZ/EFCHEZA
-        FFACT=FFACT*FRICCR
+        FFACT(NN)=FFACT(NN)*FRICCR
       ENDIF
 CIPK SEP02 END ADDITION
 
@@ -1152,13 +1153,13 @@ C	    dfmdh=-frsc/(akapmg*brang)
 C       dfmdh=0.0
       ENDIF
 C        dffact=ffact*dfmdh+fmult*dffdh
-      FFACT=FFACT*FMULT
+      FFACT(NN)=FFACT(NN)*FMULT
 
 
 cipk nov97 end changes
 CIPK MAR01 ADD DRAG AND REORGANIZE      TFRIC = 0.0
       IF( VECQ .GT. 1.0E-6 ) THEN
-        TFRIC = FFACT / VECQ
+        TFRIC = FFACT(NN) / VECQ
         TDRAGX = GRAV*DRAGX(NR)/VECQ
         TDRAGY = GRAV*DRAGY(NR)/VECQ
       ELSE
@@ -1179,7 +1180,7 @@ cipk jun05
       if (iedsw.ge.10) then
         call turbulence(nn,iedsw,tbmin,eexxyy(1,nn),eexxyy(2,nn),
      +       eexxyy(3,nn),eexxyy(4,nn),epsx,epsxz,epszx,epsz,roavg,
-     +       p_bottom,tbfact,ffact,vecq,h,drdx,drdz,dsdx,dsdz,gscal)
+     +       p_bottom,tbfact,vecq,h,drdx,drdz,dsdx,dsdz)
       end if
       !-
 
@@ -1251,8 +1252,8 @@ C
 C
 C.....BOTTOM FRICTION TERMS.....
 C
-      FRN = FRN + FFACT*VECQ*R*UBF
-      FSN = FSN + FFACT*VECQ*S*VBF
+      FRN = FRN + FFACT(NN)*VECQ*R*UBF
+      FSN = FSN + FFACT(NN)*VECQ*S*VBF
 
 CIPK MAR01   ADD DRAG TERM
 
@@ -1786,9 +1787,9 @@ CMAY93     +      XNAL(1,N)*VEL(2,N1)+XNAL(2,N)*VEL(2,N2)+XNAL(3,N)*VEL(2,N3)
 CMAY93 ENDCHANGE
             VECQ=SQRT(U**2+V**2)
             IF(ORT(NR,11) .GT. 1.) THEN
-              FFACT=1./ORT(NR,11)**2*H
+              FFACT(NN)=1./ORT(NR,11)**2*H
             ELSE
-              FFACT=ORT(NR,11)**2*FCOEF*H**0.6667/GRAV
+              FFACT(NN)=ORT(NR,11)**2*FCOEF*H**0.6667/GRAV
 cipk mar99 fix bug for bank friction (double count on GRAV)
           
             ENDIF
@@ -1798,8 +1799,8 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
             DERR=SLOAD(M)*HP1*(AFACT(N)*(SPEC(N3,3)-VEL(3,N3))
      +          +(1.-AFACT(N))*(SPEC(N1,3)-VEL(3,N1)))
             IF(M .EQ. 2) THEN
-              TFRIC=TEMP*FFACT*FTF(1)*HFACT(N)
-              FFACT=TFRIC*U*VECQ
+              TFRIC=TEMP*FFACT(NN)*FTF(1)*HFACT(N)
+              FFACT(NN)=TFRIC*U*VECQ
               IF(VECQ .GT. 0.001) THEN
                 FDU=(2.*U**2+V**2)/VECQ*TFRIC
                 FDV=U**2/VECQ*TFRIC
@@ -1808,9 +1809,9 @@ cipk mar99 fix bug for bank friction (double count on GRAV)
                 FDV=0.
               ENDIF
             ELSE
-CMAY93              TFRIC=TEMP*FFACT*FTF(2)
-              TFRIC=TEMP*FFACT*FTF(2)*HFACT(N)
-              FFACT=TFRIC*V*VECQ
+CMAY93              TFRIC=TEMP*FFACT(NN)*FTF(2)
+              TFRIC=TEMP*FFACT(NN)*FTF(2)*HFACT(N)
+              FFACT(NN)=TFRIC*V*VECQ
               IF(VECQ .GT. 0.001) THEN
                 FDU=V**2/VECQ*TFRIC
                 FDV=(2.*V**2+U**2)/VECQ*TFRIC
@@ -1824,15 +1825,15 @@ CMAY93              TFRIC=TEMP*FFACT*FTF(2)
               MA1=MA+3-2*M
               F(MA)=F(MA)+HP*XNAL(K,N)*SLOAD(M)
               IF(IHD .EQ. 0) THEN
-                F(MA1)=F(MA1)+XNAL(K,N)*FFACT
+                F(MA1)=F(MA1)+XNAL(K,N)*FFACT(NN)
                 ESTIFM(MA,NC1)=ESTIFM(MA,NC1)
      +                         -SLOAD(M)*(1.-AFACT(N))*XNAL(K,N)*HP1
                 ESTIFM(MA,NC2)=ESTIFM(MA,NC2)
      +                         -SLOAD(M)*AFACT(N)*XNAL(K,N)*HP1
                 ESTIFM(MA1,NC1)=ESTIFM(MA1,NC1)
-     +                         -XNAL(K,N)*FFACT/H*(1.-AFACT(N))
+     +                         -XNAL(K,N)*FFACT(NN)/H*(1.-AFACT(N))
                 ESTIFM(MA1,NC2)=ESTIFM(MA1,NC2)
-     +                         -XNAL(K,N)*FFACT/H*AFACT(N)
+     +                         -XNAL(K,N)*FFACT(NN)/H*AFACT(N)
                 ESTIFM(MA1,NC1-2)=ESTIFM(MA1,NC1-2)
      +                         -FDU*XNAL(K,N)*XNAL(1,N)
                 ESTIFM(MA1,NC1-1)=ESTIFM(MA1,NC1-1)
