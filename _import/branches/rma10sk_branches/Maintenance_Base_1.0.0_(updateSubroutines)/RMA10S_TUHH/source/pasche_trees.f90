@@ -1,4 +1,4 @@
-!     Last change:  WP   22 May 2008    9:09 am
+!     Last change:  WP   28 Jul 2008    7:05 pm
 !--------------------------------------------------------------------------------------------
 ! This code, pasche_trees.f90,determines the impact of tree vegetation
 ! for hydrodynamic simulations in the library 'Kalypso-2D'.
@@ -286,7 +286,10 @@ outer: do i = 1, nodecnt
   !WRITE(*,*) 'Knoten:', i, vecq
   !-
 
-  if (vecq < 0.001 .or. rausv(3,i) < ao(i)) then
+  !nis,jul08: Test for smaller velocity (original value: 0.001). Problems are very low flow areas, where trees are present. If values are too small,
+  !           they will become better and better with each iteration, because the calculation of the cwr-values takes place every iteration. This
+  !           is the opposite to BCE-2D (old RMA2-adaptation), where this comes from
+  if (vecq < 0.000001 .or. rausv(3,i) < ao(i)) then
     ! If velocity is very small or water surface is below node,
     ! no slope can be calculated.
     marker_slope(i) = .false.
