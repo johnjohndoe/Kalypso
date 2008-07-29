@@ -63,7 +63,6 @@ public class DumpExtendedHandler extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
@@ -112,7 +111,6 @@ public class DumpExtendedHandler extends AbstractHandler
     /* Dump the structure. */
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
-      @Override
       public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
       {
         monitor.beginTask( "Struktur exportieren", IProgressMonitor.UNKNOWN );
