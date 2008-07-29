@@ -1,4 +1,4 @@
-C     Last change:  NIS  14 May 2008    6:48 pm
+C     Last change:  MD   29 Jul 2008    3:10 pm
 CIPK LAST UPDATE June 06 2006 add mass output and refine compuatation of mass laid down
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  last update MAY 02 2003 turn off bed activity for selected element types
@@ -36,9 +36,9 @@ C
 C      WRITE (LOUT,1040)
 C 1040 FORMAT(' ****SUBROUTINE BEDSUR...')
       IF(MOD(IT,NPRTF) .EQ. 0) THEN
-        WRITE(LOUT,6000)
+       ! WRITE(LOUT,6000)
         WRITE(LOUT,6004) TITLE
-        WRITE(LOUT,6003) DAYOFY,TET
+       ! WRITE(LOUT,6003) DAYOFY,TET
  6000 FORMAT( '1'  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRA
      +M RMA-10S'/ 10X, 'SAND TRANSPORT '
      +      /,10X,'VERSION 3.5D MAY 2006 '///)
