@@ -1,4 +1,4 @@
-C     Last change:  MD   28 Jul 2008    5:03 pm
+C     Last change:  MD   29 Jul 2008   11:13 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -937,20 +937,22 @@ CIPK MAR01
 
       !nis,aug07: Introducing flow resistance storage for every element
       ALLOCATE (lambdaKS(1:maxe), lambdaP(1:maxe), lambdaDunes(1:maxe),
-     +          lambdaTot(1:maxe), FFACT(1:maxe))
+     +          lambdaTot(1:maxe))
       do i = 1, maxe
         lambdaKS(i) = 0.0
         lambdaP(i) = 0.0
         lambdaDunes(i)  = 0.0
         lambdaTot(i) = 0.0
-        FFACT(i) = 0.0
       end do
       !-
 
       !MD Introducing friction factor storage for every node
-      ALLOCATE (FFACT_KN(1:maxp))
+      ALLOCATE (FFACT_KN(1:maxp),FFACT_EL(1:maxe))
       do i = 1, MaxP
         FFACT_KN(i) = 0.0
+      end do
+      do i = 1, maxe
+        FFACT_EL(i) = 0.0
       end do
       !-
 
