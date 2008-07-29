@@ -19,7 +19,6 @@ import de.renew.workflow.connector.worklist.ITaskExecutor;
 
 public class ActivateScenarioHandler extends AbstractHandler
 {
-  @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final ISelection selection = HandlerUtil.getCurrentSelection( event );
