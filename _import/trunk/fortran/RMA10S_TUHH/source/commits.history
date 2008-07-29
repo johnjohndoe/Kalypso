@@ -263,3 +263,16 @@ Version 1.1.0 (laufende Änderungen)
        >> SubR RDKALYPSO (--> lambda...)  
        >> SubR ErrorMessagesAndStop    
 --- Monika Donner, 28.07.2008
+
+018.) Friction factor FFACT loacally: wieder zurück
+      >> SubR COEF11, COEF11NT, COEF25, COEF25NT, COEF2d, COEF2dNT, turbulence
+      >> SubR ParaKalyps and SubR INITL
+019.) Friction factor (FFACT_EL(1:maxe)) in order to calculate friction factor
+      per node FFACT_KN for Sediment transport. Therefore FFACT_EL an FFACT_KN
+      is defined in BLKSANMOD
+      >> SubR BLKSANMOD and SubR INITL 
+020.) Preparation of using the Friction factor FFACT_KN in VanRijn, GET_U_STAR 
+      >> SubR VANRIJN and SubR GET_U_STAR 
+021.) Cleaning up all subroutines in Sediment.for: BEDXCG, SANDX, AWHITE, GET_U_STAR
+      and KINVIS: but no changes!!           
+--- Monika Donner, 29.07.2008
