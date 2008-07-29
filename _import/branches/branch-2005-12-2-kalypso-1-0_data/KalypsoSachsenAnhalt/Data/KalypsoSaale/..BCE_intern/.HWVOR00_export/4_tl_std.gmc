@@ -1,0 +1,10 @@
+<gmlconvert xmlns="util.gml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="util.gml.kalypso.org
+./gmlconvert.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<csvtarget linktype="gml" xlink:href="Stammdat/TL.std" featurePath="TempCollectionAssociation/TempMember" delemiter="&#9;" writeHeader="true" >
+		<column>PNR</column>
+		<column>Name</column>
+		<column>Höhe</column>
+		<column>Max</column>
+	</csvtarget>
+	<gmlsource xlink:href="../modell.gml"/>
+</gmlconvert>
