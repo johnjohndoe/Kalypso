@@ -1,3 +1,4 @@
+C     Last change:  MD   29 Jul 2008   11:38 am
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES ADD NODNUM
 	subroutine vanrijn (VELS,EFD,EXNU,u_star,NODNUM)
 C
@@ -97,13 +98,24 @@ C
 CIPK MAR06 ADD NODNUM TO CALL
 	    call get_u_star(depth,u_star,u_bar,NODNUM)
 C
-C  find Chezy C
-C
-	    chezy_C = depth**(1.0/6.0) / xmanning_n
-C
-C  find applied stress
-C
-	    tau = fluid_rho * gravity * (u_bar/chezy_C)**2.0
+
+!MD  Deactivated: 28.07.2008
+!MD      chezy_C = depth**(1.0/6.0) / xmanning_n
+
+!MD  Deactivating the extra use of, MANNING's for Sediment.
+!MD  Use now, the already given Friction law and Friction
+!MD  Parameters:
+
+!MD  Find Chezy C and applied stress tau
+         IF (FFACT_KN(NODNUM) .le. 0) THEN
+           chezy_C = 0.0
+           tau = 0.0
+         Else
+           chezy_C = SQRT (gravity / FFACT_KN(NODNUM))
+           tau = fluid_rho * gravity * (u_bar/chezy_C)**2.0
+         END IF
+
+! MD  tau = fluid_rho * gravity * (u_bar/chezy_C)**2.0
 C
 C  find value of entrainment function from Shields diagram
 C
