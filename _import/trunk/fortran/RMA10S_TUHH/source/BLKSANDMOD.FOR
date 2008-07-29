@@ -1,3 +1,4 @@
+C     Last change:  MD   29 Jul 2008   11:28 am
 CIPK  LAST UPDATE MAR 05 2005 ADD OPTION TO ALLOW NODAL DEFINITION OF PROPS
 CIPK  LAST UPDATE DEC 22 2005 ADD RHOBS
       MODULE BLKSANMOD
@@ -47,6 +48,8 @@ CIPK JUN06
      +              ,IEDONE(:),NKEY1(:),EXTLD(:),trslp(:),EXTLDEL(:)   
 
 
+	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_EL    !Friction Factor for each element
+	REAL (KIND = 8), ALLOCATABLE, dimension (:):: FFACT_KN    !Friction Factor for each node
 
 
 C     +              ,CRSLOP(MEL),TRSLOP(MNP),srate(mnp),gpbsav(mnp)        
