@@ -93,7 +93,8 @@
 			<!-- startsim = Tagesanfang(startforecast - simulationDuration d) -->
 			<property name="startsim" featurepath="" featureProperty="startforecast" dateoffset="-${simulationDuration}" dateoffsetfield="${DAY_OF_MONTH}" dateTruncField="${DAY_OF_MONTH}" />
 			<!-- stopsim = startforecast + forecastDuration h -->
-			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="${forecastDuration}" dateoffsetfield="${HOUR_OF_DAY}"/>
+			<!-- TODO: was passiert, wenn interval.amount <> 1 (im Zusammenhang zusehen mit dem Erzeugen der Eingabedateien für den Rechenkern)-->
+			<property name="stopsim" featurepath="" featureProperty="startforecast" dateoffset="${forecastDuration}" dateoffsetfield="${HOUR_OF_DAY}" />
 		</kalypso.gmlProperty>
     	
     	<!-- Construct the url of the calc case to merge and set the flag if merge is allowed.
@@ -109,9 +110,8 @@
         	</condition>
     	
     	<!-- Zeitschritt der Berechnung [h] aus .calculation-->
-    			<property name="interval.field" value="HOUR_OF_DAY"/>
+    		<property name="interval.field" value="HOUR_OF_DAY"/>
 
-    		
     	    <!-- define the requests -->
     		<property name="requestQ"
     			value="&lt;request xmlns=&quot;request.zml.kalypso.org&quot;&gt;&lt;axes&gt;date,Q&lt;/axes&gt;&lt;statusAxes&gt;Q&lt;/statusAxes&gt;&lt;/request&gt;" />
