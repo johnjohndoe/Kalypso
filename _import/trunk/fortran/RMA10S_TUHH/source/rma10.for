@@ -1,4 +1,4 @@
-C     Last change:  WP   11 Jul 2008    8:40 am
+C     Last change:  MD   29 Jul 2008    4:57 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -863,7 +863,7 @@ CIPK NOV97  457   CONTINUE
           ENDDO  
 CIPK NOV97  458 CONTINUE
 
-          WRITE(*,*) 'GOING TO SANDX'
+          WRITE(*,*) 'RESTART with SANDX'
           CALL SANDX
           WRITE(*,*) 'BACK FROM SANDX'
           NDL=4
@@ -1136,6 +1136,7 @@ CIPK MAY02 UPDATE SHEARS ETC
         IF((LSAND .GT. 0  .OR.  LBED .GT. 0) .and. ick .eq. 6) THEN
           CALL KINVIS
 c          CALL SHEAR
+          WRITE(*,*) 'GOING TO SANDX'
           CALL SANDX
           CALL BEDXCG
 
