@@ -18,7 +18,7 @@
     <para>Auf der zweiten Seite des Assistenten (siehe <xref
     linkend="elbeWavos_steuerparameter" />) werden verschiedene Informationen
     angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
-    generiert. Bei fortgeführten oder kopierten Rechenvarianten entsprechen
+    generiert. Bei neu geöffneten oder kopierten Rechenvarianten entsprechen
     die Einträge denen der ursprünglichen Rechenvariante.</para>
 
     <figure id="elbeWavos_steuerparameter">
@@ -81,7 +81,7 @@
 
     <para>Nach der Eingabe der Steuerdaten erfolgt die Überprüfung der
     Eingangsdaten durch den Benutzer. Die Zeitreihen setzen sich aus
-    Messwerten und Prognosewerten zusammen. Die Messwerte in den Tabellen sind
+    Messwerten und Vorgabewerten zusammen. Die Werte in den Tabellen sind
     abhängig vom Daten-Status durch Symbole gekennzeichnet (vgl. <xref
     linkend="tabellen_kennzeichnung" />). Der Vorhersage-Assistent ist so
     aufgebaut, dass die Kontrolle der Zeitreihen einem festen Ablauf folgt
@@ -94,7 +94,7 @@
       <screenshot>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/wizard/sachsen/Assi_ElbeWavos_02_KontrolleElbepegel.png"
+            <imagedata fileref="img/wizard/sachsen/Assi_ElbeWavos_02_KontrolleVorgabe.png"
                        scale="33" />
           </imageobject>
         </mediaobject>
@@ -103,29 +103,29 @@
 
     <orderedlist>
       <listitem>
-        <para>Wasserstand an den Elbepegeln (Besonderheit für den Pegel Usti:
-        der Wasserstand wird zur Information angezeigt, beim Abfluss werden
-        Messwerte und tschechische Vorhersagewerte zu einer Gesamtzeitreihe
-        kombiniert)</para>
+        <para>Mess- und Vorgabewerte am Modellrand (Usti, Zwischengebiete und
+        Löben). Die Berechnung der Zwischengebietszuflüsse für Usti / Dresden
+        und Dresden / Torgau erfolgt durch den Meldedienst mit Hilfe des
+        Berechnungsmodells <xref linkend="elbeZwg_view_prognose" />. Für den
+        Pegel Usti werden Messwerte und tschechische Vorhersagewerte zu einer
+        Gesamtzeitreihe (Abfluss) kombiniert und die Messwerte des
+        Wasserstands werden zur Information angezeigt. Für den Pegel Löben
+        wird die Gesamtzeitreihe (Wasserstand) aus einem PSI-Container
+        abgeholt.</para>
       </listitem>
 
       <listitem>
-        <para>Wasserstand in Löben und die Zuflüsse der Zwischengebiete
-        (Gesamtzeitraum), die Berechnung der Zwischengebietszuflüsse für Usti
-        / Dresden und Dresden / Torgau erfolgt durch den Meldedienst mit Hilfe
-        des Berechnungsmodells <xref
-        linkend="elbeZwg_view_prognose" />.</para>
+        <para>Messwerte für die übrigen Elbe-Pegel.</para>
       </listitem>
     </orderedlist>
 
     <para>Die Anzeige der Zeitreihen erfolgt grafisch und tabellarisch. In
     jeder Eingabemaske wird ein Lageplan mit den Erfassungsstandorten
-    angezeigt. In der Tabelle werden für die Elbepegel und die Zwischengebiete
-    alle Pegelzeitreihen gleichzeitig aufgeführt. Durch Markieren eines Pegels
-    wird die dazugehörige Zeitreihe auch grafisch dargestellt. Bei Bedarf
-    können die Tabellenwerte vom Benutzer geändert werden. Die Änderungen
-    werden durch Bestätigung mit <guibutton>Weiter</guibutton> für die
-    Berechnungen übernommen.</para>
+    angezeigt. In der Tabelle werden alle Pegelzeitreihen gleichzeitig
+    aufgeführt. Durch Markieren eines Pegels wird die dazugehörige Zeitreihe
+    auch grafisch dargestellt. Bei Bedarf können die Tabellenwerte vom
+    Benutzer geändert werden. Die Änderungen werden durch Bestätigung mit
+    <guibutton>Weiter</guibutton> für die Berechnungen übernommen.</para>
   </section>
 
   <section id="sec_Assi_elbeWavos_03_Projektion">

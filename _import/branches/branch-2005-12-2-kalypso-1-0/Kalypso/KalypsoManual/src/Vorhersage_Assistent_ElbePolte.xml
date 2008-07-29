@@ -18,7 +18,7 @@
     <para>Auf der zweiten Seite des Assistenten (siehe <xref
     linkend="elbe_steuerparameter" />) werden verschiedene Informationen
     angezeigt. Die Einträge werden bei neu angelegten Rechenvarianten
-    generiert. Bei fortgeführten oder kopierten Rechenvarianten entsprechen
+    generiert. Bei neu geöffneten oder kopierten Rechenvarianten entsprechen
     die Einträge denen der ursprünglichen Rechenvariante.</para>
 
     <figure id="elbe_steuerparameter">

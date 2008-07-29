@@ -18,7 +18,7 @@
     <para>Auf der zweiten Seite des Assistenten (siehe <xref
     linkend="pic_SA_Assi_Ilse_01_Steuerparams" />) werden verschiedene
     Informationen angezeigt. Die Einträge werden bei neu angelegten
-    Rechenvarianten generiert. Bei fortgeführten oder kopierten
+    Rechenvarianten generiert. Bei neu geöffneten oder kopierten
     Rechenvarianten entsprechen die Einträge denen der ursprünglichen
     Rechenvariante.<figure id="pic_SA_Assi_Ilse_01_Steuerparams">
         <title>Steuerparameter - Ilse</title>
@@ -363,7 +363,7 @@
         <listitem>
           <para><guilabel>Längsschnitte</guilabel> ermöglichen einen Überblick
           über die Wasserstands- <abbrev>bzw.</abbrev> Abfluss-Entwicklung
-          entlang der Ilse. </para>
+          entlang der Ilse.</para>
         </listitem>
 
         <listitem>
