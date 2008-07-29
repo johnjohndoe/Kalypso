@@ -73,8 +73,8 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * Class representing an ESRI Shape File.
  * <p>
- * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed
- * by the EXSE-Working group of of the geogr. institute of the university of Bonn
+ * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed by
+ * the EXSE-Working group of of the geogr. institute of the university of Bonn
  * (http://www.giub.uni-bonn.de/exse/results/welcome.html).
  * <p>
  * ------------------------------------------------------------------------
@@ -306,7 +306,7 @@ public class ShapeFile
    * stored into the dbase file.
    * 
    * @param allowNull
-   *            if true, everything wich cannot parsed gets 'null' instaed of ""
+   *          if true, everything wich cannot parsed gets 'null' instaed of ""
    */
   public Feature getFeatureByRecNo( final Feature parent, final IRelationType parentRelation, final int RecNo, final boolean allowNull ) throws IOException, HasNoDBaseFileException, DBaseException
   {
@@ -379,7 +379,7 @@ public class ShapeFile
 
       final GM_Surface[] polygons = shpwks.transformPolygon( null, shppoly );
 
-      if( polygons != null )
+      if( polygons != null && polygons.length > 0 )
       {
         // create multi surface
         final GM_MultiSurface ms = GeometryFactory.createGM_MultiSurface( polygons, null );
