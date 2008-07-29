@@ -1,4 +1,4 @@
-C     Last change:  MD   25 Jul 2008    2:16 pm
+C     Last change:  MD   29 Jul 2008   12:25 pm
 CIPK LAST UPDATE MAR 07 2006 fix gpmax setup
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE AUG 09 2005 ADD bshear
@@ -27,12 +27,12 @@ C        NOTE.  THE SOURCE TERM IS  +  IF EROSION, - IF DEPOSITION
 C
       CDT=0.5*DELT
       POSA=.4
-C      RHOF=1000.
+C     RHOF=1000.
       CONP=1.-POSA
-CIPK MAR06 DELETED      SGPT=1000.*SGSA
+CIPK MAR06 DELETED    SGPT=1000.*SGSA
 CIPK MAR06 MOVED      RHOB=RHOF*CONP*SGSA
       CODT=DELT*(1.-ALPHASN)
-CIPK MAR06 DELETED      COEFF=CDT/(CONP*RHOF*SGSA)
+CIPK MAR06 DELETED    COEFF=CDT/(CONP*RHOF*SGSA)
  1030 CONTINUE
 C
 C     CHECK TO SEE IF WE HAVE MULTILAYER PROBLEM
@@ -42,7 +42,7 @@ C
 C     SETUP SETTLING RATE
 C
         DO N=1,NP
-	    IF(IBNA(N) .GT. 0  .and.  WSLL(N) .GT. AO(N)) THEN
+	  IF(IBNA(N) .GT. 0  .and.  WSLL(N) .GT. AO(N)) THEN
 CIPK MAR06            
             IF(VSANDND(N) .GT. 1E-20)THEN
               CST=CLDEND(N)*VEL(3,N)/VSANDND(N)
@@ -52,60 +52,59 @@ CIPK MAR06
             IF(CST.LT.DELT) CST=DELT
             ALPHA1(N)=-VEL(3,N)/CST
             ALPHA2(N)=0.
-	     ELSE
+	  ELSE
             ALPHA1(N)=0.
             ALPHA2(N)=0.
-	    ENDIF
+	  ENDIF
         ENDDO
       ENDIF
 C
 C     NOW PROCESS BOTTOM OR FOR 2DH
 C
       DO 1130 NN=1,NPM
-	 IF(IBNA(NN) .GT. 0  .and.  WSLL(NN) .GT. AO(NN)) THEN
-        gpbsav(nn)=gpb(nn,1)
-        N=NN
-        IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
-cipk apr99        IF(WD(N) .GT. DSET) THEN
-        GPBSAV(N)=GPB(N,1)
+	IF(IBNA(NN) .GT. 0  .and.  WSLL(NN) .GT. AO(NN)) THEN
+          gpbsav(nn)=gpb(nn,1)   ! Save Geschiebetransport VEL(7,N)
+          N=NN
+
+
+          IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+cipk apr99      IF(WD(N) .GT. DSET) THEN
+          GPBSAV(N)=GPB(N,1)
+          RHOB=RHOF*CONP*SGSAND(N)
         
-CIPK MAR06        
-        RHOB=RHOF*CONP*SGSAND(N)
-        
-        if(WSLL(n) .gt. ao(n)) then
+          if(WSLL(n) .gt. ao(n)) then
 CIPK MAR06
-          VSN=VSANDND(N)
-          AVU=SQRT(VEL(1,N)**2+VEL(2,N)**2)
-          D=VEL(3,N)
-          COEF=D/CONP
-          DO 1120 I=IGS,LGS
-            DELSAC=(VEL(6,N)-GPB(N,I))/1000.
-c											DELSAC is concentration difference kg/m3
-c											+ ve means deposition
-            IF(DELSAC .GE. 0.) THEN
+            VSN=VSANDND(N)
+            AVU=SQRT(VEL(1,N)**2+VEL(2,N)**2)
+            D=VEL(3,N)
+            COEF=D/CONP
+            DO 1120 I=IGS,LGS
+              DELSAC=(VEL(6,N)-GPB(N,I))/1000.
+c	      DELSAC is concentration difference kg/m3 ve means deposition
+              IF(DELSAC .GE. 0.) THEN
 C
-C        NOTE. DEPOSITION IS OCCURRING.
+C             NOTE. DEPOSITION IS OCCURRING.
 C              IF(VS(N).GT.1E-20)THEN
 C                CST=CLDE*D/VS(N)
 C
-              IF(VSN .GT. 1E-20)THEN
-CIPK JAN03                CST=CLDE*D/VSN
-			  
-CDJW APR03                CST=D/VSN
-C			  CST = (0.15*D)/VSN
+                IF(VSN .GT. 1E-20)THEN
+CIPK JAN03        CST=CLDE*D/VSN
+CDJW APR03        CST=D/VSN
+C		  CST = (0.15*D)/VSN
 CDJW MAY03
-			  CST = (0.25*D)/VSN
+	          CST = (0.25*D)/VSN
 CEND DJWAPR03
-              ELSE
-                CST=0.
-              ENDIF
+                ELSE
+                  CST=0.
+                ENDIF
 Cipk jan03        NOTE.  SOURCE TERM = (GP - CONC)/CST
 CIPK JAN03              IF(CST.LT.DELT) CST=DELT
 CIPK MAR06
-              IF(CST.LT.CLDEND(N)*3600.) CST=CLDEND(N)*3600.
-              ALPHA1(N)=-VEL(3,N)/CST
-              ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
+                IF(CST.LT.CLDEND(N)*3600.) CST=CLDEND(N)*3600.
+                ALPHA1(N)=-VEL(3,N)/CST
+                ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
 	        DEP=ALPHA1(N)*VEL(6,N)+ALPHA2(N)
+
 	        if(gpb(n,i) .eq. 0.) then
 	          beta=1.0
 	        else
@@ -114,96 +113,92 @@ CIPK MAR06
 	          else
 	            ratio=1.0
 	          endif
-                BETA=1.0-ratio**0.2
+                  BETA=1.0-ratio**0.2
 	        endif
 	        EYSRAT=BETA*CAI(N)*VSN
-	if(n .eq. 3598) then
-	        WRITE(110,'(I6,5G15.5)') 
-     +        N,DEP,vel(6,n),gpb(n,i),alpha1(n),eysrat
-      endif
-c			BETA,CAI(N),EYSRAT
+
+                if(n .eq. 3598) then   !MD: Unsinn!!
+	          WRITE(110,'(I6,5G15.5)')
+     +            N,DEP,vel(6,n),gpb(n,i),alpha1(n),eysrat
+                endif
+
 C
 C        NOTE.  SCOUR IS OCURRING.  CHANGE THE SIGN TO COMPUTE TSACB.
-            ELSE
-c											-'ve means erosion
+              ELSE
+c	 -'ve means erosion
 
 cipk jan98 check for zero velocity
-              if(avu .lt. 1e-20) then
+                if(avu .lt. 1e-20) then
 	          cst=delt
-              else
+                else
 CIPK MAR06              
-                CST=CLERND(N)*D/AVU
-              endif
+                  CST=CLERND(N)*D/AVU
+                endif
 CIPK MAR06             
-              PORSD=SDND(1,N)*CONP/1000.
-c											PORSD is effective diameter of pore space
+                PORSD=SDND(1,N)*CONP/1000.
+c	        PORSD is effective diameter of pore space
+                RTO=DELT/CST
+                IF(RTO.GT.1.)RTO=1.
 
-              RTO=DELT/CST
-              IF(RTO.GT.1.)RTO=1.
-c											RTO is apparent change rate over time step
-c                                             forced to be not more tham 1
+c	        RTO is apparent change rate over time step
+c               forced to be not more tham 1
 
-              TSACB=DELSAC*RTO
-c											TCSACB is predicted change
+                TSACB=DELSAC*RTO
+c	        TCSACB is predicted change
+                DYBED=-D*TSACB/(RHOB-VEL(6,N)/1000.+TSACB)
+c		DYBED is change in bed thickness allowing
+c               suspended material in water column
 
-              DYBED=-D*TSACB/(RHOB-VEL(6,N)/1000.+TSACB)
-c											DYBED is change in bed thickness allowing 
-c                                             suspended material in water column
+                IF(TTHICK(N)-PORSD-DYBED .LT. 0.) THEN
+c		This is the case of bed being exhausted
 
-              IF(TTHICK(N)-PORSD-DYBED .LT. 0.) THEN 
-c											This is the case of bed being exhausted
+                  DYBED=0.
+                  IF(VEL(6,N).GT.0.)
+     .              DYBED=TTHICK(N)-PORSD*(VEL(6,N)/GPB(N,I))**0.3333
+c		  Assume the material goes into suspesion only
 
-                DYBED=0.
-                IF(VEL(6,N).GT.0.)
-     .          DYBED=TTHICK(N)-PORSD*(VEL(6,N)/GPB(N,I))**0.3333
-c											Assume the material goes into suspesion only
-
-                IF(DYBED.LE.0.) THEN
-c											No material for that set rates to zero
-
-                  DELSAC=0.
-                  alpha1(n)=0.
-                  alpha2(n)=0.
-                  go to 1120
-                ELSE
-                  DELSAC=-DYBED*(RHOB-VEL(6,N)/1000.)/
+                  IF(DYBED.LE.0.) THEN
+c		  No material for that set rates to zero
+                    DELSAC=0.
+                    alpha1(n)=0.
+                    alpha2(n)=0.
+                    go to 1120
+                  ELSE
+                    DELSAC=-DYBED*(RHOB-VEL(6,N)/1000.)/
      +                                          ((D+DYBED)*RTO)
-c											DELSAC is recomputed to just set bed to zero
-
+c		    DELSAC is recomputed to just set bed to zero
+                  ENDIF
+                  GPB(N,I)=VEL(6,N)-DELSAC*1000.
+c                 GPB reset to be the a new effective equilibrium
                 ENDIF
-                GPB(N,I)=VEL(6,N)-DELSAC*1000.
-c
-c                                             GPB reset to be the a new effective equilibrium
-              ENDIF
-Cipk jan03        NOTE.  SOURCE TERM = (GP - CONC)/CST
-cipk jan03              IF(CST.LT.DELT) CST=DELT
-cipk jan03                                    Use CLER as a resuspension time in hours
+Cipk jan03      NOTE.  SOURCE TERM = (GP - CONC)/CST
+cipk jan03         IF(CST.LT.DELT) CST=DELT
+cipk jan03     Use CLER as a resuspension time in hours
 cccc              IF(CST .LT. DELT/5.) CST=DELT/5.
 CIPK MAR06
-              CST= CLERND(N)*3600.
-              ALPHA1(N)=-VEL(3,N)/CST
-              ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
-c											ALPHA1 is rate term
-c                                             ALPHA1*SED+ALPHA2 is the total source
-
+                CST= CLERND(N)*3600.
+                ALPHA1(N)=-VEL(3,N)/CST
+                ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
+c	        ALPHA1 is rate term
+c               ALPHA1*SED+ALPHA2 is the total source
 C
-C        NOTE.DEPTH OF SEDIMENT LESS THAN REQUIRED TO SATISFY TRANSPORT
+C     NOTE.DEPTH OF SEDIMENT LESS THAN REQUIRED TO SATISFY TRANSPORT
 C     CAPACITY.  REDUCE THE TRANSPORT CAPACITY.
-            ENDIF
+              ENDIF
 C        NOTE.  SOURCE TERM = (GP - CONC)/CST
-cipk jan03            IF(CST.LT.DELT) CST=DELT
-cipk jan03            ALPHA1(N)=-VEL(3,N)/CST
-cipk jan03            ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
- 1120     CONTINUE
+cipk jan03    IF(CST.LT.DELT) CST=DELT
+cipk jan03    ALPHA1(N)=-VEL(3,N)/CST
+cipk jan03    ALPHA2(N)=-GPB(N,I)*ALPHA1(N)
+ 1120       CONTINUE
 
-        else
-          alpha1(n)=0.
-          alpha2(n)=0.
-        ENDIF
-	 ELSE
-        alpha1(nn)=0.
-        alpha2(nn)=0.
-	 ENDIF
+          else
+            alpha1(n)=0.
+            alpha2(n)=0.
+          ENDIF
+	ELSE
+          alpha1(nn)=0.
+          alpha2(nn)=0.
+	ENDIF
  1130 CONTINUE
 
 cipk experimental april 1999 set distribution linear
@@ -230,8 +225,12 @@ cipk apr00 corect for 3-d using top and bottom element only
 
       RETURN
       END
-C
-C
+! -------------------------------------------------------------------------
+
+
+
+! -------------------------------------------------------------------------
+! -------------------------------------------------------------------------
       SUBROUTINE SANDX
       USE BLK10MOD
       USE BLKDRMOD
@@ -264,10 +263,9 @@ CIPK AUG05      INCLUDE 'BLKSED.COM'
 	!
 	LOGICAL WBM
 	INTEGER*4 AD
-	
       !
-	!  End of DJW Changes 19/01/04
-	!
+      !  End of DJW Changes 19/01/04
+      !
 
 
 C      integer ismode
@@ -288,82 +286,79 @@ C  concentration in kg of sediment per kg of fluid.
 C
 CIPK MAR06 MOVED      PPMMAX=SGSA*CONP/(POSA+CONP*SGSA)
 C
-      DO NN=1,NPM
+      DO NN=1,NPM     ! Ueber alle Knoten
 CIPK DEC02	 if(ibna(nn) .gt. 0  .and.  WSLL(NN) .GT. AO(NN)) then
 
        if(n .eq. 5130) then
-	   aaaa=0.
-	 endif
-	 if(ibna(nn) .gt. 0  .and.  (WSLL(NN) .GT. AO(NN) .OR.
+         aaaa=0.
+       endif
+       if(ibna(nn) .gt. 0  .and.  (WSLL(NN) .GT. AO(NN) .OR.
      +     VEL(3,NN) .LE. DSET)) THEN
-        N=NN
-        IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+         N=NN
+         IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
 
 CIPK MAR06
-        PPMMAX=SGSAND(N)*CONP/(POSA+CONP*SGSAND(N))
+         PPMMAX=SGSAND(N)*CONP/(POSA+CONP*SGSAND(N))
 
 cipk dec02        IF(VEL(3,N) .LE. DSET)GOTO 1130
 C        D35=EFDT(N)
 CIPK MAR06
-        D35=SDND(1,NN)
-        IRR=N
-        EFD=VEL(3,NN)
-        EXNU=XNU(NN)
-        USTAR=UST(N)
+         D35=SDND(1,NN)
+         IRR=N
+         EFD=VEL(3,NN)
+         EXNU=XNU(NN)
+         USTAR=UST(N)
 
 cipk dec02  experiment with smoothing around nodes
 
 c        if(n .eq. 3974  .or.  n .eq. 3981  .or.  n .eq. 3980) then
-c	    idebg=1
-c	  endif
-        divide=0.
-	  vxl=0.
-	  vyl=0.
-	  do j=1,np
-	    idone(j)=0
-	  enddo
-        do k=1,12
-	    neadj=elton(n,k)
-	    if(neadj .ne. 0) then
-	      do j=1,ncorn(neadj)
-	        nadj=nop(neadj,j)
-	        if(idone(nadj) .eq. 0) then
-	          vxl=vxl+vel(1,nadj)
-	          vyl=vyl+vel(2,nadj)
-	          idone(nadj)=1
-	          divide=divide+1.
-  	        endif
-	      enddo
-		endif 
-	  enddo
-	   IF(DIVIDE .GT. 0.) THEN
+c	   idebg=1
+c	 endif
+         divide=0.
+	 vxl=0.
+	 vyl=0.
+	 do j=1,np
+	   idone(j)=0
+	 enddo
+         do k=1,12
+	   neadj=elton(n,k)
+	   if(neadj .ne. 0) then
+	     do j=1,ncorn(neadj)
+	       nadj=nop(neadj,j)
+	       if(idone(nadj) .eq. 0) then
+	         vxl=vxl+vel(1,nadj)
+	         vyl=vyl+vel(2,nadj)
+	         idone(nadj)=1
+	         divide=divide+1.
+  	       endif
+	     enddo
+           endif
+	 enddo
+	 IF(DIVIDE .GT. 0.) THEN
            VXL=VXL/DIVIDE
-	     VYL=VYL/DIVIDE
-	   ENDIF
+	   VYL=VYL/DIVIDE
+	 ENDIF
          VELN=SQRT(VEL(1,N)**2+VEL(2,N)**2)
          VELS=SQRT(VXL**2+VYL**2)
 c        if(n .eq. 3974  .or.  n .eq. 3981  .or.  n .eq. 3980) then
-c	    write(166,*) n,veln,vels
-c	  endif
+c	   write(166,*) n,veln,vels
+c	 endif
 
 CIPK JUN00 ADD COMPUTATION OF CURRENT DIRECTION FOR NEW OPTION
 
-        IF(VELS .GT. 0.) THEN
+         IF(VELS .GT. 0.) THEN
 C          CDIR=ATAN2(VEL(2,N),VEL(1,N))
-          CDIR=ATAN2(VYL,VXL)
-        ELSE
-          CDIR=0.
-        ENDIF
+           CDIR=ATAN2(VYL,VXL)
+         ELSE
+           CDIR=0.
+         ENDIF
 
-        HSV= WAVEHT(N)
-        TP=  PEAKPRD(N)
-        WVDIR=WAVEDR(N)
-	
-	
-	  IF(HSV .GT. 0.7*EFD) HSV=0.7*EFD
+         HSV= WAVEHT(N)
+         TP=  PEAKPRD(N)
+         WVDIR=WAVEDR(N)
+	 IF(HSV .GT. 0.7*EFD) HSV=0.7*EFD
 
-C
-        ISUBTR=1
+         ISUBTR=1
 C
 C        WRITE(LOUT,1100)N,D35,VELS,EFD,USTAR,AVRRO,OUTNU,AVCON
 C 1100   FORMAT(//,' PARAMETERS FOR SAND TRANSPORT POTENTIAL',/,
@@ -374,79 +369,79 @@ C
 C  use the method of choice for sediment transport
 C
 CIPK MAR06
-          IF(ITSTMOD .EQ. 1) THEN
-            vels=TSTVAR(1)
-          ENDIF
-        if(vels .gt. 0.00001) then
+         IF(ITSTMOD .EQ. 1) THEN
+           vels=TSTVAR(1)
+         ENDIF
+         if(vels .gt. 0.00001) then
 cipk mar06  add node nunbers to calls below
-          ISMODE=ISMODEND(NN)
-	    if ( ismode.eq.1 ) then
-CIPK MAR06 ADD nn TO CALL
-            call awhite(VELS,EFD,EXNU,ustar,nn)
-	    else if ( ismode.eq.2 ) then
-CIPK MAR06 ADD nn TO CALL
-            call vanrijn(VELS,EFD,EXNU,ustar,nn)
+           ISMODE=ISMODEND(NN)
+
+	   if ( ismode.eq.1 ) then
+             !MD: Acker-White-Formel fuer Geschiebetransport
+             call awhite(VELS,EFD,EXNU,ustar,nn)
+
+	   else if ( ismode.eq.2 ) then
+             !MD: Van-Rijn-Formel fuer Geschiebe- und Schwebstofftransport
+             call vanrijn(VELS,EFD,EXNU,ustar,nn)
 c	IF(NN .EQ. 21) THEN
 c	WRITE(112,*) MAXN,NN,VELS,EFD,EXNU,USTAR,GP(1)*1.E6
 c	ENDIF
 	    else if ( ismode.eq.3 ) then
-CIPK MAR06 ADD nn TO CALL
-            call brownlie(VELS,EFD,EXNU,ustar,nn)
+            !MD: Brownlie-Formel fuer Geschiebetransport
+              call brownlie(VELS,EFD,EXNU,ustar,nn)
 
 cipk jun00 add new call for Nielsen option
-
 	    else if ( ismode.eq.4 ) then
+            !MD: Geschiebe mit Wellen nach Engel-und Hansen
 	      RC=RCAN(NN)
 	      RW=RWAN(NN)
-
-            iswtt = -1
-cc	if(nn .eq. 4361) iswtt=1
-     	!
-	!  DJW 19/01/04 : Ensuring that mannings roughness modification variables are initiated before 
-	!  wavecm is called
+              iswtt = -1
+cc	      if(nn .eq. 4361) iswtt=1
+	!     DJW 19/01/04 : Ensuring that mannings roughness modification variables are initiated before
+	!     wavecm is called
 	!
-	  IF (WBM) THEN
-!NiS,Nov06: Mixing logical type with arithmetic is not possible in Lahey
-!	    IF (wbm_Initiated.EQ..FALSE.) THEN
-            IF (.not.wbm_Initiated) THEN
+	      IF (WBM) THEN
+!NiS,Nov06:   Mixing logical type with arithmetic is not possible in Lahey
+!	      IF (wbm_Initiated.EQ..FALSE.) THEN
+                IF (.not.wbm_Initiated) THEN
 !-
-           CALL BedRoughInitiate(NP,wbm_Initiated,wbm_MannTrans,wbm_Node
-     +     Counter,wbm_IT,wbm_MannTransOld, wbm_BedHeight)
- 	    END IF
-        END IF
-      !
-	!  End DJW 19/01/04
-	!
+                  CALL BedRoughInitiate(NP,wbm_Initiated,wbm_MannTrans,
+     +          wbm_NodeCounter,wbm_IT,wbm_MannTransOld, wbm_BedHeight)
+ 	        END IF
+              END IF
+	!     End DJW 19/01/04
 CIPK MAR06  
-            SGSA=SGSAND(NN)
-            D50=D50ND(NN)
-            D90=D90ND(NN)
-            VSAND=VSANDND(NN)
-            call wavecm
-     +(hsv,tp,WVDIR,VELS,CDIR,D50,D90,EXNU,SGSA,RHOF,EFD,GP,VSAND,USTAR,
-     +     RC,RW,TRLOC,CA,ISWTT,nn)
-     +!     RC,RW,TRLOC,CA,ISWTT,nn,RWFACT,RWMIN) ! djw 19/01/04 includes passing of roughnesses
+              SGSA=SGSAND(NN)
+              D50=D50ND(NN)
+              D90=D90ND(NN)
+              VSAND=VSANDND(NN)
+              call wavecm (hsv,tp,WVDIR,VELS,CDIR,D50,D90,EXNU,
+     +          SGSA,RHOF,EFD,GP,VSAND,USTAR,
+     +          RC,RW,TRLOC,CA,ISWTT,nn)
+     +!         RC,RW,TRLOC,CA,ISWTT,nn,RWFACT,RWMIN) ! djw 19/01/04 includes passing of roughnesses
+
+
 	    else if ( ismode.eq.5 ) then
+            !MD: Geschiebe- und Schwebstofftransport mit Wellen
 	      RC=RCAN(NN)
 	      RW=RWAN(NN)
-
-      	  IF(NN .EQ. 1249  .or.  nn .eq. 1586  .or. nn .eq. 1615  
-     +                       .or.  nn .eq. 1265) THEN
+!MD  Unsinn --> kann raus
+      	      IF(NN.EQ.1249 .or. nn.eq.1586 .or. nn.eq.1615
+     +                     .or. nn.eq.1265) THEN
 	        ISWTT=2
 	      ELSE
 	        ISWTT=0
 	      ENDIF
-
-            iswtt = -1
-
+!MD Ende Unsinn --> kann raus
+              iswtt = -1
 CIPK MAR06  
-            SGSA=SGSAND(NN)
-            D50=D50ND(NN)
-            D90=D90ND(NN)
-            VSAND=VSANDND(NN)
-            call TRANSPOR
-     +(hsv,tp,WVDIR,VELS,CDIR,D50,D90,EXNU,SGSA,RHOF,EFD,GP,VSAND,USTAR,
-     +      RC,RW,TRLOC,ISWTT,nn)
+              SGSA=SGSAND(NN)
+              D50=D50ND(NN)
+              D90=D90ND(NN)
+              VSAND=VSANDND(NN)
+              call TRANSPOR(hsv,tp,WVDIR,VELS,CDIR,D50,D90,EXNU,
+     +           SGSA,RHOF,EFD,GP,VSAND,USTAR,
+     +           RC,RW,TRLOC,ISWTT,nn)
 	      if(iswtt .eq. 2) then
 	        write(75,*) 'back from transpor',nn,vels,efd,gp(1)
 	      endif
@@ -454,14 +449,15 @@ CIPK MAR06
 	      write(*,'(/,'' error in specifying smode '')')
 	      stop
 	    end if
-          I=1
-C
-C  now multiply concentration (kg/kg = Mg/m3) by
-C  1000000 to get g/m3
+            I=1
+
+!MD: Auswertung aller Ergebnisse aus den einzelnen Geschiebe-Transport-Berechnungen
+! --------------------------------------------------------------------------------
+C  now multiply concentration (kg/kg = Mg/m3) by 1000000 to get g/m3
 C
 c at the end of rma-sandx ust(n) is in metric => assign in subroutines
 c ackwht, brownlie, etc.
-          UST(N)=USTAR
+            UST(N)=USTAR
 CIPK AUG05 ADD bshear
 	    BSHEAR(N)=RHOF*USTAR**2
             GPB(N,I)=GP(I)*1.E+6
@@ -480,34 +476,33 @@ CIPK AUG05 ADD bshear
 	    CAI(N)=0.
 	  endif
 
- 1130   CONTINUE
-       else
+ 1130     CONTINUE
+        else
 cipk mar03 change n to nn
 	  ust(nn)=0.
 	  gpb(nn,1)=0.
-        TRRAT(NN)=0.
+          TRRAT(NN)=0.
 	  CAI(NN)=0.
-	 endif
-
+        endif
       end do
-      !
-	!  DJW 19/01/04 : Calling Routines that Modify the Roughness Based on Roughness Characteristics
-	!  Also calls routine to initiate the calculation
-	!
+
+
+      !  -------------------------------------
+      !  DJW 19/01/04 : Calling Routines that Modify the Roughness Based on Roughness Characteristics
+      !  Also calls routine to initiate the calculation
       If (WBM) Then
 
 !NiS,Nov06: Mixing Logical type with arithmetic is not possible in Lahey
-!	  IF (wbm_Initiated.EQ..FALSE.) THEN
-          IF (.not.wbm_Initiated) THEN
-!-
+!       IF (wbm_Initiated.EQ..FALSE.) THEN
+        IF (.not.wbm_Initiated) THEN
           CALL BedRoughInitiate(NP,wbm_Initiated,wbm_MannTrans,wbm_Node
-     +	Counter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
-	  END IF
+     +	    Counter,wbm_IT, wbm_MannTransOld, wbm_BedHeight)
+	END IF
         Call NewRough(ZMANN,NOP,NE,wbm_MannTrans,wbm_IT,IT,ICYC,MAXN,NP)
       End If
       !
-	!  End DJW Changes 19/01/04
-	!
+      !  End DJW Changes 19/01/04
+
 cipk experimental april 1999 set distribution linear
 cipk apr00 corect for 3-d using top and bottom element only
       ncn=0
@@ -541,39 +536,42 @@ CIPK TEMP***********************************************************
 
 c     copy potential into 7th position and get time derivative
 
-      do n=1,np
-C        VEL(7,N)=GPB(N,1)
-	  if(lbed .GT. 0) then
-
-C	    vel(7,n)=gpb(n,1)
+      DO n=1,np
+C       VEL(7,N)=GPB(N,1)
+        if(lbed .GT. 0) then
+C	  vel(7,n)=gpb(n,1)
 
           IF(MAXN .EQ. 0) THEN
-	      VOLD(7,N)=GPB(N,1)
+	    VOLD(7,N)=GPB(N,1)
             VDOTO(7,N)=0.
-	    ENDIF
+	  ENDIF
 
           IF(MAXN .EQ. 1) THEN
             VOLD(7,N)=VEL(7,N)
-	      VDOTO(7,N)=VDOT(7,N)
-	    ENDIF
+	    VDOTO(7,N)=VDOT(7,N)
+	  ENDIF
           VEL(7,N)=GPB(N,1)
           VDOT(7,n)=ALTM*(VEL(7,n)-VOLD(7,n))-VDOTO(7,n)*(ALPHA-1.)
+
           if(delt .gt. 0) then
-	      VDOT(7,N)=(VEL(7,N)-VOLD(7,N))/DELT
-	    else
-	      vdot(7,n)=0.
-	    endif
-c          write(112,*) n,vel(7,n),vold(7,n),vdot(7,n)
-	  ELSE
-	    VEL(7,N)=GPB(N,1)
+	    VDOT(7,N)=(VEL(7,N)-VOLD(7,N))/DELT
+	  else
+	    vdot(7,n)=0.
 	  endif
-	enddo
+c         write(112,*) n,vel(7,n),vold(7,n),vdot(7,n)
+	ELSE
+	  VEL(7,N)=GPB(N,1)
+	endif
+      enddo
 C
       RETURN
       END
-C
-C------------------------------------------------------------
-C
+! -------------------------------------------------------------------------
+
+
+
+! -------------------------------------------------------------------------
+! -------------------------------------------------------------------------
 CIPK MAR06 ADD NODE NUMBER TO CALL
 	subroutine awhite (VELS,EFD,EXNU,u_star,NODNUM)
 c wlp u_star not being passed back
@@ -647,96 +645,73 @@ C
 	end if
 C
         do j = 1, loops
-C
-          do i = is, ie
-C
+          do i = is, ie  ! ueber alle Bodenlayer
 CIPK MAR06
             diam=SDND(i,NODNUM)/1000.
-c wlp Remember diameter is in mm!!
+c           wlp Remember diameter is in mm!!
 C
-C  find non-dimensional grain size
-C
+C           find non-dimensional grain size
             dgr = diam *(gnsg**0.33333)/(viscosity**0.666667)
             dgrlog = ALOG10(dgr)
 C
-C  now find ackers-white coefficients
+C           now find ackers-white coefficients
 C
 	    if ( dgr.gt.60 ) then
-C
               awn = 0.
               awa = 0.17
               awm = 1.50
               awc = 0.025
 C
 C  find non-dimensional grain size
-C
 	    else if ( dgr.le.60 ) then
+C             find n coefficient (equation 16)
+              awn = 1.00 - 0.56*dgrlog
 C
-C  find n coefficient (equation 16)
-C
-              awn = 1.00-0.56*dgrlog
-C
-C  find a coefficient (equation 17)
-C
+C             find a coefficient (equation 17)
               awa = 0.23/SQRT(dgr)+0.14
 C
-cipk Aug01 experimental addition of modified Ackers White coefficients 
-C
-C  find m coefficient (equation 20)
-C
+cipk Aug01 experimental addition of modified Ackers White coefficients
+C             find m coefficient (equation 20)
               awm = 6.83/dgr+1.67
 C
-C  find c coefficient (equation 22)
-C
+C             find c coefficient (equation 22)
               clog = 2.79*dgrlog-0.98*dgrlog-3.46
 C
- 
 cipk Aug01 below are dropped coefficients
-C  find m coefficient (equation 20)
-C
-c              awm = 9.66/dgr+1.34
-C
-C  find c coefficient (equation 22)
-C
-c              clog = 2.86*dgrlog-dgrlog**2.0-3.53
-
+C             find m coefficient (equation 20)
+c             awm = 9.66/dgr+1.34
+C             find c coefficient (equation 22)
+c             clog = 2.86*dgrlog-dgrlog**2.0-3.53
               awc = 10.**clog
-C
 	    end if
-C
+
+
 C  get u_star via Manning's equation
-C
 CIPK MAR06 ADD NODNUM TO CALL
 	    call get_u_star(depth,u_star,u_bar,NODNUM)
 C
 C  determine mobility number
-C
 	    part_a = u_star**awn / SQRT(diam*gnsg)
 	    part_b = u_bar / (root32*ALOG10(ten*depth/diam))
 	    fgr = part_a * part_b**(1.0-awn)
 C
 C  determine effective normalised working stress
 C  and normalised sediment transport (equation 15)
-C
 	    stress_norm = ( fgr - awa ) / awa
 	    if ( stress_norm.lt.0.0 ) stress_norm = 0.0
-C
 	    ggr = awc * stress_norm**awm
 C
-C  determine sediment concentration as mass of sediment per mass
-C  of water
-C
+C  determine sediment concentration as mass of sediment per mass of water
 	    if ( u_star.eq.0.0 ) then
 	      c_bar = 0.0
 	    else
 	      c_bar = ggr*sed_rd*diam
 	      c_bar = c_bar / ( depth*(u_star/u_bar)**awn )
 	    end if
+
 	    if ( c_bar.gt.ppmmax ) c_bar = ppmmax
-C
 	    gp(i) = c_bar
 	    gptot = gptot + gp(i)
-C
 	  end do
 C
 	  if ( first_pass ) then
@@ -748,7 +723,6 @@ CIPK MAR06
 	    ie = lgs
 	    first_pass = .false.
 	  end if
-C
 	end do
 C
 C  normalise the transport at each grain size so that
@@ -758,7 +732,6 @@ C
 	if ( igs.ne.lgs ) then
 C
 C  ie  more than one grain size
-C
 	  do i = igs, lgs
 	    gp(i) = (gd35/gptot) * gp(i)
 	  end do
@@ -768,13 +741,16 @@ c c_bar is in kg of sediment per kg of water - WLP 31.5.96
 c This is consistent with the original RMA formulation
 C	write(77,*) loops,dgr,awn,awa,awm,awc,fgr,u_star,ggr,
 C     + c_bar,gp(1),igs,lgs
-	return
-	end
-C
-C--------------------------------------------------------------
-C
+      return
+      end
+! -------------------------------------------------------------------------
+
+
+
+! -------------------------------------------------------------------------
+! -------------------------------------------------------------------------
 CIPK MAR06  ADD NODNUM TO CALL
-	subroutine get_u_star(depth,u_star,u_bar,NODNUM)
+      subroutine get_u_star(depth,u_star,u_bar,NODNUM)
 C
 C  this subroutine will calculate the shear velocity based
 C  upon Manning's equation and tau = rho*g*y*Sf combined
@@ -784,25 +760,44 @@ C  u* = n g^1/2 u / y^1/6
 C
 C  David Luketina    26/5/96
 C
-C	include 'BLK11.COM'
+C  include 'BLK11.COM'
       USE BLKSANMOD
 CIPK AUG05      INCLUDE 'PARAM.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
 	real gravity,xmanning_n,u_bar,depth,u_star
 C
 	gravity = ACGR
-CIPK MAR06	
-	xmanning_n = AMANNND(NODNUM)
-C
-	u_star = xmanning_n * SQRT(gravity) * u_bar
-	u_star = u_star / depth**(1.0/6.0)
+CIPK MAR06
+
+!MD  Deactivating the extra use of, MANNING's for Sediment.
+!MD  Use now, the already given Friction law and Friction
+!MD  Parameters:
+!MD    - ORT(NR,5) > 1          : CHEZY with C
+!MD      --> FFACT = g / C²
+!MD    - ORT(NR,5) < 0 and < 1  : MANNING's N
+!MD      --> FFACT = n² g / (H^(1/3))
+!MD    - ORT(NR,5) > 0          : DARCY ks
+!MD      --> FFACT = lambdaTot / 8.0
+!MD          with lambdaTot = Trees + Dunes + Bed
+
+!MD Deactivated: 28.07.2008
+!MD	xmanning_n = AMANNND(NODNUM)
+!MD     u_star = xmanning_n * SQRT(gravity) * u_bar
+!MD     u_star = u_star / depth**(1.0/6.0)
+
+        u_star = SQRT(FFACT_KN(NODNUM)) * u_bar
+
 c	write(*,*) u_star,depth,gravity,u_bar,amann
 c	read(*,*) fred
 C
-	return
-	end
+      return
+      end
+C--------------------------------------------------------------
 
 
+
+C--------------------------------------------------------------
+C--------------------------------------------------------------
 CIPK LAST UPDATE JUNE 15 2000 ALLOW FOR NEW WAVE OPTION
 cipk last update apr 7 2000 correct interpolation function for 3-d
 cipk last update apr18 1999 setup for linear distribution
