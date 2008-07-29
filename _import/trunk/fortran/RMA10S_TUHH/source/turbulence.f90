@@ -1,4 +1,4 @@
-!     Last change:  MD   28 Jul 2008    5:54 pm
+!     Last change:  MD   29 Jul 2008   11:21 am
 !----------------------------------------------------------------------------
 ! This code, turbulence.f90, computes the turbulence parameter nu_T for all
 ! finite elements depending on chosen turbulence model as specified by
@@ -38,7 +38,7 @@ SUBROUTINE turbulence(nn, iturb, mineddy,		     &
 		    & eexxyy1, eexxyy2, eexxyy3, eexxyy4,    &
                     & epsxx,   epsxz,   epszx,   epszz,      &
                     & roavg,p_bottom,p_prandtl,vecq,h, &
-                    & drdx, drdz, dsdx, dsdz)
+                    & drdx, drdz, dsdx, dsdz,ffact,gscal)
 !
 !
 !---------------------------------------------------------------------
@@ -57,16 +57,14 @@ SUBROUTINE turbulence(nn, iturb, mineddy,		     &
 ! ITURB = 6   : Combination of 1 and 2 and 3
 !
 !---------------------------------------------------------------------
-USE PARAKalyps      !MD: fuer FFACT(NN) und gscal erforderlich!!!
-
 implicit none
 ! Calling variables
 INTEGER, INTENT(IN) ::          	nn, iturb
 REAL, INTENT(IN)    ::                  mineddy
 REAL, INTENT(IN)    ::   		eexxyy1,eexxyy2,eexxyy3,eexxyy4
 REAL, INTENT(IN)    ::                  roavg, p_bottom, p_prandtl, vecq
-REAL (KIND = 8), INTENT(IN) ::          h
-REAL, INTENT(IN) ::                     drdx, drdz, dsdx, dsdz
+REAL (KIND = 8), INTENT(IN) ::          h, gscal
+REAL, INTENT(IN) ::                     drdx, drdz, dsdx, dsdz, ffact
 REAL, INTENT(OUT) ::                    epsxx, epsxz, epszx, epszz
 
 ! Local variables
