@@ -65,6 +65,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -106,10 +107,10 @@ public class ElementGeometryBuilder
    * The constructor.
    * 
    * @param cnt_points
-   *            If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
-   *            count of the points will apply.
+   *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
+   *          count of the points will apply.
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public ElementGeometryBuilder( final int cnt_points, final IKalypsoFeatureTheme nodeTheme )
   {
@@ -342,7 +343,7 @@ public class ElementGeometryBuilder
         return StatusUtilities.createErrorStatus( "Ungültiges Polygon: selbstschneidend" );
 
       // New Element intersects other elements
-      final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, null, KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+      final GM_Surface<GM_SurfacePatch> newSurface = GeometryFactory.createGM_Surface( ring, new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
       for( final IFE1D2DElement element : elements )
       {
