@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008   11:38 am
+C     Last change:  MD   29 Jul 2008    2:39 pm
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES ADD NODNUM
 	subroutine vanrijn (VELS,EFD,EXNU,u_star,NODNUM)
 C
