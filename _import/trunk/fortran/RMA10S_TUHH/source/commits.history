@@ -276,3 +276,15 @@ Version 1.1.0 (laufende Änderungen)
 021.) Cleaning up all subroutines in Sediment.for: BEDXCG, SANDX, AWHITE, GET_U_STAR
       and KINVIS: but no changes!!           
 --- Monika Donner, 29.07.2008
+
+022.) BUGFIX in RDKALYPSO for 'FR' reading friction faktors
+      >> SubR RDKALYPSO
+023.) Deactivate a command to Write an info with Format 6000 and 6003 
+      in BEDLBED and BEDSUR
+      >> SubR BEDLBED and SubR BEDSUR 
+024.) NEW Subroutine GET_FFACT to determine the Friction factors at nodes FFACT_KN 
+      based on lambdaTot(N) at elements 
+      >> SubR GET_FFACT 
+025.) Adding comments and the call of GET_FFACT in Sediment.for: SANDX
+      >> SubR SANDX, SubR RMA10SUB, VANRIJN   
+--- Monika Donner, 29.07.2008
