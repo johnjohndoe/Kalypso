@@ -87,14 +87,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    */
   public GM_MultiSurface_Impl( final GM_Surface< ? >[] surface )
   {
-    super( null );
-
-    for( final GM_Surface< ? > element : surface )
-    {
-      m_aggregate.add( element );
-    }
-
-    setValid( false );
+    this( surface, null );
   }
 
   /**
@@ -128,9 +121,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
-   *            GM_Surface to insert.
+   *          GM_Surface to insert.
    * @param index
-   *            position where to insert the new GM_Surface
+   *          position where to insert the new GM_Surface
    */
   public void insertSurfaceAt( final GM_Surface< ? > gms, final int index ) throws GM_Exception
   {
@@ -142,9 +135,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
-   *            GM_Surface to set.
+   *          GM_Surface to set.
    * @param index
-   *            position where to set the new GM_Surface
+   *          position where to set the new GM_Surface
    */
   public void setSurfaceAt( final GM_Surface< ? > gms, final int index ) throws GM_Exception
   {
@@ -248,6 +241,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    */
   private void calculateEnvelope( )
   {
+    if( getSize() == 0 )
+      return;
+
     final GM_Envelope bb = getSurfaceAt( 0 ).getEnvelope();
 
     final double[] min = bb.getMin().getAsArray().clone();
@@ -290,6 +286,10 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   private void calculateCentroidArea( )
   {
     area = 0;
+
+    if( getSize() == 0 )
+      return;
+
     // REMARK: we reduce to dimension 2 here, because everyone else (GM_Surface, GM_Curve)
     // always only produce 2-dim centroids, causing an ArrayOutOfBoundsException here...
     // Maybe it would be nice to always have a 3-dim centroid if possible

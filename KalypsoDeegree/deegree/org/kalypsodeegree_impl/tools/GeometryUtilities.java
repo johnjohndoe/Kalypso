@@ -207,10 +207,10 @@ public class GeometryUtilities
    * guess point that is on the surface
    * 
    * @param surface
-   *            surface that should contain the result point
+   *          surface that should contain the result point
    * @param pointGuess
    * @param tries
-   *            numer of maximal interations
+   *          numer of maximal interations
    * @return point that is somewhere on the surface (e.g. can act as label point)
    */
   @SuppressWarnings("unchecked")
@@ -638,11 +638,11 @@ public class GeometryUtilities
    * polygon is wrapped to a multi polygon.
    * 
    * @param geomToCheck
-   *            geometry object to check
+   *          geometry object to check
    * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
    *         itself
    * @exception a
-   *                GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
+   *              GM_Exception is thrown when a the geomToCheck can not be wrapped in a multi polygon.
    */
   @SuppressWarnings("unchecked")
   public static GM_MultiSurface ensureIsMultiPolygon( final GM_Object geomToCheck ) throws GM_Exception
@@ -660,7 +660,7 @@ public class GeometryUtilities
 
   /**
    * @param positions
-   *            array of ordered {@link GM_Position}, last must equal first one
+   *          array of ordered {@link GM_Position}, last must equal first one
    * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive)
    */
   public static double calcSignedAreaOfRing( final GM_Position[] positions )
@@ -687,7 +687,7 @@ public class GeometryUtilities
    * Finds the first geometry property of the given feature type.
    * 
    * @param aPreferedGeometryClass
-   *            If non null, the first property of this type is returned.
+   *          If non null, the first property of this type is returned.
    */
   public static IValuePropertyType findGeometryProperty( final IFeatureType featureType, final Class< ? > aPreferedGeometryClass )
   {
@@ -726,9 +726,9 @@ public class GeometryUtilities
    * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
    * 
    * @param newLine
-   *            the input linestring
+   *          the input linestring
    * @param value
-   *            the new z-value
+   *          the new z-value
    */
   public static GM_Curve setValueZ( final GM_LineString newLine, final double value ) throws GM_Exception
   {
@@ -747,9 +747,9 @@ public class GeometryUtilities
    * creates a new curve by simplifying a given curve by using Douglas-Peucker Algorithm.
    * 
    * @param curve
-   *            input curve to be simplified
+   *          input curve to be simplified
    * @param epsThinning
-   *            max. distance value for Douglas-Peucker-Algorithm
+   *          max. distance value for Douglas-Peucker-Algorithm
    */
   public static GM_Curve getThinnedCurve( final GM_Curve curve, final Double epsThinning ) throws GM_Exception
   {
@@ -806,7 +806,7 @@ public class GeometryUtilities
    * qnames.
    * 
    * @param allowedQNames
-   *            Only features that substitute one of these qnames are considered.
+   *          Only features that substitute one of these qnames are considered.
    */
   @SuppressWarnings("unchecked")
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName, final QName[] allowedQNames )
@@ -897,9 +897,9 @@ public class GeometryUtilities
    * checks, if a position lies inside or outside of an polygon defined by a position array
    * 
    * @param pos
-   *            position array of the polygon object
+   *          position array of the polygon object
    * @param position
-   *            position to be checked
+   *          position to be checked
    * @return 0 - if position lies outside of the polygon<BR>
    *         1 - if position lies inside of the polygon<BR>
    *         2 - if position lies on polygon's border.
@@ -1021,12 +1021,13 @@ public class GeometryUtilities
   }
 
   /**
-   * converts two given curves into a position array of a ccw oriented, closed polygon.<br>
+   * converts two given curves into a position array of a ccw oriented polygon.<br>
    * The ring is simply produced by adding all positions of the first curve and the positions of the second curve in
-   * inverse order.
+   * inverse order.<br>
+   * <strong>The last point is missing, so they are not all positions for a closed polygon.</strong>
    * 
    * @param curves
-   *            the curves as {@link GM_Curve}
+   *          the curves as {@link GM_Curve}
    */
   public static GM_Position[] getPolygonfromCurves( final GM_Curve firstCurve, final GM_Curve secondCurve ) throws GM_Exception
   {
@@ -1050,7 +1051,7 @@ public class GeometryUtilities
    * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
    * 
    * @param curves
-   *            the curves as {@link GM_Curve}
+   *          the curves as {@link GM_Curve}
    */
   public static GM_Position[] getPolygonfromCurves( final GM_Curve[] curves ) throws GM_Exception
   {
