@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008   12:25 pm
+C     Last change:  MD   29 Jul 2008    4:30 pm
 CIPK LAST UPDATE MAR 07 2006 fix gpmax setup
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE AUG 09 2005 ADD bshear
@@ -266,12 +266,9 @@ CIPK AUG05      INCLUDE 'BLKSED.COM'
       !
       !  End of DJW Changes 19/01/04
       !
-
-
 C      integer ismode
 C
       DATA IAW/5/
-
 C
       WBM = .FALSE. ! DJW 19/01/04 Sets WBM Modifications in motion
       IRR=1
@@ -292,6 +289,18 @@ CIPK DEC02	 if(ibna(nn) .gt. 0  .and.  WSLL(NN) .GT. AO(NN)) then
        if(n .eq. 5130) then
          aaaa=0.
        endif
+
+      ! IF (NN.eq.6) THEN
+      !   WRITE(*,*) 'Kennung Rauheitsklasse je Knoten: IBNA', ibna(nn)
+      !   WRITE(*,*) 'WSLL(NN): ', WSLL(NN)
+      !   WRITE(*,*) 'A0(NN): ', AO(NN)
+      !   WRITE(*,*) 'Check: WSLL(NN) .GT. AO(NN) am Knoten?????'
+      !   WRITE(*,*) 'Wasserstand am Knoten 6: VEL(3,NN)', VEL(3,NN)
+      !   WRITE(*,*) 'DSET am Knoten 6: ', DSET
+      !   WRITE(*,*) 'Check: VEL(3,N) .le. DSET am Knoten?????'
+      ! END IF
+
+
        if(ibna(nn) .gt. 0  .and.  (WSLL(NN) .GT. AO(NN) .OR.
      +     VEL(3,NN) .LE. DSET)) THEN
          N=NN
@@ -369,6 +378,15 @@ C
 C  use the method of choice for sediment transport
 C
 CIPK MAR06
+
+!MD neu: 29.07.2008
+!MD calculation of FAKT_KN for each node based on lamdbaTot for each element
+         IF (NN.eq.6) THEN
+           WRITE(75,*) 'Friction factors are calculated for all NODES'
+           call GET_FFACT
+         endif
+!MD neu: 29.07.2008
+
          IF(ITSTMOD .EQ. 1) THEN
            vels=TSTVAR(1)
          ENDIF
