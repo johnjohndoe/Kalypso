@@ -290,10 +290,10 @@ public class KalypsoNAProjectWizard extends Wizard implements INewWizard
       // open modell.gml and hydrotop.gml file to write imported feature
       m_modelPath = new Path( m_projectHandel.getFullPath().append( "/modell.gml" ).toString() ); //$NON-NLS-1$
       final URL modelURL = new URL( ResourceUtilities.createURLSpec( m_modelPath ) );
-      m_modelWS = GmlSerializer.createGMLWorkspace( modelURL, new UrlResolver(), null );
+      m_modelWS = GmlSerializer.createGMLWorkspace( modelURL, null );
       m_hydPath = new Path( m_projectHandel.getFullPath().append( "/hydrotop.gml" ).toString() ); //$NON-NLS-1$
       final URL hydURL = new URL( ResourceUtilities.createURLSpec( m_hydPath ) );
-      m_hydWS = GmlSerializer.createGMLWorkspace( hydURL, new UrlResolver(), null );
+      m_hydWS = GmlSerializer.createGMLWorkspace( hydURL, null );
 
     }
     catch( final Exception e1 )
