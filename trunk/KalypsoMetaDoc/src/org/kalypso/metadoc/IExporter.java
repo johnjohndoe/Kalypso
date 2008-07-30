@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.java.lang.ISupplier;
+import org.kalypso.metadoc.ui.ExportableTreeItem;
 
 /**
  * Exporters can create one or more {@link org.kalypso.metadoc.IExportableObject} and export them to some {@link org.kalypso.metadoc.IExportTarget}. This is actually used as a
@@ -52,7 +53,7 @@ import org.kalypso.contribs.java.lang.ISupplier;
  * 
  * @author schlienger
  */
-public interface IExporter extends IExportableObjectFactory, IExecutableExtension
+public interface IExporter extends IExecutableExtension
 {
   /** used as label */
   public String getName();
@@ -84,4 +85,6 @@ public interface IExporter extends IExportableObjectFactory, IExecutableExtensio
    * Allows clients to override the description defined in the extension.
    */
   public void setDescription( final String desc );
+
+  public ExportableTreeItem createTreeItem( final ExportableTreeItem parent ) throws CoreException;
 }

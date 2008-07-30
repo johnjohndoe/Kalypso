@@ -50,6 +50,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExporter;
+import org.kalypso.metadoc.ui.ExportableTreeItem;
 
 /**
  * Abstract exporter, which handles the common extension point stuff.
@@ -128,6 +129,23 @@ public abstract class AbstractExporter implements IExporter
   }
 
   /**
+   * @see org.kalypso.metadoc.IExporter#createTreeItem()
+   */
+  @Override
+  public ExportableTreeItem createTreeItem( final ExportableTreeItem parent ) throws CoreException
+  {
+    final ExportableTreeItem item = new ExportableTreeItem( getName(), getImageDescriptor(), parent, null, true, false );
+    item.setChildren( createTreeItems( item ) );
+    return item;
+  }
+
+  @SuppressWarnings("unused")
+  protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
+  {
+    return new ExportableTreeItem[0];
+  }
+
+  /**
    * Convenience method for subclasses which want to retrieve objects from the supplier set in the init() method.
    * <p>
    * Wraps the InvocationTargetException into a CoreException.
@@ -152,4 +170,5 @@ public abstract class AbstractExporter implements IExporter
   {
     return getName();
   }
+
 }
