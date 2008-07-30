@@ -91,7 +91,7 @@ public class TimeserieUtils
 {
   private static final String PROP_TIMESERIES_CONFIG = "kalypso.timeseries.properties";
 
-  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource" ); //$NON-NLS-1$
+  private static URL m_configBaseUrl = TimeserieUtils.class.getResource( "resource/" ); //$NON-NLS-1$
 
   private static String m_basename = "config"; //$NON-NLS-1$
 

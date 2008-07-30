@@ -59,6 +59,8 @@ import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -68,6 +70,15 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeaturePage extends WizardPage
 {
   private final Collection<ICommand> m_changes = new ArrayList<ICommand>();
+
+  private final ModellEventListener m_modellListener = new ModellEventListener()
+  {
+    @Override
+    public void onModellChange( ModellEvent modellEvent )
+    {
+      handleModellChange(modellEvent);
+    }
+  };
 
   private FeatureComposite m_featureComposite;
 
@@ -84,6 +95,14 @@ public class FeaturePage extends WizardPage
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
     m_feature = feature;
     m_selectionManager = selectionManager;
+
+    m_feature.getWorkspace().addModellListener( m_modellListener );
+  }
+
+  protected void handleModellChange( final ModellEvent modellEvent )
+  {
+    if( m_featureComposite != null )
+      m_featureComposite.updateControl();
   }
 
   /**
@@ -135,6 +154,8 @@ public class FeaturePage extends WizardPage
   {
     if( m_featureComposite != null )
       m_featureComposite.dispose();
+    
+    m_feature.getWorkspace().removeModellListener( m_modellListener );
   }
 
   /**
