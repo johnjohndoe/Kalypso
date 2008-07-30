@@ -162,7 +162,7 @@ public class RiskLanduseHelper
       final Map<String, String> landuseClassesGmlIDsMap = new HashMap<String, String>();
       final Map<String, String> damageFunctionsGmlIDsMap = new HashMap<String, String>();
       final URL url = scenarioFolder.getProject().getParent().getRawLocation().append( "/" + externalProjectName + "/Basis/models/RasterizationControlModel.gml" ).toFile().toURL(); //$NON-NLS-1$ //$NON-NLS-2$
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, new UrlResolver(), null );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
       final List<Feature> landuseClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_LANDUSE_CLASS_MEMBER );
       final List<Feature> assetValueClassesFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_ASSET_VALUE_CLASS_MEMBER );
       final List<Feature> damageFunctionsFeatureList = (FeatureList) workspace.getRootFeature().getProperty( IRasterizationControlModel.PROPERTY_DAMAGE_FUNCTION_MEMBER );

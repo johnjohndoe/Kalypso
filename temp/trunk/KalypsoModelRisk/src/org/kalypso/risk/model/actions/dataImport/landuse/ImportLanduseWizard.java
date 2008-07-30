@@ -144,7 +144,7 @@ public class ImportLanduseWizard extends Wizard implements INewWizard
     try
     {
       final URL url = m_scenarioFolder.getFile( PREDEFINED_DATASET_PATH ).getLocationURI().toURL();
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, new UrlResolver(), null );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
       m_predefinedLanduseColorsCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_LANDUSE_COLORS_COLLECTION );
       m_predefinedDamageFunctionsCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_DAMAGE_FUNCTION_COLLECTION );
       m_predefinedAssetValueClassesCollection = (FeatureList) workspace.getRootFeature().getProperty( PROP_ASSET_VALUES_CLASSES_COLLECTION );
