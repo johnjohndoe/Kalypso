@@ -62,6 +62,7 @@ import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -80,9 +81,9 @@ public class JTSUtilities
    * This function delivers the first point from a line in another geometry.
    * 
    * @param line
-   *            The points of this line will be checked. The first, which lies in the given geometry is returned.
+   *          The points of this line will be checked. The first, which lies in the given geometry is returned.
    * @param geometry_2nd
-   *            The points of the line will be checked with this geometry.
+   *          The points of the line will be checked with this geometry.
    * @return The first point of the line, which lies in the second geometry.
    */
   public static Point linePointInGeometry( final LineString line, final Geometry geometry_2nd )
@@ -107,9 +108,9 @@ public class JTSUtilities
    * This function calculates the distance from the start point to a point, lying on the line.
    * 
    * @param line
-   *            The line.
+   *          The line.
    * @param point
-   *            One point lying on the line.
+   *          One point lying on the line.
    * @return The distance of the point on the line.
    */
   public static double pointDistanceOnLine( final LineString line, final Point point )
@@ -156,9 +157,9 @@ public class JTSUtilities
    * This function calculates a point at a specific length of a line.
    * 
    * @param lineJTS
-   *            The line string on which the point has to be.
+   *          The line string on which the point has to be.
    * @param distance
-   *            The distance at which the point should be placed on the line.
+   *          The distance at which the point should be placed on the line.
    * @return The newly created point on the line or null, if something was wrong.
    */
   public static Point pointOnLine( final LineString lineJTS, double distance )
@@ -247,9 +248,9 @@ public class JTSUtilities
    * This function calculates a point at a specific length of a line.
    * 
    * @param lineJTS
-   *            The line string on which the point has to be.
+   *          The line string on which the point has to be.
    * @param percent
-   *            The distance in percent at which the point should be placed on the line.
+   *          The distance in percent at which the point should be placed on the line.
    * @return The newly created point on the line or null, if something was wrong. Update: returns the start point or the
    *         end point if percentage is 0 or 100.
    */
@@ -274,18 +275,18 @@ public class JTSUtilities
    * on the given line.
    * 
    * @param line
-   *            The original line.
+   *          The original line.
    * @param start
-   *            The start point of the new line (it has to be one point that lies on the original line).
+   *          The start point of the new line (it has to be one point that lies on the original line).
    * @param end
-   *            The end point of the new line (it has to be one point that lies on the original line). TODO: the used
-   *            distance is calculated only by the x- and y-coordinates!! for an 3-dimensaional distance calculation,
-   *            the start and end point should have z-coordinates.
+   *          The end point of the new line (it has to be one point that lies on the original line). TODO: the used
+   *          distance is calculated only by the x- and y-coordinates!! for an 3-dimensaional distance calculation, the
+   *          start and end point should have z-coordinates.
    */
   public static LineString createLineSegment( final Geometry line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line (2d!). */
-    if( line.distance( start ) >= 10E-08 || line.distance( start ) >= 10E-08 )
+    if( line.distance( start ) >= 10E-08 || line.distance( end ) >= 10E-08 )
       return null;
 
     if( line instanceof LineString )
@@ -306,17 +307,17 @@ public class JTSUtilities
    * Evaluates the two given points and returns true, if the direction is equal of that from line (its points).
    * 
    * @param line
-   *            The original LineString.
+   *          The original LineString.
    * @param start
-   *            The start point of the new line (it has to be one point that lies on the original LineString).
+   *          The start point of the new line (it has to be one point that lies on the original LineString).
    * @param end
-   *            The end point of the new line (it has to be one point that lies on the original LineString).
+   *          The end point of the new line (it has to be one point that lies on the original LineString).
    * @return True, if the first found point of the line is nearer to the start point, than to the end point.
    */
   public static boolean getLineOrientation( final LineString line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line. */
-    if( line.distance( start ) >= 10E-08 || line.distance( start ) >= 10E-08 )
+    if( line.distance( start ) >= 10E-08 || line.distance( end ) >= 10E-08 )
       throw new IllegalArgumentException( "One of the two points does not lie on the given line ..." );
 
     boolean first = false;
@@ -353,11 +354,11 @@ public class JTSUtilities
    * namly the start and end point.
    * 
    * @param line
-   *            The original LineString.
+   *          The original LineString.
    * @param start
-   *            The start point of the new line (it has to be one point that lies on the original LineString).
+   *          The start point of the new line (it has to be one point that lies on the original LineString).
    * @param end
-   *            The end point of the new line (it has to be one point that lies on the original LineString).
+   *          The end point of the new line (it has to be one point that lies on the original LineString).
    * @return A LineString on the original LineString starting at with the start point and ending with the end point.
    */
   private static LineString createLineSegmentFromLine( final LineString line, final Point start, final Point end )
@@ -419,11 +420,11 @@ public class JTSUtilities
    * There can not be quaranteed, that this function works error free!
    * 
    * @param line
-   *            The original MultiLineString.
+   *          The original MultiLineString.
    * @param start
-   *            The start point of the new line (it has to be one point on the original MultiLineString).
+   *          The start point of the new line (it has to be one point on the original MultiLineString).
    * @param end
-   *            The end point of the new line (it has to be one point on the original MultiLineString).
+   *          The end point of the new line (it has to be one point on the original MultiLineString).
    * @return A LineString on the original MultiLineString starting at with the start point and ending with the end
    *         point.
    */
@@ -481,9 +482,9 @@ public class JTSUtilities
    * Returns a vector of this line.
    * 
    * @param start
-   *            The start point of the line.
+   *          The start point of the line.
    * @param end
-   *            The end point of the line.
+   *          The end point of the line.
    * @return A vector of the line between this two points as point.
    */
   public static Point getVector( final Point start, final Point end )
@@ -498,7 +499,7 @@ public class JTSUtilities
    * Calculates a normalized vector.
    * 
    * @param vector
-   *            The vector to be normalized.
+   *          The vector to be normalized.
    * @return The normalized vector.
    */
   public static Point getNormalizedVector( final Point vector )
@@ -519,9 +520,9 @@ public class JTSUtilities
    * returns the length.
    * 
    * @param pointOne
-   *            This point will be used as start point of the line segment.
+   *          This point will be used as start point of the line segment.
    * @param pointTwo
-   *            This point will be used as end point of the line segment.
+   *          This point will be used as end point of the line segment.
    * @return The length of the line between the two points given.
    */
   public static double getLengthBetweenPoints( final Point pointOne, final Point pointTwo )
@@ -534,9 +535,9 @@ public class JTSUtilities
    * returns the length.
    * 
    * @param coordinateOne
-   *            This coordinate will be used as start point of the line segment.
+   *          This coordinate will be used as start point of the line segment.
    * @param coordinateTwo
-   *            This coordinate will be used as end point of the line segment.
+   *          This coordinate will be used as end point of the line segment.
    * @return The length of the line between the two coordinates given.
    */
   public static double getLengthBetweenPoints( final Coordinate coordinateOne, final Coordinate coordinateTwo )
@@ -563,7 +564,7 @@ public class JTSUtilities
    * The return equation as the form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
    * 
    * @param coords
-   *            coordinate of 3 plane points
+   *          coordinate of 3 plane points
    * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
    */
   public static double[] calculateTrianglePlaneEquation( final Coordinate[] coords )
@@ -601,8 +602,8 @@ public class JTSUtilities
 
   /**
    * @param planarEquation
-   *            Previously obtained by {@link #calculateTrianglePlaneEquation(Coordinate[])}. If <code>null</code>,
-   *            <code>Double.NaN</code> will be returned.
+   *          Previously obtained by {@link #calculateTrianglePlaneEquation(Coordinate[])}. If <code>null</code>,
+   *          <code>Double.NaN</code> will be returned.
    */
   public static double calculateTriangleZ( final double[] planeEquation, final double x, final double y )
   {
@@ -614,7 +615,7 @@ public class JTSUtilities
 
   /**
    * @param ring
-   *            array of ordered coordinates, last must equal first one
+   *          array of ordered coordinates, last must equal first one
    * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive) TODO: move it to
    *         JTSUtilities
    */
@@ -646,9 +647,9 @@ public class JTSUtilities
    * found it will return null.
    * 
    * @param curve
-   *            The curve to check.
+   *          The curve to check.
    * @param point
-   *            The point, which marks the segment (e.g. an intersection point of another geometry).
+   *          The point, which marks the segment (e.g. an intersection point of another geometry).
    * @return The line segment or null.
    */
   public static LineSegment findLineSegment( final LineString curve, final Point point )
@@ -678,9 +679,9 @@ public class JTSUtilities
    * Furthermore the given list of points is modified. It should be cloned here.
    * 
    * @param line
-   *            The line, to which the points are added to.
+   *          The line, to which the points are added to.
    * @param points
-   *            The points, which should be added. The points has to lie on the line.
+   *          The points, which should be added. The points has to lie on the line.
    * @return The new line as copy of the old line, including the given points. The result may be null.
    */
   public static LineString addPointsToLine( final LineString line, final List<Point> points )
@@ -754,9 +755,9 @@ public class JTSUtilities
    * This function calculates points every x meter on the line.
    * 
    * @param curve
-   *            The curve with original points.
+   *          The curve with original points.
    * @param size
-   *            the definition at what length along the curve a point should be inserted.
+   *          the definition at what length along the curve a point should be inserted.
    * @return A map containing the distance as key and the points as value (original and new points).
    */
   public static TreeMap<Double, Point> calculatePointsOnLine( final LineString curve, double size )
@@ -794,7 +795,10 @@ public class JTSUtilities
   }
 
   /**
-   * inverts a given geometry
+   * Inverts a given geometry.
+   * 
+   * @param geometry
+   *          The geometry, which should be inverted.
    */
   public static Geometry invert( final Geometry geometry )
   {
@@ -807,13 +811,140 @@ public class JTSUtilities
 
       final Set<Coordinate> myCoordinates = new LinkedHashSet<Coordinate>();
       for( int i = coordinates.length - 1; i >= 0; i-- )
-      {
         myCoordinates.add( coordinates[i] );
-      }
 
       return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
     }
 
     throw new NotImplementedException();
+  }
+
+  /**
+   * This function adds a z-coordinate to each point of a line string. It interpolates the z-coordinate, using the
+   * length of the line segment between the start point (parameter start) and the current point. The last point will get
+   * the maximum as the z-coordinate (parameter end).
+   * 
+   * @param lineString
+   *          To each point on this line string the z-coordinate will be added.
+   * @param start
+   *          A start value (a start time, for example).
+   * @param end
+   *          A end value (an end time, for example).
+   * @return A new line string with z-coordinate.
+   */
+  public static LineString addInterpolatedZCoordinates( LineString lineString, double start, double end ) throws SameXValuesException
+  {
+    /* Interpolate the times for each points, if time is given. */
+
+    /* List with the coordinates of the new line string. */
+    List<Coordinate> coordinates = new ArrayList<Coordinate>();
+
+    /* The x-axis represents the distance on the line string. */
+    double x1 = 0.0;
+    double x2 = lineString.getLength();
+
+    /* The y-axis represents the values given by the parameters (a time, for example). */
+    double y1 = start;
+    double y2 = end;
+
+    /* Create the linear equation. */
+    LinearEquation equation = new LinearEquation( x1, y1, x2, y2 );
+
+    for( int i = 0; i < lineString.getNumPoints(); i++ )
+    {
+      /* Get the points. */
+      Point point = lineString.getPointN( i );
+
+      /* The distance from start to this point. */
+      /* If this point is the start, it should be 0. */
+      /* If this point is the end, it should be lineString.getLength(). */
+      double distance = pointDistanceOnLine( lineString, point );
+
+      /* Compute the x to this point (needed time to this point, for example). */
+      double x = equation.computeY( distance );
+
+      /* Create the coordinate. */
+      Coordinate coordinate = new Coordinate( point.getX(), point.getY(), x );
+      coordinates.add( coordinate );
+    }
+
+    /* Create the new line string. */
+    GeometryFactory factory = new GeometryFactory( lineString.getPrecisionModel(), lineString.getSRID() );
+
+    return factory.createLineString( coordinates.toArray( new Coordinate[] {} ) );
+  }
+
+  /**
+   * This function calculates the center coordinate between two coordinates.
+   * 
+   * @param coordinate_one
+   *          The first coordinate.
+   * @param coordinate_two
+   *          The second coordinate.
+   * @return The center coordinate.
+   */
+  public static Coordinate getCenterCoordinate( Coordinate coordinate_one, Coordinate coordinate_two )
+  {
+    double x = (coordinate_one.x + coordinate_two.x) / 2;
+    double y = (coordinate_one.y + coordinate_two.y) / 2;
+
+    return new Coordinate( x, y );
+  }
+
+  /**
+   * This function collects polygons from polygons (which will return itself in the list) or multi polygons.
+   * 
+   * @param geometry
+   *          The geometry to collect from. If it is no polygon, an empty list will be returned.
+   * @return The list of contained polygons or an empty list.
+   */
+  public static List<Polygon> collectPolygons( Geometry geometry )
+  {
+    /* Memory for the results. */
+    List<Polygon> polygons = new ArrayList<Polygon>();
+
+    if( !(geometry instanceof Polygon) && !(geometry instanceof MultiPolygon) )
+      return polygons;
+
+    if( geometry instanceof Polygon )
+    {
+      polygons.add( (Polygon) geometry );
+      return polygons;
+    }
+
+    if( geometry instanceof MultiPolygon )
+    {
+      MultiPolygon multi = (MultiPolygon) geometry;
+      int num = multi.getNumGeometries();
+
+      for( int i = 0; i < num; i++ )
+      {
+        Geometry geometryN = multi.getGeometryN( i );
+        polygons.add( (Polygon) geometryN );
+      }
+    }
+
+    return polygons;
+  }
+
+  /**
+   * This function inspects each coordinate of the given array and removes the z-coordinate from it (sets Double.NaN).
+   * 
+   * @param coordinates
+   *          The array of coordinates.
+   * @return A new array of new coordinates without the z-coordinate.
+   */
+  public static Coordinate[] removeZCoordinates( Coordinate[] coordinates )
+  {
+    /* Memory for the results. */
+    List<Coordinate> results = new ArrayList<Coordinate>();
+
+    for( int i = 0; i < coordinates.length; i++ )
+    {
+      Coordinate coordinate = coordinates[i];
+      results.add( new Coordinate( coordinate.x, coordinate.y ) );
+    }
+
+    return results.toArray( new Coordinate[] {} );
   }
 }
