@@ -204,47 +204,6 @@ public final class GmlSerializer
     }
   }
 
-  /**
-   * Liest ein GML aus einer URL und ersetzt dabei tokens gemäss dem URL-Resolver.
-   */
-  public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IUrlResolver urlResolver, final IFeatureProviderFactory factory ) throws Exception
-  {
-    Reader reader = null;
-
-    try
-    {
-      // TODO: this is bad! The encoding should be taken from the xml-header, never from the eclipse settings.
-      final InputStreamReader isr = urlResolver.createReader( gmlURL );
-      if( isr.getEncoding() == null )
-      {
-        IOUtils.closeQuietly( isr );
-        throw new NullPointerException( Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.5" ) ); //$NON-NLS-1$
-      }
-
-      reader = new BufferedReader( isr );
-      // Replace tokens
-      final ReplaceTokens rt = new ReplaceTokens( reader );
-      rt.setBeginToken( ':' );
-      rt.setEndToken( ':' );
-      for( final Iterator<Entry<Object, Object>> tokenIt = urlResolver.getReplaceEntries(); tokenIt.hasNext(); )
-      {
-        final Map.Entry<Object, Object> entry = tokenIt.next();
-
-        final Token token = new ReplaceTokens.Token();
-        token.setKey( (String) entry.getKey() );
-        token.setValue( (String) entry.getValue() );
-
-        rt.addConfiguredToken( token );
-      }
-
-      return createGMLWorkspace( new InputSource( rt ), gmlURL, factory );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( reader );
-    }
-  }
-
   public static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL context, final IFeatureProviderFactory factory ) throws Exception
   {
     final boolean doTrace = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.core/perf/serialization/gml" ) ); //$NON-NLS-1$

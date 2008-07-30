@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -356,9 +357,10 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     /* Use complete bounding box if search envelope is not set. */
     final GM_Envelope env = searchEnvelope == null ? getFullExtent() : searchEnvelope;
 
-    final FeatureList resultList = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
     final GMLWorkspace workspace = getWorkspace();
-
+    
+    //Put features in set in order to avoid duplicates
+    final Set<Feature> features = new HashSet<Feature>();
     final IPaintDelegate paintDelegate = new IPaintDelegate()
     {
       public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
@@ -366,7 +368,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final Feature feature = displayElement.getFeature();
         GM_Envelope envelope = feature.getEnvelope();
         if( (envelope != null) && env.intersects( envelope ) )
-          resultList.add( feature );
+          features.add( feature );
       }
     };
 
@@ -386,6 +388,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       }
     }
 
+    final FeatureList resultList = FeatureFactory.createFeatureList( m_featureList.getParentFeature(), m_featureList.getParentFeatureTypeProperty() );
+    resultList.addAll( features );
     return resultList;
   }
 

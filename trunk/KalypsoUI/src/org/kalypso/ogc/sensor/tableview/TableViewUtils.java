@@ -281,7 +281,9 @@ public final class TableViewUtils
         view.setFeatureEnabled( element, true );
     }
 
-    view.setAlphaSort( xml.isAlphaSort() );
+    final Boolean alphaSort = xml.isAlphaSort();
+    final boolean as = alphaSort == null ? false : alphaSort.booleanValue();
+    view.setAlphaSort( as );
 
     // timezone is optional
     if( xml.getTimezone() != null && xml.getTimezone().length() > 0 )

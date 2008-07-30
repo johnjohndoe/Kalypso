@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
+import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -74,9 +75,9 @@ public class FeaturePage extends WizardPage
   private final ModellEventListener m_modellListener = new ModellEventListener()
   {
     @Override
-    public void onModellChange( ModellEvent modellEvent )
+    public void onModellChange( final ModellEvent modellEvent )
     {
-      handleModellChange(modellEvent);
+      handleModellChange();
     }
   };
 
@@ -88,10 +89,13 @@ public class FeaturePage extends WizardPage
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  public FeaturePage( final String pagename, final String title, final ImageDescriptor image, final boolean overrideCanFlipToNextPage, final Feature feature, final IFeatureSelectionManager selectionManager )
+  private final IFeatureviewFactory m_factory;
+
+  public FeaturePage( final String pagename, final String title, final ImageDescriptor image, final boolean overrideCanFlipToNextPage, final Feature feature, final IFeatureSelectionManager selectionManager, final IFeatureviewFactory factory )
   {
     super( pagename, title, image );
 
+    m_factory = factory;
     m_overrideCanFlipToNextPage = overrideCanFlipToNextPage;
     m_feature = feature;
     m_selectionManager = selectionManager;
@@ -99,7 +103,7 @@ public class FeaturePage extends WizardPage
     m_feature.getWorkspace().addModellListener( m_modellListener );
   }
 
-  protected void handleModellChange( final ModellEvent modellEvent )
+  protected void handleModellChange( )
   {
     if( m_featureComposite != null )
       m_featureComposite.updateControl();
@@ -115,9 +119,7 @@ public class FeaturePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     group.setText( getTitle() );
 
-    final CachedFeatureviewFactory factory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-
-    m_featureComposite = new FeatureComposite( null, m_selectionManager, factory );
+    m_featureComposite = new FeatureComposite( null, m_selectionManager, m_factory );
     m_featureComposite.setFeature( m_feature );
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
     {
@@ -154,7 +156,7 @@ public class FeaturePage extends WizardPage
   {
     if( m_featureComposite != null )
       m_featureComposite.dispose();
-    
+
     m_feature.getWorkspace().removeModellListener( m_modellListener );
   }
 
