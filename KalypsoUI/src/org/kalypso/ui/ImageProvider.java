@@ -154,9 +154,9 @@ public class ImageProvider
 
   public static final ImageDescriptor IMAGE_ICON_OTT = ImageProvider.id( "icons/kalypso_ott.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON = ImageProvider.id( "org.kalypso.product", "etc/kalypso16.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON = ImageProvider.id( "icons/kalypso16.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = ImageProvider.id( "org.kalypso.product", "etc/kalypso32.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static final ImageDescriptor IMAGE_KALYPSO_ICON_BIG = ImageProvider.id( "icons/kalypso32.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   public static final ImageDescriptor IMAGE_UTIL_CHECKED = ImageProvider.id( "icons/util/checked.gif" ); //$NON-NLS-1$
 
