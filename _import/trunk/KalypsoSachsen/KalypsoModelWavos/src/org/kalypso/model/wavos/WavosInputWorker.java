@@ -624,7 +624,7 @@ public class WavosInputWorker
       // simulationDuration)
       final Calendar cal = Calendar.getInstance();
       cal.setTime( startForecastTime );
-      cal.add( CalendarUtilities.getCalendarField( "DAY_OF_MONTH" ), simulationDur.intValue() );
+      cal.add( CalendarUtilities.getCalendarField( "DAY_OF_MONTH" ), -simulationDur.intValue() );
       Date simulationStart = cal.getTime();
       // TODO during upgrade to new KALYPSO replace usage of "trunc" with
       // method from

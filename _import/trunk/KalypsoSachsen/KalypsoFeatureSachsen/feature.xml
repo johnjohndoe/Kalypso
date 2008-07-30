@@ -4,8 +4,7 @@
       label="KalypsoFeatureSachsen"
       version="1.0.0"
       provider-name="kalypso.org"
-      plugin="org.kalypso.product">
-
+      plugin="org.kalypso.hwv.product">
    <install-handler/>
 
    <description url="[Enter Feature URL here.]">
@@ -23,166 +22,182 @@
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.junit"/>
       <import plugin="org.apache.ant"/>
       <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.apache.commons.vfs"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.compare"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.help"/>
-      <import plugin="org.eclipse.ant.core"/>
+      <import plugin="org.eclipse.ui.browser"/>
+      <import plugin="org.eclipse.ui.intro"/>
+      <import plugin="org.eclipse.core.runtime.compatibility.auth"/>
+      <import plugin="org.eclipse.core.net"/>
+      <import plugin="org.eclipse.core.expressions"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ui.externaltools"/>
       <import plugin="org.eclipse.core.variables"/>
-      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.eclipse.ui.navigator"/>
+      <import plugin="org.eclipse.debug.core"/>
       <import plugin="org.eclipse.ant.ui"/>
-      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.ant.core" version="3.2.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed"/>
    </requires>
 
    <plugin
          id="org.kalypso.auth"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.commons"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.contribs.eclipseplatform"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.contribs.eclipsercp"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.contribs.java"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.contribs.ogc2x"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.contribs.ogc31"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.core"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.deegree"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
-         id="org.kalypso.dwd"
+         id="org.kalypso.deegree2"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.featureview"
          download-size="0"
          install-size="0"
-         version="0.0.1"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.grafikmanual"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
-         id="org.kalypso.jwsdp"
+         id="org.kalypso.hwv.product"
          download-size="0"
          install-size="0"
-         version="1.4"/>
-
-   <plugin
-         id="org.kalypso.metadoc"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.product"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.repository"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.services.core.client"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.services.user.client"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.simulation.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.1"/>
-
-   <plugin
-         id="org.kalypso.ui"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.ui.addlayer"
-         download-size="0"
-         install-size="0"
-         version="0.0.1"/>
-
-   <plugin
-         id="org.kalypso.ui.observationimport"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.wizard"
-         download-size="0"
-         install-size="0"
-         version="0.0.1"/>
-
-   <plugin
-         id="org.kalypso.services.metadoc.client"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.kalypso.manual.sachsen"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.metadoc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.repository"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.simulation.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.simulation.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.kalypso.tecdoc.sachsen"
          download-size="0"
          install-size="0"
-         version="1.0.0"/>
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.ui.addlayer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.ui.observationimport"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.wizard.CreateNAProject"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

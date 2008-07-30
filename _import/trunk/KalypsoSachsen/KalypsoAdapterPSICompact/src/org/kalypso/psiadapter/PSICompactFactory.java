@@ -6,6 +6,8 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.osgi.framework.internal.core.Framework;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.psiadapter.util.AtWQProvider;
 import org.kalypso.psiadapter.util.DummyWQProvider;
@@ -117,7 +119,7 @@ public final class PSICompactFactory
         m_factoryProperties = new Properties();
         m_factoryProperties.load( stream );
 
-        final String fakeLocation = System.getProperty( SYSPROP_FAKE_LOCATION, null );
+        final String fakeLocation = FrameworkProperties.getProperty( SYSPROP_FAKE_LOCATION, null );
         if( fakeLocation == null )
         {
           System.out

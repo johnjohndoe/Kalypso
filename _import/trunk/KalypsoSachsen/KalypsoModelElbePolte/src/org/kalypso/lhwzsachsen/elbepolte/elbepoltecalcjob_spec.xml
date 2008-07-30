@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modelspec xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model.elbepolte">
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="org.kalypso.model.elbepolte">
 	<input id="CONTROL_GML" description="Steuerdaten"/>
 	<input id="GML"/>
 
