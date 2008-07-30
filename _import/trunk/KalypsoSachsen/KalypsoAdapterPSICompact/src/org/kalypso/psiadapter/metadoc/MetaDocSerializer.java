@@ -88,7 +88,10 @@ public class MetaDocSerializer
     writer.write( "<" + TAG_RECORD + ">" );
 
     // retrieve scenario id
-    final String scenarioId = (String) metadataFeature.getProperty( QNAME_PROP_SCENARIO );
+    String scenarioId = (String) metadataFeature.getProperty( QNAME_PROP_SCENARIO );
+    if( scenarioId == null )
+      scenarioId = "";
+    
     final String region = (String) metadataFeature.getProperty( QNAME_PROP_REGION );
     final String ersteller = (String) metadataFeature.getProperty( QNAME_PROP_ERSTELLER );
     final String autor = (String) metadataFeature.getProperty( QNAME_PROP_AUTOR );
