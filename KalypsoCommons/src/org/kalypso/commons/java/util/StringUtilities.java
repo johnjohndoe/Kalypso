@@ -192,9 +192,9 @@ public final class StringUtilities
   {
     String newString = sourceValue;
 
-    for( final Iterator replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
+    for( final Iterator<Entry<Object, Object>> replaceIt = replaceProperties.entrySet().iterator(); replaceIt.hasNext(); )
     {
-      final Map.Entry entry = (Entry) replaceIt.next();
+      final Entry<Object, Object> entry = replaceIt.next();
       final String key = entry.getKey().toString();
       final String value = entry.getValue().toString();
 
