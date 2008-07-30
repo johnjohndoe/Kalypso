@@ -52,13 +52,14 @@ import org.apache.commons.io.IOUtils;
  */
 public class UrlUtilities
 {
-  private UrlUtilities()
+  private UrlUtilities( )
   {
-  // will not get instantiated
+    // will not get instantiated
   }
 
   /**
    * Opens a stream on the given url and copies its content into a string.
+   * 
    * @throws IOException
    */
   public static String toString( final URL url, final String encoding ) throws IOException
@@ -68,6 +69,27 @@ public class UrlUtilities
     {
       is = url.openStream();
       final String content = IOUtils.toString( is, encoding );
+      is.close();
+      return content;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
+    }
+  }
+
+  /**
+   * Opens a stream on the given url and copies its content into a byte array.
+   * 
+   * @throws IOException
+   */
+  public static byte[] toByteArray( final URL url ) throws IOException
+  {
+    InputStream is = null;
+    try
+    {
+      is = url.openStream();
+      final byte[] content = IOUtils.toByteArray( is );
       is.close();
       return content;
     }

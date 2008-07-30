@@ -106,7 +106,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Helper - Klasse, um Gml zu lesen und zu schreiben
- *
+ * 
  * @author Belger
  */
 public final class GmlSerializer
@@ -128,7 +128,7 @@ public final class GmlSerializer
     OutputStreamWriter writer = null;
     try
     {
-      writer = new OutputStreamWriter( new BufferedOutputStream( new FileOutputStream( gmlFile ) ), encoding );
+      writer = new OutputStreamWriter( new BufferedOutputStream( new FileOutputStream(  gmlFile ) ), encoding );
       GmlSerializer.serializeWorkspace( writer, gmlWorkspace );
       writer.close();
     }
@@ -145,7 +145,7 @@ public final class GmlSerializer
 
   /**
    * @param idMap
-   *            (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
+   *          (existing-ID,new-ID) mapping for ids, replace all given Ids in GML (feature-ID and links)
    */
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final Map<String, String> idMap ) throws GmlSerializeException
   {
@@ -264,11 +264,11 @@ public final class GmlSerializer
     return workspace;
   }
 
-  private static GMLWorkspace parseGml( final InputSource inputSource, final URL schemaLocationHint, final boolean useSchemaCache, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException, IOException, GMLException
+  public static GMLWorkspace parseGml( final InputSource inputSource, final URL schemaLocationHint, final boolean useSchemaCache, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException, IOException, GMLException
   {
     final IFeatureProviderFactory providerFactory = factory == null ? DEFAULT_FACTORY : factory;
 
-    final SAXParserFactory saxFac = SAXParserFactory.newInstance(  );
+    final SAXParserFactory saxFac = SAXParserFactory.newInstance();
     saxFac.setNamespaceAware( true );
 
     final SAXParser saxParser = saxFac.newSAXParser();
@@ -285,8 +285,6 @@ public final class GmlSerializer
     xmlReader.parse( inputSource );
 
     final GMLWorkspace workspace = exceptionHandler.getWorkspace();
-
-
 
     return workspace;
   }
