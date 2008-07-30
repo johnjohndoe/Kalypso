@@ -194,10 +194,36 @@
          unpack="false"/>
 
    <plugin
-         id="org.kalypso.wizard.CreateNAProject"
+         id="org.kalypso.model.spree"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.NACalcJob"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="org.kalypso.model.elbepolte"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.model.wavos"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.psicompactadapter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
