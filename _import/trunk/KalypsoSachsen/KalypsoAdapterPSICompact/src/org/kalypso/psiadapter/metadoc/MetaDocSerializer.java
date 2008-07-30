@@ -55,6 +55,8 @@ public class MetaDocSerializer
 
   private final static DateFormat DFDATETIME = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
+  private final static DateFormat DFDATE = new SimpleDateFormat( "yyyy-MM-dd" );
+
   private static final QName QNAME_PROP_SCENARIO = new QName( UrlCatalogPSI.NS_METADOC, "scenarioId" );
 
   private static final QName QNAME_PROP_REGION = new QName( UrlCatalogPSI.NS_METADOC, TAG_REGION );
@@ -122,6 +124,6 @@ public class MetaDocSerializer
     if( date == null )
       return "";
     
-    return DFDATETIME.format( date );
+    return DFDATE.format( date );
   }
 }
