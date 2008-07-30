@@ -3,10 +3,12 @@ package org.kalypso.model.wspm.sobek.result.processing.model;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 
 public interface IResultTimeSeries extends Feature
 {
@@ -16,8 +18,6 @@ public interface IResultTimeSeries extends Feature
 // - {org.kalypso.model.wspm.sobek.result.ts}name
 // - {org.kalypso.model.wspm.sobek.result.ts}paramID
 // - {org.kalypso.model.wspm.sobek.result.ts}unit
-// - {org.kalypso.model.wspm.sobek.result.ts}stationAlongBranch
-// - {org.kalypso.model.wspm.sobek.result.ts}branchID
 // - {org.kalypso.model.wspm.sobek.result.ts}maxValue
 // - {org.kalypso.model.wspm.sobek.result.ts}lastValue
 // - {org.kalypso.model.wspm.sobek.result.ts}durationValuePairMember
@@ -34,10 +34,6 @@ public interface IResultTimeSeries extends Feature
   public static final QName QN_PARAM_ID = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "paramID" );
 
   public static final QName QN_UNIT = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "unit" );
-
-  public static final QName QN_STATION_BRANCH_POSITION = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "stationAlongBranch" );
-
-  public static final QName QN_BRANCH_ID = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "branchID" );
 
   public static final QName QN_MAX_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "maxValue" );
 
@@ -63,9 +59,7 @@ public interface IResultTimeSeries extends Feature
 
   public String getUnit( );
 
-  public Double getStationBranchPosition( );
-
-  public String getBranchId( );
+  public Double getPositionOnBranch( IBranch branch ) throws GM_Exception, CoreException;
 
   public Double getMaxValue( );
 

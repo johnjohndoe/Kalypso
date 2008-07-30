@@ -79,8 +79,7 @@ public class BranchHydrographUtilities
       final IProfil profile = csn.getProfile();
       final double station = profile.getStation();
 
-      final IResultTimeSeries timeSeries = modelHandler.getCrossSectionTimeSeries( csn );
-      // TODO FIXME no null handling
+      final IResultTimeSeries timeSeries = modelHandler.getNodeTimeSeries( csn );
       if( timeSeries == null )
         continue;
 

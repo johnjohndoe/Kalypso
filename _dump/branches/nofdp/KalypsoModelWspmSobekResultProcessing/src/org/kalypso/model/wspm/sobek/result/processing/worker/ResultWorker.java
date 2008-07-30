@@ -27,9 +27,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
-import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.IValuePairMember;
@@ -42,13 +40,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
 
 public class ResultWorker
 {
@@ -67,14 +60,14 @@ public class ResultWorker
 
   private final CommandableWorkspace m_workspace;
 
-  private final ICrossSectionNode m_node;
+  private final INode m_node;
 
-  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final ICrossSectionNode node )
+  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node )
   {
     m_workspace = targetWorkspace;
     m_binding = binding;
     m_node = node;
-    m_handler = new ResultTimeSeriesHandler( targetWorkspace.getRootFeature() );
+    m_handler = new ResultTimeSeriesHandler( targetWorkspace.getRootFeature(), m_node );
   }
 
   public void process( ) throws CoreException
@@ -136,21 +129,7 @@ public class ResultWorker
       properties.put( IResultTimeSeries.QN_STATION_NAME, m_node.getStationName() ); // station name
       properties.put( IResultTimeSeries.QN_NAME, m_node.getName() ); // name
       properties.put( IResultTimeSeries.QN_PARAM_ID, "W" ); // parameter id
-      properties.put( IResultTimeSeries.QN_UNIT, "m hNN" ); // unit
-
-      // distance on branch
-      final IBranch branch = m_node.getLinkToBranch();
-      final GM_Curve curve = branch.getCurve();
-
-      final GM_Point location = m_node.getLocation();
-
-      final LineString line = (LineString) JTSAdapter.export( curve );
-      final Point point = (Point) JTSAdapter.export( location );
-
-      final Double distance = JTSUtilities.pointDistanceOnLine( line, point );
-      properties.put( IResultTimeSeries.QN_STATION_BRANCH_POSITION, distance ); // distance
-      properties.put( IResultTimeSeries.QN_BRANCH_ID, branch.getId() ); // distance
-
+      properties.put( IResultTimeSeries.QN_UNIT, "m NHN" ); // unit
       properties.put( IResultTimeSeries.QN_MAX_VALUE, m_max );
       properties.put( IResultTimeSeries.QN_MIN_VALUE, m_min );
       properties.put( IResultTimeSeries.QN_LAST_VALUE, m_last );
@@ -231,7 +210,6 @@ public class ResultWorker
     m_min = Math.min( m_min, value );
     m_max = Math.max( m_max, value );
     m_last = value;
-
   }
 
 }
