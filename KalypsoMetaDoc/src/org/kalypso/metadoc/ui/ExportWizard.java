@@ -125,10 +125,13 @@ public final class ExportWizard extends Wizard
             if( monitor.isCanceled() )
               throw new InterruptedException();
 
+            final IExportableObject exportableObject = objects[i];
+            monitor.subTask( exportableObject.getPreferredDocumentName() );
+            
             IStatus status;
             try
             {
-              status = target.commitDocument( objects[i], configuration, new SubProgressMonitor( monitor, 1 ) );
+              status = target.commitDocument( exportableObject, configuration, new SubProgressMonitor( monitor, 1 ) );
             }
             catch( final Exception e )
             {
