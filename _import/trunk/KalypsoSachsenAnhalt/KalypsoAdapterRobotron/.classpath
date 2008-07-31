@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis/axis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis/axis-ant.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/axis/commons-discovery-0.2.jar"/>

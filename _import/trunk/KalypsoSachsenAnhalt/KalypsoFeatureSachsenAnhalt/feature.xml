@@ -9,7 +9,6 @@
       ws="win32"
       nl="de_DE"
       arch="x86">
-
    <install-handler/>
 
    <description url="[Enter Feature URL here.]">
@@ -182,5 +181,30 @@
          download-size="0"
          install-size="0"
          version="1.0.0"/>
+
+   <plugin
+         id="org.kalypso.adapter.robotron"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.saale"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.tubig"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.hwv.product"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

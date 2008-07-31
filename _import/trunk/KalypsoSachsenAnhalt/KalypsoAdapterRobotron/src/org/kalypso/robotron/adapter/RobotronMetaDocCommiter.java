@@ -46,7 +46,6 @@ import java.net.URL;
 
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
-import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
 import org.apache.axis.Constants;
@@ -132,12 +131,6 @@ public class RobotronMetaDocCommiter extends DocumentServiceSimulation
 
     /* Create the call. */
     Call call = (Call) service.createCall();
-
-    /* Not sure, if it really works. I wasn't able to test it. But the error in the WPS goes away. */
-    /* Now there is an mail error. What with the mail-api from java? */
-    QName qn = new QName( "urn:BeanService", "DataHandler" );
-    call.registerTypeMapping( DataHandler.class, qn, new org.apache.axis.encoding.ser.JAFDataHandlerSerializerFactory( DataHandler.class, qn ), new org.apache.axis.encoding.ser.JAFDataHandlerDeserializerFactory( DataHandler.class, qn ) );
-
     call.setTargetEndpointAddress( new URL( endpoint ) );
     call.setOperationName( "commitDocument" );
     call.addParameter( "docnames", Constants.SOAP_ARRAY, ParameterMode.IN );
