@@ -101,7 +101,7 @@ public class MetaDocSerializer
 
     final String erstellungsString = formatDate( erstellungsDatum );
     final String endgString = formatDate( endgDatum );
-    
+
     writer.write( "<" + TAG_DOKUMENTTYP + ">" + dokTyp + "</" + TAG_DOKUMENTTYP + ">" );
     writer.write( "<" + TAG_ERSTELLER + ">" + ersteller + "</" + TAG_ERSTELLER + ">" );
     writer.write( "<" + TAG_AUTOR + ">" + autor + "</" + TAG_AUTOR + ">" );
@@ -126,7 +126,7 @@ public class MetaDocSerializer
     Date date = DateUtilities.toDate( cal );
     if( date == null )
       return "";
-    
+
     return DFDATE.format( date );
   }
 }

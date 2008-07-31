@@ -135,7 +135,8 @@ Export-Package: .,
  org.apache.xml.xml_soap,
  org.globus.test.bigType,
  org.globus.test.otherTypes,
- org.kalypso.robotronadapter
+ org.kalypso.robotron.adapter
 Require-Bundle: org.kalypso.metadoc,
  org.kalypso.hwv.services,
- org.kalypso.auth
+ org.kalypso.auth,
+ org.kalypso.core;bundle-version="1.0.0"

@@ -18,12 +18,12 @@ import org.kalypsodeegree.model.feature.Feature;
 import de.psi.go.lhwz.ECommException;
 
 /**
- * PSICompactCommiter
+ * PSICompactCommiter TODO :PSICOMPACT_SUFFIX: wenn bei commiten noch vorhanden sollte durch eine default-value ersetzt
+ * werden (kann der Fall sein wenn z.B. kein UserService zur Verfügung steht)
  * 
- * TODO :PSICOMPACT_SUFFIX: wenn bei commiten noch vorhanden sollte durch eine default-value ersetzt werden (kann der
- * Fall sein wenn z.B. kein UserService zur Verfügung steht)
- * 
- * @author schlienger
+ * @author Marc Schlienger
+ * @author Gernot Belger
+ * @author Holger Albert
  */
 public class PSICompactCommiter extends DocumentServiceSimulation
 {
@@ -31,11 +31,12 @@ public class PSICompactCommiter extends DocumentServiceSimulation
   public final static String SYSPROP_PSICOMPACT_DIST = IDocumentServiceConstants.SYSPROP_BASE + ".psidistdir";
 
   public final static String SYSPROP_IMPORTMODE = IDocumentServiceConstants.SYSPROP_BASE + "." + MetaDocSerializer.TAG_IMPORTMODE;
-  
+
   public final static String SYSPROP_VERSENDEN = IDocumentServiceConstants.SYSPROP_BASE + "." + MetaDocSerializer.TAG_VERSENDEN;
-  
+
   /**
-   * @see org.kalypso.hwv.services.metadoc.DocumentServiceSimulation#commitDocument(java.io.File, org.kalypsodeegree.model.feature.Feature, java.net.URL, org.kalypso.simulation.core.ISimulationMonitor)
+   * @see org.kalypso.hwv.services.metadoc.DocumentServiceSimulation#commitDocument(java.io.File,
+   *      org.kalypsodeegree.model.feature.Feature, java.net.URL, org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
   protected void commitDocument( final File tmpdir, final Feature metadataFeature, final URL documentURL, final ISimulationMonitor monitor ) throws Exception
@@ -43,23 +44,24 @@ public class PSICompactCommiter extends DocumentServiceSimulation
     final String preferredFilename = (String) metadataFeature.getProperty( IDocumentServiceConstants.QNAME_META_PREFERRED_FILENAME );
     final String preferredValidFilename = FileUtilities.validateName( preferredFilename, "_" );
     final String goodDocFilePath = filenameCleaner( preferredValidFilename );
-    
+
     final File docFile = File.createTempFile( "document", goodDocFilePath, tmpdir );
     final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile.getAbsolutePath() ) + ".xml" );
 
     final String importMode = System.getProperty( SYSPROP_IMPORTMODE, "1" );
     final String versenden = System.getProperty( SYSPROP_VERSENDEN, "0" );
-    
+
     Writer writer = null;
     try
     {
       // Copy file
       FileUtils.copyURLToFile( documentURL, docFile );
-      
+
       // Create XML
       writer = new OutputStreamWriter( new FileOutputStream( xmlFile ), "UTF-8" );
       MetaDocSerializer.buildXML( writer, docFile.getName(), metadataFeature, importMode, versenden );
       writer.close();
+
       // commit the both files (important: last one is the xml file)
       final String dist = System.getProperty( SYSPROP_PSICOMPACT_DIST ) + "/";
 
@@ -76,7 +78,6 @@ public class PSICompactCommiter extends DocumentServiceSimulation
       xmlFile.delete();
     }
   }
-  
 
   /**
    * Dateinamen für PSICompact bereinigen.
@@ -104,9 +105,9 @@ public class PSICompactCommiter extends DocumentServiceSimulation
   private void distributeFile( final File file, final String distFile ) throws ECommException
   {
     // TODO: create tracing option
-//    m_logger.info( "Distributing File " + file.getAbsolutePath() + " to " + distFile );
-    /* final boolean b = */ PSICompactFactory.getConnection().copyanddistributeFile( file, distFile );
+// m_logger.info( "Distributing File " + file.getAbsolutePath() + " to " + distFile );
+    /* final boolean b = */PSICompactFactory.getConnection().copyanddistributeFile( file, distFile );
     // TODO: create tracing option
-//    m_logger.info( "File distributed: " + b );
+// m_logger.info( "File distributed: " + b );
   }
 }

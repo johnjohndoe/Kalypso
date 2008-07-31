@@ -27,14 +27,13 @@
  * 
  * ----------------------------------------------------------------------------
  */
-package org.kalypso.robotronadapter;
+package org.kalypso.robotron.adapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -62,17 +61,13 @@ import org.kalypso.hwv.services.user.UserServiceSimulation;
  * <dt>dem Benutzer wurde das simulation-Flag gesetzt (Verweigerungsrecht)</dt>
  * <dd>Der Benutzer darf Kalypso nur dann starten, wenn das aktuelle Szenario das Simulationsbetrieb ist</dd>
  * </dl>
- * 
  * <dl>
  * <dt>20.06.2006</dt>
- * <dd>Ergänzung auf Kundenwunsch der Rechteverwaltung: jetzt mit Unterscheidung zwischen nix, Vorhersage, Experte
- * </dd>
+ * <dd>Ergänzung auf Kundenwunsch der Rechteverwaltung: jetzt mit Unterscheidung zwischen nix, Vorhersage, Experte</dd>
  * <dt>03.02.2006</dt>
  * <dd>Einführung eines separaten Flag 'Simulationsbetrieb', welcher das Einrichten von (Test-)Benutzern erlaubt, die
  * ausschließlich diesen Betriebsmodus benutzen dürfen (Absprache zwischen RDS, KAG und BCE vom 21.12.2005)</dd>
  * </dl>
- * 
- *
  * TODO: cannot work at the moment: init method is never called... TODO: implement IExecutableExtension and initalize
  * like they do
  * 
@@ -98,21 +93,22 @@ public class RobotronRightsProvider extends UserServiceSimulation
    * The properties should contain following information:
    * <p>
    * <ul>
-   * <li>LDAP_CONNECTION: the url of the ldap service. Example:
-   * "LDAP_CONNECTION=ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
-   * <li>LDAP_PRINCIPAL: the principal of the ldap. Example:
-   * "LDAP_PRINCIPAL=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
-   * <li>LDAP_CRENDENTIALS: the password to use along the principal. Example: "LDAP_CREDENTIALS=geheim"
+   * <li>kalypso.hwv.user.ldap.connection: the url of the ldap service.<br>
+   * Example: "kalypso.hwv.user.ldap.connection=ldap://193.23.163.115:389/dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
+   * <li>kalypso.hwv.user.ldap.principal: the principal of the ldap.<br>
+   * Example: "kalypso.hwv.user.ldap.principal=cn=admin,dc=hvz,dc=lhw,dc=mlu,dc=lsa-net,dc=de"
+   * <li>kalypso.hwv.user.ldap.credentials: the password to use along the principal.<br>
+   * Example: "kalypso.hwv.user.ldap.credentials=geheim"
    * 
    * @see IUserRightsProvider#init(java.util.Properties)
    */
-  public void init( final Properties props )
+  public RobotronRightsProvider( )
   {
-    m_url = props.getProperty( "LDAP_CONNECTION" );
-    m_principal = props.getProperty( "LDAP_PRINCIPAL" );
-    m_crendentials = props.getProperty( "LDAP_CREDENTIALS" );
+    m_url = System.getProperty( CONFIG_BASE + "ldap.connection" );
+    m_principal = System.getProperty( CONFIG_BASE + "ldap.principal" );
+    m_crendentials = System.getProperty( CONFIG_BASE + "ldap.credentials" );
 
-    m_simulationScenarioId = props.getProperty( "SIMULATION_SCENARIO_ID", "" );
+    m_simulationScenarioId = System.getProperty( CONFIG_BASE + "simulation.scenario_id" );
 
     LOG.info( "RobotronRightsProvider initialised" );
   }
@@ -159,7 +155,7 @@ public class RobotronRightsProvider extends UserServiceSimulation
       }
 
       final String groupName = (String) userAtts.get( "gidNumber" ).get();
-      final String simulationFlag = (String)userAtts.get( "simulation" ).get();
+      final String simulationFlag = (String) userAtts.get( "simulation" ).get();
 
       LOG.info( "User " + username + " found in group: " + groupName + ". Simulationflag is: " + simulationFlag );
 
@@ -170,15 +166,15 @@ public class RobotronRightsProvider extends UserServiceSimulation
         return UserRights.NO_RIGHTS;
       }
 
-      final Set rights = new HashSet();
+      final Set<String> rights = new HashSet<String>();
 
       LOG.info( "Checking rights from associated group..." );
 
       // jetzt checken ob der Modellierungsrecht in die entsprechende Gruppe gesetzt ist
       final Attributes rightsAtt = dirCtxt.getAttributes( "gidNumber=" + groupName + ",ou=gruppen" );
 
-      final NamingEnumeration rightsEnum = rightsAtt.get( "recht" ).getAll();
-      final List debugRights = new ArrayList( );
+      final NamingEnumeration< ? > rightsEnum = rightsAtt.get( "recht" ).getAll();
+      final List<String> debugRights = new ArrayList<String>();
       while( rightsEnum.hasMore() )
       {
         final String right = rightsEnum.next().toString();
@@ -207,12 +203,12 @@ public class RobotronRightsProvider extends UserServiceSimulation
       }
 
       // Benutzer existiert, aber darf nicht Modellieren: Vorhersage
-//      return new String[] { UserRights.RIGHT_PROGNOSE };
+      // return new String[] { UserRights.RIGHT_PROGNOSE };
 
       LOG.info( "Retrieved following LDAP rights: " + debugRights );
       debugRights.clear();
-      
-      return (String[])rights.toArray( new String[rights.size()] );
+
+      return rights.toArray( new String[rights.size()] );
     }
     catch( final NamingException e )
     {

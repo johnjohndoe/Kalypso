@@ -4,9 +4,20 @@
    <extension
          point="org.kalypso.simulation.core.simulation">
       <simulation
-            simulationClass="org.kalypso.robotronadapter.RobotronRightsProvider"
+            simulationClass="org.kalypso.robotron.adapter.RobotronRightsProvider"
             typeID="hwvUserService1.0">
       </simulation>
+      <simulation
+            simulationClass="org.kalypso.robotron.adapter.RobotronMetaDocCommiter"
+            typeID="hwvDocumentService1.0">
+      </simulation>
+   </extension>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.robotron.UrlCatalogRobotron"
+            id="org.kalypso.robotron.UrlCatalogRobotron">
+      </catalog>
    </extension>
     
 </plugin>
