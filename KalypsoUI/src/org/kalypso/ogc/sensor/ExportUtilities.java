@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeserieConstants;
 
@@ -66,8 +69,8 @@ public class ExportUtilities
    */
   public static String extractStationIDs( ObsViewItem[] items )
   {
-    /* Memory for the result. */
-    String stationIDs = "";
+    /* Temporary memory. */
+    List<String> stations = new ArrayList<String>();
 
     for( int i = 0; i < items.length; i++ )
     {
@@ -82,6 +85,16 @@ public class ExportUtilities
 
       /* Get the station. */
       String kennz = md.getProperty( TimeserieConstants.MD_KENNZIFFER );
+
+      if( kennz != null && !stations.contains( kennz ) )
+        stations.add( kennz );
+    }
+
+    /* Memory for the result. */
+    String stationIDs = "";
+    for( int i = 0; i < stations.size(); i++ )
+    {
+      String kennz = stations.get( i );
 
       /* Add it to the results. */
       if( i == 0 )
