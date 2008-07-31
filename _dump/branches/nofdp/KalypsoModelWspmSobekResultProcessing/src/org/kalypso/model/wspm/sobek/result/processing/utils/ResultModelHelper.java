@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IPolderNodeResultWrapper.POLDER_NODE_RESULT;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IRetardingBasinNodeResultWrapper.RETARDING_BASIN_NODE_RESULT;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWeirNodeResultWrapper.WEIR_NODE_RESULT;
 
@@ -58,6 +59,11 @@ public class ResultModelHelper
   }
 
   public static IFile getRetardingBasinResultFile( IFolder resultFolder, IEmptyNode node, RETARDING_BASIN_NODE_RESULT type )
+  {
+    return resultFolder.getFile( String.format( "%s%s%s", node.getId(), type.getPostfix(), ".gml" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  public static IFile getPolderNodeResultFile( IFolder resultFolder, IEmptyNode node, POLDER_NODE_RESULT type )
   {
     return resultFolder.getFile( String.format( "%s%s%s", node.getId(), type.getPostfix(), ".gml" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }

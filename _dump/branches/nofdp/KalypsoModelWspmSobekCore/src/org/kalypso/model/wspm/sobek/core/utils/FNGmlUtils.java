@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
 import org.kalypso.model.wspm.sobek.core.model.Branch;
 import org.kalypso.model.wspm.sobek.core.model.LinkageNode;
 import org.kalypso.model.wspm.sobek.core.model.NodeUtils;
+import org.kalypso.model.wspm.sobek.core.pub.EmptyNodeImplementation;
 import org.kalypso.ogc.gml.FeatureUtils;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -271,6 +272,10 @@ public class FNGmlUtils
     // TODO: use query to search for nodes! Else: performance problems
     for( final INode node : nodes )
     {
+      // FIXME test - poldernode(ln, cn) -> returned (empty, cn)
+      if( node instanceof EmptyNodeImplementation )
+        continue;
+
       final GM_Point pNode = node.getLocation();
       final Point nodePoint = (Point) JTSAdapter.export( pNode );
 

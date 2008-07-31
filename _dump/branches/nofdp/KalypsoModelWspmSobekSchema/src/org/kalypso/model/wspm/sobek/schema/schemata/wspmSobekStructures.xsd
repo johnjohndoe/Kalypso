@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- This file is part of Kalypso
-        
+
         Copyright (c) 2008 by
-        
+
         Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
         Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
         (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
-        
-        Kalypso is free software: you can redistribute it and/or modify it under the terms  
-        of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+
+        Kalypso is free software: you can redistribute it and/or modify it under the terms
+        of the GNU Lesser General Public License (LGPL) as published by the Free Software
         Foundation, either version 3 of the License, or (at your option) any later version.
-        
-        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+
+        Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
         warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-        
+
         You should have received a copy of the GNU Lesser General Public
         License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
 -->
@@ -29,7 +29,7 @@
         <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd"/>
         <import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd"/>
         <!-- schema for WSPM = 'water surface profile model' -->
-        <!-- 
+        <!--
 	_________________________________________________________________________________________
 	ELEMENTS
 	_________________________________________________________________________________________
@@ -197,7 +197,7 @@
 				<tooltip>Hochentwickeltes Fluss-Wehr</tooltip>
 				<description>Hochentwickeltes Fluss-Wehr</description>
 			</documentation>
-			<documentation xml:lang="en">Representation of Structure Sobek.RiverAdvancedWeir 
+			<documentation xml:lang="en">Representation of Structure Sobek.RiverAdvancedWeir
 				<name>Advanced River Weir (Sbk)</name>
 				<label>Advanced River Weir - ${property:org.kalypso.model.wspm.sobek#name}</label>
 				<tooltip>Advanced River Weir</tooltip>
@@ -238,7 +238,7 @@
 				<description>River Pump</description>
 			</documentation>
 		</annotation>
-	</element> 
+	</element>
 	-->
         <element name="SbkDatabaseStructure" type="wspmSobekStructures:SbkDatabaseStructureType" substitutionGroup="wspmSobekStructures:AbstractSbkCompoundableStructureNode">
                 <annotation>
@@ -360,7 +360,7 @@
 		</annotation>
 	</element>
 	-->
-        <!-- 
+        <!--
 	_________________________________________________________________________________________
 	TYPES
 	_________________________________________________________________________________________
@@ -1184,7 +1184,7 @@
                                                         </documentation>
                                                 </annotation>
                                         </element>
-                                        <element name="reductionConstant" type="double" nillable="false">
+                                        <element name="reductionConstant" type="double" default="1.0" nillable="false">
                                                 <annotation>
                                                         <documentation xml:lang="de">
                                                                 <name>reductionConstant</name>
@@ -1305,7 +1305,7 @@
                         </extension>
                 </complexContent>
         </complexType>
-        <!-- 
+        <!--
 		_________________________________________________________________________________________
 		LINK PROPERTIES
 		_________________________________________________________________________________________

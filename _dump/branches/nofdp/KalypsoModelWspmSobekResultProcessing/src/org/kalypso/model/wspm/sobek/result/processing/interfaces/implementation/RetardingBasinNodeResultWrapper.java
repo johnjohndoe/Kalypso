@@ -162,7 +162,7 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
         {
           myParamId = "Discharge (m³/s)";
         }
-        else if( RETARDING_BASIN_NODE_RESULT.eHochwasserEntlastung.equals( type ) )
+        else if( RETARDING_BASIN_NODE_RESULT.eGrundAblass.equals( type ) )
         {
           myParamId = "Discharge (m³/s)";
         }
@@ -214,7 +214,7 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
 
   public IResultTimeSeries getWaterLevel( ) throws CoreException
   {
-    return getTimeSeries( RETARDING_BASIN_NODE_RESULT.eGrundAblass, new IResultWorkerSettings()
+    return getTimeSeries( RETARDING_BASIN_NODE_RESULT.eWaterLevel, new IResultWorkerSettings()
     {
       public String getParameterId( )
       {
