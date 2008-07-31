@@ -7,7 +7,6 @@ Bundle-Vendor: www.deegree.org
 Eclipse-LazyStart: true
 Require-Bundle: org.eclipse.core.runtime
 Bundle-ClassPath: lib/acme/acme.jar,
- lib/arcsde/jsde90_sdk.jar,
  lib/batik/batik-awt-util.jar,
  lib/batik/batik-bridge.jar,
  lib/batik/batik-css.jar,
@@ -70,7 +69,8 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/xml/jaxen-1.1-beta-8.jar,
  lib/jfreechart/jcommon-1.0.12.jar,
  lib/jfreechart/jfreechart-1.0.9.jar,
- build
+ build,
+ lib2/arcsde/jsde90_sdk.jar
 Export-Package: com.vividsolutions.jts;version="1.8.0",
  com.vividsolutions.jts.algorithm;version="1.8.0",
  com.vividsolutions.jts.geom;version="1.8.0",

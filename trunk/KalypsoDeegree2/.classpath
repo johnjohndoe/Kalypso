@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="org/deegree/io/datastore/sql/oracle/JGeometryAdapter.java|org/deegree/io/datastore/sql/oracle/OracleDatastore.java|org/deegree/io/datastore/sql/oracle/OracleSpatialWhereBuilder.java|org/deegree/io/oraclegeoraster/GeoRasterReader.java|org/deegree/io/oraclegeoraster/GeoRasterWriter.java|org/deegree/model/coverage/grid/oracle/OracleGeoRasterGridCoverageReader.java|org/deegree/security/drm/SQLRegistry.java|org/deegree/tools/raster/OracleGeoRasterExporter.java|org/deegree/tools/raster/OracleGeoRasterImporter.java" kind="src" path="deegree"/>
+	<classpathentry exported="true" kind="lib" path="lib2/arcsde/jsde90_sdk.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/acme/acme.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/arcsde/jsde90_sdk.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/batik-awt-util.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/batik-bridge.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/batik/batik-css.jar"/>
