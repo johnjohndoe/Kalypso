@@ -50,7 +50,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	</target>
 
 	<target name="clean" description="cleans it up - totally">
-		<delete includeemptydirs="true">
+		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${gen.srcbind}" includes="**/*" />
 		</delete>
 	</target>
