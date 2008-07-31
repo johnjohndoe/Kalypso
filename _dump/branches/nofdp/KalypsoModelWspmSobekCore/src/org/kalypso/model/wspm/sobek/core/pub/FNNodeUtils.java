@@ -50,7 +50,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.core.i18n.Messages;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
@@ -101,7 +100,7 @@ public class FNNodeUtils
 
   private static String createNodeId( final IModelMember model, final IFeatureType targetFeatureType )
   {
-    int count = 0;
+    int max = 0;
 
     final INode[] nodes = model.getNodeMembers();
     for( final INode node : nodes )
@@ -111,16 +110,13 @@ public class FNNodeUtils
         if( nodeId == null )
           continue;
 
-        final String[] split = nodeId.split( "_" ); //$NON-NLS-1$
-        if( split.length != 2 )
-          throw new IllegalStateException( Messages.FNNodeUtils_1 );
+        String id = nodeId.replaceAll( "[a-zA-Z_#]", "" );
+        final int branch = Integer.valueOf( id );
 
-        final Integer iBranch = new Integer( split[1] );
-        if( iBranch > count )
-          count = iBranch;
+        max = Math.max( branch, max );
       }
 
-    return String.format( "%s%05d", FNNodeUtils.getDelimiter( targetFeatureType ), ++count ); //$NON-NLS-1$
+    return String.format( "%s%05d", FNNodeUtils.getDelimiter( targetFeatureType ), ++max ); //$NON-NLS-1$
   }
 
   private static String getDelimiter( final IFeatureType targetFeatureType )
