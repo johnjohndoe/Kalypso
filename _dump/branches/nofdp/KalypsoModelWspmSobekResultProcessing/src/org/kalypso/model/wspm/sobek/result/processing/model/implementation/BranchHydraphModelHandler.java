@@ -11,6 +11,7 @@ import org.kalypso.model.wspm.sobek.result.processing.SobekResultModelHandler;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrograph;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.utils.BranchHydrographUtilities;
+import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -49,7 +50,7 @@ public class BranchHydraphModelHandler extends AbstractListWrapper implements IB
       final IBranchHydrograph hydograph = BranchHydrographUtilities.createHydrograph( m_resultModelHandler, m_workspace, branch );
 
       // save changes
-      final IFile iFile = m_resultModelHandler.getBranchHydrogrographWorkspaceFile();
+      final IFile iFile = ResultModelHelper.getBranchHydrogrographWorkspaceFile( m_resultModelHandler.getResultFolder() );
       GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), m_workspace, "UTF-8" ); //$NON-NLS-1$
 
       return hydograph;

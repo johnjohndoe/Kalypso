@@ -15,7 +15,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
-import org.kalypso.model.wspm.sobek.result.processing.ISobekResultModel;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.ISobekResultModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrograph;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;

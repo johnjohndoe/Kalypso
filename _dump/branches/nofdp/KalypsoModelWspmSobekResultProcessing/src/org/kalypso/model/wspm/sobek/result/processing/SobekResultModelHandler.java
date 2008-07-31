@@ -21,12 +21,19 @@ import nl.wldelft.fews.pi.TimeSeriesComplexType;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IPolderNodeResultWrapper;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IRetardingBasinNodeResultWrapper;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.ISobekResultModel;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWeirNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchHydraphModelHandler;
@@ -125,7 +132,7 @@ public class SobekResultModelHandler implements ISobekResultModel
       if( m_branchesCommandableWorkspace == null )
       {
         /* parse gml workspace */
-        final IFile file = getBranchHydrogrographWorkspaceFile();
+        final IFile file = ResultModelHelper.getBranchHydrogrographWorkspaceFile( m_resultFolder );
         final URL url = file.getRawLocationURI().toURL();
 
         m_branchesWorkspace = GmlSerializer.createGMLWorkspace( url, null );
@@ -146,24 +153,13 @@ public class SobekResultModelHandler implements ISobekResultModel
     }
   }
 
-  public IFile getBranchHydrogrographWorkspaceFile( ) throws CoreException
-  {
-    IFile iBase = m_resultFolder.getFile( "hydrograhps.gml" ); //$NON-NLS-1$
-
-    if( !iBase.exists() )
-    {
-      final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekBranchHydrograph.gml" ); //$NON-NLS-1$
-      iBase.create( stream, true, new NullProgressMonitor() );
-    }
-
-    return iBase;
-  }
-
   public TimeSerieComplexType getNodeBinding( INode node ) throws CoreException
   {
+    Assert.isTrue( !(node instanceof IEmptyNode) ); // structure nodes need special handling!
+
     if( m_jaxRoot == null )
     {
-      final IFile iFile = ResultModelHelper.getResultFile( m_resultFolder );
+      final IFile iFile = ResultModelHelper.getPiCalculationPointFile( m_resultFolder );
 
       final InputStream is = new BufferedInputStream( iFile.getContents() );
 
@@ -195,6 +191,11 @@ public class SobekResultModelHandler implements ISobekResultModel
     {
       id = String.format( "C%s", node.getId() );
     }
+    else if( node instanceof IConnectionNode )
+    {
+      // TODO handling of IBoundaryNodes.W
+      id = String.format( "%s", node.getId() );
+    }
     else
       throw new NotImplementedException();
 
@@ -214,6 +215,8 @@ public class SobekResultModelHandler implements ISobekResultModel
 
   public IResultTimeSeries getNodeTimeSeries( INode node ) throws CoreException
   {
+    Assert.isTrue( !(node instanceof IEmptyNode) ); // structure nodes need special handling!
+
     try
     {
       final CommandableWorkspace cmd = m_commandables.get( node );
@@ -228,10 +231,9 @@ public class SobekResultModelHandler implements ISobekResultModel
       /* gml file doesn't exists - create a new empty gml (workspace) file */
       if( iFile == null )
       {
-        final IFile iNode = ResultModelHelper.getResultFile( m_resultFolder );
         iFile = m_resultFolder.getFile( node.getId() + ".gml" ); //$NON-NLS-1$
 
-        final InputStream stream = this.getClass().getResourceAsStream( "templates/templateSobekResultTimeSeries.gml" ); //$NON-NLS-1$
+        final InputStream stream = this.getClass().getResourceAsStream( "utils/templates/templateSobekResultTimeSeries.gml" ); //$NON-NLS-1$
         iFile.create( stream, true, new NullProgressMonitor() );
         stream.close();
 
@@ -266,5 +268,25 @@ public class SobekResultModelHandler implements ISobekResultModel
     {
       throw new CoreException( StatusUtilities.createErrorStatus( e.getMessage() ) );
     }
+  }
+
+  public IFolder getResultFolder( )
+  {
+    return m_resultFolder;
+  }
+
+  public IPolderNodeResultWrapper getPolderNodeResult( )
+  {
+    throw new NotImplementedException();
+  }
+
+  public IRetardingBasinNodeResultWrapper getRetardingBasinNodeResult( )
+  {
+    throw new NotImplementedException();
+  }
+
+  public IWeirNodeResultWrapper getWeirNodeResult( )
+  {
+    throw new NotImplementedException();
   }
 }

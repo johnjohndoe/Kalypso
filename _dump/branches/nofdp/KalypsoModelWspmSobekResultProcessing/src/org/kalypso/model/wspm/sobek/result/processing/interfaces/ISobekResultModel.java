@@ -1,4 +1,4 @@
-package org.kalypso.model.wspm.sobek.result.processing;
+package org.kalypso.model.wspm.sobek.result.processing.interfaces;
 
 import nl.wldelft.fews.pi.TimeSerieComplexType;
 
@@ -21,4 +21,10 @@ public interface ISobekResultModel
   IBranchHydrographModel getBranchHydrographModel( ) throws CoreException;
 
   public void dispose( );
+
+  IPolderNodeResultWrapper getPolderNodeResult( );
+
+  IRetardingBasinNodeResultWrapper getRetardingBasinNodeResult( );
+
+  IWeirNodeResultWrapper getWeirNodeResult( );
 }

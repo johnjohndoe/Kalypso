@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
+import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IModelMember;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.model.AbstractNode;
@@ -64,7 +65,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author kuch
  */
-public class EmptyNodeImplementation extends AbstractNode
+public class EmptyNodeImplementation extends AbstractNode implements IEmptyNode
 {
   public EmptyNodeImplementation( final IModelMember model, final Feature node )
   {
@@ -116,8 +117,7 @@ public class EmptyNodeImplementation extends AbstractNode
   public boolean isEmpty( )
   {
     final IBranch branch = getLinkToBranch();
-
-    if( getLinkToBranch() == null )
+    if( branch == null )
       return true;
 
     return false;
@@ -155,5 +155,22 @@ public class EmptyNodeImplementation extends AbstractNode
     }
 
     return sperrzone;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode#getStructureType()
+   */
+  public STRUCTURE_TYPE getStructureType( )
+  {
+    QName qname = getFeature().getFeatureType().getQName();
+
+    if( ISobekConstants.QN_NOFDP_POLDER_NODE.equals( qname ) )
+      return STRUCTURE_TYPE.ePolder;
+    else if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( qname ) )
+      return STRUCTURE_TYPE.eRetardingBasin;
+    else if( ISobekConstants.QN_NOFDP_WEIR_NODE.equals( qname ) )
+      return STRUCTURE_TYPE.eWeir;
+
+    throw new IllegalStateException();
   }
 }

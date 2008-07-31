@@ -14,6 +14,7 @@ Export-Package: org.kalypso.model.wspm.sobek.result.processing;
    org.kalypso.model.wspm.sobek.core.interfaces,
    org.eclipse.core.resources,
    org.eclipse.core.runtime",
+ org.kalypso.model.wspm.sobek.result.processing.interfaces,
  org.kalypso.model.wspm.sobek.result.processing.model;
   uses:="org.kalypsodeegree.model.feature,
    javax.xml.namespace,
