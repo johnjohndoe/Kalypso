@@ -34,6 +34,10 @@ import org.kalypso.model.wspm.sobek.result.processing.interfaces.IPolderNodeResu
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IRetardingBasinNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.ISobekResultModel;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWeirNodeResultWrapper;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation.PolderNodeResultWrapper;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation.RetardingBasinNodeResultWrapper;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation.WeirNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchHydraphModelHandler;
@@ -47,15 +51,15 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-public class SobekResultModelHandler implements ISobekResultModel
+public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCache
 {
   private static JAXBContext JC = null;
 
   private final IFolder m_resultFolder;
 
-  private static final Map<INode, GMLWorkspace> m_workspaces = new HashMap<INode, GMLWorkspace>();
+  private static final Map<String, GMLWorkspace> m_workspaces = new HashMap<String, GMLWorkspace>();
 
-  private static final Map<INode, CommandableWorkspace> m_commandables = new HashMap<INode, CommandableWorkspace>();
+  private static final Map<String, CommandableWorkspace> m_commandables = new HashMap<String, CommandableWorkspace>();
 
   private GMLWorkspace m_branchesWorkspace;
 
@@ -88,10 +92,10 @@ public class SobekResultModelHandler implements ISobekResultModel
     return new SobekResultModelHandler( resultFolder );
   }
 
-  private void registerWorkspaces( final INode node, final GMLWorkspace gml, final CommandableWorkspace cmd )
+  public void registerWorkspaces( final String id, final GMLWorkspace gml, final CommandableWorkspace cmd )
   {
-    m_workspaces.put( node, gml );
-    m_commandables.put( node, cmd );
+    m_workspaces.put( id, gml );
+    m_commandables.put( id, cmd );
   }
 
   /* dispose existing result workspaces */
@@ -219,7 +223,7 @@ public class SobekResultModelHandler implements ISobekResultModel
 
     try
     {
-      final CommandableWorkspace cmd = m_commandables.get( node );
+      final CommandableWorkspace cmd = m_commandables.get( node.getId() );
       if( cmd != null )
         return new ResultTimeSeriesHandler( cmd.getRootFeature(), node );
 
@@ -229,10 +233,8 @@ public class SobekResultModelHandler implements ISobekResultModel
       boolean empty = false;
 
       /* gml file doesn't exists - create a new empty gml (workspace) file */
-      if( iFile == null )
+      if( !iFile.exists() )
       {
-        iFile = m_resultFolder.getFile( node.getId() + ".gml" ); //$NON-NLS-1$
-
         final InputStream stream = this.getClass().getResourceAsStream( "utils/templates/templateSobekResultTimeSeries.gml" ); //$NON-NLS-1$
         iFile.create( stream, true, new NullProgressMonitor() );
         stream.close();
@@ -246,7 +248,7 @@ public class SobekResultModelHandler implements ISobekResultModel
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( url, null );
       final CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( gmlWorkspace );
 
-      registerWorkspaces( node, gmlWorkspace, workspace );
+      registerWorkspaces( node.getId(), gmlWorkspace, workspace );
 
       /* fill empty workspace with results */
       if( empty )
@@ -275,18 +277,23 @@ public class SobekResultModelHandler implements ISobekResultModel
     return m_resultFolder;
   }
 
-  public IPolderNodeResultWrapper getPolderNodeResult( )
+  public IPolderNodeResultWrapper getPolderNodeResult( IEmptyNode node )
   {
-    throw new NotImplementedException();
+    return new PolderNodeResultWrapper( node, m_resultFolder, this );
   }
 
-  public IRetardingBasinNodeResultWrapper getRetardingBasinNodeResult( )
+  public IRetardingBasinNodeResultWrapper getRetardingBasinNodeResult( IEmptyNode node )
   {
-    throw new NotImplementedException();
+    return new RetardingBasinNodeResultWrapper( node, m_resultFolder, this );
   }
 
-  public IWeirNodeResultWrapper getWeirNodeResult( )
+  public IWeirNodeResultWrapper getWeirNodeResult( IEmptyNode node )
   {
-    throw new NotImplementedException();
+    return new WeirNodeResultWrapper( node, m_resultFolder, this );
+  }
+
+  public CommandableWorkspace getCommandableWorkspace( String id )
+  {
+    return m_commandables.get( id );
   }
 }

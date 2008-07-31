@@ -3,6 +3,7 @@ package org.kalypso.model.wspm.sobek.result.processing.interfaces;
 import nl.wldelft.fews.pi.TimeSerieComplexType;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
@@ -22,9 +23,9 @@ public interface ISobekResultModel
 
   public void dispose( );
 
-  IPolderNodeResultWrapper getPolderNodeResult( );
+  IPolderNodeResultWrapper getPolderNodeResult( IEmptyNode node );
 
-  IRetardingBasinNodeResultWrapper getRetardingBasinNodeResult( );
+  IRetardingBasinNodeResultWrapper getRetardingBasinNodeResult( IEmptyNode node );
 
-  IWeirNodeResultWrapper getWeirNodeResult( );
+  IWeirNodeResultWrapper getWeirNodeResult( IEmptyNode node );
 }
