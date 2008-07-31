@@ -43,6 +43,7 @@ import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchHydraphModelHandler;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
+import org.kalypso.model.wspm.sobek.result.processing.worker.IResultWorkerSettings;
 import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -65,7 +66,9 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
 
   private CommandableWorkspace m_branchesCommandableWorkspace;
 
-  private JAXBElement<TimeSeriesComplexType> m_jaxRoot = null;
+  private JAXBElement<TimeSeriesComplexType> m_jaxPiCalculationPointRoot;
+
+  private JAXBElement<TimeSeriesComplexType> m_jaxPiStructuresRoot;
 
   private SobekResultModelHandler( final IFolder resultFolder ) throws JAXBException
   {
@@ -75,7 +78,11 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
     {
       JC = JAXBContext.newInstance( nl.wldelft.fews.pi.ObjectFactory.class );
     }
+  }
 
+  public JAXBContext getJaxBContext( )
+  {
+    return JC;
   }
 
   /**
@@ -101,7 +108,8 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
   /* dispose existing result workspaces */
   public void dispose( )
   {
-    m_jaxRoot = null;
+    m_jaxPiCalculationPointRoot = null;
+    m_jaxPiStructuresRoot = null;
 
     final Collection<CommandableWorkspace> commandables = m_commandables.values();
     for( final CommandableWorkspace workspace : commandables )
@@ -161,34 +169,6 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
   {
     Assert.isTrue( !(node instanceof IEmptyNode) ); // structure nodes need special handling!
 
-    if( m_jaxRoot == null )
-    {
-      final IFile iFile = ResultModelHelper.getPiCalculationPointFile( m_resultFolder );
-
-      final InputStream is = new BufferedInputStream( iFile.getContents() );
-
-      try
-      {
-        final Unmarshaller u = JC.createUnmarshaller();
-        m_jaxRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
-      }
-      catch( final Exception e )
-      {
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_4 ) );
-      }
-      finally
-      {
-        try
-        {
-          is.close();
-        }
-        catch( final IOException e )
-        {
-          throw new CoreException( StatusUtilities.createWarningStatus( Messages.SobekResultModelHandler_5 ) );
-        }
-      }
-    }
-
     /* look for id? */
     final String id;
     if( node instanceof ICrossSectionNode )
@@ -203,7 +183,7 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
     else
       throw new NotImplementedException();
 
-    TimeSeriesComplexType values = m_jaxRoot.getValue();
+    TimeSeriesComplexType values = getPiCalculationPointElement().getValue();
     List<TimeSerieComplexType> series = values.getSeries();
     for( TimeSerieComplexType complex : series )
     {
@@ -258,7 +238,18 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
           return null;
 
         final ResultWorker worker = new ResultWorker( workspace, binding, node );
-        worker.process();
+        worker.process( new IResultWorkerSettings()
+        {
+          public String getParameterId( )
+          {
+            return "W";
+          }
+
+          public String getUnit( )
+          {
+            return "m NHN";
+          }
+        } );
 
         // save changes
         GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), workspace, "UTF-8" ); //$NON-NLS-1$
@@ -295,5 +286,73 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
   public CommandableWorkspace getCommandableWorkspace( String id )
   {
     return m_commandables.get( id );
+  }
+
+  public JAXBElement<TimeSeriesComplexType> getPiCalculationPointElement( ) throws CoreException
+  {
+    if( m_jaxPiCalculationPointRoot == null )
+    {
+      final IFile iFile = ResultModelHelper.getPiCalculationPointFile( m_resultFolder );
+      final InputStream is = new BufferedInputStream( iFile.getContents() );
+
+      try
+      {
+        final Unmarshaller u = JC.createUnmarshaller();
+        m_jaxPiCalculationPointRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
+
+        return m_jaxPiCalculationPointRoot;
+      }
+      catch( final Exception e )
+      {
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_4 ) );
+      }
+      finally
+      {
+        try
+        {
+          is.close();
+        }
+        catch( final IOException e )
+        {
+          throw new CoreException( StatusUtilities.createWarningStatus( Messages.SobekResultModelHandler_5 ) );
+        }
+      }
+    }
+
+    return m_jaxPiCalculationPointRoot;
+  }
+
+  public JAXBElement<TimeSeriesComplexType> getPiStructuresElement( ) throws CoreException
+  {
+    if( m_jaxPiStructuresRoot == null )
+    {
+      final IFile iFile = ResultModelHelper.getPiStructureFile( m_resultFolder );
+      final InputStream is = new BufferedInputStream( iFile.getContents() );
+
+      try
+      {
+        final Unmarshaller u = JC.createUnmarshaller();
+        m_jaxPiStructuresRoot = (JAXBElement<TimeSeriesComplexType>) u.unmarshal( is );
+
+        return m_jaxPiStructuresRoot;
+      }
+      catch( final Exception e )
+      {
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_4 ) );
+      }
+      finally
+      {
+        try
+        {
+          is.close();
+        }
+        catch( final IOException e )
+        {
+          throw new CoreException( StatusUtilities.createWarningStatus( Messages.SobekResultModelHandler_5 ) );
+        }
+      }
+    }
+
+    return m_jaxPiStructuresRoot;
   }
 }

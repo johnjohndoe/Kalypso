@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.result.processing.interfaces.IRetardingBasinNodeResultWrapper.RETARDING_BASIN_NODE_RESULT;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWeirNodeResultWrapper.WEIR_NODE_RESULT;
 
 public class ResultModelHelper
@@ -31,7 +32,7 @@ public class ResultModelHelper
 
   public static IFile getPiStructureFile( IFolder resultFolder ) throws CoreException
   {
-    final IFile iFile = resultFolder.getFile( "struct.xml" ); //$NON-NLS-1$
+    final IFile iFile = resultFolder.getFile( "struc.xml" ); //$NON-NLS-1$
     if( !iFile.exists() )
       return null;
 
@@ -53,13 +54,11 @@ public class ResultModelHelper
 
   public static IFile getWeirNodeResultFile( IFolder resultFolder, IEmptyNode node, WEIR_NODE_RESULT type )
   {
-    if( WEIR_NODE_RESULT.eDischarge.equals( type ) )
-      return resultFolder.getFile( node.getId() + "_discharge.gml" ); //$NON-NLS-1$
-    else if( WEIR_NODE_RESULT.eWaterLevelAbove.equals( type ) )
-      return resultFolder.getFile( node.getId() + "_wl_above.gml" ); //$NON-NLS-1$
-    else if( WEIR_NODE_RESULT.eWaterLevelBelow.equals( type ) )
-      return resultFolder.getFile( node.getId() + "_wl_below.gml" ); //$NON-NLS-1$
+    return resultFolder.getFile( String.format( "%s%s%s", node.getId(), type.getPostfix(), ".gml" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
 
-    throw new IllegalStateException();
+  public static IFile getRetardingBasinResultFile( IFolder resultFolder, IEmptyNode node, RETARDING_BASIN_NODE_RESULT type )
+  {
+    return resultFolder.getFile( String.format( "%s%s%s", node.getId(), type.getPostfix(), ".gml" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

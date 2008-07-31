@@ -55,7 +55,7 @@ public class ResultWorker
 
   private double m_last = Double.NaN;
 
-  /* result table <Waterlevel, Number of Intervalls> */
+  /* result table <Waterlevel, Number of intervals> */
   private final Map<Double, Integer> m_resultTable = new TreeMap<Double, Integer>();
 
   private final CommandableWorkspace m_workspace;
@@ -70,7 +70,7 @@ public class ResultWorker
     m_handler = new ResultTimeSeriesHandler( targetWorkspace.getRootFeature(), m_node );
   }
 
-  public void process( ) throws CoreException
+  public void process( IResultWorkerSettings settings ) throws CoreException
   {
     final IObservation<TupleResult> observation = m_handler.getObservation();
 
@@ -128,8 +128,11 @@ public class ResultWorker
       properties.put( IResultTimeSeries.QN_UNIQUE_ID, m_node.getId() ); // uniqueId
       properties.put( IResultTimeSeries.QN_STATION_NAME, m_node.getStationName() ); // station name
       properties.put( IResultTimeSeries.QN_NAME, m_node.getName() ); // name
-      properties.put( IResultTimeSeries.QN_PARAM_ID, "W" ); // parameter id
-      properties.put( IResultTimeSeries.QN_UNIT, "m NHN" ); // unit
+      properties.put( IResultTimeSeries.QN_PARAM_ID, settings.getParameterId() ); // parameter id
+// properties.put( IResultTimeSeries.QN_PARAM_ID, "W" ); // parameter id
+
+      properties.put( IResultTimeSeries.QN_UNIT, settings.getUnit() ); // unit
+// properties.put( IResultTimeSeries.QN_UNIT, "m NHN" ); // unit
       properties.put( IResultTimeSeries.QN_MAX_VALUE, m_max );
       properties.put( IResultTimeSeries.QN_MIN_VALUE, m_min );
       properties.put( IResultTimeSeries.QN_LAST_VALUE, m_last );

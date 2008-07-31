@@ -2,10 +2,14 @@ package org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
+import nl.wldelft.fews.pi.HeaderComplexType;
 import nl.wldelft.fews.pi.TimeSerieComplexType;
+import nl.wldelft.fews.pi.TimeSeriesComplexType;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
@@ -19,6 +23,7 @@ import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
+import org.kalypso.model.wspm.sobek.result.processing.worker.IResultWorkerSettings;
 import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -48,29 +53,48 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
     getWaterLevelBelow();
   }
 
-  private IResultTimeSeries getWaterLevelBelow( )
+  public IResultTimeSeries getWaterLevelBelow( ) throws CoreException
   {
-    // TODO Auto-generated method stub
+    return getTimeSeries( WEIR_NODE_RESULT.eWaterLevelBelow, new IResultWorkerSettings()
+    {
+      public String getParameterId( )
+      {
+        return "W";
+      }
 
-    return null;
+      public String getUnit( )
+      {
+        return "m NHN";
+      }
+    } );
   }
 
-  private IResultTimeSeries getWaterLevelAbove( )
+  public IResultTimeSeries getWaterLevelAbove( ) throws CoreException
   {
-    // TODO Auto-generated method stub
-    return null;
+    return getTimeSeries( WEIR_NODE_RESULT.eWaterLevelAbove, new IResultWorkerSettings()
+    {
+      public String getParameterId( )
+      {
+        return "W";
+      }
+
+      public String getUnit( )
+      {
+        return "m NHN";
+      }
+    } );
   }
 
-  private IResultTimeSeries getDischarge( ) throws CoreException
+  private IResultTimeSeries getTimeSeries( WEIR_NODE_RESULT type, IResultWorkerSettings settings ) throws CoreException
   {
     try
     {
-      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( m_node.getId() + "_discharge" );
+      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) );
       if( cmd != null )
         return new ResultTimeSeriesHandler( cmd.getRootFeature(), m_node );
 
       /* get cross section node result file */
-      IFile iFile = ResultModelHelper.getWeirNodeResultFile( m_resultFolder, m_node, WEIR_NODE_RESULT.eDischarge ); //$NON-NLS-1$
+      IFile iFile = ResultModelHelper.getWeirNodeResultFile( m_resultFolder, m_node, type ); //$NON-NLS-1$
 
       boolean empty = false;
 
@@ -90,17 +114,17 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( url, null );
       final CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( gmlWorkspace );
 
-      m_cache.registerWorkspaces( m_node.getId() + "_discharge", gmlWorkspace, workspace );
+      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, workspace );
 
       /* fill empty workspace with results */
       if( empty )
       {
-        final TimeSerieComplexType binding = getNodeBinding( WEIR_NODE_RESULT.eDischarge );
+        final TimeSerieComplexType binding = getNodeBinding( type );
         if( binding == null )
           return null;
 
         final ResultWorker worker = new ResultWorker( workspace, binding, m_node );
-        worker.process();
+        worker.process( settings );
 
         // save changes
         GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), workspace, "UTF-8" ); //$NON-NLS-1$
@@ -114,8 +138,61 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
     }
   }
 
-  private TimeSerieComplexType getNodeBinding( WEIR_NODE_RESULT type )
+  public IResultTimeSeries getDischarge( ) throws CoreException
   {
-    throw new NotImplementedException();
+    return getTimeSeries( WEIR_NODE_RESULT.eDischarge, new IResultWorkerSettings()
+    {
+      public String getParameterId( )
+      {
+        return "Q";
+      }
+
+      public String getUnit( )
+      {
+        return "m³/s";
+      }
+    } );
+  }
+
+  public TimeSerieComplexType getNodeBinding( WEIR_NODE_RESULT type ) throws CoreException
+  {
+    JAXBElement<TimeSeriesComplexType> jaxRoot = m_cache.getPiStructuresElement();
+
+    final String id = String.format( "%s", m_node.getId() );
+
+    TimeSeriesComplexType values = jaxRoot.getValue();
+    List<TimeSerieComplexType> series = values.getSeries();
+    for( TimeSerieComplexType complex : series )
+    {
+      HeaderComplexType header = complex.getHeader();
+      String locationId = header.getLocationId();
+
+      if( locationId.equals( id ) ) //$NON-NLS-1$
+      {
+
+        String parameterId = header.getParameterId();
+        String myParamId;
+        if( WEIR_NODE_RESULT.eDischarge.equals( type ) )
+        {
+          myParamId = "Discharge (m³/s)";
+        }
+        else if( WEIR_NODE_RESULT.eWaterLevelAbove.equals( type ) )
+        {
+          myParamId = "Waterlevel up (m AD)";
+        }
+        else if( WEIR_NODE_RESULT.eWaterLevelBelow.equals( type ) )
+        {
+          myParamId = "Waterlevel down (m AD)";
+        }
+        else
+          throw new IllegalStateException();
+
+        if( myParamId.equals( parameterId ) )
+          return complex;
+      }
+
+    }
+
+    return null;
   }
 }
