@@ -234,6 +234,7 @@ de_DE</programArgs>
       <plugin id="org.kalypso.metadoc"/>
       <plugin id="org.kalypso.model.flood"/>
       <plugin id="org.kalypso.model.product"/>
+      <plugin id="org.kalypso.model.product.demos"/>
       <plugin id="org.kalypso.model.wspm.core"/>
       <plugin id="org.kalypso.model.wspm.schema"/>
       <plugin id="org.kalypso.model.wspm.tuhh.core"/>
