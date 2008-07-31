@@ -44,7 +44,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -55,7 +54,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
+import org.kalypso.ogc.sensor.ExportUtilities;
 
 /**
  * ExportableChart based on an existing chart
@@ -65,7 +64,9 @@ import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
 public class ExportableChart implements IExportableObject
 {
   public final static String DEFAULT_FORMAT = "png"; //$NON-NLS-1$
+
   public final static int DEFAULT_WIDTH = 400;
+
   public final static int DEFAULT_HEIGHT = 300;
 
   private final ObservationChart m_chart;
@@ -73,10 +74,14 @@ public class ExportableChart implements IExportableObject
   private final String m_format;
 
   private final int m_width;
+
   private final int m_height;
 
   private final String m_identifierPrefix;
+
   private final String m_category;
+
+  private final String m_stationIDs;
 
   static
   {
@@ -95,8 +100,7 @@ public class ExportableChart implements IExportableObject
     ImageEncoderFactory.setImageEncoder( "png", "org.jfree.chart.encoders.KeypointPNGEncoderAdapter" );
   }
 
-  public ExportableChart( final ObservationChart chart, final String format, final int width, final int height,
-      final String identifierPrefix, final String category )
+  public ExportableChart( final ObservationChart chart, final String format, final int width, final int height, final String identifierPrefix, final String category )
   {
     m_chart = chart;
     m_format = format;
@@ -104,16 +108,17 @@ public class ExportableChart implements IExportableObject
     m_height = height;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
+    m_stationIDs = ExportUtilities.extractStationIDs( m_chart.getTemplate().getItems() );
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public String getPreferredDocumentName()
+  public String getPreferredDocumentName( )
   {
     final TextTitle title = m_chart.getTitle();
 
-    String name = Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.1"); //$NON-NLS-1$
+    String name = Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.1" ); //$NON-NLS-1$
     if( title != null && title.getText().length() > 0 )
       name = title.getText();
 
@@ -122,24 +127,20 @@ public class ExportableChart implements IExportableObject
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor,
-      final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.3"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.3" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
     try
     {
-      // let update the metadata with the information we have
-      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_chart.getTemplate().getItems() );
-
       final BufferedImage image = m_chart.createBufferedImage( m_width, m_height, null );
       EncoderUtil.writeBufferedImage( image, m_format, outs );
     }
     catch( final IOException e )
     {
-      return StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.4") ); //$NON-NLS-1$
+      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ExportableChart.4" ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -152,7 +153,7 @@ public class ExportableChart implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_identifierPrefix + getPreferredDocumentName();
   }
@@ -160,8 +161,17 @@ public class ExportableChart implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
-  public String getCategory()
+  public String getCategory( )
   {
     return m_category;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
+   */
+  @Override
+  public String getStationIDs( )
+  {
+    return m_stationIDs;
   }
 }

@@ -46,7 +46,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -91,7 +90,7 @@ public class FileExportTarget extends AbstractExportTarget
         docFile = file;
 
       stream = new FileOutputStream( docFile );
-      return document.exportObject( stream, monitor, new BaseConfiguration() );
+      return document.exportObject( stream, monitor );
     }
     catch( final FileNotFoundException e )
     {

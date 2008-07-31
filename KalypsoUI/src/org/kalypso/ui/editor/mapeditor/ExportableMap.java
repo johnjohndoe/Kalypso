@@ -46,7 +46,6 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -84,30 +83,30 @@ public class ExportableMap implements IExportableObject
   public String getPreferredDocumentName( )
   {
     // TODO besserer Name?
-    return FileUtilities.validateName( Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.0") + m_format, "_" ); //$NON-NLS-1$
+    return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor, final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
     try
     {
-      monitor.beginTask( Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.1"), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.1" ), 1000 ); //$NON-NLS-1$
 
       final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height );
 
       final boolean result = ImageIO.write( image, m_format, output );
       if( !result )
-        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.2") + m_format, null ); //$NON-NLS-1$
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.2" ) + m_format, null ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.3"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.3" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -132,6 +131,15 @@ public class ExportableMap implements IExportableObject
   public String getCategory( )
   {
     // TODO bessere category
-    return Messages.getString("org.kalypso.ui.editor.mapeditor.ExportableMap.4"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.4" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
+   */
+  @Override
+  public String getStationIDs( )
+  {
+    return "";
   }
 }
