@@ -128,7 +128,7 @@ public final class GmlSerializer
     OutputStreamWriter writer = null;
     try
     {
-      writer = new OutputStreamWriter( new BufferedOutputStream( new FileOutputStream(  gmlFile ) ), encoding );
+      writer = new OutputStreamWriter( new BufferedOutputStream( new FileOutputStream( gmlFile ) ), encoding );
       GmlSerializer.serializeWorkspace( writer, gmlWorkspace );
       writer.close();
     }

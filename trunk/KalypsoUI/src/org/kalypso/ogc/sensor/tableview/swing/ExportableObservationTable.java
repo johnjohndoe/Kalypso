@@ -44,7 +44,6 @@ import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,7 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
-import org.kalypso.ogc.sensor.MetadataExtenderWithObservation;
+import org.kalypso.ogc.sensor.ExportUtilities;
 import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -64,39 +63,40 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class ExportableObservationTable implements IExportableObject
 {
   private final ObservationTable m_table;
+
   private final String m_identifierPrefix;
+
   private final String m_category;
+
+  private final String m_stationIDs;
 
   public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category )
   {
     m_table = table;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
+    m_stationIDs = ExportUtilities.extractStationIDs( m_table.getTemplate().getItems() );
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#getPreferredDocumentName()
    */
-  public String getPreferredDocumentName()
+  public String getPreferredDocumentName( )
   {
     return FileUtilities.validateName( "Tabelle.csv", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
    * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor, org.apache.commons.configuration.Configuration)
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor,
-      final Configuration metadataExtensions )
+  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
   {
-    monitor.beginTask( Messages.getString("ExportableObservationTable.1"), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "ExportableObservationTable.1" ), 2 ); //$NON-NLS-1$
 
     final BufferedWriter writer = new BufferedWriter( new OutputStreamWriter( output ) );
     try
     {
-      // let update the metadata with the information we have
-      MetadataExtenderWithObservation.extendMetadata( metadataExtensions, m_table.getTemplate().getItems() );
-
       // scenario name header
       if( !m_table.getCurrentScenarioName().equals( "" ) ) //$NON-NLS-1$
       {
@@ -121,7 +121,7 @@ public class ExportableObservationTable implements IExportableObject
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("ExportableObservationTable.5"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "ExportableObservationTable.5" ), e ); //$NON-NLS-1$
     }
     finally
     {
@@ -133,7 +133,7 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getIdentifier()
    */
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_identifierPrefix + getPreferredDocumentName();
   }
@@ -141,8 +141,17 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getCategory()
    */
-  public String getCategory()
+  public String getCategory( )
   {
     return m_category;
+  }
+
+  /**
+   * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
+   */
+  @Override
+  public String getStationIDs( )
+  {
+    return m_stationIDs;
   }
 }

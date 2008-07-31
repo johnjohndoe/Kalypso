@@ -68,13 +68,15 @@ import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
  * <br>
  * command.addExecutionListener( new IExecutionListener() {<br>
  * <br>
- * public void postExecuteSuccess( final String commandId, final Object returnValue )<br> {<br>
+ * public void postExecuteSuccess( final String commandId, final Object returnValue )<br>
+ * <br>
  * if( !(returnValue instanceof URL) )<br>
  * return;<br>
  * ... <br>
  * public void preExecute( final String commandId, final ExecutionEvent event ) {<br>
  * final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();<br>
- * context.addVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL, folder.getLocationURI().toURL() );<br> ..<br>
+ * context.addVariable( MapScreenShotHandler.CONST_TARGET_DIR_URL, folder.getLocationURI().toURL() );<br>
+ * ..<br>
  * 
  * @author Dirk Kuch
  */
@@ -127,7 +129,7 @@ public class MapScreenShotHandler extends AbstractHandler
       final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
 
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
-      export.exportObject( os, new NullProgressMonitor(), null );
+      export.exportObject( os, new NullProgressMonitor() );
 
       return img;
     }
