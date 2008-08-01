@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book PUBLIC "" "xsl/manual.dtd" [
     <!ENTITY file_bookinfo SYSTEM "bookinfo.xml">
     <!ENTITY file_einfuehrung SYSTEM "einfuehrungWSPM.xml">

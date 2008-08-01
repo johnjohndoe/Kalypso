@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Manual.dtd: DTD für die Online Hilfe - dient dazu, die enttities an einer 
+<!-- Manual.dtd: DTD fÃ¼r die Online Hilfe - dient dazu, die enttities an einer 
 	zentralen Stelle zu definieren
 -->
 
@@ -9,12 +9,12 @@
 %DocBookDTD;
 
 <!-- Alle Entities die allgemein gelten sollten hier definiert werden -->
-<!ENTITY bce "Björnsen Beratende Ingenieure GmbH">
-<!ENTITY tuhh "Technische Universität Hamburg-Harburg">
+<!ENTITY bce "BjÃ¶rnsen Beratende Ingenieure GmbH">
+<!ENTITY tuhh "Technische UniversitÃ¤t Hamburg-Harburg">
 <!ENTITY kalypso "KALYPSO">
 
-<!-- Alle Entities, welche überschrieben werden können, werden in dieser Datei definiert.
-	Dadurch können die speziellen Manuals die Werte ändern ohne die manual.dtd überschrieben zu müssen
+<!-- Alle Entities, welche Ã¼berschrieben werden kÃ¶nnen, werden in dieser Datei definiert.
+	Dadurch kÃ¶nnen die speziellen Manuals die Werte Ã¤ndern ohne die manual.dtd Ã¼berschrieben zu mÃ¼ssen
 -->
 <!ENTITY % special_manual_dtd SYSTEM "special_manual.dtd">
 %special_manual_dtd;
