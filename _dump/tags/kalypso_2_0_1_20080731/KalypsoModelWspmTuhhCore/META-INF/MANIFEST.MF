@@ -1,0 +1,20 @@
+Manifest-Version: 1.0 
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoModelWspmTuhhCore Plug-in
+Bundle-SymbolicName: org.kalypso.model.wspm.tuhh.core; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: org.kalypso.model.wspm.tuhh.core.KalypsoModelWspmTuhhCorePlugin
+Bundle-Vendor: kalypso.sourceforge.net
+Require-Bundle: org.kalypso.model.wspm.core,
+ org.kalypso.ui,
+ org.junit;resolution:=optional,
+ org.kalypso.model.wspm.schema,
+ org.kalypso.wspwin.core
+Eclipse-LazyStart: true
+Export-Package: org.kalypso.model.wspm.tuhh.core,
+ org.kalypso.model.wspm.tuhh.core.gml,
+ org.kalypso.model.wspm.tuhh.core.profile,
+ org.kalypso.model.wspm.tuhh.core.profile.buildings,
+ org.kalypso.model.wspm.tuhh.core.profile.buildings.building,
+ org.kalypso.model.wspm.tuhh.core.profile.buildings.durchlass,
+ org.kalypso.model.wspm.tuhh.core.wspwin
