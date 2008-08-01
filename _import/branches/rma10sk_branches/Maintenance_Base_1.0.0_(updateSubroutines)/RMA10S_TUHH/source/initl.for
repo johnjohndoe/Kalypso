@@ -59,7 +59,7 @@ c     Initialisation of values
       NCQOBS = 2500
       NHDS =5
       NCHOBS = 3500
-      NELDS = 40
+      NELDS = 250
       NDPTS = 2600
   200 CONTINUE
       call ginpt(Lin,id,dlin)

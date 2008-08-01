@@ -1599,7 +1599,7 @@ C
       DO 141  N=1,NE
          IF (IMAT(N) .NE. 0 .and. imat(n) /= 89)  THEN
 cipk dec00          IF (IMAT(N) .GE. 900) GO TO 141
-            I = IMAT(N)
+            I = abs(IMAT(N))
             EEXXYY(1,N) = ORT(I,1)
             EEXXYY(2,N) = ORT(I,2)
             EEXXYY(3,N) = ORT(I,3)

@@ -279,7 +279,7 @@ cipk sep96            ENDIF
                 NBC(N,KK)=0
  1971         CONTINUE
             ENDIF
-            IF(NSURF(N) .EQ. N) NDS=3
+            IF(abs(NSURF(N)) .EQ. N) NDS=3
           ENDIF
           DO 1976 I=1,NDS
  1976     NBC(N,I)=0
@@ -1324,7 +1324,7 @@ cipk dec98 reverse 5 and 6 to corect bug
             ENDIF
   325     CONTINUE
   330     CONTINUE
-          M=NSURF(N)
+          M=abs(NSURF(N))
           IF(M .LT. 1) THEN
             NBC(N,3)=0
           ELSEIF(NBC(N,3) .EQ. -99) THEN

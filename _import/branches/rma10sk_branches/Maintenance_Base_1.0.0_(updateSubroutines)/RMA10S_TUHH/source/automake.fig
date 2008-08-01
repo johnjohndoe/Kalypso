@@ -14,7 +14,7 @@ OBJDIR=../objs/
 LINK=@lf95 @%rf -ng -exe %ex
 #LINK=@lf95 @%rf -g -warn -exe %ex
 
-TARGET=../exe/rma10sk_1_0_1.exe
-#TARGET=../source/rma10sk_1_0_1_debug.exe
-#TARGET=../exe/rma10sk_1_0_1_debug.exe
+TARGET=../exe/rma10sk_1_0_2.exe
+#TARGET=../source/rma10sk_1_0_2_debug.exe
+#TARGET=../exe/rma10sk_1_0_2_debug.exe
 

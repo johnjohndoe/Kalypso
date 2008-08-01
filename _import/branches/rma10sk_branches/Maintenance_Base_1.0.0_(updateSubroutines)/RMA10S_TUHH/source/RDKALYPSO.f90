@@ -1769,6 +1769,11 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
         nop (i, j * 2) = mikno (j)
       ENDIF
     END DO
+    
+    !nis,jul08: Copy nodes to mops array
+    do j = 1, 8
+      nops (i, j) = nop (i, j)
+    enddo
 
     ! Kantenkreuzung,Verdrehung abfragen  --------------------------!the actual element is checked for crossing arcs or something else,
     crossing_outer: DO j = 1, jnum - 2                                !not congruent.

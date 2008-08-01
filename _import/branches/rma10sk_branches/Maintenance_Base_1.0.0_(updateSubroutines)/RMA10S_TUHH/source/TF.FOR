@@ -1,5 +1,8 @@
 
       FUNCTION TF(A)
+      
+      real (kind = 4) :: A
+      
       S=SIN(A)
       C=COS(A)
       IF(C .NE. 0.) THEN

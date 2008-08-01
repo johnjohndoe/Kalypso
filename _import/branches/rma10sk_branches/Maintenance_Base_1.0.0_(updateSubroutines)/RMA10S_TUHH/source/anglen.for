@@ -24,7 +24,7 @@ C
       IF (IMAT(LL) .EQ. 0) GO TO 90
 
 cipk dec03 add iedsw depedence
-        LLL=MOD(IMAT(LL),1000)
+        LLL = abs(MOD(IMAT(LL),1000))
         IEDSW=IEDSW1(LLL)
 
 cipk OCT 96 add new options

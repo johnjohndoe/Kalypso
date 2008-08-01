@@ -208,3 +208,13 @@ Version 1.0.2 (laufende Änderungen)
 
 --- Nico Schrage, 28.07.2008 (1.0.2alpha1)
 
+001.) Declaration in TF.function for proper compilation
+002.) Increase maximum number of element inflows (Affects initl.for)
+003.) Preparation of turbulence parameters for deactivated elements, too. (Affects input.for)
+004.) For 3D preparations some nodes' continuity equation were not activated after rewetting although they should be wet.
+005.) copy of nop-array to nops-array in Rdkalypso.f90
+006.) bugfix in anglen.for
+
+--- Nico Schrage, 01.08.2008 (release 1.0.2)
+
+Version 1.0.3 (laufende Änderungen)
