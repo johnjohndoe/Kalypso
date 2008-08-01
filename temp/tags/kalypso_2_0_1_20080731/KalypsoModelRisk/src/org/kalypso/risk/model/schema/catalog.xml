@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    
+    <!-- 
+        Component Dictionaries
+    -->
+    <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:languages" uri="schemata/dict/dict_languageDef.gml"/>
+    <catalog:system systemId="urn:ogc:gml:dict:kalypso:risk:model:riskresultstat" uri="schemata/dict/dict_risk_result_statistic.gml"/>
+</catalog:catalog>
