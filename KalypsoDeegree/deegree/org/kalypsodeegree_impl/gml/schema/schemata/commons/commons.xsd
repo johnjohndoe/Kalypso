@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.gml.common" elementFormDefault="qualified"
+	version="0.1">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+	</annotation>
+	<import namespace="http://www.opengis.net/gml" />
+	<!-- utility schema for gml application schemas -->
+	<!-- TODO: KALYPSO-Header einfügen -->
+
+	<!-- @deprecated: no not use any more -->
+	<complexType name="EmptyFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType">
+				<!-- Force id attribute, because Kalypso needs it -->
+				<attribute ref="gml:id" use="required" />
+			</restriction>
+		</complexContent>
+	</complexType>
+
+	<!-- @deprecated: no not use any more -->
+	<complexType name="NamedFeatureBaseType">
+		<complexContent>
+			<restriction base="gml:AbstractFeatureType">
+				<sequence>
+					<element ref="gml:metaDataProperty" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Metadaten</label>
+								<tooltip>Metadaten</tooltip>
+								<description>Metadaten</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="gml:description">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Beschreibung</label>
+								<tooltip>Beschreibung</tooltip>
+								<description>Beschreibung</description>
+							</documentation>
+						</annotation>
+					</element>
+					<element ref="gml:name" minOccurs="1" maxOccurs="1">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>Bezeichnung</label>
+								<tooltip>Bezeichnung</tooltip>
+								<description>Bezeichnung</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<!-- Force id attribute, because KALYPSO needs it -->
+				<attribute ref="gml:id" use="required" />
+			</restriction>
+		</complexContent>
+	</complexType>
+	<!-- Defines a color based on a string. It uses the format #RGB (Hex). -->
+	<simpleType name="color">
+		<restriction base="string">
+			<pattern value="^#[0-9a-fA-F]{6}" />
+		</restriction>
+	</simpleType>
+	<!-- Defines a file based on a string. -->
+	<simpleType name="file">
+		<restriction base="string"></restriction>
+	</simpleType>
+	<!-- Defines a directory based on a string. -->
+	<simpleType name="directory">
+		<restriction base="string"></restriction>
+	</simpleType>
+	<!-- Defines a email adress based on a string. -->
+	<simpleType name="email">
+		<restriction base="string">
+			<pattern value=".+@.+[.].+" />
+		</restriction>
+	</simpleType>
+	<!-- Defines a shapefile attribute name based on a string. -->
+	<simpleType name="shpAttribName">
+		<restriction base="string">
+			<maxLength value="10" />
+		</restriction>
+	</simpleType>
+	<!-- Image -->
+	<element name="Image" type="common:ImageType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de">
+				<name>Bild</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-Name nicht gesetzt-}</label>
+				<tooltip>Referenz auf eine Bilddatei</tooltip>
+				<description><![CDATA[${property:http://www.opengis.net/gml#description;-keine Beschreibung vorhanden-}]]></description>
+			</documentation>
+			<documentation xml:lang="en">
+				<name>Image</name>
+				<label>${listProperty:http://www.opengis.net/gml#name;0;-no name-}</label>
+				<tooltip>Reference to an image file</tooltip>
+				<description><![CDATA[ ${property:http://www.opengis.net/gml#description;-no description-}]]></description>
+			</documentation>
+		</annotation>
+	</element>
+	<complexType name="ImageType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="uri" type="anyURI" nillable="true">
+						<annotation>
+							<documentation xml:lang="de">
+								<label>URL</label>
+								<tooltip>Speicherort des Bildes (relative Pfade möglich)</tooltip>
+								<description>Speicherort des Bildes</description>
+							</documentation>
+							<documentation xml:lang="en">
+								<label>URL</label>
+								<tooltip>Image location (relative pathes possible)</tooltip>
+								<description>Image location</description>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<element name="Status" type="common:StatusType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation xml:lang="de"><![CDATA[org.eclipse.core.runtime.IStatus as GML feature (and so adding a (temporal, geo) position).]]></documentation>
+		</annotation>
+	</element>
+
+	<complexType name="StatusType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="time" type="dateTime"></element>
+					<element name="severity">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="ok"></enumeration>
+								<enumeration value="warning"></enumeration>
+								<enumeration value="error"></enumeration>
+								<enumeration value="cancel"></enumeration>
+								<enumeration value="info"></enumeration>
+							</restriction>
+						</simpleType>
+					</element>
+					<element name="code" type="int"></element>
+					<element name="plugin" type="string"></element>
+					<element name="exception" type="string"></element>
+					<element name="childMember" type="common:StatusPropertyType" minOccurs="0" maxOccurs="unbounded">
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="StatusPropertyType">
+		<sequence>
+			<element ref="common:Status"></element>
+		</sequence>
+	</complexType>
+
+	<element name="StatusCollection" type="common:StatusCollectionType">
+		<annotation>
+			<documentation xml:lang="de"><![CDATA[A collection of stati.]]></documentation>
+		</annotation>
+	</element>
+
+	<complexType name="StatusCollectionType">
+		<complexContent>
+			<extension base="gml:AbstractFeatureType">
+				<sequence>
+					<element name="statusMember" type="common:StatusPropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+</schema>

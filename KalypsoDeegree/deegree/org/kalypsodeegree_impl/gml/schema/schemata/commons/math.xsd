@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="org.kalypso.gml.common.math" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:math="org.kalypso.gml.common.math"
+	xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</appinfo>
+		<documentation>
+			<![CDATA[
+			Provides Generic math types and elements: ==Polynomes
+
+			@author Patrice Congo]]>
+		</documentation>
+	</annotation>
+
+	<import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
+
+	<!-- =================================================================
+		polynom property
+		================================================================== -->
+	<element name="polynomial" type="math:Polynomial1DPropertyType" />
+
+	<complexType name="PolynomialPropertyType">
+		<annotation>
+			<documentation xml:lang="en"></documentation>
+		</annotation>
+		<sequence>
+			<element ref="math:_Polynomial" minOccurs="0" maxOccurs="1" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+	<!-- ======================================================================
+		_Polynom element
+		======================================================================= -->
+	<!-- TODO: substitute _Feature -->
+	<element name="_Polynomial" type="math:AbstractPolynomialType" substitutionGroup="gml:_Feature">
+		<annotation>
+			<documentation>Substitutions head for all polynom</documentation>
+		</annotation>
+	</element>
+
+	<!-- ======================================================================
+		AbstractPolynomType
+		======================================================================= -->
+	<complexType name="AbstractPolynomialType" abstract="true">
+		<annotation>
+			<documentation>Base type for all polynoms</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="gml:AbstractFeatureType" />
+		</complexContent>
+	</complexType>
+
+
+	<!-- ====================================================================
+		polynom1D property
+		====================================================================-->
+	<element name="polynomial1D" type="math:Polynomial1DPropertyType" />
+
+	<complexType name="Polynomial1DPropertyType">
+		<sequence>
+			<element ref="math:Polynomial1D" minOccurs="0" maxOccurs="1" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+	<!-- ======================================================================
+		Polynom1D element
+		======================================================================= -->
+	<element name="Polynomial1D" type="math:Polynomial1DType" substitutionGroup="math:_Polynomial">
+		<annotation>
+			<documentation>1D polynom; a0+a1*x^1+...+an*x^n</documentation>
+		</annotation>
+	</element>
+
+	<!-- ======================================================================
+		Polynom1DType
+		======================================================================= -->
+	<complexType name="Polynomial1DType" abstract="false">
+		<annotation>
+			<documentation>Type for 1D polynoms: y=sum of ai*xi for all positive i less than order</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="math:AbstractPolynomialType">
+				<sequence>
+					<element name="coefficients" type="gml:doubleList">
+						<annotation>
+							<documentation>
+								<![CDATA[Coefficients of this polygone starting with the coefficient for x^0. The size of the list determines the order of the polygone.]]>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="minRange" type="double" minOccurs="0">
+						<annotation>
+							<documentation>
+								<![CDATA[Minimum domain range value of this polygone. If not set Double.NEGATIVE_INFINITY is assumed.]]>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="maxRange" type="double" minOccurs="0">
+						<annotation>
+							<documentation>
+								<![CDATA[Maximum domain range value of this polygone. If not set Double.POSITIVE_INFINITY is assumed.]]>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="domainPhenomenon" type="math:PhenomenonPropertyType">
+						<annotation>
+							<documentation>
+								<![CDATA[Describes the type of the domain of this polynome.]]>
+							</documentation>
+						</annotation>
+					</element>
+					<element name="rangePhenomenon" type="math:PhenomenonPropertyType">
+						<annotation>
+							<documentation>
+								<![CDATA[Describes the type of the values of this polynome.]]>
+							</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<!-- =================================================================
+		polynom2D property
+		================================================================== -->
+	<element name="polynomial2D" type="math:Polynomial1DPropertyType" />
+
+	<complexType name="Polynomial2DPropertyType">
+		<annotation>
+			<documentation xml:lang="en"></documentation>
+		</annotation>
+		<sequence>
+			<element ref="math:Polynomial2D" minOccurs="0" maxOccurs="1" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+	<!-- ======================================================================
+		Polynom2D element
+		======================================================================= -->
+	<element name="Polynomial2D" type="math:Polynomial2DType" substitutionGroup="math:_Polynomial">
+		<annotation>
+			<documentation>Represent a 2D polynom</documentation>
+		</annotation>
+	</element>
+	<!-- ======================================================================
+		Polynom2DType
+		======================================================================= -->
+	<complexType name="Polynomial2DType" abstract="false">
+		<annotation>
+			<documentation>Type for 2D polynoms z=SUM(aij*x^i*y^j) for i from 0 to degreeX j from 0 to degreeY</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="math:AbstractPolynomialType">
+				<sequence>
+					<element name="degreeX" type="positiveInteger" />
+					<element name="degreeY" type="positiveInteger" />
+					<element name="coefficients" type="gml:doubleList" />
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="PhenomenonPropertyType">
+		<annotation>
+			<documentation>
+				<![CDATA[A reference to a Phenomenon. As we do not want to depend on the swe-namespace, references to Definition's are used instead.]]>
+			</documentation>
+		</annotation>
+		<sequence>
+			<element ref="gml:Definition" minOccurs="0" maxOccurs="1" />
+		</sequence>
+		<attributeGroup ref="gml:AssociationAttributeGroup" />
+	</complexType>
+
+</schema>
