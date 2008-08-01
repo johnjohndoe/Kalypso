@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="KalypsoNA" default="deploy">
+
+	<property name="project" value="${workspace}/KalypsoModelNA" />
+
+	<import file="${workspace}/KalypsoBuild/common-project/build.xml" />
+	<property name="project-name" value="KalypsoModelNA" />
+
+	<!--path id="compile.classpath">
+		<fileset dir="${project.lib}" includes="**/*.jar" />
+		
+		<fileset dir="${jwsdp}/jaxb/lib" includes="**/*.jar" />
+				
+		<fileset dir="${workspace}/KalypsoCore/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoDeegree/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoServiceCalc/build/deploy" includes="**/*.jar"/>
+
+		<fileset dir="${workspace}/KalypsoOptimize/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoDWD/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/KalypsoCommons/build/deploy" includes="**/*.jar"/>
+		<fileset dir="${workspace}/JavaApiContributions/build/deploy" includes="**/*.jar"/>
+	</path-->
+
+	<!-- overriden to also copy non-java files -->
+	<!--target name="compile" depends="prepare">
+		<antcall target="commonbuild.compile" />
+	
+		<copy todir="${project.bin}">
+			<fileset dir="${project.src}" excludes="**/*.java"/>
+		</copy>
+	</target-->
+
+</project>
+
