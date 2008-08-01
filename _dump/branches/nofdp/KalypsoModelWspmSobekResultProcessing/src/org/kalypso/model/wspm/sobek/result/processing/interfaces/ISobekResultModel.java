@@ -5,7 +5,7 @@ import nl.wldelft.fews.pi.TimeSerieComplexType;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
-import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
+import org.kalypso.model.wspm.sobek.result.processing.model.IBranchLengthSectionModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 
 public interface ISobekResultModel
@@ -19,7 +19,7 @@ public interface ISobekResultModel
 
   TimeSerieComplexType getNodeBinding( INode node ) throws CoreException;
 
-  IBranchHydrographModel getBranchHydrographModel( ) throws CoreException;
+  IBranchLengthSectionModel getBranchHydrographModel( ) throws CoreException;
 
   public void dispose( );
 

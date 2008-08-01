@@ -38,9 +38,9 @@ import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation.PolderNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation.RetardingBasinNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation.WeirNodeResultWrapper;
-import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
+import org.kalypso.model.wspm.sobek.result.processing.model.IBranchLengthSectionModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
-import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchHydraphModelHandler;
+import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchLengthSectionsHandler;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
 import org.kalypso.model.wspm.sobek.result.processing.worker.IResultWorkerSettings;
@@ -137,7 +137,7 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
     m_branchesCommandableWorkspace = null;
   }
 
-  public IBranchHydrographModel getBranchHydrographModel( ) throws CoreException
+  public IBranchLengthSectionModel getBranchHydrographModel( ) throws CoreException
   {
     try
     {
@@ -152,10 +152,10 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
       }
 
       final Feature root = m_branchesCommandableWorkspace.getRootFeature();
-      final Object property = root.getProperty( IBranchHydrographModel.QN_HYDROGRAPHS );
+      final Object property = root.getProperty( IBranchLengthSectionModel.QN_HYDROGRAPHS );
 
       if( property instanceof FeatureList )
-        return new BranchHydraphModelHandler( this, m_branchesCommandableWorkspace, (FeatureList) property );
+        return new BranchLengthSectionsHandler( this, m_branchesCommandableWorkspace, (FeatureList) property );
 
       return null;
     }

@@ -8,22 +8,22 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.result.processing.SobekResultModelHandler;
-import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrograph;
-import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrographModel;
-import org.kalypso.model.wspm.sobek.result.processing.utils.BranchHydrographUtilities;
+import org.kalypso.model.wspm.sobek.result.processing.model.IBranchLengthSection;
+import org.kalypso.model.wspm.sobek.result.processing.model.IBranchLengthSectionModel;
+import org.kalypso.model.wspm.sobek.result.processing.utils.BranchLengthSectionUtilities;
 import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
-public class BranchHydraphModelHandler extends AbstractListWrapper implements IBranchHydrographModel
+public class BranchLengthSectionsHandler extends AbstractListWrapper implements IBranchLengthSectionModel
 {
   private final CommandableWorkspace m_workspace;
 
   private final SobekResultModelHandler m_resultModelHandler;
 
-  public BranchHydraphModelHandler( final SobekResultModelHandler resultModelHandler, final CommandableWorkspace workspace, final FeatureList list )
+  public BranchLengthSectionsHandler( final SobekResultModelHandler resultModelHandler, final CommandableWorkspace workspace, final FeatureList list )
   {
     super( list );
     m_resultModelHandler = resultModelHandler;
@@ -31,23 +31,23 @@ public class BranchHydraphModelHandler extends AbstractListWrapper implements IB
     m_workspace = workspace;
   }
 
-  public IBranchHydrograph getHydrograph( final IBranch branch ) throws CoreException
+  public IBranchLengthSection getHydrograph( final IBranch branch ) throws CoreException
   {
     try
     {
-      final IBranchHydrograph[] hydrographs = getHydrographs();
+      final IBranchLengthSection[] sections = getLengthSections();
 
       /* hydrograph already exists? */
-      for( final IBranchHydrograph hydrograph : hydrographs )
+      for( final IBranchLengthSection section : sections )
       {
-        final String id = hydrograph.getBranchId();
+        final String id = section.getBranchId();
 
         if( branch.getId().equals( id ) )
-          return hydrograph;
+          return section;
       }
 
       /* create a new hydrograph */
-      final IBranchHydrograph hydograph = BranchHydrographUtilities.createHydrograph( m_resultModelHandler, m_workspace, branch );
+      final IBranchLengthSection hydograph = BranchLengthSectionUtilities.createLengthSection( m_resultModelHandler, m_workspace, branch );
 
       // save changes
       final IFile iFile = ResultModelHelper.getBranchHydrogrographWorkspaceFile( m_resultModelHandler.getResultFolder() );
@@ -61,19 +61,19 @@ public class BranchHydraphModelHandler extends AbstractListWrapper implements IB
     }
   }
 
-  public IBranchHydrograph[] getHydrographs( )
+  public IBranchLengthSection[] getLengthSections( )
   {
-    final List<IBranchHydrograph> myList = new ArrayList<IBranchHydrograph>();
+    final List<IBranchLengthSection> myList = new ArrayList<IBranchLengthSection>();
 
     for( final Object obj : this )
     {
       if( !(obj instanceof Feature) )
         continue;
 
-      myList.add( new BranchHydrographHandler( (Feature) obj ) );
+      myList.add( new BranchLengthSectionHandler( (Feature) obj ) );
     }
 
-    return myList.toArray( new IBranchHydrograph[] {} );
+    return myList.toArray( new IBranchLengthSection[] {} );
   }
 
 }

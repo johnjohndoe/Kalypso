@@ -8,14 +8,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 
-public interface IBranchHydrographModel extends List
+public interface IBranchLengthSectionModel extends List
 {
 // {org.kalypso.model.wspm.sobek.result.ls}ResultLsList
 // - {org.kalypso.model.wspm.sobek.result.ls}resultLsMember
 
   public static final QName QN_HYDROGRAPHS = new QName( ISobekConstants.NS_SOBEK_RESULT_BRANCH_HYDROGRAPHS, "resultLsMember" );
 
-  IBranchHydrograph getHydrograph( IBranch branch ) throws CoreException;
+  IBranchLengthSection getHydrograph( IBranch branch ) throws CoreException;
 
-  IBranchHydrograph[] getHydrographs( );
+  IBranchLengthSection[] getLengthSections( );
 }

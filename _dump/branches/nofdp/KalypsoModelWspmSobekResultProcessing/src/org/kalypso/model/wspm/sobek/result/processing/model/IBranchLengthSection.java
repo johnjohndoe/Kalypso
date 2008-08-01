@@ -8,7 +8,7 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 
-public interface IBranchHydrograph extends Feature
+public interface IBranchLengthSection extends Feature
 {
   public static final QName QN_TYPE = new QName( ISobekConstants.NS_SOBEK_RESULT_BRANCH_HYDROGRAPHS, "ResultLs" );
 

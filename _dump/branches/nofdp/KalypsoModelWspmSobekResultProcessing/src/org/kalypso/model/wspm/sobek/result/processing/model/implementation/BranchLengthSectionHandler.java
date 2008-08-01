@@ -8,17 +8,17 @@ import org.kalypso.commons.metadata.MetadataObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.sobek.result.processing.model.IBranchHydrograph;
+import org.kalypso.model.wspm.sobek.result.processing.model.IBranchLengthSection;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 
-public class BranchHydrographHandler extends AbstractFeatureWrapper implements IBranchHydrograph
+public class BranchLengthSectionHandler extends AbstractFeatureWrapper implements IBranchLengthSection
 {
 
-  public BranchHydrographHandler( final Feature feature )
+  public BranchLengthSectionHandler( final Feature feature )
   {
     super( feature );
     Assert.isNotNull( feature );
