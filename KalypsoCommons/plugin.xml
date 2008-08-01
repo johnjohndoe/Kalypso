@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="i18n" name="i18n" schema="schema/i18n.exsd"/>
+
+   <extension
+         point="org.kalypso.commons.i18n">
+      <translator
+            class="org.kalypso.commons.i18n.NLSTranslator"
+            id="commons.nls"
+            label="NLS Translator">
+      </translator>
+      <translator
+            class="org.kalypso.commons.i18n.LocalTranslator"
+            id="commons.local"
+            label="Local Translator">
+      </translator>
+   </extension>
+</plugin>
