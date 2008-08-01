@@ -2,11 +2,11 @@ package org.kalypso.model.wspm.sobek.calculation.job.worker;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
+import org.kalypso.contribs.java.io.MyPrintStream;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
@@ -17,9 +17,9 @@ import org.kalypso.simulation.core.SimulationException;
 public class SimulationUpdateDataWorker implements ISimulation
 {
 
-  private final PrintStream m_outputStream;
+  private final MyPrintStream m_outputStream;
 
-  public SimulationUpdateDataWorker( PrintStream outputStream )
+  public SimulationUpdateDataWorker( MyPrintStream outputStream )
   {
     m_outputStream = outputStream;
   }

@@ -7,11 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
+import org.kalypso.contribs.java.io.MyPrintStream;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
 import org.kalypso.simulation.core.ISimulation;
@@ -23,11 +23,11 @@ import org.kalypso.simulation.core.SimulationException;
 public class SimulationPi2SobekWorker implements ISimulation
 {
 
-  private final PrintStream m_outputStream;
+  private final MyPrintStream m_outputStream;
 
-  private final PrintStream m_sobekStream;
+  private final MyPrintStream m_sobekStream;
 
-  public SimulationPi2SobekWorker( PrintStream nofdpStream, PrintStream sobekStream )
+  public SimulationPi2SobekWorker( MyPrintStream nofdpStream, MyPrintStream sobekStream )
   {
     m_outputStream = nofdpStream;
     m_sobekStream = sobekStream;
