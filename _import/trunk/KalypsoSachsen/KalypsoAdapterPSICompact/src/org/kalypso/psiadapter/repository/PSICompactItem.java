@@ -112,6 +112,7 @@ public class PSICompactItem implements IRepositoryItem
     return m_children.toArray( new IRepositoryItem[m_children.size()] );
   }
 
+  @SuppressWarnings("unchecked")
   public Object getAdapter( final Class anotherClass )
   {
     try

@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.hwv.services.user.UserServiceSimulation;
 import org.kalypso.psiadapter.PSICompactFactory;
+import org.kalypso.psiadapter.repository.PSICompactConfig;
 import org.kalypso.simulation.core.SimulationException;
 
 /**
@@ -47,11 +48,11 @@ public class PSICompactRightsProvider extends UserServiceSimulation implements I
       for( final String element : userClasses )
       {
         if( element != null )
-          rights.add( PSICompactFactory.toKalypsoRight( element.trim() ) );
+          rights.add( PSICompactConfig.toKalypsoRight( element.trim() ) );
       }
 
       // CONVENTION: always add the Vorhersage right
-      rights.add( PSICompactFactory.toKalypsoRight( "" ) );
+      rights.add( PSICompactConfig.toKalypsoRight( "" ) );
 
       return rights.toArray( new String[rights.size()] );
     }

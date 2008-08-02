@@ -7,9 +7,8 @@
          name="PSICompact Repository Factory"
          point="org.kalypso.repository.factories">
       <repository
-            conf=""
-            name="PSICompact"
-            factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"/>
+            factory="org.kalypso.psiadapter.repository.PSICompactRepositoryFactory"
+            name="PSICompact"/>
    </extension>
      <extension
            point="org.kalypso.simulation.core.simulation">

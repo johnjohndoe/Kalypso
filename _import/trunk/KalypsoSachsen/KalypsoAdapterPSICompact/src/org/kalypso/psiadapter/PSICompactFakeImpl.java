@@ -1,18 +1,18 @@
 package org.kalypso.psiadapter;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -21,6 +21,7 @@ import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -52,54 +53,50 @@ import de.psi.go.lhwz.PSICompact;
  */
 public class PSICompactFakeImpl implements PSICompact
 {
+  private static final String JAR_PROTOCOL = "jar:";
+
+  private static final String PROP_STRUCT_LOCATION = "structureFile";
+
   private static final String PROP_DISTRIB_PATH = "distributePath";
 
   private final static ArchiveData[] EMPTY_DATA = new ArchiveData[0];
 
-  private final String m_fakeLocation;
+  private final Map<String, ObjectInfo> m_id2obj = new HashMap<String, ObjectInfo>();
 
-  private final Map m_id2obj;
+  private final Map<String, String> m_id2zml = new HashMap<String, String>();
 
-  private final Map m_id2zml;
+  private final Map<String, WQParamSet[]> m_id2wq = new HashMap<String, WQParamSet[]>();
 
-  private final Map m_id2wq;
+  private final Map<String, ArchiveData[]> m_id2values = new HashMap<String, ArchiveData[]>();
 
-  private final Map/* <String, ArchiveData[]> */m_id2values = new HashMap();
-
-  private final Map/* <String, Set <Integer>> */m_id2archiv = new HashMap();
+  private final Map<String, Set<Integer>> m_id2archiv = new HashMap<String, Set<Integer>>();
 
   private final Properties m_conf = new Properties();
 
-  private URL m_baseLocation = null;
+  private final String m_fakeLocation;
 
-  public PSICompactFakeImpl( String fakeLocation )
+  private URL m_structureLocation;
+
+  public PSICompactFakeImpl( final String fakeLocation )
   {
     m_fakeLocation = fakeLocation;
-    m_id2obj = new HashMap();
-    m_id2wq = new HashMap();
-    m_id2zml = new HashMap();
   }
 
   /**
-   * simuliert eine Liste von PSI Objekte
+   * Simuliert eine Liste von PSI Objekten
    * 
    * @param mapId
    * @param mapZml
    * @param mapArchiveTypes
    * @throws ECommException
    */
-  private static final void prepareObjects( final URL baseLocation, final Map mapId, final Map mapZml,
-      final Map mapArchiveTypes ) throws ECommException
+  private static final void prepareObjects( final URL fakeStructureLocation, final Map<String, ObjectInfo> mapId, final Map<String, String> mapZml, final Map<String, Set<Integer>> mapArchiveTypes ) throws ECommException
   {
     BufferedReader reader = null;
 
     try
     {
-      final URL fakeStructureLocation = new URL( baseLocation, "./structure.txt" );
-      final InputStream stream = fakeStructureLocation.openStream();
-
-      //      final InputStream stream = PSICompactFakeImpl.class.getResourceAsStream( "fake/lhwz-ids.csv" );
-      reader = new BufferedReader( new InputStreamReader( stream, "UTF-8" ) );
+      reader = new BufferedReader( new InputStreamReader( fakeStructureLocation.openStream(), "UTF-8" ) );
 
       String line = reader.readLine();
       while( line != null )
@@ -134,7 +131,7 @@ public class PSICompactFakeImpl implements PSICompact
 
             if( !mapArchiveTypes.containsKey( baseID ) )
             {
-              final Set set = new TreeSet/* <Integer> */();
+              final Set<Integer> set = new TreeSet<Integer>();
               set.add( new Integer( PSICompact.ARC_MIN15 ) );
               mapArchiveTypes.put( baseID, set );
             }
@@ -142,7 +139,7 @@ public class PSICompactFakeImpl implements PSICompact
             if( archivTypeStr != null )
             {
               final int archivType = PSICompactUtilitites.archiveTypeFromString( archivTypeStr );
-              final Set/* <Integer> */set = (Set)mapArchiveTypes.get( baseID );
+              final Set<Integer> set = mapArchiveTypes.get( baseID );
               set.add( new Integer( archivType ) );
             }
 
@@ -175,43 +172,44 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#init()
    */
-  public void init() throws ECommException
+  public void init( ) throws ECommException
   {
-    InputStream ins = null;
     try
     {
-      m_baseLocation = new URL( m_fakeLocation );
+      final URL baseLocation = new URL( m_fakeLocation );
+      final URL configLocation = new URL( baseLocation, "./config.ini" );
 
-      final URL configLocation = new URL( m_baseLocation, "./config.ini" );
+      PropertiesUtilities.load( configLocation, m_conf );
 
-      ins = new BufferedInputStream( configLocation.openStream() );
-
-      m_conf.load( ins );
-      ins.close();
+      // build PSICompact-Structure
+      final String structurePath = m_conf.getProperty( PROP_STRUCT_LOCATION );
+      m_structureLocation = createStructureURL( configLocation, structurePath );
+      prepareObjects( m_structureLocation, m_id2obj, m_id2zml, m_id2archiv );
     }
     catch( final IOException e )
     {
       throw new ECommException( e );
     }
-    finally
-    {
-      IOUtils.closeQuietly( ins );
-    }
 
-    // build PSICompact-Structure
-    prepareObjects( m_baseLocation, m_id2obj, m_id2zml, m_id2archiv );
   }
 
-  private void testInitDone() throws ECommException
+  private URL createStructureURL( final URL configLocation, final String zipPath ) throws MalformedURLException
   {
-    if( m_baseLocation == null )
+    final URL url = new URL( configLocation, zipPath );
+    final String zipUrl = JAR_PROTOCOL + url.toExternalForm() + "!/structure.txt";
+    return new URL( zipUrl );
+  }
+
+  private void testInitDone( ) throws ECommException
+  {
+    if( m_conf.isEmpty() )
       throw new ECommException( "PSICompact.init() not performed!" );
   }
 
   /**
    * @see de.psi.go.lhwz.PSICompact#writeProtocol(java.lang.String)
    */
-  public boolean writeProtocol( String message ) throws ECommException
+  public boolean writeProtocol( final String message ) throws ECommException
   {
     testInitDone();
 
@@ -223,17 +221,17 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getInfo(int)
    */
-  public ObjectInfo[] getInfo( int typespec ) throws ECommException
+  public ObjectInfo[] getInfo( final int typespec ) throws ECommException
   {
     testInitDone();
 
-    return (ObjectInfo[])m_id2obj.values().toArray( new ObjectInfo[0] );
+    return m_id2obj.values().toArray( new ObjectInfo[0] );
   }
 
   /**
    * @see de.psi.go.lhwz.PSICompact#getArchiveData(int, int, java.util.Date, java.util.Date)
    */
-  public ArchiveData[] getArchiveData( int arg0, int arg1, Date arg2, Date arg3 ) 
+  public ArchiveData[] getArchiveData( final int arg0, final int arg1, final Date arg2, final Date arg3 )
   {
     throw new UnsupportedOperationException();
   }
@@ -241,7 +239,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getArchiveData(java.lang.String, int, java.util.Date, java.util.Date)
    */
-  public ArchiveData[] getArchiveData( String id, int arcType, Date from, Date to ) throws ECommException
+  public ArchiveData[] getArchiveData( final String id, final int arcType, final Date from, final Date to ) throws ECommException
   {
     testInitDone();
 
@@ -252,7 +250,7 @@ public class PSICompactFakeImpl implements PSICompact
 
     // Set from outside?
     if( m_id2values.containsKey( fullID ) )
-      return (ArchiveData[])m_id2values.get( fullID );
+      return m_id2values.get( fullID );
 
     // zml?
     return readFromZml( id, from, to, arcType );
@@ -263,19 +261,19 @@ public class PSICompactFakeImpl implements PSICompact
     final IObservation zmlObs = getZmlObs( id, arcType );
     if( zmlObs == null )
       return null;
-    
+
     try
     {
       final int field = PSICompactUtilitites.arcTypeToCalendarField( arcType );
       final int amount = PSICompactUtilitites.arcTypeToCalendarAmount( arcType );
 
       // TODO: use intervall filter for rainfall instead of InterpolationFilter
-      
+
       final InterpolationFilter filter = new InterpolationFilter( field, amount, false, Double.toString( Double.NaN ), -1 );
       filter.initFilter( null, zmlObs, null );
       return filter;
     }
-    catch( SensorException e )
+    catch( final SensorException e )
     {
       e.printStackTrace();
 
@@ -284,7 +282,7 @@ public class PSICompactFakeImpl implements PSICompact
 
   }
 
-  public static String getFullID( String id, int arcType ) throws ECommException
+  public static String getFullID( final String id, final int arcType ) throws ECommException
   {
     final String arcId = PSICompactUtilitites.getIdForArcType( arcType );
     return id + "#" + arcId;
@@ -299,10 +297,10 @@ public class PSICompactFakeImpl implements PSICompact
 
     final String zmlPath;
     if( m_id2zml.containsKey( fullID ) )
-      zmlPath = (String)m_id2zml.get( fullID );
-    /* Fallback, maybe only the pure id was specified in the strucutre file, so we try it like that */
+      zmlPath = m_id2zml.get( fullID );
+    /* Fallback, maybe only the pure id was specified in the structure file, so we try it like that */
     else if( m_id2zml.containsKey( id ) )
-      zmlPath = (String)m_id2zml.get( id );
+      zmlPath = m_id2zml.get( id );
     else
       zmlPath = null;
 
@@ -311,11 +309,11 @@ public class PSICompactFakeImpl implements PSICompact
 
     try
     {
-      final URL location = new URL( m_baseLocation, zmlPath );
+      final URL location = new URL( m_structureLocation, zmlPath );
 
       return ZmlFactory.parseXML( location, zmlPath );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new ECommException( e );
     }
@@ -326,7 +324,7 @@ public class PSICompactFakeImpl implements PSICompact
    * 
    * @param arcType
    */
-  private ArchiveData[] readFromZml( String id, Date from, Date to, final int arcType ) throws ECommException
+  private ArchiveData[] readFromZml( final String id, final Date from, final Date to, final int arcType ) throws ECommException
   {
     try
     {
@@ -334,11 +332,10 @@ public class PSICompactFakeImpl implements PSICompact
       if( zmlObs == null )
         return EMPTY_DATA;
 
-      final RequestObservationProxy obs = new RequestObservationProxy(
-          new ObservationRequest( new DateRange( from, to ) ), zmlObs );
+      final RequestObservationProxy obs = new RequestObservationProxy( new ObservationRequest( new DateRange( from, to ) ), zmlObs );
 
       // TODO: probably we should use use a request here! Else we get always everything which is inside the zml
-//      final ITuppleModel values = obs.getValues( new ObservationRequest( new DateRange( from, to ) ) );
+// final ITuppleModel values = obs.getValues( new ObservationRequest( new DateRange( from, to ) ) );
       final ITuppleModel values = obs.getValues( null );
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( obs.getAxisList(), Date.class );
       final IAxis valueAxis = KalypsoStatusUtils.findAxisByClass( obs.getAxisList(), Number.class, true );
@@ -346,15 +343,15 @@ public class PSICompactFakeImpl implements PSICompact
       final ArchiveData[] data = new ArchiveData[values.getCount()];
       for( int i = 0; i < data.length; i++ )
       {
-        Date d = (Date)values.getElement( i, dateAxis );
-        Number n = (Number)values.getElement( i, valueAxis );
+        final Date d = (Date) values.getElement( i, dateAxis );
+        final Number n = (Number) values.getElement( i, valueAxis );
 
         data[i] = new ArchiveData( d, PSICompact.STATUS_AUTO, n.doubleValue() );
       }
 
       return data;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new ECommException( e );
     }
@@ -364,7 +361,7 @@ public class PSICompactFakeImpl implements PSICompact
    * @see de.psi.go.lhwz.PSICompact#setArchiveData(java.lang.String, int, java.util.Date,
    *      de.psi.go.lhwz.PSICompact.ArchiveData[])
    */
-  public boolean setArchiveData( String id, int arcType, Date from, ArchiveData[] data ) throws ECommException
+  public boolean setArchiveData( final String id, final int arcType, final Date from, final ArchiveData[] data ) throws ECommException
   {
     testInitDone();
 
@@ -379,23 +376,23 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getWQParams(java.lang.String)
    */
-  public WQParamSet[] getWQParams( String id ) throws ECommException
+  public WQParamSet[] getWQParams( final String id ) throws ECommException
   {
     testInitDone();
 
-    final WQParamSet[] pset = (WQParamSet[])m_id2wq.get( id );
+    final WQParamSet[] pset = m_id2wq.get( id );
     if( pset != null )
       return pset;
 
     final IObservation obs = getZmlObs( id, PSICompact.ARC_MIN15 );
     if( obs == null )
       return new WQParamSet[0];
-    
+
     final String wqParam = obs.getMetadataList().getProperty( TimeserieConstants.MD_WQWECHMANN );
 
     if( wqParam != null )
     {
-      StringReader sr = new StringReader( wqParam );
+      final StringReader sr = new StringReader( wqParam );
       final InputSource src = new InputSource( sr );
 
       final WechmannGroup group;
@@ -403,32 +400,32 @@ public class PSICompactFakeImpl implements PSICompact
       {
         group = WechmannFactory.parse( src );
       }
-      catch( WQException e )
+      catch( final WQException e )
       {
         e.printStackTrace();
         throw new ECommException( e );
       }
 
-      final ArrayList wqps = new ArrayList();
+      final List<WQParamSet> wqps = new ArrayList<WQParamSet>();
 
-      final Iterator its = group.iterator();
+      final Iterator<WechmannSet> its = group.iterator();
       while( its.hasNext() )
       {
-        final WechmannSet ws = (WechmannSet)its.next();
+        final WechmannSet ws = its.next();
 
-        final ArrayList wqds = new ArrayList();
-        final Iterator itp = ws.iterator();
+        final List<WQData> wqds = new ArrayList<WQData>();
+        final Iterator<WechmannParams> itp = ws.iterator();
         while( itp.hasNext() )
         {
-          final WechmannParams params = (WechmannParams)itp.next();
+          final WechmannParams params = itp.next();
           final WQData data = new WQData( params.getWGR(), params.getW1(), params.getLNK1(), params.getK2() );
           wqds.add( data );
         }
 
-        wqps.add( new WQParamSet( ws.getValidity(), (WQData[])wqds.toArray( new WQData[wqds.size()] ) ) );
+        wqps.add( new WQParamSet( ws.getValidity(), wqds.toArray( new WQData[wqds.size()] ) ) );
       }
 
-      final WQParamSet[] newPset = (WQParamSet[])wqps.toArray( new WQParamSet[wqps.size()] );
+      final WQParamSet[] newPset = wqps.toArray( new WQParamSet[wqps.size()] );
       m_id2wq.put( id, newPset );
       return newPset;
     }
@@ -439,7 +436,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getObjectMetaData(java.lang.String)
    */
-  public ObjectMetaData getObjectMetaData( String id ) throws ECommException
+  public ObjectMetaData getObjectMetaData( final String id ) throws ECommException
   {
     testInitDone();
 
@@ -526,13 +523,12 @@ public class PSICompactFakeImpl implements PSICompact
     }
 
     // Archive data
-    final Set/* <Integer> */set = (Set)m_id2archiv.get( id );
+    final Set<Integer> set = m_id2archiv.get( id );
     if( set == null )
-      omd.setArchiveData( new int[]
-      { PSICompact.ARC_MIN15 } );
+      omd.setArchiveData( new int[] { PSICompact.ARC_MIN15 } );
     else
     {
-      final Integer[] setArray = (Integer[])set.toArray( new Integer[set.size()] );
+      final Integer[] setArray = set.toArray( new Integer[set.size()] );
       omd.setArchiveData( ArrayUtils.toPrimitive( setArray ) );
     }
 
@@ -564,7 +560,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getUserClasses(java.lang.String)
    */
-  public String[] getUserClasses( String userId ) throws ECommException
+  public String[] getUserClasses( final String userId ) throws ECommException
   {
     testInitDone();
 
@@ -574,7 +570,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getUserRights(java.lang.String, java.lang.String)
    */
-  public String[] getUserRights( String userId, String userClass ) throws ECommException
+  public String[] getUserRights( final String userId, final String userClass ) throws ECommException
   {
     testInitDone();
 
@@ -590,7 +586,6 @@ public class PSICompactFakeImpl implements PSICompact
    * 
    * @param from
    * @param to
-   * 
    * @return random data
    */
   protected final ArchiveData[] randomData( final Date from, final Date to )
@@ -598,7 +593,7 @@ public class PSICompactFakeImpl implements PSICompact
     final Calendar cal = Calendar.getInstance();
     cal.setTime( from );
 
-    final ArrayList data = new ArrayList();
+    final List<ArchiveData> data = new ArrayList<ArchiveData>();
     while( cal.getTime().compareTo( to ) < 0 )
     {
       data.add( new ArchiveData( cal.getTime(), PSICompact.STATUS_AUTO, Math.random() * 100 ) );
@@ -606,13 +601,13 @@ public class PSICompactFakeImpl implements PSICompact
       cal.add( Calendar.MINUTE, 15 );
     }
 
-    return (ArchiveData[])data.toArray( new ArchiveData[data.size()] );
+    return data.toArray( new ArchiveData[data.size()] );
   }
 
   /**
    * @see de.psi.go.lhwz.PSICompact#getMeasureType(java.lang.String)
    */
-  public int getMeasureType( String id ) throws ECommException
+  public int getMeasureType( final String id ) throws ECommException
   {
     testInitDone();
 
@@ -620,7 +615,7 @@ public class PSICompactFakeImpl implements PSICompact
     final IObservation obs = getZmlObs( id, PSICompact.ARC_MIN15 );
     if( obs == null )
       return PSICompact.MEAS_LEVEL;
-    
+
     final IAxis nba = KalypsoStatusUtils.findAxisByClass( obs.getAxisList(), Number.class, true );
 
     return toMeasType( nba.getType() );
@@ -650,7 +645,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#distributeFile(java.lang.String)
    */
-  public boolean distributeFile( String filename ) throws ECommException
+  public boolean distributeFile( final String filename ) throws ECommException
   {
     testInitDone();
 
@@ -687,7 +682,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#removeFile(java.lang.String)
    */
-  public boolean removeFile( String filename ) throws ECommException
+  public boolean removeFile( final String filename ) throws ECommException
   {
     testInitDone();
 
@@ -697,7 +692,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getDataModelVersion()
    */
-  public int getDataModelVersion() throws ECommException
+  public int getDataModelVersion( ) throws ECommException
   {
     testInitDone();
 
@@ -707,7 +702,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getUser(java.lang.String)
    */
-  public String[] getUser( String userClass ) throws ECommException
+  public String[] getUser( final String userClass ) throws ECommException
   {
     testInitDone();
 
@@ -717,7 +712,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getActivDBGroup()
    */
-  public int getActivDBGroup() throws ECommException
+  public int getActivDBGroup( ) throws ECommException
   {
     testInitDone();
 
@@ -727,7 +722,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getComment(java.lang.String)
    */
-  public String getComment( String Pegelkennziffer ) throws ECommException
+  public String getComment( final String Pegelkennziffer ) throws ECommException
   {
     testInitDone();
 
@@ -737,7 +732,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getGewaesser(java.lang.String)
    */
-  public String getGewaesser( String Pegelkennziffer ) throws ECommException
+  public String getGewaesser( final String Pegelkennziffer ) throws ECommException
   {
     testInitDone();
 
@@ -747,7 +742,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getFlussgebiet(java.lang.String)
    */
-  public String getFlussgebiet( String Pegelkennziffer ) throws ECommException
+  public String getFlussgebiet( final String Pegelkennziffer ) throws ECommException
   {
     testInitDone();
 
@@ -757,7 +752,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#finit()
    */
-  public void finit()
+  public void finit( )
   {
     throw new UnsupportedOperationException();
   }
@@ -765,7 +760,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#Name2Tid(java.lang.String)
    */
-  public int Name2Tid( String arg0 ) 
+  public int Name2Tid( final String arg0 )
   {
     throw new UnsupportedOperationException();
   }
@@ -773,7 +768,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#PKZ2Kennzeichen(java.lang.String)
    */
-  public String PKZ2Kennzeichen( String arg0 ) 
+  public String PKZ2Kennzeichen( final String arg0 )
   {
     throw new UnsupportedOperationException();
   }
@@ -781,7 +776,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#setComment(java.lang.String, java.lang.String)
    */
-  public void setComment( String arg0, String arg1 ) 
+  public void setComment( final String arg0, final String arg1 )
   {
     throw new UnsupportedOperationException();
   }
@@ -789,7 +784,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#quittiere(int, java.lang.String, long, long)
    */
-  public void quittiere( int arg0, String arg1, long arg2, long arg3 ) 
+  public void quittiere( final int arg0, final String arg1, final long arg2, final long arg3 )
   {
     throw new UnsupportedOperationException();
   }
@@ -797,7 +792,7 @@ public class PSICompactFakeImpl implements PSICompact
   /**
    * @see de.psi.go.lhwz.PSICompact#getLetztePegel(java.lang.String)
    */
-  public Pegelinfo[] getLetztePegel( String arg0 ) 
+  public Pegelinfo[] getLetztePegel( final String arg0 )
   {
     throw new UnsupportedOperationException();
   }

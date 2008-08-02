@@ -27,7 +27,7 @@ public class PSICompactRepository extends AbstractRepository
 
   private PSICompactItem m_psiRoot = null;
 
-  public PSICompactRepository( String name, boolean readOnly ) throws RepositoryException
+  public PSICompactRepository( final String name, final boolean readOnly ) throws RepositoryException
   {
     super( name, PSICompactRepositoryFactory.class.getName(), "", readOnly );
 
@@ -35,7 +35,7 @@ public class PSICompactRepository extends AbstractRepository
   }
 
   /**
-   * Helper um die PSICompact ObjectInfos in einer Repository enabled Struktur umzuwandeln.
+   * Helper um die PSICompact ObjectInfos in eine Repository enabled Struktur umzuwandeln.
    */
   private final void buildStructure( final PSICompactItem rootItem, final Map<String, PSICompactItem> nodes, int valueType ) throws ECommException
   {
@@ -122,7 +122,7 @@ public class PSICompactRepository extends AbstractRepository
   /**
    * Adds an at-node to a node, if an at-entry in the config exists.
    */
-  private void addAtNode( final Map nodes, final String obsName, int valueType, final ObjectInfo info,
+  private void addAtNode( final Map<String, PSICompactItem> nodes, final String obsName, int valueType, final ObjectInfo info,
       final ObjectMetaData objectMetaData, final PSICompactItem parent, final String nodeID, final int defaultArcType )
   {
     final String atNodeId = nodeID + "#at";
@@ -204,8 +204,6 @@ public class PSICompactRepository extends AbstractRepository
           false );
       final Map<String, PSICompactItem> nodes = new TreeMap<String, PSICompactItem>();
       
-//      final PSICompactItem nodeMeasurements = buildStructure( nodes, PSICompact.TYPE_MEASUREMENT );
-//      final PSICompactItem nodeForecasts = buildStructure( nodes, PSICompact.TYPE_VALUE );
       buildStructure( rootItem, nodes, PSICompact.TYPE_MEASUREMENT );
       buildStructure( rootItem, nodes, PSICompact.TYPE_VALUE );
 

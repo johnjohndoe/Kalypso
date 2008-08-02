@@ -74,7 +74,7 @@ public class PSICompactTuppleModel extends AbstractTuppleModel
   private Integer getKalypsoStatus( int index )
   {
     if( m_kalypsoStati[index] == null )
-      m_kalypsoStati[index] = PSICompactRepositoryFactory.psiStatusToMask( m_data[index].getStatus() );
+      m_kalypsoStati[index] = PSICompactConfig.psiStatusToMask( m_data[index].getStatus() );
 
     return m_kalypsoStati[index];
   }

@@ -129,7 +129,7 @@ public class PSICompactObservationItem implements IObservation
 
     axes[1] = new DefaultAxis( label, type, unit, Double.class, false );
 
-    m_vc = PSICompactRepositoryFactory.getConverter( psiUnit, unit );
+    m_vc = PSICompactConfig.getConverter( psiUnit, unit );
 
     // Status
     axes[2] = KalypsoStatusUtils.createStatusAxisFor( axes[1], true );
@@ -154,7 +154,9 @@ public class PSICompactObservationItem implements IObservation
     {
       final String gkr = String.valueOf( m_objectMetaData.getRight() );
       metadata.put( TimeserieConstants.MD_GKR, gkr );
-      metadata.put( TimeserieConstants.MD_COORDSYS, TimeserieUtils.getCoordinateSystemNameForGkr( gkr ) );
+      final String srs = TimeserieUtils.getCoordinateSystemNameForGkr( gkr );
+      if( srs != null )
+        metadata.put( TimeserieConstants.MD_COORDSYS, srs );
       metadata.put( TimeserieConstants.MD_GKH, String.valueOf( m_objectMetaData.getHeight() ) );
       
       metadata.put( TimeserieConstants.MD_HOEHENANGABEART, m_objectMetaData.getLevelUnit() );
@@ -222,6 +224,7 @@ public class PSICompactObservationItem implements IObservation
   private String printAlarmLevel( final double level )
   {
     final NumberFormat nf = TimeserieUtils.getNumberFormatFor( TimeserieConstants.TYPE_WATERLEVEL );
+    nf.setGroupingUsed( false ); // do not print 1000th points
     return nf.format( level );
   }
 
@@ -259,7 +262,7 @@ public class PSICompactObservationItem implements IObservation
       e.printStackTrace();
     }
 
-    return PSICompactRepositoryFactory.measureTypeToString( measType );
+    return PSICompactConfig.measureTypeToString( measType );
   }
 
   /**
@@ -267,7 +270,7 @@ public class PSICompactObservationItem implements IObservation
    */
   private String valueTypeToString()
   {
-    return PSICompactRepositoryFactory.valueTypeToString( m_valueType );
+    return PSICompactConfig.valueTypeToString( m_valueType );
   }
 
   /**
@@ -313,8 +316,7 @@ public class PSICompactObservationItem implements IObservation
     // tricky: when no date range specified, we create a default one
     // according to the config delivered by our PSICompactFactory
     if( request == null || request.getDateRange() == null )
-      dr = DateRange.createFromPastDays( Integer.valueOf(
-          PSICompactFactory.getProperties().getProperty( "NUMBER_OF_DAYS", "100" ) ).intValue() );
+      dr = DateRange.createFromPastDays( PSICompactConfig.getNumberOfDays()  );
     else
       dr = request.getDateRange();
 
@@ -418,7 +420,7 @@ public class PSICompactObservationItem implements IObservation
     final IAxisRange dateRange = model.getRangeFor( dateAxis );
 
     /* Get defined properties */
-    final int overwriteCalendarField = PSICompactFactory.getOverwriteCalendarField();
+    final int overwriteCalendarField = PSICompactConfig.getOverwriteCalendarField();
 
     // TODO: remove obsolete properties from config.ini
     /*
@@ -426,11 +428,11 @@ public class PSICompactObservationItem implements IObservation
      * PSICompactFactory.getOverwriteValue() );
      */
 
-    final int overwriteAmountBefore = PSICompactFactory.getOverwriteAmountBefore();
-    final int overwriteAmountAfter = PSICompactFactory.getOverwriteAmountAfter();
+    final int overwriteAmountBefore = PSICompactConfig.getOverwriteAmountBefore();
+    final int overwriteAmountAfter = PSICompactConfig.getOverwriteAmountAfter();
 
     /* Determine start and end */
-    final Calendar cal = PSICompactFactory.getCalendarForPSICompact();
+    final Calendar cal = PSICompactConfig.getCalendarForPSICompact();
     cal.setTime( (Date)dateRange.getLower() );
     cal.add( overwriteCalendarField, -overwriteAmountBefore );
     final Date begin = cal.getTime();
@@ -445,7 +447,7 @@ public class PSICompactObservationItem implements IObservation
 
     /* Create data with overwrite-values for the full time intervall */
     final double fillValue = m_vc.reverse( -1.0 ); // TODO: check if always correct
-    final SortedMap fullIntervalMap = createExtendedArchiveDataMap( begin, end, PSICompact.STATUS_AUTO, fillValue );
+    final SortedMap<Date, ArchiveData> fullIntervalMap = createExtendedArchiveDataMap( begin, end, PSICompact.STATUS_AUTO, fillValue );
 
     /* Overwrite the full interval with values from timeserie to write out */
     final int modelCount = model.getCount();
@@ -459,7 +461,7 @@ public class PSICompactObservationItem implements IObservation
       fullIntervalMap.put( date, archiveData );
     }
 
-    return (ArchiveData[])fullIntervalMap.values().toArray( new ArchiveData[fullIntervalMap.size()] );
+    return fullIntervalMap.values().toArray( new ArchiveData[fullIntervalMap.size()] );
   }
 
   /**
@@ -477,7 +479,7 @@ public class PSICompactObservationItem implements IObservation
    *          The constant value for all archive datas.
    * @throws SensorException
    */
-  private SortedMap createExtendedArchiveDataMap( final Date begin, final Date end, final int status, final double value )
+  private SortedMap<Date, ArchiveData> createExtendedArchiveDataMap( final Date begin, final Date end, final int status, final double value )
       throws SensorException
   {
     final int stepAmount = PSICompactUtilitites.arcTypeToCalendarAmount( m_arcType );
@@ -487,7 +489,7 @@ public class PSICompactObservationItem implements IObservation
     final Calendar stepper = Calendar.getInstance();
     stepper.setTime( begin );
 
-    final SortedMap archiveDataMap = new TreeMap();
+    final SortedMap<Date, ArchiveData> archiveDataMap = new TreeMap<Date, ArchiveData>();
 
     /* Make sure we do not get an endless loop */
     if( !begin.before( end ) )
