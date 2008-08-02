@@ -36,7 +36,7 @@ public class RepositoriesExtensions
    * @return array of config items
    * @throws CoreException
    */
-  public static RepositoryFactoryConfig[] retrieveExtensions() throws CoreException
+  public static RepositoryFactoryConfig[] retrieveExtensions( ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -57,7 +57,7 @@ public class RepositoriesExtensions
       final String conf = element.getAttribute( ATT_CONF );
       final boolean ro = Boolean.valueOf( element.getAttribute( ATT_RO ) ).booleanValue();
 
-      final IRepositoryFactory factory = (IRepositoryFactory)element.createExecutableExtension( ATT_FACTORY );
+      final IRepositoryFactory factory = (IRepositoryFactory) element.createExecutableExtension( ATT_FACTORY );
 
       items.add( new RepositoryFactoryConfig( factory, name, conf, ro ) );
     }
@@ -74,8 +74,7 @@ public class RepositoriesExtensions
    * @param readOnly
    * @throws CoreException
    */
-  public static RepositoryFactoryConfig retrieveExtensionFor( String factoryClassName, String repositoryName,
-      String conf, boolean readOnly ) throws CoreException
+  public static IRepositoryFactory retrieveExtensionFor( final String factoryClassName ) throws CoreException
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
@@ -96,11 +95,7 @@ public class RepositoriesExtensions
         final IConfigurationElement element = elements[j];
 
         if( factoryClassName.equals( element.getAttribute( ATT_FACTORY ) ) )
-        {
-          final IRepositoryFactory factory = (IRepositoryFactory)element.createExecutableExtension( ATT_FACTORY );
-
-          return new RepositoryFactoryConfig( factory, repositoryName, conf, readOnly );
-        }
+          return (IRepositoryFactory) element.createExecutableExtension( ATT_FACTORY );
       }
     }
 

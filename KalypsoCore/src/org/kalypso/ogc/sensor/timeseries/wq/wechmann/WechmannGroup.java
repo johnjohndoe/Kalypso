@@ -73,7 +73,7 @@ public class WechmannGroup implements IWQConverter
   /**
    * @return Iterator on the WechmannSet objects
    */
-  public Iterator iterator( )
+  public Iterator<WechmannSet> iterator( )
   {
     return m_map.values().iterator();
   }

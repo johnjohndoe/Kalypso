@@ -51,7 +51,6 @@ import javax.xml.namespace.QName;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
-import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.xml.NSPrefixProvider;
 import org.kalypso.contribs.eclipse.core.runtime.Debug;
@@ -64,6 +63,8 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  */
 public final class JaxbUtilities
 {
+  private static final String COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER = "com.sun.xml.bind.namespacePrefixMapper";
+
   public final static Debug DEBUG = new Debug( KalypsoCommonsPlugin.getDefault(), "org.kalypso.jwsdp", "/perf/jaxbinitialisation", System.out );
 
   private JaxbUtilities( )
@@ -71,26 +72,45 @@ public final class JaxbUtilities
     // never instantiate
   }
 
+  /**
+   * Creates a {@link JAXBContext} for the given object factories.<br>
+   * This is a convienience method in order to avoid handling of the thrown {@link JAXBException} which will never come
+   * during normal execution.<br>
+   * Additionally, it is vital to use this method, as it enforces the use of the right JAXB Version even if called from
+   * an ant task (see comment in code).
+   */
   public static JAXBContext createQuiet( final Class< ? >... objectFactoryClasses )
   {
     final DebugPerf stopWatch = DEBUG.createStopWatch( "Initializing JAXContext for classes:%n" );
     for( final Class< ? > clazz : objectFactoryClasses )
       DEBUG.printf( "\t%s%n", clazz );
 
+    final Thread currentThread = Thread.currentThread();
+    final ClassLoader contextClassLoader = currentThread.getContextClassLoader();
     try
     {
-      // TODO Performanzproblem hier:
-      // Ursache ist der Konstruktor der JAXBContextImpl der anscheinend rekursiv per
-      // reflektion alle classen sucht, für die er verantworltich ist
+      // REMARK/HACK: this is a crude hack to enforce the right class loader if invoked from an Ant-Task.
+      // If we do not do this, the default JAXBContext (com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl.class)
+      // will be used instead of JAXB-RI (currently 2.1.7 in the KalypsoCommons plug-in).
+      // Setting the System-Property 'javax.xml.bind.JAXBContext' does not help either,
+      // as the right ContextFactory is not accessible via the AntClassLoader.
+      // Maybe there is another, more clean way to do this?
+      if( contextClassLoader.getClass().getName().equals( "org.eclipse.ant.internal.core.AntClassLoader" ) )
+        currentThread.setContextClassLoader( JaxbUtilities.class.getClassLoader() );
+
       return JAXBContext.newInstance( objectFactoryClasses );
     }
     catch( final JAXBException e )
     {
-      DEBUG.printStackTrace( IStatus.ERROR, e );
+      // Always print stack trace, this should not happen...
+      e.printStackTrace();
       return null;
     }
     finally
     {
+      // Always restore old context class loader, who knows what happens else...
+      currentThread.setContextClassLoader( contextClassLoader );
+
       stopWatch.stopWatch( "JAXContext created.%n%n" );
     }
   }
@@ -129,7 +149,7 @@ public final class JaxbUtilities
   }
 
   /**
-   * Same as {@link  #createMarshaller(JAXBContext, true, null)}
+   * Same as {@link #createMarshaller(JAXBContext, true, null)}
    */
   public static Marshaller createMarshaller( final JAXBContext context ) throws JAXBException
   {
@@ -137,7 +157,7 @@ public final class JaxbUtilities
   }
 
   /**
-   * Same as {@link  #createMarshaller(JAXBContext, boolean, null)}
+   * Same as {@link #createMarshaller(JAXBContext, boolean, null)}
    */
   public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput ) throws JAXBException
   {
@@ -145,24 +165,24 @@ public final class JaxbUtilities
   }
 
   /**
-   * create marshaller with namespace prefixmapping<br>
+   * Create marshaller with namespace prefixmapping<br>
    * use this methode to avoid bug in jaxb-implementation when prefixing attributes with defaultnamespace like this:
    * <code><element xmlns="www.xlink..." :href="test"/></code> instead if
    * <code><element xmlns:xlink="blabla" xlink:href="test"/></code>.
    * 
    * @param formaOutput
-   *            if true, output is nicely formatted.
+   *          if true, output is nicely formatted.
    * @param specialPrefixes
-   *            if non null, use these mappings before the usual prefix mappings. Use with care, it is not tested if
-   *            namespaces are mapped into the same namespace.
+   *          if non null, use these mappings before the usual prefix mappings. Use with care, it is not tested if
+   *          namespaces are mapped into the same namespace.
    */
   public static Marshaller createMarshaller( final JAXBContext context, final boolean formatOutput, final Map<String, String> specialPrefixes ) throws JAXBException
   {
     final Marshaller marshaller = context.createMarshaller();
     if( specialPrefixes == null )
-      marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", getNSPrefixMapper() );
+      marshaller.setProperty( COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER, getNSPrefixMapper() );
     else
-      marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", getNSPrefixMapper( specialPrefixes ) );
+      marshaller.setProperty( COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER, getNSPrefixMapper( specialPrefixes ) );
     if( formatOutput )
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     return marshaller;

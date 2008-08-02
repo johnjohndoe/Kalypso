@@ -40,7 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.conf;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -72,24 +74,25 @@ public class RepositoryConfigUtils
    * @param ins
    * @throws RepositoryException
    */
-  public static List loadConfig( final InputStream ins ) throws RepositoryException
+  public static List<RepositoryFactoryConfig> loadConfig( final URL location ) throws RepositoryException
   {
+    InputStream ins = null;
     try
     {
+      ins = new BufferedInputStream( location.openStream() );
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
       final Repconf repconf = (Repconf) unmarshaller.unmarshal( ins );
       ins.close();
 
-      final List list = repconf.getRepository();
+      final List<Repconf.Repository> list = repconf.getRepository();
 
       final List<RepositoryFactoryConfig> fConfs = new Vector<RepositoryFactoryConfig>( list.size() );
 
-      for( final Iterator it = list.iterator(); it.hasNext(); )
+      for( final Iterator<Repconf.Repository> it = list.iterator(); it.hasNext(); )
       {
-        final Repconf.Repository elt = (Repconf.Repository) it.next();
-
-        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly() );
+        final Repconf.Repository elt = it.next();
+        final RepositoryFactoryConfig item = new RepositoryFactoryConfig( elt.getName(), elt.getFactory(), elt.getConf(), elt.isReadOnly(), null );
         fConfs.add( item );
       }
 
