@@ -276,7 +276,8 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
           final RepositoryFactoryConfig item = RepositoryFactoryConfig.restore( element.getTextData() );
           if( item != null )
           {
-            final IRepository rep = item.createFactory( getClass().getClassLoader() ).createRepository();
+            // TODO: dirty! always use extension mechanism to instantiate repositories
+            final IRepository rep = item.getFactory( ).createRepository();
 
             final IMemento propsMem = element.getChild( RepositoryExplorerPart.TAG_REPOSITORY_PROPS );
             if( propsMem != null )

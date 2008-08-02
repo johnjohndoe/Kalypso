@@ -173,7 +173,7 @@ public class RequestFactory
     }
     final String xmlStr = writer.toString();
     if( !includeXmlHeader )
-      return xmlStr.replaceAll( "<\\?xml.*>", "" ).replaceAll( "\n", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      return xmlStr.replaceAll( "<\\?xml.*\\?>", "" ).replaceAll( "\n", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     return xmlStr;
   }
 }

@@ -114,9 +114,9 @@ public class WechmannFactory
       final Wechmann wm = (Wechmann) unm.unmarshal( ins );
       final WechmannSet[] sets = new WechmannSet[wm.getSet().size()];
       int i = 0;
-      for( Iterator it = wm.getSet().iterator(); it.hasNext(); )
+      for( Iterator<XMLWechmannSet> it = wm.getSet().iterator(); it.hasNext(); )
       {
-        final XMLWechmannSet wset = (XMLWechmannSet) it.next();
+        final XMLWechmannSet wset = it.next();
         final WechmannParams[] wparams = new WechmannParams[wset.getParams().size()];
         int j = 0;
         for( final XMLWechmannParams wp : wset.getParams() )
@@ -165,17 +165,17 @@ public class WechmannFactory
       final Wechmann wt = OF_WECHMANN.createWechmann();
       final List<XMLWechmannSet> sets = wt.getSet();
       final SimpleDateFormat df = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ); //$NON-NLS-1$
-      for( final Iterator it = wg.iterator(); it.hasNext(); )
+      for( final Iterator<WechmannSet> it = wg.iterator(); it.hasNext(); )
       {
-        final WechmannSet wset = (WechmannSet) it.next();
+        final WechmannSet wset = it.next();
         final XMLWechmannSet wechmannSet = OF_WECHMANN.createXMLWechmannSet();
         final Validity validityType = OF_WECHMANN.createXMLWechmannSetValidity();
         validityType.setFormat( df.toPattern() );
         validityType.setValue( df.format( wset.getValidity() ) );
         wechmannSet.setValidity( validityType );
-        for( final Iterator itp = wset.iterator(); itp.hasNext(); )
+        for( final Iterator<WechmannParams> itp = wset.iterator(); itp.hasNext(); )
         {
-          final WechmannParams wp = (WechmannParams) itp.next();
+          final WechmannParams wp = itp.next();
           final XMLWechmannParams wechmannParams = OF_WECHMANN.createXMLWechmannParams();
           wechmannParams.setK2( wp.getK2() );
           wechmannParams.setLnk1( wp.getLNK1() );
