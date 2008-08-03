@@ -1,16 +1,27 @@
 <?xml version='1.0' encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	version="1.0">
 
-	<xsl:import href="latex-docbook.xsl"/>
+	<xsl:import href="latex-docbook.xsl" />
 
-	<xsl:output method="text" encoding="ISO-8859-1" indent="yes"/>
+	<xsl:output method="text" encoding="UTF-8" indent="yes" />
 
-	<xsl:variable name="latex.babel.language">german</xsl:variable>
+	<xsl:template name="latex.float.preamble" />
+
+	<xsl:variable name="latex.inputenc">utf8</xsl:variable>
+	<xsl:variable name="latex.document.font">times</xsl:variable>
+	<xsl:variable name="latex.fontenc">T1</xsl:variable>
+	<xsl:param name="unicode.mapping.languages">de</xsl:param>
+
+	<xsl:variable name="latex.babel.language">germanb</xsl:variable>
 	<xsl:variable name="latex.use.babel">1</xsl:variable>
 
-	<xsl:variable name="latex.use.isolatin1">0</xsl:variable>
+	<xsl:variable name="latex.is.draft">0</xsl:variable>
 
-	<xsl:variable name="latex.hyperref.param.pdftex">colorlinks, linkcolor=blue, urlcolor=blue, bookmarks=true,bookmarksnumbered=true</xsl:variable>
+	<xsl:variable name="latex.hyperref.param.pdftex">
+		colorlinks, linkcolor=blue, urlcolor=blue,
+		bookmarks=true,bookmarksnumbered=true
+	</xsl:variable>
 	<xsl:variable name="latex.use.hyperref">1</xsl:variable>
 
 	<xsl:variable name="latex.book.begindocument">
@@ -28,44 +39,39 @@
 
 	<xsl:param name="admon.graphics.path">./img/admon</xsl:param>
 
-	<xsl:variable name="latex.hyperref.preamble"/>
+	<xsl:variable name="latex.hyperref.preamble" />
 	<xsl:variable name="latex.use.fancyvrb">1</xsl:variable>
 	<xsl:variable name="latex.use.fancybox">1</xsl:variable>
 	<xsl:variable name="latex.use.fancyhdr">1</xsl:variable>
 	<xsl:variable name="latex.fancyhdr.style">natural</xsl:variable>
-	<xsl:variable name="latex.use.subfigure">1</xsl:variable>
-	<xsl:variable name="latex.use.rotating">1</xsl:variable>
+	<xsl:variable name="latex.use.subfigure">0</xsl:variable>
+	<xsl:variable name="latex.use.rotating">0</xsl:variable>
 	<xsl:variable name="latex.pdf.support">1</xsl:variable>
 	<xsl:variable name="latex.math.support">1</xsl:variable>
-    
-    <xsl:param name="latex.url.quotation">0</xsl:param>
+
+	<xsl:param name="latex.url.quotation">0</xsl:param>
 	<xsl:param name="latex.hyphenation.tttricks">1</xsl:param>
 	<xsl:param name="latex.generate.indexterm">1</xsl:param>
+	<xsl:param name="latex.biblio.output">all</xsl:param>
+	<xsl:param name="latex.style">docbook</xsl:param>
 
 	<xsl:param name="toc.section.depth">2</xsl:param>
-	<!-- Mögliche fonts:
-		helvetic
-		palatino
-		charter		funktioniert nicht
-		avant
-		courier
-		lucida		funktioniert nicht
-		courier
-		bookman		sehr hässlich
-		palatcm		funktioniert nicht
-		newcent
+	<xsl:param name="ignore.image.scaling" select="0"></xsl:param>
+
+	<xsl:variable name="ignore.image.scaling">0</xsl:variable>
+	<!-- 
+	<xsl:param name="latex.figure.position">[htbp]</xsl:param>
+	 -->
+	<xsl:param name="latex.figure.boxed">0</xsl:param>
+	<xsl:param name="latex.documentclass.pdftex"/>
+	<!-- 
+		<xsl:variable name="contentwidth" />
+		<xsl:variable name="contentdepth" />
+		<xsl:variable name="scalefit">1</xsl:variable>
 	-->
-	<xsl:variable name="latex.document.font">default</xsl:variable>
-	<xsl:param name="latex.fontenc">T1</xsl:param>
-
-	<xsl:variable name="latex.figure.position">[hbt]</xsl:variable>
-
 	<xsl:variable name="latex.book.preamblestart">
 		\documentclass[a4paper, oneside, 12pt]{book}
-		\usepackage[latin1]{inputenc}
+		\usepackage[pdftex]{graphicx}
 	</xsl:variable>
-
-	<!-- Keine Striche über und unter Tabellen und Figuren -->
-	<xsl:template name="latex.float.preamble"/>
 
 </xsl:stylesheet>

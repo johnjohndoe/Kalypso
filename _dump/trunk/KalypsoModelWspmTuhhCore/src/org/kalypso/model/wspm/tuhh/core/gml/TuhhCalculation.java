@@ -70,14 +70,14 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
  */
 public class TuhhCalculation extends AbstractFeatureBinder implements IWspmConstants, IWspmTuhhConstants
 {
-
   public static enum ExeVersion
   {
     _2_0_6_6,
     _2_1_0_0,
     _2_1_1_0,
     _2_1_2_0,
-    _2_1_2_1
+    _2_1_2_1,
+    _2_1_4_0
   }
 
   public static final QName QNAME_TUHH_CALC = new QName( NS_WSPM_TUHH, "CalculationWspmTuhhSteadyState" );

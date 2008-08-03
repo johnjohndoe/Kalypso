@@ -41,8 +41,8 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Import_wspmProjekt = PREFIX
 			+ "kalypso_wspm_Import_wspmProjekt";
 
-	public static final String kalypso_wspm_Projekt_Öffnen_Navigator = PREFIX
-			+ "kalypso_wspm_Projekt_Öffnen_Navigator";
+	public static final String kalypso_wspm_Projekt_ffnen_Navigator = PREFIX
+			+ "kalypso_wspm_Projekt_ï¿½ffnen_Navigator";
 
 	public static final String kalypso_wspm_wspwin_Schnittstelle = PREFIX
 			+ "kalypso_wspm_wspwin_Schnittstelle";
@@ -53,8 +53,8 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Preprozessing = PREFIX
 			+ "kalypso_wspm_Preprozessing";
 
-	public static final String kalypso_wspm_neues_gewässer = PREFIX
-			+ "kalypso_wspm_neues_gewässer";
+	public static final String kalypso_wspm_neues_gewasser = PREFIX
+			+ "kalypso_wspm_neues_gewï¿½sser";
 
 	public static final String kalypso_wspm_Profile_editieren = PREFIX
 			+ "kalypso_wspm_Profile_editieren";
@@ -68,8 +68,8 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Profileditortabelle_NeuerPunkt = PREFIX
 			+ "kalypso_wspm_Profileditortabelle_NeuerPunkt";
 
-	public static final String kalypso_wspm_Profileditortabelle_PunktLöschen = PREFIX
-			+ "kalypso_wspm_Profileditortabelle_PunktLöschen";
+	public static final String kalypso_wspm_Profileditortabelle_PunktLschen = PREFIX
+			+ "kalypso_wspm_Profileditortabelle_PunktLï¿½schen";
 
 	public static final String kalypso_wspm_Profileditortabelle_WerteKopieren = PREFIX
 			+ "kalypso_wspm_Profileditortabelle_WerteKopieren";
@@ -77,11 +77,11 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Profileditorlegende = PREFIX
 			+ "kalypso_wspm_Profileditorlegende";
 
-	public static final String kalypso_wspm_Profileditorlegende_Geländehöhe = PREFIX
-			+ "kalypso_wspm_Profileditorlegende_Geländehöhe";
+	public static final String kalypso_wspm_Profileditorlegende_Gelndehhe = PREFIX
+			+ "kalypso_wspm_Profileditorlegende_Gelï¿½ndehï¿½he";
 
-	public static final String kalypso_wspm_Profileditorlegende_Fließzonen = PREFIX
-			+ "kalypso_wspm_Profileditorlegende_Fließzonen";
+	public static final String kalypso_wspm_Profileditorlegende_Fliezonen = PREFIX
+			+ "kalypso_wspm_Profileditorlegende_Flieï¿½zonen";
 
 	public static final String kalypso_wspm_Profileditorlegende_Geokoordinaten = PREFIX
 			+ "kalypso_wspm_Profileditorlegende_Geokoordinaten";
@@ -98,20 +98,20 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Profileditorlegende_Wehr = PREFIX
 			+ "kalypso_wspm_Profileditorlegende_Wehr";
 
-	public static final String kalypso_wspm_Profileditorlegende_Brücke = PREFIX
-			+ "kalypso_wspm_Profileditorlegende_Brücke";
+	public static final String kalypso_wspm_Profileditorlegende_Brcke = PREFIX
+			+ "kalypso_wspm_Profileditorlegende_Brï¿½cke";
 
 	public static final String kalypso_wspm_Profileditorlegende_Durchlass = PREFIX
 			+ "kalypso_wspm_Profileditorlegende_Durchlass";
 
-	public static final String kalypso_wspm_Gewässerstrang_editieren = PREFIX
-			+ "kalypso_wspm_Gewässerstrang_editieren";
+	public static final String kalypso_wspm_Gewsserstrang_editieren = PREFIX
+			+ "kalypso_wspm_Gewï¿½sserstrang_editieren";
 
-	public static final String kalypso_wspm_Gewässerstrang_Neu = PREFIX
-			+ "kalypso_wspm_Gewässerstrang_Neu";
+	public static final String kalypso_wspm_Gewsserstrang_Neu = PREFIX
+			+ "kalypso_wspm_Gewï¿½sserstrang_Neu";
 
-	public static final String kalypso_wspm_Gewässerstrang_Gewässerprofile_InKarte_einladen = PREFIX
-			+ "kalypso_wspm_Gewässerstrang_Gewässerprofile_InKarte_einladen";
+	public static final String kalypso_wspm_Gewsserstrang_Gewsserprofile_InKarte_einladen = PREFIX
+			+ "kalypso_wspm_Gewï¿½sserstrang_Gewï¿½sserprofile_InKarte_einladen";
 
 	public static final String kalypso_wspm_Abflussereignisse_editieren = PREFIX
 			+ "kalypso_wspm_Abflussereignisse_editieren";
@@ -131,8 +131,8 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Berechnungsparameter_Einstellung = PREFIX
 			+ "kalypso_wspm_Berechnungsparameter_Einstellung";
 
-	public static final String kalypso_wspm_Berechnungsparameter_Fließgesetz = PREFIX
-			+ "kalypso_wspm_Berechnungsparameter_Fließgesetz";
+	public static final String kalypso_wspm_Berechnungsparameter_Fliegesetz = PREFIX
+			+ "kalypso_wspm_Berechnungsparameter_Flieï¿½gesetz";
 
 	public static final String kalypso_wspm_Berechnungsparameter_Abflussereignis = PREFIX
 			+ "kalypso_wspm_Berechnungsparameter_Abflussereignis";
@@ -158,8 +158,8 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Ergebnis_Ausgabe_Karte = PREFIX
 			+ "kalypso_wspm_Ergebnis_Ausgabe_Karte";
 
-	public static final String kalypso_wspm_Ergebnis_Ausgabe_Längsschnitt = PREFIX
-			+ "kalypso_wspm_Ergebnis_Ausgabe_Längsschnitt";
+	public static final String kalypso_wspm_Ergebnis_Ausgabe_Lngsschnitt = PREFIX
+			+ "kalypso_wspm_Ergebnis_Ausgabe_Lï¿½ngsschnitt";
 
 	public static final String kalypso_wspm_Ergebnis_Ausgabe_Tabelle = PREFIX
 			+ "kalypso_wspm_Ergebnis_Ausgabe_Tabelle";
@@ -167,11 +167,11 @@ public interface IKalypsoHelpContextIds {
 	public static final String kalypso_wspm_Ergebnis_Ausgabe_Liste = PREFIX
 			+ "kalypso_wspm_Ergebnis_Ausgabe_Liste";
 
-	public static final String kalypso_wspm_Fließtiefen_Verschneiden = PREFIX
-			+ "kalypso_wspm_Fließtiefen_Verschneiden";
+	public static final String kalypso_wspm_Fliesstiefen_Verschneiden = PREFIX
+			+ "kalypso_wspm_Flieï¿½tiefen_Verschneiden";
 
-	public static final String kalypso_wspm_Fließtiefen_Verschneiden_Durchführung = PREFIX
-			+ "kalypso_wspm_Fließtiefen_Verschneiden_Durchführung";
+	public static final String kalypso_wspm_Fliesstiefen_Verschneiden_Durchfhrung = PREFIX
+			+ "kalypso_wspm_Flieï¿½tiefen_Verschneiden_Durchfï¿½hrung";
 
 	public static final String kalypso_wspm_Karten_Ansichten_einladen = PREFIX
 			+ "kalypso_wspm_Karten_Ansichten_einladen";
