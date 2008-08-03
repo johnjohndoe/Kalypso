@@ -54,9 +54,9 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.NOperationFilterType;
-import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.OperationFilterType;
 import org.kalypso.zml.filters.ZmlFilterType;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -71,8 +71,6 @@ import org.w3._1999.xlinkext.SimpleLinkType;
 public class KrigingReader
 {
   private final String doublePattern = "[0-9\\.]+";
-
-  private final ObjectFactory filterFac = new ObjectFactory();
 
   // TODO remove member ?
   private final org.kalypso.zml.repository.virtual.ObjectFactory vRepFac = new org.kalypso.zml.repository.virtual.ObjectFactory();
@@ -142,23 +140,23 @@ public class KrigingReader
     }
 
     final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
-    final NOperationFilterType nOperationFilter = filterFac.createNOperationFilterType();
+    final NOperationFilterType nOperationFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
     nOperationFilter.setOperator( "+" );
     final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
     for( Iterator iter = map.values().iterator(); iter.hasNext(); )
     {
-      final OperationFilterType filter = filterFac.createOperationFilterType();
-      filterList.add( filterFac.createFilter( filter ) );
+      final OperationFilterType filter = FilterFactory.OF_FILTER.createOperationFilterType();
+      filterList.add( FilterFactory.OF_FILTER.createFilter( filter ) );
       final KrigingRelation rel = (KrigingRelation) iter.next();
       filter.setOperator( "*" );
       filter.setOperand( Double.toString( rel.getFactor() ) );
-      final ZmlFilterType zmlLink = filterFac.createZmlFilterType();
+      final ZmlFilterType zmlLink = FilterFactory.OF_FILTER.createZmlFilterType();
       final SimpleLinkType type = linkFac.createSimpleLinkType();
       final TimeseriesLinkType srcObservaion = m_srcObservationProvider.getObservaionForId( rel.getId() );
       type.setHref( srcObservaion.getHref() );
       // type.setHref( DWD_PSI_Mapper.mapDWDtoPSI( rel.getId() ) );
       zmlLink.setZml( type );
-      filter.setFilter( filterFac.createFilter( zmlLink ) );
+      filter.setFilter( FilterFactory.OF_FILTER.createFilter( zmlLink ) );
       m_logger.info( rel.getId() + " " + rel.getFactor() );
     }
 
@@ -234,7 +232,7 @@ public class KrigingReader
       final ItemType item = vRepFac.createItemType();
       item.setId( feature.getId() );
       item.setName( "Niederschlag - " + feature.getId() );
-      item.setFilter( filterFac.createFilter( createFilter( feature, geoPropName ) ) );
+      item.setFilter( FilterFactory.OF_FILTER.createFilter( createFilter( feature, geoPropName ) ) );
       level.getItem().add( item );
     }
     return repository;

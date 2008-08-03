@@ -37,7 +37,6 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
@@ -47,10 +46,10 @@ import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.FilterFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.Observation;
-import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.TranProLinFilterType;
 
 /**
@@ -62,10 +61,8 @@ public class TranProLinFilterUtilities
   {
     if( resultFile == null )
       return; // nothing to do
-    final ObjectFactory fac = new ObjectFactory();
-    final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
-    final TranProLinFilterType filter = fac.createTranProLinFilterType();
-    
+    final TranProLinFilterType filter = FilterFactory.OF_FILTER.createTranProLinFilterType();
+
     filter.setDateBegin( dateBegin );
     filter.setDateEnd( dateEnd );
     filter.setOperandBegin( operandBegin );
@@ -74,14 +71,13 @@ public class TranProLinFilterUtilities
     filter.setStatusToMerge( statusToMerge );
     filter.setAxisTypes( axisTypes );
     final StringWriter stringWriter = new StringWriter();
-    
-    final Marshaller marshaller = JaxbUtilities.createMarshaller(jc);
-    marshaller.marshal( filter, stringWriter );
+
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( FilterFactory.JC_FILTER );
+    marshaller.marshal( FilterFactory.OF_FILTER.createTranProLinFilter( filter ), stringWriter );
     final String string = XMLUtilities.removeXMLHeader( stringWriter.toString() );
     final String filterInline = XMLUtilities.prepareInLine( string );
     final IObservation resultObservation = ZmlFactory.decorateObservation( baseObservation, filterInline, null );
     // write ZML
-//    final IRequest request = new ObservationRequest( dateBegin.getTime(), dateEnd.getTime() );
     final Observation observationType = ZmlFactory.createXML( resultObservation, request );
     String name = observationType.getName();
     if( name == null )

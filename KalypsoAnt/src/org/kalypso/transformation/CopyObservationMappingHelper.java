@@ -33,6 +33,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
@@ -48,7 +50,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 
 /**
@@ -61,11 +62,15 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  */
 public class CopyObservationMappingHelper
 {
-  public static final String RESULT_LIST_PROP = "mappingMember";
+  private static final QName QNAME_MAPPING_COLLECTION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingCollection" );
 
-  public static final String RESULT_TS_IN_PROP = "inObservationLink";
+  private static final QName QNAME_MAPPING_OBSERVATION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingObservation" );
 
-  public static final String RESULT_TS_OUT_PROP = "outObservationLink";
+  public static final QName RESULT_LIST_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "mappingMember" );
+
+  public static final QName RESULT_TS_IN_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "inObservationLink" );
+
+  public static final QName RESULT_TS_OUT_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "outObservationLink" );
 
   /**
    * @param context
@@ -79,7 +84,7 @@ public class CopyObservationMappingHelper
     final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS, (String) null );
     if( schema == null )
       throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
-    final IFeatureType mapColFT = schema.getFeatureType( "MappingCollection" );
+    final IFeatureType mapColFT = schema.getFeatureType( QNAME_MAPPING_COLLECTION );
     final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true );
     return new GMLWorkspace_Impl( schema, schema.getAllFeatureTypes(), rootFE, context, null, null, null );
   }
@@ -98,23 +103,23 @@ public class CopyObservationMappingHelper
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
-    final IFeatureType mapFT = workspace.getFeatureType( "MappingObservation" );
+    final IFeatureType mapFT = workspace.getGMLSchema().getFeatureType( QNAME_MAPPING_OBSERVATION );
     final Feature rootFeature = workspace.getRootFeature();
 
     // in
-    final IRelationType parentRelation = (IRelationType) mapFT.getProperty( CopyObservationMappingHelper.RESULT_TS_IN_PROP );
-    final Feature mapFE = workspace.createFeature( rootFeature, parentRelation, mapFT );
+    final IRelationType pt3 = (IRelationType) rootFeature.getFeatureType().getProperty( RESULT_LIST_PROP );
+    final Feature mapFE = workspace.createFeature( rootFeature, pt3, mapFT );
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
     final String finalHref = "#" + ZmlURLConstants.FRAGMENT_USEASCONTEXT + "?" + filterInline;
     inLink.setHref( finalHref );
-    mapFE.setProperty( parentRelation, inLink );
+    final IPropertyType inLinkPT = mapFT.getProperty( CopyObservationMappingHelper.RESULT_TS_IN_PROP );
+    mapFE.setProperty( inLinkPT, inLink );
 
     // out
     final TimeseriesLinkType outLink = obsLinkFac.createTimeseriesLinkType();
     outLink.setHref( outHref );
-    final IPropertyType pt2 = FeatureHelper.getPT( mapFE, RESULT_TS_OUT_PROP );
+    final IPropertyType pt2 = mapFT.getProperty( RESULT_TS_OUT_PROP );
     mapFE.setProperty( pt2, outLink );
-    final IRelationType pt3 = (IRelationType) FeatureHelper.getPT( mapFE, RESULT_LIST_PROP );
     workspace.addFeatureAsComposition( rootFeature, pt3, 0, mapFE );
   }
 
@@ -131,17 +136,17 @@ public class CopyObservationMappingHelper
       // so we put the target-obs in the first place since it is
       // the first element that will be backed by the forecast-filter
       // forecast and measured
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP, targetFrom, targetTo, null ),
-          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, sourceFrom, sourceTo, null ) };
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_OUT_PROP.getLocalPart(), targetFrom, targetTo, null ),
+          new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), sourceFrom, sourceTo, null ) };
     }
     else
       // measured
-      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP, sourceFrom, sourceTo, null ), };
+      sources = new CopyObservationFeatureVisitor.Source[] { new CopyObservationFeatureVisitor.Source( RESULT_TS_IN_PROP.getLocalPart(), sourceFrom, sourceTo, null ), };
     // REMARK: forecastFrom and forecastTo where formerly not set which resultet in
     // strange behaviour: run from the runtime workspace, the forecast range
     // was set, from the deployed application it was not, however both used
     // exactly the same plugins. Setting it here succeeded however.
-    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP, sources, new Properties(), forecastFrom, forecastTo, logger, null );
-    workspace.accept( visitor, RESULT_LIST_PROP, 1 );
+    final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( srcContext, resolver, RESULT_TS_OUT_PROP.getLocalPart(), sources, new Properties(), forecastFrom, forecastTo, logger, null );
+    workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }
