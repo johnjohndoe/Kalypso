@@ -39,7 +39,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -61,7 +60,6 @@ import org.kalypso.transformation.CopyObservationMappingHelper;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.InterpolationFilterType;
 import org.kalypso.zml.filters.NOperationFilterType;
-import org.kalypso.zml.filters.ObjectFactory;
 import org.kalypso.zml.filters.OperationFilterType;
 import org.kalypso.zml.filters.ZmlFilterType;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -84,10 +82,6 @@ import org.xml.sax.InputSource;
  */
 public class GMLWeightingTask extends Task
 {
-  final ObjectFactory OF = new ObjectFactory();
-
-  final JAXBContext JC = JaxbUtilities.createQuiet( OF.getClass() );
-
   private File m_targetMapping = null;
 
   private URL m_modelURL;
@@ -161,7 +155,7 @@ public class GMLWeightingTask extends Task
 
       final IUrlResolver urlResolver = UrlResolverSingleton.getDefault();
       // create needed factories
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC, true );
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( FilterFactory.JC_FILTER, true );
 
       final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
 
@@ -187,7 +181,7 @@ public class GMLWeightingTask extends Task
         final URL targetURL = urlResolver.resolveURL( m_targetContext, targetHref );
 
         // 4. build n-operation filter
-        final NOperationFilterType nOperationFilter = OF.createNOperationFilterType();
+        final NOperationFilterType nOperationFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
         nOperationFilter.setOperator( "+" );
         final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
 
@@ -209,14 +203,14 @@ public class GMLWeightingTask extends Task
           if( sourceFeatures == null )
             throw new BuildException( "Kein(e) Quell-Feature(s) gefunden für FeaturePath: " + m_propRelationSourceFeature );
 
-          final OperationFilterType offsetFilter = OF.createOperationFilterType();
+          final OperationFilterType offsetFilter = FilterFactory.OF_FILTER.createOperationFilterType();
           offsetFilter.setOperator( "+" );
           offsetFilter.setOperand( Double.toString( offset ) );
 
-          final NOperationFilterType weightSumFilter = OF.createNOperationFilterType();
+          final NOperationFilterType weightSumFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
           weightSumFilter.setOperator( "+" );
 
-          offsetFilter.setFilter( OF.createNOperationFilter( weightSumFilter ) );
+          offsetFilter.setFilter( FilterFactory.OF_FILTER.createNOperationFilter( weightSumFilter ) );
 
           final List<JAXBElement< ? extends AbstractFilterType>> offsetSummands = weightSumFilter.getFilter();
 
@@ -257,13 +251,13 @@ public class GMLWeightingTask extends Task
             }
 
             // 10. build operation filter with parameters from gml
-            final OperationFilterType filter = OF.createOperationFilterType();
-            offsetSummands.add( OF.createOperationFilter( filter ) );
+            final OperationFilterType filter = FilterFactory.OF_FILTER.createOperationFilterType();
+            offsetSummands.add( FilterFactory.OF_FILTER.createOperationFilter( filter ) );
             filter.setOperator( "*" );
             filter.setOperand( Double.toString( factor ) );
 
             /* Innermost filter part */
-            final ZmlFilterType zmlFilter = OF.createZmlFilterType();
+            final ZmlFilterType zmlFilter = FilterFactory.OF_FILTER.createZmlFilterType();
             final SimpleLinkType simpleLink = linkFac.createSimpleLinkType();
             final String sourceHref = zmlLink.getHref();
             simpleLink.setHref( sourceHref );
@@ -274,21 +268,21 @@ public class GMLWeightingTask extends Task
               final String strFilterXml = FilterFactory.getFilterPart( m_sourceFilter );
 
               final StringReader sr = new StringReader( strFilterXml );
-              final Unmarshaller unmarshaller = JC.createUnmarshaller();
+              final Unmarshaller unmarshaller = FilterFactory.JC_FILTER.createUnmarshaller();
               final JAXBElement<AbstractFilterType> af = (JAXBElement<AbstractFilterType>) unmarshaller.unmarshal( new InputSource( sr ) );
               filter.setFilter( af );
 
               // HACK
               final AbstractFilterType abstractFilter = af.getValue();
               if( abstractFilter instanceof InterpolationFilterType )
-                ((InterpolationFilterType) abstractFilter).setFilter( OF.createZmlFilter( zmlFilter ) );
+                ((InterpolationFilterType) abstractFilter).setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
               else
                 throw new UnsupportedOperationException( "Only InterpolationFilter as source-filter supported at the moment." );
 
               sr.close();
             }
             else
-              filter.setFilter( OF.createZmlFilter( zmlFilter ) );
+              filter.setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
           }
 
           /* Empty NOperation filter is forbidden */
@@ -297,7 +291,7 @@ public class GMLWeightingTask extends Task
             logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Leere Summe für Feature: " + weightFE.getId() );
           }
           else
-            filterList.add( OF.createOperationFilter( offsetFilter ) );
+            filterList.add( FilterFactory.OF_FILTER.createOperationFilter( offsetFilter ) );
         }
 
         /* Empty NOperation filter is forbidden */
@@ -309,7 +303,7 @@ public class GMLWeightingTask extends Task
 
         // 11. serialize filter to string
         final Writer writer = new StringWriter();
-        marshaller.marshal( nOperationFilter, writer );
+        marshaller.marshal( FilterFactory.OF_FILTER.createNOperationFilter( nOperationFilter ), writer );
         writer.close();
         final String string = XMLUtilities.removeXMLHeader( writer.toString() );
         final String filterInline = XMLUtilities.prepareInLine( string );
