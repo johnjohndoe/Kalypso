@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.services.sensor.impl;
+package org.kalypso.services.observation.server;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,7 +61,12 @@ import javax.activation.FileDataSource;
 import javax.jws.WebService;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
@@ -83,12 +88,12 @@ import org.kalypso.repository.RepositoryUtils;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
-import org.kalypso.repository.service.ItemBean;
-import org.kalypso.repository.service.RepositoryBean;
-import org.kalypso.services.common.ServiceConfig;
-import org.kalypso.services.sensor.DataBean;
-import org.kalypso.services.sensor.IObservationService;
-import org.kalypso.services.sensor.ObservationBean;
+import org.kalypso.services.observation.KalypsoServiceObsActivator;
+import org.kalypso.services.observation.sei.DataBean;
+import org.kalypso.services.observation.sei.IObservationService;
+import org.kalypso.services.observation.sei.ItemBean;
+import org.kalypso.services.observation.sei.ObservationBean;
+import org.kalypso.services.observation.sei.RepositoryBean;
 import org.kalypso.zml.Observation;
 import org.kalypso.zml.request.Request;
 import org.xml.sax.InputSource;
@@ -103,8 +108,8 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-@WebService
-public class KalypsoObservationService implements IObservationService
+@WebService(endpointInterface = "org.kalypso.services.observation.sei.IObservationService")
+public class ObservationServiceImpl implements IObservationService
 {
   private final List<IRepository> m_repositories;
 
@@ -129,10 +134,12 @@ public class KalypsoObservationService implements IObservationService
 
   private final Logger m_logger;
 
+  private boolean m_initialized = false;
+
   /**
    * Constructs the service by reading the configuration.
    */
-  public KalypsoObservationService( ) throws RepositoryException
+  public ObservationServiceImpl( )
   {
     m_repositories = new Vector<IRepository>();
     m_mapBeanId2Item = new Hashtable<String, IRepositoryItem>( 512 );
@@ -141,12 +148,35 @@ public class KalypsoObservationService implements IObservationService
     m_mapRepId2Manip = new Hashtable<String, IObservationManipulator>();
     m_mapDataId2File = new Hashtable<String, File>( 128 );
 
-    m_logger = Logger.getLogger( KalypsoObservationService.class.getName() );
+    m_logger = Logger.getLogger( ObservationServiceImpl.class.getName() );
 
-    m_tmpDir = FileUtilities.createNewTempDir( "Observations", ServiceConfig.getTempDir() );
+    m_tmpDir = FileUtilities.createNewTempDir( "Observations" );
     m_tmpDir.deleteOnExit();
 
-    init();
+    // We must start init in a separate thread (aka later), else we get a dead lock
+    // as the init method tries to access another servlet in the same container.
+    final Job initJob = new Job( "Initialising Observation Service" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        try
+        {
+          ObservationServiceImpl.this.init();
+          return Status.OK_STATUS;
+        }
+        catch( final RepositoryException e )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( e );
+          KalypsoServiceObsActivator.getDefault().getLog().log( status );
+          return status;
+        }
+      }
+    };
+    initJob.setPriority( Job.LONG );
+    // TODO: not nice: we even must give some time, in order to let the file servlet initialize
+    // itself... this stinks
+    initJob.schedule( 1000 );
   }
 
   @Override
@@ -180,26 +210,33 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * Initialize the Service according to configuration.
+   * Initialise the Service according to configuration.
    * 
    * @throws RemoteException
    */
-  private final void init( ) throws RepositoryException
+  protected final synchronized void init( ) throws RepositoryException
   {
+    if( m_initialized )
+      return;
+
+    m_initialized = true;
+
     clearCache();
 
     final Properties props = new Properties();
 
     try
     {
-      final URL confLocation = ServiceConfig.getConfLocation();
-      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "IObservationService/repconf_server.xml" );
-      final InputStream stream = confUrl.openStream();
+      final String configurationLocation = System.getProperty( "kalypso.hwv.observation.service.configuration.location" );
+      final URL confLocation = new URL( configurationLocation );
+      final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repconf_server.xml" );
+
       // this call also closes the stream
-      final List<?> facConfs = RepositoryConfigUtils.loadConfig( stream );
+      final List<RepositoryFactoryConfig> facConfs = RepositoryConfigUtils.loadConfig( confUrl );
 
       // load the service properties
-      final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "IObservationService/service.properties" );
+      final URL urlProps = UrlResolverSingleton.resolveUrl( confLocation, "service.properties" );
+
       InputStream ins = null;
       try
       {
@@ -225,15 +262,15 @@ public class KalypsoObservationService implements IObservationService
       }
       catch( final Throwable t )
       {
-        // Catch everything, changeing the log level should not prohibit this service to run
+        // Catch everything, changing the log level should not prohibit this service to run
         t.printStackTrace();
       }
 
       /* Load Repositories */
-      for( final Iterator<?> it = facConfs.iterator(); it.hasNext(); )
+      for( final Iterator< ? > it = facConfs.iterator(); it.hasNext(); )
       {
         final RepositoryFactoryConfig item = (RepositoryFactoryConfig) it.next();
-        final IRepositoryFactory fact = item.createFactory( getClass().getClassLoader() );
+        final IRepositoryFactory fact = item.getFactory();
 
         try
         {
@@ -274,6 +311,15 @@ public class KalypsoObservationService implements IObservationService
 
   public DataBean readData( final String href ) throws SensorException
   {
+    try
+    {
+      init();
+    }
+    catch( RepositoryException e1 )
+    {
+      throw new SensorException( e1 );
+    }
+
     final String hereHref = ZmlURL.removeServerSideId( href );
     final String obsId = ZmlURL.getIdentifierPart( hereHref );
     final ObservationBean obean = new ObservationBean( obsId );
@@ -396,6 +442,8 @@ public class KalypsoObservationService implements IObservationService
   {
     try
     {
+      init();
+
       final IRepositoryItem item = itemFromBean( obean );
 
       final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
@@ -469,6 +517,8 @@ public class KalypsoObservationService implements IObservationService
    */
   public boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
+    init();
+
     // dealing with ROOT?
     if( parent == null )
       return m_repositories.size() > 0;
@@ -491,6 +541,8 @@ public class KalypsoObservationService implements IObservationService
    */
   public ItemBean[] getChildren( final ItemBean pbean ) throws RepositoryException
   {
+    init();
+
     // dealing with ROOT?
     if( pbean == null )
     {
@@ -548,30 +600,29 @@ public class KalypsoObservationService implements IObservationService
    */
   public ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
-    final IRepositoryItem item;
+
     try
     {
-      item = itemFromBean( ib );
+      init();
+
+      final IRepositoryItem item = itemFromBean( ib );
+      if( item == null )
+        return null;
+
+      final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
+
+      if( obs == null )
+        return null;
+
+      final MetadataList md = updateObservation( obs, ib.getId() );
+
+      return new ObservationBean( ib.getId(), obs.getName(), md );
     }
     catch( final RepositoryException e )
     {
       m_logger.throwing( getClass().getName(), "adaptItem", e );
       throw new SensorException( e.getLocalizedMessage(), e );
     }
-
-    if( item == null )
-      return null;
-
-    final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
-
-    if( obs != null )
-    {
-      final MetadataList md = updateObservation( obs, ib.getId() );
-
-      return new ObservationBean( ib.getId(), obs.getName(), md );
-    }
-
-    return null;
   }
 
   private MetadataList updateObservation( final IObservation obs, final String id )
@@ -608,18 +659,12 @@ public class KalypsoObservationService implements IObservationService
   }
 
   /**
-   * @see org.kalypso.services.sensor.IObservationService#getDescription()
-   */
-  public String getDescription( )
-  {
-    return "";
-  }
-
-  /**
    * @see org.kalypso.repository.service.IRepositoryService#reload()
    */
   public void reload( ) throws RepositoryException
   {
+    m_initialized = false;
+
     init();
   }
 
@@ -628,6 +673,8 @@ public class KalypsoObservationService implements IObservationService
    */
   public ItemBean findItem( final String id ) throws RepositoryException
   {
+    init();
+
     for( final Object element : m_repositories )
     {
       final IRepository rep = (IRepository) element;
