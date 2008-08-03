@@ -135,39 +135,40 @@ public class DBFDataSection
       switch( fddata[11] )
       {
         case (byte) 'C':
-      {
+        {
           if( recdata != null && !(recdata instanceof String) )
             throw new DBaseException( "invalid data type at field: " + i );
 
-        final byte[] b;
-        if( recdata == null )
-          b = new byte[0];
-        else if( m_charset == null )
-          b = ( (String)recdata ).getBytes();
-        else
-        {
-          try
+          final byte[] b;
+          if( recdata == null )
+            b = new byte[0];
+          else if( m_charset == null )
+            b = ((String) recdata).getBytes();
+          else
           {
-            b = ( (String)recdata ).getBytes( m_charset );
+            try
+            {
+              b = ((String) recdata).getBytes( m_charset );
+            }
+            catch( final UnsupportedEncodingException e )
+            {
+              throw new DBaseException( "Unsupported encoding: " + e.getLocalizedMessage() );
+            }
           }
-          catch( final UnsupportedEncodingException e )
-          {
-            throw new DBaseException( "Unsupported encoding: " + e.getLocalizedMessage() );
-          }
-        }
 
-        writeEntry( datasec, offset, fddata[16], b, (byte)0x20 );
-          }
+          writeEntry( datasec, offset, fddata[16], b, (byte) 0x20 );
+        }
           break;
-          
+
         case (byte) 'N':
-      {
+        {
           if( recdata != null && !(recdata instanceof Number) )
             throw new DBaseException( "invalid data type at field: " + i );
 
           final int fieldLength = fddata[16];
+          final int decimalcount = fddata[17];
 
-        final byte[] b;
+          final byte[] b;
           if( recdata == null )
           {
             b = new byte[fieldLength];
@@ -176,38 +177,46 @@ public class DBFDataSection
           }
           else
           {
-            // todo: performance: would be probably to create the format-string only once
-            // create format:
-            final int decimalcount = fddata[17];
+            // todo: performance: would probably be better to create the format-string only once
 
-            String pattern;
-            if( decimalcount == 0 )
-              pattern = "%" + fieldLength + "d";
+            final StringBuffer pattern = new StringBuffer( );
+            pattern.append( '%' );
+
+            pattern.append( fieldLength );
+
+            // format specifier must correspond to real type of recdata
+            if( recdata instanceof Double || recdata instanceof Float )
+            {
+              // always append decimalcount for float/double value
+              pattern.append( '.' );
+              pattern.append( decimalcount );
+              pattern.append( 'f' );
+            }
             else
-              pattern = "%" + fieldLength + "." + decimalcount + "f";
+              pattern.append( 'd' );
 
-            final String format = String.format( Locale.US, pattern, recdata );
+            final String format = String.format( Locale.US, pattern.toString(), recdata );
             b = format.getBytes();
           }
 
-        writeEntry( datasec, offset, fddata[16], b, (byte)0x0 );
-      }
-        break;
+          writeEntry( datasec, offset, fieldLength, b, (byte) 0x0 );
+        }
+          break;
 
-      case (byte)'L':
-      {
-        if( recdata != null && !( recdata instanceof Boolean ) )
-          throw new DBaseException( "invalid data type at field: " + i );
+        case (byte) 'L':
+        {
+          if( recdata != null && !(recdata instanceof Boolean) )
+            throw new DBaseException( "invalid data type at field: " + i );
 
-        final Boolean logical = (Boolean)recdata;
-        final byte[] b = new byte[1];
-        if( logical == null || !logical.booleanValue() )
-          b[0] = 'F';
-        else
-          b[0] = 'T';
+          final Boolean logical = (Boolean) recdata;
+          final byte[] b = new byte[1];
+          if( logical == null || !logical.booleanValue() )
+            b[0] = 'F';
+          else
+            b[0] = 'T';
 
-        writeEntry( datasec, offset, fddata[16], b, (byte)0x00 );
-      }
+          writeEntry( datasec, offset, fddata[16], b, (byte) 0x00 );
+        }
           break;
         default:
           throw new DBaseException( "data type not supported" );
@@ -222,8 +231,7 @@ public class DBFDataSection
 
   }
 
-  private void writeEntry( final ByteContainer datasec, final int offset, final byte length, final byte[] b,
-      final byte fillByte ) throws DBaseException
+  private void writeEntry( final ByteContainer datasec, final int offset, final int length, final byte[] b, final byte fillByte ) throws DBaseException
   {
     if( b.length > length )
       throw new DBaseException( "Entry contains too many characters " + new String( b ) );
