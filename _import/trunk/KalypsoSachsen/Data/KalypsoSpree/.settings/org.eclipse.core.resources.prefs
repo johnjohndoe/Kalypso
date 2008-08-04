@@ -1,4 +1,4 @@
-#Wed Jul 16 17:10:50 CEST 2008
+#Sun Aug 03 14:03:51 CEST 2008
 eclipse.preferences.version=1
 encoding//..BCE_Intern/\#ToDo.txt=UTF-8
 encoding//.model/observationConf/OmbrometerMapping.gml=UTF-8
@@ -57,6 +57,8 @@ encoding//.prognose/MergeTestInCalc/calcCase.gml=UTF-8
 encoding//.prognose/Spielwiese/.calculation=UTF-8
 encoding//.prognose/Spielwiese/calcCase.gml=UTF-8
 encoding//.prognose/Stand\ WAVOS\ FK/.calculation=UTF-8
+encoding//.prognose/Stand_SchwarzeElster_11_2006/.calculation=UTF-8
+encoding//.prognose/Stand_SchwarzeElster_11_2006/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Flusslaufparameter.gtt=UTF-8
@@ -387,6 +389,7 @@ encoding//.prognose/Vorhersage-2007-05-03_12h56/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-2007-05-03_12h56/grafik/grafik.tpl=Cp1252
 encoding//.prognose/Vorhersage-2008-07-02_17h04/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2008-07-11_14h58/.calculation=UTF-8
+encoding//.prognose/Vorhersage-2008-08-03_13h58/.calculation=UTF-8
 encoding//.prognose/Vorhersage-25-10-2004_15h15/calcCase.gml=UTF-8
 encoding//.prognose/Vorhersage-25-11-2004_15h28/.calculation=UTF-8
 encoding//.prognose/Vorhersage_SP-2007-12-14_08h55/.calculation=UTF-8
