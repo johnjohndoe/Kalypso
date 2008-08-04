@@ -99,37 +99,13 @@
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.jwsdp"
-         download-size="0"
-         install-size="0"
-         version="1.4"/>
-
-   <plugin
          id="org.kalypso.metadoc"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
 
    <plugin
-         id="org.kalypso.product"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
          id="org.kalypso.repository"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.services.core.client"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.services.user.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
@@ -160,12 +136,6 @@
 
    <plugin
          id="org.kalypso.ui.observationimport"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"/>
-
-   <plugin
-         id="org.kalypso.services.metadoc.client"
          download-size="0"
          install-size="0"
          version="1.0.0"/>
@@ -202,6 +172,33 @@
 
    <plugin
          id="org.kalypso.hwv.product"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.deegree2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.simulation.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.contribs.ogc2x"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.contribs.ogc31"
          download-size="0"
          install-size="0"
          version="0.0.0"
