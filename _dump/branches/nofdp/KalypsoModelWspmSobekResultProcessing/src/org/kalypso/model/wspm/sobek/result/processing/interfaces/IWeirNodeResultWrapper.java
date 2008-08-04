@@ -28,9 +28,9 @@ public interface IWeirNodeResultWrapper
 
   void init( ) throws CoreException;
 
-  public IResultTimeSeries getDischarge( ) throws CoreException;
+  public IResultTimeSeries getDischarge( ) throws CoreException; // m³/sec
 
-  public IResultTimeSeries getWaterLevelAbove( ) throws CoreException;
+  public IResultTimeSeries getWaterLevelAbove( ) throws CoreException; // m NHN
 
-  public IResultTimeSeries getWaterLevelBelow( ) throws CoreException;
+  public IResultTimeSeries getWaterLevelBelow( ) throws CoreException; // m NHN
 }

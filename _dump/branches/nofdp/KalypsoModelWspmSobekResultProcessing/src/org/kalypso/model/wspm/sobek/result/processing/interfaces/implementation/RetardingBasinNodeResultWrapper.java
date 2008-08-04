@@ -156,7 +156,7 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
         String myParamId;
         if( RETARDING_BASIN_NODE_RESULT.eWaterLevel.equals( type ) )
         {
-          myParamId = "Waterlevel (m AD)";
+          myParamId = "Waterlevel  (m AD)"; // achtung: 2 leerzeichen!
         }
         else if( RETARDING_BASIN_NODE_RESULT.eHochwasserEntlastung.equals( type ) )
         {
@@ -184,7 +184,6 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     {
       public String getParameterId( )
       {
-        // TODO Auto-generated method stub
         return "Q";
       }
 
@@ -201,7 +200,6 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     {
       public String getParameterId( )
       {
-        // TODO Auto-generated method stub
         return "Q";
       }
 
@@ -218,7 +216,6 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     {
       public String getParameterId( )
       {
-        // TODO Auto-generated method stub
         return "W";
       }
 
