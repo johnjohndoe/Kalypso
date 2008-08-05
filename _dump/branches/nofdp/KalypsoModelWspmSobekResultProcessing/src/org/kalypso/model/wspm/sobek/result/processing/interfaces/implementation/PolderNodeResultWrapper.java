@@ -21,7 +21,7 @@ import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode.STRUCTURE_TYPE;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IPolderNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
-import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
+import org.kalypso.model.wspm.sobek.result.processing.model.implementation.PolderNodeTimeSeriesHandler;
 import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
 import org.kalypso.model.wspm.sobek.result.processing.worker.IResultWorkerSettings;
 import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
@@ -129,7 +129,7 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
     {
       final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) );
       if( cmd != null )
-        return new ResultTimeSeriesHandler( cmd.getRootFeature(), m_node );
+        return new PolderNodeTimeSeriesHandler( type, cmd.getRootFeature(), m_node );
 
       /* get cross section node result file */
       IFile iFile = ResultModelHelper.getPolderNodeResultFile( m_resultFolder, m_node, type ); //$NON-NLS-1$
@@ -161,14 +161,16 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
         if( binding == null )
           return null;
 
-        final ResultWorker worker = new ResultWorker( workspace, binding, m_node );
+        PolderNodeTimeSeriesHandler handler = new PolderNodeTimeSeriesHandler( type, workspace.getRootFeature(), m_node );
+
+        final ResultWorker worker = new ResultWorker( workspace, binding, m_node, handler );
         worker.process( settings );
 
         // save changes
         GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), workspace, "UTF-8" ); //$NON-NLS-1$
       }
 
-      return new ResultTimeSeriesHandler( workspace.getRootFeature(), m_node );
+      return new PolderNodeTimeSeriesHandler( type, workspace.getRootFeature(), m_node );
     }
     catch( final Exception e )
     {

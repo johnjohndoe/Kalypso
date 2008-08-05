@@ -12,16 +12,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 
 public interface IResultTimeSeries extends Feature
 {
-// {org.kalypso.model.wspm.sobek.result.ts}ResultTs
-// - {org.kalypso.model.wspm.sobek.result.ts}uniqueID
-// - {org.kalypso.model.wspm.sobek.result.ts}stationName
-// - {org.kalypso.model.wspm.sobek.result.ts}name
-// - {org.kalypso.model.wspm.sobek.result.ts}paramID
-// - {org.kalypso.model.wspm.sobek.result.ts}unit
-// - {org.kalypso.model.wspm.sobek.result.ts}maxValue
-// - {org.kalypso.model.wspm.sobek.result.ts}lastValue
-// - {org.kalypso.model.wspm.sobek.result.ts}durationValuePairMember
-// - {org.kalypso.model.wspm.sobek.result.ts}resultMember
 
   public static final QName QN_TYPE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "ResultTs" );
 
@@ -46,6 +36,16 @@ public interface IResultTimeSeries extends Feature
   public static final String DICT_OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#DATE"; //$NON-NLS-1$
 
   public static final String DICT_OBS_WATERLEVEL = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#WATERLEVEL"; //$NON-NLS-1$
+
+  public static final String DICT_OBS_DISCHARGE = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#DISCHARGE"; //$NON-NLS-1$
+
+  public static final String DICT_OBS_INFLOW = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#INFLOW"; //$NON-NLS-1$
+
+  public static final String DICT_OBS_OUTFLOW = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#OUTFLOW"; //$NON-NLS-1$
+
+  public static final String DICT_OBS_GRUNDABLASS = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#GRUNDABLASS"; //$NON-NLS-1$
+
+  public static final String DICT_OBS_HOCHWASSERENTLASTUNG = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#HOCHWASSERENTLASTUNG"; //$NON-NLS-1$
 
   public static final QName QN_MIN_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "minValue" );
 

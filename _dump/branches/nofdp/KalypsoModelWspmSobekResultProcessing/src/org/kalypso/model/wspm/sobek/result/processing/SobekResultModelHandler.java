@@ -41,7 +41,7 @@ import org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation.
 import org.kalypso.model.wspm.sobek.result.processing.model.IBranchLengthSectionModel;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.implementation.BranchLengthSectionsHandler;
-import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
+import org.kalypso.model.wspm.sobek.result.processing.model.implementation.NodeTimeSeriesHandler;
 import org.kalypso.model.wspm.sobek.result.processing.utils.ResultModelHelper;
 import org.kalypso.model.wspm.sobek.result.processing.worker.IResultWorkerSettings;
 import org.kalypso.model.wspm.sobek.result.processing.worker.ResultWorker;
@@ -205,7 +205,7 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
     {
       final CommandableWorkspace cmd = m_commandables.get( node.getId() );
       if( cmd != null )
-        return new ResultTimeSeriesHandler( cmd.getRootFeature(), node );
+        return new NodeTimeSeriesHandler( cmd.getRootFeature(), node );
 
       /* get cross section node result file */
       IFile iFile = ResultModelHelper.getNodeResultFile( m_resultFolder, node ); //$NON-NLS-1$
@@ -230,14 +230,16 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
 
       registerWorkspaces( node.getId(), gmlWorkspace, workspace );
 
-      /* fill empty workspace with results */
       if( empty )
       {
+        /* fill empty workspace with results */
         final TimeSerieComplexType binding = getNodeBinding( node );
         if( binding == null )
           return null;
 
-        final ResultWorker worker = new ResultWorker( workspace, binding, node );
+        NodeTimeSeriesHandler handler = new NodeTimeSeriesHandler( workspace.getRootFeature(), node );
+
+        final ResultWorker worker = new ResultWorker( workspace, binding, node, handler );
         worker.process( new IResultWorkerSettings()
         {
           public String getParameterId( )
@@ -255,7 +257,7 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
         GmlSerializer.serializeWorkspace( iFile.getLocation().toFile(), workspace, "UTF-8" ); //$NON-NLS-1$
       }
 
-      return new ResultTimeSeriesHandler( workspace.getRootFeature(), node );
+      return new NodeTimeSeriesHandler( workspace.getRootFeature(), node );
     }
     catch( final Exception e )
     {

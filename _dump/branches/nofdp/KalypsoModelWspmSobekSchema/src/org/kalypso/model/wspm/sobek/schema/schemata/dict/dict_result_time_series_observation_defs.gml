@@ -46,4 +46,132 @@
 				</swe:representation>-->
 		</swe:ItemDefinition>
 	</gml:dictionaryEntry>
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="DISCHARGE">
+			<gml:name>%dischargeItemName</gml:name>
+			<swe:property>
+				<swe:Phenomenon gml:id="Phenomenon_Q">
+					<gml:description>Discharge</gml:description>
+					<gml:name>Q</gml:name>
+				</swe:Phenomenon>
+			</swe:property>
+			<swe:representation>
+				<swe:SimpleType>
+					<xst:restriction base="decimal">
+						<xst:fractionDigits value="2" />
+					</xst:restriction>
+					<gml:unitOfMeasure uom="m³/s" />
+				</swe:SimpleType>
+			</swe:representation>
+			<!--
+				<swe:representation>
+				<swe:Number>
+				<gml:unitOfMeasure uom="m³/s"/>
+				</swe:Number>
+				</swe:representation>-->
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="OUTFLOW">
+			<gml:name>%outflowItemName</gml:name>
+			<swe:property>
+				<swe:Phenomenon gml:id="Phenomenon_Outflow">
+					<gml:description>Outflow</gml:description>
+					<gml:name>Q</gml:name>
+				</swe:Phenomenon>
+			</swe:property>
+			<swe:representation>
+				<swe:SimpleType>
+					<xst:restriction base="decimal">
+						<xst:fractionDigits value="2" />
+					</xst:restriction>
+					<gml:unitOfMeasure uom="m³/s" />
+				</swe:SimpleType>
+			</swe:representation>
+			<!--
+				<swe:representation>
+				<swe:Number>
+				<gml:unitOfMeasure uom="m³/s"/>
+				</swe:Number>
+				</swe:representation>-->
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="INFLOW">
+			<gml:name>%inflowItemName</gml:name>
+			<swe:property>
+				<swe:Phenomenon gml:id="Phenomenon_Inflow">
+					<gml:description>Inflow</gml:description>
+					<gml:name>Q</gml:name>
+				</swe:Phenomenon>
+			</swe:property>
+			<swe:representation>
+				<swe:SimpleType>
+					<xst:restriction base="decimal">
+						<xst:fractionDigits value="2" />
+					</xst:restriction>
+					<gml:unitOfMeasure uom="m³/s" />
+				</swe:SimpleType>
+			</swe:representation>
+			<!--
+				<swe:representation>
+				<swe:Number>
+				<gml:unitOfMeasure uom="m³/s"/>
+				</swe:Number>
+				</swe:representation>-->
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="HOCHWASSERENTLASTUNG">
+			<gml:name>%hochwasserEntlastungItemName</gml:name>
+			<swe:property>
+				<swe:Phenomenon gml:id="Phenomenon_HochwasserEntlastung">
+					<gml:description>Hochwasserentlastung</gml:description>
+					<gml:name>Q</gml:name>
+				</swe:Phenomenon>
+			</swe:property>
+			<swe:representation>
+				<swe:SimpleType>
+					<xst:restriction base="decimal">
+						<xst:fractionDigits value="2" />
+					</xst:restriction>
+					<gml:unitOfMeasure uom="m³/s" />
+				</swe:SimpleType>
+			</swe:representation>
+			<!--
+				<swe:representation>
+				<swe:Number>
+				<gml:unitOfMeasure uom="m³/s"/>
+				</swe:Number>
+				</swe:representation>-->
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="GRUNDABLASS">
+			<gml:name>%grundAblassItemName</gml:name>
+			<swe:property>
+				<swe:Phenomenon gml:id="Phenomenon_GrundAblass">
+					<gml:description>Grundablass</gml:description>
+					<gml:name>Q</gml:name>
+				</swe:Phenomenon>
+			</swe:property>
+			<swe:representation>
+				<swe:SimpleType>
+					<xst:restriction base="decimal">
+						<xst:fractionDigits value="2" />
+					</xst:restriction>
+					<gml:unitOfMeasure uom="m³/s" />
+				</swe:SimpleType>
+			</swe:representation>
+			<!--
+				<swe:representation>
+				<swe:Number>
+				<gml:unitOfMeasure uom="m³/s"/>
+				</swe:Number>
+				</swe:representation>-->
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
+
 </gml:Dictionary>

@@ -1,7 +1,6 @@
 package org.kalypso.model.wspm.sobek.result.processing.worker;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -31,7 +30,6 @@ import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.core.utils.AtomarAddFeatureCommand;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.IValuePairMember;
-import org.kalypso.model.wspm.sobek.result.processing.model.implementation.ResultTimeSeriesHandler;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -45,7 +43,7 @@ import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl
 
 public class ResultWorker
 {
-  private final ResultTimeSeriesHandler m_handler;
+  private final IResultTimeSeries m_handler;
 
   private final TimeSerieComplexType m_binding;
 
@@ -62,12 +60,12 @@ public class ResultWorker
 
   private final INode m_node;
 
-  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node )
+  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node, IResultTimeSeries handler )
   {
     m_workspace = targetWorkspace;
     m_binding = binding;
     m_node = node;
-    m_handler = new ResultTimeSeriesHandler( targetWorkspace.getRootFeature(), m_node );
+    m_handler = handler;
   }
 
   public void process( IResultWorkerSettings settings ) throws CoreException
@@ -85,12 +83,8 @@ public class ResultWorker
       final XMLGregorianCalendar time = event.getTime();
 
       final GregorianCalendar calendar = new GregorianCalendar();
-      calendar.set( Calendar.DAY_OF_MONTH, date.getDay() );
-      calendar.set( Calendar.MONTH, date.getMonth() );
-      calendar.set( Calendar.YEAR, date.getYear() );
-      calendar.set( Calendar.HOUR_OF_DAY, time.getHour() );
-      calendar.set( Calendar.MINUTE, time.getMinute() );
-      calendar.set( Calendar.SECOND, time.getSecond() );
+      calendar.clear();
+      calendar.set( date.getYear(), date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute(), time.getSecond() );
 
       final Double value = event.getValue();
 
