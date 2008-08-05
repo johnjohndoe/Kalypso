@@ -40,28 +40,93 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.util.export;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
+
+import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Exports an IObservation<TupleResult> to an CSV-Spreadsheet
  * 
  * @author kuch
  */
-public class IObservationSpreadsheetExporter implements ICoreRunnableWithProgress
+public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
 {
+
+  private final IObservation<TupleResult> m_observation;
+
+  private final IFile m_file;
+
+  public ObservationSpreadsheetExporter( IObservation<TupleResult> observation, IFile file )
+  {
+    m_observation = observation;
+    m_file = file;
+  }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
-    // TODO Auto-generated method stub
-    return null;
+    try
+    {
+      FileWriter fileWriter = new FileWriter( m_file.getLocation().toFile() );
+
+      CSVWriter writer = new CSVWriter( fileWriter, ';', '"' );
+
+      TupleResult result = m_observation.getResult();
+
+      /* header */
+      IComponent[] components = result.getComponents();
+      List<String> values = new ArrayList<String>();
+
+      for( IComponent component : components )
+      {
+        values.add( component.getName() );
+      }
+
+      writer.writeNext( values.toArray( new String[] {} ) );
+
+      /* values */
+      for( IRecord record : result )
+      {
+
+        values.clear();
+        for( int i = 0; i < components.length; i++ )
+        {
+          Object value = record.getValue( i );
+          values.add( value.toString() );
+        }
+
+        writer.writeNext( values.toArray( new String[] {} ) );
+      }
+
+      writer.close();
+      fileWriter.close();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+
+      throw new CoreException( StatusUtilities.createErrorStatus( "Exporting observation as spreadsheet failed." ) );
+    }
+
+    return Status.OK_STATUS;
   }
 
 }
