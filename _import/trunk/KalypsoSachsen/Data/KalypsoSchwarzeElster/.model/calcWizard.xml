@@ -320,7 +320,7 @@ ToDo: Help-Ids setzen!!! -->
 					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_NEUWIE.zml"/>
 				</arg>
 			</arg>
-			<arg name="exporter4">
+			<arg name="exporter3b">
 				<arg name="id" value="sumUpTableExporter"/>
 				<arg name="name" value="Abfluss"/>
 				<arg name="documentName" value="ScheitelwerteQ.csv"/>

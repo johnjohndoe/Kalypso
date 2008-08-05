@@ -227,10 +227,11 @@
 		<arg name="mainSash" value="40"/>
 		<arg name="rightSash" value="25"/>
 
+		<arg name="modelLabel" value="Spree"/>
 		<arg name="exporter1">
 			<arg name="id" value="featureWithTemplateExporterTree"/>
 			<arg name="name" value="Vorhersagepegel"/>
-			<arg name="nameproperty" value="Name"/>
+			<!--arg name="nameproperty" value="Name"/-->
 			<arg name="width" value="1024"/>
 			<arg name="height" value="768"/>
 			<arg name="imageFormat" value ="png"/>
@@ -244,18 +245,75 @@
 				<arg name="href6" value="Wasserstand_vorhersage_oben"/>
 			</arg>
 			<arg name="templateDiagQ">
-				<arg name="label" value="Abflußgrafik"/>
+				<arg name="label" value="Abflussgrafik"/>
 				<arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+				<arg name="documentName" value="Pegel ${property:Name;unbekannt}-Abfluss"/>
+				<arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt}-Abfluss"/>
 			</arg>
 			<arg name="templateDiagW">
 				<arg name="label" value="Wasserstandsgrafik"/>
 				<arg name="href" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+				<arg name="documentName" value="Pegel ${property:Name;unbekannt}-Wasserstand"/>
+				<arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt}-Wasserstand"/>
 			</arg>
 			<arg name="templateTable">
 				<arg name="label" value="Tabelle"/>
 				<arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+				<arg name="documentName" value="Pegel ${property:Name;unbekannt}"/>
+				<arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt}"/>
 			</arg>
 		</arg>
+<!-- Scheitelwert-Tabellen W / Q -->
+		<arg name="exporter3">
+			<arg name="id" value="multiExporter"/>
+			<arg name="name" value="Scheitelwerte"/>
+			<arg name="description" value="Exportiert Vorhersageeergebnisse in Form von Scheitelwerttabellen."/>
+			<arg name="exporter3a">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Wasserstand"/>
+				<arg name="documentName" value="ScheitelwerteW.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="documentName" value="Wasserstand-Scheitelwerte"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="axisType" value="W"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="Trado 1"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_LIESKE.zml"/>
+				</arg>
+			</arg>
+			<arg name="exporter3b">
+				<arg name="id" value="sumUpTableExporter"/>
+				<arg name="name" value="Abfluss"/>
+				<arg name="documentName" value="ScheitelwerteQ.csv"/>
+				<arg name="separator" value=";"/>
+				<!--arg name="charset" value="cp1252"/-->
+				<arg name="delta" value="0.0001"/>
+				<arg name="dateFormat" value="dd.MM.yyyy HH:mm:ss"/>
+				<arg name="documentName" value="Abfluss-Scheitelwerte"/>
+				<arg name="documentTitle" value="Scheitelwerttabelle - Abfluss"/>
+				<arg name="column1">
+					<arg name="position" value="1"/>
+					<arg name="label" value="Pegel"/>
+					<arg name="content" value="arg:label"/>
+				</arg>
+				<arg name="axisType" value="Q"/>
+				<arg name="timeUnit" value="HOUR"/>
+				<arg name="timeStep" value="6"/>
+				<arg name="obs1">
+					<arg name="label" value="Trado 1"/>
+					<arg name="href" value="./Ergebnisse/Zeitreihen/QV_LIESKE.zml"/>
+				</arg>
+			</arg>
+		</arg>		
       </page>
 	
 </calcwizard>

@@ -42,10 +42,13 @@ public class PSICompactCommiter extends DocumentServiceSimulation
   protected void commitDocument( final File tmpdir, final Feature metadataFeature, final URL documentURL, final ISimulationMonitor monitor ) throws Exception
   {
     final String preferredFilename = (String) metadataFeature.getProperty( IDocumentServiceConstants.QNAME_META_PREFERRED_FILENAME );
-    final String preferredValidFilename = FileUtilities.validateName( preferredFilename, "_" );
+    
+    final String calcCaseName = (String) metadataFeature.getProperty( MetaDocSerializer.QNAME_PROP_CALCCASE );
+    
+    final String preferredValidFilename = FileUtilities.validateName( calcCaseName + "_"+ preferredFilename, "_" );
     final String goodDocFilePath = filenameCleaner( preferredValidFilename );
 
-    final File docFile = File.createTempFile( "document", goodDocFilePath, tmpdir );
+    final File docFile = new File( tmpdir, goodDocFilePath );
     final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile.getAbsolutePath() ) + ".xml" );
 
     final String importMode = System.getProperty( SYSPROP_IMPORTMODE, "1" );

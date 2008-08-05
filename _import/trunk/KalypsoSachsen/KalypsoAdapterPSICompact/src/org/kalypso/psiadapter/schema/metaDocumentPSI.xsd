@@ -60,6 +60,14 @@
 		                       	</xs:documentation>
 							</xs:annotation>
 						</xs:element>
+						<xs:element name="calcCaseName" type="xs:string">
+							<xs:annotation>
+								<xs:documentation xml:lang="de">
+	                                <xs:label>Rechenvariante</xs:label>
+	                                <xs:tooltip>Bezeichnung dieser Rechenvariante. Gleichzeitig Präfix aller abgelegten Dokumente aus dieser Variante.</xs:tooltip>
+		                       	</xs:documentation>
+							</xs:annotation>
+						</xs:element>
 					</xs:sequence>
 				</xs:extension>
 			</xs:complexContent>
