@@ -86,7 +86,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IProfilProvider2.class )
@@ -102,6 +102,9 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
           {
             final FeatureSelectionProfileProvider oldFeatureSelectionProvider = m_providers.get( part );
             final ISelectionProvider oldSelectionProvider = oldFeatureSelectionProvider.getSelectionProvider();
+
+            if( oldSelectionProvider == null )
+              return null;
 
             if( oldSelectionProvider.equals( selectionProvider ) )
               return oldFeatureSelectionProvider;
@@ -126,7 +129,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   /**
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public Class[] getAdapterList( )
   {
     return new Class[] { IProfilProvider2.class };
