@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="Grundfunktionen" vendor="sachsen,sachsen-anhalt">
+<chapter id="Grundfunktionen" vendor="sachsen;sachsen-anhalt">
   <title>Modellpflege</title>
 
   <indexterm>
@@ -27,7 +27,7 @@
     Hauptmenüleiste können auf dem Server gespeicherte Modelle importiert bzw.
     editierte Modelldateien auf den Server zurückgeschrieben werden. Im
     Einzelnen bestehen folgende Möglichkeiten (siehe <xref
-    linkend="pic_menu_modell" />):</para>
+    linkend="PicMenuModell" />):</para>
 
     <figure id="PicMenuModell">
       <title>Hauptmenü Modell</title>
@@ -198,7 +198,7 @@
         Einzugsgebietsfläche, Name eines Pegels) werden in Form von Tabellen
         dargestellt. Zur grafischen Darstellung von Zeitreihen ist eine
         Diagramm-Ansicht in der Oberfläche integriert (siehe <xref
-        linkend="grundfunktionen" /> ).</para>
+        linkend="Grundfunktionen" /> ).</para>
       </listitem>
 
       <listitem>
@@ -217,7 +217,7 @@
         <para>Auf dem Server befindliche Zeitreihen können in das Modell
         übernommen werden und bestimmten Elementen zugeordnet werden
         (Pegelzeitreihen, Talsperrenabgaben), siehe auch <xref
-        linkend="zeitreihen_repository" />.</para>
+        linkend="ZeitreihenRepository" />.</para>
       </listitem>
 
       <listitem>
@@ -251,7 +251,7 @@
       einzelnen Ansichten Änderungen in den Modellparametern (hier handelt es
       sich um ein Niederschlag-Abfluss-Modell) vorgenommen werden können. Dazu
       werden in der KALYPSO-Oberfläche eine Karten- und eine Tabellenansicht
-      geöffnet (siehe <xref linkend="modellparameter_edit" />).</para>
+      geöffnet (siehe <xref linkend="ModellparameterEdit" />).</para>
 
       <figure id="ModellparameterEdit">
         <title>Ansicht zur Änderung von Modellparametern</title>
@@ -292,7 +292,7 @@
       können die Werte in der Tabelle editiert werden. Im vorliegenden Fall
       wird der Faktor für die Gebietsniederschläge des ausgewählten
       Teilgebietes auf 1,5 erhöht (siehe <xref
-      linkend="modellparameter_edit_gross" />).</para>
+      linkend="ModellparameterEditGross" />).</para>
 
       <figure id="ModellparameterEditGross">
         <title>Ändern eines Tabellen-Wertes</title>
@@ -437,7 +437,7 @@
       von Zeitreihen in den Rechenlauf-Ordner gespeichert. Die Speicherung
       erfolgt im lokalen Arbeitsverzeichnis. Ggf. müssen die berechneten
       Ergebnisse vom Benutzer auf den Server übertragen werden (siehe <xref
-      linkend="rechenvariante_archivieren" />).</para>
+      linkend="RechenvarianteArchivieren" />).</para>
     </section>
 
     <section id="RechenvarianteAktualisieren">
@@ -476,7 +476,7 @@
       Server. Existiert bereits eine gleichnamige Rechenvariante, ist eine
       Archivierung nicht möglich. Um die in Frage stehende Rechenvariante
       trotzdem zu archivieren, kann eine Kopie unter einem anderen Namen
-      erstellt (siehe <xref linkend="rechenvariante_kopieren" />) und dann
+      erstellt (siehe <xref linkend="RechenvarianteKopieren" />) und dann
       archiviert werden.</para>
     </section>
   </section>
@@ -519,7 +519,7 @@
         ausgegeben. Die Tabelle besteht aus einer Zeitspalte (Datum, Uhrzeit)
         und dem dazugehörigen Wert (Wasserstand, Abfluss). Alle in der Tabelle
         enthaltenen Werte können editiert werden. Es gelten die allgemeinen
-        Änderungsoptionen, die in <xref linkend="ansichtssteuerung" />
+        Änderungsoptionen, die in <xref linkend="Ansichtssteuerung" />
         beschrieben werden. Vorgenommene Änderungen werden über <menuchoice>
             <guimenu>Datei</guimenu>
 
@@ -539,7 +539,7 @@
         Ergebnisse können je nach Konfiguration von Kalypso exportiert
         werden.</para>
 
-        <para>Siehe hierzu <xref linkend="dokumentenexport" />.</para>
+        <para>Siehe hierzu <xref linkend="Dokumentenexport" />.</para>
       </listitem>
     </itemizedlist>
   </section>
@@ -573,7 +573,7 @@
       Datei. Im Fall eines Zeitreihendiagramms wird die Ansicht zum Beispiel
       als Bild exportiert. In diesem Fall wird im Assistenten die Grösse und
       Format der Bilddatei abgefragt (siehe <xref
-      linkend="pic_docexport_wizard_imageoptions" />). Auf jeden Fall ist
+      linkend="PicDocexportWizardImageoptions" />). Auf jeden Fall ist
       natürlich der Pfad auf die zu speichernde Datei einzugeben.</para>
 
       <figure id="PicDocexportWizardImageoptions">
@@ -609,7 +609,7 @@
       id="MenuDiagrammBerichtsablage">Diagramm</guimenu> ) unter <guimenu
       id="MenuBerichtsablage">Berichtsablage...</guimenu> . Es folgt eine
       Eingabemaske, in der zusätzliche Informationen zu der exportierten Datei
-      eingetragen werden können (siehe <xref linkend="pic_berichtsablage" />
+      eingetragen werden können (siehe <xref linkend="PicBerichtsablage" />
       ).</para>
 
       <figure id="PicBerichtsablage">

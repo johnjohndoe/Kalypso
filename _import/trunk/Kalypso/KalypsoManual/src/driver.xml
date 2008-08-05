@@ -9,6 +9,12 @@
 	
 
 	<!ENTITY file_wizards_allg SYSTEM "Vorhersage_Assistenten_allg.xml">
+	<!ENTITY file_wizard_ElbeZwg SYSTEM "Vorhersage_Assistent_ElbeZwg.xml">
+	<!ENTITY file_wizard_ElbePolte SYSTEM "Vorhersage_Assistent_ElbePolte.xml">
+	<!ENTITY file_wizard_ElbeWavosSachsen SYSTEM "Vorhersage_Assistent_ElbeWavosSachsen.xml">
+	<!ENTITY file_wizard_SchwarzeElster SYSTEM "Vorhersage_Assistent_SchwarzeElster.xml">
+	<!ENTITY file_wizard_Spree SYSTEM "Vorhersage_Assistent_Spree.xml">
+	<!ENTITY file_wizard_WeisseElster SYSTEM "Vorhersage_Assistent_WeisseElster.xml">
 	<!ENTITY file_wizard_Ilse SYSTEM "Vorhersage_Assistent_Ilse.xml">
 	<!ENTITY file_wizard_Bode SYSTEM "Vorhersage_Assistent_Bode.xml">
 	<!ENTITY file_wizard_Saale SYSTEM "Vorhersage_Assistent_Saale.xml">
@@ -29,11 +35,21 @@
 	&file_modellpflege; 
 	&file_repository;
 	
-	<chapter vendor="sachsen,sachsen-anhalt" id="vorhersage_wizards">
+	<chapter vendor="sachsen;sachsen-anhalt" id="vorhersage_wizards">
 		<title>Vorhersage-Assistent</title>
 		<indexterm><primary>Vorhersage-Assistent</primary> </indexterm>
 		
 		&file_wizards_allg;
+
+		<!-- Sachsen -->
+		&file_wizard_ElbeZwg;
+		&file_wizard_ElbePolte;
+		&file_wizard_ElbeWavosSachsen;
+		&file_wizard_SchwarzeElster;
+		&file_wizard_Spree; 
+		&file_wizard_WeisseElster; 
+		
+		<!-- Sachsen-Anhalt -->
 		&file_wizard_Ilse;
 		&file_wizard_Bode;
 		&file_wizard_Saale;

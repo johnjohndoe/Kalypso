@@ -24,6 +24,7 @@
 	<property name="dist.dir" value="${manual.project}/dist" />
 	<property name="dist.pdf.dir" value="${dist.dir}/pdf" />
 	<property name="dist.html.dir" value="${dist.dir}/html" />
+	<property name="dist.wordml.dir" value="${dist.dir}/wordml" />
 	<property name="dist.eclipse.dir" value="${dist.dir}/eclipse" />
 	<property name="dist.fo.dir" value="${dist.dir}/fo" />
 
@@ -45,6 +46,7 @@
 		<dtd publicId="-//OASIS//DTD DocBook XML V4.4//EN" location="${docbook.dtd.dir}/docbookx.dtd" />
 		<dtd publicId="profile.xsl" location="${docbook.xsl.dir}/profiling/profile.xsl" />
 		<dtd publicId="chunk.xsl" location="${docbook.xsl.dir}/html/chunk.xsl" />
+		<dtd publicId="wordml.xsl" location="${docbook.xsl.dir}/wordml/wordml.xsl" />
 		<dtd publicId="eclipse-ex.xsl" location="${docbook.xsl.dir}/eclipse/eclipse-ex.xsl" />
 		<dtd publicId="fo-docbook.xsl" location="${docbook.xsl.dir}/fo/docbook.xsl" />
 		<dtd publicId="latex-docbook.xsl" location="${docbook.latex.xsl.dir}/xsl/docbook.xsl" />
@@ -59,6 +61,7 @@
 
 		<mkdir dir="${dist.pdf.dir}" />
 		<mkdir dir="${dist.html.dir}" />
+		<mkdir dir="${dist.wordml.dir}" />
 		<mkdir dir="${dist.eclipse.dir}" />
 		<mkdir dir="${dist.fo.dir}" />
 
@@ -98,6 +101,9 @@
 
 	<target name="profiling" description="Hilfsfunktion zum Profilen von DocBook" depends="init">
 		<!-- First we do the profiling -->
+		
+		<echo message="Catalog: ${publishing.dir}/docbook-xsl-1.73.2"/>
+		
 		<xslt basedir="${build.merged.dir}" in="${doc.path}" out="${doc.profiled.path}" style="${build.merged.xsl.dir}/common-profile.xsl">
 			<xmlcatalog refid="docbookCatalog" />
 		</xslt>
@@ -129,6 +135,26 @@
 		<copy todir="${dist.html.dir}/img">
 			<fileset dir="${image.dir}" includes="**/*" />
 		</copy>
+	</target>
+
+	<target name="wordml" depends="profiling" description="Erzeugt das Benutzerhandbuch - Word-Version">
+		<xslt basedir="${build.merged.dir}" in="${doc.profiled.path}" out="${dist.wordml.dir}/dummy.wordml" style="${build.merged.xsl.dir}/common-wordml.xsl">
+			<xmlcatalog refid="docbookCatalog" />
+		</xslt>
+
+		<!--
+		<copy todir="${dist.wordml.dir}">
+			<fileset dir="${css.dir}" includes="*.*" />
+		</copy>
+		-->
+
+		<!-- TODO: filter the needed images from the profiled docbook and copy only those -->
+		<!--
+		<mkdir dir="${dist.wordml.dir}/img" />
+		<copy todir="${dist.wordml.dir}/img">
+			<fileset dir="${image.dir}" includes="**/*" />
+		</copy>
+		-->
 	</target>
 
 	<target name="eclipse-help" depends="profiling" description="Erzeugt das Benutzerhandbuch - Online-Help für Eclipse">

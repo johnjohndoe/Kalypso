@@ -8,17 +8,17 @@
     <secondary>Expertenmodus</secondary>
   </indexterm>
 
-  <para vendor="KalypsoModeler,hh_ingenieurbueros">Im vorliegenden Kapitel
+  <para vendor="KalypsoModeler;hh_ingenieurbueros">Im vorliegenden Kapitel
   werden die allgemein für alle Module anzuwendenden Ansichten und Editoren
   der Benutzeroberfläche (GUI) erläutert.</para>
 
-  <para vendor="sachsen,sachsen-anhalt">Im vorliegenden Kapitel wird die
+  <para vendor="sachsen;sachsen-anhalt">Im vorliegenden Kapitel wird die
   grafische Benutzeroberfläche (GUI) für den KALYPSO Modeler (Expertenmodus)
   erläutert. Die KALYPSO Modeler Perspektive kann über das vorhandene Symbol
   in der Auswahlleiste oder über das Menü <guimenuitem>Fenster</guimenuitem>
   geöffnet werden.</para>
 
-  <figure vendor="sachsen, sachsen-anhalt">
+  <figure vendor="sachsen;sachsen-anhalt">
     <title>KALYPSO Modeler Perspektive öffnen</title>
 
     <mediaobject>
@@ -38,7 +38,7 @@
       <secondary>Allgemeines</secondary>
     </indexterm>
 
-    <para>Die grafische Benutzeroberfläche beinhaltet besteht im
+    <para>Die grafische Benutzeroberfläche im Expertenmodus besteht im
     Wesentlichen aus folgenden Ansichten:</para>
 
     <itemizedlist>
@@ -68,20 +68,22 @@
 
       <listitem>
         <para><emphasis role="bold">Baum-Ansicht</emphasis>: Die Baum-Ansicht
-        stellt eine Gesamtübersicht der betrachteten Daten in Baumform
-        bereit.</para>
+        stellt eine Gesamtübersicht der betrachteten Daten in Baumform bereit.
+        Innere Abhängigkeiten sind so editierbar.</para>
       </listitem>
 
       <listitem>
         <para><emphasis role="bold">Feature-Ansicht</emphasis>: Die
-        Feature-Ansicht ermöglicht den Zugriff auf die Daten des selektierten
+        Feature-Ansicht ermöglicht den Zugriff auf alle Daten des selektierten
         Elements.</para>
       </listitem>
 
       <listitem>
         <para><emphasis role="bold">Tabellen-Ansicht</emphasis>: Die
         Tabellen-Ansicht erlaubt den Zugriff auf Modellparameter bzw.
-        geografische Attribute in Tabellenform.</para>
+        geografische Attribute, welche gleichzeitig mit der Kartenvorlage
+        verknüpft sind. Ebenfalls sind Zeitreihenwerte mit der Tabellenansicht
+        darstellbar und veränderbar.</para>
       </listitem>
 
       <listitem>
@@ -116,13 +118,13 @@
     <para>Die Ergonomie und Logik der Oberfläche ähnelt denen gängiger
     GIS-Programme, sie werden jedoch ergänzt durch generelle Funktionen zur
     Bearbeitung und Verwaltung hydrologischer / hydraulischer Modelle (siehe
-    <xref linkend="grundfunktionen" />).</para>
+    <xref linkend="Grundfunktionen" />).</para>
 
     <para>I.d.R. gehört zu jeder der oben genannten Ansichten ein spezifisches
     Untermenü bzw. Werkzeuge in Form von Toolbars. <abbrev>Z. B.</abbrev>
     umfasst die Karten-Ansicht Menüpunkte zum Ein- und Ausblenden von Themen
     oder zum Zoomen innerhalb der Ansicht (siehe <xref
-    linkend="ansichtssteuerung" />).</para>
+    linkend="Ansichtssteuerung" />).</para>
 
     <section id="GuiOeffnenAnsichten">
       <title>Öffnen einzelner Ansichten</title>
@@ -144,8 +146,8 @@
       gedrückt wird, kann über <guimenuitem>Öffnen mit</guimenuitem> ein für
       den Vorlagentyp speziell konfigurierter Editor gewählt werden.
       <abbrev>Z. B.</abbrev> ist dies im Falle der Karten-Ansicht der KALYPSO
-      Karten-Editor (siehe <xref linkend="gis_view_editor" />) und bei
-      Tabellen der KALYPSO Tabellen-Editor.</para>
+      Karten-Editor (siehe <xref linkend="GisViewEditor" />) und bei Tabellen
+      der KALYPSO Tabellen-Editor.</para>
 
       <figure id="GisViewEditor">
         <title>Öffnen einer Karte anhand des Karten-Editors</title>
@@ -203,7 +205,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="img/gui/Mehrere_Ansichten.png"
-                       scale="100" />
+                       scale="80" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -240,9 +242,9 @@
       <abbrev>z. B.</abbrev> mit der Maus auf das Kreuz neben dem
       Ansichtsnamen in der oberen Ansichtsleiste geklickt wird.</para>
 
-      <para id="MenuFenster">Generell können die Ansichtsfenster auch über
-      das Menü <guimenu>Fenster</guimenu> im Hauptmenü von KALYPSO gesteuert
-      werden (siehe <xref linkend="fenster" />).</para>
+      <para id="MenuFenster">Generell können die Ansichtsfenster auch über das
+      Menü <guimenu>Fenster</guimenu> im Hauptmenü von KALYPSO gesteuert
+      werden (siehe <xref linkend="Fenster" />).</para>
 
       <figure id="Fenster">
         <title>Menü Fenster zur Ansichtsteuerung</title>
@@ -277,11 +279,11 @@
       <primary>KALYPSO-Ansichten</primary>
     </indexterm>
 
-    <para>Die verschiedenen Ansichten in KALYPSO beinhalten
-    generell Untermenüs, die u.a. die Navigation innerhalb der Ansicht
-    ermöglichen. Die wichtigsten und speziell auf die Darstellung und
-    Bearbeitung hydrologischer / hydraulischer Modelle zielenden Ansichten und
-    ihre Anpassungsmöglichkeiten werden nachfolgend erläutert.</para>
+    <para>Die verschiedenen Ansichten in KALYPSO beinhalten generell
+    Untermenüs, die u.a. die Navigation innerhalb der Ansicht ermöglichen. Die
+    wichtigsten und speziell auf die Darstellung und Bearbeitung
+    hydrologischer / hydraulischer Modelle zielenden Ansichten und ihre
+    Anpassungsmöglichkeiten werden nachfolgend erläutert.</para>
 
     <section>
       <title>Ansichts-Vorlagen</title>
@@ -362,7 +364,7 @@
       wird, erscheint im Hauptmenü zwischen den Menüpunkten
       <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
       zusätzlicher Menüpunkt <guimenu>Karte</guimenu> (siehe <xref
-      linkend="navigation_karten_ansicht" />). Die Funktionen im Menü
+      linkend="NavigationKartenAnsicht" />). Die Funktionen im Menü
       <guimenu>Karte</guimenu> sind erst ausführbar, wenn eine Karten-Ansicht
       aktiviert bzw. in diese hinein geklickt wird (Kartenname wird farblich
       hervorgehoben).</para>
@@ -426,26 +428,25 @@
       Rasterdaten oder Daten von einem Web Feature Service bzw. Web Map
       Service hinzuzufügen. Durch einen Doppelklick auf die gewünschte
       Datenform wird der spezifische Assistent zum Datenimport gestartet
-      (siehe <xref linkend="gui-layer_hinzufuegen" />).</para>
+      (siehe <xref linkend="GuiLayerHinzufuegen" />).</para>
 
       <para>Das Layout der Karten-Ansicht bzw. der Kartenvorlage wird anhand
-      des Style-Editors angepasst (siehe <xref linkend="style_editor" />).
-      Dazu wird in der Gliederung-Ansicht ein Thema ausgewählt, für welches
-      die Darstellung verändert werden soll. Beim Klicken auf das Plus-Symbol
-      vor dem Themennamen erscheint eine Untergliederung unter dem
-      Themennamen. I.d.R. gibt es unter dem Themennamen nur eine
-      Untergliederung mit einer identischen Bezeichnung wie der Themenname.
-      Sofern die Untergliederung mit Mausklick aktiviert wird, erscheint in
-      der Ansichtsleiste Gliederung die Funktion <guimenu>Style
-      ändern</guimenu>. Nur diese ist jetzt in der Ansichtsleiste verfügbar -
-      alle anderen sind grau hinterlegt. Alternativ zur Ansichtsleiste kann
-      mit einem Rechtsklick mit der Maus (Untergliederung des Themas muss
-      aktiv sein) ein Untermenü geöffnet werden, in dem <guimenu>Style
-      verändern</guimenu> ausgewählt werden kann, sodass sich die
-      Style-Editor-Ansicht öffnet. Mit dem Style-Editor können
-      Symboldarstellungen, Farben, Fonts, etc. interaktiv verändert werden.
-      Damit die Veränderungen für die Kartenvorlage wirksam werden, ist der
-      veränderte Style entsprechend zu speichern.</para>
+      des Style-Editors angepasst (siehe <xref linkend="StyleEditor" />). Dazu
+      wird in der Gliederung-Ansicht ein Thema ausgewählt, für welches die
+      Darstellung verändert werden soll. Beim Klicken auf das Plus-Symbol vor
+      dem Themennamen erscheint eine Untergliederung unter dem Themennamen.
+      I.d.R. gibt es unter dem Themennamen nur eine Untergliederung mit einer
+      identischen Bezeichnung wie der Themenname. Sofern die Untergliederung
+      mit Mausklick aktiviert wird, erscheint in der Ansichtsleiste Gliederung
+      die Funktion <guimenu>Style ändern</guimenu>. Nur diese ist jetzt in der
+      Ansichtsleiste verfügbar - alle anderen sind grau hinterlegt. Alternativ
+      zur Ansichtsleiste kann mit einem Rechtsklick mit der Maus
+      (Untergliederung des Themas muss aktiv sein) ein Untermenü geöffnet
+      werden, in dem <guimenu>Style verändern</guimenu> ausgewählt werden
+      kann, sodass sich die Style-Editor-Ansicht öffnet. Mit dem Style-Editor
+      können Symboldarstellungen, Farben, Fonts, etc. interaktiv verändert
+      werden. Damit die Veränderungen für die Kartenvorlage wirksam werden,
+      ist der veränderte Style entsprechend zu speichern.</para>
 
       <figure id="StyleEditor">
         <title>Veränderung der Karten-Ansicht / Kartenvorlage mit dem
@@ -489,7 +490,7 @@
           <guimenuitem>Andere</guimenuitem>
         </menuchoice> hinzugefügt werden. Hierzu ist der Assistent GisMapView
       unter dem Ordner Andere auszuwählen (siehe <xref
-      linkend="pic_neue_karte" />). Mit Hilfe des Assistenten kann der
+      linkend="PicNeueKarte" />). Mit Hilfe des Assistenten kann der
       Speicherort sowie der Name der neuen Karte bestimmt werden.<figure
           id="PicNeueKarte">
           <title>Neue Karte erzeugen</title>
@@ -497,7 +498,7 @@
           <mediaobject>
             <imageobject>
               <imagedata align="center" fileref="img/gui/gis_neue_karte.png"
-                         scale="100" />
+                         scale="80" />
             </imageobject>
           </mediaobject>
         </figure></para>
@@ -513,7 +514,7 @@
 
         <para>In einer neuen oder auch bestehenden Karte kann ein Thema mit
         Hilfe des Plus-Symbols hinzugefügt werden (siehe <xref
-        linkend="pic_button_layer_add" />).</para>
+        linkend="PicButtonLayerAdd" />).</para>
 
         <figure id="PicButtonLayerAdd">
           <title>Thema zu Karte hinzufügen</title>
@@ -531,17 +532,16 @@
         Informationsquellen innerhalb des Arbeitsverzeichnisses oder durch
         Anbindung eines Web Services eingebunden werden. Hierzu ist der
         entsprechende Assistent durch Doppelklick im Auswahlfenster zu starten
-        (siehe <xref linkend="pic_datenquelle_waehlen" />). Die Angaben, die
-        im dann folgenden Dialog zu machen sind, hängen von der Art der
-        gewählten Datenquelle ab. So muss <abbrev>z. B.</abbrev> für das
-        Einbinden einer Shape-Datei eine entsprechende Datei im aktuellen
-        Arbeitsverzeichnis ausgewählt und das Koordinatensystem, in dem die
-        Daten abgelegt sind, angegeben werden. Zur Symbolisierung kann der
-        Benutzer einen bereits definierten Style auswählen oder einen
-        Standard-Style generieren lassen. Ähnliche angaben sind für alle
-        dateibasierten Datenquellen zu machen. Bei den webbasierten
-        Datenquellen (Web Service) sind vor der Datenauswahl gültige
-        Verbindungsdaten anzugeben.</para>
+        (siehe <xref linkend="PicDatenquelleWaehlen" />). Die Angaben, die im
+        dann folgenden Dialog zu machen sind, hängen von der Art der gewählten
+        Datenquelle ab. So muss <abbrev>z. B.</abbrev> für das Einbinden einer
+        Shape-Datei eine entsprechende Datei im aktuellen Arbeitsverzeichnis
+        ausgewählt und das Koordinatensystem, in dem die Daten abgelegt sind,
+        angegeben werden. Zur Symbolisierung kann der Benutzer einen bereits
+        definierten Style auswählen oder einen Standard-Style generieren
+        lassen. Ähnliche angaben sind für alle dateibasierten Datenquellen zu
+        machen. Bei den webbasierten Datenquellen (Web Service) sind vor der
+        Datenauswahl gültige Verbindungsdaten anzugeben.</para>
 
         <figure id="PicDatenquelleWaehlen">
           <title>Auswahl der Datenquelle</title>
@@ -549,8 +549,7 @@
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-                         fileref="img/gui/layer_import_auswahl.png"
-                         scale="100" />
+                         fileref="img/gui/layer_import_auswahl.png" scale="80" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -569,7 +568,7 @@
       im Hauptmenü zwischen den Menüpunkten <guimenu>Modell</guimenu> und
       <guimenu>Fenster</guimenu> ein zusätzlicher Menüpunkt
       <guimenu>Baum</guimenu> (siehe <xref
-      linkend="pic_navigation_baum_ansicht" />). Die Funktionen im Menü
+      linkend="PicNavigationBaumAnsicht" />). Die Funktionen im Menü
       <guimenu>Baum</guimenu> sind erst ausführbar, wenn eine Baum-Ansicht
       aktiviert bzw. in diese hinein geklickt wird (Baumname wird farblich
       hervorgehoben).</para>
@@ -580,7 +579,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="img/gui/gui-navi_baum.png"
-                       scale="100" />
+                       scale="80" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -642,7 +641,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/gui/gui-featureview_karte.png" scale="100" />
+                       fileref="img/gui/gui-featureview_karte.png" scale="80" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -661,7 +660,7 @@
       geöffnet wird, erscheint im Hauptmenü zwischen den Menüpunkten
       <guimenu>Modell</guimenu> und <guimenu>Fenster</guimenu> ein
       zusätzlicher Menüpunkt <guimenu>Tabelle</guimenu> (siehe <xref
-      linkend="navigation_tabellen_ansicht" />). Die Funktionen im Menü
+      linkend="NavigationTabellenAnsicht" />). Die Funktionen im Menü
       <guimenu>Tabelle</guimenu> sind erst ausführbar, wenn eine
       Tabellen-Ansicht aktiviert bzw. in diese hinein geklickt wird
       (Tabellenname wird farblich hervorgehoben).</para>
@@ -711,7 +710,7 @@
           <guimenuitem>Daten speichern</guimenuitem>
         </menuchoice> gewählt werden. Alternativ kann auch die entsprechende
       Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
-      linkend="pic_tabelle_button" />).</para>
+      linkend="PicTabelleButton" />).</para>
 
       <figure id="PicTabelleButton">
         <title>Schaltflächen in der Tabellen-Ansicht</title>
@@ -736,16 +735,16 @@
 
       <para>Zeitreihen im ZML-Format (*.zml) können in der KALYPSO-Oberfläche
       als Tabelle oder Diagramm geöffnet werden (siehe <xref
-      linkend="navigation_ansichtsauswahl" />). Durch Doppelklick auf eine
+      linkend="NavigationAnsichtsauswahl" />). Durch Doppelklick auf eine
       Zeitreihe und Auswahl von <guilabel>Standard Tabellen Editor</guilabel>
       wird die Zeitreihe in der Tabellen-Ansicht dargestellt (siehe <xref
-      linkend="navigation_tabelle_zml" />).</para>
+      linkend="NavigationTabelleZml" />).</para>
 
       <para vendor="sachsen-anhalt"><note>
           <para>Tabellen-Ansichten von Zeitreihen, die im sog.
           <quote>Simulationsbetrieb</quote> erstellt wurden und
           dementsprechend markiert sind (vergl. <xref
-          linkend="kalypso_testbetrieb" />), haben eine gesonderte Überschrift
+          linkend="KalypsoTestbetrieb" />), haben eine gesonderte Überschrift
           und sind somit gut von Zeitreihen des <quote>Regelbetriebs</quote>
           zu unterscheiden.</para>
         </note></para>
@@ -767,7 +766,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-                       fileref="img/gui/tabellen-ansicht_zml.png" scale="100" />
+                       fileref="img/gui/tabellen-ansicht_zml.png" scale="80" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -816,7 +815,7 @@
         Vorhersage-Assistenten (vgl. <xref linkend="vorhersage_wizards" />).
         Die Bearbeitungsfunktionen stehen in Form eines Kontextmenüs durch
         Rechtsklick auf die Tabelle zur Verfügung (siehe <xref
-        linkend="kontextmenu_tabellen" />).</para>
+        linkend="KontextmenuTabellen" />).</para>
 
         <figure id="KontextmenuTabellen">
           <title>Kontextmenü zur Bearbeitung von Tabellenwerten</title>
@@ -913,12 +912,14 @@
             <guimenuitem>Daten speichern</guimenuitem>
           </menuchoice> gewählt werden. Alternativ kann auch die entsprechende
         Schaltfläche in der Menü-Leiste benutzt werden (siehe <xref
-        linkend="pic_tabelle_button" />).</para>
+        linkend="PicTabelleButton" />).</para>
 
         <important>
           <para>Alle Änderungen in den Zeitreihen betreffen ausschließlich die
           lokal gespeicherte ZML-Datei.</para>
         </important>
+
+        <!--PROFILING ANFANG-->
 
         <para vendor="sachsen">Beim <emphasis role="bold">Export</emphasis>
         über die Schaltfläche <inlinemediaobject>
@@ -926,9 +927,96 @@
               <imagedata fileref="img/gui/icon_bericht.png" />
             </imageobject>
           </inlinemediaobject> wird die Tabelle im CSV-Format in das
-        Berichtswesen (IMS) abgelegt. Vom Anwender sind Metadaten anzugeben,
-        die dem IMS übergeben werden.</para>
+        Berichtswesen (PSICompact) abgelegt. Vom Anwender sind Metadaten
+        anzugeben, die der Dokumentenablage übergeben werden.</para>
+
+        <!--PROFLING ENDE-->
       </section>
+
+      <!--PROFILING sachsen ANFANG-->
+
+      <section id="TabellenKennzeichnung" vendor="sachsen">
+        <title>Kennzeichnung von Tabellenwerten</title>
+
+        <indexterm>
+          <primary>Zeitreihen</primary>
+
+          <secondary>Kennzeichnung von Tabellenwerten</secondary>
+        </indexterm>
+
+        <para>Beim Aufruf von Zeitreihen über den KALYPSO Zeitreihendienst,
+        dies ist beim LHWZ gleichbedeutend mit dem Abruf der Zeitreihendaten
+        aus PSICompact, werden die Werte einer Zeitreihe mit einem internen
+        Status versehen. Dieser ist abhängig von den Attributen aus
+        PSICompact. Beim Öffnen einer Zeitreihe in KALYPSO mit der
+        Tabellen-Ansicht wird der Status durch ein Symbol visualisiert. Die
+        einzelnen Symbole sind mit dem dazugehörigen Status in einer Tabelle
+        in <xref linkend="zeitreihensymbole" /> dargestellt. Wird kein Symbol
+        vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO den
+        Status <quote>OK</quote>.</para>
+
+        <table id="zeitreihensymbole">
+          <title>Symbole in Zeitreihen-Tabellen</title>
+
+          <tgroup cols="3">
+            <colspec align="center" colwidth="1*" />
+
+            <colspec align="left" colwidth="2*" />
+
+            <colspec align="left" colwidth="2*" />
+
+            <thead>
+              <row>
+                <entry align="center">Symbol</entry>
+
+                <entry align="center">KALYPSO-Status</entry>
+
+                <entry align="center">PSICompact-Status</entry>
+              </row>
+            </thead>
+
+            <tbody>
+              <row>
+                <entry valign="middle"></entry>
+
+                <entry>OK</entry>
+
+                <entry>AUTO, OK</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/gui/icon_write.png"
+                valign="middle" /></entry>
+
+                <entry>Vom Benutzer geändert</entry>
+
+                <entry>MANKOR</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/gui/icon_warning.png"
+                valign="middle" /></entry>
+
+                <entry>Wert auf Gültigkeit prüfen</entry>
+
+                <entry>ERSALLG, NACH, NORM, NORMALLG, UNDEF</entry>
+              </row>
+
+              <row>
+                <entry><graphic fileref="img/gui/icon_conflict.png"
+                valign="middle" /></entry>
+
+                <entry>Wert nicht ableitbar (W/Q,
+                W/V-Umwandlungsfehler)</entry>
+
+                <entry>-</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+      </section>
+
+      <!--PROFLING sachsen-anhalt ANFANG-->
 
       <section id="TabellenKennzeichnung" vendor="sachsen-anhalt">
         <title>Kennzeichnung von Tabellenwerten</title>
@@ -1009,6 +1097,8 @@
             </tbody>
           </tgroup>
         </table>
+
+        <!--PROFLING ENDE-->
       </section>
 
       <section>
@@ -1037,12 +1127,12 @@
       <para>Durch Doppelklick auf eine Zeitreihe (*.zml) und Auswahl von
       <guimenu>Standard Diagramm Editor</guimenu> wird die Zeitreihe in der
       Diagramm-Ansicht dargestellt (siehe <xref
-      linkend="navigation_diagramm_ansicht" />).</para>
+      linkend="NavigationDiagrammAnsicht" />).</para>
 
       <note vendor="sachsen-anhalt">
         <para>Diagramm-Ansichten von Zeitreihen, die im sog.
         <quote>Simulationsbetrieb</quote> erstellt wurden und dementsprechend
-        markiert sind (vergl. <xref linkend="kalypso_testbetrieb" />), haben
+        markiert sind (vergl. <xref linkend="KalypsoTestbetrieb" />), haben
         ein Wasserzeichen. außerdem ist der Verlauf der Rahmenfarbe anders.
         Diese Zeitreihen sind somit gut von Zeitreihen des
         <quote>Regelbetriebs</quote> zu unterscheiden.</para>
@@ -1052,12 +1142,12 @@
       und Darstellung von Zeitreihen. Die Möglichkeit der
       Zeitreihenbearbeitung ist mit dem Werkzeug nicht vorgesehen. Zur
       komplexen Zeitreihenbearbeitung mittels Zeitreihen-Vorlagen (*.odt)
-      steht das Grafikprogramm (siehe <xref
-      linkend="zeitreihen_bearbeiten" />) zur Verfügung.</para>
+      steht das Grafikprogramm (siehe <xref linkend="ZeitreihenBearbeiten" />)
+      zur Verfügung.</para>
 
       <para>Wenn bereits eine Zeitreihe in der Diagramm-Ansicht dargestellt
       ist, dann können über Drag and Drop (linke Maustaste) aus dem Navigator
-      in die Gliederung-Ansicht mehrere Zeitreihen dargestellt werden.
+      in die Gliederung-Ansicht mehrere Zeitreihen hinzugefügt werden.
       Voraussetzung ist allerdings, dass die Zeitreihen die gleiche Einheit
       auf der Ordinaten-Achse vorweisen. Zusätzlich ist es in der
       Gliederung-Ansicht möglich, einzelne Datensätze einer Zeitreihe
@@ -1073,7 +1163,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="img/gui/diagramm.png" scale="100" />
+            <imagedata fileref="img/gui/diagramm.png" scale="80" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1096,6 +1186,130 @@
         W als auch Q dargestellt. Um nur die W Ganglinie zu sehen, kann Q in
         der Gliederungsansicht deaktiviert werden.</para>
       </formalpara>
+
+      <section>
+        <title>Konfiguration</title>
+
+        <para>Zur Konfiguration einer Diagrammansicht stehen eine Reihe von
+        Werkzeugen zur Verfügung, über welche die Darstellung des Diagramms
+        verändert werden kann.</para>
+
+        <formalpara>
+          <title>Diagrammeigenschaften</title>
+
+          <para>Die allgemeinen Eigenschaften eines Diagramms lassen sich über
+          den Menüpunkt <menuchoice>
+              <guiicon>Diagramm</guiicon>
+
+              <guilabel>Diagramm Eigenschaften</guilabel>
+            </menuchoice> editieren. Im Dialog lassen sich die folgenden
+          Eigenschaften des Diagramm anpassen:<itemizedlist>
+              <listitem>
+                <para>Diagramm-Titel: der Titel des Diagramms</para>
+              </listitem>
+
+              <listitem>
+                <para>Sichtbarkeit der Legende: ob die Legende dargestellt
+                werden soll</para>
+              </listitem>
+
+              <listitem>
+                <para>Legenden-Titel: Bezeichnung der Legende im
+                Diagramm</para>
+              </listitem>
+            </itemizedlist></para>
+        </formalpara>
+
+        <formalpara>
+          <title>Kurven hinzufügen</title>
+
+          <para>Neue Kurven lassen sich in die Diagrammansicht über Drag und
+          Drop von .zml Dateien aus dem Navigator hinzufügen. Es werden dabei
+          alle in der Datei vorliegenden Datenspuren automatisch alsKurven im
+          Diagramm angelegt. Enthält die eingefügt Zeitreihe zum Beispiel
+          sowohl eine W als auch eine Q Datenreihe, werden zwei Kurven zum
+          Diagramm hinzugefügt.</para>
+        </formalpara>
+
+        <formalpara>
+          <title>Kurven löschen</title>
+
+          <para>Im Diagramm befindliche Kurven lassen sich über das
+          Löschwerkzeug <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/gui/diagram_remove.png" />
+              </imageobject>
+            </inlinemediaobject> in der Gliederungsansicht des Diagramms
+          entfernen. Es wird dabei lediglich die dargestellte Kurve aus dem
+          Diuagramm entfernt. Die eigentlichen Zeitreihendaten, d.h. die
+          referenzierte .zml Datei, bleibt im System erhalten.</para>
+        </formalpara>
+
+        <formalpara>
+          <title>Kurveneigenschaften</title>
+
+          <para>Die Darstellung einer Kurve lässt sich über den Dialog
+          <guilabel>Kurveneigenschaften</guilabel> (siehe <xref
+          linkend="figure_diagram_curveproperties" />), welcher sich über den
+          entsprechenden Knopf <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/gui/diagram_properties.png" />
+              </imageobject>
+            </inlinemediaobject> in der Gliederungsansicht aufrufen lässt,
+          verändern.<figure id="figure_diagram_curveproperties">
+              <title>Dialog Kurveneigenschaften</title>
+
+              <mediaobject>
+                <imageobject>
+                  <imagedata fileref="img/gui/diagram_propertiesDialog.png"
+                             scale="50" />
+                </imageobject>
+              </mediaobject>
+            </figure></para>
+        </formalpara>
+
+        <para>Die folgenden Eigenschaften können im Dialog verändert
+        werden:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Name: Die Bezeichnung der Kurve in der
+            Gliederungsansicht</para>
+          </listitem>
+
+          <listitem>
+            <para>Farbe/Transparenz: Farbe und Transparenz (alpha-Wert) der
+            Kurve im Diagramm</para>
+          </listitem>
+
+          <listitem>
+            <para>Strichart: Darstellungsart der Linie; es stehen
+            verschiedenen Strichelungsarten zur Auswahl</para>
+          </listitem>
+
+          <listitem>
+            <para>Strichstärke: die Strichstäkre der Kurve im Diagramm</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Werden gleichzeitig mehrere Kurven in der Gliederungsansicht
+        selektiert, werden die Eigenschaften für diese Kurven gemeinsam
+        verändert.</para>
+
+        <formalpara>
+          <title>Filterung</title>
+
+          <para>Das Werkzeug <guilabel>Filter <inlinemediaobject>
+              <imageobject>
+                <imagedata fileref="img/gui/diagram_filter.png" />
+              </imageobject>
+            </inlinemediaobject> </guilabel> in der Gliederungsansicht des
+          Diagramms erlaubt das schnelle Ausblenden von Kurven gleichen
+          Achsentyps. Die Kurven werden in der Gliederungsansicht lediglich
+          deaktiviert und können jederzeit wieder sichtbar gemacht
+          werden.</para>
+        </formalpara>
+      </section>
     </section>
   </section>
 
@@ -1131,8 +1345,8 @@
       Maustaste bereitgestellt wird, in das ZML-Format konvertiert werden.
       Hierzu ist als Importquelle <guimenuitem>Zeitreihen aus externen
       Dateien</guimenuitem> auszuwählen (siehe <xref
-      linkend="gui_zml-import" />). Die Quellzeitreihe wird mit Speicherort
-      und Format festgelegt und dann abhängig vom Format (Datentyp &amp;
+      linkend="GuiZmlImport" />). Die Quellzeitreihe wird mit Speicherort und
+      Format festgelegt und dann abhängig vom Format (Datentyp &amp;
       Datenformat) in die Zielzeitreihe (ZML-Zeitreihe) konvertiert.</para>
 
       <figure id="GuiZmlImport">
@@ -1263,7 +1477,7 @@ dd MM yyyy HH Wert2</programlisting>
         Zeitreihen innerhalb von KALYPSO erlaubt. Für einen weiter gehenden
         Import bzw. die tatsächliche Verknüpfung von Zeitreihen mit dem
         hydrologischen / hydraulischen Modell bedarf es jedoch weiterer
-        Arbeitsschritte (siehe <xref linkend="zeitreihen_repository" />
+        Arbeitsschritte (siehe <xref linkend="ZeitreihenRepository" />
         ).</para>
       </note>
     </section>
@@ -1299,7 +1513,7 @@ dd MM yyyy HH Wert2</programlisting>
       <para>Wird eine Diagramm-Vorlage im Navigator-Fenster markiert,
       erscheint in der Werkzeug-Leiste die Schaltfläche zum Öffnen der Vorlage
       im Grafikprogramm (siehe <xref
-      linkend="button_grafik_programm" />).</para>
+      linkend="ButtonGrafikProgramm" />).</para>
 
       <figure id="ButtonGrafikProgramm">
         <title>Schaltfläche zum Öffnen des Grafikprogramms</title>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="SA_Assi_Ilse_01">
+<section id="SA_Assi_Ilse_01" vendor="sachsen-anhalt">
   <title>Vorhersagemodell Ilse</title>
 
   <indexterm>
@@ -15,10 +15,10 @@
       <secondary>Ilse</secondary>
     </indexterm>
 
-    <para>Auf der nächsten Seite des Assistenten (siehe <xref
+    <para>Auf der zweiten Seite des Assistenten (siehe <xref
     linkend="pic_SA_Assi_Ilse_01_Steuerparams" />) werden verschiedene
     Informationen angezeigt. Die Einträge werden bei neu angelegten
-    Rechenvarianten generiert. Bei fortgeführten oder kopierten
+    Rechenvarianten generiert. Bei neu geöffneten oder kopierten
     Rechenvarianten entsprechen die Einträge denen der ursprünglichen
     Rechenvariante.<figure id="pic_SA_Assi_Ilse_01_Steuerparams">
         <title>Steuerparameter - Ilse</title>
@@ -37,7 +37,7 @@
     <para>Der Eintrag zum <guilabel>Szenario</guilabel>
     (<quote>Regelbetrieb</quote> oder <quote>Simulationsbetrieb</quote>) dient
     zur Information darüber, welchem Szenario die Rechenvariante zugeordnet
-    ist (siehe <xref linkend="kalypso_testbetrieb" />). Dieser Eintrag ist
+    ist (siehe <xref linkend="KalypsoTestbetrieb" />). Dieser Eintrag ist
     unveränderlich und spiegelt den bei der Erstellung gewählten Betriebsmodus
     wider.</para>
 
@@ -110,7 +110,7 @@
     tabellarisch dargestellt. Für die in der Karte markierte
     Niederschlagsstation wird die Zeitreihe im Diagramm dargestellt.
     Korrekturen und Ergänzungen der Eingangswerte sind in der Tabelle möglich
-    (siehe <xref linkend="tabellen_bearbeiten" />). Damit sich Änderungen an
+    (siehe <xref linkend="TabellenBearbeiten" />). Damit sich Änderungen an
     den Niederschlagswerten auch im Modell auswirken, muss der Knopf
     <guilabel>Gebietsniederschlag berechnen</guilabel> gedrückt werden. Die
     Gebietsniederschläge ergeben sich aus einer linearen Gewichtung der
@@ -147,7 +147,7 @@
     ermittelten Gebietsniederschläge dar. Hier sind noch die Prognosewerte für
     die Gebietsniederschläge in der Tabelle zu ergänzen. Die
     Zeitreihenbearbeitung wird deutlich erleichtert durch die in <xref
-    linkend="tabellen_bearbeiten" /> beschriebenen Funktionen zur
+    linkend="TabellenBearbeiten" /> beschriebenen Funktionen zur
     Tabellenbearbeitung. Im Diagramm wird jeweils die Ganglinie zu dem Pegel
     angezeigt, der in der Karte ausgewählt ist.</para>
   </section>
@@ -328,13 +328,12 @@
       der Benutzer durch einen mehrstufigen Dialog geführt. Nach einer Auswahl
       der abzulegenden Berichtskomponenten werden Zusatzinformationen
       (Metadaten) angezeigt, die zusätzlich mit in die Dokumentenablage
-      übergeben werden: Dokumententyp (<guilabel>doctyp</guilabel>),
-      Erstelldatum (<guilabel>erstelldat</guilabel>), Gültigkeitsdatum
-      (<guilabel>gueltigdat</guilabel>), Autor (<guilabel>autor</guilabel>),
-      Ersteller (<guilabel>ersteller</guilabel>), Szenario
-      (<guilabel>simulation</guilabel>) und Messstellennummer
-      (<guilabel>station_id</guilabel>). Vom Benutzer ist hier lediglich das
-      Gültigkeitsdatum anzupassen.</para>
+      übergeben werden: Autor (<guilabel>autor</guilabel>), Ersteller
+      (<guilabel>ersteller</guilabel>), Erstelldatum
+      (<guilabel>erstelldat</guilabel>), Gültigkeitsdatum
+      (<guilabel>gueltigdat</guilabel>) und Beschreibung
+      (<guilabel>description</guilabel>). Vom Benutzer sind hier das
+      Gültigkeitsdatum und die Beschreibung anzupassen.</para>
 
       <para>Die Ablage folgender Berichtskomponenten ist konfiguriert:</para>
 
@@ -359,6 +358,12 @@
           <guilabel>Eingangsdaten Abfluss</guilabel>, <guilabel>Ergebnisdaten
           Abfluss</guilabel> und <guilabel>Niederschlag</guilabel> für die
           beiden Vorhersagepegel.</para>
+        </listitem>
+
+        <listitem>
+          <para><guilabel>Längsschnitte</guilabel> ermöglichen einen Überblick
+          über die Wasserstands- <abbrev>bzw.</abbrev> Abfluss-Entwicklung
+          entlang der Ilse.</para>
         </listitem>
 
         <listitem>

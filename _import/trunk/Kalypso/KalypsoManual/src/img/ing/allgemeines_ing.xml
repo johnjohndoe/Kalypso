@@ -7,7 +7,7 @@
         <primary>Einführung in KALYPSO</primary>
       </indexterm>
 
-  <section id="allgemeines_zu_kalypso">
+  <section id="AllgemeinesZuKalypso">
     <title>Allgemeines zu KALYPSO</title>
 
     <para>Das Programm-System KALYPSO Enterprise ist eine Open-Source
@@ -85,7 +85,7 @@
     </section>
   </section>
 
-  <section id="kalypso_installation">
+  <section id="KalypsoInstallation">
     <title>KALYPSO-Installation</title>
 	  
     <indexterm>
@@ -134,7 +134,7 @@
       enthalten.</para>
     </section>
 
-    <section id="client-installation">
+    <section id="ClientInstallation">
       <title>Client-Installation (Windows)</title>
 		
       <indexterm>
@@ -236,7 +236,7 @@
     </section>
   </section>
 
-  <section id="anwendungsfaelle">
+  <section id="Anwendungsfaelle">
     <title>Anwendungsfälle</title>
 	  
     <indexterm>
@@ -270,8 +270,8 @@
     </orderedlist>
 
     <para>Die Benutzung von KALYPSO im Hinblick auf die Modellierung (<xref
-    linkend="grafische_oberflaeche" /> und <xref
-    linkend="zeitreihen_repository" />) und den Anwedungsbetrieb ist im
+    linkend="GrafischeOberflaeche" /> und <xref
+    linkend="ZeitreihenRepository" />) und den Anwedungsbetrieb ist im
     vorliegenden Handbuch beschrieben.</para>
   </section>
 
@@ -282,7 +282,7 @@
           <primary>Datenmanagement</primary>
         </indexterm>
 
-    <para>Die in <xref linkend="kalypso_installation" /> beschriebene
+    <para>Die in <xref linkend="KalypsoInstallation" /> beschriebene
     Client-Server-Architektur basiert auf folgendem
     Datenmanagement-Prinzip:</para>
 
@@ -298,7 +298,7 @@
     Rechenfälle) auf dem Server und ähnliche Funktionen werden mittels der
     speziellen Menüs <guilabel>Modell</guilabel> und
     <guimenu>Rechenvariante</guimenu> (siehe <xref
-    linkend="grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
+    linkend="Grundfunktionen" />) im Hauptmenü von KALYPSO angesteuert.</para>
 
     <para>Dieses Datenmanagement-Prinzip ist insbesondere transparent im
     KALYPSO-Modeler (Expertenmodus), wo der Experte sehr detailliert und

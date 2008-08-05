@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="kalypso_wspm" vendor="KalypsoModeller,hh_ingenieurbueros">
+<chapter id="kalypso_wspm" vendor="KalypsoModeller;hh_ingenieurbueros">
   <title>1D Spiegellinienmodell KalypsoWSPM</title>
 
   <indexterm>

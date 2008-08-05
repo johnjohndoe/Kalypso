@@ -1,51 +1,658 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <contexts>
 <context id="Grafik_Programm">
-<description>Interaktive Gangliniengrafik</description>
-<topic href="ch01.html" label="Interaktive Gangliniengrafik"/>
+<description>
+    
+
+    Einführung
+  Interaktive GangliniengrafikKALYPSO - Interaktive GangliniengrafikEinführungDas Programm zur Gangliniendarstellung ist zur schnellen
+    interaktiven oder automatischen Darstellung und Auswertung von
+    beobachteten oder berechneten Zeitreihen aus Messnetzsystemen,
+    Modellrechnungen oder Datenbanken vorgesehen.Oberfläche des GrafikprogrammsEs können bis zu 10 Kurven gleichzeitig eingeladen und dargestellt
+    werden.Die Datenreihen können wahlweise 2 verschiedenen y-Achsen zugeordnet
+    werden. Die Darstellung der Ganglinien kann unter Wahl der Farben und
+    Linienarten als Linien-, Balken-, Treppen-, Punkt- oder Linien- mit
+    Punktdarstellung erfolgen.Die zuerst eingelesene Datenreihe bestimmt den Anfangszeitpunkt der
+    Datendarstellung und die x-Achsenbeschriftung. Die x-Achsenbeschriftung
+    kann durch den Anwender geändert werden.Das Grafikmodul besitzt die wichtigsten Grundfunktionen zur
+    Seitenansicht, Druckereinstellung und zum Ausdrucken der Ganglinien. Über
+    einen Zusatzmenüpunkt können komfortable Korrekturmöglichkeiten angewandt
+    werden.Weiterführende Gestaltungsmöglichkeiten zur Gangliniendarstellung
+    können über die Exportschnittstelle zur Datensicherung und der
+    anschließenden Bearbeitung zum Beispiel in Excel erfolgen.Das Grafik-Programm ermöglicht dem Anwender eine Vielzahl von
+    Darstellungs- und Auswertungsmöglichkeiten, die in den nachfolgenden
+    Kapiteln näher beschrieben werden.Interaktion KALYPSO - GrafikprogrammDer Aufruf des Grafik-Programms erfolgt aus der KALYPSO-Oberfläche,
+    indem eine Diagramm-Vorlage (*.odt) zum Bearbeiten mit dem Grafik-Programm
+    geöffnet wird (siehe Dokumentation zur Programmoberfläche KALYPSO). Beim
+    Aufruf des Grafik-Programms wird die Diagramm-Vorlage aus KALYPSO in eine
+    Grafik-Vorlage (*.tpl) umgewandelt, um mit dem Grafik-Programm die
+    entsprechenden Zeitreihen visualisieren zu können. Dabei ist folgendes zu
+    beachten:In beiden Programmen erfolgt eine möglichst kompatible
+        Darstellung der Zeitreihen. Das betrifft sowohl die Kurvendarstellung
+        (Benennung, Typ, Farbe) als auch die Diagramm-Achsen (Benennung,
+        Einheiten, Skalierung).Werden im Grafik-Programm Änderungen in den Werten eines
+        Diagramms vorgenommen, werden diese in KALYPSO übernommen. D.h.
+        Änderungen der Werte einer Zeitreihe werden in der dazugehörigen
+        *.zml-Datei gespeichert.Hinzugefügte Werte werden nicht nicht übernommen. D.h.
+        Änderungen am Datum werden nicht übernommen.Änderungen in der Gestaltung des Diagramms (Farben, Achsen,
+        Hinzuladen von Zeitreihen) werden nicht in KALYPSO übernommen. D.h.
+        die Änderungen werden nicht in der Vorlage (*.tpl) gespeichert. Beim
+        erneuten Öffnen einer Diagramm-Vorlage (*.odt) in KALYPSO wird eine
+        neue Grafik-Vorlage mit den Standard-Einstellungen erzeugt und ggfs.
+        bereits vorhandene Dateien überschrieben.Beim Öffnen von Zeitreihen im Grafik Programm werden die
+    *.zml-Dateien in *.dat-Dateien konvertiert und zusammen mit der
+    Vorlagen-Datei (*.tpl) in ein Unterverzeichnis grafik
+    abgelegt. Beim erneuten Öffnen der Diagramm-Vorlage mit dem
+    Grafik-Programm werden die Dateien überschrieben. Das Unterverzeichnis
+    grafik kann aber vom Benutzer in ein beliebiges Verzeichnis kopiert werden
+    (z.B. zur späteren Visualisierung der Zeitreihen).KALYPSO - Interaktive GangliniengrafikMenü: DateiMenü DateiÜber den Menüpunkt Datei sind alle wichtigen
+    Funktionen zum Laden, Sichern, Drucken sowie Seiten- und
+    Druckereinstellungen enthalten. Die folgende Tabelle enthält die
+    Erläuterung der einzelnen Menüpunkte.MenüpunktFunktionDaten ladenEinladen einer neuen DatenreiheNochmals ladenDie letzte Datenreihe wird nochmals eingeladen.Voraussetzung ist, dass bereits eine Datenreihe über den
+            Menüpunkt Daten laden eingeladen wurde. Bei
+            einigen Formaten, in denen die Auswahl von Blocknummern oder
+            Spaltennummern notwendig ist, wird diese Auswahl erneut
+            angeboten.Vorlage ladenEine vorher als Vorlage gesicherte Einstellung wird
+            geladen. Es kann gewählt werden, ob die bisher geladenen
+            Datenreihen im Diagramm erhalten bleiben sollen oder
+            nicht.Vorlage sichernAlle aktuellen Einstellungen werden unter einem Namen als
+            Vorlage-Datei (Template) gesichert und können wieder aufgerufen
+            werden. Gesichert werden unter anderem: Name der Datenreihe,
+            Anzeige, Diagrammart, y-Achse, Maßstab, Beschriftung u.s.w.
+            (Hinweis: Es werden nicht die Datenwerte selbst
+            gesichert.)Grafik exportierenFür eine weitere Verwendung als Bitmap kann die aktuelle
+            Darstellung als Grafik-Datei (*.bmp) abgelegt werden. (Hinweis:
+            Analog kann über Bearbeiten - Grafik in die Zwischenablage die
+            Übergabe der Darstellung in ein externes Bildbearbeitungsprogramm
+            erfolgen.)DruckenDie Diagrammdarstellung wird auf den Drucker ausgegeben.
+            Der Windows-Standarddialog ermöglicht eine Einstellung des
+            Druckers und seiner Eigenschaften.SeitenansichtVorschau der Druckausgabe.DruckereinrichtungEinstellung der Druckereigenschaften (Seitenformat u.a.m.)
+            ohne anschließendes Drucken.Die Vorgehensweise bei der Arbeit mit Vorlagen wird in der
+    Technischen Dokumentation zum Programm KALYPSO beschrieben.Menü: BearbeitenDas Menü Bearbeiten enthält Funktionen zur
+    Bearbeitung von Datenreihen, Kopieren eines Diagramms in die
+    Zwischenablage und zum Entfernen aller angezeigter Kurven aus dem
+    Diagramm.Menü BearbeitenIm Einzelnen stehen die folgenden Funktionen zur Verfügung:KALYPSO - Interaktive GangliniengrafikKorrekturmodusIm Korrektutmodus können die Werte der Datenreihen editiert
+      werden. Voraussetzung dazu ist die Aktivierung des Modus (Häkchen im
+      Menü). Nach Einschalten des Korrekturmodus erscheint eine zusätzliche
+      Werkzeugleiste mit folgenden Funktionen:Werkzeugleiste im KorrekturmodusDie Schaltflächen bedeuten von links nach rechts:Auswahl der zu korrigierenden DatenreiheWerte löschenWerte aus anderen Datenreihen übernehmenEinzelwerte hinzufügenStützstellenkorrektur (y-Achse)Stützstellenkorrektur (Zeit-Achse)Multiplikation mit einem WertAddieren von DatenreihenSubtrahieren von DatenreihenSpiegeln von KurvenabschnittenVerschieben von DatenreihenBestimmung des AbflussbeiwertesGeänderte Datenreihe sichernLetzte Änderung rückgängig machenNach Wahl der zu korrigierenden Datenreihe wird diese farbig und
+      alle anderen Kurven im Grauton dargestellt. Als Voreinstellung wird die
+      erste sichtbare Datenreihe gewählt.Der zu korrigierende Bereich wird durch einen Cursorstrich, der
+      über die Maus oder die Cursortasten bewegt werden kann, eingestellt.
+      Durch einen Doppelklick mit der linken Maustaste oder die
+      &lt;Enter&gt;-Taste wird die linke Begrenzung
+      festgelegt. Ein zweiter Doppelklick markiert die rechte Begrenzung.
+      Anschließend erscheint je nach gewähltem Werkzeug ein entsprechendes
+      Eingabemenü.Werte löschenDie innerhalb des gewählten Abschnitt befindlichen
+              Messwerte werden entfernt. Die Darstellung wird über diesen
+              Bereich interpoliert.Werte übernehmenFür den gewählten Abschnitt werden alle Messwerte
+              gelöscht und anschließend die im gleichen Zeitraum befindlichen
+              Messwerte einer anderen Messreihe übernommen. Die zu
+              übernehmende Messreihe muss aus den in der Grafik eingeladenen
+              Datenreihen ausgewählt werden. Bei der Übernahme der Werte kann
+              noch ein Faktor und eine Verschiebung (Offset) eingestellt
+              werden. Die Messwertübernahme kann auf Messwertausfälle
+              beschränkt werden. (siehe auch )Werte hinzufügenEntsprechend der Mausposition wird in x- und y-Richtung
+              ein neuer Messwert ermittelt und zur Übernahme angeboten. Der
+              y-Wert kann noch entsprechend verändert werden.Stützstellenkorrektur (y-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.
+              Ist zum Beispiel für einen Pegelschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber um 2 cm
+              nachgestellt werden musste, so kann die Datenreihe mit Offset
+              (t0)=0 und Offset (t1)=2 korrigiert werden. Die Abweichung der
+              Daten zwischen den beiden Zeitpunkten wird dabei linear von 0
+              auf 2cm interpoliert.Stützstellenkorrektur (Zeit-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte in der Zeitachse verändert werden. Damit können
+              Laufzeitfehler bei Messreihenaufzeichnungen korrigiert werden.
+              Ist zum Beispiel für einen Datenschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber die Uhr
+              30 min nachgeht, so kann die Datenreihe mit Offset(t0)=0 und
+              Offset(t1)=120 min korrigiert werden. Die Datenreihe wird
+              zwischen den beiden Zeitpunkten entsprechend gestreckt.
+              Eventuell vorhanden neue Messwerte im überlappenden Bereich
+              werden überschrieben.Multiplikation mit einem WertDie Werte der aktuellen Kurve werden mit einem Zahlenwert
+              multipliziert.Addieren von DatenreihenZwei Datenreihen werden addiert.Subtrahieren von DatenreihenZwei Datenreihen werden subtrahiert.Spiegeln von KurvenabschnittenEin Kurvenabschnitt wird in y-Richtung gespiegelt.
+              Bezugspunkt ist der y- Wert am Abschnittsanfang.Verschieben von DatenreihenDie Werte werden um einen bestimmten Betrag auf der
+              Zeitachse verschoben. Die Verschiebung wird durch den Cursor als
+              Anfangs- und Zielpunkt markiert.AbflussbeiwertBestimmung des Abflussbeiwertes. Nähere Erläuterungen
+              sind im Abschnitt zum Abflussbeiwert (siehe ) vorhanden.geänderte Datenreihe sichernDie aktuell bearbeitete Datenreihe wird gesichert. Die
+              Originaldaten werden dabei überschrieben. Als Datenformat wird
+              das Standardformat (Datum Zeit Wert) verwendet.letzte Änderung rückgängigDer letzte Bearbeitungsschritt wird aufgehoben. Die
+              vorherige Version der Datenreihe ist immer als graue Punktlinie
+              dargestellt. Bei nochmaliger Betätigung dieser Aktion werden
+              alle Änderungen bis zum letzten Speichern aufgehoben. Ein
+              Speichern der Datenreihe ist in der Art endgültig, dass eine
+              Korrektur der Änderungen nicht mehr möglich ist.Zusätzlich zu den Menüpunkten kann die Schaltfläche zum Export der
+      Daten genutzt werden.Schaltfläche DatenexportDie Daten werden im aktuell dargestellten Ausschnitt in einem
+      allgemeinen Textformat ausgegeben. Es werden nur die sichtbaren
+      Datenreihen ausgegeben. Das Format ist für den Import in Excel
+      vorbereitet, kann aber universell auch für andere Fremdprogramme genutzt
+      werden.Die Daten werden wie folgt gespeichert: 1. Zeile Beschriftung der
+      Datenreihen (Legendentext) folgende ZeilenTA1 YA1 TB1 YB1 TC1 YC1 ...TA2 YA2 TB2 YB2 TC2 YC2 ... ...TAn YAn TBn YBn TCn YCn ...T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne
+      DatenreihenAlle Spalten sind durch Tabulatoren getrennt. Das
+      Dezimaltrennzeichen ist standardmäßig das Komma und kann über das Menü
+      ExtrasOptionen eingestellt werden.KopierenDie Gangliniengrafik wird als
+      Foto in die Zwischenablage kopiert
+      und kann nun in externe Programme (z.B. Office-Programme) als Bild
+      eingefügt werden.Alle Kurven entfernenAlle Datenreihen werden aus der Darstellung entfernt. Dabei werden
+      eine Reihe von Einstellungen, wie zum Beispiel der Anfangszeitpunkt
+      zurückgesetzt. Für eine Gangliniendarstellung müssen wieder neue
+      Messreihen eingelesen werden. Diese Aktion ist dem einzelnen Löschen
+      aller Datenreihen unter Anzeigeaktuelle KurvenEntferne Nr.: gleichzusetzen (siehe ).Menü: AnzeigeEinstellungen zur Anzeige der Datenreihen können über das Menü
+    Anzeige verändert werden. Einige der Menüpunkte können
+    auch direkt über Schaltflächen aufgerufen werden. Die entsprechenden
+    Schaltflächen sind im Folgenden mit dargestellt.Menü AnzeigeKALYPSO - Interaktive GangliniengrafikAktuelle KurvenEingabemaske 'Aktuelle Kurven' (Tastenkürzel A)Über die Schalter 1 bis
+      10 können die Linienfarben und Linienarten bzw.
+      Punktsymbole der einzelnen Datenreihen verändert werden. Die neu
+      eingestellten Linienarten bleiben auch nach Verlassen des
+      Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im
+      Verzeichnis des Programms für den nächsten Aufruf
+      zwischengespeichert.Alle derzeit geladenen Datenreihen werden als vollständiger
+      Dateiname aufgelistet.Im linken Eingabefeld kann der Titel für jede Datenreihe
+      festgelegt werden. Dieser Text erscheint in der Legende.Frei wählbar sind für jede der Datenreihe:AnAnzeige an- bzw. ausschaltenRechte y-AchseDatenreihe bezieht sich auf die rechte y-Achse. In der
+              Legende steht die Linie der Datenreihe zur Kennzeichnung rechts
+              vom Text.DiagrammartDarstellungsart der KurvenEntferne Nr.Bei Auswahl einer Nummer wird nach Betätigen von
+              OK die Datenreihe aus der grafischen
+              Darstellung vollständig entfernt.MaßstabsänderungenSchaltfläche Maßstabsänderungen (Tastenkürzel
+        M)Eingabemaske MaßstabEs können für beide y-Achsen, die Niederschlags-Achse und die
+      x-Achse die Minimal-, Maximalwert und die Skalierung festgelegt
+      werden.Y beim Zoom konstant
+      haltenBeim Zoomen mit der Maus (Rechteck aufziehen) wird nur der
+      x-Bereich (Zeitachse) verändert. Die Einstellung der y-Werte bleiben
+      unverändert.dx, dY beim Zoom autom.
+      anpassenBeim Zoomen mit der Maus (Rechteck aufziehen) werden die
+      Skalierungsabstände automatisch neu berechnet.Über den Schalter Darstellung
+      kann der für die Achsendarstellung tatsächlich dargestellte Bereich
+      vorgegeben werden.Die Einstellungen für die rechte y-Achse werden nur dann
+      verfügbar, wenn dieser Achse mindestens eine Datenreihe zugeordnet
+      wurde. Die Zuordnung erfolgt über den Menüpunkt AnzeigeAktuelle Kurven.Letzte AnsichtSchaltfläche Letzte AnsichtZoomen mit der Maus (Rechteck aufziehen) bewirkt eine Veränderung
+      des Maßstabs und Diagrammausschnitts. Mit dieser Schaltfläche wird die
+      letzte Maßstabseinstellung wieder aufgerufen.ZahlenwerteSchaltfläche ZahlenwerteEin Fenster mit der Anzeige der Datenwerte von maximal 3
+      Datenreihen wird eingeblendet. Gleichzeitig wird der Cursormode
+      aktiviert. Über die Maus kann eine Cursor-Linie im Diagramm bewegt
+      werden. Zur ausgewählten Position werden die Werte der einzelnen
+      Datenreihen angezeigt. Es können bis zu drei frei wählbare Datenreihen
+      gleichzeitig angezeigt werden.LegendeDie Legende kann ein- bzw. ausgeblendet werden (Legende
+      ein/aus). Soll die Position der Legende verschoben werden
+      (Legendenposition), so muss nach Anwahl dieses
+      Menüpunktes mit der Maus eine neue linke obere Ecke angewählt
+      werden.Vorlagenliste anzeigenÜber eine Vorlagenliste (siehe auch ) kann eine Art Film
+      durch Ablauf verschiedener Darstellungen erzielt werden.EinstellungenSelbst gewählte Bezeichnungen, wie Überschrift (Titel),
+      Beschriftung der x- und beider y-Achsen werden an fest vordefinierte
+      Stellen geschrieben. Für die Druckausgabe kann eine Kopf- und eine
+      Fußzeile festgelegt werden. Dabei ist die Eingabe für diese Zeilen in
+      drei Bereiche (linksbündig, zentriert, rechtsbündig) möglich.Weitere AnsichtseinstellungenWeitere zusätzliche Einstellungen zur Ansichtssteuerung des
+      Diagramms sind in Form von Schaltflächen vorhanden. Es sollen hier nur
+      diejenigen erläutert werden, die im Funktionsumfang die bereits
+      beschriebenen Menüpunkte erweitern.Schaltfläche AnpassenDie Maßstabseinstellungen werden auf den größten
+      Ausdehnungsbereich angepasst. Dabei wird unterschieden, welche
+      Datenreihen der 1. und welche der 2. y-Achse zugeordnet sind.Schaltfläche CursormodeUm die Zeitachse nach Zwischenwerten hinsichtlich Datum und
+      Uhrzeit abzufragen, kann der Cursormodus verwendet werden. Dieser Modus
+      ist auch automatisch bei der numerischen Anzeige der Datenreihen
+      aktiviert. Es erscheint eine senkrechte Linie im Darstellungsbereich,
+      die mit der Maus verschoben werden kann. Zur Position der Linie
+      erscheint auf der x-Achse die Information über Datum/Uhrzeit.Schaltfläche FreitextÜber das Werkzeug zur Textbeschriftung TXT können bis zu 100 Textfelder beliebig im
+      Diagrammbereich gesetzt werden. Zu Beginn der Eingabe muss immer die
+      Schaltfläche aktiviert sein.Text neu setzenMit der linken Maustaste wird eine neue Position
+              angeklickt. Es erscheint ein Texteingabedialog.Textinhalt ändernWird beim Festlegen der Mausposition für den neuen Text
+              festgestellt, dass hier bereits ein Text vorliegt, so wird
+              dieser im Texteingabedialog angeboten.Textposition ändernEs wird auf eine alte Textposition geklickt. Bei gedrückt
+              gehaltener linker Maustaste wird der alte Textinhalt
+              `mitgenommen` und beim Loslassen mit der neuen Position im
+              Texteingabedialog zu einer eventuellen Änderung
+              angeboten.Menü: AuswertungMenü Auswertung (Standard)Für die Auswertung der Datenreihen stehen einige grundlegende
+    statistische Funktionen bereit. Diese sind für einen ersten Überblick
+    gedacht und ersetzen kein umfangreiches Statistikprogramm. Zu den hier
+    angebotenen Funktionen gehören vielmehr vorbereitende Funktionen wie das
+    Erzeugen von Messwerten mit gleichen Zeitabständen (Zeitschritte) und
+    erste Ergebnisse (Mittelwert, usw.) für einen Überblick zu den
+    Eigenschaften der Datenreihen.Weitere Funktionen hinsichtlich Korrelation, Tages- und
+    Monatsstatistik, Dauerlinie und Datentest stehen bei Installation der
+    Zusatzmodule zur Verfügung.Menü Auswertung (mit Zusatzmodulen)Die oben gezeigten Menüpunkte und auch weitere stehen nur bei
+    Installation der Zusatzmodule zur Verfügung. Ein weiterführende
+    Erläuterung gibt es in den Abschnitten  und .Zur Auswertung der Datenreihen werden folgende Möglichkeiten
+    angeboten:KALYPSO - Interaktive GangliniengrafikZeitschritteDie eventuell in ungleichen Zeitschritten vorliegenden Daten
+      werden in zeitgleiche (äquidistante) Schritte umgerechnet. Es kann
+      wahlweise entschieden werden auf welche Datenreihen die Berechnung
+      angewendet werden soll und ob die Originalreihen dabei aus der Grafik
+      entfernt werden sollen. Ein Abspeichern der so erzeugten Datenreihen ist
+      nur über die zusätzlichen Funktionen des Korrekturmodus (siehe ) oder im externen
+      Datenformat (Datenexport) möglich.MonatsmittelAusgehend von der Zeitachsenbeschriftung werden die Werte aller
+      Datenreihen zu einem Monatsmittel zusammengefasst und dargestellt. Die
+      Originalwerte innerhalb des Diagramms werden dabei überschrieben. Alle
+      bisherigen Funktionen innerhalb des Grafikprogramms (z. B. Statistik,
+      Sichern, Numerische Anzeige, ...) werden auf die neuen Zahlenwerte
+      angewendet. Sollen wieder Tageswerte angezeigt werden, müssen diese neu
+      eingelesen werden. Das Aggregieren der Daten erfolgt dabei über folgende
+      Regel: Test der Datumsangabe in der 1. Spalte, falls ab 4. Position
+      identisch, dann Übernahme !Bsp.01.02.98 14:30 oder 01.02.1998 14:3002.02.98 15:15 oder 02.02.1998 15:15Analog ist auch ein anschließendes Aggregieren auf Jahreswerte
+      möglich:Bsp.02.98 oder 02.199802.98 oder 02.1998AufsummierenAlle Werte einer Datenreihe werden aufsummiert. Es ist zu
+      beachten, dass ein Aufsummieren nur für zeitgleiche Zeitschritte
+      sinnvoll erscheint. Eine Anwendung der Funktion Aufsummieren ist die
+      Darstellung der Zeitreihen als Dauerlinien.DatenausfälleAuf Basis eines eingestellten Zeitrasters wird ermittelt, ob
+      mindestens ein Messwert vorliegt. Ist dies nicht der Fall, wird ein
+      Kennwert für Messwertausfall eingetragen. Die Kennung ist auch unter
+      ExtrasOptionenDaten laden einstellbar.Änderungen RückgängigDie Berechnung kann - soweit kein Abspeichern der Zeitreihen
+      vorgenommen wurde - verworfen werden. Die Originaldatenreihen werden
+      wieder eingelesen.StatistikSchaltfläche StatistikVom aktuell eingestellten Zeitraum werden das Minimum, der
+      Mittelwert, das Maximum, die Anzahl der Werte, die Summe, der
+      Korrelationskoeffizient und das Verhältnis (Faktor) zur 1. Datenreihe
+      berechnet. Zusätzlich wird im aktuellen Pfad eine Datei STAT.TXT mit den
+      gezeigten und noch weiteren Ergebnissen (Faktor zu 1, Restquadratsumme
+      zu 1) angelegt.Menü: ExtrasMenü ExtrasKALYPSO - Interaktive GangliniengrafikTexte SpeichernAbspeichern der freistehenden Textbeschriftungen (Freitext) in
+      eine Datei (siehe auch ).SymbolleisteEin- und Ausschalten der Symbolleiste. Die Symbolleiste ist die
+      Zeile mit den Schaltsymbolen. Das Ausschalten der Symbolleiste schränkt
+      die Verfügbarkeit einiger Funktionen ein.StatusleisteEin- und Ausschalten der Statuszeile. Die Statuszeile befindet
+      sich unterhalb des Grafikfensters und dient zur kurzen Erläuterung von
+      Aktionen und Menüpunkten.OptionenGlobale Einstellungen zur Anzeige der Daten werden hier
+      festgesetzt.Eingabe der Einstellungs-Optionenx-AchseBeschriftung, Formate:Es kann jeweils für die 1. und 2. Zeile getrennt ein Datenformat
+      eingestellt werden. Liegen die Datenreihen nicht in einem Zeitformat
+      vor, so wird automatisch die laufende Position angezeigt. Folgende
+      Datenformate sind für jeweils beide Zeilen einstellbar:TT.MM.JJJJ hh:mm:ssTT.MM.JJJJ hh:mmTT.MM.JJJJTT.MM.MM/JJJJTTMMJJJJhh:mmhhdT in minlfd. Positionautomatisch wählen:Soweit es die Datengrundlage erlaubt, werden die Formate nach
+          folgendem Schema eingestellt:0 ... 5 Tage hh:mm TT.MM.JJJJ5 ... 90 Tage (ca. 3 Monate) TT MM/JJJJ90 ... 1800 Tage (ca. 3 Jahre) MM JJJJ1800 Tage ... JJJJkeine doppelten Beschriftungen:Datumsangaben, die mehrfach auftreten werden nur zum ersten
+          Zeitpunkt angezeigt.Bsp:14:00 18:00 00:00 04:00 08:0001.03.99 01.03.99 02.03.99 02.03.9914:00 18:00 00:00 04:00 08:0001.03.99 02.03.99gleiche Zeitabstände:Bei Messreihen mit zeitlich unterschiedlichen Messwerten
+          (nichtäquidistante Zeitschritte) wird die x-Achse nur bei den
+          vorhandenen Zeitwerten beschriftet. Dies ergibt oftmals ein
+          unerwünschtes Erscheinungsbild mit sehr unterschiedlichen
+          Zeitabständen. Über diese Möglichkeit kann ein zeitgleicher Abstand
+          in der Beschriftung der x-Achse eingestellt werden. Der
+          Anfangszeitpunkt der x-Achsenbeschriftung ist ebenfalls frei
+          wählbar. Bei einer automatisch Beschriftung (automatisch wählen)
+          wird die Einstellung auf gleiche Zeitabstände gesetzt und der
+          Zeitabstand entsprechend des darzustellenden Zeitraumes automatisch
+          berechnet.Sollen Datenreihen aus unterschiedlichen Zeiträume verglichen
+          werden, so kann über Anfangszeitpunkte gleichsetzen eingestellt
+          werden, dass die Datenreihen zum gleichen Zeitpunkt beginnend
+          dargestellt werden.x-Achse abfallend sortierenStandardmäßig werden zeitliche Werte und fortlaufende Position
+          immer aufsteigend dargestellt. Soll diese Einstellung (abfallende
+          Zahlenwerte) geändert werden, muss dieses Kontrollkästchen aktiviert
+          werden. Bei Datenreihen mit zeitlichen Bezug (Datumswerte in der
+          x-Achse) wird diese Einstellung ignoriert und zurückgesetzt.AnsichtEs können ein- bzw. ausgeschaltet werden:GitternetzdarstellungDatenreihen sollen alle in gleicher Liniensträke und -art
+          dargestellt werdenNullwerte bei Liniendiagramme ausblendenNullachse anzeigenBalkenbreite bei der Darstellung als Balkendiagramm
+          einstellen.Daten ladenFür das Laden der Daten ist standardmäßig die automatische
+      Formaterkennung eingestellt. Kurzzeitig kann hier ausdrücklich ein
+      gewünschtes Format voreingestellt werden. Soll die Datei nur zur
+      Identifikation der einzulesenden Daten genutzt werden, so muss diese
+      Einstellung gewählt werden. Die Einstiegsdatei muss dann im folgenden
+      Format aufgebaut werden:&lt;Dateiname&gt;&lt;x-Spalte&gt;&lt;x-Name&gt;&lt;y-Spalte&gt;&lt;y-Name&gt;Bsp.:konform.asj1fl-km2Temperaturkonform.asj1fl-km3C-BSB5konform.asj1fl-km6O2 (Sauerstoff)I:\sim\daten\tabalg1fl-km5MortalitaetI:\sim\daten\tabalg1fl-km4RespirationI:\sim\daten\guetaus1fl-km2Temperatur (Güte)Daten sichernFür den Export von Daten kann der Dezimalpunkt gesondert
+      festgelegt werden.Schriften einstellenEinstellungen zur Schriftart und Größe werden über diese
+      Eingabemaske festgelegt. Weitere EinstellungenKorrekturmodus: Einfügen von Zwischenpunkten - Im Korrekturmodus
+      wird beim Festlegen des Anfangs- und des Endzeitpunktes der Zeitpunkt
+      entweder dem nächsten dazugehörigen Datenwert zugeordnet oder ein neuer
+      Zeitpunkt interpoliert.KALYPSO - Interaktive GangliniengrafikAuswertung: MesswertausfallDie Behandlung von Datenausfällen kann über ExtrasOptionenDaten ladenKennzeichnung von Messwertausfällen eingestellt werden. Alle Datenwerte, die mit dieser
+    Kennung übereinstimmen werden:in der Ansicht nicht dargestellt,bei der Berechnung, des maximalen und minimalen y-Wertes nicht
+        berücksichtigt,nicht in der Statistik ausgewertet,im Korrekturmodus Datenwerte aus einer anderen Reihe übernehmen
+        beim Markieren der Option entsprechend übernommen. Die Datenkorrektur
+        ersetzt in diesem Fall bei Übernahme von Werten aus einer anderen
+        Datenreihe nur die Datenwerte, die als Datenausfall eindeutig
+        entsprechend der Kennung markiert sind und in der anderen Datenreihe
+        genau zum selben Zeitpunkt vorliegen.Datenausfälle werden zusätzlich noch mit einem kleinen Kreis auf der
+    x-Achse markiert. Dabei ist nicht unterscheidbar, in welcher Datenreihe
+    dieser Ausfall vorliegt.KALYPSO - Interaktive GangliniengrafikAuswertung: AbflussbeiwertBei der Auswertung von Hochwasserereignissen wird die vom
+    Basisabfluss bereinigte Ganglinie und die Wirkung des
+    Effektivniederschlages benötigt.Dazu werden im Grafikprogramm folgende Arbeitsschritte
+    angeboten:Einlesen und Darstellen der Abflussganglinie und des zugehörigen
+        EffektivniederschlagesAuswahl des Hochwasserereignisses aus diesen ZeitreihenInteraktive Möglichkeit zum Abzug des Basisabflusses vom
+        HochwasserereignisBestimmen des zugehörigen NiederschlagzeitraumesBerechnen des AbflussbeiwertesDer Ablauf wird nachfolgend näher erläutert:Einlesen und Darstellen der Abflussganglinie
+    und des zugehörigen Effektivniederschlages undAuswahl des Hochwasserereignisses aus diesen
+    Zeitreihen.Als Ganglinien werden die Abflussganglinie und der
+    Effektivniederschlag eingelesen. Die Niederschlagsdaten müssen dabei als
+    nächste Kurve nach den Abflusswerten folgen.Auswahl eines HW-Ereignisses (Beispiel)Das gewünschte Hochwasserereignis wird über die Zoom-Einstellung
+    ausgewählt.Schaltfläche AbflussbeiwertÜber die Schaltfläche zur Bestimmung des Abflussbeiwertes werden die
+    nachfolgenden Schritte angeboten. Dieses Werkzeug ist in der
+    Werkzeugleiste zur Korrektur von Datenreihen (BearbeitenKorrekturmodus) enthalten.Interaktive Möglichkeit zum Abzug des
+    Basisabflusse vom Hochwasserereignis Der Bereich des
+    tatsächlichen Hochwasserabflusses wird über Cursorstriche ausgewählt. Im
+    Ergebnis wird die Scheitelkurve für den ausgewählten Zeitraum ohne den
+    Basisabfluss ermittelt.Ermittlung des Abflussbeiwertes (Beispiel)Als Basisabfluss wird dabei die interpolierte Wasserstandsganglinie
+    zwischen dem ausgewählten Anfangs- und Endzeitpunkt angenommen. Die
+    Darstellung wechselt zur Niederschlagsdatenreihe (hier rot). Für den
+    gewählten Abflusszeitraum wird analog der dazugehörige Niederschlag
+    gewählt.Auf Basis dieser beiden Datenreihen wird im Anschluss der
+    Abflussbeiwert wie folgt berechnet:Abflussbeiwert = (Summe Abfluss je Zeitschritt am Pegel) / (Summe NS
+    je Zeitschritt im Einzugsgebiet)Die Einzugsgebietsfläche wird im Dialog abgefragt, wenn nicht eine
+    Datei grafik.abw mit folgendem Inhalt existiert: &lt;Kurvenname&gt;
+    &lt;Einzugsgebietsgröße in [qm]&gt;. Die Datei muss sich im beim
+    Programmaufruf aktuellem Arbeitsverzeichnis befinden.Das Ergebnis wird angezeigt und gleichzeitig im Protokoll Grafik.pro
+    abgelegt.Ergebnis einer Abflussbeiwertermittlung (Beispiel)KALYPSO - Interaktive GangliniengrafikVorlagenlisteÜber eine Liste, in der die Namen von mehreren vorher erstellten
+    Vorlagen enthalten sind, kann eine Art Dia-Show aufgerufen werden. Der
+    Name dieser Datei endet mit *.lst.Bsp.:dia1.lst:anfpkt.tplzeitpkt1.tplzeitpkt2.tplendpkt.tplDabei werden die Vorlagen (*.tpl) der Reihe nach geladen und
+    dargestellt.Es besteht die Wahl eines automatischen und eines
+    benutzergesteuerten Ablaufes. Der Ablauf der benutzergesteuerten Variante
+    kann über die Tasten &lt;enter&gt; oder &lt;Leertaste&gt; weitergeführt
+    und über &lt;esc&gt; oder &lt;alt F4&gt; abgebrochen werden.Die zuletzt geladene Variante bleibt zum Schluss erhalten.</description>
+<topic href="ch01.html" label="&#10;    &#10;&#10;    Einführung&#10;  Interaktive GangliniengrafikKALYPSO - Interaktive GangliniengrafikEinführungDas Programm zur Gangliniendarstellung ist zur schnellen&#10;    interaktiven oder automatischen Darstellung und Auswertung von&#10;    beobachteten oder berechneten Zeitreihen aus Messnetzsystemen,&#10;    Modellrechnungen oder Datenbanken vorgesehen.Oberfläche des GrafikprogrammsEs können bis zu 10 Kurven gleichzeitig eingeladen und dargestellt&#10;    werden.Die Datenreihen können wahlweise 2 verschiedenen y-Achsen zugeordnet&#10;    werden. Die Darstellung der Ganglinien kann unter Wahl der Farben und&#10;    Linienarten als Linien-, Balken-, Treppen-, Punkt- oder Linien- mit&#10;    Punktdarstellung erfolgen.Die zuerst eingelesene Datenreihe bestimmt den Anfangszeitpunkt der&#10;    Datendarstellung und die x-Achsenbeschriftung. Die x-Achsenbeschriftung&#10;    kann durch den Anwender geändert werden.Das Grafikmodul besitzt die wichtigsten Grundfunktionen zur&#10;    Seitenansicht, Druckereinstellung und zum Ausdrucken der Ganglinien. Über&#10;    einen Zusatzmenüpunkt können komfortable Korrekturmöglichkeiten angewandt&#10;    werden.Weiterführende Gestaltungsmöglichkeiten zur Gangliniendarstellung&#10;    können über die Exportschnittstelle zur Datensicherung und der&#10;    anschließenden Bearbeitung zum Beispiel in Excel erfolgen.Das Grafik-Programm ermöglicht dem Anwender eine Vielzahl von&#10;    Darstellungs- und Auswertungsmöglichkeiten, die in den nachfolgenden&#10;    Kapiteln näher beschrieben werden.Interaktion KALYPSO - GrafikprogrammDer Aufruf des Grafik-Programms erfolgt aus der KALYPSO-Oberfläche,&#10;    indem eine Diagramm-Vorlage (*.odt) zum Bearbeiten mit dem Grafik-Programm&#10;    geöffnet wird (siehe Dokumentation zur Programmoberfläche KALYPSO). Beim&#10;    Aufruf des Grafik-Programms wird die Diagramm-Vorlage aus KALYPSO in eine&#10;    Grafik-Vorlage (*.tpl) umgewandelt, um mit dem Grafik-Programm die&#10;    entsprechenden Zeitreihen visualisieren zu können. Dabei ist folgendes zu&#10;    beachten:In beiden Programmen erfolgt eine möglichst kompatible&#10;        Darstellung der Zeitreihen. Das betrifft sowohl die Kurvendarstellung&#10;        (Benennung, Typ, Farbe) als auch die Diagramm-Achsen (Benennung,&#10;        Einheiten, Skalierung).Werden im Grafik-Programm Änderungen in den Werten eines&#10;        Diagramms vorgenommen, werden diese in KALYPSO übernommen. D.h.&#10;        Änderungen der Werte einer Zeitreihe werden in der dazugehörigen&#10;        *.zml-Datei gespeichert.Hinzugefügte Werte werden nicht nicht übernommen. D.h.&#10;        Änderungen am Datum werden nicht übernommen.Änderungen in der Gestaltung des Diagramms (Farben, Achsen,&#10;        Hinzuladen von Zeitreihen) werden nicht in KALYPSO übernommen. D.h.&#10;        die Änderungen werden nicht in der Vorlage (*.tpl) gespeichert. Beim&#10;        erneuten Öffnen einer Diagramm-Vorlage (*.odt) in KALYPSO wird eine&#10;        neue Grafik-Vorlage mit den Standard-Einstellungen erzeugt und ggfs.&#10;        bereits vorhandene Dateien überschrieben.Beim Öffnen von Zeitreihen im Grafik Programm werden die&#10;    *.zml-Dateien in *.dat-Dateien konvertiert und zusammen mit der&#10;    Vorlagen-Datei (*.tpl) in ein Unterverzeichnis grafik&#10;    abgelegt. Beim erneuten Öffnen der Diagramm-Vorlage mit dem&#10;    Grafik-Programm werden die Dateien überschrieben. Das Unterverzeichnis&#10;    grafik kann aber vom Benutzer in ein beliebiges Verzeichnis kopiert werden&#10;    (z.B. zur späteren Visualisierung der Zeitreihen).KALYPSO - Interaktive GangliniengrafikMenü: DateiMenü DateiÜber den Menüpunkt Datei sind alle wichtigen&#10;    Funktionen zum Laden, Sichern, Drucken sowie Seiten- und&#10;    Druckereinstellungen enthalten. Die folgende Tabelle enthält die&#10;    Erläuterung der einzelnen Menüpunkte.MenüpunktFunktionDaten ladenEinladen einer neuen DatenreiheNochmals ladenDie letzte Datenreihe wird nochmals eingeladen.Voraussetzung ist, dass bereits eine Datenreihe über den&#10;            Menüpunkt Daten laden eingeladen wurde. Bei&#10;            einigen Formaten, in denen die Auswahl von Blocknummern oder&#10;            Spaltennummern notwendig ist, wird diese Auswahl erneut&#10;            angeboten.Vorlage ladenEine vorher als Vorlage gesicherte Einstellung wird&#10;            geladen. Es kann gewählt werden, ob die bisher geladenen&#10;            Datenreihen im Diagramm erhalten bleiben sollen oder&#10;            nicht.Vorlage sichernAlle aktuellen Einstellungen werden unter einem Namen als&#10;            Vorlage-Datei (Template) gesichert und können wieder aufgerufen&#10;            werden. Gesichert werden unter anderem: Name der Datenreihe,&#10;            Anzeige, Diagrammart, y-Achse, Maßstab, Beschriftung u.s.w.&#10;            (Hinweis: Es werden nicht die Datenwerte selbst&#10;            gesichert.)Grafik exportierenFür eine weitere Verwendung als Bitmap kann die aktuelle&#10;            Darstellung als Grafik-Datei (*.bmp) abgelegt werden. (Hinweis:&#10;            Analog kann über Bearbeiten - Grafik in die Zwischenablage die&#10;            Übergabe der Darstellung in ein externes Bildbearbeitungsprogramm&#10;            erfolgen.)DruckenDie Diagrammdarstellung wird auf den Drucker ausgegeben.&#10;            Der Windows-Standarddialog ermöglicht eine Einstellung des&#10;            Druckers und seiner Eigenschaften.SeitenansichtVorschau der Druckausgabe.DruckereinrichtungEinstellung der Druckereigenschaften (Seitenformat u.a.m.)&#10;            ohne anschließendes Drucken.Die Vorgehensweise bei der Arbeit mit Vorlagen wird in der&#10;    Technischen Dokumentation zum Programm KALYPSO beschrieben.Menü: BearbeitenDas Menü Bearbeiten enthält Funktionen zur&#10;    Bearbeitung von Datenreihen, Kopieren eines Diagramms in die&#10;    Zwischenablage und zum Entfernen aller angezeigter Kurven aus dem&#10;    Diagramm.Menü BearbeitenIm Einzelnen stehen die folgenden Funktionen zur Verfügung:KALYPSO - Interaktive GangliniengrafikKorrekturmodusIm Korrektutmodus können die Werte der Datenreihen editiert&#10;      werden. Voraussetzung dazu ist die Aktivierung des Modus (Häkchen im&#10;      Menü). Nach Einschalten des Korrekturmodus erscheint eine zusätzliche&#10;      Werkzeugleiste mit folgenden Funktionen:Werkzeugleiste im KorrekturmodusDie Schaltflächen bedeuten von links nach rechts:Auswahl der zu korrigierenden DatenreiheWerte löschenWerte aus anderen Datenreihen übernehmenEinzelwerte hinzufügenStützstellenkorrektur (y-Achse)Stützstellenkorrektur (Zeit-Achse)Multiplikation mit einem WertAddieren von DatenreihenSubtrahieren von DatenreihenSpiegeln von KurvenabschnittenVerschieben von DatenreihenBestimmung des AbflussbeiwertesGeänderte Datenreihe sichernLetzte Änderung rückgängig machenNach Wahl der zu korrigierenden Datenreihe wird diese farbig und&#10;      alle anderen Kurven im Grauton dargestellt. Als Voreinstellung wird die&#10;      erste sichtbare Datenreihe gewählt.Der zu korrigierende Bereich wird durch einen Cursorstrich, der&#10;      über die Maus oder die Cursortasten bewegt werden kann, eingestellt.&#10;      Durch einen Doppelklick mit der linken Maustaste oder die&#10;      &lt;Enter&gt;-Taste wird die linke Begrenzung&#10;      festgelegt. Ein zweiter Doppelklick markiert die rechte Begrenzung.&#10;      Anschließend erscheint je nach gewähltem Werkzeug ein entsprechendes&#10;      Eingabemenü.Werte löschenDie innerhalb des gewählten Abschnitt befindlichen&#10;              Messwerte werden entfernt. Die Darstellung wird über diesen&#10;              Bereich interpoliert.Werte übernehmenFür den gewählten Abschnitt werden alle Messwerte&#10;              gelöscht und anschließend die im gleichen Zeitraum befindlichen&#10;              Messwerte einer anderen Messreihe übernommen. Die zu&#10;              übernehmende Messreihe muss aus den in der Grafik eingeladenen&#10;              Datenreihen ausgewählt werden. Bei der Übernahme der Werte kann&#10;              noch ein Faktor und eine Verschiebung (Offset) eingestellt&#10;              werden. Die Messwertübernahme kann auf Messwertausfälle&#10;              beschränkt werden. (siehe auch )Werte hinzufügenEntsprechend der Mausposition wird in x- und y-Richtung&#10;              ein neuer Messwert ermittelt und zur Übernahme angeboten. Der&#10;              y-Wert kann noch entsprechend verändert werden.Stützstellenkorrektur (y-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für&#10;              beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.&#10;              Ist zum Beispiel für einen Pegelschreiber bekannt, dass er zum&#10;              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber um 2 cm&#10;              nachgestellt werden musste, so kann die Datenreihe mit Offset&#10;              (t0)=0 und Offset (t1)=2 korrigiert werden. Die Abweichung der&#10;              Daten zwischen den beiden Zeitpunkten wird dabei linear von 0&#10;              auf 2cm interpoliert.Stützstellenkorrektur (Zeit-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für&#10;              beide Zeitpunkte in der Zeitachse verändert werden. Damit können&#10;              Laufzeitfehler bei Messreihenaufzeichnungen korrigiert werden.&#10;              Ist zum Beispiel für einen Datenschreiber bekannt, dass er zum&#10;              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber die Uhr&#10;              30 min nachgeht, so kann die Datenreihe mit Offset(t0)=0 und&#10;              Offset(t1)=120 min korrigiert werden. Die Datenreihe wird&#10;              zwischen den beiden Zeitpunkten entsprechend gestreckt.&#10;              Eventuell vorhanden neue Messwerte im überlappenden Bereich&#10;              werden überschrieben.Multiplikation mit einem WertDie Werte der aktuellen Kurve werden mit einem Zahlenwert&#10;              multipliziert.Addieren von DatenreihenZwei Datenreihen werden addiert.Subtrahieren von DatenreihenZwei Datenreihen werden subtrahiert.Spiegeln von KurvenabschnittenEin Kurvenabschnitt wird in y-Richtung gespiegelt.&#10;              Bezugspunkt ist der y- Wert am Abschnittsanfang.Verschieben von DatenreihenDie Werte werden um einen bestimmten Betrag auf der&#10;              Zeitachse verschoben. Die Verschiebung wird durch den Cursor als&#10;              Anfangs- und Zielpunkt markiert.AbflussbeiwertBestimmung des Abflussbeiwertes. Nähere Erläuterungen&#10;              sind im Abschnitt zum Abflussbeiwert (siehe ) vorhanden.geänderte Datenreihe sichernDie aktuell bearbeitete Datenreihe wird gesichert. Die&#10;              Originaldaten werden dabei überschrieben. Als Datenformat wird&#10;              das Standardformat (Datum Zeit Wert) verwendet.letzte Änderung rückgängigDer letzte Bearbeitungsschritt wird aufgehoben. Die&#10;              vorherige Version der Datenreihe ist immer als graue Punktlinie&#10;              dargestellt. Bei nochmaliger Betätigung dieser Aktion werden&#10;              alle Änderungen bis zum letzten Speichern aufgehoben. Ein&#10;              Speichern der Datenreihe ist in der Art endgültig, dass eine&#10;              Korrektur der Änderungen nicht mehr möglich ist.Zusätzlich zu den Menüpunkten kann die Schaltfläche zum Export der&#10;      Daten genutzt werden.Schaltfläche DatenexportDie Daten werden im aktuell dargestellten Ausschnitt in einem&#10;      allgemeinen Textformat ausgegeben. Es werden nur die sichtbaren&#10;      Datenreihen ausgegeben. Das Format ist für den Import in Excel&#10;      vorbereitet, kann aber universell auch für andere Fremdprogramme genutzt&#10;      werden.Die Daten werden wie folgt gespeichert: 1. Zeile Beschriftung der&#10;      Datenreihen (Legendentext) folgende ZeilenTA1 YA1 TB1 YB1 TC1 YC1 ...TA2 YA2 TB2 YB2 TC2 YC2 ... ...TAn YAn TBn YBn TCn YCn ...T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne&#10;      DatenreihenAlle Spalten sind durch Tabulatoren getrennt. Das&#10;      Dezimaltrennzeichen ist standardmäßig das Komma und kann über das Menü&#10;      ExtrasOptionen eingestellt werden.KopierenDie Gangliniengrafik wird als&#10;      Foto in die Zwischenablage kopiert&#10;      und kann nun in externe Programme (z.B. Office-Programme) als Bild&#10;      eingefügt werden.Alle Kurven entfernenAlle Datenreihen werden aus der Darstellung entfernt. Dabei werden&#10;      eine Reihe von Einstellungen, wie zum Beispiel der Anfangszeitpunkt&#10;      zurückgesetzt. Für eine Gangliniendarstellung müssen wieder neue&#10;      Messreihen eingelesen werden. Diese Aktion ist dem einzelnen Löschen&#10;      aller Datenreihen unter Anzeigeaktuelle KurvenEntferne Nr.: gleichzusetzen (siehe ).Menü: AnzeigeEinstellungen zur Anzeige der Datenreihen können über das Menü&#10;    Anzeige verändert werden. Einige der Menüpunkte können&#10;    auch direkt über Schaltflächen aufgerufen werden. Die entsprechenden&#10;    Schaltflächen sind im Folgenden mit dargestellt.Menü AnzeigeKALYPSO - Interaktive GangliniengrafikAktuelle KurvenEingabemaske 'Aktuelle Kurven' (Tastenkürzel A)Über die Schalter 1 bis&#10;      10 können die Linienfarben und Linienarten bzw.&#10;      Punktsymbole der einzelnen Datenreihen verändert werden. Die neu&#10;      eingestellten Linienarten bleiben auch nach Verlassen des&#10;      Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im&#10;      Verzeichnis des Programms für den nächsten Aufruf&#10;      zwischengespeichert.Alle derzeit geladenen Datenreihen werden als vollständiger&#10;      Dateiname aufgelistet.Im linken Eingabefeld kann der Titel für jede Datenreihe&#10;      festgelegt werden. Dieser Text erscheint in der Legende.Frei wählbar sind für jede der Datenreihe:AnAnzeige an- bzw. ausschaltenRechte y-AchseDatenreihe bezieht sich auf die rechte y-Achse. In der&#10;              Legende steht die Linie der Datenreihe zur Kennzeichnung rechts&#10;              vom Text.DiagrammartDarstellungsart der KurvenEntferne Nr.Bei Auswahl einer Nummer wird nach Betätigen von&#10;              OK die Datenreihe aus der grafischen&#10;              Darstellung vollständig entfernt.MaßstabsänderungenSchaltfläche Maßstabsänderungen (Tastenkürzel&#10;        M)Eingabemaske MaßstabEs können für beide y-Achsen, die Niederschlags-Achse und die&#10;      x-Achse die Minimal-, Maximalwert und die Skalierung festgelegt&#10;      werden.Y beim Zoom konstant&#10;      haltenBeim Zoomen mit der Maus (Rechteck aufziehen) wird nur der&#10;      x-Bereich (Zeitachse) verändert. Die Einstellung der y-Werte bleiben&#10;      unverändert.dx, dY beim Zoom autom.&#10;      anpassenBeim Zoomen mit der Maus (Rechteck aufziehen) werden die&#10;      Skalierungsabstände automatisch neu berechnet.Über den Schalter Darstellung&#10;      kann der für die Achsendarstellung tatsächlich dargestellte Bereich&#10;      vorgegeben werden.Die Einstellungen für die rechte y-Achse werden nur dann&#10;      verfügbar, wenn dieser Achse mindestens eine Datenreihe zugeordnet&#10;      wurde. Die Zuordnung erfolgt über den Menüpunkt AnzeigeAktuelle Kurven.Letzte AnsichtSchaltfläche Letzte AnsichtZoomen mit der Maus (Rechteck aufziehen) bewirkt eine Veränderung&#10;      des Maßstabs und Diagrammausschnitts. Mit dieser Schaltfläche wird die&#10;      letzte Maßstabseinstellung wieder aufgerufen.ZahlenwerteSchaltfläche ZahlenwerteEin Fenster mit der Anzeige der Datenwerte von maximal 3&#10;      Datenreihen wird eingeblendet. Gleichzeitig wird der Cursormode&#10;      aktiviert. Über die Maus kann eine Cursor-Linie im Diagramm bewegt&#10;      werden. Zur ausgewählten Position werden die Werte der einzelnen&#10;      Datenreihen angezeigt. Es können bis zu drei frei wählbare Datenreihen&#10;      gleichzeitig angezeigt werden.LegendeDie Legende kann ein- bzw. ausgeblendet werden (Legende&#10;      ein/aus). Soll die Position der Legende verschoben werden&#10;      (Legendenposition), so muss nach Anwahl dieses&#10;      Menüpunktes mit der Maus eine neue linke obere Ecke angewählt&#10;      werden.Vorlagenliste anzeigenÜber eine Vorlagenliste (siehe auch ) kann eine Art Film&#10;      durch Ablauf verschiedener Darstellungen erzielt werden.EinstellungenSelbst gewählte Bezeichnungen, wie Überschrift (Titel),&#10;      Beschriftung der x- und beider y-Achsen werden an fest vordefinierte&#10;      Stellen geschrieben. Für die Druckausgabe kann eine Kopf- und eine&#10;      Fußzeile festgelegt werden. Dabei ist die Eingabe für diese Zeilen in&#10;      drei Bereiche (linksbündig, zentriert, rechtsbündig) möglich.Weitere AnsichtseinstellungenWeitere zusätzliche Einstellungen zur Ansichtssteuerung des&#10;      Diagramms sind in Form von Schaltflächen vorhanden. Es sollen hier nur&#10;      diejenigen erläutert werden, die im Funktionsumfang die bereits&#10;      beschriebenen Menüpunkte erweitern.Schaltfläche AnpassenDie Maßstabseinstellungen werden auf den größten&#10;      Ausdehnungsbereich angepasst. Dabei wird unterschieden, welche&#10;      Datenreihen der 1. und welche der 2. y-Achse zugeordnet sind.Schaltfläche CursormodeUm die Zeitachse nach Zwischenwerten hinsichtlich Datum und&#10;      Uhrzeit abzufragen, kann der Cursormodus verwendet werden. Dieser Modus&#10;      ist auch automatisch bei der numerischen Anzeige der Datenreihen&#10;      aktiviert. Es erscheint eine senkrechte Linie im Darstellungsbereich,&#10;      die mit der Maus verschoben werden kann. Zur Position der Linie&#10;      erscheint auf der x-Achse die Information über Datum/Uhrzeit.Schaltfläche FreitextÜber das Werkzeug zur Textbeschriftung TXT können bis zu 100 Textfelder beliebig im&#10;      Diagrammbereich gesetzt werden. Zu Beginn der Eingabe muss immer die&#10;      Schaltfläche aktiviert sein.Text neu setzenMit der linken Maustaste wird eine neue Position&#10;              angeklickt. Es erscheint ein Texteingabedialog.Textinhalt ändernWird beim Festlegen der Mausposition für den neuen Text&#10;              festgestellt, dass hier bereits ein Text vorliegt, so wird&#10;              dieser im Texteingabedialog angeboten.Textposition ändernEs wird auf eine alte Textposition geklickt. Bei gedrückt&#10;              gehaltener linker Maustaste wird der alte Textinhalt&#10;              `mitgenommen` und beim Loslassen mit der neuen Position im&#10;              Texteingabedialog zu einer eventuellen Änderung&#10;              angeboten.Menü: AuswertungMenü Auswertung (Standard)Für die Auswertung der Datenreihen stehen einige grundlegende&#10;    statistische Funktionen bereit. Diese sind für einen ersten Überblick&#10;    gedacht und ersetzen kein umfangreiches Statistikprogramm. Zu den hier&#10;    angebotenen Funktionen gehören vielmehr vorbereitende Funktionen wie das&#10;    Erzeugen von Messwerten mit gleichen Zeitabständen (Zeitschritte) und&#10;    erste Ergebnisse (Mittelwert, usw.) für einen Überblick zu den&#10;    Eigenschaften der Datenreihen.Weitere Funktionen hinsichtlich Korrelation, Tages- und&#10;    Monatsstatistik, Dauerlinie und Datentest stehen bei Installation der&#10;    Zusatzmodule zur Verfügung.Menü Auswertung (mit Zusatzmodulen)Die oben gezeigten Menüpunkte und auch weitere stehen nur bei&#10;    Installation der Zusatzmodule zur Verfügung. Ein weiterführende&#10;    Erläuterung gibt es in den Abschnitten  und .Zur Auswertung der Datenreihen werden folgende Möglichkeiten&#10;    angeboten:KALYPSO - Interaktive GangliniengrafikZeitschritteDie eventuell in ungleichen Zeitschritten vorliegenden Daten&#10;      werden in zeitgleiche (äquidistante) Schritte umgerechnet. Es kann&#10;      wahlweise entschieden werden auf welche Datenreihen die Berechnung&#10;      angewendet werden soll und ob die Originalreihen dabei aus der Grafik&#10;      entfernt werden sollen. Ein Abspeichern der so erzeugten Datenreihen ist&#10;      nur über die zusätzlichen Funktionen des Korrekturmodus (siehe ) oder im externen&#10;      Datenformat (Datenexport) möglich.MonatsmittelAusgehend von der Zeitachsenbeschriftung werden die Werte aller&#10;      Datenreihen zu einem Monatsmittel zusammengefasst und dargestellt. Die&#10;      Originalwerte innerhalb des Diagramms werden dabei überschrieben. Alle&#10;      bisherigen Funktionen innerhalb des Grafikprogramms (z. B. Statistik,&#10;      Sichern, Numerische Anzeige, ...) werden auf die neuen Zahlenwerte&#10;      angewendet. Sollen wieder Tageswerte angezeigt werden, müssen diese neu&#10;      eingelesen werden. Das Aggregieren der Daten erfolgt dabei über folgende&#10;      Regel: Test der Datumsangabe in der 1. Spalte, falls ab 4. Position&#10;      identisch, dann Übernahme !Bsp.01.02.98 14:30 oder 01.02.1998 14:3002.02.98 15:15 oder 02.02.1998 15:15Analog ist auch ein anschließendes Aggregieren auf Jahreswerte&#10;      möglich:Bsp.02.98 oder 02.199802.98 oder 02.1998AufsummierenAlle Werte einer Datenreihe werden aufsummiert. Es ist zu&#10;      beachten, dass ein Aufsummieren nur für zeitgleiche Zeitschritte&#10;      sinnvoll erscheint. Eine Anwendung der Funktion Aufsummieren ist die&#10;      Darstellung der Zeitreihen als Dauerlinien.DatenausfälleAuf Basis eines eingestellten Zeitrasters wird ermittelt, ob&#10;      mindestens ein Messwert vorliegt. Ist dies nicht der Fall, wird ein&#10;      Kennwert für Messwertausfall eingetragen. Die Kennung ist auch unter&#10;      ExtrasOptionenDaten laden einstellbar.Änderungen RückgängigDie Berechnung kann - soweit kein Abspeichern der Zeitreihen&#10;      vorgenommen wurde - verworfen werden. Die Originaldatenreihen werden&#10;      wieder eingelesen.StatistikSchaltfläche StatistikVom aktuell eingestellten Zeitraum werden das Minimum, der&#10;      Mittelwert, das Maximum, die Anzahl der Werte, die Summe, der&#10;      Korrelationskoeffizient und das Verhältnis (Faktor) zur 1. Datenreihe&#10;      berechnet. Zusätzlich wird im aktuellen Pfad eine Datei STAT.TXT mit den&#10;      gezeigten und noch weiteren Ergebnissen (Faktor zu 1, Restquadratsumme&#10;      zu 1) angelegt.Menü: ExtrasMenü ExtrasKALYPSO - Interaktive GangliniengrafikTexte SpeichernAbspeichern der freistehenden Textbeschriftungen (Freitext) in&#10;      eine Datei (siehe auch ).SymbolleisteEin- und Ausschalten der Symbolleiste. Die Symbolleiste ist die&#10;      Zeile mit den Schaltsymbolen. Das Ausschalten der Symbolleiste schränkt&#10;      die Verfügbarkeit einiger Funktionen ein.StatusleisteEin- und Ausschalten der Statuszeile. Die Statuszeile befindet&#10;      sich unterhalb des Grafikfensters und dient zur kurzen Erläuterung von&#10;      Aktionen und Menüpunkten.OptionenGlobale Einstellungen zur Anzeige der Daten werden hier&#10;      festgesetzt.Eingabe der Einstellungs-Optionenx-AchseBeschriftung, Formate:Es kann jeweils für die 1. und 2. Zeile getrennt ein Datenformat&#10;      eingestellt werden. Liegen die Datenreihen nicht in einem Zeitformat&#10;      vor, so wird automatisch die laufende Position angezeigt. Folgende&#10;      Datenformate sind für jeweils beide Zeilen einstellbar:TT.MM.JJJJ hh:mm:ssTT.MM.JJJJ hh:mmTT.MM.JJJJTT.MM.MM/JJJJTTMMJJJJhh:mmhhdT in minlfd. Positionautomatisch wählen:Soweit es die Datengrundlage erlaubt, werden die Formate nach&#10;          folgendem Schema eingestellt:0 ... 5 Tage hh:mm TT.MM.JJJJ5 ... 90 Tage (ca. 3 Monate) TT MM/JJJJ90 ... 1800 Tage (ca. 3 Jahre) MM JJJJ1800 Tage ... JJJJkeine doppelten Beschriftungen:Datumsangaben, die mehrfach auftreten werden nur zum ersten&#10;          Zeitpunkt angezeigt.Bsp:14:00 18:00 00:00 04:00 08:0001.03.99 01.03.99 02.03.99 02.03.9914:00 18:00 00:00 04:00 08:0001.03.99 02.03.99gleiche Zeitabstände:Bei Messreihen mit zeitlich unterschiedlichen Messwerten&#10;          (nichtäquidistante Zeitschritte) wird die x-Achse nur bei den&#10;          vorhandenen Zeitwerten beschriftet. Dies ergibt oftmals ein&#10;          unerwünschtes Erscheinungsbild mit sehr unterschiedlichen&#10;          Zeitabständen. Über diese Möglichkeit kann ein zeitgleicher Abstand&#10;          in der Beschriftung der x-Achse eingestellt werden. Der&#10;          Anfangszeitpunkt der x-Achsenbeschriftung ist ebenfalls frei&#10;          wählbar. Bei einer automatisch Beschriftung (automatisch wählen)&#10;          wird die Einstellung auf gleiche Zeitabstände gesetzt und der&#10;          Zeitabstand entsprechend des darzustellenden Zeitraumes automatisch&#10;          berechnet.Sollen Datenreihen aus unterschiedlichen Zeiträume verglichen&#10;          werden, so kann über Anfangszeitpunkte gleichsetzen eingestellt&#10;          werden, dass die Datenreihen zum gleichen Zeitpunkt beginnend&#10;          dargestellt werden.x-Achse abfallend sortierenStandardmäßig werden zeitliche Werte und fortlaufende Position&#10;          immer aufsteigend dargestellt. Soll diese Einstellung (abfallende&#10;          Zahlenwerte) geändert werden, muss dieses Kontrollkästchen aktiviert&#10;          werden. Bei Datenreihen mit zeitlichen Bezug (Datumswerte in der&#10;          x-Achse) wird diese Einstellung ignoriert und zurückgesetzt.AnsichtEs können ein- bzw. ausgeschaltet werden:GitternetzdarstellungDatenreihen sollen alle in gleicher Liniensträke und -art&#10;          dargestellt werdenNullwerte bei Liniendiagramme ausblendenNullachse anzeigenBalkenbreite bei der Darstellung als Balkendiagramm&#10;          einstellen.Daten ladenFür das Laden der Daten ist standardmäßig die automatische&#10;      Formaterkennung eingestellt. Kurzzeitig kann hier ausdrücklich ein&#10;      gewünschtes Format voreingestellt werden. Soll die Datei nur zur&#10;      Identifikation der einzulesenden Daten genutzt werden, so muss diese&#10;      Einstellung gewählt werden. Die Einstiegsdatei muss dann im folgenden&#10;      Format aufgebaut werden:&lt;Dateiname&gt;&lt;x-Spalte&gt;&lt;x-Name&gt;&lt;y-Spalte&gt;&lt;y-Name&gt;Bsp.:konform.asj1fl-km2Temperaturkonform.asj1fl-km3C-BSB5konform.asj1fl-km6O2 (Sauerstoff)I:\sim\daten\tabalg1fl-km5MortalitaetI:\sim\daten\tabalg1fl-km4RespirationI:\sim\daten\guetaus1fl-km2Temperatur (Güte)Daten sichernFür den Export von Daten kann der Dezimalpunkt gesondert&#10;      festgelegt werden.Schriften einstellenEinstellungen zur Schriftart und Größe werden über diese&#10;      Eingabemaske festgelegt. Weitere EinstellungenKorrekturmodus: Einfügen von Zwischenpunkten - Im Korrekturmodus&#10;      wird beim Festlegen des Anfangs- und des Endzeitpunktes der Zeitpunkt&#10;      entweder dem nächsten dazugehörigen Datenwert zugeordnet oder ein neuer&#10;      Zeitpunkt interpoliert.KALYPSO - Interaktive GangliniengrafikAuswertung: MesswertausfallDie Behandlung von Datenausfällen kann über ExtrasOptionenDaten ladenKennzeichnung von Messwertausfällen eingestellt werden. Alle Datenwerte, die mit dieser&#10;    Kennung übereinstimmen werden:in der Ansicht nicht dargestellt,bei der Berechnung, des maximalen und minimalen y-Wertes nicht&#10;        berücksichtigt,nicht in der Statistik ausgewertet,im Korrekturmodus Datenwerte aus einer anderen Reihe übernehmen&#10;        beim Markieren der Option entsprechend übernommen. Die Datenkorrektur&#10;        ersetzt in diesem Fall bei Übernahme von Werten aus einer anderen&#10;        Datenreihe nur die Datenwerte, die als Datenausfall eindeutig&#10;        entsprechend der Kennung markiert sind und in der anderen Datenreihe&#10;        genau zum selben Zeitpunkt vorliegen.Datenausfälle werden zusätzlich noch mit einem kleinen Kreis auf der&#10;    x-Achse markiert. Dabei ist nicht unterscheidbar, in welcher Datenreihe&#10;    dieser Ausfall vorliegt.KALYPSO - Interaktive GangliniengrafikAuswertung: AbflussbeiwertBei der Auswertung von Hochwasserereignissen wird die vom&#10;    Basisabfluss bereinigte Ganglinie und die Wirkung des&#10;    Effektivniederschlages benötigt.Dazu werden im Grafikprogramm folgende Arbeitsschritte&#10;    angeboten:Einlesen und Darstellen der Abflussganglinie und des zugehörigen&#10;        EffektivniederschlagesAuswahl des Hochwasserereignisses aus diesen ZeitreihenInteraktive Möglichkeit zum Abzug des Basisabflusses vom&#10;        HochwasserereignisBestimmen des zugehörigen NiederschlagzeitraumesBerechnen des AbflussbeiwertesDer Ablauf wird nachfolgend näher erläutert:Einlesen und Darstellen der Abflussganglinie&#10;    und des zugehörigen Effektivniederschlages undAuswahl des Hochwasserereignisses aus diesen&#10;    Zeitreihen.Als Ganglinien werden die Abflussganglinie und der&#10;    Effektivniederschlag eingelesen. Die Niederschlagsdaten müssen dabei als&#10;    nächste Kurve nach den Abflusswerten folgen.Auswahl eines HW-Ereignisses (Beispiel)Das gewünschte Hochwasserereignis wird über die Zoom-Einstellung&#10;    ausgewählt.Schaltfläche AbflussbeiwertÜber die Schaltfläche zur Bestimmung des Abflussbeiwertes werden die&#10;    nachfolgenden Schritte angeboten. Dieses Werkzeug ist in der&#10;    Werkzeugleiste zur Korrektur von Datenreihen (BearbeitenKorrekturmodus) enthalten.Interaktive Möglichkeit zum Abzug des&#10;    Basisabflusse vom Hochwasserereignis Der Bereich des&#10;    tatsächlichen Hochwasserabflusses wird über Cursorstriche ausgewählt. Im&#10;    Ergebnis wird die Scheitelkurve für den ausgewählten Zeitraum ohne den&#10;    Basisabfluss ermittelt.Ermittlung des Abflussbeiwertes (Beispiel)Als Basisabfluss wird dabei die interpolierte Wasserstandsganglinie&#10;    zwischen dem ausgewählten Anfangs- und Endzeitpunkt angenommen. Die&#10;    Darstellung wechselt zur Niederschlagsdatenreihe (hier rot). Für den&#10;    gewählten Abflusszeitraum wird analog der dazugehörige Niederschlag&#10;    gewählt.Auf Basis dieser beiden Datenreihen wird im Anschluss der&#10;    Abflussbeiwert wie folgt berechnet:Abflussbeiwert = (Summe Abfluss je Zeitschritt am Pegel) / (Summe NS&#10;    je Zeitschritt im Einzugsgebiet)Die Einzugsgebietsfläche wird im Dialog abgefragt, wenn nicht eine&#10;    Datei grafik.abw mit folgendem Inhalt existiert: &lt;Kurvenname&gt;&#10;    &lt;Einzugsgebietsgröße in [qm]&gt;. Die Datei muss sich im beim&#10;    Programmaufruf aktuellem Arbeitsverzeichnis befinden.Das Ergebnis wird angezeigt und gleichzeitig im Protokoll Grafik.pro&#10;    abgelegt.Ergebnis einer Abflussbeiwertermittlung (Beispiel)KALYPSO - Interaktive GangliniengrafikVorlagenlisteÜber eine Liste, in der die Namen von mehreren vorher erstellten&#10;    Vorlagen enthalten sind, kann eine Art Dia-Show aufgerufen werden. Der&#10;    Name dieser Datei endet mit *.lst.Bsp.:dia1.lst:anfpkt.tplzeitpkt1.tplzeitpkt2.tplendpkt.tplDabei werden die Vorlagen (*.tpl) der Reihe nach geladen und&#10;    dargestellt.Es besteht die Wahl eines automatischen und eines&#10;    benutzergesteuerten Ablaufes. Der Ablauf der benutzergesteuerten Variante&#10;    kann über die Tasten &lt;enter&gt; oder &lt;Leertaste&gt; weitergeführt&#10;    und über &lt;esc&gt; oder &lt;alt F4&gt; abgebrochen werden.Die zuletzt geladene Variante bleibt zum Schluss erhalten."/>
 </context>
 <context id="grafik_einfuehrung">
-<description>Einführung</description>
-<topic href="ch01s01.html" label="Einführung"/>
+<description>KALYPSO - Interaktive GangliniengrafikEinführungDas Programm zur Gangliniendarstellung ist zur schnellen
+    interaktiven oder automatischen Darstellung und Auswertung von
+    beobachteten oder berechneten Zeitreihen aus Messnetzsystemen,
+    Modellrechnungen oder Datenbanken vorgesehen.Oberfläche des GrafikprogrammsEs können bis zu 10 Kurven gleichzeitig eingeladen und dargestellt
+    werden.Die Datenreihen können wahlweise 2 verschiedenen y-Achsen zugeordnet
+    werden. Die Darstellung der Ganglinien kann unter Wahl der Farben und
+    Linienarten als Linien-, Balken-, Treppen-, Punkt- oder Linien- mit
+    Punktdarstellung erfolgen.Die zuerst eingelesene Datenreihe bestimmt den Anfangszeitpunkt der
+    Datendarstellung und die x-Achsenbeschriftung. Die x-Achsenbeschriftung
+    kann durch den Anwender geändert werden.Das Grafikmodul besitzt die wichtigsten Grundfunktionen zur
+    Seitenansicht, Druckereinstellung und zum Ausdrucken der Ganglinien. Über
+    einen Zusatzmenüpunkt können komfortable Korrekturmöglichkeiten angewandt
+    werden.Weiterführende Gestaltungsmöglichkeiten zur Gangliniendarstellung
+    können über die Exportschnittstelle zur Datensicherung und der
+    anschließenden Bearbeitung zum Beispiel in Excel erfolgen.Das Grafik-Programm ermöglicht dem Anwender eine Vielzahl von
+    Darstellungs- und Auswertungsmöglichkeiten, die in den nachfolgenden
+    Kapiteln näher beschrieben werden.</description>
+<topic href="ch01s01.html" label="KALYPSO - Interaktive GangliniengrafikEinführungDas Programm zur Gangliniendarstellung ist zur schnellen&#10;    interaktiven oder automatischen Darstellung und Auswertung von&#10;    beobachteten oder berechneten Zeitreihen aus Messnetzsystemen,&#10;    Modellrechnungen oder Datenbanken vorgesehen.Oberfläche des GrafikprogrammsEs können bis zu 10 Kurven gleichzeitig eingeladen und dargestellt&#10;    werden.Die Datenreihen können wahlweise 2 verschiedenen y-Achsen zugeordnet&#10;    werden. Die Darstellung der Ganglinien kann unter Wahl der Farben und&#10;    Linienarten als Linien-, Balken-, Treppen-, Punkt- oder Linien- mit&#10;    Punktdarstellung erfolgen.Die zuerst eingelesene Datenreihe bestimmt den Anfangszeitpunkt der&#10;    Datendarstellung und die x-Achsenbeschriftung. Die x-Achsenbeschriftung&#10;    kann durch den Anwender geändert werden.Das Grafikmodul besitzt die wichtigsten Grundfunktionen zur&#10;    Seitenansicht, Druckereinstellung und zum Ausdrucken der Ganglinien. Über&#10;    einen Zusatzmenüpunkt können komfortable Korrekturmöglichkeiten angewandt&#10;    werden.Weiterführende Gestaltungsmöglichkeiten zur Gangliniendarstellung&#10;    können über die Exportschnittstelle zur Datensicherung und der&#10;    anschließenden Bearbeitung zum Beispiel in Excel erfolgen.Das Grafik-Programm ermöglicht dem Anwender eine Vielzahl von&#10;    Darstellungs- und Auswertungsmöglichkeiten, die in den nachfolgenden&#10;    Kapiteln näher beschrieben werden."/>
 </context>
 <context id="grafik_menu_datei">
-<description>Menü: Datei</description>
-<topic href="ch01s03.html" label="Menü: Datei"/>
+<description>KALYPSO - Interaktive GangliniengrafikMenü: DateiMenü DateiÜber den Menüpunkt Datei sind alle wichtigen
+    Funktionen zum Laden, Sichern, Drucken sowie Seiten- und
+    Druckereinstellungen enthalten. Die folgende Tabelle enthält die
+    Erläuterung der einzelnen Menüpunkte.MenüpunktFunktionDaten ladenEinladen einer neuen DatenreiheNochmals ladenDie letzte Datenreihe wird nochmals eingeladen.Voraussetzung ist, dass bereits eine Datenreihe über den
+            Menüpunkt Daten laden eingeladen wurde. Bei
+            einigen Formaten, in denen die Auswahl von Blocknummern oder
+            Spaltennummern notwendig ist, wird diese Auswahl erneut
+            angeboten.Vorlage ladenEine vorher als Vorlage gesicherte Einstellung wird
+            geladen. Es kann gewählt werden, ob die bisher geladenen
+            Datenreihen im Diagramm erhalten bleiben sollen oder
+            nicht.Vorlage sichernAlle aktuellen Einstellungen werden unter einem Namen als
+            Vorlage-Datei (Template) gesichert und können wieder aufgerufen
+            werden. Gesichert werden unter anderem: Name der Datenreihe,
+            Anzeige, Diagrammart, y-Achse, Maßstab, Beschriftung u.s.w.
+            (Hinweis: Es werden nicht die Datenwerte selbst
+            gesichert.)Grafik exportierenFür eine weitere Verwendung als Bitmap kann die aktuelle
+            Darstellung als Grafik-Datei (*.bmp) abgelegt werden. (Hinweis:
+            Analog kann über Bearbeiten - Grafik in die Zwischenablage die
+            Übergabe der Darstellung in ein externes Bildbearbeitungsprogramm
+            erfolgen.)DruckenDie Diagrammdarstellung wird auf den Drucker ausgegeben.
+            Der Windows-Standarddialog ermöglicht eine Einstellung des
+            Druckers und seiner Eigenschaften.SeitenansichtVorschau der Druckausgabe.DruckereinrichtungEinstellung der Druckereigenschaften (Seitenformat u.a.m.)
+            ohne anschließendes Drucken.Die Vorgehensweise bei der Arbeit mit Vorlagen wird in der
+    Technischen Dokumentation zum Programm KALYPSO beschrieben.</description>
+<topic href="ch01s03.html" label="KALYPSO - Interaktive GangliniengrafikMenü: DateiMenü DateiÜber den Menüpunkt Datei sind alle wichtigen&#10;    Funktionen zum Laden, Sichern, Drucken sowie Seiten- und&#10;    Druckereinstellungen enthalten. Die folgende Tabelle enthält die&#10;    Erläuterung der einzelnen Menüpunkte.MenüpunktFunktionDaten ladenEinladen einer neuen DatenreiheNochmals ladenDie letzte Datenreihe wird nochmals eingeladen.Voraussetzung ist, dass bereits eine Datenreihe über den&#10;            Menüpunkt Daten laden eingeladen wurde. Bei&#10;            einigen Formaten, in denen die Auswahl von Blocknummern oder&#10;            Spaltennummern notwendig ist, wird diese Auswahl erneut&#10;            angeboten.Vorlage ladenEine vorher als Vorlage gesicherte Einstellung wird&#10;            geladen. Es kann gewählt werden, ob die bisher geladenen&#10;            Datenreihen im Diagramm erhalten bleiben sollen oder&#10;            nicht.Vorlage sichernAlle aktuellen Einstellungen werden unter einem Namen als&#10;            Vorlage-Datei (Template) gesichert und können wieder aufgerufen&#10;            werden. Gesichert werden unter anderem: Name der Datenreihe,&#10;            Anzeige, Diagrammart, y-Achse, Maßstab, Beschriftung u.s.w.&#10;            (Hinweis: Es werden nicht die Datenwerte selbst&#10;            gesichert.)Grafik exportierenFür eine weitere Verwendung als Bitmap kann die aktuelle&#10;            Darstellung als Grafik-Datei (*.bmp) abgelegt werden. (Hinweis:&#10;            Analog kann über Bearbeiten - Grafik in die Zwischenablage die&#10;            Übergabe der Darstellung in ein externes Bildbearbeitungsprogramm&#10;            erfolgen.)DruckenDie Diagrammdarstellung wird auf den Drucker ausgegeben.&#10;            Der Windows-Standarddialog ermöglicht eine Einstellung des&#10;            Druckers und seiner Eigenschaften.SeitenansichtVorschau der Druckausgabe.DruckereinrichtungEinstellung der Druckereigenschaften (Seitenformat u.a.m.)&#10;            ohne anschließendes Drucken.Die Vorgehensweise bei der Arbeit mit Vorlagen wird in der&#10;    Technischen Dokumentation zum Programm KALYPSO beschrieben."/>
 </context>
 <context id="grafik_menu_bearbeiten">
-<description>Menü: Bearbeiten</description>
-<topic href="ch01s04.html" label="Menü: Bearbeiten"/>
+<description>Menü: BearbeitenDas Menü Bearbeiten enthält Funktionen zur
+    Bearbeitung von Datenreihen, Kopieren eines Diagramms in die
+    Zwischenablage und zum Entfernen aller angezeigter Kurven aus dem
+    Diagramm.Menü BearbeitenIm Einzelnen stehen die folgenden Funktionen zur Verfügung:KALYPSO - Interaktive GangliniengrafikKorrekturmodusIm Korrektutmodus können die Werte der Datenreihen editiert
+      werden. Voraussetzung dazu ist die Aktivierung des Modus (Häkchen im
+      Menü). Nach Einschalten des Korrekturmodus erscheint eine zusätzliche
+      Werkzeugleiste mit folgenden Funktionen:Werkzeugleiste im KorrekturmodusDie Schaltflächen bedeuten von links nach rechts:Auswahl der zu korrigierenden DatenreiheWerte löschenWerte aus anderen Datenreihen übernehmenEinzelwerte hinzufügenStützstellenkorrektur (y-Achse)Stützstellenkorrektur (Zeit-Achse)Multiplikation mit einem WertAddieren von DatenreihenSubtrahieren von DatenreihenSpiegeln von KurvenabschnittenVerschieben von DatenreihenBestimmung des AbflussbeiwertesGeänderte Datenreihe sichernLetzte Änderung rückgängig machenNach Wahl der zu korrigierenden Datenreihe wird diese farbig und
+      alle anderen Kurven im Grauton dargestellt. Als Voreinstellung wird die
+      erste sichtbare Datenreihe gewählt.Der zu korrigierende Bereich wird durch einen Cursorstrich, der
+      über die Maus oder die Cursortasten bewegt werden kann, eingestellt.
+      Durch einen Doppelklick mit der linken Maustaste oder die
+      &lt;Enter&gt;-Taste wird die linke Begrenzung
+      festgelegt. Ein zweiter Doppelklick markiert die rechte Begrenzung.
+      Anschließend erscheint je nach gewähltem Werkzeug ein entsprechendes
+      Eingabemenü.Werte löschenDie innerhalb des gewählten Abschnitt befindlichen
+              Messwerte werden entfernt. Die Darstellung wird über diesen
+              Bereich interpoliert.Werte übernehmenFür den gewählten Abschnitt werden alle Messwerte
+              gelöscht und anschließend die im gleichen Zeitraum befindlichen
+              Messwerte einer anderen Messreihe übernommen. Die zu
+              übernehmende Messreihe muss aus den in der Grafik eingeladenen
+              Datenreihen ausgewählt werden. Bei der Übernahme der Werte kann
+              noch ein Faktor und eine Verschiebung (Offset) eingestellt
+              werden. Die Messwertübernahme kann auf Messwertausfälle
+              beschränkt werden. (siehe auch )Werte hinzufügenEntsprechend der Mausposition wird in x- und y-Richtung
+              ein neuer Messwert ermittelt und zur Übernahme angeboten. Der
+              y-Wert kann noch entsprechend verändert werden.Stützstellenkorrektur (y-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.
+              Ist zum Beispiel für einen Pegelschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber um 2 cm
+              nachgestellt werden musste, so kann die Datenreihe mit Offset
+              (t0)=0 und Offset (t1)=2 korrigiert werden. Die Abweichung der
+              Daten zwischen den beiden Zeitpunkten wird dabei linear von 0
+              auf 2cm interpoliert.Stützstellenkorrektur (Zeit-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte in der Zeitachse verändert werden. Damit können
+              Laufzeitfehler bei Messreihenaufzeichnungen korrigiert werden.
+              Ist zum Beispiel für einen Datenschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber die Uhr
+              30 min nachgeht, so kann die Datenreihe mit Offset(t0)=0 und
+              Offset(t1)=120 min korrigiert werden. Die Datenreihe wird
+              zwischen den beiden Zeitpunkten entsprechend gestreckt.
+              Eventuell vorhanden neue Messwerte im überlappenden Bereich
+              werden überschrieben.Multiplikation mit einem WertDie Werte der aktuellen Kurve werden mit einem Zahlenwert
+              multipliziert.Addieren von DatenreihenZwei Datenreihen werden addiert.Subtrahieren von DatenreihenZwei Datenreihen werden subtrahiert.Spiegeln von KurvenabschnittenEin Kurvenabschnitt wird in y-Richtung gespiegelt.
+              Bezugspunkt ist der y- Wert am Abschnittsanfang.Verschieben von DatenreihenDie Werte werden um einen bestimmten Betrag auf der
+              Zeitachse verschoben. Die Verschiebung wird durch den Cursor als
+              Anfangs- und Zielpunkt markiert.AbflussbeiwertBestimmung des Abflussbeiwertes. Nähere Erläuterungen
+              sind im Abschnitt zum Abflussbeiwert (siehe ) vorhanden.geänderte Datenreihe sichernDie aktuell bearbeitete Datenreihe wird gesichert. Die
+              Originaldaten werden dabei überschrieben. Als Datenformat wird
+              das Standardformat (Datum Zeit Wert) verwendet.letzte Änderung rückgängigDer letzte Bearbeitungsschritt wird aufgehoben. Die
+              vorherige Version der Datenreihe ist immer als graue Punktlinie
+              dargestellt. Bei nochmaliger Betätigung dieser Aktion werden
+              alle Änderungen bis zum letzten Speichern aufgehoben. Ein
+              Speichern der Datenreihe ist in der Art endgültig, dass eine
+              Korrektur der Änderungen nicht mehr möglich ist.Zusätzlich zu den Menüpunkten kann die Schaltfläche zum Export der
+      Daten genutzt werden.Schaltfläche DatenexportDie Daten werden im aktuell dargestellten Ausschnitt in einem
+      allgemeinen Textformat ausgegeben. Es werden nur die sichtbaren
+      Datenreihen ausgegeben. Das Format ist für den Import in Excel
+      vorbereitet, kann aber universell auch für andere Fremdprogramme genutzt
+      werden.Die Daten werden wie folgt gespeichert: 1. Zeile Beschriftung der
+      Datenreihen (Legendentext) folgende ZeilenTA1 YA1 TB1 YB1 TC1 YC1 ...TA2 YA2 TB2 YB2 TC2 YC2 ... ...TAn YAn TBn YBn TCn YCn ...T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne
+      DatenreihenAlle Spalten sind durch Tabulatoren getrennt. Das
+      Dezimaltrennzeichen ist standardmäßig das Komma und kann über das Menü
+      ExtrasOptionen eingestellt werden.KopierenDie Gangliniengrafik wird als
+      Foto in die Zwischenablage kopiert
+      und kann nun in externe Programme (z.B. Office-Programme) als Bild
+      eingefügt werden.Alle Kurven entfernenAlle Datenreihen werden aus der Darstellung entfernt. Dabei werden
+      eine Reihe von Einstellungen, wie zum Beispiel der Anfangszeitpunkt
+      zurückgesetzt. Für eine Gangliniendarstellung müssen wieder neue
+      Messreihen eingelesen werden. Diese Aktion ist dem einzelnen Löschen
+      aller Datenreihen unter Anzeigeaktuelle KurvenEntferne Nr.: gleichzusetzen (siehe ).</description>
+<topic href="ch01s04.html" label="Menü: BearbeitenDas Menü Bearbeiten enthält Funktionen zur&#10;    Bearbeitung von Datenreihen, Kopieren eines Diagramms in die&#10;    Zwischenablage und zum Entfernen aller angezeigter Kurven aus dem&#10;    Diagramm.Menü BearbeitenIm Einzelnen stehen die folgenden Funktionen zur Verfügung:KALYPSO - Interaktive GangliniengrafikKorrekturmodusIm Korrektutmodus können die Werte der Datenreihen editiert&#10;      werden. Voraussetzung dazu ist die Aktivierung des Modus (Häkchen im&#10;      Menü). Nach Einschalten des Korrekturmodus erscheint eine zusätzliche&#10;      Werkzeugleiste mit folgenden Funktionen:Werkzeugleiste im KorrekturmodusDie Schaltflächen bedeuten von links nach rechts:Auswahl der zu korrigierenden DatenreiheWerte löschenWerte aus anderen Datenreihen übernehmenEinzelwerte hinzufügenStützstellenkorrektur (y-Achse)Stützstellenkorrektur (Zeit-Achse)Multiplikation mit einem WertAddieren von DatenreihenSubtrahieren von DatenreihenSpiegeln von KurvenabschnittenVerschieben von DatenreihenBestimmung des AbflussbeiwertesGeänderte Datenreihe sichernLetzte Änderung rückgängig machenNach Wahl der zu korrigierenden Datenreihe wird diese farbig und&#10;      alle anderen Kurven im Grauton dargestellt. Als Voreinstellung wird die&#10;      erste sichtbare Datenreihe gewählt.Der zu korrigierende Bereich wird durch einen Cursorstrich, der&#10;      über die Maus oder die Cursortasten bewegt werden kann, eingestellt.&#10;      Durch einen Doppelklick mit der linken Maustaste oder die&#10;      &lt;Enter&gt;-Taste wird die linke Begrenzung&#10;      festgelegt. Ein zweiter Doppelklick markiert die rechte Begrenzung.&#10;      Anschließend erscheint je nach gewähltem Werkzeug ein entsprechendes&#10;      Eingabemenü.Werte löschenDie innerhalb des gewählten Abschnitt befindlichen&#10;              Messwerte werden entfernt. Die Darstellung wird über diesen&#10;              Bereich interpoliert.Werte übernehmenFür den gewählten Abschnitt werden alle Messwerte&#10;              gelöscht und anschließend die im gleichen Zeitraum befindlichen&#10;              Messwerte einer anderen Messreihe übernommen. Die zu&#10;              übernehmende Messreihe muss aus den in der Grafik eingeladenen&#10;              Datenreihen ausgewählt werden. Bei der Übernahme der Werte kann&#10;              noch ein Faktor und eine Verschiebung (Offset) eingestellt&#10;              werden. Die Messwertübernahme kann auf Messwertausfälle&#10;              beschränkt werden. (siehe auch )Werte hinzufügenEntsprechend der Mausposition wird in x- und y-Richtung&#10;              ein neuer Messwert ermittelt und zur Übernahme angeboten. Der&#10;              y-Wert kann noch entsprechend verändert werden.Stützstellenkorrektur (y-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für&#10;              beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.&#10;              Ist zum Beispiel für einen Pegelschreiber bekannt, dass er zum&#10;              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber um 2 cm&#10;              nachgestellt werden musste, so kann die Datenreihe mit Offset&#10;              (t0)=0 und Offset (t1)=2 korrigiert werden. Die Abweichung der&#10;              Daten zwischen den beiden Zeitpunkten wird dabei linear von 0&#10;              auf 2cm interpoliert.Stützstellenkorrektur (Zeit-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für&#10;              beide Zeitpunkte in der Zeitachse verändert werden. Damit können&#10;              Laufzeitfehler bei Messreihenaufzeichnungen korrigiert werden.&#10;              Ist zum Beispiel für einen Datenschreiber bekannt, dass er zum&#10;              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber die Uhr&#10;              30 min nachgeht, so kann die Datenreihe mit Offset(t0)=0 und&#10;              Offset(t1)=120 min korrigiert werden. Die Datenreihe wird&#10;              zwischen den beiden Zeitpunkten entsprechend gestreckt.&#10;              Eventuell vorhanden neue Messwerte im überlappenden Bereich&#10;              werden überschrieben.Multiplikation mit einem WertDie Werte der aktuellen Kurve werden mit einem Zahlenwert&#10;              multipliziert.Addieren von DatenreihenZwei Datenreihen werden addiert.Subtrahieren von DatenreihenZwei Datenreihen werden subtrahiert.Spiegeln von KurvenabschnittenEin Kurvenabschnitt wird in y-Richtung gespiegelt.&#10;              Bezugspunkt ist der y- Wert am Abschnittsanfang.Verschieben von DatenreihenDie Werte werden um einen bestimmten Betrag auf der&#10;              Zeitachse verschoben. Die Verschiebung wird durch den Cursor als&#10;              Anfangs- und Zielpunkt markiert.AbflussbeiwertBestimmung des Abflussbeiwertes. Nähere Erläuterungen&#10;              sind im Abschnitt zum Abflussbeiwert (siehe ) vorhanden.geänderte Datenreihe sichernDie aktuell bearbeitete Datenreihe wird gesichert. Die&#10;              Originaldaten werden dabei überschrieben. Als Datenformat wird&#10;              das Standardformat (Datum Zeit Wert) verwendet.letzte Änderung rückgängigDer letzte Bearbeitungsschritt wird aufgehoben. Die&#10;              vorherige Version der Datenreihe ist immer als graue Punktlinie&#10;              dargestellt. Bei nochmaliger Betätigung dieser Aktion werden&#10;              alle Änderungen bis zum letzten Speichern aufgehoben. Ein&#10;              Speichern der Datenreihe ist in der Art endgültig, dass eine&#10;              Korrektur der Änderungen nicht mehr möglich ist.Zusätzlich zu den Menüpunkten kann die Schaltfläche zum Export der&#10;      Daten genutzt werden.Schaltfläche DatenexportDie Daten werden im aktuell dargestellten Ausschnitt in einem&#10;      allgemeinen Textformat ausgegeben. Es werden nur die sichtbaren&#10;      Datenreihen ausgegeben. Das Format ist für den Import in Excel&#10;      vorbereitet, kann aber universell auch für andere Fremdprogramme genutzt&#10;      werden.Die Daten werden wie folgt gespeichert: 1. Zeile Beschriftung der&#10;      Datenreihen (Legendentext) folgende ZeilenTA1 YA1 TB1 YB1 TC1 YC1 ...TA2 YA2 TB2 YB2 TC2 YC2 ... ...TAn YAn TBn YBn TCn YCn ...T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne&#10;      DatenreihenAlle Spalten sind durch Tabulatoren getrennt. Das&#10;      Dezimaltrennzeichen ist standardmäßig das Komma und kann über das Menü&#10;      ExtrasOptionen eingestellt werden.KopierenDie Gangliniengrafik wird als&#10;      Foto in die Zwischenablage kopiert&#10;      und kann nun in externe Programme (z.B. Office-Programme) als Bild&#10;      eingefügt werden.Alle Kurven entfernenAlle Datenreihen werden aus der Darstellung entfernt. Dabei werden&#10;      eine Reihe von Einstellungen, wie zum Beispiel der Anfangszeitpunkt&#10;      zurückgesetzt. Für eine Gangliniendarstellung müssen wieder neue&#10;      Messreihen eingelesen werden. Diese Aktion ist dem einzelnen Löschen&#10;      aller Datenreihen unter Anzeigeaktuelle KurvenEntferne Nr.: gleichzusetzen (siehe )."/>
 </context>
 <context id="menu_bearbeiten_korrekturmodus">
-<description>Korrekturmodus</description>
-<topic href="ch01s04s01.html" label="Korrekturmodus"/>
+<description>KALYPSO - Interaktive GangliniengrafikKorrekturmodusIm Korrektutmodus können die Werte der Datenreihen editiert
+      werden. Voraussetzung dazu ist die Aktivierung des Modus (Häkchen im
+      Menü). Nach Einschalten des Korrekturmodus erscheint eine zusätzliche
+      Werkzeugleiste mit folgenden Funktionen:Werkzeugleiste im KorrekturmodusDie Schaltflächen bedeuten von links nach rechts:Auswahl der zu korrigierenden DatenreiheWerte löschenWerte aus anderen Datenreihen übernehmenEinzelwerte hinzufügenStützstellenkorrektur (y-Achse)Stützstellenkorrektur (Zeit-Achse)Multiplikation mit einem WertAddieren von DatenreihenSubtrahieren von DatenreihenSpiegeln von KurvenabschnittenVerschieben von DatenreihenBestimmung des AbflussbeiwertesGeänderte Datenreihe sichernLetzte Änderung rückgängig machenNach Wahl der zu korrigierenden Datenreihe wird diese farbig und
+      alle anderen Kurven im Grauton dargestellt. Als Voreinstellung wird die
+      erste sichtbare Datenreihe gewählt.Der zu korrigierende Bereich wird durch einen Cursorstrich, der
+      über die Maus oder die Cursortasten bewegt werden kann, eingestellt.
+      Durch einen Doppelklick mit der linken Maustaste oder die
+      &lt;Enter&gt;-Taste wird die linke Begrenzung
+      festgelegt. Ein zweiter Doppelklick markiert die rechte Begrenzung.
+      Anschließend erscheint je nach gewähltem Werkzeug ein entsprechendes
+      Eingabemenü.Werte löschenDie innerhalb des gewählten Abschnitt befindlichen
+              Messwerte werden entfernt. Die Darstellung wird über diesen
+              Bereich interpoliert.Werte übernehmenFür den gewählten Abschnitt werden alle Messwerte
+              gelöscht und anschließend die im gleichen Zeitraum befindlichen
+              Messwerte einer anderen Messreihe übernommen. Die zu
+              übernehmende Messreihe muss aus den in der Grafik eingeladenen
+              Datenreihen ausgewählt werden. Bei der Übernahme der Werte kann
+              noch ein Faktor und eine Verschiebung (Offset) eingestellt
+              werden. Die Messwertübernahme kann auf Messwertausfälle
+              beschränkt werden. (siehe auch )Werte hinzufügenEntsprechend der Mausposition wird in x- und y-Richtung
+              ein neuer Messwert ermittelt und zur Übernahme angeboten. Der
+              y-Wert kann noch entsprechend verändert werden.Stützstellenkorrektur (y-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.
+              Ist zum Beispiel für einen Pegelschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber um 2 cm
+              nachgestellt werden musste, so kann die Datenreihe mit Offset
+              (t0)=0 und Offset (t1)=2 korrigiert werden. Die Abweichung der
+              Daten zwischen den beiden Zeitpunkten wird dabei linear von 0
+              auf 2cm interpoliert.Stützstellenkorrektur (Zeit-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für
+              beide Zeitpunkte in der Zeitachse verändert werden. Damit können
+              Laufzeitfehler bei Messreihenaufzeichnungen korrigiert werden.
+              Ist zum Beispiel für einen Datenschreiber bekannt, dass er zum
+              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber die Uhr
+              30 min nachgeht, so kann die Datenreihe mit Offset(t0)=0 und
+              Offset(t1)=120 min korrigiert werden. Die Datenreihe wird
+              zwischen den beiden Zeitpunkten entsprechend gestreckt.
+              Eventuell vorhanden neue Messwerte im überlappenden Bereich
+              werden überschrieben.Multiplikation mit einem WertDie Werte der aktuellen Kurve werden mit einem Zahlenwert
+              multipliziert.Addieren von DatenreihenZwei Datenreihen werden addiert.Subtrahieren von DatenreihenZwei Datenreihen werden subtrahiert.Spiegeln von KurvenabschnittenEin Kurvenabschnitt wird in y-Richtung gespiegelt.
+              Bezugspunkt ist der y- Wert am Abschnittsanfang.Verschieben von DatenreihenDie Werte werden um einen bestimmten Betrag auf der
+              Zeitachse verschoben. Die Verschiebung wird durch den Cursor als
+              Anfangs- und Zielpunkt markiert.AbflussbeiwertBestimmung des Abflussbeiwertes. Nähere Erläuterungen
+              sind im Abschnitt zum Abflussbeiwert (siehe ) vorhanden.geänderte Datenreihe sichernDie aktuell bearbeitete Datenreihe wird gesichert. Die
+              Originaldaten werden dabei überschrieben. Als Datenformat wird
+              das Standardformat (Datum Zeit Wert) verwendet.letzte Änderung rückgängigDer letzte Bearbeitungsschritt wird aufgehoben. Die
+              vorherige Version der Datenreihe ist immer als graue Punktlinie
+              dargestellt. Bei nochmaliger Betätigung dieser Aktion werden
+              alle Änderungen bis zum letzten Speichern aufgehoben. Ein
+              Speichern der Datenreihe ist in der Art endgültig, dass eine
+              Korrektur der Änderungen nicht mehr möglich ist.Zusätzlich zu den Menüpunkten kann die Schaltfläche zum Export der
+      Daten genutzt werden.Schaltfläche DatenexportDie Daten werden im aktuell dargestellten Ausschnitt in einem
+      allgemeinen Textformat ausgegeben. Es werden nur die sichtbaren
+      Datenreihen ausgegeben. Das Format ist für den Import in Excel
+      vorbereitet, kann aber universell auch für andere Fremdprogramme genutzt
+      werden.Die Daten werden wie folgt gespeichert: 1. Zeile Beschriftung der
+      Datenreihen (Legendentext) folgende ZeilenTA1 YA1 TB1 YB1 TC1 YC1 ...TA2 YA2 TB2 YB2 TC2 YC2 ... ...TAn YAn TBn YBn TCn YCn ...T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne
+      DatenreihenAlle Spalten sind durch Tabulatoren getrennt. Das
+      Dezimaltrennzeichen ist standardmäßig das Komma und kann über das Menü
+      ExtrasOptionen eingestellt werden.</description>
+<topic href="ch01s04s01.html" label="KALYPSO - Interaktive GangliniengrafikKorrekturmodusIm Korrektutmodus können die Werte der Datenreihen editiert&#10;      werden. Voraussetzung dazu ist die Aktivierung des Modus (Häkchen im&#10;      Menü). Nach Einschalten des Korrekturmodus erscheint eine zusätzliche&#10;      Werkzeugleiste mit folgenden Funktionen:Werkzeugleiste im KorrekturmodusDie Schaltflächen bedeuten von links nach rechts:Auswahl der zu korrigierenden DatenreiheWerte löschenWerte aus anderen Datenreihen übernehmenEinzelwerte hinzufügenStützstellenkorrektur (y-Achse)Stützstellenkorrektur (Zeit-Achse)Multiplikation mit einem WertAddieren von DatenreihenSubtrahieren von DatenreihenSpiegeln von KurvenabschnittenVerschieben von DatenreihenBestimmung des AbflussbeiwertesGeänderte Datenreihe sichernLetzte Änderung rückgängig machenNach Wahl der zu korrigierenden Datenreihe wird diese farbig und&#10;      alle anderen Kurven im Grauton dargestellt. Als Voreinstellung wird die&#10;      erste sichtbare Datenreihe gewählt.Der zu korrigierende Bereich wird durch einen Cursorstrich, der&#10;      über die Maus oder die Cursortasten bewegt werden kann, eingestellt.&#10;      Durch einen Doppelklick mit der linken Maustaste oder die&#10;      &lt;Enter&gt;-Taste wird die linke Begrenzung&#10;      festgelegt. Ein zweiter Doppelklick markiert die rechte Begrenzung.&#10;      Anschließend erscheint je nach gewähltem Werkzeug ein entsprechendes&#10;      Eingabemenü.Werte löschenDie innerhalb des gewählten Abschnitt befindlichen&#10;              Messwerte werden entfernt. Die Darstellung wird über diesen&#10;              Bereich interpoliert.Werte übernehmenFür den gewählten Abschnitt werden alle Messwerte&#10;              gelöscht und anschließend die im gleichen Zeitraum befindlichen&#10;              Messwerte einer anderen Messreihe übernommen. Die zu&#10;              übernehmende Messreihe muss aus den in der Grafik eingeladenen&#10;              Datenreihen ausgewählt werden. Bei der Übernahme der Werte kann&#10;              noch ein Faktor und eine Verschiebung (Offset) eingestellt&#10;              werden. Die Messwertübernahme kann auf Messwertausfälle&#10;              beschränkt werden. (siehe auch )Werte hinzufügenEntsprechend der Mausposition wird in x- und y-Richtung&#10;              ein neuer Messwert ermittelt und zur Übernahme angeboten. Der&#10;              y-Wert kann noch entsprechend verändert werden.Stützstellenkorrektur (y-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für&#10;              beide Zeitpunkte eine Verschiebung der y-Werte eingeben werden.&#10;              Ist zum Beispiel für einen Pegelschreiber bekannt, dass er zum&#10;              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber um 2 cm&#10;              nachgestellt werden musste, so kann die Datenreihe mit Offset&#10;              (t0)=0 und Offset (t1)=2 korrigiert werden. Die Abweichung der&#10;              Daten zwischen den beiden Zeitpunkten wird dabei linear von 0&#10;              auf 2cm interpoliert.Stützstellenkorrektur (Zeit-Achse)Nach Wahl des Anfangs- und Endzeitpunktes können für&#10;              beide Zeitpunkte in der Zeitachse verändert werden. Damit können&#10;              Laufzeitfehler bei Messreihenaufzeichnungen korrigiert werden.&#10;              Ist zum Beispiel für einen Datenschreiber bekannt, dass er zum&#10;              Zeitpunkt t0 richtig aufzeichnete, zum Zeitpunkt t1 aber die Uhr&#10;              30 min nachgeht, so kann die Datenreihe mit Offset(t0)=0 und&#10;              Offset(t1)=120 min korrigiert werden. Die Datenreihe wird&#10;              zwischen den beiden Zeitpunkten entsprechend gestreckt.&#10;              Eventuell vorhanden neue Messwerte im überlappenden Bereich&#10;              werden überschrieben.Multiplikation mit einem WertDie Werte der aktuellen Kurve werden mit einem Zahlenwert&#10;              multipliziert.Addieren von DatenreihenZwei Datenreihen werden addiert.Subtrahieren von DatenreihenZwei Datenreihen werden subtrahiert.Spiegeln von KurvenabschnittenEin Kurvenabschnitt wird in y-Richtung gespiegelt.&#10;              Bezugspunkt ist der y- Wert am Abschnittsanfang.Verschieben von DatenreihenDie Werte werden um einen bestimmten Betrag auf der&#10;              Zeitachse verschoben. Die Verschiebung wird durch den Cursor als&#10;              Anfangs- und Zielpunkt markiert.AbflussbeiwertBestimmung des Abflussbeiwertes. Nähere Erläuterungen&#10;              sind im Abschnitt zum Abflussbeiwert (siehe ) vorhanden.geänderte Datenreihe sichernDie aktuell bearbeitete Datenreihe wird gesichert. Die&#10;              Originaldaten werden dabei überschrieben. Als Datenformat wird&#10;              das Standardformat (Datum Zeit Wert) verwendet.letzte Änderung rückgängigDer letzte Bearbeitungsschritt wird aufgehoben. Die&#10;              vorherige Version der Datenreihe ist immer als graue Punktlinie&#10;              dargestellt. Bei nochmaliger Betätigung dieser Aktion werden&#10;              alle Änderungen bis zum letzten Speichern aufgehoben. Ein&#10;              Speichern der Datenreihe ist in der Art endgültig, dass eine&#10;              Korrektur der Änderungen nicht mehr möglich ist.Zusätzlich zu den Menüpunkten kann die Schaltfläche zum Export der&#10;      Daten genutzt werden.Schaltfläche DatenexportDie Daten werden im aktuell dargestellten Ausschnitt in einem&#10;      allgemeinen Textformat ausgegeben. Es werden nur die sichtbaren&#10;      Datenreihen ausgegeben. Das Format ist für den Import in Excel&#10;      vorbereitet, kann aber universell auch für andere Fremdprogramme genutzt&#10;      werden.Die Daten werden wie folgt gespeichert: 1. Zeile Beschriftung der&#10;      Datenreihen (Legendentext) folgende ZeilenTA1 YA1 TB1 YB1 TC1 YC1 ...TA2 YA2 TB2 YB2 TC2 YC2 ... ...TAn YAn TBn YBn TCn YCn ...T = Zeitachsenwert; Y = Datenwert; A,B,C,... einzelne&#10;      DatenreihenAlle Spalten sind durch Tabulatoren getrennt. Das&#10;      Dezimaltrennzeichen ist standardmäßig das Komma und kann über das Menü&#10;      ExtrasOptionen eingestellt werden."/>
 </context>
 <context id="grafik_menu_anzeige">
-<description>Menü: Anzeige</description>
-<topic href="ch01s05.html" label="Menü: Anzeige"/>
+<description>Menü: AnzeigeEinstellungen zur Anzeige der Datenreihen können über das Menü
+    Anzeige verändert werden. Einige der Menüpunkte können
+    auch direkt über Schaltflächen aufgerufen werden. Die entsprechenden
+    Schaltflächen sind im Folgenden mit dargestellt.Menü AnzeigeKALYPSO - Interaktive GangliniengrafikAktuelle KurvenEingabemaske 'Aktuelle Kurven' (Tastenkürzel A)Über die Schalter 1 bis
+      10 können die Linienfarben und Linienarten bzw.
+      Punktsymbole der einzelnen Datenreihen verändert werden. Die neu
+      eingestellten Linienarten bleiben auch nach Verlassen des
+      Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im
+      Verzeichnis des Programms für den nächsten Aufruf
+      zwischengespeichert.Alle derzeit geladenen Datenreihen werden als vollständiger
+      Dateiname aufgelistet.Im linken Eingabefeld kann der Titel für jede Datenreihe
+      festgelegt werden. Dieser Text erscheint in der Legende.Frei wählbar sind für jede der Datenreihe:AnAnzeige an- bzw. ausschaltenRechte y-AchseDatenreihe bezieht sich auf die rechte y-Achse. In der
+              Legende steht die Linie der Datenreihe zur Kennzeichnung rechts
+              vom Text.DiagrammartDarstellungsart der KurvenEntferne Nr.Bei Auswahl einer Nummer wird nach Betätigen von
+              OK die Datenreihe aus der grafischen
+              Darstellung vollständig entfernt.MaßstabsänderungenSchaltfläche Maßstabsänderungen (Tastenkürzel
+        M)Eingabemaske MaßstabEs können für beide y-Achsen, die Niederschlags-Achse und die
+      x-Achse die Minimal-, Maximalwert und die Skalierung festgelegt
+      werden.Y beim Zoom konstant
+      haltenBeim Zoomen mit der Maus (Rechteck aufziehen) wird nur der
+      x-Bereich (Zeitachse) verändert. Die Einstellung der y-Werte bleiben
+      unverändert.dx, dY beim Zoom autom.
+      anpassenBeim Zoomen mit der Maus (Rechteck aufziehen) werden die
+      Skalierungsabstände automatisch neu berechnet.Über den Schalter Darstellung
+      kann der für die Achsendarstellung tatsächlich dargestellte Bereich
+      vorgegeben werden.Die Einstellungen für die rechte y-Achse werden nur dann
+      verfügbar, wenn dieser Achse mindestens eine Datenreihe zugeordnet
+      wurde. Die Zuordnung erfolgt über den Menüpunkt AnzeigeAktuelle Kurven.Letzte AnsichtSchaltfläche Letzte AnsichtZoomen mit der Maus (Rechteck aufziehen) bewirkt eine Veränderung
+      des Maßstabs und Diagrammausschnitts. Mit dieser Schaltfläche wird die
+      letzte Maßstabseinstellung wieder aufgerufen.ZahlenwerteSchaltfläche ZahlenwerteEin Fenster mit der Anzeige der Datenwerte von maximal 3
+      Datenreihen wird eingeblendet. Gleichzeitig wird der Cursormode
+      aktiviert. Über die Maus kann eine Cursor-Linie im Diagramm bewegt
+      werden. Zur ausgewählten Position werden die Werte der einzelnen
+      Datenreihen angezeigt. Es können bis zu drei frei wählbare Datenreihen
+      gleichzeitig angezeigt werden.LegendeDie Legende kann ein- bzw. ausgeblendet werden (Legende
+      ein/aus). Soll die Position der Legende verschoben werden
+      (Legendenposition), so muss nach Anwahl dieses
+      Menüpunktes mit der Maus eine neue linke obere Ecke angewählt
+      werden.Vorlagenliste anzeigenÜber eine Vorlagenliste (siehe auch ) kann eine Art Film
+      durch Ablauf verschiedener Darstellungen erzielt werden.EinstellungenSelbst gewählte Bezeichnungen, wie Überschrift (Titel),
+      Beschriftung der x- und beider y-Achsen werden an fest vordefinierte
+      Stellen geschrieben. Für die Druckausgabe kann eine Kopf- und eine
+      Fußzeile festgelegt werden. Dabei ist die Eingabe für diese Zeilen in
+      drei Bereiche (linksbündig, zentriert, rechtsbündig) möglich.Weitere AnsichtseinstellungenWeitere zusätzliche Einstellungen zur Ansichtssteuerung des
+      Diagramms sind in Form von Schaltflächen vorhanden. Es sollen hier nur
+      diejenigen erläutert werden, die im Funktionsumfang die bereits
+      beschriebenen Menüpunkte erweitern.Schaltfläche AnpassenDie Maßstabseinstellungen werden auf den größten
+      Ausdehnungsbereich angepasst. Dabei wird unterschieden, welche
+      Datenreihen der 1. und welche der 2. y-Achse zugeordnet sind.Schaltfläche CursormodeUm die Zeitachse nach Zwischenwerten hinsichtlich Datum und
+      Uhrzeit abzufragen, kann der Cursormodus verwendet werden. Dieser Modus
+      ist auch automatisch bei der numerischen Anzeige der Datenreihen
+      aktiviert. Es erscheint eine senkrechte Linie im Darstellungsbereich,
+      die mit der Maus verschoben werden kann. Zur Position der Linie
+      erscheint auf der x-Achse die Information über Datum/Uhrzeit.Schaltfläche FreitextÜber das Werkzeug zur Textbeschriftung TXT können bis zu 100 Textfelder beliebig im
+      Diagrammbereich gesetzt werden. Zu Beginn der Eingabe muss immer die
+      Schaltfläche aktiviert sein.Text neu setzenMit der linken Maustaste wird eine neue Position
+              angeklickt. Es erscheint ein Texteingabedialog.Textinhalt ändernWird beim Festlegen der Mausposition für den neuen Text
+              festgestellt, dass hier bereits ein Text vorliegt, so wird
+              dieser im Texteingabedialog angeboten.Textposition ändernEs wird auf eine alte Textposition geklickt. Bei gedrückt
+              gehaltener linker Maustaste wird der alte Textinhalt
+              `mitgenommen` und beim Loslassen mit der neuen Position im
+              Texteingabedialog zu einer eventuellen Änderung
+              angeboten.</description>
+<topic href="ch01s05.html" label="Menü: AnzeigeEinstellungen zur Anzeige der Datenreihen können über das Menü&#10;    Anzeige verändert werden. Einige der Menüpunkte können&#10;    auch direkt über Schaltflächen aufgerufen werden. Die entsprechenden&#10;    Schaltflächen sind im Folgenden mit dargestellt.Menü AnzeigeKALYPSO - Interaktive GangliniengrafikAktuelle KurvenEingabemaske 'Aktuelle Kurven' (Tastenkürzel A)Über die Schalter 1 bis&#10;      10 können die Linienfarben und Linienarten bzw.&#10;      Punktsymbole der einzelnen Datenreihen verändert werden. Die neu&#10;      eingestellten Linienarten bleiben auch nach Verlassen des&#10;      Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im&#10;      Verzeichnis des Programms für den nächsten Aufruf&#10;      zwischengespeichert.Alle derzeit geladenen Datenreihen werden als vollständiger&#10;      Dateiname aufgelistet.Im linken Eingabefeld kann der Titel für jede Datenreihe&#10;      festgelegt werden. Dieser Text erscheint in der Legende.Frei wählbar sind für jede der Datenreihe:AnAnzeige an- bzw. ausschaltenRechte y-AchseDatenreihe bezieht sich auf die rechte y-Achse. In der&#10;              Legende steht die Linie der Datenreihe zur Kennzeichnung rechts&#10;              vom Text.DiagrammartDarstellungsart der KurvenEntferne Nr.Bei Auswahl einer Nummer wird nach Betätigen von&#10;              OK die Datenreihe aus der grafischen&#10;              Darstellung vollständig entfernt.MaßstabsänderungenSchaltfläche Maßstabsänderungen (Tastenkürzel&#10;        M)Eingabemaske MaßstabEs können für beide y-Achsen, die Niederschlags-Achse und die&#10;      x-Achse die Minimal-, Maximalwert und die Skalierung festgelegt&#10;      werden.Y beim Zoom konstant&#10;      haltenBeim Zoomen mit der Maus (Rechteck aufziehen) wird nur der&#10;      x-Bereich (Zeitachse) verändert. Die Einstellung der y-Werte bleiben&#10;      unverändert.dx, dY beim Zoom autom.&#10;      anpassenBeim Zoomen mit der Maus (Rechteck aufziehen) werden die&#10;      Skalierungsabstände automatisch neu berechnet.Über den Schalter Darstellung&#10;      kann der für die Achsendarstellung tatsächlich dargestellte Bereich&#10;      vorgegeben werden.Die Einstellungen für die rechte y-Achse werden nur dann&#10;      verfügbar, wenn dieser Achse mindestens eine Datenreihe zugeordnet&#10;      wurde. Die Zuordnung erfolgt über den Menüpunkt AnzeigeAktuelle Kurven.Letzte AnsichtSchaltfläche Letzte AnsichtZoomen mit der Maus (Rechteck aufziehen) bewirkt eine Veränderung&#10;      des Maßstabs und Diagrammausschnitts. Mit dieser Schaltfläche wird die&#10;      letzte Maßstabseinstellung wieder aufgerufen.ZahlenwerteSchaltfläche ZahlenwerteEin Fenster mit der Anzeige der Datenwerte von maximal 3&#10;      Datenreihen wird eingeblendet. Gleichzeitig wird der Cursormode&#10;      aktiviert. Über die Maus kann eine Cursor-Linie im Diagramm bewegt&#10;      werden. Zur ausgewählten Position werden die Werte der einzelnen&#10;      Datenreihen angezeigt. Es können bis zu drei frei wählbare Datenreihen&#10;      gleichzeitig angezeigt werden.LegendeDie Legende kann ein- bzw. ausgeblendet werden (Legende&#10;      ein/aus). Soll die Position der Legende verschoben werden&#10;      (Legendenposition), so muss nach Anwahl dieses&#10;      Menüpunktes mit der Maus eine neue linke obere Ecke angewählt&#10;      werden.Vorlagenliste anzeigenÜber eine Vorlagenliste (siehe auch ) kann eine Art Film&#10;      durch Ablauf verschiedener Darstellungen erzielt werden.EinstellungenSelbst gewählte Bezeichnungen, wie Überschrift (Titel),&#10;      Beschriftung der x- und beider y-Achsen werden an fest vordefinierte&#10;      Stellen geschrieben. Für die Druckausgabe kann eine Kopf- und eine&#10;      Fußzeile festgelegt werden. Dabei ist die Eingabe für diese Zeilen in&#10;      drei Bereiche (linksbündig, zentriert, rechtsbündig) möglich.Weitere AnsichtseinstellungenWeitere zusätzliche Einstellungen zur Ansichtssteuerung des&#10;      Diagramms sind in Form von Schaltflächen vorhanden. Es sollen hier nur&#10;      diejenigen erläutert werden, die im Funktionsumfang die bereits&#10;      beschriebenen Menüpunkte erweitern.Schaltfläche AnpassenDie Maßstabseinstellungen werden auf den größten&#10;      Ausdehnungsbereich angepasst. Dabei wird unterschieden, welche&#10;      Datenreihen der 1. und welche der 2. y-Achse zugeordnet sind.Schaltfläche CursormodeUm die Zeitachse nach Zwischenwerten hinsichtlich Datum und&#10;      Uhrzeit abzufragen, kann der Cursormodus verwendet werden. Dieser Modus&#10;      ist auch automatisch bei der numerischen Anzeige der Datenreihen&#10;      aktiviert. Es erscheint eine senkrechte Linie im Darstellungsbereich,&#10;      die mit der Maus verschoben werden kann. Zur Position der Linie&#10;      erscheint auf der x-Achse die Information über Datum/Uhrzeit.Schaltfläche FreitextÜber das Werkzeug zur Textbeschriftung TXT können bis zu 100 Textfelder beliebig im&#10;      Diagrammbereich gesetzt werden. Zu Beginn der Eingabe muss immer die&#10;      Schaltfläche aktiviert sein.Text neu setzenMit der linken Maustaste wird eine neue Position&#10;              angeklickt. Es erscheint ein Texteingabedialog.Textinhalt ändernWird beim Festlegen der Mausposition für den neuen Text&#10;              festgestellt, dass hier bereits ein Text vorliegt, so wird&#10;              dieser im Texteingabedialog angeboten.Textposition ändernEs wird auf eine alte Textposition geklickt. Bei gedrückt&#10;              gehaltener linker Maustaste wird der alte Textinhalt&#10;              `mitgenommen` und beim Loslassen mit der neuen Position im&#10;              Texteingabedialog zu einer eventuellen Änderung&#10;              angeboten."/>
 </context>
 <context id="grafik_menu_aktuelle-kurven">
-<description>Aktuelle Kurven</description>
-<topic href="ch01s05s01.html" label="Aktuelle Kurven"/>
+<description>KALYPSO - Interaktive GangliniengrafikAktuelle KurvenEingabemaske 'Aktuelle Kurven' (Tastenkürzel A)Über die Schalter 1 bis
+      10 können die Linienfarben und Linienarten bzw.
+      Punktsymbole der einzelnen Datenreihen verändert werden. Die neu
+      eingestellten Linienarten bleiben auch nach Verlassen des
+      Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im
+      Verzeichnis des Programms für den nächsten Aufruf
+      zwischengespeichert.Alle derzeit geladenen Datenreihen werden als vollständiger
+      Dateiname aufgelistet.Im linken Eingabefeld kann der Titel für jede Datenreihe
+      festgelegt werden. Dieser Text erscheint in der Legende.Frei wählbar sind für jede der Datenreihe:AnAnzeige an- bzw. ausschaltenRechte y-AchseDatenreihe bezieht sich auf die rechte y-Achse. In der
+              Legende steht die Linie der Datenreihe zur Kennzeichnung rechts
+              vom Text.DiagrammartDarstellungsart der KurvenEntferne Nr.Bei Auswahl einer Nummer wird nach Betätigen von
+              OK die Datenreihe aus der grafischen
+              Darstellung vollständig entfernt.</description>
+<topic href="ch01s05s01.html" label="KALYPSO - Interaktive GangliniengrafikAktuelle KurvenEingabemaske 'Aktuelle Kurven' (Tastenkürzel A)Über die Schalter 1 bis&#10;      10 können die Linienfarben und Linienarten bzw.&#10;      Punktsymbole der einzelnen Datenreihen verändert werden. Die neu&#10;      eingestellten Linienarten bleiben auch nach Verlassen des&#10;      Grafikprogramms erhalten. Sie werden in der Datei Grafik.ini im&#10;      Verzeichnis des Programms für den nächsten Aufruf&#10;      zwischengespeichert.Alle derzeit geladenen Datenreihen werden als vollständiger&#10;      Dateiname aufgelistet.Im linken Eingabefeld kann der Titel für jede Datenreihe&#10;      festgelegt werden. Dieser Text erscheint in der Legende.Frei wählbar sind für jede der Datenreihe:AnAnzeige an- bzw. ausschaltenRechte y-AchseDatenreihe bezieht sich auf die rechte y-Achse. In der&#10;              Legende steht die Linie der Datenreihe zur Kennzeichnung rechts&#10;              vom Text.DiagrammartDarstellungsart der KurvenEntferne Nr.Bei Auswahl einer Nummer wird nach Betätigen von&#10;              OK die Datenreihe aus der grafischen&#10;              Darstellung vollständig entfernt."/>
 </context>
 <context id="grafik_menu_auswertung">
-<description>Zeitschritte</description>
-<topic href="ch01s06s01.html" label="Zeitschritte"/>
+<description>KALYPSO - Interaktive GangliniengrafikZeitschritteDie eventuell in ungleichen Zeitschritten vorliegenden Daten
+      werden in zeitgleiche (äquidistante) Schritte umgerechnet. Es kann
+      wahlweise entschieden werden auf welche Datenreihen die Berechnung
+      angewendet werden soll und ob die Originalreihen dabei aus der Grafik
+      entfernt werden sollen. Ein Abspeichern der so erzeugten Datenreihen ist
+      nur über die zusätzlichen Funktionen des Korrekturmodus (siehe ) oder im externen
+      Datenformat (Datenexport) möglich.</description>
+<topic href="ch01s06s01.html" label="KALYPSO - Interaktive GangliniengrafikZeitschritteDie eventuell in ungleichen Zeitschritten vorliegenden Daten&#10;      werden in zeitgleiche (äquidistante) Schritte umgerechnet. Es kann&#10;      wahlweise entschieden werden auf welche Datenreihen die Berechnung&#10;      angewendet werden soll und ob die Originalreihen dabei aus der Grafik&#10;      entfernt werden sollen. Ein Abspeichern der so erzeugten Datenreihen ist&#10;      nur über die zusätzlichen Funktionen des Korrekturmodus (siehe ) oder im externen&#10;      Datenformat (Datenexport) möglich."/>
 </context>
 <context id="grafik_menu_extras">
-<description>Texte Speichern</description>
-<topic href="ch01s07s01.html" label="Texte Speichern"/>
+<description>KALYPSO - Interaktive GangliniengrafikTexte SpeichernAbspeichern der freistehenden Textbeschriftungen (Freitext) in
+      eine Datei (siehe auch ).</description>
+<topic href="ch01s07s01.html" label="KALYPSO - Interaktive GangliniengrafikTexte SpeichernAbspeichern der freistehenden Textbeschriftungen (Freitext) in&#10;      eine Datei (siehe auch )."/>
 </context>
 <context id="grafik_messwertausfall">
-<description>Auswertung: Messwertausfall</description>
-<topic href="ch01s08.html" label="Auswertung: Messwertausfall"/>
+<description>KALYPSO - Interaktive GangliniengrafikAuswertung: MesswertausfallDie Behandlung von Datenausfällen kann über ExtrasOptionenDaten ladenKennzeichnung von Messwertausfällen eingestellt werden. Alle Datenwerte, die mit dieser
+    Kennung übereinstimmen werden:in der Ansicht nicht dargestellt,bei der Berechnung, des maximalen und minimalen y-Wertes nicht
+        berücksichtigt,nicht in der Statistik ausgewertet,im Korrekturmodus Datenwerte aus einer anderen Reihe übernehmen
+        beim Markieren der Option entsprechend übernommen. Die Datenkorrektur
+        ersetzt in diesem Fall bei Übernahme von Werten aus einer anderen
+        Datenreihe nur die Datenwerte, die als Datenausfall eindeutig
+        entsprechend der Kennung markiert sind und in der anderen Datenreihe
+        genau zum selben Zeitpunkt vorliegen.Datenausfälle werden zusätzlich noch mit einem kleinen Kreis auf der
+    x-Achse markiert. Dabei ist nicht unterscheidbar, in welcher Datenreihe
+    dieser Ausfall vorliegt.</description>
+<topic href="ch01s08.html" label="KALYPSO - Interaktive GangliniengrafikAuswertung: MesswertausfallDie Behandlung von Datenausfällen kann über ExtrasOptionenDaten ladenKennzeichnung von Messwertausfällen eingestellt werden. Alle Datenwerte, die mit dieser&#10;    Kennung übereinstimmen werden:in der Ansicht nicht dargestellt,bei der Berechnung, des maximalen und minimalen y-Wertes nicht&#10;        berücksichtigt,nicht in der Statistik ausgewertet,im Korrekturmodus Datenwerte aus einer anderen Reihe übernehmen&#10;        beim Markieren der Option entsprechend übernommen. Die Datenkorrektur&#10;        ersetzt in diesem Fall bei Übernahme von Werten aus einer anderen&#10;        Datenreihe nur die Datenwerte, die als Datenausfall eindeutig&#10;        entsprechend der Kennung markiert sind und in der anderen Datenreihe&#10;        genau zum selben Zeitpunkt vorliegen.Datenausfälle werden zusätzlich noch mit einem kleinen Kreis auf der&#10;    x-Achse markiert. Dabei ist nicht unterscheidbar, in welcher Datenreihe&#10;    dieser Ausfall vorliegt."/>
 </context>
 <context id="grafik_abflussbeiwert">
-<description>Auswertung: Abflussbeiwert</description>
-<topic href="ch01s09.html" label="Auswertung: Abflussbeiwert"/>
+<description>KALYPSO - Interaktive GangliniengrafikAuswertung: AbflussbeiwertBei der Auswertung von Hochwasserereignissen wird die vom
+    Basisabfluss bereinigte Ganglinie und die Wirkung des
+    Effektivniederschlages benötigt.Dazu werden im Grafikprogramm folgende Arbeitsschritte
+    angeboten:Einlesen und Darstellen der Abflussganglinie und des zugehörigen
+        EffektivniederschlagesAuswahl des Hochwasserereignisses aus diesen ZeitreihenInteraktive Möglichkeit zum Abzug des Basisabflusses vom
+        HochwasserereignisBestimmen des zugehörigen NiederschlagzeitraumesBerechnen des AbflussbeiwertesDer Ablauf wird nachfolgend näher erläutert:Einlesen und Darstellen der Abflussganglinie
+    und des zugehörigen Effektivniederschlages undAuswahl des Hochwasserereignisses aus diesen
+    Zeitreihen.Als Ganglinien werden die Abflussganglinie und der
+    Effektivniederschlag eingelesen. Die Niederschlagsdaten müssen dabei als
+    nächste Kurve nach den Abflusswerten folgen.Auswahl eines HW-Ereignisses (Beispiel)Das gewünschte Hochwasserereignis wird über die Zoom-Einstellung
+    ausgewählt.Schaltfläche AbflussbeiwertÜber die Schaltfläche zur Bestimmung des Abflussbeiwertes werden die
+    nachfolgenden Schritte angeboten. Dieses Werkzeug ist in der
+    Werkzeugleiste zur Korrektur von Datenreihen (BearbeitenKorrekturmodus) enthalten.Interaktive Möglichkeit zum Abzug des
+    Basisabflusse vom Hochwasserereignis Der Bereich des
+    tatsächlichen Hochwasserabflusses wird über Cursorstriche ausgewählt. Im
+    Ergebnis wird die Scheitelkurve für den ausgewählten Zeitraum ohne den
+    Basisabfluss ermittelt.Ermittlung des Abflussbeiwertes (Beispiel)Als Basisabfluss wird dabei die interpolierte Wasserstandsganglinie
+    zwischen dem ausgewählten Anfangs- und Endzeitpunkt angenommen. Die
+    Darstellung wechselt zur Niederschlagsdatenreihe (hier rot). Für den
+    gewählten Abflusszeitraum wird analog der dazugehörige Niederschlag
+    gewählt.Auf Basis dieser beiden Datenreihen wird im Anschluss der
+    Abflussbeiwert wie folgt berechnet:Abflussbeiwert = (Summe Abfluss je Zeitschritt am Pegel) / (Summe NS
+    je Zeitschritt im Einzugsgebiet)Die Einzugsgebietsfläche wird im Dialog abgefragt, wenn nicht eine
+    Datei grafik.abw mit folgendem Inhalt existiert: &lt;Kurvenname&gt;
+    &lt;Einzugsgebietsgröße in [qm]&gt;. Die Datei muss sich im beim
+    Programmaufruf aktuellem Arbeitsverzeichnis befinden.Das Ergebnis wird angezeigt und gleichzeitig im Protokoll Grafik.pro
+    abgelegt.Ergebnis einer Abflussbeiwertermittlung (Beispiel)</description>
+<topic href="ch01s09.html" label="KALYPSO - Interaktive GangliniengrafikAuswertung: AbflussbeiwertBei der Auswertung von Hochwasserereignissen wird die vom&#10;    Basisabfluss bereinigte Ganglinie und die Wirkung des&#10;    Effektivniederschlages benötigt.Dazu werden im Grafikprogramm folgende Arbeitsschritte&#10;    angeboten:Einlesen und Darstellen der Abflussganglinie und des zugehörigen&#10;        EffektivniederschlagesAuswahl des Hochwasserereignisses aus diesen ZeitreihenInteraktive Möglichkeit zum Abzug des Basisabflusses vom&#10;        HochwasserereignisBestimmen des zugehörigen NiederschlagzeitraumesBerechnen des AbflussbeiwertesDer Ablauf wird nachfolgend näher erläutert:Einlesen und Darstellen der Abflussganglinie&#10;    und des zugehörigen Effektivniederschlages undAuswahl des Hochwasserereignisses aus diesen&#10;    Zeitreihen.Als Ganglinien werden die Abflussganglinie und der&#10;    Effektivniederschlag eingelesen. Die Niederschlagsdaten müssen dabei als&#10;    nächste Kurve nach den Abflusswerten folgen.Auswahl eines HW-Ereignisses (Beispiel)Das gewünschte Hochwasserereignis wird über die Zoom-Einstellung&#10;    ausgewählt.Schaltfläche AbflussbeiwertÜber die Schaltfläche zur Bestimmung des Abflussbeiwertes werden die&#10;    nachfolgenden Schritte angeboten. Dieses Werkzeug ist in der&#10;    Werkzeugleiste zur Korrektur von Datenreihen (BearbeitenKorrekturmodus) enthalten.Interaktive Möglichkeit zum Abzug des&#10;    Basisabflusse vom Hochwasserereignis Der Bereich des&#10;    tatsächlichen Hochwasserabflusses wird über Cursorstriche ausgewählt. Im&#10;    Ergebnis wird die Scheitelkurve für den ausgewählten Zeitraum ohne den&#10;    Basisabfluss ermittelt.Ermittlung des Abflussbeiwertes (Beispiel)Als Basisabfluss wird dabei die interpolierte Wasserstandsganglinie&#10;    zwischen dem ausgewählten Anfangs- und Endzeitpunkt angenommen. Die&#10;    Darstellung wechselt zur Niederschlagsdatenreihe (hier rot). Für den&#10;    gewählten Abflusszeitraum wird analog der dazugehörige Niederschlag&#10;    gewählt.Auf Basis dieser beiden Datenreihen wird im Anschluss der&#10;    Abflussbeiwert wie folgt berechnet:Abflussbeiwert = (Summe Abfluss je Zeitschritt am Pegel) / (Summe NS&#10;    je Zeitschritt im Einzugsgebiet)Die Einzugsgebietsfläche wird im Dialog abgefragt, wenn nicht eine&#10;    Datei grafik.abw mit folgendem Inhalt existiert: &lt;Kurvenname&gt;&#10;    &lt;Einzugsgebietsgröße in [qm]&gt;. Die Datei muss sich im beim&#10;    Programmaufruf aktuellem Arbeitsverzeichnis befinden.Das Ergebnis wird angezeigt und gleichzeitig im Protokoll Grafik.pro&#10;    abgelegt.Ergebnis einer Abflussbeiwertermittlung (Beispiel)"/>
 </context>
 <context id="grafik_vorlagenliste">
-<description>Vorlagenliste</description>
-<topic href="ch01s10.html" label="Vorlagenliste"/>
+<description>KALYPSO - Interaktive GangliniengrafikVorlagenlisteÜber eine Liste, in der die Namen von mehreren vorher erstellten
+    Vorlagen enthalten sind, kann eine Art Dia-Show aufgerufen werden. Der
+    Name dieser Datei endet mit *.lst.Bsp.:dia1.lst:anfpkt.tplzeitpkt1.tplzeitpkt2.tplendpkt.tplDabei werden die Vorlagen (*.tpl) der Reihe nach geladen und
+    dargestellt.Es besteht die Wahl eines automatischen und eines
+    benutzergesteuerten Ablaufes. Der Ablauf der benutzergesteuerten Variante
+    kann über die Tasten &lt;enter&gt; oder &lt;Leertaste&gt; weitergeführt
+    und über &lt;esc&gt; oder &lt;alt F4&gt; abgebrochen werden.Die zuletzt geladene Variante bleibt zum Schluss erhalten.</description>
+<topic href="ch01s10.html" label="KALYPSO - Interaktive GangliniengrafikVorlagenlisteÜber eine Liste, in der die Namen von mehreren vorher erstellten&#10;    Vorlagen enthalten sind, kann eine Art Dia-Show aufgerufen werden. Der&#10;    Name dieser Datei endet mit *.lst.Bsp.:dia1.lst:anfpkt.tplzeitpkt1.tplzeitpkt2.tplendpkt.tplDabei werden die Vorlagen (*.tpl) der Reihe nach geladen und&#10;    dargestellt.Es besteht die Wahl eines automatischen und eines&#10;    benutzergesteuerten Ablaufes. Der Ablauf der benutzergesteuerten Variante&#10;    kann über die Tasten &lt;enter&gt; oder &lt;Leertaste&gt; weitergeführt&#10;    und über &lt;esc&gt; oder &lt;alt F4&gt; abgebrochen werden.Die zuletzt geladene Variante bleibt zum Schluss erhalten."/>
 </context>
 </contexts>

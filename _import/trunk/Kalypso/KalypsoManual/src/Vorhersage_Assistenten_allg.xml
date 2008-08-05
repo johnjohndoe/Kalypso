@@ -20,9 +20,9 @@
     </listitem>
 
     <listitem>
-      <para>Es besteht keine Möglichkeit, Modelldaten zu ändern. Ggf.
-      benötigte Steuerparameter und Mess- und Prognosewerte in den Zeitreihen
-      können selbstverständlich editiert werden.</para>
+      <para>Es besteht keine Möglichkeit, Modelldaten zu ändern. Für die
+      Modellrechnung benötigte Steuerparameter und Mess- und Prognosewerte in
+      den Zeitreihen können selbstverständlich editiert werden.</para>
     </listitem>
 
     <listitem>
@@ -86,15 +86,15 @@
   dargestellt. Auf diesen Seiten werden die Zeitreihen auch tabellarsich
   angezeigt. Auf Seiten, die der Berechnung, Ergebniskontrolle, -bearbeitung
   und -ablage dienen, werden im Diagramm jeweils mehrere Datenarten angezeigt
-  (siehe <xref linkend="gui-zml_diagramm_ansicht" />). Je nach dargestellter
+  (siehe <xref linkend="GuiZmlDiagrammAnsicht" />). Je nach dargestellter
   Datenart kann es unterhalb des Diagramms Optionsknöpfe geben, mit deren
-  Hilfe die Anzeige umgeschaltet werden kann (z.B. zwischen Wasserstand und
-  Abfluss). Diese Umschaltung betrifft dann auch ggf. vorhandene
-  Tabellen.</para>
+  Hilfe die Anzeige umgeschaltet werden kann (<abbrev>z. B.</abbrev> zwischen
+  Wasserstand und Abfluss). Diese Umschaltung betrifft dann auch ggf.
+  vorhandene Tabellen.</para>
 
   <para>Werden Zeitreihen in Tabellen angezeigt, so können die Daten vom
   Benutzer geändert bzw. müssen ergänzt werden. Dies wird deutlich erleichtert
-  durch die in <xref linkend="tabellen_bearbeiten" /> beschriebenen Funktionen
+  durch die in <xref linkend="TabellenBearbeiten" /> beschriebenen Funktionen
   zur Tabellenbearbeitung. Es können aber keine Datenpunkte hinzugefügt bzw.
   Datumsänderungen vorgenommen werden, da die Modelle mit Stundenwerten
   arbeiten. Datenänderungen werden automatisch gespeichert wenn Berechnungen
@@ -113,21 +113,33 @@
     <para>Wie schon in <xref linkend="programm_start" /> beschrieben startet
     KALYPSO automatisch im Vorhersagemodus.</para>
 
-    <para><figure id="pic_SA_Assi_allg_02_Startseite">
-        <title>KALYPSO-Startseite</title>
+    <figure id="pic_SA_Assi_allg_02_Startseite">
+      <title>KALYPSO-Startseite</title>
 
-        <screenshot>
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-                         fileref="img/Sachsen_Anhalt/SA_Assi_allg_02_Startseite.png"
-                         format="PNG" scale="30" />
-            </imageobject>
-          </mediaobject>
-        </screenshot>
-      </figure>Im linken Teil der Startseite, die nach dem Anmelden erscheint,
-    wird das zu bearbeitende Einzugsgebiet ausgewählt; das Bild im
-    Hauptbereich ändert sich entsprechend. Die beiden Knöpfe im unteren Teil
+      <!--PROFILING ANFANG-->
+
+      <mediaobject vendor="sachsen">
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/Programm-Start/startseite_sachsen.png"
+                     format="PNG" scale="30" />
+        </imageobject>
+      </mediaobject>
+
+      <mediaobject vendor="sachsen-anhalt">
+        <imageobject>
+          <imagedata align="center"
+                     fileref="img/Sachsen_Anhalt/SA_Assi_allg_02_Startseite.png"
+                     format="PNG" scale="40" />
+        </imageobject>
+      </mediaobject>
+
+      <!--PROFILING ENDE-->
+    </figure>
+
+    <para>Im linken Teil der Startseite, die nach dem Anmelden erscheint, wird
+    das zu bearbeitende Einzugsgebiet ausgewählt; das Bild im Hauptbereich
+    ändert sich entsprechend. Die beiden Knöpfe im unteren Teil
     <guilabel>Vorhersage starten</guilabel> und <guilabel>Vorhersagen
     verwalten</guilabel> beziehen sich auf das gewählte Einzugsgebiet.</para>
   </section>
@@ -154,7 +166,7 @@
             <imageobject>
               <imagedata align="center"
                          fileref="img/Sachsen_Anhalt/SA_Assi_allg_03_HWV_verwalten.png"
-                         format="PNG" scale="30" />
+                         format="PNG" scale="40" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -196,22 +208,31 @@
       <listitem>
         <para><guilabel>neue Rechenvariante erzeugen</guilabel>: es wird eine
         ganz neue Rechenvariante erzeugt, die gewünschte
-        <guilabel>Bezeichnung</guilabel> ist anzugeben.</para>
+        <guilabel>Bezeichnung</guilabel> ist anzugeben. Desweiteren verfügt
+        diese Option noch über die Möglichkeit, eine bestehende lokale
+        Rechenvariante fortzusetzen. Dies bedeutet, dass nach dem Erzeugen der
+        Zeitreihen für Werte, die den Status <quote>Warnung</quote> haben,
+        überprüft wird, ob in den ursprünglichen Zeitreihen vom Benutzer
+        editierte Werte (sog. <quote>Handeingaben</quote>) vorliegen. Diese
+        werden dann in die neuen Zeitreihen übernommen. Dies erleichter dem
+        Benutzer die Fortschreibung von Zeitreiehen zu denen es
+        <abbrev>ggf.</abbrev> noch keine Quelle in der Zeitreihenverwaltung
+        gibt.</para>
       </listitem>
 
       <listitem>
-        <para><guilabel>vorhandene Rechenvariante fortführen</guilabel>: im
+        <para><guilabel>vorhandene Rechenvariante öffnen</guilabel>: im
         unteren Teil des Dialogs ist die bereits erzeugte Rechenvariante
-        auszuwählen, welche fortgeführt werden soll. Diese Option ist z.B. zu
-        wählen, wenn Arbeiten an einer Rechenvariante noch nicht abgeschlossen
-        sind, Daten ergänzt oder verändert werden sollen. Es wird dabei die
-        urprüngliche Rechenvariante verändert.</para>
+        auszuwählen, welche geöffnet werden soll. Diese Option ist <abbrev>z.
+        B.</abbrev> zu wählen, wenn Arbeiten an einer Rechenvariante noch
+        nicht abgeschlossen sind, Daten ergänzt oder verändert werden sollen.
+        Es wird dabei die urprüngliche Rechenvariante verändert.</para>
       </listitem>
 
       <listitem>
         <para><guilabel>vorhandene Rechenvariante kopieren</guilabel>: es wird
         eine bereits erzeugte Rechenvariante kopiert und unter einer neuen
-        <guilabel>Bezeichnung</guilabel> fortgeführt, dazu ist im unteren Teil
+        <guilabel>Bezeichnung</guilabel> geöffnet, dazu ist im unteren Teil
         des Dialogs eine der bisher erzeugten Rechenvarianten auszuwählen. Die
         ursprüngliche Rechenvariante bleibt dabei unverändert erhalten.</para>
       </listitem>
@@ -220,7 +241,7 @@
         <para><guilabel>auf dem Server archivierte Rechenvariante
         kopieren</guilabel>: es wird eine bereits auf dem Server archivierte
         Rechenvariante kopiert und unter einer neuen
-        <guilabel>Bezeichnung</guilabel> fortgeführt, dazu ist im unteren Teil
+        <guilabel>Bezeichnung</guilabel> geöffnet, dazu ist im unteren Teil
         des Dialogs eine der bisher archivierten Rechenvarianten auszuwählen.
         Die auf dem Server archivierte Rechenvariante bleibt dabei unverändert
         erhalten.</para>
@@ -231,14 +252,10 @@
     benötigten Dateien werden im lokalen Arbeitsverzeichnis gespeichert. Im
     weiteren Verlauf besteht die Möglichkeit, die derzeit bearbeitete
     Rechenvariante auf dem Server zu archivieren und somit für die anderen
-    Nutzer zugänglich zu machen ( siehe <xref
-    linkend="SA_Assi_Ilse_05_Berichtsablage_VarianteArchivieren" />, <xref
-    linkend="SA_Assi_Bode_12_Berichtsablage_Pegel_VarianteArchivieren" /> ,
-    <xref linkend="SA_Assi_Saale_05_Berichtsablage_VarianteArchivieren" /> ).
-    Rechenvarianten können auch über <guilabel>Vorhersagen
-    verwalten</guilabel> auf dem Server archiviert werden (siehe <xref
-    linkend="SA_Assi_allg_03_VorhersagenVerw" />). Dieser Dialog kann auch
-    über <menuchoice>
+    Nutzer zugänglich zu machen. Rechenvarianten können auch über
+    <guilabel>Vorhersagen verwalten</guilabel> auf dem Server archiviert
+    werden (siehe <xref linkend="SA_Assi_allg_03_VorhersagenVerw" />). Dieser
+    Dialog kann auch über <menuchoice>
         <guimenu>Modell</guimenu>
 
         <guisubmenu>Vorhersagen verwalten</guisubmenu>
@@ -247,7 +264,6 @@
     <para>Die weiteren Seiten des Assistenten sind modellabhängig und werden
     im Folgenden einzeln beschrieben. Informationen über den jeweiligen
     Modellaufbau sowie die im Modell angewandten theoretischen Grundlagen sind
-    den bei der HVZ vorliegenden Dokumentationen der ursprünglichen Modelle zu
-    entnehmen.</para>
+    den Dokumentationen der ursprünglichen Modelle zu entnehmen.</para>
   </section>
 </section>
