@@ -5,13 +5,11 @@ Bundle-SymbolicName: org.kalypso.ui; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: lib/jcommon-0.9.6.jar,
  lib/jfreechart-0.9.21.jar,
- lib/opencsv/opencsv-1.8.jar,
  .
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
-Export-Package: au.com.bytecode.opencsv,
- com.keypoint,
+Export-Package: com.keypoint,
  org.jfree,
  org.jfree.base,
  org.jfree.base.config,
