@@ -600,7 +600,6 @@ public class ObservationServiceImpl implements IObservationService
    */
   public ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
-
     try
     {
       init();

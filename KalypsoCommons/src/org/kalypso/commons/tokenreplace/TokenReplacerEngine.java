@@ -44,7 +44,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Replacer engine to support string replacements of kind ${token:argument}.
+ * Replacer engine to support string replacements of kind ${data:token:argument}.<br>
+ * For each token, an {@link ITokenReplacer} handles its replacement within the engine.
  * 
  * @author belger
  */

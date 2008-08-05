@@ -175,7 +175,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    */
   public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
-    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString("org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0") ); //$NON-NLS-1$
+    final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString("org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0"), getTitle() ); //$NON-NLS-1$
     return new IExportableObject[]
     { exportable };
   }
