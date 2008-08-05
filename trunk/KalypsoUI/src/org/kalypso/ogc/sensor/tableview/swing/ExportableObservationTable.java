@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
@@ -70,11 +71,14 @@ public class ExportableObservationTable implements IExportableObject
 
   private final String m_stationIDs;
 
-  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category )
+  private final String m_preferredDocumentName;
+
+  public ExportableObservationTable( final ObservationTable table, final String identifierPrefix, final String category, final String preferredDocumentName )
   {
     m_table = table;
     m_identifierPrefix = identifierPrefix;
     m_category = category;
+    m_preferredDocumentName = preferredDocumentName;
     m_stationIDs = ExportUtilities.extractStationIDs( m_table.getTemplate().getItems() );
   }
 
@@ -83,7 +87,7 @@ public class ExportableObservationTable implements IExportableObject
    */
   public String getPreferredDocumentName( )
   {
-    return FileUtilities.validateName( "Tabelle.csv", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return FileUtilities.validateName( m_preferredDocumentName, "_" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -98,14 +102,12 @@ public class ExportableObservationTable implements IExportableObject
     try
     {
       // scenario name header
-      if( !m_table.getCurrentScenarioName().equals( "" ) ) //$NON-NLS-1$
-      {
-        writer.write( m_table.getCurrentScenarioName() );
-        int columnCount = m_table.getObservationTableModel().getColumnCount() - 1;
-        for( int i = 0; i < columnCount; i++ )
-          writer.write( ";" ); //$NON-NLS-1$
-        writer.newLine();
-      }
+      final String currentScenarioName = m_table.getCurrentScenarioName();
+      if( !currentScenarioName.equals( "" ) ) //$NON-NLS-1$
+        writeTextLine( writer, currentScenarioName );
+
+      if( m_preferredDocumentName != null && m_preferredDocumentName.length() > 0  ) //$NON-NLS-1$
+        writeTextLine( writer, m_preferredDocumentName );
 
       monitor.worked( 1 );
 
@@ -128,6 +130,18 @@ public class ExportableObservationTable implements IExportableObject
       IOUtils.closeQuietly( writer );
       monitor.done();
     }
+  }
+
+  /**
+   * Writes one line with only the first item set tu a given text and fill the rest with ';' according to the Number of current columns. 
+   */
+  private void writeTextLine( final BufferedWriter writer, final String text ) throws IOException
+  {
+    writer.write( text );
+    int columnCount = m_table.getObservationTableModel().getColumnCount() - 1;
+    for( int i = 0; i < columnCount; i++ )
+      writer.write( ";" ); //$NON-NLS-1$
+    writer.newLine();
   }
 
   /**

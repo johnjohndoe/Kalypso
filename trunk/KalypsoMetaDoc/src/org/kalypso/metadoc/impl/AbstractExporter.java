@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExporter;
@@ -171,4 +172,10 @@ public abstract class AbstractExporter implements IExporter
     return getName();
   }
 
+  protected String validateDocumentName( final String documentName )
+  {
+    return FileUtilities.validateName( documentName, "_" );
+  }
+
+  
 }
