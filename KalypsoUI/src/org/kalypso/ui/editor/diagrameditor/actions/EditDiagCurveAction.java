@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
 
 /**
@@ -65,7 +66,7 @@ public class EditDiagCurveAction extends FullAction
 
   public EditDiagCurveAction( final ObservationEditorOutlinePage page )
   {
-    super( "Eigenschaften", null /*ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES */,
+    super( "Eigenschaften", ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES,
         "Erlaubt die Eigenschaften des Themas zu bearbeiten" );
 
     m_page = page;

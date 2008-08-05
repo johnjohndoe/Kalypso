@@ -133,6 +133,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   /**
    * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {

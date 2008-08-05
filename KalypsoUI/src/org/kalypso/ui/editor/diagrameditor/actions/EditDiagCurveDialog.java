@@ -44,11 +44,11 @@ package org.kalypso.ui.editor.diagrameditor.actions;
 import java.awt.Color;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -58,6 +58,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -120,7 +121,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   }
 
   @Override
-  protected Point getInitialSize()
+  protected Point getInitialSize( )
   {
     return getShell().computeSize( SWT.DEFAULT, SWT.DEFAULT, true );
   }
@@ -136,7 +137,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     final Group composite = new Group( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 3, false ) );
-    //    composite.setText( "Eigenschaften" );
+    // composite.setText( "Eigenschaften" );
     // Also set layoutData as it is not set by parent. Maybe fixed in 3.3?
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -157,7 +158,6 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     final GridData colorData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     colorButton.setLayoutData( colorData );
 
-    // TODO: replace by spinner in 3.3
     final Scale alphaSlider = new Scale( composite, SWT.HORIZONTAL );
     final GridData alphaData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     alphaData.widthHint = 150;
@@ -175,21 +175,13 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     dashCombo.getControl().setFont( composite.getDisplay().getSystemFont() );
     final GridData dashData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     dashCombo.getCombo().setLayoutData( dashData );
-    dashCombo.setLabelProvider( new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( Object element )
-      {
-        return ( (DashType)element ).getComboLabel();
-      }
-    } );
+    // Better would be some fixed-sized font, but what is the best way to find it?
+    final Font comboFont = JFaceResources.getFont( JFaceResources.TEXT_FONT );
+    dashCombo.getCombo().setFont( comboFont );
+    dashCombo.setLabelProvider( new DashTypeLabelProvider() );
     dashCombo.setContentProvider( new ArrayContentProvider() );
     dashCombo.setInput( DashType.KNOWN_DASHS );
 
-    // TODO: replace by spinner in 3.3
     final Scale sizeSlider = new Scale( composite, SWT.HORIZONTAL );
     final GridData sizeData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     sizeData.widthHint = 150;
@@ -262,7 +254,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     {
       public void selectionChanged( SelectionChangedEvent event )
       {
-        handleTypeSelectionChanged( (IStructuredSelection)event.getSelection() );
+        handleTypeSelectionChanged( (IStructuredSelection) event.getSelection() );
         updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
       }
     } );
@@ -274,7 +266,8 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       nameText.setText( m_name );
 
     if( m_color == LineProperties.COLOR_UNDEF )
-    {}
+    {
+    }
     else
       alphaSlider.setSelection( m_alpha );
 
@@ -301,7 +294,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   protected void handleTypeSelectionChanged( IStructuredSelection selection )
   {
     if( !selection.isEmpty() )
-      m_dash = (DashType)selection.getFirstElement();
+      m_dash = (DashType) selection.getFirstElement();
   }
 
   protected void handleSizeSliderSelected( final Scale sizeSlider )
@@ -309,7 +302,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     m_size = new Integer( sizeSlider.getSelection() );
   }
 
-  protected void handleColorButtonSelected()
+  protected void handleColorButtonSelected( )
   {
     final ColorDialog dialog = new ColorDialog( getShell() );
     final RGB rgb = dialog.open();
@@ -317,8 +310,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       m_color = new Color( rgb.red, rgb.green, rgb.blue );
   }
 
-  protected void updateControl( final Text nameText, final Button colorButton, final Scale sizeSlider,
-      final ComboViewer dashCombo, final Scale alphaSlider )
+  protected void updateControl( final Text nameText, final Button colorButton, final Scale sizeSlider, final ComboViewer dashCombo, final Scale alphaSlider )
   {
     final Display display = getShell().getDisplay();
 
@@ -342,14 +334,13 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       colorButton.setText( "" );
       colorButton.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
 
-      final int widht = 32; 
+      final int widht = 32;
       final int height = 16;
       if( widht > 0 && height > 0 )
       {
         final Image colorImage = new Image( display, widht, height );
         GC gc = new GC( colorImage );
-        org.eclipse.swt.graphics.Color buttonColor = new org.eclipse.swt.graphics.Color( display, m_color.getRed(),
-            m_color.getGreen(), m_color.getBlue() );
+        org.eclipse.swt.graphics.Color buttonColor = new org.eclipse.swt.graphics.Color( display, m_color.getRed(), m_color.getGreen(), m_color.getBlue() );
         gc.setBackground( buttonColor );
         gc.fillRectangle( 0, 0, 32, 16 );
         buttonColor.dispose();
@@ -383,13 +374,13 @@ public class EditDiagCurveDialog extends TitleAreaDialog
    * Empty method that is called every time something changed. <br>
    * May be implemented by inheritence in order to react to changes.
    */
-  protected void propertiesChanged()
-  {}
-
-  public LineProperties getLineProperties()
+  protected void propertiesChanged( )
   {
-    final Color color = m_color == LineProperties.COLOR_UNDEF ? LineProperties.COLOR_UNDEF : new Color( m_color
-        .getRed(), m_color.getGreen(), m_color.getBlue(), m_alpha );
+  }
+
+  public LineProperties getLineProperties( )
+  {
+    final Color color = m_color == LineProperties.COLOR_UNDEF ? LineProperties.COLOR_UNDEF : new Color( m_color.getRed(), m_color.getGreen(), m_color.getBlue(), m_alpha );
 
     return new LineProperties( m_name, color, m_size, m_dash );
   }
