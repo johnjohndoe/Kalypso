@@ -108,6 +108,8 @@ public class ImageProvider
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_UP = id( "icons/full/elcl16/prev_nav.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_DOWN = id( "icons/full/elcl16/next_nav.gif" );
   public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_REMOVE = ImageProvider.id( "icons/full/elcl16/remove.gif" ); //$NON-NLS-1$
+  
+  public static final ImageDescriptor IMAGE_OBSVIEW_CURVE_PROPERTIES = ImageProvider.id( "icons/full/elcl16/obsviewCurveProperties.gif" ); //$NON-NLS-1$
 
   // public static final ImageDescriptor IMAGE_MAPVIEW_OUTLINE_ADD = id( "icons/full/elcl16/newpack_wiz.gif" );
   // public static final ImageDescriptor IMAGE_MAPVIEW_ZOOMIN = id( "icons/full/elcl16/kde_viewmag+.gif" );

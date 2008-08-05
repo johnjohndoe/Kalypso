@@ -44,8 +44,7 @@ package org.kalypso.ui.editor.diagrameditor.actions;
 import java.util.Arrays;
 
 /**
- * Represants dash arrays for awt-strokes.
- * 
+ * Represents dash arrays for awt-strokes.
  * 
  * @author Gernot Belger
  */
@@ -83,6 +82,7 @@ public class DashType
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString()
   {
     return m_label;
@@ -91,6 +91,7 @@ public class DashType
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals( Object obj )
   {
     if( obj instanceof DashType )
@@ -105,6 +106,7 @@ public class DashType
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode()
   {
     // Not correct, but works
