@@ -56,6 +56,7 @@ public class BranchLengthSectionHandler extends AbstractFeatureWrapper implement
         result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObservation, DICT_OBS_WATERLEVEL ) );
         result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObservation, DICT_OBS_DISCHARGE ) );
         result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObservation, DICT_OBS_LABEL ) );
+        result.addComponent( ObservationFeatureFactory.createDictionaryComponent( fObservation, DICT_OBS_NODE_TYPE ) );
 
         /* add observation to workspace */
         final IObservation<TupleResult> obs = new Observation<TupleResult>( "name", "description", result, new ArrayList<MetadataObject>() ); //$NON-NLS-1$ //$NON-NLS-2$

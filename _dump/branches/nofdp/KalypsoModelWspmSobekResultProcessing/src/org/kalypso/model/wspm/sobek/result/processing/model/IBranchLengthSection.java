@@ -32,6 +32,8 @@ public interface IBranchLengthSection extends Feature
 
   public static final String DICT_OBS_LABEL = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultLengthSectionObservationDefs#LABEL"; //$NON-NLS-1$
 
+  public static final String DICT_OBS_NODE_TYPE = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultLengthSectionObservationDefs#NODETYPE"; //$NON-NLS-1$
+
   public String getBranchId( );
 
   public String getName( );

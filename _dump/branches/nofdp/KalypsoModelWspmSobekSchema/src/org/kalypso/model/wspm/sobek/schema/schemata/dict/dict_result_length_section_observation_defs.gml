@@ -94,4 +94,23 @@
 			</swe:representation>
 		</swe:ItemDefinition>
 	</gml:dictionaryEntry>
+	<gml:dictionaryEntry>
+		<swe:ItemDefinition gml:id="NODETYPE">
+			<gml:name>%nodeTypeItemName</gml:name>
+			<swe:property>
+				<swe:Phenomenon gml:id="Phenomenon_NODETYPE">
+					<gml:description>Node Feature Type</gml:description>
+					<gml:name>Node Feature Type</gml:name>
+				</swe:Phenomenon>
+			</swe:property>
+			<swe:representation>
+				<swe:Word>
+					<swe:restriction>
+						<xst:pattern value=".*" />
+					</swe:restriction>
+					<swe:classification />
+				</swe:Word>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</gml:dictionaryEntry>
 </gml:Dictionary>

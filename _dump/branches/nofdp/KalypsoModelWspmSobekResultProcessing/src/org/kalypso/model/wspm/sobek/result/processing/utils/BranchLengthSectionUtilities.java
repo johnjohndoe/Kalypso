@@ -98,6 +98,7 @@ public class BranchLengthSectionUtilities
 
           Double maxValue = timeseries.getMaxValue();
           Double position = timeseries.getPositionOnBranch( branch );
+          IFeatureType featureType = node.getFeature().getFeatureType();
 
           final IRecord record = result.createRecord();
 
@@ -105,6 +106,7 @@ public class BranchLengthSectionUtilities
           record.setValue( 1, BigDecimal.valueOf( maxValue ) ); // w
           record.setValue( 2, BigDecimal.valueOf( 0.0d ) ); // q
           record.setValue( 3, node.getName() ); // label
+          record.setValue( 4, featureType.getQName().getLocalPart() );
 
           result.add( record );
         }
@@ -129,12 +131,14 @@ public class BranchLengthSectionUtilities
           {
             /* above */
             IResultTimeSeries above = wrapper.getWaterLevelAbove();
+            IFeatureType featureType = node.getFeature().getFeatureType();
 
             final IRecord recordAbove = result.createRecord();
             recordAbove.setValue( 0, BigDecimal.valueOf( above.getPositionOnBranch( branch ) - 0.1 ) ); // station
             recordAbove.setValue( 1, BigDecimal.valueOf( above.getMaxValue() ) ); // w
             recordAbove.setValue( 2, BigDecimal.valueOf( 0.0d ) ); // q
             recordAbove.setValue( 3, node.getName() ); // label
+            recordAbove.setValue( 4, featureType.getQName().getLocalPart() );
 
             result.add( recordAbove );
 
@@ -146,6 +150,7 @@ public class BranchLengthSectionUtilities
             recordBelow.setValue( 1, BigDecimal.valueOf( below.getMaxValue() ) ); // w
             recordBelow.setValue( 2, BigDecimal.valueOf( 0.0d ) ); // q
             recordBelow.setValue( 3, node.getName() ); // label
+            recordBelow.setValue( 4, featureType.getQName().getLocalPart() );
 
             result.add( recordBelow );
           }
