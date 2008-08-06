@@ -5,6 +5,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IBranch;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
+import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
 import org.kalypso.model.wspm.sobek.result.processing.model.IValuePairMembers;
 import org.kalypsodeegree.model.feature.Feature;
@@ -87,7 +88,7 @@ public abstract class ResultTimeSeriesHandler extends AbstractFeatureWrapper imp
 
     Geometry buffer = line.buffer( 0.1 );
     if( !point.intersects( buffer ) )
-      throw new CoreException( StatusUtilities.createErrorStatus( String.format( "INode %s is not connected with Branch %s", m_node.getName(), branch.getName() ) ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( String.format( Messages.ResultTimeSeriesHandler_0, m_node.getName(), branch.getName() ) ) );
 
     final Double distance = JTSUtilities.pointDistanceOnLine( line, point );
 

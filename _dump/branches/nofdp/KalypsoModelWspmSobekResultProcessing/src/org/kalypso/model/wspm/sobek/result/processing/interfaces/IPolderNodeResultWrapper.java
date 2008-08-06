@@ -14,9 +14,9 @@ public interface IPolderNodeResultWrapper
     {
       POLDER_NODE_RESULT type = valueOf( name() );
       if( POLDER_NODE_RESULT.eInflow.equals( type ) )
-        return "_inflow";
+        return "_inflow"; //$NON-NLS-1$
       else if( POLDER_NODE_RESULT.eOutflow.equals( type ) )
-        return "_outflow";
+        return "_outflow"; //$NON-NLS-1$
 
       throw new IllegalStateException();
     }

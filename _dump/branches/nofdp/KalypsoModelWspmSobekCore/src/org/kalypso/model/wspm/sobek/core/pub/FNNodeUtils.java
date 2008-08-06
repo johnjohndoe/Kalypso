@@ -110,7 +110,7 @@ public class FNNodeUtils
         if( nodeId == null )
           continue;
 
-        String id = nodeId.replaceAll( "[a-zA-Z_#]", "" );
+        String id = nodeId.replaceAll( "[a-zA-Z_#]", "" ); //$NON-NLS-1$ //$NON-NLS-2$
         final int branch = Integer.valueOf( id );
 
         max = Math.max( branch, max );

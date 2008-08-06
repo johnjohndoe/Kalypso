@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode.STRUCTURE_TYPE;
+import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IPolderNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
@@ -61,12 +62,12 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
     {
       public String getParameterId( )
       {
-        return "Q";
+        return "Q"; //$NON-NLS-1$
       }
 
       public String getUnit( )
       {
-        return "m³/s";
+        return "m³/s"; //$NON-NLS-1$
       }
     } );
   }
@@ -77,12 +78,12 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
     {
       public String getParameterId( )
       {
-        return "Q";
+        return "Q"; //$NON-NLS-1$
       }
 
       public String getUnit( )
       {
-        return "m³/s";
+        return "m³/s"; //$NON-NLS-1$
       }
     } );
   }
@@ -94,11 +95,11 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
     final String id;
     if( POLDER_NODE_RESULT.eInflow.equals( type ) )
     {
-      id = String.format( "%s_w", m_node.getId() );
+      id = String.format( "%s_w", m_node.getId() ); //$NON-NLS-1$
     }
     else if( POLDER_NODE_RESULT.eOutflow.equals( type ) )
     {
-      id = String.format( "%s_p", m_node.getId() );
+      id = String.format( "%s_p", m_node.getId() ); //$NON-NLS-1$
     }
     else
       throw new IllegalStateException();
@@ -113,7 +114,7 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
       if( locationId.equals( id ) ) //$NON-NLS-1$
       {
         String parameterId = header.getParameterId();
-        String myParamId = "Discharge (m³/s)";
+        String myParamId = Messages.PolderNodeResultWrapper_6;
 
         if( myParamId.equals( parameterId ) )
           return complex;
@@ -127,7 +128,7 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
   {
     try
     {
-      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) );
+      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) ); //$NON-NLS-1$
       if( cmd != null )
         return new PolderNodeTimeSeriesHandler( type, cmd.getRootFeature(), m_node );
 
@@ -152,7 +153,7 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( url, null );
       final CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( gmlWorkspace );
 
-      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, workspace );
+      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, workspace ); //$NON-NLS-1$
 
       /* fill empty workspace with results */
       if( empty )

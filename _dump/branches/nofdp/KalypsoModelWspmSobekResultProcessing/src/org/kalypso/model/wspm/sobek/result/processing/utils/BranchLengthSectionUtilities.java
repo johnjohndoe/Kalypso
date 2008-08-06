@@ -50,8 +50,8 @@ public class BranchLengthSectionUtilities
       final Map<IPropertyType, Object> properties = new HashMap<IPropertyType, Object>();
       properties.put( featureType.getProperty( IBranchLengthSection.QN_BRANCH ), branch.getId() );
       properties.put( featureType.getProperty( IBranchLengthSection.QN_NAME ), branch.getName() );
-      properties.put( featureType.getProperty( IBranchLengthSection.QN_PARAM_ID ), "W" );
-      properties.put( featureType.getProperty( IBranchLengthSection.QN_UNIT ), "m NHN" );
+      properties.put( featureType.getProperty( IBranchLengthSection.QN_PARAM_ID ), "W" ); //$NON-NLS-1$
+      properties.put( featureType.getProperty( IBranchLengthSection.QN_UNIT ), "m NHN" ); //$NON-NLS-1$
 
       final AtomarAddFeatureCommand command = new AtomarAddFeatureCommand( workspace, featureType, workspace.getRootFeature(), relationType, -1, properties, selectionManager );
       workspace.postCommand( command );

@@ -13,25 +13,25 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 public interface IResultTimeSeries extends Feature
 {
 
-  public static final QName QN_TYPE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "ResultTs" );
+  public static final QName QN_TYPE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "ResultTs" ); //$NON-NLS-1$
 
-  public static final QName QN_UNIQUE_ID = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "uniqueID" );
+  public static final QName QN_UNIQUE_ID = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "uniqueID" ); //$NON-NLS-1$
 
-  public static final QName QN_STATION_NAME = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "stationName" );
+  public static final QName QN_STATION_NAME = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "stationName" ); //$NON-NLS-1$
 
-  public static final QName QN_NAME = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "name" );
+  public static final QName QN_NAME = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "name" ); //$NON-NLS-1$
 
-  public static final QName QN_PARAM_ID = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "paramID" );
+  public static final QName QN_PARAM_ID = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "paramID" ); //$NON-NLS-1$
 
-  public static final QName QN_UNIT = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "unit" );
+  public static final QName QN_UNIT = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "unit" ); //$NON-NLS-1$
 
-  public static final QName QN_MAX_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "maxValue" );
+  public static final QName QN_MAX_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "maxValue" ); //$NON-NLS-1$
 
-  public static final QName QN_LAST_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "lastValue" );
+  public static final QName QN_LAST_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "lastValue" ); //$NON-NLS-1$
 
-  public static final QName QN_VALUE_PAIRS = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "durationValuePairMember" );
+  public static final QName QN_VALUE_PAIRS = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "durationValuePairMember" ); //$NON-NLS-1$
 
-  public static final QName QN_RESULT_MEMBER = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "resultMember" );
+  public static final QName QN_RESULT_MEMBER = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "resultMember" ); //$NON-NLS-1$
 
   public static final String DICT_OBS_DATE = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#DATE"; //$NON-NLS-1$
 
@@ -47,7 +47,7 @@ public interface IResultTimeSeries extends Feature
 
   public static final String DICT_OBS_HOCHWASSERENTLASTUNG = "urn:ogc:gml:dict:kalypso:wspm:sobek:resultTimeSeriesObservationDefs#HOCHWASSERENTLASTUNG"; //$NON-NLS-1$
 
-  public static final QName QN_MIN_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "minValue" );
+  public static final QName QN_MIN_VALUE = new QName( ISobekConstants.NS_SOBEK_RESULT_TIME_SERIES, "minValue" ); //$NON-NLS-1$
 
   public String getUniqueId( );
 

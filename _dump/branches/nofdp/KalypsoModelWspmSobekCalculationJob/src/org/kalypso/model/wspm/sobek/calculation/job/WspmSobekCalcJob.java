@@ -45,6 +45,7 @@ import java.net.URL;
 
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.MyPrintStream;
+import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationBaseWorker;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationPi2SobekWorker;
 import org.kalypso.model.wspm.sobek.calculation.job.worker.SimulationSobek2PIWorker;
@@ -92,7 +93,7 @@ public class WspmSobekCalcJob implements ISimulation
    */
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    ConsoleHelper.writeLine( m_nofdpStream, "--> Starting calculation job" );
+    ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_0 );
 
     final SimulationBaseWorker baseWorker = new SimulationBaseWorker( m_nofdpStream );
     baseWorker.run( tmpdir, inputProvider, resultEater, monitor );
@@ -116,14 +117,14 @@ public class WspmSobekCalcJob implements ISimulation
     File structures = new File( tmpdir, ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES_PATH );
 
     if( !points.exists() )
-      throw new SimulationException( "Calculation Points result file doesn't exists." );
+      throw new SimulationException( Messages.WspmSobekCalcJob_1 );
     if( !structures.exists() )
-      throw new SimulationException( "Structure Nodes result file doesn't exists." );
+      throw new SimulationException( Messages.WspmSobekCalcJob_2 );
 
     resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_POINTS, points );
     resultEater.addResult( ISobekCalculationJobConstants.CALCULATION_RESULT_STRUCTURES, structures );
 
-    ConsoleHelper.writeLine( m_nofdpStream, "--> Calculation job finished..." );
-    ConsoleHelper.writeLine( m_nofdpStream, "" );
+    ConsoleHelper.writeLine( m_nofdpStream, Messages.WspmSobekCalcJob_3 );
+    ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
   }
 }

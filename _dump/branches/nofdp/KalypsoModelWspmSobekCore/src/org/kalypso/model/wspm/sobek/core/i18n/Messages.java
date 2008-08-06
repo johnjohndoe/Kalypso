@@ -49,19 +49,13 @@ public class Messages extends NLS
 {
   private static final String BUNDLE_NAME = "org.kalypso.model.wspm.sobek.core.i18n.messages"; //$NON-NLS-1$
 
-  public static String Branch_0;
-
   public static String FNGmlUtils_0;
 
   public static String AbstractNode_0;
 
-  public static String BoundaryNode_0;
-
   public static String Branch_1;
 
   public static String BranchMaker_0;
-
-  public static String FNNodeUtils_1;
 
   public static String IBoundaryNode_0;
 
@@ -73,27 +67,11 @@ public class Messages extends NLS
 
   public static String SobekModelMember_0;
 
-  public static String SobekModelMember_1;
-
   public static String SobekModelMember_2;
 
   public static String SobekModelMember_3;
 
   public static String SobekModelMember_4;
-
-  public static String SobekModelMember_5;
-
-  public static String PiSobekModelUtils_0;
-
-  public static String PiSobekModelUtils_1;
-
-  public static String PiSobekModelUtils_2;
-
-  public static String PiSobekModelUtils_3;
-
-  public static String PiSobekModelUtils_4;
-
-  public static String PiSobekModelUtils_5;
 
   static
   {

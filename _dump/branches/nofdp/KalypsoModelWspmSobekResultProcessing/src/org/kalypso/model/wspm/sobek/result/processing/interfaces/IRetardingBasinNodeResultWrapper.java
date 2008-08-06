@@ -15,11 +15,11 @@ public interface IRetardingBasinNodeResultWrapper
     {
       RETARDING_BASIN_NODE_RESULT type = valueOf( name() );
       if( RETARDING_BASIN_NODE_RESULT.eWaterLevel.equals( type ) )
-        return "_waterlevel";
+        return "_waterlevel"; //$NON-NLS-1$
       else if( RETARDING_BASIN_NODE_RESULT.eHochwasserEntlastung.equals( type ) )
-        return "_entlastung";
+        return "_entlastung"; //$NON-NLS-1$
       else if( RETARDING_BASIN_NODE_RESULT.eGrundAblass.equals( type ) )
-        return "_ablass";
+        return "_ablass"; //$NON-NLS-1$
 
       throw new IllegalStateException();
     }

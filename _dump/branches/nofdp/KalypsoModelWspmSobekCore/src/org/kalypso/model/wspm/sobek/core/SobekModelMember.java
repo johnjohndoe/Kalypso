@@ -303,7 +303,7 @@ public class SobekModelMember implements ISobekModelMember
       catch( final Exception e )
       {
         e.printStackTrace();
-        returnStatus.add( StatusUtilities.createErrorStatus( String.format( "Sobek Structure Node %s (%s) couldn't be deleted.", node.getName(), node.getId() ) ) );
+        returnStatus.add( StatusUtilities.createErrorStatus( String.format( Messages.SobekModelMember_4, node.getName(), node.getId() ) ) );
       }
     return returnStatus;
   }

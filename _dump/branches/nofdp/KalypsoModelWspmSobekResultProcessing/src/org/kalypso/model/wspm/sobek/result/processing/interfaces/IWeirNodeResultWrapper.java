@@ -16,11 +16,11 @@ public interface IWeirNodeResultWrapper
     {
       WEIR_NODE_RESULT type = valueOf( name() );
       if( WEIR_NODE_RESULT.eDischarge.equals( type ) )
-        return "_discharge";
+        return "_discharge"; //$NON-NLS-1$
       else if( WEIR_NODE_RESULT.eWaterLevelAbove.equals( type ) )
-        return "_wl_above";
+        return "_wl_above"; //$NON-NLS-1$
       else if( WEIR_NODE_RESULT.eWaterLevelBelow.equals( type ) )
-        return "_wl_below";
+        return "_wl_below"; //$NON-NLS-1$
 
       throw new IllegalStateException();
     }

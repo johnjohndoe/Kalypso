@@ -173,12 +173,12 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
     final String id;
     if( node instanceof ICrossSectionNode )
     {
-      id = String.format( "C%s", node.getId() );
+      id = String.format( "C%s", node.getId() ); //$NON-NLS-1$
     }
     else if( node instanceof IConnectionNode )
     {
       // TODO handling of IBoundaryNodes.W
-      id = String.format( "%s", node.getId() );
+      id = String.format( "%s", node.getId() ); //$NON-NLS-1$
     }
     else
       throw new NotImplementedException();
@@ -244,12 +244,12 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
         {
           public String getParameterId( )
           {
-            return "W";
+            return "W"; //$NON-NLS-1$
           }
 
           public String getUnit( )
           {
-            return "m NHN";
+            return "m NHN"; //$NON-NLS-1$
           }
         } );
 

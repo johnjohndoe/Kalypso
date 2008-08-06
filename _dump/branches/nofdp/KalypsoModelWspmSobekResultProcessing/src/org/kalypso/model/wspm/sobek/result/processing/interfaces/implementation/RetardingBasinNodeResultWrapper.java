@@ -20,6 +20,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode.STRUCTURE_TYPE;
+import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IRetardingBasinNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
@@ -62,7 +63,7 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
   {
     try
     {
-      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) );
+      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) ); //$NON-NLS-1$
       if( cmd != null )
         return new RetardingBasinTimeSeriesHandler( type, cmd.getRootFeature(), m_node );
 
@@ -87,7 +88,7 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( url, null );
       final CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( gmlWorkspace );
 
-      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, workspace );
+      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, workspace ); //$NON-NLS-1$
 
       /* fill empty workspace with results */
       if( empty )
@@ -121,12 +122,12 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     if( RETARDING_BASIN_NODE_RESULT.eWaterLevel.equals( type ) )
     {
       jaxRoot = m_cache.getPiCalculationPointElement();
-      id = String.format( "%s_ln", m_node.getId() );
+      id = String.format( "%s_ln", m_node.getId() ); //$NON-NLS-1$
     }
     else if( RETARDING_BASIN_NODE_RESULT.eHochwasserEntlastung.equals( type ) )
     {
       jaxRoot = m_cache.getPiStructuresElement();
-      id = String.format( "%s##rW", m_node.getId() );
+      id = String.format( "%s##rW", m_node.getId() ); //$NON-NLS-1$
     }
     else if( RETARDING_BASIN_NODE_RESULT.eGrundAblass.equals( type ) )
     {
@@ -134,11 +135,11 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
 
       if( isControlled() == true )
       {
-        id = String.format( "%s##dbS", m_node.getId() );
+        id = String.format( "%s##dbS", m_node.getId() ); //$NON-NLS-1$
       }
       else
       {
-        id = String.format( "%s##gS", m_node.getId() );
+        id = String.format( "%s##gS", m_node.getId() ); //$NON-NLS-1$
       }
     }
     else
@@ -158,15 +159,15 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
         String myParamId;
         if( RETARDING_BASIN_NODE_RESULT.eWaterLevel.equals( type ) )
         {
-          myParamId = "Waterlevel  (m AD)"; // achtung: 2 leerzeichen!
+          myParamId = Messages.RetardingBasinNodeResultWrapper_6; // achtung: 2 leerzeichen!
         }
         else if( RETARDING_BASIN_NODE_RESULT.eHochwasserEntlastung.equals( type ) )
         {
-          myParamId = "Discharge (m³/s)";
+          myParamId = Messages.RetardingBasinNodeResultWrapper_7;
         }
         else if( RETARDING_BASIN_NODE_RESULT.eGrundAblass.equals( type ) )
         {
-          myParamId = "Discharge (m³/s)";
+          myParamId = Messages.RetardingBasinNodeResultWrapper_8;
         }
         else
           throw new IllegalStateException();
@@ -186,12 +187,12 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     {
       public String getParameterId( )
       {
-        return "Q";
+        return "Q"; //$NON-NLS-1$
       }
 
       public String getUnit( )
       {
-        return "m³/s";
+        return "m³/s"; //$NON-NLS-1$
       }
     } );
   }
@@ -202,12 +203,12 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     {
       public String getParameterId( )
       {
-        return "Q";
+        return "Q"; //$NON-NLS-1$
       }
 
       public String getUnit( )
       {
-        return "m³/s";
+        return "m³/s"; //$NON-NLS-1$
       }
     } );
   }
@@ -218,12 +219,12 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     {
       public String getParameterId( )
       {
-        return "W";
+        return "W"; //$NON-NLS-1$
       }
 
       public String getUnit( )
       {
-        return "m NHN";
+        return "m NHN"; //$NON-NLS-1$
       }
     } );
   }
