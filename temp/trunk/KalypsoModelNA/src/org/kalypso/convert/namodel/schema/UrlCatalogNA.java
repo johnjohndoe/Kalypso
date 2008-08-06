@@ -64,7 +64,10 @@ public class UrlCatalogNA extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
-    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v0.9/control.xsd" ) );
+    // TODO: this type of versioning does not make any sense!
+    // If a real versioning should be done, namespace MUST change (see W3C recommendations)
+    // Anything else is done by CVS/SVN
+    catalog.put( NaModelConstants.NS_NAMETA, myClass.getResource( "v1.0/control.xsd" ) );
     catalog.put( NaModelConstants.NS_NAMODELL, myClass.getResource( "v1.0/namodell.xsd" ) );
     catalog.put( NaModelConstants.NS_NACONTROL, myClass.getResource( "v0.8/nacontrol.xsd" ) );
     catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "v0.9/hydrotop.xsd" ) );
