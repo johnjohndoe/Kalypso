@@ -41,11 +41,12 @@
 
 package org.kalypso.ui.editor.mapeditor.commands;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -65,8 +66,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class SelectNextFeatureHandler extends AbstractHandler implements IExecutableExtension
 {
-  private Map<String,String> m_map = Collections.EMPTY_MAP;
-  
   /** Move forward (<code>true</code>) or backward (<code>false</code>) */
   private boolean m_forward = false;
 
@@ -77,23 +76,26 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     if( data instanceof Map )
     {
-      m_map = (Map<String,String>)data;
+      Map<String, String> m_map = (Map<String, String>) data;
       m_forward = Boolean.valueOf( m_map.get( "forward" ) ).booleanValue();
       m_rotate = Boolean.valueOf( m_map.get( "rotate" ) ).booleanValue();
-      m_map.put("plugin", config.getDeclaringExtension().getNamespace() );
     }
   }
 
   /**
    * @see org.eclipse.ui.commands.IHandler#execute(java.util.Map)
    */
-  public Object execute( final ExecutionEvent event )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final MapPanel mapPanel = null/* (MapPanel)parameterValuesByName.get( "mapPanel" );*/;
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final MapPanel mapPanel = (MapPanel) context.getVariable( "mapPanel" );
+    if( mapPanel == null )
+      throw new ExecutionException( "MapPanel not set" );
 
     mapPanel.getSelection();
     final IMapModell mapModell = mapPanel.getMapModell();
@@ -101,10 +103,10 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
       return null;
 
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if( !( activeTheme instanceof IKalypsoFeatureTheme ) )
+    if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return null;
 
-    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)activeTheme;
+    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) activeTheme;
     final FeatureList featureList = featureTheme.getFeatureList();
 
     if( featureList.isEmpty() )
@@ -117,27 +119,17 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
 
     final int newIndex = computeNewIndex( index, featureList.size() - 1 );
 
-    final Feature featureToSelect = (Feature)featureList.get( newIndex );
+    final Feature featureToSelect = (Feature) featureList.get( newIndex );
 
-    final EasyFeatureWrapper wrapperToSelect = new EasyFeatureWrapper( featureTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(),
-        featureToSelect.getParentRelation() );
+    final EasyFeatureWrapper wrapperToSelect = new EasyFeatureWrapper( featureTheme.getWorkspace(), featureToSelect, featureToSelect.getParent(), featureToSelect.getParentRelation() );
 
     final Feature[] toRemove = FeatureSelectionHelper.getFeatures( selectionManager );
 
-    selectionManager.changeSelection( toRemove, new EasyFeatureWrapper[]
-    { wrapperToSelect } );
+    selectionManager.changeSelection( toRemove, new EasyFeatureWrapper[] { wrapperToSelect } );
 
     return null;
   }
 
-//  /**
-//   * @see org.eclipse.ui.commands.AbstractHandler#getAttributeValuesByName()
-//   */
-//  public Map getAttributeValuesByName()
-//  {
-//    return m_map;
-//  }
-  
   /**
    * @param index
    *          The current index
