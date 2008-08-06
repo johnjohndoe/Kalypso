@@ -1061,13 +1061,13 @@
       </command>
 	  <command
             categoryId="org.kalypso.ogc.gml.map.widgets.category"
-           	description="Selects the next available feature"
-           	name="Select Next Feature"
+           	description="Selektiert das nächste Feature in der Karte"
+           	name="Nächstes"
            	id="org.kalypso.ui.map.selectNextFeatureCommand"/>
       <command
            categoryId="org.kalypso.ogc.gml.map.widgets.category"
-           description="Selects the previous available feature"
-           name="Select Previous Feature"
+           description="Selektiert das vorhergehende Feature in der Karte"
+           name="Vorhergehendes"
            id="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
       <command
             categoryId="org.kalypso.ui.views.outline.category"
@@ -1702,6 +1702,14 @@
     <image
           commandId="org.kalypso.ogc.gml.map.OpenOutlineCommand"
           icon="icons/map/show_outline.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.map.selectNextFeatureCommand"
+          icon="icons/map/nextFeature.gif">
+    </image>
+    <image
+          commandId="org.kalypso.ui.map.selectPreviousFeatureCommand"
+          icon="icons/map/prevFeature.gif">
     </image>
  </extension>
  <extension
