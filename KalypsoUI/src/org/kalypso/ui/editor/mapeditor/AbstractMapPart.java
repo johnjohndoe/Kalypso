@@ -116,7 +116,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
 // (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
 // functionality (save when dirty, command target).
-@SuppressWarnings("restriction")
 public abstract class AbstractMapPart extends AbstractEditorPart implements IExportableObjectFactory, IMapPanelProvider
 {
   private final IFeatureSelectionManager m_selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
@@ -183,6 +182,15 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
         if( contextService != null )
           m_activateContext = contextService.activateContext( MAP_CONTEXT );
+
+        try
+        {
+          CommandUtilities.refreshElementsForWindow( AbstractMapPart.this.getSite().getWorkbenchWindow(), MAP_COMMAND_CATEGORY );
+        }
+        catch( final CommandException e )
+        {
+          KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
       }
     }
 
@@ -198,6 +206,16 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
         if( contextService != null && m_activateContext != null )
           contextService.deactivateContext( m_activateContext );
       }
+    }
+
+    /**
+     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
+     */
+    @Override
+    public void partClosed( IWorkbenchPartReference partRef )
+    {
+      final MapPanelSourceProvider sourceProvider = MapPanelSourceProvider.getInstance();
+      sourceProvider.unsetActiveMapPanel( getMapPanel() );
     }
   };
 
@@ -304,62 +322,6 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     site.getPage().addPartListener( m_partListener );
 
     m_mapModellContextSwitcher.setMapModell( m_mapPanel.getMapModell() );
-
-    final AbstractMapPart thisPart = this;
-    final MapPanel finalMapPanel = m_mapPanel;
-    getSite().getPage().addPartListener( new IPartListener2()
-    {
-
-      public void partActivated( final IWorkbenchPartReference partRef )
-      {
-        try
-        {
-          CommandUtilities.refreshElementsForWindow( thisPart.getSite().getWorkbenchWindow(), MAP_COMMAND_CATEGORY );
-        }
-        catch( final CommandException e )
-        {
-          KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
-      }
-
-      public void partBroughtToTop( final IWorkbenchPartReference partRef )
-      {
-        // nothing to do
-      }
-
-      public void partClosed( final IWorkbenchPartReference partRef )
-      {
-        final MapPanelSourceProvider sourceProvider = MapPanelSourceProvider.getInstance();
-        sourceProvider.unsetActiveMapPanel( finalMapPanel );
-      }
-
-      public void partDeactivated( final IWorkbenchPartReference partRef )
-      {
-        // nothing to do
-      }
-
-      public void partHidden( final IWorkbenchPartReference partRef )
-      {
-        // nothing to do
-      }
-
-      public void partInputChanged( final IWorkbenchPartReference partRef )
-      {
-        // nothing to do
-      }
-
-      public void partOpened( final IWorkbenchPartReference partRef )
-      {
-        // nothing to do
-
-      }
-
-      public void partVisible( final IWorkbenchPartReference partRef )
-      {
-        // nothing to do
-      }
-
-    } );
 
     final IContextService siteContextService = (IContextService) site.getService( IContextService.class );
     if( siteContextService != null )
