@@ -12,12 +12,19 @@
 	<!ENTITY file_grafik SYSTEM "grafik.xml">
 
 	<!ENTITY file_sst_allg SYSTEM "sst_allg.xml">
+	
+	<!ENTITY file_sst_psicompact SYSTEM "sst_psicompact.xml">
+	
 	<!ENTITY file_sst_wiski SYSTEM "sst_wiski.xml">
-	<!ENTITY file_sst_robotron SYSTEM "sst_robotron.xml">
+	<!ENTITY file_sst_robotron_ldap SYSTEM "sst_robotron_ldap.xml">
+	<!ENTITY file_sst_robotron_ims SYSTEM "sst_robotron_ims.xml">
 	
 	<!ENTITY file_integr_allg SYSTEM "modellintegration_allg.xml">
+	<!ENTITY file_integr_elbezwg SYSTEM "modellintegration_elbezwg.xml">
+	<!ENTITY file_integr_elbepolte SYSTEM "modellintegration_elbepolte.xml">
+	<!ENTITY file_integr_elbewavos SYSTEM "modellintegration_elbeWavos.xml">
 	<!ENTITY file_integr_spree SYSTEM "modellintegration_spree.xml">
-	<!ENTITY file_integr_na SYSTEM "modellintegration_na.xml">
+	<!ENTITY file_integr_we SYSTEM "modellintegration_weisseelster.xml">
 	<!ENTITY file_integr_tubig SYSTEM "modellintegration_tubig.xml">
 	<!ENTITY file_integr_saale SYSTEM "modellintegration_saale.xml">
 ]>
@@ -36,31 +43,39 @@
 	&file_extras;
 	&file_grafik;
 	
-	<chapter vendor="sachsen-anhalt" id="modellintegration">
+	<chapter id="modellintegration">
 		<title>Modellintegration</title>
 		<indexterm>
 			<primary>Modellintegration</primary>
-			<secundary>Modelle</secundary></indexterm>
+		</indexterm>
 		
 		&file_integr_allg;
 		
+		<!-- 
+		&file_integr_elbezwg;
+		-->
+		&file_integr_elbepolte;
+		&file_integr_elbewavos;
 		&file_integr_spree;
-		&file_integr_na;
+		&file_integr_we;
 		
 		&file_integr_tubig;
 		&file_integr_saale;
 	</chapter>
 	
-	<chapter vendor="sachsen-anhalt" id="sst">
+	<chapter id="sst">
 		<title>Schnittstellen</title>
 		<indexterm><primary>Schnittstellen</primary></indexterm>
-		
+
 		&file_sst_allg;
-	
-		<!-- TODO PSICompact -->
-			
+		
+		<!-- SACHSEN -->
+		&file_sst_psicompact;
+
+		<!-- SACHSEN-ANHALT -->			
 		&file_sst_wiski;
-		&file_sst_robotron;
+		&file_sst_robotron_ldap;
+		&file_sst_robotron_ims;
 	</chapter>	
 	
 	<lot/>

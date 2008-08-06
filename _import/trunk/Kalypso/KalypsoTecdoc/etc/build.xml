@@ -26,6 +26,7 @@
 	<property name="dist.html.dir" value="${dist.dir}/html" />
 	<property name="dist.eclipse.dir" value="${dist.dir}/eclipse" />
 	<property name="dist.fo.dir" value="${dist.dir}/fo" />
+	<property name="dist.custom.dir" value="${dist.dir}/custom" />
 
 	<property name="css.dir" value="${build.merged.dir}/css" />
 	<property name="image.name" value="img" />
@@ -131,6 +132,16 @@
 		</copy>
 	</target>
 
+	<target name="custom" depends="profiling" description="Erzeugt das Benutzerhandbuch - Manuelle-Version (zustäzlicher Konvertierungschritt notwendig (z.B. mit XFC))">
+		<copy todir="${dist.custom.dir}" file="${doc.profiled.path}"/>
+
+		<!-- TODO: filter the needed images from the profiled docbook and copy only those -->
+		<mkdir dir="${dist.custom.dir}/img" />
+		<copy todir="${dist.custom.dir}/img">
+			<fileset dir="${image.dir}" includes="**/*" />
+		</copy>
+	</target>
+    
 	<target name="eclipse-help" depends="profiling" description="Erzeugt das Benutzerhandbuch - Online-Help für Eclipse">
 		<xslt basedir="${build.merged.dir}" in="${doc.profiled.path}" out="${dist.eclipse.dir}/dummy.html" style="${build.merged.xsl.dir}/common-eclipse.xsl">
 			<outputproperty name="encoding" value="ISO-8859-1" />
@@ -211,13 +222,19 @@
 			<arg value="${pdfproc.out.name}.tex" />
 		</exec>
 
+		<exec executable="pdflatex.exe" dir="${tex.dir}">
+			<arg value="${pdfproc.out.name}.tex" />
+		</exec>
+
+	  <!-- Index erst jetzt erstellen, damit Seitennummerierung richtig wird -->
 		<exec executable="makeindex.exe" dir="${tex.dir}">
 			<arg value="${pdfproc.out.name}" />
 		</exec>
 
-		<exec executable="pdflatex.exe" dir="${tex.dir}">
-			<arg value="${pdfproc.out.name}.tex" />
-		</exec>
+	  <!-- three times! needed for correct toc numbering -->
+	    <exec executable="pdflatex.exe" dir="${tex.dir}">
+	  	   <arg value="${pdfproc.out.name}.tex" />
+	    </exec>
 
 		<copy todir="${pdfproc.out.dir}" file="${tex.dir}/${pdfproc.out.name}.pdf" />
 	</target>

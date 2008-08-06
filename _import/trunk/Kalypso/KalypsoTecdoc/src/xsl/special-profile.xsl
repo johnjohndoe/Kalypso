@@ -4,6 +4,6 @@
 		 Hier passiert nichts, diese Datei ist dazu da, von den spezial Plugins ueberschrieben zu werden
 	-->
 
-	<!--xsl:param name="profile.vendor" select="''"/-->
+	<xsl:param name="profile.vendor" select="'-none-'"/>
 
 </xsl:stylesheet>
