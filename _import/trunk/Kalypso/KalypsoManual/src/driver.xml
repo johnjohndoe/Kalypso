@@ -7,7 +7,6 @@
 	<!ENTITY file_modellpflege SYSTEM "modellpflege.xml">
 	<!ENTITY file_repository SYSTEM "repository.xml">    
 	
-
 	<!ENTITY file_wizards_allg SYSTEM "Vorhersage_Assistenten_allg.xml">
 	<!ENTITY file_wizard_ElbeZwg SYSTEM "Vorhersage_Assistent_ElbeZwg.xml">
 	<!ENTITY file_wizard_ElbePolte SYSTEM "Vorhersage_Assistent_ElbePolte.xml">

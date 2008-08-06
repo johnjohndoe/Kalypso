@@ -169,7 +169,7 @@
         <imageobject>
           <imagedata align="center"
                      fileref="img/repository/repository_import_lokal.png"
-                     scale="100" />
+                     scale="80" />
         </imageobject>
       </mediaobject>
     </figure>
@@ -197,7 +197,7 @@
         <imageobject>
           <imagedata align="center"
                      fileref="img/repository/repository_einstellungen.png"
-                     scale="60" />
+                     scale="80" />
         </imageobject>
       </mediaobject>
     </figure>

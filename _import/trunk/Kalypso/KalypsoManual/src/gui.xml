@@ -118,7 +118,7 @@
     <para>Die Ergonomie und Logik der Oberfläche ähnelt denen gängiger
     GIS-Programme, sie werden jedoch ergänzt durch generelle Funktionen zur
     Bearbeitung und Verwaltung hydrologischer / hydraulischer Modelle (siehe
-    <xref linkend="Grundfunktionen" />).</para>
+    <xref linkend="Grundfunktionen" os="" />).</para>
 
     <para>I.d.R. gehört zu jeder der oben genannten Ansichten ein spezifisches
     Untermenü bzw. Werkzeuge in Form von Toolbars. <abbrev>Z. B.</abbrev>
@@ -415,7 +415,7 @@
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_karte.png"
-                       format="PNG" scale="100" vendor="" />
+                       format="PNG" scale="80" vendor="" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -471,7 +471,7 @@
             <imageobject>
               <imagedata align="center"
                          fileref="img/gui/style_editor_tuhh.png" format="PNG"
-                         scale="100" vendor="" />
+                         scale="80" vendor="" />
             </imageobject>
           </mediaobject>
         </screenshot>
@@ -685,7 +685,7 @@
         <mediaobject vendor="hh_ingenieurbueros">
           <imageobject>
             <imagedata align="center" fileref="img/gui/navi_tabelle.png"
-                       scale="100" vendor="" />
+                       scale="80" vendor="" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -951,11 +951,11 @@
         PSICompact. Beim Öffnen einer Zeitreihe in KALYPSO mit der
         Tabellen-Ansicht wird der Status durch ein Symbol visualisiert. Die
         einzelnen Symbole sind mit dem dazugehörigen Status in einer Tabelle
-        in <xref linkend="zeitreihensymbole" /> dargestellt. Wird kein Symbol
+        in <xref linkend="Zeitreihensymbole" /> dargestellt. Wird kein Symbol
         vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO den
         Status <quote>OK</quote>.</para>
 
-        <table id="zeitreihensymbole">
+        <table id="Zeitreihensymbole">
           <title>Symbole in Zeitreihen-Tabellen</title>
 
           <tgroup cols="3">
@@ -1034,7 +1034,7 @@
         den Attributen aus WISKI. Beim Öffnen einer Zeitreihe in KALYPSO mit
         der Tabellen-Ansicht wird der Status durch ein Symbol visualisiert.
         Die einzelnen Symbole sind mit dem dazugehörigen Status in einer
-        Tabelle in <xref linkend="zeitreihensymbole" /> dargestellt. Wird kein
+        Tabelle in <xref linkend="Zeitreihensymbole" /> dargestellt. Wird kein
         Symbol vor dem Wert angezeigt, besitzt der Wert innerhalb von KALYPSO
         den Status <quote>OK</quote>.</para>
 

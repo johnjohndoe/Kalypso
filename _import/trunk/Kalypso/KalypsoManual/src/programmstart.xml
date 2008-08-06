@@ -10,8 +10,8 @@
   abhängig von den Zugriffsrechten des Benutzers. Die Benutzerrechte sind
   dabei klassifiziert nach den in <xref linkend="Anwendungsfaelle" />
   beschriebenen Anwendungsfällen und Anwendern. Die Benutzerrechte werden bei
-  einer vorhandenen Schnittstelle zu einer zentralen Benutzerverwaltung (siehe <xref linkend="Benutzerrechte" />) durch
-  diese übergeben.</para>
+  einer vorhandenen Schnittstelle zu einer zentralen Benutzerverwaltung (siehe
+  <xref linkend="Benutzerrechte" />) durch diese übergeben.</para>
 
   <para vendor="sachsen;sachsen-anhalt">Ist eine Benutzerverwaltung nicht
   vorgesehen, so erfolgt der Login durch ein einheitliches Passwort. Wird die
@@ -25,7 +25,7 @@
       </imageobject>
     </inlinemediaobject> Kalypso.exe gestartet.</para>
 
-  <section id="KalypsoLogin" vendor="sachsen-anhalt">
+  <section id="KalypsoLogin" vendor="sachsen-anhalt;sachsen">
     <title>Anmeldung</title>
 
     <indexterm>
@@ -35,13 +35,12 @@
     </indexterm>
 
     <para>Beim Start von KALYPSO erfolgt zunächst die Anmeldung des Benutzers.
-    Hierzu öffnet sich ein Dialog (siehe <xref
-    linkend="PicKalypsoLogin" />), in welchem Benutzername und Passwort
-    einzugeben sind. Standardmässig wird als Benutzername der Name der
-    Windows-Anmeldung vorgegeben, es kann aber auch ein beliebiger anderer
-    Name eingegeben werden. Die Anmeldung wird gegen die zentrale
-    Benutzerverwaltung (LDAP-System) verifiziert, siehe hierzu auch die
-    Technische Dokumentation.</para>
+    Hierzu öffnet sich ein Dialog (siehe <xref linkend="PicKalypsoLogin" />),
+    in welchem Benutzername und Passwort einzugeben sind. Standardmässig wird
+    als Benutzername der Name der Windows-Anmeldung vorgegeben, es kann aber
+    auch ein beliebiger anderer Name eingegeben werden. Die Anmeldung wird
+    gegen die zentrale Benutzerverwaltung (LDAP-System) verifiziert, siehe
+    hierzu auch die Technische Dokumentation.</para>
 
     <figure id="PicKalypsoLogin">
       <title>KALYPSO Anmeldung</title>
@@ -122,9 +121,9 @@
       <primary>KALYPSO-Konzept</primary>
     </indexterm>
 
-    <para>Nach dem Programm-Start von KALYPSO öffnet sich die
-    Startseite, die in Anlehnung an die Zugriffsrechte des Benutzers aufgebaut
-    wird. Unabhängig von den ihm zugeordneten Rechten wird der Benutzer beim
+    <para>Nach dem Programm-Start von KALYPSO öffnet sich die Startseite, die
+    in Anlehnung an die Zugriffsrechte des Benutzers aufgebaut wird.
+    Unabhängig von den ihm zugeordneten Rechten wird der Benutzer beim
     Programmstart in den Vorhersagemodus geführt (siehe <xref
     linkend="PicKalypsoStartseite" />).</para>
 
@@ -135,7 +134,7 @@
           <imageobject>
             <imagedata align="center"
                        fileref="img/Programm-Start/startseite_sachsen.png"
-                       scale="60" vendor="" />
+                       scale="30" vendor="" />
           </imageobject>
         </mediaobject>
 
@@ -319,7 +318,7 @@
     </table>
   </section>
 
-  <section id="KalypsoTestbetrieb" vendor="sachsen-anhalt">
+  <section id="KalypsoTestbetrieb" vendor="sachsen-anhalt;sachsen">
     <title>Simulationsbetrieb</title>
 
     <para>Wie schon unter <xref linkend="KalypsoLogin" /> beschrieben, kann

@@ -110,7 +110,7 @@
       <secondary>Programm-Start</secondary>
     </indexterm>
 
-    <para>Wie schon in <xref linkend="programm_start" /> beschrieben startet
+    <para>Wie schon in <xref linkend="ProgrammStart" /> beschrieben startet
     KALYPSO automatisch im Vorhersagemodus.</para>
 
     <figure id="pic_SA_Assi_allg_02_Startseite">
