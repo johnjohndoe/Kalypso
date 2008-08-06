@@ -79,7 +79,7 @@
     </itemizedlist>
 
     <para>Besuchen sie uns auch auf unserer Homepage im Internet: <ulink
-    url="http://www.kalypso-simulation-platform.org/">http://www.kalypso-simulation-platform.org/</ulink>
+    url="http://kalypso.sourceforge.net/">http://kalypso.sourceforge.net/</ulink>
     .</para>
 
     <section id="NympheKalypso"
@@ -192,9 +192,33 @@
     </figure>
 
     <para>Die im Landeshochwasserzentrum Sachsen installierte und hier
-    beschriebene KALYPSO-Version beinhaltet zwei Modell-Plugins.</para>
+    beschriebene KALYPSO-Version beinhaltet sechs Modell-Plugins.</para>
 
     <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">Elbe (Zwischengebiete)</emphasis>:
+        Berechnungsmodell zur Ermittlung von Zwischengebietszuflüssen an der
+        Elbe.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Elbe</emphasis>:
+        Hochwasservorhersagemodell RIMO/RIDO (wird heute fortgeführt von IB
+        Polte).</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Elbe - Wavos</emphasis>:
+        Wasserstandsvorhersagemodell der BfG.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Schwarze Elster</emphasis>: Ein
+        kombiniertes Niederschlag-Abfluss-Modell und Wellenablauf-Modell der
+        TU Dresden bzw. der WASY GmbH für das Einzugsgebiet der Schwarzen
+        Elster.</para>
+      </listitem>
+
       <listitem>
         <para><emphasis role="bold">Spree</emphasis>: Ein kombiniertes
         Niederschlag-Abfluss-Modell und Wellenablauf-Modell der TU Dresden
@@ -210,10 +234,10 @@
       </listitem>
     </orderedlist>
 
-    <para>Beide Modelle werden durch die KALYPSO-Modeler Oberfläche (siehe
+    <para>Alle Modelle werden durch die KALYPSO-Modeler Oberfläche (siehe
     <xref linkend="GrafischeOberflaeche" />) unterstützt. Gleichzeitig sind
     innerhalb der Installation in der Landeshochwasserwarnzentrale Sachsen
-    zwei Vorhersage-Wizards verfügbar, die den Anwender im Falle der
+    Vorhersage-Wizards verfügbar, die den Anwender im Falle der
     Hochwasservorhersage gezielt durch die spezifische Vorhersageberechnung
     der jeweiligen Modelle leiten (siehe <xref
     linkend="vorhersage_wizards" />).</para>
@@ -531,7 +555,7 @@
               <tgroup cols="3">
                 <colspec align="left" colwidth="1*" />
 
-                <colspec align="left" />
+                <colspec align="left" colwidth="1*" />
 
                 <colspec align="left" />
 
@@ -611,7 +635,7 @@
         </orderedlist></para>
 
       <para>Nachdem die Installation durchgeführt wurde kann Kalypso gestartet
-      werden (siehe <xref linkend="programm_start" />).</para>
+      werden (siehe <xref linkend="ProgrammStart" />).</para>
     </section>
 
     <!--ENDE PROFILING Ing-Bueros-->
@@ -639,9 +663,9 @@
           <tgroup cols="3">
             <colspec align="left" colwidth="1*" />
 
-            <colspec align="left" />
+            <colspec align="left" colwidth="1*" />
 
-            <colspec align="left" />
+            <colspec align="left" colwidth="1*" />
 
             <thead>
               <row>
@@ -898,6 +922,6 @@
     url="https://www.kalypso.wb.tu-harburg.de/">https://www.kalypso.wb.tu-harburg.de/</ulink>
     gepfelgt. Sollten Sie hierüber hin aus einen persönlichen Support für
     Ihren Betrieb wünschen, so wenden sie sich bitte an den Support (siehe
-    <xref linkend="Kontakt" />).</para>
+    <xref linkend="AllgemeinesZuKalypso" />).</para>
   </section>
 </chapter>
