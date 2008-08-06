@@ -483,6 +483,8 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
 
       aColumn.setMaxWidth( 100 );
       aColumn.setResizable( false );
+      aColumn.setMinWidth( 100 );
+      aColumn.setWidth( 100 );
 
       super.addColumn( aColumn );
     }
