@@ -74,7 +74,6 @@ public class FeaturePage extends WizardPage
 
   private final ModellEventListener m_modellListener = new ModellEventListener()
   {
-    @Override
     public void onModellChange( final ModellEvent modellEvent )
     {
       handleModellChange();
