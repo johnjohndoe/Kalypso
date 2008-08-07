@@ -169,7 +169,6 @@ public class ExportableChart implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
    */
-  @Override
   public String getStationIDs( )
   {
     return m_stationIDs;

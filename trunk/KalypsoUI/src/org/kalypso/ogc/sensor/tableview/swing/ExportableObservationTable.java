@@ -163,7 +163,6 @@ public class ExportableObservationTable implements IExportableObject
   /**
    * @see org.kalypso.metadoc.IExportableObject#getStationIDs()
    */
-  @Override
   public String getStationIDs( )
   {
     return m_stationIDs;
