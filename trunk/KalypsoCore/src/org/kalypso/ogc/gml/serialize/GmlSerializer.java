@@ -42,23 +42,18 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
@@ -72,19 +67,18 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tools.ant.filters.ReplaceTokens;
-import org.apache.tools.ant.filters.ReplaceTokens.Token;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.GMLException;
@@ -105,9 +99,9 @@ import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
 /**
- * Helper - Klasse, um Gml zu lesen und zu schreiben
+ * Helper - Klasse, um Gml zu lesen und zu schreiben.
  * 
- * @author Belger
+ * @author Gernot Belger
  */
 public final class GmlSerializer
 {
@@ -350,4 +344,46 @@ public final class GmlSerializer
     monitor.worked( 1 );
   }
 
+  /**
+   * This function loads a workspace from a file.
+   * 
+   * @param file
+   *          The file of the workspace.
+   * @return The workspace of the file.
+   */
+  public static GMLWorkspace loadWorkspace( IFile file ) throws Exception
+  {
+    /* Create the url of the workspace. */
+    URL url = ResourceUtilities.createURL( file );
+
+    /* Load the workspace and return it. */
+    return GmlSerializer.createGMLWorkspace( url, null );
+  }
+
+  /**
+   * This function saves a given workspace to a file. Don't forget to set your charset to the file you are about to
+   * create. It will be used by this function.
+   * 
+   * @param workspace
+   *          The workspace to save.
+   * @param file
+   *          The file to save the workspace to. <strong>Note:</strong> The file must point to a real file.
+   */
+  public static void saveWorkspace( GMLWorkspace workspace, IFile file ) throws Exception
+  {
+    if( workspace == null || file == null )
+      throw new Exception( "Either the workspace or the target file was null." );
+
+    /* The default encoding is that of the file. */
+    String encoding = file.getCharset();
+
+    /* Create a writer. */
+    OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream( file.getLocation().toFile() ), encoding );
+
+    /* Save the workspace. */
+    GmlSerializer.serializeWorkspace( writer, workspace, writer.getEncoding() );
+
+    /* Refresh the file. */
+    file.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
+  }
 }
