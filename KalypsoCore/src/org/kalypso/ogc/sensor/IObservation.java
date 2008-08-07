@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
- * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder menschlische Wert-Erfassung.
+ * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder menschliche Wert-Erfassung.
  * 
  * @author schlienger
  */
@@ -55,42 +55,42 @@ public interface IObservation extends IObservationEventProvider
    * 
    * @return identifier
    */
-  public String getIdentifier();
+  public String getIdentifier( );
 
   /**
    * Returns the name of this Observation
    * 
    * @return name
    */
-  public String getName();
+  public String getName( );
 
   /**
    * Returns true if this observation is editable.
    * 
    * @return editable flag
    */
-  public boolean isEditable();
+  public boolean isEditable( );
 
   /**
    * Returns the target object for which this observation has measurements.
    * 
    * @return target or null
    */
-  public Object getTarget();
+  public Object getTarget( );
 
   /**
    * Returns the list of Metadata.
    * 
    * @return metadata
    */
-  public MetadataList getMetadataList();
+  public MetadataList getMetadataList( );
 
   /**
    * Returns the list of axis
    * 
    * @return axes array
    */
-  public IAxis[] getAxisList();
+  public IAxis[] getAxisList( );
 
   /**
    * Returns the values resulting from the measurements this observation stands for.
@@ -116,5 +116,5 @@ public interface IObservation extends IObservationEventProvider
    * 
    * @return href
    */
-  public String getHref();
+  public String getHref( );
 }
