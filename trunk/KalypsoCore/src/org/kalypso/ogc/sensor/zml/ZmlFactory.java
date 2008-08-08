@@ -736,6 +736,7 @@ public class ZmlFactory
           }
           catch( Exception e )
           {
+            e.printStackTrace();
             break; // ignore this row
           }
         }

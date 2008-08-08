@@ -73,14 +73,14 @@ public class DeleteFeatureCommand implements ICommand
 
   public DeleteFeatureCommand( final Feature featureToDelete )
   {
-    m_featuresToDelete = new Feature[]{ featureToDelete };
+    m_featuresToDelete = new Feature[] { featureToDelete };
   }
 
   public DeleteFeatureCommand( final EasyFeatureWrapper[] wrappers )
   {
-    m_featuresToDelete =  new Feature[wrappers.length];
+    m_featuresToDelete = new Feature[wrappers.length];
     for( int i = 0; i < wrappers.length; i++ )
-      m_featuresToDelete[i] =  wrappers[i].getFeature();
+      m_featuresToDelete[i] = wrappers[i].getFeature();
   }
 
   /**
@@ -132,9 +132,9 @@ public class DeleteFeatureCommand implements ICommand
         workspace.addFeatureAsComposition( parentFeature, rt, 0, featureToAdd );
 
       // collect infos for event
-      if( !parentMap.containsKey( parentFeature ))
+      if( !parentMap.containsKey( parentFeature ) )
         parentMap.put( parentFeature, new ArrayList<Feature>() );
-      
+
       final List<Feature> children = parentMap.get( parentFeature );
       children.add( featureToAdd );
     }
@@ -158,7 +158,7 @@ public class DeleteFeatureCommand implements ICommand
    */
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.command.DeleteFeatureCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.command.DeleteFeatureCommand.0" ); //$NON-NLS-1$
   }
 
   private void delete( ) throws Exception
@@ -169,7 +169,7 @@ public class DeleteFeatureCommand implements ICommand
 
     // collect event information
     final Map<Feature, List<Feature>> parentMap = new HashMap<Feature, List<Feature>>();
-    
+
     for( final Feature featureToRemove : m_featuresToDelete )
     {
       final GMLWorkspace workspace = featureToRemove.getWorkspace();
@@ -182,16 +182,16 @@ public class DeleteFeatureCommand implements ICommand
       if( rt.isList() )
       {
         final Object prop = parentFeature.getProperty( rt );
-        final List<?> list = (List<?>) prop;
+        final List< ? > list = (List< ? >) prop;
         m_listIndexMap.put( featureToRemove, new Integer( list.indexOf( featureToRemove ) ) );
       }
       // remove the feature
       workspace.removeLinkedAsCompositionFeature( parentFeature, rt, featureToRemove );
 
       // collect infos for event
-      if( !parentMap.containsKey( parentFeature ))
+      if( !parentMap.containsKey( parentFeature ) )
         parentMap.put( parentFeature, new ArrayList<Feature>() );
-      
+
       final List<Feature> children = parentMap.get( parentFeature );
       children.add( featureToRemove );
     }
@@ -222,7 +222,7 @@ public class DeleteFeatureCommand implements ICommand
   private final class FindLinksFeatureVisitor implements FeatureVisitor
   {
     private final GMLWorkspace m_workspace;
-    
+
     public FindLinksFeatureVisitor( final GMLWorkspace workspace )
     {
       m_workspace = workspace;
@@ -243,7 +243,7 @@ public class DeleteFeatureCommand implements ICommand
           final IRelationType linkftp = (IRelationType) ftps[j];
           if( linkftp.isList() )
           {
-            final List<?> propList = (List<?>) f.getProperty( linkftp );
+            final List< ? > propList = (List< ? >) f.getProperty( linkftp );
             // important: count down not up
             for( int k = propList.size() - 1; k >= 0; k-- )
             {
