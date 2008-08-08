@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -442,7 +443,7 @@ public class ProfilUtil
 
   public static Double getMaxValueFor( final IProfil profil, final IComponent property )
   {
-    if( property == null )
+    if( property == null || profil == null )
       return null;
     final int index = profil.indexOfProperty( property );
     final IRecord[] points = profil.getPoints();
@@ -454,8 +455,9 @@ public class ProfilUtil
       final Object o = point.getValue( index );
       if( o instanceof Double )
         maxValue = Math.max( maxValue, (Double) o );
+
     }
-    return maxValue;
+    return maxValue > Double.MIN_VALUE ? maxValue : null;
   }
 
   public static IComponent getComponentForID( final IComponent[] components, final String propertyID )
@@ -570,6 +572,8 @@ public class ProfilUtil
    */
   public static IRecord getMinPoint( final IProfil profil, final IComponent property )
   {
+    if( profil == null )
+      return null;
     final IRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;

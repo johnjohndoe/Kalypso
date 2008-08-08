@@ -585,6 +585,9 @@ public abstract class AbstractProfil implements IProfil
   public void setActivePointProperty( final IComponent pointProperty )
   {
     m_activePointProperty = pointProperty;
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setActivePropertyChanged( true );
+    fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, m_activePoint, m_activePointProperty ) } );
   }
 
   public void setComment( final String comment )

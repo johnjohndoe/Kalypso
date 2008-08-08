@@ -181,9 +181,9 @@ public interface IWspmTuhhConstants extends IWspmConstants
 
   public static String LAYER_WASSERSPIEGEL = PROFILE_LAYER + "WASSERSPIEGEL";
 
-  public static String LAYER_RAUHEIT_KST = PROFILE_LAYER + "RAUHEIT_KST";
+  public static String LAYER_RAUHEIT = PROFILE_LAYER + "RAUHEIT";
 
-  public static String LAYER_RAUHEIT_KS = PROFILE_LAYER + "RAUHEIT_KS";
+ // public static String LAYER_RAUHEIT_KS = PROFILE_LAYER + "RAUHEIT_KS";
 
   public static String LAYER_RAUHEIT_QUICKVIEW = PROFILE_LAYER + "RAUHEIT_QUICKVIEW";
 

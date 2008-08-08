@@ -62,6 +62,8 @@ public class ProfilChangeHint
   private boolean m_ProfilPropertyChanged = false;
 
   private boolean m_activePointChanged = false;
+  
+  private boolean m_activePropertyChanged = false;
 
   public void setObjectChanged( )
   {
@@ -175,5 +177,15 @@ public class ProfilChangeHint
   public boolean isActivePointChanged( )
   {
     return m_activePointChanged;
+  }
+
+  public boolean isActivePropertyChanged( )
+  {
+    return m_activePropertyChanged;
+  }
+
+  public void setActivePropertyChanged( boolean activePropertyChanged )
+  {
+    m_activePropertyChanged = activePropertyChanged;
   }
 }

@@ -71,23 +71,27 @@ public class DeviderProvider implements IProfilPointMarkerProvider
   {
 
     final int cnt = markers.length;
-    final int offset = (16 - (3 * cnt)) / 2;
+    // final int offset = (16 - (3 * cnt)) / 2;
+    final int offset = (gc.getClipping().width - (3 * cnt)) / 2;
     int i = 0;
     final Color oldColor = gc.getBackground();
     for( final String marker : markers )
     {
-      final Color color = new Color( gc.getDevice(), m_markerTypes.get( marker ) );
-      try
+      final RGB rgb = m_markerTypes.get( marker );
+      if( rgb != null )
       {
-        gc.setBackground( color );
-        gc.fillRectangle( offset + 4 * i++, 0, 3, 16 );
+        final Color color = new Color( gc.getDevice(), rgb );
+        try
+        {
+          gc.setBackground( color );
+          gc.fillRectangle( offset + 4 * i++, gc.getClipping().y, 3, gc.getClipping().height );
+        }
+        finally
+        {
+          gc.setBackground( oldColor );
+          color.dispose();
+        }
       }
-      finally
-      {
-        gc.setBackground( oldColor );
-        color.dispose();
-      }
-
     }
   }
 
