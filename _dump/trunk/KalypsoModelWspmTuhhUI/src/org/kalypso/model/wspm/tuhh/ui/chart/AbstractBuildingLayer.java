@@ -44,9 +44,9 @@ import java.awt.geom.Rectangle2D;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -59,7 +59,7 @@ import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.belger.swtchart.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * @author kimwerner
@@ -102,7 +102,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
     // TODO Auto-generated method stub
 
@@ -139,7 +139,7 @@ public abstract class AbstractBuildingLayer extends AbstractProfilChartLayer
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override
-  public final void paintDrag( final GCWrapper gc, final Point editing, final Object hoverData )
+  public final void paintDrag( final GC gc, final Point editing, final Object hoverData )
   {
     // da nicht editiert wird, nichts zeichnen
   }

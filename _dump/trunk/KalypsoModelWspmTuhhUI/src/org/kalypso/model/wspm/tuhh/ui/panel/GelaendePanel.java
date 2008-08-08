@@ -59,7 +59,6 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
 /**
  * @author gernot
@@ -68,9 +67,9 @@ public class GelaendePanel extends AbstractProfilView
 {
   protected Text m_comment;
 
-  public GelaendePanel( final IProfil profile, final ProfilViewData viewdata )
+  public GelaendePanel( final IProfil profile)
   {
-    super( profile, viewdata );
+    super( profile );
   }
 
   /**
@@ -90,26 +89,26 @@ public class GelaendePanel extends AbstractProfilView
     editgroup.setLayout( new GridLayout() );
 
     final Button horzbutton = new Button( editgroup, SWT.CHECK );
-    horzbutton.setSelection( getViewData().isEdithorz() );
+   // horzbutton.setSelection( getViewData().isEdithorz() );
     horzbutton.setText( "Horizontal" );
     horzbutton.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        getViewData().setEdithorz( horzbutton.getSelection() );
+        //getViewData().setEdithorz( horzbutton.getSelection() );
       }
     } );
 
     final Button vertbutton = new Button( editgroup, SWT.CHECK );
-    vertbutton.setSelection( getViewData().isEditvert() );
+   // vertbutton.setSelection( getViewData().isEditvert() );
     vertbutton.setText( "Vertikal" );
     vertbutton.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
       {
-        getViewData().setEditvert( vertbutton.getSelection() );
+       // getViewData().setEditvert( vertbutton.getSelection() );
       }
     } );
     final Group cg = new Group( panel, SWT.None );
@@ -132,10 +131,8 @@ public class GelaendePanel extends AbstractProfilView
         final String comment = m_comment.getText();
         if( comment != null && !comment.equals( getProfil().getComment() ) )
         {
-          /*
-           * we need both methods to stay synchronized with featureView
-           */
           getProfil().setComment( m_comment.getText() );
+
           final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true );
           new ProfilOperationJob( operation ).schedule();
         }
@@ -146,6 +143,7 @@ public class GelaendePanel extends AbstractProfilView
       m_comment.setText( getProfil().getComment() );
     return panel;
   }
+
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {

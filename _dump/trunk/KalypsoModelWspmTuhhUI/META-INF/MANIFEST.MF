@@ -17,5 +17,6 @@ Require-Bundle: org.kalypso.model.wspm.core,
  org.kalypso.ui,
  org.kalypso.model.wspm.schema,
  de.openali.odysseus.chart.ui,
- org.kalypso.simulation.core
+ org.kalypso.simulation.core,
+ de.openali.odysseus.chart.ext.base
 Eclipse-LazyStart: true

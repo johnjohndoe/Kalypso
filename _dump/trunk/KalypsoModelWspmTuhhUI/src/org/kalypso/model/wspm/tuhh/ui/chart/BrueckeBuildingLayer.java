@@ -45,9 +45,9 @@ import java.awt.geom.Point2D;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -102,7 +102,7 @@ public class BrueckeBuildingLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public void paintLegend( final GCWrapper gc )
+  public void paintLegend( final GC gc )
   {
     final Rectangle clipping = gc.getClipping();
 

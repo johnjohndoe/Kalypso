@@ -78,7 +78,6 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -104,9 +103,9 @@ public class RauheitenPanel extends AbstractProfilView
 
   protected Button m_updateOnDeviderMove;
 
-  public RauheitenPanel( final IProfil profile, final ProfilViewData viewdata )
+  public RauheitenPanel( final IProfil profile )
   {
-    super( profile, viewdata );
+    super( profile );
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getProfil().getType() );
     final String[] components = provider.getPointProperties();
@@ -238,9 +237,9 @@ public class RauheitenPanel extends AbstractProfilView
             return;
 
           final int i_left = 0;
-          final int i_right = profil.indexOfPoint( trennflaechen[0].getPoint() );
+          final int i_rechts = profil.indexOfPoint( trennflaechen[0].getPoint() );
           m_li = value;
-          setValues( i_left, i_right > 0 ? i_right - 1 : 0, value );
+          setValues( i_left, i_rechts, value );
         }
       }
     } );
@@ -275,9 +274,9 @@ public class RauheitenPanel extends AbstractProfilView
             return;
 
           final int i_left = profil.indexOfPoint( trennflaechen[0].getPoint() );
-          final int i_right = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
+          final int i_rechts = profil.indexOfPoint( trennflaechen[trennflaechen.length - 1].getPoint() );
           m_hf = value;
-          setValues( i_left, i_right > 0 ? i_right - 1 : 0, value );
+          setValues( i_left, i_rechts, value );
         }
       }
     } );
@@ -424,7 +423,7 @@ public class RauheitenPanel extends AbstractProfilView
         value = (Double) trennflaechen[0].getPoint().getValue( index );
       else if( point.equals( trennflaechen[trennflaechen.length - 1].getPoint() ) )
         value = (Double) trennflaechen[trennflaechen.length - 1].getPoint().getValue( index );
-      else if( Math.abs( value - ProfilUtil.getDoubleValueFor( m_rauheitTyp, point ) ) > precision )
+      else if( value == null || Math.abs( value - ProfilUtil.getDoubleValueFor( m_rauheitTyp, point ) ) > precision )
         return false;
     }
 

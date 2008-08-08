@@ -44,10 +44,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -62,9 +62,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
 import org.kalypso.observation.result.IRecord;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
-import de.belger.swtchart.util.LogicalRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * @author kimwerner
@@ -88,8 +86,8 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
   {
     final IProfil profil = getProfil();
     if( profil == null )
-      return MINIMAL_RECT;
-    final Rectangle2D bounds = MINIMAL_RECT;
+      return new Rectangle2D.Double(0,0,0,0);
+    final Rectangle2D bounds = new Rectangle2D.Double(0,0,0,0);
     final IProfilPointMarker[] deviders1 = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     final IProfilPointMarker[] deviders2 = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
     for( final IProfilPointMarker dev : deviders1 )
@@ -128,7 +126,7 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
 
     if( !hint.isMarkerDataChanged() )
       return;
-    final AxisRange valueRange = getValueRange();
+ 
 
     final IProfilPointMarker[] deviders1 = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE );
     final IProfilPointMarker[] deviders2 = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE );
@@ -149,9 +147,9 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
       minProfilValue = Math.min( minProfilValue, y );
       maxProfilValue = Math.max( maxProfilValue, y );
     }
-
-    if( Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom() )
-      valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
+//TODO: KIM tudas
+//    if( Math.abs( maxProfilValue - m_valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom() )
+//      m_valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
   }
 
   @Override
@@ -208,7 +206,7 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
     }
   }
 
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
     final Color background = gc.getBackground();
     final Double[] values = new Double[4];
@@ -285,13 +283,13 @@ public class SimpleRauheitLayer extends AbstractRauheitLayer
     {
       final Point lp = logical2screen( new Point2D.Double( breite[i], values[i] ) );
       final Point rp = logical2screen( new Point2D.Double( breite[i + 1], values[i + 1] ) );
-      hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, getValueRange().getScreenFrom() - lp.y );
+      hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, m_valueRange.getNumericRange().getMin().intValue() - lp.y );
       if( hover.contains( point ) )
       {
         final EditData editData = new EditData( i, m_rauheit );
         final String text = String.format( "%.4f[" + m_rauheit == IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ? "kst" : "ks" + "]", values[i] );
 
-        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), editData, text );
+        return null;//new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), editData, text );
       }
     }
     return null;

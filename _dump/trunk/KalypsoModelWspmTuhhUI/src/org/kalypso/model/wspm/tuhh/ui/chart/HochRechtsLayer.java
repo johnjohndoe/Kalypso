@@ -44,9 +44,9 @@ import java.awt.geom.Rectangle2D;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
@@ -60,8 +60,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
@@ -95,7 +94,7 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
 
   public Rectangle2D getBounds( )
   {
-    return IChartLayer.MINIMAL_RECT;
+    return null;//IChartLayer.MINIMAL_RECT;
   }
 
   @Override
@@ -111,12 +110,12 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   }
 
   @Override
-  public void paintDrag( final GCWrapper gc, final Point editing, final Object hoverData )
+  public void paintDrag( final GC gc, final Point editing, final Object hoverData )
   {
   }
 
   @Override
-  public void paintLegend( final GCWrapper gc )
+  public void paintLegend( final GC gc )
   {
     final Rectangle clipping = gc.getClipping();
 
@@ -136,27 +135,14 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
     gc.drawOval( midx, midy, 3, 3 );
   }
 
-  @Override
   public boolean isNotPainting( )
   {
     return true;
   }
 
-  /**
-   * @see com.bce.profil.ui.view.chart.layer.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point,
-   *      java.lang.Object)
-   */
-  @Override
-  protected void editProfil( final Point point, final Object data )
-  {
-  }
+ 
 
-  /**
-   * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
-   */
-  public void paint( final GCWrapper gc )
-  {
-  }
+  
 
   /**
    * @see com.bce.eind.core.profil.IProfilListener#onProfilChanged(com.bce.eind.core.profil.changes.ProfilChangeHint,
@@ -165,5 +151,15 @@ public class HochRechtsLayer extends AbstractProfilChartLayer implements IProfil
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilChartLayer#editProfil(org.eclipse.swt.graphics.Point, java.lang.Object)
+   */
+  @Override
+  protected void editProfil( Point point, Object data )
+  {
+    // TODO Auto-generated method stub
+    
   }
 }

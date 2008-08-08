@@ -47,9 +47,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -72,8 +72,7 @@ import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * @author gernot
@@ -152,7 +151,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
       {
         final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( markerType );
         if( deviders.length < 2 )
-          return MINIMAL_RECT;
+          return new Rectangle2D.Double(0,0,0,0);
 
         final double left = (Double) deviders[0].getPoint().getValue( iBreite );
         final double right = (Double) deviders[deviders.length - 1].getPoint().getValue( iBreite );
@@ -193,9 +192,8 @@ public class TrennerLayer extends AbstractProfilChartLayer
 
   private EditInfo getDeviderInfo( final Point mousePoint, final IProfilPointMarker[] deviders, final int topOffset )
   {
-    final AxisRange valueRange = getValueRange();
-    final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
-    final int top = valueRange.getScreenTo() + valueRange.getGapSpace() + topOffset;
+//    final int bottom = m_valueRange.getScreenFrom() + m_valueRange.getGapSpace();
+//    final int top = m_valueRange.getScreenTo() + m_valueRange.getGapSpace() + topOffset;
     final int iBreite = getProfil().indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
     for( final IProfilPointMarker devider : deviders )
     {
@@ -203,12 +201,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
       final IRecord deviderPos = devider.getPoint();
       final double breite = (Double) deviderPos.getValue( iBreite );
       final Point point = logical2screen( new Point2D.Double( breite, (Double) deviderPos.getValue( iBreite ) ) );
-      final Rectangle devRect = new Rectangle( point.x - 5, top - 5, 10, bottom - top + 10 );
+      final Rectangle devRect = new Rectangle( point.x - 5, m_valueRange.getNumericRange().getMax().intValue() - 5, 10,  m_valueRange.getNumericRange().getMin().intValue() -  m_valueRange.getNumericRange().getMax().intValue() + 10 );
       final Rectangle pointRect = new Rectangle( point.x - 5, point.y - 5, 10, 10 );
       if( pointRect.contains( mousePoint.x, mousePoint.y ) )
         return null;
       if( devRect.contains( mousePoint.x, mousePoint.y ) )
-        return new EditInfo( this, devRect, devider, getDeviderInfo( devider ) );
+        return null;//new EditInfo( this, devRect, devider, getDeviderInfo( devider ) );
     }
     return null;
   }
@@ -260,11 +258,12 @@ public class TrennerLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paint( final GCWrapper gc )
+  @Override
+  public void paint( final GC gc )
   {
     gc.setLineWidth( 3 );
     gc.setLineStyle( SWT.LINE_SOLID );
-    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
+    final int top =  m_valueRange.getNumericRange().getMax().intValue();
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) )
       paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE, top, true );
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
@@ -274,13 +273,13 @@ public class TrennerLayer extends AbstractProfilChartLayer
       paintDevider( gc, IWspmTuhhConstants.MARKER_TYP_BORDVOLL, top + 40, false );
   }
 
-  public void paintDevider( final GCWrapper gc, final String deviderID, final int top, final boolean isClosed )
+  public void paintDevider( final GC gc, final String deviderID, final int top, final boolean isClosed )
   {
     final IComponent devider = getProfil().hasPointProperty( deviderID );
     if( devider == null )
       return;
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( devider );
-    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
+    final int bottom =  m_valueRange.getNumericRange().getMin().intValue();
     final int iBreite = getProfil().indexOfProperty( IWspmTuhhConstants.POINT_PROPERTY_BREITE );
 
     gc.setForeground( m_colorRegistry.get( devider.getId() ) );
@@ -288,13 +287,13 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       final IRecord point = d.getPoint();
       final double leftvalue = (Double) point.getValue( iBreite );
-      final int left = (int) getDomainRange().logical2screen( leftvalue );
+      final int left = m_domainRange.numericToScreen( leftvalue );
       gc.drawLine( left, top, left, bottom );
     }
     if( isClosed && deviders.length > 1 )
     {
-      final int l = (int) getDomainRange().logical2screen( (Double) deviders[0].getPoint().getValue( iBreite ) );
-      final int r = (int) getDomainRange().logical2screen( (Double) deviders[deviders.length - 1].getPoint().getValue( iBreite ) );
+      final int l = m_domainRange.numericToScreen( (Double) deviders[0].getPoint().getValue( iBreite ) );
+      final int r = m_domainRange.numericToScreen((Double) deviders[deviders.length - 1].getPoint().getValue( iBreite ) );
       gc.drawLine( l, top, r, top );
     }
   }
@@ -304,7 +303,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override
-  public void paintDrag( final GCWrapper gc, final Point editing, final Object hoverData )
+  public void paintDrag( final GC gc, final Point editing, final Object hoverData )
   {
     gc.setLineStyle( SWT.LINE_DOT );
     gc.setLineWidth( 1 );
@@ -313,9 +312,9 @@ public class TrennerLayer extends AbstractProfilChartLayer
     {
       final IComponent cDevider = ((IProfilPointMarker) hoverData).getId();
       final int iDevider = getProfil().indexOfProperty( cDevider );
-      final AxisRange valueRange = getValueRange();
-      final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
-      int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+
+      final int bottom = m_valueRange.getNumericRange().getMin().intValue() ;
+      int top =m_valueRange.getNumericRange().getMax().intValue();
       if( cDevider.getId().equals( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) )
         top = top + 20;
       if( cDevider.getId().equals( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) )
@@ -351,7 +350,7 @@ public class TrennerLayer extends AbstractProfilChartLayer
    * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
   @Override
-  public void paintLegend( final GCWrapper gc )
+  public void paintLegend( final GC gc )
   {
     final Rectangle clipping = gc.getClipping();
 

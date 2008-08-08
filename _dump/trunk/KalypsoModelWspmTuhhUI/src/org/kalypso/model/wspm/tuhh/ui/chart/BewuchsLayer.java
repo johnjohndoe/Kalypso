@@ -46,10 +46,10 @@ import java.awt.geom.Rectangle2D;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -70,8 +70,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilChartLayer
 {
@@ -123,7 +122,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
 
   public Rectangle2D getBounds( )
   {
-    return IChartLayer.MINIMAL_RECT;
+    return null;// IChartLayer.MINIMAL_RECT;
   }
 
   private Point2D[] getPoints( )
@@ -198,7 +197,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
             final Point p = logical2screen( pm );
             final Rectangle hover = new Rectangle( p.x - 10, p.y - 20, 20, 20 );// RectangleUtils.buffer( p );
             if( hover.contains( mousePos ) & p.x - pl.x > 12 )
-              return new EditInfo( this, hover, i, String.format( TOOLTIP_FORMAT, new Object[] { ax, ay, dp } ) );
+              return null;//new EditInfo( this, hover, i, String.format( TOOLTIP_FORMAT, new Object[] { ax, ay, dp } ) );
           }
         }
       }
@@ -213,19 +212,19 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
   }
 
   @Override
-  public void paintDrag( final GCWrapper gc, final Point editing, final Object hoverData )
+  public void paintDrag( final GC gc, final Point editing, final Object hoverData )
   {
     // do nothing
 
   }
 
   @Override
-  public void paintLegend( final GCWrapper gc )
+  public void paintLegend( final GC gc )
   {
     drawIcon( gc, gc.getClipping() );
   }
 
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
     final IRecord[] points = m_profile.getPoints();
     if( points.length == 0 )
@@ -267,7 +266,7 @@ public class BewuchsLayer extends AbstractProfilChartLayer implements IProfilCha
     }
   }
 
-  private void drawIcon( final GCWrapper gc, final Rectangle clipping )
+  private void drawIcon( final GC gc, final Rectangle clipping )
   {
 
     final int left = clipping.x + 2;

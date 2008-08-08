@@ -46,10 +46,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -65,7 +65,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.observation.result.IRecord;
 
-import de.belger.swtchart.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * Zeigt eine Konstante WSP Linie im Profil
@@ -104,7 +104,8 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paint( final GCWrapper gc )
+  @Override
+  public void paint( final GC gc )
   {
     final Rectangle clipping = gc.getClipping();
 
@@ -185,7 +186,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
    * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
   @Override
-  public void paintLegend( final GCWrapper gc )
+  public void paintLegend( final GC gc )
   {
     final Rectangle clipping = gc.getClipping();
     final int mid = clipping.y + clipping.width / 2;
@@ -217,7 +218,7 @@ public class WspLayer extends AbstractProfilChartLayer implements IProfilChartLa
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override
-  public void paintDrag( final GCWrapper gc, final Point editing, final Object hoverData )
+  public void paintDrag( final GC gc, final Point editing, final Object hoverData )
   {
   }
 

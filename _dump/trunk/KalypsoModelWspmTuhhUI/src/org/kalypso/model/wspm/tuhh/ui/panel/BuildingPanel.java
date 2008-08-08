@@ -66,7 +66,6 @@ import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -81,9 +80,9 @@ public class BuildingPanel extends AbstractProfilView
 
   private final IProfileObject m_building;
 
-  public BuildingPanel( final IProfil profile, final ProfilViewData viewdata )
+  public BuildingPanel( final IProfil profile)
   {
-    super( profile, viewdata );
+    super( profile);
 
     final IProfileObject[] profileObjects = getProfil().getProfileObjects();
     if( profileObjects.length > 0 )

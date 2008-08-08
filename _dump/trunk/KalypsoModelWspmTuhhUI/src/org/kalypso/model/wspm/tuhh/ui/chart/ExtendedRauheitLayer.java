@@ -44,10 +44,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -67,9 +67,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer.EditData;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
-import de.belger.swtchart.util.LogicalRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * @author kimwerner
@@ -96,11 +94,12 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
 
     for( final IRecord p : points )
     {
-      final Double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );//p.getValue( iBreite );
-      final Double rauheit = ProfilUtil.getDoubleValueFor( m_rauheit, p );//p.getValue( iRauheit );
+      final Double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p );// p.getValue( iBreite
+                                                                                                // );
+      final Double rauheit = ProfilUtil.getDoubleValueFor( m_rauheit, p );// p.getValue( iRauheit );
       if( x.isNaN() || rauheit.isNaN() )
         continue;
-      final Rectangle2D area = new Rectangle2D.Double(  x,  rauheit, 0, 0 );
+      final Rectangle2D area = new Rectangle2D.Double( x, rauheit, 0, 0 );
 
       if( bounds == null )
         bounds = area;
@@ -119,7 +118,8 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractRauheitLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
 
-  public void paint( final GCWrapper gc )
+  @Override
+  public void paint( final GC gc )
   {
     final Color background = gc.getBackground();
     try
@@ -130,7 +130,7 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
       final IRecord[] points = profil.getPoints();
       IRecord lastP = null;
 
-      if( profil.hasPointProperty( m_rauheit )==null )
+      if( profil.hasPointProperty( m_rauheit ) == null )
         return;
 
       for( final IRecord point : points )
@@ -141,9 +141,9 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
           final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
           final Double y2 = ProfilUtil.getDoubleValueFor( m_rauheit, lastP );
 
-          if( !x1.isNaN() && !x2.isNaN()&& !y2.isNaN() )
+          if( !x1.isNaN() && !x2.isNaN() && !y2.isNaN() )
           {
-            final Rectangle box = logical2screen( new Rectangle2D.Double(  x1, 0.0,  x2 -  x1,  y2 ) );
+            final Rectangle box = logical2screen( new Rectangle2D.Double( x1, 0.0, x2 - x1, y2 ) );
             box.width += 1;
             fillRectangle( gc, box );
           }
@@ -181,23 +181,20 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
 
     if( hint.isPointValuesChanged() )
     {
-      final AxisRange valueRange = getValueRange();
+
       final IComponent rauheit = getProfil().hasPointProperty( m_rauheit );
       final Double maxProfilValue = ProfilUtil.getMaxValueFor( getProfil(), rauheit );
       final Double minProfilValue = ProfilUtil.getMinValueFor( getProfil(), rauheit );
-      if( (maxProfilValue != null && minProfilValue != null) && (Math.abs( maxProfilValue - valueRange.getLogicalTo() ) > 0.1 || minProfilValue < valueRange.getLogicalFrom()) )
-        valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
+      // TODO: KIM tudas
+// if( (maxProfilValue != null && minProfilValue != null) && (Math.abs( maxProfilValue - m_valueRange.getLogicalTo() ) >
+// 0.1 || minProfilValue < valueRange.getLogicalFrom()) )
+// m_valueRange.setLogicalRange( new LogicalRange( minProfilValue * 0.9, maxProfilValue ) );
     }
     if( hint.isMarkerMoved() && getViewData().isVisible( m_rauheit ) )
       updateRauheit();
   }
 
-  @Override
-  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
-  {
-    return new RauheitenPanel( profile, viewData );
-  }
-
+  
   private final void updateRauheit( )
   {
     // TODO:Kim überschreiben der Rauheitsspalte
@@ -221,11 +218,11 @@ public class ExtendedRauheitLayer extends AbstractRauheitLayer
       final Point rp = logical2screen( points[i + 1] );
       if( lp.y == 0 )
         return null;
-      hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, getValueRange().getScreenFrom() - lp.y );
+      hover = new Rectangle( lp.x, lp.y, rp.x - lp.x, m_valueRange.getNumericRange().getMin().intValue() - lp.y );
       if( hover.contains( point ) )
       {
         final String text = m_rauheit == IWspmConstants.POINT_PROPERTY_RAUHEIT_KST ? "kst" : "ks";
-        return new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, m_rauheit ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
+        return  null;//new EditInfo( this, new Rectangle( lp.x, lp.y, 0, 0 ), new EditData( i, m_rauheit ), String.format( "%.4f[" + text + "]", points[i].getY() ) );
       }
     }
     return null;

@@ -46,10 +46,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -62,7 +62,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.panel.WehrPanel;
+import org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -72,8 +72,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * @author kimwerner
@@ -89,7 +88,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   @Override
   public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData )
   {
-    return new WehrPanel( profile, viewData );
+    return new WeirPanel( profile, viewData );
   }
 
   public final void editDevider( final Point point, final IProfilPointMarker devider )
@@ -120,9 +119,9 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   {
     if( !getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
       return null;
-    final AxisRange valueRange = getValueRange();
-    final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
-    final int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+
+    final int bottom = m_valueRange.getNumericRange().getMin().intValue();
+    final int top = m_valueRange.getNumericRange().getMin().intValue();
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
     int fieldNr = 0;
 
@@ -145,7 +144,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
         final String text = String.format( "%s%n%s: %10.4f%n%s: %10.4f", new Object[] { "Wehrparameter", "Feld " + Integer.toString( fieldNr + 1 ), leftValue,
             "Feld " + Integer.toString( fieldNr + 2 ), rightValue } );
 
-        return new EditInfo( this, devRect, devider, text );
+        return null;//new EditInfo( this, devRect, devider, text );
       }
       fieldNr++;
       leftValue = rightValue;
@@ -209,27 +208,27 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractPolyLineLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
   @Override
-  public void paint( final GCWrapper gc )
+  public void paint( final GC gc )
   {
     super.paint( gc );
     if( getViewData().getMarkerVisibility( IWspmTuhhConstants.MARKER_TYP_WEHR ) )
       paintDevider( gc );
   }
 
-  private void paintDevider( final GCWrapper gc )
+  private void paintDevider( final GC gc )
   {
     final IProfil profil = getProfil();
 
     final IProfilPointMarker[] deviders = profil.getPointMarkerFor( IWspmTuhhConstants.MARKER_TYP_WEHR );
-    final int bottom = getValueRange().getScreenFrom() + getValueRange().getGapSpace();
-    final int top = getValueRange().getScreenTo() + getValueRange().getGapSpace();
+    final int bottom = m_valueRange.getNumericRange().getMin().intValue();
+    final int top = m_valueRange.getNumericRange().getMax().intValue();
     for( final IProfilPointMarker devider : deviders )
     {
       final IRecord point = devider.getPoint();
       final Double leftvalue = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
       if( !leftvalue.isNaN() )
       {
-        final int left = (int) getDomainRange().logical2screen( leftvalue );
+        final int left = m_domainRange.numericToScreen( leftvalue );
         gc.drawLine( left, top, left, bottom );
       }
     }
@@ -241,7 +240,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override
-  public void paintDrag( final GCWrapper gc, final Point editing, final Object data )
+  public void paintDrag( final GC gc, final Point editing, final Object data )
   {
     if( data instanceof IProfilPointMarker )
       paintDragDevider( gc, editing );
@@ -250,14 +249,14 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
 
   }
 
-  private void paintDragDevider( final GCWrapper gc, final Point editing )
+  private void paintDragDevider( final GC gc, final Point editing )
   {
     gc.setLineStyle( SWT.LINE_DOT );
     gc.setLineWidth( 1 );
 
-    final AxisRange valueRange = getValueRange();
-    final int bottom = valueRange.getScreenFrom() + valueRange.getGapSpace();
-    final int top = valueRange.getScreenTo() + valueRange.getGapSpace();
+
+    final int bottom = 0;
+    final int top = m_valueRange.getScreenHeight();
     final IProfil profil = getProfil();
 
     final IRecord destinationPoint = ProfilUtil.findNearestPoint( profil, screen2logical( editing ).getX() );
@@ -271,7 +270,7 @@ public class WehrBuildingLayer extends AbstractPolyLineLayer
   }
 
   @Override
-  public void paintLegend( final GCWrapper gc )
+  public void paintLegend( final GC gc )
   {
     final Rectangle clipping = gc.getClipping();
 
