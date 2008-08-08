@@ -99,7 +99,7 @@ public class SpecialPropertyMapper
       @Override
       public Object map( Object srcObject )
       {
-        return new Double( ((String) srcObject).trim() );
+        return new Double( ((String) srcObject).trim().replace( ',','.' ) );
       }
     } );
 
