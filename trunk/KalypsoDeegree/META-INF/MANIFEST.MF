@@ -13,7 +13,7 @@ Bundle-ClassPath: lib/acme/acme.jar,
  lib/shiftone/shiftone-cache.jar,
  lib/xalan-j/xalan.jar,
  lib/xtiff-jai/xtiff-jai.jar,
- build/bin
+ .
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.gmlschema;visibility:=reexport,
@@ -128,4 +128,5 @@ Export-Package: com.sun.media.jai.codec,
  org.libtiff.jai.codec,
  org.libtiff.jai.codecimpl,
  org.libtiff.jai.operator,
- org.libtiff.jai.util
+ org.libtiff.jai.util,
+ org.openjump.core.graph.delauneySimplexInsert

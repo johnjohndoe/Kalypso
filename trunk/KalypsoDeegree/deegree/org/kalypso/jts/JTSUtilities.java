@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
@@ -237,7 +238,6 @@ public class JTSUtilities
     }
     catch( final SameXValuesException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -589,8 +589,8 @@ public class JTSUtilities
     else
     {
       // build the equation Ax + By + Cz - D = 0
-      double A = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
-      double B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
+      final double A = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
+      final double B = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
       final double C = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
       final double D = x1 * (y2 * z3 - y3 * z2) + x2 * (y3 * z1 - y1 * z3) + x3 * (y1 * z2 - y2 * z1);
 
@@ -616,8 +616,7 @@ public class JTSUtilities
   /**
    * @param ring
    *          array of ordered coordinates, last must equal first one
-   * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive) TODO: move it to
-   *         JTSUtilities
+   * @return signed area, area >= 0 means points are counter clockwise defined (mathematic positive)
    */
   public static double calcSignedAreaOfRing( final Coordinate[] ring )
   {
@@ -633,10 +632,10 @@ public class JTSUtilities
 
       area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
 
-          - ((a.x - b.x) * (b.y - a.y)//
-              + (b.x - c.x) * (b.y - c.y)//
+      - ((a.x - b.x) * (b.y - a.y)//
+          + (b.x - c.x) * (b.y - c.y)//
           + (a.x - c.x) * (c.y - a.y)//
-          ) / 2d;
+      ) / 2d;
     }
 
     return area;
@@ -760,7 +759,7 @@ public class JTSUtilities
    *          the definition at what length along the curve a point should be inserted.
    * @return A map containing the distance as key and the points as value (original and new points).
    */
-  public static TreeMap<Double, Point> calculatePointsOnLine( final LineString curve, double size )
+  public static TreeMap<Double, Point> calculatePointsOnLine( final LineString curve, final double size )
   {
     /* The length of the line. */
     final double length = curve.getLength();
@@ -832,44 +831,44 @@ public class JTSUtilities
    *          A end value (an end time, for example).
    * @return A new line string with z-coordinate.
    */
-  public static LineString addInterpolatedZCoordinates( LineString lineString, double start, double end ) throws SameXValuesException
+  public static LineString addInterpolatedZCoordinates( final LineString lineString, final double start, final double end ) throws SameXValuesException
   {
     /* Interpolate the times for each points, if time is given. */
 
     /* List with the coordinates of the new line string. */
-    List<Coordinate> coordinates = new ArrayList<Coordinate>();
+    final List<Coordinate> coordinates = new ArrayList<Coordinate>();
 
     /* The x-axis represents the distance on the line string. */
-    double x1 = 0.0;
-    double x2 = lineString.getLength();
+    final double x1 = 0.0;
+    final double x2 = lineString.getLength();
 
     /* The y-axis represents the values given by the parameters (a time, for example). */
-    double y1 = start;
-    double y2 = end;
+    final double y1 = start;
+    final double y2 = end;
 
     /* Create the linear equation. */
-    LinearEquation equation = new LinearEquation( x1, y1, x2, y2 );
+    final LinearEquation equation = new LinearEquation( x1, y1, x2, y2 );
 
     for( int i = 0; i < lineString.getNumPoints(); i++ )
     {
       /* Get the points. */
-      Point point = lineString.getPointN( i );
+      final Point point = lineString.getPointN( i );
 
       /* The distance from start to this point. */
       /* If this point is the start, it should be 0. */
       /* If this point is the end, it should be lineString.getLength(). */
-      double distance = pointDistanceOnLine( lineString, point );
+      final double distance = pointDistanceOnLine( lineString, point );
 
       /* Compute the x to this point (needed time to this point, for example). */
-      double x = equation.computeY( distance );
+      final double x = equation.computeY( distance );
 
       /* Create the coordinate. */
-      Coordinate coordinate = new Coordinate( point.getX(), point.getY(), x );
+      final Coordinate coordinate = new Coordinate( point.getX(), point.getY(), x );
       coordinates.add( coordinate );
     }
 
     /* Create the new line string. */
-    GeometryFactory factory = new GeometryFactory( lineString.getPrecisionModel(), lineString.getSRID() );
+    final GeometryFactory factory = new GeometryFactory( lineString.getPrecisionModel(), lineString.getSRID() );
 
     return factory.createLineString( coordinates.toArray( new Coordinate[] {} ) );
   }
@@ -883,10 +882,10 @@ public class JTSUtilities
    *          The second coordinate.
    * @return The center coordinate.
    */
-  public static Coordinate getCenterCoordinate( Coordinate coordinate_one, Coordinate coordinate_two )
+  public static Coordinate getCenterCoordinate( final Coordinate coordinate_one, final Coordinate coordinate_two )
   {
-    double x = (coordinate_one.x + coordinate_two.x) / 2;
-    double y = (coordinate_one.y + coordinate_two.y) / 2;
+    final double x = (coordinate_one.x + coordinate_two.x) / 2;
+    final double y = (coordinate_one.y + coordinate_two.y) / 2;
 
     return new Coordinate( x, y );
   }
@@ -898,10 +897,10 @@ public class JTSUtilities
    *          The geometry to collect from. If it is no polygon, an empty list will be returned.
    * @return The list of contained polygons or an empty list.
    */
-  public static List<Polygon> collectPolygons( Geometry geometry )
+  public static List<Polygon> collectPolygons( final Geometry geometry )
   {
     /* Memory for the results. */
-    List<Polygon> polygons = new ArrayList<Polygon>();
+    final List<Polygon> polygons = new ArrayList<Polygon>();
 
     if( !(geometry instanceof Polygon) && !(geometry instanceof MultiPolygon) )
       return polygons;
@@ -914,12 +913,12 @@ public class JTSUtilities
 
     if( geometry instanceof MultiPolygon )
     {
-      MultiPolygon multi = (MultiPolygon) geometry;
-      int num = multi.getNumGeometries();
+      final MultiPolygon multi = (MultiPolygon) geometry;
+      final int num = multi.getNumGeometries();
 
       for( int i = 0; i < num; i++ )
       {
-        Geometry geometryN = multi.getGeometryN( i );
+        final Geometry geometryN = multi.getGeometryN( i );
         polygons.add( (Polygon) geometryN );
       }
     }
@@ -934,17 +933,32 @@ public class JTSUtilities
    *          The array of coordinates.
    * @return A new array of new coordinates without the z-coordinate.
    */
-  public static Coordinate[] removeZCoordinates( Coordinate[] coordinates )
+  public static Coordinate[] removeZCoordinates( final Coordinate[] coordinates )
   {
     /* Memory for the results. */
-    List<Coordinate> results = new ArrayList<Coordinate>();
+    final List<Coordinate> results = new ArrayList<Coordinate>();
 
-    for( int i = 0; i < coordinates.length; i++ )
+    for( final Coordinate coordinate : coordinates )
     {
-      Coordinate coordinate = coordinates[i];
       results.add( new Coordinate( coordinate.x, coordinate.y ) );
     }
 
     return results.toArray( new Coordinate[] {} );
   }
+
+  /**
+   * Buffers a geometry<br>
+   * The size of the buffer is determined as a ratio of the size of its envelope.<br>
+   * More exact, it is <code>ratio * Math.max(envelope.getWidht(), envelope.getHeight())</code>
+   */
+  public static Geometry bufferWithRatio( final Geometry geometry, final double ratio )
+  {
+    final Envelope envelope = geometry.getEnvelopeInternal();
+    final double width = envelope.getWidth();
+    final double height = envelope.getHeight();
+    final double max = Math.max( width, height );
+
+    return geometry.buffer( max * ratio );
+  }
+
 }

@@ -121,9 +121,9 @@ public class Feature_Impl extends AbstractFeature
   }
 
   /**
-   * format of name if "namespace:name" or just "name" - both will work
+   * Accesses a property value of this feature.
    * 
-   * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
+   * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be embedded in
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
@@ -133,15 +133,14 @@ public class Feature_Impl extends AbstractFeature
       throw new IllegalArgumentException( "pt may not null" );
 
     final int pos = m_featureType.getPropertyPosition( pt );
-    if( pos == -1 )
+    final IFeaturePropertyHandler fsh = getPropertyHandler();
+    if( pos == -1 && !fsh.isFunctionProperty( pt ))
     {
       final String msg = String.format( "Unknown property (%s) for type: %s", pt, m_featureType );
       throw new IllegalArgumentException( msg );
     }
 
-    final IFeaturePropertyHandler fsh = getPropertyHandler();
-
-    final Object currentValue = m_properties[pos];
+    final Object currentValue = pos == -1 ? null : m_properties[pos];
 
     return fsh.getValue( this, pt, currentValue );
   }
