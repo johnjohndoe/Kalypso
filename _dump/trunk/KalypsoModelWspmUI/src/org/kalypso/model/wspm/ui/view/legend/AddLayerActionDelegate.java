@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.view.legend;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.action.IAction;
@@ -77,9 +76,9 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
     {
       for( final String al : layerProvider.getAddableLayers( profilChartView ) )
       {
-        final IProfilChartLayer[] layers = layerProvider.getLayer( al, profilChartView );
-        if( layers != null )
-          addables.addAll( Arrays.asList( layers ) );
+        final IProfilChartLayer layer = layerProvider.createLayer( al, profilChartView );
+        if( layer != null )
+          addables.add( layer );
       }
     }
 
@@ -92,7 +91,7 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
       @Override
       public final String getText( Object element )
       {
-        return ((IProfilChartLayer) element).getLabel();
+        return ((IProfilChartLayer) element).getTitle();
       }
     } );
     dialog.setInput( addables );

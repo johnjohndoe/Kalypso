@@ -62,8 +62,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
-
-import de.belger.swtchart.legend.ChartLegend;
+import org.kalypso.model.wspm.ui.view.legend.ChartLegend;
 
 /**
  * The common code for showing a {@link IProfile} as a chart.
@@ -89,7 +88,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     public void run( )
     {
       if( m_chartview != null )
-        m_chartview.getChart().repaint();
+        m_chartview.getChart().redraw();
     }
   };
 
@@ -111,8 +110,8 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     gridLayout.marginHeight = 0;
     m_control.setLayout( gridLayout );
     m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( parent.getDisplay() );
-
-    updateControl();
+//TODO: KIM dieses ist der Hund
+    //updateControl();
 
     return m_control;
   }
@@ -140,19 +139,20 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public void updateControl( )
   {
+//TODO:KIM
     if( m_chartview != null )
     {
       m_chartview.saveState( m_viewdata.getChartMemento() );
-      m_chartview.dispose();
+  m_chartview.dispose();
       m_chartview = null;
     }
 
     if( m_control == null || m_control.isDisposed() )
       return;
-
+//TODO:KIM
     final Control[] children = m_control.getChildren();
     for( final Control c : children )
-      c.dispose();
+     c.dispose();
 
     if( m_profile == null )
     {
@@ -174,7 +174,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       // PROFIL_PROPERTY.KOMMENTAR );
 
       // setContentDescription( (kommentare == null) ? "" : kommentare.toString() );
-      m_chartview = new ProfilChartView( m_profile, m_viewdata, m_profilColorRegistry );
+      m_chartview = new ProfilChartView( m_profile,  m_profilColorRegistry );
       m_chartview.setLayerProvider( m_layerProvider );
       m_chartview.createControl( m_control, SWT.BORDER );
       m_chartview.restoreState( m_viewdata.getChartMemento() );

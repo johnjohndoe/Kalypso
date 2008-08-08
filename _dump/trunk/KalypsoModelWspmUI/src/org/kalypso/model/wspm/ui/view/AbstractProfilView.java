@@ -48,34 +48,29 @@ import org.kalypso.model.wspm.core.result.IStationResult;
 
 /**
  * @author belger
+ * @author kimwerner
  */
-public abstract class AbstractProfilView implements IProfilListener, IProfilView, IProfilViewDataListener
+public abstract class AbstractProfilView implements IProfilListener, IProfilView
 {
-  private final ProfilViewData m_viewdata;
-
   protected final IProfil m_profile;
 
   private Control m_control;
 
   private final IStationResult[] m_results;
 
-  public AbstractProfilView( final IProfil profile, final ProfilViewData viewdata, final IStationResult[] results )
+  public AbstractProfilView( final IProfil profile, final IStationResult[] results )
   {
     m_profile = profile;
-    m_viewdata = viewdata;
     m_results = results == null ? new IStationResult[0] : results;
 
     if( m_profile != null )
       m_profile.addProfilListener( this );
 
-    if( m_viewdata != null )
-      m_viewdata.addProfilViewDataListener( this );
-
   }
 
-  public AbstractProfilView( final IProfil profile, final ProfilViewData viewdata )
+  public AbstractProfilView( final IProfil profile )
   {
-    this( profile, viewdata, new IStationResult[0] );
+    this( profile, null );
   }
 
   /**
@@ -85,9 +80,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   {
     if( m_profile != null )
       m_profile.removeProfilListener( this );
-
-    if( m_viewdata != null )
-      m_viewdata.removeProfilViewDataListener( this );
   }
 
   protected abstract Control doCreateControl( final Composite parent, final int style );
@@ -114,21 +106,9 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
     return m_profile;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#getViewData()
-   */
-  public final ProfilViewData getViewData( )
-  {
-    return m_viewdata;
-  }
-
   public IStationResult[] getResults( )
   {
     return m_results;
-  }
-
-  public void onProfilViewDataChanged( )
-  {
   }
 
   /**
@@ -136,5 +116,6 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    */
   public void onProblemMarkerChanged( final IProfil source )
   {
+    //instances must overwrite this method
   }
 }

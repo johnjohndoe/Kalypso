@@ -46,6 +46,9 @@ package org.kalypso.model.wspm.ui.view;
  * @author belger
  *
  */
+
+
+//TODO: remove this interface
 public interface IProfilViewDataListener
 {
   /** Informed, when anything changes */

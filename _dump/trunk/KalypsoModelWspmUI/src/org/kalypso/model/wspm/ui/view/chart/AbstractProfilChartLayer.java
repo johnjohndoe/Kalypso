@@ -40,17 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
-import de.belger.swtchart.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 public abstract class AbstractProfilChartLayer extends AbstractChartLayer implements IProfilChartLayer
 {
@@ -77,20 +83,30 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
   private boolean m_initialVisibility = true;
 
   private final String m_label;
-  
+
   private final String m_id;
 
-  public AbstractProfilChartLayer( final String layerId,final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange, final String label )
+  protected final IAxis m_domainRange;
+
+  protected final IAxis m_valueRange;
+
+  public AbstractProfilChartLayer( final String layerId, final ProfilChartView chartView, final IAxis domainRange, final IAxis valueRange, final String label )
   {
-    super( domainRange, valueRange );
+    super();
+    setCoordinateMapper( chartView.getMapper() );
+    m_domainRange = domainRange;
+    m_valueRange = valueRange;
     m_label = label;
     m_chartView = chartView;
     m_id = layerId;
   }
 
-  public AbstractProfilChartLayer(final String layerId, final ProfilChartView chartView, final AxisRange domainRange, final AxisRange valueRange, final String label, final boolean initalVisibility )
+  public AbstractProfilChartLayer( final String layerId, final ProfilChartView chartView, final IAxis domainRange, final IAxis valueRange, final String label, final boolean initalVisibility )
   {
-    super( domainRange, valueRange );
+    super();
+    setCoordinateMapper( chartView.getMapper() );
+    m_domainRange = domainRange;
+    m_valueRange = valueRange;
     m_label = label;
     m_chartView = chartView;
     m_initialVisibility = initalVisibility;
@@ -109,28 +125,19 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
   {
     editProfil( point, data );
 
-    getViewData().setActiveLayer( this );
   }
 
   /**
    * @return Returns the profil.
    */
-  protected final IProfil getProfil( )
+  public final IProfil getProfil( )
   {
     return m_chartView.getProfil();
   }
-/**
- * @deprecated
- */
-  
-  
+
   /**
-   * @return Returns the viewData.
+   * @deprecated
    */
-  protected final ProfilViewData getViewData( )
-  {
-    return m_chartView.getViewData();
-  }
 
   protected abstract void editProfil( Point point, Object data );
 
@@ -138,7 +145,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfilEventManager,
    *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
    */
-  public IProfilView createLayerPanel( IProfil profile, ProfilViewData viewData )
+  public IProfilView createLayerPanel( IProfil profile )
   {
     // TODO Auto-generated method stub
     return null;
@@ -164,14 +171,14 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    * @see de.belger.swtchart.layer.IChartLayer#paintDrag(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
-  public void paintDrag( GCWrapper gc, Point editing, Object hoverData )
+  public void paintDrag( GC gc, Point editing, Object hoverData )
   {
   }
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paintLegend( GCWrapper gc )
+  public void paintLegend( GC gc )
   {
   }
 
@@ -195,7 +202,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    */
   public String getId( )
   {
-    
+
     return m_id;
   }
 
@@ -204,7 +211,84 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    */
   public String getLabel( )
   {
-    
+
     return m_label;
   }
+
+  public final Point logical2screen( final Point2D p2d )
+  {
+    return new Point( m_domainRange.numericToScreen( p2d.getX() ), m_valueRange.numericToScreen( p2d.getY() ) );
+  }
+
+  public final Point2D screen2logical( final Point p )
+  {
+    return new Point2D.Double( (Double) m_domainRange.screenToNumeric( p.x ), (Double) m_valueRange.screenToNumeric( p.y ) );
+  }
+
+  /**
+   * @see de.belger.swtchart.layer.IChartLayer#logical2screen(java.awt.geom.Rectangle2D)
+   */
+  public final Rectangle logical2screen( final Rectangle2D r2d )
+  {
+    final double x1 = m_domainRange.numericToScreen( r2d.getX() );
+    final double y1 = m_valueRange.numericToScreen( r2d.getY() );
+    final double x2 = m_domainRange.numericToScreen( r2d.getX() + r2d.getWidth() );
+    final double y2 = m_valueRange.numericToScreen( r2d.getY() + r2d.getHeight() );
+
+    return new Rectangle( (int) x1, (int) y1, (int) (x2 - x1), (int) (y2 - y1) );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
+  public IDataRange<Number> getDomainRange( )
+  {
+    return m_domainRange.getNumericRange();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  public IDataRange<Number> getTargetRange( )
+  {
+    return m_valueRange.getNumericRange();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  public void dispose( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
+  public void paint( GC gc )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
+   */
+  public void removeYourself( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
 }

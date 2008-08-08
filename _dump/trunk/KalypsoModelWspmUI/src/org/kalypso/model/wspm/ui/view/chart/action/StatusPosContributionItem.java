@@ -53,8 +53,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.belger.swtchart.mouse.IChartPosListener;
-
 public class StatusPosContributionItem extends ContributionItem
 {
   private static final String POS_FORMAT = "%10.4f  /  %10.4f"; //$NON-NLS-1$
@@ -63,17 +61,17 @@ public class StatusPosContributionItem extends ContributionItem
 
   private final int m_charWidth;
 
-  private final IChartPosListener m_posListener = new IChartPosListener()
-  {
-    public void onPosChanged( final Point2D logpoint, final boolean inScreen )
-    {
-      final StringBuffer msg = new StringBuffer( "Pos: " ); //$NON-NLS-1$
-      if( inScreen )
-        msg.append( String.format( POS_FORMAT, new Object[] { logpoint.getX(), logpoint.getY() } ) );
-
-      setText( msg.toString() );
-    }
-  };
+//  private final IChartPosListener m_posListener = new IChartPosListener()
+//  {
+//    public void onPosChanged( final Point2D logpoint, final boolean inScreen )
+//    {
+//      final StringBuffer msg = new StringBuffer( "Pos: " ); //$NON-NLS-1$
+//      if( inScreen )
+//        msg.append( String.format( POS_FORMAT, new Object[] { logpoint.getX(), logpoint.getY() } ) );
+//
+//      setText( msg.toString() );
+//    }
+//  };
 
   private CLabel m_label;
 
@@ -117,7 +115,7 @@ public class StatusPosContributionItem extends ContributionItem
   {
     if( m_chartView != null )
     {
-      m_chartView.removeChartPosListener( m_posListener );
+      //m_chartView.removeChartPosListener( m_posListener );
       m_chartView = null;
     }
   }
@@ -187,8 +185,8 @@ public class StatusPosContributionItem extends ContributionItem
 
     m_chartView = chartView;
 
-    if( m_chartView != null )
-      m_chartView.addChartPosListener( m_posListener );
+//    if( m_chartView != null )
+//      m_chartView.addChartPosListener( m_posListener );
   }
 
 }

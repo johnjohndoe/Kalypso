@@ -57,7 +57,7 @@ public interface IProfilLayerProvider
    * </p>
    * return all affected layer
    */
-  public IProfilChartLayer[] addLayerToChart( final ProfilChartView view, final String layerId );
+  public IProfilChartLayer addLayerToChart( final ProfilChartView view, final String layerId );
 
   /**
    * return the layers, the view needs to show all of the required themes
@@ -74,7 +74,7 @@ public interface IProfilLayerProvider
    * </p>
    * otherwise see: addLayerToChart
    */
-  public IProfilChartLayer[] getLayer( final String layerId, final ProfilChartView view );
+  public IProfilChartLayer createLayer( final String layerId, final ProfilChartView view );
 
   /**
    * return true if The provider can create the layer
@@ -82,4 +82,6 @@ public interface IProfilLayerProvider
   public boolean providesLayer( final String layerId );
 
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
+  
+  public void dispose();
 }

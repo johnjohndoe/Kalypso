@@ -54,7 +54,7 @@ import org.eclipse.swt.widgets.Control;
  * 
  * @author gernot
  */
-public interface IProfilView extends IProfilViewProvider
+public interface IProfilView
 {
   /**
    * <p>

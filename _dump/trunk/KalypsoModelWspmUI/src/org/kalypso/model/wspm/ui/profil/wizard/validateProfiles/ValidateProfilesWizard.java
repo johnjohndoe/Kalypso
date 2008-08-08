@@ -77,7 +77,6 @@ import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

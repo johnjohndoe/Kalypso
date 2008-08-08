@@ -40,21 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.IProfilView;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
+import org.kalypso.observation.result.IComponent;
 
-import de.belger.swtchart.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 
 /**
- * @author Gernot Belger
+ * @author Kim Werner
  */
-public interface IProfilChartLayer extends IChartLayer
+public interface IProfilChartLayer extends IEditableChartLayer
 {
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
-  public IProfilView createLayerPanel( final IProfil profile, final ProfilViewData viewData );
+  public IProfilView createLayerPanel( );
 
   /**
    * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem Profil, die durch diesen Layer
@@ -62,16 +64,20 @@ public interface IProfilChartLayer extends IChartLayer
    * 
    * @throws IllegalProfileOperationException
    * @throws UnsupportedOperationException
-   *           Falls diese Art von Layer nicht gelöscht werden kann.
+   *             Falls diese Art von Layer nicht gelöscht werden kann.
    */
+  @Deprecated
   public void removeYourself( );
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 
-  public ProfilChartView getProfilChartView( );
+  public IProfil getProfil( );
 
-  public String getLabel( );
+  public IComponent getTargetComponent( );
 
-  public String getId( );
+  public IComponent getDomainComponent( );
 
+  public void executeDrop( Point point, EditInfo dragStartData );
+
+  public void executeClick(EditInfo dragStartData );
 }

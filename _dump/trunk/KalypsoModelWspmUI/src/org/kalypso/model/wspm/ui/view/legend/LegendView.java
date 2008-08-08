@@ -53,6 +53,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -67,20 +68,26 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.editor.ChartTreeLabelProvider;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderDelegator;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.view.chart.IActiveLayerChangeListener;
+import org.kalypso.model.wspm.ui.view.chart.IActiveLayerProvider;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.belger.swtchart.layer.IActiveLayerChangeListener;
-import de.belger.swtchart.layer.IActiveLayerProvider;
-import de.belger.swtchart.layer.IChartLayer;
-import de.belger.swtchart.legend.ChartLegend;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * This view shows the profile legend. It always shows the legend of the last active part which adapts to
@@ -91,11 +98,12 @@ import de.belger.swtchart.legend.ChartLegend;
  * 
  * @author Gernot Belger
  */
-public class LegendView extends ViewPart implements IAdapterEater, IProfilChartViewProviderListener, IActiveLayerProvider
+public class LegendView extends ViewPart implements IChartPart, IAdapterEater, IProfilChartViewProviderListener, IActiveLayerProvider
 {
   private final AdapterPartListener m_chartProviderListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private ChartLegend m_chartlegend;
+  // private ChartLegend m_chartlegend;
+  private ChartEditorTreeOutlinePage m_chartlegend;
 
   private Composite m_composite;
 
@@ -225,9 +233,30 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
     }
     else
     {
-      m_chartlegend = new ChartLegend( parent, SWT.BORDER, chartView.getChart(), false );
+      // m_chartlegend = new ChartLegend( parent, SWT.BORDER, chartView.getChart(), false );
       // TODO: restore selection
 
+      m_chartlegend = new ChartEditorTreeOutlinePage( this );
+
+      m_chartlegend.createControl( parent );
+// final TreeViewer tv = m_chartlegend.getTreeViewer();
+//
+// tv.setLabelProvider( new ChartTreeLabelProvider( this )
+// {
+//
+// /**
+// * @see org.kalypso.chart.ui.editor.ChartTreeLabelProvider#getText(java.lang.Object)
+// */
+// @Override
+// public String getText( Object element )
+// {
+// if( element instanceof IProfilChartLayer )
+// {
+// return ((IProfilChartLayer) element).getTitle();
+// }
+// return super.getText( element );
+// }
+// } );
       final Control control = m_chartlegend.getControl();
       control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
@@ -240,7 +269,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
         }
       } );
 
-      m_selectionProviderDelegator.setDelegate( m_chartlegend.getSelectionProvider() );
+      m_selectionProviderDelegator.setDelegate( m_chartlegend.getTreeViewer() );
 
       // reset menu manager
       m_menuMgr.dispose();
@@ -338,7 +367,7 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
-  @Override
+
   public Object getAdapter( final Class adapter )
   {
     if( adapter == IActiveLayerProvider.class )
@@ -352,12 +381,14 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
    */
   public IChartLayer getActiveLayer( )
   {
+
     final ISelection selection = getSelectionProvider().getSelection();
     if( !(selection instanceof IStructuredSelection) )
       return null;
 
     final IStructuredSelection structSel = (IStructuredSelection) selection;
     final Object firstElement = structSel.getFirstElement();
+
     if( firstElement instanceof IChartLayer )
       return (IChartLayer) firstElement;
 
@@ -382,9 +413,48 @@ public class LegendView extends ViewPart implements IAdapterEater, IProfilChartV
 
   protected void fireOnActiveLayerChanged( )
   {
-    final IChartLayer activeLayer = getActiveLayer();
-    for( final IActiveLayerChangeListener l : m_layerListener )
-      l.onActiveLayerChanged( activeLayer );
+    // final IChartLayer activeLayer = getActiveLayer();
+    final ChartComposite comp = getChartComposite();
+    if (comp==null)return;
+    for( final IChartLayer layer : comp.getChartModel().getLayerManager().getLayers() )
+    {
+      if( layer.isActive() )
+      {
+        for( final IActiveLayerChangeListener l : m_layerListener )
+          l.onActiveLayerChanged( layer );
+        return;
+      }
+    }
+
+// for( final IActiveLayerChangeListener l : m_layerListener )
+// l.onActiveLayerChanged( activeLayer );
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
+   */
+  public AxisDragHandlerDelegate getAxisDragHandler( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+   */
+  public ChartComposite getChartComposite( )
+  {
+    final ProfilChartView view = getProfilChartView();
+    return view==null?null:view.getChartComposite();
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
+   */
+  public PlotDragHandlerDelegate getPlotDragHandler( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

@@ -53,7 +53,7 @@ import org.eclipse.ui.XMLMemento;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import de.belger.swtchart.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * <p>
@@ -66,6 +66,7 @@ import de.belger.swtchart.layer.IChartLayer;
  * 
  * @author Gernot Belger
  */
+
 public class ProfilViewData
 {
   private Document m_document;
@@ -199,6 +200,9 @@ public class ProfilViewData
 
   public void setActiveLayer( final IChartLayer activeLayer )
   {
+    if( activeLayer == m_activeLayer )
+      return;
+    m_activeLayer.setActive( false );
     m_activeLayer = activeLayer;
 
     fireChanged();

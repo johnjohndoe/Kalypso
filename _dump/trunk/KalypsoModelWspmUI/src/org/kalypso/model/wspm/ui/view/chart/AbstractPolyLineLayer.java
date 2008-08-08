@@ -48,9 +48,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.contribs.eclipse.swt.graphics.GCWrapper;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -65,8 +65,8 @@ import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
-import de.belger.swtchart.EditInfo;
-import de.belger.swtchart.axis.AxisRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author kimwerner
@@ -113,8 +113,10 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   private final boolean m_markActivePoint;
 
   private final boolean m_mayEditVert;
+  
+  
 
-  public AbstractPolyLineLayer( final String layerId, final String label, final ProfilChartView pcv, final AxisRange domainRange, final AxisRange valueRange, final String[] lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
+  public AbstractPolyLineLayer( final String layerId, final String label, final ProfilChartView pcv, final IAxis domainRange, final IAxis valueRange, final String[] lineProperties, final boolean drawStationLines, final boolean markActivePoint, final boolean mayEditVert )
   {
     super( layerId, pcv, domainRange, valueRange, label );
     m_selectedcolor = pcv.getColorRegistry().get( IProfilColorSet.COLOUR_GELAENDE_MARKED );
@@ -127,7 +129,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     m_mayEditVert = mayEditVert;
   }
 
-  protected void drawEditLine( final GCWrapper gc, final Point editing, final Point2D[] points, final Point2D oldpoint, final int index )
+  protected void drawEditLine( final GC gc, final Point editing, final Point2D[] points, final Point2D oldpoint, final int index )
   {
     if( 0 <= index && index < points.length )
     {
@@ -135,19 +137,19 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
       gc.setLineWidth( 1 );
       gc.setForeground( m_editColor );
 
-      final Point oldp = logical2screen( oldpoint );
+      final Point oldp = logical2screen(  oldpoint);
 
-      final int newx = m_mayEditVert && getViewData().isEdithorz() ? editing.x : oldp.x;
-
-      final int newy = getViewData().isEditvert() ? editing.y : oldp.y;
+//      final int newx = m_mayEditVert && getViewData().isEdithorz() ? editing.x : oldp.x;
+//
+//      final int newy = getViewData().isEditvert() ? editing.y : oldp.y;
 
       final Point p = logical2screen( points[index] );
 
-      gc.drawLine( p.x, p.y, newx, newy );
+      gc.drawLine( p.x, p.y, editing.x, editing.y );
     }
   }
 
-  public void drawSegment( final GCWrapper gc, final Point leftPoint, final Point rightPoint, final boolean activeSegment, final Color color )
+  public void drawSegment( final GC gc, final Point leftPoint, final Point rightPoint, final boolean activeSegment, final Color color )
   {
     gc.setLineWidth( 3 );
     gc.setLineStyle( SWT.LINE_SOLID );
@@ -160,10 +162,10 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
     gc.drawOval( rightPoint.x - 2, rightPoint.y - 2, 4, 4 );
 
     if( m_drawStationLines )
-      drawStationline( gc, rightPoint.x, getValueRange().getScreenFrom() + getValueRange().getGapSpace(), rightPoint.x, rightPoint.y );
+      drawStationline( gc, rightPoint.x, m_valueRange.getScreenHeight() , rightPoint.x, rightPoint.y );
   }
 
-  protected void drawStationline( final GCWrapper gc, final int x1, final int y1, final int x2, final int y2 )
+  protected void drawStationline( final GC gc, final int x1, final int y1, final int x2, final int y2 )
   {
     gc.setLineWidth( 1 );
     gc.setForeground( m_stationColor );
@@ -186,9 +188,9 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
 
     final String propertyID = editData.getProperty();
     final IComponent property = profil.hasPointProperty( propertyID );
-    if( getViewData().isEditvert() )
+  //  if( getViewData().isEditvert() )
       profilOperation.addChange( new PointPropertyEdit( point, property, logPoint.getY() ) );
-    if( m_mayEditVert && getViewData().isEdithorz() )
+   // if( m_mayEditVert && getViewData().isEdithorz() )
       profilOperation.addChange( new PointPropertyEdit( point, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ), logPoint.getX() ) );
 
     profilOperation.addChange( new ActiveObjectEdit( profil, point, property ) );
@@ -238,8 +240,8 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
           final IRecord[] found = ProfilUtil.findPoints( getProfil(), propertyID, element, delta );
           final int index = ArrayUtils.indexOf( getProfil().getPoints(), found[0] );
 
-          return isPointVisible( found[0] ) ? new EditInfo( this, hover, new EditData( index, propertyID ), String.format( TOOLTIP_FORMAT, new Object[] { Messages.AbstractPolyLineLayer_2,
-              element.getX(), property.getName(), element.getY(), property.getUnit() } ) ) : null;
+          return null;//isPointVisible( found[0] ) ? new EditInfo( this, hover, new EditData( index, propertyID ), String.format( TOOLTIP_FORMAT, new Object[] { Messages.AbstractPolyLineLayer_2,
+              //element.getX(), property.getName(), element.getY(), property.getUnit() } ) ) : null;
         }
       }
     }
@@ -258,7 +260,8 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paint( final GCWrapper gc )
+  
+  public void paint( final GC gc )
   {
     try
     {
@@ -324,7 +327,7 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
   @Override
-  public void paintDrag( final GCWrapper gc, final Point editing, final Object data )
+  public void paintDrag( final GC gc, final Point editing, final Object data )
   {
     final EditData editData = (EditData) data;
     final int index = editData.getIndex();
@@ -341,8 +344,8 @@ public abstract class AbstractPolyLineLayer extends AbstractProfilChartLayer
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  @Override
-  public abstract void paintLegend( final GCWrapper gc );
+
+  public abstract void paintLegend( final GC gc );
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#setActivePoint(org.eclipse.swt.graphics.Point)

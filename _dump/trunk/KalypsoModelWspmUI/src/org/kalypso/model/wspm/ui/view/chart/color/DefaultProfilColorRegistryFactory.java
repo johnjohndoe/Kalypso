@@ -61,21 +61,13 @@ public class DefaultProfilColorRegistryFactory
   {
     final ColorRegistry registry = new ColorRegistry( display, true );
 
-    registry.put( IProfilColorSet.COLOUR_,new RGB( 0,0, 0 ));
-  //  registry.put( IProfilColorSet.COLOUR_GELAENDE, new RGB( 255, 150, 0 ) );
+    registry.put( IProfilColorSet.COLOUR_, new RGB( 0, 0, 0 ) );
     registry.put( IProfilColorSet.COLOUR_GELAENDE_MARKED, new RGB( 200, 50, 0 ) );
     registry.put( IProfilColorSet.COLOUR_AXIS_FOREGROUND, new RGB( 0, 0, 0 ) );
     registry.put( IProfilColorSet.COLOUR_AXIS_BACKGROUND, new RGB( 255, 255, 255 ) );
     registry.put( IProfilColorSet.COLOUR_STATIONS, new RGB( 128, 128, 128 ) );
-//    registry.put( IProfilColorSet.COLOUR_TRENNFLAECHEN, new RGB( 0, 180, 0 ) );
-//    registry.put( IProfilColorSet.COLOUR_BORDVOLLPUNKTE, new RGB( 200, 50, 0 ) );
-//    registry.put( IProfilColorSet.COLOUR_DURCHSTROEMTE_BEREICHE, new RGB( 0, 0, 255 ) );
-//    registry.put( IProfilColorSet.COLOUR_BRUECKE, new RGB( 0, 128, 0 ) );
-//    registry.put( IProfilColorSet.COLOUR_DURCHLASS, new RGB( 220, 220, 0 ) );
-  //  registry.put( IProfilColorSet.COLOUR_RAUHEIT, new RGB( 220, 220, 220 ) );
-    //registry.put( IProfilColorSet.COLOUR_BEWUCHS, new RGB( 0, 255, 0 ) );
     registry.put( IProfilColorSet.COLOUR_WSP, new RGB( 0, 128, 255 ) );
-    
+
     return registry;
   }
 }

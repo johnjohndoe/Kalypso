@@ -56,12 +56,11 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.Messages;
+import org.kalypso.model.wspm.ui.view.chart.IActiveLayerChangeListener;
+import org.kalypso.model.wspm.ui.view.chart.IActiveLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.belger.swtchart.layer.IActiveLayerChangeListener;
-import de.belger.swtchart.layer.IActiveLayerProvider;
-import de.belger.swtchart.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Gernot Belger
@@ -85,7 +84,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
 
   private IActiveLayerProvider m_provider;
 
-  private IProfilChartLayer m_activeLayer;
+  private IChartLayer m_activeLayer;
 
   /**
    * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
@@ -167,8 +166,8 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
    */
   public void onActiveLayerChanged( final IChartLayer activeLayer )
   {
-    final IProfilChartLayer profilLayer = activeLayer instanceof IProfilChartLayer ? (IProfilChartLayer) activeLayer : null;
-    if( m_activeLayer == profilLayer && profilLayer != null )
+
+    if( m_activeLayer == activeLayer )
       return;
     final Group group = (Group) m_creator.getContentControl();
     if( group == null || group.isDisposed() )
@@ -181,12 +180,10 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
     }
     group.setText( "" ); //$NON-NLS-1$
 
-    if( profilLayer != null )
+    if( activeLayer != null )
     {
-      group.setText( profilLayer.getLabel() );
-
-      final ProfilChartView profilChartView = profilLayer.getProfilChartView();
-      final IProfilView panel = profilLayer.createLayerPanel( profilChartView.getProfil(), profilChartView.getViewData() );
+      group.setText( activeLayer.getTitle() );
+      final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer) activeLayer).createLayerPanel() : null;
 
       if( panel != null )
       {
@@ -196,7 +193,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
       else
         new Label( group, SWT.NONE | SWT.WRAP );
 
-      m_activeLayer = profilLayer;
+      m_activeLayer = activeLayer;
     }
     else
     {

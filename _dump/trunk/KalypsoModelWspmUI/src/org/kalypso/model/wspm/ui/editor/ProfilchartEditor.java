@@ -105,20 +105,18 @@ import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilUndoContext;
 import org.kalypso.model.wspm.ui.view.AbstractProfilPart;
-import org.kalypso.model.wspm.ui.view.IProfilViewProvider;
 import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
+import org.kalypso.model.wspm.ui.view.legend.ChartLegend;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-
-import de.belger.swtchart.legend.ChartLegend;
 
 /**
  * An editor, which shows one profil as a chart.
  * 
  * @author belger
  */
-public class ProfilchartEditor extends EditorPart implements IProfilViewProvider, IGotoMarker, IProfilProvider2
+public class ProfilchartEditor extends EditorPart implements  IGotoMarker, IProfilProvider2
 {
   private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
 

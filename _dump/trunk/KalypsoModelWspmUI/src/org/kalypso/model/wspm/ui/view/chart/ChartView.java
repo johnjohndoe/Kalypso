@@ -42,6 +42,11 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -50,14 +55,18 @@ import org.kalypso.model.wspm.ui.view.AbstractProfilViewPart2;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContributor;
 import org.kalypso.observation.result.IComponent;
 
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+
 /**
  * @author Gernot Belger
  */
-public class ChartView extends AbstractProfilViewPart2
+public class ChartView extends AbstractProfilViewPart2 implements IChartPart
 {
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
 
   private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
+
+  private ChartEditorTreeOutlinePage m_outlinePage;
 
   public ChartView( )
   {
@@ -119,6 +128,29 @@ public class ChartView extends AbstractProfilViewPart2
     if( adapted != null )
       return adapted;
 
+      if( ChartComposite.class.equals( adapter ) )
+      {
+        ChartComposite chart = getChartComposite();
+        if( chart!= null && !chart.isDisposed() )
+          return chart;
+        else
+          return null;
+      }
+
+      if( IChartPart.class.equals( adapter ) )
+      {
+        return this;
+      }
+
+      if( IContentOutlinePage.class.equals( adapter ) )
+      {
+        if( m_outlinePage == null )
+        {
+          m_outlinePage = new ChartEditorTreeOutlinePage( this );
+        }
+        return m_outlinePage;
+      }
+    
     return super.getAdapter( adapter );
   }
 
@@ -136,5 +168,33 @@ public class ChartView extends AbstractProfilViewPart2
         m_profilPart.getViewData().setMarkerVisibility( markerTyp.getId(), true );
       }
     }
+  }
+
+ 
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
+   */
+  public AxisDragHandlerDelegate getAxisDragHandler( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+   */
+  public ChartComposite getChartComposite( )
+  {
+    return  m_profilPart.getProfilChartView().getChartComposite();
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
+   */
+  public PlotDragHandlerDelegate getPlotDragHandler( )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
