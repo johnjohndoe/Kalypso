@@ -67,7 +67,7 @@ public class BooleanModifier implements IFeatureModifier
   {
     m_ftp = ftp;
 
-    if( !(java.lang.Boolean.class==ftp.getValueClass() )) 
+    if( !(java.lang.Boolean.class == ftp.getValueClass()) )
       throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" ); //$NON-NLS-1$
   }
 
@@ -76,7 +76,7 @@ public class BooleanModifier implements IFeatureModifier
    */
   public Object getValue( final Feature f )
   {
-    final Object property = f.getProperty( m_ftp);
+    final Object property = f.getProperty( m_ftp );
     if( property == null )
       return Boolean.FALSE;
 
@@ -108,13 +108,13 @@ public class BooleanModifier implements IFeatureModifier
     if( value instanceof Boolean )
       return null;
 
-    return Messages.getString("org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool" ); //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
    */
-  public IPropertyType getFeatureTypeProperty()
+  public IPropertyType getFeatureTypeProperty( )
   {
     return m_ftp;
   }
@@ -124,8 +124,9 @@ public class BooleanModifier implements IFeatureModifier
    */
   public String getLabel( final Feature f )
   {
-    final Boolean b = (Boolean)getValue( f );
-    return String.valueOf( b );
+    return null;
+//    final Boolean b = (Boolean) getValue( f );
+//    return String.valueOf( b );
   }
 
   /**
@@ -133,7 +134,7 @@ public class BooleanModifier implements IFeatureModifier
    */
   public Image getImage( final Feature f )
   {
-    final Boolean b = (Boolean)getValue( f );
+    final Boolean b = (Boolean) getValue( f );
     if( b == null || !b.booleanValue() )
     {
       if( m_uncheckedImage == null )
@@ -157,10 +158,12 @@ public class BooleanModifier implements IFeatureModifier
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
    */
-  public void dispose()
+  public void dispose( )
   {
-    m_checkedImage.dispose();
-    m_uncheckedImage.dispose();
+    if( m_checkedImage != null )
+      m_checkedImage.dispose();
+    if( m_uncheckedImage != null )
+      m_uncheckedImage.dispose();
   }
 
   /**
