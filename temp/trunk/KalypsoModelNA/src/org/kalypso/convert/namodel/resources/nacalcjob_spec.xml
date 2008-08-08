@@ -10,6 +10,8 @@
 	<input id="SceConf" description="Modelldaten - Optimierung" optional="true"/>
 	<input id="LZSIM_IN" description="zu verwendende Anfangswerte" optional="false"/>	
 
+	<!--  TODO: some optional parameters are not specified (like 'ErgebnisDir' ) -->
+
 	<!-- Ergebnis-Dateien/Verzeichnisse -->
 	<output id="OUT_ZML" description="Verzeichnis aller Berechnungsergebnisse und Logs"/>
 	<output id="OUT_OPTIMIZEFILE" description="Optimierte Parameter Datei"/>

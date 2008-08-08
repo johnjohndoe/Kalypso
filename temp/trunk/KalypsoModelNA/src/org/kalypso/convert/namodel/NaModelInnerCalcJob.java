@@ -149,7 +149,7 @@ public class NaModelInnerCalcJob implements ISimulation
   // resourcebase for static files used in calculation
   private final String m_resourceBase = "template/";
 
-  // private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
+  private final String EXE_FILE_WEISSE_ELSTER = "start/kalypso_2.0.1a.exe";
 
   private final String EXE_FILE_2_05beta = "start/kalypso_2.0.5beta.exe";
 
@@ -905,8 +905,8 @@ public class NaModelInnerCalcJob implements ISimulation
   {
     if( kalypsoNAVersion.equals( "test" ) )
       m_kalypsoKernelPath = EXE_FILE_TEST;
-    // else if( kalypsoNAVersion == null || kalypsoNAVersion.equals( "lfug" ) || kalypsoNAVersion.equals( "" ) )
-    // m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
+    else if( kalypsoNAVersion.equals( "lfug" ) )
+      m_kalypsoKernelPath = EXE_FILE_WEISSE_ELSTER;
     else if( kalypsoNAVersion.equals( "v2.0.5" ) )
       m_kalypsoKernelPath = EXE_FILE_2_05beta;
     else if( kalypsoNAVersion.equals( "v2.0.6" ) )
@@ -1559,7 +1559,6 @@ public class NaModelInnerCalcJob implements ISimulation
       logOS = new FileOutputStream( new File( basedir, "exe.log" ) );
       errorOS = new FileOutputStream( new File( basedir, "exe.err" ) );
       ProcessHelper.startProcess( commandString, new String[0], exeDir, monitor, timeOut, logOS, errorOS, null );
-
     }
     catch( final Exception e )
     {

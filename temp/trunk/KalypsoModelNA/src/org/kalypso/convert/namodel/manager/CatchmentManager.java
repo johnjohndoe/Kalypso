@@ -301,8 +301,8 @@ public class CatchmentManager extends AbstractManager
       System.out.println( "Teilgebiet " + asciiID + " wird Standard-Zeitflächenfunktion zugeordnet (im Modell ist dem Teilgebiet keine Zeitflächenfunktion zugeordnet)" );
       asciiBuffer.getCatchmentBuffer().append( "we999.zfl\n" );
       
-      // BUG: this cannot work, as the we999 file is not available
-      // TODO: copy the we999 into the inp.dat folder!
+      // BUG: this can never work, as the we999 file is not available
+      // TODO: copy the we999 into the inp.dat folder or stop calculation!
     }
     asciiBuffer.getCatchmentBuffer().append( "we.hyd\n" );
 
