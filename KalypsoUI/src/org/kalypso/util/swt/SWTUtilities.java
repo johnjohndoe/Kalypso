@@ -51,28 +51,6 @@ import org.eclipse.swt.layout.GridData;
  */
 public class SWTUtilities
 {
-  private static final Map<String, Integer> GRID_DATA_MAP = new HashMap<String, Integer>();
-  static
-  {
-    GRID_DATA_MAP.put( "GridData.BEGINNING", new Integer( GridData.BEGINNING ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.CENTER", new Integer( GridData.CENTER ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.END", new Integer( GridData.END ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL", new Integer( GridData.FILL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL_BOTH", new Integer( GridData.FILL_BOTH ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL_HORIZONTAL", new Integer( GridData.FILL_HORIZONTAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.FILL_VERTICAL", new Integer( GridData.FILL_VERTICAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.GRAB_HORIZONTAL", new Integer( GridData.GRAB_HORIZONTAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.GRAB_VERTICAL", new Integer( GridData.GRAB_VERTICAL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_BEGINNING", new Integer( GridData.HORIZONTAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_CENTER", new Integer( GridData.HORIZONTAL_ALIGN_CENTER ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_END", new Integer( GridData.HORIZONTAL_ALIGN_END ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_FILL", new Integer( GridData.HORIZONTAL_ALIGN_FILL ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_BEGINNING", new Integer( GridData.VERTICAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_CENTER", new Integer( GridData.VERTICAL_ALIGN_CENTER ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_END", new Integer( GridData.VERTICAL_ALIGN_END ) ); //$NON-NLS-1$
-    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_FILL", new Integer( GridData.VERTICAL_ALIGN_FILL ) ); //$NON-NLS-1$
-  }
-
   private static final Map<String, Integer> SWT_MAP = new HashMap<String, Integer>();
   static
   {
@@ -104,6 +82,32 @@ public class SWTUtilities
     SWT_MAP.put( "SWT.BOTTOM", SWT.BOTTOM ); //$NON-NLS-1$
     // Add other keys to complete the map
   }
+
+  private static final Map<String, Integer> GRID_DATA_MAP = new HashMap<String, Integer>();
+  static
+  {
+    GRID_DATA_MAP.put( "GridData.BEGINNING", new Integer( GridData.BEGINNING ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.CENTER", new Integer( GridData.CENTER ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.END", new Integer( GridData.END ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL", new Integer( GridData.FILL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL_BOTH", new Integer( GridData.FILL_BOTH ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL_HORIZONTAL", new Integer( GridData.FILL_HORIZONTAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.FILL_VERTICAL", new Integer( GridData.FILL_VERTICAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.GRAB_HORIZONTAL", new Integer( GridData.GRAB_HORIZONTAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.GRAB_VERTICAL", new Integer( GridData.GRAB_VERTICAL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_BEGINNING", new Integer( GridData.HORIZONTAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_CENTER", new Integer( GridData.HORIZONTAL_ALIGN_CENTER ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_END", new Integer( GridData.HORIZONTAL_ALIGN_END ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.HORIZONTAL_ALIGN_FILL", new Integer( GridData.HORIZONTAL_ALIGN_FILL ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_BEGINNING", new Integer( GridData.VERTICAL_ALIGN_BEGINNING ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_CENTER", new Integer( GridData.VERTICAL_ALIGN_CENTER ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_END", new Integer( GridData.VERTICAL_ALIGN_END ) ); //$NON-NLS-1$
+    GRID_DATA_MAP.put( "GridData.VERTICAL_ALIGN_FILL", new Integer( GridData.VERTICAL_ALIGN_FILL ) ); //$NON-NLS-1$
+
+    // Also add SWT constants, as GridData uses them for the more complex constructors
+    GRID_DATA_MAP.putAll( SWT_MAP );
+  }
+
 
   public static int createStyleFromString( final String key )
   {
