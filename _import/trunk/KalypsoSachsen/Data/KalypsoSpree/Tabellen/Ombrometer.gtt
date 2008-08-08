@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gistableview xmlns="gistableview.template.kalypso.org">
-    <layer featurePath="OmbrometerCollectionAssociation/OmbrometerMember" id="id" linktype="gml" ns1:actuate="onRequest" ns1:href="project:/modell.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-        <column alignment="16384" editable="true" name="name" width="147"/>
-        <column alignment="16384" editable="true" name="NR" width="100"/>
-        <column alignment="16384" editable="true" name="precipitation" width="264"/>
-    </layer>
-</gistableview>
-
+<ns4:gistableview xmlns:ns4="gistableview.template.kalypso.org" xmlns:ns3="obstableview.template.kalypso.org" xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org">
+    <ns4:layer featurePath="ombrometerMember" id="id" linktype="gml" xlink:actuate="onRequest" xlink:href="project:/ombrometer.gml" xlink:type="simple">
+        <ns4:column format="" alignment="16384" width="147" editable="true" name="name"/>
+        <ns4:column format="" alignment="16384" width="100" editable="true" name="externalId"/>
+        <ns4:column format="" alignment="16384" width="271" editable="true" name="precipitationLink1"/>
+        <ns4:column alignment="16384" width="317" editable="true" name="stationLocation"/>
+    </ns4:layer>
+</ns4:gistableview>

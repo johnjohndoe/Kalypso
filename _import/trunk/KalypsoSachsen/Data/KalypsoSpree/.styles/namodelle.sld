@@ -4,7 +4,7 @@
     <Name>deegree style definition</Name>
     <UserStyle>
       <Name>NA-Modelle</Name>
-      <Title>Einzugsgebiete</Title>
+      <Title></Title>
       <IsDefault>1</IsDefault>
       <FeatureTypeStyle>
         <Name>Einzugsgebiete - Pegel</Name>

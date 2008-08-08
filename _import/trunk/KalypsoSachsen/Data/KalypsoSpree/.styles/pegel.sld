@@ -4,7 +4,7 @@
 		<Name>deegree style definition</Name>
 		<UserStyle>
 			<Name>Pegel</Name>
-			<Title>Vorhersagepegel</Title>
+			<Title></Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
 				<Name>Pegel</Name>

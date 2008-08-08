@@ -4,7 +4,7 @@
 		<Name>deegree style definition</Name>
 		<UserStyle>
 			<Name>Flutungen</Name>
-			<Title>Zufluesse</Title>
+			<Title></Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
 				<Name>Flutungen</Name>

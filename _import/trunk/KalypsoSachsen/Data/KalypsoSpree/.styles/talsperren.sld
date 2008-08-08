@@ -4,7 +4,7 @@
 		<Name>deegree style definition</Name>
 		<UserStyle>
 			<Name>Talsperren</Name>
-			<Title>Talsperren</Title>
+			<Title></Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
 				<Name>Talsperren</Name>

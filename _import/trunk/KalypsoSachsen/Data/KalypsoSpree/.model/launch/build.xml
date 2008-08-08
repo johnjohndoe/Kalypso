@@ -66,6 +66,7 @@
 		<echo message="Rechenvariante anlegen: ${calc.dir}" />
 
 		<copy file="${project.dir}/modell.gml" tofile="${calc.dir}/calcCase.gml"/>
+		<copy file="${project.dir}/ombrometer.gml" todir="${calc.dir}"/>
 		<copy file="${project.dir}/.templates/.calculation.template" tofile="${calc.dir}/.calculation"/>
 		<copy todir="${calc.dir}">
 			<fileset dir="${project.dir}/.templates">
@@ -289,6 +290,7 @@
           target: gebietsniederschlag              
          ================================= -->
 	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
+		<!--
 		<antcall target="updateForecastN"/>
 		
 		<kalypso.gmlWeight 
@@ -303,6 +305,7 @@
 			from="${startsimN}" 
 			forecastfrom="${startforecast}" 
 			to="${stopsim}" />
+			-->
 	</target>
 	
     <target name="updateForecastN" depends="calculationProperties">

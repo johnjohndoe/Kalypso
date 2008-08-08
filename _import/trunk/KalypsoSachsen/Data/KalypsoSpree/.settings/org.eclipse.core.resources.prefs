@@ -1,4 +1,4 @@
-#Sun Aug 03 14:03:51 CEST 2008
+#Fri Aug 08 18:27:58 CEST 2008
 eclipse.preferences.version=1
 encoding//..BCE_Intern/\#ToDo.txt=UTF-8
 encoding//.model/observationConf/OmbrometerMapping.gml=UTF-8
@@ -59,6 +59,8 @@ encoding//.prognose/Spielwiese/calcCase.gml=UTF-8
 encoding//.prognose/Stand\ WAVOS\ FK/.calculation=UTF-8
 encoding//.prognose/Stand_SchwarzeElster_11_2006/.calculation=UTF-8
 encoding//.prognose/Stand_SchwarzeElster_11_2006/calcCase.gml=UTF-8
+encoding//.prognose/TestOmbro/.calculation=UTF-8
+encoding//.prognose/TestOmbro/ombrometer.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Flusslaufparameter.gtt=UTF-8
@@ -419,12 +421,12 @@ encoding//.prognose/prognose9/calcCase.gml=UTF-8
 encoding//.styles/ezg.sld=UTF-8
 encoding//.styles/namodelle_mit_relationen.sld=UTF-8
 encoding//.styles/ombrometer.sld=UTF-8
-encoding//.styles/thiessen.sld=UTF-8
 encoding//.temp/laengsschnitt.odt=UTF-8
 encoding//.templates/Zeitreihen/Niederschl\u00E4ge.ott=UTF-8
 encoding//.templates/Zeitreihen/Pegel_W_und_Q.ott=UTF-8
 encoding//.templates/calcCase/Zeitreihen/Ombrometer.ott=UTF-8
 encoding//.templates/calcCase/berichtDiagQ.odt=UTF-8
+encoding//.templates/calcCase/ombrometer.gml=UTF-8
 encoding//Grunddaten/ombrometer.csv=Cp1252
 encoding//Rechenf\u00E4lle/test/.calculation=UTF-8
 encoding//Rechenf\u00E4lle/test/Anfangsvolumen.gtt=UTF-8
@@ -618,3 +620,4 @@ encoding//Rechenvarianten/april/calcCase.gml=UTF-8
 encoding//Rechenvarianten/april/calcCase.log=UTF-8
 encoding/<project>=UTF-8
 encoding/modell.gml=UTF-8
+encoding/ombrometer.gml=UTF-8

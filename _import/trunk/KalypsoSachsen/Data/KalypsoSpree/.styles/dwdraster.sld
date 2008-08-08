@@ -4,7 +4,7 @@
     <Name>deegree style definition</Name>
     <UserStyle>
       <Name>dwdCell</Name>
-      <Title>dwdCell</Title>
+      <Title></Title>
       <IsDefault>1</IsDefault>
       <FeatureTypeStyle>
         <Name>dwdCell</Name>

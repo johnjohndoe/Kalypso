@@ -4,7 +4,7 @@
 		<Name>deegree style definition</Name>
 		<UserStyle>
 			<Name>Landesgrenzen</Name>
-			<Title>rivers</Title>
+			<Title></Title>
 			<IsDefault>1</IsDefault>
 			<FeatureTypeStyle>
 				<Name>StyleName0815</Name>
