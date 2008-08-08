@@ -152,7 +152,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[2] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ), 0.0 );
       final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new BewuchsLayer( view );
+      return null;//new BewuchsLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
     {
@@ -161,7 +161,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
       final ProfilOperation operation = new ProfilOperation( "Geokoordinaten einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new HochRechtsLayer( view );
+      return null;//new HochRechtsLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
     {
@@ -170,7 +170,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
       final ProfilOperation operation = new ProfilOperation( "Profillinie einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new GelaendeLayer( view );
+      return null;//new GelaendeLayer( view );
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
@@ -186,7 +186,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       else
         operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) );
       new ProfilOperationJob( operation ).schedule();
-      return new ExtendedRauheitLayer( view, layerId, "Rauheit-ks" );
+      return null;//new ExtendedRauheitLayer( view, layerId, "Rauheit-ks" );
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
@@ -196,7 +196,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
       final ProfilOperation operation = new ProfilOperation( "Brücke einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new BrueckeBuildingLayer( view );
+      return null;//new BrueckeBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
@@ -205,7 +205,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
       final ProfilOperation operation = new ProfilOperation( "Wehr einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new WehrBuildingLayer( view );
+      return null;//new WehrBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_KREIS ) )
     {
@@ -214,7 +214,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new KreisBuildingLayer( view );
+      return null;// new KreisBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_MAUL ) )
     {
@@ -223,7 +223,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new MaulBuildingLayer( view );
+      return null;//new MaulBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_TRAPEZ ) )
     {
@@ -232,7 +232,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new TrapezBuildingLayer( view );
+      return null;//new TrapezBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_EI ) )
     {
@@ -241,7 +241,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return new EiBuildingLayer( view );
+      return null;//new EiBuildingLayer( view );
     }
 
     return createLayer( layerId, view );
