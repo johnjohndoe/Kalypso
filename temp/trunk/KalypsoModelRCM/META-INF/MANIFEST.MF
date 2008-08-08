@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Kalypso Rainfall-Catchment-Model
+Bundle-SymbolicName: org.kalypso.model.rcm;singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: org.kalypso.model.rcm.KalypsoModelRcmActivator
+Bundle-Vendor: kalypso.org
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.kalypso.deegree;bundle-version="1.0.0",
+ org.kalypso.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.kalypso.model.rcm,
+ org.kalypso.model.rcm.binding,
+ org.kalypso.model.rcm.util

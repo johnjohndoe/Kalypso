@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.kalypso.contribs.java.urlCatalog">
+      <catalog
+            class="org.kalypso.model.rcm.internal.UrlCatalogRcm"
+            id="org.kalypso.model.rcm.UrlCatalogRcm">
+      </catalog>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypso.model.rcm.internal.binding.RcmFeatureAdapterFactory">
+         <adapter
+               type="org.kalypso.model.rcm.binding.IOmbrometer">
+         </adapter>
+      </factory>
+   </extension>
+
+</plugin>
