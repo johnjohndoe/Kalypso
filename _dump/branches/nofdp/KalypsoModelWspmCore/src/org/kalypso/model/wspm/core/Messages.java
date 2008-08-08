@@ -69,40 +69,6 @@ public class Messages extends NLS
 
   public static String AddPercentValueOperator_1;
 
-  public static String WspmProfileHelper_0;
-
-  public static String WspmProfileHelper_1;
-
-  public static String WspmProfileHelper_10;
-
-  public static String WspmProfileHelper_11;
-
-  public static String WspmProfileHelper_12;
-
-  public static String WspmProfileHelper_13;
-
-  public static String WspmProfileHelper_16;
-
-  public static String WspmProfileHelper_17;
-
-  public static String WspmProfileHelper_18;
-
-  public static String WspmProfileHelper_19;
-
-  public static String WspmProfileHelper_22;
-
-  public static String WspmProfileHelper_23;
-
-  public static String WspmProfileHelper_24;
-
-  public static String WspmProfileHelper_4;
-
-  public static String WspmProfileHelper_5;
-
-  public static String WspmProfileHelper_6;
-
-  public static String WspmProfileHelper_7;
-
   public static String AddFixValueOperator_0;
 
   public static String AddFixValueOperator_1;
