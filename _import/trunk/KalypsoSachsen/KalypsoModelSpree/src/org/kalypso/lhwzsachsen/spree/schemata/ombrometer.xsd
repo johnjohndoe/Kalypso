@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema targetNamespace="org.kalypso.spree.ombrometer" version="0.1" xmlns:common="org.kalypso.spree.common" xmlns:ombrometer="org.kalypso.spree.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<annotation>
+		<documentation>Deprecated. Use org.kalypso.hwv.ombrometer instead.</documentation>
     	<appinfo xmlns:kapp="org.kalypso.appinfo">
         	<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
 		</appinfo>
