@@ -30,15 +30,15 @@
                   <CssParameter name="fill">#004080</CssParameter>
                 </Fill>
                 <Stroke>
-                  <CssParameter name="stroke">#004080</CssParameter>
-                  <CssParameter name="stroke-width">5.0</CssParameter>
+                  <CssParameter name="stroke">#0000ff</CssParameter>
+                  <CssParameter name="stroke-width">1.0</CssParameter>
                   <CssParameter name="stroke-linejoin">round</CssParameter>
                   <CssParameter name="stroke-opacity">1.0</CssParameter>
                   <CssParameter name="stroke-linecap">square</CssParameter>
                 </Stroke>
               </Mark>
               <Opacity>1.0</Opacity>
-              <Size>12.0</Size>
+              <Size>10.0</Size>
               <Rotation>0.0</Rotation>
             </Graphic>
           </PointSymbolizer>
@@ -63,8 +63,8 @@
                   <AnchorPointY>0.0</AnchorPointY>
                 </AnchorPoint>
                 <Displacement>
-                  <DisplacementX>0.0</DisplacementX>
-                  <DisplacementY>0.0</DisplacementY>
+                  <DisplacementX>5.0</DisplacementX>
+                  <DisplacementY>5.0</DisplacementY>
                 </Displacement>
                 <Rotation>0.0</Rotation>
               </PointPlacement>

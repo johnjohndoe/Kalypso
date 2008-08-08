@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modeldata xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
+<modeldata xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" typeID="KalypsoNA">
     <input id="MetaSteuerdaten" path=".calculation" relativeToCalcCase="true"/>
     <input id="Modell" path="calcCase.gml" relativeToCalcCase="true"/>
     <input id="Control" path=".nacontrol_1.gml" relativeToCalcCase="true"/>
@@ -12,15 +12,14 @@
     <input id="ZuflussDir" path="Zufluss" relativeToCalcCase="true"/>
     <input id="PegelDir" path="Pegel" relativeToCalcCase="true"/>
     <input id="ErgebnisDir" path="Ergebnisse" relativeToCalcCase="true"/>
-
-<!--
 	<input id="Hydrotop" path="hydrotop.gml" relativeToCalcCase="true"/>
 	<input id="Parameter" path="parameter.gml" relativeToCalcCase="true"/>
--->
+	<input id="LZSIM_IN" path="Anfangswerte" relativeToCalcCase="true"/>
 
-	<output id="OUT_OPTIMIZEFILE" path=".nacontrol_1.gml" relativeToCalcCase="true"/>
+	<output id="ERGEBNISSE" path="Ergebnisse" relativeToCalcCase="true"/>
 
 	<output id="OUT_ZML" path="Ergebnisse" relativeToCalcCase="true"/>
+	<output id="OUT_OPTIMIZEFILE" path=".nacontrol_1.gml" relativeToCalcCase="true"/>
 
 	<output id="LOG_EXE_STDOUT" path="logs1.txt" relativeToCalcCase="true"/>
 	<output id="LOG_EXE_ERROUT" path="logs2.txt" relativeToCalcCase="true"/>
