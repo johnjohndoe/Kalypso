@@ -669,10 +669,19 @@ public class ImportWspmWizard extends Wizard implements IWizard
           if( element instanceof IElement1D )
           {
             final List<IFE1D2DNode> nodes = ((IElement1D) element).getNodes();
-            if( nodes.contains( node ) && nodes.contains( lastNode ) )
+            if( nodes == null )
             {
-              found = true;
-              break;
+              System.out.println( element.getGmlID() );
+              continue;
+            }
+            if( nodes != null )
+            {
+
+              if( nodes.contains( node ) && nodes.contains( lastNode ) )
+              {
+                found = true;
+                break;
+              }
             }
           }
         }

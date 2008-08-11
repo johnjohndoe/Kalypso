@@ -128,6 +128,9 @@ public class DeleteFeElementsHelper
       // not allowed
       // 1D: check if any of the selected elements have nodes that belongs to any continuity line; if that element is
       // the last one on the line, deleting is not allowed
+
+      // TODO:
+      // there must be a check if a node of a 1d element is also part to other 1d elements...
       for( final EasyFeatureWrapper easyFeatureWrapper : selected )
       {
         if( easyFeatureWrapper == null )
