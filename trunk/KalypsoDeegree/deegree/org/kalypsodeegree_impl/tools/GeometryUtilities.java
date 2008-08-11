@@ -838,6 +838,51 @@ public class GeometryUtilities
   }
 
   /**
+   * Same as
+   * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
+   * 
+   * @param allowedQNames
+   *            Only features that substitute one of these qnames are considered.
+   */
+  @SuppressWarnings("unchecked")
+  public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList[] modelLists, final QName geoQName, final QName[] allowedQNames )
+  {
+    Feature nearest = null;
+
+    for( int i = 0; i < modelLists.length; i++ )
+    {
+      final FeatureList modelList = modelLists[i];
+
+      if( modelList == null )
+        continue;
+
+      final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
+      final List<Feature> foundElements = modelList.query( reqEnvelope, null );
+
+      double min = Double.MAX_VALUE;
+
+      for( final Feature feature : foundElements )
+      {
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
+        {
+          final GM_Object geom = (GM_Object) feature.getProperty( geoQName );
+
+          if( geom != null )
+          {
+            final double curDist = point.distance( geom );
+            if( min > curDist && curDist <= grabDistance )
+            {
+              nearest = feature;
+              min = curDist;
+            }
+          }
+        }
+      }
+    }
+    return nearest;
+  }
+
+  /**
    * Calculates the direction (in degrees) from one position to another.
    * 
    * @return The angle in degree or {@link Double#NaN} if the points coincide.
