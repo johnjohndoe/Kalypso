@@ -68,7 +68,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Patrice Congo
  * 
  */
-@SuppressWarnings( { "unchecked", "hiding" })
 public class Model1d2dCalUnitTheme extends AbstractKalypsoTheme
 {
   private CalUnitDisplayElement calUnitDisplayElement;
