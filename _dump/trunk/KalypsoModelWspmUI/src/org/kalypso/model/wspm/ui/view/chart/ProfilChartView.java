@@ -191,15 +191,15 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     IMapperRegistry mr = m_chart.getChartModel().getMapperRegistry();
 
-    final IAxis domainAxis = new GenericLinearAxis( ID_AXIS_DOMAIN, POSITION.BOTTOM, new String[] {}, null );
+    final IAxis domainAxis = new GenericLinearAxis( ID_AXIS_DOMAIN, POSITION.BOTTOM, null );
     AxisAdjustment aaDom = new AxisAdjustment( 3, 94, 3 );
     domainAxis.setPreferredAdjustment( aaDom );
 
-    final IAxis targetAxisLeft = new GenericLinearAxis( ID_AXIS_LEFT, POSITION.LEFT, new String[] {}, null );
+    final IAxis targetAxisLeft = new GenericLinearAxis( ID_AXIS_LEFT, POSITION.LEFT, null );
     AxisAdjustment aaLeft = new AxisAdjustment( 15, 75, 10 );
     targetAxisLeft.setPreferredAdjustment( aaLeft );
 
-    final IAxis targetAxisRight = new GenericLinearAxis( ID_AXIS_RIGHT, POSITION.RIGHT, new String[] {}, null );
+    final IAxis targetAxisRight = new GenericLinearAxis( ID_AXIS_RIGHT, POSITION.RIGHT, null );
     AxisAdjustment aaRight = new AxisAdjustment( 2, 40, 58 );
     targetAxisRight.setPreferredAdjustment( aaRight );
 

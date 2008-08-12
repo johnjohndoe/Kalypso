@@ -9,12 +9,12 @@ Bundle-Localization: plugin
 Require-Bundle: org.kalypso.ui,
  org.kalypso.featureview,
  org.kalypso.model.wspm.schema,
- de.openali.odysseus.chart.ui,
- de.openali.odysseus.chart.ext.base,
+ de.openali.odysseus.chart.ui;visibility:=reexport,
+ de.openali.odysseus.chart.ext.base;visibility:=reexport,
  org.kalypso.model.wspm.core,
  org.eclipse.core.expressions,
  org.eclipse.ui.views,
- de.openali.odysseus.chart.ext.observation
+ de.openali.odysseus.chart.ext.observation;visibility:=reexport
 Eclipse-LazyStart: true
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,
