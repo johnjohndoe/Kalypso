@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Panel;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,7 +58,6 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -102,9 +104,10 @@ import org.kalypso.ogc.sensor.timeseries.TimeserieUtils;
  * 
  * @author schlienger
  */
-public class ObservationTable extends JPanel implements IObsViewEventListener
+public class ObservationTable extends Panel implements IObsViewEventListener
 {
   private final ObservationTableModel m_model;
+
   private final MainTable m_table;
 
   private final TableView m_view;
@@ -113,7 +116,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
 
   private final boolean m_waitForSwing;
 
-  protected String m_currentScenarioName = ""; //$NON-NLS-1$ 
+  protected String m_currentScenarioName = ""; //$NON-NLS-1$
 
   /** is created if an observation has a scenario property */
   private final JLabel m_label = new JLabel( "", SwingConstants.CENTER ); //$NON-NLS-1$
@@ -143,8 +146,8 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
 
     // date renderer with timezone
     m_dateRenderer = new DateTableCellRenderer();
-    m_dateRenderer.setTimeZone( template.getTimezone() );    
-    
+    m_dateRenderer.setTimeZone( template.getTimezone() );
+
     final NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setGroupingUsed( false );
 
@@ -164,8 +167,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     m_table.setDefaultRenderer( Double.class, nbRenderer );
     m_table.setDefaultRenderer( Float.class, nbRenderer );
     m_table.setAutoCreateColumnsFromModel( true );
-    m_table
-        .setDefaultEditor( Double.class, new SelectAllCellEditor( new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
+    m_table.setDefaultEditor( Double.class, new SelectAllCellEditor( new DoubleCellEditor( nf, true, new Double( 0 ) ) ) );
     m_table.setCellSelectionEnabled( true );
     m_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
 
@@ -177,7 +179,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     rowHeader.setColumnSelectionAllowed( false );
     rowHeader.setCellSelectionEnabled( false );
     rowHeader.getTableHeader().setReorderingAllowed( false );
-    rowHeader.getTableHeader().setDefaultRenderer( new ColumnHeaderRenderer( ) );
+    rowHeader.getTableHeader().setDefaultRenderer( new ColumnHeaderRenderer() );
     rowHeader.setAutoCreateColumnsFromModel( true );
 
     // make sure that selections between the main table and the header stay in sync
@@ -201,9 +203,30 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
 
     // removed in this.dispose()
     m_view.addObsViewEventListener( this );
+
+    addKeyListener( new KeyListener()
+    {
+      @Override
+      public void keyPressed( final KeyEvent e )
+      {
+        System.out.println( "keyPressed" );
+      }
+
+      @Override
+      public void keyReleased( final KeyEvent e )
+      {
+        System.out.println( "keyReleased" );
+      }
+
+      @Override
+      public void keyTyped( final KeyEvent e )
+      {
+        System.out.println( "keyTyped" );
+      }
+    } );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_table.dispose();
 
@@ -226,14 +249,14 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     final CatchRunnable runnable = new CatchRunnable()
     {
       @Override
-      protected void runIntern() throws Throwable
+      protected void runIntern( ) throws Throwable
       {
         final int evenType = evt.getType();
 
         // REFRESH ONE COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_DATA_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
           model.refreshColumn( column, evt.getSource() );
 
           analyseObservation( column.getObservation(), true );
@@ -245,7 +268,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
         // REFRESH COLUMN ACCORDING TO ITS STATE
         if( evenType == ObsViewEvent.TYPE_ITEM_STATE_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
 
           if( column.isShown() )
             model.addColumn( column );
@@ -258,7 +281,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
         // ADD COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_ADD && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
           if( column.isShown() )
             model.addColumn( column );
 
@@ -268,7 +291,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
         // REMOVE COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_REMOVE && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn)evt.getObject();
+          final TableViewColumn column = (TableViewColumn) evt.getObject();
           model.removeColumn( column );
 
           analyseObservation( column.getObservation(), false );
@@ -293,9 +316,9 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
         // VIEW CHANGED
         if( evenType == ObsViewEvent.TYPE_VIEW_CHANGED )
         {
-          final TableView view = (TableView)evt.getObject();
+          final TableView view = (TableView) evt.getObject();
           model.setAlphaSort( view.isAlphaSort() );
-          
+
           m_dateRenderer.setTimeZone( view.getTimezone() );
 
           repaint();
@@ -336,8 +359,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
       // add a scenario-label if obs has scenario specific metadata property
       if( mdl.getProperty( ObservationConstants.MD_SCENARIO ) != null )
       {
-        final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario(
-            mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
+        final IScenario scenario = KalypsoAuthPlugin.getDefault().getScenario( mdl.getProperty( ObservationConstants.MD_SCENARIO ) );
 
         if( scenario != null && !ScenarioUtilities.isDefaultScenario( scenario ) && isLabelSet() )
         {
@@ -351,7 +373,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
             }
             catch( final MalformedURLException e )
             {
-              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString("org.kalypso.ogc.sensor.tableview.swing.ObservationTable.3"), e ); //$NON-NLS-1$
+              Logger.getLogger( getClass().getName() ).log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.tableview.swing.ObservationTable.3" ), e ); //$NON-NLS-1$
             }
           }
 
@@ -377,17 +399,17 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
     }
   }
 
-  public ObservationTableModel getObservationTableModel()
+  public ObservationTableModel getObservationTableModel( )
   {
     return m_model;
   }
 
-  public TableView getTemplate()
+  public TableView getTemplate( )
   {
     return m_view;
   }
 
-  public String getCurrentScenarioName()
+  public String getCurrentScenarioName( )
   {
     return m_currentScenarioName;
   }
@@ -401,21 +423,21 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
    * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
    */
   public void onPrintObsView( final ObsViewEvent evt )
-  {}
+  {
+  }
 
-  protected void clearLabel()
+  protected void clearLabel( )
   {
     m_label.setText( "" ); //$NON-NLS-1$
     m_label.setVisible( false );
   }
 
-  protected boolean isLabelSet()
+  protected boolean isLabelSet( )
   {
     return m_label.isVisible();
   }
 
-  protected void setLabel( final String txt, final Icon icon, final Color color, final Integer height,
-      final Boolean showTxt )
+  protected void setLabel( final String txt, final Icon icon, final Color color, final Integer height, final Boolean showTxt )
   {
     final boolean bShowText;
     if( showTxt != null )
@@ -461,8 +483,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
       aColumn.setHeaderValue( headerValue );
 
       // Auto-resize column
-      final Component c = headerRenderer.getTableCellRendererComponent( null, aColumn.getHeaderValue(), false, false,
-          0, 0 );
+      final Component c = headerRenderer.getTableCellRendererComponent( null, aColumn.getHeaderValue(), false, false, 0, 0 );
       final int colWidth = c.getPreferredSize().width + 5;
       aColumn.setPreferredWidth( colWidth );
       aColumn.setWidth( colWidth );
@@ -496,8 +517,7 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
 
     private ExcelClipboardAdapter m_excelCp = null;
 
-    public MainTable( final boolean useContextMenu, final NumberFormat nf, final TableModel dm,
-        final TableColumnModel cm )
+    public MainTable( final boolean useContextMenu, final NumberFormat nf, final TableModel dm, final TableColumnModel cm )
     {
       super( dm, cm );
 
@@ -512,14 +532,14 @@ public class ObservationTable extends JPanel implements IObsViewEventListener
       }
     }
 
-    public void dispose()
+    public void dispose( )
     {
       if( m_excelCp != null )
         m_excelCp.dispose();
     }
 
     @Override
-    protected void processMouseEvent( MouseEvent e )
+    protected void processMouseEvent( final MouseEvent e )
     {
       if( e.isPopupTrigger() && m_popup != null )
         m_popup.show( this, e.getX(), e.getY() );
