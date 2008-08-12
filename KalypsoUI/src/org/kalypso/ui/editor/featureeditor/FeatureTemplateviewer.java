@@ -43,8 +43,6 @@ package org.kalypso.ui.editor.featureeditor;
 import java.net.URL;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -61,10 +59,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -75,9 +73,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypso.util.pool.IPoolListener;
 import org.kalypso.util.pool.IPoolableObjectType;
@@ -93,9 +89,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  */
 public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 {
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-  private final ResourcePool m_pool = KalypsoGisPlugin.getDefault().getPool();
+  private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 
   private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
 
@@ -184,7 +178,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
     return Status.OK_STATUS;
   }
 
-  public void setTemplate( Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
+  public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
     final List<FeatureviewType> view = template.getView();
     for( final FeatureviewType featureviewType : view )
@@ -325,6 +319,7 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
 
       if( feature != null )
       {
+        m_featureComposite.addChangeListener( m_changeListener );
         m_featureComposite.setFeature( feature );
         final Control control = m_featureComposite.createControl( m_panel, SWT.NONE, feature.getFeatureType() );
         control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -332,8 +327,6 @@ public class FeatureTemplateviewer implements IPoolListener, ModellEventListener
         m_featureComposite.updateControl();
 
         m_panel.layout();
-
-        m_featureComposite.addChangeListener( m_changeListener );
 
         m_commandtarget.resetDirty();
       }
