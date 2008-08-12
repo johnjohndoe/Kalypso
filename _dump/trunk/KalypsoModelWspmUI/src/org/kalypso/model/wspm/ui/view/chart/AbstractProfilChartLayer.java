@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.IProfilView;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -139,13 +138,14 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    * @deprecated
    */
 
+  @Deprecated
   protected abstract void editProfil( Point point, Object data );
 
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.chart.layer.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfilEventManager,
    *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
    */
-  public IProfilView createLayerPanel( IProfil profile )
+  public IProfilView createLayerPanel( final IProfil profile )
   {
     // TODO Auto-generated method stub
     return null;
@@ -154,7 +154,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
   /**
    * @see de.belger.swtchart.layer.IChartLayer#getHoverInfo(org.eclipse.swt.graphics.Point)
    */
-  public EditInfo getHoverInfo( Point point )
+  public EditInfo getHoverInfo( final Point point )
   {
     return null;
   }
@@ -163,7 +163,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    * @see de.belger.swtchart.layer.IChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
   }
 
@@ -171,21 +171,21 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
    * @see de.belger.swtchart.layer.IChartLayer#paintDrag(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
    *      org.eclipse.swt.graphics.Point, java.lang.Object)
    */
-  public void paintDrag( GC gc, Point editing, Object hoverData )
+  public void paintDrag( final GC gc, final Point editing, final Object hoverData )
   {
   }
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#paintLegend(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper)
    */
-  public void paintLegend( GC gc )
+  public void paintLegend( final GC gc )
   {
   }
 
   /**
    * @see de.belger.swtchart.layer.IChartLayer#setActivePoint(java.lang.Object)
    */
-  public void setActivePoint( Object data )
+  public void setActivePoint( final Object data )
   {
   }
 
@@ -200,6 +200,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getId()
    */
+  @Override
   public String getId( )
   {
 
@@ -276,7 +277,7 @@ public abstract class AbstractProfilChartLayer extends AbstractChartLayer implem
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     // TODO Auto-generated method stub
 
