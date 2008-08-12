@@ -5,21 +5,21 @@
    <extension
          point="org.eclipse.ui.commandImages">
       <image
-            commandId="org.kalypso.google.earth.export.command"
+            commandId="org.kalypso.kml.export.command"
             icon="icons/googleEarth.png">
       </image>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <category
-            id="org.kalypso.google.earth.export"
+            id="org.kalypso.kml.export"
             name="%category.name.0">
       </category>
       <command
-            categoryId="org.kalypso.google.earth.export"
-            defaultHandler="org.kalypso.google.earth.export.GoogleEarthExportCommandHandler"
+            categoryId="org.kalypso.kmlexport"
+            defaultHandler="org.kalypso.kml.export.KMLExportCommandHandler"
             description="%command.description.0"
-            id="org.kalypso.google.earth.export.command"
+            id="org.kalypso.google.kml.command"
             name="%command.name.0">
       </command>
    </extension>
