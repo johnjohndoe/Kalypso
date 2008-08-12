@@ -99,6 +99,9 @@ public class OmbrometerUtils
    * Calculates thiessen polygons for a list of ombrometers.<br>
    * Only omrbometers, whichs 'isUsed' flag is set are considered.<br>
    * The thiessen polygons are intersected with a buffer of the convex hull of all ombrometers<br>
+   * <br>
+   * The thiessen method does work only, if at least 2 point are available. In order to handle one more case (1
+   * available point), the whole buiffer region is used in case of only one available point.<br>
    * 
    * @param ombrometerList
    *          List of features of ombrometers.
@@ -141,21 +144,30 @@ public class OmbrometerUtils
 
     ProgressUtilities.worked( monitor, 1 );
 
-    if( points.size() >= 2 )
+    // Convex hull of points as boundary for thiessen
+    final ConvexHull convexHull = new ConvexHull( crds.toArray( new Coordinate[crds.size()] ), new GeometryFactory() );
+    final Geometry boundary = convexHull.getConvexHull();
+
+    ProgressUtilities.worked( monitor, 1 );
+
+    final Geometry thiessenBoundary = JTSUtilities.bufferWithRatio( boundary, bufferRatio );
+    ProgressUtilities.worked( monitor, 1 );
+
+    if( geoIndex.size() == 0 )
     {
-      // Calculate voronoi polygons ;only if we have at least 2 points.
-      // Else, all areas will get deleted
 
-      // Convex hull of points as boundary of thiessen
-      final ConvexHull convexHull = new ConvexHull( crds.toArray( new Coordinate[crds.size()] ), new GeometryFactory() );
-      final Geometry boundary = convexHull.getConvexHull();
-
-      ProgressUtilities.worked( monitor, 2 );
-
-      final Geometry thiessenBoundary = JTSUtilities.bufferWithRatio( boundary, bufferRatio );
+    }
+    else if( geoIndex.size() == 1 )
+    {
+      final IOmbrometer ombro = (IOmbrometer) geoIndex.get( 0 );
+      final GM_Surface<GM_SurfacePatch> gmBoundary = (GM_Surface<GM_SurfacePatch>) JTSAdapter.wrap( thiessenBoundary );
+      changeMap.put( ombro, gmBoundary );
+    }
+    else
+    {
+      // Calculate voronoi polygons
       final DTriangulationForJTS tri = new DTriangulationForJTS( points, thiessenBoundary );
       final List<Polygon> thiessenPolys = tri.getThiessenPolys();
-
       ProgressUtilities.worked( monitor, 2 );
 
       for( final Polygon polygon : thiessenPolys )
@@ -170,8 +182,8 @@ public class OmbrometerUtils
 
       monitor.worked( 1 );
     }
-    else
-      ProgressUtilities.worked( monitor, 5 );
+
+    ProgressUtilities.done( monitor );
 
     return changeMap;
   }
