@@ -50,7 +50,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.kml.export.Messages;
-import org.kalypso.kml.export.constants.IGoogleEarthExportSettings;
+import org.kalypso.kml.export.constants.IKMLExportSettings;
 import org.kalypso.ui.views.map.MapView;
 
 /**
@@ -83,7 +83,7 @@ public class WizardGoogleExport extends Wizard implements IWorkbenchWizard
     addPage( m_page );
   }
 
-  public IGoogleEarthExportSettings getExportedSettings( )
+  public IKMLExportSettings getExportedSettings( )
   {
     return m_page;
   }

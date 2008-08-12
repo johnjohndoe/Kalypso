@@ -8,9 +8,9 @@ import java.io.File;
 /**
  * @author kuch
  */
-public interface IGoogleEarthExportSettings
+public interface IKMLExportSettings
 {
-  public static final String CONST_TARGET_FILE = "googleEarthExportTargetFile"; //$NON-NLS-1$
+  public static final String CONST_TARGET_FILE = "kmlExportTargetFile"; //$NON-NLS-1$
 
   public String getExportDescription( );
 

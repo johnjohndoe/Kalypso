@@ -19,12 +19,12 @@ import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
 import org.kalypso.kml.export.Messages;
-import org.kalypso.kml.export.constants.IGoogleEarthExportSettings;
+import org.kalypso.kml.export.constants.IKMLExportSettings;
 
 /**
  * @author kuch
  */
-public class PageGoogleExport extends WizardPage implements IGoogleEarthExportSettings
+public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 {
 
   protected File m_file; // file target

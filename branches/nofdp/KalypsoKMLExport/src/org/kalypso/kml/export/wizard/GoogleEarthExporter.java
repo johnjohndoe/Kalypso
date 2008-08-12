@@ -27,8 +27,8 @@ import org.junit.Assert;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kml.export.KMLThemeVisitor;
 import org.kalypso.kml.export.KMLExportDelegate;
-import org.kalypso.kml.export.constants.IGoogleEarthExportSettings;
-import org.kalypso.kml.export.interfaces.IGoogleEarthAdapter;
+import org.kalypso.kml.export.constants.IKMLExportSettings;
+import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.FolderUtil;
 import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
@@ -56,34 +56,34 @@ import com.google.earth.kml.ObjectFactory;
 public class GoogleEarthExporter implements ICoreRunnableWithProgress
 {
 
-  private final IGoogleEarthExportSettings m_settings;
+  private final IKMLExportSettings m_settings;
 
   private final MapView m_view;
 
   private MapPanel m_mapPanel;
 
-  private final IGoogleEarthAdapter[] m_provider;
+  private final IKMLAdapter[] m_provider;
 
   /**
    * @param view
    * @param m_page
    */
-  public GoogleEarthExporter( final MapView view, final IGoogleEarthExportSettings settings )
+  public GoogleEarthExporter( final MapView view, final IKMLExportSettings settings )
   {
     m_view = view;
     m_settings = settings;
 
     /* get extension points for rendering geometries and adding additional geometries */
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IGoogleEarthAdapter.ID ); //$NON-NLS-1$
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IKMLAdapter.ID ); //$NON-NLS-1$
 
     // TODO handling of several providers, which provider wins / rules, returns a special geometry, aso
-    final List<IGoogleEarthAdapter> provider = new ArrayList<IGoogleEarthAdapter>( elements.length );
+    final List<IKMLAdapter> provider = new ArrayList<IKMLAdapter>( elements.length );
     for( final IConfigurationElement element : elements )
     {
       try
       {
-        provider.add( (IGoogleEarthAdapter) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
+        provider.add( (IKMLAdapter) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
       }
       catch( final CoreException e )
       {
@@ -91,7 +91,7 @@ public class GoogleEarthExporter implements ICoreRunnableWithProgress
       }
     }
 
-    m_provider = provider.toArray( new IGoogleEarthAdapter[] {} );
+    m_provider = provider.toArray( new IKMLAdapter[] {} );
   }
 
   /**

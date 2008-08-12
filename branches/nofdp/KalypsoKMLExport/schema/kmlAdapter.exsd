@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.kalypso.google.earth.export">
+<schema targetNamespace="org.kalypso.kml.export">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.kalypso.google.earth.export" id="googleEarthAdapter" name="googleEarthAdapter"/>
+         <meta.schema plugin="org.kalypso.kml.export" id="kmlAdapter" name="kmlAdapter"/>
       </appInfo>
       <documentation>
          [Enter description of this extension point.]
@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence>
-            <element ref="myGoogleEarthAdapter"/>
+            <element ref="myKmlAdapter"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +42,7 @@
       </complexType>
    </element>
 
-   <element name="myGoogleEarthAdapter">
+   <element name="myKmlAdapter">
       <annotation>
          <appInfo>
             <meta.element labelAttribute="name"/>
@@ -76,7 +76,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypso.google.earth.export.IGoogleEarthAdapter"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.kml.export.interfaces.IKMLAdapter"/>
                </appInfo>
             </annotation>
          </attribute>

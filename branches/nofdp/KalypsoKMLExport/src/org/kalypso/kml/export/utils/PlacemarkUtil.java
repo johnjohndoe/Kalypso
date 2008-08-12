@@ -6,7 +6,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.kalypso.kml.export.Messages;
-import org.kalypso.kml.export.interfaces.IGoogleEarthAdapter;
+import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.interfaces.IPlacemark;
 
 import com.google.earth.kml.FeatureType;
@@ -18,11 +18,11 @@ import com.google.earth.kml.PointType;
 public class PlacemarkUtil
 {
 
-  public static void addAdditional( final FolderType base, final IGoogleEarthAdapter[] provider, final ObjectFactory googleEarthFactory )
+  public static void addAdditional( final FolderType base, final IKMLAdapter[] provider, final ObjectFactory googleEarthFactory )
   {
     /* add additional place marks and clean up providers */
     final List<IPlacemark> placemarks = new ArrayList<IPlacemark>();
-    for( final IGoogleEarthAdapter adapter : provider )
+    for( final IKMLAdapter adapter : provider )
     {
       final IPlacemark[] placemarkers = adapter.getAdditionalPlacemarkers();
       for( final IPlacemark placemark : placemarkers )

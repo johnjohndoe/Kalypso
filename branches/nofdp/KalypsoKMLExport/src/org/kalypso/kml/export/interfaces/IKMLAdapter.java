@@ -2,9 +2,9 @@ package org.kalypso.kml.export.interfaces;
 
 import org.kalypsodeegree.model.feature.Feature;
 
-public interface IGoogleEarthAdapter
+public interface IKMLAdapter
 {
-  public static String ID = "org.kalypso.google.earth.export.googleEarthAdapter"; //$NON-NLS-1$
+  public static String ID = "org.kalypso.kml.export.kmlAdapter"; //$NON-NLS-1$
 
   /**
    * Point geometries can define place markers, this means, which image will be displayed for an point TODO add name,
