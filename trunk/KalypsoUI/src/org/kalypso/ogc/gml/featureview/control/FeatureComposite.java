@@ -602,13 +602,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
           final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
           if( id.equals( elementId ) )
             try
-            {
+          {
               comparator = (ViewerComparator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-            }
-            catch( final CoreException e )
-            {
-              e.printStackTrace();
-            }
+          }
+          catch( final CoreException e )
+          {
+            e.printStackTrace();
+          }
         }
 
         /* If a valid id was given ... */
