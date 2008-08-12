@@ -33,8 +33,6 @@ import java.awt.Frame;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.JScrollPane;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -360,13 +358,10 @@ public class ObservationViewer extends Composite
     // TABLE
     m_table = new ObservationTable( m_tableView, false, false );
 
-    m_table.setBorder( null );
     final Composite tableComp = new Composite( form, SWT.RIGHT | SWT.EMBEDDED );
     final Frame vFrame = SWT_AWT.new_Frame( tableComp );
     vFrame.setVisible( true );
-    final JScrollPane scrollPane = new JScrollPane( m_table );
-    scrollPane.setBorder( null );
-    vFrame.add( scrollPane );
+    vFrame.add( m_table );
 
     form.setWeights( new int[] { 2, 5 } );
   }
