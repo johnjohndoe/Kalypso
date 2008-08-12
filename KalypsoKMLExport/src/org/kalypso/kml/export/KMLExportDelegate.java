@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBElement;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kml.export.convert.ConvertFacade;
-import org.kalypso.kml.export.interfaces.IGoogleEarthAdapter;
+import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
 import org.kalypso.ogc.gml.IPaintInternalDelegate;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -39,13 +39,13 @@ public class KMLExportDelegate implements IPaintInternalDelegate
 
   private final ObjectFactory m_factory;
 
-  private final IGoogleEarthAdapter[] m_provider;
+  private final IKMLAdapter[] m_provider;
 
   /**
    * @param factory
    * @param folderType
    */
-  public KMLExportDelegate( final IGoogleEarthAdapter[] provider, final MapPanel mapPanel, final ObjectFactory factory, final FolderType folderType )
+  public KMLExportDelegate( final IKMLAdapter[] provider, final MapPanel mapPanel, final ObjectFactory factory, final FolderType folderType )
   {
     m_provider = provider;
     m_mapPanel = mapPanel;
@@ -116,7 +116,7 @@ public class KMLExportDelegate implements IPaintInternalDelegate
           return;
 
         final Feature feature = displayElement.getFeature();
-        for( final IGoogleEarthAdapter adapter : m_provider )
+        for( final IKMLAdapter adapter : m_provider )
         {
           adapter.registerExportedFeature( feature );
         }

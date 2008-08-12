@@ -13,7 +13,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.kml.export.constants.IGoogleEarthExportSettings;
+import org.kalypso.kml.export.constants.IKMLExportSettings;
 import org.kalypso.kml.export.wizard.WizardGoogleExport;
 import org.kalypso.ui.views.map.MapView;
 
@@ -32,7 +32,7 @@ public class KMLExportCommandHandler implements IHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final File targetFile = (File) context.getVariable( IGoogleEarthExportSettings.CONST_TARGET_FILE );
+    final File targetFile = (File) context.getVariable( IKMLExportSettings.CONST_TARGET_FILE );
 
     /* get mapView instance */
     MapView mapView = null;

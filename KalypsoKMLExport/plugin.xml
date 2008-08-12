@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="googleEarthAdapter" name="googleEarthAdapter" schema="schema/googleEarthAdapter.exsd"/>
+   <extension-point id="kmlAdapter" name="kmlAdapter" schema="schema/googleEarthAdapter.exsd"/>
    <extension
          point="org.eclipse.ui.commandImages">
       <image
@@ -16,10 +16,10 @@
             name="%category.name.0">
       </category>
       <command
-            categoryId="org.kalypso.kmlexport"
+            categoryId="org.kalypso.kml.export"
             defaultHandler="org.kalypso.kml.export.KMLExportCommandHandler"
             description="%command.description.0"
-            id="org.kalypso.google.kml.command"
+            id="org.kalypso.kml.export.command"
             name="%command.name.0">
       </command>
    </extension>

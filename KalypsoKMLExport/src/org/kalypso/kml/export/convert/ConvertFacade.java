@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.geometry.GeoUtils;
 import org.kalypso.kml.export.geometry.GeoUtils.GEOMETRY_TYPE;
-import org.kalypso.kml.export.interfaces.IGoogleEarthAdapter;
+import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -27,7 +27,7 @@ import com.google.earth.kml.StyleType;
  */
 public class ConvertFacade
 {
-  public static FeatureType[] convert( final IGoogleEarthAdapter[] providers, final ObjectFactory factory, final GM_Object[] geometries, final StyleType style, final Feature feature ) throws Exception
+  public static FeatureType[] convert( final IKMLAdapter[] providers, final ObjectFactory factory, final GM_Object[] geometries, final StyleType style, final Feature feature ) throws Exception
   {
     final List<FeatureType> featureTypes = new ArrayList<FeatureType>();
 
