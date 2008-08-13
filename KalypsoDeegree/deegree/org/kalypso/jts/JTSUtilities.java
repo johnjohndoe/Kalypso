@@ -961,4 +961,46 @@ public class JTSUtilities
     return geometry.buffer( max * ratio );
   }
 
+  /**
+   * Calculates the fractions some polygons are covering one base polygons.
+   * 
+   * @see #fractionAreaOf(Polygon, Polygon)
+   */
+  public static double[] fractionAreasOf( final Polygon basePolygon, final Polygon[] coverPolygons )
+  {
+    final double[] factors = new double[coverPolygons.length];
+    for( int i = 0; i < coverPolygons.length; i++ )
+      factors[i] = JTSUtilities.fractionAreaOf( basePolygon, coverPolygons[i] );
+
+    return factors;
+  }
+
+
+  /**
+   * Calculates the part (as fraction) of one polygon covering another.
+   * 
+   * @param basePolygon
+   *          The polygon, that is covered (by the calculated fraction) by the <code>coverPolygon</code>. May NOT be
+   *          <code>null</code>.
+   * @param coverPolygon
+   *          The polygon covering (or not) the basePolygon. My be <code>null</code> (in that case, <code>0.0</code> is
+   *          returned).
+   */
+  public static double fractionAreaOf( final Polygon basePolygon, final Polygon coverPolygon )
+  {
+    Assert.isNotNull( basePolygon );
+
+    if( coverPolygon == null )
+      return 0.0;
+
+    final Geometry geometry = basePolygon.intersection( coverPolygon );
+    if( geometry == null )
+      return 0.0;
+
+    final double totalArea = basePolygon.getArea();
+    final double subArea = geometry.getArea();
+
+    return subArea / totalArea;
+  }
+
 }
