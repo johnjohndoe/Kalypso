@@ -40,7 +40,9 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.rcm.binding.IOmbrometer;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -98,12 +100,24 @@ public class RcmFeatureAdapterFactory implements IAdapterFactory
   {
     final Map<Class< ? >, AdapterConstructor> cMap = new Hashtable<Class< ? >, AdapterConstructor>();
 
-    // polynomial 1d
+    // IOmbrometer
     cMap.put( IOmbrometer.class, new AdapterConstructor()
     {
       public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
       {
         return new Ombrometer( feature );
+      }
+    } );
+
+    // IRainfallGenerator
+    cMap.put( IRainfallGenerator.class, new AdapterConstructor()
+    {
+      public Object constructAdapter( final Feature feature, final Class< ? > cls ) throws IllegalArgumentException
+      {
+        if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), OmbrometerRainfallGenerator.QNAME ) )
+          return new OmbrometerRainfallGenerator( feature );
+
+        return null;
       }
     } );
 

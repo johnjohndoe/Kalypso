@@ -1,0 +1,320 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ * 
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ * 
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.model.rcm.util;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
+
+/**
+ * This class does the real generation stuff.
+ * 
+ * @author Gernot Belger
+ */
+public class RainfallGenerationOp
+{
+  private final static class Generator
+  {
+    public final String m_gmlId;
+
+    public final Date m_from;
+
+    public final Date m_to;
+
+    public Generator( final String gmlId, final Date from, final Date to )
+    {
+      m_gmlId = gmlId;
+      m_from = from;
+      m_to = to;
+    }
+  }
+
+  private final List<Generator> m_generators = new ArrayList<Generator>();
+
+  private final URL m_rcmGmlLocation;
+
+  private final URL m_catchmentGmlLocation;
+
+  private final String m_catchmentFeaturePath;
+
+  private final String m_catchmentObservationPath;
+
+  private final String m_catchmentAreaPath;
+
+  private final String m_targetFilter;
+
+  public RainfallGenerationOp( final URL rcmGmlLocation, final URL catchmentGmlLocation, final String catchmentFeaturePath, final String catchmentObservationPath, final String catchmentAreaPath, final String targetFilter )
+  {
+    m_rcmGmlLocation = rcmGmlLocation;
+    m_catchmentGmlLocation = catchmentGmlLocation;
+    m_catchmentFeaturePath = catchmentFeaturePath;
+    m_catchmentObservationPath = catchmentObservationPath;
+    m_catchmentAreaPath = catchmentAreaPath;
+    m_targetFilter = targetFilter;
+  }
+
+  public void addGenerator( final String gmlId, final Date from, final Date to )
+  {
+    m_generators.add( new Generator( gmlId, from, to ) );
+  }
+
+  public void execute( final ILogger logger, final IProgressMonitor monitor ) throws CoreException
+  {
+    final SubMonitor progress = SubMonitor.convert( monitor, "", m_generators.size() * 10 + 2 * 3 + 10 );
+
+    // 1. Load and verify catchments
+    final GMLWorkspace catchmentWorkspace = loadGml( "Lade Einzugsgebiete", m_catchmentGmlLocation, logger, progress );
+    final URL targetContext = catchmentWorkspace.getContext();
+    final Feature[] catchmentFeatureArray = findCatchmentFeatures( catchmentWorkspace, logger );
+    final TimeseriesLinkType[] targetLinks = findCatchmentLinks( catchmentFeatureArray, logger );
+    final GM_Surface<GM_SurfacePatch>[] catchmentAreas = findCatchmentAreas( catchmentFeatureArray, logger );
+
+    // 2. Load and verify generators
+    final GMLWorkspace rcmWorkspace = loadGml( "Lade Gebietsniederschlagsmodelldefinition", m_rcmGmlLocation, logger, progress );
+
+    // Iterate through all generators
+    final List<IStatus> generatorStati = new ArrayList<IStatus>();
+    for( final Generator generatorDesc : m_generators )
+    {
+      final String generatorId = generatorDesc.m_gmlId;
+      if( generatorId == null )
+      {
+        logger.log( Level.SEVERE, -1, "Generator ohne gültige ID. Eintrag wird ignoriert." );
+        continue;
+      }
+
+      final Feature feature = rcmWorkspace.getFeature( generatorId );
+      if( feature == null )
+      {
+        logger.log( Level.SEVERE, -1, "Generator mit ID konnte in rcm-gml nicht gefunden werden. Eintrag wird ignoriert." );
+        continue;
+      }
+
+      final String generatorName = NamedFeatureHelper.getName( feature );
+
+      progress.subTask( "Erzeuge Gebietsniederschlag: " + generatorName );
+
+      final IRainfallGenerator rainGen = (IRainfallGenerator) feature.getAdapter( IRainfallGenerator.class );
+      if( rainGen == null )
+      {
+        final String msg = String.format( "Generator mit ID %s konnte nicht instantiiert werden. Eintrag wird ignoriert.", generatorId );
+        logger.log( Level.SEVERE, -1, msg );
+        continue;
+      }
+
+      try
+      {
+        final IObservation[] observations = rainGen.createRainfall( catchmentAreas, monitor );
+        final String msg = String.format( "Generator '%s' erfolgreich ausgeführt.", generatorName );
+        logger.log( Level.INFO, -1, msg );
+        // TODO: combine with observation from other generators
+        writeObservations( observations, targetLinks, targetContext );
+      }
+      catch( final CoreException e )
+      {
+        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' schlug fehl mit Meldung: %s", generatorName, e.getStatus().getMessage() );
+        logger.log( Level.WARNING, -1, msg );
+        generatorStati.add( e.getStatus() );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+        final String msg = String.format( "Fehler bei der Niederschlagserzeugung ('%s'): %s", generatorName, e.toString() );
+        logger.log( Level.WARNING, -1, msg );
+// generatorStati.add( e.getStatus() );
+      }
+
+      ProgressUtilities.worked( progress, 10 );
+    }
+
+    // Combine observations and write into target file while applying the targetFilter
+
+    // TODO mabye like that?
+// final ForecastFilter fc = new ForecastFilter();
+// fc.initFilter( sourceObses, sourceObses[0], null );
+
+
+    progress.subTask( "Schreibe Zeitreihen" );
+    ProgressUtilities.worked( progress, 10 );
+  }
+
+  private void writeObservations( final IObservation[] observations, final TimeseriesLinkType[] links, final URL context ) throws MalformedURLException, SensorException
+  {
+    for( int i = 0; i < links.length; i++ )
+    {
+      final IObservation obs = observations[i];
+      final TimeseriesLinkType link = links[i];
+      if( obs == null || link == null )
+        continue;
+
+      final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+      final File file = ResourceUtilities.findJavaFileFromURL( location );
+      ZmlFactory.writeToFile( obs, file );
+    }
+  }
+
+  private TimeseriesLinkType[] findCatchmentLinks( final Feature[] catchments, final ILogger logger ) throws CoreException
+  {
+    final FeaturePath featurePath = new FeaturePath( m_catchmentObservationPath );
+
+    final TimeseriesLinkType[] links = new TimeseriesLinkType[catchments.length];
+
+    for( int i = 0; i < catchments.length; i++ )
+    {
+      final Feature catchment = catchments[i];
+      if( catchment == null )
+        continue;
+
+      final Object object = featurePath.getFeatureForSegment( catchment.getWorkspace(), catchment, 0 );
+      if( object instanceof TimeseriesLinkType )
+        links[i] = (TimeseriesLinkType) object;
+      else if( object == null )
+      {
+        logger.log( Level.WARNING, -1, "Einzugsgebiet ohne Zielzeitreihe: " + catchment );
+        catchments[i] = null; // does not make sense to process
+      }
+      else
+      {
+        final String msg = String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein TimeseriesLinkType", object, m_catchmentObservationPath );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
+      }
+    }
+
+    return links;
+  }
+
+  @SuppressWarnings("unchecked")
+  private GM_Surface<GM_SurfacePatch>[] findCatchmentAreas( final Feature[] catchments, final ILogger logger ) throws CoreException
+  {
+    final FeaturePath featurePath = new FeaturePath( m_catchmentAreaPath );
+
+    final GM_Surface<GM_SurfacePatch>[] areas = new GM_Surface[catchments.length];
+
+    for( int i = 0; i < catchments.length; i++ )
+    {
+      final Feature catchment = catchments[i];
+      if( catchment == null )
+        continue;
+
+      final Object object = featurePath.getFeatureForSegment( catchment.getWorkspace(), catchment, 0 );
+      if( object instanceof GM_Surface )
+        areas[i] = (GM_Surface) object;
+      else if( object == null )
+      {
+        logger.log( Level.WARNING, -1, "Einzugsgebiet ohne Polygonfläche: " + catchment );
+        catchments[i] = null; // does not make sense to process
+      }
+      else
+      {
+        final String msg = String.format( "Ungültiges Object in Zeitreihenlink: %s (Property: %s). Erwartet wird ein GM_Surface", object, m_catchmentAreaPath );
+        throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, msg, null ) );
+      }
+    }
+
+    return areas;
+  }
+
+  private Feature[] findCatchmentFeatures( final GMLWorkspace catchmentWorkspace, final ILogger logger ) throws CoreException
+  {
+    final FeaturePath catchmentFeaturePath = new FeaturePath( m_catchmentFeaturePath );
+    final Object catchmentsObject = catchmentFeaturePath.getFeature( catchmentWorkspace );
+    if( !(catchmentsObject instanceof FeatureList) )
+      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, "Einzugsgebiet-FeaturePfad (catchmentObservationPath) zeigt nicht auf eine FeatureListe: " + m_catchmentFeaturePath, null ) );
+
+    final FeatureList catchmentFeatures = (FeatureList) catchmentsObject;
+
+    final Feature[] array = FeatureHelper.toArray( catchmentFeatures );
+    if( array.length < catchmentFeatures.size() )
+      logger.log( Level.WARNING, -1, "Ungültige oder leere Feature-Links in Catchment-Workspace" );
+
+    return array;
+  }
+
+  private GMLWorkspace loadGml( final String msg, final URL location, final ILogger logger, final SubMonitor progress ) throws CoreException
+  {
+    try
+    {
+      progress.subTask( msg );
+      logger.log( Level.INFO, -1, msg + ": " + m_catchmentGmlLocation );
+      final GMLWorkspace catchmentWorkspace = GmlSerializer.createGMLWorkspace( location, null );
+      ProgressUtilities.worked( progress, 3 );
+      return catchmentWorkspace;
+    }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Fehler beim GML-Laden: " + location, e );
+      throw new CoreException( status );
+    }
+  }
+
+}

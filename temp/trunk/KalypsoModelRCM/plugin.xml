@@ -16,7 +16,18 @@
          <adapter
                type="org.kalypso.model.rcm.binding.IOmbrometer">
          </adapter>
+         <adapter
+               type="org.kalypso.model.rcm.binding.IRainfallGenerator">
+         </adapter>
       </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.kalypso.model.rcm.ant.RainfallGenerationTask"
+            library="lib/anttasks.jar"
+            name="kalypso.rainfallGeneration">
+      </antTask>
    </extension>
 
 </plugin>
