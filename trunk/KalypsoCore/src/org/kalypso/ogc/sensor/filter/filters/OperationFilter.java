@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -70,7 +70,7 @@ public class OperationFilter extends AbstractObservationFilter
 
   private final double m_operand;
 
-  public OperationFilter( OperationFilterType filter )
+  public OperationFilter( final OperationFilterType filter )
   {
     m_operand = Double.parseDouble( filter.getOperand() );
     final String operator = filter.getOperator();
@@ -83,31 +83,40 @@ public class OperationFilter extends AbstractObservationFilter
     else if( operator.equals( "/" ) ) //$NON-NLS-1$
       m_operation = OPERATION_DURCH;
     else
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationFilter.4") + operator + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationFilter.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.4" ) + operator + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  public OperationFilter( final int operation, final double operand, final IObservation observation ) throws SensorException
+  {
+    m_operation = operation;
+    m_operand = operand;
+
+    m_baseobservation = observation;
+
+    super.initFilter( null, observation, null );
   }
 
   @Override
-  public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
+  public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
     super.initFilter( dummy, baseObs, context );
   }
 
   @Override
-  public ITuppleModel getValues( IRequest args ) throws SensorException
+  public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
     return new OperationTupplemodel( m_operand, m_operation, m_baseobservation.getValues( args ) );
   }
 
   /*
    * (non-Javadoc)
-   * 
    * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
    */
   @Override
-  public void setValues( ITuppleModel values )
+  public void setValues( final ITuppleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.OperationFilter.6") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.OperationFilter.6" ) ); //$NON-NLS-1$
   }
 
 }

@@ -150,14 +150,14 @@ public class UserStylePainter
       /* Only paint really visible features */
       if( filterFeature( feature, selected, filter ) )
       {
-        /* Only paint features which apply to the given qname */
+        /* Only paint features which applies to the given qname */
         if( qname == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), qname ) )
         {
           final Symbolizer[] symbolizers = rule.getSymbolizers();
           for( final Symbolizer symbolizer : symbolizers )
           {
             final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
-            // TODO: shoudlnt there be at least some debug output if this happens?
+            // TODO: should'nt there be at least some debug output if this happens?
             if( displayElement != null )
             {
               /* does scale apply? */

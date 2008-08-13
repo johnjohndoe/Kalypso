@@ -88,7 +88,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   private long m_forecastFrom = -1;
 
   /**
-   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
+   * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
    * werden kann ob die Eigenschaft gesetzt wurde.
    */
   private long m_forecastTo = -1;
@@ -107,12 +107,12 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
    * Ordered List of 'Source' Elements. Each source will be read as Observation, the combination of all sources will be
    * written to 'targetobservation'
    */
-  private List<CopyObservationFeatureVisitor.Source> m_sources = new LinkedList<CopyObservationFeatureVisitor.Source>();
+  private final List<CopyObservationFeatureVisitor.Source> m_sources = new LinkedList<CopyObservationFeatureVisitor.Source>();
 
   /**
    * List of metadata-properties and values to set to the target observation
    */
-  private Properties m_metadata = new Properties();
+  private final Properties m_metadata = new Properties();
 
   public CopyObservationTask( )
   {
@@ -203,7 +203,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       return property;
     }
 
-    public final void setProperty( String prop )
+    public final void setProperty( final String prop )
     {
       this.property = prop;
     }
@@ -213,7 +213,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       return from;
     }
 
-    public final void setFrom( long lfrom )
+    public final void setFrom( final long lfrom )
     {
       this.from = lfrom;
     }
@@ -223,7 +223,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       return to;
     }
 
-    public final void setTo( long lto )
+    public final void setTo( final long lto )
     {
       this.to = lto;
     }
@@ -244,7 +244,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     return m_forecastFrom;
   }
 
-  public final void setForecastFrom( long forecastFrom )
+  public final void setForecastFrom( final long forecastFrom )
   {
     m_forecastFrom = forecastFrom;
   }
@@ -254,7 +254,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     return m_forecastTo;
   }
 
-  public final void setForecastTo( long forecastTo )
+  public final void setForecastTo( final long forecastTo )
   {
     m_forecastTo = forecastTo;
   }
@@ -264,7 +264,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     return m_tokens;
   }
 
-  public void setTokens( String tokens )
+  public void setTokens( final String tokens )
   {
     m_tokens = tokens;
   }
@@ -280,7 +280,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       return m_name;
     }
 
-    public void setName( String name )
+    public void setName( final String name )
     {
       m_name = name;
     }
@@ -290,7 +290,7 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
       return m_value;
     }
 
-    public void setValue( String value )
+    public void setValue( final String value )
     {
       m_value = value;
     }
