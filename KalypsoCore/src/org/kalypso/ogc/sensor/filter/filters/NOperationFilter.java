@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -68,7 +68,7 @@ public class NOperationFilter extends AbstractObservationFilter
 
   private IObservation[] m_innerObservations = null;
 
-  public NOperationFilter( NOperationFilterType filter )
+  public NOperationFilter( final NOperationFilterType filter )
   {
     final String operator = filter.getOperator();
     if( operator.equals( "+" ) ) //$NON-NLS-1$
@@ -83,24 +83,32 @@ public class NOperationFilter extends AbstractObservationFilter
       throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.4") + operator + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.5") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  @Override
-  public void initFilter( Object conf, IObservation baseObs, URL context ) throws SensorException
+  public NOperationFilter( final int operation, final IObservation[] innerObservations ) throws SensorException
   {
-    super.initFilter( null, baseObs, context );
+    super.initFilter( null, innerObservations[0], null );
+
+    m_operation = operation;
+    m_innerObservations = innerObservations;
+  }
+
+  @Override
+  public void initFilter( final Object conf, final IObservation baseObs, final URL context ) throws SensorException
+  {
+    super.initFilter( null, baseObs, null );
     m_innerObservations = (IObservation[])conf;
   }
 
   @Override
-  public ITuppleModel getValues( IRequest args ) throws SensorException
+  public ITuppleModel getValues( final IRequest args ) throws SensorException
   {
-    ITuppleModel models[] = new ITuppleModel[m_innerObservations.length];
+    final ITuppleModel models[] = new ITuppleModel[m_innerObservations.length];
     for( int i = 0; i < models.length; i++ )
       models[i] = m_innerObservations[i].getValues( args );
     return new NOperationTupplemodel( models, m_operation );
   }
 
   @Override
-  public void setValues( ITuppleModel values )
+  public void setValues( final ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationFilter.6") ); //$NON-NLS-1$
   }
