@@ -90,13 +90,11 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    */
   public IChartLayer[] getLayers( )
   {
-    final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>(m_chartLayers.length);
-    for(final IProfilChartLayer layer : m_chartLayers)
-    {
-      if (layer.getTargetComponent()!= null)
+    final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>( m_chartLayers.length );
+    for( final IProfilChartLayer layer : m_chartLayers )
+      if( layer.getTargetComponent() != null )
         layers.add( layer );
-    }
-    return layers.toArray(new IProfilChartLayer[]{});
+    return layers.toArray( new IProfilChartLayer[] {} );
   }
 
   /**
@@ -119,9 +117,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     m_title = title;
     setCoordinateMapper( cm );
     for( final IChartLayer layer : chartLayers )
-    {
       layer.setCoordinateMapper( cm );
-    }
     m_chartLayers = chartLayers;
 
   }
@@ -254,6 +250,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
    */
+  @Override
   public void removeYourself( )
   {
     for( final IProfilChartLayer layer : m_chartLayers )
@@ -285,7 +282,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( min == null || max == null )
+    if( (min == null) || (max == null) )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -313,7 +310,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( min == null || max == null )
+    if( (min == null) || (max == null) )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -324,7 +321,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public IProfil getProfil( )
   {
-    if( m_chartLayers.length > 0 && m_chartLayers[0] != null )
+    if( (m_chartLayers.length > 0) && (m_chartLayers[0] != null) )
       return m_chartLayers[0].getProfil();
     return null;
   }
@@ -370,24 +367,16 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         source = i;
       }
       if( m_chartLayers[i] == selectedObject )
-      {
         target = i;
-      }
     }
     if( target == source )
       return false;
     else if( target - source > 0 )
-    {
       for( int i = source; i < target; i++ )
         m_chartLayers[i] = m_chartLayers[i + 1];
-
-    }
     else if( target - source < 0 )
-    {
       for( int i = source; i > target; i-- )
         m_chartLayers[i] = m_chartLayers[i - 1];
-
-    }
     m_chartLayers[target] = draggedLayer;
     fireLayerContentChanged();
     return true;

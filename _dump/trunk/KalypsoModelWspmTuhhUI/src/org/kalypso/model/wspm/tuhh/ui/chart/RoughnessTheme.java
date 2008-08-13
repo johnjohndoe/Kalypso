@@ -56,7 +56,7 @@ public class RoughnessTheme extends AbstractProfilTheme
 
   public RoughnessTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(IWspmTuhhConstants.LAYER_RAUHEIT, "Rauheiten", chartLayers, cm );
+    super( IWspmTuhhConstants.LAYER_RAUHEIT, "Rauheiten", chartLayers, cm );
 
   }
 

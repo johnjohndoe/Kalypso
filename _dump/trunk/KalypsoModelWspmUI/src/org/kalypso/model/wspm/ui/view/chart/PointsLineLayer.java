@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.tuhh.ui.chart;
+package org.kalypso.model.wspm.ui.view.chart;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -46,7 +46,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
@@ -60,7 +59,6 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class PointsLineLayer extends AbstractProfilLayer
 {
 
- 
   public PointsLineLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( profil, targetRangeProperty, styleProvider );
@@ -88,6 +86,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       profilPoint.setValue( breite, x );
       profilPoint.setValue( hoehe, y );
       profil.setActivePoint( profilPoint );
+      getEventHandler().fireLayerContentChanged( this );
     }
   }
 
@@ -107,9 +106,7 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final int active = profil.indexOfPoint( profil.getActivePoint() );
     for( int i = 0; i < len; i++ )
-    {
       points[i] = toScreen( profilPoints[i] );
-    }
 
     final PolylineFigure pf = new PolylineFigure();
 
@@ -157,6 +154,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     return new EditInfo( this, null, infoFigure, dragStartData.m_data, getTooltipInfo( toNumeric( newPos ) ), newPos );
 
   }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
    */

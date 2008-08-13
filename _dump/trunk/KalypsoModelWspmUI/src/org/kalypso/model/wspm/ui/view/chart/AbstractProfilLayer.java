@@ -72,16 +72,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 public abstract class AbstractProfilLayer extends AbstractChartLayer implements IProfilChartLayer
 {
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  public void executeDrop( Point point, EditInfo dragStartData )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
   private final IProfil m_profil;
 
   private final String m_targetComponent;
@@ -126,7 +116,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
-    if( min == null || max == null )
+    if( (min == null) || (max == null) )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -139,9 +129,19 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), getTargetComponent() );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getTargetComponent() );
-    if( min == null || max == null )
+    if( (min == null) || (max == null) )
       return null;
     return new DataRange<Number>( min, max );
+  }
+
+  /**
+   * To be implemented by subclasses - if needed
+   * 
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  public void executeDrop( Point point, EditInfo dragStartData )
+  {
   }
 
   /**
@@ -160,7 +160,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    */
   public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
-    if( hint.isActivePropertyChanged() && getProfil() != null )
+    if( hint.isActivePropertyChanged() && (getProfil() != null) )
     {
       final IComponent cmp = getProfil().getActiveProperty();
       if( cmp != null )
@@ -172,7 +172,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public String getTooltipInfo( final Point2D point )
   {
-    if( getTargetComponent() == null || getDomainComponent() == null )
+    if( (getTargetComponent() == null) || (getDomainComponent() == null) )
       return "";
     try
     {
@@ -267,9 +267,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       if( hover == null )
         continue;
       if( hover.contains( pos ) )
-      {
         return new EditInfo( this, null, null, i, getTooltipInfo( getPoint2D( profilPoints[i] ) ), pos );
-      }
     }
     return null;
   }

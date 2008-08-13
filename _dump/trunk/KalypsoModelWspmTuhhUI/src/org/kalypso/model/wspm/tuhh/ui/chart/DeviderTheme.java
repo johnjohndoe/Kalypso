@@ -63,7 +63,7 @@ public class DeviderTheme extends AbstractProfilTheme
 
   public DeviderTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( IWspmTuhhConstants.LAYER_DEVIDER,"Flieﬂzonen", chartLayers, cm );
+    super( IWspmTuhhConstants.LAYER_DEVIDER, "Flieﬂzonen", chartLayers, cm );
 
   }
 
@@ -83,9 +83,7 @@ public class DeviderTheme extends AbstractProfilTheme
     final String[] deviderIds = new String[m_chartLayers.length];
     int i = 0;
     for( final IProfilChartLayer layer : m_chartLayers )
-    {
       deviderIds[i++] = layer.getId();
-    }
 
     LegendEntry le = new LegendEntry( this, getTitle() )
     {
@@ -106,7 +104,7 @@ public class DeviderTheme extends AbstractProfilTheme
   public void onActiveLayerChanged( IChartLayer activeLayer )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
 }

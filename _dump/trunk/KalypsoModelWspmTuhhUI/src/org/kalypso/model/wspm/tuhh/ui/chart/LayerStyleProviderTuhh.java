@@ -71,7 +71,7 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
     ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
     ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
 
-    final ILineStyle stationStyle = (ILineStyle) getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE + "LINE", LineStyle.class );
+    final ILineStyle stationStyle = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE + "LINE", LineStyle.class );
     stationStyle.setDash( 0f, new float[] { 0, 1, 1 } );
   }
 
@@ -84,30 +84,26 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
       return;
     final Collection<IStyle> styles = m_styles.values();
     if( styles != null )
-    {
       for( final IStyle style : styles )
-      {
         if( style != null )
           style.dispose();
-      }
-    }
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
    */
   @SuppressWarnings("unchecked")
-  public IStyle getStyleFor( String id, Class defaultStyle )
+  public <T extends IStyle> T getStyleFor( String id, Class<T> defaultStyle )
   {
     if( m_styles == null )
       createStyles();
     final IStyle style = m_styles.get( id );
-    if( style != null )
-      return style;
+    if( (style != null) )
+      return (T) style;
     final IStyle newStyle = defaultStyle == null ? null : StyleUtils.getDefaultStyle( defaultStyle );
     if( newStyle != null )
       m_styles.put( id, newStyle );
-    return newStyle;
+    return (T) newStyle;
 
   }
 }

@@ -49,6 +49,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
@@ -75,8 +76,9 @@ public class StationLineLayer extends AbstractProfilLayer
   @Override
   public String getTitle( )
   {
-        return "stationlines";
+    return "stationlines";
   }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
@@ -88,13 +90,14 @@ public class StationLineLayer extends AbstractProfilLayer
     if( profil == null )
       return;
     final IRecord[] profilPoints = profil.getPoints();
- 
-    final int baseLine = getCoordinateMapper().getTargetAxis().getScreenHeight();
+
+    IAxis targetAxis = getCoordinateMapper().getTargetAxis();
+    final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
     final PolylineFigure pf = new PolylineFigure();
     pf.setStyle( getLineStyle() );
-    for( int i = 0; i < profilPoints.length; i++ )
+    for( IRecord profilPoint : profilPoints )
     {
-      final Point point = toScreen( profilPoints[i] );
+      final Point point = toScreen( profilPoint );
       pf.setPoints( new Point[] { new Point( point.x, baseLine ), point } );
       pf.paintFigure( gc );
     }

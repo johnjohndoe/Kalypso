@@ -86,9 +86,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.ui.profil.operation.changes.VisibleMarkerEdit;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 

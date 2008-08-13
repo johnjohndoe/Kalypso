@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
-import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
 import org.kalypso.model.wspm.tuhh.ui.panel.WeirPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;

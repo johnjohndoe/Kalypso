@@ -54,7 +54,7 @@ public class GeoCoordinateTheme extends AbstractProfilTheme
 
   public GeoCoordinateTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super(IWspmTuhhConstants.LAYER_GEOKOORDINATEN, "Geokoordinaten", chartLayers, cm );
+    super( IWspmTuhhConstants.LAYER_GEOKOORDINATEN, "Geokoordinaten", chartLayers, cm );
 
   }
 

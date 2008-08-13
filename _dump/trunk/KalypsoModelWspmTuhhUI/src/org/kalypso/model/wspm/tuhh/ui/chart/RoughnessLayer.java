@@ -49,6 +49,9 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner
@@ -89,12 +92,14 @@ public class RoughnessLayer extends AbstractProfilLayer
     final Point[] points = new Point[len];
 
     for( int i = 0; i < len; i++ )
-    {
       points[i] = toScreen( profilPoints[i] );
-    }
     final int baseLine = getTargetAxis().getScreenHeight();
     final FullRectangleFigure fr = new FullRectangleFigure();
-    fr.setStyle( getPointStyle() );
+
+    IPointStyle ps = getPointStyle();
+    AreaStyle as = new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), ps.isVisible() );
+
+    fr.setStyle( as );
     for( int i = 0; i < len - 1; i++ )
     {
       final int x1 = points[i].x;
