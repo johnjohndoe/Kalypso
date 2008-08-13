@@ -289,7 +289,12 @@
 	<!-- ================================= 
           target: gebietsniederschlag              
          ================================= -->
-	<target name="gebietsniederschlag" depends="calculationProperties" description="Umrechnung in Gebietsniederschlag">
+	<target name="gebietsniederschlag" depends="calculationProperties" description="Berechnung Gebietsniederschlag">
+		<kalypso.rainfallGeneration rcmurl="${calc.url}/rainfallCatchment.gml" catchmenturl="${calc.url}/calcCase.gml" catchmentFeaturePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" catchmentObservationPath="Niederschlag_rechnung" catchmentAreaPath="GEOM_EZG" targetFilter="">
+			<generator rcmId="ombrometerGenerator" from="${startforecast}" to="${stopsim}" />
+			<generator rcmId="rasterGenerator" from="${startforecast}" to="${stopsim}" />
+		</kalypso.rainfallGeneration>
+		
 		<!--
 		<antcall target="updateForecastN"/>
 		
@@ -308,6 +313,7 @@
 			-->
 	</target>
 	
+	<!--
     <target name="updateForecastN" depends="calculationProperties">
         <echo message="aktualisiere Gebietsniederschläge (Vorhersage aus DWD-Raster ${dwdRasterLocalURL} )" />
         <kalypso.dwdTask dwd2zmlconfurl="${project.url}/.model/dwd/dwdZmlConf.xml"
@@ -321,5 +327,6 @@
             <metadata name="Szenario" value="${scenarioId}" />
         </kalypso.dwdTask>
     </target>
+    -->
 	
 </project>
