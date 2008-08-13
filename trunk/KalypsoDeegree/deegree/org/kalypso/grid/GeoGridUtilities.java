@@ -400,6 +400,32 @@ public class GeoGridUtilities
     }
   }
 
+  /**
+   * This function creates a writable geo grid.
+   * 
+   * @param mimeType
+   *          The mime type for this grid (e.g. "image/bin").
+   * @param file
+   *          The file for this grid.
+   * @param sizeX
+   *          The amount of cells in x - direction.
+   * @param sizeY
+   *          the amount of cells in y - direction.
+   * @param scale
+   *          The scale of the value. The value is saved as an int (because it uses less space then a double) and the
+   *          scale is needed then, to indicate the fraction digits.
+   * @param origin
+   *          The origin of the grid.
+   * @param offsetX
+   *          The x-offset.
+   * @param offsetY
+   *          The y-offset.
+   * @param sourceCRS
+   *          The coordinate system of the grid.
+   * @param fillGrid
+   *          Should the values be filled with Double.NaN?
+   * @return The writable geo grid.
+   */
   public static IWriteableGeoGrid createWriteableGrid( final String mimeType, final File file, final int sizeX, final int sizeY, final int scale, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean fillGrid ) throws GeoGridException
   {
     // HACK: internal binary grid
@@ -414,13 +440,13 @@ public class GeoGridUtilities
    * to the outputCoverages.
    * 
    * @param coverages
-   *          The new coverage will be added to this collection
+   *          The new coverage will be added to this collection.
    * @param grid
    *          The values of the new coverage will be read from this grid.
    * @param file
    *          The new coverage will be serialized to this file.
    * @param filePath
-   *          the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *          The (maybe relative) url to the file. This path will be put into the gml as address of the underlying
    *          file.
    * @param mimeType
    *          The mime type of the created underlying file.
