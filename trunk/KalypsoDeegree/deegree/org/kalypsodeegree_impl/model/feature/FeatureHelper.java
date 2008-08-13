@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.model.feature;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -428,15 +429,15 @@ public class FeatureHelper
 
     if( typeHandler != null )
       try
-      {
+    {
         return typeHandler.cloneObject( object, gmlVersion );
-      }
-      catch( final Exception e )
-      {
-        final CloneNotSupportedException cnse = new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
-        cnse.initCause( e );
-        throw cnse;
-      }
+    }
+    catch( final Exception e )
+    {
+      final CloneNotSupportedException cnse = new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
+      cnse.initCause( e );
+      throw cnse;
+    }
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
 
@@ -619,7 +620,7 @@ public class FeatureHelper
     final IPropertyType pt = feature.getFeatureType().getProperty( property );
     if( pt != null )
       return feature.getProperty( pt );
-    
+
     if( XMLConstants.NULL_NS_URI.equals( property.getNamespaceURI() ) )
       return feature.getProperty( property.getLocalPart() );
 
@@ -664,13 +665,13 @@ public class FeatureHelper
     final IPropertyType[] srcFTPs = srcFE.getFeatureType().getProperties();
     for( final IPropertyType element : srcFTPs )
       try
-      {
+    {
         FeatureHelper.copySimpleProperty( srcFE, targetFE, element );
-      }
-      catch( final Exception e )
-      {
-        multiException.addException( e );
-      }
+    }
+    catch( final Exception e )
+    {
+      multiException.addException( e );
+    }
     if( !multiException.isEmpty() )
       throw multiException;
   }
@@ -861,17 +862,17 @@ public class FeatureHelper
     if( value instanceof Feature )
       return (Feature) value;
     else /* Its a local link inside a xlinked-feature */
-    if( feature instanceof XLinkedFeature_Impl )
-    {
-      final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
-      final String href = xlinkedFeature.getUri() + "#" + value;
-      return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
-    }
-    else if( value == null )
-      return null;
-    else
-      /* A normal local link inside the same workspace */
-      return feature.getWorkspace().getFeature( (String) value );
+      if( feature instanceof XLinkedFeature_Impl )
+      {
+        final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
+        final String href = xlinkedFeature.getUri() + "#" + value;
+        return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
+      }
+      else if( value == null )
+        return null;
+      else
+        /* A normal local link inside the same workspace */
+        return feature.getWorkspace().getFeature( (String) value );
 
   }
 
@@ -1006,13 +1007,13 @@ public class FeatureHelper
 
     if( typeHandler != null )
       try
-      {
+    {
         return typeHandler.parseType( input[0] );
-      }
-      catch( final ParseException e )
-      {
-        e.printStackTrace();
-      }
+    }
+    catch( final ParseException e )
+    {
+      e.printStackTrace();
+    }
 
     return null;
   }
@@ -1401,6 +1402,47 @@ public class FeatureHelper
       }
     }
     return fl;
+  }
+
+  /**
+   * Converts a feature list into an array, and resolves all links while dooing this.<br>
+   * The size of the resulting array may be smaller than the given list, if contained links cannot be resolved.
+   */
+  public static Feature[] toArray( final FeatureList featureList )
+  {
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+
+    final List<Feature> features = new ArrayList<Feature>( featureList.size() );
+    for( final Object object : featureList )
+    {
+      final Feature feature = FeatureHelper.getFeature( workspace, object );
+      if( feature != null )
+        features.add( feature );
+    }
+
+    return features.toArray( new Feature[features.size()] );
+  }
+
+  /**
+   * Reads a property for every feature of an array of features and puts them into a new array.
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T[] getProperties( final Feature[] features, final String path, final T[] a )
+  {
+    final FeaturePath featurePath = new FeaturePath( path );
+
+    final T[] properties = a == null ? (T[]) Array.newInstance( a.getClass().getComponentType(), features.length ) : a;
+
+    for( int i = 0; i < features.length; i++ )
+    {
+      final Feature feature = features[i];
+      if( feature == null )
+        continue;
+
+      properties[i] = (T) featurePath.getFeatureForSegment( feature.getWorkspace(), feature, 0 );
+    }
+
+    return properties;
   }
 
 }

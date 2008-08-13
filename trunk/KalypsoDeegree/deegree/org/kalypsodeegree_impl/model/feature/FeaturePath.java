@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -142,8 +142,8 @@ public class FeaturePath
       final Feature subFeature = (Feature) ((FeatureList) value).get( 0 );
       return getFeatureForSegment( workspace, subFeature, segmentIndex + 1 );
     }
-    // alles andere ist ein Fehler
-    return null;
+
+    return value;
   }
 
   /** Voraussetzung, mindestens das Root-Feature muss existieren */
@@ -272,10 +272,8 @@ public class FeaturePath
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
           final IGMLSchema contexstSchema = workspace.getGMLSchema();
           final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contexstSchema, false, true );
-          for( int i = 0; i < associationFeatureTypes.length; i++ )
+          for( final IFeatureType type : associationFeatureTypes )
           {
-            final IFeatureType type = associationFeatureTypes[i];
-
             final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( type, workspace.getGMLSchema(), true, true );
             for( final IFeatureType substType : substituts )
             {
