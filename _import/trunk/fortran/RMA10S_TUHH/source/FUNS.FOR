@@ -1,3 +1,4 @@
+C     Last change:  MD   12 Aug 2008    7:00 pm
 
       FUNCTION DRODS(SAL,I)
       !function type declaration
@@ -11,7 +12,7 @@ C
       DIMENSION GF(2)
       DATA GF/1.0,516./
 C-
-      DRODS=61932.8/(6511.7-1.906*SAL)**2*GF(I)
+      DRODS=61932.8/(6511.7 - 1.906*SAL)**2*GF(I)
       RETURN
       END
 
@@ -51,7 +52,7 @@ C
       DATA GF/1.0,516./
 C-
 C**************** TEMPERATURE FUNCTION
-      FDN=(1.939938+TEM*(5.588599E-5-1.108539E-5*TEM))*GF(I)
+      FDN=(1.939938+TEM*(5.588599E-5 - 1.108539E-5*TEM))*GF(I)
 C****************
       RETURN
       END
@@ -71,7 +72,7 @@ C
       DIMENSION GF(2)
       DATA GF/1.0,516./
 C-
-      DRODTM=(5.588599E-5-2.217078E-5*TEM)*GF(I)
+      DRODTM=(5.588599E-5 - 2.217078E-5*TEM)*GF(I)
       RETURN
       END
 
@@ -91,7 +92,7 @@ C
       DATA GF/1.0,516./
 C-
 C**************** SALINITY FUNCTION
-      FDEN=1.940*((4.906*SAL-11.7)/(6511.7-1.906*SAL)+1.0)*GF(I)
+      FDEN=1.940*((4.906*SAL-11.7)/(6511.7 - 1.906*SAL)+1.0)*GF(I)
 C****************
       RETURN
       END
@@ -111,5 +112,7 @@ C
       DATA GF/1.0,516./
 C-
       DRODSD=1.940E-3*GF(I)
+      !MD muss hier nicht ????? :
+      !MD DRODSD=(1.940*(1.0+SED*1.0E-3)*GF(I)) *1.0E-3
       RETURN
       END
