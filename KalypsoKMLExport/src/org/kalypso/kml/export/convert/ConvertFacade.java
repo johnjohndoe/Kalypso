@@ -43,37 +43,40 @@ public class ConvertFacade
         placemark.setGeometry( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo ) ) );
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+
         featureTypes.add( placemark );
       }
       else if( GEOMETRY_TYPE.eCurve.equals( gt ) )
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
-
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
-
         placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
+
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+
         featureTypes.add( placemark );
       }
       else if( GEOMETRY_TYPE.eMultiSurface.equals( gt ) )
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
-
         placemark.setGeometry( factory.createMultiGeometry( ConverterMultiSurface.convert( factory, (GM_MultiSurface) gmo ) ) );
+
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+
         featureTypes.add( placemark );
       }
       else if( GEOMETRY_TYPE.eSurface.equals( gt ) )
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
-
         placemark.setGeometry( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo ) ) );
+
         if( style != null )
           placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+
         featureTypes.add( placemark );
       }
       else if( GEOMETRY_TYPE.ePoint.equals( gt ) )

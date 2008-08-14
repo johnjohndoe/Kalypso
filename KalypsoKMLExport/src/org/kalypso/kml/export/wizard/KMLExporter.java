@@ -202,8 +202,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
     if( theme instanceof AbstractCascadingLayerTheme )
     {
       final FolderType folderType = factory.createFolderType();
-
-      folderType.setName( theme.getLabel() );
+      folderType.setName( theme.getName().getValue() );
 
       final AbstractCascadingLayerTheme cascading = (AbstractCascadingLayerTheme) theme;
       final GisTemplateMapModell inner = cascading.getInnerMapModel();
@@ -221,7 +220,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
       try
       {
         final FolderType folderType = factory.createFolderType();
-        folderType.setName( theme.getLabel() );
+        folderType.setName( theme.getName().getValue() );
         final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
         final KMLExportDelegate delegate = new KMLExportDelegate( m_provider, m_mapPanel, factory, folderType );
         ft.paintInternal( delegate );
