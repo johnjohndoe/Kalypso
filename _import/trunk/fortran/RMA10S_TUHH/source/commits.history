@@ -288,3 +288,38 @@ Version 1.1.0 (laufende Änderungen)
 025.) Adding comments and the call of GET_FFACT in Sediment.for: SANDX
       >> SubR SANDX, SubR RMA10SUB, VANRIJN   
 --- Monika Donner, 29.07.2008
+
+
+026.) Correction for all tree Bed-Load-Transports without waves: Reactivate and
+      correct the option for mineral size fraction (Parameter diam) 
+      (DE: Korrektur und Reaktivierung des Ansatzes mehrerer Kornfraktionen
+           fuer alle Geschiebetransportansätze OHNE Wellen!)   
+      >> SubR VANRIJN, AWHITE, BROWNLIE      
+027.) Avoiding the call of BEDLBED from RMA10SUB, because the incoming and outcoming
+      values (GAN and GAN0) are ZERO. Now the right and complete SubR BEDSUR is used
+      in the case if LBED > 0 and LSAND = 0 (Call from RMA10SUB).
+      >> SubR RMA10SUB 
+      --> SubR BEDLBED is NEVER USED now!!!     
+028.) In all COEFXX Routines the Parameters GAN and GAN0 are used to allocate the
+      Bed-Load-Transport. Till today these values (GAN and GAN0) were ZERO. Now the 
+      corresponding values are selected: GAN0 = CBS und GAN = EDOT (beides sind 
+      Erosionsraten in [kg/m³/s])  
+      Now in SubR BEDSUR the Parameters GAN and GAN0 are allocated.
+      >> SubR BEDSUR       
+029.) Correction of wrong formulares in Subr AWHITE: for clog was (drglog**2)missing.
+      And formulares mixed the appendage from Acker-White 1973 and 1990. Now only 
+      the formulares of Acker-White 1990 are implimented.
+      >> SubR AWHITE       
+030.) Correction of numerical critical transitions between formulares in sections.
+      Therefore the Shields-Parameter, Acker-White- and van Rijn formulares were 
+      corrected in there typical boundary-Values. In order to get the new steady
+      transitions the boundary-Values are calculated based on the given Functions.
+      (DE: Glättung der Uebergänge zwischen abschnittsweisen Funktionen, so dass keine
+       Rücksprünge auftreten. Die neuen Grenzwerte decken sich somit nicht mehr mit
+       den klassischen Angaben der Literatur, aber stabilisieren das numerische 
+       Verfahren!) 
+      >> SubR AWHITE, VANRIJN      
+031.) Correction while reading Suspendend Data in SPROP and BED 
+      "ENDSED" was not read --> Programm is stopped 
+      >> SubR SPROP, BED                     
+--- Monika Donner, 14.08.2008
