@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008    3:10 pm
+C     Last change:  MD   11 Aug 2008    6:23 pm
 CIPK LAST UPDATE June 06 2006 add mass output and refine compuatation of mass laid down
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  last update MAY 02 2003 turn off bed activity for selected element types
@@ -28,79 +28,91 @@ CIPK AUG05      INCLUDE 'BLK11.COM'
 CIPK AUG05      INCLUDE 'BLKSAND.COM'
 CIPK AUG05      INCLUDE 'BLKSED.COM'
 CIPK AUG05	INCLUDE 'BLKDR.COM'
-	REAL*8 DYBED
+      REAL*8 DYBED
 !NiS,jul06: Consistent data types for passing parameters
       REAL(KIND=8) :: HTP
 !-
 C
 C      WRITE (LOUT,1040)
-C 1040 FORMAT(' ****SUBROUTINE BEDSUR...')
+C      1040 FORMAT(' ****SUBROUTINE BEDSUR...')
       IF(MOD(IT,NPRTF) .EQ. 0) THEN
-       ! WRITE(LOUT,6000)
+        ! WRITE(LOUT,6000)
         WRITE(LOUT,6004) TITLE
-       ! WRITE(LOUT,6003) DAYOFY,TET
- 6000 FORMAT( '1'  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...PROGRA
-     +M RMA-10S'/ 10X, 'SAND TRANSPORT '
-     +      /,10X,'VERSION 3.5D MAY 2006 '///)
-C 6003 FORMAT( / 5X,'...RESULTS AFTER',F9.2,' HOURS OF DYNAMIC SIMULATION
-C     1...' /)
- 6003 FORMAT( / 5X,'...RESULTS AT DAY',F7.0,'  HOUR', F9.2,'...')
- 6004 FORMAT(5X,A80)
+        ! WRITE(LOUT,6003) DAYOFY,TET
+ 6000   FORMAT( '1'  / 10X, 'FINITE ELEMENT METHOD FOR FLUID FLOW...
+     +        PROGRAM_RMA-10S'/ 10X, 'SAND TRANSPORT '
+     +        /,10X,'VERSION 3.5D MAY 2006 '///)
+C 6003  FORMAT( / 5X,'...RESULTS AFTER',F9.2,' HOURS OF DYNAMIC SIMULATION
+C       1...' /)
+ 6003   FORMAT( / 5X,'...RESULTS AT DAY',F7.0,'  HOUR', F9.2,'...')
+ 6004   FORMAT(5X,A80)
         WRITE(LOUT,1060)
  1060   FORMAT('    N    E/D(OLD)    ',
      * 'E/D(NEW)      DELBED     ELEVB       THICK      USTAR')
       ENDIF
-c 1080 CTETA = 1.0 - ALPHA
+
 cipk mar95 1080 CTETA = 1.0 - ALPHA
  1080 CTETA = (alpha-1.0)/alpha
       CONP=1.-POSA
 CIPK MAR06 MOVED      RHOBS=1000.*CONP*SGSA
-*
       BEDMSG = 0
 *
 CIPK MAY03 turn off bed activity for selected element types
       DO NN=1,NE
-	  NCN=NCORN(NN)
+        NCN=NCORN(NN)
         DO M=1,NCN
           MR=NOP(NN,M)
-	  
           do ned=1,9
 cipk may03  reduce nodal rates to zero when IEDROP active
 
             IF(IMAT(NN) .EQ. iedrop(ned)) THEN
-  	        alpha1(mr)=0.
-	        alpha2(mr)=0.
-	      ENDIF
-	    enddo
+  	      alpha1(mr)=0.
+	      alpha2(mr)=0.
+	    ENDIF
 	  enddo
+	enddo
       ENDDO
 
 
       DO 3000 NN=1,NPM
 CIPK MAY03 test for low depth
-	 if(WSLL(NN) -ao(NN) .lt. zstdep) then
-	   alpha1(NN)=0.
-	   alpha2(NN)=0
-       ENDIF
+        if(WSLL(NN) -ao(NN) .lt. zstdep) then
+	  alpha1(NN)=0.
+	  alpha2(NN)=0
+        ENDIF
 
-	 IF(NN .EQ. 12386) THEN
-	    A65=0
-	 ENDIF
-	 if(ibna(nn) .gt. 0) then
-        N=NN
-        IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
-C        DYBED=DYBE(N)
+        !MD Unsinn/ Controllabfrage raus
+        !MD IF(NN .EQ. 12386) THEN
+        !MD   A65=0
+        !MD ENDIF
+
+        if(ibna(nn) .gt. 0) then
+          N=NN
+          IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+C         DYBED=DYBE(N)
 cipk jan98 test for missing node number
-        if(VEL(3,N) .eq. 0.) go to 3000
+          if(VEL(3,N) .eq. 0.) go to 3000
 
 cipk apr99
-        if(wsll(n) .lt. ao(n)) then
-          edot(n)=0.
-          go to 3000
-        endif
+          if(wsll(n) .lt. ao(n)) then
+            edot(n)=0.
+            GAN(N)=edot(n)
+            go to 3000
+          endif
         
-        CBS=(ALPHA2(N)+ALPHA1(N)*VEL(6,N))/(VEL(3,N)*1000.)
-        D=VEL(3,N)
+          CBS=(ALPHA2(N)+ALPHA1(N)*VEL(6,N))/(VEL(3,N)*1000.)
+          D=VEL(3,N)
+
+!MD 11.08.2008
+          !MD Neu fuer Koeffizienten-Matrix ist GAN und GAN0 zu belegen
+          !MD Vergleiche SubR BEDLBED: CBS = GAN0 und GAN = EDOT
+          GAN0(N)=CBS
+
+      !MD    IF (N.lt.2) THEN
+      !MD      !testoutput into output.out
+      !MD      WRITE (LOUT,*) 'GAN0(N), VEL(6,n), ALPHA1(N), ALPHA2(n)'
+      !MD      WRITE (LOUT,*)  GAN0(N), VEL(6,N), ALPHA1(N), ALPHA2(N)
+      !MD    END IF
 C
 C***********************************************************************
 C
@@ -108,69 +120,88 @@ C     SAND BED COMPUTATIONS
 C
 C***********************************************************************
 C
-        RTO=1.0
-c        VBS=(CBS*ALPHA+EDOT(N)*CTETA)*DELT
-cipk mar95       VBS=(CBS*ALPHA+EDOT(N)*CTETA)*DELT
-        VBS=(CBS/ALPHA+EDOT(N)*CTETA)*DELT
+          RTO=1.0
+
+cipk mar95 VBS=(CBS*ALPHA+EDOT(N)*CTETA)*DELT
+          VBS=(CBS/ALPHA+EDOT(N)*CTETA)*DELT
 CIPK MAR06
-        RHOBS=1000.*CONP*SGSAND(N)
-        
-        srate(n)=(CBS/ALPHA+EDOT(N)*CTETA)*D/RHOBS
+          RHOBS=1000.*CONP*SGSAND(N)
+          srate(n)=(CBS/ALPHA+EDOT(N)*CTETA)*D/RHOBS
 C        NOTE.  THE SOURCE TERM, ALPHA2+ALPHA1*CONC, IS POSITIVE FOR
-C               EROSION SINCE SEDIMENT IS BEING ADDED TO THE FLOW FIELD.
-C               A SIGN CHANGE IS REQUIRED WHEN PASSING TO THE BED
-C               CONTROL VOLUME SO EROSION BECOMES (-).
-        IF(VBS.LT.0.) RTO=0.
-        DYBED=-D*VBS/(RHOBS-RTO*VBS)
-        DNEW=D-DYBED
-        IF(DNEW.GT.0.)GOTO 2192
-        DNEW=0.1*D
-        WRITE(LOUT,2193)N,DYBED
+C              EROSION SINCE SEDIMENT IS BEING ADDED TO THE FLOW FIELD.
+C              A SIGN CHANGE IS REQUIRED WHEN PASSING TO THE BED
+C              CONTROL VOLUME SO EROSION BECOMES (-).
+          IF(VBS.LT.0.) RTO=0.
+          DYBED=-D*VBS/(RHOBS-RTO*VBS)
+          DNEW=D-DYBED
+          IF(DNEW.GT.0.) GOTO 2192
+          DNEW=0.1*D
+
+          WRITE(LOUT,2193)N,DYBED
  2193   FORMAT(1X,'***WARNING. AT NODE NO. ',I5,' DEPOSITION OF ',G10.4,
      *  ' IS GREATER THAN DEPTH.  TO PREVENT, REDUCE TIME',/1X,
      * 'STEP OR DECREASE DEPOSITION RATE BY REDUCING SETTLING VELOCITY')
- 2192   CONTINUE
+ 2192     CONTINUE
 C
-C       IF(IVEL .LE. 0) THEN
-C       VELR=D/DNEW
-C       XVEL(N,1)=VELR*XVEL(N,1)
-C       XVEL(N,2)=VELR*XVEL(N,2)
-C       ENDIF
-C
-C       WD(N)=DNEW
- 2191   CONTINUE
+C         IF(IVEL .LE. 0) THEN
+C           VELR=D/DNEW
+C           XVEL(N,1)=VELR*XVEL(N,1)
+C           XVEL(N,2)=VELR*XVEL(N,2)
+C         ENDIF
+C         WD(N)=DNEW
+
+ 2191     CONTINUE
 !
 !  DJW dec 2004 - Enables use of factor entered on 'SMO' line
 !
-        DELBED(N)=DELBED(N)+DYBED*FACTMORPH
-        ELEVB(N)=ELEVB(N)+DYBED*FACTMORPH
-        TTHICK(N)=TTHICK(N)+DYBED*FACTMORPH
+          DELBED(N)=DELBED(N)+DYBED*FACTMORPH
+          ELEVB(N)=ELEVB(N)+DYBED*FACTMORPH
+          TTHICK(N)=TTHICK(N)+DYBED*FACTMORPH
 
-!        DELBED(N)=DELBED(N)+DYBED
-!        ELEVB(N)=ELEVB(N)+DYBED
-C        IF(MTC.NE.0)TTHICK(N)=TTHICK(N)+DYBED
-!        TTHICK(N)=TTHICK(N)+DYBED
+!         DELBED(N)=DELBED(N)+DYBED
+!         ELEVB(N)=ELEVB(N)+DYBED
+C         IF(MTC.NE.0)TTHICK(N)=TTHICK(N)+DYBED
+!         TTHICK(N)=TTHICK(N)+DYBED
 !
 !  End DJW dec 2004
 !
 C
 CIPK APR 2000  COPY TO TOP LAYER
 C
-        IF(N .NE. NN) THEN
-          DELBED(NN)=DELBED(N)
-          SRATE(NN)=SRATE(N)
-        ENDIF
+          IF(N .NE. NN) THEN
+            DELBED(NN)=DELBED(N)
+            SRATE(NN)=SRATE(N)
+          ENDIF
 
-        IF(MOD(IT,NPRTF) .EQ. 0) THEN
-          WRITE(LOUT,1130) N,EDOT(N),CBS,DELBED(N),ELEVB(N),
-     +      TTHICK(N),UST(N)
-        ENDIF
- 1120   CONTINUE
-        EDOT(N)=(ALPHA2(N)+ALPHA1(N)*VEL(6,N))/(VEL(3,N)*1000.)
- 1130   FORMAT(I5,6(1X,G11.5))
-       else
+          IF(MOD(IT,NPRTF) .EQ. 0) THEN
+            WRITE(LOUT,1130) N,EDOT(N),CBS,DELBED(N),ELEVB(N),
+     +        TTHICK(N),UST(N)
+          ENDIF
+
+ 1120     CONTINUE
+          EDOT(N)=(ALPHA2(N)+ALPHA1(N)*VEL(6,N))/(VEL(3,N)*1000.)
+          !MD 11.08.2008
+          !MD Neu fuer Koeffizienten-Matrix ist GAN und GAN0 zu belegen
+          !MD Vergleiche SubR BEDLBED: CBS = GAN0 und GAN = EDOT
+          GAN(N)=EDOT(N)
+
+          IF (N.eq.5) THEN
+            !testoutput into output.out
+            WRITE (75,*) 'Erosionsrate N=5 GAN =', GAN(N)
+          ELSeIF (N.eq.50) THEN
+            !testoutput into output.out
+            WRITE (75,*) 'Erosionsrate N=50 GAN =', GAN(N)
+          END IF
+
+ 1130     FORMAT(I5,6(1X,G11.5))
+        else
 	  edot(nn)=0.
-	 endif
+          !MD 11.08.2008
+          !MD Neu fuer Koeffizienten-Matrix ist GAN und GAN0 zu belegen
+          !MD Vergleiche SubR BEDLBED: CBS = GAN0 und GAN = EDOT
+          GAN(NN)=edot(nn)         
+	endif
+
  3000 CONTINUE
 
 
@@ -210,7 +241,6 @@ CIPK MAY02 UPDATE BED ELEVATION
 !	If (Updatebed /= 0.0) Then
       
       DO N=1,NP
-
         DEP=VEL(3,N)
         DIFF=ELEVB(N)-AO(N)
         AO(N)=ELEVB(N)
@@ -219,22 +249,22 @@ CIPK MAY02 UPDATE BED ELEVATION
         !TODO: Differ between Marsh and not-Marsh as well as dimensions; it shouldn't be applied for 1D Polynomial
         CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
         VEL(3,N)=HTP
-	  RATIO=vel(3,n)/(vel(3,n)+diff)
-	  VEL(1,N)=VEL(1,N)/RATIO
-	  VEL(2,N)=VEL(2,N)/RATIO
-	  VDOT(1,N)=VDOT(1,N)/RATIO
-	  VDOT(2,N)=VDOT(2,N)/RATIO
+	RATIO=vel(3,n)/(vel(3,n)+diff)
+	VEL(1,N)=VEL(1,N)/RATIO
+	VEL(2,N)=VEL(2,N)/RATIO
+        VDOT(1,N)=VDOT(1,N)/RATIO
+	VDOT(2,N)=VDOT(2,N)/RATIO
 cipk jun06 test	  VEL(6,N)=VEL(6,N)/RATIO
 cipk jun06 test	  VDOT(6,N)=VDOT(6,N)/RATIO
 cipk jun06 get total masses by node for susp sed and bed 	   
         RHOBS=1000.*CONP*SGSAND(N)
-	   TMSAND(N)=tthick(n)*rhobs
+	TMSAND(N)=tthick(n)*rhobs
      +   +(alpha2(n))*delt/1000.*(ALPHA-1.)/ALPHA
-	   TMSSAND(N)=DEP*VEL(6,N)/1000.
-	  VEL(6,N)=VEL(6,N)/RATIO
-	  VDOT(6,N)=VDOT(6,N)/RATIO
+	TMSSAND(N)=DEP*VEL(6,N)/1000.
+	VEL(6,N)=VEL(6,N)/RATIO
+	VDOT(6,N)=VDOT(6,N)/RATIO
 
-     	ENDDO
+      ENDDO
       
  !     Else
 
