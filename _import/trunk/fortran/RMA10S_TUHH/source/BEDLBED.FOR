@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008    2:51 pm
+C     Last change:  MD   11 Aug 2008    2:58 pm
 CIPK  LAST UPDATE MAR 5 2006 RESET TO ALLOW NODAL VALUES OF PROPS
 CIPK  NEW ROUTINE BASED ON BEDSUR MAY 30 2002
        SUBROUTINE BEDLBED
@@ -119,7 +119,6 @@ C
 
 
 c     set distribution linear
-
       ncn=0
       do n=1,ne
         if(imat(n) .gt. 0  ) then
@@ -147,10 +146,11 @@ CIPK MAY02 UPDATE BED ELEVATION
 	  DEP=VEL(3,N)
 	  DIFF=ELEVB(N)-AO(N)
 	  AO(N)=ELEVB(N)
-        ADO(N)=ADO(N)+DIFF
-        HEL(N)=WSLL(N)-ADO(N)
-        CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
-        VEL(3,N)=HTP
+          ADO(N)=ADO(N)+DIFF
+          HEL(N)=WSLL(N)-ADO(N)
+          CALL AMF(HEL(N),HTP,AKP(N),ADT(N),ADB(N),D1,D2,1)
+
+          VEL(3,N)=HTP
 	  RATIO=VEL(3,N)/DEP
 	  VEL(1,N)=VEL(1,N)/RATIO
 	  VEL(2,N)=VEL(2,N)/RATIO
