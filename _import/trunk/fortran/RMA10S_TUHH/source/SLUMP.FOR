@@ -1,4 +1,4 @@
-C     Last change:  NIS  14 May 2008    6:48 pm
+C     Last change:  MD    5 Aug 2008    5:03 pm
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE DEC 22 2005 MAKE SURE RHOBS IS DEFINED
       SUBROUTINE SLUMPIT
@@ -77,25 +77,25 @@ C     Now loop through nodes to get elements to then compute changes
 C     Take out excess material and allocate to nodes below as source
 
       DO N=1,NP
-	  EXTLD(N)=0.
-	ENDDO
+	EXTLD(N)=0.
+      ENDDO
       DO N=1,NP
-	  IF(NSRC(N) .GT. 0.) THEN
+	IF(NSRC(N) .GT. 0.) THEN
 	  
 CIPK MAR06
           RHOBS=1000.*CONP*SGSAND(N)
 	  
           EXTLD(NSRC(N))=EXTLD(NSRC(N))+DELTAB(N)*TRIBAREA(N)*RHOBS
-     +    /(DELT*3600.*TRIBAREA(NSRC(N)))*1000.
-	    ELEVB(N)=ELEVB(N)-DELTAB(N)
+     +      /(DELT*3600.*TRIBAREA(NSRC(N)))*1000.
+	  ELEVB(N)=ELEVB(N)-DELTAB(N)
 
           write(145,'(2i8,6g15.5)') icyc,n,elevb(n),deltab(n)
-     +    ,extld(nsrc(n)),rhobs,tribarea(n),tribarea(nsrc(n))
-	    
-	    TTHICK(N)=TTHICK(N)-DELTAB(N)
-	    DELBED(N)=DELBED(N)-DELTAB(N)
-	  ENDIF
-	ENDDO
+     +      ,extld(nsrc(n)),rhobs,tribarea(n),tribarea(nsrc(n))
+            
+	  TTHICK(N)=TTHICK(N)-DELTAB(N)
+	  DELBED(N)=DELBED(N)-DELTAB(N)
+	ENDIF
+      ENDDO
 C	DO N=1,NP
 C	WRITE(75,*) N,EXTLD(N),ELEVB(N),TTHICK(N),DELBED(N)
 C	ENDDO
