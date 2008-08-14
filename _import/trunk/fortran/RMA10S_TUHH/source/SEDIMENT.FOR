@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008    4:30 pm
+C     Last change:  MD   12 Aug 2008   11:37 am
 CIPK LAST UPDATE MAR 07 2006 fix gpmax setup
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE AUG 09 2005 ADD bshear
@@ -9,6 +9,9 @@ C
       USE BLK10MOD
       USE BLKDRMOD
       USE BLKSANMOD
+
+      !MD neu USe BLKSEDMOD
+      USE BLKSEDMOD
 C
 C  evaluate sedimentation or erosion at the bed based upon the
 C  difference between the actual and equilibrium (carrying)
@@ -62,7 +65,7 @@ C
 C     NOW PROCESS BOTTOM OR FOR 2DH
 C
       DO 1130 NN=1,NPM
-	IF(IBNA(NN) .GT. 0  .and.  WSLL(NN) .GT. AO(NN)) THEN
+	IF(IBNA(NN).GT.0  .and.  WSLL(NN).GT.AO(NN)) THEN
           gpbsav(nn)=gpb(nn,1)   ! Save Geschiebetransport VEL(7,N)
           N=NN
 
@@ -117,10 +120,18 @@ CIPK MAR06
 	        endif
 	        EYSRAT=BETA*CAI(N)*VSN
 
-                if(n .eq. 3598) then   !MD: Unsinn!!
-	          WRITE(110,'(I6,5G15.5)')
-     +            N,DEP,vel(6,n),gpb(n,i),alpha1(n),eysrat
-                endif
+                !MD!MD: Anfang der Testausgabe
+                IF (n==1) then
+                 Write(LOUT,*) 'Ausgabe aus BEDXCG'
+                 write(LOUT,*) '    N,   DEP,            vel(6,n),
+     +      gpb(n),       alpha1(n),
+     +      alpha2(n),     XNU(n),      UST(N),        BSHEAR(N)'
+                Endif
+
+	        WRITE(LOUT,'(I6,8G15.5)')
+     +            N,DEP,vel(6,n),gpb(n,i),alpha1(n),alpha2(n),XNU(n),
+     +            UST(N), BSHEAR(N)
+                !MD!MD: Ende der Testausgabe
 
 C
 C        NOTE.  SCOUR IS OCURRING.  CHANGE THE SIGN TO COMPUTE TSACB.
@@ -285,11 +296,6 @@ CIPK MAR06 MOVED      PPMMAX=SGSA*CONP/(POSA+CONP*SGSA)
 C
       DO NN=1,NPM     ! Ueber alle Knoten
 CIPK DEC02	 if(ibna(nn) .gt. 0  .and.  WSLL(NN) .GT. AO(NN)) then
-
-       if(n .eq. 5130) then
-         aaaa=0.
-       endif
-
       ! IF (NN.eq.6) THEN
       !   WRITE(*,*) 'Kennung Rauheitsklasse je Knoten: IBNA', ibna(nn)
       !   WRITE(*,*) 'WSLL(NN): ', WSLL(NN)
@@ -301,79 +307,81 @@ CIPK DEC02	 if(ibna(nn) .gt. 0  .and.  WSLL(NN) .GT. AO(NN)) then
       ! END IF
 
 
-       if(ibna(nn) .gt. 0  .and.  (WSLL(NN) .GT. AO(NN) .OR.
-     +     VEL(3,NN) .LE. DSET)) THEN
-         N=NN
-         IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
+!MD    Falsche Abfrage: Knoten sollen Nass sein!!
+!MD       if(ibna(nn) .gt. 0  .and.  (WSLL(NN) .GT. AO(NN) .OR.
+!MD   +     VEL(3,NN) .LE. DSET)) THEN
+        if(ibna(nn).gt.0  .and.  WSLL(NN).GT.AO(NN)) THEN
+          N=NN
+          IF(NDEP(NN) .GT. 1) N=NREF(NN)+NDEP(NN)-1
 
 CIPK MAR06
-         PPMMAX=SGSAND(N)*CONP/(POSA+CONP*SGSAND(N))
+          PPMMAX=SGSAND(N)*CONP/(POSA+CONP*SGSAND(N))
 
-cipk dec02        IF(VEL(3,N) .LE. DSET)GOTO 1130
-C        D35=EFDT(N)
+cipk dec02 IF(VEL(3,N) .LE. DSET)GOTO 1130
+C          D35=EFDT(N)
 CIPK MAR06
-         D35=SDND(1,NN)
-         IRR=N
-         EFD=VEL(3,NN)
-         EXNU=XNU(NN)
-         USTAR=UST(N)
+          D35=SDND(1,NN)
+          IRR=N
+          EFD=VEL(3,NN)
+          EXNU=XNU(NN)
+          USTAR=UST(N)
 
 cipk dec02  experiment with smoothing around nodes
 
-c        if(n .eq. 3974  .or.  n .eq. 3981  .or.  n .eq. 3980) then
-c	   idebg=1
-c	 endif
-         divide=0.
-	 vxl=0.
-	 vyl=0.
-	 do j=1,np
-	   idone(j)=0
-	 enddo
-         do k=1,12
-	   neadj=elton(n,k)
-	   if(neadj .ne. 0) then
-	     do j=1,ncorn(neadj)
-	       nadj=nop(neadj,j)
-	       if(idone(nadj) .eq. 0) then
-	         vxl=vxl+vel(1,nadj)
-	         vyl=vyl+vel(2,nadj)
-	         idone(nadj)=1
-	         divide=divide+1.
-  	       endif
-	     enddo
-           endif
-	 enddo
-	 IF(DIVIDE .GT. 0.) THEN
-           VXL=VXL/DIVIDE
-	   VYL=VYL/DIVIDE
-	 ENDIF
-         VELN=SQRT(VEL(1,N)**2+VEL(2,N)**2)
-         VELS=SQRT(VXL**2+VYL**2)
-c        if(n .eq. 3974  .or.  n .eq. 3981  .or.  n .eq. 3980) then
-c	   write(166,*) n,veln,vels
-c	 endif
+c       if(n .eq. 3974  .or.  n .eq. 3981  .or.  n .eq. 3980) then
+c	  idebg=1
+c	endif
+          divide=0.
+	  vxl=0.
+	  vyl=0.
+	  do j=1,np
+	    idone(j)=0
+    	  enddo
+          do k=1,12
+  	    neadj=elton(n,k)
+  	    if(neadj .ne. 0) then
+  	      do j=1,ncorn(neadj)
+	        nadj=nop(neadj,j)
+	        if(idone(nadj) .eq. 0) then
+	          vxl=vxl+vel(1,nadj)
+	          vyl=vyl+vel(2,nadj)
+	          idone(nadj)=1
+	          divide=divide+1.
+  	        endif
+	      enddo
+            endif
+          enddo
+	  IF(DIVIDE .GT. 0.) THEN
+            VXL=VXL/DIVIDE
+	    VYL=VYL/DIVIDE
+	  ENDIF
+          VELN=SQRT(VEL(1,N)**2+VEL(2,N)**2)
+          VELS=SQRT(VXL**2+VYL**2)
+c         if(n .eq. 3974  .or.  n .eq. 3981  .or.  n .eq. 3980) then
+c	    write(166,*) n,veln,vels
+c	  endif
 
 CIPK JUN00 ADD COMPUTATION OF CURRENT DIRECTION FOR NEW OPTION
 
-         IF(VELS .GT. 0.) THEN
-C          CDIR=ATAN2(VEL(2,N),VEL(1,N))
-           CDIR=ATAN2(VYL,VXL)
-         ELSE
-           CDIR=0.
-         ENDIF
+          IF(VELS .GT. 0.) THEN
+C           CDIR=ATAN2(VEL(2,N),VEL(1,N))
+            CDIR=ATAN2(VYL,VXL)
+          ELSE
+            CDIR=0.
+          ENDIF
 
-         HSV= WAVEHT(N)
-         TP=  PEAKPRD(N)
-         WVDIR=WAVEDR(N)
-	 IF(HSV .GT. 0.7*EFD) HSV=0.7*EFD
+          HSV= WAVEHT(N)
+          TP=  PEAKPRD(N)
+          WVDIR=WAVEDR(N)
+	  IF(HSV .GT. 0.7*EFD) HSV=0.7*EFD
 
-         ISUBTR=1
+          ISUBTR=1
 C
-C        WRITE(LOUT,1100)N,D35,VELS,EFD,USTAR,AVRRO,OUTNU,AVCON
-C 1100   FORMAT(//,' PARAMETERS FOR SAND TRANSPORT POTENTIAL',/,
-C     * 5X,' NN    D35     VELOCITY     DEPTH          U*     RHO    ',
-C     * '     NU(10**5)      CONC.',/,
-C     * 5X,I3,F8.6,5F12.4,F12.6)
+C          WRITE(LOUT,1100)N,D35,VELS,EFD,USTAR,AVRRO,OUTNU,AVCON
+C 1100     FORMAT(//,' PARAMETERS FOR SAND TRANSPORT POTENTIAL',/,
+C       * 5X,' NN    D35     VELOCITY     DEPTH          U*     RHO    ',
+C       * '     NU(10**5)      CONC.',/,
+C       * 5X,I3,F8.6,5F12.4,F12.6)
 C
 C  use the method of choice for sediment transport
 C
@@ -381,31 +389,31 @@ CIPK MAR06
 
 !MD neu: 29.07.2008
 !MD calculation of FAKT_KN for each node based on lamdbaTot for each element
-         IF (NN.eq.6) THEN
-           WRITE(75,*) 'Friction factors are calculated for all NODES'
-           call GET_FFACT
-         endif
-!MD neu: 29.07.2008
+          IF (NN.eq.1) THEN
+            WRITE(75,*) 'Friction factors are calculated for all NODES'
+            call GET_FFACT
+          endif
+!MD neu: 29.07.2008  (nur einmal GET_FFACT aufrufen!!)
 
-         IF(ITSTMOD .EQ. 1) THEN
-           vels=TSTVAR(1)
-         ENDIF
-         if(vels .gt. 0.00001) then
+          IF(ITSTMOD .EQ. 1) THEN
+            vels=TSTVAR(1)
+          ENDIF
+          if(vels .gt. 0.00001) then
 cipk mar06  add node nunbers to calls below
-           ISMODE=ISMODEND(NN)
+            ISMODE=ISMODEND(NN)
 
-	   if ( ismode.eq.1 ) then
-             !MD: Acker-White-Formel fuer Geschiebetransport
-             call awhite(VELS,EFD,EXNU,ustar,nn)
+	    if ( ismode.eq.1 ) then
+              !MD: Acker-White-Formel fuer Geschiebetransport
+              call awhite(VELS,EFD,EXNU,ustar,nn)
 
-	   else if ( ismode.eq.2 ) then
-             !MD: Van-Rijn-Formel fuer Geschiebe- und Schwebstofftransport
-             call vanrijn(VELS,EFD,EXNU,ustar,nn)
-c	IF(NN .EQ. 21) THEN
-c	WRITE(112,*) MAXN,NN,VELS,EFD,EXNU,USTAR,GP(1)*1.E6
-c	ENDIF
+	    else if ( ismode.eq.2 ) then
+              !MD: Van-Rijn-Formel fuer Geschiebe- und Schwebstofftransport
+              call vanrijn(VELS,EFD,EXNU,ustar,nn)
+c             IF(NN .EQ. 21) THEN
+c       	WRITE(112,*) MAXN,NN,VELS,EFD,EXNU,USTAR,GP(1)*1.E6
+c	      ENDIF
 	    else if ( ismode.eq.3 ) then
-            !MD: Brownlie-Formel fuer Geschiebetransport
+              !MD: Brownlie-Formel fuer Geschiebetransport
               call brownlie(VELS,EFD,EXNU,ustar,nn)
 
 cipk jun00 add new call for Nielsen option
@@ -438,21 +446,21 @@ CIPK MAR06
      +          RC,RW,TRLOC,CA,ISWTT,nn)
      +!         RC,RW,TRLOC,CA,ISWTT,nn,RWFACT,RWMIN) ! djw 19/01/04 includes passing of roughnesses
 
-
+            
 	    else if ( ismode.eq.5 ) then
             !MD: Geschiebe- und Schwebstofftransport mit Wellen
 	      RC=RCAN(NN)
 	      RW=RWAN(NN)
 !MD  Unsinn --> kann raus
       	      IF(NN.EQ.1249 .or. nn.eq.1586 .or. nn.eq.1615
-     +                     .or. nn.eq.1265) THEN
+     +                    .or. nn.eq.1265) THEN
 	        ISWTT=2
 	      ELSE
 	        ISWTT=0
 	      ENDIF
 !MD Ende Unsinn --> kann raus
               iswtt = -1
-CIPK MAR06  
+CIPK MAR06
               SGSA=SGSAND(NN)
               D50=D50ND(NN)
               D90=D90ND(NN)
@@ -460,7 +468,7 @@ CIPK MAR06
               call TRANSPOR(hsv,tp,WVDIR,VELS,CDIR,D50,D90,EXNU,
      +           SGSA,RHOF,EFD,GP,VSAND,USTAR,
      +           RC,RW,TRLOC,ISWTT,nn)
-	      if(iswtt .eq. 2) then
+	       if(iswtt .eq. 2) then
 	        write(75,*) 'back from transpor',nn,vels,efd,gp(1)
 	      endif
 	    else
@@ -475,19 +483,19 @@ C  now multiply concentration (kg/kg = Mg/m3) by 1000000 to get g/m3
 C
 c at the end of rma-sandx ust(n) is in metric => assign in subroutines
 c ackwht, brownlie, etc.
-            UST(N)=USTAR
+
+            UST(N)= USTAR
 CIPK AUG05 ADD bshear
-	    BSHEAR(N)=RHOF*USTAR**2
-            GPB(N,I)=GP(I)*1.E+6
+	    BSHEAR(N)=RHOF * (USTAR**2.0)
+            GPB(N,I)=GP(I) * (10.0**6.0)
 cipk mar06
             GPMAX=GPMAXND(N)
 	    IF(GPB(N,I) .GT. GPMAX) GPB(N,I)=GPMAX
 	    TRRAT(N)=TRLOC
 	    CAI(N)=CA*1000.
-
 	  else
 	    ust(n)=0.
-CIPK AUG05 ADD bshear
+CIPK AUG05  ADD bshear
 	    BSHEAR(N)=0.
 	    gpb(n,1)=0.
 	    TRRAT(N)=0.
@@ -576,7 +584,12 @@ C	  vel(7,n)=gpb(n,1)
 	  else
 	    vdot(7,n)=0.
 	  endif
-c         write(112,*) n,vel(7,n),vold(7,n),vdot(7,n)
+
+          IF (n==1) then
+            write(LOUT,*) 'Ausgabe aus SANDX:'
+            write(LOUT,*) 'Belegung von vel(7,n), vold(7,n), vdot(7,n)'
+          Endif
+
 	ELSE
 	  VEL(7,N)=GPB(N,1)
 	endif
@@ -662,6 +675,7 @@ C
 	  loops = 2
 	end if
 C
+        i = 0
         do j = 1, loops
           do i = is, ie  ! ueber alle Bodenlayer
 CIPK MAR06
@@ -669,31 +683,47 @@ CIPK MAR06
 c           wlp Remember diameter is in mm!!
 C
 C           find non-dimensional grain size
-            dgr = diam *(gnsg**0.33333)/(viscosity**0.666667)
+            dgr = diam *(gnsg**(1./3.))/ (viscosity**(2./3.))
             dgrlog = ALOG10(dgr)
 C
 C           now find ackers-white coefficients
-C
-	    if ( dgr.gt.60 ) then
-              awn = 0.
-              awa = 0.17
-              awm = 1.50
-              awc = 0.025
-C
+
+!MD	    if (dgr.gt.60.) then
+!MD            awn = 0.
+!MD            awa = 0.17
+!MD            !MD awm = 1.50  alter Ansatz nach 1973
+!MD            awm = 1.78
+!MD            awc = 0.025
+
+!MD  Neuer Ansatz fuer dgr > 60 mit glattem Ubergang zu den
+!MD  Funktionen groesser und kleiner 60
+	    if (dgr.gt.60.0) then
+              IF (dgr .lt. (10.0**(1.0/0.56))) THEN
+                awn = 1.00 - (0.56 * ALOG10(dgr))
+              Else
+                awn = 0.00
+              END IF
+              awa = (0.23/SQRT(60.0)) +0.14
+              awm = (6.83/60.0) +1.67
+              clog = (2.79*ALOG10(60.0))-(0.98*(ALOG10(60.0)**2.0))-3.46
+              awc = 10.**clog
+
 C  find non-dimensional grain size
-	    else if ( dgr.le.60 ) then
+	    else if (dgr.le.60.0) then
 C             find n coefficient (equation 16)
-              awn = 1.00 - 0.56*dgrlog
+              awn = 1.00 - (0.56*dgrlog)
 C
 C             find a coefficient (equation 17)
-              awa = 0.23/SQRT(dgr)+0.14
+              awa = (0.23/SQRT(dgr)) +0.14
 C
 cipk Aug01 experimental addition of modified Ackers White coefficients
 C             find m coefficient (equation 20)
-              awm = 6.83/dgr+1.67
+              awm = (6.83/dgr) +1.67
 C
 C             find c coefficient (equation 22)
-              clog = 2.79*dgrlog-0.98*dgrlog-3.46
+              !MD  clog = 2.79*dgrlog-0.98*dgrlog-3.46
+              !MD  11.08.2008: Formel korrigiert!!
+              clog = (2.79*dgrlog) - (0.98*(dgrlog**2.0)) - 3.46
 C
 cipk Aug01 below are dropped coefficients
 C             find m coefficient (equation 20)
@@ -701,6 +731,12 @@ c             awm = 9.66/dgr+1.34
 C             find c coefficient (equation 22)
 c             clog = 2.86*dgrlog-dgrlog**2.0-3.53
               awc = 10.**clog
+
+              IF (dgr.le.1) THEN
+                write(LOUT,*) ' Warnung aus Acker-White:'
+                write(LOUT,*) ' Gueltigkeitsbereich fuer der Gelichung'
+                write(LOUT,*) '  von dgr > 1 wurde unterschritten!'
+              END IF
 	    end if
 
 
@@ -710,21 +746,25 @@ CIPK MAR06 ADD NODNUM TO CALL
 C
 C  determine mobility number
 	    part_a = u_star**awn / SQRT(diam*gnsg)
-	    part_b = u_bar / (root32*ALOG10(ten*depth/diam))
+	    part_b = u_bar / (root32*ALOG10(10.0*depth/diam))
 	    fgr = part_a * part_b**(1.0-awn)
 C
 C  determine effective normalised working stress
 C  and normalised sediment transport (equation 15)
 	    stress_norm = ( fgr - awa ) / awa
-	    if ( stress_norm.lt.0.0 ) stress_norm = 0.0
-	    ggr = awc * stress_norm**awm
+	    if ( stress_norm.lt.0.0 ) then
+              stress_norm = 0.0
+              Write(75,*) ' Achtung: stress_norm = 0.0'
+              Write(75,*) ' --> Geschiebetransport wird  zu 0.0'
+            Endif
+	    ggr = awc * (stress_norm**awm)
 C
 C  determine sediment concentration as mass of sediment per mass of water
 	    if ( u_star.eq.0.0 ) then
 	      c_bar = 0.0
 	    else
 	      c_bar = ggr*sed_rd*diam
-	      c_bar = c_bar / ( depth*(u_star/u_bar)**awn )
+	      c_bar = c_bar / ( depth * (u_star/u_bar)**awn )
 	    end if
 
 	    if ( c_bar.gt.ppmmax ) c_bar = ppmmax
@@ -732,9 +772,10 @@ C  determine sediment concentration as mass of sediment per mass of water
 	    gptot = gptot + gp(i)
 	  end do
 C
+!MD  Ablegen der Werte fuer den ersten Durchlauf bzw.
+!MD   fuer D35 als charateritischen Durchmesser
 	  if ( first_pass ) then
             gd35 =GP(1)
-CIPK MAR06
             SDND(1,NODNUM)=TMPSD
 	    gptot = 0.0
 	    is = igs
@@ -748,13 +789,16 @@ C  the total transport must equal that predicted when a
 C  d35 grain size is used for the whole mixture
 C
 	if ( igs.ne.lgs ) then
-C
-C  ie  more than one grain size
+C       ie  more than one grain size
 	  do i = igs, lgs
 	    gp(i) = (gd35/gptot) * gp(i)
 	  end do
+        !MD fuer nur eine Kornfraktion
+        Elseif (igs.eq.lgs) then
+          gp(1) = gd35
 	end if
 C
+
 c c_bar is in kg of sediment per kg of water - WLP 31.5.96
 c This is consistent with the original RMA formulation
 C	write(77,*) loops,dgr,awn,awa,awm,awc,fgr,u_star,ggr,
