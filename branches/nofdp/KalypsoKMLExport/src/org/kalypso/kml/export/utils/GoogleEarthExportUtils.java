@@ -9,7 +9,6 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
-import org.kalypsodeegree.model.feature.Feature;
 
 import com.google.earth.kml.FolderType;
 import com.google.earth.kml.ObjectFactory;
@@ -22,13 +21,12 @@ public class GoogleEarthExportUtils
 {
 
   /**
-   * @param feature
    * @param m_factory
    * @param symbolizer
    * @return
    * @throws FilterEvaluationException
    */
-  public static StyleType getStyleType( final ObjectFactory factory, final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException
+  public static StyleType getStyleType( final ObjectFactory factory, final Symbolizer symbolizer ) throws FilterEvaluationException
   {
     final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( factory );
 

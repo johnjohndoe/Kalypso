@@ -10,6 +10,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.geometry.GeoUtils;
 import org.kalypso.kml.export.geometry.GeoUtils.GEOMETRY_TYPE;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
+import org.kalypso.kml.export.utils.KMLAdapterUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -33,12 +34,11 @@ public class ConvertFacade
 
     for( final GM_Object gmo : geometries )
     {
-
       final GEOMETRY_TYPE gt = GeoUtils.getGeoType( gmo );
       if( GEOMETRY_TYPE.eMultiCurve.equals( gt ) )
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
-        placemark.setName( feature.getId() );
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
 
         placemark.setGeometry( factory.createMultiGeometry( ConverterMultiCurve.convert( factory, (GM_MultiCurve) gmo ) ) );
         if( style != null )
@@ -48,7 +48,8 @@ public class ConvertFacade
       else if( GEOMETRY_TYPE.eCurve.equals( gt ) )
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
-        placemark.setName( feature.getId() );
+
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
 
         placemark.setGeometry( factory.createLineString( ConverterCurve.convert( factory, (GM_Curve) gmo ) ) );
         if( style != null )
@@ -58,7 +59,7 @@ public class ConvertFacade
       else if( GEOMETRY_TYPE.eMultiSurface.equals( gt ) )
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
-        placemark.setName( feature.getId() );
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
 
         placemark.setGeometry( factory.createMultiGeometry( ConverterMultiSurface.convert( factory, (GM_MultiSurface) gmo ) ) );
         if( style != null )
@@ -68,7 +69,7 @@ public class ConvertFacade
       else if( GEOMETRY_TYPE.eSurface.equals( gt ) )
       {
         final PlacemarkType placemark = factory.createPlacemarkType();
-        placemark.setName( feature.getId() );
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
 
         placemark.setGeometry( factory.createPolygon( ConverterSurface.convert( factory, (GM_Surface< ? >) gmo ) ) );
         if( style != null )
