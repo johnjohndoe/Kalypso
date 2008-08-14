@@ -1,3 +1,4 @@
+C     Last change:  MD   14 Aug 2008   12:20 pm
 CIPK  LAST UPDATE APR 20 2006 ADD INPUT OPTION FOR TLAYM
 CIPK  LAST UPDATE NOV 19 1997
 crrr  last update Aug 30 1997 test for max number of layers
@@ -75,7 +76,7 @@ C.................................................................
       CALL GINPT(LIN,ID,DLIN)
       NN=0
   250 CONTINUE
-
+!MD      CALL GINPT(LIN,ID,DLIN)
 CIPK SEP05
       NN=NN+1	      
       N1=1
@@ -88,16 +89,18 @@ CIPK SEP05
         GO TO 275
 	ELSEIF(ID(1:4) .EQ. 'CSS3') THEN
         READ(DLIN,5001)NLAYTM,TAUCDM,GAWM,GABM
-     +     ,TTLAYM ,GACM ,ERCM ,UNM 
-	ELSEIF(ID(1:6) .EQ. 'ENDSED'  .OR. ID(1:3) .EQ. 'CB ') THEN
+     +     ,TTLAYM ,GACM ,ERCM ,UNM
 
-	  NSEDTYP=NN
-	  GO TO 300
+      !MD wenn Ende aller Daten erreicht
+      ELSEIF(ID(1:6) .EQ. 'ENDSED' .OR. ID(1:3) .EQ. 'CB ') THEN
+	NSEDTYP=NN
+	GO TO 300
       ELSE	  
         WRITE(75,*) 'EXPECTED MORE SED DATA - NONE FOUND'
         WRITE(*,*) 'EXPECTED MORE DATA - NONE FOUND'
         STOP
-	ENDIF
+      ENDIF
+
 crrr aug97
       if (NLAYTM  .GT. MXSEDLAY ) THEN
          WRITE(LOUT,'(/A,I3)')  
@@ -129,16 +132,16 @@ crrr aug97
       
       WRITE(LOUT,6021)
       DO L=1,NLAYTM 
-	  IF(ID(1:4) .EQ. 'CSS4') THEN
+	IF(ID(1:4) .EQ. 'CSS4') THEN
 CIPK APR06 ADD INPUT OPTION FOR TLAYM
 CIPK MAY06   ADD EROSTM
           READ(DLIN,5002) I,SSM(I),GBM(I),TLAYM(I),EROSTM(I)
           CALL GINPT(LIN,ID,DLIN)
- 	  ELSE
+ 	ELSE
           WRITE(75,*) 'EXPECTED CSS4 DATA - NONE FOUND'
           WRITE(*,*) 'EXPECTED CSS4 DATA - NONE FOUND'
           STOP
-	  ENDIF
+	ENDIF
       ENDDO
       DO I=1,NLAYTM 
         GADM(I)=(GBM(I)-GAWM )*GACM /(GACM -GAWM )
@@ -183,17 +186,19 @@ CIPK MAY06   ADD EROSTM
 
 
       GO TO 250
+      !MD weiterlesen der CSMT-Daten!
       
   300 CONTINUE      
 
-      CALL BED
+      IF(ID(1:3) .EQ. 'CB ') THEN
+        CALL BED
+      Endif
 
 cipk June 1996      IF(IBNK .NE. 0) THEN
 cipk June 1996        READ(IIQ,5010) BNKCD,BNKGAB,BNKERC,BRKS
 cipk June 1996        WRITE(LOUT,6030) BNKCD,BNKGAB,BNKERC,BRKS
 cipk June 1996      ENDIF
 
-C      CALL GINPT(LIN,ID,DLIN)
       IF(ID(1:6) .NE. 'ENDSED') THEN
 	  WRITE(75,*) 'NO ENDSED DATA LINE FOUND'
 	  WRITE(*,*) 'NO ENDSED DATA LINE FOUND'
