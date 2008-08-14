@@ -46,11 +46,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -65,7 +69,9 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
+import org.kalypso.contribs.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -257,6 +263,17 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       }
     } );
     m_problemView = new ProfileProblemView( m_toolkit, m_form );
+
+    // Override the default TableViewerEditor:
+    // - multi-selection is enabled
+    // - there is a focused cell
+    // - right-click opens context-menu everywhere
+    // - single-click starts editing
+    final FocusCellHighlighter focusHighlighter = new FocusCellOwnerDrawHighlighter( m_view );
+    TableViewerFocusCellManager tableViewerFocusCellManager = new TableViewerFocusCellManager( m_view, focusHighlighter );
+    final ColumnViewerEditorActivationStrategy editorActivationStrategy = new ColumnViewerEditorActivationStrategy( m_view );
+    TableViewerEditor.create( m_view, tableViewerFocusCellManager, editorActivationStrategy, ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditor.TABBING_HORIZONTAL
+        | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
 
     updateControl();
   }
