@@ -1,3 +1,4 @@
+C     Last change:  MD   14 Aug 2008    4:42 pm
 cipk  last update apr 05 2006   make a first call to get sed initial conditions
 crrr  Last update Aug 23 1997
       SUBROUTINE BED
@@ -36,12 +37,12 @@ CIPK AUG05      INCLUDE 'BLKSAND.COM'
 
       ALLOCATE (SSTOM(MXSEDLAY),SMVALM(MXSEDLAY)
      +         ,GBOM(MXSEDLAY),THICKOM(MXSEDLAY))
-     
+
       SSTOM=0.
       SMVALM=0.
       GBOM=0.
       THICKM=0.
-     
+
       IF(NB .EQ. 0) GO TO 10
       
 cipk aug05 update to allow redefinition of bed
@@ -52,14 +53,21 @@ cipk aug05 update to allow redefinition of bed
         TM(N)=0.
       ENDDO
 cipk apr06   make a first call to get sed initial conditions
-      CALL GETINIT(IBIN,0)
-      CALL FORMBED(1)
-      RETURN
+
+!MD  deactivated 14.08.2008
+!MD  Data for restart with suspenend sediment
+!MD  causes problems in Kalypso
+!----------------------------------
+!MD      CALL GETINIT(IBIN,0)
+!MD      CALL FORMBED(1)
+!MD      RETURN
+!MD  End of deactivation 14.08.2008
+
    10 CONTINUE
 CIPK AUG05      IF(NB .EQ. 0) THEN
 CIPK SEP05	  CALL GINPT(LIN,ID,DLIN)
 CIPK AUG05      ENDIF
-        IF(ID(1:2) .EQ. 'CB') THEN
+        IF(ID(1:3) .EQ. 'CB ') THEN
           READ(DLIN,'(2I8)') IBED,IELEV
         ELSE
           WRITE(LOUT,*) ' ERROR -- EXPECTED LINE TYPE CB'
@@ -67,12 +75,15 @@ CIPK AUG05      ENDIF
         ENDIF
 C
 C     READ INITIAL BED PROFILE DATA
-C
+
+      WRITE(LOUT,*) ' IBED = ', IBED
+
       IF(IBED .EQ. 1) THEN
 C-
-	  CALL GINPT(LIN,ID,DLIN)
+	CALL GINPT(LIN,ID,DLIN)
         IF(ID(1:3) .EQ. 'CBD') THEN
           READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
+          WRITE(75,*) 'MD: CBD mit IBED=1 ist gelesen'
           if (NLA .gt. mxsedlay)  then
             write(*,*) '  lt > mlayer ', N,NLA,TEMP1
             write(75,*) '  lt > mlayer ', N,NLA,TEMP1
@@ -97,6 +108,7 @@ crrr aug97 update test to 3 characters
               STOP
             ENDIF
             READ(DLIN,5003) L,SSTO(1,L),SMVAL(1,L),GBO(1,L),THICKO(1,L)
+            WRITE(75,*) 'MD: CBL mit IBED=1 ist gelesen'
             CALL GINPT(LIN,ID,DLIN)
             IF(I .LE. 2) THEN
               WRITE(LOUT,6016) N,L,THICKO(1,L),GBO(1,L),SSTO(1,L)
@@ -132,6 +144,7 @@ C-
           STOP
         ENDIF
         READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
+        WRITE(75,*) 'MD: CBD mit IBED=2 ist gelesen'
         if (NLA .gt. mxsedlay)  then
           write(*,*) '  lt > mlayer ', N,NLA,TEMP1
           write(75,*) '  lt > mlayer ', N,NLA,TEMP1
@@ -152,6 +165,7 @@ C-
            STOP
           ENDIF
           READ(DLIN,5003) L,SSTO(N,L),SMVAL(N,L),GBO(N,L),THICKO(N,L)
+          WRITE(75,*) 'MD: CBL mit IBED=2 ist gelesen'
           IF(I .LE. 2) THEN
           WRITE(LOUT,6016) N,I,THICKO(N,I),GBO(N,I),SSTO(N,I),SMVAL(N,I)
           ELSE
@@ -189,6 +203,7 @@ C-
         IF(ID(1:4) .EQ. 'CBMT') THEN
           N9=N1+8
           READ(DLIN,'(9I8)') (IMTREF(I),I=N1,N9)
+          WRITE(75,*) 'MD: CBMT mit IBED=3 ist gelesen'
           N1=N1+9
           CALL GINPT(LIN,ID,DLIN)
           GO TO 450
@@ -197,6 +212,7 @@ C-
           STOP
         ENDIF
         READ(DLIN,'(2I8,F8.0)') N,NLA,TEMP1
+        WRITE(75,*) 'MD: CBD mit IBED=3 ist gelesen'
         if (NLA .gt. mxsedlay)  then
           write(*,*) '  lt > mlayer ', N,NLA,TEMP1
           write(75,*) '  lt > mlayer ', N,NLA,TEMP1
@@ -226,6 +242,7 @@ C-
            STOP
           ENDIF
           READ(DLIN,5003) L,SSTOM(L),SMVALM(L),GBOM(L),THICKOM(L)
+          WRITE(75,*) 'MD: CBL mit IBED=3 ist gelesen'
           WRITE(LOUT,6017) L,THICKOM(L),GBOM(L),SSTOM(L),SMVALM(L)
         ENDDO
         
@@ -253,7 +270,7 @@ C..... READ NEXT RECORD
           ENDIF
         ENDDO
 
-	  CALL GINPT(LIN,ID,DLIN)
+	CALL GINPT(LIN,ID,DLIN)
         IF(ID(1:4) .NE. 'CBMT') THEN
           GO TO 500
         ENDIF
