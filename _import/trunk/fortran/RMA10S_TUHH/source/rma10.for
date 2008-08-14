@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008    4:57 pm
+C     Last change:  MD   14 Aug 2008    5:05 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -1327,6 +1327,7 @@ C      END OF ITERATION LOOP
         write(75,*) 'rma10-668 at 750 continue'
 CIPK MAY02 UPDATE BED INFORMATION FOR SAND CASE
         IF(LSAND .GT. 0) THEN
+          write(75,*) 'rma10: going to bedsur'
           CALL BEDSUR
         ELSEIF(LSS .GT. 0) THEN
 C
@@ -1335,9 +1336,17 @@ C
           CALL NEWBED(2)
         ENDIF
 
-        IF(LBED .GT. 0) THEN
-        write(75,*) 'rma10-674 going to bedlbed'
-          CALL BEDLBED
+      !MD Aufruf der Sohlentwicklung nur einmal fuer sandige Sohle
+        IF(LBED.GT.0 .and. LSAND.le.0) THEN
+        write(75,*) 'rma10-674 going to bedsur'
+
+          !MD 11.08.2008: BEDLBED wurde deaktiviert, da Routine veraltet und fehlerhaft:
+          !MD   alle dort berechneten Werte GAN0 und GAN sind unsinnig, da immer = null
+          !MD   BEDLBED wurde mit der aktuelleren Routine BEDSUR ersetzt
+          !MD CALL BEDLBED
+
+          !MD!MD neu
+          CALL BEDSUR
         ENDIF
 
 !NiS,apr06: calculating the cwr-values for trees.
