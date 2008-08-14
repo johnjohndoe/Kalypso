@@ -1,4 +1,4 @@
-C     Last change:  WP    2 May 2008    1:14 pm
+C     Last change:  MD   14 Aug 2008    5:01 pm
 CIPK  LAST UPDATE JUNE 27 2005 ALLOW FOR CONTROL STRUCTURES
 CIPK  LAST UPDATE MAR 25 2005
 CIPK  LAST UPDATE SEP 06 2004 CREATE ERROR FILE
@@ -178,7 +178,7 @@ C
 C     ASSEMBLY
 C
       DO 15 N=1,NSZF
-      IPOINT(N)=0
+        IPOINT(N)=0
 CC      rkeep(n)=0.
 CC      ekeep(j)=0.
    15 R1(N)=0.
@@ -186,8 +186,8 @@ C-
 C......ESTABLISH DENSITIES AND PRESSURES
 C-
       IF(NRX .EQ. 1) THEN
-          CALL PRESR
-          NDF=4
+        CALL PRESR
+        NDF=4
       ENDIF
       LCOL=0
    18 NELL=NELL+1
@@ -211,50 +211,49 @@ CIPK DEC03 ADD IEDSW DEPENDENCE
       endif
 
       IF(ITEQV(MAXN) .NE. 5) THEN
-          
-          IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
-            IF(NRX .EQ. 2) GO TO 18
+
+        IF(IMAT(N) .GT. 1000  .AND.  IMAT(N) .LT. 5000) THEN
+          IF(NRX .EQ. 2) GO TO 18
 
 CIPK NOV99     Either process surface integrals or collapse to 2-d
 
-          IF(ICOLLAPE(N) .EQ. 0) THEN
-                   CALL SURCOF(N,NRX)
-          ELSEIF(IMAT(N) .LT. 2000) THEN
-            IF(NETYP(N)/10 .LT. 1) THEN
+        IF(ICOLLAPE(N) .EQ. 0) THEN
+          CALL SURCOF(N,NRX)
+        ELSEIF(IMAT(N) .LT. 2000) THEN
+          IF(NETYP(N)/10 .LT. 1) THEN
 CIPK MAR05
 !nis,may07
-
-              IF(INOTR .EQ. 0) THEN
-                CALL COEF1(N,NRX)
-              ELSE
-                CALL COEF1NT(N,NRX)
-              endif
+            IF(INOTR .EQ. 0) THEN
+              CALL COEF1(N,NRX)
+            ELSE
+              CALL COEF1NT(N,NRX)
+            endif
 
 C     Modify tests to allows for IDIFSW
 
-            ELSEIF(IUTUB .EQ. 1  .and.  iedsw .eq. 2  .AND. ISLP .EQ. 0)
+          ELSEIF(IUTUB .EQ. 1  .and.  iedsw .eq. 2  .AND. ISLP .EQ. 0)
      +	      THEN
 CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2D(N,NRX)
-                ELSE
+              ELSE
                 CALL COEF2DNT(N,NRX)
-                ENDIF
+              ENDIF
             ELSEIF(ISLP .EQ. 1  .AND.  IUTUB .EQ. 1 .AND. IDIFSW .EQ. 2)
      +        THEN
 CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2D(N,NRX)
-                ELSE
+              ELSE
                 CALL COEF2DNT(N,NRX)
-                ENDIF
+              ENDIF
       	    ELSE
 CIPK MAR05
               IF(INOTR .EQ. 0) THEN
                 CALL COEF2(N,NRX)
-                ELSE
-                  CALL COEF2NT(N,NRX)
-                ENDIF
+              ELSE
+                CALL COEF2NT(N,NRX)
+              ENDIF
             ENDIF
           ELSE
             GO TO 18
@@ -288,7 +287,7 @@ CIPK JUN05
 
 C     Process   horizontal 2d
 
-          	       IF(NRX .EQ. 2) GO TO 18
+          	IF(NRX .EQ. 2) GO TO 18
 cipk jan97
                 if(iutub .eq. 1  .AND.  IEDSW .EQ. 2  .AND. ISLP .EQ. 0)
      +            then
@@ -707,14 +706,14 @@ C
       NEC=NSZF+1
 
       DO 600 IV=1,NSZF
-      NEC=NEC-1
-      LCOL=LCS(NEC)
-      LPIVCO=LPS(NEC)
-      LQ=LQ-LCOL
-      IF(LQ .GT. -1) GO TO 450
-      CALL XRED(ND1,IRTC,NRR)
-C     CALL RED(ND1,-1)
-      LQ=LQ-LCOL
+        NEC=NEC-1
+        LCOL=LCS(NEC)
+        LPIVCO=LPS(NEC)
+        LQ=LQ-LCOL
+        IF(LQ .GT. -1) GO TO 450
+        CALL XRED(ND1,IRTC,NRR)
+C       CALL RED(ND1,-1)
+        LQ=LQ-LCOL
   450 DO 460 L=1,LCOL
       LQ=LQ+1
       LHED(L)=IABS(LHS(LQ))
