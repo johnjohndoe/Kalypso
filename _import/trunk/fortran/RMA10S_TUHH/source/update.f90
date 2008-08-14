@@ -1,4 +1,4 @@
-!     Last change:  MD   25 Jul 2008    1:00 pm
+!     Last change:  MD   12 Aug 2008    4:41 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -123,6 +123,7 @@ IF (MAXN == 1) THEN
       NCNV (2) = 1
       NCNV (3) = 1
       NCNV (6) = 1
+    !  NCNV (7) = 1  !MD!MD!MD neu
 
     !only temperature to be considered (T)
     ELSEIF (ITEQV (I) == 8) THEN
@@ -131,12 +132,13 @@ IF (MAXN == 1) THEN
     !only sediment concentration to be considered (csed)
     ELSEIF (ITEQV (I) == 9) THEN
       NCNV (6) = 1
+    !  NCNV (7) = 1  !MD!MD!MD neu
 
 !IPK MAY02
     !TOASK
     !nis,com: Is this 3D?
     ELSEIF (ITEQV (I) == 10) THEN
-      NCNV (7) = 1
+    !  NCNV (7) = 1
 
 !IPK MAY02     ELSEIF (ITEQV (I) == 10) THEN
     !don't consider water depth to be changed for temperature calculations (vx, vy, T)
@@ -151,6 +153,7 @@ IF (MAXN == 1) THEN
       NCNV (1) = 1
       NCNV (2) = 1
       NCNV (6) = 1
+     ! NCNV (7) = 1  !MD!MD!MD neu
     ENDIF
   ENDDO
 
