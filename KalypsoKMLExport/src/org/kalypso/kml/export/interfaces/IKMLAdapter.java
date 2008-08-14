@@ -23,4 +23,6 @@ public interface IKMLAdapter
   public void registerExportedFeature( Feature feature );
 
   public void cleanUp( );
+
+  public String getFeatureName( Feature feature );
 }

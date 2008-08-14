@@ -111,7 +111,7 @@ public class KMLExportDelegate implements IPaintInternalDelegate
 
       try
       {
-        styleType = GoogleEarthExportUtils.getStyleType( m_factory, displayElement.getFeature(), symbolizer );
+        styleType = GoogleEarthExportUtils.getStyleType( m_factory, symbolizer );
         if( styleType == null )
           return;
 
@@ -122,7 +122,6 @@ public class KMLExportDelegate implements IPaintInternalDelegate
         }
 
         // TODO perhaps, get rendered GM_Point geometry from symbolizer
-
         final FeatureType[] featureTypes = ConvertFacade.convert( m_provider, m_factory, element.getGeometry(), styleType, feature );
 
         final List<JAXBElement< ? extends FeatureType>> features = m_folderType.getFeature();

@@ -103,7 +103,7 @@ public class WizardGoogleExport extends Wizard implements IWorkbenchWizard
   @Override
   public boolean performFinish( )
   {
-    final GoogleEarthExporter googleEarthExporter = new GoogleEarthExporter( m_mapView, m_page );
+    final KMLExporter googleEarthExporter = new KMLExporter( m_mapView, m_page );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, googleEarthExporter );
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.WizardGoogleExport_1, status );
