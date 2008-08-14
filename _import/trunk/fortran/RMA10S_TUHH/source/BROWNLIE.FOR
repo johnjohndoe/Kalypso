@@ -1,3 +1,4 @@
+C     Last change:  MD   11 Aug 2008    6:01 pm
 CIPK  LAST UPDATE MAR 05 2006 ADD NODNUM TO CALL AND USE NODAL PROPS
 	subroutine brownlie (VELS,EFD,EXNU,u_star,nodnum)
 C
@@ -41,7 +42,7 @@ CIPK MAR06
 	u_bar = VELS
 	fluid_rho = RHOF
 CIPK MAR06
-	d50m=d50ND(NODNUM)/1000.
+      !MD	d50m=d50ND(NODNUM)/1000.
 	d90m=d90ND(NODNUM)/1000.
 C
 C  get u_star via Manning's equation
@@ -77,6 +78,9 @@ C
 	gptot = 0.0
 	is = 1
 	ie = 1
+CIPK MAR06
+	tmpsd = SDND(1,NODNUM)
+	SDND(1,NODNUM) = d50ND(NODNUM)
 C
 	if ( igs.eq.lgs ) then
 	  loops = 1
@@ -85,12 +89,11 @@ C
 	end if
 C
         do j = 1, loops
-C
           do i = is, ie
 C
 c reinvoke following line of multiple sediment sizes are used
-c            diam=SD(i)/1000.
-            diam=d50m
+            diam=SDND(i,NODNUM)/1000.
+!MD            diam=d50m
 C
 C  stop if sediment diameters are such
 C  that the formulae is out of range
@@ -107,7 +110,7 @@ C
 C
 C  find Y parameter
 C
-	    Y = ( ( gnsg * d50m**3.0 )**0.5 / viscosity )**(-0.6)
+	    Y = ( ( gnsg * diam**3.0 )**0.5 / viscosity )**(-0.6)
 C
 C  find entrainment values as per Shields diagram
 C
@@ -115,7 +118,7 @@ C
 C
 C  find mobility
 C
-	    Fg = u_bar / ( gnsg * d50m )**0.5
+	    Fg = u_bar / ( gnsg * diam )**0.5
 C
 C  find threshold mobility
 C
@@ -132,7 +135,7 @@ C  over mass per unit time of fluid (eq 6.9)
 C
 		c_bar = 7100.0 * cF * slope**(2.0/3.0)
 		c_bar = c_bar * (Fg - Fg_crit)**2.0
-		c_bar = c_bar * (depth/d50m)**(-1.0/3.0)
+		c_bar = c_bar * (depth/diam)**(-1.0/3.0)
 	    end if
 C
 C  convert to kg sediment per kg fluid from ppm
@@ -168,13 +171,16 @@ C
 	if ( igs.ne.lgs ) then
 C
 C  ie  more than one grain size
-C
 	  do i = igs, lgs
 	    gp(i) = (gd50/gptot) * gp(i)
 	  end do
+
+        !MD fuer nur eine Kornfraktion
+        Elseif (igs.eq.lgs) then
+          gp(1) = gd50
 	end if
 C
-c	write(lout,*) Y,gnsg,d50m,viscosity,cF,slope,Fg,Fg_crit,depth,
+c	write(lout,*) Y,gnsg,diam,viscosity,cF,slope,Fg,Fg_crit,depth,
 c     + c_bar,gp(1),igs,lgs
 	return
 	end
