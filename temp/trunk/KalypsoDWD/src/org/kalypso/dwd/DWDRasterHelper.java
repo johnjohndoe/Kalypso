@@ -86,12 +86,12 @@ public class DWDRasterHelper
   static
   {
     // REMARK: Wir setzen hier explizit die Zeitzone für die Datümer der LM Datei
-    // Die Zeitzone ist Momentan uf 'GMT-1:0' gesetzt, da so die Daten identisch zum HWVOR00 (Saale) Modell interpretiert werden.
+    // Die Zeitzone ist Momentan uf 'GMT-1:0' gesetzt, da so die Daten identisch zum HWVOR00 (Saale) Modell
+    // interpretiert werden.
     // Dies ist vermutlich nicht richtig (TODO: verifizieren)
     // TODO: noch besser wäre es, die Zeitzone 'von aussen' konfigurierbar zu machen
     DATEFORMAT_RASTER.setTimeZone( TimeZone.getTimeZone( "GMT-1:00" ) );
   }
-
 
   /**
    * Return the most recent DWD file from the given folder, or null if nothing found.
@@ -232,10 +232,10 @@ public class DWDRasterHelper
         if( raster != null )
         {
           for( int i = 0; i < values.length; i++ )
-            raster.addValue( ( Double.parseDouble( values[i] ) + offset ) * factor );
-          }
-
+            raster.addValue( (Double.parseDouble( values[i] ) + offset) * factor );
         }
+
+      }
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LAT )
         yRaster = raster;
       if( raster != null && raster.getKey() == DWDRaster.KEY_100000_LON )
@@ -257,7 +257,7 @@ public class DWDRasterHelper
       case DWDRaster.KEY_BEDECKUNG: // [%]
         return 1;
       case DWDRaster.KEY_TAU: // [GradC]
-    case DWDRaster.KEY_TEMP: // [Kelvin]
+      case DWDRaster.KEY_TEMP: // [Kelvin]
         return 1d / 10d;
       case DWDRaster.KEY_RAIN: // [mm]
       case DWDRaster.KEY_SNOW: // [mm]
@@ -276,19 +276,68 @@ public class DWDRasterHelper
   {
     switch( dwdKey )
     {
-    case DWDRaster.KEY_TEMP: // [Kelvin]
-      return -2731.5;
+      case DWDRaster.KEY_TEMP: // [Kelvin]
+        return -2731.5;
 
-    default:
-      return 0; // unknown
+      default:
+        return 0; // unknown
     }
+  }
+
+  /**
+   * This function returns the unit for the given key.
+   * 
+   * @param dwdKey
+   *          The key.
+   * @return The unit.
+   */
+  private static String getUnitForDwdKey( final int dwdKey )
+  {
+    String unit = "";
+
+    switch( dwdKey )
+    {
+      case DWDRaster.KEY_HEIGHT:
+        unit = "m";
+        break;
+      case DWDRaster.KEY_BEDECKUNG:
+        unit = "%";
+        break;
+      case DWDRaster.KEY_TAU:
+        unit = "GradC";
+        break;
+      case DWDRaster.KEY_TEMP:
+        unit = "Kelvin";
+        break;
+      case DWDRaster.KEY_RAIN:
+        unit = "mm";
+        break;
+      case DWDRaster.KEY_SNOW:
+        unit = "mm";
+        break;
+      case DWDRaster.KEY_WINDM:
+        unit = "m/s";
+        break;
+      case DWDRaster.KEY_WINDZ:
+        unit = "m/s";
+        break;
+      case DWDRaster.KEY_100000_LAT:
+        unit = "grad";
+        break;
+      case DWDRaster.KEY_100000_LON:
+        unit = "grad";
+        break;
+    }
+
+    return unit;
   }
 
   public static DWDObservationRaster loadObservationRaster( final URL url, final int dwdKey, final int maxCells ) throws Exception
   {
     final double factor = getFactorForDwdKey( dwdKey );
     final double offset = getOffsetForDwdKey( dwdKey );
-    
+    final String unit = getUnitForDwdKey( dwdKey );
+
     LineNumberReader reader = null;
     try
     {
@@ -311,7 +360,7 @@ public class DWDRasterHelper
           if( key == dwdKey )
           {
             if( raster == null ) // if not allready loading
-              raster = new DWDObservationRaster( key, maxCells );
+              raster = new DWDObservationRaster( key, maxCells, unit );
           }
           else if( raster != null )
             return raster;
@@ -325,7 +374,7 @@ public class DWDRasterHelper
           date = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
           if( key == dwdKey )
-            raster = new DWDObservationRaster( key, maxCells );
+            raster = new DWDObservationRaster( key, maxCells, unit );
           else if( raster != null )
             return raster;
           lmVersion = 2;
@@ -341,8 +390,8 @@ public class DWDRasterHelper
             values = (line.trim()).split( " +", 13 );
             for( int i = 0; i < values.length; i++ )
             {
-            final double value = Double.parseDouble( values[i] );
-            raster.setValueFor( date, cellpos, ( value + offset ) * factor );
+              final double value = Double.parseDouble( values[i] );
+              raster.setValueFor( date, cellpos, (value + offset) * factor );
               cellpos++;
             }
             break;
@@ -350,8 +399,8 @@ public class DWDRasterHelper
             values = (line.trim()).split( " +" );
             for( int i = 0; i < values.length; i++ )
             {
-            final double value = Double.parseDouble( values[i] );
-            raster.setValueFor( date, cellpos, ( value + offset ) * factor );
+              final double value = Double.parseDouble( values[i] );
+              raster.setValueFor( date, cellpos, (value + offset) * factor );
               cellpos++;
               if( cellpos >= maxCells )
               {
@@ -422,8 +471,8 @@ public class DWDRasterHelper
       IOUtils.closeQuietly( writer );
     }
   }
-  
-    /**
+
+  /**
    * Parses the date from the first line of a lm file.
    */
   public static Date dateFromFirstLine( final String line )

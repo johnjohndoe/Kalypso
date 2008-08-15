@@ -35,34 +35,66 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * this represents a observation that is read from DWD-rasterformat (LM or LM2)
+ * This represents a observation that is read from DWD-Rasterformat (LM or LM2).
  * 
  * @author doemming
  */
 public class DWDObservationRaster
 {
+  /**
+   * The value hash.
+   */
   private final SortedMap<Date, double[]> m_valueHash = new TreeMap<Date, double[]>();
 
+  /**
+   * The type of the observation.
+   */
   private final int m_dwdKey;
 
+  /**
+   * The maximum amount of cells per raster.
+   */
   private final int m_maxCells;
 
   /**
-   * @param dwdKey
-   *          type of observation
+   * The unit of the values of this observation.
    */
-  public DWDObservationRaster( int dwdKey, int maxCells )
+  private final String m_unit;
+
+  /**
+   * The constructor.
+   * 
+   * @param dwdKey
+   *          The type of the observation.
+   * @param maxCells
+   *          The maximum amount of cells per raster.
+   * @param unit
+   *          The unit of the values of this observation.
+   */
+  public DWDObservationRaster( int dwdKey, int maxCells, String unit )
   {
     m_dwdKey = dwdKey;
     m_maxCells = maxCells;
+    m_unit = unit;
   }
 
   /**
-   * @return type of observation
+   * This function returns the type of the observation.
+   * @return The type of the observation.
    */
   public int getDwdKey( )
   {
     return m_dwdKey;
+  }
+  
+  /**
+   * This function returns the unit of the values of this observation.
+   * 
+   * @return The unit of the values of this observation.
+   */
+  public String getUnit( )
+  {
+    return m_unit;
   }
 
   public void setValueFor( final Date date, final int cellPos, final double value )
