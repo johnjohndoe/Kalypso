@@ -531,7 +531,7 @@ public class GeoGridUtilities
       final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
       grid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
       outputGrid.dispose();
-      setCoverage( coverage, toGridDomain( grid ), filePath, mimeType );
+      setCoverage( coverage, toGridDomain( grid ), file.getName(), mimeType );
       ProgressUtilities.worked( progress, 10 );
     }
     finally
