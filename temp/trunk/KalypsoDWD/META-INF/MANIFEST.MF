@@ -7,10 +7,7 @@ Bundle-ClassPath: lib/servlet-api.jar,
  .
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
-Export-Package: javax.servlet,
- javax.servlet.http,
- javax.servlet.resources,
- org.kalypso.dwd,
+Export-Package: org.kalypso.dwd,
  org.kalypso.dwd.dwdzml,
  org.kalypso.dwd.schema,
  org.kalypso.dwd.servlet.dwdfilecopy
