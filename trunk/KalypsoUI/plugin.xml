@@ -1378,6 +1378,18 @@
               style="radio"
               tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.tooltip">
         </command>
+        <command
+              commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand"
+              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label"
+              style="radio"
+              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
+         </command>
+         <command
+                commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
+                label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label"
+                style="radio"
+                tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.tooltip">
+          </command>
           <separator
                 name="navigation"
                 visible="true">
@@ -2268,18 +2280,7 @@
                               style="radio"
                               tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip">
                         </command>
-                        <command
-                              commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
-                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label"
-                              style="radio"
-                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.tooltip">
-                        </command>
-                        <command
-                              commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand"
-                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label"
-                              style="radio"
-                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
-                        </command>
+
                         <command
                               commandId="org.kalypso.ogc.gml.map.UndoCommand"
                               label="%org.kalypso.ui.editor.mapeditor.actiondelegates.UndoDelegate.label"
@@ -2313,34 +2314,46 @@
                   <toolbar
                         id="org.kalypso.ui.menus.mapToolbar"
                         >
-                        <dynamic
-             				id="org.kalypso.ogc.gml.map.zoom">
-					        <class
-					              class="org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem">
-					           <parameter
-					                 name="command1"
-					                 value="org.kalypso.ogc.gml.map.FullExtentCommand">
-					           </parameter>
-					           <parameter
-					                 name="command2"
-					                 value="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand">
-					           </parameter>
-					           <parameter
-					                 name="command3"
-					                 value="org.kalypso.ogc.gml.map.ZoomInStaticCommand">
-					           </parameter>
-					           <parameter
-					                 name="command4"
-					                 value="org.kalypso.ogc.gml.map.ZoomOutCommand">
-					           </parameter>
-					        </class>
-             <visibleWhen
-                   checkEnabled="true">
-                <reference
-                      definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
-                </reference>
-             </visibleWhen>
-					     </dynamic>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.FullExtentCommand"
+                              style="push">
+                           <visibleWhen
+                                 checkEnabled="false">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand"
+                              style="push">
+                           <visibleWhen
+                                 checkEnabled="false">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand"
+                              style="push">
+                           <visibleWhen
+                                 checkEnabled="false">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.ZoomOutCommand"
+                              style="push">
+                           <visibleWhen
+                                 checkEnabled="false">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
 					     <dynamic
 					           id="org.kalypso.ogc.gml.map.move">
 					        <class
@@ -2369,6 +2382,10 @@
                 </reference>
              </visibleWhen>
 					    </dynamic>
+          <separator
+                name="klickNavigation"
+                visible="true">
+          </separator>
                         <command
                               commandId="org.kalypso.ogc.gml.map.PanToCommand"
                               label="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label"
@@ -2393,6 +2410,30 @@
                                     </reference>
                               </visibleWhen>
                         </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
+                              <visibleWhen
+                                    checkEnabled="false">
+                                    <reference
+                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                                    </reference>
+                              </visibleWhen>
+                        </command>
+                        <command
+                              commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
+                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label"
+                              style="radio"
+                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.tooltip">
+                           <visibleWhen
+                                 checkEnabled="false">
+                              <reference
+                                    definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
+                              </reference>
+                           </visibleWhen>
+                        </command>
                         <separator
                               name="navigation"
                               visible="true">
@@ -2410,34 +2451,10 @@
                               </visibleWhen>
                         </command>
                         <command
-                              commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand"
-                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label"
-                              style="radio"
-                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip">
-                              <visibleWhen
-                                    checkEnabled="true">
-                                    <reference
-                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
-                                    </reference>
-                              </visibleWhen>
-                        </command>
-                        <command
                               commandId="org.kalypso.ogc.gml.map.CoordinateInfoCommand"
                               label="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.label"
                               style="radio"
                               tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.CoordinateInfoWidgetDelegate.tooltip">
-                              <visibleWhen
-                                    checkEnabled="true">
-                                    <reference
-                                          definitionId="org.kalypso.ogc.gml.map.GISEditorIsActive">
-                                    </reference>
-                              </visibleWhen>
-                        </command>
-                        <command
-                              commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand"
-                              label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label"
-                              style="radio"
-                              tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip">
                               <visibleWhen
                                     checkEnabled="true">
                                     <reference
