@@ -137,7 +137,6 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
     final IEvaluationContext currentState = handlerService.getCurrentState();
     final IKalypsoTheme theme = (IKalypsoTheme) currentState.getVariable( MapPanelSourceProvider.ACTIVE_THEME_NAME );
 
-
     if( theme == null || !theme.isLoaded() )
     {
       // do not cache themes that are not loaded yet
@@ -151,7 +150,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
     }
 
     m_currentTheme = theme;
-    
+
     if( theme == null || !(theme instanceof IKalypsoFeatureTheme) )
     {
       m_currentItems = new CommandContributionItem[0];
@@ -160,17 +159,24 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
 
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
     final IFeatureType featureType = featureTheme.getFeatureType();
-    
+
     if( featureType == null )
     {
       m_currentItems = new CommandContributionItem[0];
       return m_currentItems;
     }
-    
+
     final FeatureList featureList = featureTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
     final IRelationType fatp = featureList.getParentFeatureTypeProperty();
-    
+    if( fatp == null )
+    {
+      // TODO What to do, if null?
+      // This can happen, when the root feature is drawn in the map (e.g. root = rectified grid coverage).
+      m_currentItems = new CommandContributionItem[0];
+      return m_currentItems;
+    }
+
     final int maxOccurs = fatp.getMaxOccurs();
 
     /* If we may not inline features we cannot create them via 'new' */
@@ -246,7 +252,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
   protected void updateInternal( )
   {
     final CommandContributionItem[] contributionItems = getContributionItems();
-    if( contributionItems.length > 0)
+    if( contributionItems.length > 0 )
       m_currentCommand = contributionItems[0];
     final Display display = PlatformUI.getWorkbench().getDisplay();
     display.asyncExec( new Runnable()
