@@ -30,7 +30,6 @@
 package org.kalypso.lhwzsachsen.spree.tools;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.List;
@@ -38,9 +37,10 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
-import org.apache.commons.io.IOUtils;
+import junit.framework.JUnit4TestAdapter;
+
+import org.junit.Test;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.dwd.DWDRaster;
 import org.kalypso.dwd.DWDRasterGeoLayer;
 import org.kalypso.dwd.DWDRasterHelper;
 import org.kalypso.dwd.RasterPart;
@@ -50,7 +50,6 @@ import org.kalypso.dwd.dwdzml.DwdzmlConf.Target;
 import org.kalypso.dwd.dwdzml.DwdzmlConf.Target.Map;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -60,7 +59,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Diese Klasse ist ein Werkzeug, um die Zuordnung zwischen Rasterzellen des DWD-Rasters und den Niederschlagsgebieten
- * zu generiernen.
+ * zu generieren.
  * <p>
  * Optional kann das Raster auch als GML (Polygon-Themen) ausgegeben werden.
  * </p>
@@ -76,65 +75,51 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class DWDConfigure
 {
-  private final static ObjectFactory OF = new ObjectFactory();
+  private static final ObjectFactory OF = new ObjectFactory();
 
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( OF.getClass() );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( OF.getClass() );
 
   /**
+   * This function is under test and will start the gerneration of the raster gml and the rest.
    * <p>
-   * Synopsis: DWDConfigureTest -rasteroutput rasterfilename.gml
-   * </p>
-   * <p>
-   * If -rasteroutput is not specified, no raster will be written (faster!)
+   * If the raster file is not specified (== null), no raster will be written (faster!)
    * </p>
    * 
    * @throws Exception
    */
-  public static void main( final String[] args ) throws Exception
+  @Test
+  public void createBaseRasterDWDRaster( ) throws Exception
   {
-    // LM2:
-    final URL lmBaseURL = DWDConfigure.class.getResource( "../resources/dwd/lm2_inv_slug" );
+    final File rasterFile = new File( "C:\\temp\\sachsen\\raster.gml" );
+    final URL lmBaseURL = DWDConfigure.class.getResource( "../resources/dwd/lm3_inv_geb2.txt" );
+    final File fileDwdZmlN = new File( "C:\\temp\\sachsen\\dwdZmlConf.xml" );
 
-    final File fileDwdZmlN = new File( "C:\\TMP\\dwdZmlConf.xml" );
-
-    createBaseRasterDWDRaster( args, lmBaseURL, fileDwdZmlN );
-  }
-
-  /**
-   * generate raster as polygon-gml and create raster-mapping configuration
-   * 
-   * @param fileDwdZmlN
-   * @throws Exception
-   */
-  public static void createBaseRasterDWDRaster( final String args[], final URL lmbaseURL, final File fileDwdZmlN ) throws Exception
-  {
     System.out.println( "Start reading raster..." );
-    final DWDRasterGeoLayer geoRaster = DWDRasterHelper.loadGeoRaster( lmbaseURL, "EPSG:31468" );
+    final DWDRasterGeoLayer geoRaster = DWDRasterHelper.loadGeoRaster( lmBaseURL, "EPSG:4326" ); // EPSG:31468
     System.out.println( "Raster read" );
 
-    if( args.length == 2 && args[0].equals( "-rasteroutput" ) )
+    if( rasterFile != null )
     {
-      final File file = new File( args[1] );
-      System.out.println( "Writing raster to file: " + file.getAbsolutePath() );
-      geoRaster.saveAsGML( file );
+      System.out.println( "Writing raster to file: " + rasterFile.getAbsolutePath() );
+      geoRaster.saveAsGML( rasterFile );
     }
 
-    // raster gml generated
-    // start part two and generate mapping configuration
-    // N
-    FileWriter fileWriter = null;
-    try
-    {
-      fileWriter = new FileWriter( fileDwdZmlN );
-      generateDwdZmlConf( geoRaster, DWDRaster.KEY_RAIN, KalypsoStati.BIT_OK, fileWriter );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( fileWriter );
-    }
+    // /* Raster gml generated. */
+    // /* Start part two and generate mapping configuration. */
+    // FileWriter fileWriter = null;
+    //    
+    // try
+    // {
+    // fileWriter = new FileWriter( fileDwdZmlN );
+    // generateDwdZmlConf( geoRaster, DWDRaster.KEY_RAIN, KalypsoStati.BIT_OK, fileWriter );
+    // }
+    // finally
+    // {
+    // IOUtils.closeQuietly( fileWriter );
+    // }
   }
 
-  private static void generateDwdZmlConf( final DWDRasterGeoLayer geoRaster, final int dwdKey, final int defaultStatusValue, final Writer writer ) throws Exception
+  public void generateDwdZmlConf( final DWDRasterGeoLayer geoRaster, final int dwdKey, final int defaultStatusValue, final Writer writer ) throws Exception
   {
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( DWDConfigure.class.getResource( "../resources/dwd/modell.gml" ), null );
 
@@ -169,7 +154,7 @@ public class DWDConfigure
       if( positions.length == 0 )
         throw new Exception( "für Gebiet " + feature.getId() + " wurden keine Rasterzellen zugeordnet !" );
 
-      for( final  RasterPart rasterPart : positions )
+      for( final RasterPart rasterPart : positions )
       {
         // percentage of intersection
         final double percentage = rasterPart.getPortion() / fullCellArea;
@@ -192,5 +177,15 @@ public class DWDConfigure
     final Marshaller marshaller = JC.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.marshal( conf, writer );
+  }
+
+  /**
+   * This function creates the JUnit4TestAdapter.
+   * 
+   * @return JUnit4TestAdapter
+   */
+  public static junit.framework.Test suite( )
+  {
+    return new JUnit4TestAdapter( DWDConfigure.class );
   }
 }
