@@ -41,7 +41,6 @@
 package org.kalypso.model.rcm.util;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,10 +56,12 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
+import org.kalypso.model.rcm.KalypsoModelRcmActivator;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -68,7 +69,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
@@ -96,6 +96,8 @@ public class RainfallGenerationOp
   }
 
   private final List<Generator> m_generators = new ArrayList<Generator>();
+
+  private final List<IStatus> m_generatorStati = new ArrayList<IStatus>();
 
   private final URL m_rcmGmlLocation;
 
@@ -134,88 +136,152 @@ public class RainfallGenerationOp
     final Feature[] catchmentFeatureArray = findCatchmentFeatures( catchmentWorkspace, logger );
     final TimeseriesLinkType[] targetLinks = findCatchmentLinks( catchmentFeatureArray, logger );
     final GM_Surface<GM_SurfacePatch>[] catchmentAreas = findCatchmentAreas( catchmentFeatureArray, logger );
+    final List<IObservation>[] results = new List[catchmentAreas.length];
+    for( int i = 0; i < results.length; i++ )
+      results[i] = new ArrayList<IObservation>();
 
     // 2. Load and verify generators
     final GMLWorkspace rcmWorkspace = loadGml( "Lade Gebietsniederschlagsmodelldefinition", m_rcmGmlLocation, logger, progress );
 
-    // Iterate through all generators
-    final List<IStatus> generatorStati = new ArrayList<IStatus>();
     for( final Generator generatorDesc : m_generators )
     {
-      final String generatorId = generatorDesc.m_gmlId;
-      if( generatorId == null )
-      {
-        logger.log( Level.SEVERE, -1, "Generator ohne gültige ID. Eintrag wird ignoriert." );
-        continue;
-      }
-
-      final Feature feature = rcmWorkspace.getFeature( generatorId );
-      if( feature == null )
-      {
-        logger.log( Level.SEVERE, -1, "Generator mit ID konnte in rcm-gml nicht gefunden werden. Eintrag wird ignoriert." );
-        continue;
-      }
-
-      final String generatorName = NamedFeatureHelper.getName( feature );
-
-      progress.subTask( "Erzeuge Gebietsniederschlag: " + generatorName );
-
-      final IRainfallGenerator rainGen = (IRainfallGenerator) feature.getAdapter( IRainfallGenerator.class );
-      if( rainGen == null )
-      {
-        final String msg = String.format( "Generator mit ID %s konnte nicht instantiiert werden. Eintrag wird ignoriert.", generatorId );
-        logger.log( Level.SEVERE, -1, msg );
-        continue;
-      }
-
       try
       {
-        final IObservation[] observations = rainGen.createRainfall( catchmentAreas, monitor );
-        final String msg = String.format( "Generator '%s' erfolgreich ausgeführt.", generatorName );
-        logger.log( Level.INFO, -1, msg );
-        // TODO: combine with observation from other generators
-        writeObservations( observations, targetLinks, targetContext );
-      }
-      catch( final CoreException e )
-      {
-        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' schlug fehl mit Meldung: %s", generatorName, e.getStatus().getMessage() );
-        logger.log( Level.WARNING, -1, msg );
-        generatorStati.add( e.getStatus() );
+        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentAreas, generatorDesc.m_from, generatorDesc.m_to, logger, progress.newChild( 10 ) );
+        if( obses == null )
+        {
+          final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorDesc.m_gmlId );
+          logger.log( Level.WARNING, -1, msg );
+        }
+        else if( obses.length != results.length )
+        {
+          final String msg = String.format( "Niederschlagserzeugung für Generator '%s': Anzahl Ergebnisszeitreihen ist falsch und wird ingoriert", generatorDesc.m_gmlId );
+          logger.log( Level.WARNING, -1, msg );
+        }
+        else
+        {
+          // sort by catchment
+          for( int i = 0; i < obses.length; i++ )
+            results[i].add( obses[i] );
+        }
+
       }
       catch( final Exception e )
       {
-        e.printStackTrace();
-        final String msg = String.format( "Fehler bei der Niederschlagserzeugung ('%s'): %s", generatorName, e.toString() );
-        logger.log( Level.WARNING, -1, msg );
-// generatorStati.add( e.getStatus() );
-      }
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelRcmActivator.getDefault().getLog().log( status );
 
-      ProgressUtilities.worked( progress, 10 );
+        final String msg = String.format( "Niederschlagserzeugung für Generator '%s' schlug fehl mit Meldung: %s", generatorDesc.m_gmlId, status.getMessage() );
+        logger.log( Level.WARNING, -1, msg );
+        m_generatorStati.add( status );
+      }
     }
 
     // Combine observations and write into target file while applying the targetFilter
-
-    // TODO mabye like that?
-// final ForecastFilter fc = new ForecastFilter();
-// fc.initFilter( sourceObses, sourceObses[0], null );
-
-
     progress.subTask( "Schreibe Zeitreihen" );
+    final IObservation[] combinedObservations = combineObservations( results );
+    writeObservations( combinedObservations, targetLinks, targetContext );
+
     ProgressUtilities.worked( progress, 10 );
   }
 
-  private void writeObservations( final IObservation[] observations, final TimeseriesLinkType[] links, final URL context ) throws MalformedURLException, SensorException
+  private IObservation[] combineObservations( final List<IObservation>[] observationLists )
   {
-    for( int i = 0; i < links.length; i++ )
-    {
-      final IObservation obs = observations[i];
-      final TimeseriesLinkType link = links[i];
-      if( obs == null || link == null )
-        continue;
+    final IObservation[] result = new IObservation[observationLists.length];
+    for( int i = 0; i < result.length; i++ )
+      result[i] = combineObservations( observationLists[i] );
 
-      final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
-      final File file = ResourceUtilities.findJavaFileFromURL( location );
-      ZmlFactory.writeToFile( obs, file );
+    return result;
+  }
+
+  private IObservation combineObservations( final List<IObservation> observationList )
+  {
+    try
+    {
+      final int size = observationList.size();
+      if( size == 0 )
+        return null;
+      else if( size == 1 )
+        return observationList.get( 0 );
+      else
+      {
+        final IObservation[] obses = observationList.toArray( new IObservation[size] );
+        final ForecastFilter fc = new ForecastFilter();
+        fc.initFilter( obses, obses[0], null );
+        return fc;
+      }
+    }
+    catch( final SensorException e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelRcmActivator.getDefault().getLog().log( status );
+      return null;
+    }
+  }
+
+  private IObservation[] generate( final Generator generatorDesc, final GMLWorkspace rcmWorkspace, final GM_Surface<GM_SurfacePatch>[] catchmentAreas, final Date from, final Date to, final ILogger logger, final IProgressMonitor monitor ) throws CoreException
+  {
+    final SubMonitor progress = SubMonitor.convert( monitor, 100 );
+
+    final String generatorId = generatorDesc.m_gmlId;
+    if( generatorId == null )
+    {
+      logger.log( Level.SEVERE, -1, "Generator ohne gültige ID. Eintrag wird ignoriert." );
+      return null;
+    }
+
+    final Feature feature = rcmWorkspace.getFeature( generatorId );
+    if( feature == null )
+    {
+      final String msg = String.format( "Generator mit ID '%s' konnte in rcm-gml (%s) nicht gefunden werden. Eintrag wird ignoriert.", generatorId, rcmWorkspace.getContext() );
+      logger.log( Level.SEVERE, -1, msg );
+      return null;
+    }
+
+    final IRainfallGenerator rainGen = (IRainfallGenerator) feature.getAdapter( IRainfallGenerator.class );
+    if( rainGen == null )
+    {
+      final String msg = String.format( "Generator mit ID '%s' konnte nicht instantiiert werden. Eintrag wird ignoriert.", generatorId );
+      logger.log( Level.SEVERE, -1, msg );
+      return null;
+    }
+
+    final String generatorName = rainGen.getName();
+    progress.subTask( "Erzeuge Gebietsniederschlag: " + generatorName );
+
+    try
+    {
+      final IObservation[] observations = rainGen.createRainfall( catchmentAreas, from, to, monitor );
+      final String msg = String.format( "Generator '%s' erfolgreich ausgeführt.", generatorName );
+      logger.log( Level.INFO, -1, msg );
+      return observations;
+    }
+    finally
+    {
+      ProgressUtilities.done( progress );
+    }
+  }
+
+  private void writeObservations( final IObservation[] observations, final TimeseriesLinkType[] links, final URL context ) throws CoreException
+  {
+    try
+    {
+      for( int i = 0; i < links.length; i++ )
+      {
+        final IObservation obs = observations[i];
+        final TimeseriesLinkType link = links[i];
+        if( obs == null || link == null )
+          continue;
+
+        final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
+        final File file = ResourceUtilities.findJavaFileFromURL( location );
+        ZmlFactory.writeToFile( obs, file );
+      }
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e, "Fehler beim Schreiben der Zeitreihen" );
+      throw new CoreException( status );
     }
   }
 

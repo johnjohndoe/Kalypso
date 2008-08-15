@@ -33,7 +33,7 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-package org.kalypso.model.rcm.internal.binding;
+package org.kalypso.model.rcm;
 
 import java.util.Collections;
 import java.util.Hashtable;
@@ -43,10 +43,14 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
+import org.kalypso.model.rcm.internal.binding.Ombrometer;
+import org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Adapter Factory for feature in the rcm namespace
+ * Adapter Factory for feature in the rcm namespace<br>
+ * REMARK: must be made public in order to let other adapter factories inherit from this one, else we cannot extend
+ * features from the rcm namespace.
  * 
  * @author Gernot Belger
  */

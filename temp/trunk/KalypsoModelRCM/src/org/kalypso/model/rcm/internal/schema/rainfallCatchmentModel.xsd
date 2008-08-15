@@ -58,20 +58,4 @@ Denotes the affected area of the corresponding ombnrometer.]]></documentation>
 			</complexContent>
 		</complexType>
 	</element>
-	
-	<!-- TODO: move this to the service?  -->
-	<element name="RasterServiceRainfallGenerator" substitutionGroup="rcm:RainfallGenerator">
-		<annotation>
-			<documentation xml:lang="en"><![CDATA[This generator creates the rainfall from a raster service that supportsa this feature.]]></documentation>
-		</annotation>
-		<complexType>
-			<complexContent>
-				<extension base="rcm:RainfallGeneratorType">
-					<sequence>
-						<element name="rasterId" type="string" minOccurs="1" maxOccurs="unbounded" />
-					</sequence>
-				</extension>
-			</complexContent>
-		</complexType>
-	</element>
 </schema>

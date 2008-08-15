@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.rcm.internal.binding;
 
-import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 import javax.xml.namespace.QName;
 
@@ -59,7 +59,10 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.NOperationFilter;
 import org.kalypso.ogc.sensor.filter.filters.OperationFilter;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -80,8 +83,6 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class OmbrometerRainfallGenerator extends AbstractFeatureBinder implements IRainfallGenerator
 {
-  public static final BigDecimal BIG_ZERO = new BigDecimal( "0.0" );
-
   public static final QName QNAME = new QName( UrlCatalogRcm.NS_RCM, "OmbrometerRainfallGenerator" );
 
   public static final QName QNAME_PROP_ombrometerCollection = new QName( UrlCatalogRcm.NS_RCM, "ombrometerCollection" );
@@ -100,9 +101,10 @@ public class OmbrometerRainfallGenerator extends AbstractFeatureBinder implement
   /**
    * @see
    *      org.kalypso.model.rcm.binding.IRainfallGenerator#createRainfall(org.kalypsodeegree.model.geometry.GM_Surface<org
-   *      .kalypsodeegree.model.geometry.GM_SurfacePatch>[], org.eclipse.core.runtime.IProgressMonitor)
+   *      .kalypsodeegree.model.geometry.GM_SurfacePatch>[], java.util.Date, java.util.Date,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
-  public IObservation[] createRainfall( final org.kalypsodeegree.model.geometry.GM_Surface<org.kalypsodeegree.model.geometry.GM_SurfacePatch>[] areas, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
+  public IObservation[] createRainfall( final GM_Surface<GM_SurfacePatch>[] areas, final Date from, final Date to, final IProgressMonitor monitor ) throws org.eclipse.core.runtime.CoreException
   {
     final Feature ombrometerCollection = getProperty( QNAME_PROP_ombrometerCollection, Feature.class );
     final String collectionPath = getProperty( QNAME_PROP_ombrometerFeaturePath, String.class );
@@ -114,15 +116,16 @@ public class OmbrometerRainfallGenerator extends AbstractFeatureBinder implement
     final Feature[] ombrometerFeatures = FeatureHelper.toArray( ombrometerList );
     if( ombrometerFeatures.length < ombrometerList.size() )
     {
-      // log problem
+      // TODO: log problem
     }
-    final GM_Surface<GM_SurfacePatch>[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaPath, new GM_Surface[ombrometerFeatures.length] );
+
+    final GM_Surface< ? >[] ombrometerAreas = FeatureHelper.getProperties( ombrometerFeatures, areaPath, new GM_Surface[ombrometerFeatures.length] );
     final TimeseriesLinkType[] ombrometerLinks = FeatureHelper.getProperties( ombrometerFeatures, linkPath, new TimeseriesLinkType[ombrometerFeatures.length] );
     final URL sourceContext = ombrometerList.getParentFeature().getWorkspace().getContext();
 
     try
     {
-      final IObservation[] ombrometerObservations = readObservations( ombrometerLinks, sourceContext );
+      final IObservation[] ombrometerObservations = readObservations( ombrometerLinks, from, to, sourceContext );
 
       // Convert to JTS-Geometries
       final Polygon[] ombrometerPolygons = new Polygon[ombrometerAreas.length];
@@ -164,15 +167,25 @@ public class OmbrometerRainfallGenerator extends AbstractFeatureBinder implement
     }
   }
 
-  private IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final URL context ) throws MalformedURLException, SensorException
+  private IObservation[] readObservations( final TimeseriesLinkType[] ombrometerLinks, final Date from, final Date to, final URL context ) throws MalformedURLException, SensorException
   {
+    final IRequest request = new ObservationRequest( from, to );
+
     final IObservation[] readObservations = new IObservation[ombrometerLinks.length];
     for( int i = 0; i < ombrometerLinks.length; i++ )
     {
       final TimeseriesLinkType link = ombrometerLinks[i];
-      final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, link.getHref() );
-      if( zmlLocation != null )
-        readObservations[i] = ZmlFactory.parseXML( zmlLocation, link.getHref() );
+      if( link != null )
+      {
+        final String href = link.getHref();
+        if( href != null )
+        {
+          final String hrefRequest = ZmlURL.insertRequest( href, request );
+          final URL zmlLocation = link == null ? null : UrlResolverSingleton.resolveUrl( context, hrefRequest );
+          if( zmlLocation != null )
+            readObservations[i] = ZmlFactory.parseXML( zmlLocation, href );
+        }
+      }
     }
 
     return readObservations;
