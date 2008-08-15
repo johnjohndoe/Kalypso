@@ -3,7 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoDWD
 Bundle-SymbolicName: org.kalypso.dwd; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: lib/servlet-api.jar
+Bundle-ClassPath: lib/servlet-api.jar,
+ .
 Bundle-Vendor: kalypso.sourceforge.net
 Bundle-Localization: plugin
 Export-Package: javax.servlet,

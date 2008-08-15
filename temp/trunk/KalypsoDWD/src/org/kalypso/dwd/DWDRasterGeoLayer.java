@@ -32,6 +32,7 @@ package org.kalypso.dwd;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -141,13 +142,13 @@ public class DWDRasterGeoLayer
       Feature feature = createFeature( rootFE, cellMemeberPT, pos );
       m_workspace.addFeatureAsComposition( rootFE, cellMemeberPT, 0, feature );
     }
-    m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
-    // resort it before using the query
-    m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
-    // now update the surface geometry
-    m_workspace.accept( new UpdateFeatureSurfaceGeometry(), m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-    // resort again before using the query
-    m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
+//    m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
+//    // resort it before using the query
+//    m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
+//    // now update the surface geometry
+//    m_workspace.accept( new UpdateFeatureSurfaceGeometry(), m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
+//    // resort again before using the query
+//    m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
   }
 
   private Feature createFeature( final Feature parent, final IRelationType parentRelation, final int pos ) throws Exception
@@ -155,7 +156,7 @@ public class DWDRasterGeoLayer
     final Feature feature = FeatureFactory.createFeature( parent, parentRelation, Integer.toString( pos ), m_positionFeature, true );
     GM_Object point = createGeometryPoint( pos );
     feature.setProperty( GEO_PROP_POINT, point );
-    feature.setProperty( POS_PROP, new Integer( pos ) );
+    feature.setProperty( POS_PROP, new BigInteger( String.valueOf( pos ) ) );
     return feature;
   }
 

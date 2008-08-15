@@ -107,6 +107,7 @@ public class DWDRasterHelper
    * @deprecated This method is now implemented in DWDCopyTask for use from the DVDFileCopyServlet. It seems that the
    *             method isn't used form any other class anymore.
    */
+  @Deprecated
   public static File getNewestFile( final File srcDir, final String prefix, final SimpleDateFormat df, final boolean removeOthers )
   {
     final FileFilter filter = new PrefixFileFilter( prefix );
