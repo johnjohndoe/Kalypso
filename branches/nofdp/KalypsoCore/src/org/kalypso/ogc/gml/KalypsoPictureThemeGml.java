@@ -84,7 +84,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 
     m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
     if( m_coverages.size() != 1 )
-      throw new NotImplementedException( Messages.getString("org.kalypso.ogc.gml.KalypsoPictureThemeGml.0") ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
 
     for( final ICoverage coverage : m_coverages )
     {
