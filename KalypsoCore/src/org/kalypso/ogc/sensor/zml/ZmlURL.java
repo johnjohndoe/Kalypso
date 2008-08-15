@@ -128,7 +128,7 @@ public final class ZmlURL
    */
   public static String getIdentifierPart( final String strUrl )
   {
-    int ix = strUrl.indexOf( '?' );
+    final int ix = strUrl.indexOf( '?' );
     if( ix != -1 )
       return strUrl.substring( 0, ix );
 
@@ -151,7 +151,7 @@ public final class ZmlURL
     // TODO test if this is correct since only the first ':' found
     // will be returned here. But the url might contain something like
     // foo:bar://stuff hence results might not be correct!!!
-    int ix = strUrl.indexOf( ":" ); //$NON-NLS-1$
+    final int ix = strUrl.indexOf( ":" ); //$NON-NLS-1$
     if( ix != -1 )
       return strUrl.substring( 0, ix );
 
@@ -164,11 +164,14 @@ public final class ZmlURL
    * @param href
    *          the zml url to update
    * @param queryPart
-   *          may contain a filter spec (embodied within %lt;filter/&gt; tags) and may also contain a request spec
-   *          (embodied within %lt;request/&gt; tags)
+   *          May contain a filter spec (embodied within %lt;filter/&gt; tags) and may also contain a request spec
+   *          (embodied within %lt;request/&gt; tags). If <code>null</code>, simply <code>href</code> is returned.
    */
   public static String insertQueryPart( final String href, final String queryPart )
   {
+    if( queryPart == null )
+      return href;
+
     String newHref = href;
 
     final int fp1 = queryPart.indexOf( ZmlURLConstants.TAG_FILTER1 );
@@ -209,7 +212,7 @@ public final class ZmlURL
     filter = filter.replaceAll( "^" + ZmlURLConstants.TAG_FILTER1, "" ); // remove beginning "<filter>" //$NON-NLS-1$ //$NON-NLS-2$
     filter = filter.replaceAll( ZmlURLConstants.TAG_FILTER2 + "$", "" ); // remove ending "</filter>" //$NON-NLS-1$ //$NON-NLS-2$
 
-    String[] strs = tmp.split( "\\?", 2 ); //$NON-NLS-1$
+    final String[] strs = tmp.split( "\\?", 2 ); //$NON-NLS-1$
     if( strs[0].startsWith( "<" ) || strs[0].startsWith( "&lt;" ) ) //$NON-NLS-1$ //$NON-NLS-2$
       tmp = "?" + strs[0] + ZmlURLConstants.TAG_FILTER1 + filter + ZmlURLConstants.TAG_FILTER2; //$NON-NLS-1$
     else
@@ -278,7 +281,7 @@ public final class ZmlURL
   public static String insertRequest( final String href, final String request )
   {
     // first remove the existing request (does nothing if not present)
-    String requestPart = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
+    final String requestPart = XMLStringUtilities.getXMLPart( href, ZmlURLConstants.TAG_REQUEST );
     String tmpUrl;
     if( requestPart != null )
       tmpUrl = href.replace( requestPart, "" ); //$NON-NLS-1$

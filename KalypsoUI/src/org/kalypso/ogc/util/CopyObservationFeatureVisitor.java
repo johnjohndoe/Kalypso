@@ -200,7 +200,6 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       {
         final ForecastFilter fc = new ForecastFilter();
         fc.initFilter( sourceObses, sourceObses[0], null );
-        // TODO check if null context is ok here
         resultObs = fc;
       }
 
@@ -376,11 +375,8 @@ public class CopyObservationFeatureVisitor implements FeatureVisitor
       return null;
     // keine Zeitreihe verlink, z.B. kein Pegel am
     // Knoten in KalypsoNA
-    final String href;
-    if( filter == null )
-      href = sourcelink.getHref();
-    else
-      href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter ); // use insertQueryPart, not insertFilter, because
+    final String href = ZmlURL.insertQueryPart( sourcelink.getHref(), filter );
+
     // filter variable might also contain request spec
     String sourceref = ZmlURL.insertRequest( href, new ObservationRequest( from, to ) );
 
