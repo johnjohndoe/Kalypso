@@ -10,12 +10,41 @@
 				<Title>-</Title>
 				<Rule>
 					<Name>thiessenPolygon</Name>
+					<Title>Thiessen Polygon</Title>					
 					<PolygonSymbolizer>
 						<Geometry>
 							<ogc:PropertyName>affectedArea</ogc:PropertyName>
 						</Geometry>
 						<Fill>
 							<CssParameter name="fill-opacity">0.2</CssParameter>
+							<CssParameter name="fill">#019c05</CssParameter>
+						</Fill>
+						<Stroke>
+							<CssParameter name="stroke">#000000</CssParameter>
+							<CssParameter name="stroke-width">1.0</CssParameter>
+							<CssParameter name="stroke-linejoin">mitre</CssParameter>
+							<CssParameter name="stroke-opacity">1.0</CssParameter>
+							<CssParameter name="stroke-linecap">butt</CssParameter>
+						</Stroke>
+					</PolygonSymbolizer>
+				</Rule>
+			</FeatureTypeStyle>
+		</UserStyle>
+		<UserStyle>
+			<Name>thiessenSchwach</Name>
+			<Title></Title>
+			<FeatureTypeStyle>
+				<Name>ThiessenSchwachFts</Name>
+				<Title>-</Title>
+				<Rule>
+					<Name>thiessenSchwachPolygon</Name>
+					<Title>Thiessen Polygon</Title>
+					<PolygonSymbolizer>
+						<Geometry>
+							<ogc:PropertyName>affectedArea</ogc:PropertyName>
+						</Geometry>
+						<Fill>
+							<CssParameter name="fill-opacity">0.05</CssParameter>
 							<CssParameter name="fill">#019c05</CssParameter>
 						</Fill>
 						<Stroke>

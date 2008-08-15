@@ -291,7 +291,7 @@
          ================================= -->
 	<target name="gebietsniederschlag" depends="calculationProperties" description="Berechnung Gebietsniederschlag">
 		<kalypso.rainfallGeneration rcmurl="${calc.url}/rainfallCatchment.gml" catchmenturl="${calc.url}/calcCase.gml" catchmentFeaturePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" catchmentObservationPath="Niederschlag_rechnung" catchmentAreaPath="GEOM_EZG" targetFilter="">
-			<generator rcmId="ombrometerGenerator" from="${startforecast}" to="${stopsim}" />
+			<generator rcmId="ombrometerGenerator" from="${startsimN}" to="${startforecast}" />
 			<generator rcmId="rasterGenerator" from="${startforecast}" to="${stopsim}" />
 		</kalypso.rainfallGeneration>
 		

@@ -12,6 +12,7 @@
         <!--arg name="htmlFilePath" value=".model/wizardhtml/07_Prognose_01.html"/-->
 		<arg name="mainSash" value="50" />
 		<arg name="rightSash" value="50" />
+		<arg name="hideCalcButton" value="true" />
 
 		<!-- MAP -->
 		<arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt" />
@@ -54,7 +55,8 @@
         <!--arg name="htmlFilePath" value=".model/wizardhtml/07_Prognose_01.html"/-->
 		<arg name="mainSash" value="50" />
 		<arg name="rightSash" value="100" />
-
+		<arg name="hideCalcButton" value="true" />
+		
 		<!-- MAP -->
 		<arg name="mapTemplate" value=".templates/calcCase/dwdprognose.gmt" />
 		<arg name="maximizeMap" value="true" />
@@ -72,13 +74,20 @@
 
 	<!-- Kontrolle Niederschlag -->
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<arg name="mainSash" value="40" />
+		<arg name="rightSash" value="50" />
+
 		<arg name="mapTemplate" value=".templates/calcCase/ezg.gmt" />
 		<arg name="maximizeMap" value="true" />
 		<arg name="selectFeatureID" value="EZ_1" />
-		<arg name="mainSash" value="40" />
-		<arg name="rightSash" value="50" />
+		<arg name="mapToolbar">
+			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
+			<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand" />
+		</arg>
+
 		<arg name="zmlTableShow" value="all" />
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung" />
+
 		<arg name="buttonText" value="Neuberechnung Gebietsniederschlag" />
 		<arg name="buttonTooltip" value="Ombrometermesswerte mittels Gebietsniederschlagsmodell übernehmen" />
 		<arg name="buttonLaunch" value="gebietsniederschlag" />
