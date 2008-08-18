@@ -68,7 +68,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class StatusComposite extends Composite
 {
   /**
@@ -148,6 +148,7 @@ public class StatusComposite extends Composite
     {
       m_statusImgLabel.setImage( null );
       m_statusMessageLabel.setText( "" ); //$NON-NLS-1$
+      m_statusMessageLabel.setToolTipText( null );
       if( m_detailsButton != null )
         m_detailsButton.setEnabled( false );
     }
@@ -155,6 +156,8 @@ public class StatusComposite extends Composite
     {
       m_statusImgLabel.setImage( getStatusImage( status ) );
       m_statusMessageLabel.setText( status.getMessage() );
+      // Set same text as tooltip, if label is too short to hold the complete text
+      m_statusMessageLabel.setToolTipText( status.getMessage() );
       if( m_detailsButton != null )
         m_detailsButton.setEnabled( status.isMultiStatus() || status.getException() != null );
     }
@@ -175,7 +178,7 @@ public class StatusComposite extends Composite
     return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );
   }
 
-  @SuppressWarnings("restriction") //$NON-NLS-1$
+  @SuppressWarnings("restriction")
   public static Image getStatusImage( final IStatus status )
   {
     switch( status.getSeverity() )

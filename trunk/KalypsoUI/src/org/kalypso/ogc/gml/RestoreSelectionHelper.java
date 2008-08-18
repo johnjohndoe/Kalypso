@@ -45,11 +45,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.pool.PoolableObjectType;
 import org.kalypso.util.pool.ResourcePool;
 import org.kalypsodeegree.model.feature.Feature;
@@ -82,7 +82,7 @@ public class RestoreSelectionHelper
   private final PoolableObjectType m_key;
 
   public RestoreSelectionHelper( final PoolableObjectType key, final IFeatureSelectionManager selectionManager )
-      throws CoreException
+  throws CoreException
   {
     m_key = key;
     m_selectionManager = selectionManager;
@@ -92,9 +92,8 @@ public class RestoreSelectionHelper
 
   private CommandableWorkspace getWorkspace( final PoolableObjectType key ) throws CoreException
   {
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
-    final CommandableWorkspace workspace = (CommandableWorkspace)pool.getObject( key );
-    return workspace;
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    return (CommandableWorkspace) pool.getObject( key );
   }
 
   public void restoreSelection() throws CoreException
@@ -108,9 +107,8 @@ public class RestoreSelectionHelper
       return;
 
     final List<EasyFeatureWrapper> easyFeatures = new ArrayList<EasyFeatureWrapper>( m_oldSelectionState.length );
-    for( int i = 0; i < m_oldSelectionState.length; i++ )
+    for( final String fid : m_oldSelectionState )
     {
-      final String fid = m_oldSelectionState[i];
       if( fid != null )
       {
         final Feature feature = workspace.getFeature( fid );
@@ -119,7 +117,7 @@ public class RestoreSelectionHelper
       }
     }
     final EasyFeatureWrapper[] easyArray = easyFeatures
-        .toArray( new EasyFeatureWrapper[easyFeatures.size()] );
+    .toArray( new EasyFeatureWrapper[easyFeatures.size()] );
 
     final Feature[] selectionToRemove = FeatureSelectionHelper.getFeatures( m_selectionManager );
     m_selectionManager.changeSelection( selectionToRemove, easyArray );
