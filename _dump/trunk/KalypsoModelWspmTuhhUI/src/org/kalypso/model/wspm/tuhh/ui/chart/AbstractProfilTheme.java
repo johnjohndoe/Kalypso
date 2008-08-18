@@ -48,12 +48,14 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
@@ -64,8 +66,43 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IExpandableChartLayer
+public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IExpandableChartLayer, ILayerEventListener
 {
+  
+  
+  
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerActivationChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerActivationChanged( IChartLayer layer )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerContentChanged( IChartLayer layer )
+  {
+      getEventHandler().fireLayerContentChanged( this );
+  }
+
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerVisibilityChanged( IChartLayer layer )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+
+  
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
@@ -90,11 +127,13 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    */
   public IChartLayer[] getLayers( )
   {
-    final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>( m_chartLayers.length );
-    for( final IProfilChartLayer layer : m_chartLayers )
-      if( layer.getTargetComponent() != null )
+    final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>(m_chartLayers.length);
+    for(final IProfilChartLayer layer : m_chartLayers)
+    {
+      if (layer.getTargetComponent()!= null)
         layers.add( layer );
-    return layers.toArray( new IProfilChartLayer[] {} );
+    }
+    return layers.toArray(new IProfilChartLayer[]{});
   }
 
   /**
@@ -111,6 +150,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   private final String m_title;
 
+
   public AbstractProfilTheme( final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( null, id, null );
@@ -119,8 +159,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     for( final IChartLayer layer : chartLayers )
       layer.setCoordinateMapper( cm );
     m_chartLayers = chartLayers;
-
-  }
+}
 
   protected final void drawClippingRect( final GC gc )
   {
@@ -250,7 +289,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
    */
-  @Override
   public void removeYourself( )
   {
     for( final IProfilChartLayer layer : m_chartLayers )
@@ -282,7 +320,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( (min == null) || (max == null) )
+    if( min == null || max == null )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -310,7 +348,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( (min == null) || (max == null) )
+    if( min == null || max == null )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -321,7 +359,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public IProfil getProfil( )
   {
-    if( (m_chartLayers.length > 0) && (m_chartLayers[0] != null) )
+    if( m_chartLayers.length > 0 && m_chartLayers[0] != null )
       return m_chartLayers[0].getProfil();
     return null;
   }
@@ -367,34 +405,27 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         source = i;
       }
       if( m_chartLayers[i] == selectedObject )
+      {
         target = i;
+      }
     }
     if( target == source )
       return false;
     else if( target - source > 0 )
+    {
       for( int i = source; i < target; i++ )
         m_chartLayers[i] = m_chartLayers[i + 1];
+
+    }
     else if( target - source < 0 )
+    {
       for( int i = source; i > target; i-- )
         m_chartLayers[i] = m_chartLayers[i - 1];
+
+    }
     m_chartLayers[target] = draggedLayer;
-    fireLayerContentChanged();
+    getEventHandler().fireLayerContentChanged(this);
     return true;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#fireLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void fireLayerContentChanged( )
-  {
-    getEventHandler().fireLayerContentChanged( this );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#fireLayerVisibilityChanged()
-   */
-  public void fireLayerVisibilityChanged( )
-  {
-    fireLayerContentChanged();
-  }
-}
+ }

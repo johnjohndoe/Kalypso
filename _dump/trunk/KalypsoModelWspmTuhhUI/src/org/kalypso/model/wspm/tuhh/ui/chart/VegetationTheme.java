@@ -70,7 +70,7 @@ public class VegetationTheme extends AbstractProfilTheme
   public VegetationTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
     super( IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, null );
-    m_LineStyle = (ILineStyle) styleProvider.getStyleFor( chartLayers[0].getId() + "LINE", LineStyle.class );
+    m_LineStyle = styleProvider.getStyleFor( chartLayers[0].getId() + "LINE", LineStyle.class );
     m_LineStyle.setColor( new RGB( 0, 255, 0 ) );
     m_cm = cm;
   }
@@ -91,6 +91,24 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public void paint( GC gc )
   {
+
+//    final IProfil profil = getProfil();
+//
+//    if( profil == null )
+//      return;
+//    final IRecord[] profilPoints = profil.getPoints();
+//    final int len = profilPoints.length - 2;
+//    final PolylineFigure pf = new PolylineFigure();
+//
+//    pf.setStyle( getLineStyle() );
+//    for( int i = 0; i < len; i++ )
+//    {
+//      final Point point1 = m_cm.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoints[i] ), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, profilPoints[i] )+1 );
+//      final Point point2 = m_cm.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoints[i + 1] ), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, profilPoints[i + 1] )+1 );
+//      pf.setPoints( new Point[] { point1, point2 } );
+//      pf.paint( gc );
+//    }
+
     final IProfil profil = getProfil();
 
     if( profil == null )
@@ -108,5 +126,7 @@ public class VegetationTheme extends AbstractProfilTheme
       pf.paint( gc );
     }
   }
+  
+ 
 
 }
