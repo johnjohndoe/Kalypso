@@ -60,12 +60,18 @@ public class ResultWorker
 
   private final INode m_node;
 
-  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node, IResultTimeSeries handler )
+  private final GregorianCalendar m_start;
+
+  private final GregorianCalendar m_end;
+
+  public ResultWorker( final CommandableWorkspace targetWorkspace, final TimeSerieComplexType binding, final INode node, IResultTimeSeries handler, GregorianCalendar start, GregorianCalendar end )
   {
     m_workspace = targetWorkspace;
     m_binding = binding;
     m_node = node;
     m_handler = handler;
+    m_start = start;
+    m_end = end;
   }
 
   public void process( IResultWorkerSettings settings ) throws CoreException
@@ -85,6 +91,11 @@ public class ResultWorker
       final GregorianCalendar calendar = new GregorianCalendar();
       calendar.clear();
       calendar.set( date.getYear(), date.getMonth() - 1, date.getDay(), time.getHour(), time.getMinute(), time.getSecond() );
+
+      if( calendar.before( m_start ) )
+        continue;
+      if( calendar.after( m_end ) )
+        continue;
 
       final Double value = event.getValue();
 
