@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -354,6 +354,8 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
 
       final GM_Surface< ? > polygon = (GM_Surface< ? >) JTSAdapter.wrap( geometry );
+      polygon.setCoordinateSystem( lineValue.getCoordinateSystem() );
+
       return polygon;
     }
     catch( final GM_Exception e )
