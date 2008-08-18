@@ -28,6 +28,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IConnectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ICrossSectionNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
+import org.kalypso.model.wspm.sobek.core.interfaces.ILastfall;
 import org.kalypso.model.wspm.sobek.core.interfaces.INode;
 import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IPolderNodeResultWrapper;
@@ -70,9 +71,12 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
 
   private JAXBElement<TimeSeriesComplexType> m_jaxPiStructuresRoot;
 
-  private SobekResultModelHandler( final IFolder resultFolder ) throws JAXBException
+  private final ILastfall m_lastfall;
+
+  private SobekResultModelHandler( ILastfall lastfall, final IFolder resultFolder ) throws JAXBException
   {
     m_resultFolder = resultFolder;
+    m_lastfall = lastfall;
 
     if( JC == null )
     {
@@ -91,12 +95,12 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
    * @return Sobek Result Model
    * @throws JAXBException
    */
-  public static ISobekResultModel getHandler( final IFolder resultFolder ) throws CoreException, JAXBException
+  public static ISobekResultModel getHandler( ILastfall lastfall, final IFolder resultFolder ) throws CoreException, JAXBException
   {
     if( !resultFolder.exists() )
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.SobekResultModelHandler_0 ) );
 
-    return new SobekResultModelHandler( resultFolder );
+    return new SobekResultModelHandler( lastfall, resultFolder );
   }
 
   public void registerWorkspaces( final String id, final GMLWorkspace gml, final CommandableWorkspace cmd )
@@ -239,7 +243,7 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
 
         NodeTimeSeriesHandler handler = new NodeTimeSeriesHandler( workspace.getRootFeature(), node );
 
-        final ResultWorker worker = new ResultWorker( workspace, binding, node, handler );
+        final ResultWorker worker = new ResultWorker( workspace, binding, node, handler, m_lastfall.getLastfallStart(), m_lastfall.getLastfallEnd() );
         worker.process( new IResultWorkerSettings()
         {
           public String getParameterId( )
@@ -272,17 +276,17 @@ public class SobekResultModelHandler implements ISobekResultModel, IWorkspaceCac
 
   public IPolderNodeResultWrapper getPolderNodeResult( IEmptyNode node )
   {
-    return new PolderNodeResultWrapper( node, m_resultFolder, this );
+    return new PolderNodeResultWrapper( node, m_resultFolder, this, m_lastfall.getLastfallStart(), m_lastfall.getLastfallEnd() );
   }
 
   public IRetardingBasinNodeResultWrapper getRetardingBasinNodeResult( IEmptyNode node )
   {
-    return new RetardingBasinNodeResultWrapper( node, m_resultFolder, this );
+    return new RetardingBasinNodeResultWrapper( node, m_resultFolder, this, m_lastfall.getLastfallStart(), m_lastfall.getLastfallEnd() );
   }
 
   public IWeirNodeResultWrapper getWeirNodeResult( IEmptyNode node )
   {
-    return new WeirNodeResultWrapper( node, m_resultFolder, this );
+    return new WeirNodeResultWrapper( node, m_resultFolder, this, m_lastfall.getLastfallStart(), m_lastfall.getLastfallEnd() );
   }
 
   public CommandableWorkspace getCommandableWorkspace( String id )

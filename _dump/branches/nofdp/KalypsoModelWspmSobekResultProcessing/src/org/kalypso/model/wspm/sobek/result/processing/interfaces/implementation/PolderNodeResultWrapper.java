@@ -2,6 +2,7 @@ package org.kalypso.model.wspm.sobek.result.processing.interfaces.implementation
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -39,9 +40,14 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
 
   private final IWorkspaceCache m_cache;
 
-  public PolderNodeResultWrapper( IEmptyNode node, IFolder resultFolder, IWorkspaceCache cache )
-  {
+  private final GregorianCalendar m_start;
 
+  private final GregorianCalendar m_end;
+
+  public PolderNodeResultWrapper( IEmptyNode node, IFolder resultFolder, IWorkspaceCache cache, GregorianCalendar start, GregorianCalendar end )
+  {
+    m_start = start;
+    m_end = end;
     Assert.isTrue( STRUCTURE_TYPE.ePolder.equals( node.getStructureType() ) );
 
     m_node = node;
@@ -164,7 +170,7 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
 
         PolderNodeTimeSeriesHandler handler = new PolderNodeTimeSeriesHandler( type, workspace.getRootFeature(), m_node );
 
-        final ResultWorker worker = new ResultWorker( workspace, binding, m_node, handler );
+        final ResultWorker worker = new ResultWorker( workspace, binding, m_node, handler, m_start, m_end );
         worker.process( settings );
 
         // save changes
