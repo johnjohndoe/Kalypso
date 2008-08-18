@@ -80,6 +80,9 @@ public class BranchLengthSectionUtilities
    * 
    *  CN--------CSN----CSN----Empty-----CSN-----CSN---------CN
    * </pre>
+   * 
+   * @param end
+   * @param start
    */
   private static void fillObservation( final ISobekResultModel modelHandler, final TupleResult result, final IBranch branch ) throws CoreException
   {
