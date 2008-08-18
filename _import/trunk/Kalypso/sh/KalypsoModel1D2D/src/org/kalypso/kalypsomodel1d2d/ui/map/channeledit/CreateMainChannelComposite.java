@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.channeledit;
 
-import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +100,8 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
-import de.belger.swtchart.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+
 
 /**
  * @author Thomas Jung
@@ -929,7 +929,7 @@ public class CreateMainChannelComposite extends Composite
         // here repaint!!
       }
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
-      final ProfilChartView profilChartView = new ProfilChartView( profil, m_viewData, new IStationResult[0], m_colorRegistry, new Insets( 0, 0, 0, 0 ) );
+      final ProfilChartView profilChartView = new ProfilChartView( profil, new IStationResult[0], m_colorRegistry);
       profilChartView.setLayerProvider( new ProfilOverlayLayerProvider() );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
@@ -943,7 +943,7 @@ public class CreateMainChannelComposite extends Composite
       final Control profilControl = profilChartView.createControl( sectionClient, SWT.BORDER );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      final IChartLayer overlayLayer = profilChartView.getChart().getLayer( IWspmOverlayConstants.LAYER_OVERLAY );
+      final IChartLayer overlayLayer = profilChartView.getChart().getChartModel().getLayerManager().getLayerById( IWspmOverlayConstants.LAYER_OVERLAY );
       if( overlayLayer instanceof ProfilOverlayLayer )
       {
         // currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
