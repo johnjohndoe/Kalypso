@@ -56,16 +56,21 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.Messages;
-import org.kalypso.model.wspm.ui.view.chart.IActiveLayerChangeListener;
-import org.kalypso.model.wspm.ui.view.chart.IActiveLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
+import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author Gernot Belger
  */
-public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerChangeListener
+public class LayerView extends ViewPart implements IAdapterEater, IProfilChartViewProviderListener// ,
+// IActiveLayerChangeListener
 {
   private final ScrolledCompositeCreator m_creator = new ScrolledCompositeCreator( null )
   {
@@ -80,9 +85,9 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
     }
   };
 
-  private final AdapterPartListener m_providerListener = new AdapterPartListener( IActiveLayerProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
+  private final AdapterPartListener m_providerListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  private IActiveLayerProvider m_provider;
+  private IProfilChartViewProvider m_provider;
 
   private IChartLayer m_activeLayer;
 
@@ -114,7 +119,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
   {
     if( m_provider != null )
     {
-      m_provider.removeActiveLayerChangeListener( this );
+      // m_provider.removeActiveLayerChangeListener( this );
       m_provider = null;
     }
   }
@@ -137,8 +142,8 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
   public void createPartControl( final Composite parent )
   {
     m_creator.createControl( parent, SWT.H_SCROLL | SWT.V_SCROLL, SWT.NONE );
-
-    onActiveLayerChanged( m_provider == null ? null : m_provider.getActiveLayer() );
+    if( m_provider != null )
+      onProfilChartViewChanged( m_provider.getProfilChartView() );
   }
 
   /**
@@ -146,7 +151,7 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
    */
   public void setAdapter( final IWorkbenchPart part, final Object adapter )
   {
-    final IActiveLayerProvider provider = (IActiveLayerProvider) adapter;
+    final IProfilChartViewProvider provider = (IProfilChartViewProvider) adapter;
 
     if( m_provider == provider && provider != null )
       return;
@@ -156,17 +161,30 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
     m_provider = provider;
 
     if( m_provider != null )
-      m_provider.addActiveLayerChangeListener( this );
+    {
+      m_provider.addProfilChartViewProviderListener( this );
+      onProfilChartViewChanged( m_provider.getProfilChartView() );
+    }
 
-    onActiveLayerChanged( m_provider == null ? null : m_provider.getActiveLayer() );
   }
 
   /**
-   * @see de.belger.swtchart.layer.IActiveLayerChangeListener#onActiveLayerChanged(de.belger.swtchart.layer.IChartLayer)
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener#onProfilChartViewChanged(org.kalypso.model.wspm.ui.view.chart.ProfilChartView)
    */
-  public void onActiveLayerChanged( final IChartLayer activeLayer )
+  @Override
+  public void onProfilChartViewChanged( ProfilChartView newProfilChartView )
   {
-
+    final ChartComposite chart = newProfilChartView == null ? null : newProfilChartView.getChart();
+    final IChartModel model = chart == null ? null : chart.getChartModel();
+    final ILayerManager mngr = model == null ? null : model.getLayerManager();
+    final IChartLayer[] layers = mngr == null ? new IChartLayer[] {} : mngr.getLayers();
+    IChartLayer activeLayer = null;
+    for( final IChartLayer layer : layers )
+      if( layer.isActive() )
+      {
+        activeLayer = layer;
+        break;
+      }
     if( m_activeLayer == activeLayer )
       return;
     final Group group = (Group) m_creator.getContentControl();
@@ -214,5 +232,60 @@ public class LayerView extends ViewPart implements IAdapterEater, IActiveLayerCh
     group.layout();
     m_creator.updateControlSize( false );
   }
+
+// /**
+// * @see de.belger.swtchart.layer.IActiveLayerChangeListener#onActiveLayerChanged(de.belger.swtchart.layer.IChartLayer)
+// */
+// public void onActiveLayerChanged( final IChartLayer activeLayer )
+// {
+//
+// if( m_activeLayer == activeLayer )
+// return;
+// final Group group = (Group) m_creator.getContentControl();
+// if( group == null || group.isDisposed() )
+// return;
+//
+// for( final Control c : group.getChildren() )
+// {
+// if( !c.isDisposed() )
+// c.dispose();
+// }
+//    group.setText( "" ); //$NON-NLS-1$
+//
+// if( activeLayer != null )
+// {
+// group.setText( activeLayer.getTitle() );
+// final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer)
+  // activeLayer).createLayerPanel() : null;
+//
+// if( panel != null )
+// {
+// final Control control = panel.createControl( group, SWT.NONE );
+// control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+// }
+// else
+// new Label( group, SWT.NONE | SWT.WRAP );
+//
+// m_activeLayer = activeLayer;
+// }
+// else
+// {
+// // alles gescheitert -> Meldung
+// final Label label = new Label( group, SWT.CENTER );
+// final GridData gridData = new GridData();
+// gridData.grabExcessHorizontalSpace = true;
+// gridData.horizontalAlignment = SWT.FILL;
+// gridData.horizontalIndent = 10;
+// gridData.grabExcessVerticalSpace = true;
+// gridData.verticalAlignment = SWT.CENTER;
+// gridData.verticalIndent = 10;
+//
+// label.setLayoutData( gridData );
+// label.setText( Messages.LayerView_1 );
+// }
+//
+// group.layout();
+// m_creator.updateControlSize( false );
+// }
 
 }

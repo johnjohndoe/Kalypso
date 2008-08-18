@@ -72,6 +72,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 public abstract class AbstractProfilLayer extends AbstractChartLayer implements IProfilChartLayer
 {
 
+
   private final IProfil m_profil;
 
   private final String m_targetComponent;
@@ -99,12 +100,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_targetComponent = targetRangeProperty;
     if( styleProvider != null )
     {
-      m_LineStyle = (ILineStyle) styleProvider.getStyleFor( targetRangeProperty + "LINE", LineStyle.class );
-      m_LineStyle_active = (ILineStyle) styleProvider.getStyleFor( targetRangeProperty + "LINE_ACTIVE", LineStyle.class );
-      m_LineStyle_hover = (ILineStyle) styleProvider.getStyleFor( targetRangeProperty + "LINE_HOVER", LineStyle.class );
-      m_pointStyle = (IPointStyle) styleProvider.getStyleFor( targetRangeProperty + "POINT", PointStyle.class );
-      m_pointStyle_active = (IPointStyle) styleProvider.getStyleFor( targetRangeProperty + "POINT_ACTIVE", PointStyle.class );
-      m_pointStyle_hover = (IPointStyle) styleProvider.getStyleFor( targetRangeProperty + "POINT_HOVER", PointStyle.class );
+      m_LineStyle = styleProvider.getStyleFor( targetRangeProperty + "LINE", LineStyle.class );
+      m_LineStyle_active = styleProvider.getStyleFor( targetRangeProperty + "LINE_ACTIVE", LineStyle.class );
+      m_LineStyle_hover =  styleProvider.getStyleFor( targetRangeProperty + "LINE_HOVER", LineStyle.class );
+      m_pointStyle = styleProvider.getStyleFor( targetRangeProperty + "POINT", PointStyle.class );
+      m_pointStyle_active =  styleProvider.getStyleFor( targetRangeProperty + "POINT_ACTIVE", PointStyle.class );
+      m_pointStyle_hover =  styleProvider.getStyleFor( targetRangeProperty + "POINT_HOVER", PointStyle.class );
     }
   }
 
@@ -368,7 +369,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     // override this method
     return null;// new ILegendEntry[] {};
   }
-
+ 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
    */

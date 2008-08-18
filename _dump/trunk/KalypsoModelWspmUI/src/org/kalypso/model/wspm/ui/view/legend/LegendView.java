@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.legend;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -53,7 +50,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -70,22 +66,17 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
-import org.kalypso.chart.ui.editor.ChartTreeLabelProvider;
-import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderDelegator;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.Messages;
-import org.kalypso.model.wspm.ui.view.chart.IActiveLayerChangeListener;
-import org.kalypso.model.wspm.ui.view.chart.IActiveLayerProvider;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
@@ -98,8 +89,60 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * 
  * @author Gernot Belger
  */
-public class LegendView extends ViewPart implements IChartPart, IAdapterEater, IProfilChartViewProviderListener, IActiveLayerProvider
+@SuppressWarnings("unchecked")
+public class LegendView extends ViewPart implements IAdapterEater, ILayerManagerEventListener// ,
+                                                                                                   // IActiveLayerProvider
 {
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerAdded( IChartLayer layer )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerContentChanged( IChartLayer layer )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerMoved( IChartLayer layer )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerRemoved( IChartLayer layer )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerVisibilityChanged( IChartLayer layer )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
   private final AdapterPartListener m_chartProviderListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
   // private ChartLegend m_chartlegend;
@@ -113,7 +156,7 @@ public class LegendView extends ViewPart implements IChartPart, IAdapterEater, I
 
   private final MenuManager m_menuMgr = new MenuManager( Messages.LegendView_0 );
 
-  private final List<IActiveLayerChangeListener> m_layerListener = new ArrayList<IActiveLayerChangeListener>( 5 );
+  // private final List<IActiveLayerChangeListener> m_layerListener = new ArrayList<IActiveLayerChangeListener>( 5 );
 
   @Override
   public void init( final IViewSite site ) throws PartInitException
@@ -177,7 +220,7 @@ public class LegendView extends ViewPart implements IChartPart, IAdapterEater, I
   {
     if( m_provider != null )
     {
-      m_provider.removeProfilChartViewProviderListener( this );
+    //  m_provider.removeProfilChartViewProviderListener( this );
       m_provider = null;
     }
   }
@@ -236,7 +279,7 @@ public class LegendView extends ViewPart implements IChartPart, IAdapterEater, I
       // m_chartlegend = new ChartLegend( parent, SWT.BORDER, chartView.getChart(), false );
       // TODO: restore selection
 
-      m_chartlegend = new ChartEditorTreeOutlinePage( this );
+      m_chartlegend = new ChartEditorTreeOutlinePage((IChartPart)getProfilChartView() ); // this
 
       m_chartlegend.createControl( parent );
 // final TreeViewer tv = m_chartlegend.getTreeViewer();
@@ -351,7 +394,10 @@ public class LegendView extends ViewPart implements IChartPart, IAdapterEater, I
     m_provider = provider;
 
     if( m_provider != null )
-      m_provider.addProfilChartViewProviderListener( this );
+    {
+     // m_provider.addProfilChartViewProviderListener( this );
+      m_provider.getProfilChartView().getChart().getChartModel().getLayerManager().addListener( this );
+    }
 
     updateChartLegend();
   }
@@ -368,9 +414,11 @@ public class LegendView extends ViewPart implements IChartPart, IAdapterEater, I
    * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
    */
 
+  @SuppressWarnings("unchecked")
+  @Override
   public Object getAdapter( final Class adapter )
   {
-    if( adapter == IActiveLayerProvider.class )
+    if( adapter == IProfilChartViewProviderListener.class )
       return this;
 
     return super.getAdapter( adapter );
@@ -395,66 +443,42 @@ public class LegendView extends ViewPart implements IChartPart, IAdapterEater, I
     return null;
   }
 
-  /**
-   * @see de.belger.swtchart.layer.IActiveLayerProvider#addActiveLayerChangeListener(de.belger.swtchart.layer.IActiveLayerChangeListener)
-   */
-  public void addActiveLayerChangeListener( final IActiveLayerChangeListener l )
-  {
-    m_layerListener.add( l );
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IActiveLayerProvider#removeActiveLayerChangeListener(de.belger.swtchart.layer.IActiveLayerChangeListener)
-   */
-  public void removeActiveLayerChangeListener( final IActiveLayerChangeListener l )
-  {
-    m_layerListener.add( l );
-  }
-
+// /**
+// * @see de.belger.swtchart.layer.IActiveLayerProvider#addActiveLayerChangeListener(de.belger.swtchart.layer.
+  // IActiveLayerChangeListener)
+// */
+// public void addActiveLayerChangeListener( final IActiveLayerChangeListener l )
+// {
+// m_layerListener.add( l );
+// }
+//
+// /**
+// * @see de.belger.swtchart.layer.IActiveLayerProvider#removeActiveLayerChangeListener(de.belger.swtchart.layer.
+  // IActiveLayerChangeListener)
+// */
+// public void removeActiveLayerChangeListener( final IActiveLayerChangeListener l )
+// {
+// m_layerListener.add( l );
+// }
+//
   protected void fireOnActiveLayerChanged( )
   {
-    // final IChartLayer activeLayer = getActiveLayer();
-    final ChartComposite comp = getChartComposite();
-    if (comp==null)return;
-    for( final IChartLayer layer : comp.getChartModel().getLayerManager().getLayers() )
-    {
-      if( layer.isActive() )
-      {
-        for( final IActiveLayerChangeListener l : m_layerListener )
-          l.onActiveLayerChanged( layer );
-        return;
-      }
-    }
 
-// for( final IActiveLayerChangeListener l : m_layerListener )
-// l.onActiveLayerChanged( activeLayer );
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-   */
-  public AxisDragHandlerDelegate getAxisDragHandler( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
-  public ChartComposite getChartComposite( )
-  {
     final ProfilChartView view = getProfilChartView();
-    return view==null?null:view.getChartComposite();
-  }
+    final ChartComposite chart = view == null ? null :  view.getChart();
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
-   */
-  public PlotDragHandlerDelegate getPlotDragHandler( )
-  {
-    // TODO Auto-generated method stub
-    return null;
+    if( chart == null )
+      return;
+    final IChartLayer activeLayer = getActiveLayer();
+    for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
+    {
+      layer.setActive( activeLayer == layer );
+// if( layer.isActive() )
+// {
+// for( final IActiveLayerChangeListener l : m_layerListener )
+// l.onActiveLayerChanged( layer );
+// return;
+// }
+    }
   }
-
 }

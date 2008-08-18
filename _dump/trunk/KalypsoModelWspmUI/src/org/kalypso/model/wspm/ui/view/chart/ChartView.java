@@ -186,7 +186,7 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public ChartComposite getChartComposite( )
   {
-    return  m_profilPart.getProfilChartView().getChartComposite();
+    return  m_profilPart.getProfilChartView().getChart();
   }
 
   /**

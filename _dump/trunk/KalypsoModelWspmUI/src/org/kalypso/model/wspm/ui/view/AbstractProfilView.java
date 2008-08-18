@@ -50,8 +50,12 @@ import org.kalypso.model.wspm.core.result.IStationResult;
  * @author belger
  * @author kimwerner
  */
-public abstract class AbstractProfilView implements IProfilListener, IProfilView
+public abstract class AbstractProfilView implements IProfilListener, IProfilView//,IChartPart
 {
+  
+
+  
+
   protected final IProfil m_profile;
 
   private Control m_control;
@@ -118,4 +122,44 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   {
     //instances must overwrite this method
   }
+ 
+//  /**
+//   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
+//   */
+//  @Override
+//  public AxisDragHandlerDelegate getAxisDragHandler( )
+//  {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
+//
+//  /**
+//   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+//   */
+//  @Override
+//  public ChartComposite getChartComposite( )
+//  {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
+//
+//  /**
+//   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
+//   */
+//  @Override
+//  public PlotDragHandlerDelegate getPlotDragHandler( )
+//  {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
+//  /**
+//   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
+//   */
+//  @Override
+//  public Object getAdapter( Class< ? > clazz )
+//  {
+//    // TODO Auto-generated method stub
+//    return null;
+//  }
+
 }

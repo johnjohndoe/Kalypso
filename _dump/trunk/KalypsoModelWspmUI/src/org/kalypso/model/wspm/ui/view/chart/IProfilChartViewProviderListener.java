@@ -47,4 +47,5 @@ public interface IProfilChartViewProviderListener
 {
   /** Called, when the chart view the provider provides has changed. */
   public void onProfilChartViewChanged( final ProfilChartView newProfilChartView );
+
 }

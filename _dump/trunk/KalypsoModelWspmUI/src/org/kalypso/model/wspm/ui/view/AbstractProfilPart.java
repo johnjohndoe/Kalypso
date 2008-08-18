@@ -110,7 +110,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     gridLayout.marginHeight = 0;
     m_control.setLayout( gridLayout );
     m_profilColorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( parent.getDisplay() );
-//TODO: KIM dieses ist der Hund
+//TODO: KIM auskommentieren überprüfen
     //updateControl();
 
     return m_control;
@@ -128,6 +128,8 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
     m_profilColorRegistry = null;
 
+    //TODO: KIM undo implementieren
+    
     if( m_profile != null )
     {
       // die undo queue für dieses profil löschen
@@ -139,17 +141,17 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public void updateControl( )
   {
-//TODO:KIM
+//TODO:KIM viewdata verhalten überprüfen
     if( m_chartview != null )
     {
       m_chartview.saveState( m_viewdata.getChartMemento() );
   m_chartview.dispose();
       m_chartview = null;
     }
-
+  //TODO:KIM viewdata verhalten überprüfen
     if( m_control == null || m_control.isDisposed() )
       return;
-//TODO:KIM
+
     final Control[] children = m_control.getChildren();
     for( final Control c : children )
      c.dispose();
@@ -188,6 +190,8 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     fireOnProfilChartViewChanged();
   }
 
+  
+  //TODO: Kim undoContext nur für IProfile ??
   public ProfilUndoContext getUndoContext( )
   {
     return m_profile == null ? null : new ProfilUndoContext( m_profile );
@@ -197,7 +201,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   {
     return PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
   }
-
+  //TODO: Kim undoContext nur für IProfile ??
   public void setFocus( )
   {
     if( m_control != null )
@@ -240,6 +244,7 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
 
   public ProfilViewData getViewData( )
   {
+    //TODO: KIM überprüfen 
     return m_viewdata;
   }
 
@@ -248,6 +253,8 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
     return m_profile;
   }
 
+  
+  //TODO: kim remove this, only used in ChartEditor
   public ChartLegend createChartLegend( final Composite control, final int style )
   {
     if( m_chartview == null || m_chartview.getChart() == null )
@@ -261,12 +268,13 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
   /**
    * @param chartlegend
    */
+//TODO: kim remove this, only used in ChartEditor
   public void saveLegend( final ChartLegend chartlegend )
   {
     if( chartlegend != null )
       chartlegend.saveState( m_viewdata.getLegendMemento() );
   }
-
+//TODO: kim remove this, only used in ChartEditor
   public void runChartAction( final ProfilChartActionsEnum chartAction )
   {
     if( m_chartview != null )

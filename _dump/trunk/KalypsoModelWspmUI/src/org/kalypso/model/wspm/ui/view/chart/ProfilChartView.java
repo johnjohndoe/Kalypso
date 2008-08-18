@@ -86,6 +86,8 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 public class ProfilChartView extends AbstractProfilView implements IPersistableElement
 {
 
+  
+
   private static final String MEM_LAYER_VIS = "layerVisibility"; //$NON-NLS-1$
 
   // private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
@@ -260,7 +262,9 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return m_colorRegistry;
   }
-
+/**
+ * @deprecated use getAxis(String id)
+ */
   public IAxis getDomainRange( )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_DOMAIN );
@@ -273,17 +277,24 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return null;
   }
-
+  /**
+   * @deprecated use getAxis(String id)
+   */
   public IAxis getValueRangeLeft( )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_LEFT );
   }
-
+  /**
+   * @deprecated use getAxis(String id)
+   */
   public IAxis getValueRangeRight( )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_RIGHT );
   }
-
+  public IAxis getAxis(final String id )
+  {
+    return m_chart.getChartModel().getMapperRegistry().getAxis( id );
+  }
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final ChartComposite chart = m_chart;
@@ -416,12 +427,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_layerProvider = layerProvider;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
-  public ChartComposite getChartComposite( )
-  {
-    return m_chart;
-  }
+//  /**
+//   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+//   */
+//  @Override
+//  public ChartComposite getChartComposite( )
+//  {
+//    return m_chart;
+//  }
 
 }
