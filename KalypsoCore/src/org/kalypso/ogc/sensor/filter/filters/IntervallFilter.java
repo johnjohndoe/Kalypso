@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -45,8 +45,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -79,7 +79,7 @@ public class IntervallFilter extends AbstractObservationFilter
 
   private final int m_defaultStatus;
 
-  public IntervallFilter( IntervallFilterType filter )
+  public IntervallFilter( final IntervallFilterType filter )
   {
     final String mode = filter.getMode();
     if( "intensity".equalsIgnoreCase( mode ) ) //$NON-NLS-1$
@@ -98,7 +98,7 @@ public class IntervallFilter extends AbstractObservationFilter
   }
 
   @Override
-  public void initFilter( Object dummy, IObservation baseObs, URL context ) throws SensorException
+  public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
     super.initFilter( dummy, baseObs, context );
@@ -113,7 +113,7 @@ public class IntervallFilter extends AbstractObservationFilter
     final Date to = dateRange == null ? null : dateRange.getTo();
 
     // BUGIFX: fixes the problem with the first value:
-    // the first value was always ignored, because the intervall
+    // the first value was always ignored, because the interval
     // filter cannot handle the first value of the source observation
     // FIX: we just make the request a big bigger in order to get a new first value
     // HACK: we always use DAY, so that work fine only up to timeseries of DAY-quality.
@@ -125,7 +125,7 @@ public class IntervallFilter extends AbstractObservationFilter
   }
 
   @Override
-  public void setValues( ITuppleModel values )
+  public void setValues( final ITuppleModel values )
   {
     throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.IntervallFilter.2") ); //$NON-NLS-1$
   }

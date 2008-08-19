@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml;
 
@@ -157,7 +157,7 @@ public class ZmlFactory
 
         return m_parserProps;
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         throw new RuntimeException( e );
       }
@@ -298,10 +298,8 @@ public class ZmlFactory
     if( obs.getMetadataList() != null )
     {
       final List<MetadataType> mdList = obs.getMetadataList().getMetadata();
-      for( final Iterator<MetadataType> it = mdList.iterator(); it.hasNext(); )
+      for( final MetadataType md : mdList )
       {
-        final MetadataType md = it.next();
-
         final String value;
         if( md.getValue() != null )
           value = md.getValue();
@@ -474,12 +472,10 @@ public class ZmlFactory
       final MetadataListType metadataListType = OF.createMetadataListType();
       obsType.setMetadataList( metadataListType );
       final List<MetadataType> metadataList = metadataListType.getMetadata();
-      for( final Iterator<Entry<Object, Object>> it = obs.getMetadataList().entrySet().iterator(); it.hasNext(); )
+      for( final Entry<Object, Object> entry : obs.getMetadataList().entrySet() )
       {
-        final Map.Entry<Object, Object> entry = it.next();
-
         final String mdKey = (String) entry.getKey();
-        String mdValue = (String) entry.getValue();
+        final String mdValue = (String) entry.getValue();
 
         final MetadataType mdType = OF.createMetadataType();
         mdType.setName( mdKey );
@@ -501,7 +497,7 @@ public class ZmlFactory
       final MetadataType mdType = OF.createMetadataType();
       mdType.setName( TimeserieConstants.MD_TIMEZONE );
       mdType.setValue( timezone.getID() );
-	  // Check, if value already exists and remove first
+      // Check, if value already exists and remove first
       for( final Iterator<MetadataType> iterator = metadataList.iterator(); iterator.hasNext(); )
       {
         if( iterator.next().getName().equals( TimeserieConstants.MD_TIMEZONE ))
@@ -513,9 +509,9 @@ public class ZmlFactory
       // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
       // Junit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-      {
+          {
 
-        public int compare( IAxis a1, IAxis a2 )
+        public int compare( final IAxis a1, final IAxis a2 )
         {
           String type1 = a1.getType();
           String type2 = a2.getType();
@@ -536,12 +532,12 @@ public class ZmlFactory
           return type1.compareTo( type2 );
         }
 
-      } );
+          } );
 
-      for( IAxis axis : obs.getAxisList() )
+      for( final IAxis axis : obs.getAxisList() )
         sortedAxis.add( axis );
 
-      for( IAxis axis : sortedAxis )
+      for( final IAxis axis : sortedAxis )
       {
         if( axis.isPersistable() )
         {
@@ -568,7 +564,7 @@ public class ZmlFactory
 
       return obsType;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new FactoryException( e );
     }
@@ -593,7 +589,7 @@ public class ZmlFactory
     return sb.toString();
   }
 
-  private static void buildStringAxis( ITuppleModel model, IAxis axis, StringBuffer sb ) throws SensorException
+  private static void buildStringAxis( final ITuppleModel model, final IAxis axis, final StringBuffer sb ) throws SensorException
   {
     final int amount = model.getCount() - 1;
     for( int i = 0; i < amount; i++ )
@@ -672,12 +668,26 @@ public class ZmlFactory
    * @throws SensorException
    *             if an IOException or a FactoryException is thrown internally
    */
-  public static void writeToFile( final IObservation obs, final File file ) throws SensorException
+  public static void writeToFile( final IObservation filteredObs, final File file ) throws SensorException
+  {
+    writeToFile( filteredObs, file, null );
+  }
+
+  /**
+   * Helper method for simply writing the observation to a file
+   * 
+   * @param request
+   *          If non-<code>null</code>, this request will be applied to the access to the values of the given
+   *          observation.
+   * @throws SensorException
+   *           if an IOException or a FactoryException is thrown internally
+   */
+  public static void writeToFile( final IObservation obs, final File file, final IRequest request ) throws SensorException
   {
     OutputStream outs = null;
     try
     {
-      final Observation xml = createXML( obs, null );
+      final Observation xml = createXML( obs, request );
 
       outs = new BufferedOutputStream( new FileOutputStream( file ) );
 
@@ -707,9 +717,8 @@ public class ZmlFactory
   {
     final String[] rows = content.split( "\\n" ); //$NON-NLS-1$
     final List<Object[]> collector = new ArrayList<Object[]>();
-    for( int i = 0; i < rows.length; i++ )
+    for( final String row : rows )
     {
-      final String row = rows[i];
       final String[] cells = row.split( "\\t" ); //$NON-NLS-1$
       final Object[] rowValues = new Object[axis.length];
       for( int ax = 0; ax < axis.length; ax++ )
@@ -734,7 +743,7 @@ public class ZmlFactory
             }
             rowValues[ax] = keyValue;
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             e.printStackTrace();
             break; // ignore this row
@@ -756,7 +765,7 @@ public class ZmlFactory
             else
               rowValues[ax] = null;
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             rowValues[ax] = null;
           }
@@ -794,10 +803,10 @@ public class ZmlFactory
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );
     final List<IAxis> list = new ArrayList<IAxis>();
     list.add( keyAxes[0] );
-    for( int i = 0; i < axes.length; i++ )
+    for( final IAxis axe : axes )
     {
-      if( axes[i] != keyAxes[0] )
-        list.add( axes[i] );
+      if( axe != keyAxes[0] )
+        list.add( axe );
     }
     final IAxis[] sortedAxes = list.toArray( new IAxis[list.size()] );
     for( int row = 0; row < count; row++ )
@@ -816,7 +825,7 @@ public class ZmlFactory
             stringValue = (String) SpecialPropertyMapper.cast( value, String.class, true, false );
           result.append( stringValue != null ? stringValue : " " ); //$NON-NLS-1$
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           result.append( Messages.getString("org.kalypso.ogc.sensor.zml.ZmlFactory.34") ); //$NON-NLS-1$
           // ignore
@@ -829,4 +838,5 @@ public class ZmlFactory
     }
     return result.toString();
   }
+
 }

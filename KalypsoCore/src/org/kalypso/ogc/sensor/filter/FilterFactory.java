@@ -97,7 +97,7 @@ public class FilterFactory
     {
       props.load( ins );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -149,7 +149,6 @@ public class FilterFactory
     {
       final Unmarshaller unmarshaller = JC_FILTER.createUnmarshaller();
       final JAXBElement<AbstractFilterType> value = (JAXBElement<AbstractFilterType>) unmarshaller.unmarshal( new InputSource( sr ) );
-      // final IntervallFilterType ift = (IntervallFilterType) value.getValue();
       final AbstractFilterType af = value.getValue();
       sr.close();
       final IFilterCreator creator = getCreatorInstance( af );
@@ -202,7 +201,7 @@ public class FilterFactory
       final IFilterCreator creator = getCreatorInstance( af );
       return creator.createFilter( af, null, context );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new SensorException( e );
     }
@@ -220,7 +219,7 @@ public class FilterFactory
       final IFilterCreator creator = getCreatorInstance( af );
       return creator.createFilter( af, null, context );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new SensorException( e );
     }
