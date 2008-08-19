@@ -61,6 +61,8 @@ import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.forecast.ForecastFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -111,7 +113,11 @@ public class RainfallGenerationOp
 
   private final String m_targetFilter;
 
-  public RainfallGenerationOp( final URL rcmGmlLocation, final URL catchmentGmlLocation, final String catchmentFeaturePath, final String catchmentObservationPath, final String catchmentAreaPath, final String targetFilter )
+  private final Date m_targetFrom;
+
+  private final Date m_targetTo;
+
+  public RainfallGenerationOp( final URL rcmGmlLocation, final URL catchmentGmlLocation, final String catchmentFeaturePath, final String catchmentObservationPath, final String catchmentAreaPath, final String targetFilter, final Date targetFrom, final Date targetTo )
   {
     m_rcmGmlLocation = rcmGmlLocation;
     m_catchmentGmlLocation = catchmentGmlLocation;
@@ -119,6 +125,8 @@ public class RainfallGenerationOp
     m_catchmentObservationPath = catchmentObservationPath;
     m_catchmentAreaPath = catchmentAreaPath;
     m_targetFilter = targetFilter;
+    m_targetFrom = targetFrom;
+    m_targetTo = targetTo;
   }
 
   public void addGenerator( final String gmlId, final Date from, final Date to )
@@ -147,7 +155,7 @@ public class RainfallGenerationOp
     {
       try
       {
-        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentAreas, generatorDesc.m_from, generatorDesc.m_to, logger, progress.newChild( 10 ) );
+        final IObservation[] obses = generate( generatorDesc, rcmWorkspace, catchmentAreas, generatorDesc.m_from, generatorDesc.m_to, logger, progress.newChild( 10, SubMonitor.SUPPRESS_NONE ) );
         if( obses == null )
         {
           final String msg = String.format( "Niederschlagserzeugung für Generator '%s' liefert keine Ergebnisse und wird ingoriert", generatorDesc.m_gmlId );
@@ -162,7 +170,10 @@ public class RainfallGenerationOp
         {
           // sort by catchment
           for( int i = 0; i < obses.length; i++ )
-            results[i].add( obses[i] );
+          {
+            if( obses[i] != null )
+              results[i].add( obses[i] );
+          }
         }
 
       }
@@ -194,7 +205,10 @@ public class RainfallGenerationOp
     return result;
   }
 
-  private IObservation combineObservations( final List<IObservation> observationList )
+  /**
+   * Combines a list of observations into a single one.
+   */
+  public static IObservation combineObservations( final List<IObservation> observationList )
   {
     try
     {
@@ -247,11 +261,11 @@ public class RainfallGenerationOp
     }
 
     final String generatorName = rainGen.getName();
-    progress.subTask( "Erzeuge Gebietsniederschlag: " + generatorName );
+    progress.subTask( generatorName );
 
     try
     {
-      final IObservation[] observations = rainGen.createRainfall( catchmentAreas, from, to, monitor );
+      final IObservation[] observations = rainGen.createRainfall( catchmentAreas, from, to, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
       final String msg = String.format( "Generator '%s' erfolgreich ausgeführt.", generatorName );
       logger.log( Level.INFO, -1, msg );
       return observations;
@@ -273,9 +287,16 @@ public class RainfallGenerationOp
         if( obs == null || link == null )
           continue;
 
+        final IObservation filteredObs = ZmlFactory.decorateObservation( obs, m_targetFilter, null );
+        final IRequest request;
+        if( m_targetFrom == null || m_targetTo == null )
+          request = null;
+        else
+          request = new ObservationRequest( m_targetFrom, m_targetTo );
+
         final URL location = UrlResolverSingleton.resolveUrl( context, link.getHref() );
         final File file = ResourceUtilities.findJavaFileFromURL( location );
-        ZmlFactory.writeToFile( obs, file );
+        ZmlFactory.writeToFile( filteredObs, file, request );
       }
     }
     catch( final Exception e )

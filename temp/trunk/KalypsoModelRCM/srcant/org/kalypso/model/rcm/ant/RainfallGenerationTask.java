@@ -43,7 +43,6 @@ import org.eclipse.ant.core.AntCorePlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
@@ -57,8 +56,6 @@ import org.kalypso.model.rcm.util.RainfallGenerationOp;
  */
 public class RainfallGenerationTask extends Task
 {
-  private static final String BUNDLE_RCM = "org.kalypso.model.rcm";
-
   public final static class Generator
   {
     private String m_id;
@@ -112,6 +109,10 @@ public class RainfallGenerationTask extends Task
 
   private String m_targetFilter;
 
+  private Date m_targetFrom;
+
+  private Date m_targetTo;
+
   public void addConfiguredGenerator( final Generator generator )
   {
     m_generators.add( generator );
@@ -145,6 +146,16 @@ public class RainfallGenerationTask extends Task
   public void setTargetFilter( final String targetFilter )
   {
     m_targetFilter = targetFilter;
+  }
+
+  public void setTargetFrom( final Long targetFrom )
+  {
+    m_targetFrom = new Date( targetFrom );
+  }
+
+  public void setTargetTo( final Long targetTo )
+  {
+    m_targetTo = new Date( targetTo );
   }
 
   /**
@@ -185,7 +196,7 @@ public class RainfallGenerationTask extends Task
       final SubMonitor progress = SubMonitor.convert( monitor, taskMessage, 100 );
       progress.subTask( "Operation wird initialisiert" );
 
-      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, m_catchmentUrl, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, m_targetFilter );
+      final RainfallGenerationOp operation = new RainfallGenerationOp( m_rcmUrl, m_catchmentUrl, m_catchmentFeaturePath, m_catchmentObservationPath, m_catchmentAreaPath, m_targetFilter, m_targetFrom, m_targetTo );
       for( final Generator generator : m_generators )
       {
         final Date fromDate = new Date( generator.getFrom() );
@@ -198,7 +209,7 @@ public class RainfallGenerationTask extends Task
       // call the operation
       try
       {
-        final SubMonitor subMon = progress.newChild( 99, SubMonitor.SUPPRESS_BEGINTASK | SubMonitor.SUPPRESS_SETTASKNAME );
+        final SubMonitor subMon = progress.newChild( 99, SubMonitor.SUPPRESS_NONE );
         operation.execute( logger, subMon );
       }
       catch( final CoreException ce )
@@ -215,7 +226,7 @@ public class RainfallGenerationTask extends Task
   }
 
   protected int mapLevelToAnt( final Level level )
-  { 
+  {
     if( Level.CONFIG.equals( level ) )
       return Project.MSG_DEBUG;
     if( Level.FINE.equals( level ) )
