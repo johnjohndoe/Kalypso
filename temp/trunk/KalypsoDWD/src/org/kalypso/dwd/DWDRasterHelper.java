@@ -57,6 +57,7 @@ import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
@@ -341,7 +342,16 @@ public class DWDRasterHelper
     LineNumberReader reader = null;
     try
     {
-      reader = new LineNumberReader( new InputStreamReader( url.openStream() ) );
+      /* Create the reader. */
+      if( url.getFile().endsWith( ".gz" ) )
+      {
+        GZIPInputStream gzipInputStream = new GZIPInputStream( url.openStream() );
+        InputStreamReader inputStream = new InputStreamReader( gzipInputStream );
+        reader = new LineNumberReader( inputStream );
+      }
+      else
+        reader = new LineNumberReader( new InputStreamReader( url.openStream() ) );
+
       int lmVersion = 0;
       String line = null;
       DWDObservationRaster raster = null;
