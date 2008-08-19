@@ -124,13 +124,25 @@ public class VeloDiff2D
 
       System.out.println( "generate differences..." );
 
-      if( args[5].equals( "project" ) )
+      if( args.length > 5 )
       {
-        final File outputFileParallel = new File( args[3] + "_parallel.2d" );
-        final File outputFileOrthogonal = new File( args[3] + "_orthogonal.2d" );
 
-        generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileParallel, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_PARALLEL );
-        generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileOrthogonal, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_ORTHOGONAL );
+        if( args[5].equals( "project" ) )
+        {
+          final CharSequence subSequence = args[3].subSequence( 0, args[3].length() - 3 );
+          final File outputFileParallel = new File( subSequence + "_parallel.2d" );
+          final File outputFileOrthogonal = new File( subSequence + "_orthogonal.2d" );
+
+          generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFile, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE );
+          System.out.println( "project differences..." );
+
+          System.out.println( "parallel..." );
+          generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileParallel, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_PARALLEL );
+
+          System.out.println( "orthogonal..." );
+          generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileOrthogonal, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_ORTHOGONAL );
+
+        }
       }
       else
       {

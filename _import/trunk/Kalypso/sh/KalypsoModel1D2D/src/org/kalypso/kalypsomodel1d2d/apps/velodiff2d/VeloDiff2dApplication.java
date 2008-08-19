@@ -61,9 +61,9 @@ public class VeloDiff2dApplication implements IApplication
     final Map arguments = context.getArguments();
     String[] args = (String[]) arguments.get( "application.args" );
 
-    if( args.length != 5 )
+    if( args.length < 5 )
     {
-      System.out.println( "wrong number of arguments: velodiff2d <result file 1> <result file 2> <template file> <output file> <parameter>" );
+      System.out.println( "wrong number of arguments: velodiff2d <result file 1> <result file 2> <template file> <output file> <velo> <project>" );
       return EXIT_OK;
     }
 
