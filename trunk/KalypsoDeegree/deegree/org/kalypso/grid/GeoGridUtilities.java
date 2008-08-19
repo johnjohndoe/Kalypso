@@ -83,7 +83,9 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Helper class for {@link IGeoGrid}s.
@@ -379,7 +381,7 @@ public class GeoGridUtilities
    * @param walkingArea
    *          If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
    */
-  public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final Geometry walkingArea, final IProgressMonitor monitor ) throws Exception
+  public static void walkCoverages( final ICoverageCollection coverages, final IGeoGridWalker walker, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( "Visiting coverages", coverages.size() );
 
@@ -531,7 +533,7 @@ public class GeoGridUtilities
       final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
       grid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
       outputGrid.dispose();
-      setCoverage( coverage, toGridDomain( grid ), file.getName(), mimeType );
+      setCoverage( coverage, toGridDomain( grid ), filePath, mimeType );
       ProgressUtilities.worked( progress, 10 );
     }
     finally
@@ -755,7 +757,7 @@ public class GeoGridUtilities
     }
   }
 
-  public static void walkGeoGrid( final IWriteableGeoGrid grid, final IGeoGridWalker walker, final Geometry walkingArea, final IProgressMonitor monitor ) throws Exception
+  public static void walkGeoGrid( final IWriteableGeoGrid grid, final IGeoGridWalker walker, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws Exception
   {
     monitor.beginTask( "Visiting geoGrid", 1 );
 
@@ -925,5 +927,43 @@ public class GeoGridUtilities
     final Coordinate offsetY = new Coordinate( 0, -minCellSizeY );
 
     return new FlattenToCategoryGrid( gridCategories, globalGridSurfaceBoundary, origin, offsetX, offsetY, sourceCRS, numOfColumns, numOfRows );
+  }
+
+  /**
+   * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a polygon
+   * with the grid point as center point of the polygon.
+   * 
+   * @param grid
+   *          The grid.
+   * @param x
+   *          The (cell-)coordinate x.
+   * @param y
+   *          The (cell-)coordinate y.
+   * @return The cell at the given (cell-)coordinates in the grid.
+   */
+  public static Polygon createCellPolygon( IGeoGrid grid, int x, int y ) throws GeoGridException
+  {
+    final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
+
+    final double offsetX = grid.getOffsetX().x;
+    final double offsetY = grid.getOffsetY().y;
+
+    final double cellX1 = cellCoordinate.x - offsetX / 2;
+    final double cellY1 = cellCoordinate.y - offsetY / 2;
+
+    final double cellX2 = cellX1 + offsetX;
+    final double cellY2 = cellY1 + offsetY;
+
+    final com.vividsolutions.jts.geom.GeometryFactory factory = new com.vividsolutions.jts.geom.GeometryFactory();
+
+    /* Create the coordinates for the outer ring. */
+    final Coordinate c1 = new Coordinate( cellX1, cellY1 );
+    final Coordinate c2 = new Coordinate( cellX2, cellY1 );
+    final Coordinate c3 = new Coordinate( cellX2, cellY2 );
+    final Coordinate c4 = new Coordinate( cellX1, cellY2 );
+
+    final LinearRing ring = factory.createLinearRing( new Coordinate[] { c1, c2, c3, c4, c1 } );
+
+    return factory.createPolygon( ring, new LinearRing[] {} );
   }
 }
