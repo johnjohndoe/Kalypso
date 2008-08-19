@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters;
 
@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.ITuppleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTuppleModel;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
@@ -59,7 +60,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
 
   private final ITuppleModel[] m_baseModels;
 
-  public NOperationTupplemodel( ITuppleModel[] models, int operation )
+  public NOperationTupplemodel( final ITuppleModel[] models, final int operation )
   {
     super( models[0].getAxisList() );
 
@@ -67,7 +68,7 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     m_operation = operation;
   }
 
-  public int getCount() throws SensorException
+  public int getCount( ) throws SensorException
   {
     return m_baseModels[0].getCount();
   }
@@ -78,94 +79,89 @@ public class NOperationTupplemodel extends AbstractTuppleModel
     return m_baseModels[0].hashCode();
   }
 
-  public Object getElement( int index, IAxis axis ) throws SensorException
+  public Object getElement( final int index, final IAxis axis ) throws SensorException
   {
-    //    final String axisName = axis.getName();
     final String axisType = axis.getType();
 
-    final Class dataClass = axis.getDataClass();
+    final Class< ? > dataClass = axis.getDataClass();
     if( dataClass.equals( Date.class ) )
     {
       final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
-      //      final IAxis a = ObservationUtilities.findAxisByName(
-      // m_baseModels[0].getAxisList(), axisName );
       return m_baseModels[0].getElement( index, a );
     }
 
     if( dataClass.equals( Double.class ) )
     {
-      //      final IAxis a = ObservationUtilities.findAxisByName(
-      // m_baseModels[0].getAxisList(), axisName );
       final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
       if( index >= m_baseModels[0].getCount() )
         return null;
-      double value = ( (Number)m_baseModels[0].getElement( index, a ) ).doubleValue();
+      double value = ((Number) m_baseModels[0].getElement( index, a )).doubleValue();
       for( int i = 1; i < m_baseModels.length; i++ )
       {
-        ITuppleModel model = m_baseModels[i];
+        final ITuppleModel model = m_baseModels[i];
         if( index >= model.getCount() )
           continue;
 
-        //        final IAxis a2 = ObservationUtilities.findAxisByName( m_baseModels[i].getAxisList(), axisName );
         final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
 
-        double nextValue = ( (Number)model.getElement( index, a2 ) ).doubleValue();
+        final double nextValue = ((Number) model.getElement( index, a2 )).doubleValue();
         switch( m_operation )
         {
-        case OperationFilter.OPERATION_PLUS:
-          value += nextValue;
-          break;
-        case OperationFilter.OPERATION_MINUS:
-          value -= nextValue;
-          break;
-        case OperationFilter.OPERATION_MAL:
-          value *= nextValue;
-          break;
-        case OperationFilter.OPERATION_DURCH: // macht das sinn, bei mehr als
-          // zwei ?
-          value /= nextValue;
-          break;
+          case OperationFilter.OPERATION_PLUS:
+            value += nextValue;
+            break;
+          case OperationFilter.OPERATION_MINUS:
+            value -= nextValue;
+            break;
+          case OperationFilter.OPERATION_MAL:
+            value *= nextValue;
+            break;
+            // macht das sinn, bei mehr als zwei ?
+          case OperationFilter.OPERATION_DURCH:
+            value /= nextValue;
+            break;
         }
       }
       return new Double( value );
     }
 
     // status-axis
-    if(KalypsoStatusUtils.isStatusAxis(axis) )
+    if( KalypsoStatusUtils.isStatusAxis( axis ) )
     {
       final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
       if( index >= m_baseModels[0].getCount() )
         return null;
 
-      int value = ( (Number)m_baseModels[0].getElement( index, a ) ).intValue();
-      for( int i = 1; i < m_baseModels.length; i++ )
-      {
-        ITuppleModel model = m_baseModels[i];
-        if( index >= model.getCount() )
-          continue;
-
-        final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
-
-        int nextValue = ( (Number)model.getElement( index, a2 ) ).intValue();
-        value |= nextValue;
-      }
+      final int value = KalypsoStati.BIT_OK;
+// int value = ((Number) m_baseModels[0].getElement( index, a )).intValue();
+// for( int i = 1; i < m_baseModels.length; i++ )
+// {
+// final ITuppleModel model = m_baseModels[i];
+// if( index >= model.getCount() )
+// continue;
+//
+// final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
+//
+// final int nextValue = ((Number) model.getElement( index, a2 )).intValue();
+// value |= nextValue;
+// }
       return new Integer( value );
     }
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.0") //$NON-NLS-1$
-        + axis.getDataClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.1") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.0" ) //$NON-NLS-1$
+        + axis.getDataClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.1" ) ); //$NON-NLS-1$
   }
 
-  public void setElement( int index, Object element, IAxis axis )
+  public void setElement( final int index, final Object element, final IAxis axis )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.2") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.2" ) ); //$NON-NLS-1$
   }
 
-  public int indexOf( Object element, IAxis axis ) throws SensorException
+  public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
     // TODO: better than this test: should test if axis.isKey() is true
     if( element instanceof Date )
       return m_baseModels[0].indexOf( element, axis );
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.3") //$NON-NLS-1$
-        + axis.getName() + Messages.getString("org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.4") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.3" ) //$NON-NLS-1$
+        + axis.getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationTupplemodel.4" ) ); //$NON-NLS-1$
   }
 }

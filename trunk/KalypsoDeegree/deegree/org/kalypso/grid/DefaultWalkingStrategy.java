@@ -74,9 +74,14 @@ public class DefaultWalkingStrategy implements IGeoWalkingStrategy
     {
       for( int x = 0; x < sizeX; x++ )
       {
-        final Coordinate coordinate = GeoGridUtilities.calcCoordinate( grid, x, y, tmpCrd );
+        final Coordinate coordinate = GeoGridUtilities.toCoordinate( grid, x, y, tmpCrd );
         if( walkingArea == null || walkingArea.contains( x, y, coordinate ) )
+        {
+          // PERFORMANCE: only acces z value if we will visit that cell
+          final double value = grid.getValueChecked( x, y );
+          coordinate.z = value;
           pwo.operate( x, y, coordinate );
+        }
       }
 
       if( monitor != null )
