@@ -222,8 +222,8 @@ Version 1.0.3 (laufende Änderungen)
 001.) Get rid of data field aour, which is just a copy of al (affects: blk10mod, rdkalyps, initl, rdrm1); writing out is now only related to ao-field (affects: modell_schreiben)
 002.) delete "old" way of polynomial definition in input files, only support new way (affects: rdkalyps)
 003.) use allocatable statement for arrays used as dummies, where the size is defined in the variable declaration list (affects: rdkalyps)
-004.) direction fix for control structures, where the flow vectors of upstream and downstream point into neighbouring mathmatical quadrants (affects: cstrc)
-005.) seperate reordering subroutines into seperate file with the name Reordering.f90 (affects: rdkalyps)
+004.) direction fix for control structures, where the flow vectors of upstream and downstream point into neighbouring mathematical quadrants (affects: cstrc)
+005.) separate reordering subroutines into seperate file with the name Reordering.f90 (affects: rdkalyps)
 006.) get rid of data corpses concerning control volume finite element method (cv*- variables); they can be integrated in a more elegant way if needed again)
 007.) delete old control parts in rdkalyps that were related to the differing of 1D elements with and without midside nodes
 008.) get rid of element splitting for CVFEM. It can be introduced again if it was necessary
@@ -241,5 +241,5 @@ Version 1.0.3 (laufende Änderungen)
 014.) Deactivate a call of the wtform subroutine in Load3 because it is not necessary
 015.) Delete old data corpse of calculationUnit name and ID (calcUnitID; calcUnitName) in parakalyps.f90
 016.) Move array size definition from static declaration to allocatable declaration in pasche_trees.f90. Problem is stack overflow, if a global size value is used to define dummy arrays, whose size can be taken from the overgiving.
-017.) 
 
+--- Nico Schrage, 19.08.2008 (1.0.3 bf1)
