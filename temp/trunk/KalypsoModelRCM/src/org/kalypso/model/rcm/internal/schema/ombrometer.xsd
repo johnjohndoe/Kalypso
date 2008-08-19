@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="org.kalypso.model.rcm.ombrometer" version="0.1" xmlns:commons="org.kalypso.gml.common" xmlns:ombr="org.kalypso.model.rcm.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
+<schema targetNamespace="org.kalypso.model.rcm.ombrometer" version="0.1" xmlns:ombr="org.kalypso.model.rcm.ombrometer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" elementFormDefault="qualified">
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
         	<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -7,7 +7,6 @@
 	</annotation>
 	<import namespace="http://www.opengis.net/gml" />
 	<import namespace="obslink.zml.kalypso.org" />
-	<import namespace="org.kalypso.gml.common" />
 	<element name="OmbrometerCollection" substitutionGroup="gml:_Feature">
 		<complexType>
 			<complexContent>
@@ -36,7 +35,7 @@
 					<element name="isUsed" type="boolean" />
 					<element name="stationLocation" type="gml:PointPropertyType" />
 					<element name="affectedArea" type="gml:PolygonPropertyType" />
-					<!-- Several predefined measurment links. Add others if needed -->
+					<!-- Several predefined measurement links. Add others if needed -->
 					<element name="precipitationLink1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 					<element name="precipitationLink2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 					<element name="temperatureLink1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
