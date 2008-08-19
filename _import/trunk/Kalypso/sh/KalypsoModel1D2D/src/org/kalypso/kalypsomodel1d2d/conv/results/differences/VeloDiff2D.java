@@ -49,14 +49,8 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.DifferenceResultModel1d2dHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
@@ -102,7 +96,6 @@ public class VeloDiff2D
 
     try
     {
-
       outputFile.createNewFile();
 
       /* check files */
@@ -125,11 +118,24 @@ public class VeloDiff2D
         System.out.println( "Wrong parameter is set. Right now only 'velo' is supported. Aborting..." );
         return;
       }
+
       System.out.println( "processing input result files..." );
       processResults( resultFile1, resultFile2, parameters, outputDir1, outputDir2 );
 
       System.out.println( "generate differences..." );
-      generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFile );
+
+      if( args[5].equals( "project" ) )
+      {
+        final File outputFileParallel = new File( args[3] + "_parallel.2d" );
+        final File outputFileOrthogonal = new File( args[3] + "_orthogonal.2d" );
+
+        generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileParallel, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_PARALLEL );
+        generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFileOrthogonal, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE_ORTHOGONAL );
+      }
+      else
+      {
+        generateDifferences( parameters, outputDir1, outputDir2, templateFile, outputFile, ResultCalculatorType.TYPE.VECTOR_DIFFERENCE );
+      }
 
     }
     catch( Exception e )
@@ -143,7 +149,7 @@ public class VeloDiff2D
     }
   }
 
-  private static void generateDifferences( final List<TYPE> parameters, final File outputDir1, final File outputDir2, final File templateFile, final File outputFile ) throws Exception
+  private static void generateDifferences( final List<TYPE> parameters, final File outputDir1, final File outputDir2, final File templateFile, final File outputFile, org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE resultDifferenceType ) throws Exception
   {
     final InputStream is = new FileInputStream( templateFile );
     try
@@ -161,7 +167,7 @@ public class VeloDiff2D
       }
 
       final RMA10S2GmlConv converter = new RMA10S2GmlConv();
-      final IRMA10SModelElementHandler handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, types );
+      final IRMA10SModelElementHandler handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, types, resultDifferenceType );
       converter.setRMA10SModelElementHandler( handler );
 
       converter.parse( is );
@@ -180,7 +186,6 @@ public class VeloDiff2D
 
   private static void processResults( final File result2dFile1, final File result2dFile2, final List<TYPE> parameters, final File outputDir1, final File outputDir2 )
   {
-
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
     final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
     job1.run( new NullProgressMonitor() );
@@ -188,71 +193,6 @@ public class VeloDiff2D
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
     final ProcessResultsJob job2 = new ProcessResultsJob( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
     job2.run( new NullProgressMonitor() );
-  }
-
-  private void testLoadResults( ) throws Exception
-  {
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "Start Result Processing Test (2D only)\n" );
-
-    // unzip test project into workspace
-    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    final IProject project = workspace.getRoot().getProject( "NodeResultTest" );
-    project.create( new NullProgressMonitor() );
-
-    final URL zipLocation = getClass().getResource( "resources/ergs.zip" );
-    ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
-
-    // run model
-    final IFolder folder = project.getFolder( "ergs" );
-    final IFile resultFile1 = folder.getFile( "erg1.2d" );
-    final IFile resultFile2 = folder.getFile( "erg2.2d" );
-    final IFile templateFile = folder.getFile( "template.2d" );
-
-    final File outputDir1 = FileUtilities.createNewTempDir( "output1" );
-    final File outputDir2 = FileUtilities.createNewTempDir( "output2" );
-
-    // get 2d-files from resources
-    final File result2dFile1 = resultFile1.getLocation().toFile();
-
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
-    final List<TYPE> parameters = new ArrayList<TYPE>();
-
-    parameters.add( TYPE.VELOCITY_X );
-    parameters.add( TYPE.VELOCITY_Y );
-
-    // ICalcUnitResultMeta resultMeta = new CalcUnitResultMeta(null);
-
-    final ProcessResultsJob job1 = new ProcessResultsJob( result2dFile1, outputDir1, null, null, null, parameters, ResultManager.STEADY_DATE, null );
-    job1.run( new NullProgressMonitor() );
-
-    // get 2d-file from resources
-    final File result2dFile2 = resultFile2.getLocation().toFile();
-
-    KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "calling ProcessResultsJob\n" );
-    final ProcessResultsJob job2 = new ProcessResultsJob( result2dFile2, outputDir2, null, null, null, parameters, ResultManager.STEADY_DATE, null );
-    job2.run( new NullProgressMonitor() );
-
-    /* generate differences */
-    final TYPE[] types = parameters.toArray( new TYPE[parameters.size()] );
-
-    final GM_TriangulatedSurface[] minuendSurfaces = new GM_TriangulatedSurface_Impl[types.length];
-    final GM_TriangulatedSurface[] subtrahentSurfaces = new GM_TriangulatedSurface_Impl[types.length];
-
-    for( int i = 0; i < types.length; i++ )
-    {
-      minuendSurfaces[i] = getSurfaces( outputDir1, types[i] );
-      subtrahentSurfaces[i] = getSurfaces( outputDir2, types[i] );
-    }
-    final File outputFile = new File( outputDir2, "output.2d" );
-
-    final RMA10S2GmlConv converter = new RMA10S2GmlConv();
-    final IRMA10SModelElementHandler handler = new DifferenceResultModel1d2dHandler( outputFile, minuendSurfaces, subtrahentSurfaces, types );
-    converter.setRMA10SModelElementHandler( handler );
-
-    final InputStream is = new FileInputStream( templateFile.getLocation().toFile() );
-    converter.parse( is );
-    handler.end();
-
   }
 
   private static GM_TriangulatedSurface getSurfaces( final File outputDir, TYPE resultType ) throws Exception

@@ -54,7 +54,9 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
+import org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -69,30 +71,28 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
 
   private int m_lastnodeID;
 
-  private double m_elevation;
-
-  private double m_easting;
-
-  private double m_northing;
-
   private final GM_TriangulatedSurface[] m_minuendSurfaces;
 
   private final GM_TriangulatedSurface[] m_subtrahentSurfaces;
 
-  private final TYPE[] m_types;
+  private final TYPE[] m_resultTypes;
 
-  public DifferenceResultModel1d2dHandler( final File outputFile, GM_TriangulatedSurface[] minuendSurfaces, GM_TriangulatedSurface[] subtrahentSurfaces, TYPE[] types )
+  private final org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE m_differenceType;
+
+  private GM_Position m_nodePos;
+
+  public DifferenceResultModel1d2dHandler( final File outputFile, GM_TriangulatedSurface[] minuendSurfaces, GM_TriangulatedSurface[] subtrahentSurfaces, TYPE[] types, org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE differenceType )
   {
     m_minuendSurfaces = minuendSurfaces;
     m_subtrahentSurfaces = subtrahentSurfaces;
-    m_types = types;
+    m_resultTypes = types;
+    m_differenceType = differenceType;
 
     try
     {
       // REMARK: Made a central formatter with US locale (causing decimal point to be '.'),
       // so no locale parameter for each format is needed any more .
       m_formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
-
     }
     catch( IOException e )
     {
@@ -175,7 +175,6 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   public void handleFlowResitance( String line, int id, double combinedLambda, double soilLambda, double vegetationLambda )
   {
     m_formatter.format( "%s%n", line );
-
   }
 
   /**
@@ -196,9 +195,8 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
     m_formatter.format( "%s%n", lineString );
 
     m_lastnodeID = id;
-    m_easting = easting;
-    m_northing = northing;
-    m_elevation = elevation;
+
+    m_nodePos = GeometryFactory.createGM_Position( easting, northing, elevation );
   }
 
   /**
@@ -216,32 +214,71 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    */
   public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel )
   {
-
     Assert.isLegal( id == m_lastnodeID );
 
-    final Map<TYPE, Double> valueMap = new HashMap<TYPE, Double>();
+    final Map<TYPE, Double> valueMap = calculateDifferences( m_minuendSurfaces, m_subtrahentSurfaces, m_nodePos, m_resultTypes );
 
-    // get new result from tins
-    for( int i = 0; i < m_types.length; i++ )
+    // get the vector values of the difference vector
+    final Double diffVx = valueMap.get( ResultType.TYPE.VELOCITY_X );
+    final Double diffVy = valueMap.get( ResultType.TYPE.VELOCITY_Y );
+
+    // get the vector values of all vectors (we assume, that surface 0 is X-direction and surface 1 is Y-direction)
+    final double mainX = m_minuendSurfaces[0].getValue( m_nodePos );
+    final double mainY = m_minuendSurfaces[1].getValue( m_nodePos );
+    final double secondaryX = m_subtrahentSurfaces[0].getValue( m_nodePos );
+    final double secondaryY = m_subtrahentSurfaces[1].getValue( m_nodePos );
+
+    switch( m_differenceType )
     {
-      final double minuendValue = m_minuendSurfaces[i].getValue( GeometryFactory.createGM_Position( m_easting, m_northing, m_elevation ) );
-      final double subtrahentValue = m_subtrahentSurfaces[i].getValue( GeometryFactory.createGM_Position( m_easting, m_northing, m_elevation ) );
-      double diffValue = 0.0;
+      case VECTOR_DIFFERENCE:
 
-      if( !Double.isNaN( minuendValue ) && !Double.isNaN( subtrahentValue ) )
-        diffValue = minuendValue - subtrahentValue;
-      else
-        diffValue = 0.0;
+        vx = diffVx == null ? vx : diffVx;
+        vy = diffVy == null ? vy : diffVy;
 
-      valueMap.put( m_types[i], diffValue );
+        break;
+
+      case VECTOR_DIFFERENCE_ORTHOGONAL:
+
+        /* calculate the orthogonal projection on the main vector */
+        // calculate the vector projection factor for the parallel part
+        final double faktor = (secondaryX * mainX + secondaryY * mainY) / (mainX * mainX + mainY * mainY);
+
+        // calculate the vector values for the projected vector
+        final Double diffMainParallelX = faktor * mainX;
+        final Double diffMainParallelY = faktor * mainY;
+
+        // calculate the vector values for the orthogonal part
+        final Double diffMainOrthoX1 = secondaryX - diffMainParallelX;
+        final Double diffMainOrthoY1 = secondaryY - diffMainParallelY;
+
+        vx = diffMainOrthoX1 == null ? vx : diffMainOrthoX1;
+        vy = diffMainOrthoY1 == null ? vx : diffMainOrthoY1;
+
+        break;
+
+      case VECTOR_DIFFERENCE_PARALLEL:
+
+        // calculate the vector projection factor for the parallel part
+        final double faktorParallel = ((-diffVx) * mainX + (-diffVy) * mainY) / (mainX * mainX + mainY * mainY);
+
+        // calculate the vector values for the projected vector
+        final Double diffMainParallelX2 = faktorParallel * mainX;
+        final Double diffMainParallelY2 = faktorParallel * mainY;
+
+        vx = diffMainParallelX2 == null ? vx : diffMainParallelX2;
+        vy = diffMainParallelY2 == null ? vy : diffMainParallelY2;
+
+        break;
     }
 
-    final Double diffVx = valueMap.get( ResultType.TYPE.VELOCITY_X );
-    vx = diffVx == null ? vx : diffVx;
+    /* check the values */
+    if( Double.isNaN( vx ) )
+      vx = 0.0;
 
-    final Double diffVy = valueMap.get( ResultType.TYPE.VELOCITY_Y );
-    vy = diffVy == null ? vy : diffVy;
+    if( Double.isNaN( vy ) )
+      vy = 0.0;
 
+    /* other values */
     final Double diffDepth = valueMap.get( ResultType.TYPE.DEPTH );
     depth = diffDepth == null ? depth : diffDepth;
 
@@ -249,6 +286,38 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
     waterlevel = diffWaterlevel == null ? waterlevel : diffWaterlevel;
 
     m_formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", id, vx, vy, depth, waterlevel ); //$NON-NLS-1$
+  }
+
+  /**
+   * Calculates the difference values of all given result types for the current position and returns them as a map.
+   * 
+   * @param minuendSurfaces
+   *          the tins from which it will be substracted
+   * @param subtrahentSurfaces
+   *          the tins that give the values with which it will be substracted
+   * @param pos
+   *          the position at which the values are being read from the result tins.
+   * @param resultTypes
+   *          the given result tpyes
+   */
+  private static Map<TYPE, Double> calculateDifferences( final GM_TriangulatedSurface[] minuendSurfaces, final GM_TriangulatedSurface[] subtrahentSurfaces, final GM_Position pos, final TYPE[] resultTypes )
+  {
+    final Map<TYPE, Double> valueMap = new HashMap<TYPE, Double>();
+
+    for( int i = 0; i < resultTypes.length; i++ )
+    {
+      final double minuendValue = minuendSurfaces[i].getValue( pos );
+      final double subtrahentValue = subtrahentSurfaces[i].getValue( pos );
+      double diffValue = 0.0;
+
+      if( !Double.isNaN( minuendValue ) && !Double.isNaN( subtrahentValue ) )
+        diffValue = minuendValue - subtrahentValue;
+      else
+        diffValue = 0.0;
+
+      valueMap.put( resultTypes[i], diffValue );
+    }
+    return valueMap;
   }
 
   /**

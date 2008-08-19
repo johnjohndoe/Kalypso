@@ -73,8 +73,6 @@ public class RMA10S2GmlConv
 
   private final int m_monitorStep;
 
-  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" );
-
   private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
 
   private static final Pattern ARC_LINE_PATTERN2 = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
@@ -238,15 +236,16 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeLine( final String line )
   {
-    final Matcher matcher = NODE_LINE_PATTERN.matcher( line );
-    if( matcher.matches() )
+    final String[] nodeLineStrings = line.split( "[ ]+" );
+    
+    if(nodeLineStrings[0].equals( "FP" ))
     {
       try
       {
-        final int id = Integer.parseInt( matcher.group( 1 ) );
-        final double easting = Double.parseDouble( matcher.group( 2 ) );
-        final double northing = Double.parseDouble( matcher.group( 3 ) );
-        double elevation = Double.parseDouble( matcher.group( 4 ) );
+        final int id = Integer.parseInt( nodeLineStrings[1] );
+        final double easting = Double.parseDouble(  nodeLineStrings[2] );
+        final double northing = Double.parseDouble(  nodeLineStrings[3] );
+        double elevation = Double.parseDouble(  nodeLineStrings[4] );
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
         if( elevation == -9999 )
           elevation = Double.NaN;
