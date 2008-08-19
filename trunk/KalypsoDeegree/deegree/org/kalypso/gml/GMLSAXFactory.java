@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
@@ -120,6 +120,10 @@ public class GMLSAXFactory
       // generate used prefixes
       getPrefixedQName( qName );
     }
+
+    // TODO: bug... this may cause too much namespaces to bee written into the gml-file
+    // Either, we must only write what we really have, or
+    // we should have another look at the import of substituting namespaces
 
     // we may have additional schema, but no features using them (now)
     // We save these namespaces as prefixes, so if we reload the gml
