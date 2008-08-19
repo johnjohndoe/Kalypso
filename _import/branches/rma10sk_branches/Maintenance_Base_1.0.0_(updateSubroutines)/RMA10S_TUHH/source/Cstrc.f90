@@ -46,8 +46,8 @@ if (width(nop(nn,1)) == 0.0) then
   qh (nop (nn, 3)) = 0.0
 
   !Polnyomial positions
-  PolyPos(1) = findPolynom (PolyRangeA (nop (nn, 1), :), vel (3, nop(nn, 1)), PolySplitsA (nop (nn, 1)))
-  PolyPos(2) = findPolynom (PolyRangeA (nop (nn, 3), :), vel (3, nop(nn, 3)), PolySplitsA (nop (nn, 3)))
+  PolyPos(1) = findPolynom (PolyRangeA (nop (nn, 1), :), vel (3, nop(nn, 1)), PolySplitsA (nop (nn, 1)), cord (nop (nn,1), 1), cord (nop (nn,1), 2), nop (nn, 1))
+  PolyPos(2) = findPolynom (PolyRangeA (nop (nn, 3), :), vel (3, nop(nn, 3)), PolySplitsA (nop (nn, 3)), cord (nop (nn,3), 1), cord (nop (nn,3), 2), nop (nn, 3))
 
   !A(h)
   ah (nop (nn, 1)) = calcPolynomial (apoly (PolyPos (1), nop (nn, 1), 0:12), vel (3, nop (nn, 1)), ubound (apoly, 3))
@@ -58,7 +58,7 @@ if (width(nop(nn,1)) == 0.0) then
   dahdh (nop (nn, 3)) = calcPolynomial1stDerivative (apoly (PolyPos (2), nop (nn, 3), 0:12), vel (3, nop (nn, 3)), ubound (apoly, 3))
 endif
 
-!form ave velocity
+!form 1D-velocity at cstrc's corner nodes
 DO N = 1, NCN
   NodA = NOP (NN, N)
   IF (NodA > 0) U(N) = VEL (1, NodA) * COS (ALFA (NodA)) + VEL (2, NodA) * SIN (ALFA (NodA))
@@ -103,24 +103,13 @@ DO  KK = 1, NCN, 2
     !for polynomial approach
     if (width(n1) == 0.0) then
       !estifm (1, EqA) = dir (n1) * ah (n1)
-      estifm (1, EqA) = - dirfact * ah (n1)! * u (kk) / ABS (u (kk))
+      estifm (1, EqA) = - dir (n1) * ah (n1)! * u (kk) / ABS (u (kk))
 
     !geometric approach, using absolute discharge
     else
       !ESTIFM (1, EqA) = DIR(N1)*(WIDTH(N1)+(SS1(N1)+SS2(N1))/2.
       ESTIFM (1, EqA) = DIRfact * (WIDTH (N1) + (SS1 (N1) + SS2 (N1)) / 2. * VEL (3, N1)) * VEL (3, N1)
     end if
-
-    !testing
-    !WRITE(*,*) '     node: ', n1, '(', KK, ')'
-    !WRITE(*,*) '*****************************'
-    !WRITE(*,*) 'direction: ', dirfact
-    !WRITE(*,*) 'water st.: ', vel(3, n1) + ao(n1)
-    !WRITE(*,*) '     area: ', ah (n1)
-    !WRITE(*,*) '    dF/dv: ', estifm (1, Eqa)
-    !WRITE(*,*)
-    !testing-
-    !-
 
     CX=COS(ALFA(N1))
     SA=SIN(ALFA(N1))
@@ -132,7 +121,7 @@ DO  KK = 1, NCN, 2
 
     !polynomial approach
     if (width(n1) == 0.0) then
-      estifm (1, EqA + 2) = - dirfact * dahdh (n1) * u (kk)
+      estifm (1, EqA + 2) = - dir(n1) * dahdh (n1) * u (kk)
 
     !geometric approach
     else
@@ -140,20 +129,8 @@ DO  KK = 1, NCN, 2
       ESTIFM (1, EqA + 2) = DIRfact * (WIDTH (N1) + (SS1 (N1) + SS2 (N1)) * VEL (3, N1)) * u (kk)
     end if
 
-    !testing
-    !WRITE(*,*) '    dahdh: ', dahdh (n1)
-    !WRITE(*,*) ' velocity: ', u(kk)
-    !WRITE(*,*) '    dF/dh: ', ESTIFM (1, Eqa)
-    !testing-
-
     !F(1) = F (1) - ESTIFM (1, EqA) * u (kk)
-    F (1) = F (1) + dirfact * u (kk) * ah (n1)
-
-    !testing
-    !WRITE(*,*) ' residual: ', dirfact * u (kk) * ah (n1)
-    !WRITE(*,*) ' tot res : ', f(1)
-    !WRITE(*,*) '---'
-    !testing-
+    F (1) = F (1) + dir(n1) * u (kk) * ah (n1)
 
   ENDIF
 ENDDO
@@ -513,38 +490,25 @@ ENDDO
     if(isubm(n1) .eq. 2) go to 500
 
 !   set sign for DH
-
-    IF(VEL(3,N1) .GE. 0.) THEN
-      DH=0.002
-      DV = 0.01
-      !DH = 0.01
-    ELSE
-      DH=0.002
-      DV = 0.01
-      !DH = 0.01
-    ENDIF
+!set increments for numerical derivatives
+    DH = 0.002
+    DV = 0.01
  
 !
 !      This is a corner node
 !
     IF(WSLL(N1) .LT. TRANSEL(N1)) THEN
 
-    !testing
-    !WRITE(*,*) 'velocities'
-    !WRITE(*,*) u(1), u(3)
-    !WRITE(*,*)
-    !testing-
-
-    if (width(n1) == 0) then
+    !Calculate the discharge based on the present values of both nodes
+    if (width (n1) == 0) then
+      !if it is polynomial approach: absolute discharge
       Q = (U(1) * ah(n1) + U(3) * ah(N2)) / 2.
     else
+      !if it is geometry approach: specific discharge
       Q = (U(1) * VEL(3, N1) + U(3) * VEL(3, N2)) / 2.
     end if
      
-!
-!      Derivative with respect to u1 and u2
-!
-
+    !Calculate derivative with respect to velocities at corner nodes u1 and u3
     if (width (n1) == 0.0) then
       ESTIFM (NodB, NodA) = -ah(n1) / 2.! * u(1) / ABS (u (1))
       ESTIFM (NodB, NodB) = -ah(n2) / 2.! * u(3) / ABS (u (3))
@@ -641,7 +605,7 @@ ENDDO
         Q1T = Q1T * 10.7636
 !IPK JUN05
       ELSE
-        CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2)
+        CALL WTFORM(Q1T,NCTREF(IMAT(NN)),WS1,WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
 
 !*********************
@@ -663,7 +627,7 @@ ENDDO
         end if
 
         !WRITE(*,*) 'Calculate Q at cstrc'
-        CALL WTFORM (Q1T, NCTREF (IMAT (NN)), WS1, WS2)
+        CALL WTFORM (Q1T, NCTREF (IMAT (NN)), WS1, WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
 
       ENDIF
 !end SI-units: Q(huw, how)
@@ -697,7 +661,7 @@ ENDDO
         Q1DH1=Q1DH1*10.7636
 !IPKJUN05
       ELSE
-        CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2)
+        CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
 
 !*********************
@@ -713,7 +677,7 @@ ENDDO
       !***********************************
       ELSE
         !WRITE(*,*) 'Calculate dQ/+dhow at cstrc', ws1, ws1+dh/2.
-        CALL WTFORM (Q1DH1, NCTREF (IMAT (NN)), WS1 + DH/ 2., WS2)
+        CALL WTFORM (Q1DH1, NCTREF (IMAT (NN)), WS1 + DH/ 2., WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
     ENDIF
 
@@ -729,7 +693,7 @@ ENDDO
         &      WH2/ 3.2808, WS2/ 3.2808, WV2/ 3.2808, WEC/ 3.2808, WLN/ 3.2808, ITP, IWTYP, widem/ 3.2808)
               Q2DH1=Q2DH1*10.7636
       ELSE
-        CALL WTFORM (Q2DH1, NCTREF (IMAT (NN)), WS1 - DH/ 2., WS2)
+        CALL WTFORM (Q2DH1, NCTREF (IMAT (NN)), WS1 - DH/ 2., WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
 
 !*********************
@@ -744,7 +708,7 @@ ENDDO
       !***********************************
       ELSE
         !WRITE(*,*) 'Calculate dQ/-dhow at cstrc', ws1, ws1-dh/2.
-        CALL WTFORM (Q2DH1, NCTREF (IMAT (NN)), WS1 - DH/ 2., WS2)
+        CALL WTFORM (Q2DH1, NCTREF (IMAT (NN)), WS1 - DH/ 2., WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
     ENDIF
 
@@ -784,7 +748,7 @@ ENDDO
       !for table- or function defined weir
       !***********************************
       ELSE
-        CALL WTFORM (Q1DH2, NCTREF (IMAT (NN)), WS1, WS2 + DH/ 2.)
+        CALL WTFORM (Q1DH2, NCTREF (IMAT (NN)), WS1, WS2 + DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
 
 !*********************
@@ -799,7 +763,7 @@ ENDDO
       !***********************************
       ELSE
         !WRITE(*,*) 'Calculate dQ/+dhuw at cstrc', ws2, ws2+dh/2.
-        CALL WTFORM (Q1DH2, NCTREF (IMAT (NN)), WS1, WS2 + DH/ 2.)
+        CALL WTFORM (Q1DH2, NCTREF (IMAT (NN)), WS1, WS2 + DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1),  2))
       ENDIF
     ENDIF
 
@@ -820,7 +784,7 @@ ENDDO
 !IPK JAN05
       ELSE
 !IPK NOV06   FIX BUG IN SIGN
-        CALL WTFORM (Q2DH2, NCTREF (IMAT (NN)), WS1, WS2 - DH/ 2.)
+        CALL WTFORM (Q2DH2, NCTREF (IMAT (NN)), WS1, WS2 - DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
 
 !*********************
@@ -836,7 +800,7 @@ ENDDO
       ELSE
 !IPK NOV06   FIX BUG IN SIGN
         !WRITE(*,*) 'Calculate dQ/-dhuw at cstrc', ws2, ws2-dh/2.
-        CALL WTFORM (Q2DH2, NCTREF (IMAT (NN)), WS1, WS2 - DH/ 2.)
+        CALL WTFORM (Q2DH2, NCTREF (IMAT (NN)), WS1, WS2 - DH/ 2., cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       ENDIF
     ENDIF
 
@@ -874,7 +838,7 @@ ENDDO
       !WRITE(*,*) 'WS1+dV: ', WS1PlusDV
       !testing-
 
-      CALL WTFORM (Q1DV1, NCTREF (IMAT (NN)), WS1PlusDV, WS2)
+      CALL WTFORM (Q1DV1, NCTREF (IMAT (NN)), WS1PlusDV, WS2, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       Q1DV1 = QFACT1 * Q1DV1
 
       !dQ/-dvow
@@ -883,7 +847,7 @@ ENDDO
       !WRITE(*,*) 'WS1-dV: ', WS1MinusDV
       !testing-
 
-      CALL WTFORM (Q2DV1, NCTREF (IMAT (NN)), WS1MinusDV, WS2)
+      CALL WTFORM (Q2DV1, NCTREF (IMAT (NN)), WS1MinusDV, WS2, cord (nop(nn,1), 1), cord(nop(nn,1),2) )
       Q2DV1 = QFACT1 * Q2DV1
 
       !Scale this part of the numerical derivative by the direction
@@ -909,7 +873,7 @@ ENDDO
       !WRITE(*,*) 'WS2+dV: ', WS2PlusDV
       !testing-
 
-      CALL WTFORM (Q1DV2, NCTREF (IMAT (NN)), WS1, WS2PlusDV)
+      CALL WTFORM (Q1DV2, NCTREF (IMAT (NN)), WS1, WS2PlusDV, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       Q1DV2 = QFACT1 * Q1DV2
 
       !dQ/-dvuw
@@ -919,7 +883,7 @@ ENDDO
       !WRITE(*,*) 'WS2-DV: ', WS2MinusDV
       !testing-
 
-      CALL WTFORM (Q2DV2, NCTREF (IMAT (NN)), WS1, WS2MinusDV)
+      CALL WTFORM (Q2DV2, NCTREF (IMAT (NN)), WS1, WS2MinusDV, cord (nop(nn,1), 1), cord (nop (nn,1), 2))
       Q2DV2 = QFACT1 * Q2DV2
 
       !Scale this part of the numerical derivative by the direction

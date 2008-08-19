@@ -323,6 +323,20 @@ cipk sep04
         STOP 'LOOKING FOR C3'
       ENDIF 
       READ(DLIN,5020) CMIN,CPR,UNOM,UDIR,HMNN,DSET,DSETD
+      
+      !nis,aug08: Prevent nan in Darcy-Weisbach calculations
+      if (dset < 0.0d0) then
+        dset = 0.0d0
+        write(*,*)'WARNING - dset is < 0,0, it will be fixed 0,0'
+      endif
+      if (dsetd <= dset) then
+        dsetd = dset + 0.0005
+        write(*,*) 'WARNING - dsetd is smaller dset, it will be fixed'
+        write(*,*) '          to a value 0.0005 higher then dset'
+        write(*,*) '          Change prevents oszillating activation'
+      endif
+      
+      
       write(*,*) 'read c3'
 C      HMIN=VOID
 C      IF(HMNN .NE. 0.) HMIN=HMNN
@@ -462,13 +476,13 @@ CIPK AUG07  ADD ICPU
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       !nis,jan08: New control line for additional output options
+      !Set standard values
+      WriteNodeBlock = 0
+      testoutput = 0
+      percentCheck = 0
       if (ID(1:2) == 'C7') then
-        read (DLIN, '(2I8)') WriteNodeBlock, testoutput
+        read (DLIN, '(3I8)') WriteNodeBlock, testoutput, percentCheck
         call ginpt (lin, id, dlin)
-      !Set the standard values
-      else
-        WriteNodeBlock = 0
-        testoutput = 0
       end if
 
 CIPK ADD ICNSV AND IAVEL AND MAKE ORDER OPTIONAL

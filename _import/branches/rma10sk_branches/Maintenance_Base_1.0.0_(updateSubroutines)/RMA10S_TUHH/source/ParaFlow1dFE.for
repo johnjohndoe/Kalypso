@@ -30,6 +30,7 @@ C     Last change:  WP    8 Nov 2007   10:38 am
       !decision switch for way of coefficient calculation
       INTEGER                        :: beient                       !decision switch for flow coefficient (2: beta, 1: alpha, 0. ignore)
       INTEGER                        :: Moment_off                   !number of iterations in a not restarted model, in which the momentum term is switched off (only Polynom-approach)
+      integer                        :: percentCheck
       INTEGER, ALLOCATABLE           :: polySplitsA(:)
       INTEGER, ALLOCATABLE           :: polySplitsQ(:)
       INTEGER, ALLOCATABLE           :: polySplitsB(:)

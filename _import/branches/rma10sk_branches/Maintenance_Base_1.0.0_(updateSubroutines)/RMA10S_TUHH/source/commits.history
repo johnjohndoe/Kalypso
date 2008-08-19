@@ -218,3 +218,28 @@ Version 1.0.2 (laufende Änderungen)
 --- Nico Schrage, 01.08.2008 (release 1.0.2)
 
 Version 1.0.3 (laufende Änderungen)
+
+001.) Get rid of data field aour, which is just a copy of al (affects: blk10mod, rdkalyps, initl, rdrm1); writing out is now only related to ao-field (affects: modell_schreiben)
+002.) delete "old" way of polynomial definition in input files, only support new way (affects: rdkalyps)
+003.) use allocatable statement for arrays used as dummies, where the size is defined in the variable declaration list (affects: rdkalyps)
+004.) direction fix for control structures, where the flow vectors of upstream and downstream point into neighbouring mathmatical quadrants (affects: cstrc)
+005.) seperate reordering subroutines into seperate file with the name Reordering.f90 (affects: rdkalyps)
+006.) get rid of data corpses concerning control volume finite element method (cv*- variables); they can be integrated in a more elegant way if needed again)
+007.) delete old control parts in rdkalyps that were related to the differing of 1D elements with and without midside nodes
+008.) get rid of element splitting for CVFEM. It can be introduced again if it was necessary
+009.) Modernize loop to initiate the reordering (affects: rdkalyps)
+010.) introduce percent check option for updating the degrees of freedom, i.e. user can set a switch whether absolute changes or changes related to the absolute value
+      of the variable at a certain place should be updated; also the output console is adapted for that (affects: update, paraflow1dfe, input)
+011.) Overgiving of coordinates and node number to the findPolynom.sub. The subroutine finds the intersection of a small array to give back the positon. It is used for control structure data,
+      where it throws a georeferenced error, if the value to sort in was out of the valid range, and for normal polynomial functions, where it just throws a warning. The error at a bridge is thrown,
+      because this is much more sensitive as a polynomial, where being out of the range must not cause the model to crash. (affects: check, wtform, cstrc, ErrorMessageAndStop, LineTransitionCalc, PolynomPositionSearch.f90)
+012.) catch negative deactivation depth, i.e. if the user sets dset negative it will be set to the value 0.0. Additionally the Darcy.sub that is generating the lambda value depending on the roughness
+      and depth was setting lambda to 10000, if water depth was below 0.01m for negative deactivation depth this lead to NaN-problems. The special case depth to fix the lambda value was set to
+      dset. Consequently nodes with a water depth below dset, what technically can't occur - nodes below that depth are inoperative - , will now get the lambda value from only 1000. NaN problems didn't occur any more
+      for such problems. (affects: coef11, coef11nt, coef25, coef25nt, coef2d, coef2dnt, roughness.f90, Qgen.for, QgenTransition, 
+013.) Increase the buffer size to standard NBS = 5.000.000 to NBS = 400.000.000, meaning is not 100 percent clear but it leads to less scratch files. (affects: initl)
+014.) Deactivate a call of the wtform subroutine in Load3 because it is not necessary
+015.) Delete old data corpse of calculationUnit name and ID (calcUnitID; calcUnitName) in parakalyps.f90
+016.) Move array size definition from static declaration to allocatable declaration in pasche_trees.f90. Problem is stack overflow, if a global size value is used to define dummy arrays, whose size can be taken from the overgiving.
+017.) 
+

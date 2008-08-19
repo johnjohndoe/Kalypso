@@ -468,7 +468,7 @@ CIPK OCT01
                 CALL darcy (lambda, vecq, di(0),
      +            LineCniku,
      +            NullVal, NullVal, 0,  0, gl_bedform, mel, cwr_line, 2,
-     +            dummy(1), dummy(2), dummy(3))
+     +            dummy(1), dummy(2), dummy(3),dset)
                 !Correct roughness, if there is a material (imat) factor (when marsh-option is active)
                 if (idnopt /= 0 .and. d1 < akp(na) * adb(na)) then
                   lambda = lambda

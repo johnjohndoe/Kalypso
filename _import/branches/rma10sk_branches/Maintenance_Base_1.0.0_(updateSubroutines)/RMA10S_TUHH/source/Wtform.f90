@@ -1,6 +1,6 @@
 !Last change:  WP   12 Jun 2008    2:06 pm
 !Last change:  WP    7 Feb 2008    3:42 pm
-SUBROUTINE WTFORM(Q, NCTR, HOWIN, HUWIN)
+SUBROUTINE WTFORM(Q, NCTR, HOWIN, HUWIN, xcord, ycord)
 USE CSVAR
 USE parakalyps
 
@@ -9,6 +9,7 @@ implicit none
 
 !dummys ins
 REAL (KIND = 8), INTENT (IN) :: huwin, howin
+real (kind = 8), intent (in) :: xcord, ycord
 INTEGER, INTENT (IN)         :: NCTR
 !dummy outs
 REAL (KIND = 8), INTENT (OUT) :: Q
@@ -63,11 +64,21 @@ if (UseEnergyCstrc == 0) then
   FindRow: DO K=1, NROWCS (NCTR)
     NRHI = K
     IF(HOW < HRW (NCTR, K)) EXIT FindRow
+    !nis,aug08: If no entry found, value range too small, stop!
+    if (k == nrowcs (nctr)) then
+      call errormessageandstop (4004, 0, xcord, ycord)
+    endif  
+      
   ENDDO FindRow
 
   FindColumn: DO K = 1, NCOLCS (NCTR)
     NCHI = K
     IF (HUW < HCL (NCTR, K)) EXIT FindColumn
+    !nis,aug08: If no entry found, value range too small, stop!
+    if (k == ncolcs (nctr)) then
+      call errormessageandstop (4004, 0, xcord, ycord)
+    endif  
+    
   ENDDO FindColumn
 
 
@@ -133,6 +144,12 @@ ELSEIF (UseEnergyCstrc == 1) then
 
   !get the number of entries in array
   noOfOutQs = UBOUND (cstrcRange, 3)
+  ReduceForZeros: do i = noOfOutQs, 1, -1
+    if (cstrcRange (nctr, 1, i) /= 0.0) exit ReduceForZeros
+  enddo ReduceForZeros
+  noOfOutQs = i
+      
+    
 
   !valuesOnLine
   !
@@ -155,7 +172,7 @@ ELSEIF (UseEnergyCstrc == 1) then
   ALLOCATE (valuesOnLine (1: noOfOutQs))
 
   do i = 1, noOfOutQs
-    Pos = findPolynom (cstrcRange (nctr, i, :), huw, noOfOutQs)
+    Pos = findPolynom (cstrcRange (nctr, i, :), huw, noOfOutQs, xcord , ycord, 0)
     if (Pos > noOfOutQs) then
       findLast: do j = 1, noOfOutQs
 
@@ -184,7 +201,7 @@ ELSEIF (UseEnergyCstrc == 1) then
   end do
 
   !now get it in vertical line
-  Pos  = findPolynom (valuesOnLine, how, noOfOutQs)
+  Pos  = findPolynom (valuesOnLine, how, noOfOutQs, xcord, ycord, 0)
 
   !testing
   !WRITE(*,*) how, pos

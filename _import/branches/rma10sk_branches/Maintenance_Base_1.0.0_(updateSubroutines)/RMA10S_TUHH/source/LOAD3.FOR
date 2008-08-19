@@ -785,7 +785,9 @@ CIPK FEB07
                 CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
               ELSE
-                CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+                !nis,aug08: What is this needed for?
+                !CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+                !-
               ENDIF
               IF(NTMREF(IMAT(NN)) .NE. 0) THEN
                 CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET

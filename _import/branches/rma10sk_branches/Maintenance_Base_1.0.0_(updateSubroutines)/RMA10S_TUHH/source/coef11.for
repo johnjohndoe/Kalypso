@@ -703,7 +703,7 @@ CIPK MAY06  MOVE NR TO MAT
                    !store values for output
      +             lamKS,
      +             lamP,
-     +             lamDunes)
+     +             lamDunes, dset)
 
         !calculation of friction factor for roughness term in differential equation
         FFACT = lamTot / 8.0
@@ -1316,7 +1316,8 @@ c     WRITE(*,*) NN,NCN
         !using polynom approach
         ELSE
           PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1),
-     +                           PolySplitsA (n1))
+     +                           PolySplitsA (n1), cord(n1, 1),
+     +                           cord (n1, 2), n1)
           ah(n1) = calcPolynomial (apoly (PolyPos, n1, 0: 12),
      +                             vel(3, n1), ubound(apoly, 3))
           !derivative over velocity

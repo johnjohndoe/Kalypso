@@ -300,14 +300,14 @@ write_nodes: DO i = 1, np
   IF (cord(i,1) .lt. -1.e19) CYCLE write_nodes
 
   if (.not. (IntPolProf (i)) .and. kmx (i) /= -1.0) then
-    write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+    write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   ELSEIF (.not. (IntPolProf (i)) .and. kmx (i) == -1.0) then
-    WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
+    WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), ao(i)
   !for interpolated profiles
   ELSEIF (IntPolProf (i) .AND. kmx (i) /= -1.0) then
-    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   ELSEIF (IntPolProf (i)) then
-    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), aour (i)
+    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), ao(i)
   endif
 
   if (resultType == 'resu') THEN
@@ -394,10 +394,6 @@ write_elements: DO i = 1, ne
   ELSE
     if (imat (i) /= 89) then
 
-      if (CalcUnitID (i) > 0) then
-        WRITE (IKalypsoFM, 7048) i, CalcUnitID (i), trim (CalcUnitName (i))
-      endif
-
         WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
 
       !write material types and reordering number
@@ -412,9 +408,6 @@ write_elements: DO i = 1, ne
     !write number of profiles to interpolate in between
     elseif (imat (i) == 89 .and. (.NOT.(IntPolProf (nop (i, 1))))) then
 
-      if (CalcUnitID (i) > 0) then
-        write (IKALYPSOFM, 7048) i, CalcUnitID (i), TRIM (CalcUnitName (i))
-      end if
       WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i)
 
       write (IKALYPSOFM, 7046) i, IntPolNo (i)

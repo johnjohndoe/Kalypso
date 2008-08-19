@@ -36,7 +36,7 @@
 
 !nis,may07: Add switch for sort of calculation 1D or 2D
 !SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr)
-SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr, approxdim, lambdasand, lambdawald, lambdabedform)
+SUBROUTINE darcy (lambda, vecq, h, ks, a, dp, nn, morph, bedform, mel, c_wr, approxdim, lambdasand, lambdawald, lambdabedform, dset)
 !-
 !
 !
@@ -58,9 +58,10 @@ REAL (kind = 8), INTENT(OUT)                   :: lambdasand, lambdawald, lambda
 INTEGER, INTENT(IN)                            :: morph, nn, mel
 REAL, INTENT(IN)                               :: vecq
 real (kind = 8), INTENT(IN)                    :: ks, a, dp
-REAL(KIND=8)                                   :: h
+REAL(KIND=8), intent (in)                      :: h
 REAL (KIND = 8), DIMENSION(1:mel,1:4), INTENT(IN) :: bedform
 REAL (KIND = 8), INTENT(INOUT)                    :: c_wr
+real (kind = 8), intent (in)                   :: dset
 
 !Add switch for approximation decision
 INTEGER                                        :: approxdim
@@ -79,8 +80,8 @@ IF (ks.le.0.0) then
 endif
 !-
 
-IF (h.le.0.01) then
-  lambda = 100000.0
+IF (h < dset) then
+  lambda = 1000.0
   RETURN
 ENDIF
 

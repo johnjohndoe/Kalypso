@@ -54,9 +54,9 @@ USE Blk10mod
 !-
 
 ! Local variables
-REAL(kind=8), DIMENSION(1:MaxP) :: slope        ! Slope of watersurface at node
-REAL(kind=8), DIMENSION(1:MaxP) :: eslope       ! Slope of energy level at node
-REAL(KIND=8)                    :: lambda_s     ! Mean roughness coefficient at element
+REAL(kind=8), allocatable :: slope (:)  ! Slope of watersurface at node
+REAL(kind=8), allocatable :: eslope (:) ! Slope of energy level at node
+REAL(KIND=8)              :: lambda_s   ! Mean roughness coefficient at element
 
 REAL(KIND=8) :: sumvx = 0.0
 REAL(KIND=8) :: sumvy = 0.0
@@ -64,9 +64,13 @@ REAL(KIND=8) :: sumh = 0.0
 REAL(kind=8) :: sumslope = 0.0
 REAL(kind=8) :: sumeslope = 0.0
 REAL (KIND = 8) :: NikuradseRoughness
-REAL(kind=8), DIMENSION(1:MaxE) :: mslope        ! Mean slope of water surface at element
-REAL(kind=8), DIMENSION(1:MaxE) :: meslope       ! Mean slope of energy level at element
+REAL(kind=8), allocatable :: mslope (:)  ! Mean slope of water surface at element
+REAL(kind=8), allocatable :: meslope (:) ! Mean slope of energy level at element
 INTEGER :: i, cycle_number
+
+
+allocate (slope (1: MaxP), eslope (1: MaxP))
+allocate (mslope (1:MaxE), meslope (1: MaxE))
 
 ! Main procedure to calculate the slope of the watersurface
 ! for all nodes.
@@ -203,6 +207,8 @@ ENDIF
 call cwr_write(name_cwr, ne, mcord, c_wr, mslope, meslope, mh, mvxvy, MaxE)
 !-
 
+RETURN
+
 end subroutine get_element_cwr
 
 
@@ -230,21 +236,16 @@ USE Blk10mod
 
 
 ! Calling variables
-!NiS,apr06: changing mnd to MaxP
-!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT) :: slope    ! Calculated slope of water surface
-!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT) :: eslope   ! Calculated slope of energy curve/surface
-REAL (kind=8), DIMENSION (1: MaxP), INTENT (OUT) :: slope    ! Calculated slope of water surface
-REAL (kind=8), DIMENSION (1: MaxP), INTENT (OUT) :: eslope   ! Calculated slope of energy curve/surface
-!-
+REAL (kind=8), INTENT (OUT) :: slope (1: *)   ! Calculated slope of water surface
+REAL (kind=8), INTENT (OUT) :: eslope (1: *)  ! Calculated slope of energy curve/surface
 
 ! Local variables
-INTEGER  			:: first_loc		! Neighbour nodes of the flow vector
-INTEGER  			:: second_loc		! Neighbour nodes of the flow vector
+INTEGER :: first_loc		! Neighbour nodes of the flow vector
+INTEGER :: second_loc		! Neighbour nodes of the flow vector
 
 !nis,sep06: Declaring missing variable and overgiving the proper value
 INTEGER                         :: nodecnt
 INTEGER                         :: elcnt
-!-
 
 REAL(kind=8), DIMENSION(1:2)    :: angle_v              ! direction of the actual flow vector
 REAL(kind=8), DIMENSION(1:2)    :: vector_to_point      ! direction from actual point to the neighbour points
@@ -253,12 +254,13 @@ REAL(kind=8), DIMENSION(1:100)  :: angle_delt = 0.0     ! angle between the flow
 REAL(kind=8)                    :: vecq                 ! absolut value of velocity
 
 !NiS,apr06: changing mnd to MaxP
-!LOGICAL, DIMENSION(1:mnd)       :: marker_slope
-LOGICAL, DIMENSION(1:MaxP)       :: marker_slope        ! Marker if slope has been calculated (true) or not(false).
-                                                        ! The slope of all nodes with MARKER_SLOPE=.false. will be interpolated
-                                                        ! from the neighbouring points in subroutine FILL_SLOPES
-!-
+LOGICAL, allocatable :: marker_slope (:) ! Marker if slope has been calculated (true) or not(false).
+                                         ! The slope of all nodes with MARKER_SLOPE=.false. will be interpolated
+                                         ! from the neighbouring points in subroutine FILL_SLOPES
+
 INTEGER         		:: i,j,m
+
+allocate (marker_slope (1: MaxP))
 
 
 !nis,sep06: nodecnt value must be specified, it is not global
@@ -319,7 +321,6 @@ outer: do i = 1, nodecnt
 
   if (second_loc /= 0) then
 !nis,dec06: Only the marker_slope of the passed node i is wanted!!!
-!    call GET_SLOPE(angle_v, i, neighb(i,first_loc), neighb(i,second_loc), slope, eslope, marker_slope)
     call GET_SLOPE(angle_v, i, neighb(i,first_loc), neighb(i,second_loc), slope, eslope, marker_slope(i))
 !-
   else
@@ -374,8 +375,7 @@ end do outer1D
 ! All point that have been marked as not detected (MARKER_SLOPE = .false.)
 ! the slope will be interpolated from the neighbouring points.
 !nis,dec06: Correction of line, replacing mnd with MaxP
-!call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, mnd)
-call FILL_SLOPES(nodecnt, slope,eslope, marker_slope, nconnect, neighb, MaxP, IsPolynomNode)
+call FILL_SLOPES(nodecnt, slope,eslope, marker_slope)
 !-
 
 !nis,dec06,testing
@@ -518,7 +518,7 @@ end subroutine GET_MIN_ANGLE_POINTS
 
 
 !----------------------------------------------------------------------------------------
-subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope, nconnect, neighb, mnd, IsPolynomNode)
+subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope)
 !
 ! For some nodes the slope could not be detected directly (e.g. if the node is dry).
 ! To have a completely filled array of slopes for each node of the mesh, the slope of the
@@ -529,20 +529,18 @@ subroutine FILL_SLOPES(nodecnt, slope, eslope, marker_slope, nconnect, neighb, m
 
 !nis,jan07: For checking, whether nodes are active, the coordinates must be present
 USE blk10mod
+use parakalyps
 !-
 
 implicit none
 
 ! Calling variables
-INTEGER, INTENT(IN)                           :: nodecnt
-REAL(kind=8), DIMENSION(1:mnd), INTENT(INOUT) :: slope
-REAL(kind=8), DIMENSION(1:mnd), INTENT(INOUT) :: eslope
-INTEGER, DIMENSION (1: mnd), INTENT(IN)         :: nconnect
-INTEGER, DIMENSION (1: mnd, 0: 100), INTENT (IN)    :: neighb
-LOGICAL, DIMENSION (1: mnd), INTENT(INOUT)      :: marker_slope
-LOGICAL, DIMENSION (1: mnd), INTENT(INOUT)      :: IsPolynomNode
+INTEGER, INTENT(IN)  :: nodecnt
 
-INTEGER, INTENT(IN)                           :: mnd
+REAL(kind=8), INTENT(INOUT) :: slope (1:*)
+REAL(kind=8), INTENT(INOUT) :: eslope (1:*)
+
+LOGICAL, INTENT (INOUT) :: marker_slope (1:*)
 
 ! Local variables
 INTEGER      :: i, j, anz, temp_anz
@@ -669,17 +667,13 @@ USE Blk10mod
 
 ! Calling variables
 REAL(kind=8), DIMENSION(1:2), INTENT(IN) 	:: angle_v	! Velocity vector
-INTEGER, INTENT(IN)                             :: pn      	! Point of velocity vector
-INTEGER, INTENT(IN)                             :: first_neighb	! First neighbour to calculated cross-point.
-INTEGER, INTENT(IN)                             :: second_neighb! Second neighbour to calculated cross-point.
+INTEGER, INTENT(IN) :: pn      	! Point of velocity vector
+INTEGER, INTENT(IN) :: first_neighb	! First neighbour to calculated cross-point.
+INTEGER, INTENT(IN) :: second_neighb! Second neighbour to calculated cross-point.
 !NiS,apr06: changing mnd to MaxP
-!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT)     :: slope
-!REAL(kind=8), DIMENSION(1:mnd), INTENT(OUT)     :: eslope
-!LOGICAL, DIMENSION(1:mnd), INTENT(OUT)       	:: marker_slope
-REAL(kind=8), DIMENSION(1:MaxP), INTENT(OUT)    :: slope        ! Slope to be calculated
-REAL(kind=8), DIMENSION(1:MaxP), INTENT(OUT)    :: eslope       ! Energy-Slope to be calculated
+REAL(kind=8), INTENT(OUT) :: slope (1:*)       ! Slope to be calculated
+REAL(kind=8), INTENT(OUT) :: eslope (1:*)      ! Energy-Slope to be calculated
 !nis,dec06, just one value is needed here
-!LOGICAL, DIMENSION(1:MaxP), INTENT(OUT)       	:: marker_slope
 LOGICAL,INTENT(OUT)       	                :: marker_slope_pn ! Marker if slope could be determined
 !-
 ! Local variables
@@ -691,9 +685,9 @@ REAL(KIND=8) 	:: temp1, temp2
 
 ! Solving the linear equation
 INTEGER :: n = 2
-REAL (KIND=8), DIMENSION (2,2) 	:: A
-REAL (KIND=8), DIMENSION (2) 	:: B
-REAL (KIND=8), DIMENSION (2) 	:: X
+REAL (KIND=8), DIMENSION (2,2) :: A
+REAL (KIND=8), DIMENSION (2) :: B
+REAL (KIND=8), DIMENSION (2) :: X
 LOGICAL :: sing = .false.
 
 ! initialize v_pn and he_pn

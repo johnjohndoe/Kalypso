@@ -120,11 +120,6 @@ CIPK NOT IN RMA10        BS1(J)=BS11
       ENDIF
 !-
 
-!NiS,may06: Copy elevation field, because this might be given out in Kalypso-2D format
-      do i = 1, MaxP
-        aour(i) = ao(i)
-      end do
-!-
 !NiS,may06,com: CONTINUITY LINES READING BLOCK
 !NiS,may06,com: Read initial line for continuity block
       CALL GINPT1(IFILE,DLINE)

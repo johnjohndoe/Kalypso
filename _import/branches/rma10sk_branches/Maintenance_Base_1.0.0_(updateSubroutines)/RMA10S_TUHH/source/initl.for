@@ -45,7 +45,8 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
 c     Initialisation of values
 
-      NBS=5000000
+      !NBS=5000000
+      NBS = 400000000
       MFW=1000
       NBSS=NBS
       LBMAX=NBSS
@@ -743,12 +744,6 @@ CIPK MAR01
         ADDSED(J)=-9999.
       ENDDO
 
-!NiS,apr06: allocate and initialize the aour-array
-      ALLOCATE (aour(maxp))
-      do j=1,maxp
-        aour(j) = 0
-      ENDDO
-!-
 !NiS,apr06: allocating arrays for roughness calculation in DARCY-WEISBACH-equation
       ALLOCATE (CNIKU(MaxE), DURCHBAUM(MaxE), ABST(MaxE))
       ALLOCATE (C_WR(MaxE))
@@ -882,7 +877,7 @@ CIPK MAR01
         polySplitsB (i) = 0
         !validity range for polynoms
         hhmin(i)      = 0.0
-        hhmax(i)      = 0.0
+        hhmax(i)      = 10.0e3
         !flow kilometer of node
         kmx(i)        = -1.0
         !reference friction slope
@@ -1038,12 +1033,6 @@ CIPK MAR01
         NeighProf (i, 1) = 0
         NeighProf (i, 2) = 0
         kmWeight (i) = 1.0D0
-      end do
-
-      ALLOCATE (CalcUnitID (1: MaxE), CalcUnitName (1: MaxE))
-
-      do i = 1, MaxE
-        CalcUnitID (i) = -1
       end do
 
       RETURN

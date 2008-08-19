@@ -1028,11 +1028,10 @@ CIPK SEP04  ADD MAH AND MAT OPTION
                    !store values for output
      +             lambdaKS(nn),
      +             lambdaP(nn),
-     +             lambdaDunes(nn))
+     +             lambdaDunes(nn), dset)
 
         !calculation of friction factor for roughness term in differential equation
         FFACT = lambdaTot(nn)/8.0
-        !-
 
       ENDIF
 

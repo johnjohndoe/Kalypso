@@ -92,10 +92,6 @@ LOGICAL, ALLOCATABLE :: IntPolProf (:), IsPolynomNode (:)
 INTEGER              :: statElSz, statNoSz, NodesToIntPol
 REAL (KIND = 8), ALLOCATABLE :: kmWeight(:)
 
-!nis,feb08: Contribution to calculation base units
-INTEGER, ALLOCATABLE :: CalcUnitID (:)
-CHARACTER (Len = 128), ALLOCATABLE :: CalcUnitName (:)
-
 !new parameters for weirs defined by linear functions
 REAL (KIND = 8), ALLOCATABLE :: cstrcRange (:,:,:), cstrcCoefs (:,:,:,:), cstrcdisch (:, :)
 

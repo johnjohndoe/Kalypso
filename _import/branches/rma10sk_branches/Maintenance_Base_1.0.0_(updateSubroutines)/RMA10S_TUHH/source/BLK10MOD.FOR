@@ -195,7 +195,7 @@ C     LAYER VARIABLE
       ALLOCATABLE  THL(:),THLAY(:,:)
 
 !NiS,apr06: for data exchange with kalypso-reading and writing modules
-      REAL(KIND=8), ALLOCATABLE :: aour(:)!,fehler(:,:),
+!      REAL(KIND=8), ALLOCATABLE :: fehler(:,:),
 !-
 
 !nis,nov06: Adding arrays
