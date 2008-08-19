@@ -63,6 +63,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.grid.CountGeoGridWalker;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.PolygonGeoGridArea;
 import org.kalypso.grid.VolumeGeoGridWalker;
 import org.kalypso.model.flood.binding.IFloodModel;
 import org.kalypso.model.flood.binding.IFloodPolygon;
@@ -172,7 +173,7 @@ public class FloodModelProcess
       minWsp = Math.min( minWsp, geoGrid.getMin().doubleValue() );
 
       /* The maximum waterlevel per grid, is calculated by assuming that all cells have the maxmimum terrain value */
-      geoGrid.getWalkingStrategy().walk( geoGrid, countWalker, volumeGeometry, new NullProgressMonitor() );
+      geoGrid.getWalkingStrategy().walk( geoGrid, countWalker, new PolygonGeoGridArea( geoGrid, volumeGeometry ), new NullProgressMonitor() );
       final int numberOfCellsCoveringThePolgon = countWalker.getCount();
 
       final double coveredArea = numberOfCellsCoveringThePolgon * cellSize;
@@ -224,7 +225,7 @@ public class FloodModelProcess
       final GeoTransformer transformer = new GeoTransformer( sourceCRS );
       final Geometry volumeGeometry = JTSAdapter.export( transformer.transform( volumeGmObject ) );
 
-      grid.getWalkingStrategy().walk( grid, volumeWalker, volumeGeometry, new NullProgressMonitor() );
+      grid.getWalkingStrategy().walk( grid, volumeWalker, new PolygonGeoGridArea( grid, volumeGeometry ), new NullProgressMonitor() );
 
       volume += volumeWalker.getVolume();
     }
