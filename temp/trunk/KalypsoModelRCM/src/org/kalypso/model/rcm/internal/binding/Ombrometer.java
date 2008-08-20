@@ -46,26 +46,27 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.rcm.binding.IOmbrometer;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.gml.binding.AbstractFeatureBinding;
 
 /**
  * @author Gernot Belger
  */
-public class Ombrometer extends AbstractFeatureBinder implements IOmbrometer
+public class Ombrometer extends AbstractFeatureBinding implements IOmbrometer
 {
-  public Ombrometer( final Feature featureToBind )
+  public Ombrometer( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
-    super( featureToBind, QNAME_FEATURE_OMBROMETER );
+    super( parent, parentRelation, featureType, id, propValues );
   }
 
   /**

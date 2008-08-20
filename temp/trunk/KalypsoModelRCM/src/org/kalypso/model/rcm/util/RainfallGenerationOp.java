@@ -252,7 +252,7 @@ public class RainfallGenerationOp
       return null;
     }
 
-    final IRainfallGenerator rainGen = (IRainfallGenerator) feature.getAdapter( IRainfallGenerator.class );
+    final IRainfallGenerator rainGen = (IRainfallGenerator) feature;
     if( rainGen == null )
     {
       final String msg = String.format( "Generator mit ID '%s' konnte nicht instantiiert werden. Eintrag wird ignoriert.", generatorId );

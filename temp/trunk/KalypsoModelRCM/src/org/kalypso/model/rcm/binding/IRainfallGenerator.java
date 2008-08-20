@@ -45,16 +45,16 @@ import java.util.Date;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.IFeatureBinding;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
- * * GML-binding for the rcm:RainfallGenerator's
+ * GML-binding for the rcm:RainfallGenerator's
  * 
  * @author Gernot Belger
  */
-public interface IRainfallGenerator extends IFeatureWrapper2
+public interface IRainfallGenerator extends IFeatureBinding
 {
   IObservation[] createRainfall( final GM_Surface<GM_SurfacePatch>[] areas, final Date from, final Date to, final IProgressMonitor monitor ) throws CoreException;
 }

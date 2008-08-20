@@ -130,7 +130,7 @@ public class OmbrometerUtils
     final List<Coordinate> crds = new ArrayList<Coordinate>();
     for( final Object listEntry : ombrometerList )
     {
-      final IOmbrometer ombro = (IOmbrometer) ((Feature) listEntry).getAdapter( IOmbrometer.class );
+      final IOmbrometer ombro = (IOmbrometer) listEntry;
       final GM_Point stationLocation = ombro.getStationLocation();
       final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( stationLocation );
       if( ombro.isUsed() )

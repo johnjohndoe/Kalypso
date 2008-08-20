@@ -9,25 +9,23 @@
       </catalog>
    </extension>
    <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.kalypsodeegree.model.feature.Feature"
-            class="org.kalypso.model.rcm.RcmFeatureAdapterFactory">
-         <adapter
-               type="org.kalypso.model.rcm.binding.IOmbrometer">
-         </adapter>
-         <adapter
-               type="org.kalypso.model.rcm.binding.IRainfallGenerator">
-         </adapter>
-      </factory>
-   </extension>
-   <extension
          point="org.eclipse.ant.core.antTasks">
       <antTask
             class="org.kalypso.model.rcm.ant.RainfallGenerationTask"
             library="lib/anttasks.jar"
             name="kalypso.rainfallGeneration">
       </antTask>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.Ombrometer"
+            qname="{org.kalypso.model.rcm.ombrometer}Ombrometer">
+      </feature>
+      <feature
+            class="org.kalypso.model.rcm.internal.binding.OmbrometerRainfallGenerator"
+            qname="{org.kalypso.model.rcm}OmbrometerRainfallGenerator">
+      </feature>
    </extension>
 
 </plugin>

@@ -52,6 +52,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.rcm.binding.IRainfallGenerator;
 import org.kalypso.model.rcm.internal.UrlCatalogRcm;
@@ -69,7 +71,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypsodeegree_impl.gml.binding.AbstractFeatureBinding;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -81,7 +83,7 @@ import com.vividsolutions.jts.geom.Polygon;
  * 
  * @author Gernot Belger
  */
-public class OmbrometerRainfallGenerator extends AbstractFeatureBinder implements IRainfallGenerator
+public class OmbrometerRainfallGenerator extends AbstractFeatureBinding implements IRainfallGenerator
 {
   public static final QName QNAME = new QName( UrlCatalogRcm.NS_RCM, "OmbrometerRainfallGenerator" );
 
@@ -93,9 +95,10 @@ public class OmbrometerRainfallGenerator extends AbstractFeatureBinder implement
 
   public static final QName QNAME_PROP_areaPath = new QName( UrlCatalogRcm.NS_RCM, "areaPath" );
 
-  public OmbrometerRainfallGenerator( final Feature featureToBind )
+
+  public OmbrometerRainfallGenerator( final Object parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] propValues )
   {
-    super( featureToBind, QNAME );
+    super( parent, parentRelation, featureType, id, propValues );
   }
 
   /**
