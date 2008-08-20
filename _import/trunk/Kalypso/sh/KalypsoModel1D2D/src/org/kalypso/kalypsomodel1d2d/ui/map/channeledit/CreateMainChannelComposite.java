@@ -87,7 +87,6 @@ import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLaye
 import org.kalypso.kalypsomodel1d2d.ui.map.channeledit.overlay.ProfilOverlayLayerProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.result.IStationResult;
-import org.kalypso.model.wspm.ui.view.ProfilViewData;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.chart.color.DefaultProfilColorRegistryFactory;
@@ -102,14 +101,11 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
-
 /**
  * @author Thomas Jung
  */
 public class CreateMainChannelComposite extends Composite
 {
-  private final ProfilViewData m_viewData = new ProfilViewData();
-
   private final ColorRegistry m_colorRegistry = DefaultProfilColorRegistryFactory.createColorRegistry( getDisplay() );
 
   final CreateChannelData m_data;
@@ -426,7 +422,7 @@ public class CreateMainChannelComposite extends Composite
     spinnerNumIntersSegment.setLayoutData( gridDataNumIntersSpinner );
     spinnerNumIntersSegment.setEnabled( true );
     spinnerNumIntersSegment.setMinimum( 2 );
-    spinnerNumIntersSegment.setMaximum( 100 );
+    spinnerNumIntersSegment.setMaximum( 999 );
     if( m_data.getNumOfSegments() > 0 )
     {
       spinnerNumIntersSegment.setSelection( m_data.getNumBankIntersections( spinnerSegment.getSelection() ) );
@@ -686,7 +682,7 @@ public class CreateMainChannelComposite extends Composite
     spinNumBankIntersections.setLayoutData( gridDataSpin );
     spinNumBankIntersections.setDigits( 0 );
     spinNumBankIntersections.setMinimum( 2 );
-    spinNumBankIntersections.setMaximum( 100 );
+    spinNumBankIntersections.setMaximum( 999 );
     if( m_data.getGlobNumBankIntersections() == 0 )
       spinNumBankIntersections.setSelection( 6 );
     else
@@ -818,7 +814,7 @@ public class CreateMainChannelComposite extends Composite
     m_toolkit.adapt( spinNumProfIntersections );
     spinNumProfIntersections.setDigits( 0 );
     spinNumProfIntersections.setMinimum( 4 );
-    spinNumProfIntersections.setMaximum( 100 );
+    spinNumProfIntersections.setMaximum( 999 );
     if( m_data.getNumProfileIntersections() == 0 )
       spinNumProfIntersections.setSelection( 6 );
     else
@@ -829,7 +825,6 @@ public class CreateMainChannelComposite extends Composite
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
-      @SuppressWarnings("synthetic-access")
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -929,7 +924,7 @@ public class CreateMainChannelComposite extends Composite
         // here repaint!!
       }
       final SegmentData currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
-      final ProfilChartView profilChartView = new ProfilChartView( profil, new IStationResult[0], m_colorRegistry);
+      final ProfilChartView profilChartView = new ProfilChartView( profil, new IStationResult[0], m_colorRegistry );
       profilChartView.setLayerProvider( new ProfilOverlayLayerProvider() );
 
       final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL );
