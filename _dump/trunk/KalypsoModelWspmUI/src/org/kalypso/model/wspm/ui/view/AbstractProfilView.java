@@ -43,9 +43,13 @@ package org.kalypso.model.wspm.ui.view;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
+import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
+
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author belger
@@ -53,10 +57,6 @@ import org.kalypso.model.wspm.core.result.IStationResult;
  */
 public abstract class AbstractProfilView implements IProfilListener, IProfilView, IChartPart
 {
-  
-
-  
-
   protected final IProfil m_profile;
 
   private Control m_control;
@@ -124,43 +124,42 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
     //instances must overwrite this method
   }
  
-//  /**
-//   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
-//   */
-//  @Override
-//  public AxisDragHandlerDelegate getAxisDragHandler( )
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
-//
-//  /**
-//   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-//   */
-//  @Override
-//  public ChartComposite getChartComposite( )
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
-//
-//  /**
-//   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
-//   */
-//  @Override
-//  public PlotDragHandlerDelegate getPlotDragHandler( )
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
-//  /**
-//   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
-//   */
-//  @Override
-//  public Object getAdapter( Class< ? > clazz )
-//  {
-//    // TODO Auto-generated method stub
-//    return null;
-//  }
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
+   */
+  @Override
+  public AxisDragHandlerDelegate getAxisDragHandler( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+   */
+  @Override
+  public ChartComposite getChartComposite( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
+   */
+  @Override
+  public PlotDragHandlerDelegate getPlotDragHandler( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( Class< ? > clazz )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 }

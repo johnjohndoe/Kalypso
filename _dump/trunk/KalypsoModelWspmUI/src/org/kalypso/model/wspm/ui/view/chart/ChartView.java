@@ -128,29 +128,29 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
     if( adapted != null )
       return adapted;
 
-      if( ChartComposite.class.equals( adapter ) )
-      {
-        ChartComposite chart = getChartComposite();
-        if( chart!= null && !chart.isDisposed() )
-          return chart;
-        else
-          return null;
-      }
+    if( ChartComposite.class.equals( adapter ) )
+    {
+      ChartComposite chart = getChartComposite();
+      if( chart != null && !chart.isDisposed() )
+        return chart;
+      else
+        return null;
+    }
 
-      if( IChartPart.class.equals( adapter ) )
-      {
-        return this;
-      }
+    if( IChartPart.class.equals( adapter ) )
+    {
+      return this;
+    }
 
-      if( IContentOutlinePage.class.equals( adapter ) )
+    if( IContentOutlinePage.class.equals( adapter ) )
+    {
+      if( m_outlinePage == null )
       {
-        if( m_outlinePage == null )
-        {
-          m_outlinePage = new ChartEditorTreeOutlinePage( this );
-        }
-        return m_outlinePage;
+        m_outlinePage = new ChartEditorTreeOutlinePage( this );
       }
-    
+      return m_outlinePage;
+    }
+
     return super.getAdapter( adapter );
   }
 
@@ -170,15 +170,13 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
     }
   }
 
- 
-
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
     return m_profilPart.getProfilChartView().getAxisDragHandler();
-    //return null;
+    // return null;
   }
 
   /**
@@ -186,7 +184,7 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public ChartComposite getChartComposite( )
   {
-    return  m_profilPart.getProfilChartView().getChart();
+    return m_profilPart.getProfilChartView().getChart();
   }
 
   /**
