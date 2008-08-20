@@ -76,7 +76,6 @@
 	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif">
 		<arg name="mainSash" value="40" />
 		<arg name="rightSash" value="50" />
-
 		<arg name="mapTemplate" value=".templates/calcCase/ezg.gmt" />
 		<arg name="maximizeMap" value="true" />
 		<arg name="selectFeatureID" value="EZ_1" />
@@ -84,10 +83,8 @@
 			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
 			<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand" />
 		</arg>
-
 		<arg name="zmlTableShow" value="all" />
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung" />
-
 		<arg name="buttonText" value="Neuberechnung Gebietsniederschlag" />
 		<arg name="buttonTooltip" value="Ombrometermesswerte mittels Gebietsniederschlagsmodell übernehmen" />
 		<arg name="buttonLaunch" value="gebietsniederschlag" />
@@ -103,9 +100,6 @@
 		<arg name="zmlTableShow" value="all" />
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - Abgabe#linkColumn=Abgabe#color=0x0000ff" />
 		<arg name="ignoreType1" value="W" />
-        <!--arg name="ignoreType2" value="Q"/-->
-        <!--arg name="ignoreLabel1" value="Abfluss"/-->
-        <!--arg name="ignoreLabel2" value="Wasserstand"/-->
 	</page>
 
 	<!-- Kontrolle W-Eingabepegel -->
@@ -147,9 +141,6 @@
 		<arg name="rightSash" value="50" />
 		<arg name="zmlTableShow" value="all" />
 		<arg name="ignoreType1" value="W" />
-        <!--arg name="ignoreType2" value="Q"/-->
-        <!--arg name="ignoreLabel1" value="Abfluss"/-->
-        <!--arg name="ignoreLabel2" value="Wasserstand"/-->
 		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Abfluss#color=0x0000ff" />
 	</page>
 

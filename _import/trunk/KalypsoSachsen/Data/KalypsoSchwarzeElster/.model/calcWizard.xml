@@ -13,45 +13,91 @@ ToDo: Help-Ids setzen!!! -->
 
 	<!-- Phase 1: KONTROLLE DER ZEITREIHEN -->
 
+
+	<!-- Auswahl Ombrometer + Thiessen -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Auswahl - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif">
+		<arg name="pageID" value="OmbrometerAuswahl" />
+        <!--arg name="htmlFilePath" value=".model/wizardhtml/07_Prognose_01.html"/-->
+		<arg name="mainSash" value="50" />
+		<arg name="rightSash" value="50" />
+		<arg name="hideCalcButton" value="true" />
+
+		<!-- MAP -->
+		<arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt" />
+		<arg name="maximizeMap" value="true" />
+		<arg name="selectFeatureID" value="Ombrometer-Sohland" />
+		<arg name="mapWidgetID" value="SELECT" />
+		<arg name="mapToolbar">
+			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
+			<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand" />
+		</arg>
+
+		<!-- FEATURE-VIEW -->
+		<arg name="featureTemplate" value=".templates/calcCase/ombrometer.gft#linktype=gml#href=ombrometer.gml" />
+		<arg name="featureControlStyle" value="SWT.NONE" />
+		<arg name="reselectFeatureview" value="false" />
+		<arg name="selectionFromFeatureview" value="false" />
+
+		<!-- DIAGRAMM -->
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitationLink1" />
+	</page>
+
 	<!-- Kontrolle Ombrometer -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt"/>
-        
-		<arg name="pageID" value="Ombrometer"/>
- 		<arg name="htmlFilePath" value=".model/wizardhtml/Ombrometer.html"/>
- 		<arg name="helpId" value="&hid;sec_Assi_schwElster_02_Eingangsdaten"/>
- 		
-        <arg name="mainSash" value="50"/>
-        <arg name="rightSash" value="50"/>
-        
-        <arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitation"/>
-        
-        <arg name="maximizeMap" value="true"/>
-        <arg name="mapWidgetID" value="SELECT"/>
-    </page>
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Ombrometer " imageLocation="icons/calcwizard/kalypso32.gif">
+		<arg name="mainSash" value="50" />
+		<arg name="rightSash" value="50" />
+		<arg name="maximizeMap" value="true" />
+		<arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt" />
+		<arg name="mapWidgetID" value="SELECT" />
+		<arg name="selectFeatureID" value="Ombrometer-Sohland" />
+		<arg name="mapToolbar">
+			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
+			<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand" />
+		</arg>
+		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitationLink1" />
+	</page>
+	
+	<!-- Auswahl Niederschlagsvorhersage -->
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.MapAndFeatureWizardPage" pageTitle="Auswahl - Niederschlagsvorhersage" imageLocation="icons/calcwizard/kalypso32.gif">
+		<arg name="pageID" value="dwdprognoseAuswahl" />
+        <!--arg name="htmlFilePath" value=".model/wizardhtml/07_Prognose_01.html"/-->
+		<arg name="mainSash" value="50" />
+		<arg name="rightSash" value="100" />
+		<arg name="hideCalcButton" value="true" />
+		
+		<!-- MAP -->
+		<arg name="mapTemplate" value=".templates/calcCase/dwdprognose.gmt" />
+		<arg name="maximizeMap" value="true" />
+		<arg name="mapWidgetID" value="" /> <!-- Disables any widget -->
+
+		<!-- FEATURE-VIEW -->
+		<arg name="featureTemplate" value=".templates/calcCase/dwdprognose.gft#linktype=gml#href=rcm.gml" />
+		<arg name="featureControlStyle" value="SWT.NONE" />
+		<arg name="reselectFeatureview" value="false" />
+		<arg name="selectionFromFeatureview" value="false" />
+
+		<!-- DIAGRAMM -->
+        <!--arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=precipitationLink1"/-->
+	</page>
 
 	<!-- Kontrolle Niederschlag -->
-    <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif" >
-        <arg name="mapTemplate" value=".templates/calcCase/ezg.gmt"/>
-       	<arg name="maximizeMap" value="true"/>
-       	<arg name="selectFeatureID" value="EZ_1"/>
-
-		<arg name="pageID" value="Einzugsgebiete"/>
- 		<arg name="htmlFilePath" value=".model/wizardhtml/Einzugsgebiete.html"/>
- 		<arg name="helpId" value="&hid;sec_Assi_schwElster_02_Eingangsdaten"/>
-
- 		<arg name="mainSash" value="40"/>
-        <arg name="rightSash" value="50"/>
-
-        <arg name="zmlTableShow" value="all"/>
-
-        <arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung"/>
-        
-        <arg name="buttonText" value="Neuberechnung Gebietsniederschlag"/>
-		<arg name="buttonTooltip" value="Ombrometermesswerte mittels Gebietsniederschlagsmodell übernehmen"/>
-		<arg name="buttonLaunch" value="gebietsniederschlag"/>
-    </page>
-
+	<page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Niederschlag - Eingabepegel (NA-Modelle)" imageLocation="icons/calcwizard/kalypso32.gif">
+		<arg name="mainSash" value="40" />
+		<arg name="rightSash" value="50" />
+		<arg name="mapTemplate" value=".templates/calcCase/ezg.gmt" />
+		<arg name="maximizeMap" value="true" />
+		<arg name="selectFeatureID" value="EZ_1" />
+		<arg name="mapToolbar">
+			<arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand" />
+			<arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand" />
+		</arg>
+		<arg name="zmlTableShow" value="all" />
+		<arg name="timeserie1" value="nameColumn=Name#nameString=%featureprop% - %axisname%#linkColumn=Niederschlag_rechnung" />
+		<arg name="buttonText" value="Neuberechnung Gebietsniederschlag" />
+		<arg name="buttonTooltip" value="Ombrometermesswerte mittels Gebietsniederschlagsmodell übernehmen" />
+		<arg name="buttonLaunch" value="gebietsniederschlag" />
+	</page>
+	
 	<!-- Kontrolle Talsperrenabgaben -->
     <page className="org.kalypso.simulation.ui.wizards.calculation.modelpages.ObservationMapTableDiagWizardPage" pageTitle="Kontrolle Talsperrenabgabe" imageLocation="icons/calcwizard/kalypso32.gif" >
         <arg name="mapTemplate" value=".templates/calcCase/talsperren.gmt"/>

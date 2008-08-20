@@ -11,6 +11,9 @@
 			<label property="startsimulation" style="0"/>
 			<text property="startsimulation" style="2048">
 				<gridData horizontalAlignment="4" grabExcessHorizontalSpace="true"/>
+				<!-- REMARK: does not work: StringModifier is not able
+				to parse that date... -->
+				<!--format>%1$td.%1$tm.%1$ty %1$tH:%1$tM</format-->
 			</text>
 			<label property="startforecast" style="0"/>
 			<text property="startforecast" style="2048">

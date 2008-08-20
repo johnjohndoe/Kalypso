@@ -5,9 +5,9 @@
         	<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/feature.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/xlinks.xsd"/>
-	<import namespace="obslink.zml.kalypso.org" schemaLocation="http://lfug-kv-01:8080/KalypsoConf/schemata/gml2_2002/obslink.xsd"/>
+	<import namespace="http://www.opengis.net/gml" />
+	<import namespace="http://www.w3.org/1999/xlink"/>
+	<import namespace="obslink.zml.kalypso.org"/>
 	<import namespace="org.kalypso.spree.ombrometer" schemaLocation="ombrometer.xsd"/>
 
 	<!-- Eigentliches Spree-Modell -->	
@@ -21,6 +21,7 @@
 					<element name="VorgabeCollectionAssociation" type="spree:VorgabeCollectionAssociationType"/>
 					<element name="OmbrometerCollectionAssociation" type="ombrometer:OmbrometerCollectionAssociationType" minOccurs="0">
 						<annotation>
+							<documentation>Deprecated. Die Ombrometer werden jetzt separat vom Modell abgebildet..</documentation>
 							<documentation xml:lang="de">
 								<label>Ombrometer-Liste</label>
 								<tooltip>Liste der Ombrometer</tooltip>
@@ -118,10 +119,11 @@
 				    </element>
 					<element name="gewichtung" type="spree:GewichtungsAssociationType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
+							<documentation>DEPRECATED: Das Gebietsniederschlagsmodell wird jetzt ausserhalb vom Modell betrieben.</documentation>
 							<documentation xml:lang="de">
 								<label>Gewichtung Ombrometer</label>
 								<tooltip>Zuordnung der Ombrometerstationen zu diesem Einzugsgebiet</tooltip>
-								<description>Gewichtungsfaktoren zur Zuordnung von Ombrrometern zu diesem Einzugsgebiet</description>
+								<description>Gewichtungsfaktoren zur Zuordnung von Ombrometern zu diesem Einzugsgebiet</description>
 							</documentation>
 						</annotation>
 					</element>
@@ -249,6 +251,7 @@
 	
 	
 	<!-- Relation TG nach RelationsFeature -->
+	<!--  Ab hier alles DEPRECATED -->
 	<complexType name="GewichtungsAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
