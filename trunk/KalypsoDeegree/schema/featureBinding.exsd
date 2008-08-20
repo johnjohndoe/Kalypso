@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="feature"/>
+            <element ref="feature" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -49,24 +49,20 @@
 
    <element name="feature">
       <complexType>
-         <attribute name="qname_namespace_uri" type="string" use="required">
+         <attribute name="qname" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  QName ot the registzered feature implementation. Must be of form {namespace}localPart (see QName#valueOf).
                </documentation>
+               <appinfo>
+                  <meta.attribute kind="identifier"/>
+               </appinfo>
             </annotation>
          </attribute>
-         <attribute name="qname_local_part" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="class" type="string">
-            <annotation>
-               <documentation>
-                  
+                  Implementing class of this feature binding. Must Implement &lt;code&gt;org.kalypsodeegree.model.feature.IFeatureBinding&lt;/code&gt;. Must have an constructor identical to Feature_Impl.
                </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn=":org.kalypsodeegree.model.feature.IFeatureBinding"/>

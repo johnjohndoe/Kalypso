@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -75,11 +75,11 @@ public class KalypsoDeegreeExtensions
   /* Empty implementation which does nothing. */
   private static final IGmlWorkspaceListener INVALID_PROXY = new GmlWorkspaceListener()
   {
-    public void init( GMLWorkspace workspace )
+    public void init( final GMLWorkspace workspace )
     {
     }
 
-    public void onModellChange( ModellEvent modellEvent )
+    public void onModellChange( final ModellEvent modellEvent )
     {
     }
   };
@@ -260,14 +260,12 @@ public class KalypsoDeegreeExtensions
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IFeatureBinding.ID ); //$NON-NLS-1$
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IFeatureBinding.ID );
 
-      for( IConfigurationElement configurationElement : elements )
+      for( final IConfigurationElement configurationElement : elements )
       {
-        String namespace_uri = configurationElement.getAttribute( "qname_namespace_uri" );
-        String local_part = configurationElement.getAttribute( "qname_local_part" );
-
-        final QName qn = new QName( namespace_uri, local_part );
+        final String qnameAttrribute = configurationElement.getAttribute( "qname" );
+        final QName qn = QName.valueOf( qnameAttrribute );
 
         FEATURE_BINDINGS.put( qn, configurationElement );
       }

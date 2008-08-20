@@ -19,11 +19,9 @@
  */
 
 package org.openjump.core.graph.delauneySimplexInsert;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -48,7 +46,7 @@ public class DelaunayTriangulation extends Triangulation {
      * All sites must fall within the initial triangle.
      * @param triangle the initial triangle
      */
-    public DelaunayTriangulation (Simplex triangle) {
+    public DelaunayTriangulation (final Simplex triangle) {
         super(triangle);
         mostRecent = triangle;
     }
@@ -58,12 +56,12 @@ public class DelaunayTriangulation extends Triangulation {
      * @param point the Pnt to locate
      * @return triangle (Simplex<Pnt>) that holds the point; null if no such triangle
      */
-    public Simplex locate (Pnt point) {
+    public Simplex locate (final Pnt point) {
         Simplex triangle = mostRecent;
         if (!this.contains(triangle)) triangle = null;
         
         // Try a directed walk (this works fine in 2D, but can fail in 3D)
-        Set visited = new HashSet();
+        final Set visited = new HashSet();
         while (triangle != null) {
             if (visited.contains(triangle)) { // This should never happen
                 System.out.println("Warning: Caught in a locate loop");
@@ -71,14 +69,14 @@ public class DelaunayTriangulation extends Triangulation {
             }
             visited.add(triangle);
             // Corner opposite point
-            Pnt corner = point.isOutside((Pnt[]) triangle.toArray(new Pnt[0]));
+            final Pnt corner = point.isOutside((Pnt[]) triangle.toArray(new Pnt[0]));
             if (corner == null) return triangle;
             triangle = this.neighborOpposite(corner, triangle);
         }
         // No luck; try brute force
         System.out.println("Warning: Checking all triangles for " + point);
-        for (Iterator it = this.iterator(); it.hasNext();) {
-            Simplex tri = (Simplex) it.next();
+        for (final Iterator it = this.iterator(); it.hasNext();) {
+            final Simplex tri = (Simplex) it.next();
             if (point.isOutside((Pnt[]) tri.toArray(new Pnt[0])) == null) return tri;
         }
         // No such triangle
@@ -91,11 +89,11 @@ public class DelaunayTriangulation extends Triangulation {
      * @param site the new Pnt
      * @return set of all new triangles created
      */
-    public Set delaunayPlace (Pnt site) {
-        Set newTriangles = new HashSet();
-        Set oldTriangles = new HashSet();
-        Set doneSet = new HashSet();
-        LinkedList waitingQ = new LinkedList();
+    public Set delaunayPlace (final Pnt site) {
+        final Set newTriangles = new HashSet();
+        final Set oldTriangles = new HashSet();
+        final Set doneSet = new HashSet();
+        final LinkedList waitingQ = new LinkedList();
         
         // Locate containing triangle
         if (debug) System.out.println("Locate");
@@ -111,9 +109,9 @@ public class DelaunayTriangulation extends Triangulation {
             triangle = (Simplex) waitingQ.removeFirst();      
             if (site.vsCircumcircle((Pnt[]) triangle.toArray(new Pnt[0])) == 1) continue;
             oldTriangles.add(triangle);
-            Iterator it = this.neighbors(triangle).iterator();
+            final Iterator it = this.neighbors(triangle).iterator();
             for (; it.hasNext();) {
-                Simplex tri = (Simplex) it.next();
+                final Simplex tri = (Simplex) it.next();
                 if (doneSet.contains(tri)) continue;
                 doneSet.add(tri);
                 waitingQ.add(tri);
@@ -121,8 +119,8 @@ public class DelaunayTriangulation extends Triangulation {
         }
         // Create the new triangles
         if (debug) System.out.println("Create");
-        for (Iterator it = Simplex.boundary(oldTriangles).iterator(); it.hasNext();) {
-            Set facet = (Set) it.next();
+        for (final Iterator it = Simplex.boundary(oldTriangles).iterator(); it.hasNext();) {
+            final Set facet = (Set) it.next();
             facet.add(site);
             newTriangles.add(new Simplex(facet));
         }
@@ -138,10 +136,10 @@ public class DelaunayTriangulation extends Triangulation {
     /**
      * Main program; used for testing.
      */
-    public static void main (String[] args) {
-        Simplex tri = new Simplex(new Pnt[] {new Pnt(-10,10), new Pnt(10,10), new Pnt(0,-10)});
+    public static void main (final String[] args) {
+        final Simplex tri = new Simplex(new Pnt[] {new Pnt(-10,10), new Pnt(10,10), new Pnt(0,-10)});
         System.out.println("Triangle created: " + tri);
-        DelaunayTriangulation dt = new DelaunayTriangulation(tri);
+        final DelaunayTriangulation dt = new DelaunayTriangulation(tri);
         System.out.println("DelaunayTriangulation created: " + dt);
         dt.delaunayPlace(new Pnt(0,0));
         dt.delaunayPlace(new Pnt(1,0));

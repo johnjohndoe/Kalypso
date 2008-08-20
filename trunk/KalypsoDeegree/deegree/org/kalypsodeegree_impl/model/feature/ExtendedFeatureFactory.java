@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
@@ -75,25 +75,25 @@ public class ExtendedFeatureFactory
     return SINGELTON;
   }
 
-  public Feature getFeature( Feature parent, IRelationType parentRelation, IFeatureType featureType, String id, Object[] properties )
+  public Feature getFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType featureType, final String id, final Object[] properties )
   {
     if( featureType == null )
       throw new IllegalArgumentException( "must provide a featuretype" );
 
     /* get feature binding class for feature type */
-    IConfigurationElement element = KalypsoDeegreeExtensions.getFeatureBinding( featureType.getQName() );
+    final IConfigurationElement element = KalypsoDeegreeExtensions.getFeatureBinding( featureType.getQName() );
     if( element != null )
     {
       try
       {
-        String pluginid = element.getContributor().getName();
-        Bundle bundle = Platform.getBundle( pluginid );
-        Class< ? extends IFeatureBinding> featureClass = bundle.loadClass( element.getAttribute( "class" ) );
-        Constructor< ? extends IFeatureBinding> constructor = featureClass.getConstructor( Object.class, IRelationType.class, IFeatureType.class, String.class, Object[].class );
+        final String pluginid = element.getContributor().getName();
+        final Bundle bundle = Platform.getBundle( pluginid );
+        final Class< ? extends IFeatureBinding> featureClass = bundle.loadClass( element.getAttribute( "class" ) );
+        final Constructor< ? extends IFeatureBinding> constructor = featureClass.getConstructor( Object.class, IRelationType.class, IFeatureType.class, String.class, Object[].class );
 
         return constructor.newInstance( parent, parentRelation, featureType, id, properties );
       }
-      catch( Throwable e )
+      catch( final Throwable e )
       {
         e.printStackTrace();
       }
