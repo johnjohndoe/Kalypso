@@ -177,8 +177,8 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public AxisDragHandlerDelegate getAxisDragHandler( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_profilPart.getProfilChartView().getAxisDragHandler();
+    //return null;
   }
 
   /**
@@ -194,7 +194,6 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
    */
   public PlotDragHandlerDelegate getPlotDragHandler( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return m_profilPart.getProfilChartView().getPlotDragHandler();
   }
 }

@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
+import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
@@ -85,9 +86,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  */
 public class ProfilChartView extends AbstractProfilView implements IPersistableElement
 {
-
-  
-
   private static final String MEM_LAYER_VIS = "layerVisibility"; //$NON-NLS-1$
 
   // private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
@@ -109,6 +107,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   private ChartComposite m_chart = null;
 
   private IProfilLayerProvider m_layerProvider;
+
+  private PlotDragHandlerDelegate m_plotDragHandler;
+
+  private AxisDragHandlerDelegate m_axisDragHandler;
 
   public ProfilChartView( final IProfil profile, final ColorRegistry colorRegistry )
   {
@@ -243,8 +245,11 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 
     // TODO: move this to actiondelegate
 
-    PlotDragHandlerDelegate plotDragHandler = new PlotDragHandlerDelegate( m_chart );
-    plotDragHandler.setActiveHandler( new DragEditHandler( m_chart, TRASH_HOLD ) );
+    m_plotDragHandler = new PlotDragHandlerDelegate( m_chart );
+    m_plotDragHandler.setActiveHandler( new DragEditHandler( m_chart, TRASH_HOLD ) );
+    
+    m_axisDragHandler = new AxisDragHandlerDelegate(m_chart);
+    
     return m_chart;
   }
 
@@ -427,13 +432,43 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     m_layerProvider = layerProvider;
   }
 
-//  /**
-//   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-//   */
-//  @Override
-//  public ChartComposite getChartComposite( )
-//  {
-//    return m_chart;
-//  }
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( Class< ? > clazz )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
+   */
+  @Override
+  public AxisDragHandlerDelegate getAxisDragHandler( )
+  {
+    return m_axisDragHandler;
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
+   */
+  @Override
+  public ChartComposite getChartComposite( )
+  {
+    return m_chart;
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
+   */
+  @Override
+  public PlotDragHandlerDelegate getPlotDragHandler( )
+  {
+    return m_plotDragHandler;
+  }
+
+
 
 }

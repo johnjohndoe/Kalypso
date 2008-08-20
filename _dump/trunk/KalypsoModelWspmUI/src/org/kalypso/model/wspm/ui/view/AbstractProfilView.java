@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
@@ -50,7 +51,7 @@ import org.kalypso.model.wspm.core.result.IStationResult;
  * @author belger
  * @author kimwerner
  */
-public abstract class AbstractProfilView implements IProfilListener, IProfilView//,IChartPart
+public abstract class AbstractProfilView implements IProfilListener, IProfilView, IChartPart
 {
   
 
