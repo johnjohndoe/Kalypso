@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.IFunctionExpression;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBinding;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.validation.IFeatureRule;
@@ -90,6 +91,8 @@ public class KalypsoDeegreeExtensions
   private final static String RULES_EXTENSION_POINT = "org.kalypso.deegree.featureRule";
 
   private static final IGmlWorkspaceListener[] EMPTY_LISTENERS = new IGmlWorkspaceListener[] {};
+
+  private static Map<QName, IConfigurationElement> FEATURE_BINDINGS = null;
 
   private static Map<String, IConfigurationElement> FUNCTION_EXPRESSION = null;
 
@@ -195,7 +198,7 @@ public class KalypsoDeegreeExtensions
    * Get all listeners which are associated with the given qname.
    * 
    * @param qname
-   *            If null, the listeners are returned which are not associated with any qname.
+   *          If null, the listeners are returned which are not associated with any qname.
    */
   public static IGmlWorkspaceListener[] createGmlWorkspaceListeners( final QName qname )
   {
@@ -243,6 +246,34 @@ public class KalypsoDeegreeExtensions
       result.addAll( commonRules );
 
     return result.toArray( new IFeatureRule[result.size()] );
+  }
+
+  /**
+   * @return list of feature binding handlers, handling a special featureType qname
+   */
+  public synchronized static IConfigurationElement getFeatureBinding( final QName qname )
+  {
+    // fill binding map
+    if( FEATURE_BINDINGS == null )
+    {
+      FEATURE_BINDINGS = new HashMap<QName, IConfigurationElement>();
+
+      /* get extension points */
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IFeatureBinding.ID ); //$NON-NLS-1$
+
+      for( IConfigurationElement configurationElement : elements )
+      {
+        String namespace_uri = configurationElement.getAttribute( "qname_namespace_uri" );
+        String local_part = configurationElement.getAttribute( "qname_local_part" );
+
+        final QName qn = new QName( namespace_uri, local_part );
+
+        FEATURE_BINDINGS.put( qn, configurationElement );
+      }
+    }
+
+    return FEATURE_BINDINGS.get( qname );
   }
 
   private synchronized static Map<QName, List<IFeatureRule>> getFeatureRules( )
