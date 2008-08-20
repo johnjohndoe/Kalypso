@@ -5,6 +5,7 @@
    <extension-point id="gmlWorkspaceListener" name="gmlWorkspaceListener" schema="schema/gmlWorkspaceListener.exsd"/>
    <extension-point id="featureRule" name="featureRule" schema="schema/featureRule.exsd"/>
    <extension-point id="functionExpression" name="functionExpression" schema="schema/functionExpression.exsd"/>
+   <extension-point id="featureBinding" name="featureBinding" schema="schema/featureBinding.exsd"/>
 
      <extension
          id="org.kalypso.deegree.catalog"
