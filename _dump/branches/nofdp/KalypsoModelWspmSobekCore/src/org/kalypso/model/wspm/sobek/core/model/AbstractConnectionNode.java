@@ -69,6 +69,8 @@ import com.vividsolutions.jts.geom.Geometry;
 public abstract class AbstractConnectionNode extends AbstractNode implements INode
 {
 
+  private Sperrzone m_sperrzone = null;
+
   public AbstractConnectionNode( final IModelMember model, final Feature node )
   {
     super( model, node );
@@ -213,32 +215,34 @@ public abstract class AbstractConnectionNode extends AbstractNode implements INo
    */
   public ISperrzone getSperrzone( )
   {
-    final Sperrzone sperrzone = new Sperrzone( getFeature() );
-
-    try
+    if( m_sperrzone == null )
     {
-      final GM_Point point = getLocation();
-      final Geometry jtsPoint = JTSAdapter.export( point );
-      final Geometry bufferedPoint = jtsPoint.buffer( ISperrzonenDistances.CONNECTION_NODE );
-
-      final IBranch[] inflowingBranches = getInflowingBranches();
-      final IBranch[] outflowingBranches = getOutflowingBranches();
-
-      for( final IBranch branch : inflowingBranches )
+      m_sperrzone = new Sperrzone( getFeature() );
+      try
       {
-        sperrzone.addSperrzone( branch, bufferedPoint );
+        final GM_Point point = getLocation();
+        final Geometry jtsPoint = JTSAdapter.export( point );
+        final Geometry bufferedPoint = jtsPoint.buffer( ISperrzonenDistances.CONNECTION_NODE );
+
+        final IBranch[] inflowingBranches = getInflowingBranches();
+        final IBranch[] outflowingBranches = getOutflowingBranches();
+
+        for( final IBranch branch : inflowingBranches )
+        {
+          m_sperrzone.addSperrzone( branch, bufferedPoint );
+        }
+
+        for( final IBranch branch : outflowingBranches )
+        {
+          m_sperrzone.addSperrzone( branch, bufferedPoint );
+        }
       }
-
-      for( final IBranch branch : outflowingBranches )
+      catch( final GM_Exception e )
       {
-        sperrzone.addSperrzone( branch, bufferedPoint );
+        e.printStackTrace();
       }
     }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
 
-    return sperrzone;
+    return m_sperrzone;
   }
 }

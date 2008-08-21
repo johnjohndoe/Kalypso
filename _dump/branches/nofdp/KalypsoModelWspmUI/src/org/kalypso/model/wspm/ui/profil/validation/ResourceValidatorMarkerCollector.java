@@ -109,7 +109,11 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
       if( marker == null )
         continue;
 
-      if( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( profilFeatureID ) )
+      final Object attribute = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID );
+      if( attribute == null )
+        continue;
+
+      if( attribute.equals( profilFeatureID ) )
         toDelete.add( markers[i] );
     }
     if( !toDelete.isEmpty() )

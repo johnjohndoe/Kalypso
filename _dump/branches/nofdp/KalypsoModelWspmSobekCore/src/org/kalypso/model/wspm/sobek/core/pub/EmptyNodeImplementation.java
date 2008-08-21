@@ -67,6 +67,8 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class EmptyNodeImplementation extends AbstractNode implements IEmptyNode
 {
+  private Sperrzone m_sperrzone = null;
+
   public EmptyNodeImplementation( final IModelMember model, final Feature node )
   {
     super( model, node );
@@ -128,33 +130,38 @@ public class EmptyNodeImplementation extends AbstractNode implements IEmptyNode
    */
   public ISperrzone getSperrzone( )
   {
-    final Sperrzone sperrzone = new Sperrzone( getFeature() );
-    try
+
+    if( m_sperrzone == null )
     {
-      final IBranch branch = getLinkToBranch();
-
-      final GM_Point location = getLocation();
-      final Geometry jtsLocation = JTSAdapter.export( location );
-
-      final QName name = getFeature().getFeatureType().getQName();
-
-      if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( name ) )
+      m_sperrzone = new Sperrzone( getFeature() );
+      try
       {
-        final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.RETARDING_BASIN_NODE );
-        sperrzone.addSperrzone( branch, buffer );
+        final IBranch branch = getLinkToBranch();
+
+        final GM_Point location = getLocation();
+        final Geometry jtsLocation = JTSAdapter.export( location );
+
+        final QName name = getFeature().getFeatureType().getQName();
+
+        if( ISobekConstants.QN_NOFDP_RETARDIN_BASIN_NODE.equals( name ) )
+        {
+          final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.RETARDING_BASIN_NODE );
+          m_sperrzone.addSperrzone( branch, buffer );
+        }
+        else
+        {
+          final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.DEFAULT_NODE );
+          m_sperrzone.addSperrzone( branch, buffer );
+        }
       }
-      else
+      catch( final GM_Exception e )
       {
-        final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.DEFAULT_NODE );
-        sperrzone.addSperrzone( branch, buffer );
+        e.printStackTrace();
       }
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
+
     }
 
-    return sperrzone;
+    return m_sperrzone;
   }
 
   /**

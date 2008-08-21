@@ -63,6 +63,8 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
 {
+  private Sperrzone m_sperrzone = null;
+
   public CrossSectionNode( final IModelMember model, final Feature node )
   {
     super( model, node );
@@ -202,24 +204,26 @@ public class CrossSectionNode extends AbstractNode implements ICrossSectionNode
    */
   public ISperrzone getSperrzone( )
   {
-    final Sperrzone sperrzone = new Sperrzone( getFeature() );
-
-    try
+    if( m_sperrzone == null )
     {
-      final IBranch branch = getLinkToBranch();
+      m_sperrzone = new Sperrzone( getFeature() );
+      try
+      {
+        final IBranch branch = getLinkToBranch();
 
-      final GM_Point location = getLocation();
-      final Geometry jtsLocation = JTSAdapter.export( location );
-      final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.CROSS_SECTION_NODE );
+        final GM_Point location = getLocation();
+        final Geometry jtsLocation = JTSAdapter.export( location );
+        final Geometry buffer = jtsLocation.buffer( ISperrzonenDistances.CROSS_SECTION_NODE );
 
-      sperrzone.addSperrzone( branch, buffer );
+        m_sperrzone.addSperrzone( branch, buffer );
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+      }
     }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
 
-    return sperrzone;
+    return m_sperrzone;
   }
 
 }
