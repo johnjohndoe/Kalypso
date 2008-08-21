@@ -45,8 +45,8 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
 c     Initialisation of values
 
-      !NBS=5000000
-      NBS = 400000000
+      !NBS = 5000000
+      NBS = 20000000
       MFW=1000
       NBSS=NBS
       LBMAX=NBSS

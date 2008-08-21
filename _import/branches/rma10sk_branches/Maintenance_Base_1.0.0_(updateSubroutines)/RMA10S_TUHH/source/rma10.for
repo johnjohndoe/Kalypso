@@ -484,28 +484,6 @@ CIPK DEC00
         !end if
         !-
 
-cipk apr01 This is now done in UPDATE
-cipk apr01        DO  J = 1, NPM
-cipk apr01          IF (IDNOPT.NE.0) THEN
-cipk apr01            HS = VEL(3,J)
-cipk apr01            ISWT = 0
-cipk jan01  change AME to AME1
-cipk apr01            CALL AMF(H,HS,AKP(J),ADT(J),ADB(J),AME1,D2,ISWT)
-cipk apr01            WSLL(J) = H + ADO(J)
-cipk apr01          ELSE
-cipk apr01            WSLL(J) = VEL(3,J) + AO(J)
-cipk apr01          ENDIF
-cipk apr01          K=NREF(J)+1
-cipk apr01          IF(K .NE. 1) THEN
-cipk apr01            L=NREF(J)+NDEP(J)-1
-cipk apr01            IF(L .GE. K) THEN
-cipk apr01              DO M=K,L
-cipk apr01                WSLL(M)=WSLL(J)
-cipk apr01              ENDDO
-cipk apr01            ENDIF
-cipk apr01          ENDIF
-cipk apr01        ENDDO
-
 CIPK DEC00      ENDIF
 CIPK MAY96 RESTORE TETT AS HOURS IN YEAR
       TETT=(DAYOFY-1)*24.+TET

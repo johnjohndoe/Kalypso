@@ -242,4 +242,11 @@ Version 1.0.3 (laufende Änderungen)
 015.) Delete old data corpse of calculationUnit name and ID (calcUnitID; calcUnitName) in parakalyps.f90
 016.) Move array size definition from static declaration to allocatable declaration in pasche_trees.f90. Problem is stack overflow, if a global size value is used to define dummy arrays, whose size can be taken from the overgiving.
 
---- Nico Schrage, 19.08.2008 (1.0.3 bf1)
+--- Nico Schrage, 19.08.2008 (1.0.3 bf2)
+
+017.) remove old deactivated source code from rma10.for
+018.) deallocation of arrays in pasche_tress.f90
+019.) reduce memory assumption again to NBS = 20.000.000
+
+--- Nico Schrage, 21.08.2008 (1.0.3 bf3)
+

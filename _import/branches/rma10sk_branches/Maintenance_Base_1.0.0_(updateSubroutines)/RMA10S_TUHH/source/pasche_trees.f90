@@ -207,6 +207,8 @@ ENDIF
 call cwr_write(name_cwr, ne, mcord, c_wr, mslope, meslope, mh, mvxvy, MaxE)
 !-
 
+deallocate (slope, mslope)
+
 RETURN
 
 end subroutine get_element_cwr
@@ -284,9 +286,6 @@ outer: do i = 1, nodecnt
   angle_v(1) = vel(1,i)
   angle_v(2) = vel(2,i)
   vecq = SQRT(vel(1,i)**2 + vel(2,i)**2)
-  !nis,dec06,testing
-  !WRITE(*,*) 'Knoten:', i, vecq
-  !-
 
   !nis,jul08: Test for smaller velocity (original value: 0.001). Problems are very low flow areas, where trees are present. If values are too small,
   !           they will become better and better with each iteration, because the calculation of the cwr-values takes place every iteration. This
@@ -376,11 +375,11 @@ end do outer1D
 ! the slope will be interpolated from the neighbouring points.
 !nis,dec06: Correction of line, replacing mnd with MaxP
 call FILL_SLOPES(nodecnt, slope,eslope, marker_slope)
-!-
 
-!nis,dec06,testing
-!WRITE(*,*) 'Erreiche Ende von Fill_slopes'
-!-
+
+deallocate (marker_slope)
+Return
+
 
 end subroutine GET_NODE_SLOPE
 
