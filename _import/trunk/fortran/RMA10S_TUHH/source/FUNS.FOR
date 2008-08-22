@@ -1,4 +1,4 @@
-C     Last change:  MD   12 Aug 2008    7:00 pm
+C     Last change:  MD   20 Aug 2008    6:20 pm
 
       FUNCTION DRODS(SAL,I)
       !function type declaration
@@ -111,8 +111,10 @@ C
       DIMENSION GF(2)
       DATA GF/1.0,516./
 C-
+!MD   Ableitung von Dichte(sed)/ nach d(Sed):
+!MD    --> Dichte(sed) = (1.940*(1.0+SED*1.0E-3)*GF(I)) *1.0E-3
+!MD   wird zu:
       DRODSD=1.940E-3*GF(I)
-      !MD muss hier nicht ????? :
-      !MD DRODSD=(1.940*(1.0+SED*1.0E-3)*GF(I)) *1.0E-3
+!MDMD: DRODSD= (1.940*(1.0+SED*1.0E-3)*GF(I)) *1.0E-3
       RETURN
       END
