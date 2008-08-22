@@ -1,4 +1,4 @@
-!     Last change:  MD   12 Aug 2008    4:41 pm
+!     Last change:  MD   22 Aug 2008    2:46 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -190,6 +190,7 @@ ELSE
   NDFM = NDF
 ENDIF
 
+
 UpdateDOFs: DO KK = 1, NDFM
   K = KK
   COUNT = 0.0
@@ -289,7 +290,6 @@ UpdateDOFs: DO KK = 1, NDFM
       ENDIF
       EX = EX * FCA
 
-
       !UPDATE VELOCITIES WITH FIXED DIRECTION ALFA (J)
       !***********************************************
       IF (K <= 2 .and. ALFA (j) /= 0.0) then
@@ -366,55 +366,58 @@ UpdateDOFs: DO KK = 1, NDFM
           ENDIF
         ENDIF
 
-!IPK jun05
-      !calculate the changes for the water depths, average as well as maximum changes, considering the transformations from the marsh algorithm
-      !made before the following lines
-      horg = hel (j)
-      !nis,may08: differ between application of Marsh approach
-      if (idnopt == 0 .or. IsPolynomNode (J)) then
-        hel (j) = VEL (3, J)
-      else
-        vt = vel (3, j)
-        CALL AMF (HEL (J), VT, AKP (J), ADT (J), ADB (J), D1, D2, 0)
-      end if
+        !IPK jun05
+        !calculate the changes for the water depths, average as well as maximum changes, considering the transformations from the marsh algorithm
+        !made before the following lines
+        horg = hel (j)
+        !nis,may08: differ between application of Marsh approach
+        if (idnopt == 0 .or. IsPolynomNode (J)) then
+          hel (j) = VEL (3, J)
+        else
+          vt = vel (3, j)
+          CALL AMF (HEL (J), VT, AKP (J), ADT (J), ADB (J), D1, D2, 0)
+        end if
 
-      !calculate the changes in water depth
-      aex = hel (j) - horg
-      !check whehter changes are more than current maximum changes until now
-      IF (ABS(AEX) > ABS (EMAX (K))) THEN
+        !calculate the changes in water depth
+        aex = hel (j) - horg
+        !check whehter changes are more than current maximum changes until now
+        IF (ABS(AEX) > ABS (EMAX (K))) THEN
 
-        !remember the maximum depth changes and the node where it applies
-        emax (k) = aex
-        NMX (K) = J
-      ENDIF
+          !remember the maximum depth changes and the node where it applies
+          emax (k) = aex
+          NMX (K) = J
+        ENDIF
 
-!IPK APR01 UPDATE WATER SURFACE ELEVATION
+    !IPK APR01 UPDATE WATER SURFACE ELEVATION
 
-      !calculate the water stage
-      IF (IDNOPT == 0 .or. IsPolynomNode (J)) THEN
-        WSLL (J) = VEL (3, J) + AO (J)
+        !calculate the water stage
+        IF (IDNOPT == 0 .or. IsPolynomNode (J)) THEN
+          WSLL (J) = VEL (3, J) + AO (J)
+        ELSE
+          HS = VEL (3, J)
+          ISWT = 0
+          CALL AMF (H, HS, AKP (J), ADT (J), ADB(J), AME1, D2, ISWT)
+          WSLL (J) = H + ADO (J)
+        ENDIF
+
+   !IPK MAY02 ALLOW FOR ICK=7
+
+      !UPDATE VELOCITIES WITHOUT FIXED DIRECTION (ALFA == 0) AND ALL THE OTHER CONSTITUENTS
+      !************************************************************************************
       ELSE
-        HS = VEL (3, J)
-        ISWT = 0
-        CALL AMF (H, HS, AKP (J), ADT (J), ADB(J), AME1, D2, ISWT)
-        WSLL (J) = H + ADO (J)
+
+        !update variable 7 (???)
+        IF (K == 7) THEN
+          GAN (J) = GAN (J) + EX
+
+        !update variables 1 and 2 (without direction restriction) and 4 to 6
+        ELSE
+          VEL (K, J) = VEL (K, J) + EX
+          !MDMD testout
+          !MD WRITE(75,*) 'VEL(K,J)=',VEL(K,J), 'K=', K,'EX', EX
+          !MDMD testout
+        ENDIF
       ENDIF
-
-!IPK MAY02 ALLOW FOR ICK=7
-
-    !UPDATE VELOCITIES WITHOUT FIXED DIRECTION (ALFA == 0) AND ALL THE OTHER CONSTITUENTS
-    !************************************************************************************
-    ELSE
-
-      !update variable 7 (???)
-      IF (K == 7) THEN
-        GAN (J) = GAN (J) + EX
-
-      !update variables 1 and 2 (without direction restriction) and 4 to 6
-      ELSE
-        VEL (K, J) = VEL (K, J) + EX
-      ENDIF
-    ENDIF
   ENDDO UpdateNodes
 
 
