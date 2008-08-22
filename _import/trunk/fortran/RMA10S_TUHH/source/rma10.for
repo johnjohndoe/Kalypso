@@ -1,4 +1,4 @@
-C     Last change:  MD   14 Aug 2008    5:05 pm
+C     Last change:  MD   22 Aug 2008    6:03 pm
 cipk  last update sep 05 2006 add depostion/erosion rates to wave file
 CNis  LAST UPDATE NOV XX 2006 Changes for usage of TUHH capabilities
 CIPK  LAST UPDATE MAR 22 2006 ADD OUTPUT FILE REWIND and KINVIS initialization
@@ -773,6 +773,7 @@ cipk nov99 initialize DFCT
 CIPK SEP96 UPDATE AT START
 CIPK REVISE TO SETUP HEL
         DO J=1,NP
+          ! write(75,*) 'RMA10_778: NDF=',NDF
           DO K=1,NDF
 cipk dec00
             V2OL(K,J)=VDOTO(K,J)
@@ -816,9 +817,9 @@ CIPK AUG95 USE ALPHA=1.8
 cipk dec99 test for delta = 0
         if(delt .gt. 0.) then
 
-           !TODO: This was already done in the inputd.subroutine. It shouldn't occur twice!
-          	ALTM = ALPHA/ DELT
-CIPK          ALTM=2.0/DELT
+          !TODO: This was already done in the inputd.subroutine. It shouldn't occur twice!
+    	  ALTM = ALPHA/ DELT
+CIPK      ALTM=2.0/DELT
 CIPK MAY02
           ALPHASN=1.8
           ALPHASN=2.0
@@ -831,6 +832,7 @@ C
         IF(NIPT .GT. 0) THEN
           WRITE(*,*) 'GETTING VELS'
           DO 455 J=1,NP
+            !write(75,*) 'RMA10_835: NDF=',NDF
             DO 452 K=1,NDF
               VOLD(K,J)=VEL(K,J)
               V2OL(K,J)=VDOTO(K,J)
@@ -894,6 +896,8 @@ cipk mar98 add logic to update HEL
           !thetcn:
 
           !check for all degrees of freedom
+
+          !write(75,*) 'RMA10_899: NDF=',NDF, 'NDF=', NDL
           ForAllDOFs: DO K = NDL, NDF
 CIPK SEP96        VOLD(K,J)=VEL(K,J)
 CIPK SEP96        VDOTO(K,J)=VDOT(K,J)
@@ -1138,7 +1142,11 @@ CIPK MAY02 UPDATE SHEARS ETC
 c          CALL SHEAR
           WRITE(*,*) 'GOING TO SANDX'
           CALL SANDX
+
+!MDMD: Auskommentieren der Quellen und Senken
+!MDMD   --> Muss wieder rein!!
           CALL BEDXCG
+!MDMD: Auskommentieren der Quellen und Senken
 
         ENDIF
 
@@ -1200,51 +1208,35 @@ cipk aug07
         call FindMinMaxValues (MaxP)
 
 
-
 !      !EFa jul07, necessary for autoconverge
 !      if (exterr.eq.1.0) then
-!
 !        call autoconverge(8.)
-!
 !        GOTO 465
 !
 !      end if
 !      !-
-
 C      CALL CHECK
 C     REWIND IVS
         IF(ITEQV(MAXN) .NE. 5  .AND.  ITEQV(MAXN) .NE. 2
      +  .AND.  ITEQV(MAXN) .LT. 8) CALL VRTVEL
 
-
-
           IF(NPRTF .GT. 0) THEN
-
             IF(MOD(MAXN,NPRTF) .EQ. 0  .OR.  MAXN .EQ. NITA
      +        .OR. NCONV .EQ. 1) THEN
-
               CALL OUTPUT(2)
               CALL CHECK
-
             ENDIF
 
           ELSE
-
             IPRTF=IABS(NPRTF)
 
             IF(MOD(N,IPRTF) .EQ. 0) THEN
-
               IF(MAXN .EQ. NITA  .OR. NCONV .EQ. 2) THEN
-
                 CALL OUTPUT(2)
                 CALL CHECK
-
               ENDIF
-
             ENDIF
-
           ENDIF
-
 
 
 C-
@@ -1258,6 +1250,8 @@ CIPK NOV97
 CIPK MAR98
           VTM=VEL(3,J)
           CALL AMF(HEL(J),VTM,AKP(J),ADT(J),ADB(J),D1,D2,0)
+
+          !write(75,*) 'RMA10_1250: NDF=',NDF
           DO  K=1,NDF
             VDOT(K,J)=ALTM*(VEL(K,J)-VOLD(K,J))-(ALPHA-1.)*VDOTO(K,J)
           ENDDO
@@ -1328,7 +1322,14 @@ C      END OF ITERATION LOOP
 CIPK MAY02 UPDATE BED INFORMATION FOR SAND CASE
         IF(LSAND .GT. 0) THEN
           write(75,*) 'rma10: going to bedsur'
+
+!MDMD: Auskommentieren der Quellen und Senken
+!MDMD   --> Muss weider rein!
           CALL BEDSUR
+!MDMD: Auskommentieren der Quellen und Senken
+!MDMD   --> Muss weider rein!
+
+
         ELSEIF(LSS .GT. 0) THEN
 C
 C-    IF COHESIVE SED IS SIMULATED, CALCULATE BED CHANGE
@@ -1344,9 +1345,12 @@ C
           !MD   alle dort berechneten Werte GAN0 und GAN sind unsinnig, da immer = null
           !MD   BEDLBED wurde mit der aktuelleren Routine BEDSUR ersetzt
           !MD CALL BEDLBED
-
           !MD!MD neu
+!MDMD: Auskommentieren der Quellen und Senken
+!MDMD   --> Muss weider rein!
           CALL BEDSUR
+!MDMD: Auskommentieren der Quellen und Senken
+!MDMD   --> Muss weider rein!
         ENDIF
 
 !NiS,apr06: calculating the cwr-values for trees.
@@ -1433,6 +1437,7 @@ C-
 C......STORE AS A SINGLE PRECISION ARRAY
 C-
             DO 770 J=1,NP
+            ! write(75,*) 'RMA10_1426: NDF=',NDF
               DO 760 K=1,NDF
                 VSING(K,J)=VEL(K,J)
   760         CONTINUE
