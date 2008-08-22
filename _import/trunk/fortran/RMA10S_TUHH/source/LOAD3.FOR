@@ -7,7 +7,7 @@ CIPK  LAST UPDATE DEC 21 2000 ALLOW FOR GATE STRUCTURE
 cipk  last update Nov 12 1999 add dropout of nodes for 3-d to 2-d
 CIPK  LAST UPDATE JAN 12 1999 FIX 2DV JUNCTION LOGIC
 cipk  last update Dec 5 1998 fix error at transitions
-C     Last change:  WP   15 Jun 2008    9:21 pm
+C     Last change:  MD   20 Aug 2008   11:55 am
 cipk  last update Feb 4 1998 correct zero subscript test and for HCN
 CIPK  LAST UPDATE JAN 22 1998
 cipk  last update Dec 16 1997
@@ -1306,17 +1306,20 @@ cipk sep04
               VEL(4,L)=VEL(4,N)*FCTS(L)/FCTS(N)
               VEL(5,L)=VEL(5,N)*FCTS(L)/FCTS(N)
               VEL(6,L)=VEL(6,N)*FCTS(L)/FCTS(N)
+
               VOLD(1,L)=VOLD(1,N)*FCTV(L)/FCTV(N)
               VOLD(2,L)=VOLD(2,N)*FCTV(L)/FCTV(N)
               VOLD(4,L)=VOLD(4,N)*FCTS(L)/FCTS(N)
               VOLD(5,L)=VOLD(5,N)*FCTS(L)/FCTS(N)
               VOLD(6,L)=VOLD(6,N)*FCTS(L)/FCTS(N)
+
               VDOT(1,L)=VDOT(1,N)*FCTV(L)/FCTV(N)
               VDOT(2,L)=VDOT(2,N)*FCTV(L)/FCTV(N)
               VDOT(4,L)=VDOT(4,N)*FCTS(L)/FCTS(N)
 cipk dec98 reverse 5 and 6 to corect bug
               VDOT(5,L)=VDOT(5,N)*FCTS(L)/FCTS(N)
               VDOT(6,L)=VDOT(6,N)*FCTS(L)/FCTS(N)
+
               VDOTO(1,L)=VDOTO(1,N)*FCTV(L)/FCTV(N)
               VDOTO(2,L)=VDOTO(2,N)*FCTV(L)/FCTV(N)
               VDOTO(4,L)=VDOTO(4,N)*FCTS(L)/FCTS(N)
