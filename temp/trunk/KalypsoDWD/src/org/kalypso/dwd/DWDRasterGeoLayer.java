@@ -57,8 +57,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.visitors.FindSomeNearestVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.ResortVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -142,13 +140,14 @@ public class DWDRasterGeoLayer
       Feature feature = createFeature( rootFE, cellMemeberPT, pos );
       m_workspace.addFeatureAsComposition( rootFE, cellMemeberPT, 0, feature );
     }
-//    m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
-//    // resort it before using the query
-//    m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
-//    // now update the surface geometry
-//    m_workspace.accept( new UpdateFeatureSurfaceGeometry(), m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-//    // resort again before using the query
-//    m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
+// m_workspace.accept( new TransformVisitor( targetCS ), rootFE, FeatureVisitor.DEPTH_INFINITE );
+// // resort it before using the query
+// m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
+// // now update the surface geometry
+// m_workspace.accept( new UpdateFeatureSurfaceGeometry(), m_workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE
+    // );
+// // resort again before using the query
+// m_workspace.accept( new ResortVisitor(), rootFE, FeatureVisitor.DEPTH_INFINITE );
   }
 
   private Feature createFeature( final Feature parent, final IRelationType parentRelation, final int pos ) throws Exception
@@ -234,5 +233,25 @@ public class DWDRasterGeoLayer
   public int getNumberOfCells( )
   {
     return m_xRaster.size();
+  }
+
+  /**
+   * This function returns the x raster.
+   * 
+   * @return The x raster.
+   */
+  public DWDRaster getXRaster( )
+  {
+    return m_xRaster;
+  }
+
+  /**
+   * This function returns the y raster.
+   * 
+   * @return The y raster.
+   */
+  public DWDRaster getYRaster( )
+  {
+    return m_yRaster;
   }
 }
