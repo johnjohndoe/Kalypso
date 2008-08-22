@@ -8,7 +8,7 @@ CIPK  LAST UPDATE SEP 4 2000 REVISED OUTPUT OF ERROR MESSAGES
 cipk  last update Feb 4 1998
 CIPK  LAST UPDATE DEC 16 1997
 CIPK  LAST UPDATE NOV 26 1997
-C     Last change:  WP    8 Nov 2007    9:21 am
+C     Last change:  MD   20 Aug 2008   10:21 am
 CIPK  LAST UPDATED AUGUST 28 1995
       SUBROUTINE SBGEN(IBIN)
       USE BLK10MOD
@@ -508,7 +508,9 @@ cipk APR96 save data to a scratch file
           write(nscrin,7000) id,dlin
         endif
         NDATLN=NDATLN+1
+
         CALL SGEN(J,QQAL)
+
         GO TO 213
       ENDIF
 C-
