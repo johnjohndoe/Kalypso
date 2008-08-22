@@ -323,3 +323,23 @@ Version 1.1.0 (laufende Änderungen)
       "ENDSED" was not read --> Programm is stopped 
       >> SubR SPROP, BED                     
 --- Monika Donner, 14.08.2008
+
+032.) CHECKING all Sediments-Equations in COEF25NT:
+      The derivation for Sediment: dfx/dC; dfy/dC, dfc/dC and
+      all Terms of the Sedimenttransport DGL(fs) with dfs/dvx; dfsy/dvy, dfs/dh, dfs/dC.     
+      The following corrections were made:
+      - Correction of wrong weighting function (dfs/dh, dfs/dC)  
+      - Adding the missing terms for ShearStress, coriols and so on
+        in dfx/dC; dfy/dC
+      - Adding the Source-Sinkterm Part to dfs/dh
+      - Correcting the Source-Sinkterm in dfC/dC              
+      >> SubR COEF25NT
+            
+033.) CHECKING the Sediments-Density Equation in FUNS: 
+      its correct because it is only used as rho/dC !!
+      (No changes!)
+
+034.) CHECKING the Sediments-Boundarys HC, QC and CQ in HGEN, QGEn and SBGEN.
+      its correct input: Take care Sediment is always used at these Boundarys!
+      (No changes!)                                              
+--- Monika Donner, 22.08.2008
