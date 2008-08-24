@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.server;
 
@@ -69,16 +69,16 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * A listener for job change events.
    */
-  private IJobChangeListener m_listener = new JobChangeAdapter()
+  private final IJobChangeListener m_listener = new JobChangeAdapter()
   {
     /**
      * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
      */
     @Override
-    public void done( IJobChangeEvent event )
+    public void done( final IJobChangeEvent event )
     {
       /* Get the job. */
-      Job job = event.getJob();
+      final Job job = event.getJob();
 
       /* Is it the right one. */
       if( !(job instanceof ObservationServiceJob) )
@@ -97,7 +97,7 @@ public class ObservationServiceImpl implements IObservationService
   /**
    * This variable stores the reinitialize time intervall.
    */
-  private long m_intervall;
+  private final long m_intervall;
 
   /**
    * The observation service delegate. It is reloaded after a period of time.
@@ -116,17 +116,17 @@ public class ObservationServiceImpl implements IObservationService
     /* Start the reloading. */
     m_observationServiceJob = new ObservationServiceJob( this );
     m_observationServiceJob.addJobChangeListener( m_listener );
-    m_observationServiceJob.schedule( 1000 );
+    m_observationServiceJob.schedule( 2000 );
   }
 
   /**
    * @see org.kalypso.services.observation.sei.IObservationService#adaptItem(org.kalypso.services.observation.sei.ItemBean)
    */
   @Override
-  public ObservationBean adaptItem( ItemBean ib ) throws SensorException
+  public ObservationBean adaptItem( final ItemBean ib ) throws SensorException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -139,10 +139,10 @@ public class ObservationServiceImpl implements IObservationService
    * @see org.kalypso.services.observation.sei.IObservationService#clearTempData(java.lang.String)
    */
   @Override
-  public void clearTempData( String dataId ) throws SensorException
+  public void clearTempData( final String dataId ) throws SensorException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -156,7 +156,7 @@ public class ObservationServiceImpl implements IObservationService
   public int getServiceVersion( ) throws RemoteException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -169,10 +169,10 @@ public class ObservationServiceImpl implements IObservationService
    * @see org.kalypso.services.observation.sei.IObservationService#readData(java.lang.String)
    */
   @Override
-  public DataBean readData( String href ) throws SensorException
+  public DataBean readData( final String href ) throws SensorException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -186,10 +186,10 @@ public class ObservationServiceImpl implements IObservationService
    *      javax.activation.DataHandler)
    */
   @Override
-  public void writeData( ObservationBean observation, DataHandler data ) throws SensorException
+  public void writeData( final ObservationBean observation, final DataHandler data ) throws SensorException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -200,10 +200,10 @@ public class ObservationServiceImpl implements IObservationService
    * @see org.kalypso.services.observation.sei.IRepositoryService#findItem(java.lang.String)
    */
   @Override
-  public ItemBean findItem( String id ) throws RepositoryException
+  public ItemBean findItem( final String id ) throws RepositoryException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -216,10 +216,10 @@ public class ObservationServiceImpl implements IObservationService
    * @see org.kalypso.services.observation.sei.IRepositoryService#getChildren(org.kalypso.services.observation.sei.ItemBean)
    */
   @Override
-  public ItemBean[] getChildren( ItemBean parent ) throws RepositoryException
+  public ItemBean[] getChildren( final ItemBean parent ) throws RepositoryException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -232,10 +232,10 @@ public class ObservationServiceImpl implements IObservationService
    * @see org.kalypso.services.observation.sei.IRepositoryService#hasChildren(org.kalypso.services.observation.sei.ItemBean)
    */
   @Override
-  public boolean hasChildren( ItemBean parent ) throws RepositoryException
+  public boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
     /* Get the observation service delegate. */
-    IObservationService delegate = getDelegate();
+    final IObservationService delegate = getDelegate();
 
     /* If it is existing, delegate to it. */
     if( delegate != null )
@@ -274,7 +274,7 @@ public class ObservationServiceImpl implements IObservationService
    */
   protected IObservationService getDelegate( )
   {
-    IObservationService delegate = getDelegateInternal();
+    final IObservationService delegate = getDelegateInternal();
     if( delegate != null )
       return delegate;
 
@@ -283,7 +283,7 @@ public class ObservationServiceImpl implements IObservationService
       /* Wait for the job, if he has finished loading. */
       m_observationServiceJob.join();
     }
-    catch( InterruptedException ex )
+    catch( final InterruptedException ex )
     {
       ex.printStackTrace();
     }
@@ -307,7 +307,7 @@ public class ObservationServiceImpl implements IObservationService
    * @param delegate
    *          The delegate.
    */
-  protected synchronized void setDelegate( IObservationService delegate )
+  protected synchronized void setDelegate( final IObservationService delegate )
   {
     m_delegate = delegate;
   }
@@ -318,7 +318,7 @@ public class ObservationServiceImpl implements IObservationService
    *@param status
    *          The status of the job.
    */
-  protected void onJobFinished( IStatus status )
+  protected void onJobFinished( final IStatus status )
   {
     if( !status.isOK() )
     {
