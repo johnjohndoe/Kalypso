@@ -200,13 +200,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.kalypso.NACalcJob"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.kalypso.model.elbepolte"
          download-size="0"
          install-size="0"
@@ -225,5 +218,12 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.kalypso.model.weisseelster"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
