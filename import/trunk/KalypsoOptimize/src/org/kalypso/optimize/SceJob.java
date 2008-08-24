@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
@@ -91,7 +91,7 @@ public class SceJob
 
   private final AutoCalibration m_autoCalibration;
 
-  public SceJob( AutoCalibration autoCalibration, File sceTmpDir )
+  public SceJob( final AutoCalibration autoCalibration, final File sceTmpDir )
   {
     m_autoCalibration = autoCalibration;
     m_sceTmpDir = sceTmpDir;
@@ -115,11 +115,11 @@ public class SceJob
     {
       StreamUtilities.streamCopy( sceStream, new FileOutputStream( sceExe ) );
     }
-    catch( FileNotFoundException e )
+    catch( final FileNotFoundException e )
     {
       e.printStackTrace();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -137,12 +137,7 @@ public class SceJob
     factory.setNamespaceAware( true );
     final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
 
-    // final Marshaller marshaller = fac.createMarshaller();
-    // TODO: @Andreas: die nächsten beiden Zeilen ersetzen die vorhergehende
-    // teste mal, obs immer noch klappt. In Zukunft sollten die Marshaller und Unmarshaller immer so erzeugt
-    // werden, denn ObjectFactory leitet anscheinend nicht immer automatisch von JAXBContext ab (wie hier nach der
-    // Umstellung auf jwsdp-2.0)
-    final JAXBContext context = JAXBContext.newInstance( ObjectFactory.class );
+    final JAXBContext context = JaxbUtilities.createQuiet( ObjectFactory.class );
     final Marshaller marshaller = JaxbUtilities.createMarshaller(context);
     // marshaller.setProperty( "jaxb.encoding", "UTF-8" );
 
@@ -180,7 +175,7 @@ public class SceJob
       final StringBuffer outBuffer = new StringBuffer();
       final StringBuffer errBuffer = new StringBuffer();
 
-      Writer inputWriter = new PrintWriter( process.getOutputStream(), false );
+      final Writer inputWriter = new PrintWriter( process.getOutputStream(), false );
 
       inStream = new InputStreamReader( process.getInputStream() );
       errStream = new InputStreamReader( process.getErrorStream() );
@@ -188,14 +183,14 @@ public class SceJob
       {
         if( inStream.ready() )
         {
-          char buffer[] = new char[100];
-          int bufferC = inStream.read( buffer );
+          final char buffer[] = new char[100];
+          final int bufferC = inStream.read( buffer );
           outBuffer.append( buffer, 0, bufferC );
         }
         if( errStream.ready() )
         {
-          char buffer[] = new char[100];
-          int bufferC = errStream.read( buffer );
+          final char buffer[] = new char[100];
+          final int bufferC = errStream.read( buffer );
           errBuffer.append( buffer, 0, bufferC );
         }
 //        System.out.println( "Canceled: " + monitor.isCanceled() );
@@ -213,7 +208,7 @@ public class SceJob
           process.exitValue();
           break;
         }
-        catch( IllegalThreadStateException e )
+        catch( final IllegalThreadStateException e )
         {
           sceIO.handleStreams( outBuffer, errBuffer, inputWriter );
         }
