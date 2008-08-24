@@ -3,9 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="featureview.template.kalypso.org featureview.xsd">
 	<layer id="foo" featurePath="/" linktype="gml" xlink:href="./expertControl.gml"/>
 	
-	<view typename="NAModellControl" style="0" tooltip="">
-		<gridData grabExcessHorizontalSpace="true"
-		 grabExcessVerticalSpace="true" 
+	<view typename="NAModellControl" style="SWT.NONE" tooltip="">
+		<gridData verticalAlignment="SWT.FILL" horizontalAlignment="SWT.FILL" grabExcessHorizontalSpace="true"
+		 grabExcessVerticalSpace="false" 
 		 />
 		
 		<gridLayout numColumns="3" makeColumnsEqualWidth="false" horizontalSpacing="10"/>
