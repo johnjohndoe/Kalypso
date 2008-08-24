@@ -108,7 +108,7 @@
 		/>
 		<gridLayout numColumns = "2"/>
 
-			<checkbox property="useOffsetStartPrediction" style="0">
+			<checkbox property="useOffsetStartPrediction" label="Differenzausgleich" style="0">
 				<gridData horizontalSpan="2" grabExcessHorizontalSpace="true" horizontalAlignment="SWT.LEFT"/>
 			</checkbox>
 	
@@ -118,7 +118,7 @@
 			</checkbox>
 			-->
 
-			<label property="accuracyPrediction" style="SWT.NONE">
+			<label property="accuracyPrediction" style="SWT.NONE" text="Umhüllende">
 				<gridData horizontalAlignment = "GridData.END"/>
 			</label>
 			<text property="accuracyPrediction" style="SWT.BORDER">
