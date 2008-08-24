@@ -1,4 +1,4 @@
-#Thu Aug 14 18:45:14 CEST 2008
+#Wed Aug 20 13:32:07 CEST 2008
 eclipse.preferences.version=1
 encoding//..BCE_Intern/\#ToDo.txt=UTF-8
 encoding//.model/observationConf/OmbrometerMapping.gml=UTF-8
@@ -54,6 +54,9 @@ encoding//.prognose/MergeTestIn/Zeitreihen/W_SPWITZ.zml=UTF-8
 encoding//.prognose/MergeTestIn/calcCase.gml=UTF-8
 encoding//.prognose/MergeTestInCalc/.calculation=UTF-8
 encoding//.prognose/MergeTestInCalc/calcCase.gml=UTF-8
+encoding//.prognose/OmbrometerTest/.calculation=UTF-8
+encoding//.prognose/OmbrometerTest/ombrometer.gml=UTF-8
+encoding//.prognose/OmbrometerTest/rainfallCatchment.gml=UTF-8
 encoding//.prognose/Spielwiese/.calculation=UTF-8
 encoding//.prognose/Spielwiese/calcCase.gml=UTF-8
 encoding//.prognose/Stand\ WAVOS\ FK/.calculation=UTF-8

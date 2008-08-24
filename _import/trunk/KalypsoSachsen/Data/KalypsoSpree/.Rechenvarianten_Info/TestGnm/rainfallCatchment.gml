@@ -12,8 +12,15 @@
  </gml:featureMember>
  <gml:featureMember>
   <ras:RasterServiceRainfallGenerator gml:id="rasterGenerator">
-   <gml:description/>
+   <gml:description>Gewähltes DWD-Raster: Schneemodell des DWD (SNOW3) - Vorhersage Wasserdargebot</gml:description>
    <gml:name>DWD-Prognose</gml:name>
+   <ras:entryMember>
+    <ras:RasterServiceEntry gml:id="RasterServiceEntry12191671738860">
+     <gml:description>sn-2006-11-18.00</gml:description>
+     <ras:entryId>1219160643619</ras:entryId>
+     <ras:coveredArea/>
+    </ras:RasterServiceEntry>
+   </ras:entryMember>
   </ras:RasterServiceRainfallGenerator>
  </gml:featureMember>
 </gml:FeatureCollection>

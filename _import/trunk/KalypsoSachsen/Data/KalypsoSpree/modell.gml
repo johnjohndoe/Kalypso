@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns5:SpreeModell xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns5="org.kalypso.spree.modell" xs:schemaLocation="org.kalypso.spree.modell http://lfug-kv-01:8080/KalypsoConf/schemata/spree/modell.xsd" gml:fid="root">
- <ns5:PegelCollectionAssociation>
-  <ns5:PegelCollection gml:fid="EZC_1">
-   <ns5:PegelMember>
-    <ns5:Einzugsgebiet gml:fid="EZ_1">
-     <ns5:Name>Schirgiswalde</ns5:Name>
-     <ns5:Ort>
+<ns3:SpreeModell xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns3="org.kalypso.spree.modell" xs:schemaLocation="org.kalypso.spree.modell http://lfug-kv-01:8080/KalypsoConf/schemata/spree/modell.xsd" gml:fid="root">
+ <ns3:PegelCollectionAssociation>
+  <ns3:PegelCollection gml:fid="EZC_1">
+   <ns3:PegelMember>
+    <ns3:Einzugsgebiet gml:fid="EZ_1">
+     <ns3:Name>Schirgiswalde</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3880855.55905378 5674528.268985323 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_SCHIRG.zml"/>
      </Wasserstand_gemessen>
@@ -25,14 +25,14 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen/QV_SCHIRG_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:BodenfeuchteMin>0.01</ns5:BodenfeuchteMin>
-     <ns5:Bodenfeuchte>0.0</ns5:Bodenfeuchte>
-     <ns5:BodenfeuchteMax>70.0</ns5:BodenfeuchteMax>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:BodenfeuchteMin>0.01</ns3:BodenfeuchteMin>
+     <ns3:Bodenfeuchte>0.0</ns3:Bodenfeuchte>
+     <ns3:BodenfeuchteMax>70.0</ns3:BodenfeuchteMax>
      <Niederschlag_rechnung xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/PA_SCHIRG.zml"/>
      </Niederschlag_rechnung>
-     <ns5:GEOM_EZG>
+     <ns3:GEOM_EZG>
       <gml:Polygon srsName="EPSG:31467">
        <gml:outerBoundaryIs>
         <gml:LinearRing>
@@ -40,32 +40,17 @@
         </gml:LinearRing>
        </gml:outerBoundaryIs>
       </gml:Polygon>
-     </ns5:GEOM_EZG>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewSchirgiswaldeSohland">
-       <ns5:faktor>0.68</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewSchirgiswaldeKubschuetz">
-       <ns5:faktor>0.01</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewSchirgiswaldeEibau">
-       <ns5:faktor>0.31</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-    </ns5:Einzugsgebiet>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:Einzugsgebiet gml:fid="EZ_2">
-     <ns5:Name>Bautzen-Weite Bleiche</ns5:Name>
-     <ns5:Ort>
+     </ns3:GEOM_EZG>
+    </ns3:Einzugsgebiet>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:Einzugsgebiet gml:fid="EZ_2">
+     <ns3:Name>Bautzen-Weite Bleiche</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3878124.500072468 5683833.1755399145 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_BAUTZWB.zml"/>
      </Wasserstand_gemessen>
@@ -81,14 +66,14 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen/QV_BAUTZWB_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:BodenfeuchteMin>0.01</ns5:BodenfeuchteMin>
-     <ns5:Bodenfeuchte>0.0</ns5:Bodenfeuchte>
-     <ns5:BodenfeuchteMax>130.0</ns5:BodenfeuchteMax>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:BodenfeuchteMin>0.01</ns3:BodenfeuchteMin>
+     <ns3:Bodenfeuchte>0.0</ns3:Bodenfeuchte>
+     <ns3:BodenfeuchteMax>130.0</ns3:BodenfeuchteMax>
      <Niederschlag_rechnung xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/PA_BAUTZWB.zml"/>
      </Niederschlag_rechnung>
-     <ns5:GEOM_EZG>
+     <ns3:GEOM_EZG>
       <gml:Polygon srsName="EPSG:31467">
        <gml:outerBoundaryIs>
         <gml:LinearRing>
@@ -96,32 +81,17 @@
         </gml:LinearRing>
        </gml:outerBoundaryIs>
       </gml:Polygon>
-     </ns5:GEOM_EZG>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewBautzenSohland">
-       <ns5:faktor>0.56</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewBautzenKubschuetz">
-       <ns5:faktor>0.24</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewBautzenEibau">
-       <ns5:faktor>0.2</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-    </ns5:Einzugsgebiet>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:Einzugsgebiet gml:fid="EZ_3">
-     <ns5:Name>Gröditz 1</ns5:Name>
-     <ns5:Ort>
+     </ns3:GEOM_EZG>
+    </ns3:Einzugsgebiet>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:Einzugsgebiet gml:fid="EZ_3">
+     <ns3:Name>Gröditz 1</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3892956.9410262154 5689158.5978088835 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" valueaxis="Wert" xlink:href="Zeitreihen/W_GROEDI.zml"/>
      </Wasserstand_gemessen>
@@ -137,14 +107,14 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_GROEDI_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:BodenfeuchteMin>0.01</ns5:BodenfeuchteMin>
-     <ns5:Bodenfeuchte>0.0</ns5:Bodenfeuchte>
-     <ns5:BodenfeuchteMax>70.0</ns5:BodenfeuchteMax>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:BodenfeuchteMin>0.01</ns3:BodenfeuchteMin>
+     <ns3:Bodenfeuchte>0.0</ns3:Bodenfeuchte>
+     <ns3:BodenfeuchteMax>70.0</ns3:BodenfeuchteMax>
      <Niederschlag_rechnung xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/PA_GROEDI.zml"/>
      </Niederschlag_rechnung>
-     <ns5:GEOM_EZG>
+     <ns3:GEOM_EZG>
       <gml:Polygon srsName="EPSG:31467">
        <gml:outerBoundaryIs>
         <gml:LinearRing>
@@ -152,37 +122,17 @@
         </gml:LinearRing>
        </gml:outerBoundaryIs>
       </gml:Polygon>
-     </ns5:GEOM_EZG>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewGroeditzKubschütz">
-       <ns5:faktor>0.08</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewGroeditzTSQuitzdorf">
-       <ns5:faktor>0.11</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewGroeditzReichenbach">
-       <ns5:faktor>0.44</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewGroeditzEibau">
-       <ns5:faktor>0.37</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-    </ns5:Einzugsgebiet>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:Einzugsgebiet gml:fid="EZ_4">
-     <ns5:Name>Jänkendorf</ns5:Name>
-     <ns5:Ort>
+     </ns3:GEOM_EZG>
+    </ns3:Einzugsgebiet>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:Einzugsgebiet gml:fid="EZ_4">
+     <ns3:Name>Jänkendorf</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3905683.6657029106 5695790.817177861 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_JAENKD.zml"/>
      </Wasserstand_gemessen>
@@ -198,14 +148,14 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_JAENKD_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:BodenfeuchteMin>0.01</ns5:BodenfeuchteMin>
-     <ns5:Bodenfeuchte>0.0</ns5:Bodenfeuchte>
-     <ns5:BodenfeuchteMax>200.0</ns5:BodenfeuchteMax>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:BodenfeuchteMin>0.01</ns3:BodenfeuchteMin>
+     <ns3:Bodenfeuchte>0.0</ns3:Bodenfeuchte>
+     <ns3:BodenfeuchteMax>200.0</ns3:BodenfeuchteMax>
      <Niederschlag_rechnung xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/PA_JAENKD.zml"/>
      </Niederschlag_rechnung>
-     <ns5:GEOM_EZG>
+     <ns3:GEOM_EZG>
       <gml:Polygon srsName="EPSG:31467">
        <gml:outerBoundaryIs>
         <gml:LinearRing>
@@ -213,32 +163,17 @@
         </gml:LinearRing>
        </gml:outerBoundaryIs>
       </gml:Polygon>
-     </ns5:GEOM_EZG>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewJaenkendorfTSQuitzdorf">
-       <ns5:faktor>0.18</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewJaenkendorfReichanbach">
-       <ns5:faktor>0.77</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewJaenkendorfGoerlitz">
-       <ns5:faktor>0.05</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-    </ns5:Einzugsgebiet>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:Einzugsgebiet gml:fid="EZ_6">
-     <ns5:Name>Holtendorf</ns5:Name>
-     <ns5:Ort>
+     </ns3:GEOM_EZG>
+    </ns3:Einzugsgebiet>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:Einzugsgebiet gml:fid="EZ_6">
+     <ns3:Name>Holtendorf</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3914338.2243680838 5685500.336575221 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Zeitreihen/W_HOLTD.zml"/>
      </Wasserstand_gemessen>
@@ -254,14 +189,14 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen/QV_HOLTD_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:BodenfeuchteMin>0.01</ns5:BodenfeuchteMin>
-     <ns5:Bodenfeuchte>0.0</ns5:Bodenfeuchte>
-     <ns5:BodenfeuchteMax>240.0</ns5:BodenfeuchteMax>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:BodenfeuchteMin>0.01</ns3:BodenfeuchteMin>
+     <ns3:Bodenfeuchte>0.0</ns3:Bodenfeuchte>
+     <ns3:BodenfeuchteMax>240.0</ns3:BodenfeuchteMax>
      <Niederschlag_rechnung xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Zeitreihen/PA_HOLTD.zml"/>
      </Niederschlag_rechnung>
-     <ns5:GEOM_EZG>
+     <ns3:GEOM_EZG>
       <gml:Polygon srsName="EPSG:31467">
        <gml:outerBoundaryIs>
         <gml:LinearRing>
@@ -269,27 +204,17 @@
         </gml:LinearRing>
        </gml:outerBoundaryIs>
       </gml:Polygon>
-     </ns5:GEOM_EZG>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewHoltendorfGoerlitz">
-       <ns5:faktor>0.37</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewHoltendorfReichenbach">
-       <ns5:faktor>0.63</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-    </ns5:Einzugsgebiet>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:Einzugsgebiet gml:fid="EZ_5">
-     <ns5:Name>Särichen</ns5:Name>
-     <ns5:Ort>
+     </ns3:GEOM_EZG>
+    </ns3:Einzugsgebiet>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:Einzugsgebiet gml:fid="EZ_5">
+     <ns3:Name>Särichen</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3910615.067505361 5698306.427697715 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_SAERI.zml"/>
      </Wasserstand_gemessen>
@@ -305,14 +230,14 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_SAERI_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:BodenfeuchteMin>0.01</ns5:BodenfeuchteMin>
-     <ns5:Bodenfeuchte>0.0</ns5:Bodenfeuchte>
-     <ns5:BodenfeuchteMax>310.0</ns5:BodenfeuchteMax>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:BodenfeuchteMin>0.01</ns3:BodenfeuchteMin>
+     <ns3:Bodenfeuchte>0.0</ns3:Bodenfeuchte>
+     <ns3:BodenfeuchteMax>310.0</ns3:BodenfeuchteMax>
      <Niederschlag_rechnung xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/PA_SAERI.zml"/>
      </Niederschlag_rechnung>
-     <ns5:GEOM_EZG>
+     <ns3:GEOM_EZG>
       <gml:Polygon srsName="EPSG:31467">
        <gml:outerBoundaryIs>
         <gml:LinearRing>
@@ -320,32 +245,17 @@
         </gml:LinearRing>
        </gml:outerBoundaryIs>
       </gml:Polygon>
-     </ns5:GEOM_EZG>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewSaerichenTSQuitzdorf">
-       <ns5:faktor>0.04</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewSaerichenReichenbach">
-       <ns5:faktor>0.31</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-     <ns5:gewichtung>
-      <ns5:GewichtungsElement gml:fid="GewSaerichenGoerlitz">
-       <ns5:faktor>0.65</ns5:faktor>
-      </ns5:GewichtungsElement>
-     </ns5:gewichtung>
-    </ns5:Einzugsgebiet>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:FlusslaufModell gml:fid="FM_1">
-     <ns5:Name>Lieske</ns5:Name>
-     <ns5:Ort>
+     </ns3:GEOM_EZG>
+    </ns3:Einzugsgebiet>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:FlusslaufModell gml:fid="FM_1">
+     <ns3:Name>Lieske</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3885392.075997541 5702963.279138937 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_LIESKE.zml"/>
      </Wasserstand_gemessen>
@@ -361,21 +271,21 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_LIESKE_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:Korrektur_Faktor>1.0</ns5:Korrektur_Faktor>
-     <ns5:Korrektur_Niveau>0.0</ns5:Korrektur_Niveau>
-     <ns5:Korrektur_Laufzeit>0.0</ns5:Korrektur_Laufzeit>
-     <ns5:KorrekturEmpfehlungLaufzeit>0.0</ns5:KorrekturEmpfehlungLaufzeit>
-    </ns5:FlusslaufModell>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:FlusslaufModell gml:fid="FM_2">
-     <ns5:Name>Boxberg</ns5:Name>
-     <ns5:Ort>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:Korrektur_Faktor>1.0</ns3:Korrektur_Faktor>
+     <ns3:Korrektur_Niveau>0.0</ns3:Korrektur_Niveau>
+     <ns3:Korrektur_Laufzeit>0.0</ns3:Korrektur_Laufzeit>
+     <ns3:KorrekturEmpfehlungLaufzeit>0.0</ns3:KorrekturEmpfehlungLaufzeit>
+    </ns3:FlusslaufModell>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:FlusslaufModell gml:fid="FM_2">
+     <ns3:Name>Boxberg</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3887845.379732592 5711527.85650844 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_BOXBRG.zml"/>
      </Wasserstand_gemessen>
@@ -391,21 +301,21 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_BOXBRG_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:Korrektur_Faktor>1.0</ns5:Korrektur_Faktor>
-     <ns5:Korrektur_Niveau>0.0</ns5:Korrektur_Niveau>
-     <ns5:Korrektur_Laufzeit>0.0</ns5:Korrektur_Laufzeit>
-     <ns5:KorrekturEmpfehlungLaufzeit>-1.0</ns5:KorrekturEmpfehlungLaufzeit>
-    </ns5:FlusslaufModell>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:FlusslaufModell gml:fid="FM_3">
-     <ns5:Name>Sprey</ns5:Name>
-     <ns5:Ort>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:Korrektur_Faktor>1.0</ns3:Korrektur_Faktor>
+     <ns3:Korrektur_Niveau>0.0</ns3:Korrektur_Niveau>
+     <ns3:Korrektur_Laufzeit>0.0</ns3:Korrektur_Laufzeit>
+     <ns3:KorrekturEmpfehlungLaufzeit>-1.0</ns3:KorrekturEmpfehlungLaufzeit>
+    </ns3:FlusslaufModell>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:FlusslaufModell gml:fid="FM_3">
+     <ns3:Name>Sprey</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3883835.849552397 5714083.409329742 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_SPREY.zml"/>
      </Wasserstand_gemessen>
@@ -421,21 +331,21 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_SPREY_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:Korrektur_Faktor>1.0</ns5:Korrektur_Faktor>
-     <ns5:Korrektur_Niveau>0.0</ns5:Korrektur_Niveau>
-     <ns5:Korrektur_Laufzeit>0.0</ns5:Korrektur_Laufzeit>
-     <ns5:KorrekturEmpfehlungLaufzeit>0.0</ns5:KorrekturEmpfehlungLaufzeit>
-    </ns5:FlusslaufModell>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:FlusslaufModell gml:fid="FM_4">
-     <ns5:Name>Spreewitz</ns5:Name>
-     <ns5:Ort>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:Korrektur_Faktor>1.0</ns3:Korrektur_Faktor>
+     <ns3:Korrektur_Niveau>0.0</ns3:Korrektur_Niveau>
+     <ns3:Korrektur_Laufzeit>0.0</ns3:Korrektur_Laufzeit>
+     <ns3:KorrekturEmpfehlungLaufzeit>0.0</ns3:KorrekturEmpfehlungLaufzeit>
+    </ns3:FlusslaufModell>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:FlusslaufModell gml:fid="FM_4">
+     <ns3:Name>Spreewitz</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3875135.9199536527 5722344.117651196 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_SPWITZ.zml"/>
      </Wasserstand_gemessen>
@@ -451,21 +361,21 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_SPWITZ_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:Korrektur_Faktor>1.0</ns5:Korrektur_Faktor>
-     <ns5:Korrektur_Niveau>0.0</ns5:Korrektur_Niveau>
-     <ns5:Korrektur_Laufzeit>0.0</ns5:Korrektur_Laufzeit>
-     <ns5:KorrekturEmpfehlungLaufzeit>0.0</ns5:KorrekturEmpfehlungLaufzeit>
-    </ns5:FlusslaufModell>
-   </ns5:PegelMember>
-   <ns5:PegelMember>
-    <ns5:FlusslaufModell gml:fid="FM_5">
-     <ns5:Name>Spremberg</ns5:Name>
-     <ns5:Ort>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:Korrektur_Faktor>1.0</ns3:Korrektur_Faktor>
+     <ns3:Korrektur_Niveau>0.0</ns3:Korrektur_Niveau>
+     <ns3:Korrektur_Laufzeit>0.0</ns3:Korrektur_Laufzeit>
+     <ns3:KorrekturEmpfehlungLaufzeit>0.0</ns3:KorrekturEmpfehlungLaufzeit>
+    </ns3:FlusslaufModell>
+   </ns3:PegelMember>
+   <ns3:PegelMember>
+    <ns3:FlusslaufModell gml:fid="FM_5">
+     <ns3:Name>Spremberg</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3872194.501457374 5729509.531948269 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Wasserstand_gemessen xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/W_SPREMB.zml"/>
      </Wasserstand_gemessen>
@@ -481,26 +391,26 @@
      <Wasserstand_vorhersage_oben xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" xlink:href="Ergebnisse/Zeitreihen//QV_SPREMB_oben.zml"/>
      </Wasserstand_vorhersage_oben>
-     <ns5:accuracyPrediction>30.0</ns5:accuracyPrediction>
-     <ns5:Korrektur_Faktor>1.0</ns5:Korrektur_Faktor>
-     <ns5:Korrektur_Niveau>0.0</ns5:Korrektur_Niveau>
-     <ns5:Korrektur_Laufzeit>0.0</ns5:Korrektur_Laufzeit>
-     <ns5:KorrekturEmpfehlungLaufzeit>1.0</ns5:KorrekturEmpfehlungLaufzeit>
-    </ns5:FlusslaufModell>
-   </ns5:PegelMember>
-  </ns5:PegelCollection>
- </ns5:PegelCollectionAssociation>
- <ns5:TalsperreCollectionAssociation>
-  <ns5:TalsperreCollection gml:fid="TSC_1">
-   <ns5:TalsperreMember>
-    <ns5:Talsperre gml:fid="TS_QUITZDORF">
-     <ns5:Name>Quitzdorf</ns5:Name>
-     <ns5:Anfangsstauvolumen>0.0</ns5:Anfangsstauvolumen>
-     <ns5:Ort>
+     <ns3:accuracyPrediction>30.0</ns3:accuracyPrediction>
+     <ns3:Korrektur_Faktor>1.0</ns3:Korrektur_Faktor>
+     <ns3:Korrektur_Niveau>0.0</ns3:Korrektur_Niveau>
+     <ns3:Korrektur_Laufzeit>0.0</ns3:Korrektur_Laufzeit>
+     <ns3:KorrekturEmpfehlungLaufzeit>1.0</ns3:KorrekturEmpfehlungLaufzeit>
+    </ns3:FlusslaufModell>
+   </ns3:PegelMember>
+  </ns3:PegelCollection>
+ </ns3:PegelCollectionAssociation>
+ <ns3:TalsperreCollectionAssociation>
+  <ns3:TalsperreCollection gml:fid="TSC_1">
+   <ns3:TalsperreMember>
+    <ns3:Talsperre gml:fid="TS_QUITZDORF">
+     <ns3:Name>Quitzdorf</ns3:Name>
+     <ns3:Anfangsstauvolumen>0.0</ns3:Anfangsstauvolumen>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3900808.4184375405 5699583.461855225 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Abgabe xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/QV_TSQUITZ.zml"/>
      </Abgabe>
@@ -513,17 +423,17 @@
      <Stauinhalt xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Ergebnisse/Zeitreihen/V_TSQUITZ.zml"/>
      </Stauinhalt>
-    </ns5:Talsperre>
-   </ns5:TalsperreMember>
-   <ns5:TalsperreMember>
-    <ns5:Talsperre gml:fid="TS_BAUTZEN">
-     <ns5:Name>Bautzen</ns5:Name>
-     <ns5:Anfangsstauvolumen>0.0</ns5:Anfangsstauvolumen>
-     <ns5:Ort>
+    </ns3:Talsperre>
+   </ns3:TalsperreMember>
+   <ns3:TalsperreMember>
+    <ns3:Talsperre gml:fid="TS_BAUTZEN">
+     <ns3:Name>Bautzen</ns3:Name>
+     <ns3:Anfangsstauvolumen>0.0</ns3:Anfangsstauvolumen>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3882319.532619699 5689925.853204569 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Abgabe xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/QV_TSBAUTZ.zml"/>
      </Abgabe>
@@ -536,77 +446,77 @@
      <Stauinhalt xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Ergebnisse/Zeitreihen/V_TSBAUTZ.zml"/>
      </Stauinhalt>
-    </ns5:Talsperre>
-   </ns5:TalsperreMember>
-  </ns5:TalsperreCollection>
- </ns5:TalsperreCollectionAssociation>
- <ns5:VorgabeCollectionAssociation>
-  <ns5:VorgabeCollection gml:fid="FC_1">
-   <ns5:VorgabeMember>
-    <ns5:Flutung gml:fid="F_1">
-     <ns5:Name>ÜL RLK</ns5:Name>
-     <ns5:Ort>
+    </ns3:Talsperre>
+   </ns3:TalsperreMember>
+  </ns3:TalsperreCollection>
+ </ns3:TalsperreCollectionAssociation>
+ <ns3:VorgabeCollectionAssociation>
+  <ns3:VorgabeCollection gml:fid="FC_1">
+   <ns3:VorgabeMember>
+    <ns3:Flutung gml:fid="F_1">
+     <ns3:Name>ÜL RLK</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3869530.570104379 5725119.357237624 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Abfluss xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/QV_RLKETTE.zml"/>
      </Abfluss>
-    </ns5:Flutung>
-   </ns5:VorgabeMember>
-   <ns5:VorgabeMember>
-    <ns5:Flutung gml:fid="F_2">
-     <ns5:Name>ZL RL Lohsa II</ns5:Name>
-     <ns5:Ort>
+    </ns3:Flutung>
+   </ns3:VorgabeMember>
+   <ns3:VorgabeMember>
+    <ns3:Flutung gml:fid="F_2">
+     <ns3:Name>ZL RL Lohsa II</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3884056.071605648 5711769.503117913 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Abfluss xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/QV_LOHSA.zml"/>
      </Abfluss>
-    </ns5:Flutung>
-   </ns5:VorgabeMember>
-   <ns5:VorgabeMember>
-    <ns5:Flutung gml:fid="F_3">
-     <ns5:Name>ZL RL Bärwalde</ns5:Name>
-     <ns5:Ort>
+    </ns3:Flutung>
+   </ns3:VorgabeMember>
+   <ns3:VorgabeMember>
+    <ns3:Flutung gml:fid="F_3">
+     <ns3:Name>ZL RL Bärwalde</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3883960.0583892586 5706658.383515983 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Abfluss xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/QV_BWALDE.zml"/>
      </Abfluss>
-    </ns5:Flutung>
-   </ns5:VorgabeMember>
-   <ns5:VorgabeMember>
-    <ns5:Flutung gml:fid="F_4">
-     <ns5:Name>Abzweig Kleine Spree</ns5:Name>
-     <ns5:Ort>
+    </ns3:Flutung>
+   </ns3:VorgabeMember>
+   <ns3:VorgabeMember>
+    <ns3:Flutung gml:fid="F_4">
+     <ns3:Name>Abzweig Kleine Spree</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3886178.6522764303 5696313.19691902 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Abfluss xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/QV_SPWIESE.zml"/>
      </Abfluss>
-    </ns5:Flutung>
-   </ns5:VorgabeMember>
-   <ns5:VorgabeMember>
-    <ns5:Zufluss gml:fid="Z_1">
-     <ns5:Name>Burgneudorf</ns5:Name>
-     <ns5:Ort>
+    </ns3:Flutung>
+   </ns3:VorgabeMember>
+   <ns3:VorgabeMember>
+    <ns3:Zufluss gml:fid="Z_1">
+     <ns3:Name>Burgneudorf</ns3:Name>
+     <ns3:Ort>
       <gml:Point srsName="EPSG:31467">
        <gml:coordinates ts="," cs=" " decimal=".">3874066.252814166 5720929.4484328125 NaN</gml:coordinates>
       </gml:Point>
-     </ns5:Ort>
+     </ns3:Ort>
      <Abfluss xmlns="org.kalypso.spree.modell">
       <obslink:TimeseriesLink xmlns:obslink="obslink.zml.kalypso.org" linktype="zml" xlink:href="Zeitreihen/QP_BURGNEU.zml"/>
      </Abfluss>
-    </ns5:Zufluss>
-   </ns5:VorgabeMember>
-  </ns5:VorgabeCollection>
- </ns5:VorgabeCollectionAssociation>
-</ns5:SpreeModell>
+    </ns3:Zufluss>
+   </ns3:VorgabeMember>
+  </ns3:VorgabeCollection>
+ </ns3:VorgabeCollectionAssociation>
+</ns3:SpreeModell>
