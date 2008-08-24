@@ -175,7 +175,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     return m_featureType;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
    */
@@ -329,7 +329,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return;
 
     // TODO: invalidation should made via the screen-rectangle of this feature
-    // depending on the syled geometry
+    // depending on the styled geometry
     invalidate( feature.getEnvelope() );
   }
 
@@ -358,7 +358,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final GM_Envelope env = searchEnvelope == null ? getFullExtent() : searchEnvelope;
 
     final GMLWorkspace workspace = getWorkspace();
-    
+
     //Put features in set in order to avoid duplicates
     final Set<Feature> features = new HashSet<Feature>();
     final IPaintDelegate paintDelegate = new IPaintDelegate()
@@ -366,7 +366,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
       {
         final Feature feature = displayElement.getFeature();
-        GM_Envelope envelope = feature.getEnvelope();
+        final GM_Envelope envelope = feature.getEnvelope();
         if( (envelope != null) && env.intersects( envelope ) )
           features.add( feature );
       }
@@ -478,7 +478,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
