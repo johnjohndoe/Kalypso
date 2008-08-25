@@ -124,19 +124,19 @@ public class ProcessResultsJob extends Job
 
   /**
    * @param inputFile
-   *            the result 2d file
+   *          the result 2d file
    * @param outputDir
-   *            the directory in which the results get stored
+   *          the directory in which the results get stored
    * @param flowModel
-   *            the {@link IFlowRelationshipModel}
+   *          the {@link IFlowRelationshipModel}
    * @param controlModel
-   *            the {@link org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D}
+   *          the {@link org.kalypso.kalypsomodel1d2d.schema.binding.model.ControlModel1D2D}
    * @param discModel
    * @param parameter
-   *            the parameter that will be processed
+   *          the parameter that will be processed
    * @param unitResultMeta
    * @param stepDate
-   *            The date which is determined by the result file name (i.e. step-number) and the control timeseries.
+   *          The date which is determined by the result file name (i.e. step-number) and the control timeseries.
    */
   public ProcessResultsJob( final File inputFile, final File outputDir, final IFlowRelationshipModel flowModel, final IControlModel1D2D controlModel, final IFEDiscretisationModel1d2d discModel, final List<ResultType.TYPE> parameter, final Date stepDate, final ICalcUnitResultMeta unitResultMeta )
   {
@@ -210,6 +210,9 @@ public class ProcessResultsJob extends Job
   public File read2DIntoGmlResults( ) throws Exception
   {
     KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s", "read results into GML...\n" );
+
+    final Runtime runtime = Runtime.getRuntime();
+    runtime.gc();
 
     final TimeLogger logger = new TimeLogger( "Start: lese .2d Ergebnisse" );
 
@@ -480,6 +483,8 @@ public class ProcessResultsJob extends Job
 
       logger.takeInterimTime();
       logger.printCurrentInterim( "Fertig mit Schreiben in : " );
+
+      runtime.gc();
     }
   }
 

@@ -72,12 +72,12 @@ public class NodeResultsHandler2DTest extends TestCase
     final IProject project = workspace.getRoot().getProject( "NodeResultTest" );
     project.create( new NullProgressMonitor() );
 
-    final URL zipLocation = getClass().getResource( "resources/erg.zip" );
+    final URL zipLocation = getClass().getResource( "resources/original.2d.zip" );
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run model
-    final IFolder folder = project.getFolder( "2d" );
-    final IFile ergFile = folder.getFile( "steady.2d" );
+//    final IFolder folder = project.getFolder( "2d" );
+    final IFile ergFile = project.getFile( "A0001.2d" );
 
     // get 2d-file from resources
     final File result2dFile = ergFile.getLocation().toFile();

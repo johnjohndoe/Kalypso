@@ -85,6 +85,8 @@ public class RMA10S2GmlConv
 
   private static final Pattern ELEMENT_LINE_PATTERN_1 = Pattern.compile( "FE\\s*([0-9]+).*" );
 
+  private static final Pattern ZU_LINE_PATTERN = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s*" );
+
   public RMA10S2GmlConv( final IProgressMonitor monitor, final int numberOfLinesToProcess )
   {
     m_monitorStep = numberOfLinesToProcess / 100;
@@ -323,9 +325,7 @@ public class RMA10S2GmlConv
   private void interpreteNodeInformationLine( final String line )
   {
     Matcher matcher = null;
-    // ZU 1 2 0.0000000 0.0000000 -0.0000036 0.0000045
-    final Pattern fourParamLinePattern = Pattern.compile( "ZU\\s*([0-9]+)\\s*([0-9]+)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*[E]?[\\+\\-]?[0-9]*)\\s*" ); //$NON-NLS-1$
-    matcher = fourParamLinePattern.matcher( line );
+    matcher = ZU_LINE_PATTERN.matcher( line );
     try
     {
       if( matcher.matches() )
