@@ -84,10 +84,11 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
     if( !(value instanceof Date) )
       return null;
 
-    // FIXME dateformat doesn't consider local time zone
+// df.setTimeZone( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+
     String format = String.format( "%tc", (Date) value );
     label.setText( format );
-// label.setText( df.format( value ) );
+    label.setText( df.format( value ) );
 
     if( !isSelected )
     {
