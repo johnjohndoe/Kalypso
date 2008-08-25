@@ -1,4 +1,4 @@
-#Fri Aug 08 09:21:30 CEST 2008
+#Mon Aug 25 17:26:22 CEST 2008
 eclipse.preferences.version=1
 encoding//.model/observationConf/VorhersageMapping.gml=UTF-8
 encoding//.model/observationConf/ZwischengebieteMapping.gml=UTF-8
@@ -11,7 +11,6 @@ encoding//.prognose/RV_ZWG_7_Vorhersage-2007-09-18_12h57/.calculation=UTF-8
 encoding//.prognose/Spielwiese/.calculation=UTF-8
 encoding//.prognose/Spielwiese/Zeitreihen/Zwischengebiete/UstiDresden.zml=UTF-8
 encoding//.prognose/Spielwiese/calcCase.gml=UTF-8
-encoding//.prognose/Stand_WAVOS_FK/.calculation=UTF-8
 encoding//.prognose/Stand_Wavos/.calculation=UTF-8
 encoding//.prognose/Teest/.calculation=UTF-8
 encoding//.prognose/Vorhersage-2007-08-02_18h19/.calculation=UTF-8
