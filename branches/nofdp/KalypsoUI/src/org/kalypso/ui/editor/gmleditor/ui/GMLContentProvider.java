@@ -484,6 +484,9 @@ public class GMLContentProvider implements ITreeContentProvider
       return;
 
     final TreeViewer treeViewer = m_viewer;
+    if( treeViewer == null )
+      return;
+
     final Control control = treeViewer.getControl();
 
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
