@@ -239,15 +239,15 @@ public class RMA10S2GmlConv
   private void interpreteNodeLine( final String line )
   {
     final String[] nodeLineStrings = line.split( "[ ]+" );
-    
-    if(nodeLineStrings[0].equals( "FP" ))
+
+    if( nodeLineStrings[0].equals( "FP" ) )
     {
       try
       {
         final int id = Integer.parseInt( nodeLineStrings[1] );
-        final double easting = Double.parseDouble(  nodeLineStrings[2] );
-        final double northing = Double.parseDouble(  nodeLineStrings[3] );
-        double elevation = Double.parseDouble(  nodeLineStrings[4] );
+        final double easting = Double.parseDouble( nodeLineStrings[2] );
+        final double northing = Double.parseDouble( nodeLineStrings[3] );
+        double elevation = Double.parseDouble( nodeLineStrings[4] );
         // TODO: the value '-9999' represents the NODATA-value, should be discussed
         if( elevation == -9999 )
           elevation = Double.NaN;
@@ -324,8 +324,7 @@ public class RMA10S2GmlConv
 
   private void interpreteNodeInformationLine( final String line )
   {
-    Matcher matcher = null;
-    matcher = ZU_LINE_PATTERN.matcher( line );
+    final Matcher matcher = ZU_LINE_PATTERN.matcher( line );
     try
     {
       if( matcher.matches() )
