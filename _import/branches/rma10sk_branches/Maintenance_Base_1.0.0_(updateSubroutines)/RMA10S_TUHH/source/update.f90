@@ -512,7 +512,7 @@ ENDDO WriteDOFOutputs
 IF (ITIMS == 0) THEN
   ITIMS = 1
   WRITE (LITR, 6041)
- 6041 format ('#', 21x, '<--', 6x, 'MAX CHANGES', 96x, '-->', '<--', 6x, 'AVE CHANGES', 40x, '-->' &
+ 6041 format ('#', 21x, '<--', 6x, 'MAX CHANGES', 96x, '-->', '<--', 6x, 'AVE CHANGES', 40x, '-->',/ &
       &       '#', 3x, 'TIME STEP IT  NSZF', 5x, 'X-VEL   NODE', 5x, 'Y-VEL   NODE', 5x, 'DEPTH   NODE', 7x, 'SAL   NODE', &
       &   6x, 'TEMP   NODE', 7x, 'SED   NODE', 5x, 'Z-VEL   NODE', 4x, 'X-VEL', 4x, 'Y-VEL', 4x, 'DEPTH', 6x, 'SAL', 5x, 'TEMP', &
       &   6x, 'SED', 5x, 'Z-VEL')
@@ -537,7 +537,7 @@ if (percentCheck == 0) then
 else
   WRITE (LITR, 6040) TET, ICYC, MAXN, NSZF, (EPercMax (J), NRel (J), J = 1, 7), (EAVG (J), J = 1, 7)
 endif
-6040  FORMAT (F8.1, I5, I3, I6, 7(F10.4, I7), 7(F9.4))
+6040  FORMAT (F8.1, I7, I4, I9, 7(F12.4, I9), 7(F12.4))
 
 !nis,jan08: flushing that output: KALYPSO-GUI reads the data simutanously. Information must be latest therefore
 call FLUSH (LITR)
