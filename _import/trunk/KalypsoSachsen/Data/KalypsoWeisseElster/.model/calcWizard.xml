@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<calcwizard browserInitialSize="17" xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<calcwizard browserInitialSize="12" xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<!-- Allgemeine Argumente -->
 	<arg name="showSaveButton" value="false" />
 	<arg name="askForSaveOnFinish" value="false" />

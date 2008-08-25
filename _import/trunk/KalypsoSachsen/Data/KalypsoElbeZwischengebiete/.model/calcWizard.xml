@@ -3,7 +3,7 @@
 [
 	<!ENTITY hid "org.kalypso.manual.">
 ]>
-<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="17" helpId="&hid;SA_Assi_allg_00_Start">
+<calcwizard xmlns="xml.model.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" browserInitialSize="12" helpId="&hid;SA_Assi_allg_00_Start">
 	<!-- Allgemeine Argumente -->
 	<arg name="showSaveButton" value="false"/>
 	<arg name="askForSaveOnFinish" value="false"/>
@@ -156,8 +156,7 @@ ToDo: Help-Ids setzen!!! -->
 		<!-- 
 			Diagramm -->
 		<arg name="timeserie1" value="nameColumn=name#nameString=%featureprop% - %axisname%#linkColumn=ganglinie_gesamt"/>
-		<arg name="timeserie2" value="nameColumn=Name#nameString=Modellwerte#linkColumn=ganglinie_messwerte"/>
-		<!--  -->
+	                               <!--  -->
 		<arg name="ignoreType1" value="W"/>
 	</page>
 	<!-- Phase 3: Ergebnisdarstellung und Ablage -->
@@ -182,9 +181,10 @@ ToDo: Help-Ids setzen!!! -->
 			Diagramm -->
 		<!--  -->
 		<arg name="ignoreType1" value="W"/>
+	                             <arg name="timeserie1" value="nameString=Rechnung#linkColumn=ganglinie_gesamt#color=0xff0000"/>
 		<!--  -->
 		<arg name="pegelNameProperty" value="name"/>
 		<arg name="resultProperty" value="ganglinie_gesamt"/>
-		<arg name="timeserie1" value="nameString=Rechnung#linkColumn=ganglinie_gesamt#color=0xff0000"/>
+		
 	</page>
 </calcwizard>
