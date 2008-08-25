@@ -91,6 +91,11 @@
                id="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
                name="RectifiedGridCoverage-Boundary">
          </function>
+         <function
+               class="org.kalypsodeegree_impl.model.feature.function.ValueIfNullFeaturePropertyFunction"
+               id="org.kalypso.gmlschema.functionProperty.valueIfNull"
+               name="Value if Null">
+         </function>
      </extension>
      <extension
            point="org.kalypso.deegree.featureRule">
