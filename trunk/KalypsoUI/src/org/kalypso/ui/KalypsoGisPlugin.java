@@ -456,8 +456,8 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
    */
   public TimeZone getDisplayTimeZone( )
   {
+    final String timeZoneID = KalypsoDeegreePlugin.getDefault().getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
 
-    final String timeZoneID = getPluginPreferences().getString( IKalypsoPreferences.DISPLAY_TIMEZONE );
     try
     {
       return TimeZone.getTimeZone( timeZoneID );
