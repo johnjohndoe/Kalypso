@@ -250,3 +250,6 @@ Version 1.0.3 (laufende Änderungen)
 
 --- Nico Schrage, 21.08.2008 (1.0.3 bf3)
 
+020.) iteration control output must change, because Kalypso can't parse it, if number of iterations as 6 digits.
+
+--- Nico Schrage, 25.08.2008 (1.0.3 bf3)
