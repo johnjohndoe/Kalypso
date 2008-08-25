@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
@@ -84,7 +84,10 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
     if( !(value instanceof Date) )
       return null;
 
-    label.setText( df.format( value ) );
+    // FIXME dateformat doesn't consider local time zone
+    String format = String.format( "%tc", (Date) value );
+    label.setText( format );
+// label.setText( df.format( value ) );
 
     if( !isSelected )
     {
