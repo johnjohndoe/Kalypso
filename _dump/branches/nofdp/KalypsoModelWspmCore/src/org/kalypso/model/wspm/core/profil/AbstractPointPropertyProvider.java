@@ -114,7 +114,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
     for(IComponent component : components)
     {
       if(!providesPointProperty( component.getId()))
-          throw new IllegalArgumentException("unknown component: "+component.getName());
+          throw new IllegalArgumentException("unknown component: "+component.getName()); //$NON-NLS-1$
     }
   }
 

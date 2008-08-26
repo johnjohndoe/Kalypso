@@ -47,7 +47,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.Messages;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -85,7 +85,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$
+        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$ //$NON-NLS-1$
       values[i] = value;
       i++;
     }
@@ -110,7 +110,7 @@ public class ProfilUtil
     {
       final Object value = point.getValue( iProp );
       if( value == null )
-        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$
+        Debug.print( point, Messages.ProfilUtil_5 + iProp + "   " + pointProperty.getName() ); //$NON-NLS-2$ //$NON-NLS-1$
       values[i] = value;
       i++;
     }

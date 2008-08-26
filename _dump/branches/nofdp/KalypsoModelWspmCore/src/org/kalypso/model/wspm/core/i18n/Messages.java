@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core;
+package org.kalypso.model.wspm.core.i18n;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -47,7 +47,27 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS
 {
-  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.core.messages"; //$NON-NLS-1$
+  public static String AbstractProfil_1;
+
+  public static String AbstractProfil_2;
+
+  public static String AddFixValueOperator_0;
+
+  public static String AddFixValueOperator_1;
+
+  public static String AddPercentValueOperator_0;
+
+  public static String AddPercentValueOperator_1;
+
+  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.core.i18n.messages"; //$NON-NLS-1$
+
+  public static String DA50Importer_0;
+
+  public static String DA50Importer_1;
+
+  public static String DA50Importer_2;
+
+  public static String DA50Importer_4;
 
   public static String ImportTrippleHelper_24;
 
@@ -59,23 +79,11 @@ public class Messages extends NLS
 
   public static String ImportTrippleHelper_28;
 
-  public static String AddPercentValueOperator_0;
+  public static String KalypsoModelWspmCoreExtensions_2;
 
-  public static String ProfilUtil_5;
+  public static String PointAdd_0;
 
-  public static String ProfilUtil_7;
-
-  public static String ValidatorRuleSet_0;
-
-  public static String AddPercentValueOperator_1;
-
-  public static String AddFixValueOperator_0;
-
-  public static String AddFixValueOperator_1;
-
-  public static String AbstractProfil_1;
-
-  public static String AbstractProfil_2;
+  public static String PointAdd_1;
 
   public static String PointMove_0;
 
@@ -84,6 +92,12 @@ public class Messages extends NLS
   public static String PointRemove_1;
 
   public static String PointRemove_2;
+
+  public static String ProfileFeatureFactory_5;
+
+  public static String ProfilFactory_0;
+
+  public static String ProfilFactory_1;
 
   public static String ProfilUtil_0;
 
@@ -95,25 +109,11 @@ public class Messages extends NLS
 
   public static String ProfilUtil_4;
 
-  public static String DA50Importer_0;
+  public static String ProfilUtil_5;
 
-  public static String DA50Importer_1;
+  public static String ProfilUtil_7;
 
-  public static String DA50Importer_2;
-
-  public static String DA50Importer_4;
-
-  public static String KalypsoModelWspmCoreExtensions_2;
-
-  public static String PointAdd_0;
-
-  public static String PointAdd_1;
-
-  public static String ProfileFeatureFactory_5;
-
-  public static String ProfilFactory_0;
-
-  public static String ProfilFactory_1;
+  public static String ValidatorRuleSet_0;
   static
   {
     // initialize resource bundle

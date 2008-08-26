@@ -148,7 +148,7 @@ public class ProfileFeatureManager
   private IObservation<TupleResult>[] getProfileObjects( final Feature profileFeature )
   {
 
-    final List< ? > objects = (List< ? >) profileFeature.getProperty( new QName( IWspmConstants.NS_WSPMPROF, "member" ) );
+    final List< ? > objects = (List< ? >) profileFeature.getProperty( new QName( IWspmConstants.NS_WSPMPROF, "member" ) ); //$NON-NLS-1$
     if( objects.size() == 0 )
       return new IObservation[]{};
 
