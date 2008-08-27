@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 
 package org.kalypso.convert.namodel.schema;
@@ -62,7 +62,7 @@ public class UrlCatalogNA extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
     // TODO: this type of versioning does not make any sense!
     // If a real versioning should be done, namespace MUST change (see W3C recommendations)
@@ -73,8 +73,17 @@ public class UrlCatalogNA extends AbstractUrlCatalog
     catalog.put( NaModelConstants.NS_NAHYDROTOP, myClass.getResource( "v0.9/hydrotop.xsd" ) );
     catalog.put( NaModelConstants.NS_NAPARAMETER, myClass.getResource( "v0.8/parameter.xsd" ) );
     catalog.put( NaModelConstants.NS_OMBROMETER, myClass.getResource( "v0.2/ombrometer.xsd" ) );
-    catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "v0.6/synthN.xsd" ) );    
+    catalog.put( NaModelConstants.NS_SYNTHN, myClass.getResource( "v0.6/synthN.xsd" ) );
     catalog.put( NaModelConstants.NS_INIVALUES, myClass.getResource( "v0.8/initialValues.xsd" ) );
     catalog.put( NaModelConstants.NS_NAFORTRANLOG, myClass.getResource( "v1.0/NAFortranLog.xsd" ) );
+
+    // REMARK: these prefix definition are crucial for the optimisation, as the
+    // sce xpathes rely on this special prefix.
+    prefixes.put( NaModelConstants.NS_NAMETA, "rrmMeta" );
+    prefixes.put( NaModelConstants.NS_NAMODELL, "rrm" );
+    prefixes.put( NaModelConstants.NS_NACONTROL, "rrmControl" );
+    prefixes.put( NaModelConstants.NS_NAHYDROTOP, "rrmHydrotop" );
+    prefixes.put( NaModelConstants.NS_NAPARAMETER, "rrmParam" );
+    prefixes.put( NaModelConstants.NS_OMBROMETER, "rrmOmbro" );
   }
 }
