@@ -67,6 +67,7 @@ REAL (KIND = 8) :: NikuradseRoughness
 REAL(kind=8), allocatable :: mslope (:)  ! Mean slope of water surface at element
 REAL(kind=8), allocatable :: meslope (:) ! Mean slope of energy level at element
 INTEGER :: i, cycle_number
+character (len = 96) :: inputFileName
 
 
 allocate (slope (1: MaxP), eslope (1: MaxP))
@@ -169,35 +170,19 @@ end do all_elements
 if (maxn.eq.0) then
 !-
   IF (icyc .eq.0) THEN
-    WRITE(name_cwr,'(A,A)') 'steady','.cwr'
+    call GenerateOutputFileName ('stat', niti, 0, maxn, 'cwr',modellein, modellrst, ct, nb,name_cwr, inputFileName)
   ELSE
-    cycle_number = icyc + iaccyc
-  !NiS,may06: Replacing with only one uniform name
-    WRITE (name_cwr, '(A1,I4.4,A4)') ct, cycle_number, '.cwr'
-  !  IF (.not. (cycle_number.ge.10) ) then
-  !    WRITE (name_cwr, '(A1,I1,A4)') ct, cycle_number, '.cwr'
-  !  ELSEIF (.not. (cycle_number.ge.100) ) then
-  !    WRITE (name_cwr, '(A1,I2,A4)') ct, cycle_number, '.cwr'
-  !  ELSEIF (.not. (cycle_number.ge.1000) ) then
-  !    WRITE (name_cwr, '(A1,I3,A4)') ct, cycle_number, '.cwr'
-  !  ELSE
-  !    WRITE (name_cwr, '(A1,I4,A4)') ct, cycle_number, '.cwr'
-  !  ENDIF
+    call GenerateOutputFileName ('inst', niti, icyc, maxn, 'cwr', modellein,modellrst, ct, nb, name_cwr, inputFileName)
   ENDIF
-!NiS,jun06: name creation dependent on steady or dynamic as well as within iteration or after convergence:
-else
-  !nis,sep06: solve problem, that tree-resistance can only be read, if the itefreq was not equal to 0, now it is possible.
-  if (itefreq.ne.0) then
-  !-
-    IF (icyc.eq.0.and.MOD(maxn,itefreq).eq.0) then
-      WRITE (name_cwr,'(A,I3.3,A)')'steady_Ite_',maxn,'.cwr'
-    ELSEIF (icyc.ne.0.and.MOD(maxn,itefreq).eq.0) then
-      WRITE (name_cwr,'(A1,I4.4,A4,I3.3,A4)') ct, cycle_number, '_Ite', maxn, '.cwr'
+elseif (itefreq /= 0) then
+  if (mod(maxn, itefreq) == 0) then
+    IF (icyc .eq.0) THEN
+      call GenerateOutputFileName ('stat', niti, 0, maxn, 'cwr',modellein, modellrst, ct, nb,name_cwr, inputFileName)
+    ELSE
+      call GenerateOutputFileName ('inst', niti, icyc, maxn, 'cwr', modellein,modellrst, ct, nb, name_cwr, inputFileName)
     ENDIF
-  !nis,sep06: See change definition above
   endif
-  !-
-ENDIF
+endif
 !-
 
 ! Writing detailled information of the calculated values

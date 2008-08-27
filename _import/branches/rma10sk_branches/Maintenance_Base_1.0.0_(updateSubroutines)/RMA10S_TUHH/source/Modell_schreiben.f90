@@ -328,7 +328,7 @@ write_nodes: DO i = 1, np
   !only for real results not for minmax-result-files
   !if (resultType == 'resu') then
   if (.not. IntPolProf (i)) then
-    IF (tet.ne.0.0) then
+    IF (icyc .ne. 0) then
       WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
       WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
       WRITE (IKALYPSOFM, 7006) i, (vdoto (j, i), j = 1, 3)
@@ -546,14 +546,15 @@ END SUBROUTINE write_KALYPSO
 !**********************************************************
 
 
-SUBROUTINE Generate2DFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
+SUBROUTINE GenerateOutputFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
            &                   resultName, inputName)
 
 implicit none
 INTEGER, INTENT (IN) :: timeStep, iteration, restartUnit
 INTEGER, INTENT (IN) :: niti_local
-character (LEN = 96), INTENT (OUT) :: resultName, inputName
-CHARACTER (LEN = 32), INTENT (IN)  :: outsuffix, inname, rstname
+character (LEN = 96), INTENT (inOUT) :: resultName, inputName
+CHARACTER (LEN = 32), INTENT (IN)  :: inname, rstname
+character (len = *) , intent (in) :: outsuffix
 CHARACTER (LEN = 1), INTENT (IN)   :: prefix
 CHARACTER (LEN = 4), INTENT (IN)   :: sort
 

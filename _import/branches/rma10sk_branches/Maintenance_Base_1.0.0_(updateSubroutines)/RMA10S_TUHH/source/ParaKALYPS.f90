@@ -33,7 +33,7 @@ ALLOCATABLE cniku (:)
 REAL(KIND=8), ALLOCATABLE, DIMENSION (:) :: mh
 
 !filename for saving cwr-file
-CHARACTER (LEN=32) :: name_cwr
+CHARACTER (LEN=96) :: name_cwr
 !frequency pointer for output after itertion
 INTEGER            :: itefreq
 

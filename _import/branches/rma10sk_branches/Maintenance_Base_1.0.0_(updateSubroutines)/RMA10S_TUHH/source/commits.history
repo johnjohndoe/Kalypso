@@ -253,3 +253,9 @@ Version 1.0.3 (laufende Änderungen)
 020.) iteration control output must change, because Kalypso can't parse it, if number of iterations as 6 digits.
 
 --- Nico Schrage, 25.08.2008 (1.0.3 bf3)
+
+021.) Rename 'Generate2DFileName' to 'GenerateOutputFileName'
+022.) Generation of consistent *.cwr file names using the general function 'GenerateOutputFileName' to create output file names. There was a problem, if restarting from a certain time step. (Affects Modell_schreiben.f90
+023.) bugfix for restart information-write-out, if the time of the time step is equal 0.0. It is more convenient to check for the unsteady-character of the calculation process using icyc.
+
+--- Nico Schrage 27.08.2008 (1.0.3 bf4)
