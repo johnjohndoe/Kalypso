@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,33 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.SortedMap;
+import java.util.Map.Entry;
 
 /**
  * @author doemming
  */
 public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
 {
-  public FunctionRMSEPeakAndLowFlow( TreeMap measuredTS, Date startCompare, Date endCompare, 
-      double min, double max )
-  {
-    super( measuredTS, startCompare, endCompare);
-    m_min = min;
-    m_max = max;
-
-  }
-
   public final static double UNBOUND = -1;
-
-  private final double m_min;
-
-  private final double m_max;
 
   private static final int STATUS_SEARCH_INTERVALL = 1;
 
@@ -70,7 +57,20 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
 
   private static final int STATUS_OUTSIDE_INTERVALL = 3;
 
-  public double calculateError( TreeMap calced )
+  private final double m_min;
+
+  private final double m_max;
+
+  public FunctionRMSEPeakAndLowFlow( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare,
+      final double min, final double max )
+  {
+    super( measuredTS, startCompare, endCompare);
+    m_min = min;
+    m_max = max;
+  }
+
+  @Override
+  public double calculateError( final SortedMap<Date, Double> calced )
   {
     int status = STATUS_SEARCH_INTERVALL;
     double error = 0;
@@ -79,21 +79,22 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
     double errorAll = 0;
     int cAll = 0;
 
-    final Iterator it_all = calced.keySet().iterator();
-    while( it_all.hasNext() )
+    for( final Entry<Date, Double> entry : calced.entrySet() )
     {
-      final Date dateKey = (Date)it_all.next();
-      if( m_startCompare.before( dateKey ) && m_endCompare.after( dateKey ) )
+      final Date dateKey = entry.getKey();
+      // TODO: Fehler: 1. und letzter Wert werden nicht berücksichtigt
+      if( getStartCompare().before( dateKey ) && getEndCompare().after( dateKey ) )
       {
-        final double valueCalced = ( (Double)calced.get( dateKey ) ).doubleValue();
-        final double valueMeasured = ( (Double)m_measuredTS.get( dateKey ) ).doubleValue();
+        final double valueCalced = entry.getValue().doubleValue();
+        final double valueMeasured = getMeasuredTS().get( dateKey ).doubleValue();
         try
         {
+          // TODO: Fehler: Ausruck wird nie war, wenn m_min != UNBOUND (2.Zeile)
           if( ( m_min == UNBOUND && valueMeasured <= m_max ) || ( m_max == UNBOUND && valueMeasured >= m_min )
-              || ( m_max != UNBOUND && m_min == UNBOUND && m_min <= valueMeasured && valueMeasured <= m_max ) )
+              || (m_max != UNBOUND && m_min != UNBOUND && m_min <= valueMeasured && valueMeasured <= m_max) )
           {
-            // valid intervall
-            if( status == STATUS_OUTSIDE_INTERVALL )
+            // valid interval
+            if( status == STATUS_OUTSIDE_INTERVALL && c != 0 )
             {
               // reentering it
               errorAll += Math.sqrt( error / c );
@@ -108,7 +109,7 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
           else
             status = STATUS_OUTSIDE_INTERVALL;
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           status = STATUS_OUTSIDE_INTERVALL;
           e.printStackTrace();
@@ -117,6 +118,6 @@ public class FunctionRMSEPeakAndLowFlow extends IErrorFunktion
     }
     errorAll += Math.sqrt( error / c );
     cAll++;
-    return errorAll / cAll + m_normalizeOffset;
+    return errorAll / cAll + getNormalizeOffset();
   }
 }

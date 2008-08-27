@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.transform;
 
@@ -70,8 +70,8 @@ public class ParameterOptimizeContext
 
   private final String[] m_xPaths;
 
-  public ParameterOptimizeContext( double initialValue, double syntecticValue, double lowerBound, double upperBound,
-      String mode, String[] xPaths )
+  public ParameterOptimizeContext( final double initialValue, final double syntecticValue, final double lowerBound, final double upperBound,
+      final String mode, final String[] xPaths )
   {
     m_initialValue = initialValue;
     m_synteticValue = syntecticValue;
@@ -81,14 +81,16 @@ public class ParameterOptimizeContext
     m_xPaths = xPaths;
   }
 
-  public ParameterOptimizeContext( Parameter parameter )
+  public ParameterOptimizeContext( final Parameter parameter )
   {
     m_initialValue = parameter.getInitialValue();
     m_synteticValue = parameter.getSynteticValue();
     m_lowerBound = parameter.getLowerBound();
     m_upperBound = parameter.getUpperBound();
     m_mode = parameter.getMode();
-    m_xPaths = (String[])parameter.getXpath().toArray( new String[parameter.getXpath().size()] );
+
+    m_xPaths = parameter.getXpath().toArray( new String[parameter.getXpath().size()] );
+
   }
 
   public double getUpperBound()

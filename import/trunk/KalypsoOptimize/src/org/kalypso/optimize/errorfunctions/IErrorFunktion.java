@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,34 +36,34 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 /**
  * @author doemming
  */
 public abstract class IErrorFunktion
 {
-  protected final Date m_startCompare;
+  private final Date m_startCompare;
 
-  protected final Date m_endCompare;
+  private final Date m_endCompare;
 
-  protected final TreeMap m_measuredTS;
+  private final SortedMap<Date, Double> m_measuredTS;
 
   /**
    * calculated errors can be weighted with this offset, this makes it possible to compare different errorfuntions
    */
-  protected double m_normalizeOffset = 0d;
+  private double m_normalizeOffset = 0d;
 
   /**
    * abstract error funktion class
-   *  
+   * 
    */
-  public IErrorFunktion( TreeMap measuredTS, Date startCompare, Date endCompare )
+  public IErrorFunktion( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare )
   {
     m_measuredTS = measuredTS;
     m_startCompare = startCompare;
@@ -71,16 +71,38 @@ public abstract class IErrorFunktion
 
   }
 
-  public abstract double calculateError( TreeMap calcedTS );
+  public abstract double calculateError( SortedMap<Date, Double> calcedTS );
 
   /**
    * @param normalizeOffset
    *          calculated errors can be weighted with this offset, this makes it possible to compare different
-   *          errorfuntions
+   *          errorfunctions
    */
-  public void setNormalizeOffset( double normalizeOffset )
+  public void setNormalizeOffset( final double normalizeOffset )
   {
     m_normalizeOffset = normalizeOffset;
   }
+
+  protected Date getStartCompare( )
+  {
+    return m_startCompare;
+  }
+
+  protected Date getEndCompare( )
+  {
+    return m_endCompare;
+  }
+
+  protected SortedMap<Date, Double> getMeasuredTS( )
+  {
+    return m_measuredTS;
+  }
+
+  protected double getNormalizeOffset( )
+  {
+    return m_normalizeOffset;
+  }
+
+
 
 }

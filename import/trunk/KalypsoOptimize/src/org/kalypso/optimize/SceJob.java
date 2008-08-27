@@ -179,8 +179,15 @@ public class SceJob
 
       inStream = new InputStreamReader( process.getInputStream() );
       errStream = new InputStreamReader( process.getErrorStream() );
+
+      final int stepMax = m_autoCalibration.getOptParameter().getMaxN();
+
       while( true )
       {
+        final String monitorMsg = String.format( "Optimierungsrechnung %d von %d", sceIO.getStep(), stepMax );
+        monitor.setMessage( monitorMsg );
+        monitor.setProgress( 100 * sceIO.getStep() / stepMax );
+
         if( inStream.ready() )
         {
           final char buffer[] = new char[100];
@@ -193,7 +200,6 @@ public class SceJob
           final int bufferC = errStream.read( buffer );
           errBuffer.append( buffer, 0, bufferC );
         }
-//        System.out.println( "Canceled: " + monitor.isCanceled() );
         if( monitor.isCanceled() )
         {
           process.destroy();

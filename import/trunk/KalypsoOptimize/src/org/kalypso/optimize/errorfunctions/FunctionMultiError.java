@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,34 +36,35 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
+
+import org.eclipse.core.runtime.Assert;
 
 /**
  * @author doemming
  */
 public class FunctionMultiError extends IErrorFunktion
 {
-  private final List <IErrorFunktion> m_functions;
+  private final IErrorFunktion[] m_functions;
 
   private boolean m_normalized = false;
 
-  public FunctionMultiError( TreeMap measuredTS, Date startCompare, Date endCompare )
+  public FunctionMultiError( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare, final IErrorFunktion[] errorFunktions )
   {
     super( measuredTS, startCompare, endCompare );
-    m_functions = new ArrayList<IErrorFunktion>();
+    m_functions = errorFunktions;
+
+    Assert.isTrue( errorFunktions.length > 0 );
   }
 
   @Override
-  public double calculateError( TreeMap calcedTS )
+  public double calculateError( final SortedMap<Date, Double> calcedTS )
   {
     // first time normalize offsets
     if( !m_normalized )
@@ -74,14 +75,14 @@ public class FunctionMultiError extends IErrorFunktion
     return calculateInnerError( calcedTS );
   }
 
-  public void normalizeOffset( TreeMap calcedTS )
+  public void normalizeOffset( final SortedMap<Date, Double> calcedTS )
   {
-    double error[] = new double[m_functions.size()];
-    boolean valid[] = new boolean[m_functions.size()];
+    final double error[] = new double[m_functions.length];
+    final boolean valid[] = new boolean[m_functions.length];
     Arrays.fill( valid, true );
-    for( int i = 0; i < m_functions.size(); i++ )
+    for( int i = 0; i < m_functions.length; i++ )
     {
-      final IErrorFunktion function = m_functions.get( i );
+      final IErrorFunktion function = m_functions[i];
       final double calculateError = function.calculateError( calcedTS );
       if( !Double.isInfinite( calculateError ) && !Double.isNaN( calculateError ) )
         error[i] = calculateError;
@@ -91,13 +92,11 @@ public class FunctionMultiError extends IErrorFunktion
         valid[i] = false;
       }
     }
-    // find max
-    // TODO: what about using Arrays.sort() and error[error.length - 1] ?
-    // ask Marc for more information. I believe it must be more performant.
+
     final double maxError = org.kalypso.contribs.java.util.Arrays.findMax( error );
-    for( int i = 0; i < m_functions.size(); i++ )
+    for( int i = 0; i < m_functions.length; i++ )
     {
-      final IErrorFunktion function = m_functions.get( i );
+      final IErrorFunktion function = m_functions[i];
       if( valid[i] )
         function.setNormalizeOffset( maxError - error[i] );
       else
@@ -105,14 +104,13 @@ public class FunctionMultiError extends IErrorFunktion
     }
   }
 
-  private double calculateInnerError( TreeMap calcedTS )
+  private double calculateInnerError( final SortedMap<Date, Double> calcedTS )
   {
     double c = 0;
     double error = 0;
-    final Iterator iter = m_functions.iterator();
-    while( iter.hasNext() )
+
+    for( final IErrorFunktion function : m_functions )
     {
-      final IErrorFunktion function = (IErrorFunktion)iter.next();
       try
       {
         final double calculateError = function.calculateError( calcedTS );
@@ -124,16 +122,11 @@ public class FunctionMultiError extends IErrorFunktion
         else
           System.out.println( "errorfunction " + function.toString() + " is invalid" );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
     }
-    return Math.sqrt( error / c ) + m_normalizeOffset;
-  }
-
-  public void addFunction( IErrorFunktion function )
-  {
-    m_functions.add( function );
+    return Math.sqrt( error / c ) + getNormalizeOffset();
   }
 }

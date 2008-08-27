@@ -66,7 +66,7 @@ public class OptimizerCalJob implements ISimulation
    * @param job
    *          encapsulated job to optimize
    */
-  public OptimizerCalJob( Logger logger, IOptimizingJob job )
+  public OptimizerCalJob( final Logger logger, final IOptimizingJob job )
   {
     m_logger = logger;
     m_optimizingJob = job;
@@ -85,14 +85,13 @@ public class OptimizerCalJob implements ISimulation
    *      org.kalypso.services.calculation.job.ICalcDataProvider, org.kalypso.services.calculation.job.ICalcResultEater,
    *      org.kalypso.services.calculation.job.ICalcMonitor)
    */
-  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater,
+  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater,
       final ISimulationMonitor monitor )
   {
     try
     {
-
       final AutoCalibration autoCalibration = m_optimizingJob.getOptimizeConfiguration();
-      SceJob sceJob = new SceJob( autoCalibration, tmpdir );
+      final SceJob sceJob = new SceJob( autoCalibration, tmpdir );
 
       final SceIOHandler sceIO = new SceIOHandler( m_logger, autoCalibration, m_optimizingJob );
 
@@ -102,7 +101,7 @@ public class OptimizerCalJob implements ISimulation
 
       m_optimizingJob.publishResults( resultEater );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }

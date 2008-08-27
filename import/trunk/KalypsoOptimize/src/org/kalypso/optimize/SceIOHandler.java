@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
@@ -44,8 +44,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,15 +58,12 @@ import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.Parameter;
 
 /**
- * 
  * this class handles the comunication between optimizer routine (SCE) and calcjob routine
  * 
  * @author doemming
  */
 public class SceIOHandler
 {
-  private static boolean DEBUG = false;
-
   private static Pattern PARAMETER_COUNT = Pattern.compile( "^.+\\&Parameter: n =.*?(\\d+).*?\\r$" );
 
   private static Pattern PARAMETER = Pattern.compile( "^.*?(\\d+\\.\\d+.(E|)(-|\\+|)\\d*).*?\\r$" );
@@ -82,7 +80,7 @@ public class SceIOHandler
 
   private final IErrorFunktion m_errorFunction;
 
-  private final List m_parameter = new ArrayList();
+  private final List<Double> m_parameter = new ArrayList<Double>();
 
   private final Logger m_logger;
 
@@ -94,146 +92,141 @@ public class SceIOHandler
 
   private double m_bestEvaluation = -1;
 
-  public SceIOHandler( Logger logger, AutoCalibration calibration, IOptimizingJob job ) throws MalformedURLException,
-      SensorException
+  public SceIOHandler( final Logger logger, final AutoCalibration calibration, final IOptimizingJob job ) throws MalformedURLException, SensorException
   {
     m_logger = logger;
-    //    calibration.getPegel().getFile()
-    TreeMap measuersTS = job.getMeasuredTimeSeries();
+    // calibration.getPegel().getFile()
+    final SortedMap<Date, Double> measuersTS = job.getMeasuredTimeSeries();
     m_errorFunction = ErrorFunctionFactory.createErrorFunktion( measuersTS, calibration );
-    final List parameterList = calibration.getParameterlist().getParameter();
-    final Parameter[] parameters = (Parameter[])parameterList.toArray( new Parameter[parameterList.size()] );
+    final List<Parameter> parameterList = calibration.getParameterlist().getParameter();
+    final Parameter[] parameters = parameterList.toArray( new Parameter[parameterList.size()] );
     m_parameterConf = parameters;
     m_job = job;
-
   }
 
-  public void readLine( String line )
+  public void readLine( final String line )
   {
     switch( status )
     {
-    case STATUS_READ_PARAMETER_COUNT:
-    {
-      Matcher m = PARAMETER_COUNT.matcher( line );
-      if( m.matches() )
+      case STATUS_READ_PARAMETER_COUNT:
       {
-        m_parameterCount = Integer.parseInt( m.group( 1 ) );
-        status = STATUS_READ_PARAMETER;
-        m_parameter.clear();
+        final Matcher m = PARAMETER_COUNT.matcher( line );
+        if( m.matches() )
+        {
+          m_parameterCount = Integer.parseInt( m.group( 1 ) );
+          status = STATUS_READ_PARAMETER;
+          m_parameter.clear();
+        }
       }
-    }
       break;
-    case STATUS_READ_PARAMETER:
-    {
-      Matcher m = PARAMETER.matcher( line );
-      if( m.matches() )
+      case STATUS_READ_PARAMETER:
       {
-        String group = m.group( 1 );
-        double sceValue = Double.parseDouble( group );
-        double realValue = scaleSCEtoRealValue( sceValue, m_parameter.size() );
-        m_parameter.add( new Double( realValue ) );
-        if( m_parameter.size() == m_parameterCount )
-          status = STATUS_CALCULATE_AND_EVALUATE;
+        final Matcher m = PARAMETER.matcher( line );
+        if( m.matches() )
+        {
+          final String group = m.group( 1 );
+          final double sceValue = Double.parseDouble( group );
+          final double realValue = scaleSCEtoRealValue( sceValue, m_parameter.size() );
+          m_parameter.add( new Double( realValue ) );
+          if( m_parameter.size() == m_parameterCount )
+            status = STATUS_CALCULATE_AND_EVALUATE;
+        }
       }
-    }
       break;
-    default:
-      break;
+      default:
+        break;
     }
   }
 
-  private double scaleSCEtoRealValue( double sceValue, int index )
+  private double scaleSCEtoRealValue( final double sceValue, final int index )
   {
-    double result = m_parameterConf[index].getLowerBound() + sceValue
-        * ( m_parameterConf[index].getUpperBound() - m_parameterConf[index].getLowerBound() );
+    final double result = m_parameterConf[index].getLowerBound() + sceValue * (m_parameterConf[index].getUpperBound() - m_parameterConf[index].getLowerBound());
     return result;
   }
 
-  public void handle( Writer inputWriter ) throws IOException
+  public void handle( final Writer inputWriter ) throws IOException
   {
     switch( status )
     {
-    case STATUS_CALCULATE_AND_EVALUATE:
-    {
-      String answer;
-      try
+      case STATUS_CALCULATE_AND_EVALUATE:
       {
-        recalculate();
-        double evaluation = evaluate();
-        if( m_calculationCounter == 0 || evaluation < m_bestEvaluation )
+        String answer;
+        try
         {
-          m_job.setBestEvaluation( true );
-          m_bestEvaluation = evaluation;
+          recalculate();
+          final double evaluation = evaluate();
+          if( m_calculationCounter == 0 || evaluation < m_bestEvaluation )
+          {
+            m_job.setBestEvaluation( true );
+            m_bestEvaluation = evaluation;
+          }
+          else
+          {
+            m_job.setBestEvaluation( false );
+          }
+          m_calculationCounter++;
+          answer = Double.toString( evaluation ) + "\n";
+          m_logger.info( "evaluation of " + m_calculationCounter + ". calculation is " + evaluation + " (best is " + m_bestEvaluation + ")" );
         }
-        else
+        catch( final Exception e )
         {
+          m_calculationCounter++;
           m_job.setBestEvaluation( false );
+          answer = Double.toString( m_bestEvaluation + 999d );
+          e.printStackTrace();
         }
-        m_calculationCounter++;
-        answer = Double.toString( evaluation ) + "\n";
-        m_logger.info( "evaluation of " + m_calculationCounter + ". calculation is " + evaluation + " (best is "
-            + m_bestEvaluation + ")" );
+        inputWriter.write( answer );
+        inputWriter.write( '\n' );
+        inputWriter.flush();
+        KalypsoOptimizeDebug.DEBUG.printf( "SCE < %s", answer );
+        status = STATUS_READ_PARAMETER_COUNT;
       }
-      catch( Exception e )
-      {
-        answer = Double.toString( m_bestEvaluation + 999d );
-        e.printStackTrace();
-      }
-      inputWriter.write( answer );
-      inputWriter.flush();
-      if( DEBUG )
-        System.out.print( "SCE < " + answer );
-      status = STATUS_READ_PARAMETER_COUNT;
-    }
       break;
-    default:
-      break;
+      default:
+        break;
     }
   }
 
-  private double evaluate() throws MalformedURLException, SensorException
+  private double evaluate( ) throws MalformedURLException, SensorException
   {
-    TreeMap calcedTS = m_job.getCalcedTimeSeries();
+    final SortedMap<Date, Double> calcedTS = m_job.getCalcedTimeSeries();
     return m_errorFunction.calculateError( calcedTS );
   }
 
-  private void recalculate() throws Exception
+  private void recalculate( ) throws Exception
   {
-    if( DEBUG )
-      System.out.println( "\n\nrecalculation ..." );
-    double[] newValues = new double[m_parameter.size()];
+    KalypsoOptimizeDebug.DEBUG.printf( "%n%nrecalculation step %d...", m_calculationCounter );
+    final double[] newValues = new double[m_parameter.size()];
     for( int i = 0; i < newValues.length; i++ )
     {
-      newValues[i] = ( (Double)m_parameter.get( i ) ).doubleValue();
+      newValues[i] = (m_parameter.get( i )).doubleValue();
     }
     m_job.optimize( m_parameterConf, newValues );
     m_job.calculate();
   }
 
-  public void handleStreams( StringBuffer outBuffer, StringBuffer errBuffer, Writer inputWriter ) throws IOException
+  public void handleStreams( final StringBuffer outBuffer, final StringBuffer errBuffer, final Writer inputWriter ) throws IOException
   {
-    String[] out = getLines( outBuffer );
-    String[] err = getLines( errBuffer );
-    if( DEBUG )
-      printlines( "OUT: ", out );
-    if( DEBUG )
-      printlines( "ERR: ", err );
-    for( int i = 0; i < out.length; i++ )
-    {
-      readLine( out[i] );
-    }
+    // REMARK: do not inline: getLines() deletes read data from the buffer
+    final String[] outLines = getLines( outBuffer );
+    final String[] errLines = getLines( errBuffer );
+
+    printlines( "OUT: ", outLines );
+    printlines( "ERR: ", errLines );
+
+    for( final String element : outLines )
+      readLine( element );
+
     handle( inputWriter );
   }
 
-  private void printlines( String prefix, String[] lines )
+  private void printlines( final String prefix, final String[] lines )
   {
-    for( int i = 0; i < lines.length; i++ )
-    {
-      System.out.print( prefix + lines[i] );
-    }
+    for( final String line : lines )
+      KalypsoOptimizeDebug.DEBUG.printf( "%s%s", prefix, line );
   }
 
-  public String[] getLines( StringBuffer buffer )
+  public String[] getLines( final StringBuffer buffer )
   {
     final String out = buffer.toString();
     final int lastBR = out.lastIndexOf( '\n' );
@@ -248,5 +241,10 @@ public class SceIOHandler
       }
     }
     return new String[0];
+  }
+
+  public int getStep( )
+  {
+    return m_calculationCounter;
   }
 }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
+
+import javax.xml.bind.JAXBElement;
 
 import org.kalypso.optimizer.AutoCalibration;
 import org.kalypso.optimizer.RootMeanSquareError;
@@ -58,40 +60,47 @@ import org.kalypso.optimizer.VolumeError;
  */
 public class ErrorFunctionFactory
 {
-  public ErrorFunctionFactory()
+  private ErrorFunctionFactory( )
   {
-  // do not instantiate
+    // do not instantiate
   }
 
-  public static IErrorFunktion createErrorFunktion( TreeMap measuredTS, AutoCalibration autocalibration )
+  public static IErrorFunktion createErrorFunktion( final SortedMap<Date, Double> measuredTS, final AutoCalibration autocalibration )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
-    final FunctionMultiError result = new FunctionMultiError( measuredTS, startOptimize, endOptimize );
-    final List errorFunktions = autocalibration.getOptParameter().getObjectiveFunction().getErrorFunktion();
-
-    for( Iterator iter = errorFunktions.iterator(); iter.hasNext(); )
+    final List<JAXBElement< ? >> errorFunktions = autocalibration.getOptParameter().getObjectiveFunction().getErrorFunktion();
+    final List<IErrorFunktion> functions = new ArrayList<IErrorFunktion>();
+    for( final JAXBElement< ? > element : errorFunktions )
     {
-      Object fXML = iter.next();
-      final IErrorFunktion function;
-      if( fXML instanceof VolumeError )
-        function = createErrorFunctionVolume( autocalibration, measuredTS );
-      else if( fXML instanceof RootMeanSquareError )
-        function = createErrorFunctionRMS( autocalibration, measuredTS );
-      else if( fXML instanceof RootMeanSquareErrorLowFlows )
-        function = createErrorFunction( (RootMeanSquareErrorLowFlows)fXML, autocalibration, measuredTS );
-      else if( fXML instanceof RootMeanSquareErrorPeakFlows )
-        function = createErrorFunction( (RootMeanSquareErrorPeakFlows)fXML, autocalibration, measuredTS );
-      else
-        function = null;
+      final Object fXML = element.getValue();
+      final IErrorFunktion function = toErrorFunktion( fXML, autocalibration, measuredTS );
       if( function != null )
-        result.addFunction( function );
+        functions.add( function );
     }
-    return result;
+
+    return new FunctionMultiError( measuredTS, startOptimize, endOptimize, functions.toArray( new IErrorFunktion[functions.size()] ) );
   }
 
-  public static IErrorFunktion createErrorFunction( RootMeanSquareErrorLowFlows error, AutoCalibration autocalibration,
-      TreeMap calcedTS )
+  private static IErrorFunktion toErrorFunktion( final Object fXML, final AutoCalibration autocalibration, final SortedMap<Date, Double> measuredTS )
+  {
+    if( fXML instanceof VolumeError )
+      return createErrorFunctionVolume( autocalibration, measuredTS );
+
+    if( fXML instanceof RootMeanSquareError )
+      return createErrorFunctionRMS( autocalibration, measuredTS );
+
+    if( fXML instanceof RootMeanSquareErrorLowFlows )
+      return createErrorFunction( (RootMeanSquareErrorLowFlows) fXML, autocalibration, measuredTS );
+
+    if( fXML instanceof RootMeanSquareErrorPeakFlows )
+      return createErrorFunction( (RootMeanSquareErrorPeakFlows) fXML, autocalibration, measuredTS );
+
+    return null;
+  }
+
+  public static IErrorFunktion createErrorFunction( final RootMeanSquareErrorLowFlows error, final AutoCalibration autocalibration,
+      final SortedMap<Date, Double> calcedTS )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
@@ -99,8 +108,8 @@ public class ErrorFunctionFactory
     return new FunctionRMSEPeakAndLowFlow( calcedTS, startOptimize, endOptimize, 0d, error.getLowFlowLevel() );
   }
 
-  public static IErrorFunktion createErrorFunction( RootMeanSquareErrorPeakFlows error,
-      AutoCalibration autocalibration, TreeMap calcedTS )
+  public static IErrorFunktion createErrorFunction( final RootMeanSquareErrorPeakFlows error,
+      final AutoCalibration autocalibration, final SortedMap<Date, Double> calcedTS )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
@@ -109,14 +118,14 @@ public class ErrorFunctionFactory
         FunctionRMSEPeakAndLowFlow.UNBOUND );
   }
 
-  public static IErrorFunktion createErrorFunctionRMS( AutoCalibration autocalibration, TreeMap calcedTS )
+  public static IErrorFunktion createErrorFunctionRMS( final AutoCalibration autocalibration, final SortedMap<Date, Double> calcedTS )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();
     return new FunctionRMSError( calcedTS, startOptimize, endOptimize );
   }
 
-  public static IErrorFunktion createErrorFunctionVolume( AutoCalibration autocalibration, TreeMap calcedTS )
+  public static IErrorFunktion createErrorFunctionVolume( final AutoCalibration autocalibration, final SortedMap<Date, Double> calcedTS )
   {
     final Date startOptimize = autocalibration.getPegel().getStartDate().getTime();
     final Date endOptimize = autocalibration.getPegel().getEndDate().getTime();

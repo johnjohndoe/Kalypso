@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize;
 
 import java.net.MalformedURLException;
-import java.util.TreeMap;
+import java.util.Date;
+import java.util.SortedMap;
 
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.optimizer.AutoCalibration;
@@ -52,7 +53,7 @@ import org.kalypso.simulation.core.SimulationException;
 /**
  * IOptimizingJob
  * 
- * @author doemmig
+ * @author doemming
  */
 public interface IOptimizingJob
 {
@@ -76,12 +77,12 @@ public interface IOptimizingJob
   /**
    * @return timeseries of measured values
    */
-  public TreeMap getMeasuredTimeSeries( ) throws MalformedURLException, SensorException;
+  public SortedMap<Date, Double> getMeasuredTimeSeries( ) throws MalformedURLException, SensorException;
 
   /**
    * @return calculated timeseries from last calculation run
    */
-  public TreeMap getCalcedTimeSeries( ) throws MalformedURLException, SensorException;
+  public SortedMap<Date, Double> getCalcedTimeSeries( ) throws MalformedURLException, SensorException;
 
   /**
    * inform job, if last calculation got the best results (till last run)</br> e.g. to implement: keep best results and
@@ -95,9 +96,5 @@ public interface IOptimizingJob
 
   public void publishResults( ISimulationResultEater resultEater ) throws SimulationException;
 
-  /**
-   * @return
-   */
   public boolean isSucceeded();
-
 }

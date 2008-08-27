@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,48 +36,48 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.errorfunctions;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.TreeMap;
+import java.util.SortedMap;
+import java.util.Map.Entry;
 
 /**
  * @author doemming
  */
 public class FunctionVolumeError extends IErrorFunktion
 {
-
-  public FunctionVolumeError( TreeMap measuredTS, Date startCompare, Date endCompare)
+  public FunctionVolumeError( final SortedMap<Date, Double> measuredTS, final Date startCompare, final Date endCompare )
   {
     super( measuredTS, startCompare, endCompare );
   }
 
-  public double calculateError( TreeMap calced )
+  @Override
+  public double calculateError( final SortedMap<Date, Double> calced )
   {
     double error = 0;
     double c = 0;
-    Iterator it_all = calced.keySet().iterator();
-    while( it_all.hasNext() )
+
+    for( final Entry<Date, Double> entry : calced.entrySet() )
     {
-      Date dateKey = (Date)it_all.next();
-      if( m_startCompare.before( dateKey ) && m_endCompare.after( dateKey ) )
+      final Date dateKey = entry.getKey();
+      if( getStartCompare().before( dateKey ) && getEndCompare().after( dateKey ) )
       {
         try
         {
-          final double valueCalced = ( (Double)calced.get( dateKey ) ).doubleValue();
-          final double valueMeasured = ( (Double)m_measuredTS.get( dateKey ) ).doubleValue();
+          final double valueCalced = entry.getValue().doubleValue();
+          final double valueMeasured = getMeasuredTS().get( dateKey ).doubleValue();
           error += valueCalced - valueMeasured;
           c++;
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           e.printStackTrace();
         }
       }
     }
-    return Math.abs( error / c) + m_normalizeOffset ;
+    return Math.abs( error / c ) + getNormalizeOffset();
   }
 }

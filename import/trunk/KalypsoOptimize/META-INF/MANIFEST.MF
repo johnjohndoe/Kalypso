@@ -4,7 +4,6 @@ Bundle-Name: KalypsoOptimizePlugin
 Bundle-SymbolicName: org.kalypso.optimize;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: kalypso.sourceforge.net
-Bundle-Localization: plugin
 Export-Package: org.kalypso.optimize,
  org.kalypso.optimize.errorfunctions,
  org.kalypso.optimize.transform,

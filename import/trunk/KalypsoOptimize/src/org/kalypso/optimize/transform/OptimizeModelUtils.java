@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.optimize.transform;
 
@@ -55,7 +55,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xpath.XPathAPI;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Document;
@@ -69,32 +68,32 @@ import org.w3c.dom.NodeList;
  */
 public class OptimizeModelUtils
 {
-  public OptimizeModelUtils( )
+  private OptimizeModelUtils( )
   {
-    // do not instanciate
+    // do not instantiate
   }
 
-  public static void initializeModel( Document doc, ParameterOptimizeContext[] contexts ) throws TransformerException
+  public static void initializeModel( final Document doc, final ParameterOptimizeContext[] contexts ) throws TransformerException
   {
-    for( int i = 0; i < contexts.length; i++ )
-      initializeModell( doc, contexts[i] );
+    for( final ParameterOptimizeContext context : contexts )
+      initializeModell( doc, context );
   }
 
-  public static void initializeModell( Document doc, ParameterOptimizeContext calContext ) throws TransformerException
+  public static void initializeModell( final Document doc, final ParameterOptimizeContext calContext ) throws TransformerException
   {
-    String value = Double.toString( calContext.getInitialValue() );
+    final String value = Double.toString( calContext.getInitialValue() );
     setParameter( calContext.getxPaths(), value, doc );
   }
 
-  public static void transformModel( Document doc, double[] values, ParameterOptimizeContext[] contexts ) throws TransformerException
+  public static void transformModel( final Document doc, final double[] values, final ParameterOptimizeContext[] contexts ) throws TransformerException
   {
     for( int i = 0; i < contexts.length; i++ )
       transformModel( doc, values[i], contexts[i] );
   }
 
-  public static void transformModel( Document doc, double value, ParameterOptimizeContext calContext ) throws TransformerException
+  public static void transformModel( final Document doc, final double value, final ParameterOptimizeContext calContext ) throws TransformerException
   {
-    String mode = calContext.getMode();
+    final String mode = calContext.getMode();
     if( ParameterOptimizeContext.MODE_FACTOR.equals( mode ) )
       setParameter_Factor( calContext.getxPaths(), value, doc );
     else if( ParameterOptimizeContext.MODE_OFFSET.equals( mode ) )
@@ -104,134 +103,83 @@ public class OptimizeModelUtils
       setParameter( calContext.getxPaths(), (new Double( value )).toString(), doc );
   }
 
-  // public static void setParameter_Factor( String[] querys, double value,
-  // Document myDom )
-  // throws TransformerException
-  // {
-  // for( int n = 0; n < querys.length; n++ )
-  // {
-  // String query = querys[n];
-  // NodeList nl = getXPath( query, myDom );
-  // for( int i = 0; i < nl.getLength(); i++ )
-  // {
-  // String nodeValue = ( nl.item( i ) ).getNodeValue();
-  // double setValue = value * Double.parseDouble( nodeValue );
-  // ( nl.item( i ) ).setNodeValue( String.valueOf( setValue ) );
-  // }
-  // }
-  // }
-
-  public static void setParameter( String[] querys, String value, Document myDom ) throws TransformerException
+  public static void setParameter( final String[] querys, final String value, final Document myDom ) throws TransformerException
   {
-    for( int n = 0; n < querys.length; n++ )
+    for( final String query : querys )
     {
-      String query = querys[n];
-      NodeList nl = getXPath( query, myDom );
+      final NodeList nl = getXPath( query, myDom );
+      if( nl.getLength() == 0 )
+        System.out.println( "Empty result for xpath: " + query );
+
       for( int i = 0; i < nl.getLength(); i++ )
       {
-        Node node = nl.item( i );
+        final Node node = nl.item( i );
         XMLUtilities.setTextNode( myDom, node, value );
       }
     }
   }
 
-  public static void setParameter_Factor( String[] querys, double value, Document myDom ) throws TransformerException
+  public static void setParameter_Factor( final String[] querys, final double value, final Document myDom ) throws TransformerException
   {
-    for( int n = 0; n < querys.length; n++ )
+    for( final String query : querys )
     {
-
-      String query = querys[n];
-      // System.out.println( "Query: " + query );
-      NodeList nl = getXPath( query, myDom );
+      final NodeList nl = getXPath( query, myDom );
 
       for( int i = 0; i < nl.getLength(); i++ )
       {
-        String nodeValue = XMLTools.getStringValue( nl.item( i ) );
-        double setValue = value * Double.parseDouble( nodeValue );
+        final String nodeValue = XMLTools.getStringValue( nl.item( i ) );
+        final double setValue = value * Double.parseDouble( nodeValue );
         XMLUtilities.setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
       }
     }
   }
 
-  public static void setParameter_Offset( String[] querys, double value, Document myDom ) throws TransformerException
+  public static void setParameter_Offset( final String[] querys, final double value, final Document myDom ) throws TransformerException
   {
-    for( int n = 0; n < querys.length; n++ )
+    for( final String query : querys )
     {
-
-      String query = querys[n];
-      // System.out.println( "Query: " + query );
-      NodeList nl = getXPath( query, myDom );
+      final NodeList nl = getXPath( query, myDom );
 
       for( int i = 0; i < nl.getLength(); i++ )
       {
-        String nodeValue = XMLTools.getStringValue( nl.item( i ) );
-        double setValue = value + Double.parseDouble( nodeValue );
+        final String nodeValue = XMLTools.getStringValue( nl.item( i ) );
+        final double setValue = value + Double.parseDouble( nodeValue );
         XMLUtilities.setTextNode( myDom, nl.item( i ), Double.toString( setValue ) );
       }
     }
   }
 
   // method returns nodeList to a given query
-  public static NodeList getXPath( String xPathQuery, Document domNode ) throws TransformerException
+  public static NodeList getXPath( final String xPathQuery, final Document domNode ) throws TransformerException
   {
-    NodeList nl;
-    String newXPathQuery = null;
+    final String newXPathQuery = null;
     try
     {
-      final String rrmPrefix = domNode.lookupPrefix( NS.KALYPSO_RRM );
-      if( rrmPrefix != null )
-        newXPathQuery = xPathQuery.replaceAll( "/:", "/" + rrmPrefix + ":" );
-      else
-        newXPathQuery = xPathQuery;
-      nl = XPathAPI.selectNodeList( domNode, newXPathQuery, domNode );
+      return XPathAPI.selectNodeList( domNode, xPathQuery, domNode );
     }
-    catch( TransformerException e )
+    catch( final TransformerException e )
     {
-      System.out.println( newXPathQuery );
+      System.out.println( "Failed to resolve xpath: " + newXPathQuery );
       throw e;
     }
-    return nl;
-  }
-
-  // method returns node to a given query
-  public static Node getXPath_singleNode( String xPathQuery, Node domNode )
-  {
-    Node node = null;
-    String newXPathQuery = null;
-    try
-    {
-      final String rrmPrefix = domNode.lookupPrefix( NS.KALYPSO_RRM );
-      if( rrmPrefix != null )
-        newXPathQuery = xPathQuery.replaceAll( "/:", "/" + rrmPrefix + ":" );
-      else
-        newXPathQuery = xPathQuery;
-      node = XPathAPI.selectSingleNode( domNode, newXPathQuery, domNode );
-    }
-    catch( Exception e )
-    {
-      System.out.println( e.getMessage() );
-      e.printStackTrace();
-    }
-    return node;
   }
 
   // method returns the Document of a xml-file
-  public static Document getXML( InputStream inputStream ) throws Exception
+  public static Document getXML( final InputStream inputStream ) throws Exception
   {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    Document dom = docuBuilder.parse( inputStream );
-    return dom;
+    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
+    return docuBuilder.parse( inputStream );
   }
 
   // method writes a document(node) to a file
-  public static void toFile( File file, Node node ) throws TransformerException, FileNotFoundException
+  public static void toFile( final File file, final Node node ) throws TransformerException, FileNotFoundException
   {
-    Transformer t = TransformerFactory.newInstance().newTransformer();
-    DOMSource src = new DOMSource( node );
-    FileOutputStream outStr = new FileOutputStream( file );
-    OutputStreamWriter fw = new OutputStreamWriter( outStr );
-    StreamResult result = new StreamResult( fw );
+    final Transformer t = TransformerFactory.newInstance().newTransformer();
+    final DOMSource src = new DOMSource( node );
+    final FileOutputStream outStr = new FileOutputStream( file );
+    final OutputStreamWriter fw = new OutputStreamWriter( outStr );
+    final StreamResult result = new StreamResult( fw );
     t.transform( src, result );
   }
 }
