@@ -16,6 +16,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.MyPrintStream;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
+import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -43,18 +44,18 @@ public class SimulationSobekOpenMIWorker implements ISimulation
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
 
-    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Starting OpenMI to process model..." ) );
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( Messages.SimulationSobekOpenMIWorker_0 ) );
 
     /*******************************************************************************************************************
      * PROCESSING
      ******************************************************************************************************************/
     /* The command for execution. */
-    final File directory = new File( tmpdir, "Sobek-IDSS/batch" );
+    final File directory = new File( tmpdir, "Sobek-IDSS/batch" ); //$NON-NLS-1$
 
     final String[] command = new String[3];
-    command[0] = "cmd.exe";
-    command[1] = "/C";
-    command[2] = "2_runOpenMI.cmd";
+    command[0] = "cmd.exe"; //$NON-NLS-1$
+    command[1] = "/C"; //$NON-NLS-1$
+    command[2] = "2_runOpenMI.cmd"; //$NON-NLS-1$
 
     /* Execute the process. */
 
@@ -104,8 +105,8 @@ public class SimulationSobekOpenMIWorker implements ISimulation
       }
     }
 
-    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Model processed." ) );
-    ConsoleHelper.writeLine( m_nofdpStream, "" );
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( Messages.SimulationSobekOpenMIWorker_5 ) );
+    ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
 
     /* add openmi control log file */
     File logOpenMi = new File( tmpdir, ISobekCalculationJobConstants.LOG_OPENMI_CONTROL_PATH );
@@ -118,12 +119,12 @@ public class SimulationSobekOpenMIWorker implements ISimulation
       resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK, logSobek );
 
     if( !logOpenMi.exists() )
-      throw new SimulationException( "OpenMI control log file doesn't exists..." );
+      throw new SimulationException( Messages.SimulationSobekOpenMIWorker_7 );
     if( !logSobek.exists() )
-      throw new SimulationException( "Sobek Calculation Core computation log file doesn't exists..." );
+      throw new SimulationException( Messages.SimulationSobekOpenMIWorker_8 );
 
     if( !checkLogFiles( logOpenMi, logSobek ) )
-      throw new SimulationException( "Calculation failed..." );
+      throw new SimulationException( Messages.SimulationSobekOpenMIWorker_9 );
   }
 
   /**
@@ -144,10 +145,10 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     try
     {
       inputStream = new FileInputStream( logOpenMi );
-      reader = new BufferedReader( new InputStreamReader( inputStream, "UTF-16" ) );
+      reader = new BufferedReader( new InputStreamReader( inputStream, "UTF-16" ) ); //$NON-NLS-1$
       String line = null;
 
-      Pattern p = Pattern.compile( ".*Simulation finished successfuly.*" );
+      Pattern p = Pattern.compile( ".*Simulation finished successfuly.*" ); //$NON-NLS-1$
 
       while( (line = reader.readLine()) != null )
       {
@@ -163,11 +164,11 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     }
     catch( FileNotFoundException e )
     {
-      throw new SimulationException( "OpenMi Control log file not found." );
+      throw new SimulationException( Messages.SimulationSobekOpenMIWorker_12 );
     }
     catch( IOException e )
     {
-      throw new SimulationException( "Error reading OpenMi Control log file." );
+      throw new SimulationException( Messages.SimulationSobekOpenMIWorker_13 );
     }
     finally
     {
@@ -183,7 +184,7 @@ public class SimulationSobekOpenMIWorker implements ISimulation
 
       while( (line = reader.readLine()) != null )
       {
-        if( line.contains( "Normal end of Sobeksim" ) )
+        if( line.contains( "Normal end of Sobeksim" ) ) //$NON-NLS-1$
         {
           sobek = true;
           break;
@@ -193,11 +194,11 @@ public class SimulationSobekOpenMIWorker implements ISimulation
     }
     catch( FileNotFoundException e )
     {
-      throw new SimulationException( "Sobek calculation core log file not found." );
+      throw new SimulationException( Messages.SimulationSobekOpenMIWorker_15 );
     }
     catch( IOException e )
     {
-      throw new SimulationException( "Error reading Sobek calculation core log file." );
+      throw new SimulationException( Messages.SimulationSobekOpenMIWorker_16 );
     }
     finally
     {

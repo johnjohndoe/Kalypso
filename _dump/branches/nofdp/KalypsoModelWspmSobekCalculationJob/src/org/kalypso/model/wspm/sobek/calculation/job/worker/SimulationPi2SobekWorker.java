@@ -14,6 +14,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.MyPrintStream;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
+import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -41,7 +42,7 @@ public class SimulationPi2SobekWorker implements ISimulation
 
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Converting PI Model into Sobek Model..." ) );
+    ConsoleHelper.writeLine( m_outputStream, String.format( Messages.SimulationPi2SobekWorker_0 ) );
 
     /*******************************************************************************************************************
      * PROCESSING
@@ -50,9 +51,9 @@ public class SimulationPi2SobekWorker implements ISimulation
     final File directory = new File( tmpdir, ISobekCalculationJobConstants.PATH_SOBEK_BATCH_DIR );
 
     final String[] command = new String[3];
-    command[0] = "cmd.exe";
-    command[1] = "/C";
-    command[2] = "1_PI2sobek.bat";
+    command[0] = "cmd.exe"; //$NON-NLS-1$
+    command[1] = "/C"; //$NON-NLS-1$
+    command[2] = "1_PI2sobek.bat"; //$NON-NLS-1$
 
     /* Execute the process. */
     Process exec;
@@ -103,18 +104,18 @@ public class SimulationPi2SobekWorker implements ISimulation
       }
     }
 
-    ConsoleHelper.writeLine( m_outputStream, String.format( "---> PI Model converted into Sobek Model." ) );
-    ConsoleHelper.writeLine( m_outputStream, "" );
+    ConsoleHelper.writeLine( m_outputStream, String.format( Messages.SimulationPi2SobekWorker_4 ) );
+    ConsoleHelper.writeLine( m_outputStream, "" ); //$NON-NLS-1$
 
     /* add pi conversion log to result eater */
     File logFile = new File( tmpdir, ISobekCalculationJobConstants.LOG_PI2SOBEK_PATH );
     if( !logFile.exists() )
-      throw new SimulationException( "Pi2Sobek conversion log file doesn't exists..." );
+      throw new SimulationException( Messages.SimulationPi2SobekWorker_6 );
 
     resultEater.addResult( ISobekCalculationJobConstants.LOG_PI2SOBEK, logFile );
 
     if( !checkLogFile( logFile ) )
-      throw new SimulationException( "Pi2Sobek conversion failed..." );
+      throw new SimulationException( Messages.SimulationPi2SobekWorker_7 );
   }
 
   /**
@@ -133,18 +134,18 @@ public class SimulationPi2SobekWorker implements ISimulation
 
       while( (line = reader.readLine()) != null )
       {
-        if( line.contains( "The conversion was successfull" ) )
+        if( line.contains( "The conversion was successfull" ) ) // //$NON-NLS-1$
           return true;
       }
 
     }
     catch( FileNotFoundException e )
     {
-      throw new SimulationException( "Pi2Sobek Conversion log file not found." );
+      throw new SimulationException( Messages.SimulationPi2SobekWorker_9 );
     }
     catch( IOException e )
     {
-      throw new SimulationException( "Error reading Pi2Sobek Conversion log file." );
+      throw new SimulationException( Messages.SimulationPi2SobekWorker_10 );
     }
     finally
     {

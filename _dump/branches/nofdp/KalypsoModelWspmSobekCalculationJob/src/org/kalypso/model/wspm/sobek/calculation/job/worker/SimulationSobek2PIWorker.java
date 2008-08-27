@@ -9,6 +9,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.MyPrintStream;
 import org.kalypso.contribs.java.io.StreamGobbler;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
+import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -36,18 +37,18 @@ public class SimulationSobek2PIWorker implements ISimulation
 
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Converting Sobek model into PI Model..." ) );
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( Messages.SimulationSobek2PIWorker_0 ) );
 
     /*******************************************************************************************************************
      * PROCESSING
      ******************************************************************************************************************/
     /* The command for execution. */
-    final File directory = new File( tmpdir, "Sobek-IDSS/batch" );
+    final File directory = new File( tmpdir, "Sobek-IDSS/batch" ); //$NON-NLS-1$
 
     final String[] command = new String[3];
-    command[0] = "cmd.exe";
-    command[1] = "/C";
-    command[2] = "3_sobek2PI.bat";
+    command[0] = "cmd.exe"; //$NON-NLS-1$
+    command[1] = "/C"; //$NON-NLS-1$
+    command[2] = "3_sobek2PI.bat"; //$NON-NLS-1$
 
     /* Execute the process. */
 
@@ -99,20 +100,20 @@ public class SimulationSobek2PIWorker implements ISimulation
       }
     }
 
-    ConsoleHelper.writeLine( m_nofdpStream, String.format( "---> Sobek model converted." ) );
-    ConsoleHelper.writeLine( m_nofdpStream, "" );
+    ConsoleHelper.writeLine( m_nofdpStream, String.format( Messages.SimulationSobek2PIWorker_5 ) );
+    ConsoleHelper.writeLine( m_nofdpStream, "" ); //$NON-NLS-1$
 
     /* add calculation points conversion log file */
     File logCalculationPoints = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_POINTS_PATH );
     if( !logCalculationPoints.exists() )
-      throw new SimulationException( "Sobek2Pi Calculation Points log file doesn't exists..." );
+      throw new SimulationException( Messages.SimulationSobek2PIWorker_7 );
 
     resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK2PI_POINTS, logCalculationPoints );
 
     /* add structure nodes conversion log file */
     File logStructureNodes = new File( tmpdir, ISobekCalculationJobConstants.LOG_SOBEK2PI_STRUCTURES_PATH );
     if( !logStructureNodes.exists() )
-      throw new SimulationException( "Sobek2Pi Structure Nodes log file doesn't exists..." );
+      throw new SimulationException( Messages.SimulationSobek2PIWorker_8 );
 
     resultEater.addResult( ISobekCalculationJobConstants.LOG_SOBEK2PI_STRUCTURES, logStructureNodes );
 

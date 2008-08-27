@@ -18,8 +18,6 @@ public class Messages extends NLS
 
   public static String SobekResultModelHandler_0;
 
-  public static String SobekResultModelHandler_2;
-
   public static String SobekResultModelHandler_4;
 
   public static String SobekResultModelHandler_5;

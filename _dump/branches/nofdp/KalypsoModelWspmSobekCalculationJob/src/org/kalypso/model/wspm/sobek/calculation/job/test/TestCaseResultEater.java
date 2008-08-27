@@ -8,7 +8,7 @@ public class TestCaseResultEater implements ISimulationResultEater
 
   public void addResult( final String id, final Object result ) throws SimulationException
   {
-    System.out.println( String.format( "Adding result %s, type of %s", id, result.getClass().toString() ) );
+    System.out.println( String.format( "Adding result %s, type of %s", id, result.getClass().toString() ) ); //$NON-NLS-1$
   }
 
 }

@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.MyPrintStream;
 import org.kalypso.model.wspm.sobek.calculation.job.ISobekCalculationJobConstants;
+import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -32,13 +33,13 @@ public class SimulationUpdateDataWorker implements ISimulation
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
 
-    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Perparing calculation core model input data..." ) );
+    ConsoleHelper.writeLine( m_outputStream, String.format( Messages.SimulationUpdateDataWorker_0 ) );
 
     /* extract computation data */
     extractData( tmpdir, inputProvider );
 
-    ConsoleHelper.writeLine( m_outputStream, String.format( "---> Model input data prepared." ) );
-    ConsoleHelper.writeLine( m_outputStream, "" );
+    ConsoleHelper.writeLine( m_outputStream, String.format( Messages.SimulationUpdateDataWorker_1 ) );
+    ConsoleHelper.writeLine( m_outputStream, "" ); //$NON-NLS-1$
   }
 
   private void extractData( final File tmpdir, final ISimulationDataProvider inputProvider ) throws SimulationException
@@ -51,16 +52,16 @@ public class SimulationUpdateDataWorker implements ISimulation
       /* src directories */
       final File folderCalcCase = new File( urlCalcCase.getFile() );
       if( !folderCalcCase.exists() )
-        throw new SimulationException( String.format( "Missing data folder - %s", urlCalcCase.toExternalForm() ) );
+        throw new SimulationException( String.format( Messages.SimulationUpdateDataWorker_3, urlCalcCase.toExternalForm() ) );
 
       final File folderFlowNetwork = new File( urlFlowNetwork.getFile() );
       if( !folderFlowNetwork.exists() )
-        throw new SimulationException( String.format( "Missing data folder - %s", urlFlowNetwork.toExternalForm() ) );
+        throw new SimulationException( String.format( Messages.SimulationUpdateDataWorker_4, urlFlowNetwork.toExternalForm() ) );
 
       /* destination directory */
-      final File destination = new File( tmpdir, "Sobek-IDSS" );
+      final File destination = new File( tmpdir, "Sobek-IDSS" ); //$NON-NLS-1$
       if( !folderFlowNetwork.exists() )
-        throw new SimulationException( String.format( "Missing destination folder - %s", destination.getAbsolutePath() ) );
+        throw new SimulationException( String.format( Messages.SimulationUpdateDataWorker_6, destination.getAbsolutePath() ) );
 
       /* copy src folders to destination dir */
       FileUtils.copyDirectory( folderFlowNetwork, destination );
@@ -68,7 +69,7 @@ public class SimulationUpdateDataWorker implements ISimulation
     }
     catch( final IOException e )
     {
-      throw new SimulationException( String.format( "Overwriting data directories failed. cause: %s", e.getMessage() ) );
+      throw new SimulationException( String.format( Messages.SimulationUpdateDataWorker_7, e.getMessage() ) );
     }
   }
 

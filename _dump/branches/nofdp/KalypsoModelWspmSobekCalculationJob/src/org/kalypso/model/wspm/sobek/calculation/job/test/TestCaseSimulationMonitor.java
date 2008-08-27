@@ -28,17 +28,17 @@ public class TestCaseSimulationMonitor implements ISimulationMonitor
 
   public void setFinishInfo( final int status, final String text )
   {
-    System.out.println( String.format( "ISimualionMonitor.setFinishInfo() - id: %d\ntext: %s", status, text ) );
+    System.out.println( String.format( "ISimualionMonitor.setFinishInfo() - id: %d\ntext: %s", status, text ) ); //$NON-NLS-1$
   }
 
   public void setMessage( final String message )
   {
-    System.out.println( String.format( "ISimualionMonitor.setMessage() - message: %s", message ) );
+    System.out.println( String.format( "ISimualionMonitor.setMessage() - message: %s", message ) ); //$NON-NLS-1$
   }
 
   public void setProgress( final int progress )
   {
-    System.out.println( String.format( "ISimualionMonitor.setProgress() - progress: %d", progress ) );
+    System.out.println( String.format( "ISimualionMonitor.setProgress() - progress: %d", progress ) ); //$NON-NLS-1$
 
   }
 

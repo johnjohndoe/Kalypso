@@ -9,6 +9,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ConsoleHelper;
 import org.kalypso.contribs.java.io.MyPrintStream;
+import org.kalypso.model.wspm.sobek.calculation.job.i18n.Messages;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.ISimulationMonitor;
@@ -37,13 +38,13 @@ public class SimulationBaseWorker implements ISimulation
   {
     try
     {
-      ConsoleHelper.writeLine( m_outputStream, String.format( "---> Preparing Sobek Calculation Core..." ) );
+      ConsoleHelper.writeLine( m_outputStream, String.format( Messages.SimulationBaseWorker_0 ) );
 
       /* extract computation base directories */
       extractCalculationCore( tmpdir );
 
-      ConsoleHelper.writeLine( m_outputStream, String.format( "---> Sobek Calculation Core prepared." ) );
-      ConsoleHelper.writeLine( m_outputStream, "" );
+      ConsoleHelper.writeLine( m_outputStream, String.format( Messages.SimulationBaseWorker_1 ) );
+      ConsoleHelper.writeLine( m_outputStream, Messages.SimulationBaseWorker_2 );
     }
     catch( final IOException e )
     {

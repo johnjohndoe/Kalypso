@@ -22,8 +22,8 @@ public class TestCalculationJob extends TestCase
   @Test
   public void test( ) throws IOException, SimulationException
   {
-    final File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) );
-    final File sobekTmpDir = new File( tmpDir, "testSobekCalculationJob" );
+    final File tmpDir = new File( System.getProperty( "java.io.tmpdir" ) ); //$NON-NLS-1$
+    final File sobekTmpDir = new File( tmpDir, "testSobekCalculationJob" ); //$NON-NLS-1$
 
     if( sobekTmpDir.exists() )
       FileUtils.deleteDirectory( sobekTmpDir );
