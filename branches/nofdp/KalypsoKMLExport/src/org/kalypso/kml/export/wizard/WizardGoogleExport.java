@@ -49,8 +49,8 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.kml.export.Messages;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
+import org.kalypso.kml.export.i18n.Messages;
 import org.kalypso.ui.views.map.MapView;
 
 /**

@@ -18,8 +18,8 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChooserDelegate.FILE_CHOOSER_GROUP_TYPE;
-import org.kalypso.kml.export.Messages;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
+import org.kalypso.kml.export.i18n.Messages;
 
 /**
  * @author kuch

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.kalypso.kml.export.Messages;
+import org.kalypso.kml.export.i18n.Messages;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.interfaces.IPlacemark;
 

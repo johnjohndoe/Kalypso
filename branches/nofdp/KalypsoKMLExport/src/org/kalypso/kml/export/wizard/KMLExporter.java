@@ -28,6 +28,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.kml.export.KMLExportDelegate;
 import org.kalypso.kml.export.KMLThemeVisitor;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
+import org.kalypso.kml.export.i18n.Messages;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.FolderUtil;
 import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
@@ -143,7 +144,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
       final JAXBElement<DocumentType> kmlDocument = googleEarthFactory.createDocument( documentType );
 
       final FolderType folderType = googleEarthFactory.createFolderType();
-      folderType.setName( "Kalypso Google Earth (TM) Export" );
+      folderType.setName( Messages.KMLExporter_0 );
 
       /* process map */
       final KalypsoThemeVisitor visitor = new KMLThemeVisitor( new ThemeGoogleEarthExportable() );
