@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -537,7 +537,7 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
    * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
    *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
    */
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_Triangle> surfacePatchVisitor, final IProgressMonitor monitor ) throws GM_Exception, CoreException
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_Triangle> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "", IProgressMonitor.UNKNOWN );
 
@@ -574,7 +574,6 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
   /**
    * @see org.kalypsodeegree.model.geometry.GM_TriangulatedSurface#getValue(org.kalypsodeegree.model.geometry.GM_Position)
    */
-  @SuppressWarnings("unchecked")
   public double getValue( final GM_Point location )
   {
     // TODO: transform to my own crs
@@ -635,6 +634,5 @@ public class GM_TriangulatedSurface_Impl extends GM_OrientableSurface_Impl imple
 
     Debug.debugMethodEnd();
     return GeometryFactory.createGM_TriangulatedSurface( triangles, targetOGCCS );
-
   }
 }
