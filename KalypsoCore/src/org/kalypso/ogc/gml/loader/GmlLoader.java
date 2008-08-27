@@ -258,6 +258,7 @@ public class GmlLoader extends AbstractLoader
   public void save( final String source, final URL context, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
     IFile file = null;
+    IMarker lockMarker = null;
     try
     {
       final GMLWorkspace workspace = (GMLWorkspace) data;
@@ -269,7 +270,8 @@ public class GmlLoader extends AbstractLoader
 
       if( file != null )
       {
-        file.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
+        // REMARK: see AbstractLoaderResourceDeltaVisitor for an explanation
+        lockMarker = file.createMarker( IKalypsoCoreConstants.RESOURCE_LOCK_MARKER_TYPE );
 
         final SetContentHelper thread = new SetContentHelper()
         {
@@ -306,15 +308,11 @@ public class GmlLoader extends AbstractLoader
     finally
     {
       /* delete all markers on the corresponding resource */
-      if( file != null )
+      if( lockMarker != null )
       {
         try
         {
-          final IMarker[] markers = file.findMarkers( source, false, IResource.DEPTH_ZERO );
-          for( final IMarker marker : markers )
-          {
-            marker.delete();
-          }
+          lockMarker.delete();
         }
         catch( final CoreException e )
         {
