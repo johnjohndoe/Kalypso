@@ -55,7 +55,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 final public class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
 {
-    
+
   private final IResource m_resource;
 
   private final static String[] USED_ATTRIBUTES = new String[] { IMarker.MESSAGE, IMarker.LOCATION, IMarker.SEVERITY, IMarker.TRANSIENT, IDE.EDITOR_ID_ATTR,
@@ -105,7 +105,8 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     final ArrayList<IMarker> toDelete = new ArrayList<IMarker>();
     for( int i = 0; i < markers.length; i++ )
     {
-      if( markers[i].getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( profilFeatureID ) )
+      final Object attribute = markers[i].getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID );
+      if( attribute != null && attribute.equals( profilFeatureID ) )
         toDelete.add( markers[i] );
     }
     if( !toDelete.isEmpty() )
@@ -142,7 +143,7 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     {
       ResMarkerStrings[i] = markerResolutions[i].getSerializedParameter();
     }
-    String ResMarkerSerialized = StringUtils.join( ResMarkerStrings,'\u0000');
+    String ResMarkerSerialized = StringUtils.join( ResMarkerStrings, '\u0000' );
 
     final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resolutionPluginId, ResMarkerSerialized == "" ? null : ResMarkerSerialized, //$NON-NLS-1$
         m_profileFeatureID, m_station };
