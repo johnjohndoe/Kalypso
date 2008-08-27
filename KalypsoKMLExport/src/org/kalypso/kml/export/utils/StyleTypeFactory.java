@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 
-import org.kalypso.kml.export.Messages;
+import org.kalypso.kml.export.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Fill;
