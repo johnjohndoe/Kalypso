@@ -111,7 +111,7 @@ public class AddRowHandler extends AbstractHandler
     final TupleResult tupleResult = row.getOwner();
     if( target == null )
     {
-      for( int i = 0; i < tupleResult.size(); i++ )
+      for( int i = 0; i < tupleResult.getComponents().length; i++ )
       {
         final IComponent component = tupleResult.getComponent( i );
         if( component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
@@ -121,7 +121,7 @@ public class AddRowHandler extends AbstractHandler
     else
     {
 
-      for( int i = 0; i < tupleResult.size(); i++ )
+      for( int i = 0; i < tupleResult.getComponents().length; i++ )
 
       {
         final IComponent component = tupleResult.getComponent( i );
