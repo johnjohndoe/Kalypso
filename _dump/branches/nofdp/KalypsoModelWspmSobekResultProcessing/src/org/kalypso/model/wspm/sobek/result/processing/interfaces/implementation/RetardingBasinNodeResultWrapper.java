@@ -21,7 +21,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.ISobekConstants;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode.STRUCTURE_TYPE;
-import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IRetardingBasinNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
@@ -129,12 +128,12 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
     if( RETARDING_BASIN_NODE_RESULT.eWaterLevel.equals( type ) )
     {
       jaxRoot = m_cache.getPiCalculationPointElement();
-      id = String.format( "%s_ln", m_node.getId() ); //$NON-NLS-1$
+      id = String.format( "%s_ln", m_node.getId() );
     }
     else if( RETARDING_BASIN_NODE_RESULT.eHochwasserEntlastung.equals( type ) )
     {
       jaxRoot = m_cache.getPiStructuresElement();
-      id = String.format( "%s##rW", m_node.getId() ); //$NON-NLS-1$
+      id = String.format( "%s##rW", m_node.getId() );
     }
     else if( RETARDING_BASIN_NODE_RESULT.eGrundAblass.equals( type ) )
     {
@@ -142,11 +141,11 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
 
       if( isControlled() == true )
       {
-        id = String.format( "%s##dbS", m_node.getId() ); //$NON-NLS-1$
+        id = String.format( "%s##dbS", m_node.getId() );
       }
       else
       {
-        id = String.format( "%s##gS", m_node.getId() ); //$NON-NLS-1$
+        id = String.format( "%s##gS", m_node.getId() );
       }
     }
     else
@@ -166,15 +165,16 @@ public class RetardingBasinNodeResultWrapper implements IRetardingBasinNodeResul
         String myParamId;
         if( RETARDING_BASIN_NODE_RESULT.eWaterLevel.equals( type ) )
         {
-          myParamId = Messages.RetardingBasinNodeResultWrapper_6; // achtung: 2 leerzeichen!
+          // achtung: 2 leerzeichen!
+          myParamId = "Waterlevel  (m AD)"; //$NON-NLS-1$
         }
         else if( RETARDING_BASIN_NODE_RESULT.eHochwasserEntlastung.equals( type ) )
         {
-          myParamId = Messages.RetardingBasinNodeResultWrapper_7;
+          myParamId = "Discharge (m³/s)";//$NON-NLS-1$
         }
         else if( RETARDING_BASIN_NODE_RESULT.eGrundAblass.equals( type ) )
         {
-          myParamId = Messages.RetardingBasinNodeResultWrapper_8;
+          myParamId = "Discharge (m³/s)"; //$NON-NLS-1$
         }
         else
           throw new IllegalStateException();

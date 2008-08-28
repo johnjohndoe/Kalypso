@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode.STRUCTURE_TYPE;
-import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IPolderNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
@@ -101,11 +100,11 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
     final String id;
     if( POLDER_NODE_RESULT.eInflow.equals( type ) )
     {
-      id = String.format( "%s_w", m_node.getId() ); //$NON-NLS-1$
+      id = String.format( "%s_w", m_node.getId() );
     }
     else if( POLDER_NODE_RESULT.eOutflow.equals( type ) )
     {
-      id = String.format( "%s_p", m_node.getId() ); //$NON-NLS-1$
+      id = String.format( "%s_p", m_node.getId() );
     }
     else
       throw new IllegalStateException();
@@ -120,7 +119,7 @@ public class PolderNodeResultWrapper implements IPolderNodeResultWrapper
       if( locationId.equals( id ) ) //$NON-NLS-1$
       {
         String parameterId = header.getParameterId();
-        String myParamId = Messages.PolderNodeResultWrapper_6;
+        String myParamId = "Discharge (m³/s)";
 
         if( myParamId.equals( parameterId ) )
           return complex;

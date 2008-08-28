@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode;
 import org.kalypso.model.wspm.sobek.core.interfaces.IEmptyNode.STRUCTURE_TYPE;
-import org.kalypso.model.wspm.sobek.result.processing.i18n.Messages;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWeirNodeResultWrapper;
 import org.kalypso.model.wspm.sobek.result.processing.interfaces.IWorkspaceCache;
 import org.kalypso.model.wspm.sobek.result.processing.model.IResultTimeSeries;
@@ -67,12 +66,12 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
     {
       public String getParameterId( )
       {
-        return "W"; //$NON-NLS-1$
+        return "W";
       }
 
       public String getUnit( )
       {
-        return "m NHN"; //$NON-NLS-1$
+        return "m NHN";
       }
     } );
   }
@@ -83,12 +82,12 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
     {
       public String getParameterId( )
       {
-        return "W"; //$NON-NLS-1$
+        return "W";
       }
 
       public String getUnit( )
       {
-        return "m NHN"; //$NON-NLS-1$
+        return "m NHN";
       }
     } );
   }
@@ -97,7 +96,7 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
   {
     try
     {
-      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) ); //$NON-NLS-1$
+      final CommandableWorkspace cmd = m_cache.getCommandableWorkspace( String.format( "%s%s", m_node.getId(), type.getPostfix() ) );
       if( cmd != null )
         return new WeirTimeSeriesHandler( type, cmd.getRootFeature(), m_node );
 
@@ -122,7 +121,7 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
       final GMLWorkspace gmlWorkspace = GmlSerializer.createGMLWorkspace( url, null );
       final CommandableWorkspace workspace = PoolHelper.getCommandableWorkspace( gmlWorkspace );
 
-      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, workspace ); //$NON-NLS-1$
+      m_cache.registerWorkspaces( String.format( "%s%s", m_node.getId(), type.getPostfix() ), gmlWorkspace, workspace );
 
       /* fill empty workspace with results */
       if( empty )
@@ -154,12 +153,12 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
     {
       public String getParameterId( )
       {
-        return "Q"; //$NON-NLS-1$
+        return "Q";
       }
 
       public String getUnit( )
       {
-        return "m³/s"; //$NON-NLS-1$
+        return "m³/s";
       }
     } );
   }
@@ -168,7 +167,7 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
   {
     JAXBElement<TimeSeriesComplexType> jaxRoot = m_cache.getPiStructuresElement();
 
-    final String id = String.format( "%s", m_node.getId() ); //$NON-NLS-1$
+    final String id = String.format( "%s", m_node.getId() );
 
     TimeSeriesComplexType values = jaxRoot.getValue();
     List<TimeSerieComplexType> series = values.getSeries();
@@ -184,15 +183,15 @@ public class WeirNodeResultWrapper implements IWeirNodeResultWrapper
         String myParamId;
         if( WEIR_NODE_RESULT.eDischarge.equals( type ) )
         {
-          myParamId = Messages.WeirNodeResultWrapper_9;
+          myParamId = "Discharge (m³/s)";//$NON-NLS-1$
         }
         else if( WEIR_NODE_RESULT.eWaterLevelAbove.equals( type ) )
         {
-          myParamId = Messages.WeirNodeResultWrapper_10;
+          myParamId = "Waterlevel up (m AD)";//$NON-NLS-1$
         }
         else if( WEIR_NODE_RESULT.eWaterLevelBelow.equals( type ) )
         {
-          myParamId = Messages.WeirNodeResultWrapper_11;
+          myParamId = "Waterlevel down (m AD)"; //$NON-NLS-1$
         }
         else
           throw new IllegalStateException();
