@@ -40,36 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * @author kuch
+ * Intermediate Class for Feature-API refactorings. Used to declare some old, now obsolete methods of Deegree1 Feature
+ * deprecated. Reason: Get nearer to the Deegree2 Feature API
+ * 
+ * @author Dirk Kuch
  */
-public interface Feature extends KalypsoBaseFeature, Deegree2Feature
+public interface KalypsoBaseFeature extends BaseFeature
 {
+  @Deprecated
+  // use {FeatureDeegreeTwo}.getDefaultGeometryPropertyValue() instead
+  GM_Object getDefaultGeometryProperty( );
 
-  /** Returns the gml:name property of the bound feature. */
-  public String getName( );
+  @Deprecated
+  // use {FeatureDeegreeTwo}.getBoundedBy() instead
+  GM_Envelope getEnvelope( );
 
-  /** Sets the gml:name property */
-  public void setName( final String name );
+  @Deprecated
+  // use {FeatureDeegreeTwo}.getGeometryPropertyValues instead
+  GM_Object[] getGeometryProperties( );
 
-  /** Returns the gml:description property of the bound feature. */
-  public String getDescription( );
+  @Deprecated
+  // use @link{FeatureDeegreeTwo}.getOwner() instead
+  public Feature getParent( );
 
-  /** Sets the gml_description property */
-  public void setDescription( final String desc );
-
-  /**
-   * Return the gml:location property of the bound feature.<br>
-   * REMARK: gml:location is deprecated in the GML3-Schema.
-   */
-  public GM_Object getLocation( );
-
-  /**
-   * Sets the gml:location property to the bound feature.<br>
-   * REMARK: gml:location is deprecated in the GML3-Schema.
-   */
-  public void setLocation( final GM_Object location );
-
+  @Deprecated
+  // use FeatureDeegreeTwo.setEnvelopesUpdated() instead
+  public void invalidEnvelope( );
 }

@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.dict;
 
 import javax.xml.namespace.QName;
 
+import org.deegree.model.spatialschema.GeometryException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -49,6 +50,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 /**
  * Another feature implementation used by the dictionary catalog.
@@ -219,4 +221,128 @@ public class DictionaryFeature implements Feature
     m_feature.invalidEnvelope();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
+   */
+  @Override
+  public GM_Envelope getBoundedBy( ) throws GeometryException
+  {
+    return m_feature.getBoundedBy();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
+   */
+  @Override
+  public GM_Object getDefaultGeometryPropertyValue( )
+  {
+    return m_feature.getDefaultGeometryPropertyValue();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
+   */
+  @Override
+  public GM_Object[] getGeometryPropertyValues( )
+  {
+    return m_feature.getGeometryPropertyValues();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
+   */
+  @Override
+  public Feature getOwner( )
+  {
+    return m_feature.getOwner();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
+   */
+  @Override
+  public QName getQualifiedName( )
+  {
+    return m_feature.getQualifiedName();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
+   */
+  @Override
+  public void setEnvelopesUpdated( )
+  {
+    m_feature.setEnvelopesUpdated();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  @Override
+  public void setFeatureType( IFeatureType ft )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
+   */
+  @Override
+  public void setId( String fid )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    return NamedFeatureHelper.getName( m_feature );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( final String name )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return NamedFeatureHelper.getDescription( m_feature );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( final String desc )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
+  public GM_Object getLocation( )
+  {
+    Object property = m_feature.getProperty( NamedFeatureHelper.GML_LOCATION );
+    if( property instanceof GM_Object )
+      return (GM_Object) property;
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public void setLocation( final GM_Object location )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
 }

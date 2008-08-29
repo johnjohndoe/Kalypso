@@ -118,14 +118,12 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
 
   public void add( final int index, final FWCls element )
   {
-    final Feature f = element.getFeature();
-    getFeatureList().add( index, f );
+    getFeatureList().add( index, element );
   }
 
   public boolean add( final FWCls o )
   {
-    final Feature f = o.getFeature();
-    return getFeatureList().add( f );
+    return getFeatureList().add( o );
   }
 
   public FWCls addNew( final QName newChildType )
@@ -323,7 +321,7 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
   {
     if( o instanceof IFeatureBinding )
     {
-      return getFeatureList().lastIndexOf( ((IFeatureBinding) o).getFeature() );
+      return getFeatureList().lastIndexOf( (o) );
     }
     else
     {
@@ -344,7 +342,7 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
 
       public void add( final FWCls o )
       {
-        lit.add( o.getFeature() );
+        lit.add( o );
       }
 
       public boolean hasNext( )
@@ -388,7 +386,7 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
 
       public void set( final FWCls o )
       {
-        lit.set( o.getFeature() );
+        lit.set( o );
       }
 
     };
@@ -404,9 +402,9 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
   {
     if( o instanceof IFeatureBinding )
     {
-      boolean removed = getFeatureList().remove( ((IFeatureBinding) o).getFeature() );
+      boolean removed = getFeatureList().remove( (o) );
       if( !removed )
-        removed = getFeatureList().remove( ((IFeatureBinding) o).getFeature().getId() );
+        removed = getFeatureList().remove( (o) );
       return removed;
     }
     else if( o instanceof String )
@@ -435,9 +433,8 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
   public FWCls set( final int index, final FWCls element )
   {
     final FWCls r = get( index );
-    final Feature f = element.getFeature();
 
-    getFeatureList().set( index, f );
+    getFeatureList().set( index, element );
     return r;
   }
 
@@ -534,7 +531,7 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
   {
     if( toRemove == null )
       return;
-    final String gmlID = toRemove.getGmlID();
+    final String gmlID = toRemove.getId();
     getFeatureList().remove( gmlID );
   }
 
@@ -543,7 +540,7 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
    */
   public boolean addRef( final FWCls toAdd ) throws IllegalArgumentException
   {
-    final String gmlID = toAdd.getGmlID();
+    final String gmlID = toAdd.getId();
     // TODO: this can cause major performance leaks
     if( getFeatureList().contains( gmlID ) )
     {
@@ -567,7 +564,7 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
-        final GM_Object prop = feature.getFeature().getDefaultGeometryProperty();
+        final GM_Object prop = feature.getDefaultGeometryProperty();
         if( containedOnly )
         {
           if( selectionSurface.contains( prop ) )
@@ -640,7 +637,7 @@ public class FeatureBindingCollection<FWCls extends IFeatureBinding> implements 
   public void cloneInto( final FWCls toClone ) throws Exception
   {
     final IRelationType relationType = getFeatureList().getParentFeatureTypeProperty();
-    FeatureHelper.cloneFeature( m_featureCollection, relationType, toClone.getFeature() );
+    FeatureHelper.cloneFeature( m_featureCollection, relationType, toClone );
   }
 
   public void addSecondaryWrapper( final Class<FWCls> secondaryWrapper )
