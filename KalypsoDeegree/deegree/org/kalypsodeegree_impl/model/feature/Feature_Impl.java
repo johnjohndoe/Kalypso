@@ -40,6 +40,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.deegree.model.spatialschema.GeometryException;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -51,6 +52,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -69,9 +71,9 @@ public class Feature_Impl extends AbstractFeature
    */
   private final Object[] m_properties;
 
-  private final IFeatureType m_featureType;
+  private IFeatureType m_featureType;
 
-  private final String m_id;
+  private String m_id;
 
   private Object m_parent = null;
 
@@ -123,8 +125,8 @@ public class Feature_Impl extends AbstractFeature
   /**
    * Accesses a property value of this feature.
    * 
-   * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be embedded in
-   *         java.util.List-objects
+   * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
+   *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
    */
   public Object getProperty( final IPropertyType pt )
@@ -134,7 +136,7 @@ public class Feature_Impl extends AbstractFeature
 
     final int pos = m_featureType.getPropertyPosition( pt );
     final IFeaturePropertyHandler fsh = getPropertyHandler();
-    if( pos == -1 && !fsh.isFunctionProperty( pt ))
+    if( pos == -1 && !fsh.isFunctionProperty( pt ) )
     {
       final String msg = String.format( "Unknown property (%s) for type: %s", pt, m_featureType );
       throw new IllegalArgumentException( msg );
@@ -150,24 +152,7 @@ public class Feature_Impl extends AbstractFeature
    */
   public GM_Object[] getGeometryProperties( )
   {
-    final List<GM_Object> result = new ArrayList<GM_Object>();
-    final IPropertyType[] ftp = m_featureType.getProperties();
-    for( final IPropertyType element : ftp )
-    {
-      if( element instanceof IValuePropertyType && ((IValuePropertyType) element).isGeometry() )
-      {
-        final Object o = getProperty( element );
-        if( o == null )
-          continue;
-
-        if( element.isList() )
-          result.addAll( (List) o );
-        else
-          result.add( (GM_Object) o );
-      }
-    }
-
-    return result.toArray( new GM_Object[result.size()] );
+    return getGeometryPropertyValues();
   }
 
   /**
@@ -175,21 +160,7 @@ public class Feature_Impl extends AbstractFeature
    */
   public GM_Object getDefaultGeometryProperty( )
   {
-    final IValuePropertyType defaultGeomProp = m_featureType.getDefaultGeometryProperty();
-    if( defaultGeomProp == null )
-      return null;
-
-    final Object prop = getProperty( defaultGeomProp );
-    if( defaultGeomProp.isList() )
-    {
-      final List props = (List) prop;
-      return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
-    }
-
-    if( prop == null || prop instanceof GM_Object )
-      return (GM_Object) prop;
-
-    throw new IllegalStateException( "Wrong geometry type: " + prop.getClass().getName() );
+    return getDefaultGeometryPropertyValue();
   }
 
   /**
@@ -197,11 +168,16 @@ public class Feature_Impl extends AbstractFeature
    */
   public GM_Envelope getEnvelope( )
   {
-    if( m_envelope == Feature_Impl.INVALID_ENV )
+    try
     {
-      calculateEnv();
+      return getBoundedBy();
     }
-    return m_envelope;
+    catch( GeometryException e )
+    {
+      e.printStackTrace();
+
+      return null;
+    }
   }
 
   private void calculateEnv( )
@@ -223,28 +199,9 @@ public class Feature_Impl extends AbstractFeature
     m_envelope = env;
   }
 
-  // TODO: make it private again?
   public void invalidEnvelope( )
   {
-    m_envelope = INVALID_ENV;
-
-    /* Invalidate geo-index of all feature-list which contains this feature. */
-    // TODO: At the moment, only the owning list is invalidated. Lists who link to this feature are invald but not
-    // invalidated.
-    // TODO: This code is probably not very performant. How to improve this?
-    // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
-    final Feature parent = getParent();
-    if( parent == null )
-      return;
-
-    final IRelationType rt = getParentRelation();
-    if( (rt != null) && rt.isList() )
-    {
-      // rt relation type and this relation type can differ (differnt feature workspaces!)
-      final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );
-      final FeatureList list = (FeatureList) parent.getProperty( relation );
-      list.invalidate( this );
-    }
+    setEnvelopesUpdated();
   }
 
   /**
@@ -329,9 +286,7 @@ public class Feature_Impl extends AbstractFeature
    */
   public Feature getParent( )
   {
-    if( m_parent instanceof Feature )
-      return (Feature) m_parent;
-    return null;
+    return getOwner();
   }
 
   /**
@@ -403,4 +358,186 @@ public class Feature_Impl extends AbstractFeature
     return propertyHandler.isFunctionProperty( pt );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
+   */
+  @Override
+  public GM_Envelope getBoundedBy( ) throws GeometryException
+  {
+    if( m_envelope == Feature_Impl.INVALID_ENV )
+    {
+      calculateEnv();
+    }
+
+    return m_envelope;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
+   */
+  @Override
+  public GM_Object getDefaultGeometryPropertyValue( )
+  {
+    final IValuePropertyType defaultGeomProp = m_featureType.getDefaultGeometryProperty();
+    if( defaultGeomProp == null )
+      return null;
+
+    final Object prop = getProperty( defaultGeomProp );
+    if( defaultGeomProp.isList() )
+    {
+      final List props = (List) prop;
+      return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
+    }
+
+    if( prop == null || prop instanceof GM_Object )
+      return (GM_Object) prop;
+
+    throw new IllegalStateException( "Wrong geometry type: " + prop.getClass().getName() );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
+   */
+  @Override
+  public GM_Object[] getGeometryPropertyValues( )
+  {
+    final List<GM_Object> result = new ArrayList<GM_Object>();
+    final IPropertyType[] ftp = m_featureType.getProperties();
+    for( final IPropertyType element : ftp )
+    {
+      if( element instanceof IValuePropertyType && ((IValuePropertyType) element).isGeometry() )
+      {
+        final Object o = getProperty( element );
+        if( o == null )
+          continue;
+
+        if( element.isList() )
+          result.addAll( (List) o );
+        else
+          result.add( (GM_Object) o );
+      }
+    }
+
+    return result.toArray( new GM_Object[result.size()] );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
+   */
+  @Override
+  public Feature getOwner( )
+  {
+    if( m_parent instanceof Feature )
+      return (Feature) m_parent;
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
+   */
+  @Override
+  public QName getQualifiedName( )
+  {
+    return getFeatureType().getQName();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
+   */
+  @Override
+  public void setEnvelopesUpdated( )
+  {
+    m_envelope = INVALID_ENV;
+
+    /* Invalidate geo-index of all feature-list which contains this feature. */
+    // TODO: At the moment, only the owning list is invalidated. Lists who link to this feature are invald but not
+    // invalidated.
+    // TODO: This code is probably not very performant. How to improve this?
+    // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
+    final Feature parent = getParent();
+    if( parent == null )
+      return;
+
+    final IRelationType rt = getParentRelation();
+    if( (rt != null) && rt.isList() )
+    {
+      // rt relation type and this relation type can differ (differnt feature workspaces!)
+      final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );
+      final FeatureList list = (FeatureList) parent.getProperty( relation );
+      list.invalidate( this );
+    }
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  @Override
+  public void setFeatureType( IFeatureType ft )
+  {
+    m_featureType = ft;
+
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
+   */
+  @Override
+  public void setId( String fid )
+  {
+    m_id = fid;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    return NamedFeatureHelper.getName( this );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( final String name )
+  {
+    NamedFeatureHelper.setName( this, name );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return NamedFeatureHelper.getDescription( this );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( final String desc )
+  {
+    NamedFeatureHelper.setDescription( this, desc );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
+  public GM_Object getLocation( )
+  {
+    Object property = getProperty( NamedFeatureHelper.GML_LOCATION );
+    if( property instanceof GM_Object )
+      return (GM_Object) property;
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public void setLocation( final GM_Object location )
+  {
+    setProperty( NamedFeatureHelper.GML_LOCATION, location );
+  }
 }

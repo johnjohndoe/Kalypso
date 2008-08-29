@@ -39,6 +39,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.deegree.model.spatialschema.GeometryException;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -47,6 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 /**
  * A Feature implementation wich delegates all calls to another feature, proved by a feature provider.
@@ -68,7 +70,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
 
   private final String m_uri;
 
-  private final String m_featureId;
+  private String m_featureId;
 
   private final String m_role;
 
@@ -208,7 +210,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
    */
   public GM_Object[] getGeometryProperties( )
   {
-    return getFeature().getGeometryProperties();
+    return getGeometryPropertyValues();
   }
 
   /**
@@ -216,7 +218,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
    */
   public GM_Object getDefaultGeometryProperty( )
   {
-    return getFeature().getDefaultGeometryProperty();
+    return getDefaultGeometryPropertyValue();
   }
 
   /**
@@ -224,11 +226,16 @@ public class XLinkedFeature_Impl extends AbstractFeature
    */
   public GM_Envelope getEnvelope( )
   {
-    final Feature feature = getFeature();
-    if( feature == null )
-      return null;
+    try
+    {
+      return getBoundedBy();
+    }
+    catch( GeometryException e )
+    {
+      e.printStackTrace();
 
-    return feature.getEnvelope();
+      return null;
+    }
   }
 
   /**
@@ -292,7 +299,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
    */
   public Feature getParent( )
   {
-    return m_parentFeature;
+    return getOwner();
   }
 
   /**
@@ -328,9 +335,7 @@ public class XLinkedFeature_Impl extends AbstractFeature
    */
   public void invalidEnvelope( )
   {
-    final Feature feature = getFeature();
-    if( feature != null )
-      feature.invalidEnvelope();
+    setEnvelopesUpdated();
   }
 
   public String getHref( )
@@ -404,5 +409,136 @@ public class XLinkedFeature_Impl extends AbstractFeature
   public String getFeatureId( )
   {
     return m_featureId;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
+   */
+  @Override
+  public GM_Envelope getBoundedBy( ) throws GeometryException
+  {
+    final Feature feature = getFeature();
+    if( feature == null )
+      return null;
+
+    return feature.getBoundedBy();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
+   */
+  @Override
+  public GM_Object getDefaultGeometryPropertyValue( )
+  {
+    return getFeature().getDefaultGeometryPropertyValue();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
+   */
+  @Override
+  public GM_Object[] getGeometryPropertyValues( )
+  {
+    return getFeature().getGeometryPropertyValues();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
+   */
+  @Override
+  public Feature getOwner( )
+  {
+    return m_parentFeature;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
+   */
+  @Override
+  public QName getQualifiedName( )
+  {
+    return getFeatureType().getQName();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
+   */
+  @Override
+  public void setEnvelopesUpdated( )
+  {
+    final Feature feature = getFeature();
+    if( feature != null )
+      feature.invalidEnvelope();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
+  @Override
+  public void setFeatureType( IFeatureType ft )
+  {
+    m_featureType = ft;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
+   */
+  @Override
+  public void setId( String fid )
+  {
+    m_featureId = fid;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    return NamedFeatureHelper.getName( getFeature() );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( final String name )
+  {
+    NamedFeatureHelper.setName( getFeature(), name );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return NamedFeatureHelper.getDescription( getFeature() );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( final String desc )
+  {
+    NamedFeatureHelper.setDescription( getFeature(), desc );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
+  public GM_Object getLocation( )
+  {
+    Object property = getFeature().getProperty( NamedFeatureHelper.GML_LOCATION );
+    if( property instanceof GM_Object )
+      return (GM_Object) property;
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public void setLocation( final GM_Object location )
+  {
+    getFeature().setProperty( NamedFeatureHelper.GML_LOCATION, location );
   }
 }
