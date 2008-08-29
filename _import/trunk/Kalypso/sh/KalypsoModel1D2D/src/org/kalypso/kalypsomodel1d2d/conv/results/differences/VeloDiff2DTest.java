@@ -84,9 +84,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
  * <br>
  * result file 1, result file 2, template file, output file, parameter<br>
  * 
- * 
  * @author Thomas Jung
- * 
  */
 public class VeloDiff2DTest extends TestCase
 {
@@ -118,7 +116,7 @@ public class VeloDiff2DTest extends TestCase
       handler.end();
       is.close();
     }
-    catch( RuntimeException e )
+    catch( final RuntimeException e )
     {
       e.printStackTrace();
     }
@@ -169,12 +167,19 @@ public class VeloDiff2DTest extends TestCase
     // ICalcUnitResultMeta resultMeta = new CalcUnitResultMeta(null);
 
     System.out.println( "processing input result files..." );
-    processResults( resultFile1.getLocation().toFile(), resultFile2.getLocation().toFile(), parameters, outputDir1, outputDir2 );
+    File file1 = resultFile1.getLocation().toFile();
+    File file2 = resultFile2.getLocation().toFile();
+
+    file1 = new File( "C:\\users\\jung\\temp\\glw_100_b39.2d" );
+    file2 = new File( "C:\\users\\jung\\temp\\glw_ref_t5.2d" );
+
+    processResults( file1, file2, parameters, outputDir1, outputDir2 );
 
     final File outputFile = new File( outputDir2, "output.2d" );
-    final File template = templateFile.getLocation().toFile();
+    final File template = file2;
+// File template = templateFile.getLocation().toFile();
 
-    boolean parallel = true;
+    final boolean parallel = true;
     if( parallel == true )
     {
       final File outputFileParallel = new File( outputDir2, "output_para.2d" );
@@ -189,7 +194,7 @@ public class VeloDiff2DTest extends TestCase
     }
   }
 
-  private static GM_TriangulatedSurface getSurfaces( final File outputDir, TYPE resultType ) throws Exception
+  private static GM_TriangulatedSurface getSurfaces( final File outputDir, final TYPE resultType ) throws Exception
   {
     File gmlFile = null;
 
@@ -202,7 +207,7 @@ public class VeloDiff2DTest extends TestCase
     final URL url = gmlFile.toURL();
 
     // REMARK 1: loads the source tin directly into memory.... will bring performance problems...
-    GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
+    final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( url, null );
 
     final Feature rootFeature = workspace.getRootFeature();
     final GM_TriangulatedSurface surface = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "triangulatedSurfaceMember" ) );

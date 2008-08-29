@@ -54,7 +54,6 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.FormatterUtils;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
-import org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -62,7 +61,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHandler
 {
@@ -81,7 +79,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
 
   private GM_Position m_nodePos;
 
-  public DifferenceResultModel1d2dHandler( final File outputFile, GM_TriangulatedSurface[] minuendSurfaces, GM_TriangulatedSurface[] subtrahentSurfaces, TYPE[] types, org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE differenceType )
+  public DifferenceResultModel1d2dHandler( final File outputFile, final GM_TriangulatedSurface[] minuendSurfaces, final GM_TriangulatedSurface[] subtrahentSurfaces, final TYPE[] types, final org.kalypso.kalypsomodel1d2d.conv.results.differences.ResultCalculatorType.TYPE differenceType )
   {
     m_minuendSurfaces = minuendSurfaces;
     m_subtrahentSurfaces = subtrahentSurfaces;
@@ -94,7 +92,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
       // so no locale parameter for each format is needed any more .
       m_formatter = new Formatter( outputFile, Charset.defaultCharset().name(), Locale.US );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -112,7 +110,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
       {
         FormatterUtils.checkIoException( m_formatter );
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         e.printStackTrace();
       }
@@ -136,7 +134,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handle1dJunctionInformation(java.lang.String,
    *      int, java.util.List)
    */
-  public void handle1dJunctionInformation( String line, int junctionId, List<Integer> junctionNodeIDList )
+  public void handle1dJunctionInformation( final String line, final int junctionId, final List<Integer> junctionNodeIDList )
   {
     m_formatter.format( "%s%n", line );
   }
@@ -145,7 +143,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleArc(java.lang.String, int, int, int, int,
    *      int, int)
    */
-  public void handleArc( String lineString, int id, int node1ID, int node2ID, int elementLeftID, int elementRightID, int middleNodeID )
+  public void handleArc( final String lineString, final int id, final int node1ID, final int node2ID, final int elementLeftID, final int elementRightID, final int middleNodeID )
   {
     m_formatter.format( "%s%n", lineString );
   }
@@ -154,7 +152,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleElement(java.lang.String, int, int, int,
    *      int)
    */
-  public void handleElement( String lineString, int id, int currentRougthnessClassID, int previousRoughnessClassID, int eleminationNumber )
+  public void handleElement( final String lineString, final int id, final int currentRougthnessClassID, final int previousRoughnessClassID, final int eleminationNumber )
   {
     m_formatter.format( "%s%n", lineString );
   }
@@ -163,7 +161,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleError(java.lang.String,
    *      org.kalypso.kalypsomodel1d2d.conv.EReadError)
    */
-  public void handleError( String lineString, EReadError errorHints )
+  public void handleError( final String lineString, final EReadError errorHints )
   {
     m_formatter.format( "%s%n", lineString );
   }
@@ -172,7 +170,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleFlowResitance(java.lang.String, int,
    *      double, double, double)
    */
-  public void handleFlowResitance( String line, int id, double combinedLambda, double soilLambda, double vegetationLambda )
+  public void handleFlowResitance( final String line, final int id, final double combinedLambda, final double soilLambda, final double vegetationLambda )
   {
     m_formatter.format( "%s%n", line );
   }
@@ -181,7 +179,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleJunction(java.lang.String, int, int, int,
    *      int)
    */
-  public void handleJunction( String line, int junctionID, int element1dID, int boundaryLine2dID, int node1dID )
+  public void handleJunction( final String line, final int junctionID, final int element1dID, final int boundaryLine2dID, final int node1dID )
   {
     m_formatter.format( "%s%n", line );
   }
@@ -190,7 +188,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNode(java.lang.String, int, double, double,
    *      double)
    */
-  public void handleNode( String lineString, int id, double easting, double northing, double elevation )
+  public void handleNode( final String lineString, final int id, final double easting, final double northing, final double elevation )
   {
     m_formatter.format( "%s%n", lineString );
 
@@ -203,7 +201,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleNodeInformation(java.lang.String, int, int,
    *      double, double, double, double)
    */
-  public void handleNodeInformation( String line, int id, int dry, double value1, double value2, double value3, double value4 )
+  public void handleNodeInformation( final String line, final int id, final int dry, final double value1, final double value2, final double value3, final double value4 )
   {
     m_formatter.format( "%s%n", line );
   }
@@ -212,21 +210,26 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleResult(java.lang.String, int, double,
    *      double, double, double)
    */
-  public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel )
+  public void handleResult( final String lineString, final int id, double vx, double vy, double depth, double waterlevel )
   {
     Assert.isLegal( id == m_lastnodeID );
 
     final Map<TYPE, Double> valueMap = calculateDifferences( m_minuendSurfaces, m_subtrahentSurfaces, m_nodePos, m_resultTypes );
 
-    // get the vector values of the difference vector
+    // get the vector values of the difference vector (minuend - subtrahent)
     final Double diffVx = valueMap.get( ResultType.TYPE.VELOCITY_X );
     final Double diffVy = valueMap.get( ResultType.TYPE.VELOCITY_Y );
 
     // get the vector values of all vectors (we assume, that surface 0 is X-direction and surface 1 is Y-direction)
-    final double mainX = m_minuendSurfaces[0].getValue( m_nodePos );
-    final double mainY = m_minuendSurfaces[1].getValue( m_nodePos );
     final double secondaryX = m_subtrahentSurfaces[0].getValue( m_nodePos );
     final double secondaryY = m_subtrahentSurfaces[1].getValue( m_nodePos );
+
+    // calculate the vector values for the projected vector
+    final double faktorParallel = ((diffVx) * secondaryX + (diffVy) * secondaryY) / (secondaryX * secondaryX + secondaryY * secondaryY);
+
+    // calculate the vector values for the orthogonal part
+    final Double diffMainParallelX = faktorParallel * secondaryX;
+    final Double diffMainParallelY = faktorParallel * secondaryY;
 
     switch( m_differenceType )
     {
@@ -240,34 +243,28 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
       case VECTOR_DIFFERENCE_ORTHOGONAL:
 
         /* calculate the orthogonal projection on the main vector */
-        // calculate the vector projection factor for the parallel part
-        final double faktor = (secondaryX * mainX + secondaryY * mainY) / (mainX * mainX + mainY * mainY);
 
-        // calculate the vector values for the projected vector
-        final Double diffMainParallelX = faktor * mainX;
-        final Double diffMainParallelY = faktor * mainY;
+        if( !Double.isNaN( faktorParallel ) )
+        {
+          final Double diffMainOrthoX = diffVx - diffMainParallelX;
+          final Double diffMainOrthoY = diffVy - diffMainParallelY;
 
-        // calculate the vector values for the orthogonal part
-        final Double diffMainOrthoX1 = secondaryX - diffMainParallelX;
-        final Double diffMainOrthoY1 = secondaryY - diffMainParallelY;
-
-        vx = diffMainOrthoX1 == null ? vx : diffMainOrthoX1;
-        vy = diffMainOrthoY1 == null ? vx : diffMainOrthoY1;
+          vx = diffMainOrthoX == null ? vx : diffMainOrthoX;
+          vy = diffMainOrthoY == null ? vx : diffMainOrthoY;
+        }
 
         break;
 
       case VECTOR_DIFFERENCE_PARALLEL:
 
-        // calculate the vector projection factor for the parallel part
-        final double faktorParallel = ((-diffVx) * mainX + (-diffVy) * mainY) / (mainX * mainX + mainY * mainY);
+        vx = diffMainParallelX == null ? vx : diffMainParallelX;
+        vy = diffMainParallelY == null ? vy : diffMainParallelY;
 
-        // calculate the vector values for the projected vector
-        final Double diffMainParallelX2 = faktorParallel * mainX;
-        final Double diffMainParallelY2 = faktorParallel * mainY;
+        break;
 
-        vx = diffMainParallelX2 == null ? vx : diffMainParallelX2;
-        vy = diffMainParallelY2 == null ? vy : diffMainParallelY2;
+      default:
 
+        System.out.println( "chosen difference type not implemented." );
         break;
     }
 
@@ -289,7 +286,8 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   }
 
   /**
-   * Calculates the difference values of all given result types for the current position and returns them as a map.
+   * Calculates the difference values of all given result types for the current position and returns them as a map. The
+   * differences is computed as follows: minuend - subtrahent
    * 
    * @param minuendSurfaces
    *          the tins from which it will be substracted
@@ -323,7 +321,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTime(java.lang.String, java.util.Date)
    */
-  public void handleTime( String line, Date time )
+  public void handleTime( final String line, final Date time )
   {
     m_formatter.format( "%s%n", line );
   }
@@ -331,7 +329,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handlerUnIdentifyable(java.lang.String)
    */
-  public void handlerUnIdentifyable( String lineString )
+  public void handlerUnIdentifyable( final String lineString )
   {
     m_formatter.format( "%s%n", lineString );
   }
@@ -339,7 +337,7 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   /**
    * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#setIRoughnessIDProvider(org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider)
    */
-  public void setIRoughnessIDProvider( IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
+  public void setIRoughnessIDProvider( final IRoughnessIDProvider roughnessIDProvider ) throws IllegalArgumentException
   {
     // TODO Auto-generated method stub
 
