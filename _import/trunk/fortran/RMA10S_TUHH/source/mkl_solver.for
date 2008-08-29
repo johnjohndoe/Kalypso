@@ -1,30 +1,93 @@
-c void superlu_s_(int *order, int *ordering,
-c	      int *threads, int *N, int *column, int *row, float *value, 
-c	      float *x, int *info)
-      
-      
-      
+
+
       subroutine mkl_solver(  NPROCS, NSZF,
-     &             icol, irow, a, b, x, IERROR )
+     &             icol, irow, a, b, x, IERROR, nOfEntriesInQs )
 
       include 'PARAM.COM'
 c      save ipt, perm
 c      include 'mkl_pardiso.f77'
       
-      integer*8 ipt(64)
-C      integer*8 ipt(64)
-      integer*8 iparm(64)
-      integer*8 irow(*), icol(*)
+      integer :: nOfEntriesInQs, nOfEntriesInQsOld
+      !32 bit OS
+      !---------
+      integer(kind = 4) :: ipt(64)
+      !64 bit OS
+      !---------
+      !integer*8 ipt(64)
       
-      integer (kind = 8) :: ia(MR1SIZ+1), ja(NBUFFSIZ)
-      integer (kind = 8) :: perm(MR1SIZ)
       
-      real*8 a(*), b(*), x(*)
-      real*8 da(NBUFFSIZ), db(MR1SIZ), dx(MR1SIZ)
+      
+      !data for pardiso
+      !----------------
+
+      !-----
+      !input
+      !-----
+      !ipt(64) :: memory address pointer, which is initialized with zero
+      !maxfct  :: maximum number of factors with identical nonzewo sparsity stucture; usually 1; trials necessary
+      !mnum    :: matrix to be factorized; it must be 1 <= mnum <= maxfct
+      !mtype   :: type of the matrix to be solved; in our case it is a real unsymmetric matrix; mtype = 11
+      !phase   :: phase of the solving process; first run needs to be the Analysis (phase = 11); second run needs to be the numerical fatorization, solving and linear refinement (phase = 23)
+      !n       :: number of equations in the matrix (n = nszf)
+      !a, ia and ib describe the matrix storage format for non-symmetric matrices to be put into pardiso; the documentation of MKL has the detailed informations
+       ! - - - - - - - - - - - - - - - - - - - 
+       !a      :: vector of all non-zero entries in the matrix; row by row
+       !ja     :: stores the number of the occurance of a certain a-vector entry in the line
+       !ia     :: stores the index for array a, which is always the first entry in a new row; the last additional entry must be the number of entries of a plus one (lenght(a)+1)
+       !     a and ja must have equal size
+       !     ia is large as the number of rows+1
+      !perm    :: user fill-in permuation; switched off, if parm(5) = 1; here parm(5) = 0
+      !nrhs    :: right hand sides to be solved; here always 1
+      !iparm   :: 64 parameters to be passed for different purposes
+        !(1) :: 1 - user defined settings
+        !(2) :: 0 - minimum degree algorithm
+        !       2 - nested dissection algorithm from METIS
+        !(3) :: number of processors; must be the same as MKL_NUM_THREADS (environment variable)
+        !(4) :: 0 - factorization computation as required by phase
+        !       other values for experienced users
+        !(5) :: 0 - for no user permuation
+        !       other values for experienced users; regarding some other reordering algorithms
+        !(6) :: 0 - write results to vector x, don't change vector b
+        !       1 - write results to vector b, x is used as dummy anyway
+        !(8) :: maximum number of refinement steps for iterative procedure
+        !(9) :: future use reservation; has to have the value 0
+        !(10):: perturbation accuracy exponent for pivoting (1e-iparm(10))
+        !(11):: 1 - default value for unsymmetric matrices; for permutation
+        !       0 - default value for symmetric matrices; for permutation
+        !(12):: reserved for future use; must be zero
+        !(13):: 
+        !... to be continued
+       !msglvl :: message level 1 - print out statistical informations
+       !                       0 - don't print anything
+       !b      :: right hand side vector and output vector if iparm(6) = 0
+       !------
+       !output
+       !------
+       !pt     :: internal address pointers; DO NOT CHANGE after initialization
+       !iparm  :: 64 parameters to be passed for different purposes 
+       ! (... to be continued
+       !x      :: output vector, if iparm(6)=1
+       !error  :: error (see documentatio for details!)
+
+
+      !general parameters passed to PARDISO
+      integer (kind = 4) :: iparm(64)
+      
+      !values of ia and ja for the unsorted matrix a
+      integer (kind = 4) :: irow(*), icol(*)
+      
+      !ia and ja are position pointers for the line-matrix (see documentation below)
+      integer (kind = 4) :: ia(MR1SIZ+1), ja(NBUFFSIZ)
+      integer (kind = 4) :: perm(MR1SIZ)
+      
+      !a, b and x are matrix, right-side vector and result vector
+      real (kind = 8) :: a(*), b(*), x(*)
+      real (kind = 8) :: da(NBUFFSIZ), db(MR1SIZ), dx(MR1SIZ)
+      !
       real*8 dum
       real*8 ddum
       
-      common /blk_mkl/  ipt, perm, nzzold, nszfold
+      common /blk_mkl/  ipt, perm, nzzold, nszfold, nOfEntriesInQsOld
       
       data ifirst /0/
       
@@ -62,29 +125,25 @@ c    iparm = 0 --> use defaults
          
         iparm(3) = NPROCS ! numbers of processors
       endif
-      !testing
-      do n=1,20
-        write(194,*) iparm(n)
-      enddo
-      !testing-
       
-      !nis,com: first run of mkl_solver.sub
+      !first run of mkl_solver.sub; some values need to be initialized
       if ( ifirst .eq. 0 )  then
-         ipt = 0
          nzzold = 0
          nszfold = 0
+         nOfEntriesInQsOld = 0
          ifirst = 1
       endif
-
-      
       nzz = icol(nszf+1) 
       do i=1,nzz
          da(i) = 0.
          ja(i) = 0
       enddo
      
+
       do i=1,nzz
+        !copy matrix-vector to local da-array
         da(i) = a(i)
+        !copy the initial non zero-entry of the row i in the global matrix; see MKL (PARDISO) documenation for details
         ja(i) = irow(i)
       enddo
       
@@ -95,43 +154,18 @@ c    iparm = 0 --> use defaults
       enddo
       
       do i=1,nszf
+         !ia holds the column of the non-zero entry in the matrix row; see documentation of MKL (PARDISO) for details
          ia(i) = icol(i)
+         !copy right side vector to local db-array
          db(i) = b(i)
+         !dx will become the result vector
          dx(i) = 0.
       enddo
-
-      !testing
-      do j=1,nzz
-        write(195,*) j,da(j),ja(j)
-      enddo
-      do j=1,nszf
-        write(196,*) j,ia(j)
-      enddo
-      pause
-c     if(ifirst .lt. 2) stop
-      !testing-
-        
-      
-      
-c      do n=1,nszf
-c	  write(299,'(2i10)') n,ia(n)
-c	enddo
-      
       
       
 C  Need to sort ja so that for the row, the column indices are in increasing value
       ia(nszf+1) =  nzz
-      !testing
-      open (123, file='testfile.txt')
-      !testing-
       do i=1,nszf
-
-        !testing
-        write(123, *) i, nszf, ia(i), ja(ia(i))
-        call flush (123)
-        !-
-      
-      
          if ( ia(i) .eq. 0 )  then
             write(75,*) ' ia(i) eq 0, i=', i
             write(75,*) ' nszf = ', nszf
@@ -141,33 +175,28 @@ C  Need to sort ja so that for the row, the column indices are in increasing val
          endif
          nsort = ia(i+1) - ia(i)
          call mysort( ja(ia(i)), da(ia(i)), nsort)
-       
       enddo         
       
       
+      !set number of equations to be solved in pardiso
       n = nszf
       
+      !parameters for PARDISO; see documentation above or for MKL (PARDISO)
       nrhs = 1
-      
       maxfct = 1
       mnum = 1
       mtype = 11
       ierror = 0
-      
       iphase = 11
       
-      if ( nzzold .ne. nzz .or.
-     &    nszfold .ne. nszf )  then
+      if ( nzzold /= nzz .or. nszfold /= nszf ) then
         ifirst = 1
-            write(*,*) ' nszf, nszfold = ', nszf, nszfold
-            write(*,*) ' nzz, nzzold   = ', nzz, nzzold
-       
-      else
-c        iparm(4) = 51
-            write(*,*) ' nszf, nszfold = ', nszf, nszfold
-            write(*,*) ' nzz, nzzold   = ', nzz, nzzold
-
       endif
+
+      !Informations concerning number of equations
+      write(*,*) ' nszf, nszfold = ', nszf, nszfold
+      write(*,*) ' nzz, nzzold   = ', nzz, nzzold
+      write(*,*) ' InQs, InQsOld = ', nOfEntriesInQs, nOfEntriesInQsOld
       
 c      ifirst=1
 
@@ -175,15 +204,12 @@ c      ifirst=1
        
       if ( ifirst .lt. 2 ) then
       
-c         do i=1,mr1
-c             perm(i) =  0
-c         enddo
-C        if(iparm(5) .eq. 0) then
+         ipt = 0
 
-!          call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
-!     &          da, ia, ja, perm, nrhs, iparm, msglvl,
+          call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
+     &          da, ia, ja, perm, nrhs, iparm, msglvl,
 c     &          db, dx, ierror )
-!     &          ddum, ddum, ierror )
+     &          ddum, ddum, ierror )
      
           if ( ierror .ne. 0 ) then
             write(75,*) 'Error phase 11 ', ierror
@@ -208,9 +234,9 @@ c        return
       iphase = 23
       ierror = 0
       
-!      call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
-!     &          da, ia, ja, perm, nrhs, iparm, msglvl,
-!     &          db, dx, ierror )
+      call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
+     &          da, ia, ja, perm, nrhs, iparm, msglvl,
+     &          db, dx, ierror )
 
       if ( ierror .ne. 0 ) then
         write(75,*) 'Error phase 33 ', ierror
@@ -229,11 +255,15 @@ c      write(210,'(2i10)') (i,iparm(i),i=1,23)
       
       nzzold = nzz
       nszfold = nszf
+      nOfEntriesInQsOld = nOfEntriesInQs
       
       end
-C
-C        General purpose subroutines
-C
+
+
+
+!-------------------------------------------------------
+!subroutine to sort the matrix-vector in ascending order
+!-------------------------------------------------------
       SUBROUTINE MYSORT (IX, Y, N)
 C
 C        ALGORITHM AS 304.8 APPL.STATIST. (1996), VOL.45, NO.3
@@ -241,7 +271,7 @@ C
 C        Sorts the N values stored in array X in ascending order
 C
       INTEGER :: N
-      integer (kind = 8) :: ix(n)
+      integer (kind = 4) :: ix(n)
       real (kind = 8) :: y(N)
 C
       INTEGER I, J, INCR

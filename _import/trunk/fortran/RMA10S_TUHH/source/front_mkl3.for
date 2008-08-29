@@ -35,7 +35,12 @@ C superLU
 	
 	
 !some comments
-!NLSTEL(J)  :: NLSTEL (J) 
+!NLSTEL(J)  :: NLSTEL (J) is last element, that is necessary to fill the global equation
+!              of degree of freedom J
+
+!NBUFFSIZ   :: size of the memory, that can be used from RMA10S (default definition in param.com to 20000000; user definition in control file!)
+!MFWSIZ     :: seems to be the maximum band width of the matrix (default definition in param.com to 2000)
+!MR1SIZ     :: seems to be the maximum number of free degrees
 	
 C
       IF(ITIME .EQ. 0) THEN
@@ -80,6 +85,8 @@ C
       enddo 
            
       K=NESAV+1
+
+
       DO NN=1,NESAV
         K=K-1
         N=NFIXH(K)
@@ -325,7 +332,7 @@ C-
       LCOL=0
       LROW=0
       LCOLM=MFW
-      LROWM=0
+      lRowMax=0
 c      DO I=1,LCOLM
 c        DO J=1,lcolm
 c          EQQ(J,I)=0.
@@ -353,7 +360,7 @@ C-
       N=NFIXH(NELL)
 C
       IF(IMAT(N).LE.0) GO TO 18
-      NM=IMAT(N)
+      NM=mod(IMAT(N),100)
       IF(NM .LT. 901) THEN
         IF(ORT(NM,1) .EQ. 0. .and. nm /= 89) GO TO 18
       ENDIF
@@ -586,156 +593,233 @@ cipk jan01
           enddo
         endif
       enddo
-      DO I=1,NCN
-        J=NOP(N,I)
-	  IF(J .GT. 0) THEN
-          IA=NDF*(I-1)
-          DO K=1,NDF
-            IA=IA+1
-            JA=NBC(J,K)
-            IF(JA .NE. 0) THEN
-            
-              if ( ja .lt. 0 )  then
+
+
+      !-----------------------------------------------------------
+      !Bring the element residuals into the global residual vector
+      !-----------------------------------------------------------
+      !F(IA)  :: local residual (local degree of freedom) in line IA of element matrix
+      !RR(JA) :: global residual (degree of freedom) in line JA of the global sparse matrix
+      DO I = 1, NCN
+        J = NOP (N, I)
+	  !non-zero node
+	  IF (J > 0) THEN
+          !one step before first degree of freedom at local node is calculated
+          IA = NDF * (I - 1)
+          !k runs through the degrees of freedom of the certain local node
+          DO K = 1, NDF
+            !get the local equation number of degree k at local node I
+            IA = IA + 1
+            !get the global equation number of global degree k at global node J
+            JA = NBC (J, K)
+            !If JA is an active degree; means JA /= 0, fill in local residual in global one!
+            IF (JA /= 0) THEN
+              if (ja < 0 )  then
                 dum = 0
               endif
-              RR(JA)=RR(JA)+F(IA)
+              RR (JA) = RR (JA) + F (IA)
   	      ENDIF
           ENDDO
         ENDIF
 	ENDDO
-      NBN = NCN*NDF
-      DO LK=1,NBN
-c        LDEST(LK)=0
-        NK(LK)=0
+
+      !---------------------------------------------------
+      !reset the NK-array for each local degree of freedom
+      !---------------------------------------------------
+      NBN = NCN * NDF
+      DO LK = 1, NBN
+        NK (LK) = 0
       ENDDO
-      KC=0
+      KC = 0
 
 C     SETUP DESTINATION LOCATION
-
-      DO J=1,NCN
-        I=NOP(N,J)
-        IF(I .EQ. 0) THEN
-          KC=KC+NDF
+      
+      !--------------------------------------------------------------
+      !store a linear array holding for the local degrees of freedom,
+      !linearily counted in the NK-array the global equation number
+      !--------------------------------------------------------------
+      !run through nodes of element
+      DO J = 1, NCN
+        !get global node number
+        I = NOP (N, J)
+        !increase equation counter by number of degree of freedoms, if global node is not existing at that position
+        !ndf-shift
+        IF (I == 0) THEN
+          KC = KC + NDF
+        !if node is existing (i/=0); store the destination location in global matrix
         ELSE
-          DO L=1,NDF
-            LL=NBC(I,L)
-            KC=KC+1
-            NK(KC)=LL
-            IF(LL .NE. 0) THEN
-              IF(NLSTEL(LL) .EQ. N) NK(KC)=-LL
+          !for all degrees of freedom
+          DO L = 1, NDF
+            !global equation number of nodal degree of freedom at node I
+            LL = NBC (I, L)
+            !increase linear local equation counter
+            KC = KC + 1
+            !store global equation number in linearized matrix for global equation numbers
+            !of local equation numbers
+            NK (KC) = LL
+            !set the global equation number in linearized matrix to negative value,
+            !if the current element is the last one to be processed for the solution
+            !of the degree of freedom LL
+            IF (LL /= 0) THEN
+              IF (NLSTEL (LL) == N) NK (KC) = -LL
             ENDIF
           ENDDO
         ENDIF
       ENDDO
+
+
 C
 C     SET UP HEADING VECTORS IF NEEDED
 C
     
-      LFZ=1
-      DO LK=1,NBN
-       LROWT=ABS(NK(LK))
-	 if(lrowt .ne. 0) then
+      !--------------------------------------------------------------------------------------------
+      !Include the local ESTIFMS into the global matrix EQQ; before the global numbering is handled
+      !--------------------------------------------------------------------------------------------
+      !lrowt           = stands for the original global degree of freedom number
+      !                  (which is in the frontal scheme the global equation number)
+      !NK (LK)         = NK is a vector, that stores for the current element's equations
+      !                  the global equation number lrowt
+      !LK              = local degree of freedom counter
+      !lRowMax         = maximum number of registered (in the end: active) equations
+      !lrow            = local counter index, which is always in the range of1 ... lRowMax
+      !lrowent (lrow)  = counts the number of entries in the line lrow of EQQ
+      !lrpoint (lrowt) = Points to the equation number lrow, that is used for the global
+      !                  degree of freedom lrwot
+      !
+      !description
+      !During the execution of the following control, the active global degrees are counted.
+      !The maximum number is always stored in lRowMax. Within the range 1...lRowMax, from time
+      !to time the counter index lrow is used to identify any already registered location
+      !in the global matrix.
+      IntroduceLocalMatrices: DO LK = 1, NBN
+       !get global equation number LROWT (global row) for local equation nubmer LK
+       LROWT = ABS (NK (LK))
+
+	 !if global equation is active (lowrt/=0), store pointer to equation in
+	 !the following control
+	 if (lrowt /= 0) then
 c
 c     lrowt is the equation number for this degree of freedom
 c          look in pointer matrix for this row if it has been used
 c          before
-        lrow= lrpoint(lrowt)
-	  if(lrow .eq. 0) then
-c
-c     create an entry for a blank row
-c
-          do ll=1,lrowm
-	      if(lrowent(ll) .eq. 0) then
-	        lrpoint(lrowt)=ll
-	        lrow=ll
+        lrow = lrpoint(lrowt)
+
+        !if the temporary row number lrowt is not counted (pointed) yet, then
+        !create an entry
+	  if (lrow == 0) then
+          !run through all memorized rows (lRowMax counts already pointed rows)
+          !at startup lRowMax is zero
+          do ll = 1, lRowMax
+	      if (lrowent (ll) == 0) then
+	        lrpoint (lrowt) = ll
+	        lrow = ll
 	        go to 50
 	      endif
 	    enddo
-          lrow=lrowm+1
-	    lrowm=lrowm+1
-          lrowent(lrow)=0
-          IF(LROWM .GT. MFRW) THEN
+          !count lrow
+          lrow = lRowMax + 1
+	    lRowMax = lRowMax + 1
+          lrowent (lrow) = 0
+
+          !Error if the system becomes too big
+          IF (lRowMax > MFRW) THEN
             NERROR=2
             WRITE(*,*) '  MFRW not large enough'
-            WRITE(75,417)NERROR
-            WRITE(*,6008)   NFIXH(NELL)
-            WRITE(75,6008)   NFIXH(NELL)
- 6008       FORMAT( // 10X, '..STOP AT ELEMENT', I10 )
+            WRITE (75, 417) NERROR
+            WRITE (*, 6008)   NFIXH(NELL)
+            WRITE (75, 6008)   NFIXH(NELL)
+ 6008       FORMAT ( // 10X, '..STOP AT ELEMENT', I10 )
 C            WRITE(75,9820) (LHED(L),L=1,LCOL)
             WRITE(75,9821) (N,(NBC(N,M),M=1,3),N=1,NP)
             CALL ZVRS(1)
             STOP
           ENDIF
-          lrpoint(lrowt)=lrow
+          !End of Error Message and program execution termination
+
+          !store in the corresponding pointer number
+          lrpoint (lrowt) = lrow
 	  endif
+
    50   continue
-        LL=LROW
 
+        LL = LROW
 
-        DO KK=1,NBN
+        DO KK = 1, NBN
 
-C     now work along the columns hoping storing values
- 
-c         IF (NODEC .EQ. 0) GO TO 62
-          IF (NK(KK) .EQ. 0) GO TO 62
-          NODEC=ABS(NK(KK))
-          
-          DO L=1,lrowent(lrow)+1
-             IF(LCPOINT(L,LL) .EQ. NODEC) THEN
-
-C     we have a match - store the entry
-
-crow-wise              EQ(LL,L)=EQ(LL,L)+ESTIFM(LK,KK)
-c              EQ(LL,L)=EQ(LL,L)+ESTIFM(KK,LK)
-                EQQ(L,LL)=EQQ(L,LL)+ESTIFM(LK,KK)
-                GO TO 62
-             ELSEIF(LCPOINT(L,LL) .EQ. 0) THEN
-
-C     no match so add to last column and store
-
-                LCPOINT(L,LL)=NODEC
-crow-wise              EQ(LL,L)=EQ(LL,L)+ESTIFM(LK,KK)
-c              EQ(LL,L)=EQ(LL,L)+ESTIFM(KK,LK)
-                EQQ(L,LL)=EQQ(L,LL)+ESTIFM(LK,KK)
-	          if( L .gt. lrowent(lrow) ) lrowent(lrow)=L
-                GO TO 62
-             ENDIF
-          ENDDO
+          !now work along the columns hoping storing values
+          IF (NK (KK) /= 0) then
             
-   62     CONTINUE
-            if ( l .gt. maxl ) maxl = l
+            !get global equation number
+            NODEC = ABS (NK (KK))
+          
+            AddEstifm: DO L = 1, lrowent (lrow) + 1
+
+              !we have a match - store the entry
+              IF (LCPOINT (L, LL) == NODEC) THEN
+
+                 EQQ (L, LL) = EQQ (L, LL) + ESTIFM (LK, KK)
+                 exit AddEstifm
+
+               !no match so add to last column and store
+               ELSEIF (LCPOINT (L, LL) == 0) THEN
+
+                  LCPOINT (L, LL) = NODEC
+                  EQQ (L, LL) = EQQ (L, LL) + ESTIFM (LK, KK)
+	            if (L > lrowent (lrow)) lrowent (lrow) = L
+                  exit AddEstifm
+
+               ENDIF
+            ENDDO AddEstifm
+          ENDIF
+            
+          IF (l > maxl) maxl = l
    
         ENDDO
-        
 	 ENDIF
-      ENDDO
+      ENDDO IntroduceLocalMatrices  
 
 C     SET LHED NEGATIVE FOR ENTRIES THAT ARE FULLY SUMMED
 
-      IF(MOD(NELL,1000) .EQ. 0)
-     +  WRITE(*,'(I13,2I10)') NELL,LROWM,LELIM
-      IF(MOD(NELL,1000) .EQ. 0)
-     +  WRITE(75,'(I13,2I10)') NELL,LROWM,LELIM
+      IF (MOD (NELL, 1000) == 0)
+     +  WRITE (*, '(I13,2I10)') NELL, lRowMax, LELIM
+      IF (MOD (NELL,1000) == 0)
+     +  WRITE (75,'(I13,2I10)') NELL, lRowMax, LELIM
 
-
-   60 CONTINUE
 C
 C     DETERMINE WHETHER TO COMPACT OR ADD A NEW ELEMENT
 C
-      LELTM=0
-      DO LL=1,LROWM
-	  L=LL+LELIM
-	  lrow=lrpoint(l)
-	  IF(NLSTEL(L) .EQ. N) THEN
-          IRWEPT(L)=ICUR-NSZF
-          DO J=1,LROWENT(LROW)
-            IF(LCPOINT(J,LROW) .NE. 0) THEN
-c              IF(EQQ(J,LROW) .NE. 0.) THEN
-                ICUR=ICUR+1
-                qs1(ICUR-NSZF-1)=EQQ(J,LROW)
-	          EQQ(J,LROW)=0.
-                IRWEPT(ICUR)=LCPOINT(J,LROW)
-	          LCPOINT(J,LROW)=0
+      !Following control compacts an equation line, that is completly set up
+      !additionally it gives free that certain line again, to store
+      !a new registered equation in it
+      LELTM = 0
+      DO LL = 1, lRowMax
+	  L = LL + LELIM
+	  lrow = lrpoint (l)
+	  IF (NLSTEL (L) == N) THEN
+          IRWEPT (L) = ICUR - NSZF
+          DO J = 1, LROWENT (LROW)
+            IF (LCPOINT (J, LROW) /= 0) THEN
+
+
+                !TODO: Normally pardiso works with a sparse matrix storage format,
+                !      that has no zero entries. If here only non-zero entries are
+                !      considered, the matrix can not be solved any more 
+                !testing
+                !if (EQQ (J, LROW) /= 0.0) then
+                !testing-
+                  ICUR = ICUR + 1
+                  qs1 (ICUR - NSZF - 1) = EQQ (J, LROW)
+                  IRWEPT (ICUR) = LCPOINT (J, LROW)
+                !testing
+                !endif
+                !testing-
+
+                !after storing the value of the global matrix
+                !in the sparse matrix format place in qs1
+                !initlialize it again for later use in another
+                !element
+	          EQQ (J, LROW) = 0.
+	          LCPOINT (J, LROW) = 0
 c 	        ELSE
 c	          LCPOINT(J,LROW)=0
 c              ENDIF
@@ -789,22 +873,13 @@ CIPK FEB07      NPROCS = ICPU
 
                    
       CALL mkl_solver(NPROCS,NSZF,
-     &          IRWEPT(1),IRWEPT(NSZF+2),qs1(1), RR(1), R1T(1),IERR)
-
-c      CALL SUPERLU(ORDER,ORDERING(1),NPROCS,NSZF,
-c     &             ICOL(MPUC),IROW(MPUR),SEQ,R1T(1),IERR)
-
-c      write(*,'(a,f8.3)') ' Setup time = ', sutim1-sec
-c      write(75,'(a,f8.3)') ' Setup time = ', sutim1-sec
-
-cc      CALL SUPERLU_S(IORDER, IORDERING(1),NPROCS,NSZF,
-cc     &             IRWEPT(1),IRWEPT(NSZF+2),BIGEQ(1), R1T(1),IERR)
-c     &             IRWEPT(NSZF+2),IRWEPT(1),BIGEQ(1), R1T(1),IERR)
-
-c      do n=1,nszf
-c	  write(75,'(2i10)') n,iordering(n)
-c	enddo
-
+     &          IRWEPT(1),IRWEPT(NSZF+2),qs1, RR, R1T,IERR,
+     &          IRWEPT (NSZF+1))
+     
+      !nis,aug08
+      !NPROCS :: number of processors (user entry)
+      !NSZF   :: number of equations
+      
       if(ierr .ne. 0) then
         write(75,*) 'error stop in mkl',ierr
         write(*,*) 'error stop in mkl',ierr

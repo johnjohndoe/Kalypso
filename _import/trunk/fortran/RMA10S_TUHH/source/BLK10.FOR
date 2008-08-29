@@ -3,7 +3,7 @@
       INCLUDE 'PARAM.COM'
       REAL*8 R1,RKEEP
       INTEGER*2 IPOINT,LCS,LPS
-      integer (kind = 8) :: irwept
+      integer (kind = 4) :: irwept
       
       ALLOCATABLE   LCS(:),LPS(:),IPOINT(:)
       ALLOCATABLE   R1(:),NLSTEL(:),RKEEP(:),
