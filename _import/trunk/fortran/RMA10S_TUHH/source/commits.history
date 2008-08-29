@@ -204,11 +204,12 @@ Version 1.0.2 (laufende Änderungen)
 002.) Manage writing of PRA, PRQ and PRB lines in result file for 2D-nodes. There was a bad check, which is now modernized. Problem was the restart with such a result file.
 003.) Activate VO, GA, GO lines for restart and leave inputd.sub earlier, when searching for proper time step to get BCs from. Problem was that restart conditions for H-boundary nodes were changed. (Affects: inputd.for, rdkalypso.f90).
       Now restart is in 2D full functional.
+004.) Change smallest velocity for calcualtion of energy slope in subroutine to get the c_wr value.
 
 --- Nico Schrage, 28.07.2008 (1.0.2alpha1)
 
 -----------------------------------------------------------------------------------------------------
-24.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
+28.07.2008 Branch 'update subroutines' were merged into the TRUNK. Merged revisions are 4957 to 5252.
 -----------------------------------------------------------------------------------------------------
 
 Version 1.1.0 (laufende Änderungen)
@@ -343,3 +344,78 @@ Version 1.1.0 (laufende Änderungen)
       its correct input: Take care Sediment is always used at these Boundarys!
       (No changes!)                                              
 --- Monika Donner, 22.08.2008
+
+035.) Introduce changes from maintenance branch 1.0.0
+      --------------------------------------------------------------------
+      29.08.2008 - Merging changes from branch since 28.07.2008 into TRUNK
+      --------------------------------------------------------------------
+      cbh: cite branch history 
+      cbh   001.) Declaration in TF.function for proper compilation
+      cbh   002.) Increase maximum number of element inflows (Affects initl.for)
+      cbh   003.) Preparation of turbulence parameters for deactivated elements, too. (Affects input.for)
+      cbh   004.) For 3D preparations some nodes' continuity equation were not activated after rewetting although they should be wet.
+      cbh   005.) copy of nop-array to nops-array in Rdkalypso.f90
+      cbh   006.) bugfix in anglen.for
+      cbh   
+      cbh   --- Nico Schrage, 01.08.2008 (release 1.0.2)
+      cbh   
+      cbh   Version 1.0.3 (laufende Änderungen)
+      cbh   
+      cbh   001.) Get rid of data field aour, which is just a copy of al (affects: blk10mod, rdkalyps, initl, rdrm1); writing out is now only related to ao-field (affects: modell_schreiben)
+      cbh   002.) delete "old" way of polynomial definition in input files, only support new way (affects: rdkalyps)
+      cbh   003.) use allocatable statement for arrays used as dummies, where the size is defined in the variable declaration list (affects: rdkalyps)
+      cbh   004.) direction fix for control structures, where the flow vectors of upstream and downstream point into neighbouring mathematical quadrants (affects: cstrc)
+      cbh   005.) separate reordering subroutines into seperate file with the name Reordering.f90 (affects: rdkalyps)
+      cbh   006.) get rid of data corpses concerning control volume finite element method (cv*- variables); they can be integrated in a more elegant way if needed again)
+      cbh   007.) delete old control parts in rdkalyps that were related to the differing of 1D elements with and without midside nodes
+      cbh   008.) get rid of element splitting for CVFEM. It can be introduced again if it was necessary
+      cbh   009.) Modernize loop to initiate the reordering (affects: rdkalyps)
+      cbh   010.) introduce percent check option for updating the degrees of freedom, i.e. user can set a switch whether absolute changes or changes related to the absolute value
+      cbh         of the variable at a certain place should be updated; also the output console is adapted for that (affects: update, paraflow1dfe, input)
+      cbh   011.) Overgiving of coordinates and node number to the findPolynom.sub. The subroutine finds the intersection of a small array to give back the positon. It is used for control structure data,
+      cbh         where it throws a georeferenced error, if the value to sort in was out of the valid range, and for normal polynomial functions, where it just throws a warning. The error at a bridge is thrown,
+      cbh         because this is much more sensitive as a polynomial, where being out of the range must not cause the model to crash. (affects: check, wtform, cstrc, ErrorMessageAndStop, LineTransitionCalc, PolynomPositionSearch.f90)
+      cbh   012.) catch negative deactivation depth, i.e. if the user sets dset negative it will be set to the value 0.0. Additionally the Darcy.sub that is generating the lambda value depending on the roughness
+      cbh         and depth was setting lambda to 10000, if water depth was below 0.01m for negative deactivation depth this lead to NaN-problems. The special case depth to fix the lambda value was set to
+      cbh         dset. Consequently nodes with a water depth below dset, what technically can't occur - nodes below that depth are inoperative - , will now get the lambda value from only 1000. NaN problems didn't occur any more
+      cbh         for such problems. (affects: coef11, coef11nt, coef25, coef25nt, coef2d, coef2dnt, roughness.f90, Qgen.for, QgenTransition, 
+      cbh   013.) Increase the buffer size to standard NBS = 5.000.000 to NBS = 400.000.000, meaning is not 100 percent clear but it leads to less scratch files. (affects: initl)
+      cbh   014.) Deactivate a call of the wtform subroutine in Load3 because it is not necessary
+      cbh   015.) Delete old data corpse of calculationUnit name and ID (calcUnitID; calcUnitName) in parakalyps.f90
+      cbh   016.) Move array size definition from static declaration to allocatable declaration in pasche_trees.f90. Problem is stack overflow, if a global size value is used to define dummy arrays, whose size can be taken from the overgiving.
+      cbh   
+      cbh   --- Nico Schrage, 19.08.2008 (1.0.3 bf2)
+      cbh   
+      cbh   017.) remove old deactivated source code from rma10.for
+      cbh   018.) deallocation of arrays in pasche_tress.f90
+      cbh   019.) reduce memory assumption again to NBS = 20.000.000
+      cbh   
+      cbh   --- Nico Schrage, 21.08.2008 (1.0.3 bf3)
+      cbh   
+      cbh   020.) iteration control output must change, because Kalypso can't parse it, if number of iterations as 6 digits.
+      cbh   
+      cbh   --- Nico Schrage, 25.08.2008 (1.0.3 bf3)
+      cbh   
+      cbh   021.) Rename 'Generate2DFileName' to 'GenerateOutputFileName'
+      cbh   022.) Generation of consistent *.cwr file names using the general function 'GenerateOutputFileName' to create output file names. There was a problem, if restarting from a certain time step. (Affects Modell_schreiben.f90
+      cbh   023.) bugfix for restart information-write-out, if the time of the time step is equal 0.0. It is more convenient to check for the unsteady-character of the calculation process using icyc.
+      cbh   
+      cbh   --- Nico Schrage 27.08.2008 (1.0.3 bf4)
+      cbh: cite branch history
+      --------------------------------------------------------------------
+      29.08.2008 - Merging changes from branch since 28.07.2008 into TRUNK
+      --------------------------------------------------------------------
+037.) Change compilation settings for Lahey to have default integer type (kind = 8) (affects: automake.fig)
+038.) Make MKL operatable:
+      - define irwept as short integer (affects: blk10.for)
+      - adapt MKL_solver.for to be able to pass the correct parameters to the MKL and initialize arrays correctly, if equations system changes
+      - using only the type part of curved elements in front_mkl
+      - making comments in front_mkl to understand, what is done there
+      
+039.) ALFA and WSS must be long type for proper compilation (affects blk10mod.for)
+040.) Revert parameter list of turbulence to original. Technically there's no difference (affects turbulence.f90, coef25.for, coef25nt.for)
+041.) correct typo in fldir.90
+042.) Introduce missing ErrorIDs in ErrorMessageAndStop
+043.) Correct calling of wtform from cstrc2d.for
+
+--- Nico Schrage, 29.08.2008 (1.1.0alpha2)

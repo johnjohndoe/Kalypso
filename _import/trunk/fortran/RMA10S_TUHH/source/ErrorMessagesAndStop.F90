@@ -161,9 +161,13 @@ elseif (ErrorID == 1601) then
   WRITE (ErrorUnit, 1601) ObjectID
   WRITE (        *, 1601) ObjectID
 
-elseif (ErrorID == 1601) then
-  WRITE (ErrorUnit, 1601) 
-  WRITE (        *, 1601) 
+elseif (ErrorID == 1602) then
+  WRITE (ErrorUnit, 1602) ObjectID
+  WRITE (        *, 1602) ObjectID
+
+elseif (ErrorID == 1602) then
+  WRITE (ErrorUnit, 1603) ObjectID
+  WRITE (        *, 1603) ObjectID
 
 ELSEIF (ErrorID == 3501) then
   WRITE (ErrorUnit, 3501)
@@ -184,6 +188,14 @@ elseif (ErrorID == 4002) then
 elseif (ErrorID == 4003) then
   WRITE (ErrorUnit, 4003)
   WRITE (        *, 4003)
+  
+elseif (ErrorID == 4004) then
+  write (ErrorUnit, 4004)
+  write (      *, 4004)
+
+elseif (ErrorID == 4005) then
+  write (ErrorUnit, 4005) ObjectID
+  write (      *, 4005) ObjectID
 
 elseif (ErrorID == 4101) then
   WRITE (ErrorUnit, 4101)
@@ -345,6 +357,10 @@ end if
  4003 format (1x, 'ERROR - WATER SURFACE ELEVATION ABOVE HIGHEST TABLE ENTRY' / &
 !      WRITE(75,*)'ILINTB,SRFEL,ELEVTBL(ILINTB,1)',ILINTB,SRFEL
 !     +                 ,ELEVTBL(ILINTB,1)
+            & 1x, 'EXECUTION TERMINATED')
+ 4004 format (1x, 'ERROR - defined wwQ-relationship of control structure not big enough.' / &
+            & 1x, 'EXECUTION TERMINATED')
+ 4005 format (1x, 'ERROR - defined polynomial of node ', I6, ' not big enough.' / &
             & 1x, 'EXECUTION TERMINATED')
 
 !4100   Autoconverge Errors

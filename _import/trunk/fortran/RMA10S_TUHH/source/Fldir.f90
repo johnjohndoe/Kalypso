@@ -20,8 +20,8 @@ SAVE
 !NPM         = number of 3D nodes in the mesh (NP plus 3D-referenced nodes)
 !NEM         = number of 3D elements in the mesh
 
-!global variables with write acces
-!*********************************
+!global variables with write access
+!**********************************
 !DIR (N)  = direction factor (-1.0 or 1.0) of a node N
 !ITAB (N) = stores an element, where a node N belongs to
 

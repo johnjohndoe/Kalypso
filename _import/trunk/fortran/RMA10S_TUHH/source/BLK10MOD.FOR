@@ -118,7 +118,7 @@ cipk may02
       real*8 vel,ao,cord,AORIG
 
 !Nis,mar06      specialized declaration of ALFA and wss, so that the input-reading with binary files don't cause an error
-      REAL(KIND=8) :: ALFA,wss
+      REAL(KIND=4) :: ALFA,wss
 !-
 
       ALLOCATABLE CORD(:,:),VEL(:,:),AO(:),AORIG(:)
@@ -195,7 +195,7 @@ C     LAYER VARIABLE
       ALLOCATABLE  THL(:),THLAY(:,:)
 
 !NiS,apr06: for data exchange with kalypso-reading and writing modules
-      REAL(KIND=8), ALLOCATABLE :: aour(:)!,fehler(:,:),
+!      REAL(KIND=8), ALLOCATABLE :: fehler(:,:),
 !-
 
 !nis,nov06: Adding arrays
