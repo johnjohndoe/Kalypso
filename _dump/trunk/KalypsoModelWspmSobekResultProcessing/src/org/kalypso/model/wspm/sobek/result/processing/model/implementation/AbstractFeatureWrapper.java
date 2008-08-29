@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.sobek.result.processing.model.implementation;
 
 import javax.xml.namespace.QName;
 
+import org.deegree.model.spatialschema.GeometryException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -50,13 +51,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 
 /**
  * @author kuch
  */
 public abstract class AbstractFeatureWrapper implements Feature
 {
-
   private final Feature m_feature;
 
   public AbstractFeatureWrapper( final Feature feature )
@@ -239,4 +240,104 @@ public abstract class AbstractFeatureWrapper implements Feature
     m_feature.setWorkspace( workspace );
   }
 
+  @Override
+  public GM_Envelope getBoundedBy( ) throws GeometryException
+  {
+    return m_feature.getBoundedBy();
+  }
+
+  @Override
+  public GM_Object getDefaultGeometryPropertyValue( )
+  {
+    return m_feature.getDefaultGeometryPropertyValue();
+  }
+
+  @Override
+  public GM_Object[] getGeometryPropertyValues( )
+  {
+    return m_feature.getGeometryPropertyValues();
+  }
+
+  @Override
+  public Feature getOwner( )
+  {
+    return m_feature.getOwner();
+  }
+
+  @Override
+  public QName getQualifiedName( )
+  {
+    return m_feature.getQualifiedName();
+  }
+
+  @Override
+  public void setEnvelopesUpdated( )
+  {
+    m_feature.setEnvelopesUpdated();
+  }
+
+  @Override
+  public void setFeatureType( IFeatureType ft )
+  {
+    m_feature.setFeatureType( ft );
+  }
+
+  @Override
+  public void setId( String fid )
+  {
+    m_feature.setId( fid );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
+  public String getName( )
+  {
+    return NamedFeatureHelper.getName( m_feature );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
+  public void setName( final String name )
+  {
+    NamedFeatureHelper.setName( m_feature, name );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
+  @Override
+  public String getDescription( )
+  {
+    return NamedFeatureHelper.getDescription( m_feature );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
+  public void setDescription( final String desc )
+  {
+    NamedFeatureHelper.setDescription( m_feature, desc );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
+  public GM_Object getLocation( )
+  {
+    Object property = m_feature.getProperty( NamedFeatureHelper.GML_LOCATION );
+    if( property instanceof GM_Object )
+      return (GM_Object) property;
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
+  public void setLocation( final GM_Object location )
+  {
+    m_feature.setProperty( NamedFeatureHelper.GML_LOCATION, location );
+  }
 }
