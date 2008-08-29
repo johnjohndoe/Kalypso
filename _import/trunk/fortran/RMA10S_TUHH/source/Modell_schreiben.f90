@@ -1,4 +1,4 @@
-!     Last change:  WP    2 Feb 2008    2:52 pm
+!     Last change:  WP   28 Jul 2008    5:19 pm
 !-----------------------------------------------------------------------------
 ! This code, data_out.f90, performs writing and validation of model
 ! output data in the library 'Kalypso-2D'.
@@ -300,14 +300,14 @@ write_nodes: DO i = 1, np
   IF (cord(i,1) .lt. -1.e19) CYCLE write_nodes
 
   if (.not. (IntPolProf (i)) .and. kmx (i) /= -1.0) then
-    write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+    write (IKALYPSOFM, 6999) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   ELSEIF (.not. (IntPolProf (i)) .and. kmx (i) == -1.0) then
-    WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), aour (i)
+    WRITE (IKALYPSOFM, 7000) i, cord (i, 1), cord (i, 2), ao(i)
   !for interpolated profiles
   ELSEIF (IntPolProf (i) .AND. kmx (i) /= -1.0) then
-    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), aour(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
+    write (IKALYPSOFM, 7043) i, cord (i, 1), cord (i, 2), ao(i), kmx (i)  !EFa Dec06, Ausgabe der Kilometrierung, wenn vorhanden
   ELSEIF (IntPolProf (i)) then
-    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), aour (i)
+    WRITE (IKALYPSOFM, 7044) i, cord (i, 1), cord (i, 2), ao(i)
   endif
 
   if (resultType == 'resu') THEN
@@ -328,7 +328,7 @@ write_nodes: DO i = 1, np
   !only for real results not for minmax-result-files
   !if (resultType == 'resu') then
   if (.not. IntPolProf (i)) then
-    IF (tet.ne.0.0) then
+    IF (icyc .ne. 0) then
       WRITE (IKALYPSOFM, 7004) i, (vdot (j, i), j = 1, 3)
       WRITE (IKALYPSOFM, 7005) i, (vold (j, i), j = 1, 3)
       WRITE (IKALYPSOFM, 7006) i, (vdoto (j, i), j = 1, 3)
@@ -394,10 +394,6 @@ write_elements: DO i = 1, ne
   ELSE
     if (imat (i) /= 89) then
 
-      if (CalcUnitID (i) > 0) then
-        WRITE (IKalypsoFM, 7048) i, CalcUnitID (i), trim (CalcUnitName (i))
-      endif
-
         WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i) !, fehler (2, i)
 
       !write material types and reordering number
@@ -412,9 +408,6 @@ write_elements: DO i = 1, ne
     !write number of profiles to interpolate in between
     elseif (imat (i) == 89 .and. (.NOT.(IntPolProf (nop (i, 1))))) then
 
-      if (CalcUnitID (i) > 0) then
-        write (IKALYPSOFM, 7048) i, CalcUnitID (i), TRIM (CalcUnitName (i))
-      end if
       WRITE (IKALYPSOFM, 7002) i, imat (i), imato (i), nfixh (i)
 
       write (IKALYPSOFM, 7046) i, IntPolNo (i)
@@ -553,14 +546,15 @@ END SUBROUTINE write_KALYPSO
 !**********************************************************
 
 
-SUBROUTINE Generate2DFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
+SUBROUTINE GenerateOutputFileName (sort, niti_local, timeStep, iteration, outsuffix, inname, rstname, prefix, restartunit, &
            &                   resultName, inputName)
 
 implicit none
 INTEGER, INTENT (IN) :: timeStep, iteration, restartUnit
 INTEGER, INTENT (IN) :: niti_local
-character (LEN = 96), INTENT (OUT) :: resultName, inputName
-CHARACTER (LEN = 32), INTENT (IN)  :: outsuffix, inname, rstname
+character (LEN = 96), INTENT (inOUT) :: resultName, inputName
+CHARACTER (LEN = 32), INTENT (IN)  :: inname, rstname
+character (len = *) , intent (in) :: outsuffix
 CHARACTER (LEN = 1), INTENT (IN)   :: prefix
 CHARACTER (LEN = 4), INTENT (IN)   :: sort
 

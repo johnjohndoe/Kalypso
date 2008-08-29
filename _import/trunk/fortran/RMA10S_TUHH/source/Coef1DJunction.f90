@@ -113,7 +113,7 @@ checknodes: DO KK = 1, NCN
   !using polynom approach
   ELSE
     !get position in polynomial for current node with present water stage
-    PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1), PolySplitsA (n1))
+    PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1), PolySplitsA (n1), cord(n1, 1), cord (n1, 2), n1)
     !calculate the cross sectional area
     ah (n1) = calcPolynomial (apoly (PolyPos, n1, 0:12), vel (3, n1), ubound (apoly, 3))
     !install derivative of discharge over velocity at current node into local equation 1
@@ -188,11 +188,11 @@ ELSEIF (imat (nn) == 903) then
   nrx = nop (nn, 1)
   nry = nop (nn, 2)
 
-  PolyPos = findPolynom (PolyRangeA (nrx, :), vel(3, nrx), PolySplitsA (nrx))
+  PolyPos = findPolynom (PolyRangeA (nrx, :), vel(3, nrx), PolySplitsA (nrx), cord (nrx, 1), cord (nrx, 2), nrx)
   acx = calcPolynomial (apoly (PolyPos, nrx, 0:12), vel (3, nrx), ubound (apoly, 3))
   wsx = calcPolynomial1stDerivative (apoly (PolyPos, nrx, 0:12), vel(3, nrx), ubound (apoly, 3))
 
-  PolyPos = findPolynom (PolyRangeA (nry, :), vel(3, nry), PolySplitsA (nry))
+  PolyPos = findPolynom (PolyRangeA (nry, :), vel(3, nry), PolySplitsA (nry), cord (nry, 1), cord (nry, 2), nry)
   acy = calcPolynomial (apoly (PolyPos, nry, 0:12), vel (3, nry), ubound (apoly, 3))
   wsy = calcPolynomial1stDerivative (apoly (PolyPos, nry, 0:12), vel(3, nry), ubound (apoly, 3))
 

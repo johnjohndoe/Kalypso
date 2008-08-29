@@ -1,654 +1,3 @@
-!     Last change:  MD   29 Jul 2008    3:40 pm
-!-----------------------------------------------------------------------
-! This code, data_in.f90, performs reading and validation of model
-! inputa data in the library 'Kalypso-2D'.
-! Copyright (C) 2004  SEBASTIAN RATH & WOLF PLOEGER.
-!
-! This library is free software; you can redistribute it and/or
-! modify it under the terms of the GNU Lesser General Public License
-! as published by the Free Software Foundation, version 2.1.
-!
-! This library is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-! Lesser General Public License for more details.
-!
-! You should have received a copy of the GNU Lesser General Public
-! License along with this library; if not, write to the Free Software
-! Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-!
-! For information please contact:
-! HAMBURG UNIVERSITY OF TECHNOLOGY, Deptartment of River and
-! Coastal Engineering. Denickestr. 22, 21073 Hamburg, Germany.
-! Wolf Ploeger:     phone: +49 40 42878 4305 mail: ploeger@tuhh.de
-! Sebastian Rath:   phone: +49 40 42878 4180 mail: s.rath@tuhh.de
-! See our web page: www.tuhh.de/wb
-!
-!
-! HAMBURG UNIVERSITY OF TECHNOLOGY, Deptartment of River and
-! Coastal Engineering, hereby disclaims all copyright interest in
-! the library 'Kalypso-2D'.
-!
-! Sebastian Rath, 09 August 2004
-! Research Associate
-!
-
-
-!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!                                                                       
-SUBROUTINE reord_Kalyps (qlist)
-!
-!     Der reordering-Algorithmus von rma1                               
-!
-!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-USE BLK10MOD
-USE BLK2
-USE BLKASTEPH
-
-implicit none
-
-!maxsize shows the maximum size of the kntimel allocation, so the largest element
-INTEGER :: maxsize, JunctionSize
-integer :: maxc, maxcn
-integer :: qlist (2, 160)
-INTEGER, allocatable :: icon (:, :), kntimel (:, :)
-parameter (maxcn = 60)
-!NiS,mar06: variable names changed; changed mel to MaxE and mnd to MaxP
-!array kntimel must be allocatable, because the size is vacant while calling the reordering sequence
-
-!locals
-integer :: i, j, k, l, n, m
-integer :: mp, mpp, idxx, is
-
-!nis,dec06: Allocating the kntimel-array for storage of connected nodes to one element. The background is the new number nodes, that might be
-!           connected to a Transition line
-!test for all possible line transitions
-if (MaxLT /= 0) then
-  !get the maximum element size. The maximum size is obtained by the longest 1D 2D transitioning number + 2 for the number of nodes of the
-  !transitioning 1D part
-  maxsize = 0
-  !the longest continuity line is taken into account
-  do i = 1, 50
-    if (lmt(i) + 2 > maxsize) maxsize = lmt(i) + 2
-  end do
-else
-  !if there is no transitioning, the allocation runs in normal way; the number should be decreasable from 8 to 4.
-  maxsize = 8
-endif
-
-allocate (icon (1: MaxP, 1: 60), kntimel (1: MaxE, 1: maxsize))
-
-!nis,jun07: Initializing the kntimel-array
-do i = 1, MaxE
-  do j = 1, maxsize
-    kntimel (i, j) = 0
-  end do
-enddo
-!-
-
-
-!nis,may07: Information output
-WRITE(*,*) 'Start of Reordering sequence with ', Maxlt, ' couplings'
-!-
-
-!NiS,mar06: Allocating the arrays of module blkasteph
-ALLOCATE (mlist(500))
-ALLOCATE (msn(MaxP))
-ALLOCATE (icol(100,5000))
-ALLOCATE (nadm(5000))
-ALLOCATE (inum(MaxP))
-!-
-!NiS,mar06:     Allocating the arrays of module blk2
-ALLOCATE (wd(MaxP))
-ALLOCATE (iel(MaxP))
-ALLOCATE (list(MaxP))
-ALLOCATE (ihold(5000))
-ALLOCATE (paxis(MaxE))
-!-
-
-!nis,jun07: Initializing the allocated variables
-do i = 1, MaxP
-  list(i) = 0
-  msn(i) = 0
-end do
-do i = 1, 5000
-  ihold(i) = 0
-end do
-!-
-
-!get the node numbers into temporary memory
-StoreConnectivity: DO i = 1, MaxE
-
-  IF (nop (i, 1) == 0) CYCLE StoreConnectivity
-
-  IF (imat (i) < 901 .or. imat(i) > 903) THEN
-
-    !node number (corner nodes) is 2 for 1D elements
-    k = 2
-    !if it is a triangular element increase number of corner nodes to 3
-    IF (nop (i, 5) > 0) k = 3
-    !if it is a quadrilateral element increase number of corner nodes to 4
-    IF (nop (i, 7) > 0) k = 4
-    !save the node numbers
-    DO j = 1, k
-      l = 2 * j - 1
-      kntimel (i, j) = nop (i, l)
-    ENDDO
-
-    !TODO: This is not efficient, there must be another way to find out membership in 1D-2D-Transition line
-    !if there is a 1D 2D transition line, then save the nodes of the line in the element array kntimel
-    if (maxlt > 0 .and. k == 2) then
-      !first the correct line has to be found, by running through all possible lines
-      FindLine: do j = 1, MaxLT
-        !stop, if it is the correct line
-        IF (TransLines (j, 1) == i) then
-          !run through line defintion and transfer nodes to kntimel
-          do l = 1, lmt( TransLines (j,2))
-            !copy line node into kntimel. If it is the connecting node, jump over, because it is only allowed to occur once
-            IF (line (TransLines (j,2), l) /= nop (i, 3)) kntimel (i, l+2) = line( TransLines (j,2), l)
-          ENDDO
-          EXIT FindLine
-        ENDIF
-      ENDDO FindLine
-    ENDIF
-
-  ELSE
-    JunctionSize = 1
-    HowManyNodes: DO
-      IF (nop (i, JunctionSize) == 0) EXIT HowManyNodes
-      JunctionSize = JunctionSize + 1
-    ENDDO HowManyNodes
-    DO j = 1, JunctionSize
-      kntimel (i, j) = nop(i, j)
-    ENDDO
-  ENDIF
-
-ENDDO StoreConnectivity
-
-!maximum number of nodal connections is reduced to 60 (see definition of maxcn=60 above)
-maxc = maxcn
-
-!The size is in general 4, but if there was a line transition in the network, this number increases to maxsize
-if (MaxLT /= 0) then
-  ncn = maxsize
-else
-  ncn  = 4
-end if
-
-!tm Thomas Maurer, 15.05,1998
-!tm in folgender Zeile befindet sich eine Variable idx,                 
-!tm die nie initialisiert wurde und sonst im gesamten Programm          
-!tm nicht auftaucht.                                                    
-!tm -> was sollen wir tun, noch nichts geaendert                        
-!tm (weiter unten gibt es die Variable idxx (noch ein "x"))             
-!SR                                                                     
-!SR Da nprt nicht genutzt wird, ist auch idx hinfaellig: deaktiviert 09.
-!SR      nprt = idx-1                                                   
-!SR                                                                     
-
-!Initialize array which shows nodes connected to others
-DO n = 1, MaxP
-  DO m = 1, maxc
-    icon (n, m) = 0
-  enddo
-enddo
-
-!This loop fills in all nodes, that have direct connection to others into icon array.
-ConnectsOuter: DO n = 1, MaxE
-
-  DO m = 1, ncn
-    !Get the reference node
-    i = kntimel (n, m)
-
-    !if node is zero go to next element
-    IF (i == 0) CYCLE ConnectsOuter
-    !run through all nodes of the actual element
-    ConnectsInner: DO k = 1, ncn
-
-      !get a node of the element's definition list
-      l = kntimel (n, k)
-
-      !cycle process if the the second node choice is the same as the first one. They don't need to be connected
-      IF (l == i) CYCLE ConnectsInner
-
-      !Check, whether node is neither zero nor the same as already inserted in the connection matrix (icon); if not fill in the actual node
-      !number connection
-      GetConnection: DO j = 1, maxc
-        IF (icon (i, j) == 0) exit GetConnection
-        IF (icon (i, j) == l) CYCLE ConnectsInner
-
-        !ERROR
-        if (j == maxc) call ErrorMessageAndStop (1501, i, cord (l, 1), cord (l, 2))
-
-      END DO GetConnection
-      icon (i, j) = l
-    END DO ConnectsInner
-  END DO
-
-END DO ConnectsOuter
-
-nepem = 0
-DO n = 1, MaxP
-  IF (icon (n, 1) > 0) nepem = nepem + 1
-END DO
-mpq = 0
-list (1) = 1
-mp = 1
-allnodes: DO n = 1, MaxP
-  IF (icon (n, 1) == 0) CYCLE allnodes
-  is = 0
-  DO m = 1, mp
-    IF (n == list (m) ) is = 1
-    IF (is == 1) list (m) = list (m + 1)
-  END DO
-
-  IF (is == 1) mp = mp - 1
-
-  allconnects: DO j = 1, maxc
-    i = icon (n, j)
-    IF (i == 0) EXIT allconnects
-    IF (i <= n) CYCLE allconnects
-
-    DO m = 1, mp
-      IF (i == list (m) ) CYCLE allconnects
-    ENDDO     
-
-    !only if every node is not in list(m)
-    !NiS,mar06: name of variable changed; changed mnd to MaxP
-    IF (mp == MaxP) mp = mp - 1
-    mp = mp + 1
-    list (mp) = i
-
-    !NiS,mar06: unit name changed; changed iout to Lout
-    !    if( mp .eq. mnd ) write(Lout,80)
-    !80 FORMAT( / 10x, 'over 1000 terms in list' )
-
-  END DO allconnects
-
-  !NiS,mar06: unit name changed; changed iout to Lout
-  !      if(nprt.eq.3) write(Lout,'(25i4)') (list(m),m=1,mp)
-  !      mpq=mpq+mp*mp
-  mpq = mpq + mp
-ENDDO allnodes
-
-
-!NiS,mar06: unit name changed; changed iout to Lout
-!      write(Lout,99) mpq
-!   99 FORMAT(1h1//10x,'for initial order, reordering sum =',i10)
-mpp = mpq
-                                                                        
-! korrektur von mpp                                                     
-                                                                        
-orderloop: DO
-
-  DO i = 1, MaxP
-    DO j = 1, maxc
-      icon (i, j) = iabs (icon (i, j) )
-    ENDDO
-  ENDDO
-
-  CALL order (idxx, kntimel, maxsize, qlist, icon)
-
-  DO k = 1, 160
-    qlist (1, k) = qlist (2, k)
-  END DO
-
-  IF (idxx >= 99999) EXIT orderloop
-
-ENDDO orderloop
-
-!ERROR - Reordering could not be fullfilled
-IF (mpp.le.mpq) then
-  call ErrorMessageAndStop (3501, 0, 0.0d0, 0.0d0)
-ENDIF
-
-DO n = 1, nepem
-  iel (n) = msn (n)
-END DO
-!-                                                                      
-!......zero arrarys                                                     
-!-                                                                      
-      DO n = 1, MaxE
-        nfixh (n) = 0 
-        list (n) = 0
-      enddo
-
-      DO n = 1, MaxP 
-        DO m = 1, maxc
-          icon (n, m) = 0
-        ENDDO
-      ENDDO
-!-                                                                      
-!......form nodes connected to elements array                           
-!-                                                                      
-      Nodes2ConnElts: DO n = 1, MaxE
-        N2CEltsOuter: DO m = 1, ncn
-
-          i = kntimel (n, m) 
-
-          IF (i == 0) cycle Nodes2ConnElts
-
-          N2CEltsInner: DO j = 1, maxc
-
-            IF (icon (i, j) .ne.0) cycle N2CEltsInner
-            icon (i, j) = n 
-            cycle N2CEltsOuter
-
-          END DO N2CEltsInner
-
-        END DO N2CEltsOuter
-      END DO Nodes2ConnElts
-
-!-
-!......form list of elements to be formed                               
-!-                                                                      
-      k = 0 
-      !through element list
-      FormList: DO n = 1, nepem
-        !get element number of list entry in iel
-        i = iel (n) 
-        !if zero-entry is reached, list is at the end
-        IF (i.eq.0) EXIT FormList
-        !go through list of elements, that are of current list
-        FormListInner: DO j = 1, maxc
-          !get connected element
-          m = icon (i, j) 
-          !first zero-entry in list of connected elements means list ends
-          IF (m.eq.0) CYCLE FormList
-          !list(m) entry means, element m was already referenced somewhere an is already processable for the software, that means, don't process it any longer
-          IF (list (m) .gt.0) cycle FormListInner
-          !increase the counter of element elimination order
-          k = k + 1 
-          !nfixh stores the real element numbers according to the elimination order
-          nfixh (k) = m 
-          !list shows, whether an element already is listed in the elimination error.
-          list (m) = k 
-        END DO FormListInner
-      END DO FormList
-
-      AssignNfixh: DO n = 1, MaxE
-        IF (list (n) /= 0) cycle AssignNfixh
-        k = k + 1 
-        nfixh (k) = n 
-      END DO AssignNfixh
-
-!NiS,mar06: unit name changed; changed iout to Lout
-!      write(Lout,98) (nfixh(k),k=1,elem)
-!   98 FORMAT(//10x,'selected element order is listed below'//(5x,10i10))
-
-!NiS,mar06: Deallocating the arrays of module blkasteph
-      DEALLOCATE (mlist)
-      DEALLOCATE (msn)
-      DEALLOCATE (icol)
-      DEALLOCATE (nadm)
-      DEALLOCATE (inum)
-!-
-!NiS,mar06: Deallocating the arrays of module blk2
-      DEALLOCATE (wd)
-      DEALLOCATE (iel)
-      DEALLOCATE (list)
-      DEALLOCATE (ihold)
-      DEALLOCATE (paxis)
-!-
-      deallocate (icon, kntimel)
-
-      RETURN
-      END SUBROUTINE reord_Kalyps
-
-
-                                                                        
-!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-SUBROUTINE order (n, kntimel, maxsize, qlist, icon)
-
-
-USE BLK10MOD
-USE BLK2
-USE BLKASTEPH
-
-INTEGER :: ia
-INTEGER :: maxsize
-INTEGER :: counter
-
-INTEGER :: qlist (2, 160)
-!INTEGER :: icon (:,:), kntimel (:,:)
-INTEGER :: icon (1:MaxP, 1:60), kntimel (1:MaxE, 1:maxsize)
-integer :: maxcn
-DIMENSION nlist (160)
-
-parameter (maxcn = 60)
-
-!initializing
-ia = 0
-
-counter = 0
-maxc  = maxcn
-mpo   = mpq
-mpq   = 0
-isum  = 0
-
-!node list to start reordering sequence from
-DO j = 1, 160
-  nlist (j) = qlist (1, j)
-END DO
-
-nelt = 2
-n = nlist (1)
-
-!If starting node number higher then maximum node number, stop ordering and go back to reordering
-IF (n > MaxP) return
-
-!INFORMATION: unit name changed; changed iout to Lout
-WRITE (Lout, 6002) n
-WRITE (*,    6002) n
-6002 FORMAT (/1x,'Starting Node:      ', I6)
-
-nprt = 1
-!NiS,mar06: unit name changed; changed iout to Lout
-!      if(nprt.gt.0) write(Lout,6040)
-! 6040 format(//10x,'intermediate steps printed below'/                 
-!     *       10x,'node, bandwidth, frontwidth, and connections')       
- 6040 FORMAT(//10x,'Zwischenschritt siehe unten:'/  &
-            &  10x,'Knoten, Bandbreite, Frontbreite, und Verknuepfungen')
-
-nel = 1
-iel (1) = n
-mp = 0
-nod = 1
-
-!recalculate icon array to set those references neqative, that are in a later position related to active node
-allConnects: DO i = 1, maxc
-  jj = icon (n, i)
-  IF (jj == 0) CYCLE allConnects
-  DO m = 1, maxc
-    !if active, then already processed, so set following reference negative
-    IF (icon (jj, m) == n) then
-      icon (jj, m) = - icon (jj, m)
-      CYCLE allConnects
-    end if
-  END DO
-END DO allConnects
-
-!set values for each new point eliminated
-MainLoop: do
-  counter = counter + 1
-  IF (nel /= 1 .or. counter /= 1) then
-
-    !initialization of icol
-    DO i = 1, 41
-      DO j = 1, 40
-        icol (i, j) = 0
-      ENDDO
-    ENDDO
-
-    nod = nod + 1
-    !TODO: mist and nr are always of the same value; therefore nadm(nr) can be used as a single value, because only nadm(1) is used
-    mist = 0
-    nr = 1
-    nadm (nr) = 100
-
-    DO m = 1, mp
-      ii = list (m)
-      CALL adjpt (ii, m, kntimel, maxsize, icon)
-    END DO
-
-    m = icol (1, 1)
-    n = list (m)
-
-    IF (ihold (1) >= 249) THEN
-      m = 1
-      n = list (1)
-    ENDIF
-
-    ia = ihold (m)
-    nel = nel + 1
-
-    IF (nlist (nelt) /= 0) THEN
-      nelt = nelt + 1
-      n = nlist (nel)
-      allMPs: DO mm = 1, mp
-        m = mm
-        IF (list (m) == n) EXIT allMPs
-
-        IF (mm == mp) THEN
-          mp = mp + 1
-          list (mp) = n
-          m = mp
-        ENDIF
-
-      END DO allMPs
-    endif
-
-    iel (nel) = n
-
-    DO i = 1, m
-      ihold (i) = ihold (i) + 1
-    ENDDO
-
-    mp = mp - 1
-
-    IF (m <= mp) THEN
-
-      DO i = m, mp
-        ihold (i) = ihold (i + 1) + 1
-        list (i) = list (i + 1)
-      ENDDO
-    ENDIF
-  ENDIF
-
-  !add to column adjacent point of eliminated point
-  addColumn: DO j = 1, maxc
-    ii = icon (n, j)
-    IF (ii <= 0) CYCLE addColumn
-    mp = mp + 1
-    ihold (mp) = 1
-    list (mp) = ii
-  END DO addColumn
-
-  mpq = mp + mpq
-  isum = isum + ia
-
-!NiS,mar06: unit name changed; changed iout to Lout
-!if(nprt.gt.0) write(Lout,'(3i5)') n,ia,mp
-!if(nprt.gt.1) write(Lout,'(20x,25i4)')  (list(j),j=1,mp)
-
-  iconAssignouter: DO i = 1, maxc
-    jj = icon (n, i)
-
-    IF (jj <= 0) CYCLE iconAssignouter
-
-    iconAssignInner: DO m = 1, maxc
-      k = iabs (icon (jj, m) )
-
-      IF (k == 0) CYCLE iconAssignInner
-
-      DO mm = 1, maxc
-        IF (icon (k, mm) == jj) then
-          icon (k, mm) = - icon (k, mm)
-          cycle iconAssignInner
-        ENDIF
-      END DO
-
-    END DO iconAssignInner
-
-  END DO iconAssignouter
-
-  IF (nod >= nepem) EXIT MainLoop
-ENDDO MainLoop
-
-!NiS,mar06: unit name changed; changed iout to Lout
-!      write(Lout,6050) mpq,isum
-! 6050 format(//10x,'reordering sum =',i10,'  band sum =',i8// )        
-! 6050 format(//10x,'reordering Summe =',i10,'  Band Summe =',i8// )    
-IF (mpq.ge.mpo) mpq = mpo
-IF (mpq.eq.mpo) return
-DO n = 1, nepem
-  msn (n) = iel (n)
-END DO
-RETURN
-END SUBROUTINE order
-                                                                        
-                                                                        
-                                                                        
-!-----------------------------------------------------------------------
-      SUBROUTINE adjpt (ii, m, kntimel, maxsize, icon)
-!                                                                       
-!      ii == actual node number of open nodes in heading list
-!       m == running number of the actual node in heading list
-! kntimel == connection array (like nop-array)
-! maxsize == maximum connections of one node inside kntimel (depends on Transition line)
-!    icon == connectivity array: stores every node to node connection
-!
-! purpose of subroutine:
-!
-!
-!
-!-----------------------------------------------------------------------
-!-
-USE BLK10MOD
-USE BLK2
-USE BLKASTEPH
-
-INTEGER :: maxsize
-INTEGER :: kntimel (1:MaxE, 1:maxsize)
-INTEGER :: icon (1:MaxP, 1:60)
-integer :: maxcn
-
-parameter (maxcn = 60)
-
-
-maxc = maxcn
-nad  = 0
-                                                                        
-!through all possible connections
-countloop: DO i = 1, maxc
-  !get connected node number
-  jj = icon (ii, i)
-  !jump over negative node references (they are deactivated!)
-  IF (jj <= 0) cycle countloop
-
-  !?What is mist?
-  IF (jj == mist) cycle countloop
-
-  !increase number of adject nodes
-  nad = nad+1
-END DO countloop
-                                                                        
-IF (nad - nadm (nr) < 0) then
-  nadm (nr) = nad
-  icol (nr, 1) = m
-  nc = 1
-ELSEIF (nad - nadm(nr) == 0) then
-  nc = nc + 1
-  icol (nr, nc) = m
-endif
-
-RETURN
-END SUBROUTINE adjpt
-                                                                        
-                                                                        
-                                                                        
-
 !-----------------------------------------------------------------------
 !nis,dec06: Adding TLcnt as counter for number of 1D-2D-Transition lines
 !SUBROUTINE RDKALYPS(nodecnt,elcnt,arccnt,KSWIT)
@@ -712,13 +61,14 @@ USE Para1DPoly  !Modul für Teschke-1D-Elemente
 REAL                   :: x, y, z                      !temporary coordinate-spaces for generation of new midside-nodes
 REAL                   :: vekkant(2),vekpu1(2),kreuz   !variables for checking-sequence of mesh
 REAL                   :: wsp                          !???
+real                   :: hhmin_loc
 !NiS,mar06: Comments added to:
 !REAL 	:: x, y, z, vekkant (2), vekpu1 (2), kreuz, wsp
 
 INTEGER                :: i, j, k, l		       !loop-counters with different meanings
 INTEGER                :: m, n                         !copy of nodecount and elementcount at the end of the subroutine; the need is not clear!
 INTEGER                :: elzaehl, mittzaehl           !real element and midside counters
-INTEGER, ALLOCATABLE   :: arc(:,:)  	               !local array for saving the arc-informations and passing them to the sorting process
+INTEGER,ALLOCATABLE    :: arc(:,:)  	               !local array for saving the arc-informations and passing them to the sorting process
 !nis,dec06: for neighbourhood relations at line couplings
 INTEGER, ALLOCATABLE   :: nop_temp (:)
 INTEGER                :: ncorn_temp
@@ -734,15 +84,18 @@ INTEGER                :: PolySplitCountA, PolySplitCountQ, polySplitCountB
 !nis,feb07: Adding numberation for Flow 1D FE element midside nodes
 !INTEGER                :: fffcnt, AddCnt               !counter for midside nodes of flow1D-FE elements, so that they can also be enumberated
 !-
-INTEGER                :: elem (MaxE, 6)               !local array for element informations ([number of arcs +1]; node-numbers of corners); dependent
+INTEGER, allocatable :: elem (:, :)                    !local array for element informations ([number of arcs +1]; node-numbers of corners); dependent
                                               	       !on the type and shape of element; the first entry can also show 1D-ELEMENT with negative value
-INTEGER                :: elkno(5), mikno(4)           !local array for loop, that generates midsides for elements where no midside is assigned
-INTEGER                :: elfix (MaxE)                 !for reordering subroutine of RMA1, not used in RMA10S
-INTEGER                :: istat                        !IOSTAT-Value that becomes non-zero while input-reading-errors
+INTEGER              :: elkno(5), mikno(4)           !local array for loop, that generates midsides for elements where no midside is assigned
+INTEGER, allocatable :: elfix (:)                      !for reordering subroutine of RMA1, not used in RMA10S
+INTEGER              :: istat                        !IOSTAT-Value that becomes non-zero while input-reading-errors
 
 !nis,dec06: Local supporting variable for reading Continuity lines
 INTEGER                :: DefLine
 !-
+
+!nis,aug08: Reordering sequence renewing
+logical :: ReorderingNotDone
 
 !NiS,mar06: Comments added and array sizes changed to:
 !INTEGER :: i, j, k, l, m, n, elzaehl, mittzaehl, arc (mnd, 5),&
@@ -751,9 +104,9 @@ INTEGER                :: DefLine
 
 !In order of global conflicts id is renamed to id_local
 !CHARACTER(LEN=2)       :: id
-CHARACTER (LEN=2)      :: id_local                     !line data identifier for reading input/restart-file
+CHARACTER (LEN=2)       :: id_local                     !line data identifier for reading input/restart-file
 CHARACTER (LEN=2400)    :: linie                        !temporary input space for reading input/restart-file
-CHARACTER (LEN=20)     :: inquiretest
+CHARACTER (LEN=20)      :: inquiretest
 !LOGICAL                :: inquiretest
 
 !NiS,mar06: the following variables were already used in the KALYPSO-2D version, but were never declared. Now they are.
@@ -772,7 +125,7 @@ INTEGER                :: node1, node2                 !temporary node spaces fo
 INTEGER                :: temparc(5)                   !reading an arc at the option of KSWIT=1, when the ARC-array is not yet assigned
 INTEGER                :: arcs_without_midside         !counting the number of arcs that have no explicitly defined midside to increase the number of
                                 		       !MAXP at the end of the dimensioning run for array allocation in initl.subroutine
-INTEGER 	              :: midsidenode_max              !comparison variable for the highest necessary node number, so it can be tested, whether
+INTEGER                :: midsidenode_max              !comparison variable for the highest necessary node number, so it can be tested, whether
                                       		       !the node list is complete
 !NiS,apr06: NEW SWITCH AND FILE READING CONTROL OPTIONS
 INTEGER                :: KSWIT                        !Switch for Run-option of this subroutine;
@@ -790,14 +143,6 @@ INTEGER                :: ConnNumber
 !NiS,mar06: the following common block has been replaced by global module called ParaKalyps
 
 
-
-!SR:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-!SR Zusaetzliche Schalter-Variablen fuer die Nachvermaschung des CVFEM-A
-!SR Diese Schalter wurden in den Lesevorgang implementiert:             
-                                                                        
-!WP bei traditionell GFEM nicht noetig, aber erst mal nicht auskommentiert
-COMMON / vnach / cvva, cvga, cvvo, cvgo, cvzu, cvfe, cvarccnt
-!SR:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 !tm Thomas Maurer, 15.05,1998
 !tm linie von *80 auf *120 verlaengert                                  
 !tm Anpassung an "verlaengerten" *.2D file, d.h.                        
@@ -806,6 +151,8 @@ COMMON / vnach / cvva, cvga, cvvo, cvgo, cvzu, cvfe, cvarccnt
 
 
 ! INITIALISIERUNGSBLOCK -----------------------------------------------------------------------
+
+allocate (elem (MaxE, 6), elfix (MaxE))
 
 IF (KSWIT==1) THEN        !In the first case the value MAXA has to be found, the allocation of
   MAXA = 0                  !arc(i,j) is not necessary for the first run, so that it is allocated
@@ -841,22 +188,12 @@ TLcnt   = 0
 !fffCnt = 0
 !AddCnt = 0
 !-
+
 !nis,dec06: Initilaizing CCL supporting variable
 DefLine = 0
-!-
-
-!WP Auch Initialisierung bei traditionell GFEM nicht noetig, aber
-!   erst mal dringelassen
-cvva = 0
-cvga = 0
-cvvo = 0
-cvgo = 0
-cvzu = 0
-cvfe = 0
-!WP Ende
 
 !LF nov06: initialize the number of weir elements
-    weircnt=0
+weircnt=0
 
 !NiS,mar06: temparc is an array for reading arc informations in the dimensioning run (KSWIT.eq.1)
 DO i=1,5
@@ -935,7 +272,6 @@ reading: do
 
     !NODE DEFINITIONS ---
     IF (linie (1:2) .eq.'FP') THEN
-
       !NiS,mar06: Find out maximum NODE number
       IF (KSWIT == 1) then
         read (linie, '(a2,i10)') id_local,i
@@ -943,56 +279,45 @@ reading: do
       !NiS,mar06: Read NODE geometry informations
       ELSE
         istat=0
-
         !TODO: Format differentiation
         READ (linie, *,IOSTAT=istat) id_local, i, cord (i, 1) , cord (i, 2), ao (i),kmx(i)
-
         if (istat.eq.0) then
           WRITE(lout,*)'Die Kilometrierung von Knoten',i,'wurde eingelesen:',kmx(i)
         end if
-
         IF (i.gt.nodecnt) nodecnt = i
-
         !ERROR
         IF (i <= 0) call ErrorMessageAndStop (1002, i, 0.0d0, 0.0d0)
-
       ENDIF
     ENDIF
 
     !ARC DEFINITIONS ---
     IF (linie (1:2) .eq.'AR') then
-
-      !NiS,mar06: Find out maximum ARC number
+      !Find out maximum ARC number
       IF (KSWIT == 1) then
         !NiS,mar06: changed id to id_local; global conflict
         READ (linie, '(a2,6i10)') id_local,i, (temparc(j),j=1,5)
         IF (i  > arccnt) arccnt = i
-
         !Remember, whether ARC has no midside node
         IF (temparc(5) == 0) then
           arcs_without_midside = arcs_without_midside + 1
-
         !Remember the maximum midside ID-number, if midside is defined
         ELSEIF (temparc(5) > 0) then
           midsidenode_max = MAX (midsidenode_max,temparc(5))
-
         else
           !ERROR
           call ErrorMessageAndStop (1101, temparc(5), cord(temparc(1), 1), cord(temparc(1), 2))
-
         ENDIF
-      !NiS,mar06: Read ARC geometry informations
+      !Read ARC geometry informations
       ELSE
         READ (linie,'(a2,6i10)') id_local, i, (arc(i,j), j=1, 5)
+        !Look for errors in enumeration
         IF (i > arccnt) arccnt = i
-
         !ERROR - negative arc number
         IF (i <= 0) call ErrorMessageAndStop (1301, i, 0.0d0, 0.0d0)
-
       ENDIF
     ENDIF
 
-    !nis,jan08: Interpolation information for elements
+    !Interpolation information for elements
     IF (linie(1:2) == 'IP') THEN
       IF (kswit == 1) THEN
         READ (linie, '(a2, i10, i10)') id_local, i, j
@@ -1003,16 +328,8 @@ reading: do
       ENDIF
     ENDIF
 
-    !EFa Nov06, Gültigeitsgrenzen der Polynome
-    IF (linie(1:2) .eq. 'MM') THEN
-      IF (KSWIT == 1) then
-        read (linie, '(a2,i10)') id_local, i
-      else
-        read (linie, '(a2,i10,2f20.7)') id_local, i, hhmin(i), hhmax(i)
-!        PolyRangeQ (i, 1) = hhmax (i)
-!        PolyRangeA (i, 1) = hhmax (i)
-      endif
-    end if
+    !nis,aug08: Valid range of polynomials is not needed anymore
+    IF (linie(1:2) .eq. 'MM') continue
 
     !nis,nov07: new range line ID (polynom range PR)
     !id_local  = 'PR'
@@ -1026,8 +343,9 @@ reading: do
         if (PolySplitCountA < j) PolySplitCountA = j
       else
         linestat = 0
-        read (linie, *, iostat = linestat) id_local, i, polySplitsA(i), hhmin(i), (polyrangeA(i, k), k=1, polySplitsA(i))
-        hhmax(i) = polyrangeA (i, polySplitsA(i))
+        read (linie, *, iostat = linestat) id_local, i, polySplitsA(i), hhmin_loc, (polyrangeA(i, k), k=1, polySplitsA(i))
+        hhmin(i) = max (hhmin(i), hhmin_loc)
+        hhmax(i) = min (hhmax(i), polyrangeA (i, polySplitsA(i)))
       endif
     end if
     if (linie(1:3) .eq. 'PRQ') then
@@ -1037,8 +355,9 @@ reading: do
         if (PolySplitCountQ < j) PolySplitCountQ = j
       else
         linestat = 0
-        read (linie, *, iostat = linestat) id_local, i, polySplitsQ(i), hhmin(i), (polyrangeQ(i, k), k=1, polySplitsQ(i))
-        hhmax(i) = polyrangeQ (i, polySplitsQ(i))
+        read (linie, *, iostat = linestat) id_local, i, polySplitsQ(i), hhmin_loc, (polyrangeQ(i, k), k=1, polySplitsQ(i))
+        hhmin(i) = max (hhmin (i), hhmin_loc)
+        hhmax(i) = min (hhmax (i), polyrangeQ (i, polySplitsQ(i)))
       endif
     end if
     if (linie(1:3) .eq. 'PRB') then
@@ -1047,10 +366,14 @@ reading: do
         read (linie, *, iostat = linestat) id_local, i, j
         if (PolySplitCountB < j) PolySplitCountB = j
       else
-        linestat = 0
-        read (linie, *, iostat = linestat) id_local, i, polySplitsB(i), hhmin(i), (polyrangeB(i, k), k=1, polySplitsB(i))
-        hhmax(i) = polyrangeB (i, polySplitsB(i))
-        hbordv (i) = polyrangeB (i, 1)
+        !nis,aug08: Just read polynomial range of Boussinesq-polynomial, if it's used.
+        if (beient /= 0 .and. beient /= 3) then
+          linestat = 0
+          read (linie, *, iostat = linestat) id_local, i, polySplitsB(i), hhmin_loc, (polyrangeB(i, k), k=1, polySplitsB(i))
+          hhmin(i) = max (hhmin(i), hhmin_loc)
+          hhmax(i) = min (hhmax(i), polyrangeB (i, polySplitsB(i)))
+          hbordv (i) = polyrangeB (i, 1)
+        endif
       endif
     end if
     !nis,nov07: new range line ID (polynom range PR)
@@ -1072,186 +395,42 @@ reading: do
       endif
     end if
     if (linie(1:3) .eq. 'ALP') then
-      IF (KSWIT /= 1) then
-        linestat = 0
-        read (linie, *, iostat = linestat) id_local, i, j, (alphapoly(j, i, k), k = 0, 12)
+      if (beient /= 0 .and. beient /= 3) then
+        IF (KSWIT /= 1) then
+          linestat = 0
+          read (linie, *, iostat = linestat) id_local, i, j, (alphapoly(j, i, k), k = 0, 12)
+        endif
       endif
     end if
     if (linie(1:3) .eq. 'BEP') then
-      IF (KSWIT /= 1) then
-        linestat = 0
-        read (linie, *, iostat = linestat) id_local, i, j, (betapoly(j, i, 0), k = 0, 12)
+      if (beient /= 0 .and. beient /= 3) then
+        IF (KSWIT /= 1) then
+          linestat = 0
+          read (linie, *, iostat = linestat) id_local, i, j, (betapoly(j, i, 0), k = 0, 12)
+        endif
       endif
     end if
 
-    !nis,nov07: old way of defining area-polynomial
-    !EFa Nov06, Flächenpolynom
-    if (linie (1:3) .eq. 'AP1') then
-
-      IF (kswit == 1) THEN
-        if (PolysplitCountA == 0) PolySplitCountA = 1
-      ELSE
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(1, i, j), j = 0, 4)
-        polySplitsA (i) = 1
-      endif
-    end if
-    if (linie (1:3) .eq. 'AP2') then
-      IF (KSWIT /= 1) then
-        read (linie, '(a3,i9,5f20.7)') id_local, i,(apoly(1, i, j), j = 5, 9)
-      endif
-    end if
-    if (linie (1:3) .eq. 'AP3') then
-      IF (KSWIT /= 1) then
-        read (linie, '(a3,i9,3f20.7)') id_local, i, (apoly(1, i, j), j = 10, 12)
-      endif
-    end if
-
-    !nis,nov07: old way of defining discharge-polynomial
-    !EFa Nov06, Q(h)-Kurve
-    if (linie (1:3) .eq. 'QP1') then
-      if (kswit == 1) then
-        if (PolysplitCountQ == 0) PolySplitCountQ = 1
-      else
-        read (linie, '(a3,i9,5f20.7)') id_local, i, qgef(i),(qpoly(1, i, j), j = 0, 3)
-        polySplitsQ (i) = 1
-      endif
-    end if
-    if (linie (1:3) .eq. 'QP2') then
-      IF (KSWIT /= 1) then
-        read (linie, '(a3,i9,5f20.7)') id_local, i, (qpoly(1, i, j), j = 4, 8)
-      endif
-    end if
-    if (linie (1:3) .eq. 'QP3') then
-      IF (KSWIT /= 1) then
-        read (linie, '(a3,i9,4f20.7)') id_local, i, (qpoly(1, i, j), j = 9, 12)
-      endif
-    end if
-
-
-    !EFa Nov06, h-Bordvoll
-    if (linie(1:2) .eq. 'HB') then
-      IF (KSWIT == 1) then
-        read (linie,'(a2,i10)') id_local,i
-      else
-        read (linie,'(a2,i10,f20.7)') id_local, i, hbordv (i)
-        PolyRangeB(i, 1) = hbordv (i)
-        !write (*,*) 'HB', i, hbordv(i)
-      endif
-    end if
-
-    !EFa Nov06, alpha-Übergang bis h
-    if (linie (1:2) .eq. 'AD') then
-      IF (KSWIT == 1) then
-        read (linie, '(a2,i10)') id_local, i
-        if (PolysplitCountB == 0) PolySplitCountB = 3
-      else
-        read (linie, '(a2,i10,5f20.7)') id_local, i, PolyRangeB(i, 2), (alphapoly (2, i, j), j = 0, 3)
-        !fill alphapoly (1,:,:)
-        if (PolysplitCountB == 0) PolySplitCountB = 1
-        alphapoly (1, i, 0) = 1.0
-        polySplitsB (i) = 3
-      endif
-    end if
-
-    !EFa Nov06, alpha-Beiwertpolynomkoeffizienten
-    if (linie (1:3) .eq. 'AK1') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,5f20.7)') id_local, i, (alphapoly (3, i, j), j = 0, 4)
-        !write (*,*) 'AK1',i,(alphapk(i,j), j=1,5)
-      endif
-    end if
-
-    if (linie (1:3) .eq. 'AK2') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,5f20.7)') id_local, i, (alphapoly (3, i, j), j = 5, 9)
-        !write (*,*) 'AK2',i,(alphapk(i,j), j=6,10)
-      endif
-    end if
-
-    if (linie (1:3) .eq. 'AK3') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,3f20.7)') id_local, i, (alphapoly (3, i, j), j = 10, 12)
-        !write (*,*) 'AK3',i,(alphapk(i,j), j=11,13)
-      endif
-    end if
-
-    !EFa Nov06, beta-Übergang bis h
-    if (linie (1:2) .eq. 'BD') then
-      IF (KSWIT == 1) then
-        read (linie, '(a2,i10)') id_local, i
-        if (PolysplitCountB == 0) PolySplitCountB = 3
-      else
-        read (linie, '(a2,i10,5f20.7)') id_local, i, PolyRangeB(i, 2), (betapoly (2, i, j), j = 0, 3)
-        !fill alphapoly (1,:,:)
-        betapoly (1, i, 0) = 1.0
-        polySplitsB (i) = 3
-      endif
-    end if
-
-    !EFa Nov06, beta-Beiwertpolynomkoeffizienten
-    if (linie (1:3) .eq. 'BK1') then
-       IF (KSWIT == 1) then
-         read (linie, '(a3,i9)') id_local, i
-       else
-         read (linie, '(a3,i9,5f20.7)') id_local, i, (betapoly (3, i, j), j = 0, 4)
-         !write (*,*) 'BK1',i,(betapk(i,j), j=1,5)
-       endif
-    end if
-
-    if (linie (1:3) .eq. 'BK2') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,5f20.7)') id_local, i, (betapoly (3, i, j), j = 5, 9)
-        !write (*,*) 'BK2',i,(betapk(i,j), j=6,10)
-      endif
-    end if
-
-    if (linie (1:3) .eq. 'BK3') then
-      IF (KSWIT == 1) then
-        read (linie, '(a3,i9)') id_local, i
-      else
-        read (linie, '(a3,i9,3f20.7)') id_local, i, (betapoly (3, i, j), j = 10, 12)
-        !write (*,*) 'BK3',i,(betapk(i,j), j=11,13)
-      endif
-    end if
-
-    !get CalculationUnit affiliation
-    if (linie (1:2) == 'CU') then
-      if (KSWIT /= 1) then
-        read (linie, '(a2, 2i10, a)') id_local, i, CalcUnitID (i), CalcUnitName (i)
-      endif
-    end if
     !ELEMENT DEFINITIONS ---
     IF (linie (1:2) .eq.'FE') then
       !NiS,mar06: Find out maximum ELEMENT number
       IF (KSWIT == 1) THEN
         READ (linie, '(a2,i10)') id_local, i
         IF (i > elcnt) elcnt = i
+      !Read geometry into arrays
       ELSE
-        cvfe = 1
         !NiS,mar06: changed id to id_local; global conflict
         READ (linie, '(a2,4i10)') id_local, i, imat (i), imato (i), nfixh (i)
 
-!LF nov06: read again the FE line for the starting node of a weir element
+        !LF,nov06: Read again the FE line for the starting node of a weir element
         if (imat(i) .gt. 903 .and. imat(i) .lt. 990) then
           weircnt = weircnt + 1
           read (linie, '(a2,5i10)') id_local, i, imat(i), imato(i), nfixh(i), reweir(weircnt,1)
-
           !ERROR - no starting node for weir element definition was found
           if (reweir (weircnt, 1) <= 0) call ErrorMessageAndStop (1003, i, 0.0d0, 0.0d0)
-
           reweir (weircnt, 2) = i
         end if
-!-
         IF (i > elcnt) elcnt = i
-
         IF (i <= 0) call ErrorMessageAndStop (1004, i, 0.0d0, 0.0d0)
       ENDIF
     ENDIF
@@ -1261,17 +440,12 @@ reading: do
       !NiS,mar06: Find out maximum ELEMENT number
       IF (KSWIT == 1) THEN
         READ (linie, '(a2,i10)') id_local,i
-        IF (i.gt.elcnt) elcnt = i
+        IF (i > elcnt) elcnt = i
       ELSE
-        cvfe = 1
-
         !NiS,mar06: changed id to id_local; global conflict
         READ (linie, '(a2,9i10)') id_local, i, (nop(i, j), j=1, 8)
-
         IF (i > elcnt) elcnt = i
-
         IF (i <= 0) call ErrorMessageAndStop (1005, i, 0.0d0, 0.0d0)
-
       ENDIF
     ENDIF
 
@@ -1326,16 +500,13 @@ reading: do
       ELSE
         WRITE(*,*) MaxLT
         READ (linie, '(a2,5i10)') id_local, i, (TransLines (i, k), k = 1, 4)
-
         !Apply default TransLines (i)
         if (istat /= 0 .and. TransLines(i, 4) == 0 &
         &   .or. &
         &   (TransLines (i, 4) /= 1 .and. TransLines (i, 4) /= 2 .and. TransLines (i, 4) /= 3) ) then
           TransLines (i, 4) = 1
         end if
-
         TransitionElement (TransLines(i, 1)) = .true.
-!        MaxLT = MaxLT + 1
       END IF
     end if
     !-
@@ -1344,12 +515,11 @@ reading: do
     !           of CCLs for defining line geometry at transitions. For reordering purposes it is necessary to be able to read in Continuity
     !           lines at the beginning together with the network.
     if (linie(1:2).eq.'CC') then
-
         read (linie,'(a2,i1,i5)') id_local,DefLine,i
       if (kswit.eq.1) then
-        if (DefLine.eq.1) WRITE(*,*) 'Continuity Line',i, 'defined in network file.'
+        if (DefLine == 1) WRITE(*,*) 'Continuity Line',i, 'defined in network file.'
       else
-        if (DefLine.eq.1) then
+        if (DefLine == 1) then
           read (linie(9:80),'(9i8)') (line(i,k),k=1,9)
           !Remember Line number
           if (i.gt.NCL) NCL = i
@@ -1379,58 +549,47 @@ reading: do
       READ (linie, '(a2,1x,a32)') id_local, name_cwr
     ENDIF
 
-    !NiS,apr06:
     !DATE INFORMATIONS IN RMA10S FORMAT ---
     IF (linie (1:2) == 'DA') THEN
       READ (linie, '(a2,i10,f20.7)') id_local, iyrr, tett
     ENDIF
-    !-
 
     !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
     IF (linie (1:2) .eq.'VA') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !wsp = 0.0
-      !cvva = 1
-      !-
       READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
-      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
+      !nis,aug08: If node number is zero, it has no coordinates; use dummy coordinates 0.0
+      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, 0.0d0, 0.0d0)
     ENDIF
-!    !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP; ONLY FOR INTERPOLATED PROFILES/ NODES ---
-!    IF (linie (1:2) .eq.'IR') then
-!      !NiS,apr06: variables deactivated for RMA10S
-!      !wsp = 0.0
-!      !cvva = 1
-!      !-
-!      READ(linie,'(a2, i10, 4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
-!      !ERROR - restart values can't be applied to node out of zero-maxp-Range
-!      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
-!      !ERROR - TRYING TO APPLY RESULT OF INTERPOLATED PROFILE/ NODE TO A REAL NODE
-!      if (.not. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
-!    ENDIF
+
+    !INITIAL VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP; ONLY FOR INTERPOLATED PROFILES/ NODES ---
+    IF (linie (1:2) .eq.'IR') then
+      READ(linie,'(a2, i10, 4f20.7)') id_local, i, (vel(j,i), j=1, 3), rausv (3, i)
+      !ERROR - restart values can't be applied to node out of zero-maxp-Range
+      IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
+      !ERROR - TRYING TO APPLY RESULT OF INTERPOLATED PROFILE/ NODE TO A REAL NODE
+      if (.not. (IntPolProf (i))) call ErrorMessageAndStop (1602, i, cord (i, 1), cord (i, 2))
+    ENDIF
 
     !NiS,may06: these degrees of freedom are missing in Kalypso-2D, because they are not used there; adding for application in RMA10S
     !INITIAL VALUES FOR DEGREES OF FREEDOM 4 TO 7 ---
-    IF (linie(1:2) .eq. 'DF') THEN
+    IF (linie(1:2) == 'DF') THEN
       READ(linie,'(a2,i10,4f20.7)') id_local, i, (vel(j,i), j=4,7)
       !ERROR - restart values can't be applied to node out of zero-maxp-Range
       IF (i > MaxP .or. i <= 0) call ErrorMessageAndStop (1601, i, cord (i, 1), cord (i, 2))
     END IF
-    !-
 
     !MD: read flow resistance for Sediment-Transport
     IF (linie(1:2) .eq. 'FR') THEN
       READ(linie,'(a2,i10,4f15.7)') id_local, i, lambdaTot(i), lambdaKS(i), lambdaP(i), lambdaDunes(i)
       !MD: read flow resistance results for elements
       !ERROR - restart values can't be applied to element out of zero-maxe-Range
-      IF (i > MaxE .or. i <= 0) call ErrorMessageAndStop (1603, i)
+      !nis,aug08: Function must be called with the correct number of arguments; use dummy arguments 0.0 as coordinates)
+      IF (i > MaxE .or. i <= 0) call ErrorMessageAndStop (1603, i, 0.0d0, 0.0d0)
     end if
 
     !INITIAL GRADIENTS OF VELOCITIES AND WATER DEPTH OF ACTIVE TIME STEP ---
-    IF (linie (1:2) .eq.'GA') then
-      !NiS,apr06: variables deactivated for RMA10S
-      !cvga = 1
-      !-
+    IF (linie (1:2) == 'GA') then
       READ (linie, '(a2,i10,3f20.7)') id_local, i, (vdot(j,i),j=1,3)
       !NiS,mar06: name of variable changed; changed mnd to MaxP
       !Stop program execution on nodenumber higher than MaxP; could normally not happen
@@ -1440,19 +599,19 @@ reading: do
     ENDIF
 
     !VALUES OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-    IF (linie (1:2) .eq.'VO') then
+    IF (linie (1:2) == 'VO') then
       !NiS,apr06: variables deactivated for RMA10S
       !cvvo = 1
       READ (linie, '(a2,i10,3f20.7)') id, i, (vold (j, i) , j=1,3)             !vold muss NICHT gelesen werden
       !NiS,mar06: name of variable changed; changed mnd to MaxP
       !Stop program execution on nodenumber higher than MaxP; could normally not happen
-      IF (i.gt.MaxP) stop 'i.gt.MaxP'
+      IF (i > MaxP) stop 'i > MaxP'
       !Stop program execution on negative NODE number
-      IF (i.le.0) stop 'Knotennummer.le.0'
+      IF (i <= 0) stop 'Knotennummer <= 0'
     ENDIF
 
     !GRADIENTS OF VELOCITIES AND WATER DEPTH OF OLD TIME STEP ---
-    IF (linie (1:2) .eq.'GO') then
+    IF (linie (1:2) == 'GO') then
       !NiS,apr06: variables deactivated for RMA10S
       !cvvo = 1
       READ (linie, '(a2,i10,3f20.7)') id, i, (vdoto (j, i) , j=1,3)            !vdoto muss NICHT gelesen werden
@@ -1486,18 +645,6 @@ reading: do
 
   ENDIF KSWITTEST 
 
-! DEACTIVATED ID-LINES IN KALYPSO-2D GEOMETRY FILE ---------------------------------------------
-
-    !TITEL INFORMATIONS ---
-    !IF (linie (1:2) .eq.'TI') then
-    !  READ (linie, '(a2,f20.7,i10)') id, tet, nitsv                            !tet muss NICHT gelesen werden
-    !ENDIF
-
-    !RESTART FILE INFORMATIONS ---
-    !IF (linie (1:2) .eq.'RS') then
-    !  READ (linie, '(a2,a80)') id, restart
-    !ENDIF
-
 END DO reading
 WRITE(*,*) ' Schaffe die Leseschleife'
 
@@ -1517,9 +664,6 @@ if (KSWIT == 0) then
   end do CClineforming
 endif
 !-
-
-!NiS,mar06: file is closed in the calling subroutine getgeo; it can't be closed here because it is used twice
-!CLOSE (12)
 
 !ENDBLOCK FOR THE CASE OF DIMENSION READING (KSWIT.eq.1) ----------------
 !NiS,mar06: leave subroutine, if FE-net dimensions are ascertained
@@ -1551,8 +695,6 @@ ELSEIF (KSWIT == 2) THEN
 ENDIF
 
 
-!     write(iout,*)' goto 900: nodecnt=',nodecnt
-
 !     TRANSLATION TO KALYPSO-2D FORMAT -----------------------------------------------------
 !     UMSETZUNG AUF KALYPSO-2D FORMAT ------------------------------------------------------
 
@@ -1569,16 +711,13 @@ ENDIF
 !     - ELEM(j,1) Kantenanzahl + 1
 !     - ELEM(j,2-4/5) Kantennummern
 !     mit j=Elementnummer
-
 !NiS,may06: every arc's element(s) will be saved in the elem-array, which shows after Loop-Execution the grouping of nodes belonging to an element.
 !           The stored values are: On the first place the number of nodes associated with the element and on the 2nd to 5th place the nodes (unsorted)
 !
 !           Changed the if-clauses in the way that, 1D, 1D-2D-transitions and 2D-elements can be recognized
 DO i = 1, arccnt
-
   !1D-ELEMENT, 1D-2D-TRANSITION-ELEMENT or DEAD ARC
   IF (arc(i,3) == arc(i,4)) THEN
-
     !SKIP DEAD ARCS WITH NO ELEMENT NUMBERS ASSIGNED
     IF (arc(i,3) == 0) THEN
       WRITE (Lout,9003) i
@@ -1593,7 +732,6 @@ DO i = 1, arccnt
         !ERROR - 1D-element is used twice which is not possible
         call ErrorMessageAndStop (1302, j, 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
                                 &          0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
-
       !assign identification for 1D-NODES (elem(j,1).eq.-1) for normal 1D-ELEMENTS and (elem(j,1).eq.-2) for 1D-2D-transition elements; remember
       !the ARC, that defines the 1D-ELEMENT for later NODE extraction
       ELSE
@@ -1616,22 +754,18 @@ DO i = 1, arccnt
       j = arc (i, k)
       !Testing, whether placeholder has element informations
       IF (j.gt.0) then
-
         !ERROR - element is used twice which is not possible
         IF (elem (j, 1) == -1) call ErrorMessageAndStop (1302, j,                  &
                              & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
                              & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
-
         !Testing, whether it is the first defining arc
         IF (elem (j, 1) .eq.0) elem (j, 1) = 1
         !Increase number of assigned ARCS to ELEMENT by increment =1
         elem (j, 1) = elem (j, 1) + 1
-
         !ERROR - Element is defined with more than 4 arcs
         IF (elem (j, 1) > 5) call ErrorMessageAndStop (1202, j,                      &
                                & 0.5 * (cord (arc (i,1), 1) + cord (arc (i, 2), 1)), &
                                & 0.5 * (cord (arc (i,1), 2) + cord (arc (i, 2), 2)))
-
         ! Dem Feld ELEM(j,2...5) wird die Nummer der Kante zugewiesen. (z.B.) ELEM(1000,2)=45
         elem (j, elem (j, 1) ) = i
       ENDIF
@@ -1642,7 +776,6 @@ ENDDO
 
 !NiS,may06: For that no error message is disturbing while reading the code above, it is written at the end of the Loop
  9003 format ('Just informational:',/' No elements assigned to ARC ',i6,/'DEAD ARC!')
-!-
 
 !NiS,mar06: unit name changed; changed iout to Lout
 WRITE (Lout, 110 )
@@ -1651,21 +784,19 @@ WRITE ( *  , 110 )
 
 ! ASSIGNING NODES TO ELEMENTS WITHOUT SORTING ------------------------------
 
-!NiS,may06: adaption of all_elem-DO-LOOP for 1D-ELEMENTS; some changes.
+!adaptation of all_elem-DO-LOOP for 1D-ELEMENTS; some changes.
 ! Knotennummern am Element (linksherum) einordnen
 ! dazu alle Elemente durchgehen
 elzaehl = 0
 
 !WP Schleife ueber alle Elemente (1...elcnt)
 all_elem: DO i = 1, elcnt                                         !In the loop for every element in elcnt the following steps are made:
-
   !WP Initialisieren des Elementes
   kno: DO j = 1, 4
     elkno (j) = 0
     mikno (j) = 0
   END DO kno
   elkno (5) = 0
-
   ! leere Elementnummern uebergehen:
   IF (elem (i, 1) .eq. 0) CYCLE all_elem                          !if the element with the actual number i is 0 then cycle and try the next
 
@@ -1687,18 +818,6 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
       nop(i,2) = arc(elem(i,2),5)
     ENDIF
 
-  !EFa Nov06, 1D-Teschke-Element
-  ELSEIF (elem(i,1) .EQ. -3) then
-    !EFa Nov06, for 1D_Teschke-elements, the number of nodes is 3 and the number of corner nodes is 2
-    jnum = 2
-    ncorn(i) = 3
-
-    !EFa Nov06, Passing corner nodes to nop array
-    nop (i, 1) = arc (elem(i, 2), 1)
-    nop (i, 3) = arc (elem(i, 2), 2)
-    !Mittseitenknoten
-    nop (i, 2) = arc (elem(i, 2), 5)
-
   !1D-2D-transition elements -------------
   ELSEIF (elem(i,1) .EQ. -2) THEN
     !for transition elements, the corner nodes were defined, with an eventual exception of the midside node
@@ -1719,7 +838,6 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
 
     !ERROR - element has less than 3 arcs, which is not possible
     IF (jnum == 1 .or. jnum == 2) call ErrorMessageAndStop (1203, i, cord(arc (elem (i, 2), 5), 1) , cord(arc (elem (i, 2), 5), 2))
-
 
     ! erste Kante:                                                  !starting with the first arc, the element's nodes in anticlockwise direction
     l = 1                                                           !will be saved in a temporary array to write them later into the array nop.
@@ -1789,6 +907,11 @@ all_elem: DO i = 1, elcnt                                         !In the loop f
         nop (i, j * 2) = mikno (j)
       ENDIF
     END DO
+    
+    !nis,jul08: Copy nodes to mops array
+    do j = 1, 8
+      nops (i, j) = nop (i, j)
+    enddo
 
     ! Kantenkreuzung,Verdrehung abfragen  --------------------------!the actual element is checked for crossing arcs or something else,
     crossing_outer: DO j = 1, jnum - 2                                !not congruent.
@@ -1835,15 +958,9 @@ WRITE (*   ,102) elzaehl
 
 ! GENARATION OF REQUIRED MIDSIDE NODES ---------------------------------------------------------------------
 
-!     Erzeugen der erforderlichen Mittseitenknoten
+!Erzeugen der erforderlichen Mittseitenknoten
 !initializing the counter variable for additional midside nodes.
 mittzaehl = 0
-
-!SR::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-!SR Speichern der Kantenanzahl fuer Eckknotenspezifische Fehler-
-!SR ausgabe
-cvarccnt = arccnt
-!SR::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
                                                                         
 !NiS,mar06: Changed DO-LOOP to cycle it clearly
 !DO 1400 i = 1, arccnt
@@ -1903,53 +1020,38 @@ all_arcs: DO i=1,arccnt
   x = (cord (ibot, 1) + cord (itop, 1) ) / 2.0
   y = (cord (ibot, 2) + cord (itop, 2) ) / 2.0
   z = (ao (ibot) + ao (itop) ) / 2.0
-
-!WP 03.04.03 Anfang
-!
-! Aenderungen von SR, Funktion der Abfrage nicht ganz klar.
-! Erst ab CVFEM-Version vorhanden. Wird erstmal drin gelassen.
-!
-    IF (x.lt.0.000001.and.y.lt.0.000001.and.z.lt.0.000001) then
-      !NiS,mar06: unit name changed; changed iout to Lout
-      WRITE (Lout, 3702) i, ibot, itop, mittzaehl
- 3702 FORMAT      (4i10)
-    ENDIF
-!
-!WP 03.04.03 Ende
-!
                                                                         
-    !Install the temporary values in the proper global array lines; these lines could be economized with calculating directly without locals
-    cord (nodecnt, 1) = x
-    cord (nodecnt, 2) = y
-    ao   (nodecnt)    = z
+  !Install the temporary values in the proper global array lines; these lines could be economized with calculating directly without locals
+  cord (nodecnt, 1) = x
+  cord (nodecnt, 2) = y
+  ao   (nodecnt)    = z
 
-    !NiS,may06: test for 1D- or 2D-ARC
-    !1D-ELEMENT ARC or 1D-2D-TRANSITION ELEMENT ARC:
-    IF (ilft == irgt) THEN
-      !1D-2D-TRANSITION-ELEMENTS may have a midside node already
-      IF (nop(ilft,2) /= 0) CYCLE all_arcs
-      !all other normal 1D-ELEMENTS or 1D-2D-TRANSITION-ELEMENTS get a midside node
-      nop(ilft, 2) = nodecnt
+  !NiS,may06: test for 1D- or 2D-ARC
+  !1D-ELEMENT ARC or 1D-2D-TRANSITION ELEMENT ARC:
+  IF (ilft == irgt) THEN
+    !1D-2D-TRANSITION-ELEMENTS may have a midside node already
+    IF (nop(ilft,2) /= 0) CYCLE all_arcs
+    !all other normal 1D-ELEMENTS or 1D-2D-TRANSITION-ELEMENTS get a midside node
+    nop(ilft, 2) = nodecnt
 
-    !2D-ELEMENT ARC:
-    ELSE
-      IF (ilft.gt.0) THEN
-        jnum = elem (ilft, 1) - 1
-        DO 1401 j = 1, jnum
-          IF (nop (ilft, 2 * j - 1) .eq.ibot) THEN
-            nop (ilft, 2 * j) = nodecnt
-            GOTO 1300
-          ENDIF
-1401   ENDDO
-      ENDIF
+  !2D-ELEMENT ARC:
+  ELSE
+    IF (ilft > 0) THEN
+      jnum = elem (ilft, 1) - 1
+      LeftElt: DO j = 1, jnum
+        IF (nop (ilft, 2 * j - 1) == ibot) THEN
+          nop (ilft, 2 * j) = nodecnt
+          exit LeftElt
+        ENDIF
+      enddo LeftElt
+    ENDIF
 
-1300  IF (irgt > 0) THEN
-!NiS,mar06: changes see above
-!        jnum = elem (irgt, 1)
+    IF (irgt > 0) THEN
+    !changes see above
+    !jnum = elem (irgt, 1)
         jnum = elem (irgt, 1) - 1
-
         DO j = 1, jnum
-          IF (nop (irgt, 2 * j - 1) .eq.itop) THEN
+          IF (nop (irgt, 2 * j - 1) == itop) THEN
             nop (irgt, 2 * j) = nodecnt
             CYCLE all_arcs
           ENDIF
@@ -2011,77 +1113,30 @@ call InterpolateProfs (statElSz, statNoSz, MaxP, MaxE, maxIntPolElts, IntPolNo, 
 !In the control lines of RMA10S is a new switch for CVFEM included. So later this code could be changed for CVFEM and the subroutines already
 !dealing with the FEM-switch are currently correctly running with the default value for GALERKIN method (default FEM.eq.0).
 !
-!The other subrotines for 'NACHVERMASCHUNG' in the case of CVFEM and the REORDERING in Kalypso-2D are deactivated for RMA10S. They are re-
-!named with the additions 'KalypsoSpecial', so that no collidation with original subroutins in RMA10S can occur.
-!NiS,mar06
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 !NiS,mar06: Why copy? sense not clear!
-      n  = nodecnt
-      m  = elcnt
-      !np = nodecnt
-      !ne = elcnt
-      np = MaxP
-      ne = MaxE
+n  = nodecnt
+m  = elcnt
+np = MaxP
+ne = MaxE
 
-!NiS,mar06: unit name changed; changed iout to Lout
-!     write(Lout,*)'  1402:  nodecnt=',nodecnt
-                                                                        
-! ----------------------------------------------------------------------
-!     Kopie des Hoehenfeldes
-!NIS,may06: variable name changed; changed mnd to MaxP
-      DO i = 1, MaxP
-        aour (i) = ao (i)
-      END DO
-                                                                        
-! ----------------------------------------------------------------------------------------------------------------
-!     Initialize check / ncl Linien zusammensetzen:
-      !NiS,mar06: Checking of Continuity lines is not possible; the data is not available at this runtime; DEACTIVATED for RMA10S, it will be checked
-      !           in RMA10S run
-!      CALL check
-
-!WP 04.04.03 Anfang ---------------------------------
-!
-!   Aufrufen von NACH bei trad. GFEM (FEM = 0) nicht nötig
-!      IF (fem.ne.0) then
-!SR -----------------------------------------------------
-!SR jetzt die Nachvermaschung zum CVFEM-Netz durchfuehren
-!NiS,mar06: unit name changed; changed iout to Lout
-!      WRITE (Lout,104)
-!      WRITE ( *  ,104)
-!      104 format (1X, 'Nachvermaschung aufgerufen...')
-!SR Die Nachvermaschung muss auch dann aufgerufen werden, wenn bereits
-!SR nachvermascht wurde (Restart), denn es wird die Eckknotenanzahl
-!SR weitergegeben, die benoetigt wird, um den CVFehler auszugeben.
-!SR      if (nfixh(1)==0) then
-!SR Deshalb keine Beschraenkung auf die reine Teichloesungccc
-!        CALL nach
-!SRTest      end if
-!      ENDIF
-!SR
-!WP 04.04.03 Ende --------------------------------------
-                                                                        
 !---------------------------------------------------------------------------------------------------------------------------------------------
 !nis,jan07: Work on Line transitions
 !---------------------------------------------------------------------------------------------------------------------------------------------
-!nis,jan07: Turning the transitioning elements, if necessary; while doing this: Testing, whether transition is properly defined
+!Turning the transitioning elements, if necessary; while doing this: Testing, whether transition is properly defined
 if (maxlt /= 0) then
   !run through all possible transitionings
   elementturning: do i = 1, maxlt
-
     !if transition is dead, go to next one
     if (TransLines (i, 1) == 0) CYCLE elementturning
-
     !test for correct order of nodes in transitioning element
     if (nop (TransLines (i, 1), 3) .ne. TransLines (i, 3)) then
-
       !nis,jan07: Checking, whether node is defined in element on the other slot (slot 1)
       if (nop (TransLines (i, 1), 1) /= TransLines (i, 3)) then!&
-
      !&  call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
       call ErrorMessageAndStop (1403, i, cord (nop (TransLines (i, 1), 3), 1), cord (nop (TransLines (i, 1), 3), 1))
       endif
-
     end if
   end do elementturning
 endif
@@ -2091,114 +1146,91 @@ DO i = 1, elcnt
   elfix (i) = 0
 END do
 
+ReorderingNotDone = .true.
 DO i = 1, elcnt
-  IF (nfixh (i) .le.0) goto 4003
-  !NiS,mar06: name of variable changed; changed mel to MaxE
-  IF (nfixh (i) .gt.MaxE) goto 4003
-  IF (imat (nfixh (i) ) .gt.0) elfix (nfixh (i) ) = elfix (nfixh (i) ) + 1
+  IF (nfixh (i) <= 0 .or. nfixh (i) > MaxE) then
+    !NiS,mar06: unit name changed; changed iout to Lout
+    WRITE (Lout,105)
+    WRITE ( * , 105)
+    !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
+    CALL start_node (qlist, k, MaxP)
+    call reord_Kalyps (qlist)
+    ReorderingNotDone = .false.
+  endif
+  IF (imat (nfixh (i)) > 0) elfix (nfixh (i)) = elfix (nfixh (i)) + 1
 END DO
 
-DO i = 1, elcnt
-  IF ( (imat (i) .gt. 0) .and. (elfix (i) .ne. 1) ) goto 4003
-END DO
+if (ReorderingNotDone) then
+  DO i = 1, elcnt
+    IF ((imat (i) > 0) .and. (elfix (i) /= 1) ) then
+      !NiS,mar06: unit name changed; changed iout to Lout
+      WRITE (Lout,105)
+      WRITE ( * , 105)
+      !NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
+      CALL start_node (qlist, k, MaxP)
+      call reord_Kalyps (qlist)
+    endif
+  END DO
+endif 
 
-!NiS,mar06: unit name changed; changed iout to Lout
 write (Lout, 107)
 write ( * ,  107)
-107 format (1X, 'Order of processing (NFIXH) is sufficiently correct')
-! i.e. all elements exist only once.
 
-GOTO 4004
-                                                                        
-4003 CONTINUE
-!NiS,mar06: unit name changed; changed iout to Lout
-WRITE (Lout,105)
-WRITE ( * , 105)
+!Output formats
 105 format (1X, 'Reordering has to be done.')
+107 format (1X, 'Order of processing (NFIXH) is sufficiently correct')
 
-!NiS,may06: In RMA10S a subroutine called reord.subroutin exists; changed reord to reord_Kalyps
-CALL start_node (qlist, k, MaxP)
-call reord_Kalyps (qlist)
-
-4004 CONTINUE
 
 ! CALCULATION OF CENTERS OF ELEMENTS  ----------------------------------------------------------------
-! WP 13.04.2004
-! Calculation of center coordinates of each element
-
-do i=1,ne
+do i = 1, ne
   sumx  = 0.0
   sumy  = 0.0
-  ! Schleife ueber alle Knoten des Elementes (auch Mittseitenknoten!)
-  ! zur Bestimmung des Elementmittelpunktes und dem Mittelwert
-  ! der drei Freiheitsgerade
-  !NiS,mar06: unit name changed; changed iout to Lout
-  !write (Lout,*) ' Anzahl Knoten (Element ',i,'): ', ncorn(i)
-  !EFa Nov06, für die 1D-Teschke-Elemente werden für die Mittelung nur die Eckknoten betrachtet
-  if (elem(i,1).EQ.-3) then
-    do j =1, 2
-      sumx = sumx + cord(nop(i,(j*2-1)),1)
-      sumy = sumy + cord(nop(i,(j*2-1)),1)
-    end do
-    mcord(i,1) = sumx/2
-    mcord(i,2) = sumy/2
-  else
-    do j = 1,ncorn(i)
-      sumx = sumx + cord(nop(i,j),1)
-      sumy = sumy + cord(nop(i,j),2)
-    end do
-    ! Mittelung der Werte
-    mcord(i,1) = sumx/ncorn(i)
-    mcord(i,2) = sumy/ncorn(i)
-  end if
+  !loop over all nodes, including midside nodes of an all elements
+  !to determine the coordinates of the geometrical center of the element
+  do j = 1, ncorn(i)
+    sumx = sumx + cord(nop(i,j),1)
+    sumy = sumy + cord(nop(i,j),2)
+  end do
+  !averaging of the values
+  mcord(i,1) = sumx/ncorn(i)
+  mcord(i,2) = sumy/ncorn(i)
 END do
 
 
 ! NEIGHBOURHOOD RELATIONS OF NODES -------------------------------------------------------------------
-!
-
-! Initialisieren der Nachbarschaftsbeziehungen zwischen den Knoten
-do i=1,MaxP
-  do j=1,30
-    neighb(i,j) = 0 	! Nummer der j-ten benachbarten Knotens von Knoten i
+!Initialize arrays
+do i = 1, MaxP
+  !neighb(i, j) : ID-number of j-th neighbour of node i
+  !nconnect (i) : number of neighbourhood connections
+  !It's assumed that a node has maximum 30 neighbours
+  do j = 1, 30
+    neighb (i, j) = 0
   end do
-  nconnect(i) = 0       ! Anzahl der Nachbarknoten
+  nconnect(i) = 0       
 end do
 
-
-! Jedes Element durchgehen
-neighbours: do i=1,MaxE
-
-  ! leere Elementnummern uebergehen:
-  if (elem(i,1).ne.0) then
-
-    !nis,jun07: Initializing ConnNumber
+!run through all elements
+neighbours: do i = 1, MaxE
+  !Skip empty elements
+  if (elem (i, 1) /= 0) then
+    !Check for 1D-elements that are connecting to a 2D-model part
+    !Initializing ConnNumber
     ConnNumber = 0
-
-    !nis,jan07: Get the transition number and the transitioning CCL
-    findconnection: do j= 1, MaxLT
-      if (TransLines(j,1) == i) then
+    !Look, whether element is part of any transition
+    findconnection: do j = 1, MaxLT
+      if (TransLines (j, 1) == i) then
         ConnNumber = j
         ConnLine = TransLines(j,2)
         EXIT findconnection
       end if
-      if (j.eq.MaxLT) ConnNumber = 0
+      if (j == MaxLT) ConnNumber = 0
     end do findconnection
-    !-
-
-    !nis,dec06: For 1D-2D-transition-lines the connectivity of the nodes differs from the original 2D-connectivity,
-    !           that can be also used for simple 1D-networks and simple 1D-2D-elementToelement-transitions
-    !           For those line-transitions, the following two loops are inserted
-    !
-
+    !If there is a connection assigned to that element process, store the 2D-neighbours
     if (ConnNumber /= 0) then
-      !the slope is just connected to the CORNER nodes of the transition line, the midside nodes are not effecting!
-      !number of nodes at that 1D-2D-transtion without the midsidenodes of the line
+      !number of connections at this special element (including all 2D-transitioning nodes and the 1D-element's node)
       ncorn_temp = lmt (ConnLine) + 3
-
       !this is the temporary nop-array for the '1D-2D-transitionline-element'
       ALLOCATE (nop_temp (1 : ncorn_temp))
-
       !overgive the three nodes of the 1D-part; they are already sorted:
       !1: connection to next 1D-element
       !2: midside node
@@ -2206,16 +1238,11 @@ neighbours: do i=1,MaxE
       do k = 1, 3
         nop_temp(k) = nop(i,k)
       end do
-      !-
-
-      !Adding shows the point, from which on the nodes of the connected line have to be stored in the nop_temp array
-      adding = 3
-
       !overgiving the nodes into the temporary array nop_temp
       nodeassigning: do j = 1, lmt (ConnLine)
-        nop_temp (j + adding) = line (ConnLine, j)
+        !Add 3, because they are reserved for the 1D-element
+        nop_temp (j + 3) = line (ConnLine, j)
       end do nodeassigning
-
       !store neighbourhood relations, it's nearly the same loop as in the original loop, shown below
       outerLT: do j = 1, ncorn_temp
         node1 = nop_temp (j)
@@ -2229,108 +1256,66 @@ neighbours: do i=1,MaxE
       end do outerLT
       !array resetting for next transition, that is probably be from other size
       DEALLOCATE(nop_temp)
-
-    ELSEIF(imat(i) == 89) then
-      node1 = nop(i,1)
-      node2 = nop(i,3)
-      nconnect(node1) = nconnect(node1)+1
-      nconnect(node2) = nconnect(node2)+1
-      neighb(node1,nconnect(node1)) = node2
-      neighb(node2,nconnect(node2)) = node1
-    ELSE
-      ! Lesen aller Knotennummern eines Elementes
-      outer: do j=1,ncorn(i)
-
-!nis,dec06: for increasing speed of program, bring line to outside of loop
-        node1 = nop(i,j)
-
-        inner: do l=1,ncorn(i)
-
-          node2 = nop(i,l)
-
-          IF (node1 .ne. node2) THEN
-            nconnect(node1) = nconnect(node1) + 1
-            neighb(node1,nconnect(node1)) = node2
-          END if
-        end do inner
-      end do outer
-
-    !nis,dec06: endif for the test of whether line transition or not
-    ENDIF
-    !-
-
+    endif
+    !Read all node numbers of adjacent element
+    outer: do j = 1, ncorn (i)
+      !For increasing speed of program, bring line to outside of loop
+      node1 = nop (i, j)
+      inner: do l = 1, ncorn (i)
+        node2 = nop (i, l)
+        IF (node1 /= node2) THEN
+          nconnect(node1) = nconnect(node1) + 1
+          neighb (node1, nconnect (node1)) = node2
+        END if
+      end do inner
+    end do outer
   end if
-
 end do neighbours
 
-! Ausduennung des urspruenglich mehrfach bestimmten Feldes
-! (Jedem Knoten wurde ein anderer Knoten mehrfach als Nachbar zugewiesen)
-
-do i=1,nodecnt
-
-  j=1
-  ! Gehe jeden Eintrag durch
+!Delete doubled entries in the nconnect array
+do i = 1, nodecnt
+  j = 1
+  !Run through each entry
   do
-
     if (j >= nconnect(i)) exit
-
-    k=j+1
-
+    k = j + 1 
     vergleich: do
-
-      ! Falls Eintrag an j-ter und k-ter Stelle identisch
-      ! dann lösche den j-ten Eintrag und verschiebe die
-      ! anderen nach vorne
+      !If entries on j-th position and k-th position are the same,
+      !delete the j-th entry, push all entries after the k-th on step forward
       if (neighb(i,j) == neighb(i,k)) then
-
-        ! Verschiebe alle ab der Uebereinstimmung um eine Position nach vorne
-        do l=k,nconnect(i)-1
-          neighb(i,l) = neighb(i,l+1)
+        !push k-th and upward
+        do l = k, nconnect (i) - 1
+          neighb (i, l) = neighb (i, l + 1)
         end do
-
-        ! Reduziere die Anzahl der Nachbarknoten um 1
+        !Reduce the number of neighbouring nodes
         nconnect(i) = nconnect(i)-1
-
         EXIT vergleich
       end if
-
       if (k >= nconnect(i)) exit
-
       k = k + 1
-
     end do vergleich
-
     j = j + 1
-
   end do
-
 end do
 
-!nis,aug07: generate upward knowledge, store elements connected to nodes
+!generate upward knowledge, store elements connected to nodes
 BelongingElement: do i = 1, MaxE
-
+  !Skip emtpy elements
   if (ncorn(i) == 0) CYCLE belongingElement
-
+  !run through corner nodes
   throughNodes: do j = 1, ncorn(i)
-
     throughPossibleEntries: do k = 1, 12
-
       if (IsNodeOfElement(nop(i, j), k) == i) EXIT throughPossibleEntries
-
       if (IsNodeOfElement(nop(i, j), k) == 0) then
         IsNodeOfElement(nop(i, j), k) = i
         !first column is counter
         IsNodeOfElement(nop(i, j), 0) = isNodeOfElement(nop(i, j), 0) + 1
         CYCLE throughNodes
       end if
-
     enddo throughPossibleEntries
-
     !ERROR - There are too many elements connected to one node
     call ErrorMessageAndStop (1110, nop (i, j), cord (nop (i, j), 1), cord (nop (i, j), 2))
-
   end do throughNodes
-
 ENDDO BelongingElement
 
 
@@ -2340,14 +1325,9 @@ WRITE ( *  , 111 )
   111 FORMAT (/1X, 'Reading model finished',/ &
             &  1X, '-----------------------------------------'//)
 
-!NiS,mar06: deallocate temporary array
-DEALLOCATE(arc)
-
-!LF nov06: deallocate weir renumbering array
-DEALLOCATE (reweir)
-!-
-
-!NiS,may06: Rewind for possible RESTART
+!deallocation of temporary arrays
+DEALLOCATE (arc, reweir)
+!Rewind for possible RESTART
 REWIND(IFILE)
 
 RETURN
@@ -2355,223 +1335,6 @@ RETURN
 END SUBROUTINE RDKALYPS
                                                                         
 
-!SR---------------------------------------------------------------------
-      SUBROUTINE nach 
-!SR                                                                     
-!SR Schleife zur Wandlung des FE-Netzes in ein CVFEM-Netz.Rechtecke werd
-!SR durch Hinzufuegen eines neuen Punktes in zwei Dreiecke zerlegt.     
-!SR                                                                     
-!SR                                                      Dez.2001, S. Ra
-!SR---------------------------------------------------------------------
-                                                                        
-      !NiS,mar06: 	change the module-access for global variables to the RMA10S-construction
-      !INCLUDE "common.cfg"
-      USE BLK10MOD
-
-      !Nis,mar06:       The definition of the common-block raus was changed into
-      !                 module ParaKalyps; for that the module is installed and the
-      !                 common-block deactivated
-      USE ParaKalyps
-      !      COMMON / raus / rausv (4, mnd), iauslp, iausnpm, zeigma (mnd)
-
-      COMMON / vnach / cvva, cvga, cvvo, cvgo, cvzu, cvfe, cvarccnt
-!SR Zusaetzlicher Schalter fuer eckknotenspezifische Fehlerausgabe des C
-      COMMON / cveck / cvcornernodes 
-      INTEGER cvcornernodes 
-      INTEGER newel, elcnt
-
-!NiS,mar06: additional declarations, so that no undeclared variables are used
-      INTEGER nodecnt
-
-                                                                        
-      elcnt = ne 
-      nodecnt = np 
-      WRITE ( *, * ) elcnt, nodecnt 
-                                                                        
-      DO 1500 i = 1, ne 
-                                                                        
-!SR Pruefe, ob Viereck vorliegt: Wandlung in CV-Dreieck; Dreiecke werden
-!SR Kriterium sind Knoten 7 und 8: falls belegt => Viereck              
-        IF (nop (i, 7) .gt.0) then 
-          IF (nop (i, 8) .gt.0) then 
-                                                                        
-            elcnt = elcnt + 1 
-            nodecnt = nodecnt + 1 
-                                                                        
-!SR Erstes Dreieck namens newel anstelle altem Viereck generieren: neuen
-!SR errechnen und Viereckspositionen mit Null belegen ------------------
-            newel = elcnt 
-            nop (newel, 1) = nop (i, 1) 
-            nop (newel, 2) = nodecnt 
-            nop (newel, 3) = nop (i, 5) 
-            nop (newel, 4) = nop (i, 6) 
-            nop (newel, 5) = nop (i, 7) 
-            nop (newel, 6) = nop (i, 8) 
-            nop (newel, 7) = 0 
-            nop (newel, 8) = 0 
-                                                                        
-!SR Zweites Dreieck anstelle altem Viereck generieren: Drehrichtung gege
-!SR Dazu neuen Mittseitenknoten im Innern des alten Vierecks mit neuer g
-!SR Knotennummer belegen und unerwuenschte Gleichungsnummern des Viereck
-!SR Dreieck entsteht, alte und unveraenderte Positionen bleiben wie geha
-            nop (i, 6) = nodecnt 
-            nop (i, 7) = 0 
-            nop (i, 8) = 0 
-                                                                        
-!SR Fuer neuen Mittseitknoten des ersten Dreiecks x/y/z-Koordinaten bere
-            cord (nodecnt,1) = (cord (nop (i,1),1) + cord (nop (i,5),1) ) / 2
-            cord (nodecnt,2) = (cord (nop (i,1),2) + cord (nop (i,5),2) ) / 2
-            ao (nodecnt)   = (ao (nop (i,1) ) + ao (nop (i,5) ) ) / 2
-            aour (nodecnt) = (ao (nop (i,1) ) + ao (nop (i,5) ) ) / 2
-                                                                        
-!SR Ausgabe alter und neuer Elementnummer falls neu vermascht-----------
-            WRITE ( *, 5599) i, elcnt, nodecnt 
- 5599 FORMAT      ('   alt Elem.: ',i6,'   neu Elem.:',i6,'   MSK.:',i6) 
-                                                                        
-!SR Eine lineare Interpolation vorhandener Restart-Informationen am neue
-!SR ist nicht noetig, da beim einlesen von Daten eines nachvermaschten M
-!SR bereits angelegt sind: Deaktiviertcccccccccccccccccccccccccccccccccc
-!            if (cvva .eq. 1) then                                      
-!                write(iout,*) '  NACH: VEL,RAUSV ermitteltc '          
-!SR Drei Freiheitsgrade (vel) u. Ausgabewert des Wasserstandes (rausv) a
-!               do 1900 j=1,3                                           
-!               vel(j,nodecnt)=(vel(j,nop(i,1))+vel(j,nop(i,5)))/2      
-!               rausv(3,nodecnt)=(rausv(3,nop(i,1))+rausv(3,nop(i,5)))/2
-!1900           continue
-!            endif                                                      
-!                                                                       
-!            if (cvga .eq. 1) then                                      
-!                write(iout,*) '  NACH: VDOT ermitteltc'                
-!SR Drei aktuelle Zeitgradienten (vdot) am neuen Mittseitenknoten       
-!               do 1910 j=1,3                                           
-!               vdot(j,nodecnt)=(vdot(j,nop(i,1))+vdot(j,nop(i,5)))/2   
-!1910           continue                                                
-!            endif                                                      
-!                                                                       
-!            if (cvvo .eq. 1) then                                      
-!               write(iout,*) '  NACH: VOLD ermitteltc '                
-!SR Drei Freiheitsgrade des vergangenen Zeitschritts (vold) am neuen Mit
-!               do 1920 j=1,3                                           
-!               vold(j,nodecnt)=(vold(j,nop(i,1))+vold(j,nop(i,5)))/2   
-!1920           continue                                                
-!            endif                                                      
-!                                                                       
-!            if (cvgo .eq. 1) then                                      
-!                write(iout,*) '  NACH: VDOTO ermitteltc '              
-!SR Drei Zeitgradienten des vergangenen Zeitschritts (vdoto) am neuen Mi
-!               do 1930 j=1,3                                           
-!               vdoto(j,nodecnt)=(vdoto(j,nop(i,1))+vdoto(j,nop(i,5)))/2
-!1930           continue                                                
-!            endif                                                      
-!                                                                       
-!            if (cvzu .eq. 1) then                                      
-!                write(iout,*) ' NACH: NDRY,HEL,HOL,HDET,HDOT ermitteltc
-!SR Zusatzinformationen am neuen Element                                
-!               ndry(nodecnt)=(ndry(nop(i,1))+ndry(nop(i,5)))/2         
-!               hel(nodecnt)=(hel(nop(i,1))+hel(nop(i,5)))/2            
-!               hol(nodecnt)=(hol(nop(i,1))+hol(nop(i,5)))/2            
-!               hdet(nodecnt)=(hdet(nop(i,1))+hdet(nop(i,5)))/2         
-!               hdot(nodecnt)=(hdot(nop(i,1))+hdot(nop(i,5)))/2         
-!            endif                                                      
-!SR Ende Deaktivierung, da beim Restartfile eingelesencccccccccccccccccc
-                                                                        
-!WP 03.04.03 Anfang                                                     
-!                                                                       
-! Die Anweisung IMAT(NEWEL)=IMAT(I) muss bei GFEM immer durchlaufen werd
-! bei CVFEM aber nur wenn CVFEM = 1 gilt:
-!                                                                       
-!            IF (fem.eq.0) then
-              imat (newel) = imat (i) 
-!            ELSEIF (cvfe.eq.1) then
-!SR Rauhigkeitsinformationen und Bearbeitungsreihenfolge fuer neues Elem
-!              imat (newel) = imat (i)
-!            ENDIF
-!                                                                       
-!WP 03.04.03 Ende                                                       
-!                                                                       
-                                                                        
-!SR                                                                     
-          ELSE 
-            GOTO 1500 
-          ENDIF 
-        ELSE 
-          GOTO 1500 
-        ENDIF 
-                                                                        
- 1500 END DO 
-                                                                        
-                                                                        
-!SR   Alle Elemente haben fortan 6 Knoten                               
-      DO 1501 i = 1, elcnt 
-        ncorn (i) = 6 
- 1501 END DO 
-                                                                        
-                                                                        
-      np = nodecnt 
-      ne = elcnt 
-      cvcornernodes = np - cvarccnt 
-!NiS,mar06: unit name changed; changed iout to Lout
-      WRITE (Lout, * ) 'Nachvermaschung beendetc'
-      WRITE (Lout, * ) 'Uebergebene El.-anzahl=', ne
-      WRITE (Lout, * ) 'Uebergebene Gesamtknotenanzahl(incl. MSK)=', np
-      WRITE (Lout, * ) 'Uebergebene Eckknotenanzahl=', cvcornernodes
-      RETURN 
-      END SUBROUTINE nach                           
-                                                                        
-                                                                        
-!-----------------------------------------------------------------------
-!                                                                       
-SUBROUTINE start_node (qlist, k, n)
-!                                                                       
-! Hier wird die Liste der Knoten generiert,
-! bei denen das reordering startet.
-!                                                                       
-!-----------------------------------------------------------------------
-
-!NiS,mar06: change the module-access for global variables to the RMA10S-construction
-!INCLUDE "common.cfg"
-USE BLK10MOD
-
-INTEGER :: qlist (2, 160)
-
-
-IF (lmt (1) .gt.0) then
-
-  DO i = 1, lmt (1)
-    qlist (1, i) = line (1, i)
-  END DO
-
-ELSE
-
-  read_totalnr_nodes: do
-    write (*,*) 'Wieviele Knoten werden als Startknoten gegeben?'
-    read (*,*) k
-    if (k .gt. 0) exit read_totalnr_nodes
-  end do read_totalnr_nodes
-
-  all_nodes: DO i = 1, k
-
-    WRITE ( * , * ) 'Knotennummer ', i,': '
-
-    read_nr: do
-      READ ( * , '(i5)') qlist (1, i)
-      IF ( (qlist (1, i) .le.0) .or. (qlist (1, i) .gt. n) ) then
-        WRITE ( * , * ) 'Knotennummer unzulaessig, Neueingabe:'
-        CYCLE read_nr
-      else
-        EXIT read_nr
-      ENDIF
-    end do read_nr
-
-  END DO all_nodes
-
-ENDIF
-
-qlist (2, 1) = 9999999
-
-RETURN
-
-END SUBROUTINE start_node
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

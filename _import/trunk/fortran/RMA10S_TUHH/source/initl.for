@@ -1,4 +1,4 @@
-C     Last change:  MD   29 Jul 2008   11:13 am
+C     Last change:  WP   22 Jul 2008   10:05 am
 CIPK  LAST UPDATE SEP 05 2006 ADD DEPRATO AND TO TMD
 CIPK  LAST UPDATE APR 05 2006 ADD IPASST ALLOCATION
 CIPK  LAST UPDATE MAR 22 2006 FIX NCQOBS BUG
@@ -45,7 +45,8 @@ CIPK AUG05      INCLUDE 'BLKSUB.COM'
 
 c     Initialisation of values
 
-      NBS=5000000
+      !NBS = 5000000
+      NBS = 20000000
       MFW=1000
       NBSS=NBS
       LBMAX=NBSS
@@ -59,7 +60,7 @@ c     Initialisation of values
       NCQOBS = 2500
       NHDS =5
       NCHOBS = 3500
-      NELDS = 40
+      NELDS = 250
       NDPTS = 2600
   200 CONTINUE
       call ginpt(Lin,id,dlin)
@@ -743,12 +744,6 @@ CIPK MAR01
         ADDSED(J)=-9999.
       ENDDO
 
-!NiS,apr06: allocate and initialize the aour-array
-      ALLOCATE (aour(maxp))
-      do j=1,maxp
-        aour(j) = 0
-      ENDDO
-!-
 !NiS,apr06: allocating arrays for roughness calculation in DARCY-WEISBACH-equation
       ALLOCATE (CNIKU(MaxE), DURCHBAUM(MaxE), ABST(MaxE))
       ALLOCATE (C_WR(MaxE))
@@ -841,7 +836,7 @@ CIPK MAR01
       !reference friction slope
       ALLOCATE (qgef(maxp))
       !flow kilometer of node
-      ALLOCATE (kmx(maxp))
+      ALLOCATE (kmx(0:maxp))
 
       !time dependent values
       ALLOCATE (hht(1:maxp), vvt(1:maxp))
@@ -876,13 +871,15 @@ CIPK MAR01
         enddo
       enddo
 
+      !nis,aug08,quickfix
+      kmx(0) = 0.0d0
       do i = 1, MaxP
         polySplitsA (i) = 0
         polySplitsQ (i) = 0
         polySplitsB (i) = 0
         !validity range for polynoms
         hhmin(i)      = 0.0
-        hhmax(i)      = 0.0
+        hhmax(i)      = 10.0e3
         !flow kilometer of node
         kmx(i)        = -1.0
         !reference friction slope
@@ -1048,12 +1045,6 @@ CIPK MAR01
         NeighProf (i, 1) = 0
         NeighProf (i, 2) = 0
         kmWeight (i) = 1.0D0
-      end do
-
-      ALLOCATE (CalcUnitID (1: MaxE), CalcUnitName (1: MaxE))
-
-      do i = 1, MaxE
-        CalcUnitID (i) = -1
       end do
 
       RETURN

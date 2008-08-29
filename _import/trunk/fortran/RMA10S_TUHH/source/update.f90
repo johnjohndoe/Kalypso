@@ -1,4 +1,4 @@
-!     Last change:  MD   22 Aug 2008    2:46 pm
+!     Last change:  MD   12 Aug 2008    4:41 pm
 !IPK  LAST UPDATE SEP 6 2004  add error file
 !IPK  LAST UPDATE AUG 22 2001 REORGANIZE CONVERGENCE TESTING
 !IPK  LAST UYPDATE APRIL 03  2001 ADD UPDATE OF WATER SURFACE ELEVATION
@@ -31,7 +31,8 @@ INTEGER :: problematicNode
 common /epor/ efpor
 !-
 !IPK MAY02 EXPAND TO 7
-COMMON EMAX(7),EAVG(7),NMX(7)
+real (kind = 8), dimension (1:7) :: EMAX, EAVG, EPercMax
+integer, dimension (1:7) :: NMX, NRel
 !-
 !nis,apr08: NKCONV is no more used!
 DIMENSION IH(20,4),IL(20,4)
@@ -172,11 +173,17 @@ URFC = 1.0 - FLOAT (IURVL (MAXN)) * 0.1
 !IPK MAY02 EXPAND TO 7
 !EAVG (J) : average changes of degree of freedom J
 !EMAX (J) : maximum changes of degree of freedom J
-!NMX (J)  : node, where maximum changes of degree of freedom J occurs
+!EPercMax (J) : maximum changes of degree of freedom J referring to the absolute value, i.e. percentage of change
+!NMX (J)  : node, where maximum absolute changes of degree of freedom J occurs
+!NRel (J) : node, where maximum relative changes of degree of freedom J occurs
 Initialize2: DO J = 1, 7
+  !initialize fields for maximum and average changes calculated in present iteration
   EAVG (J) = 0.0
   EMAX (J) = 0.0
+  EPercMax(J) = 0.0
+  !initialize node of maximum changes
   NMX (J)  = 0
+  NRel (J) = 0
 ENDDO Initialize2
 
 
@@ -189,7 +196,6 @@ IF (NDF > 4) THEN
 ELSE
   NDFM = NDF
 ENDIF
-
 
 UpdateDOFs: DO KK = 1, NDFM
   K = KK
@@ -259,6 +265,19 @@ UpdateDOFs: DO KK = 1, NDFM
       !the maximum changes are stored, as well as the location, where it applies; the sign of the maximum change is always kept by not using aex
       !for the depth degree of freedom (K = 3), this can't be easily done, because marsh algorithm has to be considered
       if (k /= 3) then
+        !nis,aug08: Store relative changes
+        if (abs(vel (k, j)) > 5.0*10.0e-4 .or. vel (k, j) == 0.0) then
+          !this happens at reacitvated nodes
+          if (vel (k, j) == 0.0) then
+            EPercMax (k) = 5.0
+            NRel (k) = j
+          elseif (abs(aex/ vel(k, j)) > abs(EPercMax (k))) then
+            EPercMax (k) = ex/ vel (k, j)
+            NRel (k) = j
+          endif
+
+        endif
+        !store maximum absolute changes
         IF (AEX >= ABS (EMAX (K))) then
           EMAX (K) = EX
           NMX  (K) = J
@@ -290,6 +309,7 @@ UpdateDOFs: DO KK = 1, NDFM
       ENDIF
       EX = EX * FCA
 
+
       !UPDATE VELOCITIES WITH FIXED DIRECTION ALFA (J)
       !***********************************************
       IF (K <= 2 .and. ALFA (j) /= 0.0) then
@@ -317,8 +337,9 @@ UpdateDOFs: DO KK = 1, NDFM
 
         !TOASK: What has the no transformation option to do with the effective porosity used in the marsh approach
         !IF (inotr == 1) THEN
+        !TOASK: Why should should the changes EX be adapted by the effective porosity, although it is already the change on the calculation depth?
         if (idnopt < 0 .and. (.not. IsPolynomNode (J))) then
-          !calculate the porosity of the Marsh range; although it should be already rmembered
+          !calculate the porosity of the Marsh range; although it should be already remembered
           H1 = VEL (3, J)
           CALL AMF (H, H1, AKP (J), ADT (J), ADB (J), AAT, D1, 0)
 
@@ -366,58 +387,74 @@ UpdateDOFs: DO KK = 1, NDFM
           ENDIF
         ENDIF
 
-        !IPK jun05
-        !calculate the changes for the water depths, average as well as maximum changes, considering the transformations from the marsh algorithm
-        !made before the following lines
-        horg = hel (j)
-        !nis,may08: differ between application of Marsh approach
-        if (idnopt == 0 .or. IsPolynomNode (J)) then
-          hel (j) = VEL (3, J)
-        else
-          vt = vel (3, j)
-          CALL AMF (HEL (J), VT, AKP (J), ADT (J), ADB (J), D1, D2, 0)
-        end if
+!IPK jun05
+      !calculate the changes for the water depths, average as well as maximum changes, considering the transformations from the marsh algorithm
+      !made before the following lines
+      horg = hel (j)
+      !nis,may08: differ between application of Marsh approach
+      if (idnopt == 0 .or. IsPolynomNode (J)) then
+        hel (j) = VEL (3, J)
+      else
+        vt = vel (3, j)
+        CALL AMF (HEL (J), VT, AKP (J), ADT (J), ADB (J), D1, D2, 0)
+      end if
 
-        !calculate the changes in water depth
-        aex = hel (j) - horg
-        !check whehter changes are more than current maximum changes until now
-        IF (ABS(AEX) > ABS (EMAX (K))) THEN
+      !calculate the changes in water depth
+      aex = hel (j) - horg
 
-          !remember the maximum depth changes and the node where it applies
-          emax (k) = aex
-          NMX (K) = J
-        ENDIF
 
-    !IPK APR01 UPDATE WATER SURFACE ELEVATION
+      !check, whether changes are more than current maximum changes until now
+      
+      !store relative nodal water depth changes 
+      if (horg == 0.0) then
+        if (5.0 > EPercMax (k)) then
+          EPercMax (k) = 5.0
+          NRel (k) = j
+        endif
+      else
+        if (abs(aex)/horg > EPercMax (k)) then
+          EPercMax (k) = aex/ horg
+          NRel (k) = j
+        endif
+      endif 
 
-        !calculate the water stage
-        IF (IDNOPT == 0 .or. IsPolynomNode (J)) THEN
-          WSLL (J) = VEL (3, J) + AO (J)
-        ELSE
-          HS = VEL (3, J)
-          ISWT = 0
-          CALL AMF (H, HS, AKP (J), ADT (J), ADB(J), AME1, D2, ISWT)
-          WSLL (J) = H + ADO (J)
-        ENDIF
+      !store absolute maximum water depth changes
+      IF (ABS(AEX) > ABS (EMAX (K))) THEN
+        !remember the maximum depth changes and the node where it applies
+        emax (k) = aex
+        NMX (K) = J
+      ENDIF
 
-   !IPK MAY02 ALLOW FOR ICK=7
+!IPK APR01 UPDATE WATER SURFACE ELEVATION
 
-      !UPDATE VELOCITIES WITHOUT FIXED DIRECTION (ALFA == 0) AND ALL THE OTHER CONSTITUENTS
-      !************************************************************************************
+      !calculate the water stage
+      IF (IDNOPT == 0 .or. IsPolynomNode (J)) THEN
+        WSLL (J) = VEL (3, J) + AO (J)
       ELSE
+        HS = VEL (3, J)
+        ISWT = 0
+        CALL AMF (H, HS, AKP (J), ADT (J), ADB(J), AME1, D2, ISWT)
+        WSLL (J) = H + ADO (J)
+      ENDIF
 
-        !update variable 7 (???)
-        IF (K == 7) THEN
-          GAN (J) = GAN (J) + EX
+!IPK MAY02 ALLOW FOR ICK=7
 
-        !update variables 1 and 2 (without direction restriction) and 4 to 6
-        ELSE
-          VEL (K, J) = VEL (K, J) + EX
+    !UPDATE VELOCITIES WITHOUT FIXED DIRECTION (ALFA == 0) AND ALL THE OTHER CONSTITUENTS
+    !************************************************************************************
+    ELSE
+
+      !update variable 7 (???)
+      IF (K == 7) THEN
+        GAN (J) = GAN (J) + EX
+
+      !update variables 1 and 2 (without direction restriction) and 4 to 6
+      ELSE
+        VEL (K, J) = VEL (K, J) + EX
           !MDMD testout
           !MD WRITE(75,*) 'VEL(K,J)=',VEL(K,J), 'K=', K,'EX', EX
           !MDMD testout
-        ENDIF
       ENDIF
+    ENDIF
   ENDDO UpdateNodes
 
 
@@ -426,9 +463,16 @@ UpdateDOFs: DO KK = 1, NDFM
   EAVG (K) = EAVG (K) / COUNT
 
   !If there is any change above the convergency border, then degree of freedom (NCNV) and full model (NCONV) is not converged
-  IF (ABS (EMAX (K)) > CONV (K) ) then
-    NCONV    = 0
-    NCNV (K) = 1
+  if (percentCheck == 1) then
+    if (abs (EPercMax (k)) > conv (k) ) then
+      NCONV = 0
+      ncnv (k) = 1
+    endif
+  else
+    IF (ABS (EMAX (K)) > CONV (K) ) then
+      NCONV    = 0
+      NCNV (K) = 1
+    endif
   endif
 
 ENDDO UpdateDOFs
@@ -446,24 +490,25 @@ if (beiauto > 0.) rss (maxn) = SQRT (eavg (1)**2 + eavg (2)**2)
 !-
 !IPK MAY02 EXPAND TO 7
 WriteDOFOutputs: DO J = 1, 7
+
   !write first line including informations about time step and iteration cycle
   IF (J == 1) THEN
-    !Write out kilometer of problematic node, if it is a 1D node with kilometer
-    IF (NMX (j) == 0) THEN
-      WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
-    ELSEIF (kmx (nmx (j)) /= 0.0) THEN
-      WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J), kmx (nmx (j)), IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
-    ELSE
-      WRITE (*, 6011) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2), ICYC, MAXN
-    ENDIF
+    !write header of output block in console
+    write (*, 6011) icyc, maxn
+    write (*, 6012)
+    if (percentCheck == 1) then
+      write (*, 6014)
+    else
+      write (*, 6013)
+    endif
+  ENDIF   
+
+  IF (nmx (j) == 0) THEN
+    WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
+  ELSEIF (kmx (nmx (j)) /= 0.0) THEN
+    WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j), kmx (nmx (J)), EPercMax (J), NRel (J), kmx (nRel (J)), IVAR (J, 1), IVAR (J, 2)
   ELSE
-    IF (nmx (j) == 0) THEN
-      WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2)
-    ELSEIF (kmx (nmx (j)) /= 0.0) THEN
-      WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J), kmx (nmx (J)), IVAR (J, 1), IVAR (J, 2)
-    ELSE
-      WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX (J),         0.0d0, IVAR (J, 1), IVAR (J, 2)
-    ENDIF
+    WRITE (*, 6010) J, EAVG (J), EMAX (J), NMX(j),         0.0d0, EPercMax (J), NRel (J),          0.0d0, IVAR (J, 1), IVAR (J, 2)
   ENDIF
 ENDDO WriteDOFOutputs
 
@@ -473,7 +518,7 @@ ENDDO WriteDOFOutputs
 IF (ITIMS == 0) THEN
   ITIMS = 1
   WRITE (LITR, 6041)
- 6041 format ('#', 21x, '<--', 6x, 'MAX CHANGES', 96x, '-->', '<--', 6x, 'AVE CHANGES', 40x, '-->' &
+ 6041 format ('#', 21x, '<--', 6x, 'MAX CHANGES', 96x, '-->', '<--', 6x, 'AVE CHANGES', 40x, '-->',/ &
       &       '#', 3x, 'TIME STEP IT  NSZF', 5x, 'X-VEL   NODE', 5x, 'Y-VEL   NODE', 5x, 'DEPTH   NODE', 7x, 'SAL   NODE', &
       &   6x, 'TEMP   NODE', 7x, 'SED   NODE', 5x, 'Z-VEL   NODE', 4x, 'X-VEL', 4x, 'Y-VEL', 4x, 'DEPTH', 6x, 'SAL', 5x, 'TEMP', &
       &   6x, 'SED', 5x, 'Z-VEL')
@@ -493,8 +538,12 @@ ENDIF
 !TOASK
 !Changed format descriptor from 6 to 7. What is actually the 7th degree of freedom?
 !IPK MAY02 EXPAND TO 7
-WRITE (LITR, 6040) TET, ICYC, MAXN, NSZF, (EMAX (J), NMX (J), J = 1, 7), (EAVG (J), J = 1, 7)
- 6040  FORMAT (F8.1, I5, I3, I6, 7(F10.4, I7), 7(F9.4))
+if (percentCheck == 0) then
+  WRITE (LITR, 6040) TET, ICYC, MAXN, NSZF, (EMAX (J), NMX (J), J = 1, 7), (EAVG (J), J = 1, 7)
+else
+  WRITE (LITR, 6040) TET, ICYC, MAXN, NSZF, (EPercMax (J), NRel (J), J = 1, 7), (EAVG (J), J = 1, 7)
+endif
+6040  FORMAT (F8.1, I7, I5, I9, 7(F12.4, I9), 7(F12.4))
 
 !nis,jan08: flushing that output: KALYPSO-GUI reads the data simutanously. Information must be latest therefore
 call FLUSH (LITR)
@@ -681,9 +730,15 @@ ENDIF
 
  6005 FORMAT (// 10X, 'CONVERGENCE PARAMETERS'  // 8X, 'DF        AVG CHG        MAX CHG     LOCATION')
 
- 6010 FORMAT (I3, 2F15.9, I10, 1x, f9.4, 2X, 2A4)
+ 6010 FORMAT (I2, 2F11.5, I9, 1x, f8.3,1x, F9.3, I9, 1x, f8.3, 1X, 2A4)
 
- 6011 FORMAT (I3, 2F15.9, I10, 1x, f9.4, 2X, 2A4, 'STEP', I4, ' ITER', I3)
+ 6011 FORMAT (// 62x, 'STEP', I4, ' ITER', I3 /)
+ 
+ 6012 FORMAT ('      AVG CHG    MAX CHG  MaxNode    MaxKM MaxRelChg  RelNode    RelKM' / &
+           &  '******************************************************************************')
+ 6013 FORMAT ('               (checked)')
+ 6014 FORMAT ('                                           (checked)')
+ 
 
 !EFa jun07, testing
  6111 FORMAT(i4,' rss :',F10.5)

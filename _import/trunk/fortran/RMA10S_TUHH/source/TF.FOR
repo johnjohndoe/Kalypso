@@ -2,7 +2,8 @@
       implicit none
       !Declarations
       real (kind = 8) :: TF
-      real (kind = 8) :: A, S, C
+      real (kind = 4) :: A
+      real (kind = 8) :: S, C
       
       S = SIN (A)
       C = COS (A)

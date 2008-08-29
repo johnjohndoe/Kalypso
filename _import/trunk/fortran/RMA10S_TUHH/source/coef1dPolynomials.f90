@@ -47,6 +47,7 @@ REAL (KIND = 8) :: speclocal
 
 INTEGER :: i, j, k, Pos, TrID, TrNo
 INTEGER :: PPA(1:2), findpolynom, PP(1:2)
+integer :: RefNodeN1, RefNodeN3
 
 !new variables
 !BC-values
@@ -407,42 +408,52 @@ else
   sbot = (ao(n1) - ao(n3)) / xl(3)
 endif
 
-do i = 1, 2
-
-  !corner node number, corner node and waterdepth
-  j = i * 2 - 1
-  n = ncon(j)
-  h = vel(3, n)
-
-  !test for valid water depth range
-  if (h < hhmin(n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
-    WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') less than Hmin', hhmin(n)
-  ELSEIF (h > hhmax (n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
-    WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') greater than Hmax', hhmax(n)
-  end if
-
-  !look for the position of the polynomial
-  !TODO: This should be replaced by a binary search
-  if (.NOT. IntPolProf(n)) then
-    PPA(1) = findPolynom (polyRangeA (n, :), vel(3, n), PolySplitsA (n))
-    PPA(2) = PPA(1)
-  else
-    PPA(1) = findPolynom (polyRangeA (NeighProf (n, 1), :), vel (3, n), PolySplitsA (NeighProf (n, 1)))
-    PPA(2) = findPolynom (polyRangeA (NeighProf (n, 2), :), vel (3, n), PolySplitsA (NeighProf (n, 2)))
-  end if
+!Calculation case
+if (ntx == 1) then
 
 
-  if (.not. IntPolProf (n)) then
-    !A(h)
-    ah(n)    = CalcPolynomial (apoly (PPA (1), n, 0:12), h, ubound (apoly, 3))
-  else
-    !A(h)
-    ah(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (apoly (PPA (1), NeighProf (n, 1), 0: 12), h, ubound (apoly, 3)) &
-             & +        kmWeight (n)  * CalcPolynomial (apoly (PPA (2), NeighProf (n, 2), 0: 12), h, ubound (apoly, 3))
-  endif
+  do i = 1, 2
 
-  !Calculation case
-  if (ntx == 1) then
+    !corner node number, corner node and waterdepth
+    j = i * 2 - 1
+    n = ncon(j)
+    h = vel(3, n)
+
+    !test for valid water depth range
+    if (h < hhmin(n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
+      WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') less than Hmin', hhmin(n)
+    ELSEIF (h > hhmax (n) .and. ntx == 1 .and. (.NOT. IntPolProf (n))) then
+      WRITE (*,*) 'WARNING - waterdepth', vel(3, n), ' at node', n, '(kmx: ', kmx (n), ') greater than Hmax', hhmax(n)
+    end if
+    
+    if (IntPolProf (n)) then
+      if (h < max (hhmin (NeighProf(n, 1)), hhmin(NeighProf(n, 2)))) then
+        WRITE (*,*) 'WARNING - waterdepth ', vel(3, n), ' at INTERPOLATED node', n, '(kmx: ', kmx (n), ') less than Hmin of one of the original neighbouring nodes!'
+      elseif (h > min (hhmax (NeighProf (n, 1)), hhmax (NeighProf (n, 2)))) then
+        WRITE (*,*) 'WARNING - waterdepth ', vel(3, n), ' at INTERPOLATED node', n, '(kmx: ', kmx (n), ') greater than Hmax of one of the original neighbouring nodes!'
+      endif
+    endif
+    
+
+    !look for the position of the polynomial
+    !TODO: This should be replaced by a binary search
+    if (.NOT. IntPolProf(n)) then
+      PPA(1) = findPolynom (polyRangeA (n, :), vel(3, n), PolySplitsA (n), cord(n,1), cord (n,2), n)
+      PPA(2) = PPA(1)
+    else
+      PPA(1) = findPolynom (polyRangeA (NeighProf (n, 1), :), vel (3, n), PolySplitsA (NeighProf (n, 1)), cord (NeighProf(n,1), 1), cord (NeighProf(n,1), 2), n)
+      PPA(2) = findPolynom (polyRangeA (NeighProf (n, 2), :), vel (3, n), PolySplitsA (NeighProf (n, 2)), cord (NeighProf(n,2), 1), cord (NeighProf(n,2), 2), n)
+    end if
+
+
+    if (.not. IntPolProf (n)) then
+      !A(h)
+      ah(n)    = CalcPolynomial (apoly (PPA (1), n, 0:12), h, ubound (apoly, 3))
+    else
+      !A(h)
+      ah(n)    =   (1.0 - kmWeight (n)) * CalcPolynomial (apoly (PPA (1), NeighProf (n, 1), 0: 12), h, ubound (apoly, 3)) &
+               & +        kmWeight (n)  * CalcPolynomial (apoly (PPA (2), NeighProf (n, 2), 0: 12), h, ubound (apoly, 3))
+    endif
 
     !Check for critical/ subcritical discharge
     if (vel_res(j) / sqrt (grav * h) .gt. 1) WRITE (*,*) 'Supercritical flow at node ', n
@@ -485,8 +496,8 @@ do i = 1, 2
       dahdh(n)  = dahdh (n) + LocalWeight * calcPolynomial1stDerivative (apoly (PPA (j), node, 0:12), vel(3, n), ubound (apoly, 3))
 
     end do
-  ENDIF !ntx=1
-enddo
+  enddo
+ENDIF !ntx=1
 
 !calculate additional energy losses regarding the continuous widening or contraction of the element
 !slope_l = CalcSlope_l (vel (1:2, n1), vel (1:2, n3), ah (n1), ah (n3), dahdh (n1), dahdh (n3), cord (n1, 1:2), cord (n3, 1:2), grav)
@@ -605,8 +616,8 @@ Gaussloop: DO I = 1, NGP
     end if
 
     !polynomial position for a(h)-calculations
-    PP(1) = findPolynom (polyRangeA (RefNodeN1, :), hhint(i), PolySplitsA (RefNodeN1))
-    PP(2) = findPolynom (polyRangeA (RefNodeN3, :), hhint(i), PolySplitsA (RefNodeN3))
+    PP(1) = findPolynom (polyRangeA (RefNodeN1, :), hhint(i), PolySplitsA (RefNodeN1), cord (RefNodeN1, 1), cord (RefNodeN1, 2), RefNodeN1)
+    PP(2) = findPolynom (polyRangeA (RefNodeN3, :), hhint(i), PolySplitsA (RefNodeN3), cord (RefNodeN3, 1), cord (RefNodeN3, 1), RefNodeN3)
 
     !secondary variables: area and its derivatives
     !A at GP
@@ -667,8 +678,8 @@ Gaussloop: DO I = 1, NGP
     end if
 
     !polynomial position for a(h)-calculations
-    PP(1) = findPolynom (polyRangeQ (RefNodeN1, :), hhint(i), PolySplitsQ (RefNodeN1))
-    PP(2) = findPolynom (polyRangeQ (RefNodeN3, :), hhint(i), PolySplitsQ (RefNodeN3))
+    PP(1) = findPolynom (polyRangeQ (RefNodeN1, :), hhint(i), PolySplitsQ (RefNodeN1), cord (RefNodeN1, 1), cord (RefNodeN1, 2), RefNodeN1)
+    PP(2) = findPolynom (polyRangeQ (RefNodeN3, :), hhint(i), PolySplitsQ (RefNodeN3), cord (RefNodeN3, 1), cord (RefNodeN3, 3), RefNodeN3)
     !secondary variables: reference-discharge and its derivatives
     !QSch at GP
     if (k == 1) then
@@ -731,8 +742,8 @@ Gaussloop: DO I = 1, NGP
     !use momentum coeficient
     ELSEIF (beient == 1) THEN
       !polynomial position for a(h)-calculations
-      PP(1) = findPolynom (polyRangeB (RefNodeN1, :), hhint(i), PolySplitsB (RefNodeN1))
-      PP(2) = findPolynom (polyRangeB (RefNodeN3, :), hhint(i), PolySplitsB (RefNodeN3))
+      PP(1) = findPolynom (polyRangeB (RefNodeN1, :), hhint(i), PolySplitsB (RefNodeN1), cord (RefNodeN1, 1), cord (RefNodeN1, 2), RefNodeN1)
+      PP(2) = findPolynom (polyRangeB (RefNodeN3, :), hhint(i), PolySplitsB (RefNodeN3), cord (RefNodeN3, 1), cord (RefNodeN3, 2), RefNodeN3)
 
       !beta at GP
       IF (k == 1) THEN
@@ -774,8 +785,8 @@ Gaussloop: DO I = 1, NGP
     !use energy coeficient
     ELSEIF (beient == 2) THEN
       !polynomial position for a(h)-calculations
-      PP(1) = findPolynom (polyRangeB (RefNodeN1, :), hhint(i), PolySplitsB (RefNodeN1))
-      PP(2) = findPolynom (polyRangeB (RefNodeN3, :), hhint(i), PolySplitsB (RefNodeN3))
+      PP(1) = findPolynom (polyRangeB (RefNodeN1, :), hhint(i), PolySplitsB (RefNodeN1), cord (RefNodeN1, 1), cord (RefNodeN1, 2), RefNodeN1)
+      PP(2) = findPolynom (polyRangeB (RefNodeN3, :), hhint(i), PolySplitsB (RefNodeN3), cord (RefNodeN3, 1), cord (RefNodeN3, 2), RefNodeN3)
 
       !beta at GP
       IF (k == 1) THEN
@@ -1324,7 +1335,7 @@ HBCAssign: DO L=1, NCN, 2
 
     speclocal = spec(n1, 3)
     !TODO: This should be replaced by a binary search
-    PPA(1) = findPolynom (polyRangeA (n1, :), speclocal, PolySplitsA (n1))
+    PPA(1) = findPolynom (polyRangeA (n1, :), speclocal, PolySplitsA (n1), cord (N1, 1), cord (N1, 2), N1)
 
     !1. Implementation; currently in use!!!
     !Do not apply differentiation by parts
@@ -1655,8 +1666,8 @@ IF(IMAT(NN) .GT. 903) THEN
   qh(n3) = 0.0
 
   !Find position in polynom range definitions
-  PP(1) = FindPolynom (PolyrangeA (n1, :), vel(3, n1), PolySplitsA (n1))
-  PP(2) = FindPolynom (PolyrangeA (n3, :), vel(3, n3), PolySplitsA (n3))
+  PP(1) = FindPolynom (PolyrangeA (n1, :), vel(3, n1), PolySplitsA (n1), cord (N1, 1), cord (N1, 2), N1)
+  PP(2) = FindPolynom (PolyrangeA (n3, :), vel(3, N3), PolySplitsA (N3), cord (N3, 1), cord (N3, 2), N3)
 
   !A(h)
   ah(n1) = CalcPolynomial (apoly (PP(1), n1, 0:12), vel(3, n1), ubound (apoly, 3))

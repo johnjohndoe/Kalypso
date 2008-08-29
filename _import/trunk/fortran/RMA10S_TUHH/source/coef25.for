@@ -631,16 +631,6 @@ C-
           VBFC(M)=1.0
         ENDIF
         
-        !testing
-        !if (icyc == 9 .and. maxn == 1 .and. nn < 5) then
-        !  write(*,*) 'Element: ', nn
-        !  write(*,*) '   node: ', m, ', i.e.', mr
-        !  write(*,*) ' vx: ', vel(1,mr), ' vy: ', vel(2,mr)
-        !  write(*,*) 'dvx: ', vdot(1,mr), ', dvy: ', vdot(2,mr)
-        !  pause
-        !endif
-        !testing-
-        
 
       enddo EstabVelos
 
@@ -1045,11 +1035,10 @@ CIPK SEP04  ADD MAH AND MAT OPTION
                    !store values for output
      +             lambdaKS(nn),
      +             lambdaP(nn),
-     +             lambdaDunes(nn))
+     +             lambdaDunes(nn), dset)
 
         !calculation of friction factor for roughness term in differential equation
         FFACT = lambdaTot(nn)/8.0
-        !-
 
       ENDIF
 
@@ -1180,7 +1169,7 @@ cipk jun05
       if (iedsw.ge.10) then
         call turbulence(nn,iedsw,tbmin,eexxyy(1,nn),eexxyy(2,nn),
      +       eexxyy(3,nn),eexxyy(4,nn),epsx,epsxz,epszx,epsz,roavg,
-     +       p_bottom,tbfact,vecq,h,drdx,drdz,dsdx,dsdz,ffact,gscal)
+     +       p_bottom,tbfact,ffact,vecq,h,drdx,drdz,dsdx,dsdz,gscal)
       end if
       !-
 

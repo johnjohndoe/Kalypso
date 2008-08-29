@@ -20,7 +20,7 @@ CIPK  LAST UPDATE APRIL 27 1999 Fix to use mat instead of nr for material type t
 cipk  last update Jan 6 1999 initialize AKE correctly
 cipk  last update Nov 12 add surface friction
 cipk  last update Aug 6 1998 complete division by xht for transport eqn
-C     Last change:  MD   29 Jul 2008   11:14 am
+C     Last change:  WP   10 Apr 2008    1:08 pm
 CIPK  LAST UPDATED NOVEMBER 13 1997
 CIPK  LAST UPDATED MAY 1 1996
 CIPK LAST UPDATED SEP 7 1995
@@ -634,7 +634,7 @@ CIPK MAR01  ADD POTENTIAL FOR VARIABLE MANNING N
           IF(MANMIN(MAT) .GT. 0.) THEN
 	      IF(H+ABED .LT. ELMMIN(MAT) ) THEN 
               FFACT=(MANMIN(MAT))**2*FCOEF/(H**0.333)
-	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN
+	      ELSEIF(H+ABED .GT. ELMMAX(MAT) ) THEN 
               FFACT=(MANMAX(MAT))**2*FCOEF/(H**0.333)
 	      ELSE
 	        FSCL=(H+ABED-ELMMIN(MAT))/(ELMMAX(MAT)-ELMMIN(MAT))
@@ -703,7 +703,7 @@ CIPK MAY06  MOVE NR TO MAT
                    !store values for output
      +             lamKS,
      +             lamP,
-     +             lamDunes)
+     +             lamDunes, dset)
 
         !calculation of friction factor for roughness term in differential equation
         FFACT = lamTot / 8.0
@@ -1316,7 +1316,8 @@ c     WRITE(*,*) NN,NCN
         !using polynom approach
         ELSE
           PolyPos = findPolynom (PolyRangeA (n1, :), vel(3, n1),
-     +                           PolySplitsA (n1))
+     +                           PolySplitsA (n1), cord(n1, 1),
+     +                           cord (n1, 2), n1)
           ah(n1) = calcPolynomial (apoly (PolyPos, n1, 0: 12),
      +                             vel(3, n1), ubound(apoly, 3))
           !derivative over velocity

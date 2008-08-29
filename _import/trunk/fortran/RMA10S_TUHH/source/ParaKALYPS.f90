@@ -1,4 +1,4 @@
-!     Last change:  MD   29 Jul 2008   11:12 am
+!     Last change:  NIS  14 May 2008    6:22 pm
 !     Last change:  NIS  15 Aug 2007    4:22 pm
 MODULE ParaKALYPS
 
@@ -33,7 +33,7 @@ ALLOCATABLE cniku (:)
 REAL(KIND=8), ALLOCATABLE, DIMENSION (:) :: mh
 
 !filename for saving cwr-file
-CHARACTER (LEN=32) :: name_cwr
+CHARACTER (LEN=96) :: name_cwr
 !frequency pointer for output after itertion
 INTEGER            :: itefreq
 
@@ -91,10 +91,6 @@ INTEGER              :: maxIntPolElts
 LOGICAL, ALLOCATABLE :: IntPolProf (:), IsPolynomNode (:)
 INTEGER              :: statElSz, statNoSz, NodesToIntPol
 REAL (KIND = 8), ALLOCATABLE :: kmWeight(:)
-
-!nis,feb08: Contribution to calculation base units
-INTEGER, ALLOCATABLE :: CalcUnitID (:)
-CHARACTER (Len = 128), ALLOCATABLE :: CalcUnitName (:)
 
 !new parameters for weirs defined by linear functions
 REAL (KIND = 8), ALLOCATABLE :: cstrcRange (:,:,:), cstrcCoefs (:,:,:,:), cstrcdisch (:, :)

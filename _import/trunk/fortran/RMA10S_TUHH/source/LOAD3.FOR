@@ -280,7 +280,7 @@ cipk sep96            ENDIF
                 NBC(N,KK)=0
  1971         CONTINUE
             ENDIF
-            IF(NSURF(N) .EQ. N) NDS=3
+            IF(abs(NSURF(N)) .EQ. N) NDS=3
           ENDIF
           DO 1976 I=1,NDS
  1976     NBC(N,I)=0
@@ -652,7 +652,7 @@ CIPK FEB07
                   CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
                 ELSE
-                  CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+                  !CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
                 ENDIF
 
                 IF(NTMREF(IMAT(NN)) .NE. 0) THEN
@@ -786,7 +786,9 @@ CIPK FEB07
                 CALL WFORM(Q1,HL1,WSLL(N1),WV1,HL2
      +           ,WSLL(N2),WV2,WHGT(N1),WLEN(N1),ITP,IWTYP,widem)
               ELSE
-                CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+                !nis,aug08: What is this needed for?
+                !CALL WTFORM(Q1,NCTREF(IMAT(NN)),WSLL(N1),WSLL(N2))
+                !-
               ENDIF
               IF(NTMREF(IMAT(NN)) .NE. 0) THEN
                 CALL SWITON(NTMREF(IMAT(NN)),ISWTOF,IYRR,DAYOFY,TET
@@ -1328,7 +1330,7 @@ cipk dec98 reverse 5 and 6 to corect bug
             ENDIF
   325     CONTINUE
   330     CONTINUE
-          M=NSURF(N)
+          M=abs(NSURF(N))
           IF(M .LT. 1) THEN
             NBC(N,3)=0
           ELSEIF(NBC(N,3) .EQ. -99) THEN
