@@ -167,7 +167,7 @@ public class Ombrometer extends AbstractFeatureBinding implements IOmbrometer
   @Override
   public IObservation getTimeserie( final String property ) throws MalformedURLException, SensorException
   {
-    final URL context = getFeature().getWorkspace().getContext();
+    final URL context = getWorkspace().getContext();
     final TimeseriesLinkType link = getProperty( new QName( UrlCatalogRcm.NS_OMBROMETER, property ), TimeseriesLinkType.class );
     final String href = link.getHref();
     final URL linkUrl = UrlResolverSingleton.resolveUrl( context, href );
