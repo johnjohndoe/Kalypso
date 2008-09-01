@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IActionBars;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -59,6 +64,8 @@ public class ChartView extends AbstractProfilViewPart2
 
   private final AbstractProfilPart m_profilPart = new AbstractProfilPart();
 
+  public boolean m_resetActions = true;
+
   public ChartView( )
   {
     super();
@@ -67,6 +74,7 @@ public class ChartView extends AbstractProfilViewPart2
   public ChartView( final ProfilChartViewActionBarContributor actionContributor )
   {
     super( actionContributor );
+
   }
 
   /**
@@ -79,6 +87,27 @@ public class ChartView extends AbstractProfilViewPart2
 
     m_profilPart.setProfil( getProfil() );
 
+    // @hack - disable edit action (bug)
+    if( m_resetActions == true )
+    {
+      IActionBars actionBars = getViewSite().getActionBars();
+      IToolBarManager toolBarManager = actionBars.getToolBarManager();
+      IContributionItem[] items = toolBarManager.getItems();
+      for( IContributionItem item : items )
+      {
+        if( item instanceof ActionContributionItem )
+        {
+          ActionContributionItem contribution = (ActionContributionItem) item;
+          IAction action = contribution.getAction();
+
+          action.setEnabled( false );
+          action.setChecked( false );
+        }
+      }
+      toolBarManager.update( true );
+
+      m_resetActions = false;
+    }
     return control;
   }
 
