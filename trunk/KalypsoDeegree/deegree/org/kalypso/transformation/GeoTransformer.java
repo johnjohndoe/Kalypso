@@ -63,6 +63,7 @@ package org.kalypso.transformation;
 import org.deegree.crs.transformations.coordinate.CRSTransformation;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -116,7 +117,7 @@ public class GeoTransformer
     if( cs == null || cs.equalsIgnoreCase( m_target ) )
       return geo;
 
-    return geo.transform( getTransformtion( cs ), m_target );
+    return geo.transform( getTransformation( cs ), m_target );
   }
 
   /**
@@ -127,7 +128,7 @@ public class GeoTransformer
    *            The name of the source coordinate system.
    * @return The transformation from the source coordinate system to the GeoTransformers target coordinate system.
    */
-  private CRSTransformation getTransformtion( String source ) throws Exception
+  private CRSTransformation getTransformation( String source ) throws Exception
   {
     CachedTransformationFactory transformationFactory = CachedTransformationFactory.getInstance();
     CRSTransformation transformation = transformationFactory.createFromCoordinateSystems( source, m_target );
@@ -156,5 +157,23 @@ public class GeoTransformer
     // TODO: this can be improved....
     GM_Surface< ? > asSurface = GeometryFactory.createGM_Surface( envelope, source );
     return transform( asSurface ).getEnvelope();
+  }
+  
+  /**
+   * This function transforms the coordinates of a deegree position to the target coordinate reference system.
+   * 
+   * @param position
+   *            The position to be transformed.
+   * @return The transformed position.
+   */
+  public GM_Position transformPosition( GM_Position position, String source ) throws Exception
+  {
+    if( position == null )
+      return null;
+
+    if( source == null || source.equalsIgnoreCase( m_target ) )
+      return position;
+
+    return position.transform( getTransformation( source ));
   }
 }
