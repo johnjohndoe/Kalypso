@@ -87,6 +87,15 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
   public final static QName WB1D2DCONTROL_PROP_AC2 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC2" );
   public final static QName WB1D2DCONTROL_PROP_AC1 = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "AC1" );
   public static final QName WB1D2DCONTROL_PROP_BEIENT = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BEIENT" );
+
+  public static final QName WB1D2DCONTROL_PROP_ICPU = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "ICPU" );
+
+  public static final QName WB1D2DCONTROL_PROP_MFW = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "MFW" );
+
+  public static final QName WB1D2DCONTROL_PROP_BUFFSIZ = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "BUFFSIZ" );
+
+  public static final QName WB1D2DCONTROL_PROP_PERCENT_CHECK = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "PERCENT_CHECK" );
+
   public final static QName WB1D2DCONTROL_PROP_VEGETA = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "VEGETA" );
   public final static QName WB1D2DCONTROL_PROP_RESTART = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "_restart" );
   public final static QName WB1D2DCONTROL_PROP_IACCYC = new QName( UrlCatalog1D2D.MODEL_1D2DControl_NS, "IACCYC" );
@@ -170,6 +179,30 @@ public class ControlModel1D2D extends AbstractFeatureBinder implements IControlM
       return propertyValue.intValue();
 
     return 0;
+  }
+
+  public Integer getIcpu( )
+  {
+    final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_ICPU );
+    return propertyValue != null ? propertyValue : 0;
+  }
+
+  public Integer getMFW( )
+  {
+    final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_MFW );
+    return propertyValue != null ? propertyValue : 0;
+  }
+
+  public Integer getBUFFSIZ( )
+  {
+    final Integer propertyValue = (Integer) getFeature().getProperty( WB1D2DCONTROL_PROP_BUFFSIZ );
+    return propertyValue != null ? propertyValue : 0;
+  }
+
+  public boolean getPercentCheck( )
+  {
+    final Boolean propertyValue = (Boolean) getFeature().getProperty( WB1D2DCONTROL_PROP_PERCENT_CHECK );
+    return propertyValue != null ? propertyValue : false;
   }
 
   public boolean getRestart( )

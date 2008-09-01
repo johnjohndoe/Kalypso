@@ -163,6 +163,58 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="ICPU" type="xs:int" default="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Anzahl der Prozessoren
+								</xs:label>
+								<xs:tooltip>
+									Anzahl der Prozessoren; Wert 0: Front-Algorithmus; Wert > 0 Verwendung der MKL
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="BUFFSIZ" type="xs:int" default="20000000">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									Speichergröße für Gleichungslöser
+								</xs:label>
+								<xs:tooltip>
+									maximale Speichergröße, die dem Gleichungslöser zur Verfügung stehen kann
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MFW" type="xs:int" default="1500">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									maximale Bandbreite der Lösungsmatrix
+								</xs:label>
+								<xs:tooltip>
+									zulässige Bandbreite der Lösungsmatrix; performant bis 2500
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PERCENT_CHECK" type="xs:boolean"
+						default="false">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>
+									prozentuale Änderungen?
+								</xs:label>
+								<xs:tooltip>
+gecheckt: prozentuale Änderungen als Kovergenzkriterien verwenden;
+          angegebene Grenzen sind als
+          relative Änderungen (Prozent durch 100) zu verstehen
+          uncheckt: absolute Änderungen als Konvergenzkriterien verwenden
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="IDNOPT" default="-1">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">

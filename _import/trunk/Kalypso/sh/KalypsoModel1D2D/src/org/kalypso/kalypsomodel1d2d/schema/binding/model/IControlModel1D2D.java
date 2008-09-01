@@ -70,6 +70,8 @@ public interface IControlModel1D2D extends IControlModel
 
   public String getVersion( );
 
+  public Integer getIcpu( );
+
   public int getStartYear( );
 
   public int getIaccyc( );
@@ -149,5 +151,11 @@ public interface IControlModel1D2D extends IControlModel
   public boolean isUnsteadySelected( );
 
   public IRestartInfo addRestartInfo( );
+
+  boolean getPercentCheck( );
+
+  Integer getMFW( );
+
+  Integer getBUFFSIZ( );
 
 }

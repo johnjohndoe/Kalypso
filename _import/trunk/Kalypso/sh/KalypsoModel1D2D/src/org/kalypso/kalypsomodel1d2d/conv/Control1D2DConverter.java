@@ -194,6 +194,16 @@ public class Control1D2DConverter
 
     formatter.format( "ENDFIL%n" ); //$NON-NLS-1$
 
+    // TODO: @Nico -> hard coded defaults could be got from the schema, how?
+
+    // default value: 1500
+    if( m_controlModel.getMFW() != 1500 )
+      formatter.format( "MFW     %8d%n", m_controlModel.getMFW() );
+
+    // default value: 10.000.000
+    if( m_controlModel.getBUFFSIZ() != 20000000 )
+      formatter.format( "BUFFSIZL%16d%n", m_controlModel.getBUFFSIZ() );
+
     /* CONTROL DATA BLOCK */
     final String controlModelName = m_controlModel.getName();
     final String projectName = controlModelName == null ? Messages.getString( "Control1D2DConverter.8" ) : controlModelName; //$NON-NLS-1$
@@ -223,6 +233,13 @@ public class Control1D2DConverter
 
     // C5
     formatter.format( "C5%14d%8d%16d%8d%8d%8d%8d%8d%8d%n", m_controlModel.getNITI(), m_controlModel.getNITN(), m_controlModel.getNCYC(), 0, 1, 1, 0, 1, 1 ); //$NON-NLS-1$
+
+    // C6
+    if( m_controlModel.getIcpu() != 0 )
+      formatter.format( "C6%14d%8d%8d%8d%n", 0, 0, 0, m_controlModel.getIcpu() );
+
+    // C7
+    formatter.format( "C7%14d%8d%8d%n", 0, 0, m_controlModel.getPercentCheck() ? 1 : 0 );
 
     // CV
     formatter.format( "CV%14.2g%8.2g%8.2g%8.2g%8.2g%16d%8.2f%n", m_controlModel.getCONV_1(), m_controlModel.getCONV_2(), m_controlModel.getCONV_3(), 0.05, 0.05, m_controlModel.getIDRPT(), m_controlModel.getDRFACT() ); //$NON-NLS-1$
