@@ -167,6 +167,7 @@ public class GeoGridUtilities
    */
   public static Envelope asEnvelope( final IGeoGrid grid, final int i, final int j ) throws GeoGridException
   {
+    //TODO What with offsetX.y and offsetY.x
     final Coordinate origin = grid.getOrigin();
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetY();
@@ -219,6 +220,7 @@ public class GeoGridUtilities
    */
   public static Envelope toEnvelope( final IGeoGrid grid ) throws GeoGridException
   {
+    //TODO What with offsetX.y and offsetY.x
     final Coordinate origin = grid.getOrigin();
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetY();
@@ -300,6 +302,7 @@ public class GeoGridUtilities
    */
   public static GM_Surface< ? > createCell( final IGeoGrid grid, final int x, final int y, final String targetCRS ) throws GeoGridException
   {
+    //TODO What with offsetX.y and offsetY.x
     try
     {
       final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
@@ -943,6 +946,7 @@ public class GeoGridUtilities
    */
   public static Polygon createCellPolygon( IGeoGrid grid, int x, int y ) throws GeoGridException
   {
+    //TODO What with offsetX.y and offsetY.x
     final Coordinate cellCoordinate = GeoGridUtilities.toCoordinate( grid, x, y, null );
 
     final double offsetX = grid.getOffsetX().x;
