@@ -55,6 +55,8 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
+import com.sun.java_cup.internal.runtime.virtual_parse_stack;
+
 /**
  * @author Thomas Jung
  */
@@ -72,11 +74,23 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
    */
   private static final QName QNAME_PROP_VIRTUALDEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtualdepth" );
 
+  private static final QName QNAME_PROP_VIRTDEPPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepPrevStep" );
+
+  private static final QName QNAME_PROP_VIRTDEPOVERTIME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepOverTime" );
+
+  private static final QName QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "virtDepOverTimePrevStep" );
+
   private static final QName QNAME_PROP_WATERLEVEL = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "waterlevel" );
 
   private static final QName QNAME_PROP_DEPTH = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "depth" );
 
   private static final QName QNAME_PROP_VELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velocity" );
+
+  private static final QName QNAME_PROP_VELPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velPrevStep" );
+
+  private static final QName QNAME_PROP_VELOVERTIME = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velOverTime" );
+
+  private static final QName QNAME_PROP_VELOVERTIMEPREVSTEP = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "velOverTimePrevStep" );
 
   private static final QName QNAME_PROP_DISCHARGE = new QName( UrlCatalog1D2D.MODEL_1D2DResults_NS, "discharge" );
 
@@ -143,6 +157,46 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     veloList.add( vx );
     veloList.add( vy );
     getFeature().setProperty( QNAME_PROP_VELOCITY, veloList );
+
+    /* check the real depth by comparing water level with terrain elevation */
+    // double depth = getDepth();
+    // getFeature().setProperty( QNAME_PROP_DEPTH, depth );
+  }
+
+  public void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt )
+  // WRT means with respect to
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIME, virtDepWRTt );
+
+    final List<Double> veloList = new ArrayList<Double>();
+    veloList.clear();
+    veloList.add( vxWRTt );
+    veloList.add( vyWRTt );
+    getFeature().setProperty( QNAME_PROP_VELOVERTIME, veloList );
+
+  }
+
+  public void setResultPrevStepValues( final double vxPrevStep, final double vyPrevStep, final double virtDepPrevStep )
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTDEPPREVSTEP, virtDepPrevStep );
+
+    final List<Double> velPrevStepList = new ArrayList<Double>();
+    velPrevStepList.clear();
+    velPrevStepList.add( vxPrevStep );
+    velPrevStepList.add( vyPrevStep );
+    getFeature().setProperty( QNAME_PROP_VELPREVSTEP, velPrevStepList );
+  }
+
+  public void setTimeDerivativeValuesPrevStep( final double vxWRTtPrevStep, final double vyWRTtPrevStep, final double virtDepWRTtPrevStep )
+  // WRT means with respect to
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, virtDepWRTtPrevStep );
+
+    final List<Double> veloList = new ArrayList<Double>();
+    veloList.clear();
+    veloList.add( vxWRTtPrevStep );
+    veloList.add( vyWRTtPrevStep );
+    getFeature().setProperty( QNAME_PROP_VELOVERTIMEPREVSTEP, veloList );
 
     /* check the real depth by comparing water level with terrain elevation */
     // double depth = getDepth();
@@ -228,6 +282,21 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_VELOCITY, velocity );
   }
 
+  public void setVelPrevStep( final List<Double> velPrevStep )
+  {
+    getFeature().setProperty( QNAME_PROP_VELPREVSTEP, velPrevStep );
+  }
+
+  public void setVelOverTime( final List<Double> velOverTime )
+  {
+    getFeature().setProperty( QNAME_PROP_VELOVERTIME, velOverTime );
+  }
+
+  public void setVelOverTimePrevStep( final List<Double> velOverTimePrevStep )
+  {
+    getFeature().setProperty( QNAME_PROP_VELOVERTIMEPREVSTEP, velOverTimePrevStep );
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#isWet()
    */
@@ -299,6 +368,21 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
     getFeature().setProperty( QNAME_PROP_VIRTUALDEPTH, new Double( virtualDepth ) );
   }
 
+  public void setVirtDepPrevStep( final double virtDepthPrevStep )
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTDEPPREVSTEP, new Double( virtDepthPrevStep ) );
+  }
+
+  public void setVirtDepOverTime( final double virtDepOverTime )
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIME, new Double( virtDepOverTime ) );
+  }
+
+  public void setVirtDepOverTimePrevStep( final double virtDepOverTimePrevStep )
+  {
+    getFeature().setProperty( QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP, new Double( virtDepOverTimePrevStep ) );
+  }
+
   /**
    * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getDischarge()
    */
@@ -313,5 +397,106 @@ public class GMLNodeResult extends AbstractFeatureBinder implements INodeResult
   public void setDischarge( double discharge )
   {
     getFeature().setProperty( GMLNodeResult.QNAME_PROP_DISCHARGE, new Double( discharge ) );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTime()
+   */
+  public List<Double> getVelOverTime( )
+  {
+    final double depth = getDepth();
+    List<Double> veloList;
+
+    // Try to get the velocity over time derivative
+    veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIME );
+
+    if( depth < 0 || veloList == null )
+    {
+      if( veloList == null )
+        veloList = new ArrayList<Double>();
+      veloList.clear();
+      veloList.add( 0.0 );
+      veloList.add( 0.0 );
+    }
+
+    return veloList;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTimePrevStep()
+   */
+  public List<Double> getVelOverTimePrevStep( )
+  {
+    final double depth = getDepth();
+    List<Double> veloList;
+
+    // Try to get the velocity over time derivative
+    veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELOVERTIMEPREVSTEP );
+
+    if( depth < 0 || veloList == null )
+    {
+      if( veloList == null )
+        veloList = new ArrayList<Double>();
+      veloList.clear();
+      veloList.add( 0.0 );
+      veloList.add( 0.0 );
+    }
+    return veloList;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelPrevStep()
+   */
+  public List<Double> getVelPrevStep( )
+  {
+    final double depth = getDepth();
+    List<Double> veloList;
+
+    // Try to get the velocity over time derivative
+    veloList = (List<Double>) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VELPREVSTEP );
+
+    if( depth < 0 || veloList == null )
+    {
+      if( veloList == null )
+        veloList = new ArrayList<Double>();
+      veloList.clear();
+      veloList.add( 0.0 );
+      veloList.add( 0.0 );
+    }
+    return veloList;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTime()
+   */
+  public double getVirtDepOverTime( )
+  {
+    Double VirtualDepth = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIME );
+    if( VirtualDepth == null )
+      VirtualDepth = 0.0;
+    return VirtualDepth;
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTimePrevStep()
+   */
+  public double getVirtDepOverTimePrevStep( )
+  {
+    Double VirtDepOverTimePrevStep = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPOVERTIMEPREVSTEP );
+    if( VirtDepOverTimePrevStep == null )
+      VirtDepOverTimePrevStep = 0.0;
+    return VirtDepOverTimePrevStep;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepPrevStep()
+   */
+  public double getVirtDepPrevStep( )
+  {
+    Double VirtDepPrevStep = (Double) getFeature().getProperty( GMLNodeResult.QNAME_PROP_VIRTDEPPREVSTEP );
+    if( VirtDepPrevStep == null )
+      VirtDepPrevStep = 0.0;
+    return VirtDepPrevStep;
   }
 }

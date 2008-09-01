@@ -71,6 +71,7 @@ import org.kalypso.kalypsomodel1d2d.KalypsoModel1D2DDebug;
 import org.kalypso.kalypsomodel1d2d.conv.EReadError;
 import org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler;
 import org.kalypso.kalypsomodel1d2d.conv.IRoughnessIDProvider;
+import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypso.kalypsomodel1d2d.conv.results.lengthsection.LengthSectionHandler1d;
 import org.kalypso.kalypsomodel1d2d.ops.CalcUnitOps;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.ICalculationUnit;
@@ -1713,6 +1714,37 @@ public class NodeResultsHandler implements IRMA10SModelElementHandler
     result.setResultValues( vx, vy, virtualDepth, waterlevel );
     m_resultMinMaxCatcher.addNodeResult( result );
 
+  }
+
+  public void handleTimeDependentAdditionalResult( final String lineString, final int id, final double velXComponent, final double velYComponent, final double depthComponent, final RESULTLINES resultlines )
+  {
+    final INodeResult result = m_nodeIndex.get( id );
+
+    if( result == null )
+    {
+      KalypsoModel1D2DDebug.SIMULATIONRESULT.printf( "%s %d ", "1D2D-RESULT: Result for non-existing node: \n", id );
+      return;
+    }
+    switch( resultlines )
+    {
+      case LINE_VO:
+        result.setResultPrevStepValues( velXComponent, velYComponent, depthComponent );
+
+        break;
+      case LINE_GA:
+        result.setTimeDerivativeValues( velXComponent, velYComponent, depthComponent );
+
+        break;
+      case LINE_GO:
+        result.setTimeDerivativeValuesPrevStep( velXComponent, velYComponent, depthComponent );
+
+        break;
+
+      // TODO: catch LINE_VA case and print message; normally the handleResult function can be called without water
+      // stage information!
+      // Normally this shouldn't happen, because otherwise the 2D-file is 'broken'
+
+    }
   }
 
   /**

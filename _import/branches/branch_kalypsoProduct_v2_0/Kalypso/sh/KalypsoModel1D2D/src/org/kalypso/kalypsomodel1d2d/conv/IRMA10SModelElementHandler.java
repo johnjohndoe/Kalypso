@@ -2,7 +2,9 @@ package org.kalypso.kalypsomodel1d2d.conv;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 
 /**
@@ -71,6 +73,12 @@ public interface IRMA10SModelElementHandler
    * Invoqued by the reader to signal that a result (VA) has been read and parsed
    */
   public void handleResult( String lineString, int id, double vx, double vy, double depth, double waterlevel );
+
+  // LineID, ID
+  /**
+   * Invoqued by the reader to signal that a result (VO, GA, GO) has been read and parsed
+   */
+  public void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines);
 
   /**
    * Handle a line that the reader cannot interpret

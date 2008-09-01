@@ -62,11 +62,35 @@ public class SimpleNodeResult implements INodeResult
 
   private double m_vy;
 
+  private double m_vxPrevStep;
+
+  private double m_vyPrevStep;
+
+  private double m_dvxdt;
+
+  private double m_dvydt;
+
+  private double m_dvxdtPrevStep;
+
+  private double m_dvydtPrevStep;
+
   private double m_depth;
+
+  private double m_depthPrevStep;
+
+  private double m_dDepthDt;
+
+  private double m_dDepthDtPrevStep;
 
   private double m_waterlevel;
 
   private List<Double> m_velocity;
+
+  private List<Double> m_velocityPrevStep;
+
+  private List<Double> m_dVelDt;
+
+  private List<Double> m_dVelDtPrevStep;
 
   public final List<Double> m_lambdas = new LinkedList<Double>();
 
@@ -138,6 +162,42 @@ public class SimpleNodeResult implements INodeResult
     m_vy = vy;
     m_depth = depth;
     m_waterlevel = waterlevel;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setResultPrevStepValues(double, double,
+   *      double)
+   */
+  public void setResultPrevStepValues( double vxPrevStep, double vyPrevStep, double virtDepPrevStep )
+  {
+    m_vxPrevStep = vxPrevStep;
+    m_vyPrevStep = vyPrevStep;
+    m_depthPrevStep = virtDepPrevStep;
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setTimeDerivativeValues(double, double,
+   *      double)
+   */
+  public void setTimeDerivativeValues( double vxWRTt, double vyWRTt, double virtDepWRTt )
+  {
+    m_dvxdt = vxWRTt;
+    m_dvydt = vyWRTt;
+    m_dDepthDt = virtDepWRTt;
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setTimeDerivativeValuesPrevStep(double,
+   *      double, double)
+   */
+  public void setTimeDerivativeValuesPrevStep( double vxWRTtPrevStep, double vyWRTtPrevStep, double virtDepWRTtPrevStep )
+  {
+    m_dvxdtPrevStep = vxWRTtPrevStep;
+    m_dvydtPrevStep = vyWRTtPrevStep;
+    m_dDepthDtPrevStep = virtDepWRTtPrevStep;
+
   }
 
   /**
@@ -377,5 +437,112 @@ public class SimpleNodeResult implements INodeResult
   public List<Double> getVirtualVelocity( )
   {
     return m_velocity;
+  }
+
+  // Why are the following functions needed at all?
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTime(java.util.List)
+   */
+  public void setVelOverTime( List<Double> velOverTime )
+  {
+    m_dVelDt = velOverTime;
+    m_dvxdt = velOverTime.get( 0 );
+    m_dvydt = velOverTime.get( 1 );
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelOverTimePrevStep(java.util.List)
+   */
+  public void setVelOverTimePrevStep( List<Double> velOverTimePrevStep )
+  {
+    m_dVelDtPrevStep = velOverTimePrevStep;
+    m_dvxdtPrevStep = velOverTimePrevStep.get( 0 );
+    m_dvydtPrevStep = velOverTimePrevStep.get( 1 );
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVelPrevStep(java.util.List)
+   */
+  public void setVelPrevStep( List<Double> velPrevStep )
+  {
+    m_velocityPrevStep = velPrevStep;
+    m_vxPrevStep = velPrevStep.get( 0 );
+    m_vyPrevStep = velPrevStep.get( 1 );
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTime(double)
+   */
+  public void setVirtDepOverTime( double virtDepOverTime )
+  {
+    m_dDepthDt = virtDepOverTime;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepOverTimePrevStep(double)
+   */
+  public void setVirtDepOverTimePrevStep( double virtDepOverTimePrevStep )
+  {
+    m_dDepthDtPrevStep = virtDepOverTimePrevStep;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#setVirtDepPrevStep(double)
+   */
+  public void setVirtDepPrevStep( double virtDepthPrevStep )
+  {
+    m_depthPrevStep = virtDepthPrevStep;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTime()
+   */
+  public List<Double> getVelOverTime( )
+  {
+    return m_dVelDt;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelOverTimePrevStep()
+   */
+  public List<Double> getVelOverTimePrevStep( )
+  {
+    return m_dVelDtPrevStep;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVelPrevStep()
+   */
+  public List<Double> getVelPrevStep( )
+  {
+    return m_velocityPrevStep;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTime()
+   */
+  public double getVirtDepOverTime( )
+  {
+    return m_dDepthDt;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepOverTimePrevStep()
+   */
+  public double getVirtDepOverTimePrevStep( )
+  {
+    return m_dDepthDtPrevStep;
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.results.INodeResult#getVirtDepPrevStep()
+   */
+  public double getVirtDepPrevStep( )
+  {
+    return m_depthPrevStep;
   }
 }

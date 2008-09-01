@@ -129,6 +129,36 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="virtDepPrevStep" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>virtuelle Fliesstiefe des vorigen Zeitschritts</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>virtualdepth of the previous time step</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="virtDepOverTime" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Ableitung der virtuellen Fließtiefe nach der Zeit</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>derivative of virtual depth over time</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="virtDepOverTimePrevStep" type="xs:double">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Ableitung der virtuellen Fließtiefe nach der Zeit im letzten Zeitschritt</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>derivative of virtual depth over time in last time step</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="depth" type="xs:double">
 						<xs:annotation>
 							<xs:documentation xml:lang="de">
@@ -146,6 +176,36 @@
 							</xs:documentation>
 							<xs:documentation xml:lang="en">
 								<xs:label>Velocity</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="velPrevStep" type="gml:VectorType">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Geschwindigkeit im vorigen Zeitschritt</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>velocity of the previous time step</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="velOverTime" type="gml:VectorType">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Ableitung der Geschwindigkeit nach der Zeit im vorigen Zeitschritt</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>derivative of the velocity with respect to time of the previous time step</xs:label>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="velOverTimePrevStep" type="gml:VectorType">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Ableitung der Geschwindigkeit nach der Zeit</xs:label>
+							</xs:documentation>
+							<xs:documentation xml:lang="en">
+								<xs:label>derivative of the velocity with respect to time</xs:label>
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
