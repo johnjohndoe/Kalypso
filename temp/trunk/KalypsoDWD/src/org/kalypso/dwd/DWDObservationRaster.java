@@ -80,13 +80,14 @@ public class DWDObservationRaster
 
   /**
    * This function returns the type of the observation.
+   * 
    * @return The type of the observation.
    */
   public int getDwdKey( )
   {
     return m_dwdKey;
   }
-  
+
   /**
    * This function returns the unit of the values of this observation.
    * 
@@ -142,5 +143,15 @@ public class DWDObservationRaster
     instance.add( Calendar.HOUR, -1 );
 
     return instance.getTime();
+  }
+
+  /**
+   * This function returns the max number of cells of a raster (for a date).
+   * 
+   * @return The max number of cells.
+   */
+  public int getMaxCells( )
+  {
+    return m_maxCells;
   }
 }
