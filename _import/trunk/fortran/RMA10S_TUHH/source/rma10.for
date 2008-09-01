@@ -513,7 +513,7 @@ CIPK NOV97      IF(NCONV .EQ. 1) GO TO 350
           IF (IKALYPSOFM /= 0) THEN
             WRITE(*,*)' Entering write_Kalypso',
      +                ' steady state, after Iteration = ',maxn
-            call generate2DFileName('stat', niti, 0, maxn, modellaus,
+            call generateOutputFileName('stat', niti, 0, maxn, modellaus,
      +                                modellein, modellrst, ct, nb,
      +                                outputFileName, inputFileName)
             CALL write_KALYPSO (outputFileName, 'resu')
@@ -618,7 +618,7 @@ CIPK MAR00
         MAXN = 0.
         WRITE(*,*)' Entering write_Kalypso',
      +            ' for STEADY STATE SOLUTION.'
-        call generate2DFileName('stat', niti, 0, maxn, modellaus,
+        call generateOutputFileName('stat', niti, 0, maxn, modellaus,
      +                           modellein, modellrst, ct, nb,
      +                           outputFileName, inputFileName)
         CALL write_KALYPSO (outputFileName, 'resu')
@@ -1275,7 +1275,7 @@ C      END OF ITERATION LOOP
             WRITE(*,*)' Entering write_Kalypso',
      +                ' dynamic at time step ', icyc+iaccyc-1,
      +                ' after Iteration = ',maxn
-            call generate2DFileName
+            call generateOutputFileName
      +         ('inst', niti, icyc, maxn, modellaus, modellein,
      +         modellrst, ct, nb, outputFileName, inputFileName)
             CALL write_KALYPSO (outputFileName, 'resu')
@@ -1453,17 +1453,17 @@ c      14   VSING subscript(7)  water column potential by node
               MAXN = 0.
               WRITE(*,*)' Entering write_Kalypso',
      +            ' after dynamic time step ', icyc+iaccyc-1
-              call generate2DFileName
+              call generateOutputFileName
      +          ('inst', niti, icyc, maxn, modellaus, modellein,
      +          modellrst, ct, nb, outputFileName, inputFileName)
               CALL write_KALYPSO (outputFileName, 'resu')
               WRITE (*,*)'back from write_kalypso'
               !every timestep min and max result files are overwritten to have the last
-              call generate2DFileName
+              call generateOutputFileName
      +          ('mini', 0, icyc, maxn, modellaus, modellein,
      +          modellrst, ct, nb, outputFileName, inputFileName)
               call write_Kalypso (outputFileName, 'mini')
-              call generate2DFileName
+              call generateOutputFileName
      +          ('maxi', 0, icyc, maxn, modellaus, modellein,
      +          modellrst, ct, nb, outputFileName, inputFileName)
               call write_Kalypso (outputFileName, 'maxi')

@@ -419,3 +419,7 @@ Version 1.1.0 (laufende Änderungen)
 043.) Correct calling of wtform from cstrc2d.for
 
 --- Nico Schrage, 29.08.2008 (1.1.0alpha2)
+
+044.) Retighting the function name rededication of 'Generate2DFileName' to 'GenerateOutputFileName' in rma10.for
+
+--- Nico Schrage, 01.09.2008 (1.1.0alpha2)
