@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.mapfunctions;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -138,6 +142,31 @@ public class MapfunctionHelper
    */
   public static Feature[] findFeatureToSelect( final MapPanel mapPanel, final Rectangle rectangle, final Feature[] features, final int radius )
   {
+    List<Feature> myFeatures = new ArrayList<Feature>();
+
+    /* type of feature? shape feature, ascii grid, etc */
+    for( Feature feature : features )
+    {
+      Feature root = feature.getWorkspace().getRootFeature();
+      QName qname = root.getFeatureType().getQName();
+      if( ShapeSerializer.ROOT_FEATURETYPE.equals( qname ) )
+      {
+        Feature[] selected = findShapeFeatures( mapPanel, feature, rectangle, radius );
+        for( Feature f : selected )
+        {
+          myFeatures.add( f );
+        }
+      }
+      else
+        throw new NotImplementedException();
+
+    }
+
+    return myFeatures.toArray( new Feature[] {} );
+  }
+
+  private static Feature[] findShapeFeatures( MapPanel mapPanel, Feature feature, Rectangle rectangle, int radius )
+  {
     if( mapPanel == null )
       return new Feature[] {};
 
@@ -148,10 +177,7 @@ public class MapfunctionHelper
     final GeoTransform transform = mapPanel.getProjection();
     final String coordinatesSystem = mapModell.getCoordinatesSystem();
 
-    if( features.length <= 0 )
-      return new Feature[] {};
-
-    final Feature oldRootFeature = features[0].getWorkspace().getRootFeature();
+    final Feature oldRootFeature = feature.getWorkspace().getRootFeature();
     final IFeatureType featureType = oldRootFeature.getFeatureType();
 
     final IPropertyType[] properties = oldRootFeature.getFeatureType().getProperties();
@@ -169,11 +195,10 @@ public class MapfunctionHelper
       return new Feature[] {};
 
     final Feature root = ShapeSerializer.createWorkspaceRootFeature( featureType, propertyType );
-    final IRelationType parentRelation = features[0].getParentRelation();
+    final IRelationType parentRelation = feature.getParentRelation();
 
     final FeatureList geoIndex = FeatureFactory.createFeatureList( root, parentRelation );
-    for( final Feature feature : features )
-      geoIndex.add( feature );
+    geoIndex.add( feature );
 
     if( (rectangle.width < radius) && (rectangle.height < radius) )
     {
