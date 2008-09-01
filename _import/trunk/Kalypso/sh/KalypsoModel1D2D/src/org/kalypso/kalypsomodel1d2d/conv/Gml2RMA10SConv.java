@@ -105,6 +105,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class Gml2RMA10SConv implements INativeIDProvider
 {
+  private static enum LINE_CASES
+  {
+    VA,
+    GA,
+    VO,
+    GO
+  }
+
   private final IdMap m_roughnessIDProvider;
 
   private final IdMap m_nodesIDProvider = new IdMap();
@@ -865,21 +873,104 @@ public class Gml2RMA10SConv implements INativeIDProvider
       return;
     }
 
-    final double vx;
-    final double vy;
-    final List<Double> velocity = node.getVirtualVelocity();
-    if( velocity != null )
+    // ---------------------------
+    // now write the restart lines
+    // ---------------------------
+    double velXComp = 0;
+    double velYComp = 0;
+    List<Double> velTotal = new ArrayList<Double>();
+    double virtDepth = 0;
+    final List<LINE_CASES> restartCases  = new ArrayList<LINE_CASES>();
+
+    restartCases.add( LINE_CASES.VA );
+    restartCases.add( LINE_CASES.GA );
+    restartCases.add( LINE_CASES.VO );
+    restartCases.add( LINE_CASES.GO );
+
+    // --------------------------------------------------------------------------------------------------------
+    // Write the velocities and the depth values in the VA-line; if RESTART should be done, this is the minimum
+    // information, i.e.
+    // enough information for restart with steady state, but not enough for unsteady calculations.
+    // -------------------------------------------------------------------------------------------
+    for( LINE_CASES restartCase : restartCases )
     {
-      vx = velocity.get( 0 );
-      vy = velocity.get( 1 );
+
+      switch( restartCase )
+      {
+        case VA:
+          velTotal = node.getVirtualVelocity();
+          virtDepth = node.getVirtualDepth();
+          break;
+        case GA:
+          velTotal = node.getVelOverTime();
+          virtDepth = node.getVirtDepOverTime();
+          break;
+        case VO:
+          velTotal = node.getVelPrevStep();
+          virtDepth = node.getVirtDepPrevStep();
+          break;
+        case GO:
+          velTotal = node.getVelOverTimePrevStep();
+          virtDepth = node.getVirtDepOverTimePrevStep();
+          break;
+      }
+
+      // no values in feature present at all (old models)
+      if( velTotal == null )
+      {
+        velXComp = 0.0;
+        velYComp = 0.0;
+      }
+
+      else if( velTotal != null )
+      {
+        if( velTotal.get( 0 ) == null )
+        {
+          velXComp = 0.0;
+          velYComp = 0.0;
+        }
+        // This is the situation we want to have in the unsteady restarting.
+        else
+        {
+          velXComp = velTotal.get( 0 );
+          velYComp = velTotal.get( 1 );
+
+        }
+      }
+
+      switch( restartCase )
+      {
+        case VA:
+          // --------------------------------------------------------------
+          // Write the velocities of the current time step into the VA line
+          // --------------------------------------------------------------
+          formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, velXComp, velYComp, virtDepth, node.getWaterlevel() ); //$NON-NLS-1$
+          FormatterUtils.checkIoException( formatter );
+          break;
+        case GA:
+          // -------------------------------------------------------------------------------
+          // Write the gradients of the velocities of the current time step into the GA line
+          // -------------------------------------------------------------------------------
+          formatter.format( "GA%10d%20.7f%20.7f%20.7f%n", nodeID, velXComp, velYComp, virtDepth ); //$NON-NLS-1$
+          FormatterUtils.checkIoException( formatter );
+          break;
+        case VO:
+          // ---------------------------------------------------------------
+          // Write the velocities of the previous time step into the VO line
+          // ---------------------------------------------------------------
+          formatter.format( "VO%10d%20.7f%20.7f%20.7f%n", nodeID, velXComp, velYComp, virtDepth ); //$NON-NLS-1$
+          FormatterUtils.checkIoException( formatter );
+          break;
+        case GO:
+          // --------------------------------------------------------------------------------
+          // Write the gradients of the velocities of the previous time step into the GO line
+          // --------------------------------------------------------------------------------
+          formatter.format( "GO%10d%20.7f%20.7f%20.7f%n", nodeID, velXComp, velYComp, virtDepth ); //$NON-NLS-1$
+          FormatterUtils.checkIoException( formatter );
+          break;
+      }
+
     }
-    else
-    {
-      vx = node.getAbsoluteVelocity();
-      vy = vx;
-    }
-    formatter.format( "VA%10d%20.7f%20.7f%20.7f%20.7f%n", nodeID, vx, vy, node.getVirtualDepth(), node.getWaterlevel() ); //$NON-NLS-1$
-    FormatterUtils.checkIoException( formatter );
   }
 
   @SuppressWarnings("unchecked")

@@ -52,6 +52,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.FormatterUtils;
+import org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType;
 import org.kalypso.kalypsomodel1d2d.conv.results.ResultType.TYPE;
 import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
@@ -350,6 +351,16 @@ public class DifferenceResultModel1d2dHandler implements IRMA10SModelElementHand
   {
     // TODO Auto-generated method stub
 
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.conv.IRMA10SModelElementHandler#handleTimeDependentAdditionalResult(java.lang.String, int, double, double, double, org.kalypso.kalypsomodel1d2d.conv.RMA10S2GmlConv.RESULTLINES)
+   */
+  @Override
+  public void handleTimeDependentAdditionalResult( String lineString, int id, double vx, double vy, double depth, RESULTLINES resultlines )
+  {
+    // TODO Auto-generated method stub
+    
   }
 
 }

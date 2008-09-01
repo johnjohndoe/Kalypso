@@ -117,4 +117,36 @@ public interface INodeResult extends IFeatureWrapper2
 
   void setAssigned( boolean assign );
 
+  // setter-methods for time dependent variables at unsteady restart
+  public abstract void setTimeDerivativeValues( final double vxWRTt, final double vyWRTt, final double virtDepWRTt );
+
+  public abstract void setResultPrevStepValues( final double vxPrevStep, final double vyPrevStep, final double virtDepPrevStep );
+
+  public abstract void setTimeDerivativeValuesPrevStep( final double vxWRTtPrevStep, final double vyWRTtPrevStep, final double virtDepWRTtPrevStep );
+
+  public abstract void setVirtDepPrevStep( final double virtDepthPrevStep );
+
+  public abstract void setVirtDepOverTime( final double virtDepOverTime );
+
+  public abstract void setVirtDepOverTimePrevStep( final double virtDepOverTimePrevStep );
+
+  public abstract void setVelPrevStep( List<Double> velPrevStep );
+
+  public abstract void setVelOverTime( List<Double> velOverTime );
+
+  public abstract void setVelOverTimePrevStep( List<Double> velOverTimePrevStep );
+
+  // getter-methods for time dependent variables at unsteady restart
+  public double getVirtDepPrevStep( );
+
+  public double getVirtDepOverTime( );
+
+  public double getVirtDepOverTimePrevStep( );
+
+  public List<Double> getVelPrevStep( );
+
+  public List<Double> getVelOverTime( );
+
+  public List<Double> getVelOverTimePrevStep( );
+
 }

@@ -69,9 +69,13 @@ public class RMA10S2GmlConv
 
   public static boolean VERBOSE_MODE = false;
 
+  public static enum RESULTLINES  {    LINE_VA,    LINE_VO,    LINE_GA,    LINE_GO  }
+
   private final IProgressMonitor m_monitor;
 
   private final int m_monitorStep;
+
+  private static final Pattern NODE_LINE_PATTERN = Pattern.compile( "FP\\s*([0-9]+)\\s+([0-9]+\\.[0-9]*)\\s+([0-9]+\\.[0-9]*)\\s+([\\+\\-]?[0-9]+\\.[0-9]*).*" );
 
   private static final Pattern ARC_LINE_PATTERN = Pattern.compile( "AR\\s*([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+)\\s+([0-9]+).*" );
 
@@ -116,6 +120,9 @@ public class RMA10S2GmlConv
     final Pattern lineAR = Pattern.compile( "AR.*" ); //$NON-NLS-1$
     final Pattern lineRK = Pattern.compile( "RK.*" ); //$NON-NLS-1$
     final Pattern lineVA = Pattern.compile( "VA.*" ); //$NON-NLS-1$
+    final Pattern lineVO = Pattern.compile( "VO.*" ); //$NON-NLS-1$
+    final Pattern lineGA = Pattern.compile( "GA.*" ); //$NON-NLS-1$
+    final Pattern lineGO = Pattern.compile( "GO.*" ); //$NON-NLS-1$
     final Pattern lineDA = Pattern.compile( "DA.*" ); //$NON-NLS-1$
     final Pattern lineTL = Pattern.compile( "TL.*" ); //$NON-NLS-1$
     final Pattern lineZU = Pattern.compile( "ZU.*" ); //$NON-NLS-1$
@@ -149,7 +156,13 @@ public class RMA10S2GmlConv
         // still not implemented
       }
       else if( lineVA.matcher( line ).matches() )
-        interpreteResultLine( line );
+        interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VA );
+      else if( lineVO.matcher( line ).matches() )
+        interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_VO );
+      else if( lineGA.matcher( line ).matches() )
+        interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GA );
+      else if( lineGO.matcher( line ).matches() )
+        interpreteResultLine( line, RMA10S2GmlConv.RESULTLINES.LINE_GO );
       else if( lineDA.matcher( line ).matches() )
         interpreteTimeLine( line );
       else if( lineTL.matcher( line ).matches() )
@@ -262,7 +275,7 @@ public class RMA10S2GmlConv
       m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
   }
 
-  private void interpreteResultLine( final String line )
+  private void interpreteResultLine( final String line, final RESULTLINES resultlines )
   {
     final String[] strings = line.split( "\\s+" ); //$NON-NLS-1$
     if( strings.length == 6 )
@@ -275,6 +288,21 @@ public class RMA10S2GmlConv
         final double depth = Double.parseDouble( strings[4] );
         final double waterlevel = Double.parseDouble( strings[5] );
         m_handler.handleResult( line, id, vx, vy, depth, waterlevel );
+      }
+      catch( final NumberFormatException e )
+      {
+        m_handler.handleError( line, EReadError.ILLEGAL_SECTION );
+      }
+    }
+    else if( strings.length == 5 )
+    {
+      try
+      {
+        final int id = Integer.parseInt( strings[1] );
+        final double veloXComponent = Double.parseDouble( strings[2] );
+        final double veloYComponent = Double.parseDouble( strings[3] );
+        final double depthComponent = Double.parseDouble( strings[4] );
+        m_handler.handleTimeDependentAdditionalResult( line, id, veloXComponent, veloYComponent, depthComponent, resultlines );
       }
       catch( final NumberFormatException e )
       {
