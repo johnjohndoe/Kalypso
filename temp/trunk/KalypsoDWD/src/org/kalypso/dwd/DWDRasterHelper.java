@@ -413,6 +413,7 @@ public class DWDRasterHelper
             }
 
             break;
+            
           case 2:
             values = (line.trim()).split( " +" );
             for( int i = 0; i < values.length; i++ )
