@@ -1,4 +1,4 @@
-C     Last change:  MD   11 Aug 2008    6:01 pm
+C     Last change:  MD    2 Sep 2008    1:50 pm
 CIPK  LAST UPDATE MAR 05 2006 ADD NODNUM TO CALL AND USE NODAL PROPS
 	subroutine brownlie (VELS,EFD,EXNU,u_star,nodnum)
 C
@@ -42,7 +42,7 @@ CIPK MAR06
 	u_bar = VELS
 	fluid_rho = RHOF
 CIPK MAR06
-      !MD	d50m=d50ND(NODNUM)/1000.
+      	d50m=d50ND(NODNUM)/1000.
 	d90m=d90ND(NODNUM)/1000.
 C
 C  get u_star via Manning's equation
