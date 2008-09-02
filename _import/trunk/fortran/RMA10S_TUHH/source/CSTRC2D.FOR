@@ -1,4 +1,4 @@
-C     Last change:  WP   14 Nov 2007    7:59 pm
+C     Last change:  MD    2 Sep 2008    1:44 pm
 CIPK  NEWLY ADDED TO RMA10S FROM RMA2  JUNE 27 2005
 CIPK  LAST UPDATE JAN 11 2005 ALLOW FOR NEG HLOS IN OPTION 2
 CIPK  LAST UPDATE SEP 06 2004 ADD ERROR FILE
@@ -1075,7 +1075,7 @@ C      set sign for DH
 c
 c      This is a corner node
 c
-     
+
             Q=(U(KK)*VEL(3,N1)+U(8-KK)*VEL(3,N2))/2.
 
 c
@@ -1167,8 +1167,8 @@ cipk jul04
 CIPK DEC05
               Q1DH1=Q1DH1*QFACT1
 	       ELSE
-	        CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2, mcord(nn,1),
-     +                    mcord(nn,2))
+	         CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2,
+     +             mcord(nn,1),mcord(nn,2))
 CIPK DEC05
               Q1DH1=Q1DH1*QFACT1
 	       ENDIF
@@ -1180,8 +1180,8 @@ CIPK DEC05
 CIPK DEC05
               Q1DH1=Q1DH1*QFACT1
 	       ELSE
-	        CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2, mcord(nn,1),
-     +                    mcord(nn,2))
+	         CALL WTFORM(Q1DH1,NCTREF(IMAT(NN)),WS1+DH/2.,WS2,
+     +                mcord(nn,1), mcord(nn,2))
 CIPK DEC05
               Q1DH1=Q1DH1*QFACT1
 	       ENDIF
@@ -1198,8 +1198,8 @@ cipk jul04
 CIPK DEC05
               Q2DH1=Q2DH1*QFACT1
 	       ELSE
-	        CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2, mcord(nn,1),
-     +                    mcord(nn,2))
+	        CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2,
+     +             mcord(nn,1),mcord(nn,2))
 CIPK DEC05
               Q2DH1=Q2DH1*QFACT1
 	       ENDIF
@@ -1211,8 +1211,8 @@ CIPK DEC05
 CIPK DEC05
               Q2DH1=Q2DH1*QFACT1
 	       ELSE
-	        CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2, mcord(nn,1),
-     +                    mcord(nn,2))
+	         CALL WTFORM(Q2DH1,NCTREF(IMAT(NN)),WS1-DH/2.,WS2,
+     +               mcord(nn,1),mcord(nn,2))
 CIPK DEC05
               Q2DH1=Q2DH1*QFACT1
 	       ENDIF
@@ -1234,8 +1234,8 @@ cipk jul04
 CIPK DEC05
               Q1DH2=Q1DH2*QFACT1
 	       ELSE
-	        CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2., mcord(nn,1),
-     +                    mcord(nn,2))
+	        CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.,
+     +              mcord(nn,1),mcord(nn,2))
 CIPK DEC05
               Q1DH2=Q1DH2*QFACT1
 	       ENDIF
@@ -1247,8 +1247,8 @@ CIPK DEC05
 CIPK DEC05
               Q1DH2=Q1DH2*QFACT1
 	       ELSE
-	        CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2., mcord(nn,1),
-     +                    mcord(nn,2))
+	        CALL WTFORM(Q1DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.,
+     +               mcord(nn,1),mcord(nn,2))
 CIPK DEC05
               Q1DH2=Q1DH2*QFACT1
 	       ENDIF
@@ -1264,8 +1264,8 @@ CIPK DEC05
 CIPK DEC05
               Q2DH2=Q2DH2*QFACT1
 	       ELSE
-	        CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2., mcord(nn,1),
-     +                    mcord(nn,2))
+	        CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.,
+     +               mcord(nn,1),mcord(nn,2))
 CIPK DEC05
               Q2DH2=Q2DH2*QFACT1
 	       ENDIF
@@ -1277,8 +1277,8 @@ CIPK DEC05
 CIPK DEC05
               Q2DH2=Q2DH2*QFACT1
 	       ELSE
-	        CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2., mcord(nn,1),
-     +                    mcord(nn,2))
+	        CALL WTFORM(Q2DH2,NCTREF(IMAT(NN)),WS1,WS2+DH/2.,
+     +               mcord(nn,1),mcord(nn,2))
 CIPK DEC05
               Q2DH2=Q2DH2*QFACT1
 	       ENDIF
