@@ -357,6 +357,7 @@ public class DWDRasterHelper
       DWDObservationRaster raster = null;
       Date date = null;
       int cellpos = 0;
+      boolean rightBlock = false; // Is only used by the dynamic header (lmVersion = 1)
       while( (line = reader.readLine()) != null )
       {
         final Matcher dynamicHeaderMatcher = HEADER_DYNAMIC.matcher( line );
@@ -370,11 +371,12 @@ public class DWDRasterHelper
 
           if( key == dwdKey )
           {
+            rightBlock = true;
             if( raster == null ) // if not allready loading
               raster = new DWDObservationRaster( key, maxCells, unit );
           }
-          else if( raster != null )
-            return raster;
+          else
+            rightBlock = false; // wrong key, but reading the file must be continued, the key can appear again
 
           lmVersion = 1;
           cellpos = 0;
@@ -400,6 +402,10 @@ public class DWDRasterHelper
         if( raster == null )
           continue;
 
+        // if we are reading lmVersion = 1 and we have a wrong key, continue
+        if( lmVersion == 1 && rightBlock == false )
+          continue;
+
         final String[] values;
         switch( lmVersion )
         {
@@ -413,7 +419,7 @@ public class DWDRasterHelper
             }
 
             break;
-            
+
           case 2:
             values = (line.trim()).split( " +" );
             for( int i = 0; i < values.length; i++ )
