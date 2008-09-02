@@ -367,6 +367,7 @@ public class DWDRasterHelper
           final long hour = Long.parseLong( dynamicHeaderMatcher.group( 3 ) );
           // ARG: use calendar to add hours to date
           date = new Date( startDate.getTime() + 60 * 60 * 1000 * hour );
+
           if( key == dwdKey )
           {
             if( raster == null ) // if not allready loading
@@ -374,29 +375,35 @@ public class DWDRasterHelper
           }
           else if( raster != null )
             return raster;
+
           lmVersion = 1;
           cellpos = 0;
           continue;
         }
+
         final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() ) // lm2 ??
         {
           date = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
+
           if( key == dwdKey )
             raster = new DWDObservationRaster( key, maxCells, unit );
           else if( raster != null )
             return raster;
+
           lmVersion = 2;
           cellpos = 0;
           continue;
         }
+
         if( raster == null )
           continue;
+
+        final String[] values;
         switch( lmVersion )
         {
           case 1:
-            final String[] values;
             values = (line.trim()).split( " +", 13 );
             for( int i = 0; i < values.length; i++ )
             {
@@ -404,6 +411,7 @@ public class DWDRasterHelper
               raster.setValueFor( date, cellpos, (value + offset) * factor );
               cellpos++;
             }
+
             break;
           case 2:
             values = (line.trim()).split( " +" );
@@ -419,9 +427,11 @@ public class DWDRasterHelper
                 cellpos = 0;
               }
             }
+
             break;
         }
       }
+
       return raster;
     }
     finally
