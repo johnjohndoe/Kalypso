@@ -1,4 +1,4 @@
-C     Last change:  MD   12 Aug 2008   11:37 am
+C     Last change:  MD    2 Sep 2008    1:46 pm
 CIPK LAST UPDATE MAR 07 2006 fix gpmax setup
 CIPK LAST UPDATE MAR 05 2006 UPDATE TO ALLOW FOR NODAL VALUES
 CIPK  LAST UPDATE AUG 09 2005 ADD bshear
@@ -733,9 +733,9 @@ c             clog = 2.86*dgrlog-dgrlog**2.0-3.53
               awc = 10.**clog
 
               IF (dgr.le.1) THEN
-                write(LOUT,*) ' Warnung aus Acker-White:'
-                write(LOUT,*) ' Gueltigkeitsbereich fuer der Gelichung'
-                write(LOUT,*) '  von dgr > 1 wurde unterschritten!'
+                write(75,*) ' Warnung aus Acker-White:'
+                write(75,*) ' Gueltigkeitsbereich fuer der Gelichung'
+                write(75,*) '  von dgr > 1 wurde unterschritten!'
               END IF
 	    end if
 
