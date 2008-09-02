@@ -346,6 +346,7 @@ Version 1.1.0 (laufende Änderungen)
 --- Monika Donner, 22.08.2008
 
 035.) Introduce changes from maintenance branch 1.0.0
+
       --------------------------------------------------------------------
       29.08.2008 - Merging changes from branch since 28.07.2008 into TRUNK
       --------------------------------------------------------------------
@@ -417,9 +418,17 @@ Version 1.1.0 (laufende Änderungen)
 041.) correct typo in fldir.90
 042.) Introduce missing ErrorIDs in ErrorMessageAndStop
 043.) Correct calling of wtform from cstrc2d.for
-
 --- Nico Schrage, 29.08.2008 (1.1.0alpha2)
 
 044.) Retighting the function name rededication of 'Generate2DFileName' to 'GenerateOutputFileName' in rma10.for
-
 --- Nico Schrage, 01.09.2008 (1.1.0alpha2)
+
+
+045.) Compiling Error: Test output in SubR AWHITE from LOUT to 75
+      (No real changes!) >> SubR AWHITE     
+046.) Compiling Error: Reactivate d50m in SubR Brownlie for the
+      calculation of geometric standard deviation 
+      >> SubR Brownlie
+047.) Compiling Error: Moving the "Call WFORM(...)" out of SubR CSTRC2D
+      (No real changes!) >> SubR CSTRC2D                                              
+--- Monika Donner, 02.09.2008
