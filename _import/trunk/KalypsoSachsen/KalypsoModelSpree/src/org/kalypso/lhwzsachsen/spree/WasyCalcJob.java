@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -471,7 +472,7 @@ public abstract class WasyCalcJob implements ISimulation
       {
         final Number dzahl = (Number) feature.getProperty( "DATUM" );
         // IMPORTENT: add leading zeros to avoid bug for the years 2000-2009
-        final String dzahlStr = String.format( "%07.2f", dzahl );
+        final String dzahlStr = String.format(Locale.ENGLISH, "%07.2f", dzahl );
 
         date = DF_DZAHL.parse( dzahlStr );
       }
