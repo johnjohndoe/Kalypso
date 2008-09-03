@@ -8,7 +8,6 @@ Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.commons,
  org.kalypso.core,
- javax.servlet;bundle-version="2.4.0",
  org.eclipse.equinox.http.registry;bundle-version="1.0.100"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.services.observation.KalypsoServiceObsActivator
@@ -33,3 +32,5 @@ Bundle-ClassPath: lib/jax-ws-2.1.7/activation.jar,
  lib/jax-ws-2.1.7/streambuffer.jar,
  .
 Export-Package: org.kalypso.services.observation
+Import-Package: javax.servlet;version="2.4.0",
+ javax.servlet.http;version="2.4.0"
