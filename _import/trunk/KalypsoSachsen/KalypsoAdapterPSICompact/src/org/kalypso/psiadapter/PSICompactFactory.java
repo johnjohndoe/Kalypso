@@ -1,5 +1,6 @@
 package org.kalypso.psiadapter;
 
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.psiadapter.util.AtWQProvider;
 import org.kalypso.psiadapter.util.DummyWQProvider;
 import org.kalypso.psiadapter.util.IWQProvider;
@@ -61,7 +62,7 @@ public final class PSICompactFactory
     {
       try
       {
-        final String fakeLocation = System.getProperty( SYSPROP_FAKE_LOCATION, null );
+        final String fakeLocation = FrameworkProperties.getProperty( SYSPROP_FAKE_LOCATION, null );
         if( fakeLocation == null )
         {
           System.out.println( "Fake location not set, using real PSICompact-implementation. Use the following System-property to use a fake implementation instead: " + SYSPROP_FAKE_LOCATION );
@@ -95,7 +96,7 @@ public final class PSICompactFactory
     {
       try
       {
-        final String atDictLocation = System.getProperty( SYSPROP_AT_DICTIONARY, null );
+        final String atDictLocation = FrameworkProperties.getProperty( SYSPROP_AT_DICTIONARY, null );
         if( atDictLocation != null )
           s_wqProvider = new AtWQProvider( atDictLocation );
       }

@@ -51,6 +51,7 @@ import javax.xml.rpc.ParameterMode;
 import org.apache.axis.Constants;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.hwv.services.metadoc.DocumentServiceSimulation;
 import org.kalypso.hwv.services.metadoc.IDocumentServiceConstants;
@@ -97,7 +98,7 @@ public class RobotronMetaDocCommiter extends DocumentServiceSimulation
   protected void commitDocument( File tmpdir, Feature metadataFeature, URL documentURL, ISimulationMonitor monitor ) throws Exception
   {
     /* The connector address. */
-    String endpoint = System.getProperty( SYSPROP_ROBOTRON_ENDPOINT );
+    String endpoint = FrameworkProperties.getProperty( SYSPROP_ROBOTRON_ENDPOINT );
     if( endpoint == null )
       throw new Exception( "Service-Endpoint '" + SYSPROP_ROBOTRON_ENDPOINT + "' muss in der config.ini definiert sein ..." );
 

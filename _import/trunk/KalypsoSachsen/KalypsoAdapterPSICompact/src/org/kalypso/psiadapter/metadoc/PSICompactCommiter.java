@@ -8,6 +8,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.hwv.services.metadoc.DocumentServiceSimulation;
 import org.kalypso.hwv.services.metadoc.IDocumentServiceConstants;
@@ -42,17 +43,17 @@ public class PSICompactCommiter extends DocumentServiceSimulation
   protected void commitDocument( final File tmpdir, final Feature metadataFeature, final URL documentURL, final ISimulationMonitor monitor ) throws Exception
   {
     final String preferredFilename = (String) metadataFeature.getProperty( IDocumentServiceConstants.QNAME_META_PREFERRED_FILENAME );
-    
+
     final String calcCaseName = (String) metadataFeature.getProperty( MetaDocSerializer.QNAME_PROP_CALCCASE );
-    
-    final String preferredValidFilename = FileUtilities.validateName( calcCaseName + "_"+ preferredFilename, "_" );
+
+    final String preferredValidFilename = FileUtilities.validateName( calcCaseName + "_" + preferredFilename, "_" );
     final String goodDocFilePath = filenameCleaner( preferredValidFilename );
 
     final File docFile = new File( tmpdir, goodDocFilePath );
     final File xmlFile = new File( FileUtilities.nameWithoutExtension( docFile.getAbsolutePath() ) + ".xml" );
 
-    final String importMode = System.getProperty( SYSPROP_IMPORTMODE, "1" );
-    final String versenden = System.getProperty( SYSPROP_VERSENDEN, "0" );
+    final String importMode = FrameworkProperties.getProperty( SYSPROP_IMPORTMODE, "1" );
+    final String versenden = FrameworkProperties.getProperty( SYSPROP_VERSENDEN, "0" );
 
     Writer writer = null;
     try
@@ -66,7 +67,7 @@ public class PSICompactCommiter extends DocumentServiceSimulation
       writer.close();
 
       // commit the both files (important: last one is the xml file)
-      final String dist = System.getProperty( SYSPROP_PSICOMPACT_DIST ) + "/";
+      final String dist = FrameworkProperties.getProperty( SYSPROP_PSICOMPACT_DIST ) + "/";
 
       final String distDocFile = dist + docFile.getName();
       final String distXmlFile = dist + xmlFile.getName();
@@ -108,9 +109,9 @@ public class PSICompactCommiter extends DocumentServiceSimulation
   private void distributeFile( final File file, final String distFile ) throws ECommException
   {
     // TODO: create tracing option
-// m_logger.info( "Distributing File " + file.getAbsolutePath() + " to " + distFile );
+    // m_logger.info( "Distributing File " + file.getAbsolutePath() + " to " + distFile );
     /* final boolean b = */PSICompactFactory.getConnection().copyanddistributeFile( file, distFile );
     // TODO: create tracing option
-// m_logger.info( "File distributed: " + b );
+    // m_logger.info( "File distributed: " + b );
   }
 }

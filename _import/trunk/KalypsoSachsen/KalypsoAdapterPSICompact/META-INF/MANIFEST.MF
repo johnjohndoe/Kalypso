@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoPSICompactAdapter
 Bundle-SymbolicName: org.kalypso.psicompactadapter; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: KalypsoPSICompactAdapter.jar,
+Bundle-ClassPath: .,
  lib/PSICompact.jar,
  lib/OB.jar
 Bundle-Vendor: kalypso.org
@@ -88,4 +88,4 @@ Require-Bundle: org.kalypso.core,
  org.eclipse.ui,
  org.junit,
  org.kalypso.hwv.services
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy

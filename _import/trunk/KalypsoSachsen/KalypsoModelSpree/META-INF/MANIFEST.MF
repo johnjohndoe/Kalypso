@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoModelSpree
 Bundle-SymbolicName: org.kalypso.model.spree; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: kalypsoModelSpree.jar
+Bundle-ClassPath: .
 Bundle-Vendor: kalypso.org
 Require-Bundle: org.kalypso.commons,
  org.kalypso.core,
@@ -12,3 +12,5 @@ Require-Bundle: org.kalypso.commons,
  org.kalypso.dwd;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.kalypso.lhwzsachsen.spree,
+ org.kalypso.lhwzsachsen.spree.tools

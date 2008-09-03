@@ -44,6 +44,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.auth.user.UserRights;
 import org.kalypso.hwv.services.user.UserServiceSimulation;
 
@@ -104,11 +105,11 @@ public class RobotronRightsProvider extends UserServiceSimulation
    */
   public RobotronRightsProvider( )
   {
-    m_url = System.getProperty( CONFIG_BASE + "ldap.connection" );
-    m_principal = System.getProperty( CONFIG_BASE + "ldap.principal" );
-    m_crendentials = System.getProperty( CONFIG_BASE + "ldap.credentials" );
+    m_url = FrameworkProperties.getProperty( CONFIG_BASE + "ldap.connection" );
+    m_principal = FrameworkProperties.getProperty( CONFIG_BASE + "ldap.principal" );
+    m_crendentials = FrameworkProperties.getProperty( CONFIG_BASE + "ldap.credentials" );
 
-    m_simulationScenarioId = System.getProperty( CONFIG_BASE + "simulation.scenario_id" );
+    m_simulationScenarioId = FrameworkProperties.getProperty( CONFIG_BASE + "simulation.scenario_id" );
 
     LOG.info( "RobotronRightsProvider initialised" );
   }
