@@ -43,6 +43,7 @@ package org.kalypso.kalypsomodel1d2d.conv;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,6 +59,7 @@ import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.deegree.model.feature.Feature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -608,11 +610,20 @@ public class Control1D2DConverter
           if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )
               && (boundaryCondition.isAbsolute() == null) )
           {
+            // TODO: @Nico This is very ugly, but it works for the moment!! It should be introduced to GMLLoader checks
+            final Boolean hasDirectionProperty = boundaryCondition.hasDirection();
+            if( hasDirectionProperty == false || hasDirectionProperty == null )
+              boundaryCondition.setHasDirection( true );
+
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
             formatter.format( "QC%14d%8d%8.3f%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, stepValue, theta, 0.000, 20.000, 0.000 );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ) )
           {
+            // TODO: @Nico This is very ugly, but it works for the moment!! It should be introduced to GMLLoader checks
+            final Boolean hasDirectionProperty = boundaryCondition.hasDirection();
+            if( hasDirectionProperty == false || hasDirectionProperty == null )
+              boundaryCondition.setHasDirection( true );
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
             formatter.format( "SQC%13d%40.4f%8.3f%8.3f%8.3f%n", ordinal, theta, 0.000, 20.000, 0.000 );
             m_WQboundaryConditionsIDProvider.put( ordinal, boundaryCondition );
@@ -626,16 +637,45 @@ public class Control1D2DConverter
           {
             // 1D Element
             final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
+            final Boolean hasDirectionProperty = boundaryCondition.hasDirection();
+
+            // TODO: @Nico This is very ugly, but it works for the moment!! It should be introduced to GMLLoader checks
+            if( hasDirectionProperty == null )
+            {
+              boundaryCondition.setHasDirection( false );
+              boundaryCondition.setDirection( new BigInteger( "0" ) );
+            }
+            if( boundaryCondition.hasDirection() && boundaryCondition.getDirection() == null )
+              boundaryCondition.setDirection( new BigInteger( "0" ) );
+
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
-            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
+
+            if( boundaryCondition.hasDirection() )
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, boundaryCondition.getInflowVelocity(), Math.toRadians( boundaryCondition.getDirection().doubleValue() ) );
+            else
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
           }
           else if( bcAbscissaComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && bcOrdinateComponentType.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )
               && !boundaryCondition.getParentElementID().startsWith( "Element1D" ) )
           {
             // 2D Element
             final Boolean isAbsoluteProperty = boundaryCondition.isAbsolute();
+            final Boolean hasDirectionProperty = boundaryCondition.hasDirection();
+
+            // TODO: @Nico This is very ugly, but it works for the moment!! It should be introduced to GMLLoader checks
+            if( hasDirectionProperty == null )
+            {
+              boundaryCondition.setHasDirection( false );
+              boundaryCondition.setDirection( new BigInteger( "0" ) );
+            }
+            if( boundaryCondition.hasDirection() && boundaryCondition.getDirection() == null )
+              boundaryCondition.setDirection( new BigInteger( "0" ) );
+
             final int isAbsolute = (isAbsoluteProperty != null && isAbsoluteProperty.booleanValue()) ? 1 : 0;
-            formatter.format( "EFE%13d%8d%8d%8.3f%8.3f%8.3f%8.3f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
+            if( boundaryCondition.hasDirection() )
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0, boundaryCondition.getInflowVelocity(), Math.toRadians( boundaryCondition.getDirection().doubleValue() ) );
+            else
+              formatter.format( "EFE%13d%8d%8d%8.3f%8.4f%8.4f%8.4f%n", ordinal, 0, isAbsolute, stepValue, 0.0, 20.000, 0.0 );
           }
         }
       }

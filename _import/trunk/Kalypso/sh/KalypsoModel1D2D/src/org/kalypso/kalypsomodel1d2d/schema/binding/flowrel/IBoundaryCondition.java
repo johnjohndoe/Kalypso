@@ -76,7 +76,11 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public static final QName QNAME_P_DIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "direction" );
 
+  public static final QName QNAME_P_INFLOWVELOCITY = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "inflowVelocity" );
+
   public static final QName QNAME_P_ISABSOLUTE = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "absolute" );
+
+  public static final QName QNAME_P_HASDIRECTION = new QName( UrlCatalog1D2D.MODEL_1D2DOperational_NS, "hasDirection" );
 
   public IObservation<TupleResult> initializeObservation( final String domainComponentUrn, final String valueComponentUrn );
 
@@ -86,13 +90,23 @@ public interface IBoundaryCondition extends IFlowRelationship
 
   public double getStationaryCondition( );
 
+  public double getInflowVelocity( );
+  
+  public void setInflowVelocity(final double value);
+
   public void setStationaryCondition( double statCond );
 
   public BigInteger getDirection( );
 
+  public void setDirection( final BigInteger value);
+
   public Boolean isAbsolute( );
 
+  public Boolean hasDirection( );
+
   public void setIsAbsolute( final Boolean value );
+
+  public void setHasDirection( final Boolean value );
 
   public void setParentElement( final IFeatureWrapper2 parentElement );
 

@@ -105,8 +105,8 @@ public class CreateBCFlowrelationWidget extends AbstractCreateFlowrelationWidget
   {
     final TimeserieStepDescriptor wstTimeDescriptor = new TimeserieStepDescriptor( "Wasserstand - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL );
     final TimeserieStepDescriptor qTimeDescriptor = new TimeserieStepDescriptor( "Abfluss - Zeitreihe", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE );
-    final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Elemente Zufluss", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D );
-    final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Elemente Zufluss", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
+    final TimeserieStepDescriptor specQ1TimeDescriptor = new TimeserieStepDescriptor( "Quelle/Senke oder Elementzufluss", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D );
+    final TimeserieStepDescriptor specQ2TimeDescriptor = new TimeserieStepDescriptor( "Quelle/Senke oder Elementzufluss", Kalypso1D2DDictConstants.DICT_COMPONENT_TIME, Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D );
     final WQStepDescriptor wqDescriptor = new WQStepDescriptor( "W/Q - Beziehung" );
 
     final IFolder importFolder = KalypsoModel1D2DHelper.getTimeeseriesFolder( scenarioFolder );

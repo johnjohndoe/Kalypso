@@ -89,14 +89,22 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
     final Feature obsFeature = getTimeserieFeature();
 
     if( (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE ))
+        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ))
+        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D ))
         || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_WATERLEVEL ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )) )
+    {
       getFeature().setProperty( QNAME_P_DIRECTION, new BigInteger( "0" ) );
+      setHasDirection( true );
+    }
     else
+    {
       getFeature().setProperty( QNAME_P_DIRECTION, null );
+      getFeature().setProperty( QNAME_P_HASDIRECTION, null );
+    }
 
     if( (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_1D ))
-        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D )) 
-      || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )) )
+        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_SPECIFIC_DISCHARGE_2D ))
+        || (domainComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_TIME ) && valueComponentUrn.equals( Kalypso1D2DDictConstants.DICT_COMPONENT_DISCHARGE )) )
       setIsAbsolute( true );
     else
       setIsAbsolute( null );
@@ -255,6 +263,61 @@ public class BoundaryCondition extends FlowRelationship implements IBoundaryCond
   public void setIsAbsolute( final Boolean value )
   {
     getFeature().setProperty( QNAME_P_ISABSOLUTE, value );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#hasDirection()
+   */
+  @Override
+  public Boolean hasDirection( )
+  {
+    // if( getFeature().getProperty( QNAME_P_HASDIRECTION ) == null )
+    // return false;
+
+    return (Boolean) getFeature().getProperty( QNAME_P_HASDIRECTION );
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setHasDirection(java.lang.Boolean)
+   */
+  @Override
+  public void setHasDirection( final Boolean value )
+  {
+    getFeature().setProperty( QNAME_P_HASDIRECTION, value );
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#getInflowVelocity()
+   */
+  @Override
+  public double getInflowVelocity( )
+  {
+    final boolean hasDirection = (Boolean) getFeature().getProperty( QNAME_P_HASDIRECTION );
+    if( hasDirection )
+      return (Double) getFeature().getProperty( QNAME_P_INFLOWVELOCITY );
+    else
+      return 0.0;
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setDirection()
+   */
+  @Override
+  public void setDirection( final BigInteger value )
+  {
+    getFeature().setProperty( QNAME_P_DIRECTION, value );
+
+  }
+
+  /**
+   * @see org.kalypso.kalypsomodel1d2d.schema.binding.flowrel.IBoundaryCondition#setInflowVelocity(double)
+   */
+  @Override
+  public void setInflowVelocity( double value )
+  {
+    getFeature().setProperty( QNAME_P_INFLOWVELOCITY, value );
   }
 
 }

@@ -147,6 +147,23 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="hasDirection"
+						type="xs:boolean" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>richtungsbehaftet</xs:label>
+								<xs:tooltip>
+									Randbedingung ist richtungsbehaftet (z.B. seitlicher Zufluss)
+								</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation>
+								<xs:label>direction restricted</xs:label>
+								<xs:tooltip>
+									boundary condition is direction restricted (e.g. sideflow)
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="direction"
 						type="gml:DegreeValueType" nillable="true">
 						<xs:annotation>
@@ -160,6 +177,23 @@
 								<xs:label>Direction</xs:label>
 								<xs:tooltip>
 									Direction of this boundary condition
+								</xs:tooltip>
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="inflowVelocity"
+						type="xs:double" nillable="true">
+						<xs:annotation>
+							<xs:documentation xml:lang="de">
+								<xs:label>Einstroemgeschwindigkeit</xs:label>
+								<xs:tooltip>
+									Einstroemgeschwindigkeit
+								</xs:tooltip>
+							</xs:documentation>
+							<xs:documentation>
+								<xs:label>inflow velocity</xs:label>
+								<xs:tooltip>
+									inflow velocity
 								</xs:tooltip>
 							</xs:documentation>
 						</xs:annotation>
