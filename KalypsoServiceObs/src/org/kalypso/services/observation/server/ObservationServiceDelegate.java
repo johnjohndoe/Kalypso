@@ -60,6 +60,7 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -213,7 +214,7 @@ public class ObservationServiceDelegate implements IObservationService
 
     try
     {
-      final String configurationLocation = System.getProperty( "kalypso.hwv.observation.service.configuration.location" );
+      final String configurationLocation = FrameworkProperties.getProperty( "kalypso.hwv.observation.service.configuration.location" );
       final URL confLocation = new URL( configurationLocation );
       final URL confUrl = UrlResolverSingleton.resolveUrl( confLocation, "repconf_server.xml" );
 
