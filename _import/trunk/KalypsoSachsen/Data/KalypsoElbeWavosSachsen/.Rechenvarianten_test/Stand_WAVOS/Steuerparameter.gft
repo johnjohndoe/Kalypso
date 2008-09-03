@@ -55,9 +55,9 @@ D:\Kalypso\KalypsoCore\etc\schemas\template\featureview.xsd">
                         <label style="SWT.NONE" visible="false">
                                 <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
                         </label>
-                        <label text="Anfangswerte verwenden" style="SWT.NONE" tooltip="Anfangswerte verwenden" visible="true">
+                        <!--<label text="Anfangswerte verwenden" style="SWT.NONE" tooltip="Anfangswerte verwenden" visible="true">
                                 <gridData grabExcessHorizontalSpace="false" horizontalAlignment="GridData.BEGINNING"/>
-                        </label>
+                        </label> -->
                         <checkbox editable="true" property="useAWerte" style="SWT.NONE" tooltip="Anfangswerte verwenden">
                                 <gridData horizontalAlignment="GridData.BEGINNING" horizontalSpan="1" widthHint="200"/>
                         </checkbox>
