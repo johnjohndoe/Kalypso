@@ -688,7 +688,7 @@
                         </annotation>
                     </element>
                     <!-- StreckenParameter  -->
-                    <element name="zwg_zuschlag" type="double" default="0.0">
+                    <element name="zwg_zuschlag" default="0.0">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Zwischengebietszuschlag [%]</name>
@@ -697,12 +697,12 @@
                                 <description>Zwischengebietszuschlag [%]</description>
                             </documentation>
                         </annotation>
-                        <!--  <simpleType>
-                            <restriction base="int">
-                            <minInclusive value="0"/>
-                            <maxInclusive value="100"/>
+                        <simpleType>
+                            <restriction base="double">
+                            <minInclusive value="0.0"/>
+                            <maxInclusive value="100.0"/>
                             </restriction>
-                            </simpleType> -->
+                            </simpleType> 
                     </element>
                     <element name="nr" type="string">
                         <annotation>
@@ -744,7 +744,7 @@
                             </documentation>
                         </annotation>
                     </element>
-                    <element name="nr_feko" type="int" default="2">
+                        <element name="nr_feko" type="commons:fekoType" default="2">
                         <annotation>
                             <documentation xml:lang="de">
                                 <name>Nachführung FEKO [Anzahl Zeitschritte]</name>
@@ -753,12 +753,6 @@
                                 <description>Nachführung FEKO [Anzahl Zeitschritte]</description>
                             </documentation>
                         </annotation>
-                        <!--  <simpleType>
-                          <restriction base="int">
-                                <minInclusive value="0"/>
-                                <maxInclusive value="4"/>
-                            </restriction>
-                        </simpleType> -->
                     </element>
                     <!-- maxOccurs ist allgemein 4, für die Elbe gibt es aber nur drei Hochwassertypen... -->
                     <element ref="modell:paramSetMember" minOccurs="1" maxOccurs="4">

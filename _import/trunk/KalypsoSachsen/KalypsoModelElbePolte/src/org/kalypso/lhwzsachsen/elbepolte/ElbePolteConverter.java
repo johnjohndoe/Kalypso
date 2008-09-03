@@ -61,6 +61,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -368,7 +369,7 @@ public class ElbePolteConverter
         dtDatum = (Date) tplWerte.getElement( ii, axDatum );
         wert = (Number) tplWerte.getElement( ii, axWerte );
 
-        pWrtr.println( String.format( ElbePolteConst.HWVS_FORMAT_DATA_ROW, new Integer( ii + 1 ), ElbePolteConst.HWVS_DATE_FORMAT_YEAR.format( dtDatum ), ElbePolteConst.HWVS_DATE_FORMAT_MONTH.format( dtDatum ), ElbePolteConst.HWVS_DATE_FORMAT_DAY.format( dtDatum ), ElbePolteConst.HWVS_DATE_FORMAT_HOUR.format( dtDatum ), wert ) );
+        pWrtr.println( String.format( Locale.ENGLISH,ElbePolteConst.HWVS_FORMAT_DATA_ROW, new Integer( ii + 1 ), ElbePolteConst.HWVS_DATE_FORMAT_YEAR.format( dtDatum ), ElbePolteConst.HWVS_DATE_FORMAT_MONTH.format( dtDatum ), ElbePolteConst.HWVS_DATE_FORMAT_DAY.format( dtDatum ), ElbePolteConst.HWVS_DATE_FORMAT_HOUR.format( dtDatum ), wert ) );
       }
     }
 
