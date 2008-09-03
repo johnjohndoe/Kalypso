@@ -100,6 +100,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author Thomas Jung
@@ -938,7 +940,10 @@ public class CreateMainChannelComposite extends Composite
       final Control profilControl = profilChartView.createControl( sectionClient, SWT.BORDER );
       profilControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      final IChartLayer overlayLayer = profilChartView.getChart().getChartModel().getLayerManager().getLayerById( IWspmOverlayConstants.LAYER_OVERLAY );
+      final ILayerManager mngr = profilChartView.getChart().getChartModel().getLayerManager();
+
+      final IChartLayer overlayLayer = mngr.getLayerById( IWspmOverlayConstants.LAYER_OVERLAY );
+
       if( overlayLayer instanceof ProfilOverlayLayer )
       {
         // currentSegment = m_data.getCurrentSegment( m_data.getSelectedSegment() );
@@ -951,9 +956,14 @@ public class CreateMainChannelComposite extends Composite
             layerData = currentSegment.getProfDownIntersProfile();
 
           ((ProfilOverlayLayer) overlayLayer).setProfile( layerData, m_data, m_widget );
+          ((ProfilOverlayLayer) overlayLayer).lockLayer( false );
           m_widget.getPanel().repaint();
         }
       }
+      final int zOrder = mngr.getLayerPosition( overlayLayer );
+      final int last = mngr.getLayers().length - 1;
+      if( zOrder < last )
+        mngr.moveLayerToPosition( overlayLayer, last );
 
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT ) );
       manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN ) );

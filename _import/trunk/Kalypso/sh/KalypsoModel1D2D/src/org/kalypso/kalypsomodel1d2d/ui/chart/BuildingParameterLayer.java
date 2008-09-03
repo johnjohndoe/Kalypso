@@ -52,6 +52,8 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class BuildingParameterLayer extends AbstractChartLayer implements IEditableChartLayer
 {
+  
+
   private final static GeometryFactory GF = new GeometryFactory();
 
   private Coordinate[] m_paintOkPoints = null;
@@ -476,5 +478,27 @@ public class BuildingParameterLayer extends AbstractChartLayer implements IEdita
     // TODO Auto-generated method stub
     return null;
   }
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
+   */
+  @Override
+  public boolean isLocked( )
+  {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
+   */
+  @Override
+  public void lockLayer( boolean isLocked )
+  {
+    // TODO Auto-generated method stub
+    
+  }
+ 
+
+ 
 
 }

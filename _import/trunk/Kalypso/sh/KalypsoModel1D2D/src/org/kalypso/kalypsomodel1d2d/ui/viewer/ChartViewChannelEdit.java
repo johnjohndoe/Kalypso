@@ -53,24 +53,24 @@ import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContr
  */
 public class ChartViewChannelEdit extends ChartView
 {
-  private static List<ChartAction> m_chartActions = createChartActions();
-
-  private static ProfilChartViewActionBarContributor m_contributor = new ProfilChartViewActionBarContributor( m_chartActions );
+//  private static List<ChartAction> m_chartActions = createChartActions();
+//
+//  private static ProfilChartViewActionBarContributor m_contributor = new ProfilChartViewActionBarContributor( m_chartActions );
 
   public ChartViewChannelEdit( )
   {
-    super( m_contributor );
+    super();// m_contributor );
   }
 
-  private static List<ChartAction> createChartActions( )
-  {
-    List<ChartAction> chartActions = new LinkedList<ChartAction>();
-    chartActions.add( new ChartAction( ProfilChartActionsEnum.ZOOM_OUT ) );
-    chartActions.add( new ChartAction( ProfilChartActionsEnum.ZOOM_IN ) );
-    chartActions.add( new ChartAction( ProfilChartActionsEnum.PAN ) );
-    chartActions.add( new ChartAction( ProfilChartActionsEnum.MAXIMIZE ) );
-    chartActions.add( new ChartAction( ProfilChartActionsEnum.EDIT ) );
-    chartActions.add( new ChartAction( ProfilChartActionsEnum.EXPORT_IMAGE ) );
-    return chartActions;
-  }
+//  private static List<ChartAction> createChartActions( )
+//  {
+//    List<ChartAction> chartActions = new LinkedList<ChartAction>();
+//    chartActions.add( new ChartAction( ProfilChartActionsEnum.ZOOM_OUT ) );
+//    chartActions.add( new ChartAction( ProfilChartActionsEnum.ZOOM_IN ) );
+//    chartActions.add( new ChartAction( ProfilChartActionsEnum.PAN ) );
+//    chartActions.add( new ChartAction( ProfilChartActionsEnum.MAXIMIZE ) );
+//    chartActions.add( new ChartAction( ProfilChartActionsEnum.EDIT ) );
+//    chartActions.add( new ChartAction( ProfilChartActionsEnum.EXPORT_IMAGE ) );
+//    return chartActions;
+//  }
 }
