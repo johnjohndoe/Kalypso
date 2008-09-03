@@ -101,8 +101,8 @@ public class ChartAction extends Action implements IAction
   @Override
   public void runWithEvent( final Event event )
   {
-    if( m_profilChartView != null )
-      m_profilChartView.runChartAction( m_desc );
+//    if( m_profilChartView != null )
+//      m_profilChartView.runChartAction( m_desc );
   }
 
   public String getMenuPath( )

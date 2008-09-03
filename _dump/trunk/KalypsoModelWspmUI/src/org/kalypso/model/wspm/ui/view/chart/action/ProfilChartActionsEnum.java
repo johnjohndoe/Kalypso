@@ -139,7 +139,7 @@ public enum ProfilChartActionsEnum
       @Override
       public void run( )
       {
-        profilView.runChartAction( chartAction );
+       // profilView.runChartAction( chartAction );
       }
     };
 

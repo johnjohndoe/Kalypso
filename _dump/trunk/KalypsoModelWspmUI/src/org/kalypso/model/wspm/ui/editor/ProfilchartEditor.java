@@ -653,10 +653,10 @@ public class ProfilchartEditor extends EditorPart implements  IGotoMarker, IProf
     }
   }
 
-  public void runChartAction( final ProfilChartActionsEnum chartAction )
-  {
-    m_profilPart.runChartAction( chartAction );
-  }
+//  public void runChartAction( final ProfilChartActionsEnum chartAction )
+//  {
+//    m_profilPart.runChartAction( chartAction );
+//  }
 
   public void registerCommonGlobalActions( final IActionBars bars )
   {

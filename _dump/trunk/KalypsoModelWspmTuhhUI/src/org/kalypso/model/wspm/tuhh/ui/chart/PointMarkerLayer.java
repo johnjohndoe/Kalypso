@@ -45,6 +45,7 @@ import java.awt.geom.Point2D;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -81,7 +82,7 @@ public class PointMarkerLayer extends AbstractProfilLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
- 
+
   @Override
   public void executeDrop( Point point, EditInfo dragStartData )
   {
@@ -112,14 +113,14 @@ public class PointMarkerLayer extends AbstractProfilLayer
   @Override
   public Rectangle getHoverRect( IRecord profilPoint )
   {
-    if( getTargetComponent() == null )
-      return null;
+
     final IProfilPointMarker[] deviders = getProfil().getPointMarkerFor( profilPoint );
     for( final IProfilPointMarker devider : deviders )
     {
-      if( devider.getId().getId().equals( getTargetComponent().getId() ) )
+      if( devider.getId().equals( getTargetComponent() ) )
       {
-        final Rectangle rect = new Rectangle( toScreen( profilPoint ).x - 5, m_offset, 10, getTargetAxis().getScreenHeight() - m_offset );
+        final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoint ) );
+        final Rectangle rect = new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() - m_offset );
         return rect;
       }
     }
@@ -145,16 +146,18 @@ public class PointMarkerLayer extends AbstractProfilLayer
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-      final int x = toScreen( deviders[i].getPoint() ).x;
+
+      final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, deviders[i].getPoint() ) );
       final Point p1 = new Point( x, m_offset );
       final Point p2 = new Point( x, baseLine );
       pf.setPoints( new Point[] { p1, p2 } );
       pf.paint( gc );
     }
-    if( m_close )
+    if( m_close && len > 1 )
     {
-      final int x1 = toScreen( deviders[0].getPoint() ).x;
-      final int x2 = toScreen( deviders[len - 1].getPoint() ).x;
+
+      final int x1 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[0].getPoint() ) );
+      final int x2 = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), deviders[len - 1].getPoint() ) );
       final Point p1 = new Point( x1, m_offset );
       final Point p2 = new Point( x2, m_offset );
       pf.setPoints( new Point[] { p1, p2 } );
@@ -171,13 +174,14 @@ public class PointMarkerLayer extends AbstractProfilLayer
   {
     final IProfil profil = getProfil();
     final IRecord point = ProfilUtil.findNearestPoint( profil, toNumeric( newPos ).getX() );
-    final Point p = toScreen( point );
+    final int x = getDomainAxis().numericToScreen( ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point) );
+
 
     final EmptyRectangleFigure hoverFigure = new EmptyRectangleFigure();
     hoverFigure.setStyle( getLineStyle_hover() );
-    hoverFigure.setRectangle( new Rectangle( p.x - 5, m_offset, 10, getTargetAxis().getScreenHeight() ) );
+    hoverFigure.setRectangle( new Rectangle( x - 5, m_offset, 10, getTargetAxis().getScreenHeight() ) );
 
-    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( toNumeric( newPos ) ), newPos );
+    return new EditInfo( this, null, hoverFigure, dragStartData.m_data, getTooltipInfo( point ), newPos );
 
   }
 
@@ -185,11 +189,12 @@ public class PointMarkerLayer extends AbstractProfilLayer
    * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#getTooltipInfo(java.awt.geom.Point2D)
    */
   @Override
-  public String getTooltipInfo( Point2D point )
+  public String getTooltipInfo( IRecord point )
   {
+    final Point2D p = getPoint2D( point );
     try
     {
-      return String.format( "%-12s %10.4f [m]%n%-12s", new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName() } );
+      return String.format( "%-12s %10.4f [m]%n%-12s", new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName() } );
     }
     catch( RuntimeException e )
     {

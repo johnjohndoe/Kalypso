@@ -72,6 +72,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 
@@ -82,21 +83,22 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 {
   private final List<String> m_layers = new ArrayList<String>();
 
-  private final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
+  protected final LayerStyleProviderTuhh m_lsp = new LayerStyleProviderTuhh();
 
   public ProfilLayerProviderTuhh( )
   {
     m_layers.add( IWspmTuhhConstants.LAYER_BEWUCHS );
     m_layers.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
     m_layers.add( IWspmTuhhConstants.LAYER_GELAENDE );
-    m_layers.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
+    // TODO Kim m_layers.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
     m_layers.add( IWspmTuhhConstants.LAYER_RAUHEIT );
     m_layers.add( IWspmTuhhConstants.LAYER_BRUECKE );
     m_layers.add( IWspmTuhhConstants.LAYER_WEHR );
-    m_layers.add( IWspmTuhhConstants.LAYER_KREIS );
-    m_layers.add( IWspmTuhhConstants.LAYER_MAUL );
-    m_layers.add( IWspmTuhhConstants.LAYER_TRAPEZ );
-    m_layers.add( IWspmTuhhConstants.LAYER_EI );
+//    m_layers.add( IWspmTuhhConstants.LAYER_KREIS );
+//    m_layers.add( IWspmTuhhConstants.LAYER_MAUL );
+//    m_layers.add( IWspmTuhhConstants.LAYER_TRAPEZ );
+//    m_layers.add( IWspmTuhhConstants.LAYER_EI );
+    m_layers.add( IWspmTuhhConstants.LAYER_TUBES );
     m_layers.add( IWspmTuhhConstants.LAYER_DEVIDER );
   }
 
@@ -107,20 +109,28 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
   {
     final List<String> addableLayer = new ArrayList<String>();
     final List<String> existingLayers = new ArrayList<String>();
-
-    for( final IChartLayer layer : view.getChart().getChartModel().getLayerManager().getLayers() )
-      existingLayers.add( layer.getId() );
-
+    final ILayerManager mngr = view.getChart().getChartModel().getLayerManager();
     final IProfil profile = view.getProfil();
+    if( mngr == null || profile==null)
+      return new String[] {};
+
+    for( final IChartLayer layer : mngr.getLayers() )
+      existingLayers.add( layer.getId() );
+   
+    //only ONE Object allowed
     if( profile.getProfileObjects().length == 0 )
     {
       addableLayer.add( IWspmTuhhConstants.LAYER_BRUECKE );
       addableLayer.add( IWspmTuhhConstants.LAYER_WEHR );
-      addableLayer.add( IWspmTuhhConstants.LAYER_KREIS );
-      addableLayer.add( IWspmTuhhConstants.LAYER_TRAPEZ );
-      addableLayer.add( IWspmTuhhConstants.LAYER_EI );
-      addableLayer.add( IWspmTuhhConstants.LAYER_MAUL );
+      addableLayer.add( IWspmTuhhConstants.LAYER_TUBES );
     }
+    // always show devider and roughness
+    if( !existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT ) )
+      addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT );
+    if( !existingLayers.contains( IWspmTuhhConstants.LAYER_DEVIDER ) )
+      addableLayer.add( IWspmTuhhConstants.LAYER_DEVIDER );
+    
+    
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX ) == null && !existingLayers.contains( IWspmTuhhConstants.LAYER_BEWUCHS ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_BEWUCHS );
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE ) == null && !existingLayers.contains( IWspmTuhhConstants.LAYER_GELAENDE ) )
@@ -128,10 +138,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) == null && !existingLayers.contains( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_GEOKOORDINATEN );
 
-    if( existingLayers.contains( IWspmTuhhConstants.LAYER_RAUHEIT ) )
-      addableLayer.add( IWspmTuhhConstants.LAYER_RAUHEIT );
-    if( !existingLayers.contains( IWspmTuhhConstants.LAYER_DEVIDER ) )
-      addableLayer.add( IWspmTuhhConstants.LAYER_DEVIDER );
+    
     if( view.getResults().length > 0 && !existingLayers.contains( IWspmTuhhConstants.LAYER_WASSERSPIEGEL ) )
       addableLayer.add( IWspmTuhhConstants.LAYER_WASSERSPIEGEL );
 
@@ -154,7 +161,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[2] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP ), 0.0 );
       final ProfilOperation operation = new ProfilOperation( "Bewuchs einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new BewuchsLayer( view );
+      return null;// new BewuchsLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
     {
@@ -163,7 +170,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) );
       final ProfilOperation operation = new ProfilOperation( "Geokoordinaten einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new HochRechtsLayer( view );
+      return null;// new HochRechtsLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_GELAENDE ) )
     {
@@ -172,7 +179,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[1] = new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_BREITE ) );
       final ProfilOperation operation = new ProfilOperation( "Profillinie einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new GelaendeLayer( view );
+      return null;// new GelaendeLayer( view );
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
@@ -188,7 +195,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       else
         operation.addChange( new PointPropertyAdd( profil, provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS ) ) );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new ExtendedRauheitLayer( view, layerId, "Rauheit-ks" );
+      return null;
     }
 
     if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
@@ -198,7 +205,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
       final ProfilOperation operation = new ProfilOperation( "Brücke einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new BrueckeBuildingLayer( view );
+      return null;// new BrueckeBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
@@ -207,7 +214,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
       final ProfilOperation operation = new ProfilOperation( "Wehr einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new WehrBuildingLayer( view );
+      return null;// new WehrBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_KREIS ) )
     {
@@ -225,7 +232,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new MaulBuildingLayer( view );
+      return null;// new MaulBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_TRAPEZ ) )
     {
@@ -234,7 +241,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new TrapezBuildingLayer( view );
+      return null;// new TrapezBuildingLayer( view );
     }
     if( layerId.equals( IWspmTuhhConstants.LAYER_EI ) )
     {
@@ -243,7 +250,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
       changes[0] = new ProfileObjectSet( profil, new IProfileObject[] { building } );
       final ProfilOperation operation = new ProfilOperation( "Durchlaß einfügen", view.getProfil(), changes, true );
       new ProfilOperationJob( operation ).schedule();
-      return null;//new EiBuildingLayer( view );
+      return null;// new EiBuildingLayer( view );
     }
 
     return createLayer( layerId, view );
@@ -324,7 +331,7 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     if( layerId.equals( IWspmTuhhConstants.LAYER_BEWUCHS ) )
     {
       return new VegetationTheme( new IProfilChartLayer[] { new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX ),
-          new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ), new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) }, cmLeft, m_lsp  );
+          new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY ), new ComponentLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP ) }, cmLeft, m_lsp );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_GEOKOORDINATEN ) )
     {
@@ -344,14 +351,16 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
 
     else if( layerId.equals( IWspmTuhhConstants.LAYER_RAUHEIT ) )
     {
-      return new RoughnessTheme( new RoughnessLayer[] { new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, m_lsp ),
-          new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, m_lsp ) }, cmRight );
+      if( profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST ) != null )
+        return new RoughnessTheme( new RoughnessLayer[] { new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KST, m_lsp ) }, cmRight );
+      if( profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS ) != null )
+        return new RoughnessTheme( new RoughnessLayer[] { new RoughnessLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_RAUHEIT_KS, m_lsp ) }, cmRight );
     }
 
     else if( layerId.equals( IWspmTuhhConstants.LAYER_BRUECKE ) )
     {
       return new BuildingBridgeTheme( new IProfilChartLayer[] { new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE, m_lsp ),
-          new StationLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) }, cmLeft );
+          new PointsLineLayer( profil, IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE, m_lsp ) }, cmLeft );
     }
     else if( layerId.equals( IWspmTuhhConstants.LAYER_WEHR ) )
     {
@@ -390,14 +399,6 @@ public class ProfilLayerProviderTuhh implements IProfilLayerProvider
     return new GenericComponentUiHandlerProvider( profile );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider#dispose()
-   */
-  public void dispose( )
-  {
-    if( m_lsp != null )
-      m_lsp.dispose();
-
-  }
+ 
 
 }

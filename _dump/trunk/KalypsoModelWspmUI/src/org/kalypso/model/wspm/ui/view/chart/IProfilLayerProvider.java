@@ -51,6 +51,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 public interface IProfilLayerProvider
 {
   /**
+
    * if the layer depends on other layers or properties, create all required things here.
    * </p>
    * if there is nothing to do see getLayer( final String layerId, final ProfilChartView view )
@@ -72,7 +73,6 @@ public interface IProfilLayerProvider
   /**
    * the layer factory, no additional operations needed
    * </p>
-   * otherwise see: addLayerToChart
    */
   public IProfilChartLayer createLayer( final String layerId, final ProfilChartView view );
 
@@ -82,6 +82,8 @@ public interface IProfilLayerProvider
   public boolean providesLayer( final String layerId );
 
   public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
-  
-  public void dispose();
+  /**
+   * @deprecated
+   */
+  //public void dispose();
 }

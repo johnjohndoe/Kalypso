@@ -40,15 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
@@ -80,7 +84,7 @@ public class RoughnessLayer extends AbstractProfilLayer
   @Override
   public void paint( GC gc )
   {
-    if( getTargetComponent() == null )
+    if( getTargetRange() == null )
       return;
 
     final IProfil profil = getProfil();
@@ -89,22 +93,23 @@ public class RoughnessLayer extends AbstractProfilLayer
       return;
     final IRecord[] profilPoints = profil.getPoints();
     final int len = profilPoints.length;
-    final Point[] points = new Point[len];
+    final ArrayList<Point> points = new ArrayList<Point>(len);
 
-    for( int i = 0; i < len; i++ )
-      points[i] = toScreen( profilPoints[i] );
     final int baseLine = getTargetAxis().getScreenHeight();
     final FullRectangleFigure fr = new FullRectangleFigure();
 
     IPointStyle ps = getPointStyle();
     AreaStyle as = new AreaStyle( new ColorFill( ps.getInlineColor() ), ps.getAlpha(), ps.getStroke(), ps.isVisible() );
-
     fr.setStyle( as );
+    final IAxis dom = getDomainAxis();
+    final IAxis tar = getTargetAxis();
+    final int index = profil.indexOfProperty( getTargetComponent() );
+    final int breite = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE);
     for( int i = 0; i < len - 1; i++ )
     {
-      final int x1 = points[i].x;
-      final int y1 = points[i].y;
-      final int x2 = points[i + 1].x;
+      final int x1 = dom.numericToScreen( (Double)profilPoints[i].getValue( breite ) ); 
+      final int y1 = tar.numericToScreen( (Double)profilPoints[i].getValue( index ) ); 
+      final int x2 = dom.numericToScreen( (Double)profilPoints[i+1].getValue( breite ) ); 
       fr.setRectangle( new Rectangle( x1, y1, Math.abs( x2 - x1 ), Math.abs( baseLine - y1 ) ) );
       fr.paint( gc );
     }

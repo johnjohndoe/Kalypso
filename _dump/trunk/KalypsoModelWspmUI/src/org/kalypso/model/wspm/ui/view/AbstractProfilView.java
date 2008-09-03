@@ -46,7 +46,9 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 
 import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
@@ -55,13 +57,20 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * @author belger
  * @author kimwerner
  */
+
 public abstract class AbstractProfilView implements IProfilListener, IProfilView, IChartPart
+
 {
   protected final IProfil m_profile;
 
   private Control m_control;
 
   private final IStationResult[] m_results;
+
+  public AbstractProfilView( final IProfil profile )
+  {
+    this( profile, null );
+  }
 
   public AbstractProfilView( final IProfil profile, final IStationResult[] results )
   {
@@ -73,9 +82,13 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
   }
 
-  public AbstractProfilView( final IProfil profile )
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite, int)
+   */
+  public final Control createControl( final Composite parent, final int style )
   {
-    this( profile, null );
+    m_control = doCreateControl( parent, style );
+    return m_control;
   }
 
   /**
@@ -90,40 +103,15 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   protected abstract Control doCreateControl( final Composite parent, final int style );
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#createControl(org.eclipse.swt.widgets.Composite, int)
+   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
    */
-  public final Control createControl( final Composite parent, final int style )
+  @Override
+  public Object getAdapter( Class< ? > clazz )
   {
-    m_control = doCreateControl( parent, style );
-    return m_control;
+    // TODO Auto-generated method stub
+    return null;
   }
 
-  public final Control getControl( )
-  {
-    return m_control;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#getProfil()
-   */
-  public final IProfil getProfil( )
-  {
-    return m_profile;
-  }
-
-  public IStationResult[] getResults( )
-  {
-    return m_results;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
-   */
-  public void onProblemMarkerChanged( final IProfil source )
-  {
-    //instances must overwrite this method
-  }
- 
   /**
    * @see org.kalypso.chart.ui.IChartPart#getAxisDragHandler()
    */
@@ -144,6 +132,11 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
     return null;
   }
 
+  public final Control getControl( )
+  {
+    return m_control;
+  }
+
   /**
    * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
    */
@@ -153,13 +146,36 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
     // TODO Auto-generated method stub
     return null;
   }
+
   /**
-   * @see org.kalypso.chart.ui.IChartPart#getAdapter(java.lang.Class)
+   * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#getProfil()
+   */
+  public final IProfil getProfil( )
+  {
+    return m_profile;
+  }
+
+  public IStationResult[] getResults( )
+  {
+    return m_results;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  public void onProblemMarkerChanged( final IProfil source )
+  {
+    // instances must overwrite this method
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public Object getAdapter( Class< ? > clazz )
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
   {
     // TODO Auto-generated method stub
-    return null;
+
   }
 }

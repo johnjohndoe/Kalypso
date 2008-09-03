@@ -67,26 +67,27 @@ public class LayerStyleProviderTuhh implements ILayerStyleProvider
     // TODO: read styles from *.kod file
 
     IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( TuhhProfil.PROFIL_TYPE );
-    ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
-    ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
-    ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
+    ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE + "_LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_TRENNFLAECHE ) );
+    ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE + "_LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_DURCHSTROEMTE ) );
+    ((ILineStyle) getStyleFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL + "_LINE", LineStyle.class )).setColor( markerProvider.getColorFor( IWspmTuhhConstants.MARKER_TYP_BORDVOLL ) );
 
-    final ILineStyle stationStyle = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE + "LINE", LineStyle.class );
+    final ILineStyle stationStyle = getStyleFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE + "_LINE", LineStyle.class );
     stationStyle.setDash( 0f, new float[] { 0, 1, 1 } );
   }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.IComponentStyleProvider#dispose()
+   * @deprecated styles dispose themselves
    */
   public void dispose( )
   {
-    if( m_styles == null )
-      return;
-    final Collection<IStyle> styles = m_styles.values();
-    if( styles != null )
-      for( final IStyle style : styles )
-        if( style != null )
-          style.dispose();
+//    if( m_styles == null )
+//      return;
+//    final Collection<IStyle> styles = m_styles.values();
+//    if( styles != null )
+//      for( final IStyle style : styles )
+//        if( style != null )
+//          style.dispose();
   }
 
   /**

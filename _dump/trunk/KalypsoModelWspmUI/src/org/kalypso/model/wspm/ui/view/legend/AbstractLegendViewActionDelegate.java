@@ -65,7 +65,7 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
   {
     Logger.getLogger( getClass().getName() ).info( Messages.AbstractLegendViewActionDelegate_0 + msg );
 
-    MessageDialog.openWarning( m_view.getViewSite().getShell(), Messages.AbstractLegendViewActionDelegate_1, msg );
+   // MessageDialog.openWarning( m_view.getViewSite().getShell(), Messages.AbstractLegendViewActionDelegate_1, msg );
   }
 
   public final void selectionChanged( final IAction action, final ISelection selection )

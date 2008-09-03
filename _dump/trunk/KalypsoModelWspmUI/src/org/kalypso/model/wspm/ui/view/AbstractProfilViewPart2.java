@@ -48,7 +48,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -63,14 +62,13 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider2;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
-import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartViewActionBarContributor;
 
 /**
  * @author Gernot Belger
  */
 public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfilViewPart2, IProfilViewDataListener, IProfilListener, IProfilProviderListener, IAdapterEater
 {
-  private ProfilChartViewActionBarContributor m_actionContributor = new ProfilChartViewActionBarContributor();
+  //private ProfilChartViewActionBarContributor m_actionContributor = new ProfilChartViewActionBarContributor();
 
   private final AdapterPartListener m_adapterPartListener = new AdapterPartListener( IProfilProvider2.class, this, new EditorFirstAdapterFinder(), new EditorFirstAdapterFinder() );
 
@@ -95,22 +93,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     }
   };
 
-  /**
-   * Standard constructor.
-   */
-  public AbstractProfilViewPart2( )
-  {
-    m_actionContributor = new ProfilChartViewActionBarContributor();
-  }
-
-  /**
-   * Constructor to add an own ActionContributor.
-   */
-  public AbstractProfilViewPart2( final ProfilChartViewActionBarContributor actionContributor )
-  {
-    m_actionContributor = actionContributor;
-  }
-
+ 
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -119,12 +102,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
     final IWorkbenchPage page = site.getPage();
 
     m_adapterPartListener.init( page );
-    m_actionContributor.init( page );
-
-    final IActionBars actionBars = site.getActionBars();
-    m_actionContributor.contributeTo( actionBars.getMenuManager() );
-    m_actionContributor.contributeTo( actionBars.getToolBarManager() );
-    m_actionContributor.contributeTo( actionBars.getStatusLineManager() );
+   
   }
 
   public IProfil getProfil( )
@@ -172,8 +150,7 @@ public abstract class AbstractProfilViewPart2 extends ViewPart implements IProfi
   public void dispose( )
   {
     m_adapterPartListener.dispose();
-    m_actionContributor.dispose();
-
+ 
     m_profilProviderPart = null;
 
     unhookProvider();

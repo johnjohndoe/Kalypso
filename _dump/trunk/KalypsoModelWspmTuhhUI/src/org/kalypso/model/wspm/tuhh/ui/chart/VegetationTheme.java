@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.tuhh.ui.chart;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
@@ -51,8 +50,8 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IRecord;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
@@ -63,26 +62,23 @@ import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 public class VegetationTheme extends AbstractProfilTheme
 
 {
-  private final ICoordinateMapper m_cm;
-
-  private final ILineStyle m_LineStyle;
 
   public VegetationTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super( IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, null );
-    m_LineStyle = styleProvider.getStyleFor( chartLayers[0].getId() + "LINE", LineStyle.class );
-    m_LineStyle.setColor( new RGB( 0, 255, 0 ) );
-    m_cm = cm;
+    super( IWspmTuhhConstants.LAYER_BEWUCHS, "Bewuchs", chartLayers, cm );
+    final ILineStyle lineStyle = styleProvider.getStyleFor( chartLayers[0].getId() + "_LINE", LineStyle.class );
+    lineStyle.setColor( new RGB( 0, 255, 0 ) );
+    setLineStyle( lineStyle );
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilTheme#getHover(org.eclipse.swt.graphics.Point)
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilTheme#getTargetRange()
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public IDataRange<Number> getTargetRange( )
   {
-    // TODO Auto-generated method stub
-    return super.getHover( pos );
+    // this theme will not be calculated, so supress the dimension of vegetation
+    return null;
   }
 
   /**
@@ -91,23 +87,6 @@ public class VegetationTheme extends AbstractProfilTheme
   @Override
   public void paint( GC gc )
   {
-
-//    final IProfil profil = getProfil();
-//
-//    if( profil == null )
-//      return;
-//    final IRecord[] profilPoints = profil.getPoints();
-//    final int len = profilPoints.length - 2;
-//    final PolylineFigure pf = new PolylineFigure();
-//
-//    pf.setStyle( getLineStyle() );
-//    for( int i = 0; i < len; i++ )
-//    {
-//      final Point point1 = m_cm.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoints[i] ), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, profilPoints[i] )+1 );
-//      final Point point2 = m_cm.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoints[i + 1] ), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, profilPoints[i + 1] )+1 );
-//      pf.setPoints( new Point[] { point1, point2 } );
-//      pf.paint( gc );
-//    }
 
     final IProfil profil = getProfil();
 
@@ -120,13 +99,28 @@ public class VegetationTheme extends AbstractProfilTheme
     pf.setStyle( getLineStyle() );
     for( int i = 0; i < len; i++ )
     {
-      final Point point1 = m_cm.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoints[i] ), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, profilPoints[i] ) + 1 );
-      final Point point2 = m_cm.numericToScreen( ProfilUtil.getDoubleValueFor( getDomainComponent().getId(), profilPoints[i + 1] ), ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, profilPoints[i + 1] ) + 1 );
-      pf.setPoints( new Point[] { point1, point2 } );
-      pf.paint( gc );
+      if( segmenthasVegetation( profilPoints[i] ) )
+      {
+        final Double y1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, profilPoints[i] );
+        final Double y2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_HOEHE, profilPoints[i + 1] );
+        final Double x1 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, profilPoints[i] );
+        final Double x2 = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BREITE, profilPoints[i + 1] );
+
+        final Point p1 = new Point( getDomainAxis().numericToScreen( x1 ), getTargetAxis().numericToScreen( y1 ) -3  );
+        final Point p2 = new Point( getDomainAxis().numericToScreen( x2 ), getTargetAxis().numericToScreen( y2 ) - 3 );
+
+        pf.setPoints( new Point[] { p1, p2 } );
+        pf.paint( gc );
+
+      }
     }
   }
-  
- 
 
+  final boolean segmenthasVegetation( final IRecord point )
+  {
+    final Double ax = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AX, point );
+    final Double ay = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_AY, point );
+    final Double dp = ProfilUtil.getDoubleValueFor( IWspmTuhhConstants.POINT_PROPERTY_BEWUCHS_DP, point );
+    return !ax.isNaN() && !ay.isNaN() && !dp.isNaN() && ax * ay * dp != 0;
+  }
 }

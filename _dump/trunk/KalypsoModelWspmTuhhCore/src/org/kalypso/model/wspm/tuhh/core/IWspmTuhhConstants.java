@@ -200,6 +200,8 @@ public interface IWspmTuhhConstants extends IWspmConstants
   public static String LAYER_DEVIDER = PROFILE_LAYER + "DEVIDER";
 
   public static String LAYER_EI = PROFILE_LAYER + "EI";
+  
+  public static String LAYER_TUBES = PROFILE_LAYER + "TUBES";
 
   /* Layer_Colors */
   /**

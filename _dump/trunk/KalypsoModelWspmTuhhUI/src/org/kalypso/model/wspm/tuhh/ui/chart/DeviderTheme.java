@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.tuhh.ui.panel.TrennerPanel;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
@@ -75,14 +76,22 @@ public class DeviderTheme extends AbstractProfilTheme
   {
     return new TrennerPanel( getProfil() );
   }
-
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( )
+  {
+    // this theme will not be painted, so supress the dimension of pointMarkers
+    return null;
+  }
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
     final IProfilPointMarkerProvider markerProvider = KalypsoModelWspmCoreExtensions.getMarkerProviders( getProfil().getType() );
-    final String[] deviderIds = new String[m_chartLayers.length];
+    final String[] deviderIds = new String[getLayerManager().getLayers().length];
     int i = 0;
-    for( final IProfilChartLayer layer : m_chartLayers )
+    for( final IChartLayer layer : getLayerManager().getLayers() )
       deviderIds[i++] = layer.getId();
 
     LegendEntry le = new LegendEntry( this, getTitle() )
@@ -98,13 +107,5 @@ public class DeviderTheme extends AbstractProfilTheme
     return new ILegendEntry[] { le };
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IActiveLayerChangeListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void onActiveLayerChanged( IChartLayer activeLayer )
-  {
-    // TODO Auto-generated method stub
-
-  }
 
 }

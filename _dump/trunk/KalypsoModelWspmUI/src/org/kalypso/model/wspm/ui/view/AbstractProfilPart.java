@@ -275,11 +275,11 @@ public class AbstractProfilPart extends PlatformObject implements IProfilChartVi
       chartlegend.saveState( m_viewdata.getLegendMemento() );
   }
 //TODO: kim remove this, only used in ChartEditor
-  public void runChartAction( final ProfilChartActionsEnum chartAction )
-  {
-    if( m_chartview != null )
-      m_chartview.runChartAction( chartAction );
-  }
+//  public void runChartAction( final ProfilChartActionsEnum chartAction )
+//  {
+//    if( m_chartview != null )
+//      m_chartview.runChartAction( chartAction );
+//  }
 
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProvider#getProfilChartView()

@@ -72,8 +72,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 public abstract class AbstractProfilLayer extends AbstractChartLayer implements IProfilChartLayer
 {
 
-
-  private final IProfil m_profil;
+  private IProfil m_profil;
 
   private final String m_targetComponent;
 
@@ -91,6 +90,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private IPointStyle m_pointStyle_hover = null;
 
+  private boolean m_isLocked = false;
+
   protected static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]";
 
   public AbstractProfilLayer( final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
@@ -100,97 +101,44 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_targetComponent = targetRangeProperty;
     if( styleProvider != null )
     {
-      m_LineStyle = styleProvider.getStyleFor( targetRangeProperty + "LINE", LineStyle.class );
-      m_LineStyle_active = styleProvider.getStyleFor( targetRangeProperty + "LINE_ACTIVE", LineStyle.class );
-      m_LineStyle_hover =  styleProvider.getStyleFor( targetRangeProperty + "LINE_HOVER", LineStyle.class );
-      m_pointStyle = styleProvider.getStyleFor( targetRangeProperty + "POINT", PointStyle.class );
-      m_pointStyle_active =  styleProvider.getStyleFor( targetRangeProperty + "POINT_ACTIVE", PointStyle.class );
-      m_pointStyle_hover =  styleProvider.getStyleFor( targetRangeProperty + "POINT_HOVER", PointStyle.class );
+      final String id = getId();
+      setLineStyle( styleProvider.getStyleFor( id + "_LINE", LineStyle.class ) );
+      setLineStyle_active( styleProvider.getStyleFor( id + "_LINE_ACTIVE", LineStyle.class ) );
+      setLineStyle_hover( styleProvider.getStyleFor( id + "_LINE_HOVER", LineStyle.class ) );
+      setPointStyle( styleProvider.getStyleFor( id + "_POINT", PointStyle.class ) );
+      setPointStyle_active( styleProvider.getStyleFor( id + "_POINT_ACTIVE", PointStyle.class ) );
+      setPointStyle_hover( styleProvider.getStyleFor( id + "_POINT_HOVER", PointStyle.class ) );
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
-  public IDataRange<Number> getDomainRange( )
+  public void setLineStyle( ILineStyle lineStyle )
   {
-
-    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
-    final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
-    if( (min == null) || (max == null) )
-      return null;
-    return new DataRange<Number>( min, max );
+    m_LineStyle = lineStyle;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
-  public IDataRange<Number> getTargetRange( )
+  public void setLineStyle_active( ILineStyle lineStyle_active )
   {
-
-    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getTargetComponent() );
-    final Double min = ProfilUtil.getMinValueFor( getProfil(), getTargetComponent() );
-    if( (min == null) || (max == null) )
-      return null;
-    return new DataRange<Number>( min, max );
+    m_LineStyle_active = lineStyle_active;
   }
 
-  /**
-   * To be implemented by subclasses - if needed
-   * 
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  public void executeDrop( Point point, EditInfo dragStartData )
+  public void setLineStyle_hover( ILineStyle lineStyle_hover )
   {
+    m_LineStyle_hover = lineStyle_hover;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
-   */
-  @Override
-  public String getTitle( )
+  public void setPointStyle( IPointStyle pointStyle )
   {
-    final IComponent cmp = m_profil.hasPointProperty( m_targetComponent );
-    return cmp == null ? m_targetComponent : cmp.getName();
+    m_pointStyle = pointStyle;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
-  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  public void setPointStyle_active( IPointStyle pointStyle_active )
   {
-    if( hint.isActivePropertyChanged() && (getProfil() != null) )
-    {
-      final IComponent cmp = getProfil().getActiveProperty();
-      if( cmp != null )
-        setActive( cmp.equals( getTargetComponent() ) );
-    }
-    // TODO: only fire if this layer is affected
-    getEventHandler().fireLayerContentChanged( this );
+    m_pointStyle_active = pointStyle_active;
   }
 
-  public String getTooltipInfo( final Point2D point )
+  public void setPointStyle_hover( IPointStyle pointStyle_hover )
   {
-    if( (getTargetComponent() == null) || (getDomainComponent() == null) )
-      return "";
-    try
-    {
-      return String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(), point.getY(), getTargetComponent().getUnit() } );
-    }
-    catch( RuntimeException e )
-    {
-      return e.getLocalizedMessage();
-    }
-
-  }
-
-  public Point2D getPoint2D( final IRecord point )
-  {
-    final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfilUtil.getDoubleValueFor( m_targetComponent, point );
-    return new Point2D.Double( x, y );
+    m_pointStyle_hover = pointStyle_hover;
   }
 
   /**
@@ -212,113 +160,22 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel()
    */
-  public void executeClick( EditInfo clickInfo )
+  public IProfilView createLayerPanel( )
   {
-    final int pos = ((Integer) clickInfo.m_data);
-    final IProfil profil = getProfil();
-    profil.setActivePoint( profil.getPoint( pos ) );
-    profil.setActivePointProperty( getTargetComponent() );
-  }
-
-  @SuppressWarnings("unused")
-  public Rectangle getHoverRect( final IRecord profilPoint )
-  {
+    // override this method
     return null;
   }
 
-  public Point toScreen( final IRecord point )
-  {
-    final ICoordinateMapper cm = getCoordinateMapper();
-    return cm == null ? null : cm.numericToScreen( ProfilUtil.getDoubleValueFor( m_domainComponent, point ), ProfilUtil.getDoubleValueFor( m_targetComponent, point ) );
-  }
-
   /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getId()
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
    */
   @Override
-  public String getId( )
+  protected ILegendEntry[] createLegendEntries( )
   {
-    final IComponent target = getTargetComponent();
-    return target == null ? m_targetComponent : target.getId();
-  }
-
-  public Point2D toNumeric( final Point point )
-  {
-    final ICoordinateMapper cm = getCoordinateMapper();
-    final Double x = cm.getDomainAxis().screenToNumeric( point.x ).doubleValue();
-    final Double y = cm.getTargetAxis().screenToNumeric( point.y ).doubleValue();
-    return new Point2D.Double( x, y );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
-   */
-  public EditInfo getHover( Point pos )
-  {
-    if( getProfil() == null )
-      return null;
-    final IRecord[] profilPoints = getProfil().getPoints();
-    final int len = profilPoints.length;
-    for( int i = 0; i < len; i++ )
-    {
-
-      final Rectangle hover = getHoverRect( profilPoints[i] );
-      if( hover == null )
-        continue;
-      if( hover.contains( pos ) )
-        return new EditInfo( this, null, null, i, getTooltipInfo( getPoint2D( profilPoints[i] ) ), pos );
-    }
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getProfil()
-   */
-  public IProfil getProfil( )
-  {
-    return m_profil;
-  }
-
-  public IComponent getTargetComponent( )
-  {
-    return getProfil() == null ? null : getProfil().hasPointProperty( m_targetComponent );
-  }
-
-  public IComponent getDomainComponent( )
-  {
-    return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
-  }
-
-  protected ILineStyle getLineStyle( )
-  {
-    return m_LineStyle;
-  }
-
-  protected ILineStyle getLineStyle_active( )
-  {
-    return m_LineStyle_active;
-  }
-
-  protected IPointStyle getPointStyle( )
-  {
-    return m_pointStyle;
-  }
-
-  protected IPointStyle getPointStyle_active( )
-  {
-    return m_pointStyle_active;
-  }
-
-  protected ILineStyle getLineStyle_hover( )
-  {
-    return m_LineStyle_hover;
-  }
-
-  protected IPointStyle getPointStyle_hover( )
-  {
-    return m_pointStyle_hover;
+    // override this method
+    return null;// new ILegendEntry[] {};
   }
 
   /**
@@ -344,12 +201,204 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel()
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
-  public IProfilView createLayerPanel( )
+  public void executeClick( EditInfo clickInfo )
   {
-    // override this method
+    final int pos = ((Integer) clickInfo.m_data);
+    final IProfil profil = getProfil();
+    profil.setActivePoint( profil.getPoint( pos ) );
+    profil.setActivePointProperty( getTargetComponent() );
+  }
+
+  /**
+   * To be implemented by subclasses - if needed
+   * 
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  public void executeDrop( Point point, EditInfo dragStartData )
+  {
+  }
+
+  public IComponent getDomainComponent( )
+  {
+    return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
+  public IDataRange<Number> getDomainRange( )
+  {
+
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
+    if( (min == null) || (max == null) )
+      return null;
+    return new DataRange<Number>( min, max );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
+  public EditInfo getHover( Point pos )
+  {
+    if( getProfil() == null )
+      return null;
+    final IRecord[] profilPoints = getProfil().getPoints();
+    final int len = profilPoints.length;
+    for( int i = 0; i < len; i++ )
+    {
+
+      final Rectangle hover = getHoverRect( profilPoints[i] );
+      if( hover == null )
+        continue;
+      if( hover.contains( pos ) )
+        return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), pos );
+    }
     return null;
+  }
+
+  @SuppressWarnings("unused")
+  public Rectangle getHoverRect( final IRecord profilPoint )
+  {
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    final IComponent target = getTargetComponent();
+    return target == null ? m_targetComponent : target.getId();
+  }
+
+  protected ILineStyle getLineStyle( )
+  {
+    return m_LineStyle;
+  }
+
+  protected ILineStyle getLineStyle_active( )
+  {
+    return m_LineStyle_active;
+  }
+
+  protected ILineStyle getLineStyle_hover( )
+  {
+    return m_LineStyle_hover;
+  }
+
+  public Point2D getPoint2D( final IRecord point )
+  {
+    final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
+    final Double y = ProfilUtil.getDoubleValueFor( m_targetComponent, point );
+    return new Point2D.Double( x, y );
+  }
+
+  protected IPointStyle getPointStyle( )
+  {
+    return m_pointStyle;
+  }
+
+  protected IPointStyle getPointStyle_active( )
+  {
+    return m_pointStyle_active;
+  }
+
+  protected IPointStyle getPointStyle_hover( )
+  {
+    return m_pointStyle_hover;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getProfil()
+   */
+  public IProfil getProfil( )
+  {
+    return m_profil;
+  }
+
+  public IComponent getTargetComponent( )
+  {
+    return getProfil() == null ? null : getProfil().hasPointProperty( m_targetComponent );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  public IDataRange<Number> getTargetRange( )
+  {
+
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getTargetComponent() );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), getTargetComponent() );
+    if( (min == null) || (max == null) )
+      return null;
+    return new DataRange<Number>( min, max );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    final IComponent cmp = m_profil == null ? null : m_profil.hasPointProperty( m_targetComponent );
+    return cmp == null ? m_targetComponent : cmp.getName();
+  }
+
+  public String getTooltipInfo( final IRecord point )
+  {
+
+    if( point == null || (getTargetComponent() == null) || (getDomainComponent() == null) )
+      return "";
+    try
+    {
+      final Point2D p = getPoint2D( point );
+      return String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName(), p.getY(), getTargetComponent().getUnit() } );
+    }
+    catch( RuntimeException e )
+    {
+      return e.getLocalizedMessage();
+    }
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
+   */
+  @Override
+  public boolean isLocked( )
+  {
+    return m_isLocked;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
+   */
+  @Override
+  public void lockLayer( boolean isLocked )
+  {
+    m_isLocked = isLocked;
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  public void onProfilChanged( ProfilChangeHint hint, IProfilChange[] changes )
+  {
+    if( hint.isActivePropertyChanged() && (getProfil() != null) )
+    {
+      final IComponent cmp = getProfil().getActiveProperty();
+      if( cmp != null )
+        setActive( cmp.equals( getTargetComponent() ) );
+    }
+    // TODO: only fire if this layer is affected
+    getEventHandler().fireLayerContentChanged( this );
   }
 
   /**
@@ -361,23 +410,40 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    // override this method
-    return null;// new ILegendEntry[] {};
-  }
- 
-  /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
    */
-  @Deprecated
   public void removeYourself( )
   {
     // TODO Auto-generated method stub
 
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
+   */
+  @Override
+  public void setProfil( IProfil profil )
+  {
+    m_profil = profil;
+
+  }
+
+  public Point2D toNumeric( final Point point )
+  {
+    final ICoordinateMapper cm = getCoordinateMapper();
+    final Double x = cm.getDomainAxis().screenToNumeric( point.x ).doubleValue();
+    final Double y = cm.getTargetAxis().screenToNumeric( point.y ).doubleValue();
+    return new Point2D.Double( x, y );
+  }
+
+  public Point toScreen( final IRecord point )
+  {
+    final ICoordinateMapper cm = getCoordinateMapper();
+    final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
+    final Double y = ProfilUtil.getDoubleValueFor( m_targetComponent, point );
+    if( cm != null && x != null && y != null && !x.isNaN() && !y.isNaN() )
+      return cm == null ? null : cm.numericToScreen( x, y );
+    return null;
   }
 
 }

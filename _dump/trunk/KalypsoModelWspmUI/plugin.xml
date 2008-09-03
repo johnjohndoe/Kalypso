@@ -23,38 +23,6 @@
      <extension
            point="org.eclipse.ui.viewActions">
         <viewContribution
-              id="com.bce.profil.eclipse.view.legendContribution"
-              targetID="org.kalypso.model.wspm.ui.view.legend.LegendView">
-           <action
-                 class="org.kalypso.model.wspm.ui.view.legend.LayerViewActionDelegate"
-                 disabledIcon="icons/dlcl16/profil_legend_props.gif"
-                 enablesFor="1"
-                 icon="icons/elcl16/profil_legend_props.gif"
-                 id="com.bce.profil.eclipse.view.legend.LayerViewAction"
-                 label="%com.bce.profil.eclipse.view.legend.LayerViewAction"
-                 style="push"
-                 toolbarPath="additions"
-                 tooltip="%com.bce.profil.eclipse.view.legend.LayerViewAction.tooltip"/>
-           <action
-                 class="org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate"
-                 disabledIcon="icons/dtool16/delete_layer.gif"
-                 enablesFor="1"
-                 icon="icons/etool16/delete_layer.gif"
-                 id="com.bce.profil.eclipse.view.legend.RemoveLayerAction"
-                 label="%com.bce.profil.eclipse.view.legend.RemoveLayerAction"
-                 style="push"
-                 toolbarPath="additions"
-                 tooltip="%action.tooltip.0"/>
-           <action
-                 class="org.kalypso.model.wspm.ui.view.legend.AddLayerActionDelegate"
-                 icon="icons/etool16/add_layer.gif"
-                 id="com.bce.profil.eclipse.view.legend.AddLayerAction"
-                 label="%com.bce.profil.eclipse.view.legend.AddLayerAction"
-                 style="push"
-                 toolbarPath="additions"
-                 tooltip="%com.bce.profil.eclipse.view.legend.AddLayerAction.tooltip"/>
-        </viewContribution>
-        <viewContribution
               id="com.bce.profil.eclipse.view.tableContribution"
               targetID="org.kalypso.model.wspm.ui.view.table.TableView">
            <menu
@@ -474,6 +442,40 @@
                   style="push">
             </command>
          </menuContribution>
+         <menuContribution
+               locationURI="toolbar:org.kalypso.model.wspm.ui.view.chart.ChartView">
+            <command
+                  commandId="org.kalypso.chart.ui.commands.zoomIn"
+                  style="radio">
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.zoomOut"
+                  style="radio">
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.pan"
+                  style="radio">
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.maximize"
+                  style="radio">
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.edit"
+                  style="radio">
+            </command>
+         </menuContribution>
+         <menuContribution
+               locationURI="toolbar:org.kalypso.model.wspm.ui.view.legend.LegendView">
+            <command
+                  commandId="org.kalypso.model.wspm.ui.view.legend.addlayer"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.model.wspm.ui.view.legend.removelayer"
+                  style="push">
+            </command>
+         </menuContribution>
       </extension>
       <extension
             point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -485,6 +487,45 @@
                class="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider"
                id="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
          </provider>
+      </extension>
+      <extension
+            point="org.eclipse.ui.commands">
+         <command
+               categoryId="org.kalypso.model.wspm.ui.view.legend.category"
+               id="org.kalypso.model.wspm.ui.view.legend.addlayer"
+               name="add">
+         </command>
+         <category
+               id="org.kalypso.model.wspm.ui.view.legend.category"
+               name="Chart Legend Commands">
+         </category>
+         <command
+               categoryId="org.kalypso.model.wspm.ui.view.legend.category"
+               id="org.kalypso.model.wspm.ui.view.legend.removelayer"
+               name="remove Chart Layer">
+         </command>
+      </extension>
+      <extension
+            point="org.eclipse.ui.handlers">
+         <handler
+               class="org.kalypso.model.wspm.ui.view.legend.AddLayerHandler"
+               commandId="org.kalypso.model.wspm.ui.view.legend.addlayer">
+         </handler>
+         <handler
+               class="org.kalypso.model.wspm.ui.view.legend.RemoveLayerHandler"
+               commandId="org.kalypso.model.wspm.ui.view.legend.removelayer">
+         </handler>
+      </extension>
+      <extension
+            point="org.eclipse.ui.commandImages">
+         <image
+               commandId="org.kalypso.model.wspm.ui.view.legend.addlayer"
+               icon="icons/etool16/add_layer.gif">
+         </image>
+         <image
+               commandId="org.kalypso.model.wspm.ui.view.legend.removelayer"
+               icon="icons/etool16/delete_layer.gif">
+         </image>
       </extension>
 
 </plugin>

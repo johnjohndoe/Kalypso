@@ -49,6 +49,6 @@ public class LayerViewActionDelegate extends AbstractLegendViewActionDelegate
 {
   public void run( final IAction action )
   {
-    getView().showLayerProperties();
+   // getView().showLayerProperties();
   }
 }

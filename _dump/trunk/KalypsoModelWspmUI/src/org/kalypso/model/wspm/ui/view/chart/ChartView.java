@@ -68,16 +68,6 @@ public class ChartView extends AbstractProfilViewPart2 implements IChartPart
 
   private ChartEditorTreeOutlinePage m_outlinePage;
 
-  public ChartView( )
-  {
-    super();
-  }
-
-  public ChartView( final ProfilChartViewActionBarContributor actionContributor )
-  {
-    super( actionContributor );
-  }
-
   /**
    * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#createContent(org.eclipse.swt.widgets.Composite)
    */

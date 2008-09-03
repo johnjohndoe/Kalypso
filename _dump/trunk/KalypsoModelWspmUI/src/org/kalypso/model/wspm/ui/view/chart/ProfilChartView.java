@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPersistableElement;
 import org.kalypso.chart.ui.editor.mousehandler.AxisDragHandlerDelegate;
-import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.editor.mousehandler.TooltipHandler;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -59,7 +58,6 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.chart.action.ProfilChartActionsEnum;
 import org.kalypso.model.wspm.ui.view.chart.color.IProfilColorSet;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
@@ -74,7 +72,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
-import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -88,7 +85,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
 {
   private static final String MEM_LAYER_VIS = "layerVisibility"; //$NON-NLS-1$
 
-  // private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
+  private static final String MEM_LAYER_ACT = "activeLayer"; //$NON-NLS-1$
 
   public static final String ID_AXIS_DOMAIN = "domain";//$NON-NLS-1$
 
@@ -156,8 +153,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
         {
           final Boolean visible = visibility.get( layer.getId() );
           layer.setVisible( visible == null ? layer.isVisible() : visible );
-          IMapperRegistry mr = m_chart.getChartModel().getMapperRegistry();
-          layer.setCoordinateMapper( new CoordinateMapper( mr.getAxis( ID_AXIS_DOMAIN ), mr.getAxis( ID_AXIS_LEFT ) ) );
           lm.addLayer( layer );
         }
       }
@@ -174,10 +169,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     if( (m_chart != null) && !m_chart.isDisposed() )
       m_chart.dispose();
     m_chart = null;
-
-    if( m_layerProvider != null )
-      m_layerProvider.dispose();
-    m_layerProvider = null;
 
     super.dispose();
   }
@@ -246,10 +237,11 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
     // TODO: move this to actiondelegate
 
     m_plotDragHandler = new PlotDragHandlerDelegate( m_chart );
-    m_plotDragHandler.setActiveHandler( new DragEditHandler( m_chart, TRASH_HOLD ) );
-    
-    m_axisDragHandler = new AxisDragHandlerDelegate(m_chart);
-    
+    m_axisDragHandler = new AxisDragHandlerDelegate( m_chart );
+    // m_plotDragHandler.setActiveHandler( new DragEditHandler( m_chart, TRASH_HOLD ) );
+//
+// m_axisDragHandler = new AxisDragHandlerDelegate( m_chart );
+
     return m_chart;
   }
 
@@ -267,9 +259,10 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return m_colorRegistry;
   }
-/**
- * @deprecated use getAxis(String id)
- */
+
+  /**
+   * @deprecated use getAxis(String id)
+   */
   public IAxis getDomainRange( )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_DOMAIN );
@@ -282,6 +275,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return null;
   }
+
   /**
    * @deprecated use getAxis(String id)
    */
@@ -289,6 +283,7 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_LEFT );
   }
+
   /**
    * @deprecated use getAxis(String id)
    */
@@ -296,10 +291,13 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( ID_AXIS_RIGHT );
   }
-  public IAxis getAxis(final String id )
+
+  public IAxis getAxis( final String id )
   {
     return m_chart.getChartModel().getMapperRegistry().getAxis( id );
   }
+
+  @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final ChartComposite chart = m_chart;
@@ -354,49 +352,68 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       hash.put( name, visib );
     }
 
+    final Map<String, Boolean> actHash = new HashMap<String, Boolean>();
+    final IMemento[] actChildren = memento.getChildren( MEM_LAYER_ACT );
+    for( final IMemento layermem : actChildren )
+    {
+      final String name = layermem.getID();
+      final String textData = layermem.getTextData();
+      final Boolean active = Boolean.valueOf( textData );
+      actHash.put( name, active );
+    }
+
+    Boolean activeLayerFound = false;
     for( final IChartLayer layer : m_chart.getChartModel().getLayerManager().getLayers() )
     {
       final Boolean visib = hash.get( layer.getId() );
+      final Boolean active = actHash.get( layer.getId() );
       if( visib != null )
         layer.setVisible( visib );
-    }
-  }
-
-  public void runChartAction( final ProfilChartActionsEnum chartAction )
-  {
-
-    // TODO: KIM ersetzen der Actions durch commands,handler
-
-    if( (m_chart != null) && !m_chart.isDisposed() )
-      switch( chartAction )
+      if( active != null )
       {
-        case MAXIMIZE:
-          // m_chart.maximize();
-          break;
-
-        case ZOOM_IN:
-          // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.ZOOM_IN ).setChecked( true );
-          break;
-        case ZOOM_OUT:
-          // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.ZOOM_OUT ).setChecked( true );
-          break;
-        case PAN:
-          // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.PAN ).setChecked( true );
-          break;
-
-        case EDIT:
-        {
-          // TODO: KIM ersetzen final IAction editAction = m_actions.getAction( ChartStandardActions.Action.EDIT );
-          // editAction.setChecked( !editAction.isChecked() );
-        }
-          break;
-
-        case EXPORT_IMAGE:
-          // saveChartAsImage( m_chart );
-          break;
-
+        layer.setActive( active );
+        activeLayerFound = activeLayerFound || active;
       }
+    }
+    if( !activeLayerFound )
+      m_chart.getChartModel().getLayerManager().getLayers()[0].setActive( true );
   }
+
+// public void runChartAction( final ProfilChartActionsEnum chartAction )
+// {
+//
+// // TODO: KIM ersetzen der Actions durch commands,handler
+//
+// if( (m_chart != null) && !m_chart.isDisposed() )
+// switch( chartAction )
+// {
+// case MAXIMIZE:
+// // m_chart.maximize();
+// break;
+//
+// case ZOOM_IN:
+// // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.ZOOM_IN ).setChecked( true );
+// break;
+// case ZOOM_OUT:
+// // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.ZOOM_OUT ).setChecked( true );
+// break;
+// case PAN:
+// // TODO: KIM ersetzen m_actions.getAction( ChartStandardActions.Action.PAN ).setChecked( true );
+// break;
+//
+// case EDIT:
+// {
+// // TODO: KIM ersetzen final IAction editAction = m_actions.getAction( ChartStandardActions.Action.EDIT );
+// // editAction.setChecked( !editAction.isChecked() );
+// }
+// break;
+//
+// case EXPORT_IMAGE:
+// // saveChartAsImage( m_chart );
+// break;
+//
+// }
+// }
 
   /**
    * @see org.eclipse.ui.IPersistableElement#saveState(org.eclipse.ui.IMemento)
@@ -411,6 +428,8 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
       {
         final IMemento layermem = getMementoChild( memento, MEM_LAYER_VIS, layer.getId(), true );
         layermem.putTextData( "" + layer.isVisible() ); //$NON-NLS-1$
+        final IMemento layeract = getMementoChild( memento, MEM_LAYER_ACT, layer.getId(), true );
+        layeract.putTextData( "" + layer.isActive() ); //$NON-NLS-1$
       }
   }
 
@@ -468,7 +487,5 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   {
     return m_plotDragHandler;
   }
-
-
 
 }

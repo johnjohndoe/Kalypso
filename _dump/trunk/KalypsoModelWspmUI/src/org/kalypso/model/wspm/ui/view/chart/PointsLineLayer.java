@@ -110,11 +110,13 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final PolylineFigure pf = new PolylineFigure();
 
-    pf.setStyle( getLineStyle() );
-    pf.setPoints( points );
-    pf.paint( gc );
-
-    if( active < len - 1 )
+    
+      pf.setStyle( getLineStyle() );
+      pf.setPoints( points );
+      pf.paint( gc );
+    
+    
+    if(active < len - 1 )
     {
       pf.setStyle( getLineStyle_active() );
       pf.setPoints( new Point[] { points[active], points[active + 1] } );
@@ -151,7 +153,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     infoFigure.setPoints( new Point[] { previous, newPos, next } );
     infoFigure.setStyle( getLineStyle_hover() );
 
-    return new EditInfo( this, null, infoFigure, dragStartData.m_data, getTooltipInfo( toNumeric( newPos ) ), newPos );
+    return new EditInfo( this, null, infoFigure, dragStartData.m_data, getTooltipInfo(  profilPoints[index]  ), newPos );
 
   }
 

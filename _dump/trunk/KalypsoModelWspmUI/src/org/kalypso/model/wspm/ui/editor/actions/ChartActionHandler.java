@@ -68,7 +68,7 @@ public class ChartActionHandler extends AbstractEditorPartAction implements IEdi
     if( editorPart instanceof ProfilchartEditor)
     {
       final ProfilchartEditor editor = (ProfilchartEditor)editorPart;
-      editor.runChartAction( m_chartAction );
+      //editor.runChartAction( m_chartAction );
     }
   }
   

@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -58,4 +64,27 @@ public class GeoCoordinateTheme extends AbstractProfilTheme
 
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( )
+  {
+    // this theme will not be painted, so supress the dimension of GeoCoordinates
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
+   */
+  @Override
+  public void removeYourself( )
+  {
+    final IProfil profil = getProfil();
+
+    final ProfilOperation operation = new ProfilOperation( "Brücke entfernen", getProfil(), true );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT ) ) );
+    new ProfilOperationJob( operation ).schedule();
+  }
 }

@@ -82,7 +82,7 @@ public class AddLayerActionDelegate extends AbstractLegendViewActionDelegate
       }
     }
 
-    final ListDialog dialog = new ListDialog( getView().getSite().getShell() );
+    final ListDialog dialog = new ListDialog( null);//getView().getSite().getShell() );
     dialog.setAddCancelButton( true );
     dialog.setBlockOnOpen( true );
     dialog.setContentProvider( new ArrayContentProvider() );

@@ -40,14 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.legend;
 
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -58,15 +53,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
-import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderDelegator;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -76,9 +67,9 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProvider;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartViewProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
 
-import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
+import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * This view shows the profile legend. It always shows the legend of the last active part which adapts to
@@ -90,174 +81,19 @@ import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
  * @author Gernot Belger
  */
 @SuppressWarnings("unchecked")
-public class LegendView extends ViewPart implements IAdapterEater, ILayerManagerEventListener// ,
-                                                                                                   // IActiveLayerProvider
+public class LegendView extends ViewPart implements IAdapterEater, IProfilChartViewProviderListener
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void onLayerAdded( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void onLayerContentChanged( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void onLayerMoved( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void onLayerRemoved( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-    
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void onLayerVisibilityChanged( IChartLayer layer )
-  {
-    // TODO Auto-generated method stub
-    
-  }
 
   private final AdapterPartListener m_chartProviderListener = new AdapterPartListener( IProfilChartViewProvider.class, this, EditorFirstAdapterFinder.instance(), EditorFirstAdapterFinder.instance() );
 
-  // private ChartLegend m_chartlegend;
   private ChartEditorTreeOutlinePage m_chartlegend;
 
   private Composite m_composite;
 
   private IProfilChartViewProvider m_provider;
 
-  private final SelectionProviderDelegator m_selectionProviderDelegator = new SelectionProviderDelegator();
-
-  private final MenuManager m_menuMgr = new MenuManager( Messages.LegendView_0 );
-
-  // private final List<IActiveLayerChangeListener> m_layerListener = new ArrayList<IActiveLayerChangeListener>( 5 );
-
-  @Override
-  public void init( final IViewSite site ) throws PartInitException
-  {
-    super.init( site );
-
-    m_chartProviderListener.init( site.getPage() );
-
-    site.setSelectionProvider( m_selectionProviderDelegator );
-
-    // menuMgr.setRemoveAllWhenShown( true );
-    m_menuMgr.addMenuListener( new IMenuListener()
-    {
-      public void menuAboutToShow( final IMenuManager manager )
-      {
-        LegendView.this.fillContextMenu( manager );
-      }
-    } );
-
-    getSite().registerContextMenu( m_menuMgr, m_selectionProviderDelegator );
-
-    // inform active layer listeners of selection changes
-    m_selectionProviderDelegator.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        fireOnActiveLayerChanged();
-      }
-    } );
-  }
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    m_chartProviderListener.dispose();
-    m_selectionProviderDelegator.dispose();
-
-    unhookProvider();
-    unhookLegend();
-
-    getSite().setSelectionProvider( null );
-
-    super.dispose();
-  }
-
-  private void unhookLegend( )
-  {
-    if( m_chartlegend != null )
-    {
-      m_chartlegend.dispose();
-      m_chartlegend = null;
-    }
-
-    m_selectionProviderDelegator.setDelegate( null );
-  }
-
-  private void unhookProvider( )
-  {
-    if( m_provider != null )
-    {
-    //  m_provider.removeProfilChartViewProviderListener( this );
-      m_provider = null;
-    }
-  }
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createPartControl( final Composite parent )
-  {
-    m_composite = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    m_composite.setLayout( gridLayout );
-    updateChartLegend();
-  }
-
-  private void updateChartLegend( )
-  {
-    if( m_composite != null && !m_composite.isDisposed() )
-    {
-      for( final Control control : m_composite.getChildren() )
-        control.dispose();
-
-      createContent( m_composite );
-      m_composite.layout();
-    }
-
-    fireOnActiveLayerChanged();
-  }
-
   private Control createContent( final Composite parent )
   {
-    // TODO: remember selected layer names
-    unhookLegend();
-
     final ProfilChartView chartView = getProfilChartView();
 
     if( chartView == null )
@@ -276,33 +112,31 @@ public class LegendView extends ViewPart implements IAdapterEater, ILayerManager
     }
     else
     {
-      // m_chartlegend = new ChartLegend( parent, SWT.BORDER, chartView.getChart(), false );
-      // TODO: restore selection
-
-      m_chartlegend = new ChartEditorTreeOutlinePage((IChartPart)getProfilChartView() ); // this
-
+      m_chartlegend = new ChartEditorTreeOutlinePage( this.getProfilChartView() ); // this
       m_chartlegend.createControl( parent );
-// final TreeViewer tv = m_chartlegend.getTreeViewer();
-//
-// tv.setLabelProvider( new ChartTreeLabelProvider( this )
-// {
-//
-// /**
-// * @see org.kalypso.chart.ui.editor.ChartTreeLabelProvider#getText(java.lang.Object)
-// */
-// @Override
-// public String getText( Object element )
-// {
-// if( element instanceof IProfilChartLayer )
-// {
-// return ((IProfilChartLayer) element).getTitle();
-// }
-// return super.getText( element );
-// }
-// } );
+      m_chartlegend.addSelectionChangedListener( new ISelectionChangedListener()
+      {
+        /**
+         * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+         */
+        @Override
+        public void selectionChanged( SelectionChangedEvent event )
+        {
+          final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+          final Object firstElement = selection.getFirstElement();
+          if( firstElement instanceof IExpandableChartLayer )
+          {
+            final IChartLayer activeLayer = (IChartLayer) firstElement;
+            final ILayerManager mngr = getProfilChartView().getChart().getChartModel().getLayerManager();
+            for( final IChartLayer layer : mngr.getLayers() )
+            {
+              layer.setActive( activeLayer == layer );
+            }
+          }
+        }
+      } );
       final Control control = m_chartlegend.getControl();
       control.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-
       control.addMouseListener( new MouseAdapter()
       {
         @Override
@@ -311,17 +145,52 @@ public class LegendView extends ViewPart implements IAdapterEater, ILayerManager
           showLayerProperties();
         }
       } );
-
-      m_selectionProviderDelegator.setDelegate( m_chartlegend.getTreeViewer() );
-
-      // reset menu manager
-      m_menuMgr.dispose();
-      m_menuMgr.removeAll();
-      final Menu menu = m_menuMgr.createContextMenu( control );
-      control.setMenu( menu );
-
       return control;
     }
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPartControl( final Composite parent )
+  {
+    m_composite = new Composite( parent, SWT.NONE );
+    final GridLayout gridLayout = new GridLayout();
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    m_composite.setLayout( gridLayout );
+    updateChartLegend();
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_chartProviderListener.dispose();
+    unhookProvider();
+    getSite().setSelectionProvider( null );
+
+    super.dispose();
+  }
+
+  /**
+   * Contributes actions to the pop-up menu.
+   */
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
+   */
+
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == ChartEditorTreeOutlinePage.class )
+      return m_chartlegend;
+
+    return super.getAdapter( adapter );
   }
 
   public ProfilChartView getProfilChartView( )
@@ -330,40 +199,37 @@ public class LegendView extends ViewPart implements IAdapterEater, ILayerManager
     return chartView;
   }
 
-  public void showLayerProperties( )
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
   {
-    // just open layer view
-    try
-    {
-      getSite().getPage().showView( "org.kalypso.model.wspm.ui.view.LayerView" ); //$NON-NLS-1$
-    }
-    catch( final PartInitException ex )
-    {
-      ErrorDialog.openError( getSite().getShell(), Messages.LegendView_3, Messages.LegendView_4, ex.getStatus() );
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( ex.getStatus() );
-    }
-  }
+    super.init( site );
 
-  public ISelectionProvider getSelectionProvider( )
-  {
-    return m_selectionProviderDelegator;
+    m_chartProviderListener.init( site.getPage() );
+
   }
 
   /**
-   * Contributes actions to the pop-up menu.
+   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener#ProfilChartViewChanged(org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView)
    */
-  void fillContextMenu( final IMenuManager menu )
+  public void onProfilChartViewChanged( final ProfilChartView newProfilChartView )
   {
-    // update enabled state for actions that aren't updated in selectionChanged
-    // final IStructuredSelection selection = (IStructuredSelection)getSelection();
-    // resolveMarkerAction.setEnabled( resolveMarkerAction.shouldEnable( selection ) );
+    updateChartLegend();
+  }
 
-    // add the actions to the menu
-    // menu.add( removeTaskAction );
-    // menu.add( new Separator() );
-    menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
-    menu.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS + "-end" ) ); //$NON-NLS-1$
-    // menu.add( propertiesAction );
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
+   */
+  public void setAdapter( final IWorkbenchPart part, final Object adapter )
+  {
+    final IProfilChartViewProvider provider = (IProfilChartViewProvider) adapter;
+    if( m_provider == provider )
+      return;
+
+    unhookProvider();
+
+    m_provider = provider;
+    m_provider.addProfilChartViewProviderListener( this );
+    updateChartLegend();
   }
 
   /**
@@ -380,105 +246,38 @@ public class LegendView extends ViewPart implements IAdapterEater, ILayerManager
     }
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
-   */
-  public void setAdapter( final IWorkbenchPart part, final Object adapter )
+  public void showLayerProperties( )
   {
-    final IProfilChartViewProvider provider = (IProfilChartViewProvider) adapter;
-    if( m_provider == provider )
-      return;
+    // just open layer view
+    try
+    {
+      getSite().getPage().showView( "org.kalypso.model.wspm.ui.view.LayerView" ); //$NON-NLS-1$
+    }
+    catch( final PartInitException ex )
+    {
+      ErrorDialog.openError( getSite().getShell(), Messages.LegendView_3, Messages.LegendView_4, ex.getStatus() );
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( ex.getStatus() );
+    }
+  }
 
-    unhookProvider();
-
-    m_provider = provider;
-
+  private void unhookProvider( )
+  {
     if( m_provider != null )
     {
-     // m_provider.addProfilChartViewProviderListener( this );
-      m_provider.getProfilChartView().getChart().getChartModel().getLayerManager().addListener( this );
+      m_provider.removeProfilChartViewProviderListener( this );
+      m_provider = null;
     }
-
-    updateChartLegend();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.chart.IProfilChartViewProviderListener#ProfilChartViewChanged(org.kalypso.model.wspm.ui.profil.view.chart.ProfilChartView)
-   */
-  public void onProfilChartViewChanged( final ProfilChartView newProfilChartView )
+  private void updateChartLegend( )
   {
-    updateChartLegend();
-  }
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-   */
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( adapter == IProfilChartViewProviderListener.class )
-      return this;
-
-    return super.getAdapter( adapter );
-  }
-
-  /**
-   * @see de.belger.swtchart.layer.IActiveLayerProvider#getActiveLayer()
-   */
-  public IChartLayer getActiveLayer( )
-  {
-
-    final ISelection selection = getSelectionProvider().getSelection();
-    if( !(selection instanceof IStructuredSelection) )
-      return null;
-
-    final IStructuredSelection structSel = (IStructuredSelection) selection;
-    final Object firstElement = structSel.getFirstElement();
-
-    if( firstElement instanceof IChartLayer )
-      return (IChartLayer) firstElement;
-
-    return null;
-  }
-
-// /**
-// * @see de.belger.swtchart.layer.IActiveLayerProvider#addActiveLayerChangeListener(de.belger.swtchart.layer.
-  // IActiveLayerChangeListener)
-// */
-// public void addActiveLayerChangeListener( final IActiveLayerChangeListener l )
-// {
-// m_layerListener.add( l );
-// }
-//
-// /**
-// * @see de.belger.swtchart.layer.IActiveLayerProvider#removeActiveLayerChangeListener(de.belger.swtchart.layer.
-  // IActiveLayerChangeListener)
-// */
-// public void removeActiveLayerChangeListener( final IActiveLayerChangeListener l )
-// {
-// m_layerListener.add( l );
-// }
-//
-  protected void fireOnActiveLayerChanged( )
-  {
-
-    final ProfilChartView view = getProfilChartView();
-    final ChartComposite chart = view == null ? null :  view.getChart();
-
-    if( chart == null )
-      return;
-    final IChartLayer activeLayer = getActiveLayer();
-    for( final IChartLayer layer : chart.getChartModel().getLayerManager().getLayers() )
+    if( m_composite != null && !m_composite.isDisposed() )
     {
-      layer.setActive( activeLayer == layer );
-// if( layer.isActive() )
-// {
-// for( final IActiveLayerChangeListener l : m_layerListener )
-// l.onActiveLayerChanged( layer );
-// return;
-// }
+      for( final Control control : m_composite.getChildren() )
+        control.dispose();
+      createContent( m_composite );
+      m_composite.layout();
     }
   }
+
 }

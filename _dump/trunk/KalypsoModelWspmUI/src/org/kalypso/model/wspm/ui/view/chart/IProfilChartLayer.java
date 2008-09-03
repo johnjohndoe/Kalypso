@@ -66,12 +66,14 @@ public interface IProfilChartLayer extends IEditableChartLayer
    * @throws UnsupportedOperationException
    *             Falls diese Art von Layer nicht gelöscht werden kann.
    */
-  @Deprecated
+
   public void removeYourself( );
 
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 
   public IProfil getProfil( );
+  
+  public void setProfil(final IProfil profil );
 
   public IComponent getTargetComponent( );
 
@@ -80,4 +82,5 @@ public interface IProfilChartLayer extends IEditableChartLayer
   public void executeDrop( Point point, EditInfo dragStartData );
 
   public void executeClick(EditInfo dragStartData );
+ 
 }

@@ -40,15 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
-import java.util.ArrayList;
-
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.observation.result.IComponent;
@@ -56,10 +53,14 @@ import org.kalypso.observation.result.IComponent;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -68,19 +69,16 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IExpandableChartLayer, ILayerEventListener
 {
-  
-  
-  
+
   /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerActivationChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onLayerActivationChanged( IChartLayer layer )
+  public void onActiveLayerChanged( IChartLayer layer )
   {
     // TODO Auto-generated method stub
     
   }
-
 
   /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -88,106 +86,98 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   @Override
   public void onLayerContentChanged( IChartLayer layer )
   {
-      getEventHandler().fireLayerContentChanged( this );
+    // TODO Auto-generated method stub
+    
   }
 
-
   /**
-   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
    */
   @Override
-  public void onLayerVisibilityChanged( IChartLayer layer )
+  public void removeYourself( )
   {
-    getEventHandler().fireLayerContentChanged( this );
+    throw new UnsupportedOperationException( "Dieser layer kann nicht entfernt werden." );
   }
 
-
-  
-
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#lockLayer(boolean)
    */
   @Override
-  public String getId( )
+  public void lockLayer( boolean isLocked )
   {
-    return super.getId();
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public void addLayer( IChartLayer layer )
-  {
-    throw new IllegalStateException( "no layer addable" );
+    if( isLocked != isLocked() )
+      for( final IEditableChartLayer layer : getLayerManager().getEditableLayers() )
+      {
+        layer.lockLayer( isLocked );
+      }
+    super.lockLayer( isLocked );
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#getLayer()
-   */
-  public IChartLayer[] getLayers( )
-  {
-    final ArrayList<IProfilChartLayer> layers = new ArrayList<IProfilChartLayer>(m_chartLayers.length);
-    for(final IProfilChartLayer layer : m_chartLayers)
-    {
-      if (layer.getTargetComponent()!= null)
-        layers.add( layer );
-    }
-    return layers.toArray(new IProfilChartLayer[]{});
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#removeLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  public IChartLayer removeLayer( IChartLayer layer )
-  {
-    throw new IllegalStateException( "no removable layer" );
-  }
-
-  protected final IProfilChartLayer[] m_chartLayers;
+  private final ILayerManager m_layerManager = new LayerManager();
 
   private IProfilChartLayer m_hovering = null;
 
   private final String m_title;
-
 
   public AbstractProfilTheme( final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( null, id, null );
     m_title = title;
     setCoordinateMapper( cm );
+    ILayerManager mngr = getLayerManager();
     for( final IChartLayer layer : chartLayers )
+    {
+      mngr.addLayer( layer );
       layer.setCoordinateMapper( cm );
-    m_chartLayers = chartLayers;
-}
-
-  protected final void drawClippingRect( final GC gc )
-  {
-    final Color col = new Color( gc.getDevice(), new RGB( 0, 0, 0 ) );
-    try
-    {
-      gc.setForeground( col );
-      Rectangle clipping = gc.getClipping();
-      gc.setLineWidth( 1 );
-      gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
-      gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
+      layer.addListener( this );
     }
-    finally
-    {
-      col.dispose();
-    }
-  }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public EditInfo drag( Point newPos, EditInfo dragStartData )
-  {
-    if( m_hovering != null )
-      return m_hovering.drag( newPos, dragStartData );
-    return null;
+    mngr.addListener( new ILayerManagerEventListener()
+    {
+
+      @Override
+      public void onActivLayerChanged( IChartLayer layer )
+      {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void onLayerAdded( IChartLayer layer )
+      {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void onLayerContentChanged( IChartLayer layer )
+      {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void onLayerMoved( IChartLayer layer )
+      {
+        fireLayerContentChange();
+       
+      }
+
+      @Override
+      public void onLayerRemoved( IChartLayer layer )
+      {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void onLayerVisibilityChanged( IChartLayer layer )
+      {
+        // TODO Auto-generated method stub
+
+      }
+    } );
   }
 
   /**
@@ -207,6 +197,52 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       m_hovering.executeDrop( point, dragStartData );
 
     return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+    LegendEntry le = new LegendEntry( this, toString() )
+    {
+      @Override
+      public void paintSymbol( GC gc, Point size )
+      {
+        drawClippingRect( gc );
+      }
+    };
+    return new ILegendEntry[] { le };
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  @Override
+  public EditInfo drag( Point newPos, EditInfo dragStartData )
+  {
+    if( m_hovering != null && !isLocked() )
+      return m_hovering.drag( newPos, dragStartData );
+    return null;
+  }
+
+  protected final void drawClippingRect( final GC gc )
+  {
+    final Color col = new Color( gc.getDevice(), new RGB( 0, 0, 0 ) );
+    try
+    {
+      gc.setForeground( col );
+      Rectangle clipping = gc.getClipping();
+      gc.setLineWidth( 1 );
+      gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
+      gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
+    }
+    finally
+    {
+      col.dispose();
+    }
   }
 
   /**
@@ -245,58 +281,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
-   */
-
-  @Override
-  public EditInfo getHover( Point pos )
-  {
-    for( int i = m_chartLayers.length - 1; i > -1; i-- ) // reverse layers, last paint-hover first
-    {
-      final EditInfo info = m_chartLayers[i].getHover( pos );
-      if( info != null )
-      {
-        m_hovering = m_chartLayers[i];
-        return info;
-      }
-    }
-    return null;
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
-   */
-
-  @Override
-  public IComponent getTargetComponent( )
-  {
-    return m_hovering == null ? null : m_hovering.getTargetComponent();
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
-  @Override
-  public void paint( final GC gc )
-  {
-    for( final IProfilChartLayer layer : m_chartLayers )
-      if( layer.isVisible() )
-        layer.paint( gc );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
-   */
-  public void removeYourself( )
-  {
-    for( final IProfilChartLayer layer : m_chartLayers )
-      layer.removeYourself();
-
-  }
-
-  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
    */
   @Override
@@ -304,7 +288,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     Double min = null;
     Double max = null;
-    for( final IChartLayer layer : m_chartLayers )
+    for( final IChartLayer layer : getLayerManager().getLayers() )
     {
 
       final IDataRange<Number> dr = layer.getDomainRange();
@@ -326,6 +310,75 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   }
 
   /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
+
+  @Override
+  public EditInfo getHover( Point pos )
+  {
+    final IChartLayer[] layers = getLayerManager().getLayers();
+    for( int i = layers.length - 1; i > -1; i-- ) // reverse layers, last paint will hover first
+    {
+      if( layers[i] instanceof IProfilChartLayer )
+      {
+        final IProfilChartLayer pLayer = (IProfilChartLayer) layers[i];
+        final EditInfo info = pLayer.getHover( pos );
+        if( info != null )
+        {
+          m_hovering = pLayer;
+          return info;
+        }
+      }
+    }
+    return null;
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
+   */
+  @Override
+  public String getId( )
+  {
+    return super.getId();
+  }
+
+  public final ILayerManager getLayerManager( )
+  {
+    return m_layerManager;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getProfil()
+   */
+  @Override
+  public IProfil getProfil( )
+  {
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      if( layer instanceof IProfilChartLayer )
+      {
+        final IProfilChartLayer pLayer = (IProfilChartLayer) layer;
+        final IProfil profil = pLayer.getProfil();
+        if( profil != null )
+          return profil;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
+   */
+
+  @Override
+  public IComponent getTargetComponent( )
+  {
+    return m_hovering == null ? null : m_hovering.getTargetComponent();
+
+  }
+
+  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
@@ -333,7 +386,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     Double min = null;
     Double max = null;
-    for( final IChartLayer layer : m_chartLayers )
+    for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       final IDataRange<Number> dr = layer.getTargetRange();
       if( dr != null )
@@ -354,34 +407,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getProfil()
-   */
-  @Override
-  public IProfil getProfil( )
-  {
-    if( m_chartLayers.length > 0 && m_chartLayers[0] != null )
-      return m_chartLayers[0].getProfil();
-    return null;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
-   */
-  @Override
-  public ILegendEntry[] createLegendEntries( )
-  {
-    LegendEntry le = new LegendEntry( this, toString() )
-    {
-      @Override
-      public void paintSymbol( GC gc, Point size )
-      {
-        drawClippingRect( gc );
-      }
-    };
-    return new ILegendEntry[] { le };
-  }
-
-  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTitle()
    */
   @Override
@@ -390,42 +415,29 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     return m_title;
   }
 
-  public final boolean moveLayerToPosition( final String id, final IChartLayer selectedObject )
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerVisibilityChanged( IChartLayer layer )
   {
+    fireLayerContentChange();
 
-    IProfilChartLayer draggedLayer = null;
-    int source = -1;
-    int target = -1;
-    for( int i = 0; i < m_chartLayers.length; i++ )
-    {
-
-      if( m_chartLayers[i].getId().equals( id ) )
-      {
-        draggedLayer = m_chartLayers[i];
-        source = i;
-      }
-      if( m_chartLayers[i] == selectedObject )
-      {
-        target = i;
-      }
-    }
-    if( target == source )
-      return false;
-    else if( target - source > 0 )
-    {
-      for( int i = source; i < target; i++ )
-        m_chartLayers[i] = m_chartLayers[i + 1];
-
-    }
-    else if( target - source < 0 )
-    {
-      for( int i = source; i > target; i-- )
-        m_chartLayers[i] = m_chartLayers[i - 1];
-
-    }
-    m_chartLayers[target] = draggedLayer;
-    getEventHandler().fireLayerContentChanged(this);
-    return true;
   }
 
- }
+  protected void fireLayerContentChange( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
+  @Override
+  public void paint( final GC gc )
+  {
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+      if( layer.isVisible() )
+        layer.paint( gc );
+  }
+}

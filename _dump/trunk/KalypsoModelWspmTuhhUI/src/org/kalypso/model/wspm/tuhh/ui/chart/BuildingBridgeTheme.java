@@ -40,11 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.tuhh.ui.chart;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectSet;
 import org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants;
 import org.kalypso.model.wspm.tuhh.ui.panel.BuildingPanel;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -53,11 +60,9 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 public class BuildingBridgeTheme extends AbstractProfilTheme
 
 {
-
   public BuildingBridgeTheme( final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( IWspmTuhhConstants.LAYER_BRUECKE, "Brücke", chartLayers, cm );
-
   }
 
   /**
@@ -67,5 +72,29 @@ public class BuildingBridgeTheme extends AbstractProfilTheme
   public IProfilView createLayerPanel( )
   {
     return new BuildingPanel( getProfil() );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( )
+  {
+    // this theme will not be painted as a layer, so supress the dimension of GeoCoordinates
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
+   */
+  @Override
+  public void removeYourself( )
+  {
+    final IProfil profil = getProfil();
+    final ProfilOperation operation = new ProfilOperation( "Brücke entfernen", getProfil(), true );
+    operation.addChange( new ProfileObjectSet( profil, new IProfileObject[]{} ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_OBERKANTEBRUECKE ) ) );
+    operation.addChange( new PointPropertyRemove( profil, profil.hasPointProperty( IWspmTuhhConstants.POINT_PROPERTY_UNTERKANTEBRUECKE ) ) );
+    new ProfilOperationJob( operation ).schedule();
   }
 }
