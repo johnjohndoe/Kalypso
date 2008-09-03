@@ -43,30 +43,24 @@ package org.kalypso.model.wavos;
 import org.kalypso.ogc.sensor.MetadataList;
 
 /**
- * 
- * 
  * @author thuel2
  */
-public class ZmlInfo
-{
+public class ZmlInfo {
 
-  private final MetadataList m_metadata;
+	private final MetadataList m_metadata;
 
-  private final String m_name;
+	private final String m_name;
 
-  public ZmlInfo( final String name, final MetadataList metadata )
-  {
-    m_name = name;
-    m_metadata = metadata;
-  }
+	public ZmlInfo(final String name, final MetadataList metadata) {
+		m_name = name;
+		m_metadata = metadata;
+	}
 
-  public MetadataList getMetadata()
-  {
-    return m_metadata;
-  }
+	public MetadataList getMetadata() {
+		return m_metadata;
+	}
 
-  public String getName()
-  {
-    return m_name;
-  }
+	public String getName() {
+		return m_name;
+	}
 }

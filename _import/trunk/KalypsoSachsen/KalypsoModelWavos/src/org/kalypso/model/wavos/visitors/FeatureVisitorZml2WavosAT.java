@@ -56,8 +56,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * 
- * @author thuel2
+ * @author  thuel2
  */
 public class FeatureVisitorZml2WavosAT implements FeatureVisitor
 {
@@ -83,7 +82,7 @@ public class FeatureVisitorZml2WavosAT implements FeatureVisitor
       try
       {
         url = m_urlresolver.resolveURL( m_context, href );
-        WavosConverter.zml2At( url, m_tafelDir, sFileNme, f.getId(), false );
+        WavosConverter.zml2At( url, m_tafelDir, sFileNme, f.getId(), true );
       }
       catch( final Exception e )
       {
@@ -123,7 +122,8 @@ public class FeatureVisitorZml2WavosAT implements FeatureVisitor
 
   private final File m_tafelDir;
   private final URL m_context;
-  private final UrlUtilities m_urlresolver = new UrlUtilities();
+
+private final UrlUtilities m_urlresolver = new UrlUtilities();
   private Collection m_exceptions = new ArrayList();
 
   public FeatureVisitorZml2WavosAT( final File tafelDir, final URL context )

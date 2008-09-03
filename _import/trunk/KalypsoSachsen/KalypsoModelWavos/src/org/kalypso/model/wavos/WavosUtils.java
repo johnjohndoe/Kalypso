@@ -43,6 +43,7 @@ package org.kalypso.model.wavos;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * @author thuel2
@@ -85,7 +86,7 @@ public class WavosUtils
 
     // TODO? Zeitversatz (Sommer/Winter)
     // TODO? nicht heute null Uhr, sondern gestern 24 Uhr schreiben...
-    return String.format( WavosConst.FLUSS_INPUT + ".%04d%02d%02d%02d", Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ) );
+    return String.format(Locale.ENGLISH, WavosConst.FLUSS_INPUT + ".%04d%02d%02d%02d", Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ) );
   }
 
   /**
@@ -98,7 +99,7 @@ public class WavosUtils
     // TODO? nicht heute null Uhr, sondern gestern 24 Uhr schreiben...
     final Calendar c = Calendar.getInstance();
     c.setTime( date );
-    return String.format( "%4d %02d %02d %02d %02d", Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MINUTE ) ) ) );
+    return String.format( Locale.ENGLISH,"%4d %02d %02d %02d %02d", Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MINUTE ) ) ) );
   }
 
   /**
@@ -109,7 +110,7 @@ public class WavosUtils
   {
     final Calendar c = Calendar.getInstance();
     c.setTime( date );
-    return String.format( "%4d %02d %02d %02d",
+    return String.format(Locale.ENGLISH, "%4d %02d %02d %02d",
 
     Integer.valueOf( Integer.toString( c.get( Calendar.YEAR ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.MONTH ) + 1 ) ), Integer.valueOf( Integer.toString( c.get( Calendar.DAY_OF_MONTH ) ) ), Integer.valueOf( Integer.toString( c.get( Calendar.HOUR_OF_DAY ) ) ) );
   }

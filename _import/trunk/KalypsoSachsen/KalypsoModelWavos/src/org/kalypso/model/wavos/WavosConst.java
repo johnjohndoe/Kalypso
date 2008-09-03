@@ -86,8 +86,8 @@ public class WavosConst
   public static final int ZIP_TYPE_DATA = 1;
   public static final int ZIP_TYPE_BIN = 2;
 
-  public static final String WAVOS_COUNT_WQ_PAIRS_FORMAT = "%5i Wertepaare (W/Q)";
-  public static final String WAVOS_COUNT_WQ_FORMAT = "%5i %6i";
+  public static final String WAVOS_COUNT_WQ_PAIRS_FORMAT = "%5d Wertepaare (W,Q)";
+  public static final String WAVOS_COUNT_WQ_FORMAT = "%5.0f %6.1f";
 
   // TODO andere Lösung, wenn andere Flussgebiete kommen...
   public static final String FLUSS = "elbe";
