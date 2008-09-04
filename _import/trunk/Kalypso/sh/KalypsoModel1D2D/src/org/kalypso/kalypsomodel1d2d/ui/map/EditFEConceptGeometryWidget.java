@@ -46,10 +46,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -76,14 +73,12 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * <li/>find all feature affected by a geometric change in the edited fe concepts; <li/>invalidate the envelops of the
  * found feature <li/> and fire feature change event holding the affected feature
  * </ul>
- * 
- * This widget rely on the assumption that the map to edit has layer holding feture with the QName
+ * This widget rely on the assumption that the map to edit has layer holding feature with the QName
  * {@link Kalypso1D2DSchemaConstants#WB1D2D_F_NODE}
  * 
  * @author Patrice Congo
  * @author Dejan Antanaskovic
  * @author Thomas Jung
- * 
  */
 public class EditFEConceptGeometryWidget extends AbstractWidget
 {
@@ -233,7 +228,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
   /**
    * @see org.kalypso.kalypsomodel1d2d.ui.map.SnapToGeometryWidget#paint(java.awt.Graphics)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void paint( final Graphics g )
   {
@@ -241,19 +235,19 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     if( mapPanel == null )
       return;
 
-    GeoTransform projection = mapPanel.getProjection();
+    final GeoTransform projection = mapPanel.getProjection();
 
     /* always paint a small rectangle of current position */
     if( m_currentMapPoint != null )
     {
-      final int[][] posPoints = getPointArrays( m_currentMapPoint );
+      final int[][] posPoints = UtilMap.getPointArrays( m_currentMapPoint );
 
-      int[] arrayX = posPoints[0];
-      int[] arrayY = posPoints[1];
+      final int[] arrayX = posPoints[0];
+      final int[] arrayY = posPoints[1];
 
       /* Paint as linestring. */
       g.drawPolygon( arrayX, arrayY, arrayX.length );
-      drawHandles( g, arrayX, arrayY );
+      UtilMap.drawHandles( g, arrayX, arrayY );
 
       /* paint the snap */
       if( m_pointSnapper != null )
@@ -280,31 +274,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
     if( m_warning == true )
       m_warningRenderer.paintToolTip( new Point( 5, bounds.height - 80 ), g, bounds );
 
-  }
-
-  private static void drawHandles( final Graphics g, final int[] x, final int[] y )
-  {
-    final int sizeOuter = 6;
-    for( int i = 0; i < y.length; i++ )
-      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
-  }
-
-  /**
-   * returns a point array for a given {@link IFE1D2DNode} and a {@link GM_Point}
-   */
-  @SuppressWarnings("unchecked")
-  private int[][] getPointArrays( final Point currentPoint )
-  {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
-
-    xArray.add( currentPoint.x );
-    yArray.add( currentPoint.y );
-
-    final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
-    final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
-
-    return new int[][] { xs, ys };
   }
 
   /**
@@ -338,7 +307,6 @@ public class EditFEConceptGeometryWidget extends AbstractWidget
 
   }
 
-  @SuppressWarnings("unchecked")
   private Object checkNewNode( final Point p )
   {
     final MapPanel mapPanel = getMapPanel();

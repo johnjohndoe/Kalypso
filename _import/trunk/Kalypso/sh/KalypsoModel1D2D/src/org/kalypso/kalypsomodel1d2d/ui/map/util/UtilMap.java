@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.util;
 
+import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -60,8 +63,10 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ui.views.map.MapView;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Provides map oriented utility methods.
@@ -75,7 +80,7 @@ public class UtilMap
   /* predicate for kalypso feature themes */
   private static final IKalypsoThemePredicate PREDICATE = new IKalypsoThemePredicate()
   {
-    public boolean decide( IKalypsoTheme theme )
+    public boolean decide( final IKalypsoTheme theme )
     {
       if( !(theme instanceof IKalypsoFeatureTheme) )
         return false;
@@ -123,9 +128,8 @@ public class UtilMap
    * Find a discretisation model within the mapModel themes.
    * 
    * @return The first discretisation model encountered in the list of themes.
-   * 
    * @throws RuntimeException
-   *             if model cannot be found
+   *           if model cannot be found
    */
   static public IFEDiscretisationModel1d2d findFEModelTheme( final IMapModell mapModel ) throws RuntimeException
   {
@@ -161,11 +165,11 @@ public class UtilMap
   }
 
   /**
-   * Method waits for all <code>IKalypsoFeatureTheme</code> objects from <code>mapModel</code> to be fully loaded
-   * (not only themes to be assigned to the map, but also features to be loaded)
+   * Method waits for all <code>IKalypsoFeatureTheme</code> objects from <code>mapModel</code> to be fully loaded (not
+   * only themes to be assigned to the map, but also features to be loaded)
    * 
    * @param mapModel
-   *            map model from which the themes should be loaded
+   *          map model from which the themes should be loaded
    * @deprecated Use {@link org.kalypso.ogc.gml.mapmodel.MapModellHelper} instead
    */
   @Deprecated
@@ -206,4 +210,47 @@ public class UtilMap
     return waitForFeatureLoadingOperation;
   }
 
+  public static void drawHandles( final Graphics g, final int[] x, final int[] y )
+  {
+    final int sizeOuter = 6;
+    for( int i = 0; i < y.length; i++ )
+      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+  }
+
+  /**
+   * returns a point array for a given {@link IFE1D2DNode} and a {@link GM_Point}
+   */
+  public static int[][] getPointArrays( final Point currentPoint )
+  {
+    return getPointArrays( currentPoint, null, null );
+  }
+
+  public static int[][] getPointArrays( final Point currentPoint, final List<GM_Point> nodes, final GeoTransform projection )
+  {
+    final List<Integer> xArray = new ArrayList<Integer>();
+    final List<Integer> yArray = new ArrayList<Integer>();
+
+    if( nodes != null && projection != null )
+    {
+      for( final GM_Point point : nodes )
+      {
+        final int x = (int) projection.getDestX( point.getX() );
+        final int y = (int) projection.getDestY( point.getY() );
+
+        xArray.add( new Integer( x ) );
+        yArray.add( new Integer( y ) );
+      }
+    }
+
+    if( currentPoint != null )
+    {
+      xArray.add( currentPoint.x );
+      yArray.add( currentPoint.y );
+    }
+
+    final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
+    final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
+
+    return new int[][] { xs, ys };
+  }
 }

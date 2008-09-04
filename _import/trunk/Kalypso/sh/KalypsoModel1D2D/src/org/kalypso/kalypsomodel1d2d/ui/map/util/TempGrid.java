@@ -51,9 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.jts.QuadMesher.JTSQuadMesher;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.Kalypso1D2DSchemaConstants;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
@@ -64,9 +62,9 @@ import org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryHelper;
 import org.kalypso.kalypsomodel1d2d.ui.map.grid.LinePointCollector;
 import org.kalypso.kalypsosimulationmodel.core.Assert;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -119,9 +117,9 @@ public class TempGrid
    * system and no reference system conversion made in by the {@link TempGrid}
    * 
    * @param targetCrs
-   *            the target {@link CS_CoordinateSystem}
+   *          the target {@link CS_CoordinateSystem}
    * @throws IllegalArgumentException
-   *             is targetCrs is null
+   *           is targetCrs is null
    */
   public void setCoodinateSystem( final String targetCrs ) throws IllegalArgumentException
   {
@@ -133,11 +131,11 @@ public class TempGrid
    * Class this to display the {@link TempGrid} on the screen.
    * 
    * @param g
-   *            the display graphic context
+   *          the display graphic context
    * @param projection
-   *            the geoprojection for projecting {@link GM_Point} to screen points
+   *          the geoprojection for projecting {@link GM_Point} to screen points
    * @param pointRectSize
-   *            the side lengtth for square representing the points
+   *          the side lengtth for square representing the points
    */
   public void paint( final Graphics g, final GeoTransform projection )
   {
@@ -207,10 +205,10 @@ public class TempGrid
    * Reset this {@link TempGrid}. It is empty, i.e. contains no points after reset
    * 
    * @param crs
-   *            the target coordinate reference system for the grid
+   *          the target coordinate reference system for the grid
    * @see #setCoodinateSystem(CS_CoordinateSystem)
    * @throws IllegalArgumentException
-   *             if crs is null
+   *           if crs is null
    */
   public void resetTempGrid( final String crs ) throws IllegalArgumentException
   {
@@ -222,15 +220,15 @@ public class TempGrid
    * config the with its side points.
    * 
    * @param topSidePoints
-   *            the collector containing the top side points
+   *          the collector containing the top side points
    * @param bottomSidePoints
-   *            the collector containing the bottom side points
+   *          the collector containing the bottom side points
    * @param leftSidePoints
-   *            the collector containing the to left side points
+   *          the collector containing the to left side points
    * @param rightSidePoints
-   *            the collector containing the to right side points
+   *          the collector containing the to right side points
    * @throws IllegalArgumentException
-   *             if one the the side point collector is null
+   *           if one the the side point collector is null
    */
   public IStatus setTempGrid( final LinePointCollector topSidePoints, final LinePointCollector bottomSidePoints, final LinePointCollector leftSidePoints, final LinePointCollector rightSidePoints )
   {
@@ -244,7 +242,7 @@ public class TempGrid
       m_gridPoints = computeMesh( topSidePoints, bottomSidePoints, leftSidePoints, rightSidePoints );
       return Status.OK_STATUS;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return StatusUtilities.statusFromThrowable( e, "Griderzeugung fehlgeschlagen." );
@@ -308,7 +306,7 @@ public class TempGrid
       {
         addElements( commandableWorkspace, nodeTheme );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
         return StatusUtilities.statusFromThrowable( e, "FE-Griderzeugung schlug fehl." );
@@ -320,7 +318,7 @@ public class TempGrid
     return Status.OK_STATUS;
   }
 
-  private void addElements( final CommandableWorkspace workspace, IKalypsoFeatureTheme nodeTheme ) throws Exception
+  private void addElements( final CommandableWorkspace workspace, final IKalypsoFeatureTheme nodeTheme ) throws Exception
   {
     final FeatureList featureList = nodeTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
@@ -329,24 +327,8 @@ public class TempGrid
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
     final List<GM_Ring> elements = getRingsFromPoses();
 
-    for( GM_Ring ring : elements )
-    {
-      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-
-      final List<GM_Point> nodes = new ArrayList<GM_Point>();
-      final GM_Position[] positions = ring.getPositions();
-      for( int i = 0; i < positions.length - 1; i++ )
-      {
-        nodes.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( positions[i], m_crs ) );
-      }
-
-      // create the new elements
-      if( nodes.size() == 3 || nodes.size() == 4 )
-      {
-        ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, nodes );
-        nodeTheme.getWorkspace().postCommand( command );
-      }
-    }
+    for( final GM_Ring ring : elements )
+      ElementGeometryHelper.createFE1D2DfromRing( workspace, nodeTheme, parentFeature, discModel, ring );
   }
 
   @SuppressWarnings("unchecked")
@@ -357,15 +339,15 @@ public class TempGrid
     try
     {
       final IFEDiscretisationModel1d2d discModel = DiscretisationModelUtils.modelForTheme( m_nodeTheme );
-      List<GM_Ring> rings = getRingsFromPoses();
-      for( GM_Ring ring : rings )
+      final List<GM_Ring> rings = getRingsFromPoses();
+      for( final GM_Ring ring : rings )
       {
         // 4) New Element self-intersects
         if( GeometryUtilities.isSelfIntersecting( ring.getPositions() ) )
           return StatusUtilities.createErrorStatus( "Ungültiges Polygon: selbstschneidend" );
 
         // New Element intersects other elements
-        final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, null, KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+        final GM_Surface<GM_SurfacePatch> newSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( ring.getPositions(), new GM_Position[][] {}, null, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final List<IFE1D2DElement> elements = discModel.getElements().query( newSurface.getEnvelope() );
         for( final IFE1D2DElement element : elements )
         {
@@ -383,7 +365,7 @@ public class TempGrid
       }
       return Status.OK_STATUS;
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -392,7 +374,6 @@ public class TempGrid
     return Status.OK_STATUS;
   }
 
-  @SuppressWarnings("unchecked")
   private List<GM_Ring> getRingsFromPoses( ) throws GM_Exception
   {
     // TODO: here we can implement some nice checkies!
@@ -405,7 +386,7 @@ public class TempGrid
     {
       for( int j = 0; j < m_gridPoints[0].length - 1; j++ )
       {
-        GM_Position[] poses = new GM_Position[5];
+        final GM_Position[] poses = new GM_Position[5];
 
         poses[0] = m_gridPoints[i][j].getPosition();
         poses[1] = m_gridPoints[i + 1][j].getPosition();
@@ -421,7 +402,7 @@ public class TempGrid
     return rings;
   }
 
-  private GM_Position[] checkPoses( GM_Position[] poses )
+  private GM_Position[] checkPoses( final GM_Position[] poses )
   {
     final List<GM_Position> posToDeleteList = new ArrayList<GM_Position>();
     final List<GM_Position> posList = new ArrayList<GM_Position>();
@@ -444,7 +425,7 @@ public class TempGrid
       }
     }
 
-    for( GM_Position position : posToDeleteList )
+    for( final GM_Position position : posToDeleteList )
     {
       posList.remove( position );
     }
@@ -472,7 +453,7 @@ public class TempGrid
     return lineString;
   }
 
-  public void setNodeTheme( IKalypsoFeatureTheme nodeTheme )
+  public void setNodeTheme( final IKalypsoFeatureTheme nodeTheme )
   {
     m_nodeTheme = nodeTheme;
   }

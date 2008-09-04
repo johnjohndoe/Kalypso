@@ -91,10 +91,10 @@ public class LinePointCollector
    * The constructor.
    * 
    * @param cnt_points
-   *            If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
-   *            count of the points will apply.
+   *          If >0 the the geometry will be finished, if the count of points is reached. If 0 no rule regarding the
+   *          count of the points will apply.
    * @param targetCrs
-   *            The target coordinate system.
+   *          The target coordinate system.
    */
   public LinePointCollector( final int cnt_points, final String targetCrs )
   {
@@ -271,7 +271,6 @@ public class LinePointCollector
 
   /**
    * removes all points in this {@link LineGeometryBuilder}
-   * 
    */
   void clear( )
   {
@@ -308,8 +307,7 @@ public class LinePointCollector
   /**
    * Conevniance methode to get a new builder with the same required number of point and coordinate reference system
    * 
-   * @param return
-   *            a new builder
+   * @param return a new builder
    */
   public LinePointCollector getNewBuilder( )
   {
@@ -357,8 +355,7 @@ public class LinePointCollector
    * To set the number of points the this line geometry is required to have to be considered finished
    * 
    * @param cntPoints
-   *            the new required number of points
-   * 
+   *          the new required number of points
    */
   public void setCntPoints( final int cntPoints )
   {
@@ -491,7 +488,7 @@ public class LinePointCollector
 
     for( int i = 0; i < m_points.size(); i++ )
     {
-      GM_Point curPoint = m_points.get( i );
+      final GM_Point curPoint = m_points.get( i );
       final double curCoordX = curPoint.getX();
       if( lowX <= curCoordX && upperX >= curCoordX )
       {
@@ -515,11 +512,10 @@ public class LinePointCollector
   /**
    * Mark the {@link LineGeometryBuilder} as selected
    * 
-   * @param isSelected --
-   *            a boolean expressing the selection state of the {@link LineGeometryBuilder}
-   * 
+   * @param isSelected
+   *          -- a boolean expressing the selection state of the {@link LineGeometryBuilder}
    */
-  public void setSelected( boolean isSelected )
+  public void setSelected( final boolean isSelected )
   {
     m_isSelected = isSelected;
     if( !isSelected )

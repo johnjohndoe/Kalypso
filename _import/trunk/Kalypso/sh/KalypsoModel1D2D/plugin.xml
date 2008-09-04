@@ -451,6 +451,25 @@
                     value="Knoten bewegen"/>
             </class>
 		 </handler>
+		 
+		 <handler
+		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement">
+      <activeWhen>
+         <reference
+               definitionId="org.kalypso.ui.views.mapView.expressions.refine">
+         </reference>
+      </activeWhen>
+      		<class
+            	class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+	                value="org.kalypso.kalypsomodel1d2d.ui.map.RefineFEGeometryWidget"/>
+              <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.icon"
+                    value="icons/elcl16/33_refine_2D.gif"/>
+			  <parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.tooltip"
+                    value="Elemente verfeinern"/>
+            </class>
+		 </handler>
+		 
 		 <handler
 		       commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElement">
 		    <activeWhen>
@@ -695,6 +714,10 @@
             name="Element editieren"/>
       <command
             categoryId="org.kalypso.ogc.gml.map.category"
+            id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement"
+            name="Elemente verfeinern"/>
+      <command
+            categoryId="org.kalypso.ogc.gml.map.category"
             id="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.EditElementProperties"
             name="Elementgeometrie editieren"/>
       <command
@@ -805,6 +828,16 @@
            </command>
         </menuContribution>
         <menuContribution
+              locationURI="menu:org.kalypso.ui.view.mapView.refine2DMenu">
+           <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement"
+                 icon="icons/elcl16/edit.gif"
+                 label="anhand Linie"
+                 style="radio"
+                 tooltip="Ein Element verfeinern">
+           </command>
+        </menuContribution>
+        <menuContribution
               locationURI="menu:org.kalypso.ui.view.mapView.createParameterMenu">
            <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
@@ -838,6 +871,22 @@
         <menuContribution
               locationURI="toolbar:org.kalypso.ui.views.mapView?after=actions">
            <command
+                 commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.RefineElement"
+                 icon="icons/elcl16/33_refine_2D.gif"
+                 id="org.kalypso.ui.view.mapView.refine2DMenu"
+                 label="Elemente verfeinern"
+                 style="pulldown"
+                 tooltip="Verfeinerungsoptionen">
+              <visibleWhen>
+                 <reference
+                       definitionId="org.kalypso.ui.views.mapView.expressions.refine">
+                 </reference>
+              </visibleWhen>
+           </command>
+        </menuContribution>
+        <menuContribution
+              locationURI="toolbar:org.kalypso.ui.views.mapView?after=actions">
+           <command
                  commandId="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.CreateTeschkeFlowRelation"
                  icon="icons/elcl16/09_add_parameter_teschke.gif"
                  id="org.kalypso.ui.view.mapView.createParameterMenu"
@@ -863,6 +912,21 @@
                  operator="or">
               <equals
                     value="{http://www.tu-harburg.de/wb/kalypso/schemata/simulationbase}_FlowRelationship">
+              </equals>
+           </iterate>
+        </with>
+     </definition>
+  </extension>
+  <extension
+        point="org.eclipse.core.expressions.definitions">
+     <definition
+           id="org.kalypso.ui.views.mapView.expressions.refine">
+        <with
+              variable="activeContexts">
+           <iterate
+                 operator="or">
+              <equals
+                    value="{http://www.tu-harburg.de/wb/kalypso/schemata/1d2d}PolyElement">
               </equals>
            </iterate>
         </with>

@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -94,7 +93,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyTyped(java.awt.event.KeyEvent)
    */
   @Override
-  public void keyTyped( KeyEvent e )
+  public void keyTyped( final KeyEvent e )
   {
     if( KeyEvent.VK_ESCAPE == e.getKeyChar() )
     {
@@ -107,7 +106,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    MapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -173,7 +172,7 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   @Override
   public void leftClicked( final Point p )
   {
-    MapPanel mapPanel = getMapPanel();
+    final MapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
@@ -205,7 +204,6 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void doubleClickedLeft( final Point p )
   {
@@ -296,14 +294,14 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
     if( m_currentMapPoint == null )
       return;
 
-    final int[][] posPoints = getPointArrays( m_currentMapPoint );
+    final int[][] posPoints = UtilMap.getPointArrays( m_currentMapPoint );
 
-    int[] arrayX = posPoints[0];
-    int[] arrayY = posPoints[1];
+    final int[] arrayX = posPoints[0];
+    final int[] arrayY = posPoints[1];
 
     /* Paint as linestring. */
     g.drawPolygon( arrayX, arrayY, arrayX.length );
-    drawHandles( g, arrayX, arrayY );
+    UtilMap.drawHandles( g, arrayX, arrayY );
 
     /* paint the snap */
     if( m_pointSnapper != null )
@@ -318,35 +316,11 @@ public class CreateFEContinuityLineWidget extends AbstractWidget
           geometryBuilder.addPoint( m_nodeList.get( i ).getPoint() );
         geometryBuilder.paint( g, getMapPanel().getProjection(), m_currentMapPoint );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
     }
   }
 
-  private static void drawHandles( final Graphics g, final int[] x, final int[] y )
-  {
-    final int sizeOuter = 6;
-    for( int i = 0; i < y.length; i++ )
-      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
-  }
-
-  /**
-   * returns a point array for a given {@link IFE1D2DNode} and a {@link GM_Point}
-   */
-  @SuppressWarnings("unchecked")
-  private int[][] getPointArrays( final Point currentPoint )
-  {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
-
-    xArray.add( currentPoint.x );
-    yArray.add( currentPoint.y );
-
-    final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
-    final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
-
-    return new int[][] { xs, ys };
-  }
 }

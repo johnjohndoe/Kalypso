@@ -64,6 +64,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.PolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.ListPropertyChangeCommand;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -72,6 +73,9 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -79,7 +83,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class ElementGeometryHelper
 {
@@ -95,7 +98,7 @@ public class ElementGeometryHelper
    * The new {@link IFE1D2DElement} is specified by its geometry.
    * 
    * @param command
-   *            the {@link CompositeCommand} to be filled
+   *          the {@link CompositeCommand} to be filled
    * @param workspace
    * @param parentFeature
    * @param parentNodeProperty
@@ -104,9 +107,9 @@ public class ElementGeometryHelper
    * @param nodeContainerPT
    * @param edgeContainerPT
    * @param discModel
-   *            the discretisation model
+   *          the discretisation model
    * @param points
-   *            the {@link GM_Point} list
+   *          the {@link GM_Point} list
    */
   @SuppressWarnings("unchecked")
   public static void createAdd2dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
@@ -151,14 +154,14 @@ public class ElementGeometryHelper
    * The new {@link IFE1D2DElement} is specified by its geometry.
    * 
    * @param command
-   *            the {@link CompositeCommand} to be filled
+   *          the {@link CompositeCommand} to be filled
    * @param workspace
    * @param parentFeature
    * @param nodeContainerPT
    * @param discModel
-   *            the discretisation model
+   *          the discretisation model
    * @param points
-   *            the {@link GM_Point} list
+   *          the {@link GM_Point} list
    */
   @SuppressWarnings("unchecked")
   public static void createAdd1dElement( final CompositeCommand command, final CommandableWorkspace workspace, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final List<GM_Point> points )
@@ -225,7 +228,7 @@ public class ElementGeometryHelper
    * will be generated.
    * 
    * @param points
-   *            the points
+   *          the points
    * @param command
    * @param workspace
    * @param parentFeature
@@ -345,8 +348,8 @@ public class ElementGeometryHelper
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
 
-    int x = (int) projection.getDestX( node1.getX() );
-    int y = (int) projection.getDestY( node1.getY() );
+    final int x = (int) projection.getDestX( node1.getX() );
+    final int y = (int) projection.getDestY( node1.getY() );
 
     xArray.add( x );
     yArray.add( y );
@@ -391,4 +394,40 @@ public class ElementGeometryHelper
     return poses;
   }
 
+  public static void createFE1D2DfromSurface( final CommandableWorkspace workspace, final IKalypsoFeatureTheme theme, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final GM_Surface<GM_SurfacePatch> surface ) throws Exception
+  {
+    final String crs = surface.getCoordinateSystem();
+    for( final GM_SurfacePatch surfacePatch : surface )
+    {
+      final GM_Position[] poses = surfacePatch.getExteriorRing();
+      createFE1D2DfromPositions( workspace, theme, parentFeature, discModel, poses, crs );
+    }
+  }
+
+  public static void createFE1D2DfromRing( final CommandableWorkspace workspace, final IKalypsoFeatureTheme theme, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final GM_Ring ring ) throws Exception
+  {
+    final GM_Position[] poses = ring.getPositions();
+    final String crs = ring.getCoordinateSystem();
+    createFE1D2DfromPositions( workspace, theme, parentFeature, discModel, poses, crs );
+  }
+
+  public static void createFE1D2DfromPositions( final CommandableWorkspace workspace, final IKalypsoFeatureTheme theme, final Feature parentFeature, final IFEDiscretisationModel1d2d discModel, final GM_Position[] poses, final String crs ) throws Exception
+  {
+    final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
+
+    // create the nodes
+    final List<GM_Point> nodes = new ArrayList<GM_Point>();
+
+    for( int i = 0; i < poses.length - 1; i++ )
+      nodes.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( poses[i], crs ) );
+
+    // create the new elements
+    if( nodes.size() == 3 || nodes.size() == 4 )
+    {
+      createAdd2dElement( command, workspace, parentFeature, discModel, nodes );
+
+      // inside the loop because we want to avoid duplicates
+      theme.getWorkspace().postCommand( command );
+    }
+  }
 }

@@ -51,7 +51,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element1D;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.Element2D;
@@ -65,7 +64,6 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.DeleteCmdFactory;
 import org.kalypso.kalypsomodel1d2d.ui.map.cmds.IDiscrModel1d2dChangeCommand;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -84,7 +82,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * 
  * This class is used to edit 1D2D Elements
  * 
  * @author Thomas Jung
@@ -117,7 +114,7 @@ public class ElementGeometryEditor
   }
 
   @SuppressWarnings("unchecked")
-  public void addElements( IFE1D2DElement[] elements )
+  public void addElements( final IFE1D2DElement[] elements )
   {
     for( int i = 0; i < elements.length; i++ )
     {
@@ -141,7 +138,7 @@ public class ElementGeometryEditor
     final IFEDiscretisationModel1d2d discModel = new FE1D2DDiscretisationModel( parentFeature );
 
     // add remove element command
-    for( IFE1D2DElement element : m_elementList )
+    for( final IFE1D2DElement element : m_elementList )
     {
       if( element instanceof Element2D )
       {
@@ -151,29 +148,16 @@ public class ElementGeometryEditor
     }
 
     /* create new elements */
-    for( IFE1D2DElement element : m_elementList )
+    for( final IFE1D2DElement element : m_elementList )
     {
-      final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
-
-      final List<GM_Point> points = new ArrayList<GM_Point>();
-
       if( element instanceof Element2D )
       {
-        // get nodes array of the new geometries
+        // get ring of the new geometries
         final GM_Ring ring = getEditedGeometryAsRing( element );
-        final GM_Position[] positions = ring.getPositions();
 
-        for( int i = 0; i < positions.length - 1; i++ )
-        {
-          final GM_Point point = GeometryFactory.createGM_Point( positions[i], KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-          points.add( point );
-        }
+        // create the new elements
+        ElementGeometryHelper.createFE1D2DfromRing( workspace, m_nodeTheme, parentFeature, discModel, ring );
       }
-
-      // create the new elements
-      ElementGeometryHelper.createAdd2dElement( command, workspace, parentFeature, discModel, points );
-
-      m_nodeTheme.getWorkspace().postCommand( command );
     }
   }
 
@@ -184,32 +168,18 @@ public class ElementGeometryEditor
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
     if( m_startNode != null )
-    {
-      // /* paint a line between start point and current position. */
-      // final int[][] points = getLineAsPointArrays( projection, m_startNode.getPoint(), currentPoint );
-      //
-      // int[] arrayX = points[0];
-      // int[] arrayY = points[1];
-      //
-      // // line
-      // g.drawPolygon( arrayX, arrayY, arrayX.length );
-      // // small start point rect
-      // drawHandles( g, arrayX, arrayY );
-
-      // paint preview
       paintPreview( g, projection, currentPoint );
-    }
   }
 
   @SuppressWarnings("unchecked")
-  private void paintPreview( Graphics g, GeoTransform projection, Point currentPoint )
+  private void paintPreview( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
-    IFE1D2DElement[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
-    for( IFE1D2DElement element : elements )
+    final IFE1D2DElement[] elements = m_elementList.toArray( new IFE1D2DElement[m_elementList.size()] );
+    for( final IFE1D2DElement element : elements )
     {
-      List<GM_Point> pointsToDraw = new ArrayList<GM_Point>();
+      final List<GM_Point> pointsToDraw = new ArrayList<GM_Point>();
 
-      List<IFE1D2DNode> nodes = element.getNodes();
+      final List<IFE1D2DNode> nodes = element.getNodes();
       for( int i = 0; i < nodes.size(); i++ )
       {
         if( nodes.get( i ).equals( m_startNode ) )
@@ -221,15 +191,15 @@ public class ElementGeometryEditor
     }
   }
 
-  private void paintPreviewElement( Graphics g, GeoTransform projection, GM_Point[] points )
+  private void paintPreviewElement( final Graphics g, final GeoTransform projection, final GM_Point[] points )
   {
     for( int i = 0; i < points.length - 1; i++ )
     {
       /* paint a line between start point and current position. */
       final int[][] drawPoints = ElementGeometryHelper.getPolygonAsPointArrays( projection, points );
 
-      int[] arrayX = drawPoints[0];
-      int[] arrayY = drawPoints[1];
+      final int[] arrayX = drawPoints[0];
+      final int[] arrayY = drawPoints[1];
 
       final Color color = g.getColor();
 
@@ -243,8 +213,6 @@ public class ElementGeometryEditor
 
       // line
       g.drawPolygon( arrayX, arrayY, arrayX.length );
-      // small start point rect
-      // drawHandles( g, arrayX, arrayY );
 
       g.setColor( color );
     }
@@ -267,7 +235,7 @@ public class ElementGeometryEditor
       /* A) element type checks */
       // A.1) check for 1d-elements (they are not supported yet)
       final IFE1D2DElement[] startElements = m_startNode.getElements();
-      for( IFE1D2DElement element : startElements )
+      for( final IFE1D2DElement element : startElements )
       {
         if( element instanceof Element1D )
           return StatusUtilities.createErrorStatus( "1D Knoten können nicht verschoben werden" );
@@ -303,7 +271,7 @@ public class ElementGeometryEditor
       /* D) element geometry checks */
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final GM_Ring[] rings = getNewGeometries();
-      for( GM_Ring ring : rings )
+      for( final GM_Ring ring : rings )
       {
         final GM_Position[] poses = ring.getPositions();
         // D.1) New Element self-intersects
@@ -329,7 +297,7 @@ public class ElementGeometryEditor
         }
 
         /* E) Boundary Condition check */
-        GM_Position[] positions = ring.getPositions();
+        final GM_Position[] positions = ring.getPositions();
         for( int i = 0; i < positions.length; i++ )
         {
           final GM_Point point = GeometryFactory.createGM_Point( positions[i], crs );
@@ -354,7 +322,7 @@ public class ElementGeometryEditor
   private GM_Ring[] getNewGeometries( ) throws GM_Exception
   {
     final List<GM_Ring> ringList = new ArrayList<GM_Ring>();
-    for( IFE1D2DElement element : m_elementList )
+    for( final IFE1D2DElement element : m_elementList )
     {
       if( element instanceof IElement2D )
         ringList.add( getEditedGeometryAsRing( element ) );
@@ -389,8 +357,8 @@ public class ElementGeometryEditor
       if( node.equals( m_startNode ) )
       {
         final GM_Position position = m_endPoint.getPosition();
-        double x = position.getX();
-        double y = position.getY();
+        final double x = position.getX();
+        final double y = position.getY();
         double z;
         if( m_startNode.getPoint().getCoordinateDimension() == 3 )
         {
@@ -403,8 +371,8 @@ public class ElementGeometryEditor
       else
       {
         final GM_Position position = node.getPoint().getPosition();
-        double x = position.getX();
-        double y = position.getY();
+        final double x = position.getX();
+        final double y = position.getY();
         double z;
         if( node.getPoint().getCoordinateDimension() == 3 )
         {
@@ -426,7 +394,7 @@ public class ElementGeometryEditor
   }
 
   @SuppressWarnings("unchecked")
-  public void setStartNode( IFE1D2DNode startNode )
+  public void setStartNode( final IFE1D2DNode startNode )
   {
     m_startNode = startNode;
 
@@ -440,7 +408,7 @@ public class ElementGeometryEditor
    * check the node
    */
   @SuppressWarnings("unchecked")
-  public IStatus checkNewNode( Object newNode )
+  public IStatus checkNewNode( final Object newNode )
   {
     /* set the new end node candidate */
     if( newNode instanceof IFE1D2DNode )

@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.kalypsomodel1d2d.i18n.Messages;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.DiscretisationModelUtils;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.FE1D2DDiscretisationModel;
@@ -62,6 +61,7 @@ import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DNode;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
+import org.kalypso.kalypsomodel1d2d.ui.map.util.UtilMap;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -80,9 +80,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * TODO: separate (again) geometry building from 1d2d element building!
- * 
- * This class is used to build new 1D2D Elements
+ * TODO: separate (again) geometry building from 1d2d element building! This class is used to build new 1D2D Elements
  * 
  * @author Gernot Belger
  */
@@ -141,7 +139,6 @@ public class ElementGeometryBuilder
    * 
    * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#finish()
    */
-  @SuppressWarnings("unchecked")
   public ICommand finish( ) throws Exception
   {
     final CompositeCommand command = new CompositeCommand( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.ElementGeometryBuilder.1" ) ); //$NON-NLS-1$
@@ -166,7 +163,7 @@ public class ElementGeometryBuilder
     // IMPORTANT: we remember GM_Points (not Point's) and re-transform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
-    final int[][] points = getPointArrays( projection, currentPoint );
+    final int[][] points = UtilMap.getPointArrays( currentPoint, m_nodes, projection );
 
     final int[] arrayX = points[0];
     final int[] arrayY = points[1];
@@ -183,40 +180,10 @@ public class ElementGeometryBuilder
     g.setColor( preViewColor );
 
     g.drawPolygon( arrayX, arrayY, arrayX.length );
-    drawHandles( g, arrayX, arrayY );
+    UtilMap.drawHandles( g, arrayX, arrayY );
 
     g.setColor( color );
 
-  }
-
-  private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
-  {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
-
-    for( final GM_Point point : m_nodes )
-    {
-      final int x = (int) projection.getDestX( point.getX() );
-      final int y = (int) projection.getDestY( point.getY() );
-
-      xArray.add( new Integer( x ) );
-      yArray.add( new Integer( y ) );
-    }
-
-    xArray.add( currentPoint.x );
-    yArray.add( currentPoint.y );
-
-    final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[xArray.size()] ) );
-    final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[yArray.size()] ) );
-
-    return new int[][] { xs, ys };
-  }
-
-  private void drawHandles( final Graphics g, final int[] x, final int[] y )
-  {
-    final int sizeOuter = 6;
-    for( int i = 0; i < y.length; i++ )
-      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
 
   public int getNumberOfNodes( )
@@ -250,7 +217,7 @@ public class ElementGeometryBuilder
     final List<GM_Point> list = new ArrayList<GM_Point>( m_nodes );
     list.add( newNode );
     removeDuplicates( list );
-    IStatus status = checkNewElement( list.toArray( new GM_Point[list.size()] ) );
+    final IStatus status = checkNewElement( list.toArray( new GM_Point[list.size()] ) );
 
     if( status == Status.OK_STATUS )
       m_valid = true;
@@ -300,7 +267,7 @@ public class ElementGeometryBuilder
       {
         final GM_Position[] line = ElementGeometryHelper.linePositionsFromNodes( allNodes );
 
-        final GM_Curve curve = GeometryFactory.createGM_Curve( line, KalypsoCorePlugin.getDefault().getCoordinatesSystem() );
+        final GM_Curve curve = GeometryFactory.createGM_Curve( line, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final List<IFE1D2DElement> elements = discModel.getElements().query( curve.getEnvelope() );
         for( final IFE1D2DElement element : elements )
         {
