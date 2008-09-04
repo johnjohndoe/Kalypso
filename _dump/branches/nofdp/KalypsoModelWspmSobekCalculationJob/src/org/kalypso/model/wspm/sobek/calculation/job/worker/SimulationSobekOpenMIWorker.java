@@ -87,6 +87,9 @@ public class SimulationSobekOpenMIWorker implements ISimulation
       try
       {
         exitValue = exec.exitValue();
+        if( monitor.isCanceled() )
+          throw new SimulationException( "Computation Canceld" );
+
         break;
       }
       catch( final RuntimeException e )
