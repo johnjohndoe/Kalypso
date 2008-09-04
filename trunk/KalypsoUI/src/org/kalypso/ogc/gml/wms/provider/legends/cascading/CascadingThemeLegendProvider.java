@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.provider.legends.cascading;
 
@@ -86,12 +86,12 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
   /**
    * This variable stores the cascading theme.
    */
-  private AbstractCascadingLayerTheme m_theme;
+  private final AbstractCascadingLayerTheme m_theme;
 
   /**
    * The constructor.
    */
-  public CascadingThemeLegendProvider( AbstractCascadingLayerTheme theme )
+  public CascadingThemeLegendProvider( final AbstractCascadingLayerTheme theme )
   {
     m_theme = theme;
   }
@@ -99,44 +99,41 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
   /**
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  public Image getLegendGraphic( Font font ) throws CoreException
+  public Image getLegendGraphic( final Font font ) throws CoreException
   {
     /* No theme, no legend. */
     if( m_theme == null )
       return null;
 
     /* Memory for all legends. */
-    ArrayList<Image> legends = new ArrayList<Image>();
+    final ArrayList<Image> legends = new ArrayList<Image>();
 
     /* All childs available. */
-    IKalypsoTheme[] childs = m_theme.getAllThemes();
+    final IKalypsoTheme[] childs = m_theme.getAllThemes();
 
     /* Get the legend of each child. */
-    for( int i = 0; i < childs.length; i++ )
+    for( final IKalypsoTheme kalypsoTheme : childs )
     {
-      /* Get the theme. */
-      IKalypsoTheme kalypsoTheme = childs[i];
-
       if( kalypsoTheme == null )
         continue;
 
       /* Get the legend. */
-      Image legendGraphic = kalypsoTheme.getLegendGraphic( font );
+      final Image legendGraphic = kalypsoTheme.getLegendGraphic( font );
       if( legendGraphic != null )
         legends.add( legendGraphic );
     }
 
     /* Create a legend element for this theme. */
-    LegendElement legendElement = new LegendElement( font, 0, m_theme, new GisMapOutlineLabelProvider( false ) );
+    final LegendElement legendElement = new LegendElement( font, 0, m_theme, new GisMapOutlineLabelProvider( false, false ) );
 
     /* Compute the size for the image. */
-    Rectangle computeSize = computeSize( legends, legendElement );
+    final Rectangle computeSize = computeSize( legends, legendElement );
 
     /* Create the image. */
-    Image image = new Image( Display.getCurrent(), computeSize.width, computeSize.height );
+    final Image image = new Image( Display.getCurrent(), computeSize.width, computeSize.height );
 
     /* Need a graphical context. */
-    GC gc = new GC( image );
+    final GC gc = new GC( image );
 
     /* Set the font. */
     gc.setFont( font );
@@ -151,7 +148,7 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
     gc.setForeground( gc.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
 
     /* Get the icon. */
-    Image icon = legendElement.getImage();
+    final Image icon = legendElement.getImage();
 
     /* Draw for the theme itself. */
     gc.drawImage( icon, BORDER, BORDER );
@@ -160,7 +157,7 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
     gc.drawString( legendElement.getText(), BORDER + ICON_SIZE + GAP, BORDER );
 
     int heightSoFar = BORDER + legendElement.getSize().height + GAP;
-    for( Image legend : legends )
+    for( final Image legend : legends )
     {
       /* Draw the legend. */
       gc.drawImage( legend, BORDER + ICON_SIZE + GAP, heightSoFar );
@@ -180,10 +177,10 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
    * @param legendElement
    *            The legend element for this theme.
    */
-  private Rectangle computeSize( ArrayList<Image> legends, LegendElement legendElement )
+  private Rectangle computeSize( final ArrayList<Image> legends, final LegendElement legendElement )
   {
     /* The size for this theme. */
-    Rectangle size = legendElement.getSize();
+    final Rectangle size = legendElement.getSize();
 
     /* If there are no other legends, the width and height will only represent the size for this theme. */
     if( legends.size() == 0 )
@@ -202,7 +199,7 @@ public class CascadingThemeLegendProvider implements IKalypsoLegendProvider
     int temp = size.width;
 
     /* No collect the legends. */
-    for( Image image : legends )
+    for( final Image image : legends )
     {
       if( image == null )
         continue;

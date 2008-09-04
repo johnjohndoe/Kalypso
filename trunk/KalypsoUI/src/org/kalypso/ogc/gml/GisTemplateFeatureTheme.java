@@ -136,7 +136,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     super( layerName, layerType.getLinktype(), mapModel, legendIcon, context, shouldShowChildren );
 
     m_selectionManager = selectionManager;
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final String source = layerType.getHref();
     final String type = layerType.getLinktype();
     final String featurePath = layerType.getFeaturePath();
@@ -184,7 +184,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     m_disposed = true;
     // remove from pool
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     pool.removePoolListener( this );
     if( m_commandTarget != null )
       m_commandTarget.dispose();
@@ -220,7 +220,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     try
     {
       if( m_theme != null )
-        KalypsoGisPlugin.getDefault().getPool().saveObject( m_theme.getWorkspace(), monitor );
+        KalypsoCorePlugin.getDefault().getPool().saveObject( m_theme.getWorkspace(), monitor );
     }
     catch( final Exception e )
     {
@@ -438,7 +438,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       return m_theme.getFeatureType();
     return null;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
    */
@@ -561,6 +561,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     else
       return super.getTypeContext();
   }
+
+
 
   /**
    * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLabel(java.lang.Object)
@@ -691,7 +693,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
    */
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")
   @Override
   public Object getAdapter( final Class adapter )
   {
