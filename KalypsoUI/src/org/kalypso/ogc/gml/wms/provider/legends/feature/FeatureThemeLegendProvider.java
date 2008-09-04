@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.provider.legends.feature;
 
@@ -78,12 +78,12 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
   /**
    * This variable stores the feature theme.
    */
-  private IKalypsoFeatureTheme m_theme;
+  private final IKalypsoFeatureTheme m_theme;
 
   /**
    * The constructor.
    */
-  public FeatureThemeLegendProvider( IKalypsoFeatureTheme theme )
+  public FeatureThemeLegendProvider( final IKalypsoFeatureTheme theme )
   {
     m_theme = theme;
   }
@@ -91,26 +91,26 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
   /**
    * @see org.kalypso.ogc.gml.wms.provider.IKalypsoLegendProvider#getLegendGraphic(org.eclipse.swt.graphics.Font)
    */
-  public Image getLegendGraphic( Font font )
+  public Image getLegendGraphic( final Font font )
   {
     /* No theme, no legend. */
     if( m_theme == null )
       return null;
 
     /* All elements in this theme. */
-    ArrayList<LegendElement> elements = collectElements( font );
+    final ArrayList<LegendElement> elements = collectElements( font );
 
     if( elements.size() == 0 )
       return null;
 
     /* Compute the size for the image. */
-    Rectangle computeSize = computeSize( elements );
+    final Rectangle computeSize = computeSize( elements );
 
     /* Create the image. */
-    Image image = new Image( Display.getCurrent(), computeSize.width, computeSize.height );
+    final Image image = new Image( Display.getCurrent(), computeSize.width, computeSize.height );
 
     /* Need a graphical context. */
-    GC gc = new GC( image );
+    final GC gc = new GC( image );
 
     /* Set the font. */
     gc.setFont( font );
@@ -128,10 +128,10 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
     for( int i = 0; i < elements.size(); i++ )
     {
       /* Get the legend element. */
-      LegendElement legendElement = elements.get( i );
+      final LegendElement legendElement = elements.get( i );
 
       /* Get the icon. */
-      Image icon = legendElement.getImage();
+      final Image icon = legendElement.getImage();
 
       /* Draw the icon. */
       gc.drawImage( icon, BORDER + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar );
@@ -155,17 +155,17 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
    *            The font, to use.
    * @return A list, containing all elements.
    */
-  private ArrayList<LegendElement> collectElements( Font font )
+  private ArrayList<LegendElement> collectElements( final Font font )
   {
     /* The label provider. */
-    GisMapOutlineLabelProvider labelProvider = new GisMapOutlineLabelProvider( false );
+    final GisMapOutlineLabelProvider labelProvider = new GisMapOutlineLabelProvider( false, false );
 
     /* Memory for the elements. */
-    ArrayList<LegendElement> elements = new ArrayList<LegendElement>();
+    final ArrayList<LegendElement> elements = new ArrayList<LegendElement>();
     elements.add( new LegendElement( font, 0, m_theme, labelProvider ) );
 
     /* The content provider. */
-    GisMapOutlineContentProvider contentProvider = new GisMapOutlineContentProvider();
+    final GisMapOutlineContentProvider contentProvider = new GisMapOutlineContentProvider();
 
     /* Collect all elements. */
     collect( contentProvider, labelProvider, font, m_theme, elements, 1 );
@@ -187,10 +187,10 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
    * @param level
    *            The level of recursion.
    */
-  private void collect( GisMapOutlineContentProvider contentProvider, GisMapOutlineLabelProvider labelProvider, Font font, Object startElement, ArrayList<LegendElement> elements, int level )
+  private void collect( final GisMapOutlineContentProvider contentProvider, final GisMapOutlineLabelProvider labelProvider, final Font font, final Object startElement, final ArrayList<LegendElement> elements, final int level )
   {
-    Object[] children = contentProvider.getChildren( startElement );
-    for( Object element : children )
+    final Object[] children = contentProvider.getChildren( startElement );
+    for( final Object element : children )
     {
       /* Add the element. */
       elements.add( new LegendElement( font, level, element, labelProvider ) );
@@ -207,7 +207,7 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
    * @param elements
    *            The list of elements.
    */
-  private Rectangle computeSize( ArrayList<LegendElement> elements )
+  private Rectangle computeSize( final ArrayList<LegendElement> elements )
   {
     /* Start width. */
     int width = 2 * BORDER;
@@ -222,10 +222,10 @@ public class FeatureThemeLegendProvider implements IKalypsoLegendProvider
     int amount = 0;
 
     /* Loop for finding the longest width and for summarizing the height. */
-    for( LegendElement legendElement : elements )
+    for( final LegendElement legendElement : elements )
     {
       /* Get the size of the element. */
-      Rectangle size = legendElement.getSize();
+      final Rectangle size = legendElement.getSize();
 
       /* For the longest width. */
       if( size.width > temp )
