@@ -47,7 +47,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -110,6 +109,8 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private final IFEDiscretisationModel1d2d m_discModel;
 
+  private File[] m_stepsToProcess;
+
   public ResultManager( final File inputDir, final File outputDir, final String resultFilePattern, final IControlModel1D2D controlModel, final IFlowRelationshipModel flowModel, final IFEDiscretisationModel1d2d discModel, final IScenarioResultMeta scenarioResultMeta, final IGeoLog geoLog )
   {
     m_controlModel = controlModel;
@@ -133,11 +134,17 @@ public class ResultManager implements ISimulation1D2DConstants
     final SubMonitor progress = SubMonitor.convert( monitor, "Ergebnisse werden ausgewertet...", 1000 );
     progress.subTask( "Ergebnisse werden ausgewertet..." );
 
+    if( m_stepsToProcess == null )
+      return StatusUtilities.createOkStatus( "Keine Ergebnisse ausgewählt..." );
+
     try
     {
       /* Process all remaining .2d files. Now including min and max files */
-      final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+      final File[] existing2dFiles = m_stepsToProcess;
+
       progress.setWorkRemaining( existing2dFiles.length );
+      // final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+      // progress.setWorkRemaining( existing2dFiles.length );
 
       final IStatus[] fileStati = new IStatus[existing2dFiles.length];
 
@@ -222,27 +229,26 @@ public class ResultManager implements ISimulation1D2DConstants
 
   private Date findStepDate( final IControlModel1D2D controlModel, final String resultFileName )
   {
-    final Matcher matcher = m_resultFilePattern.matcher( resultFileName );
-    if( matcher.matches() )
-    {
-      final String countStr = matcher.group( 1 );
-      final int step = Integer.parseInt( countStr );
-
-      final IObservation<TupleResult> obs = controlModel.getTimeSteps();
-      final TupleResult timeSteps = obs.getResult();
-
-      final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
-      final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
-      return DateUtilities.toDate( stepCal );
-    }
-
     if( resultFileName.startsWith( "steady" ) )
       return STEADY_DATE;
 
     if( resultFileName.startsWith( "maxi" ) )
       return MAXI_DATE;
+    if( resultFileName.startsWith( "mini" ) || resultFileName.startsWith( "model" ) )
+      return null;
 
-    return null;
+    int index = resultFileName.length();
+    CharSequence sequence = resultFileName.subSequence( 1, index );
+    String string = sequence.toString();
+
+    final int step = Integer.parseInt( string );
+
+    final IObservation<TupleResult> obs = controlModel.getTimeSteps();
+    final TupleResult timeSteps = obs.getResult();
+
+    final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+    final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
+    return DateUtilities.toDate( stepCal );
   }
 
   public Date[] findCalculatedSteps( )
@@ -251,7 +257,8 @@ public class ResultManager implements ISimulation1D2DConstants
     final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
     for( final File file : existing2dFiles )
     {
-      final Date stepDate = findStepDate( m_controlModel, file.getName() );
+      final String resultFileName = FileUtilities.nameWithoutExtension( file.getName() );
+      final Date stepDate = findStepDate( m_controlModel, resultFileName );
       if( stepDate != null )
         dates.add( stepDate );
     }
@@ -282,5 +289,57 @@ public class ResultManager implements ISimulation1D2DConstants
   public IGeoLog getGeoLog( )
   {
     return m_geoLog;
+  }
+
+  public void setStepsToProcess( Date[] dates, final IControlModel1D2D controlModel )
+  {
+    final List<File> fileList = new ArrayList<File>();
+    final File[] existing2dFiles = m_inputDir.listFiles( FILTER_2D );
+
+    for( final Date date : dates )
+    {
+      final File stepFile = findStepFile( date, existing2dFiles, controlModel );
+      if( stepFile != null )
+        fileList.add( stepFile );
+    }
+
+    m_stepsToProcess = fileList.toArray( new File[fileList.size()] );
+
+  }
+
+  private File findStepFile( final Date date, final File[] existing2dFiles, final IControlModel1D2D controlModel )
+  {
+    for( File file : existing2dFiles )
+    {
+      if( date.equals( STEADY_DATE ) && file.getName().equals( "steady.2d" ) )
+        return file;
+
+      if( date.equals( MAXI_DATE ) && file.getName().equals( "maxi.2d" ) )
+        return file;
+
+      if( file.getName().equals( "steady.2d" ) || file.getName().equals( "maxi.2d" ) || file.getName().equals( "mini.2d" ) || file.getName().equals( "model.2d" ) )
+        continue;
+
+      final String resultFileName = file.getName();
+      int index = resultFileName.indexOf( "." );
+      CharSequence sequence = resultFileName.subSequence( 1, index );
+      String string = sequence.toString();
+      final int step = Integer.parseInt( string );
+
+      final IObservation<TupleResult> obs = controlModel.getTimeSteps();
+      final TupleResult timeSteps = obs.getResult();
+
+      final IComponent componentTime = ComponentUtilities.findComponentByID( timeSteps.getComponents(), Kalypso1D2DDictConstants.DICT_COMPONENT_TIME );
+      final XMLGregorianCalendar stepCal = (XMLGregorianCalendar) timeSteps.get( step ).getValue( componentTime );
+      final Date fileDate = DateUtilities.toDate( stepCal );
+      if( date.equals( fileDate ) )
+        return file;
+    }
+    return null;
+  }
+
+  public File[] getStepsToProcess( )
+  {
+    return m_stepsToProcess;
   }
 }
