@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<gismapview xmlns="gismapview.template.kalypso.org">
-    <extent bottom="5613408.439793806" left="5398879.253585345" right="5543156.711594422" srs="EPSG:31469" top="5757048.911233307"/>
-    <highlightColors>
-    	<fillColor red="255" green="255" blue="0" alpha="100"/>
-    </highlightColors>
-    <layers active="ID_1">
-        <layer name="Ombrometer" visible="true" featurePath="ombrometerMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../ombrometer.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-            <ns2:style linktype="sld" style="ombrometerIsUsed" ns1:actuate="onRequest" ns1:href="project:/.styles/ombrometer.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
-           	<ns2:legendicon xmlns:ns2="types.template.kalypso.org">urn:kalypso:map:theme:swtimage:style:ombrometerIsUsed:rule:ombrometerOn</ns2:legendicon>
-        </layer>
-        <layer name="Thiessen-Polygone" visible="true" featurePath="ombrometerMember" id="ID_1" linktype="gml" ns1:actuate="onRequest" ns1:href="../ombrometer.gml" ns1:type="simple" xmlns:ns1="http://www.w3.org/1999/xlink">
-            <ns2:style linktype="sld" style="thiessen" ns1:actuate="onRequest" ns1:href="project:/.styles/ombrometer.sld" ns1:type="simple" xmlns:ns2="types.template.kalypso.org"/>
-        </layer>
-        <layer name="Vorhersagepegel (N-A Modell)" visible="true" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_2" linktype="gml" ns3:actuate="onRequest" ns3:href="project:/modell.gml" ns3:type="simple" xmlns:ns3="http://www.w3.org/1999/xlink">
-            <ns4:style linktype="sld" style="NA-Modelle" ns3:actuate="onRequest" ns3:href="project:/.styles/namodelle_mit_relationen.sld" ns3:type="simple" xmlns:ns4="types.template.kalypso.org"/>
-        </layer>
-        <layer name="Gewässerverlauf" visible="true" featurePath="featureMember" id="ID_3" linktype="shape" ns5:actuate="onRequest" ns5:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" ns5:type="simple" xmlns:ns5="http://www.w3.org/1999/xlink">
-            <ns6:style linktype="sld" style="sachsenrivers" ns5:actuate="onRequest" ns5:href="project:/.styles/styles.sld" ns5:type="simple" xmlns:ns6="types.template.kalypso.org"/>
-        </layer>
-        <layer name="raster.gml" visible="true" featurePath="cellMember" id="ID_5" linktype="gml" ns9:actuate="onRequest" ns9:href="project:/.model/dwd/raster.gml" ns9:type="simple" xmlns:ns9="http://www.w3.org/1999/xlink">
-            <ns10:style linktype="sld" style="dwdCell" ns9:actuate="onRequest" ns9:href="project:/.styles/dwdraster.sld" ns9:type="simple" xmlns:ns10="types.template.kalypso.org"/>
-        </layer>
-    </layers>
-</gismapview>
+<mapv:gismapview xmlns:mapv="gismapview.template.kalypso.org" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:templ="types.template.kalypso.org" xmlns:ns5="gistableview.template.kalypso.org" xmlns:obsv="obsdiagview.template.kalypso.org" xmlns:ns6="obstableview.template.kalypso.org">
+    <mapv:extent srs="EPSG:31467" bottom="5640205.216291782" top="5752793.536958235" right="3949616.7956352625" left="3819077.699340863"/>
+    <mapv:layers active="ID_0">
+        <mapv:layer visible="true" name="DWD-Vorhersage" featurePath="#fid#rasterGenerator/entryMember[RasterServiceEntry]" id="ID_0" linktype="gml" xlink:actuate="onRequest" xlink:href="../rainfallCatchment.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="rasterVorschau" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/dwdPrognose.sld" xlink:type="simple"/>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Ombrometer" featurePath="ombrometerMember" id="ID_1" linktype="gml" xlink:actuate="onRequest" xlink:href="../ombrometer.gml" xlink:type="simple">
+            <templ:legendicon>urn:kalypso:map:theme:swtimage:style:ombrometerIsUsed:rule:ombrometerOn</templ:legendicon>
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="ombrometerIsUsed" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/ombrometer.sld" xlink:type="simple"/>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Thiessen-Polygone" featurePath="ombrometerMember" id="ID_2" linktype="gml" xlink:actuate="onRequest" xlink:href="../ombrometer.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="thiessenSchwach" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/ombrometer.sld" xlink:type="simple"/>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Vorhersagepegel (N-A Modell)" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_3" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="NA-Modelle" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/namodelle.sld" xlink:type="simple"/>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+        <mapv:layer visible="true" name="Gewässerverlauf" featurePath="featureMember" id="ID_4" linktype="shape" xlink:actuate="onRequest" xlink:href="project:/Grunddaten/Shapes/gewässer#EPSG:31469" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="sachsenrivers" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/styles.sld" xlink:type="simple"/>
+            <templ:property name="deleteable">true</templ:property>
+        </mapv:layer>
+                 <mapv:layer visible="true" name="NA-Modelle-Gebiete" featurePath="PegelCollectionAssociation/PegelMember[Einzugsgebiet]" id="ID_5" linktype="gml" xlink:actuate="onRequest" xlink:href="../modell.gml" xlink:type="simple">
+            <templ:showChildren>true</templ:showChildren>
+            <templ:style style="NA-Modelle-Gebiete" linktype="sld" xlink:actuate="onRequest" xlink:href="project:/.styles/namodelle.sld" xlink:type="simple"/>
+            <templ:property name="deleteable">true</templ:property>
+            </mapv:layer>
+    </mapv:layers>
+</mapv:gismapview>
+
 

@@ -3,7 +3,7 @@
   <NamedLayer>
     <Name>deegree style definition</Name>
     <UserStyle>
-      <Name>dwdCell</Name>
+      <Name></Name>
       <Title>dwdCell</Title>
       <IsDefault>1</IsDefault>
       <FeatureTypeStyle>

@@ -13,8 +13,6 @@ Folgende Vorlagen werden nicht mehr benutzt und könnten somit entfernt werden (
 -.templates/calcCase/zufluss.odt
 -.templates/calcCase/berichtDiagObereSpree.odt
 
-Tippfehler in calcWizard.xml: "Abfluß" bei der Konfiguration der Berichte
-
 build.xml
 ---------
 - create-target  wie bei Schwarze Elster (Kopieren von Vorlagen aus Unterverzeichnissen funktionierte nicht)
@@ -25,7 +23,6 @@ Außerdem auch Vorlagen für Ergebnistabellen erstellen (.templates/Ergebnisse/Z
 potentielle Dinge, die im Rahmen der Pflege getrieben werden könnten (gilt ggf. auch für die Weiße Elster):
 -------------------------------------------------------------------------------------------------------------------------------
 - neue Berichtstypen (insb. Scheitelwerte)
-- HTML-Navigation
 - zusätzliche Vorlagen?
 - Option "fillLastWithValid" beim Abholen der Zeitreihen benutzen
 

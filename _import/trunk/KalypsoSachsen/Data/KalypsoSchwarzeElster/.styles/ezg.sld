@@ -4,7 +4,7 @@
     <Name>deegree style definition</Name>
     <UserStyle>
       <Name>- generierter Standard-Stil -</Name>
-      <Title>- generierter Standard-Stil -</Title>
+      <Title></Title>
       <Abstract>empty Abstract</Abstract>
       <FeatureTypeStyle>
         <Name>- generierter Standard-Stil -</Name>

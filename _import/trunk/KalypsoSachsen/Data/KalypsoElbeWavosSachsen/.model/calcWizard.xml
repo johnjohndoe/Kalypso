@@ -220,10 +220,11 @@
                 <arg name="pegelNameProperty" value="name"/>
                 <arg name="resultProperty" value="ganglinie_vorhersage"/>
                 <!-- Exporter fangen hier an... -->
+                <arg name="modelLabel" value="Elbe - WAVOS"/>
                 <arg name="exporter1">
                         <arg name="id" value="featureWithTemplateExporterTree"/>
                         <arg name="name" value="Vorhersagepegel"/>
-                        <arg name="nameproperty" value="Name"/>
+<!--                        <arg name="nameproperty" value="Name"/>-->
                         <arg name="width" value="1024"/>
                         <arg name="height" value="768"/>
                         <arg name="imageFormat" value="png"/>
@@ -237,14 +238,20 @@
                         <arg name="templateDiagQ">
                                 <arg name="label" value="Abflussgrafik"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
+                                <arg name="documentName" value="Pegel ${property:Name;unbekannt} - Abfluss"/>
+                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt} - Abfluss"/>
                         </arg>
                         <arg name="templateDiagW">
                                 <arg name="label" value="Wasserstandsgrafik"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtDiagW.odt"/>
+                                <arg name="documentName" value="Pegel ${property:Name;unbekannt} - Wasserstand"/>
+                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt} - Wasserstand"/>
                         </arg>
                         <arg name="templateTable">
                                 <arg name="label" value="Tabelle"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
+                                <arg name="documentName" value="Pegel ${property:Name;unbekannt}"/>
+                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt}"/>
                         </arg>
                 </arg>
                 <!-- Scheitelwert-Tabellen W / Q -->
@@ -255,7 +262,8 @@
                         <arg name="exporter3a">
                                 <arg name="id" value="sumUpTableExporter"/>
                                 <arg name="name" value="Wasserstand"/>
-                                <arg name="documentName" value="ScheitelwerteW.csv"/>
+                                <arg name="documentName" value="Wasserstand-Scheitelwerte"/>
+                                <arg name="documentTitle" value="Scheitelwerttabelle - Wasserstand"/>
                                 <arg name="separator" value=";"/>
                                 <!--arg name="charset" value="cp1252"/-->
                                 <arg name="delta" value="0.0001"/>
@@ -296,7 +304,8 @@
                         <arg name="exporter4">
                                 <arg name="id" value="sumUpTableExporter"/>
                                 <arg name="name" value="Abfluss"/>
-                                <arg name="documentName" value="ScheitelwerteQ.csv"/>
+                                <arg name="documentName" value="Abfluss-Scheitelwerte"/>
+                                <arg name="documentTitle" value="Abfluss - Wasserstand"/>
                                 <arg name="separator" value=";"/>
                                 <!--arg name="charset" value="cp1252"/-->
                                 <arg name="delta" value="0.0001"/>
@@ -339,13 +348,13 @@
                         <arg name="id" value="simpleTemplateExporter"/>
                         <arg name="name" value="Längsschnitte"/>
                         <arg name="templateDiagLS_Q">
-                                <arg name="documentName" value="LängsschnittQ"/>
+                                <arg name="documentName" value="Abfluss-Längsschnitt"/>
                                 <arg name="label" value="Längsschnitt - Abfluss"/>
                                 <arg name="category" value="Längsschnitt Pegel;Elbe Abfluss"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtLängsschnitt_Q.odt"/>
                         </arg>
                         <arg name="templateDiagLS_W">
-                                <arg name="documentName" value="LängsschnittW"/>
+                                <arg name="documentName" value="Wasserstand-Längsschnitt"/>
                                 <arg name="label" value="Längsschnitt - Wasserstand"/>
                                 <arg name="category" value="Längsschnitt Pegel;Elbe Wasserstand"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtLängsschnitt_W.odt"/>

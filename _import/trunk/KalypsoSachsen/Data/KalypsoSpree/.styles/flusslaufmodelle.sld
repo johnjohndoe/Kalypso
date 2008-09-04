@@ -34,7 +34,7 @@
 						<Geometry>
 							<ogc:PropertyName>Ort</ogc:PropertyName>
 						</Geometry>
-						<Label><ogc:PropertyName>Name</ogc:PropertyName></Label>
+						<Label><ogc:PropertyName>Name</ogc:PropertyName>Name</Label>
 						<Font>
 							<CssParameter name="font-family" />
 							<CssParameter name="font-color">#000000</CssParameter>
