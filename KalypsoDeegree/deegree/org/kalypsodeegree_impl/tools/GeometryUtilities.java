@@ -837,7 +837,7 @@ public class GeometryUtilities
     return nearest;
   }
 
-  /**
+/**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    * 
@@ -1136,7 +1136,9 @@ public class GeometryUtilities
   }
 
   /**
-   * Triangulates a closed ring (must be oriented counter-clock-wise).
+   * Triangulates a closed ring (must be oriented counter-clock-wise). <br>
+   * <b>It uses floats, so there can occur rounding problems!</b><br>
+   * To avoid this, we substract all values with its minimum value. And add it later.
    * 
    * @return An array of triangles: GM_Position[numberOfTriangles][3]
    */
@@ -1144,11 +1146,36 @@ public class GeometryUtilities
   {
     final float[] posArray = new float[ring.length * 3];
 
+    double minX = Double.MAX_VALUE;
+    double minY = Double.MAX_VALUE;
+    double minZ = Double.MAX_VALUE;
+
+    // find minimum values
     for( int i = 0; i < ring.length; i++ )
     {
-      posArray[i * 3] = (float) ring[i].getX();
-      posArray[i * 3 + 1] = (float) ring[i].getY();
-      posArray[i * 3 + 2] = (float) ring[i].getZ();
+      minX = Math.min( minX, ring[i].getX() );
+      minY = Math.min( minY, ring[i].getY() );
+      minZ = Math.min( minZ, ring[i].getZ() );
+    }
+
+    // if we have no z-value we fake one.
+    if( Double.isNaN( minZ ) )
+    {
+      for( int i = 0; i < ring.length; i++ )
+      {
+        posArray[i * 3] = (float) (ring[i].getX() - minX);
+        posArray[i * 3 + 1] = (float) (ring[i].getY() - minY);
+        posArray[i * 3 + 2] = new Float( 0.0 );
+      }
+    }
+    else
+    {
+      for( int i = 0; i < ring.length; i++ )
+      {
+        posArray[i * 3] = (float) (ring[i].getX() - minX);
+        posArray[i * 3 + 1] = (float) (ring[i].getY() - minY);
+        posArray[i * 3 + 2] = (float) (ring[i].getZ() - minZ);
+      }
     }
 
     final float[] normal = { 0, 0, 1 };
@@ -1162,24 +1189,46 @@ public class GeometryUtilities
 
     final GM_Position[][] triangles = new GM_Position[num][3];
 
-    for( int i = 0; i < num; i++ )
+    if( Double.isNaN( minZ ) )
     {
-      triangles[i] = new GM_Position[3];
+      for( int i = 0; i < num; i++ )
+      {
+        triangles[i] = new GM_Position[3];
 
-      final double x1 = posArray[output[i * 3]];
-      final double y1 = posArray[output[i * 3] + 1];
-      final double z1 = posArray[output[i * 3] + 2];
-      final double x2 = posArray[output[i * 3 + 1]];
-      final double y2 = posArray[output[i * 3 + 1] + 1];
-      final double z2 = posArray[output[i * 3 + 1] + 2];
-      final double x3 = posArray[output[i * 3 + 2]];
-      final double y3 = posArray[output[i * 3 + 2] + 1];
-      final double z3 = posArray[output[i * 3 + 2] + 2];
-      triangles[i][0] = GeometryFactory.createGM_Position( x1, y1, z1 );
-      triangles[i][1] = GeometryFactory.createGM_Position( x2, y2, z2 );
-      triangles[i][2] = GeometryFactory.createGM_Position( x3, y3, z3 );
+        final double x1 = posArray[output[i * 3]] + minX;
+        final double y1 = posArray[output[i * 3] + 1] + minY;
+        final double z1 = Double.NaN;
+        final double x2 = posArray[output[i * 3 + 1]] + minX;
+        final double y2 = posArray[output[i * 3 + 1] + 1] + minY;
+        final double z2 = Double.NaN;
+        final double x3 = posArray[output[i * 3 + 2]] + minX;
+        final double y3 = posArray[output[i * 3 + 2] + 1] + minY;
+        final double z3 = Double.NaN;
+        triangles[i][0] = GeometryFactory.createGM_Position( x1, y1, z1 );
+        triangles[i][1] = GeometryFactory.createGM_Position( x2, y2, z2 );
+        triangles[i][2] = GeometryFactory.createGM_Position( x3, y3, z3 );
+      }
     }
+    else
+    {
+      for( int i = 0; i < num; i++ )
+      {
+        triangles[i] = new GM_Position[3];
 
+        final double x1 = posArray[output[i * 3]] + minX;
+        final double y1 = posArray[output[i * 3] + 1] + minY;
+        final double z1 = posArray[output[i * 3] + 2] + minZ;
+        final double x2 = posArray[output[i * 3 + 1]] + minX;
+        final double y2 = posArray[output[i * 3 + 1] + 1] + minY;
+        final double z2 = posArray[output[i * 3 + 1] + 2] + minZ;
+        final double x3 = posArray[output[i * 3 + 2]] + minX;
+        final double y3 = posArray[output[i * 3 + 2] + 1] + minY;
+        final double z3 = posArray[output[i * 3 + 2] + 2] + minZ;
+        triangles[i][0] = GeometryFactory.createGM_Position( x1, y1, z1 );
+        triangles[i][1] = GeometryFactory.createGM_Position( x2, y2, z2 );
+        triangles[i][2] = GeometryFactory.createGM_Position( x3, y3, z3 );
+      }
+    }
     return triangles;
   }
 
