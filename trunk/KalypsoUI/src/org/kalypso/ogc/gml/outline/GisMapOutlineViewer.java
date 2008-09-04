@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
@@ -81,7 +81,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, IMapModellListener
 {
   private final ITreeContentProvider m_contentProvider = new GisMapOutlineContentProvider();
@@ -107,7 +107,13 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget, 
    */
   public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel, final boolean showStyle )
   {
-    m_labelProvider = new GisMapOutlineLabelProvider( showStyle );
+    // TODO: temporary and only for debug purposes
+    // Change rendering to bold-font (or what else?); put flag into user preferences?
+    // get type of rendering from map-file (and also flag?)
+    // TODO: if committed to true, please set to false
+    final boolean showActive = false;
+
+    m_labelProvider = new GisMapOutlineLabelProvider( showStyle, showActive );
     setMapModel( mapModel );
     m_commandTarget = commandTarget;
   }
