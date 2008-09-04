@@ -170,12 +170,12 @@ public class VeloDiff2DTest extends TestCase
     File file1 = resultFile1.getLocation().toFile();
     File file2 = resultFile2.getLocation().toFile();
 
-    file1 = new File( "C:\\users\\jung\\temp\\glw_100_b39.2d" );
-    file2 = new File( "C:\\users\\jung\\temp\\glw_ref_t5.2d" );
+    file1 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_plan\\ohne_Hafen\\mhw_hq100\\mhw_hq100_plan_p16.2d" );
+    file2 = new File( "P:\\emu0528409\\modell\\bce_2d\\calc_ref\\mhw_hq100\\mhw_ref_g18.2d" );
 
     processResults( file1, file2, parameters, outputDir1, outputDir2 );
 
-    final File outputFile = new File( outputDir2, "output.2d" );
+    final File outputFile = new File( "P:\\emu0528409\\modell\\bce_2d\\Auswertung_Querstroemung\\oH-Ref\\oH-Ref_mhw_hq100_quer.2d" );
     final File template = file2;
 // File template = templateFile.getLocation().toFile();
 
