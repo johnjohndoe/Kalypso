@@ -60,6 +60,8 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
    */
   private final boolean m_showStyle;
 
+  private final boolean m_showActive;
+
   /**
    * The constructor.
    * 
@@ -67,9 +69,10 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
    *            If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
    *            styles of a theme, this is not neccessary, because their level will be displayed in the outline then.
    */
-  public GisMapOutlineLabelProvider( final boolean showStyle )
+  public GisMapOutlineLabelProvider( final boolean showStyle, final boolean showActive )
   {
     m_showStyle = showStyle;
+    m_showActive = showActive;
   }
 
   public void elementsChanged( final Object... elements )
@@ -83,31 +86,35 @@ public class GisMapOutlineLabelProvider extends WorkbenchLabelProvider
   @Override
   protected String decorateText( final String input, final Object element )
   {
-    /* Standard behaviour, if the style name for a single style of a theme should not be added. */
-    if( m_showStyle == false )
-      return input;
-
     if( element instanceof IWorkbenchAdapter && element instanceof IKalypsoTheme )
     {
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) element;
+      final IKalypsoTheme theme = (IKalypsoTheme) element;
+
+      final boolean isActive = theme.getMapModell().isThemeActivated( theme );
+      final String isActiveMsg = isActive && m_showActive ? "# " : "";
+
+      /* Standard behaviour, if the style name for a single style of a theme should not be added. */
+      if( m_showStyle == false )
+        return isActiveMsg + input;
 
       final Object[] children = adapter.getChildren( element );
       if( !(children instanceof ThemeStyleTreeObject[]) )
-        return input;
+        return isActiveMsg + input;
 
       if( children != null && (children.length == 0 || children.length > 1) )
-        return input;
+        return isActiveMsg + input;
 
       final ThemeStyleTreeObject style = (ThemeStyleTreeObject) children[0];
       final String label = style.getLabel( style );
 
       if( label.contains( Messages.getString( "org.kalypso.ogc.gml.outline.GisMapOutlineLabelProvider.0" ) ) )
-        return input;
+        return isActiveMsg + input;
 
       if( label.trim().equals( "" ) ) //$NON-NLS-1$
-        return input;
+        return isActiveMsg + input;
 
-      return input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+      return isActiveMsg + input + " (" + label + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return input;
