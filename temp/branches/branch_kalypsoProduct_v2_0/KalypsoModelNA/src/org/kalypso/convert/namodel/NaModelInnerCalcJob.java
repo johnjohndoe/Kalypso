@@ -152,6 +152,8 @@ public class NaModelInnerCalcJob implements ISimulation
 
   private final String EXE_FILE_2_07 = "start/kalypso_2.0.7.exe";
 
+  private final String EXE_FILE_2_08 = "start/kalypso_2_0_8_build20080904.exe";
+
   private final String EXE_FILE_TEST = "start/kalypso_test.exe";
 
   private boolean m_succeeded = false;
@@ -873,13 +875,15 @@ public class NaModelInnerCalcJob implements ISimulation
       m_kalypsoKernelPath = EXE_FILE_2_06;
     else if( kalypsoNAVersion.equals( "v2.0.7" ) )
       m_kalypsoKernelPath = EXE_FILE_2_07;
+    else if( kalypsoNAVersion.equals( "v2.0.8" ) )
+      m_kalypsoKernelPath = EXE_FILE_2_08;
     else if( kalypsoNAVersion.equals( "neueste" ) || kalypsoNAVersion.equals( "latest" ) )
-      m_kalypsoKernelPath = EXE_FILE_2_07;
+      m_kalypsoKernelPath = EXE_FILE_2_08;
     else
     {
       System.out.println( "Sie haben keine Version des Fortran Codes angegeben oder \n" + " die von Ihnen angegebene Version wird nicht weiter unterstützt.\n"
           + " Es wird mit der neuesten version gerechnet." );
-      m_kalypsoKernelPath = EXE_FILE_2_07;
+      m_kalypsoKernelPath = EXE_FILE_2_08;
     }
   }
 

@@ -58,6 +58,8 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.kalypso.ui.KalypsoGisPlugin;
+
 public class BlockTimeSeries
 {
   private final DateFormat m_dateFormat;
@@ -98,7 +100,8 @@ public class BlockTimeSeries
    */
   public BlockTimeSeries( )
   {
-    this( TimeZone.getTimeZone( "GMT+1" ) );
+    this( KalypsoGisPlugin.getDefault().getDisplayTimeZone() );
+// this( TimeZone.getTimeZone( "GMT+1" ) );
   }
 
   /**
@@ -136,7 +139,7 @@ public class BlockTimeSeries
           {
             case SEARCH_TIMEOFFSET:
               m = pTime.matcher( line );
-              synthM=pSynthTime.matcher(line);
+              synthM = pSynthTime.matcher( line );
               if( m.matches() )
               {
                 String sDate = m.group( 1 );
@@ -157,15 +160,15 @@ public class BlockTimeSeries
                    * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
                    */
                   timeStep = 300000l;
-//                  System.out.println( "TimeStep: " + timeStep );
+// System.out.println( "TimeStep: " + timeStep );
                 }
                 else
                 {
                   timeStep = ((long) (Float.parseFloat( sStep ) * 1000f)) * 3600l;
                 }
 
-//                Date testDate = new Date( startDate );
-//                System.out.println( "startdate: " + testDate + "  step:" + sStep );
+// Date testDate = new Date( startDate );
+// System.out.println( "startdate: " + testDate + " step:" + sStep );
                 step++;
               }
               if( synthM.matches() )
@@ -189,17 +192,17 @@ public class BlockTimeSeries
                    * timeStep = ((long) (sTimeStep_float * 1000f)) * 3600l;
                    */
                   timeStep = 300000l;
-//                  System.out.println( "TimeStep: " + timeStep );
+// System.out.println( "TimeStep: " + timeStep );
                 }
                 else
                 {
                   timeStep = ((long) (Float.parseFloat( sStep ) * 1000f)) * 3600l;
                 }
 
-//                Date testDate = new Date( startDate );
-//                System.out.println( "startdate: " + testDate + "  step:" + sStep );
+// Date testDate = new Date( startDate );
+// System.out.println( "startdate: " + testDate + " step:" + sStep );
                 step++;
-              }              
+              }
               break;
             case SEARCH_BLOCK_HEADER:
               m = pBlock.matcher( line );

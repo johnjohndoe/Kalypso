@@ -230,6 +230,7 @@
 			<enumeration value="v2.0.5"/>
 			<enumeration value="v2.0.6"/>
 			<enumeration value="v2.0.7"/>
+			<enumeration value="v2.0.8"/>
 			<enumeration value="neueste"/>
 			<enumeration value="latest"/>
 			<enumeration value="test"/>

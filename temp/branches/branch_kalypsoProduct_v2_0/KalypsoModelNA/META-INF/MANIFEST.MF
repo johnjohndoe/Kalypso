@@ -30,5 +30,6 @@ Require-Bundle: org.kalypso.deegree;visibility:=reexport,
  org.kalypso.core;visibility:=reexport,
  org.kalypso.optimize;visibility:=reexport,
  org.junit;resolution:=optional,
- org.kalypso.simulation.core
+ org.kalypso.simulation.core,
+ org.kalypso.ui
 Eclipse-LazyStart: true
