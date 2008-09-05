@@ -79,6 +79,7 @@ c      include 'mkl_pardiso.f77'
       !ia and ja are position pointers for the line-matrix (see documentation below)
       integer (kind = 4) :: ia(MR1SIZ+1), ja(NBUFFSIZ)
       integer (kind = 4) :: perm(MR1SIZ)
+      integer (kind = 4) :: ierror
       
       !a, b and x are matrix, right-side vector and result vector
       real (kind = 8) :: a(*), b(*), x(*)
@@ -189,8 +190,8 @@ C  Need to sort ja so that for the row, the column indices are in increasing val
       ierror = 0
       iphase = 11
       
-      if ( nzzold /= nzz .or. nszfold /= nszf ) then
-        ifirst = 1
+      if (nzzold /= nzz .or. nszfold /= nszf) then
+        if (nzzold /= 0) ifirst = 2
       endif
 
       !Informations concerning number of equations
@@ -202,10 +203,20 @@ c      ifirst=1
 
       call second(sutim1)
        
-      if ( ifirst .lt. 2 ) then
+      if ( ifirst < 3 ) then
       
-         ipt = 0
+          
+          !release all allocated memory
+          if (ifirst == 2) then
+            iphase = -1
+            call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
+     &          da, ia, ja, perm, nrhs, iparm, msglvl,
+c     &          db, dx, ierror )
+     &          ddum, ddum, ierror )
+          endif 
 
+          ipt = 0
+          iphase = 11
           call pardiso( ipt, maxfct, mnum, mtype, iphase, n, 
      &          da, ia, ja, perm, nrhs, iparm, msglvl,
 c     &          db, dx, ierror )
@@ -218,7 +229,7 @@ c     &          db, dx, ierror )
         
           
 C        endif  
-        ifirst = 2
+        ifirst = 3
 c        do i=1,n
 c            x(i) = dx(i)
 c        enddo

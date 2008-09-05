@@ -26,6 +26,8 @@ cipk jan03  ADD AN EXTRA 8 CHARACTERS
       CHARACTER*8 DLINEXTRA
       COMMON /DLINF/ DLINEXTRA
       DIMENSION QQAL(3)
+      
+      integer :: ioerror
 CIPKFEB94 V4.5
       ALLOCATABLE
      +          NEQ(:)
@@ -133,8 +135,10 @@ CIPK DEC97 END ADDITION
         ENDIF
         IF(NEQ (IEGEN) .EQ. 0) THEN
 cipk jan03          READ(DLIN,5029) N,LN,NEST,SF,QQAL,LABL
-          READ (DLIN, 5029) N, LN, NEST, SF, QQAL, LABL, ELINR
-          read (dlinextra, 5030) ELINT
+          ioerror = 0
+          READ (DLIN, 5029, iostat = ioerror)
+     +         N, LN, NEST, SF, QQAL, LABL, ELINR, ELINT
+          !read (dlinextra, 5030) ELINT
           ELINX = ELINR * COS (ELINT)
           ELINY = ELINR * SIN (ELINT)
           WRITE (LOUT, 6019) N, SF, QQAL, ELINX, ELINY
@@ -188,8 +192,13 @@ CIPK DEC97 END ADDITION
         IF (NEQ (IEGEN) .EQ. 0) THEN
 
           !get the user's input data with new option for inflow angle if inflow has direction (for momentum equation)
-          READ (DLIN, 5029) N, LN, NEST, SF, QQAL, LABL, ELINR
-          read (dlinextra, 5030) ELINT
+          ioerror = 0
+          READ (DLIN, 5029, iostat = ioerror)
+     +          N, LN, NEST, SF, QQAL, LABL, ELINR, ELINT
+     
+          write(*,*) ioerror
+          write(*,*) n, ln, nest, sf, qqal, labl, elinr, elint
+          !read (dlinextra, 5030) ELINT
 
           !calculate x- and y- inflow
           ELINX = ELINR * COS (ELINT)
@@ -258,7 +267,7 @@ CIPK NOV97 END CHANGES
 
 CIPK NOV97 END CHANGES
 CIPK JAN03
- 5029 FORMAT( 3I8, 4F8.0, I8 ,2F8.0)
+ 5029 FORMAT( 3I8, 4F8.0, I8 ,3F8.0)
  5030 FORMAT(F8.0)
  5035 FORMAT( I8, 9F8.0 )
  6019 FORMAT(/' ALL ELEMENTS HAVE DISTRIBUTED INFLOW'/

@@ -432,3 +432,9 @@ Version 1.1.0 (laufende Änderungen)
 047.) Compiling Error: Moving the "Call WFORM(...)" out of SubR CSTRC2D
       (No real changes!) >> SubR CSTRC2D                                              
 --- Monika Donner, 02.09.2008
+
+048.) To read different data from EFE lines an iostat error question must be integrated in the read statement. Besides dlinextra is not read there anymore. The same applies to EFA. (Affects: ELFLOWS.FOR)
+049.) If MKL is used it produces at every reordering step a new memory allocatio without deleting the old one. Furthermore the ierror variable was from wrong type. This changed and
+      pardiso is called a third time, for cleaning up the memory to run it with a new equation system.
+      
+--- Nico Schrage, 05.09.200 (1.1.0alpha3)
