@@ -1,4 +1,4 @@
-#Wed Sep 03 13:49:04 CEST 2008
+#Thu Sep 04 17:55:52 CEST 2008
 eclipse.preferences.version=1
 encoding//..BCE_Intern/ombrometer.csv=Cp1252
 encoding//.Rechenvarianten_Info/Ereignis95/.calculation=UTF-8
@@ -35,10 +35,6 @@ encoding//.prognose/OmbroTest/Zeitreihen/Ombrometer/P_Sohland.zml=UTF-8
 encoding//.prognose/OmbroTest/Zeitreihen/Ombrometer/P_TS_Quitzdorf.zml=UTF-8
 encoding//.prognose/OmbroTest/calcCase.gml=UTF-8
 encoding//.prognose/Spielwiese/.calculation=UTF-8
-encoding//.prognose/Stand_SchwarzeElster_11_2006/.calculation=UTF-8
-encoding//.prognose/Stand_SchwarzeElster_11_2006/calcCase.gml=UTF-8
-encoding//.prognose/Stand_SchwarzeElster_11_2006/ombrometer.gml=UTF-8
-encoding//.prognose/Stand_SchwarzeElster_11_2006/rainfallCatchment.gml=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Anfangsvolumen.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Bodenfeuchten.gtt=UTF-8
 encoding//.prognose/Vorhersage-03-11-2004_19h04/Flusslaufparameter.gtt=UTF-8

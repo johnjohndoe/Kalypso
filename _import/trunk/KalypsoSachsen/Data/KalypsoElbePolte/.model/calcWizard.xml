@@ -218,8 +218,8 @@
                         <arg name="templateDiagQ">
                                 <arg name="label" value="Diagramm - Abfluss"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
-                                <arg name="documentName" value="Pegel ${property:Name;unbekannt} - Abfluss"/>
-                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt} - Abfluss"/>
+                                <arg name="documentName" value="Pegel ${property:name;unbekannt} - Abfluss"/>
+                                <arg name="documentTitle" value="Pegel ${property:name;unbekannt} - Abfluss"/>
                         </arg>
                         <arg name="templateDiagW">
                                 <arg name="label" value="Diagramm - Wasserstand"/>
@@ -227,14 +227,14 @@
                                 <arg name="excludes">
                                         <arg name="#featureId" value="Usti"/>
                                 </arg>
-                                <arg name="documentName" value="Pegel ${property:Name;unbekannt} - Wasserstand"/>
-                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt} - Wasserstand"/>
+                                <arg name="documentName" value="Pegel ${property:name;unbekannt} - Wasserstand"/>
+                                <arg name="documentTitle" value="Pegel ${property:name;unbekannt} - Wasserstand"/>
                         </arg>
                         <arg name="templateTable">
                                 <arg name="label" value="Tabelle"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
-                                <arg name="documentName" value="Pegel ${property:Name;unbekannt}"/>
-                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt}"/>
+                                <arg name="documentName" value="Pegel ${property:name;unbekannt}"/>
+                                <arg name="documentTitle" value="Pegel ${property:name;unbekannt}"/>
                         </arg>
                 </arg>
                 <!-- Scheitelwert-Tabellen W / Q -->

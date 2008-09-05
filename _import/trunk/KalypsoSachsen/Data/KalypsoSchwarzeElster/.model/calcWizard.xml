@@ -271,19 +271,19 @@ ToDo: Help-Ids setzen!!! -->
                                 <arg name="label" value="Abflussgrafik"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtDiagQ.odt"/>
                                 <arg name="documentName" value="Pegel ${property:Name;unbekannt} - Abfluss"/>
-                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt} - Abfluss"/>
+                                <arg name="documentTitle" value="Pegel ${property:Name;unbekannt} - Abfluss"/>
                         </arg>
                         <arg name="templateDiagW">
                                 <arg name="label" value="Wasserstandsgrafik"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtDiagW.odt"/>
                                 <arg name="documentName" value="Pegel ${property:Name;unbekannt} - Wasserstand"/>
-                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt} - Wasserstand"/>
+                                <arg name="documentTitle" value="Pegel ${property:Name;unbekannt} - Wasserstand"/>
                         </arg>
                         <arg name="templateTable">
                                 <arg name="label" value="Tabelle"/>
                                 <arg name="href" value="project:/.templates/calcCase/berichtTabelle.ott"/>
                                 <arg name="documentName" value="Pegel ${property:Name;unbekannt}"/>
-                                <arg name="documentTitle" value="Titel: Pegel ${property:Name;unbekannt}"/>
+                                <arg name="documentTitle" value="Pegel ${property:Name;unbekannt}"/>
                         </arg>
                 </arg>
                 <!-- Scheitelwert-Tabellen W / Q -->
