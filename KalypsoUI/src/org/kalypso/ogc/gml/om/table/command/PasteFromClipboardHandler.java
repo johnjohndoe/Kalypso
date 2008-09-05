@@ -46,7 +46,6 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -68,6 +67,7 @@ import org.kalypso.ogc.gml.om.table.LastLineLabelProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
@@ -96,22 +96,22 @@ public class PasteFromClipboardHandler extends AbstractHandler
       // if Cipboard content is not text or that content is empty, just ignore it
       if( trstring == null || trstring.trim().length() == 0 )
       {
-        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.0"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+        MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.0" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
     }
     catch( Exception e )
     {
-      MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.2"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.3") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.2" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
-    
+
     try
     {
       final TableViewer tupleResultViewer = TupleResultCommandUtils.findTableViewer( event );
       if( tupleResultViewer == null )
       {
-        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.4"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+        MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.4" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
       final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
@@ -181,7 +181,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
               else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
               {
                 final SimpleDateFormat dateFormat = new SimpleDateFormat( descriptors[descriptorIndex].getParseFormat() );
-                final GregorianCalendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "GMT+1" ) ); //$NON-NLS-1$
+                final GregorianCalendar calendar = new GregorianCalendar( KalypsoGisPlugin.getDefault().getDisplayTimeZone() ); //$NON-NLS-1$
                 calendar.setTime( dateFormat.parse( token ) );
                 record.setValue( i, new XMLGregorianCalendarImpl( calendar ) );
               }
@@ -206,7 +206,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     }
     catch( final Exception ex )
     {
-      MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.12"), Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.13") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.12" ), Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       ex.printStackTrace();
     }
     return null;
