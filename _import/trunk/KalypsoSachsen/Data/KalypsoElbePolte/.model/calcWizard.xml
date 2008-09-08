@@ -18,7 +18,7 @@
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz01_startpegel.gmt"/>
                 <arg name="maximizeMap" value="true"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
@@ -68,7 +68,7 @@
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz03_zwischengebiete.gmt"/>
                 <arg name="maximizeMap" value="true"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetID" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>

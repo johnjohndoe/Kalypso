@@ -19,9 +19,9 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="hideCalcButton" value="true"/>
                 <!-- MAP -->
                 <arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt"/>
-                <arg name="maximizeMap" value="true"/>
+                <arg name="maximizeMap" value="false"/>
                 <arg name="selectFeatureID" value="Ombrometer-Sohland"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
@@ -42,7 +42,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="rightSash" value="50"/>
                 <arg name="maximizeMap" value="true"/>
                 <arg name="mapTemplate" value=".templates/calcCase/ombrometer.gmt"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="selectFeatureID" value="Ombrometer-Sohland"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
@@ -60,7 +60,7 @@ ToDo: Help-Ids setzen!!! -->
                 <!-- MAP -->
                 <arg name="mapTemplate" value=".templates/calcCase/dwdprognose.gmt"/>
                 <arg name="maximizeMap" value="true"/>
-                <arg name="mapWidgetID" value=""/>
+                <arg name="mapWidgetClass" value=""/>
                 <!-- Disables any widget -->
                 <!-- FEATURE-VIEW -->
                 <arg name="featureTemplate" value=".templates/calcCase/dwdprognose.gft#linktype=gml#href=rcm.gml"/>
@@ -370,10 +370,6 @@ ToDo: Help-Ids setzen!!! -->
                                 <arg name="obs10">
                                         <arg name="label" value="Spreewitz"/>
                                         <arg name="href" value="./Ergebnisse/Zeitreihen/QV_SPWITZ.zml"/>
-                                </arg>
-                                <arg name="obs11">
-                                        <arg name="label" value="Spremberg"/>
-                                        <arg name="href" value="./Ergebnisse/Zeitreihen/QV_SPREMB.zml"/>
                                 </arg>
                         </arg>
                         <arg name="exporter3b">

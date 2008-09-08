@@ -20,7 +20,7 @@ ToDo: Help-Ids setzen!!! -->
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz01a_zwischengebietspegelUstiDresden.gmt"/>
                 <arg name="maximizeMap" value="false"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
@@ -48,7 +48,7 @@ ToDo: Help-Ids setzen!!! -->
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz02_ZwgUstiDresden.gmt"/>
                 <arg name="maximizeMap" value="false"/>
-                <arg name="mapWidgetID" value=""/>
+                <arg name="mapWidgetClass" value=""/>
                 <!--  -->
                 <arg name="mainSash" value="40"/>
                 <arg name="rightSash" value="50"/>
@@ -78,7 +78,7 @@ ToDo: Help-Ids setzen!!! -->
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz01b_zwischengebietspegelDresdenTorgau.gmt"/>
                 <arg name="maximizeMap" value="false"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
@@ -106,7 +106,7 @@ ToDo: Help-Ids setzen!!! -->
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz03_ZwgDresdenTorgau.gmt"/>
                 <arg name="maximizeMap" value="false"/>
-                <arg name="mapWidgetID" value=""/>
+                <arg name="mapWidgetClass" value=""/>
                 <!--  -->
                 <arg name="mainSash" value="40"/>
                 <arg name="rightSash" value="50"/>
@@ -145,7 +145,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz04_ZwischengebietsErgebnisse.gmt"/>
                 <arg name="mapTemplateContextIsCalcCase" value="true"/>
                 <arg name="maximizeMap" value="true"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>
@@ -177,7 +177,7 @@ ToDo: Help-Ids setzen!!! -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz05_berichtsablage.gmt"/>
                 <arg name="mapTemplateContextIsCalcCase" value="true"/>
                 <arg name="maximizeMap" value="true"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
                         <arg name="command1" value="org.kalypso.ui.map.selectNextFeatureCommand"/>

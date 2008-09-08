@@ -18,7 +18,7 @@
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz01_zufluesse.gmt"/>
                 <arg name="maximizeMap" value="true"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="selectFeatureID" value="Usti"/>
               <!--  <arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
@@ -48,7 +48,7 @@
                 <!--  -->
                 <arg name="mapTemplate" value=".templates/calcCase/wiz02_elbepegel.gmt"/>
                 <arg name="maximizeMap" value="true"/>
-                <arg name="mapWidgetID" value="SELECT"/>
+                <arg name="mapWidgetClass" value="org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget"/>
                 <arg name="selectFeatureID" value="Schoena"/>
                 <!--<arg name="mapToolbar">
                         <arg name="command0" value="org.kalypso.ui.map.selectPreviousFeatureCommand"/>
