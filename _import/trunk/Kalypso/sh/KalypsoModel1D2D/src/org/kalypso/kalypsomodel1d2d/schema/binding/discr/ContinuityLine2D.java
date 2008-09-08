@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.schema.binding.discr;
 
@@ -60,12 +60,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 public class ContinuityLine2D extends FELine implements IContinuityLine2D
 {
-  public ContinuityLine2D( Feature featureToBind )
+  public ContinuityLine2D( final Feature featureToBind )
   {
     this( featureToBind, IContinuityLine2D.QNAME );
   }
 
-  public ContinuityLine2D( Feature featureToBind, QName featureQName )
+  public ContinuityLine2D( final Feature featureToBind, final QName featureQName )
   {
     super( featureToBind, featureQName );
   }
@@ -83,7 +83,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     {
       fullNodeList = recalculateGeometry( nodes );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "ContinuityLine2D.1" ) + e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
@@ -107,7 +107,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
       list.addAll( getNodes() );
       recalculateGeometry( list );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
     }
@@ -138,6 +138,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
     for( ; iterator.hasNext(); )
     {
       final IFE1D2DNode nextMilestoneNode = iterator.next();
+      // TODO: !!!Potential endless loop!! I once got it (Gernot)
       while( !nextMilestoneNode.getGmlID().equals( currentNode.getGmlID() ) )
       {
         final Collection<IFE1D2DNode> neighbourNodes = currentNode.getNeighbours();
@@ -150,7 +151,7 @@ public class ContinuityLine2D extends FELine implements IContinuityLine2D
         double shortestDistance = Double.MAX_VALUE;
         for( final IFE1D2DNode node : neighbourNodes )
         {
-          double nodesDistance = nodesDistance( node, nextMilestoneNode );
+          final double nodesDistance = nodesDistance( node, nextMilestoneNode );
           if( nodesDistance < shortestDistance )
           {
             shortestDistance = nodesDistance;
