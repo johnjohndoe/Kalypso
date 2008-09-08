@@ -368,13 +368,13 @@ public class DWDRasterHelper
           final int key = Integer.parseInt( dynamicHeaderMatcher.group( 2 ) );
           final int hour = Integer.parseInt( dynamicHeaderMatcher.group( 3 ) );
 
-          startCal.add( Calendar.HOUR_OF_DAY, hour );
+          startCal.add( Calendar.HOUR_OF_DAY, hour + 1 );
           blockDate = startCal.getTime();
 
           if( key == dwdKey )
           {
             rightBlock = true;
-            if( raster == null ) // if not allready loading
+            if( raster == null ) // if not already loading
               raster = new DWDObservationRaster( key, maxCells, unit );
           }
           else
@@ -430,9 +430,9 @@ public class DWDRasterHelper
             valueDate.setTime( blockDate );
             for( final String valueStr : values )
             {
+              valueDate.add( Calendar.HOUR_OF_DAY, 1 ); // starting with hour 1, so add first here!
               final double value = Double.parseDouble( valueStr );
               raster.setValueFor( valueDate.getTime(), cellpos, (value + offset) * factor );
-              valueDate.add( Calendar.HOUR_OF_DAY, 1 );
             }
 
             cellpos++;
