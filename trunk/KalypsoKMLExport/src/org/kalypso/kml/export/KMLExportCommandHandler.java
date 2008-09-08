@@ -14,6 +14,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
+import org.kalypso.kml.export.i18n.Messages;
 import org.kalypso.kml.export.wizard.WizardGoogleExport;
 import org.kalypso.ui.views.map.MapView;
 
