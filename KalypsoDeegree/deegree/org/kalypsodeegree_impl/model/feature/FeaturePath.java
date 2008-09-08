@@ -281,6 +281,9 @@ public class FeaturePath
                 return substType;
             }
 
+            // TODO: this does not work for filtered pathes, substituion should also
+            // be check upwards
+
             // if( m_typename.equals( type.getName() ) )
             // return type;
           }
