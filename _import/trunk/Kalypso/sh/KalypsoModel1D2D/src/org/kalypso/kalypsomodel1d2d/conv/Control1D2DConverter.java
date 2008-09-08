@@ -353,7 +353,7 @@ public class Control1D2DConverter
     formatter.format( "ECL%n" ); //$NON-NLS-1$
 
     if( m_controlModel.getIDNOPT() != 0 && m_controlModel.getIDNOPT() != -1 )
-      formatter.format( "MP%21.2f%8.2f%8.2f%n", m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3() ); //$NON-NLS-1$
+      formatter.format( "MP%21.3f%8.3f%8.5f%n", m_controlModel.getAC1(), m_controlModel.getAC2(), m_controlModel.getAC3() ); //$NON-NLS-1$
 
     formatter.format( "ENDGEO%n" ); //$NON-NLS-1$
 
@@ -612,7 +612,9 @@ public class Control1D2DConverter
           {
             // TODO: @Nico This is very ugly, but it works for the moment!! It should be introduced to GMLLoader checks
             final Boolean hasDirectionProperty = boundaryCondition.hasDirection();
-            if( hasDirectionProperty == false || hasDirectionProperty == null )
+            if( hasDirectionProperty == null )
+              boundaryCondition.setHasDirection( true );
+            else if( hasDirectionProperty == false )
               boundaryCondition.setHasDirection( true );
 
             final double theta = Math.toRadians( boundaryCondition.getDirection().doubleValue() );
