@@ -342,6 +342,9 @@ public class RefineFEGeometryWidget extends AbstractWidget
   @SuppressWarnings("unchecked")
   private void convertRefinementToModel( )
   {
+    if( m_objects == null )
+      return;
+
     // first, we re-select all features that lie on the refined GM_Object's center points.
     // This is necessary because of some additional filters used in the refinement class.
 
@@ -426,6 +429,16 @@ public class RefineFEGeometryWidget extends AbstractWidget
       }
     }
     return centroidList;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#rightClicked(java.awt.Point)
+   */
+  @Override
+  public void rightClicked( final Point p )
+  {
+    convertRefinementToModel();
+    super.rightClicked( p );
   }
 
   /**

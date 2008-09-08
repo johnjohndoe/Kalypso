@@ -99,7 +99,8 @@ public class DeleteFEElements2DWidget extends AbstractDelegateWidget
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    if( e.getKeyCode() == KeyEvent.VK_DELETE )
+
+    if( e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE )
     {
       e.consume();
 

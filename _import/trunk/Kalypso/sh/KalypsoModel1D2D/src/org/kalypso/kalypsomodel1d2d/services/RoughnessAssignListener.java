@@ -84,13 +84,12 @@ public class RoughnessAssignListener implements ModellEventListener
    * Starts the roughness (re)assignment job
    * 
    * @param envelope
-   *            The area where roughness recalculation is needed; if <code>null</code>, whole model will be
-   *            recalculated
+   *          The area where roughness recalculation is needed; if <code>null</code>, whole model will be recalculated
    */
   private void startJob( final GM_Envelope envelope )
   {
-    if( m_job != null )
-      m_job.cancel();
+// if( m_job != null )
+// m_job.cancel();
 
     m_job = new RoughnessAssignService( "Roughness assign service", m_terrainModel, m_discModel );
 

@@ -275,6 +275,11 @@ public class CreateFE2DElementWidget extends AbstractWidget
       m_warning = false;
     else
     {
+      if (status.getMessage().equals( "Warnung! Element ohne Geometrie in Modell vorhanden." ))
+      {
+        // TODO: delete element!
+        
+      }
       m_warning = true;
       m_warningRenderer.setTooltip( status.getMessage() );
     }

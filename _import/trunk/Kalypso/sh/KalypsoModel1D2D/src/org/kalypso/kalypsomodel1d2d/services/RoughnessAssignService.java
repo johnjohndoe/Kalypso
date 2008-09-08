@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFE1D2DElement;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IFEDiscretisationModel1d2d;
 import org.kalypso.kalypsomodel1d2d.schema.binding.discr.IPolyElement;
@@ -75,7 +74,6 @@ import de.renew.workflow.connector.cases.ICaseDataProvider;
 
 /**
  * @author Dejan Antanaskovic
- * 
  */
 public class RoughnessAssignService extends Job
 {
@@ -104,12 +102,15 @@ public class RoughnessAssignService extends Job
     {
       final List<IFE1D2DElement> elementsInWorkarea = (m_workArea != null) ? m_model1d2d.getElements().query( m_workArea ) : m_model1d2d.getElements();
       final SubMonitor progress = SubMonitor.convert( monitor, "Roughness asigning", elementsInWorkarea.size() );
-      ProgressUtilities.worked( progress, 0 );
+// ProgressUtilities.worked( progress, 0 );
       m_changesDiscretisationModel.clear();
       for( final IFE1D2DElement element : elementsInWorkarea )
       {
         assignRoughness( monitor, element );
-        ProgressUtilities.worked( progress, 1 );
+        // TODO: do not cancel, does not work well with work area...
+        // TODO: change this stuff, so that we have a queue of elements to be worked on
+// ProgressUtilities.worked( progress, 1 );
+        progress.worked( 1 );
       }
     }
     catch( final Throwable t )
@@ -151,8 +152,8 @@ public class RoughnessAssignService extends Job
     Double correctionParameterDP = null;
     for( int i = 0; i < m_roughnessPolygonCollections.size(); i++ )
     {
-      if( monitor.isCanceled() )
-        throw new CoreException( Status.CANCEL_STATUS );
+// if( monitor.isCanceled() )
+// throw new CoreException( Status.CANCEL_STATUS );
 
       final IRoughnessPolygonCollection roughnessPolygonCollection = m_roughnessPolygonCollections.get( i );
       final List<IRoughnessPolygon> matchedRoughness = roughnessPolygonCollection.query( position );
