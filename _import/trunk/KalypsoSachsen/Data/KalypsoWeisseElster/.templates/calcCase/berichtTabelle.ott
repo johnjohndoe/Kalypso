@@ -12,15 +12,15 @@
 -->
     <observation linktype="zml" ns1:href="%href3%" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersagespur mittlerer Wert" width="50"/>
-        <column axis="Gesamtabfluss Knoten" editable="true" id="c2" name="Abfluss - Vorhersagespur mittlerer Wert" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Vorhersagespur mittlerer Wert" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="%href4%" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersagespur unterer Wert" width="50"/>
-        <column axis="Gesamtabfluss Knoten" editable="true" id="c2" name="Abfluss - Vorhersagespur unterer Wert" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Vorhersagespur unterer Wert" width="50"/>
     </observation>
     <observation linktype="zml" ns1:href="%href5%" xmlns:ns1="http://www.w3.org/1999/xlink">
         <column axis="Wasserstand" editable="true" id="c2" name="Wasserstand - Vorhersagespur oberer Wert" width="50"/>
-        <column axis="Gesamtabfluss Knoten" editable="true" id="c2" name="Abfluss - Vorhersagespur oberer Wert" width="50"/>
+        <column axis="Abfluss" editable="true" id="c2" name="Abfluss - Vorhersagespur oberer Wert" width="50"/>
     </observation>
 </obstableview>
 
