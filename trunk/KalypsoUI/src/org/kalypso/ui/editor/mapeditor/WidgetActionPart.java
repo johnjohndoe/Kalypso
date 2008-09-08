@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,17 +36,14 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.mapeditor.actiondelegates;
+package org.kalypso.ui.editor.mapeditor;
 
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
@@ -63,15 +60,7 @@ public class WidgetActionPart implements ICommandTarget
     m_part = part;
   }
 
-  public MapPanel getMapPanel( )
-  {
-    if( m_part == null )
-      return null;
-
-    return (MapPanel) m_part.getAdapter( MapPanel.class );
-  }
-
-  public ICommandTarget getCommandTarget( )
+  private ICommandTarget getCommandTarget( )
   {
     if( m_part == null )
       return null;
@@ -114,21 +103,5 @@ public class WidgetActionPart implements ICommandTarget
   public IWorkbenchPart getPart( )
   {
     return m_part;
-  }
-
-  public CommandableWorkspace getCommandableWorkspace( )
-  {
-    if( m_part == null )
-      return null;
-
-    return (CommandableWorkspace) m_part.getAdapter( CommandableWorkspace.class );
-  }
-
-  public Control getControl( )
-  {
-    if( m_part == null )
-      return null;
-
-    return (Control) m_part.getAdapter( Control.class );
   }
 }

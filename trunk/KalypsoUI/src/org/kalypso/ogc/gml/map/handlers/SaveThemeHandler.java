@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
@@ -63,34 +63,23 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 
 /**
  * @author burtscher1
  */
 public class SaveThemeHandler extends AbstractHandler
 {
-
   private boolean m_isEnabled = true;
 
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  @SuppressWarnings("unused") //$NON-NLS-1$
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
-    if( part == null )
-      return null;
-
-    final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
-
-    if( mapPanel == null )
-      return null;
-
-    final Shell shell = part.getSite().getShell();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     if( mapPanel != null )
     {
@@ -108,7 +97,7 @@ public class SaveThemeHandler extends AbstractHandler
             // only save if map is dirty
             if( workspace != null && workspace.isDirty() )
             {
-              if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.1"), Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.2") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+              if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.1" ), Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
                 return null;
 
               final IKalypsoSaveableTheme theme = (IKalypsoSaveableTheme) activeTheme;
@@ -120,11 +109,7 @@ public class SaveThemeHandler extends AbstractHandler
                 @Override
                 protected void execute( final IProgressMonitor monitor ) throws CoreException
                 {
-                  final IWorkbenchPart workbenchPart = part;
-                  if( workbenchPart == null )
-                    return;
-                  else if( workbenchPart instanceof AbstractMapPart )
-                    theme.saveFeatures( monitor );
+                  theme.saveFeatures( monitor );
                 }
               };
 
@@ -137,7 +122,7 @@ public class SaveThemeHandler extends AbstractHandler
                 e.printStackTrace();
 
                 final CoreException ce = (CoreException) e.getTargetException();
-                ErrorDialog.openError( shell, Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.3"), Messages.getString("org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.4"), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+                ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.3" ), Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.4" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
               }
               catch( final InterruptedException e )
               {
@@ -173,7 +158,7 @@ public class SaveThemeHandler extends AbstractHandler
   {
     boolean bEnabled = false;
 
-    IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+    final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     final MapPanel mapPanel = (MapPanel) activePart.getAdapter( MapPanel.class );
 
     if( mapPanel == null )

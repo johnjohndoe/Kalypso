@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
+import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
 
 /**
  * @author belger

@@ -45,10 +45,8 @@ package org.kalypso.ogc.gml.map.handlers;
  */
 public class UndoHandler extends UndoRedoHandler
 {
-
   public UndoHandler( )
   {
     super( true );
   }
-
 }

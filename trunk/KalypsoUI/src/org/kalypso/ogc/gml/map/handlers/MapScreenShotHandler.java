@@ -54,8 +54,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ui.editor.mapeditor.ExportableMap;
 import org.kalypso.ui.preferences.KalypsoScreenshotPreferencePage;
@@ -125,8 +123,7 @@ public class MapScreenShotHandler extends AbstractHandler
       /* generate and store img */
       os = new BufferedOutputStream( new FileOutputStream( img ) );
 
-      final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-      final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
+      final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
       final ExportableMap export = new ExportableMap( mapPanel, width, height, format );
       export.exportObject( os, new NullProgressMonitor() );

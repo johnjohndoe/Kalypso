@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.newfeature;
 
@@ -45,12 +45,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISourceProviderListener;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.services.IServiceLocator;
@@ -63,7 +62,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
+import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
@@ -81,44 +80,20 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class NewFeatureToolbarContribution extends DropDownToolbarItem
 {
+  public static final String CMD_ID_NEW_FEATURE = "org.kalypso.gis.newFeature.command";
 
   private Command m_rootCommand;
 
-  private ISourceProviderListener m_sourceProviderListener;
-
-  private IKalypsoTheme m_currentTheme = null;
-
-  private CommandContributionItem[] m_currentItems = new CommandContributionItem[0];
-
   public NewFeatureToolbarContribution( )
   {
-    // create ISourceProviderListener to listen for changes in the active map panel or active theme
-    m_sourceProviderListener = new ISourceProviderListener()
-    {
-
-      @SuppressWarnings("unchecked")
-      public void sourceChanged( int sourcePriority, Map sourceValuesByName )
-      {
-        updateInternal();
-      }
-
-      public void sourceChanged( int sourcePriority, String sourceName, Object sourceValue )
-      {
-        updateInternal();
-      }
-
-    };
-    MapPanelSourceProvider.getInstance().addSourceProviderListener( m_sourceProviderListener );
-
     // register the base command
-    m_rootCommand = m_commandService.getCommand( "org.kalypso.gis.newFeature.command" ); //$NON-NLS-1$
+    m_rootCommand = m_commandService.getCommand( CMD_ID_NEW_FEATURE );
     registerCommandListeners( new Command[] { m_rootCommand } );
   }
 
   /**
    * @see org.eclipse.ui.actions.CompoundContributionItem#getContributionItems()
    */
-  @SuppressWarnings("unchecked")
   @Override
   protected CommandContributionItem[] getContributionItems( )
   {
@@ -133,77 +108,51 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
       return new CommandContributionItem[0];
     }
 
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
-    final IEvaluationContext currentState = handlerService.getCurrentState();
-    final IKalypsoTheme theme = (IKalypsoTheme) currentState.getVariable( MapPanelSourceProvider.ACTIVE_THEME_NAME );
-
+    final IKalypsoTheme theme = getActiveTheme();
     if( theme == null || !theme.isLoaded() )
     {
       // do not cache themes that are not loaded yet
       return new CommandContributionItem[0];
     }
 
-    // use cached items
-    if( theme == m_currentTheme )
-    {
-      return m_currentItems;
-    }
-
-    m_currentTheme = theme;
-
     if( theme == null || !(theme instanceof IKalypsoFeatureTheme) )
-    {
-      m_currentItems = new CommandContributionItem[0];
-      return m_currentItems;
-    }
+      return new CommandContributionItem[0];
 
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
     final IFeatureType featureType = featureTheme.getFeatureType();
 
     if( featureType == null )
-    {
-      m_currentItems = new CommandContributionItem[0];
-      return m_currentItems;
-    }
+      return new CommandContributionItem[0];
 
     final FeatureList featureList = featureTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
     final IRelationType fatp = featureList.getParentFeatureTypeProperty();
     if( fatp == null )
     {
-      // TODO What to do, if null?
-      // This can happen, when the root feature is drawn in the map (e.g. root = rectified grid coverage).
-      m_currentItems = new CommandContributionItem[0];
-      return m_currentItems;
+      // The theme shows a single feature, and hence we cannot add something here
+      return new CommandContributionItem[0];
     }
 
     final int maxOccurs = fatp.getMaxOccurs();
 
     /* If we may not inline features we cannot create them via 'new' */
     if( !fatp.isInlineAble() )
-      // Just return
-      return null;
+      return new CommandContributionItem[0];
 
     /*
      * Direct properties (maxoccurs = 1) can only be added if not already there.
      */
     if( maxOccurs == 1 && parentFeature.getProperty( fatp ) != null )
-    {
-      m_currentItems = new CommandContributionItem[0];
-      return m_currentItems;
-    }
+      return new CommandContributionItem[0];
 
     /*
      * If maxoccurs > 1 we have a list, and we may test if the list is already full.
      */
     else if( maxOccurs > 1 )
     {
-      final List list = (List) parentFeature.getProperty( fatp );
+      final List< ? > list = (List< ? >) parentFeature.getProperty( fatp );
       if( list != null && list.size() >= maxOccurs )
-      {
-        m_currentItems = new CommandContributionItem[0];
-        return m_currentItems;
-      }
+        return new CommandContributionItem[0];
     }
 
     final IGMLSchema contextSchema = featureType.getGMLSchema();
@@ -225,14 +174,28 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
         tooltip = annotation.getValue( IAnnotation.ANNO_TOOLTIP );
       }
 
-      final Map map = new HashMap();
+      final Map<String, Object> map = new HashMap<String, Object>();
       final String parameterValue = ft.getQName().toString();
       map.put( parameter.getId(), parameterValue );
 
       items[i++] = new CommandContributionItem( locator, m_rootCommand.getId(), m_rootCommand.getId(), map, featureNewImg, null, null, parameterLabel, null, tooltip, CommandContributionItem.STYLE_PUSH );
     }
-    m_currentItems = items;
-    return m_currentItems;
+    return items;
+  }
+
+  private IKalypsoTheme getActiveTheme( )
+  {
+    try
+    {
+      final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+      final IEvaluationContext currentState = handlerService.getCurrentState();
+      return MapHandlerUtils.getActiveTheme( currentState );
+    }
+    catch( final ExecutionException e )
+    {
+      // ignore, no active theme present
+      return null;
+    }
   }
 
   /**
@@ -241,27 +204,8 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
   @Override
   public void dispose( )
   {
-    MapPanelSourceProvider.getInstance().removeSourceProviderListener( m_sourceProviderListener );
-    m_sourceProviderListener = null;
     super.dispose();
-    m_rootCommand = null;
-    m_currentTheme = null;
-    m_currentItems = null;
-  }
 
-  protected void updateInternal( )
-  {
-    final CommandContributionItem[] contributionItems = getContributionItems();
-    if( contributionItems.length > 0 )
-      m_currentCommand = contributionItems[0];
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    display.asyncExec( new Runnable()
-    {
-      @SuppressWarnings("synthetic-access")
-      public void run( )
-      {
-        NewFeatureToolbarContribution.super.update();
-      }
-    } );
+    m_rootCommand = null;
   }
 }

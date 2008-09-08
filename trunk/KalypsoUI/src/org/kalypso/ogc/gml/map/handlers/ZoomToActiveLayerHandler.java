@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
@@ -46,13 +46,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -68,26 +65,8 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    if( part == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.0") ); //$NON-NLS-1$
-
-    final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
-    if( mapPanel == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.1") ); //$NON-NLS-1$
-
-    final IKalypsoTheme activeTheme = mapPanel.getMapModell().getActiveTheme();
-    if( activeTheme == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.2") ); //$NON-NLS-1$
-
-// final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) activeTheme;
-// final FeatureList featureList = ft.getFeatureList();
-// featureList.invalidate();
-// for( Object object : featureList )
-// {
-// if( object instanceof Feature )
-// ((Feature)object).invalidEnvelope();
-// }
+    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( context );
 
     final GM_Envelope zoomBox = activeTheme.getFullExtent();
     if( zoomBox == null )
@@ -109,7 +88,7 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
 
     wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, zoomBox.getCoordinateSystem() );
 
-    new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, wishBBox ), null );
+    MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, wishBBox ), null );
 
     return Status.OK_STATUS;
   }

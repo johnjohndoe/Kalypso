@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
@@ -47,9 +47,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
@@ -92,7 +89,7 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
    * @param percent
    *          Percentage for increasing the new extend.
    */
-  public ZoomToSelectedFeaturesByLayer( IKalypsoTheme theme, int percent )
+  public ZoomToSelectedFeaturesByLayer( final IKalypsoTheme theme, final int percent )
   {
     m_theme = theme;
 
@@ -104,46 +101,40 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    if( part == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer.0") ); //$NON-NLS-1$
-
-    MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
-    if( mapPanel == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer.1") ); //$NON-NLS-1$
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
     /* If no theme is given, use the active theme. */
     if( m_theme == null )
       m_theme = mapPanel.getMapModell().getActiveTheme();
 
     /* Collect the selected features of this theme. */
-    ArrayList<Feature> features = new ArrayList<Feature>();
+    final ArrayList<Feature> features = new ArrayList<Feature>();
 
     /* This list consists of all selected features. */
-    EasyFeatureWrapper[] allFeatures = mapPanel.getSelectionManager().getAllFeatures();
+    final EasyFeatureWrapper[] allFeatures = mapPanel.getSelectionManager().getAllFeatures();
 
     /* At the moment only the gis template feature theme is supported. */
     if( m_theme instanceof GisTemplateFeatureTheme )
     {
-      GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme) m_theme;
-      FeatureList featureList = theme.getFeatureList();
+      final GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme) m_theme;
+      final FeatureList featureList = theme.getFeatureList();
 
       for( int i = 0; i < featureList.size(); i++ )
       {
-        Object object = featureList.get( i );
+        final Object object = featureList.get( i );
 
         /* Only features are supported. */
         if( object instanceof Feature )
         {
-          Feature feature = (Feature) object;
+          final Feature feature = (Feature) object;
 
           /* If this feature of the theme is one of the selecteded, add it. */
-          for( int j = 0; j < allFeatures.length; j++ )
+          for( final EasyFeatureWrapper allFeature : allFeatures )
           {
-            Feature selectedFeature = allFeatures[j].getFeature();
+            final Feature selectedFeature = allFeature.getFeature();
             if( selectedFeature.equals( feature ) )
             {
               features.add( feature );
@@ -158,7 +149,7 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
       return Status.OK_STATUS;
 
     /* Create the piece, which will zoom to the features. */
-    ZoomToFeaturesPart piece = new ZoomToFeaturesPart( part, features, m_percent );
+    final ZoomToFeaturesPart piece = new ZoomToFeaturesPart( mapPanel, features, m_percent );
 
     /* Zoom to the features. */
     piece.zoomTo();

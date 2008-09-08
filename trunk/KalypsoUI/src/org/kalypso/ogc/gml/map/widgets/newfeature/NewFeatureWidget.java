@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,28 +36,17 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.newfeature;
 
-import java.util.Map;
-
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISourceProviderListener;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.CommandEvent;
+import org.eclipse.core.commands.ICommandListener;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
-import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
+import org.eclipse.ui.commands.ICommandService;
 
 /**
  * Creates a new feature in the current theme and lets the user draw the associated geometries. The feature type of the
@@ -66,79 +55,44 @@ import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
  * 
  * @author kurzbach
  */
-public class NewFeatureWidget extends AbstractCreateGeometryWidget implements IWidgetWithOptions
+public class NewFeatureWidget extends AbstractCreateGeometryWidget
 {
+  private final Command m_command;
 
-  private ISourceProviderListener m_sourceProviderListener;
+  private final ICommandListener m_commandListener;
 
   public NewFeatureWidget( final QName name, final QName[] geomProperties )
   {
     super( name, geomProperties );
 
-    m_sourceProviderListener = new ISourceProviderListener()
+    final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+    m_command = service.getCommand( NewFeatureToolbarContribution.CMD_ID_NEW_FEATURE );
+    m_commandListener = new ICommandListener()
     {
-
-      public void sourceChanged( int sourcePriority, Map sourceValuesByName )
+      @Override
+      public void commandChanged( final CommandEvent commandEvent )
       {
+        // It is necessary to cancel this widget as soon as anything changes,
+        // else we could continue to create new features for non-active themes
         cancel();
       }
-
-      public void sourceChanged( int sourcePriority, String sourceName, Object sourceValue )
-      {
-        cancel();
-      }
-
-      private void cancel( )
-      {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        if( workbench == null || workbench.isClosing() )
-          return;
-
-        final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-        if( activeWorkbenchWindow == null )
-          return;
-
-        final IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-        if( activePage == null )
-          return;
-
-        final Display display = workbench.getDisplay();
-        display.asyncExec( new Runnable()
-        {
-          public void run( )
-          {
-            final MapPanel mapPanel = getMapPanel();
-            if( mapPanel != null )
-              mapPanel.getWidgetManager().setActualWidget( null );
-
-            final IViewPart widgetView = activePage.findView( MapWidgetView.ID );
-            if( widgetView != null )
-              activePage.hideView( widgetView );
-          }
-        } );
-      }
-
     };
-    MapPanelSourceProvider.getInstance().addSourceProviderListener( m_sourceProviderListener );
+
+    m_command.addCommandListener( m_commandListener );
   }
 
   /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.ogc.gml.map.widgets.newfeature.AbstractCreateGeometryWidget#finish()
    */
-  public Control createControl( Composite parent, FormToolkit toolkit )
+  @Override
+  public void finish( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    m_command.removeCommandListener( m_commandListener );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
-   */
-  public void disposeControl( )
+  /** Deactivates myself */
+  protected void cancel( )
   {
-    // TODO Auto-generated method stub
-
+    getMapPanel().getWidgetManager().setActualWidget( null );
   }
-
 }
