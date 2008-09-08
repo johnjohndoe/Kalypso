@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.dwd;
 
@@ -52,6 +52,7 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.logging.Logger;
@@ -121,9 +122,8 @@ public class DWDRasterHelper
     Date date = null;
 
     // search newest...
-    for( int i = 0; i < files.length; i++ )
+    for( final File file : files )
     {
-      final File file = files[i];
       if( file.isDirectory() )
         continue;
 
@@ -149,9 +149,8 @@ public class DWDRasterHelper
     if( removeOthers )
     {
       // got it, so now remove others
-      for( int i = 0; i < files.length; i++ )
+      for( final File file : files )
       {
-        final File file = files[i];
         if( !file.isDirectory() )
         {
           final Date d = getDateFromRaster( file, df );
@@ -189,7 +188,7 @@ public class DWDRasterHelper
   /**
    * @param dwdKey
    */
-  public static String getAxisTypeForDWDKey( int dwdKey )
+  public static String getAxisTypeForDWDKey( final int dwdKey )
   {
     switch( dwdKey )
     {
@@ -232,8 +231,8 @@ public class DWDRasterHelper
 
         if( raster != null )
         {
-          for( int i = 0; i < values.length; i++ )
-            raster.addValue( (Double.parseDouble( values[i] ) + offset) * factor );
+          for( final String value : values )
+            raster.addValue( (Double.parseDouble( value ) + offset) * factor );
         }
 
       }
@@ -345,8 +344,8 @@ public class DWDRasterHelper
       /* Create the reader. */
       if( url.getFile().endsWith( ".gz" ) )
       {
-        GZIPInputStream gzipInputStream = new GZIPInputStream( url.openStream() );
-        InputStreamReader inputStream = new InputStreamReader( gzipInputStream );
+        final GZIPInputStream gzipInputStream = new GZIPInputStream( url.openStream() );
+        final InputStreamReader inputStream = new InputStreamReader( gzipInputStream );
         reader = new LineNumberReader( inputStream );
       }
       else
@@ -355,7 +354,7 @@ public class DWDRasterHelper
       int lmVersion = 0;
       String line = null;
       DWDObservationRaster raster = null;
-      Date date = null;
+      Date blockDate = null;
       int cellpos = 0;
       boolean rightBlock = false; // Is only used by the dynamic header (lmVersion = 1)
       while( (line = reader.readLine()) != null )
@@ -364,10 +363,13 @@ public class DWDRasterHelper
         if( dynamicHeaderMatcher.matches() ) // lm1
         {
           final Date startDate = DATEFORMAT_RASTER.parse( dynamicHeaderMatcher.group( 1 ) );
+          final Calendar startCal = Calendar.getInstance();
+          startCal.setTime( startDate );
           final int key = Integer.parseInt( dynamicHeaderMatcher.group( 2 ) );
-          final long hour = Long.parseLong( dynamicHeaderMatcher.group( 3 ) );
-          // ARG: use calendar to add hours to date
-          date = new Date( startDate.getTime() + 60 * 60 * 1000 * hour );
+          final int hour = Integer.parseInt( dynamicHeaderMatcher.group( 3 ) );
+
+          startCal.add( Calendar.HOUR_OF_DAY, hour );
+          blockDate = startCal.getTime();
 
           if( key == dwdKey )
           {
@@ -386,7 +388,7 @@ public class DWDRasterHelper
         final Matcher staticHeaderMatcher = HEADER_STATIC.matcher( line );
         if( staticHeaderMatcher.matches() ) // lm2 ??
         {
-          date = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
+          blockDate = DATEFORMAT_RASTER.parse( staticHeaderMatcher.group( 1 ) );
           final int key = Integer.parseInt( staticHeaderMatcher.group( 2 ) );
 
           if( key == dwdKey )
@@ -406,37 +408,37 @@ public class DWDRasterHelper
         if( lmVersion == 1 && rightBlock == false )
           continue;
 
-        final String[] values;
         switch( lmVersion )
         {
           case 1:
-            values = (line.trim()).split( " +", 13 );
-            for( int i = 0; i < values.length; i++ )
+          {
+            final String[] values = (line.trim()).split( " +", 13 );
+            for( final String value2 : values )
             {
-              final double value = Double.parseDouble( values[i] );
-              raster.setValueFor( date, cellpos, (value + offset) * factor );
+              final double value = Double.parseDouble( value2 );
+              raster.setValueFor( blockDate, cellpos, (value + offset) * factor );
               cellpos++;
             }
-
-            break;
+          }
+          break;
 
           case 2:
-            //TODO The format is wrong read here!
-            values = (line.trim()).split( " +" );
-            for( int i = 0; i < values.length; i++ )
+          {
+            // One line represents all 78 values for one position.
+            final String[] values = (line.trim()).split( " +" );
+            final Calendar valueDate = Calendar.getInstance();
+            valueDate.setTime( blockDate );
+            for( final String valueStr : values )
             {
-              final double value = Double.parseDouble( values[i] );
-              raster.setValueFor( date, cellpos, (value + offset) * factor );
-              cellpos++;
-              if( cellpos >= maxCells )
-              {
-                long time = date.getTime(); // add one hour
-                date = new Date( time + 1000l * 60l * 60l );
-                cellpos = 0;
-              }
+              final double value = Double.parseDouble( valueStr );
+              raster.setValueFor( valueDate.getTime(), cellpos, (value + offset) * factor );
+              valueDate.add( Calendar.HOUR_OF_DAY, 1 );
             }
 
-            break;
+            cellpos++;
+          }
+
+          break;
         }
       }
 
