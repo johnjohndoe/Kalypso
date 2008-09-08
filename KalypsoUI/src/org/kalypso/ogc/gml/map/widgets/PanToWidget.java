@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -102,12 +102,13 @@ public class PanToWidget extends AbstractWidget
   public void perform( )
   {
     final MapPanel mapPanel = getMapPanel();
-    // REMARK: immediately suppress painting, in order to fix the ugly flicker (map gets paint at old position), after
-    // pan has been released
-    mapPanel.stopPaint();
 
     if( m_startPoint != null && m_endPoint != null && !m_startPoint.equals( m_endPoint ) )
     {
+      // REMARK: immediately suppress painting, in order to fix the ugly flicker (map gets paint at old position), after
+      // pan has been released
+      mapPanel.stopPaint();
+
       final double mx = mapPanel.getWidth() / 2d - (m_endPoint.getX() - m_startPoint.getX());
       final double my = mapPanel.getHeight() / 2d - (m_endPoint.getY() - m_startPoint.getY());
 

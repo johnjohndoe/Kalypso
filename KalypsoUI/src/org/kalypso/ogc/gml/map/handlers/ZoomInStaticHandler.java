@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
@@ -46,12 +46,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -67,13 +63,7 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    if( part == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler.0") ); //$NON-NLS-1$
-
-    final MapPanel mapPanel = (MapPanel) part.getAdapter( MapPanel.class );
-    if( mapPanel == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomInStaticHandler.1") ); //$NON-NLS-1$
+    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
 
     final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 
@@ -93,7 +83,7 @@ public class ZoomInStaticHandler extends AbstractHandler implements IHandler
     wishBBox = GeometryFactory.createGM_Envelope( newMin, newMax, currentBBox.getCoordinateSystem() );
 
     final GM_Envelope zoomBox = wishBBox;
-    new WidgetActionPart( part ).postCommand( new ChangeExtentCommand( mapPanel, zoomBox ), null );
+    MapHandlerUtils.postMapCommand( mapPanel, new ChangeExtentCommand( mapPanel, zoomBox ), null );
 
     return Status.OK_STATUS;
   }

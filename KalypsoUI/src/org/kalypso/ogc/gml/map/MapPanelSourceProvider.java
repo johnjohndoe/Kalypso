@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,19 +36,30 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.eclipse.core.commands.contexts.Context;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.AbstractSourceProvider;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextActivation;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.services.IServiceLocator;
+import org.eclipse.ui.services.IServiceWithSources;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -57,24 +68,26 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 
 /**
- * Provides notifications when the active map panel and its internal properties change.
+ * Manages context and sources corresponding to the map.<br>
+ * As soon as the manager is created on a mapPanel, the map-context is activated and registered with the given
+ * serviceLocator. Also, the mapPanel is provides as source via the evaluation context.<br>
+ * Additional: the activeTheme is always registered as some kind of dynamic context. This should be changed; handlers,
+ * that are at the moment registered against this context should register against the mapContext, and test the active
+ * theme via the corresponding property test (org.kalypso.ui.activeThemeQName).
  * 
- * @author kurzbach
+ * @author Stefan Kurzbach
+ * @author Gernot Belger
  */
 public class MapPanelSourceProvider extends AbstractSourceProvider
 {
+  public static final String MAP_CONTEXT = "org.kalypso.ogc.gml.map.context"; //$NON-NLS-1$
 
   public static final String ACTIVE_MAPPANEL_NAME = "activeMapPanel";
 
-  public static final String ACTIVE_THEME_NAME = "activeTheme";
+  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_MAPPANEL_NAME };
 
-  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_MAPPANEL_NAME, ACTIVE_THEME_NAME };
-
-  private static MapPanelSourceProvider m_instance = null;
-
-  protected final IMapModellListener m_MapModellListener = new MapModellAdapter()
+  protected final IMapModellListener m_mapModellListener = new MapModellAdapter()
   {
-
     /**
      * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
      *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
@@ -82,11 +95,21 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
-      checkActiveTheme();
+      activateThemeContext( nowActive );
+    }
+
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeContextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
+    @Override
+    public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+      activateThemeContext( theme );
     }
   };
 
-  private final IMapPanelListener m_MapPanelListener = new MapPanelAdapter()
+  private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
     /**
      * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
@@ -96,76 +119,70 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     public void onMapModelChanged( final MapPanel source, final IMapModell oldModel, final IMapModell newModel )
     {
       if( oldModel != null )
-        oldModel.removeMapModelListener( m_MapModellListener );
+        oldModel.removeMapModelListener( m_mapModellListener );
       if( newModel != null )
-        newModel.addMapModelListener( m_MapModellListener );
-      checkActiveTheme();
+        newModel.addMapModelListener( m_mapModellListener );
+
+      final IKalypsoTheme activeTheme = newModel == null ? null : newModel.getActiveTheme();
+      activateThemeContext( activeTheme );
     }
   };
 
-  private MapPanel m_activeMapPanel = null;
+  /**
+   * This collection contains all services, with which this provider has been registered. Used in order to correctly
+   * unregister.
+   */
+  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<IServiceWithSources>();
 
-  private IKalypsoTheme m_activeTheme = null;
+  /** Ensures, that the context are activated in the same order as the themes are activated. */
+  private final ISchedulingRule m_muteRule = new MutexRule();
+
+  private MapPanel m_mapPanel;
+
+  private final IContextService m_contextService;
+
+  private IContextActivation m_mapPanelContext;
+
+  private IContextActivation m_themeContext;
 
   /**
-   * Creates a new MapPanelSourceProvider on the given MapPanel
+   * Creates a new MapPanelSourceProvider on the given service locator.
    */
-  public MapPanelSourceProvider( )
+  public MapPanelSourceProvider( final IServiceLocator serviceLocator )
   {
-    registerSourceProviders();
-  }
-
-  @SuppressWarnings("unchecked")
-  protected final void checkActiveTheme( )
-  {
-    final Map currentState = getCurrentState();
-
-    final Object newActiveTheme = currentState.get( ACTIVE_THEME_NAME );
-    if( newActiveTheme != m_activeTheme )
-    {
-      m_activeTheme = (IKalypsoTheme) newActiveTheme;
-      fireSourceChanged( 0, ACTIVE_THEME_NAME, m_activeTheme );
-    }
+    this( serviceLocator, null );
   }
 
   /**
-   * Call this method if some map panel thinks it is the active one
+   * Creates a new MapPanelSourceProvider on the given MapPanel.<br>
+   * Initialises it state with the given parameters.
    */
-  public void setActiveMapPanel( final MapPanel mapPanel )
+  public MapPanelSourceProvider( final IServiceLocator serviceLocator, final MapPanel mapPanel )
   {
-    if( m_activeMapPanel != mapPanel )
-    {
-      if( m_activeMapPanel != null )
-      {
-        m_MapPanelListener.onMapModelChanged( m_activeMapPanel, null, null );
-        m_activeMapPanel.removeMapPanelListener( m_MapPanelListener );
-      }
+    m_mapPanel = mapPanel;
 
-      m_activeMapPanel = mapPanel;
+    m_contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
+    registerServiceWithSources( serviceLocator, IEvaluationService.class );
+    registerServiceWithSources( serviceLocator, IHandlerService.class );
+    registerServiceWithSources( serviceLocator, IMenuService.class );
 
-      if( m_activeMapPanel != null )
-      {
-        m_activeMapPanel.addMapPanelListener( m_MapPanelListener );
-        m_MapPanelListener.onMapModelChanged( m_activeMapPanel, null, m_activeMapPanel.getMapModell() );
-      }
-      fireSourceChanged( 0, ACTIVE_MAPPANEL_NAME, m_activeMapPanel );
-      checkActiveTheme();
-    }
+    m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
+
+    m_mapPanel.addMapPanelListener( m_mapPanelListener );
+    m_mapPanelListener.onMapModelChanged( m_mapPanel, null, m_mapPanel.getMapModell() );
   }
 
-  public void unsetActiveMapPanel( final MapPanel mapPanel )
+  private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
   {
-    if( m_activeMapPanel == mapPanel )
-    {
-      if( m_activeMapPanel != null )
-      {
-        m_MapPanelListener.onMapModelChanged( m_activeMapPanel, null, null );
-        m_activeMapPanel.removeMapPanelListener( m_MapPanelListener );
-      }
-      m_activeMapPanel = null;
-      fireSourceChanged( 0, ACTIVE_MAPPANEL_NAME, m_activeMapPanel );
-      checkActiveTheme();
-    }
+    final IServiceWithSources service = (IServiceWithSources) serviceLocator.getService( serviceClass );
+    if( service == null )
+      return null;
+
+    service.addSourceProvider( this );
+
+    m_registeredServices.add( service );
+
+    return service;
   }
 
   /**
@@ -173,32 +190,29 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
    */
   public void dispose( )
   {
-    unregisterSourceProviders();
-    m_activeMapPanel = null;
-    m_activeTheme = null;
+    m_mapPanel.removeMapPanelListener( m_mapPanelListener );
+    m_mapPanelListener.onMapModelChanged( m_mapPanel, m_mapPanel.getMapModell(), null );
+
+    m_mapPanel = null;
+
+    for( final IServiceWithSources service : m_registeredServices )
+      service.removeSourceProvider( this );
+
+    if( m_mapPanelContext != null )
+      m_contextService.deactivateContext( m_mapPanelContext );
+
+    if( m_themeContext != null )
+      m_contextService.deactivateContext( m_themeContext );
   }
 
   /**
    * @see org.eclipse.ui.ISourceProvider#getCurrentState()
    */
-  @SuppressWarnings("unchecked")
-  public Map getCurrentState( )
+  public Map< ? , ? > getCurrentState( )
   {
-    final Map currentState = new TreeMap();
-    currentState.put( ACTIVE_MAPPANEL_NAME, m_activeMapPanel );
-    final IKalypsoTheme activeMapTheme = getActiveMapTheme( m_activeMapPanel );
-    currentState.put( ACTIVE_THEME_NAME, activeMapTheme );
+    final Map<String, Object> currentState = new TreeMap<String, Object>();
+    currentState.put( ACTIVE_MAPPANEL_NAME, m_mapPanel );
     return currentState;
-  }
-
-  private IKalypsoTheme getActiveMapTheme( final MapPanel activeMapPanel )
-  {
-    if( activeMapPanel == null )
-      return null;
-    final IMapModell mapModell = activeMapPanel.getMapModell();
-    if( mapModell == null )
-      return null;
-    return mapModell.getActiveTheme();
   }
 
   /**
@@ -209,44 +223,55 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     return PROVIDED_SOURCE_NAMES;
   }
 
-  public static MapPanelSourceProvider getInstance( )
+  protected void activateThemeContext( final IKalypsoTheme activeTheme )
   {
-    if( m_instance == null )
-      m_instance = new MapPanelSourceProvider();
-    return m_instance;
+    final UIJob job = new UIJob( "Activate theme context job" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        activateThemeContextSWT( activeTheme );
+        return Status.OK_STATUS;
+      }
+    };
+    job.setRule( m_muteRule );
+    job.setSystem( true );
+    job.schedule();
   }
 
-  private void registerSourceProviders( )
+  /**
+   * Same as {@link #activateThemeContext(IKalypsoTheme)}, but MUST run in the swt thread.
+   */
+  protected void activateThemeContextSWT( final IKalypsoTheme activeTheme )
   {
-    if( PlatformUI.isWorkbenchRunning() )
+    if( m_themeContext != null )
+      m_contextService.deactivateContext( m_themeContext );
+
+    m_themeContext = null;
+
+    if( activeTheme != null )
     {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IEvaluationService evaluationService = (IEvaluationService) workbench.getService( IEvaluationService.class );
-      if( evaluationService != null )
-        evaluationService.addSourceProvider( this );
+      final String contextId = activeTheme.getTypeContext();
+      final Context context = m_contextService.getContext( contextId );
+      if( !context.isDefined() )
+      {
+        final String parentId = MAP_CONTEXT;
+        context.define( contextId, contextId, parentId );
+      }
 
-      final IContextService contextService = (IContextService) workbench.getService( IContextService.class );
-      if( contextService != null )
-        contextService.addSourceProvider( this );
-    }
-  }
+      m_themeContext = m_contextService.activateContext( contextId );
 
-  private void unregisterSourceProviders( )
-  {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    if( workbench != null && !workbench.isClosing() )
-    {
-      final IEvaluationService evaluationService = (IEvaluationService) workbench.getService( IEvaluationService.class );
-      if( evaluationService != null )
-        evaluationService.removeSourceProvider( this );
-
-      final IContextService contextService = (IContextService) workbench.getService( IContextService.class );
-      if( contextService != null )
-        contextService.removeSourceProvider( this );
-
-      final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-      if( handlerService != null )
-        handlerService.removeSourceProvider( this );
+      // REMARK: in order to update the command contributions, we
+      // activate/deactivate the current map-context.
+      // This is better, as all items should be completely update()'d
+      // ( instead of just refreshed via an UIElement updater.
+      // This is for example necessary for the NewFeature-DropDown.
+      // There is probably a better way to do this, which one?
+      if( m_mapPanelContext != null )
+      {
+        m_contextService.deactivateContext( m_mapPanelContext );
+        m_mapPanelContext = m_contextService.activateContext( MAP_CONTEXT );
+      }
     }
   }
 

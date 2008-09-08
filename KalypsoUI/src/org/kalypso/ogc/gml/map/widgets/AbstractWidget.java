@@ -171,7 +171,6 @@ public abstract class AbstractWidget implements IWidget
   public void dragged( final Point p )
   {
     // not implemented by default
-
   }
 
   /**
@@ -187,7 +186,6 @@ public abstract class AbstractWidget implements IWidget
   public void leftClicked( final Point p )
   {
     // not implemented by default
-
   }
 
   /**

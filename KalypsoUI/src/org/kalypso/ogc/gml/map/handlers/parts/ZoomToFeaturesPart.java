@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml.map.handlers.parts;
 
 import java.util.List;
 
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.core.commands.ExecutionException;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ui.editor.mapeditor.actiondelegates.WidgetActionPart;
+import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -62,11 +62,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class ZoomToFeaturesPart
 {
   /**
-   * A view part containing a map panel.
-   */
-  private final IWorkbenchPart m_part;
-
-  /**
    * The list of features, to zoom to.
    */
   private final Feature[] m_features;
@@ -75,6 +70,8 @@ public class ZoomToFeaturesPart
    * This value specifies the amount of the new extent used to increase it for creating a border around the new extent.
    */
   private final int m_percent;
+
+  private final MapPanel m_mapPanel;
 
   /**
    * The constructor.
@@ -87,16 +84,16 @@ public class ZoomToFeaturesPart
    *            This value specifies the amount of the new extent used to increase it for creating a border around the
    *            new extent.
    */
-  public ZoomToFeaturesPart( final IWorkbenchPart part, final List<Feature> features, final int percent )
+  public ZoomToFeaturesPart( final MapPanel mapPanel, final List<Feature> features, final int percent )
   {
-    m_part = part;
+    m_mapPanel = mapPanel;
     m_features = features.toArray( new Feature[] {} );
     m_percent = percent;
   }
 
-  public ZoomToFeaturesPart( final IWorkbenchPart part, final Feature[] features, final int percent )
+  public ZoomToFeaturesPart( final MapPanel mapPanel, final Feature[] features, final int percent )
   {
-    m_part = part;
+    m_mapPanel = mapPanel;
     m_features = features;
     m_percent = percent;
   }
@@ -104,7 +101,7 @@ public class ZoomToFeaturesPart
   /**
    * This function will start the zoom action (boyaahh!).
    */
-  public void zoomTo( )
+  public void zoomTo( ) throws ExecutionException
   {
     if( m_features.length == 0 )
       return;
@@ -143,12 +140,7 @@ public class ZoomToFeaturesPart
     /* Create the new envelope. */
     final GM_Envelope newEnvelope = GeometryFactory.createGM_Envelope( newMin, newMax, envelope.getCoordinateSystem() );
 
-    final MapPanel mapPanel = (MapPanel) m_part.getAdapter( MapPanel.class );
-    if( mapPanel == null )
-      return;
-
     /* Finally set the bounding box. */
-    final WidgetActionPart part = new WidgetActionPart( m_part );
-    part.postCommand( new ChangeExtentCommand( mapPanel, newEnvelope ), null );
+    MapHandlerUtils.postMapCommand( m_mapPanel, new ChangeExtentCommand( m_mapPanel, newEnvelope ), null );
   }
 }
