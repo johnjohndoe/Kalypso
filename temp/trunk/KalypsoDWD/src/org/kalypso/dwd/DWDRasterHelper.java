@@ -421,6 +421,7 @@ public class DWDRasterHelper
             break;
 
           case 2:
+            //TODO The format is wrong read here!
             values = (line.trim()).split( " +" );
             for( int i = 0; i < values.length; i++ )
             {
