@@ -1540,6 +1540,12 @@
               style="push"
               tooltip="%command.tooltip.1">
         </command>
+        <command
+              commandId="org.kalypso.kml.export.command"
+              label="kml Export"
+              style="push"
+              tooltip="kml Export">
+        </command>
      </menuContribution>
      <menuContribution
            locationURI="menu:org.kalypso.ui.views.outline?after=outlineExport">
