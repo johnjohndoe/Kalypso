@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
@@ -51,6 +51,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface KalypsoBaseFeature extends BaseFeature
 {
+  // TODO: put deprecated comments into javadoc (@deprecated)
+
   @Deprecated
   // use {FeatureDeegreeTwo}.getDefaultGeometryPropertyValue() instead
   GM_Object getDefaultGeometryProperty( );
