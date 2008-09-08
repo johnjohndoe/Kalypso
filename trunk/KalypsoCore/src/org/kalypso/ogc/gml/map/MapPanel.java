@@ -96,7 +96,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
- * @author vdoemming
+ * @author Andreas von Dömming
  */
 public class MapPanel extends Canvas implements ComponentListener, ISelectionProvider
 {
@@ -182,6 +182,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   private final List<IMapPanelPaintListener> m_paintListeners = new ArrayList<IMapPanelPaintListener>();
 
+  private final ExtentHistory m_extentHistory = new ExtentHistory( 200 );
+
   private Boolean m_shouldPaint = true;
 
   private String m_message = ""; //$NON-NLS-1$
@@ -228,7 +230,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
      *      org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
-    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, boolean lastVisibility )
+    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       if( lastVisibility )
         forceRepaint();
@@ -239,7 +241,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
      *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
     @Override
-    public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, boolean visibility )
+    public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
       forceRepaint();
     }
@@ -389,9 +391,9 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   public void componentResized( final ComponentEvent e )
   {
     if( m_wishBBox != null )
-      setBoundingBox( m_wishBBox );
+      setBoundingBox( m_wishBBox, false );
     else
-      setBoundingBox( getBoundingBox() );
+      setBoundingBox( getBoundingBox(), false );
   }
 
   /**
@@ -400,9 +402,9 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   public void componentShown( final ComponentEvent e )
   {
     if( m_wishBBox != null )
-      setBoundingBox( m_wishBBox );
+      setBoundingBox( m_wishBBox, false );
     else
-      setBoundingBox( getBoundingBox() );
+      setBoundingBox( getBoundingBox(), false );
   }
 
   public void dispose( )
@@ -699,14 +701,14 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
   /**
    * <p>
-   * This method was synchronized in order to fix bugs caused by threading issues concerning the setBoundBox method.
+   * This method was synchronised in order to fix bugs caused by threading issues concerning the setBoundBox method.
    * </p>
    * <p>
    * The bug was fixed by this, an so far no dead locks are encountered. see also {@link #getBoundingBox()}and
    * {@link #setBoundingBox(GM_Envelope)}
    * </p>
    * <p>
-   * Make sure, that no call to one of the 'fire...' methods is made in the synchronized code.
+   * Make sure, that no call to one of the 'fire...' methods is made in the synchronised code.
    * </p>
    * 
    * @see java.awt.Component#paint(java.awt.Graphics)
@@ -843,7 +845,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
       if( endPoint == null ) // not dragged
       {
-        // TODO depend on featuretype
+        // TODO depends on featuretype
         // line and point with radius
         // polygon without radius
         final double gisRadius = Math.abs( transform.getSourceX( startPoint.getX() + radius ) - g1x );
@@ -858,7 +860,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
         changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, m_selectionManager, selectionMode );
       }
       else
-      // dragged
+        // dragged
       {
         final double g2x = transform.getSourceX( endPoint.getX() );
         final double g2y = transform.getSourceY( endPoint.getY() );
@@ -895,15 +897,32 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
    * This function sets the bounding box to this map panel and all its themes.
    * 
    * @param wishBBox
-   *            The new extent.
+   *          The new extent, will be adapted so it fits into the current size of the panel.
    */
-  public synchronized void setBoundingBox( GM_Envelope wishBBox )
+  public synchronized void setBoundingBox( final GM_Envelope wishBBox )
+  {
+    setBoundingBox( wishBBox, true );
+  }
+
+  /**
+   * This function sets the bounding box to this map panel and all its themes.
+   * 
+   * @param wishBBox
+   *          The new extent, will be adapted so it fits into the current size of the panel.
+   * @param useHistory
+   *          If <code>true</code>, the last extend is put into the extend history.
+   */
+  public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory )
   {
     /* The wished bounding box. */
     m_wishBBox = wishBBox;
 
-    /* Store the old extend. */
-    GM_Envelope oldExtent = m_boundingBox;
+    /* We do remember the wish-box here, this behaves more nicely if the size of the view changed meanwhile. */
+    if( useHistory )
+      m_extentHistory.push( m_wishBBox );
+
+    /* Store the old extent */
+    final GM_Envelope oldExtent = m_boundingBox;
 
     /* Adjust the new extent (using the wish bounding box). */
     m_boundingBox = MapModellHelper.adjustBoundingBox( m_model, m_wishBBox, getRatio() );
@@ -913,7 +932,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
       /* Debug-Information. */
       if( KalypsoCoreDebug.MAP_PANEL.isEnabled() )
       {
-        StringBuffer dump = new StringBuffer();
+        final StringBuffer dump = new StringBuffer();
         dump.append( "MinX:" + m_boundingBox.getMin().getX() );
         dump.append( "\nMinY:" + m_boundingBox.getMin().getY() );
         dump.append( "\nMaxX:" + m_boundingBox.getMax().getX() );
@@ -940,8 +959,8 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
     /* Tell the themes , that the extent has changed. */
     if( m_model != null )
     {
-      int height = getHeight();
-      int width = getWidth();
+      final int height = getHeight();
+      final int width = getWidth();
 
       /* Update dimension. */
       if( (height != m_height) || (width != m_width) )
@@ -1029,7 +1048,7 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
   }
 
   /**
-   * Causes any pending paint to be stopped, and nothing will be painted until ne next call to invalidateMap (called if
+   * Causes any pending paint to be stopped, and nothing will be painted until the next call to invalidateMap (called if
    * setBoundingBox is called).<br>
    * Fixes the ugly pan flicker bug (map gets drawn on old position after pan has been released).
    */
@@ -1039,5 +1058,10 @@ public class MapPanel extends Canvas implements ComponentListener, ISelectionPro
 
     if( m_mapModellPainter != null )
       m_mapModellPainter.cancel();
+  }
+
+  public ExtentHistory getExtentHistory( )
+  {
+    return m_extentHistory;
   }
 }

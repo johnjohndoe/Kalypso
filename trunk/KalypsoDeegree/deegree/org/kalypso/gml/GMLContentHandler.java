@@ -71,12 +71,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * A {@link org.xml.sax.ContentHandler} imeplementation which parses GML fragment and produces a {@link Feature}
- * hirarchy from it.
- * <p>
+ * A {@link org.xml.sax.ContentHandler} implementation which parses GML fragment and produces a {@link Feature}
+ * hierarchy from it.<br>
  * This content handler only parses the feature-property structure and delegates the parsing of any (non-feature)
  * property-values to their corresponding {@link IMarshallingTypeHandler}s.
- * </p>
  * 
  * @author Andreas von Doemming
  */
@@ -156,7 +154,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     /* Go into scope with that feature */
     m_scopeProperty = pt;
 
-    // TODO: normally this should be enough. We should now activate a delegate contentHandler whih parses the content
+    // TODO: normally this should be enough. We should now activate a delegate contentHandler which parses the content
     // of a property
 
     if( pt instanceof IValuePropertyType )
@@ -179,7 +177,7 @@ public class GMLContentHandler extends DelegateContentHandler implements Unmarsh
     // TODO: we should distinguish between simple and complex types here and use different types of typeHandlers for
     // that. Reason1: get rid of overhead for simple types, just read the content as string and translate to the
     // corresponding simple type. Reason2: If it is clear for the complex types that they are complex, we may
-    // enhance parsing there (for example dont read the end element of the property).
+    // enhance parsing there (for example do not read the end element of the property).
 
     final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
 
