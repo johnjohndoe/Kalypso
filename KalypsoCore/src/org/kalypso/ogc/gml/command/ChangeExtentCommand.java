@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
@@ -58,11 +58,19 @@ public class ChangeExtentCommand implements ICommand
 
   private final MapPanel m_mapPanel;
 
+  private final boolean m_useHistory;
+
   public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox )
   {
+    this( mapPanel, boundingBox, true );
+  }
+
+  public ChangeExtentCommand( final MapPanel mapPanel, final GM_Envelope boundingBox, final boolean useHistory )
+  {
     m_mapPanel = mapPanel;
-    m_undoBoundingBox = mapPanel.getBoundingBox();
+    m_useHistory = useHistory;
     m_doBoundingBox = boundingBox;
+    m_undoBoundingBox = mapPanel.getBoundingBox();
   }
 
   public boolean isUndoable( )
@@ -72,7 +80,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void process( ) throws Exception
   {
-    m_mapPanel.setBoundingBox( m_doBoundingBox );
+    m_mapPanel.setBoundingBox( m_doBoundingBox, m_useHistory );
   }
 
   public void redo( ) throws Exception
@@ -82,7 +90,7 @@ public class ChangeExtentCommand implements ICommand
 
   public void undo( ) throws Exception
   {
-    m_mapPanel.setBoundingBox( m_undoBoundingBox );
+    m_mapPanel.setBoundingBox( m_undoBoundingBox, m_useHistory );
   }
 
   /**
