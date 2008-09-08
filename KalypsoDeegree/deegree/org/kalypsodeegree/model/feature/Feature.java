@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
@@ -47,6 +50,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public interface Feature extends KalypsoBaseFeature, Deegree2Feature
 {
+  /** QName of gml's gml:_Feature */
+  public final static QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" );
 
   /** Returns the gml:name property of the bound feature. */
   public String getName( );

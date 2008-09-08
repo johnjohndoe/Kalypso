@@ -58,7 +58,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.filterencoding.IFunctionExpression;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBinding;
 import org.kalypsodeegree.model.feature.IGmlWorkspaceListener;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.validation.IFeatureRule;
@@ -89,6 +88,8 @@ public class KalypsoDeegreeExtensions
   private final static String LISTENER_EXTENSION_POINT = "org.kalypso.deegree.gmlWorkspaceListener";
 
   private final static String RULES_EXTENSION_POINT = "org.kalypso.deegree.featureRule";
+
+  private final static String FEATUREBINDING_EXTENSION_POINT = "org.kalypso.deegree.featureBinding";
 
   private static final IGmlWorkspaceListener[] EMPTY_LISTENERS = new IGmlWorkspaceListener[] {};
 
@@ -260,7 +261,7 @@ public class KalypsoDeegreeExtensions
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IFeatureBinding.ID );
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( FEATUREBINDING_EXTENSION_POINT );
 
       for( final IConfigurationElement configurationElement : elements )
       {
