@@ -65,7 +65,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
-    public void selectionChanged( IFeatureSelection selection )
+    public void selectionChanged( final IFeatureSelection selection )
     {
       onSelectionChanged( selection );
     }
@@ -92,6 +92,11 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
     m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
   }
 
+  public ICommandTarget getCommandTarget( )
+  {
+    return m_commandTarget;
+  }
+
   // MouseAdapter
   public void mouseClicked( final MouseEvent e )
   {
@@ -112,7 +117,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-          break;
+        break;
 
         case MouseEvent.BUTTON2:
           actualWidget.middleClicked( e.getPoint() );
@@ -125,7 +130,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-          break;
+        break;
 
         default:
           break;
@@ -253,7 +258,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   /**
    * Adds a listener to this manager.
    * <p>
-   * Has no effekt, if the same listener was already registered.
+   * Has no effect, if the same listener was already registered.
    */
   public void addWidgetChangeListener( final IWidgetChangeListener listener )
   {
@@ -263,7 +268,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, KeyLis
   /**
    * Removes a listener from this manager.
    * <p>
-   * Has no effekt, if this listener was not added to this manager before.
+   * Has no effect, if this listener was not added to this manager before.
    */
   public void removeWidgetChangeListener( final IWidgetChangeListener listener )
   {
