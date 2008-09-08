@@ -74,7 +74,6 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -89,7 +88,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")//$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class MapPartHelper
 {
   private MapPartHelper( )
@@ -97,7 +96,7 @@ public class MapPartHelper
     // will not be instantiated
   }
 
-  public static Control createMapPanelPartControl( final Composite parent, final MapPanel mapPanel, final IWorkbenchPartSite site, boolean doCreateMenu )
+  public static Control createMapPanelPartControl( final Composite parent, final MapPanel mapPanel, final IWorkbenchPartSite site, final boolean doCreateMenu )
   {
     final Composite composite = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.NO_BACKGROUND );
     // create MapPanel
@@ -113,7 +112,7 @@ public class MapPartHelper
        * @see org.eclipse.swt.events.FocusAdapter#focusGained(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusGained( FocusEvent e )
+      public void focusGained( final FocusEvent e )
       {
         SwingUtilities.invokeLater( new Runnable()
         {
@@ -122,8 +121,6 @@ public class MapPartHelper
             mapPanel.requestFocus();
           }
         } );
-        final MapPanelSourceProvider sourceProvider = MapPanelSourceProvider.getInstance();
-        sourceProvider.setActiveMapPanel( mapPanel );
       }
     } );
 
@@ -175,7 +172,7 @@ public class MapPartHelper
       final StructuredSelection themeSelection = new StructuredSelection( theme );
       final ISelectionProvider selectionProvider = new ISelectionProvider()
       {
-        public void addSelectionChangedListener( ISelectionChangedListener listener )
+        public void addSelectionChangedListener( final ISelectionChangedListener listener )
         {
         }
 
@@ -184,11 +181,11 @@ public class MapPartHelper
           return themeSelection;
         }
 
-        public void removeSelectionChangedListener( ISelectionChangedListener listener )
+        public void removeSelectionChangedListener( final ISelectionChangedListener listener )
         {
         }
 
-        public void setSelection( ISelection selection )
+        public void setSelection( final ISelection selection )
         {
         }
       };

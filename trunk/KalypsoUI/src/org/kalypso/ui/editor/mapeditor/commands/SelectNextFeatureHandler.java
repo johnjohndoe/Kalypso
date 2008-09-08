@@ -52,7 +52,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -81,7 +81,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
   {
     if( data instanceof Map )
     {
-      Map<String, String> m_map = (Map<String, String>) data;
+      final Map<String, String> m_map = (Map<String, String>) data;
       m_forward = Boolean.valueOf( m_map.get( "forward" ) ).booleanValue();
       m_rotate = Boolean.valueOf( m_map.get( "rotate" ) ).booleanValue();
     }
@@ -93,16 +93,8 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IExecut
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final MapPanel mapPanel = (MapPanel) context.getVariable( "mapPanel" );
-    if( mapPanel == null )
-      throw new ExecutionException( "MapPanel not set" );
-
-    mapPanel.getSelection();
-    final IMapModell mapModell = mapPanel.getMapModell();
-    if( mapModell == null )
-      return null;
-
-    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+    final MapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+    final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveTheme( context );
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return null;
 
