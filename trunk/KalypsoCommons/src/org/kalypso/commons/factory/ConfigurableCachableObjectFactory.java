@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.factory;
 
@@ -103,7 +103,7 @@ public class ConfigurableCachableObjectFactory
    * 
    * @see ConfigurableCachableObjectFactory#getObjectInstance(String, Class, Object[])
    */
-  public Object getObjectInstance( final String type, final Class expected ) throws FactoryException
+  public Object getObjectInstance( final String type, final Class< ? > expected ) throws FactoryException
   {
     return getObjectInstance( type, expected, null );
   }
@@ -122,8 +122,8 @@ public class ConfigurableCachableObjectFactory
    * <p>
    * WICHTIG: Dies bedeutet dass man also Argumente benutzen sollte nur wenn der Cache nicht aktiviert ist.
    */
-  public Object getObjectInstance( final String type, final Class expected, final Object[] arguments )
-      throws FactoryException
+  public Object getObjectInstance( final String type, final Class< ? > expected, final Object[] arguments )
+  throws FactoryException
   {
     final String className = m_props.getProperty( type );
     if( className == null )
@@ -140,7 +140,7 @@ public class ConfigurableCachableObjectFactory
       {
         obj = ClassUtilities.newInstance( className, expected, m_classLoader, arguments );
       }
-      catch( ClassUtilityException e )
+      catch( final ClassUtilityException e )
       {
         throw new FactoryException( e );
       }
@@ -162,7 +162,7 @@ public class ConfigurableCachableObjectFactory
    * 
    * @param props
    */
-  public void addProperties( Properties props )
+  public void addProperties( final Properties props )
   {
     m_props.putAll( props );
   }
