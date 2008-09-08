@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kalypsomodel1d2d.ui.map.fenetRoughness;
 
@@ -51,8 +51,4 @@ import org.kalypso.ogc.gml.map.widgets.SelectWidget;
  */
 public class DeletePolygonWidgetWrapper extends SelectWidget
 {
-  public DeletePolygonWidgetWrapper( )
-  {
-    super( "Polygone zeichnen", "" );
-  }
 }
