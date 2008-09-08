@@ -41,10 +41,11 @@
 package org.kalypsodeegree.model.feature;
 
 /**
+ * TODO: @Dirk: i think we do not need it any more... should we just remove it?, Gernot.
+ * 
  * @author kuch
  */
 public interface IFeatureBinding extends Feature
 {
-  String ID = "org.kalypso.deegree.featureBinding";
 
 }

@@ -20,7 +20,7 @@ Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree2;visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: com.sun.media.jai.codec,
  com.sun.media.jai.codecimpl,
