@@ -206,9 +206,6 @@ cipk feb07 add LLDONE test
           ENDIF
 	  enddo
       ENDDO
-      DO N=1,NSZF
-      WRITE(198,'(2I15)') N,ICHGL(N)
-      ENDDO
       
       do n=1,np
   	  do m=1,ndf
