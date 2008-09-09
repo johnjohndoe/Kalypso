@@ -123,14 +123,6 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
   @SuppressWarnings("boxing")//$NON-NLS-1$
   protected void createLayer( )
   {
-    // get visibility and clear layer
-    final Map<String, Boolean> visibility = new HashMap<String, Boolean>();
-    final ILayerManager lm = m_chart.getChartModel().getLayerManager();
-    for( final IChartLayer layer : lm.getLayers() )
-    {
-      visibility.put( layer.getId(), layer.isVisible() );
-      lm.removeLayer( layer );
-    }
 
     final IProfil profil = getProfil();
     if( profil != null )
@@ -143,18 +135,31 @@ public class ProfilChartView extends AbstractProfilView implements IPersistableE
           // TODO: display userinformation
           return;
       }
-      // call provider
-      final String[] requieredLayer = m_layerProvider.getRequiredLayer( this );
 
-      for( final String layerId : requieredLayer )
+      final HashMap<String, IChartLayer> requieredLayer = new HashMap<String, IChartLayer>();
+      for( final String layerId : m_layerProvider.getRequiredLayer( this ) )
       {
         final IProfilChartLayer layer = m_layerProvider.createLayer( layerId, this );
         if( layer != null )
-        {
-          final Boolean visible = visibility.get( layer.getId() );
-          layer.setVisible( visible == null ? layer.isVisible() : visible );
+          requieredLayer.put( layerId, layer );
+      }
+
+      final ILayerManager lm = m_chart.getChartModel().getLayerManager();
+      final HashMap<String, IChartLayer> existingLayer = new HashMap<String, IChartLayer>();
+      for( final IChartLayer layer : lm.getLayers() )
+      {
+        existingLayer.put( layer.getId(), layer );
+      }
+
+      for( final IChartLayer layer : requieredLayer.values() )
+      {
+        if( existingLayer.get( layer.getId() ) == null )
           lm.addLayer( layer );
-        }
+      }
+      for( final IChartLayer layer : existingLayer.values() )
+      {
+        if( requieredLayer.get( layer.getId() ) == null )
+          lm.removeLayer( layer );
       }
     }
 

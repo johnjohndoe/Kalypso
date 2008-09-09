@@ -40,31 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.action;
 
+import java.util.Collections;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.ISources;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIImages;
 import org.kalypso.model.wspm.ui.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartView;
+
+import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 public enum ProfilChartActionsEnum
 {
   ZOOM_OUT(Messages.ProfilChartActionsEnum_0, Messages.ProfilChartActionsEnum_1, KalypsoModelWspmUIImages.ID_CHART_ZOOM_OUT, null, IAction.AS_RADIO_BUTTON),
   ZOOM_IN(Messages.ProfilChartActionsEnum_2, Messages.ProfilChartActionsEnum_3, KalypsoModelWspmUIImages.ID_CHART_ZOOM_IN, null, IAction.AS_RADIO_BUTTON),
   PAN(Messages.ProfilChartActionsEnum_4, Messages.ProfilChartActionsEnum_5, KalypsoModelWspmUIImages.ID_CHART_PAN, null, IAction.AS_RADIO_BUTTON),
-// TODO: KIM Ansicht Seitenverhältnis überarbeiten
-// FIX_RATIO("Seitenverhältnis", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
-// IAction.AS_DROP_DOWN_MENU),
-// FIX_RATIO_0("auto", "Seitenverhältnis anpassen", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
-// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
-// FIX_RATIO_1("1:1", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
-// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
-// FIX_RATIO_2("1:2", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
-// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
-// FIX_RATIO_3("1:5", "Seitenverhältnis fixieren", KalypsoModelWspmUIImages.ID_CHART_FIX_RATIO, null,
-// IAction.AS_RADIO_BUTTON, "FIX_RATIO"),
-
-  EDIT(Messages.ProfilChartActionsEnum_6, Messages.ProfilChartActionsEnum_7, KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_CHECK_BOX),
+  EDIT(Messages.ProfilChartActionsEnum_6, Messages.ProfilChartActionsEnum_7, KalypsoModelWspmUIImages.ID_CHART_EDIT, null, IAction.AS_RADIO_BUTTON),
   MAXIMIZE(Messages.ProfilChartActionsEnum_8, Messages.ProfilChartActionsEnum_9, KalypsoModelWspmUIImages.ID_CHART_MAXIMIZE, null, IAction.AS_PUSH_BUTTON),
   EXPORT_IMAGE(Messages.ProfilChartActionsEnum_10, Messages.ProfilChartActionsEnum_11, KalypsoModelWspmUIImages.ID_CHART_SCREENSHOT, null, IAction.AS_PUSH_BUTTON);
 
@@ -126,7 +124,7 @@ public enum ProfilChartActionsEnum
     return m_label;
   }
 
-  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction )
+  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction, final IChartDragHandler chartHandler )
   {
     final int style = chartAction.getStyle();
     final String label = chartAction.toString();
@@ -139,7 +137,7 @@ public enum ProfilChartActionsEnum
       @Override
       public void run( )
       {
-       // profilView.runChartAction( chartAction );
+        profilView.getPlotDragHandler().setActiveHandler( chartHandler );
       }
     };
 
@@ -150,4 +148,40 @@ public enum ProfilChartActionsEnum
     return action;
   }
 
+  public static IAction createAction( final ProfilChartView profilView, final ProfilChartActionsEnum chartAction, final AbstractHandler chartHandler )
+  {
+    final int style = chartAction.getStyle();
+    final String label = chartAction.toString();
+
+    final IAction action = new Action( label, style )
+    {
+      /**
+       * @see org.eclipse.jface.action.Action#run()
+       */
+      @Override
+      public void run( )
+      {
+        final EvaluationContext context = new EvaluationContext( null, this );
+        context.addVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME, profilView );
+        if( profilView != null )
+          context.addVariable( ISources.ACTIVE_SHELL_NAME, profilView.getControl().getDisplay().getActiveShell() );
+        final ExecutionEvent event = new ExecutionEvent( null, Collections.EMPTY_MAP, null, context );
+
+        try
+        {
+          chartHandler.execute( event );
+        }
+        catch( ExecutionException e )
+        {
+          throw new RuntimeException( e );
+        }
+      }
+    };
+
+    action.setToolTipText( chartAction.getTooltip() );
+    action.setImageDescriptor( chartAction.getEnabledImage() );
+    action.setDisabledImageDescriptor( chartAction.getDisabledImage() );
+
+    return action;
+  }
 }
