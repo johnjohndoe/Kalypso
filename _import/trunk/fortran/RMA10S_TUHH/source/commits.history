@@ -437,4 +437,8 @@ Version 1.1.0 (laufende Änderungen)
 049.) If MKL is used it produces at every reordering step a new memory allocatio without deleting the old one. Furthermore the ierror variable was from wrong type. This changed and
       pardiso is called a third time, for cleaning up the memory to run it with a new equation system.
       
---- Nico Schrage, 05.09.200 (1.1.0alpha3)
+--- Nico Schrage, 05.09.2008 (1.1.0alpha3)
+
+50.)  Delete output to unit 198 in front_mkl3.for
+
+--- Nico Schrage, 09.09.2008 (1.1.0alpha3)
