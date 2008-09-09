@@ -497,7 +497,7 @@ public class Control1D2DConverter
       ihre = 0;
     }
 
-    formatter.format( "DT%14.2f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre ); //$NON-NLS-1$
+    formatter.format( "DT%14.5f%8d%8d%8.2f", timeStepHours, year, dayOfYear, ihre ); //$NON-NLS-1$
 
     // BC lines
     if( niti == 0 )
