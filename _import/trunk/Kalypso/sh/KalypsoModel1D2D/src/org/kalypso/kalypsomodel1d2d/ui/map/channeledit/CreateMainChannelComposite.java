@@ -74,6 +74,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.chart.ui.editor.commandhandler.ExportHandler;
+import org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler;
+import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
+import org.kalypso.chart.ui.editor.mousehandler.DragPanHandler;
+import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
+import org.kalypso.chart.ui.editor.mousehandler.DragZoomOutHandler;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
@@ -100,8 +106,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.view.impl.ChartComposite;
 
 /**
  * @author Thomas Jung
@@ -965,11 +971,13 @@ public class CreateMainChannelComposite extends Composite
       if( zOrder < last )
         mngr.moveLayerToPosition( overlayLayer, last );
 
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE ) );
-      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE ) );
+      final ChartComposite chartComposite =  profilChartView.getChartComposite();
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_OUT ,new DragZoomOutHandler(chartComposite)) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.ZOOM_IN,new DragZoomInHandler(chartComposite)) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.PAN ,new DragPanHandler(chartComposite)) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EDIT ,new DragEditHandler(chartComposite)) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.MAXIMIZE ,new MaximizeHandler()) );
+      manager.add( ProfilChartActionsEnum.createAction( profilChartView, ProfilChartActionsEnum.EXPORT_IMAGE,new ExportHandler()) );
 
       final IAction action = new Action( Messages.getString( "org.kalypso.kalypsomodel1d2d.ui.map.channeledit.CreateMainChannelComposite.44" ), IAction.AS_PUSH_BUTTON ) //$NON-NLS-1$
       {
