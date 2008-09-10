@@ -78,7 +78,7 @@ public interface ILastfall
   public Integer getSimulationTimeStep( );
 
   public Integer getTimeStepMultiplier( );
-  
-  public String getValidatedLastfallDir();
+
+  public String getValidatedLastfallDir( );
 
 }

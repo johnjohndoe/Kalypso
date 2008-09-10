@@ -142,6 +142,15 @@ public class Lastfall implements ILastfall
   }
 
   /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return getFeature().hashCode();
+  }
+
+  /**
    * @see org.kalypso.model.wspm.sobek.core.interfaces.ILastfall#getPreSimulationTime()
    */
   public Integer getPreSimulationTime( )
@@ -172,4 +181,5 @@ public class Lastfall implements ILastfall
   {
     return FileUtilities.validateName( getFeature().getId().replaceAll( "[a-zA-Z]", "" ), "_" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
+
 }
